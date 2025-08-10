@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_self_order
-# 
+#
 # Translators:
 # Tiffany Chang, 2024
 # emre oktem, 2024
@@ -20,19 +20,19 @@
 # Ediz Duman <neps1192@gmail.com>, 2024
 # Umur Akın <umura@projetgrup.com>, 2024
 # Deniz Guvener_Odoo <degu@odoo.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:38+0000\n"
+"POT-Creation-Date: 2025-08-08 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: pos_self_order
@@ -421,11 +421,15 @@ msgstr "Her Sipariş"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Each table in your floor plan is assigned a unique QR code based on your configuration. For security reasons,\n"
-"                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:."
+"Each table in your floor plan is assigned a unique QR code based on your "
+"configuration. For security reasons,\n"
+"                    both the point of sale and table names are encrypted in "
+"the generated URL, as shown in the example below:."
 msgstr ""
-"Kat planınızdaki her masaya, yapılandırmanıza bağlı olarak benzersiz bir QR kodu atanır. Güvenlik nedeniyle,\n"
-"                    hem satış noktası hem de masa adları, aşağıdaki örnekte gösterildiği gibi oluşturulan URL'de şifrelenir:"
+"Kat planınızdaki her masaya, yapılandırmanıza bağlı olarak benzersiz bir QR "
+"kodu atanır. Güvenlik nedeniyle,\n"
+"                    hem satış noktası hem de masa adları, aşağıdaki örnekte "
+"gösterildiği gibi oluşturulan URL'de şifrelenir:"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -441,6 +445,13 @@ msgstr "Düzenle"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+msgid ""
+"Enable QR menu in the Restaurant settings to get QR codes for free on tables."
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
 msgid "Enter your custom value"
 msgstr "Özel değerinizi girin"
@@ -448,8 +459,8 @@ msgstr "Özel değerinizi girin"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Feel free to use and print this QR code as many times as needed according to"
-" your requirements."
+"Feel free to use and print this QR code as many times as needed according to "
+"your requirements."
 msgstr ""
 "İhtiyacınıza göre bu QR kodunu dilediğiniz kadar kullanabilir ve "
 "yazdırabilirsiniz."
@@ -475,6 +486,18 @@ msgstr "Terminaldeki talimatları izleyin"
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "Generic"
 msgstr "Jenerik"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.xml:0
+msgid "Get QR Codes"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+msgid "Get QR codes"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -537,11 +560,15 @@ msgstr "Bu ürün Self Servis Sipariş ekranlarında mevcutsa"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"If you need customized QR codes, start by scanning the relevant QR code to acquire the URL. Then, make\n"
-"                use of a QR code generator like https://www.qrcode-monkey.com or https://www.qr-code-generator.com"
+"If you need customized QR codes, start by scanning the relevant QR code to "
+"acquire the URL. Then, make\n"
+"                use of a QR code generator like https://www.qrcode-"
+"monkey.com or https://www.qr-code-generator.com"
 msgstr ""
-"Özelleştirilmiş QR kodlarına ihtiyacınız varsa, URL'yi almak için ilgili QR kodunu tarayarak başlayın. Ardından\n"
-"                https://www.qrcode-monkey.com veya https://www.qr-code-generator.com gibi bir QR kodu oluşturucudan yararlanın"
+"Özelleştirilmiş QR kodlarına ihtiyacınız varsa, URL'yi almak için ilgili QR "
+"kodunu tarayarak başlayın. Ardından\n"
+"                https://www.qrcode-monkey.com veya https://www.qr-code-"
+"generator.com gibi bir QR kodu oluşturucudan yararlanın"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -557,8 +584,8 @@ msgstr "Self-servis sipariş ekranında gösterilecek görsel"
 msgid ""
 "In Self-Order mode, you must have at least one table to generate QR codes"
 msgstr ""
-"Self-Order modunda QR kodları oluşturmak için en az bir masaya sahip olmanız"
-" gerekir."
+"Self-Order modunda QR kodları oluşturmak için en az bir masaya sahip olmanız "
+"gerekir."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__inactive
@@ -641,7 +668,8 @@ msgid ""
 "                online or order with the QR codes on your tables"
 msgstr ""
 "Müşterilerinizin menünüzü çevrim içi olarak keşfetmesini veya\n"
-"                masalarınızdaki QR kodları ile sipariş vermesini kolaylaştırın"
+"                masalarınızdaki QR kodları ile sipariş vermesini "
+"kolaylaştırın"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -742,7 +770,8 @@ msgstr "Tamam"
 #. odoo-python
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid "Only pay after each is available with kiosk mode."
-msgstr "Sadece kiosk modunda \"her biri için sonra öde\" seçeneği kullanılabilir."
+msgstr ""
+"Sadece kiosk modunda \"her biri için sonra öde\" seçeneği kullanılabilir."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
@@ -1016,8 +1045,8 @@ msgstr "Masa seçin"
 #: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
 msgid ""
 "Select for which points of sale you want to display this link. Leave empty "
-"to display it for all points of sale. You have to select among the points of"
-" sale that have the 'QR Code Menu' feature enabled."
+"to display it for all points of sale. You have to select among the points of "
+"sale that have the 'QR Code Menu' feature enabled."
 msgstr ""
 "Bu bağlantıyı hangi satış noktalarında görüntülemek istediğinizi seçin. Tüm "
 "satış noktalarında görüntülemek için boş bırakın. 'QR Kod Menüsü' özelliği "
@@ -1194,8 +1223,8 @@ msgstr "\"Sonra Müsait\" zamanı 00:00 ile 24:00 arasında ayarlanmalıdır"
 #: code:addons/pos_self_order/models/pos_category.py:0
 msgid "The Availability Until must be greater than Availability After."
 msgstr ""
-"\"Mevcut Olma Bitişi\", \"Mevcut Olma Başlangıcından\" daha sonraki bir saat"
-" olmalıdır."
+"\"Mevcut Olma Bitişi\", \"Mevcut Olma Başlangıcından\" daha sonraki bir saat "
+"olmalıdır."
 
 #. module: pos_self_order
 #. odoo-python

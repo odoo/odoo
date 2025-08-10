@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_self_order
-# 
+#
 # Translators:
 # Daye Jeong, 2024
 # Wil Odoo, 2024
 # Sarah Park, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:38+0000\n"
+"POT-Creation-Date: 2025-08-08 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_self_order
@@ -32,7 +32,9 @@ msgstr "\"QR 코드\""
 msgid ""
 "%s is not available anymore, it has thus been removed from your order. "
 "Please review your order and validate it again."
-msgstr "%s 항목은 더 이상 사용할 수 없습니다 주문에서 삭제되었습니다. 주문을 검토 후 다시 확인하시기 바랍니다."
+msgstr ""
+"%s 항목은 더 이상 사용할 수 없습니다 주문에서 삭제되었습니다. 주문을 검토 후 "
+"다시 확인하시기 바랍니다."
 
 #. module: pos_self_order
 #. odoo-python
@@ -66,7 +68,9 @@ msgstr "<sup title=\"키오스크 및 모바일에서만 작동\">?</sup>"
 msgid ""
 "Access rights of this user will be used when visiting self order website "
 "when no session is open."
-msgstr "이 사용자의 액세스 권한은 열려 있는 세션이 없는 경우 셀프 주문 웹사이트를 방문할 때만 사용합니다."
+msgstr ""
+"이 사용자의 액세스 권한은 열려 있는 세션이 없는 경우 셀프 주문 웹사이트를 방"
+"문할 때만 사용합니다."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__active
@@ -399,11 +403,15 @@ msgstr "개별 주문"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Each table in your floor plan is assigned a unique QR code based on your configuration. For security reasons,\n"
-"                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:."
+"Each table in your floor plan is assigned a unique QR code based on your "
+"configuration. For security reasons,\n"
+"                    both the point of sale and table names are encrypted in "
+"the generated URL, as shown in the example below:."
 msgstr ""
-"도면의 각 테이블에는 설정에 따라 고유한 QR 코드가 부여됩니다. 보안 상의 이유로,\n"
-"                    아래의 예시와 같이 POS 및 테이블 이름은 모두 생성된 URL 하에서 암호화되어 있습니다."
+"도면의 각 테이블에는 설정에 따라 고유한 QR 코드가 부여됩니다. 보안 상의 이유"
+"로,\n"
+"                    아래의 예시와 같이 POS 및 테이블 이름은 모두 생성된 URL "
+"하에서 암호화되어 있습니다."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -419,6 +427,13 @@ msgstr "편집"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+msgid ""
+"Enable QR menu in the Restaurant settings to get QR codes for free on tables."
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
 msgid "Enter your custom value"
 msgstr "사용자 지정 값을 입력합니다."
@@ -426,8 +441,8 @@ msgstr "사용자 지정 값을 입력합니다."
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Feel free to use and print this QR code as many times as needed according to"
-" your requirements."
+"Feel free to use and print this QR code as many times as needed according to "
+"your requirements."
 msgstr "이 QR 코드는 필요한 만큼 자유롭게 사용하고 인쇄할 수 있습니다."
 
 #. module: pos_self_order
@@ -454,6 +469,18 @@ msgstr "범용"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.xml:0
+msgid "Get QR Codes"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+msgid "Get QR codes"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
 msgid "Get a tracker and enter its number here"
 msgstr "트래킹 번호를 받고 여기에 입력합니다."
@@ -474,7 +501,9 @@ msgstr "페이퍼"
 msgid ""
 "Hey, looks like you forgot to create products or add them to pos_config. "
 "Please add them before using the Self Order"
-msgstr "품목을 생성하거나 pos_config에 추가하지 않았습니다. 셀프 주문을 사용하기 전에 추가해 주세요."
+msgstr ""
+"품목을 생성하거나 pos_config에 추가하지 않았습니다. 셀프 주문을 사용하기 전"
+"에 추가해 주세요."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -511,11 +540,15 @@ msgstr "셀프 주문 화면에서 해당 품목을 사용할 수 있는 경우"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"If you need customized QR codes, start by scanning the relevant QR code to acquire the URL. Then, make\n"
-"                use of a QR code generator like https://www.qrcode-monkey.com or https://www.qr-code-generator.com"
+"If you need customized QR codes, start by scanning the relevant QR code to "
+"acquire the URL. Then, make\n"
+"                use of a QR code generator like https://www.qrcode-"
+"monkey.com or https://www.qr-code-generator.com"
 msgstr ""
-"사용자 지정 QR 코드가 필요한 경우, 먼저 QR 코드를 스캔하여 URL을 가져오세요. 그런 다음\n"
-"                https://www.qrcode-monkey.com 또는 https://www.qr-code-generator.com 와 같은 QR코드 생성기를 사용할 수 있습니다."
+"사용자 지정 QR 코드가 필요한 경우, 먼저 QR 코드를 스캔하여 URL을 가져오세요. "
+"그런 다음\n"
+"                https://www.qrcode-monkey.com 또는 https://www.qr-code-"
+"generator.com 와 같은 QR코드 생성기를 사용할 수 있습니다."
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -530,7 +563,8 @@ msgstr "셀프 주문 화면에 표시할 이미지"
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid ""
 "In Self-Order mode, you must have at least one table to generate QR codes"
-msgstr "셀프 주문 모드에서 QR 코드를 생성하려면 테이블이 하나 이상 있어야 합니다."
+msgstr ""
+"셀프 주문 모드에서 QR 코드를 생성하려면 테이블이 하나 이상 있어야 합니다."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__inactive
@@ -777,7 +811,9 @@ msgstr "계산대에서 결제"
 msgid ""
 "Personalize your splash screen by adding one or multiple images to create a "
 "slideshow"
-msgstr "하나 또는 여러 개의 이미지를 추가하여 슬라이드쇼를 만들고 스플래시 화면을 맞춤 설정하세요."
+msgstr ""
+"하나 또는 여러 개의 이미지를 추가하여 슬라이드쇼를 만들고 스플래시 화면을 맞"
+"춤 설정하세요."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -982,11 +1018,11 @@ msgstr "테이블 선택"
 #: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
 msgid ""
 "Select for which points of sale you want to display this link. Leave empty "
-"to display it for all points of sale. You have to select among the points of"
-" sale that have the 'QR Code Menu' feature enabled."
+"to display it for all points of sale. You have to select among the points of "
+"sale that have the 'QR Code Menu' feature enabled."
 msgstr ""
-"이 링크를 표시할 POS를 선택하세요. 전체 POS에서 표시되게 하려면 비워 둡니다. 'QR 코드 메뉴' 기능이 활성화되어 있는 POS "
-"중에서 선택해야 합니다."
+"이 링크를 표시할 POS를 선택하세요. 전체 POS에서 표시되게 하려면 비워 둡니다. "
+"'QR 코드 메뉴' 기능이 활성화되어 있는 POS 중에서 선택해야 합니다."
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand

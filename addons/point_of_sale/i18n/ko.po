@@ -1,26 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* point_of_sale
-# 
+#
 # Translators:
 # JH CHOI <hwangtog@gmail.com>, 2024
 # Tiffany Chang, 2024
 # Daye Jeong, 2025
 # Wil Odoo, 2025
 # Sarah Park, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-14 20:46+0000\n"
+"POT-Creation-Date: 2025-08-08 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: point_of_sale
@@ -28,10 +28,15 @@ msgstr ""
 #: code:addons/point_of_sale/models/stock_picking.py:0
 msgid ""
 "\n"
-"This issue occurs because the quantity becomes zero after rounding during the conversion. To fix this, adjust the conversion factors or rounding method to ensure that even the smallest quantity in the original unit does not round down to zero in the target unit."
+"This issue occurs because the quantity becomes zero after rounding during "
+"the conversion. To fix this, adjust the conversion factors or rounding "
+"method to ensure that even the smallest quantity in the original unit does "
+"not round down to zero in the target unit."
 msgstr ""
 "\n"
-"이 문제는 변환 과정에서 수량이 0으로 반올림될 때 발생합니다. 이 문제를 해결하려면 변환 계수 또는 반올림 방법을 수정하여 원래 단위의 가장 작은 수량도 대상 단위에서 0 이상으로 유지되도록 합니다."
+"이 문제는 변환 과정에서 수량이 0으로 반올림될 때 발생합니다. 이 문제를 해결하"
+"려면 변환 계수 또는 반올림 방법을 수정하여 원래 단위의 가장 작은 수량도 대상 "
+"단위에서 0 이상으로 유지되도록 합니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -67,7 +72,9 @@ msgstr "%(name)s 환불"
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "%(old_pm)s changed to %(new_pm)s and from %(old_amount)s to %(new_amount)s"
-msgstr "%(old_pm)s이 %(new_pm)s으로, %(old_amount)s에서 %(new_amount)s로 변경되었습니다."
+msgstr ""
+"%(old_pm)s이 %(new_pm)s으로, %(old_amount)s에서 %(new_amount)s로 변경되었습니"
+"다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -242,7 +249,8 @@ msgstr "포털 사용자가 청구서를 요청할 때 사용하는 5자리 영�
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.blue_denim_jeans_template
 msgid "5-pocket jeans in cotton denim with a slight stretch for good comfort."
-msgstr "면 데님 소재의 5 포켓 청바지로 약간의 신축성이 있어 편안함을 더해줍니다."
+msgstr ""
+"면 데님 소재의 5 포켓 청바지로 약간의 신축성이 있어 편안함을 더해줍니다."
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.blue_denim_jeans_slim_template
@@ -289,10 +297,12 @@ msgstr "99.99"
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <h4>\n"
-"        Dear <t t-out=\"object.partner_id.name or 'Valuable Customer'\">Azure Interior</t>,\n"
+"        Dear <t t-out=\"object.partner_id.name or 'Valuable "
+"Customer'\">Azure Interior</t>,\n"
 "    </h4>\n"
 "    <p style=\"font-size: 13px;\">\n"
-"We have a limited-time offer only for you, enjoy a flat 20% off on your next purchase with us.\n"
+"We have a limited-time offer only for you, enjoy a flat 20% off on your next "
+"purchase with us.\n"
 "We can't wait to continue serving you.\n"
 "    </p>\n"
 "</div>\n"
@@ -300,10 +310,12 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <h4>\n"
-"        안녕하세요, <t t-out=\"object.partner_id.name or 'Valuable Customer'\">Azure Interior</t>님.\n"
+"        안녕하세요, <t t-out=\"object.partner_id.name or 'Valuable "
+"Customer'\">Azure Interior</t>님.\n"
 "    </h4>\n"
 "    <p style=\"font-size: 13px;\">\n"
-"회원님만을 위한 기간 한정 혜택을 준비했습니다! 다음 구매 시 20% 고정 할인 혜택을 누리세요.\n"
+"회원님만을 위한 기간 한정 혜택을 준비했습니다! 다음 구매 시 20% 고정 할인 혜"
+"택을 누리세요.\n"
 "앞으로도 좋은 서비스를 제공해드리겠습니다.\n"
 "    </p>\n"
 "</div>\n"
@@ -315,8 +327,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-shopping-bag me-1\" aria-label=\"Shopping cart\" "
 "role=\"img\" title=\"Shopping cart\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-shopping-bag me-1\" aria-label=\"장바구니\" role=\"img\" "
-"title=\"장바구니\"/>"
+"<i class=\"fa fa-fw fa-shopping-bag me-1\" aria-label=\"장바구니\" "
+"role=\"img\" title=\"장바구니\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -336,28 +348,32 @@ msgstr "<i class=\"fa fa-pencil\"/> 편집"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt %(is_invoiced)sfor"
-"             %(pos_name)s amounting in %(amount)s from %(company_name)s. "
-"</p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
+"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
+"(company_name)s. </p>"
 msgstr ""
-"<p>안녕하세요 %(client_name)s님,<br/>영수증%(is_invoiced)s이 발행되었습니다.             "
-"%(pos_name)s 금액 %(amount)s이 %(company_name)s에 청구되었습니다. </p>"
+"<p>안녕하세요 %(client_name)s님,<br/>영수증%(is_invoiced)s이 발행되었습니"
+"다.             %(pos_name)s 금액 %(amount)s이 %(company_name)s에 청구되었습"
+"니다. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid ""
 "<span class=\"float-end\" invisible=\"is_total_cost_computed\">To be "
 "determined</span>"
-msgstr "<span class=\"float-end\" invisible=\"is_total_cost_computed\">미정</span>"
+msgstr ""
+"<span class=\"float-end\" invisible=\"is_total_cost_computed\">미정</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
-"                                <i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                <i class=\"fa fa-info-circle me-1\" "
+"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
 "<span class=\"o_form_label\">바코드</span>\n"
-"                                <i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                <i class=\"fa fa-info-circle me-1\" "
+"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -389,7 +405,8 @@ msgstr "<span>마감</span>"
 msgid ""
 "<span>Please note that the kiosk only works with Adyen &amp; Stripe "
 "terminals</span>"
-msgstr "<span>키오스크는 Adyen 및 Stripe 단말기에서만 사용하실 수 있습니다.</span>"
+msgstr ""
+"<span>키오스크는 Adyen 및 Stripe 단말기에서만 사용하실 수 있습니다.</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -405,10 +422,12 @@ msgstr "<span>보기</span>"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid ""
 "<strong> &gt; Payment Terminals</strong>\n"
-"                                    in order to install a Payment Terminal and make a fully integrated payment method."
+"                                    in order to install a Payment Terminal "
+"and make a fully integrated payment method."
 msgstr ""
 "<strong> &gt; 결제용 단말기</strong>\n"
-"                                    결제용 단말기를 설치하고 결제 방법을 하나로 통합하기 위한 것입니다."
+"                                    결제용 단말기를 설치하고 결제 방법을 하나"
+"로 통합하기 위한 것입니다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -461,12 +480,19 @@ msgstr "? \"확인\"을 클릭하면 결제가 승인됩니다."
 msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data."
-msgstr "이 POS 환경 설정의 전역 고유 식별 기호로 클라이언트 생성 데이터의 충돌을 방지하는 데 사용됩니다."
+msgstr ""
+"이 POS 환경 설정의 전역 고유 식별 기호로 클라이언트 생성 데이터의 충돌을 방지"
+"하는 데 사용됩니다."
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_note_name_unique
 msgid "A note with this name already exists"
 msgstr "같은 이름의 메모가 이미 존재합니다."
+
+#. module: point_of_sale
+#: model:ir.model.constraint,message:point_of_sale.constraint_pos_payment_uuid_unique
+msgid "A payment with this uuid already exists"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__login_number
@@ -493,7 +519,9 @@ msgstr "세션은 일반적으로 하루 동안 POS를 통해 판매하는 기�
 msgid ""
 "A session is currently opened for this PoS. Some settings can only be "
 "changed after the session is closed."
-msgstr "현재 이 POS에 열려 있는 세션이 있습니다. 일부 설정 항목의 경우 세션을 종료한 경우에만 변경할 수 있습니다."
+msgstr ""
+"현재 이 POS에 열려 있는 세션이 있습니다. 일부 설정 항목의 경우 세션을 종료한 "
+"경우에만 변경할 수 있습니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__sequence_number
@@ -595,9 +623,11 @@ msgstr "전체 계정 결제 및 은행 분할 납부"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__outstanding_account_id
 msgid ""
-"Account used as outstanding account when creating accounting payment records"
-" for bank payments."
-msgstr "은행 결제 관련 회계 결제 기록을 생성할 때 미결제 계정으로 사용되는 계정입니다."
+"Account used as outstanding account when creating accounting payment records "
+"for bank payments."
+msgstr ""
+"은행 결제 관련 회계 결제 기록을 생성할 때 미결제 계정으로 사용되는 계정입니"
+"다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -689,7 +719,9 @@ msgstr "팁 추가"
 msgid ""
 "Add a 5-digit code on the receipt to allow the user to request the invoice "
 "for an order on the portal."
-msgstr "사용자가 포털에서 주문과 관련된 청구서를 요청할 수 있도록 영수증에 5자리 코드를 추가합니다. "
+msgstr ""
+"사용자가 포털에서 주문과 관련된 청구서를 요청할 수 있도록 영수증에 5자리 코드"
+"를 추가합니다. "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -808,8 +840,8 @@ msgid ""
 "the Sales Journal set on this point of sale if you use the Accounting "
 "application."
 msgstr ""
-"회계 응용 프로그램을 사용하는 경우 사용 가능한 모든 가격리스트는 회사와 동일한 통화로 또는 이 POS에 설정된 판매 전표와 같아야 "
-"합니다."
+"회계 응용 프로그램을 사용하는 경우 사용 가능한 모든 가격리스트는 회사와 동일"
+"한 통화로 또는 이 POS에 설정된 판매 전표와 같아야 합니다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -820,8 +852,8 @@ msgstr "모든 메모"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
-"All payment methods must be in the same currency as the Sales Journal or the"
-" company currency if that is not set."
+"All payment methods must be in the same currency as the Sales Journal or the "
+"company currency if that is not set."
 msgstr "모든 결제 방법은 판매 전표와 동일하거나 회사 통화로 설정해야 합니다."
 
 #. module: point_of_sale
@@ -883,7 +915,8 @@ msgstr "금액 승인 차이"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Amount for %(old_pm)s changed from %(old_amount)s to %(new_amount)s"
-msgstr "%(old_pm)s의 금액이 %(old_amount)s에서 %(new_amount)s으로 변경되었습니다."
+msgstr ""
+"%(old_pm)s의 금액이 %(old_amount)s에서 %(new_amount)s으로 변경되었습니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__amount_to_balance
@@ -918,7 +951,9 @@ msgstr ""
 msgid ""
 "An error occurred when loading product prices. Make sure all pricelists are "
 "available in the POS."
-msgstr "제품 가격을 불러오는 중 오류가 발생했습니다. POS에서 모든 가격표를 사용할 수 있는지 확인해 주세요."
+msgstr ""
+"제품 가격을 불러오는 중 오류가 발생했습니다. POS에서 모든 가격표를 사용할 수 "
+"있는지 확인해 주세요."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -927,7 +962,8 @@ msgid ""
 "An error occurred while closing the session. Unsynced orders will be "
 "available in the next session. The page will be reloaded."
 msgstr ""
-"세션을 종료하는 동안 오류가 발생했습니다. 동기화되지 않은 주문은 다음 세션에서 사용할 수 있습니다. 페이지를 다시 로드합니다."
+"세션을 종료하는 동안 오류가 발생했습니다. 동기화되지 않은 주문은 다음 세션에"
+"서 사용할 수 있습니다. 페이지를 다시 로드합니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -944,6 +980,16 @@ msgstr "점포판매시스템에 대한 내부 ID"
 #: model:ir.model.fields,help:point_of_sale.field_pos_printer__name
 msgid "An internal identification of the printer"
 msgstr "프린터에 대한 내부 ID"
+
+#. module: point_of_sale
+#: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_line_uuid_unique
+msgid "An order line with this uuid already exists"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_uuid_unique
+msgid "An order with this uuid already exists"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -997,7 +1043,9 @@ msgstr "가능한 빨리"
 msgid ""
 "At least one bank account must be defined on the journal to allow "
 "registering QR code payments with Bank apps."
-msgstr "은행 앱에 QR코드 결제를 등록하려면 은행 계좌가 하나 이상 전표에 설정되어 있어야 합니다."
+msgstr ""
+"은행 앱에 QR코드 결제를 등록하려면 은행 계좌가 하나 이상 전표에 설정되어 있어"
+"야 합니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__closing
@@ -1008,7 +1056,8 @@ msgstr "세션 종료 시"
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_update_stock_quantities
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__update_stock_quantities
 msgid ""
-"At the session closing: A picking is created for the entire session when it's closed\n"
+"At the session closing: A picking is created for the entire session when "
+"it's closed\n"
 " In real time: Each order sent to the server create its own picking"
 msgstr ""
 "세션 종료 시: 세션 종료 시 전체 세션에 대해 픽업 항목을 생성합니다.\n"
@@ -1272,8 +1321,9 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
-"쿠폰, 프로모션, 기프트 카드, 적립 제도 등 다양한 종류의 프로그램으로 매출 상승효과를 기대할 수 있습니다. 제품, 고객, 최소 구매 "
-"금액, 기간 등에 특정 조건을 설정하거나, 할인 또는 사은품 증정을 할 수 있습니다."
+"쿠폰, 프로모션, 기프트 카드, 적립 제도 등 다양한 종류의 프로그램으로 매출 상"
+"승효과를 기대할 수 있습니다. 제품, 고객, 최소 구매 금액, 기간 등에 특정 조건"
+"을 설정하거나, 할인 또는 사은품 증정을 할 수 있습니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_brand
@@ -1616,12 +1666,15 @@ msgstr "일상복으로 입기 좋은 편안하고 스타일리시한 캐주얼 
 msgid ""
 "Casual slim t-shirt 100% cotton with white embroidery. Various sizes "
 "available"
-msgstr "화이트 자수가 놓여진 100% 면 소재의 캐주얼 슬림 핏 티셔츠입니다. 다양한 사이즈가 제공됩니다."
+msgstr ""
+"화이트 자수가 놓여진 100% 면 소재의 캐주얼 슬림 핏 티셔츠입니다. 다양한 사이"
+"즈가 제공됩니다."
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.t_shirt_slim_product_template
 msgid "Casual slim t-shirt 100% cotton. Various sizes available"
-msgstr "100% 면 소재의 캐주얼 슬림 핏 티셔츠입니다. 다양한 사이즈가 제공됩니다."
+msgstr ""
+"100% 면 소재의 캐주얼 슬림 핏 티셔츠입니다. 다양한 사이즈가 제공됩니다."
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.casual_t_shirt_product_template
@@ -1678,8 +1731,7 @@ msgstr "팁 변경"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__to_weight
 #: model:ir.model.fields,help:point_of_sale.field_product_template__to_weight
 msgid ""
-"Check if the product should be weighted using the hardware scale "
-"integration."
+"Check if the product should be weighted using the hardware scale integration."
 msgstr "통합 연결된 저울을 사용하여 상품의 무게를 측정할지 확인합니다. "
 
 #. module: point_of_sale
@@ -1707,7 +1759,9 @@ msgstr "개폐시 현금출납기 금액을 확인하시기 바랍니다."
 msgid ""
 "Check the internet connection then try to sync again by clicking on the red "
 "wifi button (upper right of the screen)."
-msgstr "인터넷 연결을 확인하신 후 빨간색 와이파이 버튼 (화면 우측 상단)을 클릭하여 동기화를 다시 시도합니다."
+msgstr ""
+"인터넷 연결을 확인하신 후 빨간색 와이파이 버튼 (화면 우측 상단)을 클릭하여 동"
+"기화를 다시 시도합니다."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_cheese_croissant_product_template
@@ -1734,7 +1788,9 @@ msgstr "하위 범주"
 msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
-msgstr "주문할 때 고객 분류 (면세, 현장 또는 테이크아웃 등)에 따라 특정 재정 위치를 선택하세요."
+msgstr ""
+"주문할 때 고객 분류 (면세, 현장 또는 테이크아웃 등)에 따라 특정 재정 위치를 "
+"선택하세요."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2148,8 +2204,8 @@ msgstr "제한된 기능으로 계속 사용"
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_picking.py:0
 msgid ""
-"Conversion Error: The following unit of measure conversions result in a zero"
-" quantity due to rounding:"
+"Conversion Error: The following unit of measure conversions result in a zero "
+"quantity due to rounding:"
 msgstr "변환 오류: 다음 측정 단위 변환에서 반올림으로 인해 수량이 0이 됩니다:"
 
 #. module: point_of_sale
@@ -2806,13 +2862,17 @@ msgstr "현재 POS 세션의 전체 판매 내역을 포함하여 보고서 다�
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_printer_form
 msgid ""
 "Each Order Printer has an IP Address that defines the IoT Box/Hardware\n"
-"            Proxy where the printer can be found, and a list of product categories.\n"
-"            An Order Printer will only print updates for products belonging to one of\n"
+"            Proxy where the printer can be found, and a list of product "
+"categories.\n"
+"            An Order Printer will only print updates for products belonging "
+"to one of\n"
 "            its categories."
 msgstr ""
 "각각의 주문 프린터에는 프린터를 인식할 수 있도록 IoT 박스 또는 \n"
-"            하드웨어 프록시를 설정하는 IP 주소와 함께 품목 카테고리 목록이 있습니다.\n"
-"            주문 프린터는 해당 카테고리에 속하는 품목에 대한 업데이트만을 출력합니다. \n"
+"            하드웨어 프록시를 설정하는 IP 주소와 함께 품목 카테고리 목록이 있"
+"습니다.\n"
+"            주문 프린터는 해당 카테고리에 속하는 품목에 대한 업데이트만을 출"
+"력합니다. \n"
 "            "
 
 #. module: point_of_sale
@@ -2899,8 +2959,8 @@ msgid ""
 "These credentials are configurable in the *HR Settings* tab of the employee "
 "form."
 msgstr ""
-"직원은 배지를 스캔하거나 PIN을 입력하여 PoS 세션에 로그인할 수 있습니다. 이 자격 증명은 직원 양식의 *HR 설정* 탭에서 구성할"
-" 수 있습니다."
+"직원은 배지를 스캔하거나 PIN을 입력하여 PoS 세션에 로그인할 수 있습니다. 이 "
+"자격 증명은 직원 양식의 *HR 설정* 탭에서 구성할 수 있습니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2914,8 +2974,8 @@ msgid ""
 "Enable barcode scanning with a remotely connected barcode scanner and card "
 "swiping with a Vantiv card reader."
 msgstr ""
-"원격으로 연결되어 있는 바코드 스캐너로 바코드 스캔 기능을 활성화하고 Vantiv 카드 리더기로는 카드 인식 기능을 활성화시킬 수 "
-"있습니다."
+"원격으로 연결되어 있는 바코드 스캐너로 바코드 스캔 기능을 활성화하고 Vantiv "
+"카드 리더기로는 카드 인식 기능을 활성화시킬 수 있습니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_electronic_scale
@@ -2936,9 +2996,11 @@ msgstr "기말 잔액"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
-"Ensure that there is an existing bank journal. Check if chart of accounts is"
-" installed in your company."
-msgstr "은행 업무 일지가 존재하는지 확인합니다. 회사에 계정과목표가 설치되어 있는지 확인합니다."
+"Ensure that there is an existing bank journal. Check if chart of accounts is "
+"installed in your company."
+msgstr ""
+"은행 업무 일지가 존재하는지 확인합니다. 회사에 계정과목표가 설치되어 있는지 "
+"확인합니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3044,13 +3106,16 @@ msgstr "재정 위치"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_butter_croissant_product_template
 msgid "Flaky all butter pastry, layered for a light and golden croissant."
-msgstr "바삭한 버터 페스트리를 층층이 쌓아 올려 담백한 갈색빛의 크로와상을 완성했습니다."
+msgstr ""
+"바삭한 버터 페스트리를 층층이 쌓아 올려 담백한 갈색빛의 크로와상을 완성했습니"
+"다."
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_cheese_croissant_product_template
-msgid ""
-"Flaky croissant filled with creamy cheese, a savory twist on a classic."
-msgstr "크리미한 치즈를 가득 채운 바삭한 크루아상으로 클래식에 고소한 맛을 더했습니다."
+msgid "Flaky croissant filled with creamy cheese, a savory twist on a classic."
+msgstr ""
+"크리미한 치즈를 가득 채운 바삭한 크루아상으로 클래식에 고소한 맛을 더했습니"
+"다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3136,7 +3201,9 @@ msgstr "강제 미결제 계정 "
 msgid ""
 "Forces to set a customer when using this payment method and splits the "
 "journal entries for each customer. It could slow down the closing process."
-msgstr "이 결제 수단을 사용할 경우 고객을 강제 설정하고 고객별로 전표를 입력합니다. 종료 단계의 과정이 느려질 수 있습니다. "
+msgstr ""
+"이 결제 수단을 사용할 경우 고객을 강제 설정하고 고객별로 전표를 입력합니다. "
+"종료 단계의 과정이 느려질 수 있습니다. "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3426,7 +3493,8 @@ msgstr "체크하면 모든 PoS에서 동전/지폐를 사용할 수 있습니�
 msgid ""
 "If this orderline is a refund, then the refunded orderline is specified in "
 "this field."
-msgstr "이 주문 내역이 환불에 대한 것인 경우에는 환불된 내역이 이 필드에 지정됩니다."
+msgstr ""
+"이 주문 내역이 환불에 대한 것인 경우에는 환불된 내역이 이 필드에 지정됩니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__picking_policy
@@ -3436,8 +3504,8 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
-"모든 품목을 한 번에 배송하는 경우 최대 제품 리드타임을 기준으로 배송 주문이 예약됩니다. 그렇지 않으면 가장 짧은 시간을 기준으로 "
-"합니다."
+"모든 품목을 한 번에 배송하는 경우 최대 제품 리드타임을 기준으로 배송 주문이 "
+"예약됩니다. 그렇지 않으면 가장 짧은 시간을 기준으로 합니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image_128
@@ -3592,7 +3660,9 @@ msgstr "청구서 요청"
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid ""
 "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
-msgstr "%(order)s에 대한 (%(account_move)s)은 %(payment_method)s을 사용하여 결제합니다."
+msgstr ""
+"%(order)s에 대한 (%(account_move)s)은 %(payment_method)s을 사용하여 결제합니"
+"다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
@@ -3687,7 +3757,8 @@ msgid ""
 "It is forbidden to modify a tax used in a POS order not posted. You must "
 "close the POS sessions before modifying the tax."
 msgstr ""
-"게시되지 않은 POS 주문에 사용된 세금을 수정하는 것은 금지되어 있습니다. 세금을 수정하기 전에 POS 세션을 닫아야 합니다."
+"게시되지 않은 POS 주문에 사용된 세금을 수정하는 것은 금지되어 있습니다. 세금"
+"을 수정하기 전에 POS 세션을 닫아야 합니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3866,7 +3937,8 @@ msgstr "회사 설정에서 기본 계정을 사용하시려면 공란으로 두
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__receivable_account_id
 msgid ""
 "Leave empty to use the default account from the company setting.\n"
-"Overrides the company's receivable account (for Point of Sale) used in the journal entries."
+"Overrides the company's receivable account (for Point of Sale) used in the "
+"journal entries."
 msgstr ""
 "공란으로 두시면 회사 설정에서 기본 계정을 사용하실 수 있습니다.\n"
 "전표입력되어 있는 미수금 계정 (POS) 항목보다 우선적으로 사용됩니다."
@@ -3880,15 +3952,21 @@ msgstr "고객용 미수금 계정을 사용하시려면 공란으로 두십시�
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__journal_id
 msgid ""
 "Leave empty to use the receivable account of customer.\n"
-"Defines the journal where to book the accumulated payments (or individual payment if Identify Customer is true) after closing the session.\n"
-"For cash journal, we directly write to the default account in the journal via statement lines.\n"
-"For bank journal, we write to the outstanding account specified in this payment method.\n"
+"Defines the journal where to book the accumulated payments (or individual "
+"payment if Identify Customer is true) after closing the session.\n"
+"For cash journal, we directly write to the default account in the journal "
+"via statement lines.\n"
+"For bank journal, we write to the outstanding account specified in this "
+"payment method.\n"
 "Only cash and bank journals are allowed."
 msgstr ""
 "고객의 미수금 계정을 사용하려면 공란으로 두십시오.\n"
-"세션 종료 후 누적 결제 (또는 확인된 고객이 해당하는 경우 개별 결제)를 기장할 장부를 설정합니다.\n"
-"현금 분개장의 경우, 명세서 내역에 따라 분개장의 기본 계정에 바로 작성됩니다.\n"
-"은행 분개장의 경우, 해당 결제 방법에 지정되어 있는 미결제 계좌로 작성됩니다.\n"
+"세션 종료 후 누적 결제 (또는 확인된 고객이 해당하는 경우 개별 결제)를 기장할 "
+"장부를 설정합니다.\n"
+"현금 분개장의 경우, 명세서 내역에 따라 분개장의 기본 계정에 바로 작성됩니"
+"다.\n"
+"은행 분개장의 경우, 해당 결제 방법에 지정되어 있는 미결제 계좌로 작성됩니"
+"다.\n"
 "현금 및 은행 분개장만 사용이 허용됩니다."
 
 #. module: point_of_sale
@@ -3985,13 +4063,15 @@ msgstr "결제하기"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__available_pricelist_ids
 msgid ""
-"Make several pricelists available in the Point of Sale. You can also apply a"
-" pricelist to specific customers from their contact form (in Sales tab). To "
+"Make several pricelists available in the Point of Sale. You can also apply a "
+"pricelist to specific customers from their contact form (in Sales tab). To "
 "be valid, this pricelist must be listed here as an available pricelist. "
 "Otherwise the default pricelist will apply."
 msgstr ""
-"POS에서 여러 가격 목록을 사용할 수 있도록 합니다. 연락처 탭(판매 탭)에서 특정 고객에게 가격표를 적용할 수도 있습니다. 유효하려면"
-" 이 가격 목록이 사용 가능한 가격 목록으로 여기에 나열되어 있어야 합니다. 그렇지 않으면 기본 가격표가 적용됩니다."
+"POS에서 여러 가격 목록을 사용할 수 있도록 합니다. 연락처 탭(판매 탭)에서 특"
+"정 고객에게 가격표를 적용할 수도 있습니다. 유효하려면 이 가격 목록이 사용 가"
+"능한 가격 목록으로 여기에 나열되어 있어야 합니다. 그렇지 않으면 기본 가격표"
+"가 적용됩니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3999,7 +4079,9 @@ msgstr ""
 msgid ""
 "Make sure there is an IoT Box subscription associated with your Odoo "
 "database, then restart the IoT Box."
-msgstr "Odoo 데이터베이스에 연결된 IoT Box 구독이 있는지 확인한 다음 IoT Box를 다시 시작하세요."
+msgstr ""
+"Odoo 데이터베이스에 연결된 IoT Box 구독이 있는지 확인한 다음 IoT Box를 다시 "
+"시작하세요."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4007,7 +4089,9 @@ msgstr "Odoo 데이터베이스에 연결된 IoT Box 구독이 있는지 확인�
 msgid ""
 "Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept "
 "the certificate of your IoT Box."
-msgstr "IoT Box v18.12 이상을 사용하고 있는지 확인합니다. %s로 이동하여 IoT 박스의 인증서를 수락합니다."
+msgstr ""
+"IoT Box v18.12 이상을 사용하고 있는지 확인합니다. %s로 이동하여 IoT 박스의 인"
+"증서를 수락합니다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4297,22 +4381,28 @@ msgstr "비과세"
 msgid ""
 "No barcode nomenclature has been configured. This can be changed in the "
 "configuration settings."
-msgstr "바코드 이름 규칙이 구성되어 있지 않습니다. 구성 설정 메뉴에서 변경하실 수 있습니다."
+msgstr ""
+"바코드 이름 규칙이 구성되어 있지 않습니다. 구성 설정 메뉴에서 변경하실 수 있"
+"습니다."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
-msgstr "이 세션에서 발견된 현금 명세서가 없습니다. 현금 반환 기록은 사용할 수 없습니다."
+msgstr ""
+"이 세션에서 발견된 현금 명세서가 없습니다. 현금 반환 기록은 사용할 수 없습니"
+"다."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
-"No chart of account configured, go to the \"configuration / settings\" menu,"
-" and install one from the Invoicing tab."
-msgstr "계정과목표가 구성되어 있지 않습니다. \"구성 / 설정\" 메뉴로 이동하여 청구서 탭에서 계정과목표를 설치하시기 바랍니다."
+"No chart of account configured, go to the \"configuration / settings\" menu, "
+"and install one from the Invoicing tab."
+msgstr ""
+"계정과목표가 구성되어 있지 않습니다. \"구성 / 설정\" 메뉴로 이동하여 청구서 "
+"탭에서 계정과목표를 설치하시기 바랍니다."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_sale_graph
@@ -4350,7 +4440,8 @@ msgstr "\"%s\"에 대해 고객을 찾을 수 없습니다."
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "No open session available. Please open a new session to capture the order."
-msgstr "현재 열려 있는 세션이 없습니다. 주문을 처리하려면 새 세션을 시작하십시오."
+msgstr ""
+"현재 열려 있는 세션이 없습니다. 주문을 처리하려면 새 세션을 시작하십시오."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_form
@@ -4514,7 +4605,9 @@ msgstr "진행중"
 msgid ""
 "Only a negative quantity is allowed for this refund line. Click on +/- to "
 "modify the quantity to be refunded."
-msgstr "이 환불 내역의 수량에는 음수만 입력할 수 있습니다. +/- 로 환불 수량을 수정하십시오."
+msgstr ""
+"이 환불 내역의 수량에는 음수만 입력할 수 있습니다. +/- 로 환불 수량을 수정하"
+"십시오."
 
 #. module: point_of_sale
 #. odoo-python
@@ -4533,7 +4626,8 @@ msgstr "현금에만 반올림 적용"
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid ""
 "Only journals of type 'Cash' or 'Bank' could be used with payment methods."
-msgstr "'현금' 또는 '은행 계좌' 유형의 전표만 결제 수단으로 사용할 수 있습니다."
+msgstr ""
+"'현금' 또는 '은행 계좌' 유형의 전표만 결제 수단으로 사용할 수 있습니다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4547,7 +4641,9 @@ msgstr "현금 방식만 가능"
 msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
 "prices on orders."
-msgstr "PoS 앱에 대한 관리자 액세스 권한이 있는 사용자만 주문시 제품 가격을 수정할 수 있습니다."
+msgstr ""
+"PoS 앱에 대한 관리자 액세스 권한이 있는 사용자만 주문시 제품 가격을 수정할 "
+"수 있습니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4716,6 +4812,12 @@ msgid "Order Number"
 msgstr "주문 번호"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
+msgid "Order Outdated"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_order_printer
 msgid "Order Printer"
 msgstr "주문용 프린터"
@@ -4730,10 +4832,12 @@ msgstr "주문용 프린터"
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_printer_form
 msgid ""
 "Order Printers are used by restaurants and bars to print the\n"
-"            order updates in the kitchen/bar when the waiter updates the order."
+"            order updates in the kitchen/bar when the waiter updates the "
+"order."
 msgstr ""
 "주문용 프린터는 웨이터가 레스토랑과 바에서 받은 주문을 \n"
-"          변경하는 경우 키친이나 바에서 주문 업데이트 내용을 인쇄하는데 사용합니다."
+"          변경하는 경우 키친이나 바에서 주문 업데이트 내용을 인쇄하는데 사용"
+"합니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__name
@@ -5187,10 +5291,15 @@ msgstr "IoT Box가 여전히 연결되어 있는지 확인하십시오."
 #: code:addons/point_of_sale/static/src/app/printer/base_printer.js:0
 msgid ""
 "Please check if the printer is still connected. \n"
-"Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue. "
+"Some browsers don't allow HTTP calls from websites to devices in the network "
+"(for security reasons). If it is the case, you will need to follow Odoo's "
+"documentation for 'Self-signed certificate for ePOS printers' and 'Secure "
+"connection (HTTPS)' to solve the issue. "
 msgstr ""
 "프린터 연결을 확인하세요.\n"
-"일부 브라우저에서는 웹사이트에서 네트워크 장치로의 HTTP 호출이 허용되지 않습니다 (보안 상의 이유). 이러한 경우 문제를 해결하려면 'ePOS 프린터용 자체 인증서' 및 '보안 연결 (HTTP)' 관련 Odoo의 문서를 참고하여 실행하세요."
+"일부 브라우저에서는 웹사이트에서 네트워크 장치로의 HTTP 호출이 허용되지 않습"
+"니다 (보안 상의 이유). 이러한 경우 문제를 해결하려면 'ePOS 프린터용 자체 인증"
+"서' 및 '보안 연결 (HTTP)' 관련 Odoo의 문서를 참고하여 실행하세요."
 
 #. module: point_of_sale
 #. odoo-python
@@ -5198,23 +5307,26 @@ msgstr ""
 msgid ""
 "Please close all the point of sale sessions in this period before closing "
 "it. Open sessions are: %s "
-msgstr "이 기간 동안 모든 POS 세션을 닫은 후 종료하십시오. 열려 있는 세션은 다음과 같습니다 : %s"
+msgstr ""
+"이 기간 동안 모든 POS 세션을 닫은 후 종료하십시오. 열려 있는 세션은 다음과 같"
+"습니다 : %s"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid ""
-"Please close and validate the following open PoS Sessions before modifying this payment method.\n"
+"Please close and validate the following open PoS Sessions before modifying "
+"this payment method.\n"
 "Open sessions: %s"
 msgstr ""
-"이 결제 방법을 변경하시려면 열려 있는 다음 POS 세션을 종료 후 승인하시기 바랍니다.\n"
+"이 결제 방법을 변경하시려면 열려 있는 다음 POS 세션을 종료 후 승인하시기 바랍"
+"니다.\n"
 "열려 있는 세션: %s"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"Please create/select a Point of Sale above to show the configuration "
-"options."
+"Please create/select a Point of Sale above to show the configuration options."
 msgstr "구성 옵션을 표시하려면 위의 POS를 생성/선택하시기 바랍니다."
 
 #. module: point_of_sale
@@ -5242,7 +5354,9 @@ msgstr "필수 필드 전체를 작성해주시기 바랍니다."
 msgid ""
 "Please go on the %s journal and define a Loss Account. This account will be "
 "used to record cash difference."
-msgstr "%s 전표로 이동하여 손실 계정을 설정하십시오. 이 계정은 현금 차액을 기록하는데 사용합니다."
+msgstr ""
+"%s 전표로 이동하여 손실 계정을 설정하십시오. 이 계정은 현금 차액을 기록하는"
+"데 사용합니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -5250,7 +5364,9 @@ msgstr "%s 전표로 이동하여 손실 계정을 설정하십시오. 이 계�
 msgid ""
 "Please go on the %s journal and define a Profit Account. This account will "
 "be used to record cash difference."
-msgstr "%s 전표로 이동하여 수익 계정을 설정하십시오. 이 계정은 현금 차액을 기록하는데 사용합니다."
+msgstr ""
+"%s 전표로 이동하여 수익 계정을 설정하십시오. 이 계정은 현금 차액을 기록하는"
+"데 사용합니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5805,7 +5921,9 @@ msgstr "가격 정보 없이 기본 티켓을 인쇄합니다. 선물용으로 �
 msgid ""
 "Print information on the receipt to allow the customer to easily access the "
 "invoice anytime, from Odoo's portal."
-msgstr "영수증에 정보를 인쇄하여 고객이 언제든지 Odoo 포털에서 청구서에 쉽게 액세스할 수 있도록 합니다."
+msgstr ""
+"영수증에 정보를 인쇄하여 고객이 언제든지 Odoo 포털에서 청구서에 쉽게 액세스"
+"할 수 있도록 합니다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6416,9 +6534,10 @@ msgstr "반납함"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"Reversal of POS closing entry %(entry)s for order %(order)s from session "
-"%(session)s"
-msgstr "POS 마감 항목 %(entry)s 중 %(order)s 주문을 %(session)s에서 취소했습니다."
+"Reversal of POS closing entry %(entry)s for order %(order)s from session %"
+"(session)s"
+msgstr ""
+"POS 마감 항목 %(entry)s 중 %(order)s 주문을 %(session)s에서 취소했습니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -6488,7 +6607,9 @@ msgstr "결제 내역의 반올림 오류"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 msgid "Running a fake tour will create random orders. Use at your own risk."
-msgstr "테스트 투어를 실행할 경우 무작위로 주문이 생성됩니다. 담당자 책임 하에 사용하세요."
+msgstr ""
+"테스트 투어를 실행할 경우 무작위로 주문이 생성됩니다. 담당자 책임 하에 사용하"
+"세요."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_rye_bread_product_template
@@ -7026,7 +7147,8 @@ msgstr "작은 선반"
 #: model:product.template,description_sale:point_of_sale.product_cinnamon_roll_product_template
 msgid ""
 "Soft dough with a buttery cinnamon filling, topped with cream cheese icing."
-msgstr "부드러운 반죽에 버터 시나몬 필링을 채우고 크림치즈 아이싱을 올렸습니다."
+msgstr ""
+"부드러운 반죽에 버터 시나몬 필링을 채우고 크림치즈 아이싱을 올렸습니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7042,8 +7164,8 @@ msgid ""
 "errors. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
-"환경 설정 오류로 인해 일부 주문을 서버에 제출할 수 없습니다. POS (Point of Sale)를 종료 할 수 있지만 문제가 해결되기"
-" 전에 세션을 닫지 마십시오."
+"환경 설정 오류로 인해 일부 주문을 서버에 제출할 수 없습니다. POS (Point of "
+"Sale)를 종료 할 수 있지만 문제가 해결되기 전에 세션을 닫지 마십시오."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7053,8 +7175,8 @@ msgid ""
 "issues. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
-"인터넷 연결 문제로 인해 일부 주문을 서버에 제출할 수 없습니다. POS (Point of Sale)를 종료 할 수 있지만 문제가 "
-"해결되기 전에 세션을 닫지 마십시오."
+"인터넷 연결 문제로 인해 일부 주문을 서버에 제출할 수 없습니다. POS (Point of "
+"Sale)를 종료 할 수 있지만 문제가 해결되기 전에 세션을 닫지 마십시오."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7193,7 +7315,9 @@ msgstr "Stripe 결제 단말기"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.leather_jacket_product_template
 msgid "Stylish leather jacket, durable and fashionable for all occasions."
-msgstr "내구성이 뛰어나고 스타일리시한 가죽 재킷으로 어떤 상황에서도 멋스럽게 연출할 수 있습니다."
+msgstr ""
+"내구성이 뛰어나고 스타일리시한 가죽 재킷으로 어떤 상황에서도 멋스럽게 연출할 "
+"수 있습니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__price_subtotal_excl
@@ -7230,7 +7354,8 @@ msgstr "해변이나 화창한 날씨에 이상적인 여름 모자."
 #: model:product.template,description_sale:point_of_sale.product_pecan_pie_product_template
 msgid ""
 "Sweet pie filled with pecans, with a rich, buttery filling and flaky saltt."
-msgstr "피칸으로 채워진 달콤한 파이로, 진한 버터 필링과 바삭한 소금이 특징입니다."
+msgstr ""
+"피칸으로 채워진 달콤한 파이로, 진한 버터 필링과 바삭한 소금이 특징입니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7436,7 +7561,9 @@ msgstr ""
 msgid ""
 "The Point of Sale could not find any product, customer, employee or action "
 "associated with the scanned barcode."
-msgstr "스캔한 바코드 항목과 관련된 품목이나 고객, 직원이나 작업을 POS에서 찾을 수 없습니다."
+msgstr ""
+"스캔한 바코드 항목과 관련된 품목이나 고객, 직원이나 작업을 POS에서 찾을 수 없"
+"습니다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_rounding_form_view_inherited
@@ -7457,14 +7584,18 @@ msgstr "티켓 번호는 14자 이상이어야 합니다."
 msgid ""
 "The amount cannot be higher than the due amount if you don't have a cash "
 "payment method configured."
-msgstr "현금 결제 방식을 설정하지 않은 경우, 대금 금액보다 큰 금액은 입력할 수 없습니다."
+msgstr ""
+"현금 결제 방식을 설정하지 않은 경우, 대금 금액보다 큰 금액은 입력할 수 없습니"
+"다."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid ""
-"The amount of your payment lines must be rounded to validate the transaction.\n"
-"The rounding precision is %s so you should set %s as payment amount instead of %s."
+"The amount of your payment lines must be rounded to validate the "
+"transaction.\n"
+"The rounding precision is %s so you should set %s as payment amount instead "
+"of %s."
 msgstr ""
 "거래가 승인되려면 결제 금액이 반올림되어야 합니다.\n"
 "반올림 정밀도는 %s이므로, %s를 %s 대신 결제 금액으로 설정합니다.."
@@ -7499,9 +7630,11 @@ msgstr "기본 가격표는 회사나 POS상의 회사에 대한 것이 아니�
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
-"The default tip product is missing. Please manually specify the tip product."
-" (See Tips field.)"
-msgstr "기본 도움말 품목이 없습니다. 도움말 품목을 수동으로 지정하십시오 (도움말 필드를 확인하시기 바랍니다)."
+"The default tip product is missing. Please manually specify the tip product. "
+"(See Tips field.)"
+msgstr ""
+"기본 도움말 품목이 없습니다. 도움말 품목을 수동으로 지정하십시오 (도움말 필드"
+"를 확인하시기 바랍니다)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7519,7 +7652,9 @@ msgstr ""
 msgid ""
 "The fiscal position used in the original order is not loaded. Make sure it "
 "is loaded by adding it in the pos configuration."
-msgstr "원 주문에 사용된 재정 위치를 불러오지 못했습니다. POS 환경 설정에 추가한 후 불러오시기 바랍니다."
+msgstr ""
+"원 주문에 사용된 재정 위치를 불러오지 못했습니다. POS 환경 설정에 추가한 후 "
+"불러오시기 바랍니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
@@ -7527,14 +7662,15 @@ msgstr "원 주문에 사용된 재정 위치를 불러오지 못했습니다. P
 msgid ""
 "The hostname or ip address of the hardware proxy, Will be autodetected if "
 "left empty."
-msgstr "왼쪽이 비어있는 경우 자동 감지되는 하드웨어 프록시의 호스트명 또는 ip 주소"
+msgstr ""
+"왼쪽이 비어있는 경우 자동 감지되는 하드웨어 프록시의 호스트명 또는 ip 주소"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
-"The invoice journal must be in the same currency as the Sales Journal or the"
-" company currency if that is not set."
+"The invoice journal must be in the same currency as the Sales Journal or the "
+"company currency if that is not set."
 msgstr "청구서 전표는 매출 전표 또는 회사 통화와 같은 통화로 설정해야 합니다."
 
 #. module: point_of_sale
@@ -7551,9 +7687,10 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.js:0
 msgid ""
-"The money counted doesn't match what we expected. Want to log the difference"
-" for the books?"
-msgstr "계산된 금액이 예상과 일치하지 않습니다. 장부에 차액을 기록하시겠습니까?"
+"The money counted doesn't match what we expected. Want to log the difference "
+"for the books?"
+msgstr ""
+"계산된 금액이 예상과 일치하지 않습니다. 장부에 차액을 기록하시겠습니까?"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7580,11 +7717,23 @@ msgstr "알 수없는 오류로 인해 주문을 서버로 보낼 수 없습니�
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
+msgid ""
+"The order has been modified on another device. If you have modified existing "
+"order lines, check that your changes have not been overwritten.\n"
+"\n"
+"The order will be sent to the server with the last changes made on this "
+"device."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/hooks.js:0
 msgid ""
 "The order has been synchronized earlier. Please make the invoice from the "
 "backend for the order: "
-msgstr "주문이 이전에 동기화되었습니다. 주문에 대한 백엔드에서 송장을 작성하십시오 :"
+msgstr ""
+"주문이 이전에 동기화되었습니다. 주문에 대한 백엔드에서 송장을 작성하십시오 :"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7610,10 +7759,11 @@ msgstr "POS %s의 결제 방법은 이 회사에 속해 있어야 합니다."
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_available_categ_ids
 msgid ""
 "The point of sale will only display products which are within one of the "
-"selected category trees. If no category is specified, all available products"
-" will be shown"
+"selected category trees. If no category is specified, all available products "
+"will be shown"
 msgstr ""
-"POS 에는 선택한 범주 목록 중 하나에 속하는 제품만 표시됩니다. 범주를 지정하지 않으면 사용 가능한 모든 제품이 표시됩니다"
+"POS 에는 선택한 범주 목록 중 하나에 속하는 제품만 표시됩니다. 범주를 지정하"
+"지 않으면 사용 가능한 모든 제품이 표시됩니다"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_bank_statement_line__reversed_pos_order_id
@@ -7632,9 +7782,11 @@ msgstr "해당 POS에 대한 사전 정의된 노트입니다."
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__pricelist_id
 msgid ""
-"The pricelist used if no customer is selected or if the customer has no Sale"
-" Pricelist configured if any."
-msgstr "선택된 고객이 없거나 고객이 판매 가격표를 설정하지 않은 경우 사용되는 가격표입니다."
+"The pricelist used if no customer is selected or if the customer has no Sale "
+"Pricelist configured if any."
+msgstr ""
+"선택된 고객이 없거나 고객이 판매 가격표를 설정하지 않은 경우 사용되는 가격표"
+"입니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__currency_rate
@@ -7663,14 +7815,15 @@ msgstr "영수증은 주문이 끝날 때마다 자동으로 인쇄됩니다."
 msgid ""
 "The requested quantity to be refunded is higher than the ordered quantity. "
 "%s is requested while only %s can be refunded."
-msgstr "환불 요청한 수량이 주문 수량보다 큽니다. 요청 수량은 %s 인 반면, 환불 가능 수량은 %s입니다. "
+msgstr ""
+"환불 요청한 수량이 주문 수량보다 큽니다. 요청 수량은 %s 인 반면, 환불 가능 수"
+"량은 %s입니다. "
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
 msgid ""
-"The requested quantity to be refunded is higher than the refundable "
-"quantity."
+"The requested quantity to be refunded is higher than the refundable quantity."
 msgstr " 환불 요청 수량이 환불 가능 수량보다 큽니다."
 
 #. module: point_of_sale
@@ -7701,8 +7854,9 @@ msgid ""
 "the meantime have been saved in a Rescue Session, which can be reviewed "
 "anytime and posted to Accounting from Point of Sale's dashboard."
 msgstr ""
-"다른 사용자가 이미 세션을 종료하였습니다. 그동안 완료된 전체 매출 내역은 헬프 세션에 저장되어 언제든 확인하실 수 있으며 POS "
-"현황판에서 회계로 발행할 수 있습니다."
+"다른 사용자가 이미 세션을 종료하였습니다. 그동안 완료된 전체 매출 내역은 헬"
+"프 세션에 저장되어 언제든 확인하실 수 있으며 POS 현황판에서 회계로 발행할 수 "
+"있습니다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -7714,8 +7868,7 @@ msgstr "세션이 비정상적으로 오랫동안 열려 있습니다. 폐쇄를
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
-msgid ""
-"The session is being closed by another user. The page will be reloaded."
+msgid "The session is being closed by another user. The page will be reloaded."
 msgstr "다른 사용자가 세션을 닫고 있습니다. 페이지가 다시 로드됩니다."
 
 #. module: point_of_sale
@@ -7724,7 +7877,9 @@ msgstr "다른 사용자가 세션을 닫고 있습니다. 페이지가 다시 �
 msgid ""
 "The transactions are processed by Adyen. Set your Adyen credentials on the "
 "related payment method."
-msgstr "거래는 Adyen에서 처리합니다. 관련 결제 수단에서 Adyen 자격 증명을 설정하십시오."
+msgstr ""
+"거래는 Adyen에서 처리합니다. 관련 결제 수단에서 Adyen 자격 증명을 설정하십시"
+"오."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -7736,7 +7891,9 @@ msgstr "거래는 Mercado Pago 단말기에 의해 처리됩니다."
 msgid ""
 "The transactions are processed by Mercado Pago. Set your Mercado Pago "
 "credentials on the related payment method."
-msgstr "Mercado Pago에서 거래를 처리합니다. 해당 결제 방법에서 Mercado Pago 자격 증명을 설정하세요."
+msgstr ""
+"Mercado Pago에서 거래를 처리합니다. 해당 결제 방법에서 Mercado Pago 자격 증명"
+"을 설정하세요."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_paytm
@@ -7744,31 +7901,38 @@ msgstr "Mercado Pago에서 거래를 처리합니다. 해당 결제 방법에서
 msgid ""
 "The transactions are processed by PayTM. Set your PayTM credentials on the "
 "related payment method."
-msgstr "거래는 PayTM에서 처리합니다. 관련 결제 수단에서 PayTM 자격 증명을 설정하세요."
+msgstr ""
+"거래는 PayTM에서 처리합니다. 관련 결제 수단에서 PayTM 자격 증명을 설정하세요."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_razorpay
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"The transactions are processed by Razorpay. Set your Razorpay credentials on"
-" the related payment method."
-msgstr "Razorpay에서 거래를 처리합니다. 해당 결제 방법에서 Razorpay 자격 증명을 설정하세요."
+"The transactions are processed by Razorpay. Set your Razorpay credentials on "
+"the related payment method."
+msgstr ""
+"Razorpay에서 거래를 처리합니다. 해당 결제 방법에서 Razorpay 자격 증명을 설정"
+"하세요."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_six
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"The transactions are processed by Six. Set the IP address of the terminal on"
-" the related payment method."
-msgstr "Six에서 거래를 처리합니다. 해당 결제 방법에서 단말기의 IP 주소를 설정하십시오."
+"The transactions are processed by Six. Set the IP address of the terminal on "
+"the related payment method."
+msgstr ""
+"Six에서 거래를 처리합니다. 해당 결제 방법에서 단말기의 IP 주소를 설정하십시"
+"오."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_stripe
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"The transactions are processed by Stripe. Set your Stripe credentials on the"
-" related payment method."
-msgstr "Stripe에서 거래를 처리합니다. 해당 결제 방법에서 Stripe 자격 증명을 설정하십시오. "
+"The transactions are processed by Stripe. Set your Stripe credentials on the "
+"related payment method."
+msgstr ""
+"Stripe에서 거래를 처리합니다. 해당 결제 방법에서 Stripe 자격 증명을 설정하십"
+"시오. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_viva_wallet
@@ -7797,10 +7961,12 @@ msgstr "이 범주에 제품이 없습니다."
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid ""
-"There are still orders in draft state in the session. Pay or cancel the following orders to validate the session:\n"
+"There are still orders in draft state in the session. Pay or cancel the "
+"following orders to validate the session:\n"
 "%s"
 msgstr ""
-"세션에서 여전히 초안 상태의 주문이 있습니다. 세션을 확인하려면 다음 주문을 결제하거나 취소하십시오. : \n"
+"세션에서 여전히 초안 상태의 주문이 있습니다. 세션을 확인하려면 다음 주문을 결"
+"제하거나 취소하십시오. : \n"
 "%s"
 
 #. module: point_of_sale
@@ -7809,7 +7975,9 @@ msgstr ""
 msgid ""
 "There is a difference between the amounts to post and the amounts of the "
 "orders, it is probably caused by taxes or accounting configurations changes."
-msgstr "발행 금액과 주문 금액 사이에 차이가 있으며, 세금이나 회계 구성 변경으로 발생한 것일 수 있습니다."
+msgstr ""
+"발행 금액과 주문 금액 사이에 차이가 있으며, 세금이나 회계 구성 변경으로 발생"
+"한 것일 수 있습니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7823,19 +7991,25 @@ msgstr "이미 전자 결제가 진행 중입니다."
 msgid ""
 "There is no Chart of Accounts configured on the company. Please go to the "
 "invoicing settings to install a Chart of Accounts."
-msgstr "회사에 구성된 계정과목 일람표가 없습니다. 계정과목 일람표를 설치하려면 송장 설정으로 이동하십시오."
+msgstr ""
+"회사에 구성된 계정과목 일람표가 없습니다. 계정과목 일람표를 설치하려면 송장 "
+"설정으로 이동하십시오."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid ""
-"There is no cash payment method available in this point of sale to handle the change.\n"
+"There is no cash payment method available in this point of sale to handle "
+"the change.\n"
 "\n"
-" Please pay the exact amount or add a cash payment method in the point of sale configuration"
+" Please pay the exact amount or add a cash payment method in the point of "
+"sale configuration"
 msgstr ""
-"변경 사항을 처리하기 위한 점포판매시스템에 사용 가능한 현금 결제 방법이 없습니다.\n"
+"변경 사항을 처리하기 위한 점포판매시스템에 사용 가능한 현금 결제 방법이 없습"
+"니다.\n"
 "\n"
-" 정확한 금액을 기불하거나 점포판매시스템 환경설정에서 현금 결제 방법을 추가하세요."
+" 정확한 금액을 기불하거나 점포판매시스템 환경설정에서 현금 결제 방법을 추가하"
+"세요."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7855,7 +8029,9 @@ msgstr "이 세션에는 금전등록기가 없습니다."
 msgid ""
 "There is no serial/lot number for the selected product, and their creation "
 "is not allowed from the Point of Sale app."
-msgstr "선택한 제품에 사용할 수 있는 일련/로트 번호가 없으며, POS 앱에서 해당 번호를 생성할 수 없습니다."
+msgstr ""
+"선택한 제품에 사용할 수 있는 일련/로트 번호가 없으며, POS 앱에서 해당 번호를 "
+"생성할 수 없습니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7886,27 +8062,30 @@ msgstr "이 조합은 존재하지 않습니다."
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_amount_authorized_diff
 msgid ""
-"This field depicts the maximum difference allowed between the ending balance"
-" and the theoretical cash when closing a session, for non-POS managers. If "
+"This field depicts the maximum difference allowed between the ending balance "
+"and the theoretical cash when closing a session, for non-POS managers. If "
 "this maximum is reached, the user will have an error message at the closing "
 "of his session saying that he needs to contact his manager."
 msgstr ""
-"이 필드는 POS가 아닌 관리자의 경우 세션을 닫을 때 기말 잔액과 이론적 현금간에 허용되는 최대 차이를 나타냅니다. 이 최대 값에 "
-"도달하면 세션 종료시 관리자에게 문의해야 한다는 오류 메시지가 표시됩니다."
+"이 필드는 POS가 아닌 관리자의 경우 세션을 닫을 때 기말 잔액과 이론적 현금간"
+"에 허용되는 최대 차이를 나타냅니다. 이 최대 값에 도달하면 세션 종료시 관리자"
+"에게 문의해야 한다는 오류 메시지가 표시됩니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_manager_id
 msgid ""
 "This field is there to pass the id of the pos manager group to the point of "
 "sale client."
-msgstr "이 필드는 POS 관리자 그룹의 ID를 POS 클라이언트로 전달하기 위해 있습니다."
+msgstr ""
+"이 필드는 POS 관리자 그룹의 ID를 POS 클라이언트로 전달하기 위해 있습니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_user_id
 msgid ""
 "This field is there to pass the id of the pos user group to the point of "
 "sale client."
-msgstr "이 필드는 POS 사용자 그룹의 ID를 POS 클라이언트로 전달하기 위해 있습니다."
+msgstr ""
+"이 필드는 POS 사용자 그룹의 ID를 POS 클라이언트로 전달하기 위해 있습니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7917,9 +8096,11 @@ msgstr "POS 세션에서 생성된 청구서입니다: %s"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
 msgid ""
-"This is useful for restaurants with onsite and take-away services that imply"
-" specific tax rates."
-msgstr "이는 특정 세율을 암시하는 현장 및 테이크 아웃 서비스가 있는 레스토랑에 유용합니다."
+"This is useful for restaurants with onsite and take-away services that imply "
+"specific tax rates."
+msgstr ""
+"이는 특정 세율을 암시하는 현장 및 테이크 아웃 서비스가 있는 레스토랑에 유용합"
+"니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7935,8 +8116,8 @@ msgid ""
 "This journal is associated with payment method %(payment_method)s that is "
 "being used by order %(pos_order)s in the active pos session %(pos_session)s"
 msgstr ""
-"이 전표는 활성화된 POS 세션 %(payment_method)s의 주문 %(pos_order)s에서 사용 중인 "
-"%(pos_session)s 결제 수단과 연결되어 있습니다."
+"이 전표는 활성화된 POS 세션 %(payment_method)s의 주문 %(pos_order)s에서 사용 "
+"중인 %(pos_session)s 결제 수단과 연결되어 있습니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7944,11 +8125,13 @@ msgstr ""
 msgid ""
 "This operation will destroy all ${\n"
 "                    paid ? \"paid\" : \"unpaid\"\n"
-"                } orders in the browser. You will lose all the data. This operation cannot be undone."
+"                } orders in the browser. You will lose all the data. This "
+"operation cannot be undone."
 msgstr ""
 "이 작업은 브라우저의 모든 ${\n"
 "                    paid ? \"paid\" : \"unpaid\"\n"
-"                } 주문을 삭제합니다. 모든 데이터는 손실되며, 이 작업은 되돌릴 수 없습니다."
+"                } 주문을 삭제합니다. 모든 데이터는 손실되며, 이 작업은 되돌"
+"릴 수 없습니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7957,15 +8140,16 @@ msgid ""
 "This order already has refund lines for %s. We can't change the customer "
 "associated to it. Create a new order for the new customer."
 msgstr ""
-"이 주문에는 이미 %s 관련 환불 내역이 있습니다. 연결되어 있는 고객을 변경할 수 없습니다. 새 고객에 대한 새로운 주문을 생성합니다."
+"이 주문에는 이미 %s 관련 환불 내역이 있습니다. 연결되어 있는 고객을 변경할 "
+"수 없습니다. 새 고객에 대한 새로운 주문을 생성합니다."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"This order has already been paid. You cannot set it back to draft or edit "
-"it."
-msgstr "이 주문은 이미 결제가 완료되었습니다. 초안으로 되돌리거나 수정할 수 없습니다."
+"This order has already been paid. You cannot set it back to draft or edit it."
+msgstr ""
+"이 주문은 이미 결제가 완료되었습니다. 초안으로 되돌리거나 수정할 수 없습니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7973,7 +8157,9 @@ msgstr "이 주문은 이미 결제가 완료되었습니다. 초안으로 되�
 msgid ""
 "This order is not yet synced to server. Make sure it is synced then try "
 "again."
-msgstr "이 주문은 아직 서버와 동기화되지 않았습니다. 동기화 여부를 확인 한 후 다시 시도하십시오."
+msgstr ""
+"이 주문은 아직 서버와 동기화되지 않았습니다. 동기화 여부를 확인 한 후 다시 시"
+"도하십시오."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7992,7 +8178,9 @@ msgstr "이 상품은 고객 영수증에 대한 참조로 사용됩니다."
 msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders lines."
-msgstr "이 순서는 Odoo에 의해 자동으로 생성되지만 주문 내역의 참조 번호를 사용자 정의하도록 변경할 수 있습니다."
+msgstr ""
+"이 순서는 Odoo에 의해 자동으로 생성되지만 주문 내역의 참조 번호를 사용자 정의"
+"하도록 변경할 수 있습니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__sequence_id
@@ -8000,7 +8188,9 @@ msgstr "이 순서는 Odoo에 의해 자동으로 생성되지만 주문 내역�
 msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders."
-msgstr "이 순서는 Odoo에 의해 자동으로 생성되나, 주문의 참조 번호를 사용자 정의로 변경할 수 있습니다."
+msgstr ""
+"이 순서는 Odoo에 의해 자동으로 생성되나, 주문의 참조 번호를 사용자 정의로 변"
+"경할 수 있습니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8033,7 +8223,9 @@ msgstr "티켓 번호"
 msgid ""
 "Tiger bloomer. Baked for a soft inside, with its distinctive savoury "
 "crackled crust."
-msgstr "타이거 블루머. 부드러운 빵 안의 식감과 고소하고 바삭한 겉 크러스트가 특징입니다."
+msgstr ""
+"타이거 블루머. 부드러운 빵 안의 식감과 고소하고 바삭한 겉 크러스트가 특징입니"
+"다."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_tiger_white_loaf_product_template
@@ -8098,11 +8290,14 @@ msgstr "저울로 무게 측정"
 msgid ""
 "To delete a product, make sure all point of sale sessions are closed.\n"
 "\n"
-"Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
+"Deleting a product available in a session would be like attempting to snatch "
+"a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and "
+"mayo go flying everywhere!"
 msgstr ""
 "품목을 삭제하려면 전체 POS 세션 종료 여부를 확인하세요.\n"
 "\n"
-"세션에서 사용되고 있는 품목을 삭제하는 것은 고객이 막 선택한 상품이 갑자기 삭제되는 결과를 낳을 수 있으며, 큰 혼란을 줄 수 있습니다!"
+"세션에서 사용되고 있는 품목을 삭제하는 것은 고객이 막 선택한 상품이 갑자기 삭"
+"제되는 결과를 낳을 수 있으며, 큰 혼란을 줄 수 있습니다!"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8110,7 +8305,8 @@ msgstr ""
 msgid ""
 "To ensure due balance follow-up, generate an invoice or download the "
 "accounting application. "
-msgstr "적절한 잔액 후속 조치를 위해 청구서를 생성하거나 회계 앱을 다운로드하세요."
+msgstr ""
+"적절한 잔액 후속 조치를 위해 청구서를 생성하거나 회계 앱을 다운로드하세요."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -8218,7 +8414,9 @@ msgstr "주문 수정 사항 추적"
 msgid ""
 "Trainers in cotton canvas with a padded top edge, tongue and lacing at the "
 "front."
-msgstr "상단 가장자리, 텅, 앞쪽 끈 부분을 패딩 처리한 면 캔버스 소재의 트레이닝화입니다."
+msgstr ""
+"상단 가장자리, 텅, 앞쪽 끈 부분을 패딩 처리한 면 캔버스 소재의 트레이닝화입니"
+"다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_real_transaction
@@ -8284,7 +8482,8 @@ msgstr "URL"
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid ""
 "Unable to close and validate the session.\n"
-"Please set corresponding tax account in each repartition line of the following taxes: \n"
+"Please set corresponding tax account in each repartition line of the "
+"following taxes: \n"
 "%s"
 msgstr ""
 "세션을 닫고 유효성을 검사할 수 없습니다.\n"
@@ -8303,7 +8502,9 @@ msgstr "청구서를 다운로드할 수 없습니다."
 msgid ""
 "Unable to modify this PoS Configuration because you can't modify %s while a "
 "session is open."
-msgstr "세션이 열려 있는 동안에는 %s 수정이 불가능하므로 이 POS 구성을 수정할 수 없습니다."
+msgstr ""
+"세션이 열려 있는 동안에는 %s 수정이 불가능하므로 이 POS 구성을 수정할 수 없습"
+"니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8453,7 +8654,8 @@ msgstr "재정 위치를 사용하여 주문별로 세금을 다르게 받으십
 msgid ""
 "Used to record product pickings. Products are consumed from its default "
 "source location."
-msgstr "품목 픽업을 기록하는데 사용합니다. 품목은 기본값인 원래 장소에서 사용됩니다."
+msgstr ""
+"품목 픽업을 기록하는데 사용합니다. 품목은 기본값인 원래 장소에서 사용됩니다."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_users
@@ -8505,7 +8707,8 @@ msgstr "보기"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.jean_jacket_product_template
 msgid "Vintage jean jacket, a timeless piece for any casual outfit."
-msgstr "유행에 구애받지 않고 어떤 캐주얼 아이템에도 잘 어울리는 빈티지 진 재킷입니다."
+msgstr ""
+"유행에 구애받지 않고 어떤 캐주얼 아이템에도 잘 어울리는 빈티지 진 재킷입니다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8565,7 +8768,9 @@ msgstr "경고, 결제 금액이 총 금액보다 높습니다. (금액차: %s)"
 msgid ""
 "Warning: Your browser doesn't support IndexedDB. The data won't be saved. "
 "Please use a modern browser."
-msgstr "경고: 브라우저가 인덱싱된DB를 지원하지 않아 데이터가 저장되지 않습니다. 최신 브라우저로 전환하세요."
+msgstr ""
+"경고: 브라우저가 인덱싱된DB를 지원하지 않아 데이터가 저장되지 않습니다. 최신 "
+"브라우저로 전환하세요."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__website_message_ids
@@ -8602,7 +8807,9 @@ msgstr "환영합니다."
 msgid ""
 "When active, orderlines will be sorted based on product category and "
 "sequence in the product screen's order cart."
-msgstr "활성화하면 제품 화면의 장바구니에서 제품 카테고리와 순서에 따라 주문 항목이 정렬됩니다. "
+msgstr ""
+"활성화하면 제품 화면의 장바구니에서 제품 카테고리와 순서에 따라 주문 항목이 "
+"정렬됩니다. "
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__picking_policy__one
@@ -8615,16 +8822,19 @@ msgstr "모든 품목이 준비될 때"
 msgid ""
 "When disabled, only PoS manager can view the margin and cost of product "
 "among the Product info."
-msgstr "비활성화할 경우, 품목 정보 중 품목의 마진 및 비용에 대한 내용은 POS 관리자만 조회할 수 있습니다."
+msgstr ""
+"비활성화할 경우, 품목 정보 중 품목의 마진 및 비용에 대한 내용은 POS 관리자만 "
+"조회할 수 있습니다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "Whenever you close a session, one entry is generated in the following "
-"accounting journal for all the orders not invoiced. Invoices are recorded in"
-" accounting separately."
+"accounting journal for all the orders not invoiced. Invoices are recorded in "
+"accounting separately."
 msgstr ""
-"세션을 닫을 때마다 청구되지 않은 모든 주문에 대해 다음 회계 전표에 하나의 항목이 생성됩니다. 청구서는 회계에 별도로 기록됩니다."
+"세션을 닫을 때마다 청구되지 않은 모든 주문에 대해 다음 회계 전표에 하나의 항"
+"목이 생성됩니다. 청구서는 회계에 별도로 기록됩니다."
 
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.product_attribute_value_white
@@ -8669,7 +8879,9 @@ msgstr "예"
 msgid ""
 "You are currently offline. Reloading the page may cause you to lose unsaved "
 "data."
-msgstr "현재 인터넷에 연결되어 있지 않습니다. 페이지를 새로고침하면 저장되지 않은 데이터가 손실될 수 있습니다."
+msgstr ""
+"현재 인터넷에 연결되어 있지 않습니다. 페이지를 새로고침하면 저장되지 않은 데"
+"이터가 손실될 수 있습니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8677,7 +8889,9 @@ msgstr "현재 인터넷에 연결되어 있지 않습니다. 페이지를 새�
 msgid ""
 "You are not allowed to change the cash rounding configuration while a pos "
 "session using it is already opened."
-msgstr "현금 반올림 환경 설정을 사용중인 pos 세션이 이미 열려있으면 현금 반올림 환경 설정을 변경할 수 없습니다."
+msgstr ""
+"현금 반올림 환경 설정을 사용중인 pos 세션이 이미 열려있으면 현금 반올림 환경 "
+"설정을 변경할 수 없습니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8689,9 +8903,12 @@ msgstr "수량을 변경할 권한이 없습니다."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
 msgid ""
-"You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
+"You are trying to sell products with serial/lot numbers, but some of them "
+"are not set.\n"
 "Would you like to proceed anyway?"
-msgstr "판매하려는 품목 중 일련번호/LOT 번호가 설정되지 않은 품목이 있습니다. 계속 진행하시겠습니까?"
+msgstr ""
+"판매하려는 품목 중 일련번호/LOT 번호가 설정되지 않은 품목이 있습니다. 계속 진"
+"행하시겠습니까?"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8713,7 +8930,9 @@ msgstr "동일한 주문의 제품에 대해서만 환불할 수 있습니다."
 msgid ""
 "You can only unlink PoS order lines that are related to orders in new or "
 "cancelled state."
-msgstr "신규 또는 취소 상태의 주문과 관련된 PoS 주문 항목의 연결만 해제할 수 있습니다."
+msgstr ""
+"신규 또는 취소 상태의 주문과 관련된 PoS 주문 항목의 연결만 해제할 수 있습니"
+"다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8723,16 +8942,18 @@ msgid ""
 "pricelist, or create a pos.order in a python test with Form tool, or edit "
 "the form view in studio if no PoS order exist"
 msgstr ""
-"다음 작업을 진행할 수 없습니다: 백엔드 인터페이스에서 POS 주문 생성, 가격표 설정 해제, 양식 도구를 사용하여 Python "
-"테스트에서 pos.order 생성, POS 주문이 없는 경우 스튜디오에서 양식 보기 편집"
+"다음 작업을 진행할 수 없습니다: 백엔드 인터페이스에서 POS 주문 생성, 가격표 "
+"설정 해제, 양식 도구를 사용하여 Python 테스트에서 pos.order 생성, POS 주문이 "
+"없는 경우 스튜디오에서 양식 보기 편집"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_picking.py:0
 msgid ""
-"You cannot archive '%(picking_type)s' as it is used by POS configuration "
-"'%(config)s'."
-msgstr "'%(picking_type)s'는 POS 설정 '%(config)s'에서 사용되므로 보관할 수 없습니다."
+"You cannot archive '%(picking_type)s' as it is used by POS configuration '%"
+"(config)s'."
+msgstr ""
+"'%(picking_type)s'는 POS 설정 '%(config)s'에서 사용되므로 보관할 수 없습니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8795,7 +9016,8 @@ msgstr "다른 회사의 주문에 대해서는 청구서를 발행할 수 없�
 msgid ""
 "You cannot share open orders with configuration that does not use the same "
 "currency."
-msgstr "진행 중인 주문은 동일한 통화를 사용하지 않는 구성과 공유될 수 없습니다."
+msgstr ""
+"진행 중인 주문은 동일한 통화를 사용하지 않는 구성과 공유될 수 없습니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8809,7 +9031,8 @@ msgstr "동일한 전표를 여러 개의 현금 결제 방법에 사용할 수 
 msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
-msgstr "POS 세션을 열 수 있는 권한이 없습니다. 다른 사용자 계정을 사용해 보십시오. "
+msgstr ""
+"POS 세션을 열 수 있는 권한이 없습니다. 다른 사용자 계정을 사용해 보십시오. "
 
 #. module: point_of_sale
 #. odoo-python
@@ -8826,15 +9049,16 @@ msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
 msgstr ""
-"%(payment_method)s 결제 방법에 대해 \"고객 확인\" 옵션을 사용하도록 설정했지만 %(order)s 주문 내용에 고객 "
-"정보가 포함되어 있지 않습니다."
+"%(payment_method)s 결제 방법에 대해 \"고객 확인\" 옵션을 사용하도록 설정했지"
+"만 %(order)s 주문 내용에 고객 정보가 포함되어 있지 않습니다."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action
 msgid ""
 "You must define a product for everything you sell through\n"
 "                the point of sale interface."
-msgstr "POS 인터페이스를 통해 판매하는 모든 제품에 대한 제품을 정의해야 합니다."
+msgstr ""
+"POS 인터페이스를 통해 판매하는 모든 제품에 대한 제품을 정의해야 합니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8867,16 +9091,18 @@ msgstr "세션을 시작하려면 결제 방법이 하나 이상은 구성되어
 msgid ""
 "You must select a QR-code method to generate QR-codes for this payment "
 "method."
-msgstr "이 결제 방법에 대한 QR 코드를 생성하려면 QR코드 방법을 선택해야 합니다."
+msgstr ""
+"이 결제 방법에 대한 QR 코드를 생성하려면 QR코드 방법을 선택해야 합니다."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
-"You must set the iot box's IP address to use an IoT-connected screen. You'll"
-" find the field under the 'IoT Box' option."
+"You must set the iot box's IP address to use an IoT-connected screen. You'll "
+"find the field under the 'IoT Box' option."
 msgstr ""
-"IoT 연결 화면을 사용하려면 IoT 박스의 IP 주소를 설정해야 합니다. 해당 필드는 'IoT 박스' 옵션 아래에서 찾을 수 있습니다."
+"IoT 연결 화면을 사용하려면 IoT 박스의 IP 주소를 설정해야 합니다. 해당 필드는 "
+"'IoT 박스' 옵션 아래에서 찾을 수 있습니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8903,7 +9129,9 @@ msgstr "세션에 점포판매시스템을 할당해야 합니다."
 msgid ""
 "Your PoS Session is open since %(date)s, we advise you to close it and to "
 "create a new one."
-msgstr "POS 세션이 %(date)s 이후 열려 있는 상태입니다. 종료 후 새로운 세션을 생성하시기 바랍니다."
+msgstr ""
+"POS 세션이 %(date)s 이후 열려 있는 상태입니다. 종료 후 새로운 세션을 생성하시"
+"기 바랍니다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen

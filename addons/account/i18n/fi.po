@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account
-# 
+#
 # Translators:
 # Tiffany Chang, 2024
 # Sanna Edelman <direct@generare.com>, 2024
@@ -49,19 +49,19 @@
 # Thomas Becquevort, 2025
 # Jessica Jakara, 2025
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-18 18:38+0000\n"
+"POT-Creation-Date: 2025-08-08 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account
@@ -70,15 +70,18 @@ msgid ""
 "\n"
 "        Select 'Sale' for customer invoices journals.\n"
 "        Select 'Purchase' for vendor bills journals.\n"
-"        Select 'Cash', 'Bank' or 'Credit Card' for journals that are used in customer or vendor payments.\n"
+"        Select 'Cash', 'Bank' or 'Credit Card' for journals that are used in "
+"customer or vendor payments.\n"
 "        Select 'General' for miscellaneous operations journals.\n"
 "        "
 msgstr ""
 "\n"
 "        Valitse 'Myynti' asiakaslaskujen päiväkirjoille.\n"
 "        Valitse 'Osto' toimittajan laskujen päiväkirjoja varten.\n"
-"        Valitse \"Käteinen\", \"Pankki\" tai \"Luottokortti\", kun kyseessä ovat asiakas- tai toimittajamaksuissa käytettävät päiväkirjat.\n"
-"        Valitse \"General\" (Yleistä), jos haluat käyttää erilaisia toimintoja koskevia päiväkirjoja.\n"
+"        Valitse \"Käteinen\", \"Pankki\" tai \"Luottokortti\", kun kyseessä "
+"ovat asiakas- tai toimittajamaksuissa käytettävät päiväkirjat.\n"
+"        Valitse \"General\" (Yleistä), jos haluat käyttää erilaisia "
+"toimintoja koskevia päiväkirjoja.\n"
 "        "
 
 #. module: account
@@ -173,11 +176,11 @@ msgstr "%(amount)serääntyy %(date)s"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"%(attachment_name)s (detached by %(user)s on "
-"%(date)s)%(attachment_extension)s"
+"%(attachment_name)s (detached by %(user)s on %(date)s)%"
+"(attachment_extension)s"
 msgstr ""
-"%(attachment_name)s (liitännä poisti %(user)s , "
-"%(date)s)%(attachment_extension)s"
+"%(attachment_name)s (liitännä poisti %(user)s , %(date)s)%"
+"(attachment_extension)s"
 
 #. module: account
 #. odoo-python
@@ -190,10 +193,12 @@ msgstr "%(exception)s kohdissa %(user)s%(end_datetime_string)s%(reason)s."
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid ""
 "%(move)s reached an invalid state regarding its related statement line.\n"
-"To be consistent, the journal entry must always have exactly one suspense line."
+"To be consistent, the journal entry must always have exactly one suspense "
+"line."
 msgstr ""
 "%(move)s saavutti virheellisen tilan siihen liittyvän lauserivin osalta.\n"
-"Johdonmukaisuuden vuoksi päiväkirjamerkinnässä on aina oltava täsmälleen yksi pidätysrivi."
+"Johdonmukaisuuden vuoksi päiväkirjamerkinnässä on aina oltava täsmälleen "
+"yksi pidätysrivi."
 
 #. module: account
 #. odoo-python
@@ -205,21 +210,21 @@ msgstr "%(name)s erä #%(number)s"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid ""
-"%(order)s - %(order_line)s; %(quantity_billed)s Billed, "
-"%(quantity_received)s Received at %(unit_price)s each"
+"%(order)s - %(order_line)s; %(quantity_billed)s Billed, %"
+"(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
-"%(order)s - %(order_line)s; %(quantity_billed)s Laskutettu, "
-"%(quantity_received)s Vastaanotettu %(unit_price)s kukin"
+"%(order)s - %(order_line)s; %(quantity_billed)s Laskutettu, %"
+"(quantity_received)s Vastaanotettu %(unit_price)s kukin"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid ""
-"%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, "
-"%(quantity_delivered)s Delivered at %(unit_price)s each"
+"%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, %"
+"(quantity_delivered)s Delivered at %(unit_price)s each"
 msgstr ""
-"%(order)s - %(order_line)s; %(quantity_invoiced)s Laskutettu, "
-"%(quantity_delivered)s Toimitettu hintaan %(unit_price)s per yksikkö"
+"%(order)s - %(order_line)s; %(quantity_invoiced)s Laskutettu, %"
+"(quantity_delivered)s Toimitettu hintaan %(unit_price)s per yksikkö"
 
 #. module: account
 #. odoo-python
@@ -243,13 +248,13 @@ msgstr "%(tag)s (%(country_code)s)"
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid ""
-"%(tax_account)s (%(account_name)s) should be an account of type "
-"\"%(receivable)s\" or \"%(payable)s\" with both options "
-"\"%(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+"%(tax_account)s (%(account_name)s) should be an account of type \"%"
+"(receivable)s\" or \"%(payable)s\" with both options \"%"
+"(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 msgstr ""
-"%(tax_account)s (%(account_name)s) tulisi olla tilityyppiä "
-"\"%(receivable)s\" tai \"%(payable)s\", ja molempien vaihtoehtojen "
-"\"%(allow_reconciliation)s\" ja \"%(non_trade)s\" tulisi olla käytössä."
+"%(tax_account)s (%(account_name)s) tulisi olla tilityyppiä \"%"
+"(receivable)s\" tai \"%(payable)s\", ja molempien vaihtoehtojen \"%"
+"(allow_reconciliation)s\" ja \"%(non_trade)s\" tulisi olla käytössä."
 
 #. module: account
 #. odoo-python
@@ -356,8 +361,7 @@ msgstr "- Maksuerä"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "- The document's sequence becomes editable on all documents."
-msgstr ""
-"Tämän dokumentin sekvenssi tulee muokattavaksi kaikissa dokumenteissa."
+msgstr "Tämän dokumentin sekvenssi tulee muokattavaksi kaikissa dokumenteissa."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -625,13 +629,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid ""
 "<br/>\n"
-"                        <span>Please make sure that this is a wanted behavior.</span>"
+"                        <span>Please make sure that this is a wanted "
+"behavior.</span>"
 msgstr ""
 "<br/>\n"
 "                        <span>Varmista, että tämä on haluttu toiminta.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document_preview
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_wizard_preview_inherit_account
 msgid "<br/> on this account:"
 msgstr "<br/> tällä tilillä:"
 
@@ -642,7 +649,8 @@ msgid ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> "
+"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
@@ -650,21 +658,27 @@ msgid ""
 "        <br/><br/>\n"
 "        Here is your\n"
 "        <t t-if=\"object.name\">\n"
-"            credit note <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"            credit note <span style=\"font-weight:bold;\" t-"
+"out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            credit note\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (with reference: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"            (with reference: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
 "        </t>\n"
-"        amounting in <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        amounting in <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
 "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
-"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-"
+"o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -674,7 +688,8 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hyvä\n"
 "       <t t-if=\"object.partner_id.parent_id\">\n"
-"           <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"           <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t "
+"t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
 "       </t>\n"
 "       <t t-else=\"\">\n"
 "           <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
@@ -682,7 +697,8 @@ msgstr ""
 "       <br/><br/>\n"
 "        Ohessa \n"
 "       <t t-if=\"object.name\">\n"
-"            hyvityslasku <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"            hyvityslasku <span style=\"font-weight:bold;\" t-"
+"out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
 "       </t>\n"
 "       <t t-else=\"\">\n"
 "            hyvityslasku\n"
@@ -690,13 +706,17 @@ msgstr ""
 "       <t t-if=\"object.invoice_origin\">\n"
 "            (viite: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "       </t>\n"
-"        jonka määrä on <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\"> 143 750,00 dollaria</span>\n"
+"        jonka määrä on <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\"> 143 "
+"750,00 dollaria</span>\n"
 "       <t t-out=\"object.company_id.name or ''\">yritykseltäsi</t>.\n"
 "       <br/><br/>\n"
 "        Älä epäröi ottaa meihin yhteyttä, jos sinulla on kysyttävää.\n"
-"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-"
+"o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -709,7 +729,8 @@ msgid ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> "
+"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
@@ -717,15 +738,19 @@ msgid ""
 "        <br/><br/>\n"
 "        Here is your\n"
 "        <t t-if=\"object.name\">\n"
-"            invoice <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"            invoice <span style=\"font-weight:bold;\" t-out=\"object.name or "
+"''\">INV/2021/05/0005</span>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            invoice\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (with reference: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"            (with reference: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
 "        </t>\n"
-"        amounting in <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        amounting in <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
 "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            This invoice is already paid.\n"
@@ -734,22 +759,29 @@ msgid ""
 "            Please remit payment at your earliest convenience.\n"
 "            <t t-if=\"object.payment_reference\">\n"
 "                <br/><br/>\n"
-"                Please use the following communication for your payment: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                Please use the following communication for your payment: "
+"<strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
 "                <t t-if=\"object.partner_bank_id\">\n"
-"                    on the account <strong t-out=\"object.partner_bank_id.acc_number\"/>\n"
+"                    on the account <strong t-"
+"out=\"object.partner_bank_id.acc_number\"/>\n"
 "                </t>\n"
 "                .\n"
 "            </t>\n"
 "        </t>\n"
-"        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and "
+"object.timesheet_count\">\n"
 "            <br/><br/>\n"
-"            PS: you can review your timesheets <a t-att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">from the portal.</a>\n"
+"            PS: you can review your timesheets <a t-att-href=\"'/my/"
+"timesheets?search_in=invoice&amp;search=%s' % object.name\">from the portal."
+"</a>\n"
 "        </t>\n"
 "        <br/><br/>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
-"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-"
+"o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -759,7 +791,8 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hyvä\n"
 "       <t t-if=\"object.partner_id.parent_id\">\n"
-"           <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"           <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t "
+"t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
 "       </t>\n"
 "       <t t-else=\"\">\n"
 "           <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
@@ -767,7 +800,8 @@ msgstr ""
 "       <br/><br/>\n"
 "        Ohessa\n"
 "       <t t-if=\"object.name\">\n"
-"            lasku <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"            lasku <span style=\"font-weight:bold;\" t-out=\"object.name or "
+"''\">INV/2021/05/0005</span>\n"
 "       </t>\n"
 "       <t t-else=\"\">\n"
 "            lasku\n"
@@ -775,7 +809,9 @@ msgstr ""
 "       <t t-if=\"object.invoice_origin\">\n"
 "            (viite: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "       </t>\n"
-"        jonka määrä on <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\"> 143 750,00 dollaria</span>\n"
+"        jonka määrä on <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\"> 143 "
+"750,00 dollaria</span>\n"
 "       <t t-out=\"object.company_id.name or ''\">yritykseltäsi</t>.\n"
 "       <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Tämä lasku on jo maksettu.\n"
@@ -784,22 +820,29 @@ msgstr ""
 "            Pyydämme teitä suorittamaan maksun mahdollisimman pian.\n"
 "           <t t-if=\"object.payment_reference\">\n"
 "               <br/><br/>\n"
-"                Käytä maksua varten seuraavaa viestintää: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                Käytä maksua varten seuraavaa viestintää: <strong t-"
+"out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
 "               <t t-if=\"object.partner_bank_id\">\n"
-"                    tilillä <strong t-out=\"object.partner_bank_id.acc_number\"/>\n"
+"                    tilillä <strong t-"
+"out=\"object.partner_bank_id.acc_number\"/>\n"
 "               </t>\n"
 "                .\n"
 "           </t>\n"
 "       </t>\n"
-"       <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"       <t t-if=\"hasattr(object, 'timesheet_count') and "
+"object.timesheet_count\">\n"
 "           <br/><br/>\n"
-"            PS: voit tarkastella työaikataulujasi <a t-att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">portaalista.</a>\n"
+"            PS: voit tarkastella työaikataulujasi <a t-att-href=\"'/my/"
+"timesheets?search_in=invoice&amp;search=%s' % object.name\">portaalista.</"
+"a>\n"
 "       </t>\n"
 "       <br/><br/>\n"
 "        Älä epäröi ottaa meihin yhteyttä, jos sinulla on kysyttävää.\n"
-"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-"
+"o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -810,34 +853,49 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/"
+"><br/>\n"
 "        Thank you for your payment.\n"
-"        Here is your payment receipt <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> amounting\n"
-"        to <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        Here is your payment receipt <span style=\"font-weight:bold;\" t-"
+"out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
+"amounting\n"
+"        to <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
+"span> from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
 "        <br/><br/>\n"
 "        Best regards,\n"
-"        <t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-container=\"1\">\n"
+"        <t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-"
+"container=\"1\">\n"
 "            <br/><br/>\n"
-"            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br "
+"data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hyvä <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
+"        Hyvä <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/"
+"><br/>\n"
 "        Kiitos maksusta.\n"
-"        Tässä on maksukuitti <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span>, jonka määrä on seuraava\n"
-"       <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\"> 10,00 dollaria</span> <t t-out=\"object.company_id.name or ''\">yritykseltänne</t>.\n"
+"        Tässä on maksukuitti <span style=\"font-weight:bold;\" t-"
+"out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span>, "
+"jonka määrä on seuraava\n"
+"       <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\"> 10,00 "
+"dollaria</span> <t t-out=\"object.company_id.name or ''\">yritykseltänne</"
+"t>.\n"
 "       <br/><br/>\n"
 "        Älä epäröi ottaa meihin yhteyttä, jos sinulla on kysyttävää.\n"
 "       <br/><br/>\n"
 "        Ystävällisin terveisin,\n"
-"        <t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-container=\"1\">\n"
+"        <t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-"
+"container=\"1\">\n"
 "            <br/><br/>\n"
-"            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br "
+"data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -849,21 +907,26 @@ msgstr "<em>Luonnoslasku</em>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_kanban
-msgid "<i class=\"fa fa-clock-o fw-bold\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
+msgid ""
+"<i class=\"fa fa-clock-o fw-bold\" aria-label=\"Date\" role=\"img\" "
+"title=\"Date\"/>"
 msgstr ""
 "<i class=\"fa fa-clock-o fw-bold\" aria-label=\"Päivä\" role=\"img\" "
 "title=\"Päivä\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_kanban
-msgid "<i class=\"fa fa-clock-o fw-bold\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgid ""
+"<i class=\"fa fa-clock-o fw-bold\" role=\"img\" aria-label=\"Date\" "
+"title=\"Date\"/>"
 msgstr ""
 "<i class=\"fa fa-clock-o fw-bold\" role=\"img\" aria-label=\"Päivä\" "
 "title=\"Päivä\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
-msgid "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
+msgid ""
+"<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
 msgstr ""
 "<i class = \"fa fa-clock-o\" aria-label = \"Date\" role = \"img\" title = "
 "\"Päivämäärä\" />"
@@ -876,49 +939,69 @@ msgstr "<i class=\"fa fa-download\"/> Lataa"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Paid\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> Paid</span>"
+"<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Paid\" "
+"role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"Paid</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Paid\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> Maksettu</span>"
+"<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Paid\" "
+"role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"Maksettu</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"Reversed\" title=\"Reversed\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> Reversed</span>"
+"<i class=\"fa fa-fw fa-check\" aria-label=\"Reversed\" title=\"Reversed\" "
+"role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"Reversed</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"Reversed\" title=\"Käännetty\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> Hyvitetty</span>"
+"<i class=\"fa fa-fw fa-check\" aria-label=\"Reversed\" title=\"Käännetty\" "
+"role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"Hyvitetty</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" title=\"Processing Payment\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> Processing Payment</span>"
+"<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" "
+"title=\"Processing Payment\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"Processing Payment</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" title=\"Maksun käsittely\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> Maksun käsittely</span>"
+"<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" "
+"title=\"Maksun käsittely\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"Maksun käsittely</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid ""
-"<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> Waiting for Payment</span>"
+"<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" "
+"role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"Waiting for Payment</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Avattu\" title=\"Avattu\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> Odottaa maksua</span>"
+"<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Avattu\" title=\"Avattu\" "
+"role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"Odottaa maksua</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid ""
 "<i class=\"fa fa-lightbulb-o\" role=\"img\"/>\n"
-"                        Don't worry, you can always change this setting later on the vendor's form.\n"
-"                        You also have the option to disable the feature for all vendors in the accounting settings."
+"                        Don't worry, you can always change this setting "
+"later on the vendor's form.\n"
+"                        You also have the option to disable the feature for "
+"all vendors in the accounting settings."
 msgstr ""
 "<i class=\"fa fa-lightbulb-o\" role=\"img\"/>\n"
-"                        Älä huoli, voit aina muuttaa tätä asetusta myöhemmin myyjän lomakkeella.\n"
-"                        Voit myös poistaa ominaisuuden käytöstä kaikkien myyjien osalta kirjanpitoasetuksissa."
+"                        Älä huoli, voit aina muuttaa tätä asetusta myöhemmin "
+"myyjän lomakkeella.\n"
+"                        Voit myös poistaa ominaisuuden käytöstä kaikkien "
+"myyjien osalta kirjanpitoasetuksissa."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -946,37 +1029,47 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
 msgid ""
 "<small class=\"form-text text-muted\">\n"
-"                    You can choose how you want us to send your invoices, and with which electronic format.\n"
+"                    You can choose how you want us to send your invoices, "
+"and with which electronic format.\n"
 "                </small>"
 msgstr ""
 "<small class=\"form-text text-muted\">\n"
-"                    Voit valita, miten ja missä sähköisessä muodossa haluat lähettää laskut.\n"
+"                    Voit valita, miten ja missä sähköisessä muodossa haluat "
+"lähettää laskut.\n"
 "                </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid ""
 "<span class=\"badge rounded-pill text-bg-warning\">\n"
-"                                    <i class=\"fa fa-fw fa-remove\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> Cancelled</span>\n"
+"                                    <i class=\"fa fa-fw fa-remove\" aria-"
+"label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"Cancelled</span>\n"
 "                                </span>"
 msgstr ""
 "<span class=\"badge rounded-pill text-bg-warning\">\n"
-"                                    <i class=\"fa fa-fw fa-remove\" aria-label=\"Peruutettu\" title=\"Peruutettu\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> Peruutettu</span>\n"
+"                                    <i class=\"fa fa-fw fa-remove\" aria-"
+"label=\"Peruutettu\" title=\"Peruutettu\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"Peruutettu</span>\n"
 "                                </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid ""
 "<span class=\"d-flex gap-2 w-100\">\n"
-"                            <span invisible=\"allow_out_payment\" class=\"text-muted\">Untrusted</span>\n"
-"                            <span invisible=\"not allow_out_payment\" class=\"text-success\">Trusted</span>\n"
+"                            <span invisible=\"allow_out_payment\" "
+"class=\"text-muted\">Untrusted</span>\n"
+"                            <span invisible=\"not allow_out_payment\" "
+"class=\"text-success\">Trusted</span>\n"
 "                        </span>"
 msgstr ""
 "<span class=\"d-flex gap-2 w-100\">\n"
-"                            <span invisible=\"allow_out_payment\" class=\"text-muted\">Epäluotettava</span>\n"
-"                            <span invisible=\"not allow_out_payment\" class=\"text-success\">Luotettu</span>\n"
+"                            <span invisible=\"allow_out_payment\" "
+"class=\"text-muted\">Epäluotettava</span>\n"
+"                            <span invisible=\"not allow_out_payment\" "
+"class=\"text-success\">Luotettu</span>\n"
 "                        </span>"
 
 #. module: account
@@ -1018,11 +1111,11 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid ""
-"<span class=\"o_form_label\" invisible=\"match_amount != "
-"'between'\">and</span>"
+"<span class=\"o_form_label\" invisible=\"match_amount != 'between'\">and</"
+"span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"match_amount != "
-"'between'\">ja</span>"
+"<span class=\"o_form_label\" invisible=\"match_amount != 'between'\">ja</"
+"span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -1110,7 +1203,8 @@ msgid ""
 "                            </span>"
 msgstr ""
 "<span class=\"text-muted ms-2\">\n"
-"                                <i>mukaan lukien, jotta ne olisivat muuttumattomia</i>\n"
+"                                <i>mukaan lukien, jotta ne olisivat "
+"muuttumattomia</i>\n"
 "                            </span>"
 
 #. module: account
@@ -1127,29 +1221,29 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid ""
-"<span class=\"text-nowrap\">$ <span "
-"class=\"oe_currency_value\">11,750.00</span></span>"
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">11,750.00</"
+"span></span>"
 msgstr ""
-"<span class=\"text-nowrap\">$ <span "
-"class=\"oe_currency_value\">11,750.00</span></span>"
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">11,750.00</"
+"span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid ""
-"<span class=\"text-nowrap\">$ <span "
-"class=\"oe_currency_value\">19,250.00</span></span>"
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">19,250.00</"
+"span></span>"
 msgstr ""
-"<span class=\"text-nowrap\">$ <span "
-"class=\"oe_currency_value\">19,250.00</span></span>"
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">19,250.00</"
+"span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid ""
-"<span class=\"text-nowrap\">$ <span "
-"class=\"oe_currency_value\">7,500.00</span></span>"
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">7,500.00</"
+"span></span>"
 msgstr ""
-"<span class=\"text-nowrap\">$ <span "
-"class=\"oe_currency_value\">7,500.00</span></span>"
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">7,500.00</"
+"span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1171,8 +1265,8 @@ msgstr "<span class=\"text-warning\">Keskisuuri riski</span>: IBAN"
 msgid ""
 "<span invisible=\"name or name_placeholder or quick_edit_mode\">Draft</span>"
 msgstr ""
-"<span invisible=\"name or name_placeholder or "
-"quick_edit_mode\">Luonnos</span>"
+"<span invisible=\"name or name_placeholder or quick_edit_mode\">Luonnos</"
+"span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -1193,10 +1287,12 @@ msgstr "<span invisible=\"not early_discount\"> päivää</span>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid ""
 "<span invisible=\"reconciled_invoices_type != 'invoice'\"> Invoice</span>\n"
-"                                        <span invisible=\"reconciled_invoices_type == 'invoice'\"> Credit Note</span>"
+"                                        <span "
+"invisible=\"reconciled_invoices_type == 'invoice'\"> Credit Note</span>"
 msgstr ""
 "<span invisible=\"reconciled_invoices_type != 'invoice'\"> Lasku</span>\n"
-"                                        <span invisible=\"reconciled_invoices_type == 'invoice'\"> Hyvityslasku</span>"
+"                                        <span "
+"invisible=\"reconciled_invoices_type == 'invoice'\"> Hyvityslasku</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1340,8 +1436,8 @@ msgstr "<span>Uusi</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid ""
-"<span>One or more Bank Accounts set on this partner are also used by "
-"others:</span>"
+"<span>One or more Bank Accounts set on this partner are also used by others:"
+"</span>"
 msgstr ""
 "<span>Yksi tai useampi pankkitili, jotka ovat asetettu tälle kumppanille, "
 "ovat myös muiden käytössä:</span>"
@@ -1381,8 +1477,7 @@ msgstr "<span>Verot</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid "<span>The Bank Account could be a duplicate of</span>"
-msgstr ""
-"<span>Tämä pankkitili saattaa olla kaksoiskappale pankkitilistä</span>"
+msgstr "<span>Tämä pankkitili saattaa olla kaksoiskappale pankkitilistä</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1511,11 +1606,16 @@ msgstr "<strong>Välisumma</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
 msgid ""
-"<strong>This currency has already been used to generate accounting entries.</strong> <br/>\n"
-"                        Changing its rounding factor now will not change the rounding made on previous entries; possibly causing an inconsistency with the new ones."
+"<strong>This currency has already been used to generate accounting entries.</"
+"strong> <br/>\n"
+"                        Changing its rounding factor now will not change the "
+"rounding made on previous entries; possibly causing an inconsistency with "
+"the new ones."
 msgstr ""
 "<strong>Tätä valuuttaa on jo käytetty kirjanpitovienneillä.</strong> <br/>\n"
-"                        Pyöristysdesimaalin muuttaminen nyt ei muuta aiempien vientien pyöristystä, mutta se saattaa aiheuttaa epäjohdonmukaisuutta uusien vientien kanssa."
+"                        Pyöristysdesimaalin muuttaminen nyt ei muuta "
+"aiempien vientien pyöristystä, mutta se saattaa aiheuttaa "
+"epäjohdonmukaisuutta uusien vientien kanssa."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1548,7 +1648,8 @@ msgstr "@Lähettäjä: %(email)s"
 #: model_terms:ir.actions.act_window,help:account.action_view_bank_statement_tree
 msgid ""
 "A Cash Register allows you to manage cash entries in your cash\n"
-"                journals. This feature provides an easy way to follow up cash\n"
+"                journals. This feature provides an easy way to follow up "
+"cash\n"
 "                payments on a daily basis."
 msgstr ""
 "Kassakoneen avulla voit hallita käteisvientejä käteispäiväkirjoilla.\n"
@@ -1578,28 +1679,31 @@ msgstr "Pankkitili voidaan liittää vain yhteen päiväkirjaan."
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid ""
-"A bank account with Account Number %(number)s already exists for Partner "
-"%(partner)s, but is archived. Please unarchive it instead."
+"A bank account with Account Number %(number)s already exists for Partner %"
+"(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
-"Pakkitili ja tilinumero %(number)s ovat jo olemassa Kumppanilla %(partner)s,"
-" mutta ne on arkistoitu. Ole hyvä ja poista niiden arkistointi."
+"Pakkitili ja tilinumero %(number)s ovat jo olemassa Kumppanilla %(partner)s, "
+"mutta ne on arkistoitu. Ole hyvä ja poista niiden arkistointi."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
 msgid ""
 "A bank statement is a summary of all financial transactions\n"
-"                occurring over a given period of time on a bank account. You\n"
+"                occurring over a given period of time on a bank account. "
+"You\n"
 "                should receive this periodically from your bank."
 msgstr ""
 "Pankkitiliote on yhteenveto kaikista rahoitustapahtumista\n"
-"                jotka ovat tapahtuneet tietyn ajanjakson aikana pankkitilillä. Osoite\n"
+"                jotka ovat tapahtuneet tietyn ajanjakson aikana "
+"pankkitilillä. Osoite\n"
 "                sinun pitäisi saada se säännöllisesti pankiltasi."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_credit_statement_tree
 msgid ""
 "A credit statement is a summary of all financial transactions\n"
-"                occurring over a given period of time on a credit account. You\n"
+"                occurring over a given period of time on a credit account. "
+"You\n"
 "                should receive this periodically from your bank."
 msgstr ""
 "Tiliote on yhteenveto kaikista rahaliikenteen tapahtumista\n"
@@ -1620,8 +1724,7 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Päiväkirja koostuu tapahtumista, jotka ovat joko debit tai kredit "
-"tapahtumia."
+"Päiväkirja koostuu tapahtumista, jotka ovat joko debit tai kredit tapahtumia."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -1636,8 +1739,8 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 msgid "A line cannot have both children and a groupby value (line '%s')."
 msgstr ""
-"Rivillä ei voi olla sekä alirivejä että ryhmittele tämän mukaan -arvoa (rivi"
-" '%s')."
+"Rivillä ei voi olla sekä alirivejä että ryhmittele tämän mukaan -arvoa (rivi "
+"'%s')."
 
 #. module: account
 #. odoo-python
@@ -1657,8 +1760,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "A note, whose content usually applies to the section or product above."
 msgstr ""
-"Huomautus, jonka sisältö koskee yleensä edellä mainittua osiota tai "
-"tuotetta."
+"Huomautus, jonka sisältö koskee yleensä edellä mainittua osiota tai tuotetta."
 
 #. module: account
 #. odoo-python
@@ -1673,11 +1775,10 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
-msgid ""
-"A payment tolerance defined as an amount should always be higher than 0"
+msgid "A payment tolerance defined as an amount should always be higher than 0"
 msgstr ""
-"Maksun toleranssi, joka on määritelty määränä, jonka on aina oltava suurempi"
-" kuin 0"
+"Maksun toleranssi, joka on määritelty määränä, jonka on aina oltava suurempi "
+"kuin 0"
 
 #. module: account
 #. odoo-python
@@ -1823,8 +1924,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid ""
-"Account %s cannot be unmerged as it already belongs to a single company. The"
-" unmerge operation only splits an account based on its companies."
+"Account %s cannot be unmerged as it already belongs to a single company. The "
+"unmerge operation only splits an account based on its companies."
 msgstr ""
 "Tiliä %s ei voida purkaa, koska se kuuluu jo yhdelle yritykselle. "
 "Yhdistämisen purkaminen jakaa tilin vain sen yhtiöiden perusteella."
@@ -2070,8 +2171,8 @@ msgstr "Tilityyppi"
 #: model:ir.model.fields,help:account.field_account_move_line__account_type
 msgid ""
 "Account Type is used for information purpose, to generate country-specific "
-"legal reports, and set the rules to close a fiscal year and generate opening"
-" entries."
+"legal reports, and set the rules to close a fiscal year and generate opening "
+"entries."
 msgstr ""
 "Tilityyppiä käytetään maakohtaisten virallisten raporttien luomiseen sekä "
 "tilikauden sulkemiseen ja uuden tilikauden avaukseen."
@@ -2090,8 +2191,8 @@ msgstr "Tilikoodit 2 ensimmäiselle numerolle"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid ""
-"Account codes must be unique. You can't create accounts with these duplicate"
-" codes: %s"
+"Account codes must be unique. You can't create accounts with these duplicate "
+"codes: %s"
 msgstr ""
 "Tilikoodien on oltava yksilöllisiä. Et voi luoda tilejä näillä "
 "kaksoiskoodeilla: %s"
@@ -2099,8 +2200,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
 msgid ""
-"Account for the difference amount after the expense discount has been "
-"granted"
+"Account for the difference amount after the expense discount has been granted"
 msgstr ""
 "Tili kulujen erotuksen määrälle sen jälkeen, kun kulualennus on myönnetty"
 
@@ -2215,11 +2315,11 @@ msgstr "Tili, jolla on tapahtumia"
 #. module: account
 #: model:ir.actions.server,name:account.ir_cron_auto_post_draft_entry_ir_actions_server
 msgid ""
-"Account: Post draft entries with auto_post enabled and accounting date up to"
-" today"
+"Account: Post draft entries with auto_post enabled and accounting date up to "
+"today"
 msgstr ""
-"Tili: Kirjaa luonnos kirjaukset, joissa automaattinen kirjaus on käytössä ja"
-" kirjanpitopäivämäärä on tähän päivään asti"
+"Tili: Kirjaa luonnos kirjaukset, joissa automaattinen kirjaus on käytössä ja "
+"kirjanpitopäivämäärä on tähän päivään asti"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -2344,11 +2444,12 @@ msgstr "Jaksotusviennit"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid ""
-"Accrual entry created on %(date)s: %(accrual_entry)s.                    And"
-" its reverse entry: %(reverse_entry)s."
+"Accrual entry created on %(date)s: %(accrual_entry)s.                    And "
+"its reverse entry: %(reverse_entry)s."
 msgstr ""
-"Suoriteperusteinen kirjaus luotu %(date)s: %(accrual_entry)s."
-"                    Ja sen käänteinen kirjaus: %(reverse_entry)s."
+"Suoriteperusteinen kirjaus luotu %(date)s: %"
+"(accrual_entry)s.                    Ja sen käänteinen kirjaus: %"
+"(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -2500,8 +2601,8 @@ msgstr "Lisää muistiinpano"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
-"Add a QR-code to your invoices so that your customers can pay instantly with"
-" their mobile banking application."
+"Add a QR-code to your invoices so that your customers can pay instantly with "
+"their mobile banking application."
 msgstr ""
 "Lisää maksatus QR-koodi laskuillesi, jotta asiakkaasi voivat maksaa heti "
 "mobiilipankkisovelluksellaan."
@@ -2570,8 +2671,7 @@ msgstr "Lisää kontaktit, joille ilmoitetaan..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid ""
-"Add your terms & conditions at the bottom of invoices/orders/quotations"
+msgid "Add your terms & conditions at the bottom of invoices/orders/quotations"
 msgstr "Lisää ehdot laskujen, tilausten tai tarjousten alareunaan"
 
 #. module: account
@@ -2601,17 +2701,16 @@ msgstr "Oikaisuvienti"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Adjusting Entry {link} {percent}%% of {amount} recognized from {date}"
 msgstr ""
-"Muokkauskirjaus {link} {percent}%% määrästä {amount} on tunnistettu päivästä"
-" {date}"
+"Muokkauskirjaus {link} {percent}%% määrästä {amount} on tunnistettu päivästä "
+"{date}"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-msgid ""
-"Adjusting Entry {link} {percent}%% of {amount} recognized on {new_date}"
+msgid "Adjusting Entry {link} {percent}%% of {amount} recognized on {new_date}"
 msgstr ""
-"Muokkauskirjaus {link} {percent}%% määrästä {amount} on tunnistettu päivästä"
-" {new_date}"
+"Muokkauskirjaus {link} {percent}%% määrästä {amount} on tunnistettu päivästä "
+"{new_date}"
 
 #. module: account
 #: model:res.groups,name:account.group_account_manager
@@ -2964,20 +3063,25 @@ msgstr "Tilin verokanta voidaan määritellä vain kerran samoilla tileillä."
 msgid ""
 "An account is part of a ledger allowing your company\n"
 "                to register all kinds of debit and credit transactions.\n"
-"                Companies present their annual accounts in two main parts: the\n"
+"                Companies present their annual accounts in two main parts: "
+"the\n"
 "                balance sheet and the income statement (profit and loss\n"
-"                account). The annual accounts of a company are required by law\n"
+"                account). The annual accounts of a company are required by "
+"law\n"
 "                to disclose a certain amount of information."
 msgstr ""
 "Tili on kirjanpidon osa johon merkitään kaikki debit ja kredit tapahtumat.\n"
-"Yritykset esittävät vuotuisen kirjanpitonsa kahdessa osassa: tulos- ja taselaskelmassa. Tuloslaskelma koostuu tulo- ja menotileistä. Yrityksen kirjanpitovelvollisuudesta ja kirjanpitoon sisällytettävistä tiedoista on säädetty kirjanpitolaissa."
+"Yritykset esittävät vuotuisen kirjanpitonsa kahdessa osassa: tulos- ja "
+"taselaskelmassa. Tuloslaskelma koostuu tulo- ja menotileistä. Yrityksen "
+"kirjanpitovelvollisuudesta ja kirjanpitoon sisällytettävistä tiedoista on "
+"säädetty kirjanpitolaissa."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"An error occurred when computing the inalterability. A gap has been detected"
-" in the sequence."
+"An error occurred when computing the inalterability. A gap has been detected "
+"in the sequence."
 msgstr ""
 "Muuttumattomuutta laskettaessa tapahtui virhe. Sekvenssissä on havaittu "
 "aukko."
@@ -3136,11 +3240,10 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid ""
-"Any journal item on a receivable account must have a due date and vice "
-"versa."
+"Any journal item on a receivable account must have a due date and vice versa."
 msgstr ""
-"Kaikilla saamistilillä olevilla päiväkirjamerkinnöillä on oltava eräpäivä ja"
-" päinvastoin."
+"Kaikilla saamistilillä olevilla päiväkirjamerkinnöillä on oltava eräpäivä ja "
+"päinvastoin."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__purchase_lock_date
@@ -3387,8 +3490,8 @@ msgid ""
 "Auto-post was disabled on this invoice because a potential duplicate was "
 "detected."
 msgstr ""
-"Automaattinen kirjaaminen on poistettu käytöstä laskun kohdalla, koska sillä"
-" on mahdollisesti kaksoiskappale."
+"Automaattinen kirjaaminen on poistettu käytöstä laskun kohdalla, koska sillä "
+"on mahdollisesti kaksoiskappale."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
@@ -3604,9 +3707,8 @@ msgid ""
 "account if this is a Customer Invoice or Vendor Credit Note, otherwise a "
 "Partner bank account number."
 msgstr ""
-"Pankkitilin numero, johon lasku maksetaan. Yrityksen pankkitili, jos tämä on"
-" asiakkaan lasku tai myyjän hyvityslasku, muuten kumppanin pankin "
-"tilinumero."
+"Pankkitilin numero, johon lasku maksetaan. Yrityksen pankkitili, jos tämä on "
+"asiakkaan lasku tai myyjän hyvityslasku, muuten kumppanin pankin tilinumero."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_supplier_accounts
@@ -3703,10 +3805,12 @@ msgstr "Pankkitapahtumien ehdot"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_suspense_account_id
 msgid ""
-"Bank Transactions are posted immediately after import or synchronization. Their counterparty is the bank suspense account.\n"
+"Bank Transactions are posted immediately after import or synchronization. "
+"Their counterparty is the bank suspense account.\n"
 "Reconciliation replaces the latter by the definitive account(s)."
 msgstr ""
-"Pankkitapahtumat kirjataan välittömästi tuonnin tai synkronoinnin jälkeen. Niiden vastapuolena on pankin väliaikainen tili.\n"
+"Pankkitapahtumat kirjataan välittömästi tuonnin tai synkronoinnin jälkeen. "
+"Niiden vastapuolena on pankin väliaikainen tili.\n"
 "Täsmäytys korvaa jälkimmäisen lopullisella tilillä (tileillä)."
 
 #. module: account
@@ -3803,7 +3907,8 @@ msgstr "Perustuu laskuun"
 #: model:ir.model.fields,help:account.field_account_tax__tax_exigibility
 msgid ""
 "Based on Invoice: the tax is due as soon as the invoice is validated.\n"
-"Based on Payment: the tax is due as soon as the payment of the invoice is received."
+"Based on Payment: the tax is due as soon as the payment of the invoice is "
+"received."
 msgstr ""
 "Laskuun perustuen: vero on maksettava heti, kun lasku on vahvistettu.\n"
 "Maksuun perustuen vero on maksettava heti, kun laskun maksu on vastaanotettu."
@@ -3993,8 +4098,8 @@ msgid ""
 "By default, we always unfold the lines that can be. If this is checked, the "
 "line won't be unfolded by default, and a folding button will be displayed."
 msgstr ""
-"Oletusarvoisesti avaamme aina rivit, jotka voi avata. Jos tämä on valittuna,"
-" riviä ei oletusarvoisesti avata, ja taittopainike näytetään."
+"Oletusarvoisesti avaamme aina rivit, jotka voi avata. Jos tämä on valittuna, "
+"riviä ei oletusarvoisesti avata, ja taittopainike näytetään."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__active
@@ -4368,8 +4473,8 @@ msgid ""
 "be paid by the client to the tax authorities. Under no circumstances can"
 msgstr ""
 "Tietyt maat edellyttävät laskun maksajalta ennakonpidätystä osassa laskuja. "
-"Tämä on paikallisesta lainsäädännöstä kiinni. Ennakonpidätys tulee suorittaa"
-" veroviranomaisille"
+"Tämä on paikallisesta lainsäädännöstä kiinni. Ennakonpidätys tulee suorittaa "
+"veroviranomaisille"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__chains_to_hash_with_gaps
@@ -4412,8 +4517,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid ""
-"Changing your company name is not allowed once invoices have been issued for"
-" your account. Please contact us directly for this operation."
+"Changing your company name is not allowed once invoices have been issued for "
+"your account. Please contact us directly for this operation."
 msgstr ""
 "Yrityksen nimen muuttaminen ei ole sallittua, kun tilisi on laskutettu. "
 "Tähän liittyen, ota meihin yhteyttä."
@@ -4493,8 +4598,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence
 msgid ""
-"Check this box if you don't want to share the same sequence for invoices and"
-" credit notes made from this journal"
+"Check this box if you don't want to share the same sequence for invoices and "
+"credit notes made from this journal"
 msgstr ""
 "Valitse tämä valintaruutu, jos et halua jakaa samaa laskutus- ja "
 "hyvityslaskusekvenssiä"
@@ -4946,8 +5051,8 @@ msgstr "Siistiä. Näyttää siltä, että sinulla ei ole mitään maksettavaa."
 #: code:addons/account/models/company.py:0
 msgid "Corrupted data on journal entry with id %(id)s (%(name)s)."
 msgstr ""
-"Vioittuneet tiedot päiväkirjamerkinnässä, jonka tunniste on %(id)s "
-"(%(name)s)."
+"Vioittuneet tiedot päiväkirjamerkinnässä, jonka tunniste on %(id)s (%"
+"(name)s)."
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_goods_sold
@@ -5217,11 +5322,15 @@ msgstr "Luo toimittajan hyvityslasku"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
 msgid ""
-"Create as many ledger groups as needed to maintain separate ledgers for local GAAP, IFRS, or fiscal\n"
-"                    adjustments, ensuring compliance with diverse regulations."
+"Create as many ledger groups as needed to maintain separate ledgers for "
+"local GAAP, IFRS, or fiscal\n"
+"                    adjustments, ensuring compliance with diverse "
+"regulations."
 msgstr ""
-"Luo niin monta pääkirjaryhmää kuin on tarpeen, jotta voit ylläpitää erillisiä pääkirjoja paikallisia GAAP-, IFRS- tai verokohtaisia\n"
-"                    oikaisuja, varmistaen erilaisten säännösten noudattamisen."
+"Luo niin monta pääkirjaryhmää kuin on tarpeen, jotta voit ylläpitää "
+"erillisiä pääkirjoja paikallisia GAAP-, IFRS- tai verokohtaisia\n"
+"                    oikaisuja, varmistaen erilaisten säännösten "
+"noudattamisen."
 
 #. module: account
 #. odoo-javascript
@@ -6167,8 +6276,7 @@ msgstr "Määrittää, näytetäänkö kentän tilin etuliite"
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_cash_rounding_id
 #: model:ir.model.fields,help:account.field_account_move__invoice_cash_rounding_id
 msgid ""
-"Defines the smallest coinage of the currency that can be used to pay by "
-"cash."
+"Defines the smallest coinage of the currency that can be used to pay by cash."
 msgstr "Määrittää pienimmän rahan, jota voidaan käyttää käteisellä."
 
 #. module: account
@@ -6248,8 +6356,7 @@ msgstr "Kuvaus"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
-msgid ""
-"Description on invoice (e.g. Payment terms: 30 days after invoice date)"
+msgid "Description on invoice (e.g. Payment terms: 30 days after invoice date)"
 msgstr "Kuvaus laskussa (esim. maksuehto: 30 päivää laskun päiväyksestä)"
 
 #. module: account
@@ -6860,8 +6967,7 @@ msgstr "Dynaamiset raportit"
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__tag_ids_domain
 msgid "Dynamic domain used for the tag that can be set on tax"
 msgstr ""
-"Dynaaminen verkkotunnus, jota käytetään tagille, joka voidaan asettaa "
-"verolle"
+"Dynaaminen verkkotunnus, jota käytetään tagille, joka voidaan asettaa verolle"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_tree
@@ -6941,8 +7047,8 @@ msgstr "Varhaisen maksun kassa-alennus"
 msgid ""
 "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>"
 msgstr ""
-"Etukäteismaksun kassa-alennus: <b>%(amount)s</b> jos maksettu ennen "
-"<b>%(date)s</b>"
+"Etukäteismaksun kassa-alennus: <b>%(amount)s</b> jos maksettu ennen <b>%"
+"(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7144,8 +7250,8 @@ msgstr "Oma pääoma"
 msgid ""
 "Error importing attachment '%(file_name)s' as invoice (decoder=%(decoder)s)"
 msgstr ""
-"Virhe liitetiedoston '%(file_name)s' tuonnissa laskuna "
-"(dekooderi=%(decoder)s)"
+"Virhe liitetiedoston '%(file_name)s' tuonnissa laskuna (dekooderi=%"
+"(decoder)s)"
 
 #. module: account
 #. odoo-python
@@ -7155,8 +7261,8 @@ msgid ""
 "country %(country_name)s. You should probably update your localization app "
 "first."
 msgstr ""
-"Tapahtui virhe ladattaessa lokalisointia: puuttuva verotunniste %(tag_name)s"
-" maan %(country_name)s kohdalla. Sinun tulee todennäköisesti päivittää "
+"Tapahtui virhe ladattaessa lokalisointia: puuttuva verotunniste %(tag_name)s "
+"maan %(country_name)s kohdalla. Sinun tulee todennäköisesti päivittää "
 "lokalisointisovellus ensin."
 
 #. module: account
@@ -7845,8 +7951,8 @@ msgid ""
 "reports and so, match this analysis to your needs."
 msgstr ""
 "Tältä raportilta voit seurata toimittajalaskutuksen määrää. Hakutyökalua ja "
-"suotimia voidaan käyttää laskuraporttien personoimiseen ja halutun analyysin"
-" näyttämiseen."
+"suotimia voidaan käyttää laskuraporttien personoimiseen ja halutun analyysin "
+"näyttämiseen."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -7856,8 +7962,8 @@ msgid ""
 "reports and so, match this analysis to your needs."
 msgstr ""
 "Tältä raportilta voit seurata asiakaslaskutuksen määrää. Hakutyökalua ja "
-"suotimia voidaan käyttää laskuraporttien personoimiseen ja halutun analyysin"
-" näyttämiseen."
+"suotimia voidaan käyttää laskuraporttien personoimiseen ja halutun analyysin "
+"näyttämiseen."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__full
@@ -8036,10 +8142,13 @@ msgstr "Muutosvertailu"
 #: model:ir.model.fields,field_description:account.field_res_company__hard_lock_date
 msgid "Hard Lock Date"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"hard_lock_date != current_hard_lock_date\">\n"
-"                                    <i>muuttumattomuuden varmistamiseksi</i>\n"
+"<span class=\"text-muted\" invisible=\"hard_lock_date != "
+"current_hard_lock_date\">\n"
+"                                    <i>muuttumattomuuden varmistamiseksi</"
+"i>\n"
 "                                </span>\n"
-"                                <span class=\"text-danger o_form_label\" invisible=\"hard_lock_date == current_hard_lock_date\">\n"
+"                                <span class=\"text-danger o_form_label\" "
+"invisible=\"hard_lock_date == current_hard_lock_date\">\n"
 "                                    <i>Tätä muutosta ei voi peruuttaa</i>\n"
 "                                </span>"
 
@@ -8131,11 +8240,13 @@ msgstr "Hei!"
 msgid ""
 "Hi,\n"
 "    <br/><br/>\n"
-"    Your email has been discarded. the e-mail address you have used only accepts new invoices:"
+"    Your email has been discarded. the e-mail address you have used only "
+"accepts new invoices:"
 msgstr ""
 "Hei,\n"
 "   <br/><br/>\n"
-"    Sähköpostisiasi ei voida käsitellä. Käyttämäsi sähköpostiosoite ottaa vastaan vain uusia laskuja:"
+"    Sähköpostisiasi ei voida käsitellä. Käyttämäsi sähköpostiosoite ottaa "
+"vastaan vain uusia laskuja:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__hide_post_button
@@ -8189,11 +8300,6 @@ msgstr "Vaakasuora jaettu puoli"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "How total tax amount is computed in orders and invoices"
 msgstr "Kuinka kokonaisveron määrä lasketaan tilauksissa ja laskuissa"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document_preview
-msgid "IBAN: BE76 4294 6878 9995"
-msgstr "IBAN: BE76 4294 6878 9995"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
@@ -8310,8 +8416,8 @@ msgid ""
 "If activated, user-defined filters on journal items can be selected on this "
 "report"
 msgstr ""
-"Jos aktivoitu, raportissa voidaan valita käyttäjän määrittelemät suodattimet"
-" päiväkirjakohteille"
+"Jos aktivoitu, raportissa voidaan valita käyttäjän määrittelemät suodattimet "
+"päiväkirjakohteille"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_needaction
@@ -8378,11 +8484,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__is_base_affected
 msgid ""
-"If set, taxes with a lower sequence might affect this one, provided they try"
-" to do it."
+"If set, taxes with a lower sequence might affect this one, provided they try "
+"to do it."
 msgstr ""
-"Jos asetetaan, alemman sarjan verot saattavat vaikuttaa tähän, jos yrittävät"
-" tehdä sen."
+"Jos asetetaan, alemman sarjan verot saattavat vaikuttaa tähän, jos yrittävät "
+"tehdä sen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__analytic
@@ -8403,11 +8509,15 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__non_trade
 msgid ""
-"If set, this account will belong to Non Trade Receivable/Payable in reports and filters.\n"
-"If not, this account will belong to Trade Receivable/Payable in reports and filters."
+"If set, this account will belong to Non Trade Receivable/Payable in reports "
+"and filters.\n"
+"If not, this account will belong to Trade Receivable/Payable in reports and "
+"filters."
 msgstr ""
-"Jos tämä tili on määritetty, se kuuluu raporttien ja suodattimien osalta muihin kuin myyntisaamisiin/maksettaviin.\n"
-"Jos sitä ei ole asetettu, tämä tili kuuluu raporttien ja suodattimien osalta ryhmään Trade Receivable/Payable."
+"Jos tämä tili on määritetty, se kuuluu raporttien ja suodattimien osalta "
+"muihin kuin myyntisaamisiin/maksettaviin.\n"
+"Jos sitä ei ole asetettu, tämä tili kuuluu raporttien ja suodattimien osalta "
+"ryhmään Trade Receivable/Payable."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__preceding_subtotal
@@ -8434,8 +8544,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move__checked
 msgid ""
 "If this checkbox is not ticked, it means that the user was not sure of all "
-"the related information at the time of the creation of the move and that the"
-" move needs to be checked again."
+"the related information at the time of the creation of the move and that the "
+"move needs to be checked again."
 msgstr ""
 "Jos ei valittu, se tarkoittaa, että käyttäjä ei ollut varma kaikista asiaan "
 "liittyvistä tiedoista siirtoa luotaessa ja että siirto on tarkistettava "
@@ -8461,8 +8571,8 @@ msgid ""
 "If you check this box, you will be able to collect payments using SEPA "
 "Direct Debit mandates."
 msgstr ""
-"Jos valitset tämän ruudun, voit kerätä maksuja SEPA-suoraveloitusvaltuuksien"
-" avulla."
+"Jos valitset tämän ruudun, voit kerätä maksuja SEPA-suoraveloitusvaltuuksien "
+"avulla."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8684,8 +8794,8 @@ msgstr "Saapuvat maksut"
 #. odoo-python
 #: code:addons/account/wizard/setup_wizards.py:0
 msgid ""
-"Incorrect fiscal year date: day is out of range for month. Month: %(month)s;"
-" Day: %(day)s"
+"Incorrect fiscal year date: day is out of range for month. Month: %(month)s; "
+"Day: %(day)s"
 msgstr ""
 "Väärä verovuoden päivämäärä: päivä on kuukauden alueen ulkopuolella. "
 "Kuukausi: %(month)s; Day: %(day)s"
@@ -8721,8 +8831,8 @@ msgstr "Toimituslausekkeet"
 #: model:ir.model.fields,help:account.field_account_incoterms__name
 msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
-"costs and responsibilities between buyer and seller and reflect state-of-"
-"the-art transportation practices."
+"costs and responsibilities between buyer and seller and reflect state-of-the-"
+"art transportation practices."
 msgstr ""
 "Toimituslausekkeet ovat osa kauppasopimusta. Toimituslauseke määrittelee "
 "tavaran toimittamiseen sisältyvien velvollisuuksien jakautumisen myyjän ja "
@@ -8854,8 +8964,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__domain_formula
-msgid ""
-"Internal field to shorten expression_ids creation for the domain engine"
+msgid "Internal field to shorten expression_ids creation for the domain engine"
 msgstr ""
 "Sisäinen kenttä, jolla lyhennetään expression_ids:n luomista "
 "toimialuemoottoria varten"
@@ -8906,8 +9015,8 @@ msgstr "Virheellinen"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid ""
-"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
-" for the zip range and \"To\" should be greater than \"From\"."
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values "
+"for the zip range and \"To\" should be greater than \"From\"."
 msgstr ""
 "Virheellinen \"postinumeroalue\". Sinun on määritettävä \"mistä\"-  "
 "\"mihin\"-arvot postinumeron alueelle ja \"mihin\" on oltava suurempi kuin "
@@ -9098,8 +9207,8 @@ msgid ""
 "Invoice and credit note distribution should each contain exactly one line "
 "for the base."
 msgstr ""
-"Myyntilaskun ja hyvityslaskun jako tulisi molempien sisältää tasan yksi rivi"
-" verottomalle summalle."
+"Myyntilaskun ja hyvityslaskun jako tulisi molempien sisältää tasan yksi rivi "
+"verottomalle summalle."
 
 #. module: account
 #. odoo-python
@@ -9117,8 +9226,7 @@ msgstr ""
 msgid ""
 "Invoice and credit note distribution should have a total factor (-) equals "
 "to 100."
-msgstr ""
-"Laskujen ja hyvityslaskujen jakelun kokonaistekijän (-) on oltava 100."
+msgstr "Laskujen ja hyvityslaskujen jakelun kokonaistekijän (-) on oltava 100."
 
 #. module: account
 #. odoo-python
@@ -9141,8 +9249,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid ""
-"Invoice and credit note repartition should have at least one tax repartition"
-" line."
+"Invoice and credit note repartition should have at least one tax repartition "
+"line."
 msgstr ""
 "Laskujen ja hyvityslaskujen jaottelussa on oltava vähintään yksi "
 "verojaottelurivi."
@@ -9699,8 +9807,8 @@ msgstr "Päiväkirjat, joissa vastaava numero ei ole asetettu"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid ""
-"Journal items where the account allows reconciliation no matter the residual"
-" amount"
+"Journal items where the account allows reconciliation no matter the residual "
+"amount"
 msgstr ""
 "Päiväkirjan erät, joiden osalta tili sallii täsmäytyksen jäännösmäärästä "
 "riippumatta"
@@ -9720,8 +9828,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_journal_id
 msgid ""
-"Journal where the opening entry of this company's accounting has been "
-"posted."
+"Journal where the opening entry of this company's accounting has been posted."
 msgstr ""
 "Päiväkirja, jossa tämän yrityksen kirjanpidon avauskirjaus on lähetetty."
 
@@ -9800,8 +9907,8 @@ msgstr "Pidä tämä kenttä tyhjänä, jos haluat käyttää tuoteryhmän oletu
 #: model:ir.model.fields,help:account.field_product_product__property_account_expense_id
 #: model:ir.model.fields,help:account.field_product_template__property_account_expense_id
 msgid ""
-"Keep this field empty to use the default value from the product category. If"
-" anglo-saxon accounting with automated valuation method is configured, the "
+"Keep this field empty to use the default value from the product category. If "
+"anglo-saxon accounting with automated valuation method is configured, the "
 "expense account on the product category will be used."
 msgstr ""
 "Pidä tämä kenttä tyhjänä, jos haluat käyttää tuoteryhmän oletusarvoa. Jos "
@@ -9981,11 +10088,11 @@ msgstr "Edellinen vuosi"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__discount_date
 msgid ""
-"Last date at which the discounted amount must be paid in order for the Early"
-" Payment Discount to be granted"
+"Last date at which the discounted amount must be paid in order for the Early "
+"Payment Discount to be granted"
 msgstr ""
-"Viimeinen päivä, johon mennessä alennettu määrä on maksettava, jotta alennus"
-" voidaan myöntää"
+"Viimeinen päivä, johon mennessä alennettu määrä on maksettava, jotta alennus "
+"voidaan myöntää"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -10107,8 +10214,8 @@ msgid ""
 "Line \"%(line)s\" defines line \"%(parent_line)s\" as its parent, but "
 "appears before it in the report. The parent must always come first."
 msgstr ""
-"Rivi \"%(line)s\" määrittelee rivin \"%(parent_line)s\" ylemmäksi tahokseen,"
-" mutta näkyy raportissa ennen sitä. Ylemmän tason rivin on aina oltava "
+"Rivi \"%(line)s\" määrittelee rivin \"%(parent_line)s\" ylemmäksi tahokseen, "
+"mutta näkyy raportissa ennen sitä. Ylemmän tason rivin on aina oltava "
 "ensimmäisenä."
 
 #. module: account
@@ -10266,8 +10373,7 @@ msgstr "Tee suoriteperusteiset kirjaukset"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
-msgid ""
-"Make sure you first activate the audit trail in the accounting settings"
+msgid "Make sure you first activate the audit trail in the accounting settings"
 msgstr "Varmista, että aktivoit ensin kirjausketjun kirjanpitoasetuksissa"
 
 #. module: account
@@ -10292,43 +10398,67 @@ msgstr "Manuaalinen kirjaus"
 #: model:ir.model.fields,help:account.field_account_journal__inbound_payment_method_line_ids
 msgid ""
 "Manual: Get paid by any method outside of Odoo.\n"
-"Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
-"Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
-"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
+"Payment Providers: Each payment provider has its own Payment Method. Request "
+"a transaction on/to a card thanks to a payment token saved by the partner "
+"when buying or subscribing online.\n"
+"Batch Deposit: Collect several customer checks at once generating and "
+"submitting a batch deposit to your bank. Module account_batch_payment is "
+"necessary.\n"
+"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your "
+"partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 "Käsikirja: Saat maksun millä tahansa Odoon ulkopuolisella menetelmällä.\n"
-"Maksupalveluntarjoajat: Jokaisella maksupalveluntarjoajalla on oma maksutapansa. Pyydä maksutapahtuma kortilla/ kortille kumppanin tallentaman maksutunnisteen ansiosta, kun ostat tai tilaat verkossa.\n"
-"Erätalletus: Kerää useita asiakasshekkejä kerralla luomalla ja lähettämällä erätalletus pankkiin. Moduuli account_batch_payment on välttämätön.\n"
-"SEPA-suoraveloitus: Saat maksun SEPA-alueella yhteistyökumppanisi sinulle antaman valtuutuksen ansiosta. Moduuli account_sepa on välttämätön.\n"
+"Maksupalveluntarjoajat: Jokaisella maksupalveluntarjoajalla on oma "
+"maksutapansa. Pyydä maksutapahtuma kortilla/ kortille kumppanin tallentaman "
+"maksutunnisteen ansiosta, kun ostat tai tilaat verkossa.\n"
+"Erätalletus: Kerää useita asiakasshekkejä kerralla luomalla ja lähettämällä "
+"erätalletus pankkiin. Moduuli account_batch_payment on välttämätön.\n"
+"SEPA-suoraveloitus: Saat maksun SEPA-alueella yhteistyökumppanisi sinulle "
+"antaman valtuutuksen ansiosta. Moduuli account_sepa on välttämätön.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__outbound_payment_method_line_ids
 msgid ""
 "Manual: Pay by any method outside of Odoo.\n"
 "Check: Pay bills by check and print it from Odoo.\n"
-"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
+"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit "
+"Transfer file to your bank. Module account_sepa is necessary.\n"
 msgstr ""
 "Käsikirja: Maksa millä tahansa Odoon ulkopuolisella menetelmällä.\n"
 "Tarkista: Maksa laskut sekillä ja tulosta se Odoosta.\n"
-"SEPA-tilisiirto: Maksa SEPA-alueella lähettämällä SEPA-tilisiirtotiedosto pankkiisi. Moduuli account_sepa on välttämätön.\n"
+"SEPA-tilisiirto: Maksa SEPA-alueella lähettämällä SEPA-tilisiirtotiedosto "
+"pankkiisi. Moduuli account_sepa on välttämätön.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__payment_method_line_id
 #: model:ir.model.fields,help:account.field_account_payment_register__payment_method_line_id
 msgid ""
 "Manual: Pay or Get paid by any method outside of Odoo.\n"
-"Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
+"Payment Providers: Each payment provider has its own Payment Method. Request "
+"a transaction on/to a card thanks to a payment token saved by the partner "
+"when buying or subscribing online.\n"
 "Check: Pay bills by check and print it from Odoo.\n"
-"Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
-"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
-"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
+"Batch Deposit: Collect several customer checks at once generating and "
+"submitting a batch deposit to your bank. Module account_batch_payment is "
+"necessary.\n"
+"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit "
+"Transfer file to your bank. Module account_sepa is necessary.\n"
+"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your "
+"partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
-"Käsikirja: Maksa tai saat maksun millä tahansa Odoon ulkopuolisella menetelmällä.\n"
-"Maksupalveluntarjoajat: Jokaisella maksupalveluntarjoajalla on oma maksutapansa. Pyydä maksutapahtuma kortilla/ kortille yhteistyökumppanin tallentaman maksutunnisteen ansiosta, kun ostat tai tilaat verkossa.\n"
+"Käsikirja: Maksa tai saat maksun millä tahansa Odoon ulkopuolisella "
+"menetelmällä.\n"
+"Maksupalveluntarjoajat: Jokaisella maksupalveluntarjoajalla on oma "
+"maksutapansa. Pyydä maksutapahtuma kortilla/ kortille yhteistyökumppanin "
+"tallentaman maksutunnisteen ansiosta, kun ostat tai tilaat verkossa.\n"
 "Tarkista: Maksa laskut sekillä ja tulosta se Odoosta.\n"
-"Erätalletus: Kerää useita asiakasshekkejä kerralla generoimalla ja lähettämällä erätalletus pankkiin. Moduuli account_batch_payment on välttämätön.\n"
-"SEPA-tilisiirto: Maksa SEPA-alueella lähettämällä SEPA-tilisiirtotiedosto pankkiin. Moduuli account_sepa on välttämätön.\n"
-"SEPA-suoraveloitus: Saat maksun SEPA-alueella yhteistyökumppanisi sinulle antaman valtuutuksen avulla. Moduuli account_sepa on välttämätön.\n"
+"Erätalletus: Kerää useita asiakasshekkejä kerralla generoimalla ja "
+"lähettämällä erätalletus pankkiin. Moduuli account_batch_payment on "
+"välttämätön.\n"
+"SEPA-tilisiirto: Maksa SEPA-alueella lähettämällä SEPA-tilisiirtotiedosto "
+"pankkiin. Moduuli account_sepa on välttämätön.\n"
+"SEPA-suoraveloitus: Saat maksun SEPA-alueella yhteistyökumppanisi sinulle "
+"antaman valtuutuksen avulla. Moduuli account_sepa on välttämätön.\n"
 
 #. module: account
 #. odoo-python
@@ -10453,8 +10583,8 @@ msgstr "Vastaavat luokat"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matching_number
 msgid ""
-"Matching number for this line, 'P' if it is only partially reconcile, or the"
-" name of the full reconcile if it exists."
+"Matching number for this line, 'P' if it is only partially reconcile, or the "
+"name of the full reconcile if it exists."
 msgstr ""
 "Tämän rivin kohdistusnumero, 'P', jos se täsmäytetään vain osittain, tai "
 "täydellisen täsmäytyksen nimi, jos sellainen on olemassa."
@@ -11127,8 +11257,8 @@ msgid ""
 "Note that the easiest way to create a vendor credit note is to do it "
 "directly from the vendor bill."
 msgstr ""
-"Huomaa, että helpoin tapa luoda toimittajan hyvityslasku on tehdä se suoraan"
-" toimittajan laskusta."
+"Huomaa, että helpoin tapa luoda toimittajan hyvityslasku on tehdä se suoraan "
+"toimittajan laskusta."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__note
@@ -11972,8 +12102,7 @@ msgstr "Kumppaneilta puuttuvat pankkitilit"
 #: code:addons/account/models/partner.py:0
 msgid "Partners that are used in hashed entries cannot be merged."
 msgstr ""
-"Yhteistyökumppaneita, joita käytetään hashed-merkinnöissä, ei voida "
-"yhdistää."
+"Yhteistyökumppaneita, joita käytetään hashed-merkinnöissä, ei voida yhdistää."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -12390,8 +12519,7 @@ msgstr "Valitse tietyn päivämäärän kurssi"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Please contact your accountant to print the Hash integrity result."
-msgstr ""
-"Ota yhteyttä kirjanpitäjääsi tulostaaksesi Hash-integraation tuloksen."
+msgstr "Ota yhteyttä kirjanpitäjääsi tulostaaksesi Hash-integraation tuloksen."
 
 #. module: account
 #. odoo-python
@@ -12422,8 +12550,7 @@ msgstr "Aseta positiivinen pyöristysarvo."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
-msgid ""
-"Please set at least one of the match texts to create a partner mapping."
+msgid "Please set at least one of the match texts to create a partner mapping."
 msgstr ""
 "Määritä vähintään yksi vastaavuusteksteistä kumppanikohdistuksen luomista "
 "varten."
@@ -12578,8 +12705,8 @@ msgstr "Ennakot"
 msgid ""
 "Preset to create journal entries during a invoices and payments matching"
 msgstr ""
-"Esiasetus, luodaksesi päiväkirjamerkintöjä laskujen ja maksujen sovittamisen"
-" aikana"
+"Esiasetus, luodaksesi päiväkirjamerkintöjä laskujen ja maksujen sovittamisen "
+"aikana"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -13050,8 +13177,8 @@ msgstr "Viite"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__payment_reference
 msgid ""
-"Reference of the document used to issue this payment. Eg. check number, file"
-" name, etc."
+"Reference of the document used to issue this payment. Eg. check number, file "
+"name, etc."
 msgstr ""
 "Viittaus maksun myöntämiseen käytettyyn asiakirjaan. Esimerkiksi. shekin "
 "numero, tiedostonimi jne."
@@ -13138,8 +13265,8 @@ msgstr "Lataa uudelleen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
-"Reload accounting data (taxes, accounts, ...) if you notice inconsistencies."
-" This action is irreversible."
+"Reload accounting data (taxes, accounts, ...) if you notice inconsistencies. "
+"This action is irreversible."
 msgstr ""
 "Lataa kirjanpitotiedot (verot, tilit, ...) uudelleen, jos huomaat "
 "epäjohdonmukaisuuksia. Tämä toimenpide on peruuttamaton."
@@ -13677,7 +13804,7 @@ msgstr "Skannaa minut pankkisovelluksellasi."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document_preview
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_qr_code_preview
 msgid "Scan this QR Code with<br/>your banking application"
 msgstr "Skannaa tämä QR-koodi osoitteessa<br/>pankkisovelluksesi avulla"
 
@@ -13747,8 +13874,7 @@ msgstr "Hae tuotekoodia"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_label
-msgid ""
-"Search in the Statement's Label to find the Invoice/Payment's reference"
+msgid "Search in the Statement's Label to find the Invoice/Payment's reference"
 msgstr "Etsi laskun/maksun viite tilioterivin otsikko-kentästä"
 
 #. module: account
@@ -13889,8 +14015,8 @@ msgid ""
 "Select this if the taxes should use cash basis, which will create an entry "
 "for such taxes on a given account during reconciliation."
 msgstr ""
-"Valitse tämä, jos veroissa tulisi käyttää käteisperustaa, joka luo merkinnän"
-" tällaisille veroille tietyllä tilillä täsmäytyksen aikana."
+"Valitse tämä, jos veroissa tulisi käyttää käteisperustaa, joka luo merkinnän "
+"tällaisille veroille tietyllä tilillä täsmäytyksen aikana."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__selected_payment_method_codes
@@ -13907,7 +14033,8 @@ msgid ""
 msgstr ""
 "Valittaessa vaihtoehto:\n"
 "  \"Varoitusviesti\", käyttäjälle näytetään varoitusviesti\n"
-"  \"Estoviesti, käyttäjälle näytetään poikkeusviesti ja toimenpide estetään.\n"
+"  \"Estoviesti, käyttäjälle näytetään poikkeusviesti ja toimenpide "
+"estetään.\n"
 "Kirjoita näytettävä viesti seuraavaan kenttään."
 
 #. module: account
@@ -14014,8 +14141,8 @@ msgid ""
 msgstr ""
 "Väärennettyjen laskujen lähettäminen väärennetyllä tilinumerolla on yleinen "
 "phishing-käytäntö. Suojautuaksesi tarkista aina uudet pankkitilinumerot, "
-"mieluiten soittamalla myyjälle, sillä phishing tapahtuu yleensä silloin, kun"
-" heidän sähköpostinsa ovat vaarassa. Kun olet tarkistanut, voit aktivoida "
+"mieluiten soittamalla myyjälle, sillä phishing tapahtuu yleensä silloin, kun "
+"heidän sähköpostinsa ovat vaarassa. Kun olet tarkistanut, voit aktivoida "
 "mahdollisuuden lähettää rahaa."
 
 #. module: account
@@ -14152,8 +14279,7 @@ msgstr "Aseta hinta."
 #: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
-"Aseta arvo, joka on suurempi kuin 0,0, jotta luottorajan tarkistus "
-"aktivoituu"
+"Aseta arvo, joka on suurempi kuin 0,0, jotta luottorajan tarkistus aktivoituu"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -14171,8 +14297,7 @@ msgstr "Set active to false to hide the Journal without removing it."
 #: model:ir.model.fields,help:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,help:account.field_account_tax__active
 msgid "Set active to false to hide the tax without removing it."
-msgstr ""
-"Aseta aktiiviseksi false, jos haluat piilottaa veron poistamatta sitä."
+msgstr "Aseta aktiiviseksi false, jos haluat piilottaa veron poistamatta sitä."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14204,8 +14329,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__action_id
 msgid ""
-"Setting this field will turn the line into a link, executing the action when"
-" clicked."
+"Setting this field will turn the line into a link, executing the action when "
+"clicked."
 msgstr ""
 "Tämän kentän asettaminen muuttaa rivin linkiksi, joka suorittaa toiminnon, "
 "kun sitä napsautetaan."
@@ -14236,11 +14361,11 @@ msgstr "Lyhyt koodi"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
 msgid ""
-"Shorter name used for display. The journal entries of this journal will also"
-" be named using this prefix by default."
+"Shorter name used for display. The journal entries of this journal will also "
+"be named using this prefix by default."
 msgstr ""
-"Näytössä käytetään lyhyempää nimeä. Myös tämän päiväkirjan päiväkirjaviennit"
-" nimetään käyttämällä tätä etuliitettä oletusarvoisesti."
+"Näytössä käytetään lyhyempää nimeä. Myös tämän päiväkirjan päiväkirjaviennit "
+"nimetään käyttämällä tätä etuliitettä oletusarvoisesti."
 
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
@@ -14390,7 +14515,8 @@ msgid ""
 "Some payment methods supposed to be unique already exists somewhere else.\n"
 "(%s)"
 msgstr ""
-"Jotkin maksutavat, joiden pitäisi olla ainutlaatuisia, ovat jo olemassa jossain muualla.\n"
+"Jotkin maksutavat, joiden pitäisi olla ainutlaatuisia, ovat jo olemassa "
+"jossain muualla.\n"
 "(%s)"
 
 #. module: account
@@ -14423,11 +14549,11 @@ msgstr "Lähde-sähköposti"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_accrued_orders_wizard__amount
 msgid ""
-"Specify an arbitrary value that will be accrued on a         default account"
-" for the entire order, regardless of the products on the different lines."
+"Specify an arbitrary value that will be accrued on a         default account "
+"for the entire order, regardless of the products on the different lines."
 msgstr ""
-"Määritä mielivaltainen arvo, joka kertyy oletustilille koko tilauksen osalta"
-" riippumatta eri riveillä olevista tuotteista."
+"Määritä mielivaltainen arvo, joka kertyy oletustilille koko tilauksen osalta "
+"riippumatta eri riveillä olevista tuotteista."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__auto_post
@@ -14692,8 +14818,8 @@ msgstr "Tunnisteet"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_tag_ids
 msgid ""
-"Tags assigned to this line by the tax creating it, if any. It determines its"
-" impact on financial reports."
+"Tags assigned to this line by the tax creating it, if any. It determines its "
+"impact on financial reports."
 msgstr ""
 "Tälle riville mahdollisesti määritetyn veron tälle riville määrittämät "
 "tunnisteet. Se määrittää sen vaikutuksen talousraporteilla."
@@ -15038,8 +15164,8 @@ msgstr "Verot näytetään laskuissa myös paikallisessa valuutassa"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid ""
-"Taxes exigible on payment and on invoice cannot be mixed on the same journal"
-" item if they share some tag."
+"Taxes exigible on payment and on invoice cannot be mixed on the same journal "
+"item if they share some tag."
 msgstr ""
 "Maksun ja laskun yhteydessä kannettavia veroja ei voida sekoittaa samaan "
 "päiväkirjan nimikkeeseen, jos niillä on yhteinen tunniste."
@@ -15060,8 +15186,8 @@ msgstr "Oman maan verot, verokannat, tilikartta ja oikeudelliset lausunnot"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_enabled_tax_country_ids
 msgid ""
-"Technical field containing the countries for which this company is using "
-"tax-related features(hence the ones for which l10n modules need to show tax-"
+"Technical field containing the countries for which this company is using tax-"
+"related features(hence the ones for which l10n modules need to show tax-"
 "related fields)."
 msgstr ""
 "Tekninen kenttä, joka sisältää maat, joissa yritys käyttää verotukseen "
@@ -15118,15 +15244,25 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence_override_regex
 msgid ""
-"Technical field used to enforce complex sequence composition that the system would normally misunderstand.\n"
-"This is a regex that can include all the following capture groups: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"
-"The prefix* groups are the separators between the year, month and the actual increasing sequence number (seq).\n"
-"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"Technical field used to enforce complex sequence composition that the system "
+"would normally misunderstand.\n"
+"This is a regex that can include all the following capture groups: prefix1, "
+"year, prefix2, month, prefix3, seq, suffix.\n"
+"The prefix* groups are the separators between the year, month and the actual "
+"increasing sequence number (seq).\n"
+"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
+"P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 msgstr ""
-"Tekninen kenttä, jota käytetään monimutkaisen sekvenssikoostumuksen pakottamiseen, jonka järjestelmä tavallisesti ymmärtäisi väärin.\n"
-"Tämä on säännöllinen lauseke, joka voi sisältää kaikki seuraavat sieppausryhmät: etuliite1, vuosi, etuliite2, kuukausi, etuliite3, seq, jälkiliite.\n"
-"Etuliite* -ryhmät ovat erottimia vuoden, kuukauden ja todellisen kasvavan sekvenssinumeron (seq) välillä.\n"
-"esimerkiksi: ^(? P<prefix1>.*?) (? P<year>\\d{4})(? P<prefix2>\\D*?) (? P<month>\\d{2})(? P<prefix3>\\D+?) (? P<seq>\\d+)(? P<suffix>\\D*?) $</suffix></seq></prefix3></month></prefix2></year></prefix1>"
+"Tekninen kenttä, jota käytetään monimutkaisen sekvenssikoostumuksen "
+"pakottamiseen, jonka järjestelmä tavallisesti ymmärtäisi väärin.\n"
+"Tämä on säännöllinen lauseke, joka voi sisältää kaikki seuraavat "
+"sieppausryhmät: etuliite1, vuosi, etuliite2, kuukausi, etuliite3, seq, "
+"jälkiliite.\n"
+"Etuliite* -ryhmät ovat erottimia vuoden, kuukauden ja todellisen kasvavan "
+"sekvenssinumeron (seq) välillä.\n"
+"esimerkiksi: ^(? P<prefix1>.*?) (? P<year>\\d{4})(? P<prefix2>\\D*?) (? "
+"P<month>\\d{2})(? P<prefix3>\\D+?) (? P<seq>\\d+)(? P<suffix>\\D*?) $</"
+"suffix></seq></prefix3></month></prefix2></year></prefix1>"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -15192,11 +15328,17 @@ msgstr "Se on avausviennin päivämäärä."
 #. odoo-python
 #: code:addons/account/models/sequence_mixin.py:0
 msgid ""
-"The %(date_field)s (%(date)s) you've entered isn't aligned with the existing sequence number (%(sequence)s). Clear the sequence number to proceed.\n"
-"To maintain date-based sequences, select entries and use the resequence option from the actions menu, available in developer mode."
+"The %(date_field)s (%(date)s) you've entered isn't aligned with the existing "
+"sequence number (%(sequence)s). Clear the sequence number to proceed.\n"
+"To maintain date-based sequences, select entries and use the resequence "
+"option from the actions menu, available in developer mode."
 msgstr ""
-"Syöttämäsi %(date_field)s (%(date)s) ei ole linjassa olemassa olevan järjestysnumeron (%(sequence)s) kanssa. Tyhjennä järjestysnumero jatkaaksesi.\n"
-"Jos haluat ylläpitää päivämäärään perustuvia sekvenssejä, valitse merkinnät ja käytä kehittäjätilassa käytettävissä olevan Toiminnot-valikon järjestyksen muuttaminen -vaihtoehtoa."
+"Syöttämäsi %(date_field)s (%(date)s) ei ole linjassa olemassa olevan "
+"järjestysnumeron (%(sequence)s) kanssa. Tyhjennä järjestysnumero "
+"jatkaaksesi.\n"
+"Jos haluat ylläpitää päivämäärään perustuvia sekvenssejä, valitse merkinnät "
+"ja käytä kehittäjätilassa käytettävissä olevan Toiminnot-valikon "
+"järjestyksen muuttaminen -vaihtoehtoa."
 
 #. module: account
 #. odoo-python
@@ -15205,8 +15347,8 @@ msgid ""
 "The %s chart template shouldn't be selected directly. Instead, you should "
 "directly select the chart template related to your country."
 msgstr ""
-"Kaavion mallia %s ei pitäisi valita suoraan. Sen sijaan sinun pitäisi valita"
-" suoraan maasi kaavion malli."
+"Kaavion mallia %s ei pitäisi valita suoraan. Sen sijaan sinun pitäisi valita "
+"suoraan maasi kaavion malli."
 
 #. module: account
 #. odoo-python
@@ -15234,8 +15376,8 @@ msgstr "Varhaisen maksun alennuspäivien on oltava ehdottomasti positiivisia."
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 msgid ""
-"The Early Payment Discount functionality can only be used with payment terms"
-" using a single 100% line. "
+"The Early Payment Discount functionality can only be used with payment terms "
+"using a single 100% line. "
 msgstr ""
 "Varhaisen maksun alennus -toimintoa voidaan käyttää vain maksuehtojen "
 "kanssa, joissa käytetään yhtä 100% li riviä. "
@@ -15279,8 +15421,8 @@ msgid ""
 "The Journal Entry sequence is not conform to the current format. Only the "
 "Accountant can change it."
 msgstr ""
-"Päiväkirjamerkintöjen järjestys ei vastaa nykyistä muotoa. Vain kirjanpitäjä"
-" voi muuttaa sitä."
+"Päiväkirjamerkintöjen järjestys ei vastaa nykyistä muotoa. Vain kirjanpitäjä "
+"voi muuttaa sitä."
 
 #. module: account
 #. odoo-python
@@ -15306,11 +15448,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid ""
-"The Unit of Measure (UoM) '%(uom)s' you have selected for product "
-"'%(product)s', is incompatible with its category : %(category)s."
+"The Unit of Measure (UoM) '%(uom)s' you have selected for product '%"
+"(product)s', is incompatible with its category : %(category)s."
 msgstr ""
-"Tuotteelle \"%(product)s\" valitsemasi mittayksikkö (UoM) \"%(uom)s\" ei ole"
-" yhteensopiva sen kategorian kanssa : %(category)s."
+"Tuotteelle \"%(product)s\" valitsemasi mittayksikkö (UoM) \"%(uom)s\" ei ole "
+"yhteensopiva sen kategorian kanssa : %(category)s."
 
 #. module: account
 #. odoo-python
@@ -15331,8 +15473,8 @@ msgid ""
 "The account is already in use in a 'sale' or 'purchase' journal. This means "
 "that the account's type couldn't be 'receivable' or 'payable'."
 msgstr ""
-"Tili on jo käytössä osto- tai myyntipäiväkirjalla. Se tarkoittaa, että tilin"
-" tyyppi ei voi olla 'myyntisaamiset' tai 'ostovelat'."
+"Tili on jo käytössä osto- tai myyntipäiväkirjalla. Se tarkoittaa, että tilin "
+"tyyppi ei voi olla 'myyntisaamiset' tai 'ostovelat'."
 
 #. module: account
 #. odoo-python
@@ -15362,8 +15504,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__amount_currency
 #: model:ir.model.fields,help:account.field_account_move_line__amount_currency
 msgid ""
-"The amount expressed in an optional other currency if it is a multi-currency"
-" entry."
+"The amount expressed in an optional other currency if it is a multi-currency "
+"entry."
 msgstr ""
 "Summa on ilmoitettu valinnaisessa toisessa valuutassa, jos kyseessä on "
 "monivaluuttainen merkintä."
@@ -15371,8 +15513,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_amount_currency_balance_sign
 msgid ""
-"The amount expressed in the secondary currency must be positive when account"
-" is debited and negative when account is credited. If the currency is the "
+"The amount expressed in the secondary currency must be positive when account "
+"is debited and negative when account is credited. If the currency is the "
 "same as the one from the company, this amount must strictly be equal to the "
 "balance."
 msgstr ""
@@ -15385,10 +15527,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"The amount for %(partner_name)s appears unusual. Based on your historical data, the expected amount is %(mean)s (± %(wiggle)s).\n"
+"The amount for %(partner_name)s appears unusual. Based on your historical "
+"data, the expected amount is %(mean)s (± %(wiggle)s).\n"
 "Please verify if this amount is accurate."
 msgstr ""
-"Määrän %(partner_name)s arvo vaikuttaa epätavalliselta. Historiatietojesi perusteella odotettu määrä on %(mean)s (± %(wiggle)s).\n"
+"Määrän %(partner_name)s arvo vaikuttaa epätavalliselta. Historiatietojesi "
+"perusteella odotettu määrä on %(mean)s (± %(wiggle)s).\n"
 "Tarkista, onko tämä määrä oikea."
 
 #. module: account
@@ -15422,10 +15566,14 @@ msgstr "Pankkisuorituksiin käytettävä pankkitiliote"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"The billing frequency for %(partner_name)s appears unusual. Based on your historical data, the expected next invoice date is not before %(expected_date)s (every %(mean)s (± %(wiggle)s) days).\n"
+"The billing frequency for %(partner_name)s appears unusual. Based on your "
+"historical data, the expected next invoice date is not before %"
+"(expected_date)s (every %(mean)s (± %(wiggle)s) days).\n"
 "Please verify if this date is accurate."
 msgstr ""
-"Laskutustiheys %(partner_name)s vaikuttaa epätavalliselta. Historiatietojesi perusteella odotettu seuraava laskutuspäivä on aikaisintaan %(expected_date)s (joka %(mean)s (± %(wiggle)s) päivä).\n"
+"Laskutustiheys %(partner_name)s vaikuttaa epätavalliselta. Historiatietojesi "
+"perusteella odotettu seuraava laskutuspäivä on aikaisintaan %"
+"(expected_date)s (joka %(mean)s (± %(wiggle)s) päivä).\n"
 "Tarkista, onko tämä päivämäärä oikea."
 
 #. module: account
@@ -15487,8 +15635,8 @@ msgstr "Yritys, jolle tämä jakorivi kuuluu."
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid ""
-"The country code of the foreign VAT number does not match any country in the"
-" group."
+"The country code of the foreign VAT number does not match any country in the "
+"group."
 msgstr "Ulkomaisen ALV-numeron maakoodi ei vastaa mitään ryhmän maata."
 
 #. module: account
@@ -15505,8 +15653,8 @@ msgstr "Maa, jolle tämä raportti on saatavilla."
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid ""
-"The country set on the foreign VAT fiscal position must match the one set on"
-" the report."
+"The country set on the foreign VAT fiscal position must match the one set on "
+"the report."
 msgstr ""
 "Ulkomaisen alv-verokannan maan on vastattava raportissa määritettyä maata."
 
@@ -15531,8 +15679,8 @@ msgstr "Nykyinen suurin luku on"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"The current total is %(current_total)s but the expected total is "
-"%(expected_total)s. In order to post the invoice/bill, you can adjust its "
+"The current total is %(current_total)s but the expected total is %"
+"(expected_total)s. In order to post the invoice/bill, you can adjust its "
 "lines or the expected Total (tax inc.)."
 msgstr ""
 "Tämänhetkinen kokonaismäärä on %(current_total)s, mutta odotettu "
@@ -15576,8 +15724,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__sale_lock_date
 msgid ""
-"The date the Sale Lock Date is set to by this exception. If the lock date is"
-" not changed it is set to the maximal date."
+"The date the Sale Lock Date is set to by this exception. If the lock date is "
+"not changed it is set to the maximal date."
 msgstr ""
 "Päivämäärä, johon tämä poikkeus asettaa myyntilukituspäivän. Jos "
 "lukituspäivämäärää ei muuteta, se asetetaan enimmäispäivämäärään."
@@ -15726,8 +15874,8 @@ msgstr "Ulkomaan valuutan on oltava eri kuin päiväkirjan valuutan: %s"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid ""
-"The foreign currency set on the journal '%(journal)s' and the account "
-"'%(account)s' must be the same."
+"The foreign currency set on the journal '%(journal)s' and the account '%"
+"(account)s' must be the same."
 msgstr ""
 "Päiväkirjan  \"%(journal)s\" ja tilin \"%(account)s\" ulkomaanvaluutan on "
 "oltava sama."
@@ -15741,10 +15889,12 @@ msgstr "Ulkomainen verokanta, jota varten tämä ulkoinen arvo on muodostettu."
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid ""
 "The hash chain is compliant: it is not possible to alter the\n"
-"                                            data without breaking the hash chain for subsequent parts."
+"                                            data without breaking the hash "
+"chain for subsequent parts."
 msgstr ""
 "Lukitusketju on vaatimusten mukainen: ei ole mahdollista muuttaa\n"
-"                                            dataa rikkomatta lukitusketjua seuraavien osien osalta."
+"                                            dataa rikkomatta lukitusketjua "
+"seuraavien osien osalta."
 
 #. module: account
 #. odoo-python
@@ -15775,11 +15925,15 @@ msgstr "Lasku ei ole luonnos, sitä ei päivitetty liitteestä."
 #. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid ""
-"The journal entry %s reached an invalid state regarding its related statement line.\n"
-"To be consistent, the journal entry must always have exactly one journal item involving the bank/cash account."
+"The journal entry %s reached an invalid state regarding its related "
+"statement line.\n"
+"To be consistent, the journal entry must always have exactly one journal "
+"item involving the bank/cash account."
 msgstr ""
-"Päiväkirjavienti %s  on päätynyt virhetilaan siihen liittyvällä tilioterivillä.\n"
-"Jotta päiväkirjavienti olisi johdonmukainen, siinä on aina oltava täsmälleen yksi päiväkirjarivi, joka liittyy pankki-/käteistiliin."
+"Päiväkirjavienti %s  on päätynyt virhetilaan siihen liittyvällä "
+"tilioterivillä.\n"
+"Jotta päiväkirjavienti olisi johdonmukainen, siinä on aina oltava täsmälleen "
+"yksi päiväkirjarivi, joka liittyy pankki-/käteistiliin."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -15813,8 +15967,7 @@ msgstr "Päiväkirjarivi ei ole linkitetty oikealle kirjanpidon tilille"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_month
-msgid ""
-"The last day of the month will be used if the chosen day doesn't exist."
+msgid "The last day of the month will be used if the chosen day doesn't exist."
 msgstr "Kuukauden viimeistä päivää käytetään, jos valittua päivää ei ole."
 
 #. module: account
@@ -15826,13 +15979,16 @@ msgstr "Aloitus- ja lopetuskoodin etuliitteen pituuden on oltava sama"
 #: model:ir.model.fields,help:account.field_account_reconcile_model__partner_mapping_line_ids
 msgid ""
 "The mapping uses regular expressions.\n"
-"- To Match the text at the beginning of the line (in label or notes), simply fill in your text.\n"
+"- To Match the text at the beginning of the line (in label or notes), simply "
+"fill in your text.\n"
 "- To Match the text anywhere (in label or notes), put your text between .*\n"
 "  e.g: .*N°48748 abc123.*"
 msgstr ""
 "Ohjauksessa käytetään säännöllisiä lausekkeita.\n"
-"- Jos haluat kohdistaa rivin alussa olevan tekstin (otsikoissa tai muistiinpanoissa), täytä vain teksti.\n"
-"- Jos haluat sovittaa tekstin mihin tahansa (otsikoihin tai muistiinpanoihin), aseta teksti väliin .*\n"
+"- Jos haluat kohdistaa rivin alussa olevan tekstin (otsikoissa tai "
+"muistiinpanoissa), täytä vain teksti.\n"
+"- Jos haluat sovittaa tekstin mihin tahansa (otsikoihin tai "
+"muistiinpanoihin), aseta teksti väliin .*\n"
 "  esimerkiksi: .*Nro 48748 abc123.*"
 
 #. module: account
@@ -15855,9 +16011,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid ""
-"The operation is refused as it would impact an already issued tax statement."
-" Please change the journal entry date or the following lock dates to "
-"proceed: %(lock_date_info)s."
+"The operation is refused as it would impact an already issued tax statement. "
+"Please change the journal entry date or the following lock dates to proceed: "
+"%(lock_date_info)s."
 msgstr ""
 "Toimenpidettä ei hyväksytä, koska se vaikuttaisi jo annettuun "
 "veroilmoitukseen. Muuta kirjauspäivämäärää tai seuraavia lukituspäivämääriä "
@@ -15881,9 +16037,9 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__sequence
 msgid ""
-"The order in which distribution lines are displayed and matched. For refunds"
-" to work properly, invoice distribution lines should be arranged in the same"
-" order as the credit note distribution lines they correspond to."
+"The order in which distribution lines are displayed and matched. For refunds "
+"to work properly, invoice distribution lines should be arranged in the same "
+"order as the credit note distribution lines they correspond to."
 msgstr ""
 "Jakorivien näyttö- ja täsmäytysjärjestys. Jotta hyvitykset toimisivat "
 "oikein, laskujen jakorivit on järjestettävä samaan järjestykseen kuin "
@@ -15893,8 +16049,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "The partner cannot be deleted because it is used in Accounting"
-msgstr ""
-"Kumppania ei voida poistaa, koska sitä käytetään Kirjanpito-moduulissa"
+msgstr "Kumppania ei voida poistaa, koska sitä käytetään Kirjanpito-moduulissa"
 
 #. module: account
 #. odoo-python
@@ -15938,23 +16093,24 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
 msgid ""
-"The reconciliation model will only be applied to the selected "
-"customer/vendor categories."
+"The reconciliation model will only be applied to the selected customer/"
+"vendor categories."
 msgstr ""
 "Täsmäytysmallia sovelletaan vain valittuihin asiakas / toimittajan luokkiin."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_ids
 msgid ""
-"The reconciliation model will only be applied to the selected "
-"customers/vendors."
+"The reconciliation model will only be applied to the selected customers/"
+"vendors."
 msgstr ""
 "Täsmäytysmallia sovelletaan vain valittuihin asiakas / toimittajan luokkiin."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_nature
 msgid ""
-"The reconciliation model will only be applied to the selected transaction type:\n"
+"The reconciliation model will only be applied to the selected transaction "
+"type:\n"
 "        * Amount Received: Only applied when receiving an amount.\n"
 "        * Amount Paid: Only applied when paying an amount.\n"
 "        * Amount Paid/Received: Applied in both cases."
@@ -15962,7 +16118,8 @@ msgstr ""
 "Täsmäytysmallia sovelletaan vain valittuun transaktiotyyppiin:\n"
 "         * Vastaanotettu määrä: Sovelletaan vain, kun vastaanotat summan.\n"
 "         * Maksettu määrä: Sovelletaan vain, kun maksat summan.\n"
-"         * Maksettu / vastaanotettu määrä: Sovelletaan molemmissa tapauksissa."
+"         * Maksettu / vastaanotettu määrä: Sovelletaan molemmissa "
+"tapauksissa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner
@@ -15983,12 +16140,14 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
 msgid ""
 "The reconciliation model will only be applied when the label:\n"
-"        * Contains: The proposition label must contains this string (case insensitive).\n"
+"        * Contains: The proposition label must contains this string (case "
+"insensitive).\n"
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
 "Täsmäytysmallia sovelletaan vain, kun etiketti:\n"
-"         * Sisältää: Ehdotusmerkinnässä on oltava tämä merkkijono (tapausherkkä).\n"
+"         * Sisältää: Ehdotusmerkinnässä on oltava tämä merkkijono "
+"(tapausherkkä).\n"
 "         * Ei sisällä: \"Sisältää\" \".\n"
 "         * Match Regex: Määritä oma säännöllinen lauseke."
 
@@ -15996,12 +16155,14 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_note
 msgid ""
 "The reconciliation model will only be applied when the note:\n"
-"        * Contains: The proposition note must contains this string (case insensitive).\n"
+"        * Contains: The proposition note must contains this string (case "
+"insensitive).\n"
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
 "Täsmäytysmallia käytetään vain, kun merkintä:\n"
-"        * Sisältää: Ehdotushuomautuksen on sisällettävä tämä merkkijono (kirjainkoolla ei merkitystä).\n"
+"        * Sisältää: Ehdotushuomautuksen on sisällettävä tämä merkkijono "
+"(kirjainkoolla ei merkitystä).\n"
 "        * Ei sisällä: \"Sisältää\" kieltäminen.\n"
 "        * Kohdista säännöllinen lauseke: Määritä oma säännöllinen lauseke."
 
@@ -16009,12 +16170,14 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_transaction_type
 msgid ""
 "The reconciliation model will only be applied when the transaction type:\n"
-"        * Contains: The proposition transaction type must contains this string (case insensitive).\n"
+"        * Contains: The proposition transaction type must contains this "
+"string (case insensitive).\n"
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
 "Täsmäytysmallia käytetään vain, kun tapahtumatyyppi:\n"
-"        * Sisältää: Ehdotuksen tapahtumatyypin on sisällettävä tämä merkkijono (kirjainkoolla ei merkitystä).\n"
+"        * Sisältää: Ehdotuksen tapahtumatyypin on sisällettävä tämä "
+"merkkijono (kirjainkoolla ei merkitystä).\n"
 "        * Ei sisällä: \"Sisältää\" kieltäminen.\n"
 "        * Kohdista säännöllinen lauseke: Määritä oma säännöllinen lauseke."
 
@@ -16042,8 +16205,8 @@ msgid ""
 "The register payment wizard should only be called on account.move or "
 "account.move.line records."
 msgstr ""
-"Kirjaa maksu -toimintoa tulee kutsua vain account.move tai account.move.line"
-" -tietueissa."
+"Kirjaa maksu -toimintoa tulee kutsua vain account.move tai account.move.line "
+"-tietueissa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report__root_report_id
@@ -16092,28 +16255,30 @@ msgstr "Valittu päivämäärä"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid ""
-"The selected destination account is set to use a specific currency. Every entry transferred to it will be converted into this currency, causing\n"
+"The selected destination account is set to use a specific currency. Every "
+"entry transferred to it will be converted into this currency, causing\n"
 "                        the loss of any pre-existing foreign currency amount."
 msgstr ""
-"Valittu kohdetili on asetettu käyttämään tiettyä valuuttaa. Jokainen siihen siirretty vienti muunnetaan tähän valuuttaan, mikä aiheuttaa\n"
+"Valittu kohdetili on asetettu käyttämään tiettyä valuuttaa. Jokainen siihen "
+"siirretty vienti muunnetaan tähän valuuttaan, mikä aiheuttaa\n"
 "                        olemassa olevien valuuttamäärien häviämisen."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid ""
-"The selected payment method is not available for this payment, please select"
-" the payment method again."
+"The selected payment method is not available for this payment, please select "
+"the payment method again."
 msgstr ""
-"Valittu maksutapa ei ole käytettävissä tätä maksua varten, valitse maksutapa"
-" uudelleen."
+"Valittu maksutapa ei ole käytettävissä tätä maksua varten, valitse maksutapa "
+"uudelleen."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid ""
-"The sending of invoices is not set up properly, make sure the report used is"
-" set for invoices."
+"The sending of invoices is not set up properly, make sure the report used is "
+"set for invoices."
 msgstr ""
 "Laskujen lähettämistä ei ole määritetty oikein, varmista, että käytetty "
 "raportti on määritetty laskuja varten."
@@ -16137,11 +16302,14 @@ msgstr "Sekvenssimuoto on muuttunut."
 #. odoo-python
 #: code:addons/account/models/sequence_mixin.py:0
 msgid ""
-"The sequence regex should at least contain the seq grouping keys. For instance:\n"
+"The sequence regex should at least contain the seq grouping keys. For "
+"instance:\n"
 "^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
 msgstr ""
-"Sekvenssin säännöllisen lausekkeen tulisi sisältää vähintään seq-ryhmittelyavaimet. Esimerkiksi:\n"
-"^(? P<prefix1>.*?) (? P<seq>\\d*)(? P<suffix>\\D*?) $</suffix></seq></prefix1>"
+"Sekvenssin säännöllisen lausekkeen tulisi sisältää vähintään seq-"
+"ryhmittelyavaimet. Esimerkiksi:\n"
+"^(? P<prefix1>.*?) (? P<seq>\\d*)(? P<suffix>\\D*?) $</suffix></seq></"
+"prefix1>"
 
 #. module: account
 #. odoo-python
@@ -16211,11 +16379,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_resequence.py:0
 msgid ""
-"The sequences of this journal are different for Invoices and Refunds but you"
-" selected some of both types."
+"The sequences of this journal are different for Invoices and Refunds but you "
+"selected some of both types."
 msgstr ""
-"Tämän päiväkirjan sekvenssit ovat erilaiset laskuille ja hyvityksille, mutta"
-" valitsit molempia tyyppejä."
+"Tämän päiväkirjan sekvenssit ovat erilaiset laskuille ja hyvityksille, mutta "
+"valitsit molempia tyyppejä."
 
 #. module: account
 #. odoo-python
@@ -16344,12 +16512,12 @@ msgstr ""
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid ""
 "There are still unreconciled bank statement lines before the selected date. "
-"The entries from journal prefixes containing them will not be secured: "
-"%(prefix_info)s"
+"The entries from journal prefixes containing them will not be secured: %"
+"(prefix_info)s"
 msgstr ""
 "Ennen valittua päivämäärää on vielä tiliöimättömiä tiliöintirivejä. Niitä "
-"sisältävien päiväkirjojen etuliitteiden kirjauksia ei suojata: "
-"%(prefix_info)s"
+"sisältävien päiväkirjojen etuliitteiden kirjauksia ei suojata: %"
+"(prefix_info)s"
 
 #. module: account
 #. odoo-python
@@ -16401,7 +16569,8 @@ msgid ""
 "There was an error when trying to add the banner to the original PDF.\n"
 "Please make sure the source file is valid."
 msgstr ""
-"Kun banneria yritettiin lisätä alkuperäiseen PDF-tiedostoon, tapahtui virhe.\n"
+"Kun banneria yritettiin lisätä alkuperäiseen PDF-tiedostoon, tapahtui "
+"virhe.\n"
 "Varmista, että lähdetiedosto on kelvollinen."
 
 #. module: account
@@ -16439,12 +16608,12 @@ msgstr "Kuluva vuosi"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid ""
-"This account is configured in %(journal_names)s journal(s) (ids "
-"%(journal_ids)s) as payment debit or credit account. This means that this "
+"This account is configured in %(journal_names)s journal(s) (ids %"
+"(journal_ids)s) as payment debit or credit account. This means that this "
 "account's type should be reconcilable."
 msgstr ""
-"Tämä tili on määritetty %(journal_names)s päiväkirjalla (ids "
-"%(journal_ids)s) maksun debet- tai kredit-tiliksi. Tämä tarkoittaa, että "
+"Tämä tili on määritetty %(journal_names)s päiväkirjalla (ids %"
+"(journal_ids)s) maksun debet- tai kredit-tiliksi. Tämä tarkoittaa, että "
 "tämän tilin tyypin pitäisi olla täsmäytettävä."
 
 #. module: account
@@ -16484,18 +16653,19 @@ msgstr "Tämä toiminto ei ole käytettävissä tässä dokumentissa."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
-"This allows accountants to manage analytic and crossovered budgets. Once the"
-" master budgets and the budgets are defined, the project managers can set "
-"the planned amount on each analytic account."
+"This allows accountants to manage analytic and crossovered budgets. Once the "
+"master budgets and the budgets are defined, the project managers can set the "
+"planned amount on each analytic account."
 msgstr ""
-"Näin tilintarkastajat voivat hallita analyyttisiä ja ristiriitaisia "
-"​​budjetteja. Kun päämäärärahat ja budjetit on määritelty, projektipäälliköt"
-" voivat asettaa suunnitellun määrän jokaiselle analyyttiselle tilille."
+"Näin tilintarkastajat voivat hallita analyyttisiä ja ristiriitaisia ​​"
+"budjetteja. Kun päämäärärahat ja budjetit on määritelty, projektipäälliköt "
+"voivat asettaa suunnitellun määrän jokaiselle analyyttiselle tilille."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__module_account_batch_payment
 msgid ""
-"This allows you grouping payments into a single batch and eases the reconciliation process.\n"
+"This allows you grouping payments into a single batch and eases the "
+"reconciliation process.\n"
 "-This installs the account_batch_payment module."
 msgstr ""
 "Näin voit ryhmitellä maksut yhteen erään ja helpottaa täsmäytysprosessia.\n"
@@ -16529,8 +16699,8 @@ msgid ""
 "This document is protected by a hash. Therefore, you cannot edit the "
 "following fields: %s."
 msgstr ""
-"Tämä asiakirja on suojattu hash-tunnisteella. Siksi et voi muokata seuraavia"
-" kenttiä: %s."
+"Tämä asiakirja on suojattu hash-tunnisteella. Siksi et voi muokata seuraavia "
+"kenttiä: %s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__name_searchable
@@ -16543,27 +16713,27 @@ msgstr ""
 "Tämä valekenttä antaa meille mahdollisuuden käyttää toista hakumenetelmää "
 "kentälle 'name'.Tämä antaa enemmän vapautta siihen, miten 'name'-kenttää "
 "haetaan verrattuna 'filter_domain'-kenttään.Katso '_search_name' ja "
-"'_parse_name_search' siitä, miksi tämä ei ole mahdollista "
-"'filter_domain'-kentässä."
+"'_parse_name_search' siitä, miksi tämä ei ole mahdollista 'filter_domain'-"
+"kentässä."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This entry contains one or more taxes that are incompatible with your fiscal"
-" country. Check company fiscal country in the settings and tax country in "
+"This entry contains one or more taxes that are incompatible with your fiscal "
+"country. Check company fiscal country in the settings and tax country in "
 "taxes configuration."
 msgstr ""
-"Tämä vienti sisältää yhden tai useamman veron, jotka eivät ole yhteensopivia"
-" verokantasi kanssa. Tarkista asetuksista asetettu maa ja veromaa "
+"Tämä vienti sisältää yhden tai useamman veron, jotka eivät ole yhteensopivia "
+"verokantasi kanssa. Tarkista asetuksista asetettu maa ja veromaa "
 "verokonfiguroinneilla."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This entry contains taxes that are not compatible with your fiscal position."
-" Check the country set in fiscal position and in your tax configuration."
+"This entry contains taxes that are not compatible with your fiscal position. "
+"Check the country set in fiscal position and in your tax configuration."
 msgstr ""
 "Tämä vienti sisältää veroja, jotka eivät ole yhteensopivia verokantasi "
 "kanssa. Tarkista asetettu maa sekä verokannalla että verokonfiguroinneilla."
@@ -16725,7 +16895,8 @@ msgstr ""
 #: code:addons/account/models/product.py:0
 msgid ""
 "This product is already being used in posted Journal Entries.\n"
-"If you want to change its Unit of Measure, please archive this product and create a new one."
+"If you want to change its Unit of Measure, please archive this product and "
+"create a new one."
 msgstr ""
 "Tätä tuotetta on jo käytetty kirjatuilla päiväkirjavienneillä.\n"
 "Jos haluat muuttaa sen mittayksikköä, arkistoi tämä tuota ja luo uusi tuote."
@@ -16771,8 +16942,8 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
 msgid ""
-"This wizard will validate all journal entries selected. Once journal entries"
-" are validated, you can not update them anymore."
+"This wizard will validate all journal entries selected. Once journal entries "
+"are validated, you can not update them anymore."
 msgstr ""
 "Tämä ohjattu toiminto vahvistaa kaikki valitut päiväkirjamerkinnät. Kun "
 "päiväkirjamerkinnät on vahvistettu, et voi päivittää niitä enää."
@@ -16839,8 +17010,7 @@ msgstr "Vahvistettavaksi"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
 msgid ""
-"To add information to a previously sent invoice, reply to your \"sent\" "
-"email"
+"To add information to a previously sent invoice, reply to your \"sent\" email"
 msgstr ""
 "Jos haluat lisätä tietoja aiemmin lähetettyyn laskuun, vastaa "
 "\"lähetettyyn\" sähköpostiin"
@@ -16854,10 +17024,12 @@ msgstr "Tarkistettava"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"To keep the audit trail, you can not delete journal entries once they have been posted.\n"
+"To keep the audit trail, you can not delete journal entries once they have "
+"been posted.\n"
 "Instead, you can cancel the journal entry."
 msgstr ""
-"Auditointipolun säilyttämiseksi et voi poistaa päiväkirjamerkintöjä sen jälkeen, kun ne on kirjattu.\n"
+"Auditointipolun säilyttämiseksi et voi poistaa päiväkirjamerkintöjä sen "
+"jälkeen, kun ne on kirjattu.\n"
 "Sen sijaan voit peruuttaa päiväkirjamerkinnän."
 
 #. module: account
@@ -16870,8 +17042,8 @@ msgstr "Maksettavaa"
 #: code:addons/account/models/account_payment.py:0
 msgid ""
 "To record payments with %(method_name)s, the recipient bank account must be "
-"manually validated. You should go on the partner bank account of %(partner)s"
-" in order to validate it."
+"manually validated. You should go on the partner bank account of %(partner)s "
+"in order to validate it."
 msgstr ""
 "Maksujen kirjaamiseksi %(method_name)s-tilillä vastaanottajan pankkitili on "
 "vahvistettava manuaalisesti. Sinun on mentävä %(partner)s kumppanin "
@@ -16882,8 +17054,8 @@ msgstr ""
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid ""
 "To record payments with %(payment_method)s, the recipient bank account must "
-"be manually validated. You should go on the partner bank account in order to"
-" validate it."
+"be manually validated. You should go on the partner bank account in order to "
+"validate it."
 msgstr ""
 "Maksujen kirjaamiseksi %(payment_method)s-tilillä vastaanottajan pankkitili "
 "on vahvistettava manuaalisesti. Sinun on mentävä yhteistyökumppanin "
@@ -16997,11 +17169,10 @@ msgstr "Yhteensä etumerkillä"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"Total amount due (including sales orders and this document): "
-"%(total_credit)s"
+"Total amount due (including sales orders and this document): %(total_credit)s"
 msgstr ""
-"Maksettava kokonaismäärä (mukaan lukien myyntitilaukset ja tämä asiakirja): "
-"%(total_credit)s"
+"Maksettava kokonaismäärä (mukaan lukien myyntitilaukset ja tämä asiakirja): %"
+"(total_credit)s"
 
 #. module: account
 #. odoo-python
@@ -17149,8 +17320,8 @@ msgstr "Siirrä kohteeseen %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit."
-"                                      Set a value greater than 0.0 to "
+"Total Receivable amount exceeding a "
+"limit.                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
 "Käynnistä hälytyksiä laskuja ja myyntitilauksia luodessa kumppaneille, "
@@ -17531,8 +17702,8 @@ msgstr "Käytä raportin päivämäärän viimeisintä kurssia"
 #. module: account
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_0
 msgid ""
-"Use the “<i>Send by Post</i>” option to post invoices automatically. For the"
-" cost of a local stamp, we do all the manual work: your invoice will be "
+"Use the “<i>Send by Post</i>” option to post invoices automatically. For the "
+"cost of a local stamp, we do all the manual work: your invoice will be "
 "printed in the right country, put in an envelop and sent by snail mail. Use "
 "this feature from the list view to post hundreds of invoices in bulk."
 msgstr ""
@@ -17547,7 +17718,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move__quick_edit_total_amount
 msgid ""
 "Use this field to encode the total amount of the invoice.\n"
-"Odoo will automatically create one invoice line with default values to match it."
+"Odoo will automatically create one invoice line with default values to match "
+"it."
 msgstr ""
 "Käytä tätä kenttää laskun kokonaissumman koodaamiseen.\n"
 "Odoo luo automaattisesti yhden laskurivin, jonka oletusarvot vastaavat sitä."
@@ -17587,8 +17759,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__profit_account_id
 msgid ""
-"Used to register a profit when the ending balance of a cash register differs"
-" from what the system computes"
+"Used to register a profit when the ending balance of a cash register differs "
+"from what the system computes"
 msgstr ""
 "Kirjataan voitto, joka syntyy jos kassan loppuarvo poikkeaa systeemin "
 "laskemasta"
@@ -17711,16 +17883,22 @@ msgstr "Arvo"
 msgid ""
 "Value for the amount of the writeoff line\n"
 "    * Percentage: Percentage of the balance, between 0 and 100.\n"
-"    * Fixed: The fixed value of the writeoff. The amount will count as a debit if it is negative, as a credit if it is positive.\n"
-"    * From Label: There is no need for regex delimiter, only the regex is needed. For instance if you want to extract the amount from\n"
+"    * Fixed: The fixed value of the writeoff. The amount will count as a "
+"debit if it is negative, as a credit if it is positive.\n"
+"    * From Label: There is no need for regex delimiter, only the regex is "
+"needed. For instance if you want to extract the amount from\n"
 "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
 "You could enter\n"
 "BRT: ([\\d,]+)"
 msgstr ""
 "Alaskirjausrivin summan arvo\n"
 "    * Prosenttiosuus: Prosenttiosuus saldosta 0-100 välillä.\n"
-"    * Kiinteä: Alaskirjauksella kiinteä arvo. Summa lasketaan debet-vientinä, jos se on negatiivinen, ja kredit-vientinä, jos se on positiivinen.\n"
-"    * Otsikosta: Säännöllisen lausekkeen erotinta ei tarvita, vain säännöllinen lauseke tarvitaan. Jos esimerkiksi haluat poimia summan kohteesta\n"
+"    * Kiinteä: Alaskirjauksella kiinteä arvo. Summa lasketaan debet-"
+"vientinä, jos se on negatiivinen, ja kredit-vientinä, jos se on "
+"positiivinen.\n"
+"    * Otsikosta: Säännöllisen lausekkeen erotinta ei tarvita, vain "
+"säännöllinen lauseke tarvitaan. Jos esimerkiksi haluat poimia summan "
+"kohteesta\n"
 "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
 "Voit syöttää\n"
 "BRT: ([\\d,]+)"
@@ -17836,7 +18014,8 @@ msgid ""
 "                document in Odoo."
 msgstr ""
 "Myyjien laskut voidaan luoda etukäteen oston perusteella\n"
-"                tilausten tai kuittien perusteella. Näin voit valvoa laskuja\n"
+"                tilausten tai kuittien perusteella. Näin voit valvoa "
+"laskuja\n"
 "                joita saat myyjältäsi luonnoksen mukaan\n"
 "                asiakirjan mukaisesti Odoossa."
 
@@ -17917,8 +18096,10 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
-"We cannot find a chart of accounts for this company, you should configure it. \n"
-"Please go to Account Configuration and select or install a fiscal localization."
+"We cannot find a chart of accounts for this company, you should configure "
+"it. \n"
+"Please go to Account Configuration and select or install a fiscal "
+"localization."
 msgstr ""
 "Tälle yritykselle ei löydy tilikarttaa. Määrittele tilikartta kirjanpidon "
 "hallinnasta."
@@ -17968,8 +18149,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__print_on_new_page
 msgid ""
-"When checked this line and everything after it will be printed on a new "
-"page."
+"When checked this line and everything after it will be printed on a new page."
 msgstr ""
 "Kun tämä on valittuna kaikki sen jälkeinen tulostetaan uudelle sivulle."
 
@@ -17981,8 +18161,7 @@ msgstr "Kun valintaruutu on valittuna, 0-arvot eivät näy tässä sarakkeessa."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_expression__blank_if_zero
 msgid ""
-"When checked, 0 values will not show when displaying this expression's "
-"value."
+"When checked, 0 values will not show when displaying this expression's value."
 msgstr ""
 "Kun valintaruutu on valittuna, 0-arvoja ei näytetä, kun tämän lausekkeen "
 "arvo näytetään."
@@ -18060,8 +18239,8 @@ msgstr "Käynnissä oleva työ"
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Write a customer name to <b>create one</b> or <b>see suggestions</b>."
 msgstr ""
-"Kirjoita asiakkaan nimi <b>luodaksesi sellaisen</b> tai <b>katso "
-"ehdotuksia</b>."
+"Kirjoita asiakkaan nimi <b>luodaksesi sellaisen</b> tai <b>katso ehdotuksia</"
+"b>."
 
 #. module: account
 #. odoo-javascript
@@ -18125,7 +18304,8 @@ msgstr ""
 "Luonnospäiväkirjavientejä sisältävää päiväkirjaa ei voi arkistoida.\n"
 "\n"
 "Voit tehdä seuraavasti:\n"
-"1/ napsauta tämän päiväkirjalomakkeen oikeassa yläkulmassa olevaa painiketta 'Päiväkirjaviennit.\n"
+"1/ napsauta tämän päiväkirjalomakkeen oikeassa yläkulmassa olevaa painiketta "
+"'Päiväkirjaviennit.\n"
 "2/ suodata sitten 'Luonnos' -viennit\n"
 "3/ valitse ne kaikki ja kirjaa tai poista ne toimintovalikon kautta"
 
@@ -18152,8 +18332,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid ""
-"You can only change the period/account for items that are not yet "
-"reconciled."
+"You can only change the period/account for items that are not yet reconciled."
 msgstr ""
 "Voit muuttaa vain kirjattujen päiväkirjarivien kautta/tiliä, joita ei ole "
 "vielä täsmäytetty."
@@ -18185,10 +18364,8 @@ msgstr "Voit kirjata maksuja vain kirjatuille tapahtumille."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid ""
-"You can only request a cancellation for invoice sent to the government."
-msgstr ""
-"Voit pyytää peruuttamista vain viranomaisille lähetetyn laskun osalta."
+msgid "You can only request a cancellation for invoice sent to the government."
+msgstr "Voit pyytää peruuttamista vain viranomaisille lähetetyn laskun osalta."
 
 #. module: account
 #. odoo-python
@@ -18275,8 +18452,7 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
-msgid ""
-"You can't create payments for entries belonging to different companies."
+msgid "You can't create payments for entries belonging to different companies."
 msgstr "Maksuja ei voi luoda eri yrityksiin kuuluville tapahtumille."
 
 #. module: account
@@ -18305,8 +18481,8 @@ msgstr "Et voi luoda laskuja, joita ei ole kirjattu."
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 msgid ""
-"You can't have two payment method lines of the same payment type "
-"(%(payment_type)s) and with the same name (%(name)s) on a single journal."
+"You can't have two payment method lines of the same payment type (%"
+"(payment_type)s) and with the same name (%(name)s) on a single journal."
 msgstr ""
 "Yhdessä päiväkirjassa ei voi olla kahta maksutapariviä, joilla on sama "
 "maksutapa (%(payment_type)s) ja sama nimi (%(name)s)."
@@ -18315,18 +18491,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid ""
-"You can't open the register payment wizard without at least one "
-"receivable/payable line."
+"You can't open the register payment wizard without at least one receivable/"
+"payable line."
 msgstr ""
-"Et voi avata kirjaa maksu -toimintoa ilman vähintään yhtä "
-"saatavaa/maksettavaa riviä."
+"Et voi avata kirjaa maksu -toimintoa ilman vähintään yhtä saatavaa/"
+"maksettavaa riviä."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid ""
-"You can't provide a foreign currency without specifying an amount in 'Amount"
-" in Currency' field."
+"You can't provide a foreign currency without specifying an amount in 'Amount "
+"in Currency' field."
 msgstr ""
 "Et voi antaa ulkomaan valuuttaa ilman, että määrität summan \"Summa "
 "valuuttana\" -kenttään."
@@ -18335,8 +18511,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid ""
-"You can't provide an amount in foreign currency without specifying a foreign"
-" currency."
+"You can't provide an amount in foreign currency without specifying a foreign "
+"currency."
 msgstr ""
 "Et voi antaa summaa ulkomaan valuutassa määrittämättä ulkomaan valuuttaa."
 
@@ -18374,8 +18550,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid ""
-"You can't unlink this company from this account since there are some journal"
-" items linked to it."
+"You can't unlink this company from this account since there are some journal "
+"items linked to it."
 msgstr ""
 "Et voi poistaa tämän yrityksen linkitystä tältä tililtä, koska siihen on "
 "liitetty joitakin päiväkirjamerkintöjä."
@@ -18402,8 +18578,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid ""
-"You cannot change the type of an account set as Bank Account on a journal to"
-" Receivable or Payable."
+"You cannot change the type of an account set as Bank Account on a journal to "
+"Receivable or Payable."
 msgstr ""
 "Et voi muuttaa päiväkirjaan pankkitiliksi määritetyn tilin tyyppiä "
 "saamiseksi tai maksettavaksi."
@@ -18489,8 +18665,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/mail_template.py:0
 msgid ""
-"You cannot delete this mail template, it is used in the invoice sending "
-"flow."
+"You cannot delete this mail template, it is used in the invoice sending flow."
 msgstr ""
 "Et voi poistaa tätä sähköpostimallia, sillä sitä käytetään laskun "
 "lähetysvirrassa."
@@ -18527,10 +18702,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid ""
-"You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
+"You cannot do this modification on a reconciled journal entry. You can just "
+"change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %(entry)s (%(id)s)"
 msgstr ""
-"Tätä muutosta ei voi tehdä täsmäytetylle päiväkirjamerkinnälle. Voit vain muuttaa joitakin ei-laillisia kenttiä tai sinun on ensin poistettava täsmäytys.\n"
+"Tätä muutosta ei voi tehdä täsmäytetylle päiväkirjamerkinnälle. Voit vain "
+"muuttaa joitakin ei-laillisia kenttiä tai sinun on ensin poistettava "
+"täsmäytys.\n"
 "Pöytäkirjamerkintä (id): %(entry)s (%(id)s)"
 
 #. module: account
@@ -18652,8 +18830,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 msgid ""
 "You cannot perform this action on an account that contains journal items."
-msgstr ""
-"Et voi suorittaa tätä toimintoa tilissä, joka sisältää lokikirjauksia."
+msgstr "Et voi suorittaa tätä toimintoa tilissä, joka sisältää lokikirjauksia."
 
 #. module: account
 #. odoo-python
@@ -18747,8 +18924,8 @@ msgid ""
 "You cannot set a partner as an invoicing address of another if they have a "
 "different %(vat_label)s."
 msgstr ""
-"Et voi asettaa kumppania toisen laskutusosoitteeksi, jos heillä on eri "
-"%(vat_label)s."
+"Et voi asettaa kumppania toisen laskutusosoitteeksi, jos heillä on eri %"
+"(vat_label)s."
 
 #. module: account
 #. odoo-python
@@ -18795,15 +18972,15 @@ msgid ""
 "You cannot use this account (%s) in this journal, check the field 'Allowed "
 "Journals' on the related account."
 msgstr ""
-"Et voi käyttää tätä tiliä (%s) tässä päiväkirjassa, tarkista vastaavan tilin"
-" Sallitut päiväkirjat -kenttä."
+"Et voi käyttää tätä tiliä (%s) tässä päiväkirjassa, tarkista vastaavan tilin "
+"Sallitut päiväkirjat -kenttä."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid ""
-"You cannot use this account (%s) in this journal, check the section "
-"'Control-Access' under tab 'Advanced Settings' on the related journal."
+"You cannot use this account (%s) in this journal, check the section 'Control-"
+"Access' under tab 'Advanced Settings' on the related journal."
 msgstr ""
 "Et voi käyttää tätä tiliä (%s) tässä päiväkirjassa. Tarkista "
 "Kirjauskontrollit -osiosta Lisäasetukset -välilehdeltä kyseisellä "
@@ -18833,9 +19010,9 @@ msgid ""
 "create a credit note instead. Use the action menu to transform it into a "
 "credit note or refund."
 msgstr ""
-"Et voi vahvistaa laskua, jonka kokonaissumma on negatiivinen. Luo sen sijaan"
-" hyvityslasku. Käytä Toiminto-valikkoa muuttaaksesi lasku hyvityslaskuksi "
-"tai hyvitykseksi."
+"Et voi vahvistaa laskua, jonka kokonaissumma on negatiivinen. Luo sen sijaan "
+"hyvityslasku. Käytä Toiminto-valikkoa muuttaaksesi lasku hyvityslaskuksi tai "
+"hyvitykseksi."
 
 #. module: account
 #. odoo-python
@@ -18860,8 +19037,7 @@ msgstr ""
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "You do not have the rights to trust or un-trust accounts."
 msgstr ""
-"Sinulla ei ole oikeuksia luottamuksen antamiseen tai peruuttamiseen "
-"tileille."
+"Sinulla ei ole oikeuksia luottamuksen antamiseen tai peruuttamiseen tileille."
 
 #. module: account
 #. odoo-python
@@ -19059,8 +19235,8 @@ msgstr "perutaan {percent}%% arvosta {amount}"
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid ""
 "cannot under any circumstances, be required by the client to appear as a "
-"third party in the context of any claim for damages filed against the client"
-" by an end consumer."
+"third party in the context of any claim for damages filed against the client "
+"by an end consumer."
 msgstr ""
 "asiakas ei voi missään tapauksessa vaatia asiakasta esiintymään kolmantena "
 "osapuolena vahingonkorvausvaatimuksen yhteydessä, jonka loppukuluttaja on "
@@ -19233,10 +19409,12 @@ msgstr "on avaintoiminto. Oletko tarkistanut kaiken?"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid ""
 "is a money transfer service and not a bank.\n"
-"                            Double check if the account can be trusted by calling the vendor.<br/>"
+"                            Double check if the account can be trusted by "
+"calling the vendor.<br/>"
 msgstr ""
 "on rahansiirtopalvelu, ei pankki.\n"
-"                            Tarkista kaksinkertaisesti, voiko tiliin luottaa soittamalla myyjälle.<br/>"
+"                            Tarkista kaksinkertaisesti, voiko tiliin luottaa "
+"soittamalla myyjälle.<br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -19266,8 +19444,8 @@ msgstr "jotka on lueteltu jäljempänä tämän myyjän osalta."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid ""
-"must be notified of any claim by means of a letter sent by recorded delivery"
-" to its registered office within 8 days of the delivery of the goods or the "
+"must be notified of any claim by means of a letter sent by recorded delivery "
+"to its registered office within 8 days of the delivery of the goods or the "
 "provision of the services."
 msgstr ""
 "on ilmoitettava mahdollisesta reklamaatiosta kirjatulla kirjeellä, joka "
@@ -19455,7 +19633,9 @@ msgstr "{{ object.company_id.name }} Lasku (viite {{ object.name or 'n/a' }})"
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
 msgid ""
-"{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' "
-"}})"
+"{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Maksukuitti (viite {{ object.name or 'n/a' }})"
+
+#~ msgid "IBAN: BE76 4294 6878 9995"
+#~ msgstr "IBAN: BE76 4294 6878 9995"
