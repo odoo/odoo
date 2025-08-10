@@ -1141,6 +1141,7 @@ class ProjectTask(models.Model):
         # no track when the portal user create a task to avoid using during tracking
         # process since the portal does not have access to tracking models
         tasks = super(ProjectTask, self_ctx.with_context(mail_create_nosubscribe=True, mail_notrack=not self_ctx.env.su and self_ctx.env.user._is_portal())).create(vals_list)
+        tasks = tasks.with_env(self.env)  # reset the environment
         for task, computed_vals in zip(tasks.sudo(), additional_vals_list):
             if computed_vals:
                 task.write(computed_vals)
