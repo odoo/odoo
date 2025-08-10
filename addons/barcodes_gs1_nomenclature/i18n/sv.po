@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes_gs1_nomenclature
-# 
+#
 # Translators:
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Lasse L, 2023
@@ -10,20 +10,29 @@
 # Martin Trigaux, 2023
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-08-07 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
+#, python-format
+msgid ""
+"A GS1 barcode nomenclature pattern was matched. However, the barcode failed "
+"to be converted to a valid date: '%(error_message)'"
+msgstr ""
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
@@ -36,8 +45,8 @@ msgid ""
 "Alternative regex delimiter for the FNC1. The separator must not match the "
 "begin/end of any related rules pattern."
 msgstr ""
-"Alternativ regex-avgränsare för FNC1. Separatorn får inte matcha "
-"början/slutet av något relaterat regelmönster."
+"Alternativ regex-avgränsare för FNC1. Separatorn får inte matcha början/"
+"slutet av något relaterat regelmönster."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__associated_uom_id
@@ -189,8 +198,8 @@ msgid ""
 "encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
 "GS1-innehållstypen definierar vilken typ av data som regeln kommer att "
-"behandla streckkoden som:        * Datum: streckkoden kommer att konverteras"
-" till en Odoo-datetime; * Mått: streckkodens värde är relaterat till en "
+"behandla streckkoden som:        * Datum: streckkoden kommer att konverteras "
+"till en Odoo-datetime; * Mått: streckkodens värde är relaterat till en "
 "specifik UoM; * Numerisk identifierare: streckkod med fast längd som följer "
 "en specifik kodning; * Alfa-numeriskt namn: streckkod med variabel längd."
 
@@ -220,12 +229,16 @@ msgstr ""
 #, python-format
 msgid ""
 "There is something wrong with the barcode rule \"%s\" pattern.\n"
-"If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
-"Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
+"If this rule uses decimal, check it can't get sometime else than a digit as "
+"last char for the Application Identifier.\n"
+"Check also the possible matched values can only be digits, otherwise the "
+"value can't be casted as a measure."
 msgstr ""
 "Det är något fel med streckkodsregelns \"%s\"-mönster.\n"
-"Om den här regeln använder decimaltal, kontrollera att den inte kan få något annat än en siffra som sista tecken för Application Identifier.\n"
-"Kontrollera också att de möjliga matchade värdena endast kan vara siffror, annars kan värdet inte omvandlas till ett mått."
+"Om den här regeln använder decimaltal, kontrollera att den inte kan få något "
+"annat än en siffra som sista tecken för Application Identifier.\n"
+"Kontrollera också att de möjliga matchade värdena endast kan vara siffror, "
+"annars kan värdet inte omvandlas till ett mått."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
@@ -234,8 +247,8 @@ msgid ""
 "This Nomenclature use the GS1 specification, only GS1-128 encoding rules is "
 "accepted is this kind of nomenclature."
 msgstr ""
-"Denna nomenklatur använder GS1-specifikationen, endast "
-"GS1-128-kodningsregler accepteras är denna typ av nomenklatur."
+"Denna nomenklatur använder GS1-specifikationen, endast GS1-128-"
+"kodningsregler accepteras är denna typ av nomenklatur."
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript

@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mrp_account
-# 
+#
 # Translators:
 # Marianna Ciofani, 2023
 # Wil Odoo, 2025
 # Sergio Zanchetta <primes2h@gmail.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:36+0000\n"
+"POT-Creation-Date: 2025-08-07 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: it\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -30,6 +31,13 @@ msgstr "$1000"
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "$5000"
 msgstr "$5000"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/stock_move.py:0
+#, python-format
+msgid "%s - Unbuild Cost Difference"
+msgstr ""
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -296,18 +304,17 @@ msgid "Stock Rule"
 msgstr "Regola di giacenza"
 
 #. module: mrp_account
-#: model:ir.model,name:mrp_account.model_stock_valuation_layer
-msgid "Stock Valuation Layer"
-msgstr "Livello valutazione giacenze"
-
-#. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
 msgid ""
-"This account will be used as a valuation counterpart for both components and final products for manufacturing orders.\n"
-"                If there are any workcenter/employee costs, this value will remain on the account once the production is completed."
+"This account will be used as a valuation counterpart for both components and "
+"final products for manufacturing orders.\n"
+"                If there are any workcenter/employee costs, this value will "
+"remain on the account once the production is completed."
 msgstr ""
-"Il conto verrà utilizzato come controparte di valutazione sia per i componenti che i prodotti finali degli ordini di produzione.\n"
-"                In caso di centri di lavoro/costi dipendenti, il valore resterà nel conto una volta che la produzione sarà completata."
+"Il conto verrà utilizzato come controparte di valutazione sia per i "
+"componenti che i prodotti finali degli ordini di produzione.\n"
+"                In caso di centri di lavoro/costi dipendenti, il valore "
+"resterà nel conto una volta che la produzione sarà completata."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -368,3 +375,6 @@ msgstr "Centro di lavoro"
 #, python-format
 msgid "[WC] %s"
 msgstr "[CdL] %s"
+
+#~ msgid "Stock Valuation Layer"
+#~ msgstr "Livello valutazione giacenze"
