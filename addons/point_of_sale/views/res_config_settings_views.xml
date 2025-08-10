@@ -108,8 +108,8 @@
                                                 invisible="not group_cash_rounding"/>
                                     </div>
                                 </setting>
-                                <setting title="Online payment, delivery payment, terminal payment, and methods that require customer identification are not supported for fast payment validation." help="Instantly validate payment made with selected payment methods to speed up order processing" invisible="is_kiosk_mode">
-                                    <field name="pos_is_fast_payment" />
+                                <setting title="Online payment, delivery payment, terminal payment, and methods that require customer identification are not supported for fast payment validation." help="Shortcut to skip payment screen" invisible="is_kiosk_mode">
+                                    <field name="pos_is_fast_payment" string="One-click Payment" />
                                     <div class="content-group mt16" invisible="not pos_is_fast_payment">
                                         <label for="pos_fast_payment_method_ids" class="fw-bold me-2"/>
                                         <field name="pos_fast_payment_method_ids" widget="many2many_tags" string="Payment Methods"

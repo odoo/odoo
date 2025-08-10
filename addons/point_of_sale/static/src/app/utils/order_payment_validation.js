@@ -66,6 +66,10 @@ export default class OrderPaymentValidation {
         if (!this.pos.isFastPaymentRunning && (await this.askBeforeValidation()) === false) {
             return false;
         }
+        await this._askForCustomerIfRequired();
+        if (!this.pos.isFastPaymentRunning && this.pos.checkAndSkipScreenWithPrint()) {
+            return true;
+        }
         this.pos.numberBuffer.capture();
         if (!this.checkCashRoundingHasBeenWellApplied()) {
             return false;
@@ -266,10 +270,6 @@ export default class OrderPaymentValidation {
             return false;
         }
 
-        if ((await this._askForCustomerIfRequired()) === false) {
-            return false;
-        }
-
         if (
             (this.order.isToInvoice() || this.order.getShippingDate()) &&
             !this.order.getPartner()
@@ -378,7 +378,7 @@ export default class OrderPaymentValidation {
                 body: _t("Customer is required for %s payment method.", paymentMethod.name),
             });
             if (confirmed) {
-                this.pos.selectPartner();
+                await this.pos.selectPartner();
             }
             return false;
         }
