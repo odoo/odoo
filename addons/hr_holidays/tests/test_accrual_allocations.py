@@ -186,8 +186,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'holiday_status_id': leave_type.id,
                 'request_date_from': '2017-12-06 08:00:00',
                 'request_date_to': '2017-12-06 17:00:00',
-                'request_unit_half': True,
                 'request_date_from_period': 'am',
+                'request_date_to_period': 'am',
             })
             leave.action_approve()
 
@@ -1494,7 +1494,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': "Leave for employee",
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': leave_type.id,
-                'request_unit_hours': True,
                 'request_date_from': datetime.date(2024, 12, 19),
                 'request_date_to': datetime.date(2024, 12, 19),
                 'request_hour_from': '10',

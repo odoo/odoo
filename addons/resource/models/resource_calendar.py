@@ -5,6 +5,7 @@ from collections import defaultdict
 from datetime import datetime, time, timedelta
 from functools import partial
 from itertools import chain
+from typing import NamedTuple
 
 from dateutil.relativedelta import relativedelta
 from dateutil.rrule import DAILY, rrule
@@ -19,6 +20,14 @@ from odoo.tools.float_utils import float_round
 from odoo.tools.intervals import Intervals
 
 from odoo.addons.base.models.res_partner import _tz_get
+
+
+class DummyAttendance(NamedTuple):
+    hour_from: float
+    hour_to: float
+    dayofweek: str
+    day_period: str | None
+    week_type: str | None
 
 
 class ResourceCalendar(models.Model):
@@ -903,6 +912,56 @@ class ResourceCalendar(models.Model):
             weektype = str(self.env['resource.calendar.attendance'].get_week_type(date))
             return working_days[weektype][dayofweek]
         return working_days[False][dayofweek]
+
+    def _get_hours_for_date(self, target_date, day_period=None):
+        """
+        An instance method on a calendar to get the start and end float hours for a given date.
+        :param target_date: The date to find working hours.
+        :param day_period: Optional string ('morning', 'afternoon') to filter for half-days.
+        :return: A tuple of floats (hour_from, hour_to).
+        """
+        self.ensure_one()
+        if not target_date:
+            err = "Target Date cannot be empty"
+            raise ValueError(err)
+        if self.flexible_hours:
+            # Quick calculation to center flexible hours around 12PM midday
+            datetimes = [12.0 - self.hours_per_day / 2.0, 12.0, 12.0 + self.hours_per_day / 2.0]
+            if day_period:
+                return (datetimes[0], datetimes[1]) if day_period == 'morning' else (datetimes[1], datetimes[2])
+            return (datetimes[0], datetimes[2])
+
+        domain = [
+            ('calendar_id', '=', self.id),
+            ('display_type', '=', False),
+            ('day_period', '!=', 'lunch'),
+        ]
+        if day_period:
+            domain.append(('day_period', '=', day_period))
+
+        attendances = self.env['resource.calendar.attendance']._read_group(domain=domain,
+            groupby=['week_type', 'dayofweek'],
+            aggregates=['hour_from:min', 'hour_to:max'],
+            order='dayofweek')
+
+        attendances = [DummyAttendance(hour_from, hour_to, dayofweek, None, week_type)
+            for week_type, dayofweek, hour_from, hour_to in attendances]
+
+        default_start = min((att.hour_from for att in attendances), default=0.0)
+        default_end = max((att.hour_to for att in attendances), default=0.0)
+
+        week_type = False
+        if self.two_weeks_calendar:
+            week_type = str(self.env['resource.calendar.attendance'].get_week_type(target_date))
+
+        hour_from = next(
+            (att.hour_from for att in attendances if int(att.dayofweek) == target_date.weekday() and
+            (att.week_type == week_type)), default_start)
+        hour_to = next(
+            (att.hour_to for att in attendances if int(att.dayofweek) == target_date.weekday() and
+            (att.week_type == week_type)), default_end)
+
+        return (hour_from, hour_to)
 
     @ormcache('self.id')
     def _get_working_hours(self):

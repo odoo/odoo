@@ -32,13 +32,13 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
 
     def test_time_week_leave_work_entry(self):
         # /!\ this is a week day => it exists an calendar attendance at this time
+        self.leave_type.request_unit = 'hour'
         leave = self.env['hr.leave'].create({
             'name': '1leave',
             'employee_id': self.richard_emp.id,
             'holiday_status_id': self.leave_type.id,
             'request_date_from': date(2015, 11, 2),
             'request_date_to': date(2015, 11, 2),
-            'request_unit_hours': True,
             'request_hour_from': 11,
             'request_hour_to': 17,
         })
