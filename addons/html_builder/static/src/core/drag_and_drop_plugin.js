@@ -10,7 +10,7 @@ import { DragAndDropMoveHandle } from "./drag_and_drop_move_handle";
 
 export class DragAndDropPlugin extends Plugin {
     static id = "dragAndDrop";
-    static dependencies = ["dropzone", "history", "operation", "builderOptions", "savePlugin"];
+    static dependencies = ["dropzone", "history", "operation", "builderOptions"];
     resources = {
         has_overlay_options: { hasOption: (el) => this.isDraggable(el) },
         get_overlay_buttons: withSequence(1, {
@@ -18,6 +18,9 @@ export class DragAndDropPlugin extends Plugin {
         }),
         system_classes: ["o_draggable"],
         clean_for_save_handlers: this.cleanForSave.bind(this),
+        on_prepare_drag_handlers: withSequence(2, () => () => {
+            this.dragState?.restoreElementToDragStartPosition?.();
+        }),
     };
 
     setup() {
@@ -142,7 +145,6 @@ export class DragAndDropPlugin extends Plugin {
                     this.dependencies.dropzone.removeDropzones();
                     // Undo the changes needed to ease the drag and drop.
                     this.dragState.restoreCallbacks?.forEach((restore) => restore());
-                    this.dragState.restoreDirty();
                     restoreDragSavePoint();
                     dragAndDropResolve();
                     this.dependencies["builderOptions"].updateContainers(this.overlayTarget);
@@ -164,10 +166,9 @@ export class DragAndDropPlugin extends Plugin {
                 this.dragState.mousePositionYOnElement = boundedYMousePosition - targetRect.y;
                 this.dragState.mousePositionXOnElement = x - targetRect.x;
 
-                // Stop marking the elements with mutations as dirty.
-                this.dragState.restoreDirty = this.dependencies.savePlugin.ignoreDirty();
-
                 // Make some changes on the page to ease the drag and drop.
+                // Notably, this will stop marking the elements with mutations as
+                // dirty.
                 const restoreCallbacks = [];
                 for (const prepareDrag of this.getResource("on_prepare_drag_handlers")) {
                     const restore = prepareDrag();
@@ -316,22 +317,28 @@ export class DragAndDropPlugin extends Plugin {
                     });
                 }
 
-                // Undo the changes needed to ease the drag and drop.
-                this.dragState.restoreCallbacks.forEach((restore) => restore());
-                this.dragState.restoreCallbacks = null;
-
                 // In order to mark only the concerned elements as dirty, place
                 // the element back where it started, then replay the move after
                 // re-allowing to mark dirty.
-                const { startPreviousEl, startNextEl, startParentEl } = this.dragState;
-                if (startPreviousEl) {
-                    startPreviousEl.after(this.overlayTarget);
-                } else if (startNextEl) {
-                    startNextEl.before(this.overlayTarget);
-                } else {
-                    startParentEl.prepend(this.overlayTarget);
-                }
-                this.dragState.restoreDirty();
+                this.dragState.restoreElementToDragStartPosition = () => {
+                    const { startPreviousEl, startNextEl, startParentEl } = this.dragState;
+                    if (startPreviousEl) {
+                        startPreviousEl.after(this.overlayTarget);
+                    } else if (startNextEl) {
+                        startNextEl.before(this.overlayTarget);
+                    } else {
+                        startParentEl.prepend(this.overlayTarget);
+                    }
+                    delete this.dragState.restoreElementToDragStartPosition;
+                };
+
+                // Undo the changes needed to ease the drag and drop.
+                // This will apply restoreElementToDragStartPosition, then restore
+                // the ability to mark dirty.
+                this.dragState.restoreCallbacks.forEach((restore) => restore());
+                this.dragState.restoreCallbacks = null;
+
+                // Restore the dropped element at its final position.
                 currentDropzoneEl.after(this.overlayTarget);
 
                 this.dependencies.dropzone.removeDropzones();
@@ -356,6 +363,7 @@ export class DragAndDropPlugin extends Plugin {
                 if ("hasSamePositionAsStart" in this.dragState) {
                     hasSamePositionAsStart = this.dragState.hasSamePositionAsStart();
                 } else {
+                    const { startPreviousEl, startNextEl, startParentEl } = this.dragState;
                     const previousEl = this.overlayTarget.previousElementSibling;
                     const nextEl = this.overlayTarget.nextElementSibling;
                     const parentEl = this.overlayTarget.parentElement;

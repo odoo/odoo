@@ -6,7 +6,7 @@ import { uniqueId } from "@web/core/utils/functions";
 
 export class SavePlugin extends Plugin {
     static id = "savePlugin";
-    static shared = ["save", "isAlreadySaved", "saveView", "ignoreDirty"];
+    static shared = ["save", "isAlreadySaved", "saveView"];
     static dependencies = ["history"];
 
     resources = {
@@ -42,6 +42,7 @@ export class SavePlugin extends Plugin {
             // }
         ],
         get_dirty_els: () => this.editable.querySelectorAll(".o_dirty"),
+        on_prepare_drag_handlers: withSequence(1, this.ignoreDirty.bind(this)),
     };
 
     setup() {

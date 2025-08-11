@@ -201,7 +201,10 @@ export class HistoryPlugin extends Plugin {
             this.enableObserver();
             this.reset(this.config.content);
         },
-        on_prepare_drag_handlers: this.disableIsCurrentStepModifiedWarning.bind(this),
+        on_prepare_drag_handlers: withSequence(
+            1,
+            this.disableIsCurrentStepModifiedWarning.bind(this)
+        ),
         // Resource definitions:
         normalize_handlers: [
             // (commonRootOfModifiedEl or editableEl) => {
