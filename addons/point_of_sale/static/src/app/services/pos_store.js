@@ -157,7 +157,6 @@ export class PosStore extends WithLazyGetterTrap {
         this.closeOtherTabs();
         this.syncAllOrdersDebounced = debounce(this.syncAllOrders, 100);
         this._searchTriggered = false;
-        this.isFastPaymentRunning = false;
 
         if (this.env.debug) {
             registry.category("main_components").add("DebugWidget", {
@@ -2621,32 +2620,10 @@ export class PosStore extends WithLazyGetterTrap {
     async validateOrderFast(paymentMethod) {
         const validation = new OrderPaymentValidation({
             pos: this,
-            order: this.getOrder(),
+            orderUuid: this.getOrder().uuid,
             fastPaymentMethod: paymentMethod,
         });
         await validation.validateOrder(false);
-        this.isFastPaymentRunning = false;
-    }
-
-    checkAndSkipScreenWithPrint(paymentMethodId = null) {
-        const order = this.getOrder();
-        if (
-            order.nb_print === 0 &&
-            this.config.iface_print_auto &&
-            this.config.iface_print_skip_screen
-        ) {
-            this.isFastPaymentRunning = true;
-            const params = { orderUuid: order.uuid };
-            if (paymentMethodId) {
-                params["paymentMethodId"] = paymentMethodId;
-            }
-            if (order.uuid === this.selectedOrderUuid) {
-                this.navigate("FeedbackScreen", params);
-            }
-            return true;
-        } else {
-            return false;
-        }
     }
 }
 
