@@ -64,7 +64,7 @@ export class PartnerAutoCompleteCharField extends CharField {
         }
 
         // Format the many2one fields
-        const many2oneFields = ['country_id', 'state_id'];
+        const many2oneFields = ['country_id', 'state_id', 'industry_id'];
         many2oneFields.forEach((field) => {
             if (data.company[field]) {
                 data.company[field] = [data.company[field].id, data.company[field].display_name];
