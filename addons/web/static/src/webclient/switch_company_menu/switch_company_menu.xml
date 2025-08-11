@@ -30,10 +30,10 @@
     <div class="d-flex flex-row pe-2 mb-2" t-att-class="{ 'visually-hidden': !state.showFilter }">
         <div
             role="menuitemcheckbox"
-            t-att-aria-checked="companySelector.selectedCompaniesIds.length > 0 ? 'true' : 'false'"
-            t-att-aria-label="companySelector.selectedCompaniesIds.length > 0 ? 'Deselect all' : 'Select all'"
-            t-att-title="companySelector.selectedCompaniesIds.length > 0 ? 'Deselect all' : 'Select all'"
-            t-on-click="() => companySelector.selectAll()"
+            t-att-aria-checked="hasSelectedCompanies ? 'true' : 'false'"
+            t-att-aria-label="hasSelectedCompanies ? 'Deselect all' : 'Select all'"
+            t-att-title="hasSelectedCompanies ? 'Deselect all' : 'Select all'"
+            t-on-click="() => this.selectAll()"
         >
             <span class="btn border-0 pt-2 px-2" t-att-class="selectAllClass">
                 <i class="fa fa-fw" t-att-class="selectAllIcon"/>
@@ -59,7 +59,7 @@
     </div>
 
     <div class="o_switch_company_menu_items">
-        <t t-foreach="companiesEntries" t-as="entry" t-key="entry.company.id">
+        <t t-foreach="visibleCompanies" t-as="entry" t-key="entry.company.id">
             <SwitchCompanyItem company="entry.company" level="entry.level"/>
         </t>
     </div>

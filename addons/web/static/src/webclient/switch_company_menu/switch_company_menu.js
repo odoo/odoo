@@ -85,12 +85,24 @@ export class CompanySelector {
         this.selectedCompaniesIds = user.activeCompanies.map((c) => c.id);
     }
 
-    selectAll() {
-        if (this.selectedCompaniesIds.length > 0) {
-            this.selectedCompaniesIds.splice(0, this.selectedCompaniesIds.length);
-        } else {
-            const newIds = user.allowedCompanies.map((c) => c.id);
-            this.selectedCompaniesIds.splice(0, this.selectedCompaniesIds.length, ...newIds);
+    selectAll(companyIds) {
+        let shouldSelectAll = true;
+
+        // If any company is selected, just unselect all
+        for (let i = this.selectedCompaniesIds.length - 1; i >= 0; i--) {
+            if (companyIds.includes(this.selectedCompaniesIds[i])) {
+                this.selectedCompaniesIds.splice(i, 1);
+                shouldSelectAll = false;
+            }
+        }
+
+        // If no company is selected, select all
+        if (shouldSelectAll) {
+            for (const companyId of companyIds) {
+                if (!this.selectedCompaniesIds.includes(companyId)) {
+                    this.selectedCompaniesIds.push(companyId);
+                }
+            }
         }
     }
 
@@ -228,7 +240,41 @@ export class SwitchCompanyMenu extends Component {
         return user.allowedCompaniesWithAncestors.length > 9;
     }
 
-    get companiesEntries() {
+    get visibleCompanies() {
+        return this.state.visibleCompanies;
+    }
+
+    get hasSelectedCompanies() {
+        return this.visibleCompanies.some((c) =>
+            this.companySelector.isCompanySelected(c.company.id)
+        );
+    }
+
+    get selectAllClass() {
+        if (
+            this.visibleCompanies.every((c) => this.companySelector.isCompanySelected(c.company.id))
+        ) {
+            return "btn-link text-primary";
+        } else {
+            return "btn-link text-secondary";
+        }
+    }
+
+    get selectAllIcon() {
+        if (
+            this.visibleCompanies.every((c) => this.companySelector.isCompanySelected(c.company.id))
+        ) {
+            return "fa-check-square text-primary";
+        } else if (
+            this.visibleCompanies.some((c) => this.companySelector.isCompanySelected(c.company.id))
+        ) {
+            return "fa-minus-square-o";
+        } else {
+            return "fa-square-o";
+        }
+    }
+
+    computeVisibleCompanies() {
         const companies = [];
 
         const addCompany = (company, level = 0) => {
@@ -251,32 +297,16 @@ export class SwitchCompanyMenu extends Component {
         return companies;
     }
 
-    get selectAllClass() {
-        if (this.companySelector.selectedCompaniesIds.length >= user.allowedCompanies.length) {
-            return "btn-link text-primary";
-        } else {
-            return "btn-link text-secondary";
-        }
-    }
-
-    get selectAllIcon() {
-        if (this.companySelector.selectedCompaniesIds.length >= user.allowedCompanies.length) {
-            return "fa-check-square text-primary";
-        } else if (this.companySelector.selectedCompaniesIds.length > 0) {
-            return "fa-minus-square-o";
-        } else {
-            return "fa-square-o";
-        }
-    }
-
     resetState() {
         this.state.searchFilter = "";
         this.state.showFilter = this.hasLotsOfCompanies;
+        this.state.visibleCompanies = this.computeVisibleCompanies();
     }
 
     onSearch(ev) {
         this.state.searchFilter = ev.target.value;
         this.state.showFilter = true;
+        this.state.visibleCompanies = this.computeVisibleCompanies();
     }
 
     matchSearch(companyName) {
@@ -308,6 +338,11 @@ export class SwitchCompanyMenu extends Component {
     confirm() {
         this.dropdown.close();
         this.companySelector.apply();
+    }
+
+    selectAll() {
+        const companyIds = this.visibleCompanies.map((entry) => entry.company.id);
+        this.companySelector.selectAll(companyIds);
     }
 
     get isSingleCompany() {

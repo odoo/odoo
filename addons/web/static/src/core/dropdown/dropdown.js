@@ -129,6 +129,7 @@ export class Dropdown extends Component {
         this.group = useDropdownGroup();
 
         this.navigation = useNavigation(this.menuRef, {
+            shouldRegisterHotkeys: false,
             isNavigationAvailable: () => this.state.isOpen,
             getItems: () => {
                 if (this.state.isOpen && this.menuRef.el) {
@@ -350,6 +351,7 @@ export class Dropdown extends Component {
     onOpened() {
         this._focusedElBeforeOpen = document.activeElement;
         this.activeEl = this.uiService.activeElement;
+        this.navigation.registerHotkeys();
         this.navigation.update();
         this.props.onOpened?.();
         this.props.onStateChanged?.(true);
@@ -367,6 +369,7 @@ export class Dropdown extends Component {
     }
 
     onClosed() {
+        this.navigation.unregisterHotkeys();
         this.navigation.update();
         this.props.onStateChanged?.(false);
         delete this.activeEl;
