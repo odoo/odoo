@@ -4709,15 +4709,9 @@ class MailThread(models.AbstractModel):
                 load=False,
             )[0]
             if is_request:
-                res["hasReadAccess"] = True
-                res["hasWriteAccess"] = False
+                res["hasReadAccess"] = thread.sudo(False).has_access("read")
+                res["hasWriteAccess"] = thread.sudo(False).has_access("write")
                 res["canPostOnReadonly"] = self._mail_post_access == "read"
-            try:
-                thread.check_access("write")
-                if is_request:
-                    res["hasWriteAccess"] = True
-            except AccessError:
-                pass
             if (
                 request_list
                 and "activities" in request_list
