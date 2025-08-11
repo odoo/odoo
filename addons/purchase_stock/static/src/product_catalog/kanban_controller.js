@@ -56,11 +56,15 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
             ]
         );
 
-        // Recompute Kanban on filter changes (incl. sidebar category filters)
+        /* Recompute Kanban on filter changes (incl. sidebar category filters)
+         * The "update" triggers a refresh, which can happen before debounce on slow
+         * internet --> pass suggest context to searchModel in case it refreshes first */
         useBus(this.env.searchModel, "update", () => {
+            this.env.searchModel.globalContext = this._getCatalogContext(); // Check with slow internet before removing
             this._debouncedKanbanRecompute();
         });
 
+        // FIX me: Bug if Add all, then remove one by one product, then add all again
         const onAddAll = async () => {
             await this.model.orm.call("purchase.order", "action_purchase_order_suggest", [
                 this.model.config.domain,
