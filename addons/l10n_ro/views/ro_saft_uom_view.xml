@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_uom_form_inherit_ro_saft_code" model="ir.ui.view">
+        <field name="name">uom.uom.form.inherit.ro.saft.code</field>
+        <field name="model">uom.uom</field>
+        <field name="inherit_id" ref="uom.product_uom_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='relative_factor']" position="after">
+                <field name="ro_saft_code"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

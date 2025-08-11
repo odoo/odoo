@@ -23,6 +23,8 @@ Romanian accounting chart and localization.
         'views/res_partner_view.xml',
         'data/account_tax_report_data.xml',
         'data/res.bank.csv',
+        'data/uom_ro_saft_codes.xml',
+        'views/ro_saft_uom_view.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

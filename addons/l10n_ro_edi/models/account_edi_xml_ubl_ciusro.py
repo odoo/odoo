@@ -124,3 +124,27 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
                     partner.display_name)
 
         return constraints
+
+    def _get_uom_unece_code(self, uom):
+        """Use RO SAF-T code if available, else fall back to standard UNECE code."""
+        if not uom:
+            return 'H87'
+
+        return uom.ro_saft_code or uom._get_unece_code()
+
+    def _add_document_line_amount_nodes(self, line_node, vals):
+        currency_suffix = vals['currency_suffix']
+        base_line = vals['base_line']
+
+        quantity_tag = self._get_tags_for_document_type(vals)['line_quantity']
+
+        line_node.update({
+            quantity_tag: {
+                '_text': base_line['quantity'],
+                'unitCode': self._get_uom_unece_code(base_line['product_uom_id']),
+            },
+            'cbc:LineExtensionAmount': {
+                '_text': self.format_float(vals[f'total_excluded{currency_suffix}'], vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            },
+        })
