@@ -1,31 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* portal
-# 
+# * portal
+#
 # Translators:
 # Tiffany Chang, 2025
 # Martin Trigaux, 2025
 # Wil Odoo, 2025
 # Tony Ng, 2025
-# 
+#
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-16 18:39+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"PO-Revision-Date: 2025-08-11 12:35+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-s18-4/portal/zh_Hant/>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "\" to validate your action."
-msgstr "\"以驗證您的動作。"
+msgstr "\" 以驗證你的動作。"
 
 #. module: portal
 #. odoo-javascript
@@ -36,7 +39,7 @@ msgstr "過期 %s 天"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "1. Enter your password to confirm you own this account"
-msgstr "1. 輸入您的密碼以確認您擁有該帳戶"
+msgstr "1. 輸入你的密碼，以確認你擁有此帳戶"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -44,8 +47,8 @@ msgid ""
 "2. Confirm you want to delete your account by\n"
 "                                        copying down your login ("
 msgstr ""
-"2. 要確認刪除您的帳戶，\n"
-"                                        請複製您的登入名稱("
+"2. 若要確認刪除你的帳戶，\n"
+"                                        請複製你的登入名稱 ("
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -287,24 +290,43 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
-"<t t-set=\"user_name\" t-value=\"object.user_id.name or object.partner_id.name or ''\"/>\n"
-"            <t t-set=\"company_name\" t-value=\"object.user_id.company_id.name or object.partner_id.company_id.name or ''\"/>\n"
-"            <t t-set=\"signup_url\" t-value=\"object.user_id.partner_id and object.user_id.partner_id._get_signup_url() or object.partner_id and object.partner_id._get_signup_url()\"/>\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<t t-set=\"user_name\" t-value="
+"\"object.user_id.name or object.partner_id.name or ''\"/>\n"
+"            <t t-set=\"company_name\" t-value="
+"\"object.user_id.company_id.name or object.partner_id.company_id.name or ''\""
+"/>\n"
+"            <t t-set=\"signup_url\" t-value=\"object.user_id.partner_id and "
+"object.user_id.partner_id._get_signup_url() or object.partner_id and "
+"object.partner_id._get_signup_url()\"/>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\""
+"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style="
+"\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
 "<tbody>\n"
 "    <!-- HEADER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
+"0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Your Account</span><br/>\n"
-"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"user_name\">Marc Demo</span>\n"
-"                </td><td valign=\"middle\" align=\"right\" t-if=\"not object.user_id.company_id.uses_default_logo\">\n"
-"                    <img t-attf-src=\"/logo.png?company={{ object.user_id.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.user_id.company_id.name\"/>\n"
+"                    <span style=\"font-size: 10px;\">你的帳戶</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;"
+"\" t-out=\"user_name\">Marc Demo</span>\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if="
+"\"not object.user_id.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src="
+"\"/logo.png?company={{ object.user_id.company_id.id }}\" style="
+"\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt="
+"\"object.user_id.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -312,23 +334,36 @@ msgstr ""
 "    <!-- CONTENT -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
+"0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
-"                        Dear <t t-out=\"user_name\">Marc Demo</t>,<br/> <br/>\n"
-"                        Welcome to <t t-out=\"company_name\">YourCompany</t>'s Portal!<br/><br/>\n"
-"                        An account has been created for you with the following login: <t t-out=\"object.user_id.login\">demo</t><br/><br/>\n"
-"                        Click on the button below to pick a password and activate your account.\n"
-"                        <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"                            <a t-att-href=\"signup_url\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}}; color: {{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;\">\n"
-"                                <strong>Activate Account</strong>\n"
+"                        <t t-out=\"user_name\">Marc Demo</t> 你好！<br/> <br/"
+">\n"
+"                        歡迎使用 <t t-out=\"company_name\">YourCompany</t> "
+"的門戶網站！<br/><br/>\n"
+"                        系統已為你建立帳戶，登入名稱為： <t t-out="
+"\"object.user_id.login\">demo</t><br/><br/>\n"
+"                        請按一下以下按鈕，以設定密碼及啟動帳戶。\n"
+"                        <div style="
+"\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"                            <a t-att-href=\"signup_url\" style=\"display: "
+"inline-block; padding: 10px; text-decoration: none; font-size: 12px; "
+"background-color: {{object.user_id.company_id.email_secondary_color or "
+"'#875A7B'}}; color: {{object.user_id.company_id.email_primary_color or "
+"'#FFFFFF'}}; border-radius: 5px;\">\n"
+"                                <strong>啟動帳戶</strong>\n"
 "                            </a>\n"
 "                        </div>\n"
-"                        <t t-out=\"object.wizard_id.welcome_message or ''\">Welcome to our company's portal.</t>\n"
+"                        <t t-out=\"object.wizard_id.welcome_message or ''\""
+">再次歡迎你使用我們公司的服務。</t>\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -336,17 +371,27 @@ msgstr ""
 "    <!-- FOOTER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\" align=\"left\">\n"
 "                    <t t-out=\"company_name\">YourCompany</t>\n"
 "                </td></tr>\n"
-"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
-"                    <t t-out=\"object.user_id.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style="
+"\"opacity: 0.7;\">\n"
+"                    <t t-out=\"object.user_id.company_id.phone or ''\">+1 "
+"650-123-4567</t>\n"
 "                    <t t-if=\"object.user_id.company_id.email\">\n"
-"                        | <a t-attf-href=\"'mailto:%s' % {{ object.user_id.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.user_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                        | <a t-attf-href="
+"\"'mailto:%s' % {{ object.user_id.company_id.email }}\" style=\"text-"
+"decoration:none; color: #454748;\" t-out=\"object.user_id.company_id.email "
+"or ''\">info@yourcompany.com</a>\n"
 "                    </t>\n"
 "                    <t t-if=\"object.user_id.company_id.website\">\n"
-"                        | <a t-attf-href=\"'%s' % {{ object.user_id.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.user_id.company_id.website or ''\">http://www.example.com</a>\n"
+"                        | <a t-attf-href="
+"\"'%s' % {{ object.user_id.company_id.website }}\" style=\"text-"
+"decoration:none; color: #454748;\" t-out=\"object.user_id.company_id.website "
+"or ''\">http://www.example.com</a>\n"
 "                    </t>\n"
 "                </td></tr>\n"
 "            </table>\n"
@@ -357,9 +402,15 @@ msgstr ""
 "</td></tr>\n"
 "<!-- POWERED BY -->\n"
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding:"
+" 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" t-attf-style=\"color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}};\">Odoo</a>\n"
+"        由 <a target=\"_blank\" href="
+"\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" t-attf-"
+"style="
+"\"color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}};\""
+">Odoo</a> 驅動\n"
 "      </td></tr>\n"
 "    </table>\n"
 "</td></tr>\n"
@@ -486,7 +537,8 @@ msgstr "更改密碼"
 msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
-msgstr "一旦您的帳戶開具憑單，不可更改統一編號。如需要此操作，請直接與我們聯繫。"
+msgstr "若已有文件為你的帳戶發出，就不可再修改增值稅號碼。要進行此操作，請直接聯絡我"
+"們。"
 
 #. module: portal
 #. odoo-python
@@ -494,7 +546,8 @@ msgstr "一旦您的帳戶開具憑單，不可更改統一編號。如需要此
 msgid ""
 "Changing your country is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
-msgstr ""
+msgstr "若已有文件為你的帳戶發出，就不可再修改國家/地區。要進行此操作，請直接聯絡我們"
+"。"
 
 #. module: portal
 #. odoo-javascript
@@ -511,7 +564,7 @@ msgstr "城市"
 #. odoo-javascript
 #: code:addons/portal/static/src/signature_form/signature_form.xml:0
 msgid "Click here to see your document."
-msgstr "點選此處查看您的文件。"
+msgstr "按一下此處以查看你的文件。"
 
 #. module: portal
 #. odoo-javascript
@@ -535,7 +588,7 @@ msgstr "配置設定"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Configure your connection parameters"
-msgstr "配置您的連線參數"
+msgstr "配置連線參數"
 
 #. module: portal
 #. odoo-javascript
@@ -781,8 +834,8 @@ msgid ""
 "Here is your new API key, use it instead of a password for RPC access.\n"
 "                Your login is still necessary for interactive usage."
 msgstr ""
-"這是您的新API密鑰，使用它代替密碼進行 RPC 訪問.\n"
-"                            您的登錄仍然是交互式使用所必需的."
+"這是你的新 API 密鑰，請使用它代替密碼，以進行 RPC 存取。\n"
+"                            你仍必須登入，才可作互動式使用。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -812,7 +865,8 @@ msgid ""
 "If you are ordering for an external person, please place your order via the "
 "backend. If you wish to change your name or email address, please do so in "
 "the account settings or contact your administrator."
-msgstr "若是為外部人員訂購，請透過後台下單。 如果您想更改您的姓名或電郵地址，請在帳戶設定中進行操作，或聯繫您的管理員。"
+msgstr "若是為外部人員訂購，請透過後台下單。若想更改姓名或電郵地址，請在帳戶設定中修"
+"改，或聯絡你的系統管理員。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -860,7 +914,7 @@ msgstr "邀請消息"
 #. module: portal
 #: model:mail.template,description:portal.mail_template_data_portal_welcome
 msgid "Invitation email to contacts to create a user account"
-msgstr "邀請聯絡人建立使用者帳戶的電郵"
+msgstr "電郵邀請聯絡人建立使用者帳戶"
 
 #. module: portal
 #. odoo-python
@@ -956,7 +1010,7 @@ msgstr "我的地址"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Name your key"
-msgstr "命名您的密鑰"
+msgstr "為你的密鑰命名"
 
 #. module: portal
 #. odoo-javascript
@@ -1027,7 +1081,7 @@ msgstr "電話"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Please enter your password to confirm you own this account"
-msgstr "請輸入您的密碼以確認您可使用此帳戶"
+msgstr "請輸入密碼，以確認你擁有此帳戶"
 
 #. module: portal
 #. odoo-python
@@ -1059,7 +1113,7 @@ msgstr "網站入口使用者配置"
 #. module: portal
 #: model:mail.template,name:portal.mail_template_data_portal_welcome
 msgid "Portal: User Invite"
-msgstr "網站登入：用戶邀請"
+msgstr "門戶網站：邀請使用者"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -1274,7 +1328,7 @@ msgstr "無法刪除附件 %s，因為它未處於 pending 狀態。"
 #: code:addons/portal/controllers/portal.py:0
 msgid ""
 "The attachment does not exist or you do not have the rights to access it."
-msgstr "附件不存在，或者您沒有存取它的許可權。"
+msgstr "附件不存在，或你沒有足夠存取權限。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -1317,7 +1371,7 @@ msgstr "新密碼與確認密碼必須相同。"
 #: code:addons/portal/controllers/portal.py:0
 msgid ""
 "The old password you provided is incorrect, your password was not changed."
-msgstr "您提供的原密碼是錯誤的，密碼沒有改變。"
+msgstr "提供的舊密碼錯誤。密碼未有修改。"
 
 #. module: portal
 #. odoo-python
@@ -1508,7 +1562,7 @@ msgstr "寫下訊息⋯"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Write down your key"
-msgstr "寫下您的密鑰(密碼)"
+msgstr "寫下你的密鑰"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1525,13 +1579,13 @@ msgstr "主要地址不可封存"
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "You cannot leave any password empty."
-msgstr "您不能讓任何密碼為空。"
+msgstr "任何密碼欄位都不可留空。"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 msgid "You must be"
-msgstr "您必須"
+msgstr "你必須是"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1542,7 +1596,7 @@ msgstr "你應該輸入「"
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 msgid "You should first grant the portal access to the partner \"%s\"."
-msgstr "您應該首先向合作夥伴“%s”授予網站登入存取權限。"
+msgstr "你應先向以下合作夥伴授予門戶網站的存取權限：%s。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_kanban
@@ -1555,6 +1609,8 @@ msgid ""
 "Your account at {{ object.user_id.company_id.name or "
 "object.partner_id.company_id.name }}"
 msgstr ""
+"你在 {{ object.user_id.company_id.name or object.partner_id.company_id.name "
+"}} 的帳戶"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
@@ -1564,7 +1620,7 @@ msgstr "你的聯絡人"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Your name"
-msgstr "您的姓名"
+msgstr "你的姓名"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -1580,7 +1636,7 @@ msgstr "完全存取權限"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "has invited you to access the following"
-msgstr "已邀請您存取以下內容"
+msgstr "邀請你存取以下內容："
 
 #. module: portal
 #. odoo-javascript
