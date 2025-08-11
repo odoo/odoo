@@ -6,6 +6,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { Deferred } from "@web/core/utils/concurrency";
 import { toggleClass } from "@html_editor/utils/dom";
 import { omit, pick } from "@web/core/utils/objects";
+import { trackOccurrences, trackOccurrencesPair } from "../utils/tracking";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
@@ -539,30 +540,21 @@ export class HistoryPlugin extends Plugin {
      * @param { MutationRecord[] } records
      */
     filterOutIntermediateStateMutationRecords(records) {
-        // Keep track of visited attributes of each node
-        /** @type {Map<Node, Set<string>>} */
-        const nodeToAttributes = new Map();
+        // Keep track of visited attributes per each node
+        const isFirstAttributeOccurrence = trackOccurrencesPair();
         // Keep track of visited nodes for characterData mutations
-        /** @type {Set<Node>} */
-        const visitedNodesCharData = new Set();
+        const isFirstCharDataOccurence = trackOccurrences();
         const filteredRecords = [];
         for (const record of records) {
             if (record.type === "attributes") {
-                // Add entry for current target if not already present.
-                if (!nodeToAttributes.has(record.target)) {
-                    nodeToAttributes.set(record.target, new Set());
-                }
-                const visitedAttributes = nodeToAttributes.get(record.target);
-                // Keep only the first mutation record for each attribute.
-                if (!visitedAttributes.has(record.attributeName)) {
+                // Keep only the first mutation record for each (node, attribute) pair.
+                if (isFirstAttributeOccurrence(record.target, record.attributeName)) {
                     filteredRecords.push(record);
-                    visitedAttributes.add(record.attributeName);
                 }
             } else if (record.type === "characterData") {
                 // Keep only the first charData mutation record for each node.
-                if (!visitedNodesCharData.has(record.target)) {
+                if (isFirstCharDataOccurence(record.target)) {
                     filteredRecords.push(record);
-                    visitedNodesCharData.add(record.target);
                 }
             } else {
                 filteredRecords.push(record);
