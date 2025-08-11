@@ -42,25 +42,6 @@ async function performAction(trigger, action) {
     }
 }
 
-export async function waitForStable(target = document, timeout = 1000 / 16) {
-    return new Promise((resolve) => {
-        let observer;
-        let timer;
-        const mutationList = [];
-        function onMutation(mutations) {
-            mutationList.push(...(mutations || []));
-            clearTimeout(timer);
-            timer = setTimeout(() => {
-                observer.disconnect();
-                resolve(mutationList);
-            }, timeout);
-        }
-        observer = new MacroMutationObserver(onMutation);
-        observer.observe(target);
-        onMutation([]);
-    });
-}
-
 async function waitForTrigger(trigger) {
     if (!trigger) {
         return;
