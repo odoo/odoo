@@ -607,3 +607,40 @@ test("select and de-select all", async () => {
     expect("[role=menuitemcheckbox][title='Select all'] i").toHaveClass("fa-square-o");
     expect(".o_switch_company_item:has([role=menuitemcheckbox][aria-checked=true])").toHaveCount(0);
 });
+
+test("de-select only changes visible companies", async () => {
+    await createSwitchCompanyMenu();
+    await openCompanyMenu();
+
+    // Show search
+    await edit(" ");
+    await toggleCompany(4);
+    expect(".o_switch_company_item:has([role=menuitemcheckbox][aria-checked=true])").toHaveCount(2);
+
+    // Show search
+    await contains("input").edit("m");
+    await animationFrame();
+
+    // One company is selected, unselect all
+    await contains("[role=menuitemcheckbox][title='Deselect all']").click();
+    expect(".o_switch_company_item:has([role=menuitemcheckbox][aria-checked=true])").toHaveCount(0);
+
+    // Hidden company is still selected
+    await contains("input").clear();
+    await animationFrame();
+    expect(".o_switch_company_item:has([role=menuitemcheckbox][aria-checked=true])").toHaveCount(1);
+
+    // Filter and select all visible companies
+    await contains("input").edit("m");
+    await animationFrame();
+    await contains("[role=menuitemcheckbox][title='Select all']").click();
+    expect(".o_switch_company_item:has([role=menuitemcheckbox][aria-checked=true])").toHaveCount(3);
+
+    // Hidden company is unchanged
+    await contains("input").clear();
+    await animationFrame();
+    expect(".o_switch_company_item:has([role=menuitemcheckbox][aria-checked=true])").toHaveCount(4);
+    expect(".o_switch_company_item:has([role=menuitemcheckbox][aria-checked=false])").toHaveCount(
+        1
+    );
+});
