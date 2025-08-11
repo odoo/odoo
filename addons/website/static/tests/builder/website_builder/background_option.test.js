@@ -31,10 +31,10 @@ test("change the background shape of elements", async () => {
     });
     await setupWebsiteBuilder(`
         <div class="selector">
-            <div id="first" class="applyTo" data-oe-shape-data='{"shape":"web_editor/Connections/01","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'>
+            <div id="first" class="applyTo" data-oe-shape-data='{"shape":"html_builder/Connections/01","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'>
                 AAAA
             </div>
-            <div id="second" class="applyTo" data-oe-shape-data='{"shape":"web_editor/Connections/01","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'>
+            <div id="second" class="applyTo" data-oe-shape-data='{"shape":"html_builder/Connections/01","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'>
                 BBBB
             </div>
         </div>`);
@@ -45,17 +45,17 @@ test("change the background shape of elements", async () => {
     ).click();
     expect(":iframe .selector div#first").toHaveAttribute(
         "data-oe-shape-data",
-        '{"shape":"web_editor/Connections/02","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'
+        '{"shape":"html_builder/Connections/02","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'
     );
     expect(":iframe .selector div#second").toHaveAttribute(
         "data-oe-shape-data",
-        '{"shape":"web_editor/Connections/02","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'
+        '{"shape":"html_builder/Connections/02","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'
     );
 });
 
 test("remove background shape", async () => {
     await setupWebsiteBuilder(`
-        <section data-oe-shape-data='{"shape":"web_editor/Connections/01","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'>
+        <section data-oe-shape-data='{"shape":"html_builder/Connections/01","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'>
             AAAA
         </section>`);
     await contains(":iframe section").click();
@@ -66,8 +66,8 @@ test("remove background shape", async () => {
 
 test("toggle Show/Hide on mobile of the shape background", async () => {
     await setupWebsiteBuilder(`
-        <section data-oe-shape-data='{"shape":"web_editor/Connections/01","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'>
-            <div class="o_we_shape o_web_editor_Connections_01">
+        <section data-oe-shape-data='{"shape":"html_builder/Connections/01","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'>
+            <div class="o_we_shape o_html_builder_Connections_01">
                 AAAA
             </div>
         </section>`);
@@ -124,7 +124,7 @@ async function dragAndDropBgImage() {
     });
     await setupWebsiteBuilder(`
         <section style="background-image: url('/web/image/123/transparent.png'); width: 500px; height:500px">
-            <div class="o_we_shape o_web_editor_Connections_01">
+            <div class="o_we_shape o_html_builder_Connections_01">
                 AAAA
             </div>
         </section>`);
@@ -183,7 +183,7 @@ test("open the media dialog to toggle the image background but do not choose an 
 test("remove the background image of a snippet", async () => {
     const { waitDomUpdated } = await setupWebsiteBuilder(`
         <section style="background-image: url('/web/image/123/transparent.png'); width: 500px; height:500px">
-            <div class="o_we_shape o_web_editor_Connections_01">
+            <div class="o_we_shape o_html_builder_Connections_01">
                 AAAA
             </div>
         </section>`);
@@ -206,7 +206,7 @@ test("changing shape's background color doesn't hide the shape itself", async ()
     await contains(":iframe section").click();
     await contains("button[data-action-id='toggleBgShape']").click();
     await contains(
-        ".o_pager_container .o-hb-bg-shape-btn [data-action-value='web_editor/Connections/01'][data-action-id='setBackgroundShape']"
+        ".o_pager_container .o-hb-bg-shape-btn [data-action-value='html_builder/Connections/01'][data-action-id='setBackgroundShape']"
     ).click();
     const backgroundImageValue = getComputedStyle(queryOne(":iframe .o_we_shape")).backgroundImage;
     expect(backgroundImageValue).toMatch(/Connections\/01/);
