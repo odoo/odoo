@@ -617,6 +617,7 @@ export class Message extends Record {
             attachment_tokens: [],
             body: "",
             message_id: this.id,
+            partner_ids: [],
             ...this.thread.rpcParams,
         });
         this.body = "";
