@@ -784,7 +784,7 @@ class WebAsset(object):
             raise AssetError('%s is not utf-8 encoded.' % self.name)
         except IOError:
             raise AssetNotFound('File %s does not exist.' % self.name)
-        except:
+        except Exception:  # noqa: BLE001
             raise AssetError('Could not get content for %s.' % self.name)
 
     def minify(self):

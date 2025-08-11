@@ -348,7 +348,7 @@ class IrActionsAct_Window(models.Model):
                     eval_ctx = dict(self.env.context)
                     try:
                         ctx = safe_eval(values.get('context', '{}'), eval_ctx)
-                    except:
+                    except Exception:  # noqa: BLE001
                         ctx = {}
                     values['help'] = self.with_context(**ctx).env[model].get_empty_list_help(values.get('help', ''))
         return result

@@ -1202,7 +1202,7 @@ class Worker(object):
                 if not self.alive:
                     break
                 self.process_work()
-        except:
+        except Exception:  # noqa: BLE001
             _logger.exception("Worker %s (%s) Exception occurred, exiting...", self.__class__.__name__, self.pid)
             sys.exit(1)
 

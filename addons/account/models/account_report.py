@@ -628,7 +628,7 @@ class AccountReportExpression(models.Model):
             try:
                 domain = ast.literal_eval(expression.formula)
                 self.env['account.move.line']._search(domain)
-            except:
+            except Exception:  # noqa: BLE001
                 raise UserError(_("Invalid domain for expression '%(label)s' of line '%(line)s': %(formula)s",
                                 label=expression.label, line=expression.report_line_name, formula=expression.formula))
 

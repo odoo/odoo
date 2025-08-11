@@ -4525,7 +4525,7 @@ class MailThread(models.AbstractModel):
             try: # avoid to make an exists, lets be optimistic and try to read it.
                 if user.active:
                     return [(user.partner_id.id, default_subtype_ids, 'mail.message_user_assigned' if user != self.env.user else False)]
-            except:
+            except Exception:  # noqa: BLE001
                 pass
         return []
 

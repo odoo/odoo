@@ -189,7 +189,7 @@ class MailController(http.Controller):
         if kwargs.get('message_id'):
             try:
                 message = request.env['mail.message'].sudo().browse(int(kwargs['message_id'])).exists()
-            except:
+            except Exception:  # noqa: BLE001
                 message = request.env['mail.message']
             if message:
                 model, res_id = message.model, message.res_id

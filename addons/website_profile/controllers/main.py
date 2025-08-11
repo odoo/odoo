@@ -30,7 +30,7 @@ class WebsiteProfile(http.Controller):
         frontend applications like forum or elearning. """
         try:
             user = request.env['res.users'].sudo().browse(user_id).exists()
-        except:
+        except Exception:  # noqa: BLE001
             return False
         if user:
             return user.website_published and user.karma > 0

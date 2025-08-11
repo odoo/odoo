@@ -31,7 +31,7 @@ class _Outcome(object):
         except SkipTest as e:
             self.success = False
             self.result.addSkip(test_case, str(e))
-        except: # pylint: disable=bare-except
+        except Exception:  # noqa: BLE001
             exc_info = sys.exc_info()
             self.success = False
 

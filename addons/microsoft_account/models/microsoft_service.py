@@ -172,7 +172,7 @@ class MicrosoftService(models.AbstractModel):
 
             try:
                 ask_time = datetime.strptime(res.headers.get('date'), "%a, %d %b %Y %H:%M:%S %Z")
-            except:
+            except Exception:  # noqa: BLE001
                 pass
         except requests.HTTPError as error:
             if error.response.status_code in RESOURCE_NOT_FOUND_STATUSES:

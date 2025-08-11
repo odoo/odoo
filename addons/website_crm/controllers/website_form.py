@@ -26,7 +26,7 @@ class WebsiteForm(form.WebsiteForm):
         if model_record:
             try:
                 data = self.extract_data(model_record, request.params)
-            except:
+            except Exception:  # noqa: BLE001
                 # no specific management, super will do it
                 pass
             else:
