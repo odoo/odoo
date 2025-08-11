@@ -54,7 +54,7 @@ class RazorpayController(Controller):
         )
         try:
             response_content = provider_sudo._send_api_request(
-                'POST', '/get_access_token', json=proxy_payload
+                'POST', '/get_access_token', json=proxy_payload, is_proxy_request=True
             )
         except ValidationError as e:
             return request.render(
