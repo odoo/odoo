@@ -3074,6 +3074,10 @@ class AccountTax(models.Model):
                 computation_key=computation_key,
                 price_unit=base_line['price_unit'] * -percentage,
             )
+
+            if new_base_line['special_type'] == 'global_discount':
+                new_base_line['manual_tax_amounts'] = None
+
             self._add_tax_details_in_base_line(new_base_line, company)
 
             # Propagate custom values.
