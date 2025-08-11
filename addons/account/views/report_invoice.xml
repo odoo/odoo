@@ -191,7 +191,7 @@
                                                         <span>1.00</span>
                                                     </td>
                                                     <td name="td_price_unit_grouped" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                                        <span t-if="not line.collapse_prices" t-out="grouped_line['price_subtotal']" class="text-nowrap">9.00</span>
+                                                        <span t-if="not line.collapse_prices" t-out="grouped_line['price_subtotal']" t-options="{'widget': 'float', 'precision': 2}" class="text-nowrap">9.00</span>
                                                     </td>
                                                     <td name="td_discount_grouped" t-if="display_discount"/>
                                                     <td name="td_taxes_grouped" t-if="display_taxes" class="text-end">
