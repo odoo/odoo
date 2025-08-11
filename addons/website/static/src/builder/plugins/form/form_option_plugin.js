@@ -599,13 +599,13 @@ export class FormOptionPlugin extends Plugin {
                     );
                     for (const record of records) {
                         conditionValueList.push({
-                            value: String(record[idField]),
+                            value: String(record[displayNameField]),
                             textContent: record[displayNameField],
                         });
                     }
                     if (!inputContainerEl.dataset.visibilityCondition) {
                         inputContainerEl.dataset.visibilityCondition = String(
-                            records[0]?.[idField]
+                            records[0]?.[displayNameField]
                         );
                     }
                 } else {
