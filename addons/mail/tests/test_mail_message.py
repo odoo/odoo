@@ -15,7 +15,6 @@ class TestMailMessage(common.MailCommon):
         self.assertEqual(message.notification_ids.failure_type, "mail_email_invalid")
         self.assertEqual(message.notification_ids.res_partner_id, recipient.partner_id)
         self.assertEqual(message.notification_ids.author_id, self.env.user.partner_id)
-        self._reset_bus()
         with self.assertBus(
             [
                 (self.cr.dbname, "res.partner", recipient.partner_id.id),

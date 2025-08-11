@@ -181,7 +181,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                 ],
             )
 
-        self._reset_bus()
         with self.assertBus(get_params=get_add_member_bus):
             test_group._add_members(partners=self.test_partner)
 
@@ -228,7 +227,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                     },
                 ],
             )
-        self._reset_bus()
         with self.assertBus(get_params=get_add_member_again_bus):
             test_group._add_members(partners=self.test_partner)
         self.assertEqual(test_group.message_partner_ids, self.env["res.partner"])
@@ -403,7 +401,6 @@ class TestChannelInternals(MailCommon, HttpCase):
         chat = self.env['discuss.channel'].with_user(self.user_admin)._get_or_create_chat((self.partner_employee | self.user_admin.partner_id).ids)
         msg_1 = self._add_messages(chat, 'Body1', author=self.user_employee.partner_id)
         member = chat.channel_member_ids.filtered(lambda m: m.partner_id == self.user_admin.partner_id)
-        self._reset_bus()
         with self.assertBus(
             [
                 (self.env.cr.dbname, "discuss.channel", chat.id),
@@ -458,7 +455,6 @@ class TestChannelInternals(MailCommon, HttpCase):
             member._mark_as_read(msg_1.id)
         # There should be no channel member to be set as seen in the second time
         # So no notification should be sent
-        self._reset_bus()
         with self.assertBus([], []):
             member._mark_as_read(msg_1.id)
 
@@ -608,7 +604,6 @@ class TestChannelInternals(MailCommon, HttpCase):
 
     def test_channel_write_should_send_notification(self):
         channel = self.env['discuss.channel'].create({"name": "test", "description": "test"})
-        self._reset_bus()
         with self.assertBus(
             [(self.cr.dbname, "discuss.channel", channel.id)],
             [
@@ -626,7 +621,6 @@ class TestChannelInternals(MailCommon, HttpCase):
         channel.image_128 = base64.b64encode(("<svg/>").encode())
         avatar_cache_key = channel.avatar_cache_key
         channel.image_128 = False
-        self._reset_bus()
         with self.assertBus(
             [(self.cr.dbname, "discuss.channel", channel.id)],
             [
@@ -820,7 +814,6 @@ class TestChannelInternals(MailCommon, HttpCase):
         """Ensures the command '/help' works in a channel"""
         channel = self.env["discuss.channel"].browse(self.test_channel.ids)
         channel.name = "<strong>R&D</strong>"
-        self._reset_bus()
         with self.assertBus(
             [(self.env.cr.dbname, "res.partner", self.env.user.partner_id.id)],
             [
@@ -857,7 +850,6 @@ class TestChannelInternals(MailCommon, HttpCase):
             'channel_partner_ids': [(6, 0, test_user.partner_id.id)]
         })
         test_group._add_members(users=self.user_employee_nomail)
-        self._reset_bus()
         with self.assertBus(
             [(self.env.cr.dbname, "res.partner", self.env.user.partner_id.id)],
             [

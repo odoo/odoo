@@ -257,7 +257,6 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
     def test_recipients_multi_company(self):
         """Test mentioning a partner with no common company."""
         test_records_mc_c2 = self.test_records_mc[1]
-        self._reset_bus()
         with self.assertBus([(self.cr.dbname, "res.partner", self.user_employee_c3.partner_id.id)]):
             test_records_mc_c2.with_user(self.user_employee_c2).with_context(
                 allowed_company_ids=self.company_2.ids

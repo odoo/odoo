@@ -1360,6 +1360,7 @@ class MailCase(common.TransactionCase, MockEmail):
         def notif_to_string(notif):
             return f"{format_notif(notif)}\n{notif.message}"
 
+        self._reset_bus()
         try:
             with self.mock_bus():
                 yield

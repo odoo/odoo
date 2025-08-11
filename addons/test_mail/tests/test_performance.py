@@ -1715,7 +1715,6 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                 ],
             )
 
-        self._reset_bus()
         self.env.invalidate_all()
         with self.assertBus(get_params=get_bus_params):
             with self.assertQueryCount(17):

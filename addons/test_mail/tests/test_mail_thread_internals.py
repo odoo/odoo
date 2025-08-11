@@ -1158,7 +1158,6 @@ class TestDiscuss(MailCommon, TestRecipients):
 
             # mark all as read clear needactions
             msg1 = self.test_record.message_post(body='Test', message_type='comment', subtype_xmlid='mail.mt_comment', partner_ids=[employee_partner.id])
-            self._reset_bus()
             with self.assertBus(
                     [(self.cr.dbname, 'res.partner', employee_partner.id)],
                     message_items=[{
@@ -1185,7 +1184,6 @@ class TestDiscuss(MailCommon, TestRecipients):
             na_count = employee_partner._get_needaction_count()
             self.assertEqual(na_count, 1, "message not accessible is currently still counted")
 
-            self._reset_bus()
             with self.assertBus(
                     [(self.cr.dbname, 'res.partner', employee_partner.id)],
                     message_items=[{
