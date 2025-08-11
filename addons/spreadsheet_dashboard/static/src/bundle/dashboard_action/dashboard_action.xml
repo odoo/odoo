@@ -2,26 +2,26 @@
 <templates>
     <div t-name="spreadsheet_dashboard.DashboardAction" class="o_action o_spreadsheet_dashboard_action o_field_highlight">
         <ControlPanel display="controlPanelDisplay">
-            <t t-set-slot="layout-actions" t-if="!state.activeDashboard?.isSample">
-                <t t-set="status" t-value="state.activeDashboard and state.activeDashboard.status"/>
+            <t t-set-slot="layout-actions" t-if="!loader.getActiveDashboard()?.isSample">
+                <t t-set="status" t-value="loader.getActiveDashboard() and loader.getActiveDashboard().status"/>
                 <div class="d-flex flex-wrap">
-                    <DashboardSearchBar t-if="status === Status.Loaded and state.activeDashboard.model.getters.getGlobalFilters().length"
+                    <DashboardSearchBar t-if="status === Status.Loaded and loader.getActiveDashboard().model.getters.getGlobalFilters().length"
                                         t-key="activeDashboardId"
-                                        model="state.activeDashboard.model"
+                                        model="loader.getActiveDashboard().model"
                     />
                 </div>
             </t>
-            <t t-set-slot="control-panel-navigation-additional" t-if="!state.activeDashboard?.isSample">
-                <SpreadsheetShareButton t-key="activeDashboardId" model="state.activeDashboard?.model" onSpreadsheetShared.bind="shareSpreadsheet" togglerClass="'btn-light'"/>
+            <t t-set-slot="control-panel-navigation-additional" t-if="!loader.getActiveDashboard()?.isSample">
+                <SpreadsheetShareButton t-key="activeDashboardId" model="loader.getActiveDashboard()?.model" onSpreadsheetShared.bind="shareSpreadsheet" togglerClass="'btn-light'"/>
                 <a
-                    t-if="state.activeDashboard"
+                    t-if="loader.getActiveDashboard()"
                     title="Toggle favorite"
                     t-on-click="toggleFavorite"
-                    t-attf-class="o_dashboard_star fa fa-lg fa-star{{!state.activeDashboard.isFavorite ? '-o' : ' favorite_button_enabled'}}"
+                    t-attf-class="o_dashboard_star fa fa-lg fa-star{{!loader.getActiveDashboard().isFavorite ? '-o' : ' favorite_button_enabled'}}"
                 />
             </t>
         </ControlPanel>
-        <t t-set="dashboard" t-value="state.activeDashboard"/>
+        <t t-set="dashboard" t-value="loader.getActiveDashboard()"/>
         <div class="o_content o_component_with_search_panel" t-att-class="{ o_mobile_dashboard: env.isSmall }">
             <!-- Dashboard selection -->
             <t t-if="env.isSmall">
@@ -59,10 +59,10 @@
                 <button class="btn btn-light btn-sm m-1 mb-2 p-2">
                     <i class="fa fa-angle-double-right"/>
                 </button>
-                <div class="mx-auto" t-if="state.activeDashboard">
+                <div class="mx-auto" t-if="loader.getActiveDashboard()">
                     <span class="fw-bolder" t-esc="activeDashboardGroupName"/>
                     /
-                    <t t-esc="state.activeDashboard.displayName"/>
+                    <t t-esc="loader.getActiveDashboard().displayName"/>
                 </div>
             </div>
         </div>
@@ -70,7 +70,7 @@
 
     <t t-name="spreadsheet_dashboard.DashboardAction.Expanded">
         <div class="o_spreadsheet_dashboard_search_panel o_search_panel flex-grow-0 border-end flex-shrink-0 pe-2 pb-5 ps-4 h-100 bg-view overflow-auto position-relative">
-            <button t-if="!env.isSmall and state.activeDashboard" class="btn btn-light btn-sm end-0 m-1 mb-2 position-absolute px-2 py-1 top-0 z-1" t-on-click="toggleSidebar">
+            <button t-if="!env.isSmall and loader.getActiveDashboard()" class="btn btn-light btn-sm end-0 m-1 mb-2 position-absolute px-2 py-1 top-0 z-1" t-on-click="toggleSidebar">
                 <i class="fa fa-fw fa-angle-double-left"/>
             </button>
             <div class="mt-2"/>
@@ -84,7 +84,7 @@
                         t-att-data-name="dashboard.displayName"
                         t-att-title="dashboard.displayName"
                         class="o_search_panel_category_value list-group-item cursor-pointer border-0 d-flex justify-content-between align-items-center"
-                        t-att-class="{'active': dashboard.id === state.activeDashboard.id}">
+                        t-att-class="{'active': dashboard.id === loader.getActiveDashboard().id}">
                         <div class="o_dashboard_name">
                             <t t-esc="dashboard.displayName" />
                         </div>
