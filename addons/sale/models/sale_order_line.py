@@ -747,6 +747,10 @@ class SaleOrderLine(models.Model):
             if not (line.order_id.pricelist_id and discount_enabled):
                 continue
 
+            if line.combo_item_id:
+                line.discount = line._get_linked_line().discount
+                continue
+
             line.discount = 0.0
 
             if not line.pricelist_item_id._show_discount():
