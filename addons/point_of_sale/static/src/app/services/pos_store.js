@@ -1686,9 +1686,9 @@ export class PosStore extends WithLazyGetterTrap {
     changesToOrder(order, skipped = false, orderPreparationCategories, cancelled = false) {
         return changesToOrder(order, skipped, orderPreparationCategories, cancelled);
     }
-    async checkPreparationStateAndSentOrderInPreparation(order, cancelled = false) {
+    async checkPreparationStateAndSentOrderInPreparation(order, opts = {}) {
         if (typeof order.id !== "number") {
-            return this.sendOrderInPreparation(order, cancelled);
+            return this.sendOrderInPreparation(order, opts);
         }
 
         const data = await this.data.call("pos.order", "get_preparation_change", [order.id]);
@@ -1715,7 +1715,7 @@ export class PosStore extends WithLazyGetterTrap {
             return;
         }
 
-        return this.sendOrderInPreparation(order, cancelled);
+        return this.sendOrderInPreparation(order, opts);
     }
     // Now the printer should work in PoS without restaurant
     async sendOrderInPreparation(order, opts = {}) {
@@ -1767,12 +1767,12 @@ export class PosStore extends WithLazyGetterTrap {
             await this.syncAllOrders({ orders: [order] });
         }
     }
-    async sendOrderInPreparationUpdateLastChange(o, cancelled = false) {
+    async sendOrderInPreparationUpdateLastChange(o, opts) {
         if (this.data.network.offline) {
             this.data.network.warningTriggered = false;
             throw new ConnectionLostError();
         }
-        await this.checkPreparationStateAndSentOrderInPreparation(o, { cancelled });
+        await this.checkPreparationStateAndSentOrderInPreparation(o, opts);
     }
 
     getStrNotes(note) {
