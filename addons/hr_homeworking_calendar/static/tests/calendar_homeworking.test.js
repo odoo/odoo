@@ -112,10 +112,10 @@ onRpc("check_synchronization_status", async () => ({}));
 onRpc("get_attendee_detail", () => []);
 onRpc("get_default_duration", () => 1);
 onRpc("get_state_selections", () => [
-    ["needsAction", "Needs Action"],
-    ["tentative", "Maybe"],
-    ["declined", "No"],
     ["accepted", "Yes"],
+    ["declined", "No"],
+    ["tentative", "Maybe"],
+    ["needsAction", "Needs Action"],
 ]);
 onRpc("res.users", "read", () => [{ user: serverState.userId, can_edit: true }]);
 
