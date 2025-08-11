@@ -124,6 +124,7 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
         self.sale_order.commitment_date = '2121-12-21 12:21:12'
         sol_1, sol_2 = self.sale_order.order_line
         sol_1.update({
+            'sequence': 0,
             'discount': 4.99,
             'tax_ids': [
                 Command.create({'name': "test tax1"}),
@@ -151,7 +152,7 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
             'date_test': "11/04/2020",
             'datetime_test': "12/21/2121 01:21:12 PM",
             'float_test': "4.99",
-            'integer_test': "10",
+            'integer_test': "0",
             'selection_test': "Quotation",
             'monetary_test': self.sale_order.currency_id.format(720.01),
 
