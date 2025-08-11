@@ -104,7 +104,13 @@
                 </button>
             </xpath>
             <xpath expr="//group[@name='managers']" position="inside">
+<<<<<<< 435efa7fad34ef5552a2df4367271069a1308661
                 <field name="attendance_manager_id" string="Attendance" widget="many2one_avatar_user" readonly="not can_edit" groups="hr_attendance.group_hr_attendance_manager"/>
+||||||| cb9a96f10434eda539d390574774f14ee59462fc
+                <field name="attendance_manager_id" string="Attendance" widget="many2one_avatar_user" groups="hr_attendance.group_hr_attendance_manager"/>
+=======
+                <field name="attendance_manager_id" readonly="not can_edit" string="Attendance" widget="many2one_avatar_user" groups="hr_attendance.group_hr_attendance_manager"/>
+>>>>>>> 86299ace9018dc4dc11010a4f58131ba4d802d74
             </xpath>
             <xpath expr="//group[@name='managers']" position="attributes">
                 <attribute name="invisible">0</attribute>
