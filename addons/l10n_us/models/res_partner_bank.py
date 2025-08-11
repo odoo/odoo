@@ -10,6 +10,15 @@ class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
     show_aba_routing = fields.Boolean(compute="_compute_show_aba_routing")
+    l10n_us_bank_account_type = fields.Selection(
+        selection=[
+            ('checking', 'Checking'),
+            ('savings', 'Savings'),
+        ],
+        string='Bank Account Type',
+        default='checking',
+        required=True
+    )
 
     @api.depends('country_code', 'acc_type')
     def _compute_show_aba_routing(self):
