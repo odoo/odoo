@@ -22,6 +22,7 @@ class ResourceResource(models.Model):
     work_phone = fields.Char(related='employee_id.work_phone')
     show_hr_icon_display = fields.Boolean(related='employee_id.show_hr_icon_display')
     hr_icon_display = fields.Selection(related='employee_id.hr_icon_display')
+    calendar_id = fields.Many2one(inverse='_inverse_calendar_id')
 
     @api.depends('employee_id')
     def _compute_job_title(self):
@@ -51,6 +52,11 @@ class ResourceResource(models.Model):
                 resource.avatar_128 = employee[0].avatar_128
             else:
                 resource.avatar_128 = avatar_per_employee_id[employee[0].id]
+
+    def _inverse_calendar_id(self):
+        for resource in self:
+            if resource.calendar_id != resource.employee_id.resource_calendar_id:
+                resource.employee_id.resource_calendar_id = resource.calendar_id
 
     def _get_calendars_validity_within_period(self, start, end, default_company=None):
         assert start.tzinfo and end.tzinfo
