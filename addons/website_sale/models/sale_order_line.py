@@ -43,9 +43,11 @@ class SaleOrderLine(models.Model):
     def _get_displayed_unit_price(self):
         show_tax = self.order_id.website_id.show_line_subtotals_tax_selection
         tax_display = 'total_excluded' if show_tax == 'tax_excluded' else 'total_included'
+        is_combo = self.product_type == 'combo'
+        unit_price = self._get_display_price_ignore_combo() if is_combo else self.price_unit
 
         return self.tax_ids.compute_all(
-            self.price_unit, self.currency_id, 1, self.product_id, self.order_partner_id,
+            unit_price, self.currency_id, 1, self.product_id, self.order_partner_id,
         )[tax_display]
 
     def _get_displayed_quantity(self):
