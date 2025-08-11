@@ -229,6 +229,8 @@
                     <t t-else="" t-call="website_sale.shop_product_buttons"/>
                 </div>
             </div>
+            <!-- Extra actions (wishlist remove, ...) -->
+            <t t-if="extra_actions" t-out="extra_actions"/>
         </div>
     </form>
 </template>
