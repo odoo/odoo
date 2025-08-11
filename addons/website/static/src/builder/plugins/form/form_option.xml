@@ -5,7 +5,7 @@
     <BuilderRow t-if="!modelCantChange and this.state.models"
             label.translate="Action" preview="false">
         <BuilderSelect>
-            <t t-foreach="this.state.models" t-as="model" t-key="model.name">
+            <t t-foreach="this.state.models" t-as="model" t-key="model.id">
                 <BuilderSelectItem t-out="model.website_form_label" action="'selectAction'" actionValue="model.id.toString()"/>
             </t>
         </BuilderSelect>
