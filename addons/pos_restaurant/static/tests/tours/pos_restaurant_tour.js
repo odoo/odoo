@@ -15,48 +15,10 @@ import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import { delay } from "@odoo/hoot-dom";
 import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
-import * as PreparationReceipt from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
+import { checkPreparationTicketData } from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
-
-function checkOrderChanges(expected_changes) {
-    return [
-        {
-            content: `Check order changes with expected changes ${JSON.stringify(
-                expected_changes
-            )}`,
-            trigger: ".pos", // dummy trigger
-            run: function () {
-                const orderChanges = window.posmodel.getOrderChanges();
-                const orderChangesKeys = Object.keys(orderChanges.orderlines);
-                const orderChangesNbr = orderChangesKeys.length;
-                // Quick check for lenght
-                if (expected_changes.length !== orderChangesNbr) {
-                    console.error(
-                        `Was expecting ${expected_changes.length} order changes, got ${orderChangesNbr}`
-                    );
-                }
-                for (const expected_change of expected_changes) {
-                    const order_change_line = orderChangesKeys.find((key) => {
-                        const change = orderChanges.orderlines[key];
-                        return (
-                            change.name === expected_change.name &&
-                            change.quantity === expected_change.quantity
-                        );
-                    });
-                    if (order_change_line === undefined) {
-                        console.error(
-                            `Was expecting product "${expected_change.name}" with quantity ${
-                                expected_change.quantity
-                            } as order change, inside ${JSON.stringify(orderChanges.orderlines)}`
-                        );
-                    }
-                }
-            },
-        },
-    ];
-}
 
 registry.category("web_tour.tours").add("pos_restaurant_sync", {
     steps: () =>
@@ -81,19 +43,15 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.clickDisplayedProduct("Water", true),
             ProductScreen.orderlineIsToOrder("Water"),
             ProductScreen.orderlineIsToOrder("Coca-Cola"),
-            checkOrderChanges([
-                { name: "Water", quantity: 1 },
-                { name: "Coca-Cola", quantity: 1 },
+            checkPreparationTicketData([
+                { name: "Coca-Cola", qty: 1 },
+                { name: "Water", qty: 1 },
             ]),
             ProductScreen.clickOrderButton(),
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
+            Chrome.closePrintingWarning(),
             FloorScreen.clickTable("5"),
             ProductScreen.orderlinesHaveNoChange(),
-            checkOrderChanges([]),
+            checkPreparationTicketData([]),
             ProductScreen.totalAmountIs("4.40"),
 
             // Create 2nd order (paid)
@@ -102,9 +60,9 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickDisplayedProduct("Minute Maid", true),
             ProductScreen.totalAmountIs("4.40"),
-            checkOrderChanges([
-                { name: "Coca-Cola", quantity: 1 },
-                { name: "Minute Maid", quantity: 1 },
+            checkPreparationTicketData([
+                { name: "Coca-Cola", qty: 1 },
+                { name: "Minute Maid", qty: 1 },
             ]),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
@@ -121,16 +79,14 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                 content: "validate the variant dialog (with default values)",
             },
             ProductScreen.selectedOrderlineHas("Desk Organizer"),
-            checkOrderChanges([{ name: "Desk Organizer (S, Leather)", quantity: 1 }]),
+            checkPreparationTicketData([
+                { name: "Desk Organizer", qty: 1, attributes: ["S", "Leather"] },
+            ]),
             ProductScreen.clickOrderButton(),
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
+            Chrome.closePrintingWarning(),
             FloorScreen.clickTable("4"),
             ProductScreen.orderlinesHaveNoChange(),
-            checkOrderChanges([]),
+            checkPreparationTicketData([]),
             ProductScreen.totalAmountIs("5.87"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
@@ -157,11 +113,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             // The first order made in the session is a floating order.
             TicketScreen.deleteOrder("002"),
             Dialog.confirm(),
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
+            Chrome.closePrintingWarning(),
             Chrome.isSyncStatusConnected(),
             TicketScreen.selectOrder("005"),
             TicketScreen.loadSelectedOrder(),
@@ -333,11 +285,7 @@ registry.category("web_tour.tours").add("OrderChange", {
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true, "1"),
             ProductScreen.clickOrderButton(),
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
+            Chrome.closePrintingWarning(),
             FloorScreen.clickTable("5"),
             ProductScreen.orderlinesHaveNoChange(),
             ProductScreen.clickPayButton(),
@@ -434,68 +382,28 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
             Chrome.freezeDateTime(1739370000000),
             Dialog.confirm("Add"),
             ProductScreen.totalAmountIs("10"),
-            {
-                content: "Check if order preparation contains always Variant",
-                trigger: "body",
-                run: async () => {
-                    const receipts = await PreparationReceipt.generatePreparationReceipts();
-                    if (!receipts[0].innerHTML.includes("Value 1")) {
-                        throw new Error("Value 1 not found in printed receipt");
-                    }
-                    if (!receipts[0].innerHTML.includes("14:20")) {
-                        throw new Error("14:20 not found in printed receipt");
-                    }
-                    if (!receipts[0].innerHTML.includes("Eat in")) {
-                        throw new Error("Eat in not found in printed receipt");
-                    }
-                    if (receipts[0].innerHTML.includes("DUPLICATA!")) {
-                        throw new Error("DUPLICATA! should not be present in printed receipt");
-                    }
-                },
-            },
+            checkPreparationTicketData([{ name: "Product Test", qty: 1, attribute: ["Value 1"] }], {
+                visibleInDom: ["14:20", "Value 1", "Eat in"],
+                invisibleInDom: ["DUPLICATA!"],
+            }),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("2"),
             ProductScreen.clickDisplayedProduct("Water"),
             ...ProductScreen.clickSelectedLine("Water"),
             ProductScreen.addInternalNote("To Serve"),
-            {
-                content: "Check if order preparation contains 'To Serve' order level internal note",
-                trigger: "body",
-                run: async () => {
-                    const receipts = await PreparationReceipt.generatePreparationReceipts();
-                    if (!receipts[0].innerHTML.includes("Water")) {
-                        throw new Error("'Water' not found in printed receipt");
-                    }
-                    if (!receipts[1].innerHTML.includes("INTERNAL NOTE")) {
-                        throw new Error("'INTERNAL NOTE' not found in printed receipt");
-                    }
-                    if (!receipts[1].innerHTML.includes("To Serve")) {
-                        throw new Error("To Serve not found in printed receipt");
-                    }
-                    if (receipts[1].innerHTML.includes("colorIndex")) {
-                        throw new Error("colorIndex should not be displayed in printed receipt");
-                    }
-                },
-            },
+            checkPreparationTicketData([{ name: "Water", qty: 1 }], {
+                visibleInDom: ["14:20", "To Serve"],
+                invisibleInDom: ["colorIndex"],
+            }),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("4"),
             ProductScreen.clickDisplayedProduct("Water"),
             ProductScreen.selectPreset("Eat in", "Takeaway"),
             Chrome.selectPresetTimingSlotHour("12:00"),
             Chrome.presetTimingSlotIs("12:00"),
-            {
-                content: "Check if order preparation order contains Takeaway and its timing slot",
-                trigger: "body",
-                run: async () => {
-                    const receipts = await PreparationReceipt.generatePreparationReceipts();
-                    if (!receipts[0].innerHTML.includes("Takeaway")) {
-                        throw new Error("Takeaway not found in printed receipt");
-                    }
-                    if (!receipts[0].innerHTML.includes("12:00")) {
-                        throw new Error("12:00 not found in printed receipt");
-                    }
-                },
-            },
+            checkPreparationTicketData([{ name: "Water", qty: 1 }], {
+                visibleInDom: ["Takeaway", "12:00"],
+            }),
         ].flat(),
 });
 
@@ -511,65 +419,34 @@ registry.category("web_tour.tours").add("test_course_restaurant_preparation_tour
             ProductScreen.clickDisplayedProduct("Water"),
             ProductScreen.clickCourseButton(),
             ProductScreen.clickDisplayedProduct("Minute Maid"),
-            {
-                content: "Check if order preparation contains courses with products",
-                trigger: "body",
-                run: async () => {
-                    const receipts = await PreparationReceipt.generatePreparationReceipts();
-                    const coursesAndProducts = [
-                        { course: "Course 1", product: "Coca-Cola" },
-                        { course: "Course 2", product: "Water" },
-                        { course: "Course 3", product: "Minute Maid" },
-                    ];
-                    const courseEls = receipts[0].querySelectorAll("div.fw-bold");
-                    const productEls = receipts[0].querySelectorAll(".product-name");
-
-                    coursesAndProducts.forEach(({ course, product }) => {
-                        const courseFound = Array.from(courseEls).some((el) =>
-                            el.textContent.includes(course)
-                        );
-                        const productFound = Array.from(productEls).some((el) =>
-                            el.textContent.includes(product)
-                        );
-
-                        if (!courseFound || !productFound) {
-                            throw new Error(
-                                `"${course}" or "${product}" not found in printed receipt`
-                            );
-                        }
-                    });
-                },
-            },
+            checkPreparationTicketData(
+                [
+                    { name: "Coca-Cola", qty: 1 },
+                    { name: "Water", qty: 1 },
+                    { name: "Minute Maid", qty: 1 },
+                ],
+                {
+                    visibleInDom: ["Course 1", "Course 2", "Course 3"],
+                }
+            ),
             ProductScreen.clickOrderButton(),
             Dialog.bodyIs("Failed in printing Preparation Printer, Printer changes of the order"),
             Dialog.confirm(),
             FloorScreen.clickTable("5"),
-            ProductScreen.selectCourseLine("Course 2"),
-            {
-                content: "Check if 'Course 2' is printed on the receipt",
-                trigger: "body",
-                run: async () => {
-                    const receipts = await PreparationReceipt.generateFireCourseReceipts();
-                    if (!receipts[0].innerHTML.includes("Course 2 fired")) {
-                        throw new Error("'Course 2 fired' not found on printed receipt");
-                    }
-                },
-            },
+            checkPreparationTicketData([], {
+                visibleInDom: ["Course 2"],
+                fireCourse: true,
+            }),
             ProductScreen.fireCourseButton(),
             Dialog.bodyIs("Failed in printing Preparation Printer, Printer changes of the order"),
             Dialog.confirm(),
             FloorScreen.clickTable("5"),
             ProductScreen.selectCourseLine("Course 3"),
-            {
-                content: "Check if 'Course 3' is printed on the receipt",
-                trigger: "body",
-                run: async () => {
-                    const receipts = await PreparationReceipt.generateFireCourseReceipts();
-                    if (!receipts[0].innerHTML.includes("Course 3 fired")) {
-                        throw new Error("'Course 3 fired' not found on printed receipt");
-                    }
-                },
-            },
+            checkPreparationTicketData([{ name: "Product Test", qty: 1, attribute: ["Value 1"] }], {
+                visibleInDom: ["Course 3"],
+                invisibleInDom: ["DUPLICATA!"],
+                fireCourse: true,
+            }),
             ProductScreen.fireCourseButton(),
         ].flat(),
 });
@@ -590,30 +467,16 @@ registry.category("web_tour.tours").add("test_combo_preparation_receipt", {
             combo.select("Combo Product 5"),
             combo.select("Combo Product 8"),
             Dialog.confirm(),
-            {
-                content: "Check if order preparation has product correctly ordered",
-                trigger: "body",
-                run: async () => {
-                    const receipts = await PreparationReceipt.generatePreparationReceipts();
-                    const orderLines = [...receipts[0].querySelectorAll(".orderline")];
-                    const orderLinesInnerText = orderLines.map((orderLine) => orderLine.innerText);
-                    const expectedOrderLines = [
-                        "Office Combo",
-                        "Combo Product 2",
-                        "Combo Product 4",
-                        "Combo Product 6",
-                        "Office Combo",
-                        "Combo Product 1",
-                        "Combo Product 5",
-                        "Combo Product 8",
-                    ];
-                    for (let i = 0; i < orderLinesInnerText.length; i++) {
-                        if (!orderLinesInnerText[i].includes(expectedOrderLines[i])) {
-                            throw new Error("Order line mismatch");
-                        }
-                    }
-                },
-            },
+            checkPreparationTicketData([
+                { name: "Office Combo", qty: 1 },
+                { name: "Combo Product 2", qty: 1 },
+                { name: "Combo Product 4", qty: 1 },
+                { name: "Combo Product 6", qty: 1 },
+                { name: "Office Combo", qty: 1 },
+                { name: "Combo Product 1", qty: 1 },
+                { name: "Combo Product 5", qty: 1 },
+                { name: "Combo Product 8", qty: 1 },
+            ]),
             ProductScreen.totalAmountIs("95.00"),
             ProductScreen.clickPayButton(),
         ].flat(),
@@ -732,29 +595,12 @@ registry.category("web_tour.tours").add("test_combo_preparation_receipt_layout",
             combo.select("Combo Product 4"),
             combo.select("Combo Product 6"),
             Dialog.confirm(),
-            {
-                trigger: "body",
-                run: async () => {
-                    const receipts = await PreparationReceipt.generatePreparationReceipts();
-
-                    const comboItemLines = [...receipts[0].querySelectorAll(".orderline.ms-5")].map(
-                        (el) => el.innerText
-                    );
-                    const expectedComboItemLines = [
-                        "1 Combo Product 2",
-                        "1 Combo Product 4",
-                        "1 Combo Product 6",
-                    ];
-                    if (
-                        comboItemLines.length !== expectedComboItemLines.length ||
-                        !comboItemLines.every((line, index) =>
-                            line.includes(expectedComboItemLines[index])
-                        )
-                    ) {
-                        throw new Error("Order line mismatch");
-                    }
-                },
-            },
+            checkPreparationTicketData([
+                { name: "Office Combo", qty: 1 },
+                { name: "Combo Product 2", qty: 1 },
+                { name: "Combo Product 4", qty: 1 },
+                { name: "Combo Product 6", qty: 1 },
+            ]),
         ].flat(),
 });
 

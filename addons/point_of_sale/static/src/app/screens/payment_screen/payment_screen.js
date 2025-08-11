@@ -400,7 +400,7 @@ export class PaymentScreen extends Component {
         let switchScreen = true;
 
         if (!this.pos.config.module_pos_restaurant) {
-            this.pos.checkPreparationStateAndSentOrderInPreparation(this.currentOrder, {
+            this.pos.checkPreparationStateAndSentOrderInPreparation(this.currentOrder, false, {
                 orderDone: true,
             });
         }

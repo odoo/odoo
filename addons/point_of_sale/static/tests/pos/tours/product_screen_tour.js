@@ -15,10 +15,10 @@ import * as ProductConfiguratorPopup from "@point_of_sale/../tests/pos/tours/uti
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
+import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util";
+import { checkPreparationTicketData } from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
 import * as Utils from "@point_of_sale/../tests/pos/tours/utils/common";
 import * as BackendUtils from "@point_of_sale/../tests/pos/tours/utils/backend_utils";
-import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util";
-import { generatePreparationReceipts } from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
 
 registry.category("web_tour.tours").add("ProductScreenTour", {
     steps: () =>
@@ -334,19 +334,10 @@ registry.category("web_tour.tours").add("test_restricted_categories_combo_produc
             ProductScreen.clickDisplayedProduct("Office Combo"),
             combo.select("Combo Product 5"),
             Dialog.confirm(),
-            {
-                content: "Check if order preparation has product correctly ordered",
-                trigger: "body",
-                run: async () => {
-                    const rendered = await generatePreparationReceipts();
-                    if (!rendered[0].innerHTML.includes("Office Combo")) {
-                        throw new Error("Office Combo not found in preparation receipt");
-                    }
-                    if (!rendered[0].innerHTML.includes("Combo Product 5")) {
-                        throw new Error("Combo Product 5 not found in preparation receipt");
-                    }
-                },
-            },
+            checkPreparationTicketData([
+                { name: "Office Combo", qty: 1 },
+                { name: "Combo Product 5", qty: 1 },
+            ]),
             Chrome.endTour(),
         ].flat(),
 });
