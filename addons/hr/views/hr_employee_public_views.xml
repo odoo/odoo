@@ -167,6 +167,7 @@
         <record id="hr_employee_public_action" model="ir.actions.act_window">
             <field name="name">Employees</field>
             <field name="res_model">hr.employee.public</field>
+            <field name="view_mode">kanban,list,form</field>
             <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
             <field name="context">{'chat_icon': True}</field>
             <field name="view_id" eval="False"/>
