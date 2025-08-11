@@ -2036,3 +2036,15 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
         self.env.company.parent_ids.invalidate_recordset()
         payment = wizard._create_payments()
         self.assertTrue(payment)
+
+    def test_duplicate_bank_partner(self):
+        """Test that duplicate_bank_partner_ids doesn't return res.partner(None,)"""
+        partner1 = self.env['res.partner'].create({'name': 'Partner 1'})
+
+        # Bank with no duplicates
+        bank_unique = self.env['res.partner.bank'].create({
+            'acc_number': 'UNIQUE123',
+            'partner_id': partner1.id,
+        })
+
+        self.assertFalse(bank_unique.duplicate_bank_partner_ids)

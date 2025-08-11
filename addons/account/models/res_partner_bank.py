@@ -72,7 +72,7 @@ class ResPartnerBank(models.Model):
                 SELECT this.id,
                        ARRAY_AGG(other.partner_id)
                   FROM res_partner_bank this
-             LEFT JOIN res_partner_bank other ON this.acc_number = other.acc_number
+                  JOIN res_partner_bank other ON this.acc_number = other.acc_number
                                              AND this.id != other.id
                  WHERE this.id = ANY(%(ids)s)
                    AND (
