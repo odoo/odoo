@@ -115,11 +115,13 @@
                         >
                         <tr
                             t-if="not line.collapse_composition"
-                            t-att-class="{
-                                'fw-bolder o_line_section': line.display_type == 'line_section' or line.product_type == 'combo',
-                                'fw-bold o_line_subsection': line.display_type == 'line_subsection',
-                                'fst-italic o_line_note': line.display_type == 'line_note',
-                            }"
+                            t-att-class="'fw-bold o_line_section' if (
+                                line.display_type == 'line_section'
+                                or line.product_type == 'combo'
+                            )
+                            else 'fw-bold o_line_subsection' if line.display_type == 'line_subsection'
+                            else 'fst-italic o_line_note' if line.display_type == 'line_note'
+                            else ''"
                         >
                             <t t-if="not line.display_type and line.product_type != 'combo'">
                                 <td name="td_name"><span t-field="line.name">Bacon Burger</span></td>
@@ -212,7 +214,7 @@
                                     </span>
                                 </td>
                             </tr>
-                            <t t-if="line.display_type == 'line_section'">                                
+                            <t t-if="line.display_type == 'line_section'">
                                 <t t-set="current_section" t-value="line"/>
                                 <t t-set="current_subtotal" t-value="0"/>
                             </t>
