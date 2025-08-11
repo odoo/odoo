@@ -668,7 +668,7 @@ class IrActionsReport(models.Model):
         writer = PdfFileWriter()
         for stream in streams:
             try:
-                reader = PdfFileReader(stream)
+                reader = PdfFileReader(stream, strict=False)
                 writer.appendPagesFromReader(reader)
             except (PdfReadError, TypeError, NotImplementedError, ValueError):
                 # TODO : make custom_error_handler a parameter in master
