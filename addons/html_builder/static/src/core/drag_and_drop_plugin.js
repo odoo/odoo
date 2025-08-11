@@ -10,7 +10,7 @@ import { DragAndDropMoveHandle } from "./drag_and_drop_move_handle";
 
 export class DragAndDropPlugin extends Plugin {
     static id = "dragAndDrop";
-    static dependencies = ["dropzone", "history", "operation", "builderOptions", "savePlugin"];
+    static dependencies = ["dropzone", "history", "operation", "builderOptions"];
     resources = {
         has_overlay_options: { hasOption: (el) => this.isDraggable(el) },
         get_overlay_buttons: withSequence(1, {
@@ -142,7 +142,6 @@ export class DragAndDropPlugin extends Plugin {
                     this.dependencies.dropzone.removeDropzones();
                     // Undo the changes needed to ease the drag and drop.
                     this.dragState.restoreCallbacks?.forEach((restore) => restore());
-                    this.dragState.restoreDirty();
                     restoreDragSavePoint();
                     dragAndDropResolve();
                     this.dependencies["builderOptions"].updateContainers(this.overlayTarget);
@@ -164,10 +163,8 @@ export class DragAndDropPlugin extends Plugin {
                 this.dragState.mousePositionYOnElement = boundedYMousePosition - targetRect.y;
                 this.dragState.mousePositionXOnElement = x - targetRect.x;
 
-                // Stop marking the elements with mutations as dirty.
-                this.dragState.restoreDirty = this.dependencies.savePlugin.ignoreDirty();
-
-                // Make some changes on the page to ease the drag and drop.
+                // Stop marking the elements with mutations as dirty and make
+                // some changes on the page to ease the drag and drop.
                 const restoreCallbacks = [];
                 for (const prepareDrag of this.getResource("on_prepare_drag_handlers")) {
                     const restore = prepareDrag();
@@ -316,13 +313,9 @@ export class DragAndDropPlugin extends Plugin {
                     });
                 }
 
-                // Undo the changes needed to ease the drag and drop.
-                this.dragState.restoreCallbacks.forEach((restore) => restore());
-                this.dragState.restoreCallbacks = null;
-
                 // In order to mark only the concerned elements as dirty, place
-                // the element back where it started, then replay the move after
-                // re-allowing to mark dirty.
+                // the element back where it started. The move will then be
+                // replayed after re-allowing to mark dirty.
                 const { startPreviousEl, startNextEl, startParentEl } = this.dragState;
                 if (startPreviousEl) {
                     startPreviousEl.after(this.overlayTarget);
@@ -331,7 +324,13 @@ export class DragAndDropPlugin extends Plugin {
                 } else {
                     startParentEl.prepend(this.overlayTarget);
                 }
-                this.dragState.restoreDirty();
+
+                // Undo the changes needed to ease the drag and drop and
+                // re-allow to mark dirty.
+                this.dragState.restoreCallbacks.forEach((restore) => restore());
+                this.dragState.restoreCallbacks = null;
+
+                // Replay the move.
                 currentDropzoneEl.after(this.overlayTarget);
 
                 this.dependencies.dropzone.removeDropzones();
