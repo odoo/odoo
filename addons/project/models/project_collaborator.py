@@ -8,7 +8,7 @@ class ProjectCollaborator(models.Model):
     _description = 'Collaborators in project shared'
 
     project_id = fields.Many2one('project.project', 'Project Shared', domain=[('privacy_visibility', '=', 'portal'), ('is_template', '=', False)], required=True, readonly=True, export_string_translation=False)
-    partner_id = fields.Many2one('res.partner', 'Collaborator', required=True, readonly=True, export_string_translation=False)
+    partner_id = fields.Many2one('res.partner', 'Collaborator', required=True, readonly=True, export_string_translation=False, index=True)
     partner_email = fields.Char(related='partner_id.email', export_string_translation=False)
     limited_access = fields.Boolean('Limited Access', default=False, export_string_translation=False)
 
@@ -24,22 +24,22 @@ class ProjectCollaborator(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        collaborator = self.env['project.collaborator'].search([], limit=1)
+        has_collaborator = bool(self.env['project.collaborator'].search_count([], limit=1))
         project_collaborators = super().create(vals_list)
-        if not collaborator:
-            self._toggle_project_sharing_portal_rules(True)
+        if not has_collaborator:
+            self._set_project_sharing_portal_rules(True)
         return project_collaborators
 
     def unlink(self):
         res = super().unlink()
         # Check if it remains at least a collaborator in all shared projects.
-        collaborator = self.env['project.collaborator'].search([], limit=1)
-        if not collaborator:  # then disable the project sharing feature
-            self._toggle_project_sharing_portal_rules(False)
+        has_collaborator = bool(self.env['project.collaborator'].search_count([], limit=1))
+        if not has_collaborator:  # then disable the project sharing feature
+            self._set_project_sharing_portal_rules(False)
         return res
 
     @api.model
-    def _toggle_project_sharing_portal_rules(self, active):
+    def _set_project_sharing_portal_rules(self, active):
         """ Enable/disable project sharing feature
 
             When the first collaborator is added in the model then we need to enable the feature.

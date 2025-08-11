@@ -36,7 +36,7 @@ from odoo.fields import Domain
 from odoo.tools import (
     is_html_empty, html_escape, html2plaintext,
     clean_context, split_every, Query, SQL,
-    ormcache, is_list_of,
+    ormcache, is_list_of, OrderedSet,
 )
 from odoo.tools.mail import (
     append_content_to_html, decode_message_header,
@@ -206,11 +206,22 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _search_message_is_follower(self, operator, operand):
-        if operator != 'in':
+        if (
+            operator not in ('in', 'not in')
+            and isinstance(operand, OrderedSet)
+            and all(op in (True, False) for op in operand)
+        ):
             return NotImplemented
+
+        # Drop the leaf if searching for both True and False
+        if len(operand) > 1:
+            return Domain.TRUE
+
+        positive_search = (operator == 'in' and True in operand) or (operator == 'not in' and False in operand)
+
         followers = self.env['mail.followers'].sudo()._search([
             ('res_model', '=', self._name),
-            ('partner_id', operator, self.env.user.partner_id.ids),
+            ('partner_id', 'in' if positive_search else 'not in', self.env.user.partner_id.ids),
         ])
         # use `in` query to avoid reading thousands of potentially followed objects
         return [('id', 'in', followers.subselect('res_id'))]

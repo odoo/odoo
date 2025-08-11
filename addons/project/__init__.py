@@ -17,7 +17,7 @@ def _check_exists_collaborators_for_project_sharing(env):
     collaborator = env['project.collaborator'].search([], limit=1)
     if collaborator:
         # Then we need to enable the access rights linked to project sharing for the portal user
-        env['project.collaborator']._toggle_project_sharing_portal_rules(True)
+        env['project.collaborator']._set_project_sharing_portal_rules(True)
 
 
 def _project_post_init(env):
