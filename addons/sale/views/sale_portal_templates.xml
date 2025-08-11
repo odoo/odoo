@@ -732,11 +732,13 @@
                                 >
                                 <tr
                                     t-if="not line.collapse_composition"
-                                    t-att-class="{
-                                        'fw-bolder o_line_section': line.display_type == 'line_section' or line.product_type == 'combo',
-                                        'fw-bold o_line_subsection': line.display_type == 'line_subsection',
-                                        'fst-italic o_line_note': line.display_type == 'line_note',
-                                    }"
+                                    t-att-class="'fw-bold o_line_section' if (
+                                        line.display_type == 'line_section'
+                                        or line.product_type == 'combo'
+                                    )
+                                    else 'fw-bold o_line_subsection' if line.display_type == 'line_subsection'
+                                    else 'fst-italic o_line_note' if is_note
+                                    else ''"
                                 >
                                     <t
                                         name="product_line_row"

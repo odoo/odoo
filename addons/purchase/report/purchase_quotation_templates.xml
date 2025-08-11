@@ -35,11 +35,7 @@
                 </thead>
                 <tbody>
                     <t t-foreach="o.order_line.filtered(lambda l: l.display_type or l.product_qty != 0)" t-as="order_line">
-                        <tr t-att-class="{
-                            'fw-bolder o_line_section': order_line.display_type == 'line_section',
-                            'fw-bold o_line_subsection': order_line.display_type == 'line_subsection',
-                            'fst-italic o_line_note': order_line.display_type == 'line_note',
-                        }">
+                        <tr t-att-class="'fw-bolder o_line_section' if order_line.display_type == 'line_section' else 'fw-bold o_line_subsection' if order_line.display_type == 'line_subsection' else 'fst-italic o_line_note' if order_line.display_type == 'line_note' else ''">
                             <t t-if="not order_line.display_type">
                                 <td id="product">
                                     <span t-field="order_line.name"/>

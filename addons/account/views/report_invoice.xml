@@ -175,11 +175,7 @@
                                     <t t-set="current_total" t-value="current_total + line.price_total"/>
                                     <t t-set="hide_details" t-value="line.collapse_composition"/>
 
-                                    <tr t-att-class="{
-                                        'fw-bolder': line.display_type == 'line_section',
-                                        'fw-bold': line.display_type == 'line_subsection',
-                                        'fst-italic': line.display_type == 'line_note',
-                                    }" >
+                                    <tr t-att-class="'fw-bolder o_line_section' if line.display_type == 'line_section' else 'fw-bold o_line_subsection' if line.display_type == 'line_subsection' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                                         <t t-if="line.id in treated_lines"/>
                                         <t t-elif="hide_details">
                                             <t t-set="grouped_lines" t-value="line.get_lines_grouped_by_section()"/>
