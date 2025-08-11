@@ -2230,7 +2230,20 @@ export const rtcService = {
         });
         rtc.fullscreen = services["mail.fullscreen"];
         onChange(rtc.fullscreen, "id", () => {
+            const wasFullscreen = rtc.state.isFullscreen;
             rtc.state.isFullscreen = rtc.fullscreen.id === CALL_FULLSCREEN_ID;
+            if (
+                rtc.state.screenTrack &&
+                rtc.displaySurface !== "browser" &&
+                rtc.fullscreen.id === CALL_FULLSCREEN_ID
+            ) {
+                rtc.showMirroringWarning();
+            } else if (!rtc.state.isFullscreen) {
+                rtc.removeMirroringWarning?.();
+                if (wasFullscreen && rtc.state.screenTrack) {
+                    rtc.state.screenTrack.enabled = true;
+                }
+            }
         });
         rtc.p2pService = services["discuss.p2p"];
         rtc.p2pService.acceptOffer = async (id, sequence) => {
