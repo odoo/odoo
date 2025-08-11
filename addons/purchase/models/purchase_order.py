@@ -1115,9 +1115,11 @@ class PurchaseOrder(models.Model):
             if seller.currency_id != self.currency_id:
                 price = seller.currency_id._convert(seller.price_discounted, self.currency_id)
             product_infos.update(
-                price=price,
+                price=(price * seller.product_uom_id.factor) / product.uom_id.factor,
                 min_qty=seller.min_qty,
             )
+            if self.product_id.uom_id != seller.product_uom_id:
+                product_infos['uomDisplayName'] = seller.product_uom_id.display_name
 
         return product_infos
 
@@ -1219,7 +1221,8 @@ class PurchaseOrder(models.Model):
                 if seller.currency_id != self.currency_id:
                     price = seller.currency_id._convert(seller.price_discounted, self.currency_id)
                 # Fix the PO line's price on the seller's one.
-                pol.price_unit = price
+                product = self.env['product.product'].browse(product_id)
+                pol.price_unit = (price * seller.product_uom_id.factor) / product.uom_id.factor
         return pol.price_unit_discounted
 
     def _create_update_date_activity(self, updated_dates):

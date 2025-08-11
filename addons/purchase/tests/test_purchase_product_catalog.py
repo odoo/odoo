@@ -101,3 +101,40 @@ class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()['result'], company_product_price)
+
+    def test_catalog_price_uom(self):
+        """
+        Products having a SupplierInfo record in another unit of measure should have their unit price
+        correctly set in the catalog
+        """
+        uom_kg = self.env['uom.uom'].search([('name', '=', 'kg')])
+        uom_2kg = self.env['uom.uom'].create({
+            'name': '2kg',
+            'relative_factor': 2.0,
+            'relative_uom_id': uom_kg.id,
+        })
+
+        supplier_info = self.env['product.supplierinfo'].create({
+            'partner_id': self.partner_a.id,
+            'min_qty': 1,
+            'price': 15.0,
+            'product_uom_id': uom_2kg.id
+        })
+
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'standard_price': 10.0,
+            'seller_ids': [supplier_info.id],
+            'uom_id': uom_kg.id
+        })
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        self.assertEqual(product.seller_ids[0].product_uom_id.id, uom_2kg.id)
+
+        product_data = purchase_order._get_product_price_and_data(product)
+        self.assertEqual(product_data.get('price'), supplier_info.price)
+        self.assertEqual(product_data.get('uomDisplayName'), supplier_info.product_uom_id.name)
+
+        self.assertEqual(purchase_order._update_order_line_info(product.id, quantity=1), supplier_info.price)
