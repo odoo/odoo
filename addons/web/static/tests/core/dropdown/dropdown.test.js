@@ -1488,8 +1488,7 @@ test("multi-level dropdown: unsubscribe all keynav when root destroyed", async (
 
     await mountWithCleanup(Parent);
     expect(DROPDOWN_MENU).toHaveCount(0);
-    expect(registeredHotkeys.size).toBe(10);
-    checkKeys(registeredHotkeys);
+    expect(registeredHotkeys.size).toBe(0);
 
     // Open dropdowns one by one
     await click(".first");
@@ -1510,7 +1509,7 @@ test("multi-level dropdown: unsubscribe all keynav when root destroyed", async (
     await press("escape");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(2);
-    expect(removedHotkeys.size).toBe(0);
+    checkKeys(removedHotkeys);
 
     // Reset hover
     await hover(getFixture());
@@ -1519,7 +1518,7 @@ test("multi-level dropdown: unsubscribe all keynav when root destroyed", async (
     await hover(".third");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(3);
-    expect(registeredHotkeys.size).toBe(0);
+    checkKeys(registeredHotkeys);
 
     // Close third, second and first
     await press("escape");

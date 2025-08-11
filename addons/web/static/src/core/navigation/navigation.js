@@ -124,6 +124,7 @@ export class Navigator {
                 isNavigationAvailable: ({ target }) => this.contains(target),
                 shouldFocusChildInput: true,
                 shouldFocusFirstItem: false,
+                shouldRegisterHotkeys: true,
                 virtualFocus: false,
                 hotkeys: {
                     home: () => this.items[0]?.setActive(),
@@ -157,30 +158,8 @@ export class Navigator {
             options
         );
 
-        for (const [hotkey, hotkeyInfo] of Object.entries(this._options.hotkeys)) {
-            if (!hotkeyInfo) {
-                continue;
-            }
-
-            const callback = typeof hotkeyInfo == "function" ? hotkeyInfo : hotkeyInfo.callback;
-            if (!callback) {
-                continue;
-            }
-
-            const isAvailable = hotkeyInfo?.isAvailable ?? (() => true);
-            const bypassEditableProtection = hotkeyInfo?.bypassEditableProtection ?? false;
-            const allowRepeat = hotkeyInfo?.allowRepeat ?? true;
-
-            this._hotkeyRemoves.push(
-                this._hotkeyService.add(hotkey, async () => await callback(this), {
-                    global: true,
-                    allowRepeat,
-                    isAvailable: (target) =>
-                        this._options.isNavigationAvailable({ navigator: this, target }) &&
-                        isAvailable({ navigator: this, target }),
-                    bypassEditableProtection,
-                })
-            );
+        if (this._options.shouldRegisterHotkeys) {
+            this.registerHotkeys();
         }
     }
 
@@ -265,6 +244,45 @@ export class Navigator {
         return this.items.some((item) => item.target === target);
     }
 
+    registerHotkeys() {
+        if (this._hotkeyRemoves.length > 0) {
+            return;
+        }
+
+        for (const [hotkey, hotkeyInfo] of Object.entries(this._options.hotkeys)) {
+            if (!hotkeyInfo) {
+                continue;
+            }
+
+            const callback = typeof hotkeyInfo == "function" ? hotkeyInfo : hotkeyInfo.callback;
+            if (!callback) {
+                continue;
+            }
+
+            const isAvailable = hotkeyInfo?.isAvailable ?? (() => true);
+            const bypassEditableProtection = hotkeyInfo?.bypassEditableProtection ?? false;
+            const allowRepeat = hotkeyInfo?.allowRepeat ?? true;
+
+            this._hotkeyRemoves.push(
+                this._hotkeyService.add(hotkey, async () => await callback(this), {
+                    global: true,
+                    allowRepeat,
+                    isAvailable: (target) =>
+                        this._options.isNavigationAvailable({ navigator: this, target }) &&
+                        isAvailable({ navigator: this, target }),
+                    bypassEditableProtection,
+                })
+            );
+        }
+    }
+
+    unregisterHotkeys() {
+        for (const removeHotkey of this._hotkeyRemoves) {
+            removeHotkey();
+        }
+        this._hotkeyRemoves = [];
+    }
+
     /**
      * @private
      */
@@ -273,11 +291,7 @@ export class Navigator {
             item._removeListeners();
         }
         this.items = [];
-
-        for (const removeHotkey of this._hotkeyRemoves) {
-            removeHotkey();
-        }
-        this._hotkeyRemoves = [];
+        this.unregisterHotkeys();
     }
 
     /**
@@ -312,6 +326,8 @@ export class Navigator {
  * focused so the actual focus can be kept on another input.
  * @property {Boolean} [shouldFocusChildInput=false] - If true, elements like inputs or buttons
  * inside of the items are focused instead of the items themselves.
+ * @property {Boolean} [shouldRegisterHotkeys=true] - If true, registers all hotkeys directly when
+ * the hook is called.
  */
 
 /**
