@@ -175,7 +175,9 @@ class AccountMove(models.Model):
 
     def _get_portal_payment_link(self):
         self.ensure_one()
-        payment_link_wizard = self.env['payment.link.wizard'].create({
+        payment_link_wizard = self.env['payment.link.wizard'].with_context(
+            active_id=self.id, active_model=self._name
+        ).create({
             'amount': self.amount_residual,
             'res_model': self._name,
             'res_id': self.id,
