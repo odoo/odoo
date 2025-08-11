@@ -946,7 +946,8 @@
                             <record id="mod_303_casilla_65_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
-                                <field name="formula">sum</field>
+                                <field name="formula">most_recent</field>
+                                <field name="date_scope">from_beginning</field>
                                 <field name="figure_type">percentage</field>
                                 <field name="subformula">editable;rounding=2</field>
                             </record>
