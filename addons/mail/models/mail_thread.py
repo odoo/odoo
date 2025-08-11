@@ -4731,12 +4731,12 @@ class MailThread(models.AbstractModel):
             )
         elif attachment_ids is not None:  # None means "no update"
             message.attachment_ids._delete_and_notify()
-        if partner_ids:
-            msg_values.update({
-                'partner_ids': list(partner_ids or [])
-            })
+        if partner_ids is not None:
+            msg_values.update({"partner_ids": [int(pid) for pid in partner_ids] or False})
         if msg_values:
             message.write(msg_values)
+        if message._filter_empty():
+            self._clean_empty_message(message)
 
         if 'scheduled_date' in kwargs:
             # update scheduled datetime
@@ -4755,12 +4755,19 @@ class MailThread(models.AbstractModel):
             Store.Many("partner_ids", ["avatar_128", "name"], rename="recipients"),
             "pinned_at",
             "write_date",
+            *self._get_store_message_update_extra_fields()
         ]
         if body is not None:
             # sudo: mail.message.translation - discarding translations of message after editing it
             self.env["mail.message.translation"].sudo().search([("message_id", "=", message.id)]).unlink()
             res.append({"translationValue": False})
         message._bus_send_store(message, res)
+
+    def _clean_empty_message(self, message):
+        pass
+
+    def _get_store_message_update_extra_fields(self):
+        return []
 
     # ------------------------------------------------------
     # STORE
