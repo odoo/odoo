@@ -16,7 +16,6 @@ export class ContentEditablePlugin extends Plugin {
     resources = {
         normalize_handlers: withSequence(5, this.normalize.bind(this)),
         clean_for_save_handlers: withSequence(Infinity, this.cleanForSave.bind(this)),
-        filter_contenteditable_handlers: this.filterContentEditable.bind(this),
         system_classes: ["o_editable_media"],
     };
 
@@ -26,7 +25,6 @@ export class ContentEditablePlugin extends Plugin {
         for (const toDisable of toDisableEls) {
             toDisable.setAttribute("contenteditable", "false");
         }
-
         const toEnableSelector = this.getResource("force_editable_selector").join(",");
         let filteredContentEditableEls = toEnableSelector
             ? [...selectElements(root, toEnableSelector)]
@@ -50,7 +48,9 @@ export class ContentEditablePlugin extends Plugin {
                     contentEditableEl.classList.add("o_editable_media");
                     continue;
                 }
-                contentEditableEl.setAttribute("contenteditable", true);
+                if (!contentEditableEl.matches(toDisableSelector)) {
+                    contentEditableEl.setAttribute("contenteditable", true);
+                }
             }
         }
     }
@@ -63,10 +63,5 @@ export class ContentEditablePlugin extends Plugin {
         for (const contenteditableEl of contenteditableEls) {
             contenteditableEl.removeAttribute("contenteditable");
         }
-    }
-
-    filterContentEditable(contentEditableEls) {
-        const toDisableSelector = this.getResource("force_not_editable_selector").join(",");
-        return contentEditableEls.filter((el) => !el.matches(toDisableSelector));
     }
 }
