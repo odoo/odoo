@@ -318,15 +318,6 @@
                                     t-att-data-wish-id="wish.id"
                                     t-att-data-product-id="wish.product_id.id"
                                 >
-                                    <div class="d-flex gap-2 position-absolute start-50 translate-middle-x z-3">
-                                        <button
-                                            type="button"
-                                            class="btn btn-light btn-sm o_wish_rm rounded-top-0"
-                                            title="Remove from wishlist"
-                                        >
-                                            <i class='fa fa-trash-o small' role="presentation"/>
-                                        </button>
-                                    </div>
                                     <t t-call="website_sale.products_item">
                                         <t t-set="product" t-value="wish.product_id.product_tmpl_id"/>
                                         <t t-set="product_variant" t-value="wish.product_id"/>
@@ -383,6 +374,17 @@
                                                     <span class="o_label small ms-1">Add to Cart</span>
                                                 </button>
                                             </div>
+                                        </t>
+                                        <t
+                                            t-set="extra_actions"
+                                        >
+                                            <button
+                                                type="button"
+                                                class="btn btn-light o_wish_rm z-3 rounded-pill lh-1"
+                                                title="Remove from wishlist"
+                                            >
+                                                <i class="oi oi-close" role="presentation"/>
+                                            </button>
                                         </t>
                                     </t>
                                 </article>
