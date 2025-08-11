@@ -278,21 +278,29 @@ class TestEventNotifications(CalendarMailCommon):
             'duration': 30,
         })
         now = fields.Datetime.now()
-        self._reset_bus()
+
+        def get_bus_params():
+            return (
+                [(self.env.cr.dbname, "res.partner", self.partner.id)],
+                [
+                    {
+                        "type": "calendar.alarm",
+                        "payload": [
+                            {
+                                "alarm_id": alarm.id,
+                                "event_id": self.event.id,
+                                "title": "Doom's day",
+                                "message": self.event.display_time,
+                                "timer": 20 * 60,
+                                "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
+                            },
+                        ],
+                    },
+                ],
+            )
+
         with patch.object(fields.Datetime, 'now', lambda: now):
-            with self.assertBus([(self.env.cr.dbname, 'res.partner', self.partner.id)], [
-                {
-                    "type": "calendar.alarm",
-                    "payload": [{
-                        "alarm_id": alarm.id,
-                        "event_id": self.event.id,
-                        "title": "Doom's day",
-                        "message": self.event.display_time,
-                        "timer": 20 * 60,
-                        "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
-                    }],
-                },
-            ]):
+            with self.assertBus(get_params=get_bus_params):
                 self.event.with_context(no_mail_to_attendees=True).write({
                     'start': now + relativedelta(minutes=50),
                     'stop': now + relativedelta(minutes=55),
@@ -580,21 +588,29 @@ class TestEventNotifications(CalendarMailCommon):
         })
 
         now = fields.Datetime.now()
-        self._reset_bus()
+
+        def get_bus_params():
+            return (
+                [(self.env.cr.dbname, "res.partner", self.partner.id)],
+                [
+                    {
+                        "type": "calendar.alarm",
+                        "payload": [
+                            {
+                                "alarm_id": alarm.id,
+                                "event_id": self.event.id,
+                                "title": "Doom's day",
+                                "message": self.event.display_time,
+                                "timer": 20 * 60,
+                                "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
+                            },
+                        ],
+                    },
+                ],
+            )
+
         with patch.object(fields.Datetime, 'now', lambda: now):
-            with self.assertBus([(self.env.cr.dbname, 'res.partner', self.partner.id)], [
-                {
-                    "type": "calendar.alarm",
-                    "payload": [{
-                        "alarm_id": alarm.id,
-                        "event_id": self.event.id,
-                        "title": "Doom's day",
-                        "message": self.event.display_time,
-                        "timer": 20 * 60,
-                        "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
-                    }],
-                },
-            ]):
+            with self.assertBus(get_params=get_bus_params):
                 self.event.with_context(no_mail_to_attendees=True).write({
                     'start': now + relativedelta(minutes=50),
                     'stop': now + relativedelta(minutes=55),

@@ -23,7 +23,6 @@ class TestChannelRTC(MailCommon):
         channel = self.env['discuss.channel']._create_channel(name='Test Channel', group_id=self.env.ref('base.group_user').id)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         channel_member._rtc_join_call()
-        self._reset_bus()
         with self.assertBus(
             [
                 # delete of old sessions
@@ -173,7 +172,6 @@ class TestChannelRTC(MailCommon):
         last_rtc_session_id = channel_member.rtc_session_ids.id
         channel_member._rtc_leave_call()
 
-        self._reset_bus()
         with self.assertBus(
             [
                 # update new session
@@ -284,7 +282,6 @@ class TestChannelRTC(MailCommon):
         last_rtc_session_id = channel_member.rtc_session_ids.id
         channel_member._rtc_leave_call()
 
-        self._reset_bus()
         with self.assertBus(
             [
                 # update new session
@@ -458,7 +455,6 @@ class TestChannelRTC(MailCommon):
         channel_member._rtc_join_call()
 
         channel_member_test_user = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == test_user.partner_id)
-        self._reset_bus()
         with self.assertBus(
             [
                 # update invitation
@@ -559,7 +555,6 @@ class TestChannelRTC(MailCommon):
             channel_member_test_user._rtc_join_call()
 
         channel_member_test_guest = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.guest_id == test_guest)
-        self._reset_bus()
         with self.assertBus(
             [
                 # update invitation
@@ -672,7 +667,6 @@ class TestChannelRTC(MailCommon):
         channel_member._rtc_join_call()
 
         channel_member_test_user = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == test_user.partner_id)
-        self._reset_bus()
         with self.assertBus(
             [
                 # update invitation
@@ -732,7 +726,6 @@ class TestChannelRTC(MailCommon):
             channel_member_test_user._rtc_leave_call()
 
         channel_member_test_guest = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.guest_id == test_guest)
-        self._reset_bus()
         with self.assertBus(
             [
                 # update invitation
@@ -803,7 +796,6 @@ class TestChannelRTC(MailCommon):
         channel_member_test_guest = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.guest_id == test_guest)
         channel_member._rtc_join_call()
 
-        self._reset_bus()
         with self.assertBus(
             [
                 # update invitation
@@ -1129,7 +1121,6 @@ class TestChannelRTC(MailCommon):
         channel = self.env['discuss.channel']._create_group(partners_to=self.user_employee.partner_id.ids)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         channel_member._rtc_join_call()
-        self._reset_bus()
         with self.assertBus(
             [
                 # update list of sessions
@@ -1170,7 +1161,6 @@ class TestChannelRTC(MailCommon):
         channel_member._rtc_join_call()
         channel_member.rtc_session_ids.flush_model()
         channel_member.rtc_session_ids._write({'write_date': fields.Datetime.now() - relativedelta(days=2)})
-        self._reset_bus()
         with self.assertBus(
             [
                 # update list of sessions
@@ -1207,7 +1197,6 @@ class TestChannelRTC(MailCommon):
         channel = self.env['discuss.channel']._create_group(partners_to=self.user_employee.partner_id.ids)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         channel_member._rtc_join_call()
-        self._reset_bus()
         with self.assertBus(
             [
                 # update list of sessions
@@ -1255,7 +1244,6 @@ class TestChannelRTC(MailCommon):
         test_session.flush_model()
         test_session._write({'write_date': fields.Datetime.now() - relativedelta(days=2)})
         unused_ids = [9998, 9999]
-        self._reset_bus()
         with self.assertBus(
             [
                 # update list of sessions

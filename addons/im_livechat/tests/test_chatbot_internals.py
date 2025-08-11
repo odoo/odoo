@@ -375,7 +375,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             )
 
             return (channels, message_items)
-        self._reset_bus()
         with self.assertBus(get_params=get_forward_op_bus_params):
             discuss_channel._forward_human_operator(self.step_forward_operator, users=self.user_employee)
         self.assertEqual(discuss_channel.name, "OdooBot Ernest Employee")

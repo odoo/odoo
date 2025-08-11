@@ -212,7 +212,6 @@ class TestUserSettings(MailCommon):
         settings.is_discuss_sidebar_category_chat_open = False
         settings.is_discuss_sidebar_category_channel_open = False
 
-        self._reset_bus()
         with self.assertBus(
                 [(self.cr.dbname, 'res.partner', self.partner_employee.id)],
                 [{
