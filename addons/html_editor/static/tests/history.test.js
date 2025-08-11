@@ -809,17 +809,70 @@ describe("unobserved mutations", () => {
             editor.shared.history.undo();
             expect(p.className).toBe("b a");
         });
-        test("should produce mutations in undo step even with no class change", async () => {
-            const { editor } = await setupEditor(`<p>test</p>`);
-            /** @type {HTMLElement} */
-            const p = editor.editable.querySelector("p");
-            withAddStep(editor, () => p.classList.add("a"));
-            editor.shared.history.ignoreDOMMutations(() => p.classList.remove("a"));
-            expect(p.className).toBe("");
-            editor.shared.history.undo(); // mutation to be added to history: remove "a"
-            expect(p.className).toBe("");
-            editor.shared.history.redo();
-            expect(p.className).toBe("a");
+        describe("fixClassListMutationsForNewStep method", () => {
+            test("should produce mutations in undo step even with no class change", async () => {
+                const { editor } = await setupEditor(`<p>test</p>`);
+                /** @type {HTMLElement} */
+                const p = editor.editable.querySelector("p");
+                withAddStep(editor, () => p.classList.add("a"));
+                editor.shared.history.ignoreDOMMutations(() => p.classList.remove("a"));
+                expect(p.className).toBe("");
+                editor.shared.history.undo(); // mutation to be added to history: remove "a"
+                expect(p.className).toBe("");
+                editor.shared.history.redo();
+                expect(p.className).toBe("a");
+            });
+            test("should add class 'x' to match oldValue's state", async () => {
+                const { editor, plugins } = await setupEditor(`<p>test</p>`); 
+                const historyPlugin = plugins.get("history");
+                const p = editor.editable.querySelector("p");
+                historyPlugin.nodeMap.set("testNodeId", p);
+                const mutations = [{
+                    type: "classList",
+                    nodeId: "testNodeId",
+                    className: "x",
+                    oldValue: true,
+                    value: false,
+                }];
+                historyPlugin.fixClassListMutationsForNewStep(mutations);
+                expect(p).toHaveClass("x");
+            });
+            test("should not add class 'x' as state alread matches oldValue", async () => {
+                const { editor, plugins } = await setupEditor(`<p>test</p>`); 
+                const historyPlugin = plugins.get("history");
+                const p = editor.editable.querySelector("p");
+                historyPlugin.nodeMap.set("testNodeId", p);
+                const mutations = [{
+                    type: "classList",
+                    nodeId: "testNodeId",
+                    className: "x",
+                    oldValue: false,
+                    value: true,
+                }];
+                historyPlugin.fixClassListMutationsForNewStep(mutations);
+                expect(p).not.toHaveClass("x");
+            });
+            test("should not add class 'x' as state alread matches first mutation's oldValue", async () => {
+                const { editor, plugins } = await setupEditor(`<p>test</p>`); 
+                const historyPlugin = plugins.get("history");
+                const p = editor.editable.querySelector("p");
+                historyPlugin.nodeMap.set("testNodeId", p);
+                const mutations = [{
+                    type: "classList",
+                    nodeId: "testNodeId",
+                    className: "x",
+                    oldValue: false,
+                    value: true,
+                }, {
+                    type: "classList",
+                    nodeId: "testNodeId",
+                    className: "x",
+                    oldValue: true,
+                    value: false,
+                }];
+                historyPlugin.fixClassListMutationsForNewStep(mutations);
+                expect(p).not.toHaveClass("x");
+            });
         });
     });
     describe("attributes", () => {

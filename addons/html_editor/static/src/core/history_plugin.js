@@ -1355,9 +1355,11 @@ export class HistoryPlugin extends Plugin {
      * @param { HistoryMutation[] } mutations
      */
     fixClassListMutationsForNewStep(mutations) {
+        const isFirstOcurrence = trackOccurrencesPair();
         // Mutations that when applied would not produce observable classList mutations
         const nonObservableClassMutations = mutations
-            .filter(({ type }) => type === "classList")
+            .filter((mutation) => mutation.type === "classList")
+            .filter(({ nodeId, className }) => isFirstOcurrence(nodeId, className))
             .map((mutation) => ({ ...mutation, node: this.nodeMap.getNode(mutation.nodeId) }))
             .filter(({ node, className, value }) => value === node?.classList.contains(className));
         if (nonObservableClassMutations.length) {
