@@ -9,6 +9,7 @@ import * as Utils from "@point_of_sale/../tests/pos/tours/utils/common";
 import { refresh } from "@point_of_sale/../tests/generic_helpers/utils";
 import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
+import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
 
 registry.category("web_tour.tours").add("ChromeTour", {
     steps: () =>
@@ -224,5 +225,29 @@ registry.category("web_tour.tours").add("test_zero_decimal_places_currency", {
             PaymentScreen.clickValidate(),
             ReceiptScreen.receiptIsThere(),
             ReceiptScreen.totalAmountContains("100"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_click_all_orders_keep_customer", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Partner Test 1"),
+            ProductScreen.clickPartnerButton(),
+            PartnerList.clickPartnerOptions("Partner Test 1"),
+            {
+                isActive: ["auto"],
+                trigger: "div.o_popover :contains('All Orders')",
+                content: "Check the popover opened",
+                run: "click",
+            },
+            Chrome.clickRegister(),
+            ProductScreen.isShown(),
+            {
+                content: "customer is selected",
+                trigger: ".product-screen .set-partner:contains('Partner Test 1')",
+            },
         ].flat(),
 });
