@@ -42,6 +42,9 @@ export class SavePlugin extends Plugin {
             // }
         ],
         get_dirty_els: () => this.editable.querySelectorAll(".o_dirty"),
+        // Do not change the sequence of this resource, it must stay the first
+        // one to avoid marking dirty when not needed during the drag and drop.
+        on_prepare_drag_handlers: withSequence(0, this.ignoreDirty.bind(this)),
     };
 
     setup() {

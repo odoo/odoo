@@ -246,7 +246,6 @@ export class BlockTab extends Component {
                     this.shared.dropzone.removeDropzones();
                     // Undo the changes needed to ease the drag and drop.
                     this.dragState.restoreCallbacks?.forEach((restore) => restore());
-                    this.dragState.restoreDirty();
                     restoreDragSavePoint();
                 };
                 this.hideSnippetToolTip?.();
@@ -257,10 +256,8 @@ export class BlockTab extends Component {
                 this.dragState = {};
                 dropzoneEls = [];
 
-                // Stop marking the elements with mutations as dirty.
-                this.dragState.restoreDirty = this.shared.savePlugin.ignoreDirty();
-
-                // Make some changes on the page to ease the drag and drop.
+                // Stop marking the elements with mutations as dirty and make
+                // some changes on the page to ease the drag and drop.
                 const restoreCallbacks = [];
                 for (const prepareDrag of this.env.editor.getResource("on_prepare_drag_handlers")) {
                     const restore = prepareDrag();
@@ -383,10 +380,10 @@ export class BlockTab extends Component {
                 }
 
                 if (currentDropzoneEl) {
-                    // Undo the changes needed to ease the drag and drop.
+                    // Undo the changes needed to ease the drag and drop and
+                    // re-allow to mark dirty.
                     this.dragState.restoreCallbacks.forEach((restore) => restore());
                     this.dragState.restoreCallbacks = null;
-                    this.dragState.restoreDirty();
 
                     currentDropzoneEl.after(snippetEl);
                     this.shared.dropzone.removeDropzones();
