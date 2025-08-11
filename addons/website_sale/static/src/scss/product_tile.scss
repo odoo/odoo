@@ -160,7 +160,7 @@
         justify-content: var(--o-wsale-card-info-attributes-justify-content);
         flex-direction: column;
         padding: map-get($spacers, 2) 0;
-        margin-right: auto;
+        margin-right: var(--o-wsale-card-info-attributes-margin-right, auto);
     }
     .o_wsale_product_information {
         display: flex;
@@ -308,7 +308,7 @@
         font-size: var(--o-wsale-card-btns-font-size, #{unquote("clamp(12px, 9cqw, 1rem)")});
 
         .btn {
-            --btn-padding-x: var(--o-wsale-card-btns-btn-padding-x, 0.8em);
+            --btn-padding-x: 0.8em;
 
             flex-grow: var(--o-wsale-card-btns-btn-flex-grow);
             font-size: var(--o-wsale-card-btns-btn-font-size, var(--btn-font-size));
@@ -357,20 +357,22 @@
         display: var(--o-wsale-card-btn-label-display);
     }
     .o_carousel_product_remove {
-        @include o-position-absolute(7%, 50%);
-        transform: translateX(50%);
-        display: inline-flex;
-        aspect-ratio: 1;
-        align-items: center;
-        justify-content: center;
-        transition: none;
+        --btn-padding-x: #{map-get($spacers, 2)};
+        --btn-padding-y: var(--btn-padding-x);
 
-        --btn-hover-color: #{$danger};
-        --btn-hover-border-color: #{$danger};
-        --btn-padding-x: #{map-get($spacers, 1)};
-    }
-    &:where(:not(:hover)):where(:not(:focus-visible)) .o_carousel_product_remove {
-        display: none;
+        --o-wsale-wishlist-card-offset-top: calc(var(--o-wsale-card-offset-top) + var(--btn-padding-y));
+        --o-wsale-wishlist-card-offset-x: calc(var(--o-wsale-card-offset-x) + var(--btn-padding-x));
+
+        --o-wsale-wishlist-btn-offset-top-default: calc(var(--o-wsale-card-border-radius, 0px) * 0.1 + var(--btn-padding-y));
+        --o-wsale-wishlist-btn-offset-end-default: calc(var(--o-wsale-card-border-radius, 0px) * 0.2 + var(--btn-padding-x));
+
+        @include o-position-absolute(
+            $top: var(--o-wsale-wishlist-card-offset-top, var(--o-wsale-wishlist-btn-offset-top-default)),
+            $right: var(--o-wsale-wishlist-card-offset-x, var(--o-wsale-wishlist-btn-offset-end-default))
+        );
+        @include o-wsale-card-btn-design-subtle($body-bg, $body-color);
+
+        aspect-ratio: 1;
     }
 }
 
@@ -536,7 +538,8 @@
             --o-wsale-card-info-text-basis: 0 0 360px;
             --o-wsale-card-info-text-width: 360px;
 
-            &:where(.o_wsale_products_opt_has_comparison):where(:has(.o_add_compare)) {
+            &:where(.o_wsale_products_opt_has_comparison):where(:has(.o_add_compare)),
+            &:where(:has(.o_add_to_compare)) {
                 --o-wsale-comparison-btn-placeholder-display: inline-block;
             }
         }
@@ -596,7 +599,6 @@
         --o-wsale-card-attribute-previewer-order: 7;
         --o-wsale-card-attribute-previewer-padding: 0 0 #{map-get($spacers, 2)};
         --o-wsale-card-attribute-previewer-thumbnail-width: MIN(14%, 3rem);
-        --o-wsale-card-btns-btn-padding-x: #{$btn-padding-x};
         --o-wsale-card-btn-label-display: none;
         --o-wsale-card-btn-submit-label-display: inline;
         --o-wsale-card-btn-submit-order: -2;
@@ -619,6 +621,7 @@
     --o-wsale-card-border-radius: var(--o-wsale-opt-border-radius, 0px);
     --o-wsale-card-info-padding: #{map-get($spacers, 2)} 0 0 0;
     --o-wsale-card-padding: var(--_padding-base);
+    --o-wsale-card-btns-row-padding: 0;
     --o-wsale-card-btns-margin-bottom: 0;
     --o-wsale-card-pseudobg-y: 0;
     --o-wsale-card-pseudobg-x: 0;
@@ -700,7 +703,8 @@
             --o-wsale-card-info-text-basis: 0 0 280px;
             --o-wsale-card-info-text-width: 280px;
 
-            &:where(.o_wsale_products_opt_has_comparison):where(:has(.o_add_compare)) {
+            &:where(.o_wsale_products_opt_has_comparison):where(:has(.o_add_compare)),
+            &:where(:has(.o_add_to_compare)) {
                 --o-wsale-comparison-btn-placeholder-display: inline-block;
             }
         }
@@ -727,6 +731,10 @@
     --o-wsale-card-thumb-border-radius: calc(var(--o-wsale-card-border-radius, 1px) - 1px);
     --o-wsale-card-btn-submit-order: -1;
     --o-wsale-card-btn-label-display: none;
+    --o-wsale-card-btn-aspect-ratio: 1;
+    --o-wsale-card-btns-align-items: baseline;
+    --o-wsale-card-btns-btn-min-height: calc(1em + 1.6em);
+    --o-wsale-card-btn-padding-x: 0;
     --o-wsale-card-offset-top: 3%;
     --o-wsale-card-offset-x: 3%;
     --o-wsale-card-overlay: "";
@@ -1161,7 +1169,7 @@ $_wsale_products_roundness_map: (
             .o_wsale_product_action_row {
                 display: flex;
                 gap: map-get($spacers, 2);
-                transform: translateX(var(--o-wsale-card-offset-x));
+                transform: translateX(var(--o-wsale-card-offset-x)) translateY(calc(var(--o-wsale-card-offset-top) * -1));
 
                 .btn {
                     opacity: 0;
@@ -1187,16 +1195,12 @@ $_wsale_products_roundness_map: (
                 }
                 .o_wsale_product_action_row .btn {
                     opacity: 1;
-                    transform: translate(0, (map-get($spacers, 2) * -1));
+                    transform: translate(0, 0);
                     transition: transform .15s ease-out, opacity .35s ease-out;
 
                     &.o_add_compare {
                         transition-delay: .1s;
                     }
-                }
-
-                &.o_has_variations .o_wsale_product_action_row .btn {
-                    transform: translate(0, 0);
                 }
             }
         }
