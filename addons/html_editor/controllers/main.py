@@ -1,7 +1,7 @@
 import contextlib
 import re
 import uuid
-from base64 import b64decode
+from base64 import b64decode, b64encode
 from datetime import datetime
 import werkzeug.exceptions
 import werkzeug.urls
@@ -13,12 +13,12 @@ from odoo import _, http, tools, SUPERUSER_ID
 from odoo.addons.html_editor.tools import get_video_url_data
 from odoo.exceptions import UserError, MissingError, AccessError
 from odoo.http import request
-from odoo.tools.image import image_process
+from odoo.tools.image import image_process, image_data_uri, binary_to_image, get_webp_size
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import file_open
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail.tools import link_preview
-from lxml import html
+from lxml import html, etree
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
 
@@ -537,6 +537,43 @@ class HTML_Editor(http.Controller):
                 shape_animation_speed=shape_animation_speed,
                 svg=svg
             )
+        return request.make_response(svg, [
+            ('Content-type', 'image/svg+xml'),
+            ('Cache-control', 'max-age=%s' % http.STATIC_CACHE_LONG),
+        ])
+
+    @http.route(['/web_editor/image_shape/<string:img_key>/<module>/<path:filename>', '/html_editor/image_shape/<string:img_key>/<module>/<path:filename>'], type='http', auth="public", website=True)
+    def image_shape(self, module, filename, img_key, **kwargs):
+        svg = self._get_shape_svg(module, 'image_shapes', filename)
+
+        record = request.env['ir.binary']._find_record(img_key)
+        stream = request.env['ir.binary']._get_image_stream_from(record)
+        if stream.type == 'url':
+            return stream.get_response()
+
+        image = stream.read()
+        if record.mimetype == "image/webp":
+            width, height = (str(size) for size in get_webp_size(image))
+        else:
+            img = binary_to_image(image)
+            width, height = (str(size) for size in img.size)
+        root = etree.fromstring(svg)
+
+        if root.attrib.get("data-forced-size"):
+            # Adjusts the SVG height to ensure the image fits properly within
+            # the SVG (e.g. for "devices" shapes).
+            svgHeight = float(root.attrib.get("height"))
+            svgWidth = float(root.attrib.get("width"))
+            svgAspectRatio = svgWidth / svgHeight
+            height = str(float(width) / svgAspectRatio)
+
+        root.attrib.update({'width': width, 'height': height})
+        # Update default color palette on shape SVG.
+        svg, _ = self._update_svg_colors(kwargs, etree.tostring(root, pretty_print=True).decode('utf-8'))
+        # Add image in base64 inside the shape.
+        uri = image_data_uri(b64encode(image))
+        svg = svg.replace('<image xlink:href="', '<image xlink:href="%s' % uri)
+
         return request.make_response(svg, [
             ('Content-type', 'image/svg+xml'),
             ('Cache-control', 'max-age=%s' % http.STATIC_CACHE_LONG),
