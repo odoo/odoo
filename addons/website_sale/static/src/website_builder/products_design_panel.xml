@@ -29,7 +29,7 @@
         <t t-set="suggestedClassesListDefault">
             o_wsale_products_opt_name_color_regular o_wsale_products_opt_thumb_cover
             o_wsale_products_opt_has_cta
-            o_wsale_products_opt_has_wishlist o_wsale_products_opt_has_description
+            o_wsale_products_opt_has_wishlist
             o_wsale_products_opt_actions_inline
         </t>
 
@@ -76,7 +76,7 @@
                 label: thumbnailsLabel,
                 className: 'o_wsale_products_opt_layout_list o_wsale_products_opt_design_thumbs',
                 img: '/website_sale/static/src/img/products_entries_design/style_list_thumbs.svg',
-                suggestedClasses: suggestedClassesListDefault + ' o_wsale_products_opt_cc o_wsale_products_opt_cc1 o_wsale_products_opt_rounded_2 o_wsale_products_opt_img_secondary_show o_wsale_products_opt_actions_promote o_wsale_products_opt_thumb_4_5',
+                suggestedClasses: suggestedClassesListDefault + ' o_wsale_products_opt_cc o_wsale_products_opt_cc1 o_wsale_products_opt_rounded_2 o_wsale_products_opt_img_secondary_show o_wsale_products_opt_actions_promote o_wsale_products_opt_thumb_4_5 o_wsale_products_opt_has_description',
                 gap: 16,
             },
             {
@@ -85,7 +85,7 @@
                 label: cardsLabel,
                 className: 'o_wsale_products_opt_layout_list o_wsale_products_opt_design_cards',
                 img: '/website_sale/static/src/img/products_entries_design/style_list_cards.svg',
-                suggestedClasses: suggestedClassesListDefault + ' o_wsale_products_opt_cc o_wsale_products_opt_cc1 o_wsale_products_opt_rounded_2 o_wsale_products_opt_img_secondary_show o_wsale_products_opt_actions_promote',
+                suggestedClasses: suggestedClassesListDefault + ' o_wsale_products_opt_cc o_wsale_products_opt_cc1 o_wsale_products_opt_rounded_2 o_wsale_products_opt_has_description o_wsale_products_opt_img_secondary_show o_wsale_products_opt_actions_promote',
                 gap: 8,
             },
             {
@@ -94,7 +94,7 @@
                 label: gridLabel,
                 className: 'o_wsale_products_opt_layout_list o_wsale_products_opt_design_grid',
                 img: '/website_sale/static/src/img/products_entries_design/style_list_grid.svg',
-                suggestedClasses: suggestedClassesListDefault + ' o_wsale_products_opt_cc o_wsale_products_opt_cc1 o_wsale_products_opt_name_size_body o_wsale_products_opt_img_secondary_show o_wsale_products_opt_actions_promote o_wsale_products_opt_thumb_4_3',
+                suggestedClasses: suggestedClassesListDefault + ' o_wsale_products_opt_cc o_wsale_products_opt_cc1 o_wsale_products_opt_name_size_body o_wsale_products_opt_img_secondary_show o_wsale_products_opt_actions_promote o_wsale_products_opt_thumb_4_3 o_wsale_products_opt_has_description',
                 gap: 0,
             },
             {
@@ -103,8 +103,17 @@
                 type: 'list',
                 className: 'o_wsale_products_opt_layout_list o_wsale_products_opt_design_showcase',
                 img: '/website_sale/static/src/img/products_entries_design/style_list_showcase.svg',
-                suggestedClasses: suggestedClassesListDefault + ' o_wsale_products_opt_cc o_wsale_products_opt_cc5 o_wsale_products_opt_name_color_regular o_wsale_products_opt_actions_theme o_wsale_products_opt_thumb_4_3',
+                suggestedClasses: suggestedClassesListDefault + ' o_wsale_products_opt_cc o_wsale_products_opt_cc5 o_wsale_products_opt_name_color_regular o_wsale_products_opt_actions_theme o_wsale_products_opt_thumb_4_3 o_wsale_products_opt_has_description',
                 gap: 0,
+            },
+            {
+                id: 'wsale_design_condensed_list',
+                label: 'Condensed',
+                type: 'list',
+                className: 'o_wsale_products_opt_layout_list o_wsale_products_opt_design_condensed',
+                img: '/website_sale/static/src/img/products_entries_design/style_list_condensed.svg',
+                suggestedClasses: suggestedClassesListDefault + ' o_wsale_products_opt_cc o_wsale_products_opt_cc1 o_wsale_products_opt_rounded_1 o_wsale_products_opt_actions_promote o_wsale_products_opt_name_size_body',
+                gap: 4,
             },
         ]"/>
 
@@ -226,10 +235,14 @@
                 t-set="catalogChips"
                 t-value="this.isActiveItem('wsale_design_chips_catalog')"
             />
+            <t
+                t-set="listCondensed"
+                t-value="this.isActiveItem('wsale_design_condensed_list')"
+            />
 
             <BuilderRow
                 label.translate="Hover Effect"
-                t-if="anyThumb || anyCard || catalogThumb || catalogChips"
+                t-if="anyThumb || anyCard || catalogThumb || catalogChips || listCondensed"
                 >
                 <BuilderSelect>
                     <BuilderSelectItem
@@ -237,12 +250,12 @@
                         None
                     </BuilderSelectItem>
                     <BuilderSelectItem
-                        t-if="anyThumb"
+                        t-if="anyThumb || listCondensed"
                         classAction="'o_wsale_products_opt_hover_background'">
                         Background
                     </BuilderSelectItem>
                     <BuilderSelectItem
-                        t-if="anyThumb"
+                        t-if="anyThumb || listCondensed"
                         classAction="'o_wsale_products_opt_hover_background o_wsale_products_opt_hover_background_zoom'">
                         Background Zoom
                     </BuilderSelectItem>
@@ -293,7 +306,7 @@
                 label.translate="Colors"
                 tooltip.translate="Color combinations are defined in the Theme Tab"
             >
-                <BuilderSelect t-if="!anyThumb">
+                <BuilderSelect t-if="!anyThumb and !this.isActiveItem('wsale_design_condensed_list')">
                     <BuilderSelectItem
                         classAction="'.o_wsale_products_opt_cc o_wsale_products_opt_cc1'"
                     >
