@@ -78,74 +78,125 @@
             SEO Checks
         </h4>
         <hr class="mt-0"/>
-        <t t-if="state.headingsScan.missingH1">
-            <p><i class="fa fa-times text-danger me-3"></i>H1 tag is missing, please add only one</p>
-        </t>
-        <t t-elif="state.headingsScan.multipleH1">
-            <p><i class="fa fa-times text-danger me-3"></i>Multiple H1 tags detected. Please update your content to include only one H1 heading</p>
-        </t>
-        <t t-if="state.headingsScan.misplacedH1 and !state.headingsScan.missingH1">
-            <p><i class="fa fa-times text-danger me-3"></i>Misplaced H1 tag. Please place the H1 heading at the top of the page</p>
-        </t>
-        <t t-if="state.altAttributes.filter(alt => !alt.decorative and alt.alt == '').length > 0">
-            <p><i class="fa fa-times text-danger me-3"></i><span t-out="state.altAttributes.filter(alt => !alt.decorative and alt.alt == '').length"></span> alt attribute(s) missing on image(s)</p>
-        </t>
-        <t t-else="">
-            <p><i class="fa fa-check text-success me-3"></i>No warning on images</p>
-        </t>
-        <div class="row">
-            <t t-foreach="state.altAttributes" t-as="img" t-key="img.id">
-                <div class="col-lg-6 col-sm-12 d-flex align-items-center justify-content start">
-                    <div>
-                        <img class="o-img-thumbnail" alt="Preview image" t-att-src="img.src"></img>
+        <div class="accordion" id="accordionTitle">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="accordionTitle">
+                    <button class="accordion-button fs-5" t-att-class="state.issues.title > 0 ? '' : 'collapsed'" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" t-att-aria-expanded="state.issues.title == 0 ? 'true' : 'false'" aria-controls="collapseOne">
+                        Title
+                        <span class="text-danger ms-2" t-if="state.issues.title > 0">
+                            <span t-out="state.issues.title"/> issue(s)
+                        </span>
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse" t-att-class="state.issues.title > 0 ? 'show' : ''">
+                    <div class="accordion-body px-3 py-2">
+                        <t t-if="state.headingsScan.missingH1">
+                            <p class="mb-2"><i class="fa fa-times text-danger me-2"></i>H1 tag is missing, please add only one</p>
+                        </t>
+                        <t t-elif="state.headingsScan.multipleH1">
+                            <p class="mb-2"><i class="fa fa-times text-danger me-2"></i>Multiple H1 tags detected. Please update your content to include only one H1 heading</p>
+                        </t>
+                        <t t-if="state.headingsScan.invalidHeadingOrder">
+                            <span><i class="fa fa-times text-danger me-3"></i>
+                                <t t-esc="state.headingsScan.invalidHeadingDetail"/>
+                            </span>
+                        </t>
+                        <t t-elif="!state.headingsScan.missingH1 and !state.headingsScan.multipleH1">
+                            <span><i class="fa fa-check text-success me-2"></i>All Title Tags are placed correctly</span>
+                        </t>
                     </div>
-                    <div role="form" class="flex-grow-1">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" t-att-id="'decorative-' + img.id" t-model="img.decorative" t-on-change="() => imgUpdated(img)"/>
-                            <label t-att-for="'decorative-' + img.id">Mark as decorative
-                                <i class="fa fa-question-circle text-primary" title="The alt attribute is used to describe the image, optimizing both accessibility and SEO. If you select this option, the image will be hidden from screen readers and not considered for your SEO."/>
-                            </label>
-                        </div>
-                        <div t-if="!img.decorative" class="input-group mt-2">
-                            <input placeholder="Describe the image..." t-model="img.alt" type="text" t-att-class="'form-control ' + (img.alt.trim().length ? 'is-valid' : 'is-invalid')" t-on-change="() => imgUpdated(img)"/>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="accordionImages">
+                    <button class="accordion-button fs-5" type="button" t-att-class="state.issues.images > 0 ? '' : 'collapsed'" data-bs-toggle="collapse" data-bs-target="#collapseTwo" t-att-aria-expanded="state.issues.images == 0 ? 'true' : 'false'" aria-controls="collapseTwo">
+                        Images
+                        <t t-if="state.altAttributes.filter(alt => !alt.decorative and alt.alt == '').length > 0">
+                            <span class="text-danger ms-2">
+                                <span t-out="state.altAttributes.filter(alt => !alt.decorative and alt.alt == '').length"></span> alt attribute(s) missing on image(s)
+                            </span>
+                        </t>
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" t-att-class="state.issues.images > 0 ? 'show' : ''">
+                    <div class="accordion-body px-3 py-2">
+                        <div class="row g-3">
+                            <t t-foreach="state.altAttributes" t-as="img" t-key="img.id">
+                                <div class="col-lg-6 col-sm-12 d-flex align-items-center justify-content-start gap-3">
+                                    <div>
+                                        <img class="o-img-thumbnail" alt="Preview image" t-att-src="img.src"/>
+                                    </div>
+                                    <div role="form" class="flex-grow-1">
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" t-att-id="'decorative-' + img.id" t-model="img.decorative" t-on-change="() => imgUpdated(img)"/>
+                                            <label t-att-for="'decorative-' + img.id">Mark as decorative
+                                                <i class="fa fa-question-circle text-primary" title="The alt attribute is used to describe the image, optimizing both accessibility and SEO. If you select this option, the image will be hidden from screen readers and not considered for your SEO."/>
+                                            </label>
+                                        </div>
+                                        <div t-if="!img.decorative" class="input-group">
+                                            <input placeholder="Describe the image..." t-model="img.alt" type="text" t-att-class="'form-control ' + (img.alt.trim().length ? 'is-valid' : 'is-invalid')" t-on-change="() => imgUpdated(img)"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                            <t t-if="state.altAttributes.length === 0">
+                                <span><i class="fa fa-check text-success me-2"></i>All images have an ALT attribute</span>
+                            </t>
                         </div>
                     </div>
                 </div>
-            </t>
+            </div>
+            <div class="accordion-item" t-if="state.checkedLinks">
+                <h2 class="accordion-header" id="accordionLinks">
+                    <button class="accordion-button fs-5" type="button" t-att-class="state.issues.links > 0 ? '' : 'collapsed'" data-bs-toggle="collapse" data-bs-target="#collapseThree" t-att-aria-expanded="state.issues.links == 0 ? 'true' : 'false'" aria-controls="collapseThree">
+                        Links
+                        <t t-if="seoContext.brokenLinks.filter(link => link.broken and !link.noFollow).length > 0">
+                            <span class="text-danger ms-2">
+                                <span t-out="seoContext.brokenLinks.filter(link => link.broken and !link.noFollow).length"></span> broken link(s)
+                            </span>
+                        </t>
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" t-att-class="state.issues.links > 0 ? 'show' : ''">
+                    <div class="accordion-body px-3 py-2">
+                        <div class="mt-2" t-if="state.checkedLinks">
+                            <t t-if="seoContext.brokenLinks.length > 0">
+                                <t t-foreach="seoContext.brokenLinks" t-as="link" t-key="link.oldLink">
+                                    <div t-if="!link.remove" class="row align-items-center mb-3">
+                                        <div class="col-12">
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" t-att-id="'noFollow-' + link.oldLink" t-model="link.noFollow" />
+                                                <label t-att-for="'noFollow-' + link.oldLink"> Mark as noFollow
+                                                    <i class="fa fa-question-circle text-primary" title="Marks link as ‘nofollow’ for SEO purposes "/>
+                                                </label>
+                                            </div>
+                                            <div class="input-group">
+                                                <input t-model="link.newLink" type="text" t-on-focus="(ev) => this._onInputFocus(ev, link)" t-att-class="'form-control ' + linkClass(link)" t-on-blur="() => this.modifyLink(link)"/>
+                                                <button class="btn btn-primary" t-att-disabled="state.checkingLink || !link.newLink.trim().length || (link.newLink.trim() == link.oldLink)" t-on-click="() => this.modifyLink(link)">Check</button>
+                                                <button class="btn btn-outline-danger" t-att-title="'Remove link from the content'" t-on-click="() => this.removeLink(link)">
+                                                    <i class="fa fa-trash"/>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                <span><i class="fa fa-check text-success me-2"></i>No broken links</span>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
+        <div class="my-2" t-if="!state.checkedLinks">
+            <button class="btn btn-primary" t-on-click="getBrokenLinks">Check broken links</button>
+        </div>
         <div class="mt-2" t-if="state.checkingLinks">
             <div><i class="fa fa-spin fa-circle-o-notch text-info me-3"></i>Checking hyperlinks...</div>
             <div class="progress bg-black-25 mt-2" style="height: 10px;">
                 <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" t-att-aria-valuenow="state.counterLinks" aria-valuemin="0" t-att-aria-valuemax="state.totalLinks" t-attf-style="width:#{(state.counterLinks / state.totalLinks) * 100}%;" aria-label="Progress bar"/>
             </div>
-        </div>
-        <div class="mt-2" t-elif="state.checkedLinks">
-            <t t-if="seoContext.brokenLinks.length > 0">
-                <t t-if="seoContext.brokenLinks.filter(link => link.broken).length">
-                    <p><i class="fa fa-times text-danger me-3"></i><span t-out="seoContext.brokenLinks.filter(link => link.broken).length"></span> broken link(s)</p>
-                </t>
-                <t t-else="">
-                    <p><i class="fa fa-check text-success me-3"></i>No broken link</p>
-                </t>
-                <t t-foreach="seoContext.brokenLinks" t-as="link" t-key="link.oldLink">
-                    <div t-if="!link.remove" class="row align-items-center mb-2">
-                        <div class="col-12" role="form">
-                            <div class="input-group w-auto">
-                                <input t-model="link.newLink" type="text" t-att-class="'form-control ' + linkClass(link)" t-on-blur="() => this.modifyLink(link)"/>
-                                <button class="btn btn-primary" t-att-disabled="state.checkingLink || !link.newLink.trim().length || (link.newLink.trim() == link.oldLink)" t-on-click="() => this.modifyLink(link)">Check</button>
-                                <button class="btn btn-danger" t-on-click="() => this.removeLink(link)">Remove</button>
-                            </div>
-                        </div>
-                    </div>
-                </t>
-            </t>
-            <t t-else="">
-                <p><i class="fa fa-check text-success me-3"></i>No broken link</p>
-            </t>
-        </div>
-        <div class="mt-2" t-else="">
-            <button class="btn btn-primary" t-on-click="getBrokenLinks">Check broken links</button>
         </div>
 
     </section>

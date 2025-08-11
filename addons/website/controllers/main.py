@@ -885,6 +885,8 @@ class Website(Home):
                         element.drop_tag()
                     else:
                         element.set('href', markup_escape(link['newLink']))
+                        if link.get("noFollow"):
+                            element.set("rel", "nofollow")
                     modified = True
             if modified:
                 new_html_content = html.tostring(tree, encoding='unicode', method='html')

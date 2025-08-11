@@ -10,6 +10,7 @@ import { CheckBox } from '@web/core/checkbox/checkbox';
 import { MediaDialog } from '@web_editor/components/media_dialog/media_dialog';
 import { WebsiteDialog } from './dialog';
 import { Component, onMounted, onWillStart, reactive, useEffect, useState } from "@odoo/owl";
+import wUtils from "@website/js/utils";
 
 // This replaces \b, because accents(e.g. à, é) are not seen as word boundaries.
 // Javascript \b is not unicode aware, and words beginning or ending by accents won't match \b
@@ -619,12 +620,37 @@ export class SeoChecks extends Component {
             counterLinks: 0,
             totalLinks: 0,
             headingsScan: [],
+            issues: {
+                title: 0,
+                images: 0,
+                links: 0,
+            },
         });
         this.imgUpdated = this.imgUpdated.bind(this);
         onWillStart(async () => {
             this.state.altAttributes = await this.getAltAttributes();
+            seoContext.updatedAlts = this.state.updatedAlts;
             this.state.headingsScan = this.getHeadingsScan();
         });
+    }
+
+    _onInputFocus(ev, link) {
+        const input = ev.target;
+        if (input.dataset.autocompleteAttached) {
+            return;
+        }
+        input.dataset.autocompleteAttached = "true";
+        const options = {
+            body: this.website.pageDocument.body,
+            position: "bottom-fit",
+            classes: {
+                "ui-autocomplete": "o_edit_menu_autocomplete",
+            },
+            urlChosen: () => {
+                link.newLink = input.value;
+            },
+        };
+        wUtils.autocompleteWithPages(input, options, this.env);
     }
 
     imgUpdated(img) {
@@ -636,8 +662,10 @@ export class SeoChecks extends Component {
         const ret = {
             missingH1: false,
             multipleH1: false,
-            misplacedH1: false,
+            invalidHeadingOrder: false,
+            invalidHeadingDetail: "",
         };
+
         const allHeadingsEls = Array.from(
             this.website.pageDocument.documentElement.querySelectorAll(
                 "#wrap :is(h1,h2,h3,h4,h5,h6)"
@@ -648,14 +676,24 @@ export class SeoChecks extends Component {
         if (h1Els.length === 0) {
             // We must have a h1 tag
             ret.missingH1 = true;
+            this.state.issues.title++;
         } else if (h1Els.length > 1) {
             // We must have only one h1 tag
             ret.multipleH1 = true;
+            this.state.issues.title++;
         }
-        if (allHeadingsEls.length && allHeadingsEls[0].tagName.toLowerCase() !== "h1") {
-            // The h1 tag must be at the top of the hierarchy
-            ret.misplacedH1 = true;
-        }
+        // Check heading order (no backward jumps)
+        let lastLevel = 1;
+        allHeadingsEls.forEach((heading, index) => {
+            const currentLevel = parseInt(heading.tagName[1]);
+            if (currentLevel < lastLevel) {
+                ret.invalidHeadingOrder = true;
+                ret.invalidHeadingDetail = `Misplaced ${heading.tagName}`;
+                this.state.issues.title++;
+            }
+            lastLevel = Math.max(lastLevel, currentLevel);
+        });
+
         return ret;
     }
 
@@ -737,6 +775,9 @@ export class SeoChecks extends Component {
         });
 
         const results = await rpc("/website/get_alt_images", { models });
+        this.state.issues.images = JSON.parse(results).filter(
+            (alt) => !alt.decorative && alt.alt === ""
+        ).length;
 
         return JSON.parse(results);
     }
@@ -778,6 +819,7 @@ export class SeoChecks extends Component {
                     res_model: recordEl.dataset.resModel || recordEl.dataset.oeModel,
                     res_id: parseInt(recordEl.dataset.resId || recordEl.dataset.oeId),
                     field: recordEl.dataset.oeField || null,
+                    noFollow: el.getAttribute('rel') === 'nofollow',
                 };
             })
             .filter(Boolean);
@@ -787,6 +829,10 @@ export class SeoChecks extends Component {
         this.state.totalLinks = links.length;
         const brokenLinks = [];
         const promises = links.map(async (link) => {
+            if (link.noFollow) {
+                this.state.counterLinks++;
+                return;
+            }
             try {
                 const response = await fetch(link.link, {
                     method: "GET",
@@ -803,6 +849,7 @@ export class SeoChecks extends Component {
             this.state.counterLinks++;
         });
         await Promise.all(promises);
+        this.state.issues.links = brokenLinks.length;
         this.state.checkingLinks = false;
         this.state.checkedLinks = true;
         this.seoContext.brokenLinks = brokenLinks.map((link) => {
@@ -811,6 +858,7 @@ export class SeoChecks extends Component {
                 newLink: link.link,
                 broken: true,
                 remove: false,
+                noFollow: link.noFollow,
                 res_model: link.res_model,
                 res_id: link.res_id,
                 field: link.field,
@@ -836,8 +884,9 @@ export class OptimizeSEODialog extends Component {
         this.website = useService('website');
         this.dialogs = useService('dialog');
         this.orm = useService('orm');
-
-        this.title = _t("Optimize SEO");
+        const langLocale = this.website.currentWebsite.metadata.lang;
+        this.langCode = langLocale.split('_')[0].toUpperCase();
+        this.title = `${_t("Optimize SEO")} (${this.langCode})`;
         this.saveButton = _t("Save");
         this.size = 'lg';
         this.contentClass = "oe_seo_configuration";
@@ -939,7 +988,7 @@ export class OptimizeSEODialog extends Component {
         const rpcCalls = [];
         if (
             seoContext.brokenLinks.some(
-                (link) => link.oldLink !== link.newLink || link.remove === true
+                (link) => link.oldLink !== link.newLink || link.remove === true || link.noFollow
             )
         ) {
             rpcCalls.push(
