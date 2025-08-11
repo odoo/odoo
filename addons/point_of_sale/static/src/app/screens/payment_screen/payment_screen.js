@@ -54,7 +54,7 @@ export class PaymentScreen extends Component {
     async validateOrder(isForceValidate = false) {
         const validation = new OrderPaymentValidation({
             pos: this.pos,
-            order: this.currentOrder,
+            orderUuid: this.currentOrder.uuid,
         });
         await validation.validateOrder(isForceValidate);
     }

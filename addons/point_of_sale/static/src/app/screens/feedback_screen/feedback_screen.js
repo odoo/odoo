@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { Component, useRef, onMounted } from "@odoo/owl";
+import { Component, useRef, onMounted, useEffect, useState, onWillUnmount } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 
@@ -9,6 +9,7 @@ export class FeedbackScreen extends Component {
     static components = { PriceFormatter };
     static props = {
         orderUuid: String,
+        waitFor: { type: Object, optional: true },
         paymentMethodId: { type: Number, optional: true, default: null },
     };
 
@@ -17,23 +18,37 @@ export class FeedbackScreen extends Component {
         this.pos = usePos();
         this.containerRef = useRef("feedback-screen");
         this.amountRef = useRef("amount");
-        onMounted(async () => {
-            this.scaleText();
-            if (this.pos.isFastPaymentRunning) {
-                await this.fastValidate();
-            }
+        this.state = useState({
+            loading: true,
         });
-        if (!this.pos.isFastPaymentRunning) {
-            this.timeout = setTimeout(() => {
-                this.goToNextScreen();
-            }, 2000);
-        }
-    }
 
-    async fastValidate() {
-        const paymentMethod = this.pos.models["pos.payment.method"].get(this.props.paymentMethodId);
-        await this.pos.validateOrderFast(paymentMethod);
-        this.goToNextScreen();
+        onMounted(() => {
+            this.scaleText();
+        });
+
+        useEffect(
+            () => {
+                const waiter = async () => {
+                    try {
+                        if (this.props.waitFor) {
+                            await this.props.waitFor;
+                        }
+                    } finally {
+                        this.state.loading = false;
+                        this.timeout = setTimeout(() => {
+                            this.goToNextScreen();
+                        }, 5000);
+                    }
+                };
+
+                waiter();
+            },
+            () => []
+        );
+
+        onWillUnmount(() => {
+            clearTimeout(this.timeout);
+        });
     }
 
     scaleText() {
