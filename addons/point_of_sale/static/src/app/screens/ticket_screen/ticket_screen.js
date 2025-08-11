@@ -72,7 +72,7 @@ export class TicketScreen extends Component {
             nbrByPage: NBR_BY_PAGE,
             page: 1,
             nbrPage: 1,
-            filter: this.pos.config.module_pos_restaurant ? "ONGOING" : null,
+            filter: null,
             search: this.pos.getDefaultSearchDetails(),
             selectedOrderUuid: this.pos.getOrder()?.uuid || null,
             selectedOrderlineIds: {},

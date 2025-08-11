@@ -15,7 +15,6 @@ patch(PosStore.prototype, {
         this.isEditMode = false;
         this.tableSyncing = false;
         this.tableSelectorState = false;
-        this.pushOrderToPreparation = false;
         await super.setup(...arguments);
     },
     get firstPage() {
@@ -975,9 +974,6 @@ patch(PosStore.prototype, {
         const currentOrder = this.getOrder();
         if (!currentOrder) {
             return false;
-        }
-        if (this.pushOrderToPreparation) {
-            await this.sendOrderInPreparationUpdateLastChange(currentOrder);
         }
         await super.validateOrderFast(...arguments);
     },

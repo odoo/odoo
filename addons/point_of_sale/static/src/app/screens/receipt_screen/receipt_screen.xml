@@ -10,7 +10,7 @@
                             <div class="d-flex flex-column align-items-center mb-3 p-1 p-lg-3 border border-success rounded-3 bg-success-subtle text-success fs-3">
                                 <i t-if="!ui.isSmall" class="fa fa-fw fa-2x fa-check-circle"/>
                                 <span class="fs-3 fw-bolder">
-                                    <t t-if="pos.getOrder().isRefund">Refund Initiated</t>
+                                    <t t-if="currentOrder.isRefund">Refund Initiated</t>
                                     <t t-else="">Payment Successful</t>
                                 </span>
                                 <div class="fs-4 fw-bold d-flex justify-content-center align-items-center gap-2">
@@ -59,7 +59,7 @@
                     </div>
                     <div class="pos-receipt-container d-flex flex-grow-1 flex-lg-grow-0 w-100 w-lg-50 user-select-none justify-content-center bg-200 text-center overflow-hidden">
                         <div t-att-class="{ 'w-50': !ui.isSmall }" class="d-inline-block m-2 m-lg-3 p-3 border rounded text-start overflow-y-auto">
-                            <OrderReceipt order="pos.getOrder()" />
+                            <OrderReceipt order="this.currentOrder" />
                         </div>
                     </div>
                 </div>

@@ -18,13 +18,13 @@ import { ask } from "./make_awaitable_dialog";
  * @param {Object} [params.fastPaymentMethod=null] - The payment method to use for fast payment validation.
  */
 export default class OrderPaymentValidation {
-    constructor({ pos, order, fastPaymentMethod = null }) {
-        this.setup({ pos, order, fastPaymentMethod });
+    constructor({ pos, orderUuid, fastPaymentMethod = null }) {
+        this.setup({ pos, orderUuid, fastPaymentMethod });
     }
 
     setup(vals) {
         this.pos = vals.pos;
-        this.order = vals.order;
+        this.orderUuid = vals.orderUuid;
         this.payment_methods_from_config = this.pos.config.payment_method_ids
             .slice()
             .sort((a, b) => a.sequence - b.sequence);
@@ -33,7 +33,26 @@ export default class OrderPaymentValidation {
         }
     }
 
+    get order() {
+        return this.pos.models["pos.order"].getBy("uuid", this.orderUuid);
+    }
+
     get nextPage() {
+        if (
+            this.order.nb_print === 0 &&
+            this.pos.config.iface_print_auto &&
+            this.pos.config.iface_print_skip_screen &&
+            this.order.payment_ids[0]?.payment_method_id
+        ) {
+            return {
+                page: "FeedbackScreen",
+                params: {
+                    orderUuid: this.order.uuid,
+                    paymentMethodId: this.order.payment_ids[0]?.payment_method_id.id,
+                },
+            };
+        }
+
         return !this.error
             ? {
                   page: "ReceiptScreen",
@@ -62,14 +81,32 @@ export default class OrderPaymentValidation {
         return true;
     }
 
+    async shouldHideValidationBehindFeedbackScreen() {
+        const nextPage = this.nextPage;
+        if (nextPage.page === "FeedbackScreen") {
+            const waitForFn = async () => {
+                await this.finalizeValidation();
+                await this.afterOrderValidation();
+            };
+            nextPage.params.waitFor = waitForFn();
+        } else {
+            try {
+                this.pos.env.services.ui.block();
+                await this.finalizeValidation();
+                await this.afterOrderValidation();
+            } finally {
+                this.pos.env.services.ui.unblock();
+            }
+        }
+
+        this.pos.navigate(nextPage.page, nextPage.params);
+    }
+
     async validateOrder(isForceValidate) {
-        if (!this.pos.isFastPaymentRunning && (await this.askBeforeValidation()) === false) {
+        if ((await this.askBeforeValidation()) === false) {
             return false;
         }
         await this._askForCustomerIfRequired();
-        if (!this.pos.isFastPaymentRunning && this.pos.checkAndSkipScreenWithPrint()) {
-            return true;
-        }
         this.pos.numberBuffer.capture();
         if (!this.checkCashRoundingHasBeenWellApplied()) {
             return false;
@@ -91,7 +128,7 @@ export default class OrderPaymentValidation {
                 this.order.removePaymentline(line);
             }
 
-            await this.finalizeValidation();
+            await this.shouldHideValidationBehindFeedbackScreen();
         }
 
         return false;
@@ -112,46 +149,38 @@ export default class OrderPaymentValidation {
         this.pos.addPendingOrder([this.order.id]);
         this.order.state = "paid";
 
-        if (!this.pos.isFastPaymentRunning) {
-            this.pos.env.services.ui.block();
-        }
-        let syncOrderResult;
         try {
             // 1. Save order to server.
-            syncOrderResult = await this.pos.syncAllOrders({ throw: true });
+            const syncOrderResult = await this.pos.syncAllOrders({ throw: true });
             if (!syncOrderResult) {
-                return;
+                return false;
             }
 
-            // 2. Invoice.
+            // 2. Invoice, should not stop the validation process but a dialog is shown if an
+            // error occured.
             if (this.shouldDownloadInvoice() && this.order.isToInvoice()) {
                 if (this.order.raw.account_move) {
                     await this.pos.env.services.account_move.downloadPdf(
                         this.order.raw.account_move
                     );
                 } else {
-                    throw {
-                        code: 401,
-                        message: "Backend Invoice",
-                        data: { order: this.order },
-                    };
+                    this.pos.dialog.add(AlertDialog, {
+                        title: _t("Backend Invoice"),
+                        body: _t(
+                            "An error occurred while generating an invoice. You can try again from the order list."
+                        ),
+                    });
                 }
+            }
+
+            // 3. Post process.
+            const postPushOrders = syncOrderResult.filter((order) => order.waitForPushOrder());
+            if (postPushOrders.length > 0) {
+                await this.postPushOrderResolve(postPushOrders.map((order) => order.id));
             }
         } catch (error) {
             return this.handleValidationError(error);
-        } finally {
-            if (!this.pos.isFastPaymentRunning) {
-                this.pos.env.services.ui.unblock();
-            }
         }
-
-        // 3. Post process.
-        const postPushOrders = syncOrderResult.filter((order) => order.waitForPushOrder());
-        if (postPushOrders.length > 0) {
-            await this.postPushOrderResolve(postPushOrders.map((order) => order.id));
-        }
-
-        return await this.afterOrderValidation(!!syncOrderResult && syncOrderResult.length > 0);
     }
 
     async postPushOrderResolve(ordersServerId) {
@@ -167,26 +196,18 @@ export default class OrderPaymentValidation {
     async afterOrderValidation() {
         // Always show the next screen regardless of error since pos has to
         // continue working even offline.
-        const nextPage = this.nextPage;
-
         if (!this.pos.config.module_pos_restaurant) {
-            this.pos.checkPreparationStateAndSentOrderInPreparation(this.order, {
+            this.pos.sendOrderInPreparationUpdateLastChange(this.order, {
                 orderDone: true,
             });
         }
 
-        if (
-            nextPage.page === "ReceiptScreen" &&
-            this.order.nb_print === 0 &&
-            this.pos.config.iface_print_auto
-        ) {
+        if (this.order.nb_print === 0 && this.pos.config.iface_print_auto) {
             const invoiced_finalized = this.order.isToInvoice() ? this.order.finalized : true;
             if (invoiced_finalized) {
                 await this.pos.printReceipt({ order: this.order });
             }
         }
-
-        this.pos.navigate(nextPage.page, nextPage.params);
     }
 
     selectNextOrder() {

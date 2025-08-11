@@ -39,10 +39,11 @@ patch(OrderPaymentValidation.prototype, {
                 cancelLabel: _t("Discard"),
             });
             if (confirmed) {
-                if (!this.pos.isFastPaymentRunning) {
+                try {
+                    this.pos.env.services.ui.block();
                     await this.pos.sendOrderInPreparationUpdateLastChange(this.order);
-                } else {
-                    this.pos.pushOrderToPreparation = true;
+                } finally {
+                    this.pos.env.services.ui.unblock();
                 }
             }
         }
