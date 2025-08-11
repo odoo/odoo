@@ -33,7 +33,9 @@ export class ReceiptScreen extends Component {
             const order = this.pos.getOrder();
 
             if (!this.pos.config.module_pos_restaurant) {
-                this.pos.checkPreparationStateAndSentOrderInPreparation(order, { orderDone: true });
+                this.pos.checkPreparationStateAndSentOrderInPreparation(order, false, {
+                    orderDone: true,
+                });
             }
         });
     }
