@@ -187,6 +187,8 @@ def _odoo_guess_mimetype(bin_data, default='application/octet-stream'):
 try:
     import magic
     def guess_mimetype(bin_data, default=None):
+        if isinstance(bin_data, bytearray):
+            bin_data = bytes(bin_data[:1024])
         mimetype = magic.from_buffer(bin_data[:1024], mime=True)
         if mimetype in ('application/CDFV2', 'application/x-ole-storage'):
             # Those are the generic file format that Microsoft Office
