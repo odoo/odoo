@@ -1,5 +1,4 @@
 import { queryAll } from "@odoo/hoot-dom";
-import { waitForStable } from "@web/core/macro";
 
 /*******************************
  *         Common Steps
@@ -43,9 +42,6 @@ export const start = [
     {
         content: "Is your message correctly sent ?",
         trigger: "body.no_duplicated_message",
-        async run() {
-            await waitForStable(document.body, 1000);
-        },
     },
     {
         trigger:

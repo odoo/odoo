@@ -4,8 +4,26 @@ import { serializeChanges, serializeMutation } from "@web_tour/js/utils/tour_uti
 import { TourHelpers } from "@web_tour/js/tour_automatic/tour_helpers";
 import { TourStep } from "@web_tour/js/tour_step";
 import { getTag } from "@web/core/utils/xml";
-import { waitForStable } from "@web/core/macro";
+import { MacroMutationObserver } from "@web/core/macro";
 
+async function waitForMutations(target = document, timeout = 1000 / 16) {
+    return new Promise((resolve) => {
+        let observer;
+        let timer;
+        const mutationList = [];
+        function onMutation(mutations) {
+            mutationList.push(...(mutations || []));
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                observer.disconnect();
+                resolve(mutationList);
+            }, timeout);
+        }
+        observer = new MacroMutationObserver(onMutation);
+        observer.observe(target);
+        onMutation([]);
+    });
+}
 export class TourStepAutomatic extends TourStep {
     skipped = false;
     error = "";
@@ -24,7 +42,7 @@ export class TourStepAutomatic extends TourStep {
             return;
         }
         const snapshot = initialElement.cloneNode(true);
-        const mutations = await waitForStable(initialElement, delay);
+        const mutations = await waitForMutations(initialElement, delay);
         let reason;
         if (!hoot.isVisible(initialElement)) {
             reason = `Initial element is no longer visible`;
