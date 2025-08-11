@@ -423,30 +423,16 @@ class TestTranslationFlow(common.TransactionCase):
             'exported 2',
             'exported 3',
             'Bar chart title',
-            'Scorecard description',
-            'Scorecard chart',
-            'Opportunities',
-            'link label',
-            'aa (\\"inside\\") bb',
-            'with spaces',
-            'hello \\"world\\"',
-        })
-
-    def test_export_spreadsheet_new_dataset(self):
-        terms = []
-        po_reader = TranslationModuleReader(self.env.cr, ['test_translation_import'])
-        for line in po_reader:
-            _module, _ttype, name, _res_id, source, _value, _comments = line
-            if name == 'addons/test_translation_import/data/files/test_spreadsheet_v16_dashboard.json':
-                terms.append(source)
-        self.assertEqual(set(terms), {
-            'Bar chart title',
             'Chart horizontal axis title',
             'Chart vertical axis title',
             'Scorecard title',
             'Opportunities',
             'Odoo Chart horizontal axis title',
-            'Odoo Chart vertical axis title'
+            'Odoo Chart vertical axis title',
+            'link label',
+            'aa (\\"inside\\") bb',
+            'with spaces',
+            'hello \\"world\\"',
         })
 
     def test_export_records(self):

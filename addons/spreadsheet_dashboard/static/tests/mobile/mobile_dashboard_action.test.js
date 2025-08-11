@@ -30,21 +30,26 @@ test("double clicking on a figure doesn't open the side panel", async () => {
             x: 100,
             y: 100,
         },
-        data: {
-            chartId: "chartId",
-            type: "line",
-            dataSetsHaveTitle: false,
-            dataSets: [{ dataRange: "A1" }],
-            legendPosition: "top",
-            verticalAxisPosition: "left",
-            title: { text: "" },
-        },
     };
     const spreadsheetData = {
         sheets: [
             {
                 id: "sheet1",
                 figures: [{ ...figure, id: "figure1" }],
+                charts: {
+                    chartId: {
+                        figureId: "figure1",
+                        chart: {
+                            chartId: "chartId",
+                            type: "line",
+                            dataSetsHaveTitle: false,
+                            dataSets: [{ dataRange: "A1" }],
+                            legendPosition: "top",
+                            verticalAxisPosition: "left",
+                            title: { text: "" },
+                        },
+                    },
+                },
             },
         ],
     };

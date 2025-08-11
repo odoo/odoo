@@ -1135,21 +1135,21 @@ def extract_spreadsheet_terms(fileobj, keywords, comment_tags, options):
                 markdown_link = re.fullmatch(r'\[(.+)\]\(.+\)', content)
                 if markdown_link:
                     terms.add(markdown_link[1])
-        for figure in sheet['figures']:
-            if figure['tag'] == 'chart':
-                title = figure['data']['title']
-                if isinstance(title, str):
-                    terms.add(title)
-                elif 'text' in title:
-                    terms.add(title['text'])
-                if 'axesDesign' in figure['data']:
-                    terms.update(
-                        axes.get('title', {}).get('text', '') for axes in figure['data']['axesDesign'].values()
-                    )
-                if 'text' in (baselineDescr := figure['data'].get('baselineDescr', {})):
-                    terms.add(baselineDescr['text'])
-                if 'text' in (keyDescr := figure['data'].get('keyDescr', {})):
-                    terms.add(keyDescr['text'])
+        for chart_id in sheet.get('charts', {}):
+            chart_data = sheet['charts'][chart_id]["chart"]
+            title = chart_data['title']
+            if isinstance(title, str):
+                terms.add(title)
+            elif 'text' in title:
+                terms.add(title['text'])
+            if 'axesDesign' in chart_data:
+                terms.update(
+                    axes.get('title', {}).get('text', '') for axes in chart_data['axesDesign'].values()
+                )
+            if 'text' in (baselineDescr := chart_data.get('baselineDescr', {})):
+                terms.add(baselineDescr['text'])
+            if 'text' in (keyDescr := chart_data.get('keyDescr', {})):
+                terms.add(keyDescr['text'])
     terms.update(global_filter['label'] for global_filter in data.get('globalFilters', []))
     return (
         (0, None, term, [])

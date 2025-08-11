@@ -14,10 +14,11 @@ def odoo_charts(data):
     """return all odoo chart definition in the spreadsheet"""
     figures = []
     for sheet in data.get("sheets", []):
+        charts = sheet.get("charts", {})
         figures += [
-            dict(figure["data"], id=figure["id"])
-            for figure in sheet.get("figures", [])
-            if figure["tag"] == "chart" and figure["data"]["type"].startswith("odoo_")
+            dict(charts[chart_id]["chart"], id=chart_id)
+            for chart_id in charts
+            if charts[chart_id]["chart"]["type"].startswith("odoo_")
         ]
     return figures
 
