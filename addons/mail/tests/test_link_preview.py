@@ -141,7 +141,6 @@ class TestLinkPreview(MailCommon):
             message = self.test_partner.message_post(
                 body=Markup(f'<a href={self.source_url}>Nothing link</a>'),
             )
-            self._reset_bus()
 
             def get_bus_params():
                 return (
