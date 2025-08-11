@@ -27,7 +27,7 @@ class HrVersion(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']  # TODO: remove later ? (see if still needed because contract template)
     _mail_post_access = 'read'
     _order = 'date_version'
-    _rec_name = 'employee_id'
+    _rec_name = 'name'
 
     def _get_default_address_id(self):
         address = self.env.user.company_id.partner_id.address_get(['default'])
