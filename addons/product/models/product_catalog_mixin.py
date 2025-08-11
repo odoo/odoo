@@ -230,7 +230,7 @@ class ProductCatalogMixin(models.AbstractModel):
         sections = {}
         no_section_count = 0
         lines = self[child_field]
-        for line in lines:
+        for line in lines.sorted('sequence'):
             if line.display_type == 'line_section':
                 sections[line.id] = {
                     'id': line.id,
