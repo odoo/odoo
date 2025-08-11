@@ -545,7 +545,7 @@ class HrVersion(models.Model):
         for employee, versions in self.grouped('employee_id').items():
             current_version = employee.current_version_id
             for version in versions:
-                if version == current_version:
+                if version == current_version and employee.resource_id.calendar_id != version.resource_calendar_id:
                     employee.resource_id.calendar_id = version.resource_calendar_id
 
     def _get_salary_costs_factor(self):
