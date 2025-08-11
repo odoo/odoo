@@ -311,7 +311,7 @@
             --btn-padding-x: var(--o-wsale-card-btns-btn-padding-x, 0.8em);
 
             flex-grow: var(--o-wsale-card-btns-btn-flex-grow);
-            font-size: var(--o-wsale-card-btns-btn-font-size);
+            font-size: var(--o-wsale-card-btns-btn-font-size, var(--btn-font-size));
             min-height: var(--o-wsale-card-btns-btn-min-height);
             align-items: center;
             justify-content: center;
@@ -332,7 +332,7 @@
 
                 .o_label {
                     display: var(--o-wsale-card-btn-submit-label-display,  var(--o-wsale-card-btn-label-display));
-                    font-size: .8em;
+                    font-size: var(--o-wsale-card-btn-submit-label-font-size, .8em);
                     line-height: 1;
                 }
             }
@@ -645,11 +645,6 @@
         --o-wsale-ribbon-badge-offset-x: calc(#{map-get($spacers, 2)} + var(--_offset-h));
     }
 
-    .o_wsale_product_action_row {
-        --o-wsale-card-offset-top: 0px;
-        --o-wsale-card-offset-x: 0px;
-    }
-
     @include media-breakpoint-up(lg) {
         .o_wsale_attribute_previewer {
             width: calc(100% - (var(--o-wsale-card-offset-x) + #{map-get($spacers, 2)}) * 2);
@@ -725,7 +720,7 @@
     --o-wsale-card-info-position: absolute;
     --o-wsale-card-info-muted: var(--o-wsale-card-cc-text, inherit);
     --o-wsale-card-info-inset: 0;
-    --o-wsale-card-info-padding: 3% 2.5%;
+    --o-wsale-card-info-padding: clamp(4%, calc((var(--o-wsale-card-border-radius) * .7)), 6rem) clamp(3.2%, calc((var(--o-wsale-card-border-radius) * .56)), 4.8rem);
     --o-wsale-card-info-description-font-size: MAX(0.86em, 1rem);
     --o-wsale-card-sub-display: contents;
     --o-wsale-card-thumb-min-height: 50vh;
@@ -740,6 +735,9 @@
         rgba(var(--o-wsale-card-cc-bg-rgb), .35),
         rgba(var(--o-wsale-card-cc-bg-rgb), .46)
     );
+
+    // o_label equivalent
+    --o-wsale-card-btn-submit-label-font-size: .8em;
 
     .oe_product {
         &:has(.o_wsale_products_item_title a:hover), &:has(.o_wsale_products_item_title a:focus-visible) {
@@ -790,27 +788,75 @@
         justify-self: end;
         width: 100%;
         justify-content: end;
+
+        .o_product_variant_preview {
+            display: flex;
+            height: 100%;
+
+            .o_wsale_product_ptav_pill {
+                display: flex;
+                align-items: center;
+
+                .o_wsale_product_ptav_pill_label {
+                    font-size: var(--o-wsale-card-btn-submit-label-font-size);
+                }
+            }
+        }
+
+        .css_attribute_color {
+            --o-wsale-css-attribute-color__height: calc(var(--o-wsale-product-variant-preview-height) - var(--o-wsale-css-attribute-color__border-width));
+        }
+
+        span[name="hidden_ptavs_count"] {
+            --link-color-rgb: var(--o-wsale-card-cc-text-rgb);
+            --link-hover-color-rgb: var(--o-wsale-card-cc-text-rgb);
+        }
     }
     @include media-breakpoint-down(sm) {
         --o-wsale-card-btn-label-display: none;
         --o-wsale-card-btn-submit-label-display: none;
     }
+    @include media-breakpoint-down(md) {
+        --o-wsale-card-attribute-previewer-padding: 0;
+    }
     @include media-breakpoint-down(lg) {
         --o-wsale-card-info-title-font-size: calc(#{$h5-font-size} + 1.5vw);
         --o-wsale-card-btn-submit-label-display: inline;
+
+        .o_wsale_attribute_previewer {
+            // Needed else --btn-font-size is 1.5rem outside of .btn class
+            @include rfs($btn-font-size, --btn-font-size-rfs);
+
+            --o-wsale-product-variant-preview-height: MAX(var(--o-wsale-card-btns-btn-min-height), calc(var(--btn-font-size-rfs) + #{$btn-padding-y * 2} + #{$btn-border-width} * 2));
+
+            height: var(--o-wsale-product-variant-preview-height);
+
+            // --o-wsale-card-btns-btn-min-height is em, so the font-size needs to be set.
+            font-size: var(--btn-font-size-rfs);
+
+
+            .o_product_variant_preview .btn {
+                @include button-size($btn-padding-y, $btn-padding-x, $btn-font-size, $border-radius);
+                --btn-padding-x: var(--o-wsale-card-btns-btn-padding-x, 0.8em);
+
+                font-size: var(--btn-font-size);
+            }
+        }
     }
     @include media-breakpoint-up(lg) {
         --o-wsale-card-info-title-font-size: calc(#{$h4-font-size} + 1.5vw);
-        --o-wsale-card-info-padding: 7% 5%;
+        --o-wsale-card-info-padding: clamp(7%, calc((var(--o-wsale-card-border-radius) * .6)), 8rem) clamp(5.6%, calc((var(--o-wsale-card-border-radius) * .48)), 6.4rem);
         --o-wsale-card-thumb-aspect-ratio: 16/9 !important;
         --o-wsale-card-btns-gap: #{map-get($spacers, 3)};
 
         .o_wsale_attribute_previewer {
-            // TODO:Align attributes and buttons doesn't always work, to improve
-            // margin-bottom: var(--btn-padding-y-lg);
+            --o-wsale-product-variant-preview-height: MAX(var(--o-wsale-card-btns-btn-min-height), calc(#{$btn-padding-y-lg * 2} + #{$btn-font-size-lg} + #{$btn-border-width} * 2));
+
+            height: var(--o-wsale-product-variant-preview-height);
+            font-size: $btn-font-size-lg;
         }
 
-        .o_wsale_product_btn .btn {
+        .btn {
             @include o-wsale-card-btn-lg();
             --btn-padding-x: var(--btn-padding-y);
         }
@@ -1188,6 +1234,7 @@ $_wsale_products_roundness_map: (
         --o-wsale-card-cc-bg: #{$-bg-color};
         --o-wsale-card-cc-bg-rgb: #{to-rgb($-bg-color)};
         --o-wsale-card-cc-text: #{$-text};
+        --o-wsale-card-cc-text-rgb: #{to-rgb($-text)};
         --o-wsale-card-cc-muted: #{$-muted};
         --o-wsale-card-cc-headings: #{$-headings};
         --o-wsale-card-cc-link: #{$-link-color};
