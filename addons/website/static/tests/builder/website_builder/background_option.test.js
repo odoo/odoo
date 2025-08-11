@@ -144,7 +144,7 @@ async function dragAndDropBgImage() {
 test("change the main color of a background image of type '/html_editor/shape'", async () => {
     await setupWebsiteBuilder(
         `
-            <section style="background-image: url('/web_editor/shape/http_routing/404.svg?c2=o-color-2');">
+            <section style="background-image: url('/html_editor/shape/http_routing/404.svg?c2=o-color-2');">
                 AAAA
             </section>
         `,
@@ -158,13 +158,13 @@ test("change the main color of a background image of type '/html_editor/shape'",
         ".o-main-components-container .o_colorpicker_section [data-color='o-color-5']"
     ).hover();
     expect(":iframe section").toHaveStyle({
-        backgroundImage: `url("${window.location.origin}/web_editor/shape/http_routing/404.svg?c2=o-color-5")`,
+        backgroundImage: `url("${window.location.origin}/html_editor/shape/http_routing/404.svg?c2=o-color-5")`,
     });
     await contains(
         ".o-main-components-container .o_colorpicker_section [data-color='o-color-4']"
     ).hover();
     expect(":iframe section").toHaveStyle({
-        backgroundImage: `url("${window.location.origin}/web_editor/shape/http_routing/404.svg?c2=o-color-4")`,
+        backgroundImage: `url("${window.location.origin}/html_editor/shape/http_routing/404.svg?c2=o-color-4")`,
     });
 });
 
@@ -196,7 +196,7 @@ test("remove the background image of a snippet", async () => {
 
 test("changing shape's background color doesn't hide the shape itself", async () => {
     await setupWebsiteBuilder(
-        `<section style="background-image: url('/web_editor/shape/http_routing/404.svg?c2=o-color-2');">
+        `<section style="background-image: url('/html_editor/shape/http_routing/404.svg?c2=o-color-2');">
             AAAA
         </section>`,
         {

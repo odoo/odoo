@@ -224,7 +224,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         if (Number(shapeAnimationSpeed)) {
             searchParams.push(`shapeAnimationSpeed=${encodeURIComponent(shapeAnimationSpeed)}`);
         }
-        return `/web_editor/shape/${encodeURIComponent(shape)}.svg?${searchParams.join("&")}`;
+        return `/html_editor/shape/${encodeURIComponent(shape)}.svg?${searchParams.join("&")}`;
     }
     /**
      *
