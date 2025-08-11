@@ -653,3 +653,24 @@ test("can join / leave call from discuss sidebar actions", async () => {
     await click(".o-dropdown-item:contains('Disconnect')");
     await contains(".o-discuss-Call", { count: 0 });
 });
+
+test("shows warning on infinite mirror effect (screen-sharing then fullscreen)", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await click("[title='More']");
+    await click("[title='Share Screen']");
+    await contains("video");
+    await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
+    await click("[title='More']");
+    await click("[title='Fullscreen']");
+    await contains(".o-discuss-CallInfiniteMirroringWarning");
+    await contains(
+        ".o-discuss-CallInfiniteMirroringWarning:contains('To avoid the infinite mirror effect, please share a specific window or tab or another monitor.')"
+    );
+    await contains("button:contains('Stream paused') i.fa-pause-circle-o");
+    await hover(queryFirst("button:contains('Stream paused')"));
+    await contains("button:contains('Resume stream') i.fa-play-circle-o");
+});

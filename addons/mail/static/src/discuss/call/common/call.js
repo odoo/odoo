@@ -32,7 +32,7 @@ export class Call extends Component {
         CallParticipantCard,
         PttAdBanner,
     };
-    static props = ["thread", "compact?", "isPip?"];
+    static props = ["thread?", "compact?", "isPip?"];
     static template = "discuss.Call";
 
     overlayTimeout;
