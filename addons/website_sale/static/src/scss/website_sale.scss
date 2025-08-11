@@ -2022,11 +2022,11 @@ body.modal-open:has(.js_sale.o_wsale_product_page) {
     }
 
     .o_wsale_badge.o_left {
-        @include o-position-absolute($top: map-get($spacers, 2), $left: map-get($spacers, 2));
+        @include o-position-absolute($top: map-get($spacers, 2), $left: var(--o-wsale-ribbon-badge-offset-x, map-get($spacers, 2)));
     }
 
     .o_wsale_badge.o_right {
-        @include o-position-absolute($top: map-get($spacers, 2), $right: map-get($spacers, 2));
+        @include o-position-absolute($top: map-get($spacers, 2), $right: var(--o-wsale-ribbon-badge-offset-x, map-get($spacers, 2)));
     }
 
 }

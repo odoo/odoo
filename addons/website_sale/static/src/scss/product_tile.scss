@@ -614,6 +614,7 @@
 .o_wsale_products_opt_design_chips {
     --_padding-base: calc(#{map-get($spacers, 2)} + calc(var(--o-wsale-products-grid-gap) * 0.25));
 
+    --o-wsale-card-info-position: none;
     --o-wsale-card-border-width: #{$border-width};
     --o-wsale-card-border-radius: var(--o-wsale-opt-border-radius, 0px);
     --o-wsale-card-info-padding: #{map-get($spacers, 2)} 0 0 0;
@@ -623,8 +624,8 @@
     --o-wsale-card-pseudobg-x: 0;
     --o-wsale-card-btns-inset: var(--_padding-base) var(--_padding-base) auto var(--_padding-base);
 
-    --o-wsale-card-offset-top: calc(var(--_padding-base));
-    --o-wsale-card-offset-x: calc(var(--_padding-base));
+    --o-wsale-card-offset-top: var(--_padding-base);
+    --o-wsale-card-offset-x: var(--_padding-base);
 
     &.o_wsale_products_opt_actions_onhover {
         --o-wsale-card-btns-inset: var(--o-wsale-card-offset-top) var(--o-wsale-card-offset-x) auto var(--o-wsale-card-offset-x);
@@ -641,6 +642,18 @@
 
         --o-wsale-card-offset-top: calc(var(--_padding-base) + var(--_offset-top));
         --o-wsale-card-offset-x: calc(var(--_padding-base) + var(--_offset-h));
+        --o-wsale-ribbon-badge-offset-x: calc(#{map-get($spacers, 2)} + var(--_offset-h));
+    }
+
+    .o_wsale_product_action_row {
+        --o-wsale-card-offset-top: 0px;
+        --o-wsale-card-offset-x: 0px;
+    }
+
+    @include media-breakpoint-up(lg) {
+        .o_wsale_attribute_previewer {
+            width: calc(100% - (var(--o-wsale-card-offset-x) + #{map-get($spacers, 2)}) * 2);
+        }
     }
 }
 .o_wsale_products_opt_design_grid {
