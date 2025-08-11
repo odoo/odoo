@@ -85,7 +85,7 @@
             <field name="partner_phone_sanitized" invisible="1"/>
             <field name="emp_is_active" invisible="1"/>
             <header>
-                <button string="Create Employee" name="create_employee_from_applicant" type="object" data-hotkey="q" groups="hr.group_hr_user"
+                <button string="Create Employee" name="create_employee_from_applicant" type="object" data-hotkey="q" groups="hr.group_hr_user,hr_recruitment.group_hr_recruitment_user"
                         class="o_create_employee" invisible="employee_id or not active or not date_closed"/>
                 <button string="Refuse" name="archive_applicant" type="object" invisible="not active or is_pool_applicant" data-hotkey="d"/>
                 <button string="Restore" name="action_unarchive" type="object" invisible="active" data-hotkey="x"/>
@@ -99,7 +99,7 @@
                             type="object"
                             class="oe_stat_button"
                             icon="fa-id-card-o"
-                            groups="hr.group_hr_user"
+                            groups="hr.group_hr_user,hr_recruitment.group_hr_recruitment_user"
                             invisible="not (employee_id or emp_is_active)">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value"><field name="employee_name" readonly="1"/></span>

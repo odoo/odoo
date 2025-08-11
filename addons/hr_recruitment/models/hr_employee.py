@@ -20,8 +20,13 @@ class HrEmployee(models.Model):
         employees = super().create(vals_list)
         for employee_sudo in employees.sudo():
             if employee_sudo.applicant_ids:
-                employee_sudo.applicant_ids._message_log_with_view(
-                    'hr_recruitment.applicant_hired_template',
-                    render_values={'applicant': employee_sudo.applicant_ids}
+                # TODO: remove this comment:
+                # Replaced the link with a regular text message, as:
+                # 1. the link can't be dynamic (can't open a view based on user access rights (employee vs employee public))
+                # 2. the smart button on the applicant does the job of the link.
+                employee_sudo.applicant_ids.message_post(
+                    body="Employee created.",
+                    message_type='comment',
+                    subtype_xmlid='mail.mt_note'
                 )
         return employees
