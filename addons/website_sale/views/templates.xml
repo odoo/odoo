@@ -2501,7 +2501,7 @@
         active="False"
         name="Buy Now Button"
     >
-        <xpath expr="//div[@id='product_option_block']" position="before">
+        <xpath expr="//div[@id='add_to_cart_wrap']" position="inside">
             <a
                 role="button"
                 t-attf-class="btn btn-outline-primary o_we_buy_now {{'w-100' if is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large') else ''}} {{'flex-grow-1' if not is_50_pc else ''}}"
