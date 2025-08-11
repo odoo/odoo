@@ -5,11 +5,9 @@ import logging
 import re
 import time
 import requests
-import werkzeug.exceptions
-import werkzeug.urls
 from PIL import Image, ImageFont, ImageDraw
 from lxml import etree
-from base64 import b64decode, b64encode
+from base64 import b64decode
 from math import floor
 from os.path import join as opj
 from hashlib import sha256
@@ -17,7 +15,6 @@ from hashlib import sha256
 from odoo.http import request, Response
 from odoo import http, tools, _
 from odoo.tools.misc import file_open
-from odoo.tools.image import image_data_uri, binary_to_image, get_webp_size
 
 
 logger = logging.getLogger(__name__)
@@ -423,105 +420,6 @@ class Web_Editor(http.Controller):
                 }
 
         return files_data_by_bundle
-
-    def _get_shape_svg(self, module, *segments):
-        Module = request.env['ir.module.module'].sudo()
-        # Avoid creating a bridge module just for this check.
-        if 'imported' in Module._fields and Module.search([('name', '=', module)]).imported:
-            attachment = request.env['ir.attachment'].sudo().search([
-                ('url', '=', f"/{module.replace('.', '_')}/static/{'/'.join(segments)}"),
-                ('public', '=', True),
-                ('type', '=', 'binary'),
-            ], limit=1)
-            if attachment:
-                return b64decode(attachment.datas)
-            raise werkzeug.exceptions.NotFound()
-        shape_path = opj(module, 'static', *segments)
-        try:
-            with file_open(shape_path, 'r', filter_ext=('.svg',)) as file:
-                return file.read()
-        except FileNotFoundError:
-            raise werkzeug.exceptions.NotFound()
-
-    def _update_svg_colors(self, options, svg):
-        user_colors = []
-        svg_options = {}
-        default_palette = {
-            '1': '#3AADAA',
-            '2': '#7C6576',
-            '3': '#F6F6F6',
-            '4': '#FFFFFF',
-            '5': '#383E45',
-        }
-        bundle_css = None
-        regex_hex = r'#[0-9A-F]{6,8}'
-        regex_rgba = r'rgba?\(\d{1,3}, ?\d{1,3}, ?\d{1,3}(?:, ?[0-9.]{1,4})?\)'
-        for key, value in options.items():
-            colorMatch = re.match('^c([1-5])$', key)
-            if colorMatch:
-                css_color_value = value
-                # Check that color is hex or rgb(a) to prevent arbitrary injection
-                if not re.match(r'(?i)^%s$|^%s$' % (regex_hex, regex_rgba), css_color_value.replace(' ', '')):
-                    if re.match('^o-color-([1-5])$', css_color_value):
-                        if not bundle_css:
-                            bundle = 'web.assets_frontend'
-                            asset = request.env["ir.qweb"]._get_asset_bundle(bundle)
-                            bundle_css = asset.css().index_content
-                        color_search = re.search(r'(?i)--%s:\s+(%s|%s)' % (css_color_value, regex_hex, regex_rgba), bundle_css)
-                        if not color_search:
-                            raise werkzeug.exceptions.BadRequest()
-                        css_color_value = color_search.group(1)
-                    else:
-                        raise werkzeug.exceptions.BadRequest()
-                user_colors.append([tools.html_escape(css_color_value), colorMatch.group(1)])
-            else:
-                svg_options[key] = value
-
-        color_mapping = {default_palette[palette_number]: color for color, palette_number in user_colors}
-        # create a case-insensitive regex to match all the colors to replace, eg: '(?i)(#3AADAA)|(#7C6576)'
-        regex = '(?i)%s' % '|'.join('(%s)' % color for color in color_mapping.keys())
-
-        def subber(match):
-            key = match.group().upper()
-            return color_mapping[key] if key in color_mapping else key
-        return re.sub(regex, subber, svg), svg_options
-
-    @http.route(['/web_editor/image_shape/<string:img_key>/<module>/<path:filename>'], type='http', auth="public", website=True)
-    def image_shape(self, module, filename, img_key, **kwargs):
-        svg = self._get_shape_svg(module, 'image_shapes', filename)
-
-        record = request.env['ir.binary']._find_record(img_key)
-        stream = request.env['ir.binary']._get_image_stream_from(record)
-        if stream.type == 'url':
-            return stream.get_response()
-
-        image = stream.read()
-        if record.mimetype == "image/webp":
-            width, height = tuple(str(size) for size in get_webp_size(image))
-        else:
-            img = binary_to_image(image)
-            width, height = tuple(str(size) for size in img.size)
-        root = etree.fromstring(svg)
-
-        if root.attrib.get("data-forced-size"):
-            # Adjusts the SVG height to ensure the image fits properly within
-            # the SVG (e.g. for "devices" shapes).
-            svgHeight = float(root.attrib.get("height"))
-            svgWidth = float(root.attrib.get("width"))
-            svgAspectRatio = svgWidth / svgHeight
-            height = str(float(width) / svgAspectRatio)
-
-        root.attrib.update({'width': width, 'height': height})
-        # Update default color palette on shape SVG.
-        svg, _ = self._update_svg_colors(kwargs, etree.tostring(root, pretty_print=True).decode('utf-8'))
-        # Add image in base64 inside the shape.
-        uri = image_data_uri(b64encode(image))
-        svg = svg.replace('<image xlink:href="', '<image xlink:href="%s' % uri)
-
-        return request.make_response(svg, [
-            ('Content-type', 'image/svg+xml'),
-            ('Cache-control', 'max-age=%s' % http.STATIC_CACHE_LONG),
-        ])
 
     @http.route(['/web_editor/media_library_search'], type='jsonrpc', auth="user", website=True)
     def media_library_search(self, **params):
