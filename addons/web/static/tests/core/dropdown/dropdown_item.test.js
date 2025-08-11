@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click } from "@odoo/hoot-dom";
+import { click, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 
@@ -10,6 +10,15 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 const DROPDOWN_TOGGLE = ".o-dropdown.dropdown-toggle";
 const DROPDOWN_MENU = ".o-dropdown--menu.dropdown-menu";
 const DROPDOWN_ITEM = ".o-dropdown-item.dropdown-item:not(.o-dropdown)";
+
+function getHexcode(selector, pseudoSelector) {
+    const content = getComputedStyle(queryOne(selector), pseudoSelector).content;
+    if (content !== "none") {
+        return "\\" + content.replace(/['"]/g, "").charCodeAt(0).toString(16);
+    } else {
+        return content;
+    }
+}
 
 test("can be rendered as <span/>", async () => {
     class Parent extends Component {
@@ -102,4 +111,56 @@ test("can be styled", async () => {
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveClass("test-menu");
     expect(DROPDOWN_ITEM).toHaveClass("test-dropdown-item");
+});
+
+test.tags("desktop");
+test("'active' and 'selected' classes shows a checked icon", async () => {
+    class Parent extends Component {
+        static components = { Dropdown, DropdownItem };
+        static props = [];
+        static template = xml`
+                <Dropdown menuClass="'test-menu'">
+                    <button class="test-toggler">Coucou</button>
+                    <t t-set-slot="content">
+                        <DropdownItem class="'no-check'">Item</DropdownItem>
+                        <DropdownItem class="'selected'">Item</DropdownItem>
+                        <DropdownItem class="'active'">Item</DropdownItem>
+                    </t>
+                </Dropdown>
+            `;
+    }
+
+    await mountWithCleanup(Parent);
+    await click(DROPDOWN_TOGGLE);
+    await animationFrame();
+
+    expect(getHexcode(".o-dropdown-item.no-check", ":before")).toEqual("none");
+    expect(getHexcode(".o-dropdown-item.selected", ":before")).toEqual("\\f00c");
+    expect(getHexcode(".o-dropdown-item.active", ":before")).toEqual("\\f00c");
+});
+
+test.tags("mobile");
+test("'active' and 'selected' classes shows a checked icon (mobile)", async () => {
+    class Parent extends Component {
+        static components = { Dropdown, DropdownItem };
+        static props = [];
+        static template = xml`
+                <Dropdown menuClass="'test-menu'">
+                    <button class="test-toggler">Coucou</button>
+                    <t t-set-slot="content">
+                        <DropdownItem class="'no-check'">Item</DropdownItem>
+                        <DropdownItem class="'selected'">Item</DropdownItem>
+                        <DropdownItem class="'active'">Item</DropdownItem>
+                    </t>
+                </Dropdown>
+            `;
+    }
+
+    await mountWithCleanup(Parent);
+    await click(DROPDOWN_TOGGLE);
+    await animationFrame();
+
+    expect(getHexcode(".o-dropdown-item.no-check", "::after")).toEqual("none");
+    expect(getHexcode(".o-dropdown-item.selected", "::after")).toEqual("\\f00c");
+    expect(getHexcode(".o-dropdown-item.active", "::after")).toEqual("\\f00c");
 });
