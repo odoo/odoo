@@ -25,7 +25,7 @@ class Company(models.Model):
                         'action_text': _("View Company(s)"),
                         'action': invalid_records._get_records_action(name=_("Check Company Data")),
                     }
-        if invalid_records := self.filtered(lambda company: not company.l10n_es_edi_facturae_certificate_ids):
+        if invalid_records := self.filtered(lambda company: not company.sudo().l10n_es_edi_facturae_certificate_ids):
             errors["l10n_es_edi_company_facturae_certificate_check"] = {
                 'level': 'danger',
                 'message': _("Company must have a valid Factura-e certificate configured."),

@@ -319,3 +319,23 @@ test("suggested recipients should be added as follower when posting a message", 
     await contains(".o-mail-Message");
     await contains(".o-mail-Followers-counter", { text: "1" });
 });
+
+test("suggested recipients without name should show display_name instead", async () => {
+    const pyEnv = await startServer();
+    const [partner1, partner2] = pyEnv["res.partner"].create([
+        { name: "Test Partner" },
+        // Partner without name
+        { type: "invoice" },
+    ]);
+
+    pyEnv["res.partner"].write([partner2], { parent_id: partner1 });
+    const fakeId = pyEnv["res.fake"].create({ partner_ids: [partner2] });
+    registerArchs(archs);
+    await start();
+    await openFormView("res.fake", fakeId);
+    await click("button", { text: "Send message" });
+    await contains(".o-mail-SuggestedRecipient", {
+        text: "Test Partner, Invoice Address",
+        contains: ["input[type=checkbox]:checked"],
+    });
+});
