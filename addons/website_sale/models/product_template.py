@@ -1041,7 +1041,7 @@ class ProductTemplate(models.Model):
         :rtype: `product.ribbon` recordset
         """
         variant = variant or self.product_variant_id
-        ribbon = variant.variant_ribbon_id or self.website_ribbon_id
+        ribbon = variant.variant_ribbon_id or self.sudo().website_ribbon_id
         if not ribbon:
             # The None check ensures that we do not recompute the ribbons when no ribbons were
             # previously found.
