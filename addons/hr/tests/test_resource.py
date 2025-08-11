@@ -206,3 +206,10 @@ class TestResource(TestHrCommon):
         attendances = self.employee._get_calendar_attendances(date_from, date_to)
         self.assertEqual(21 * 7 + 21 * 8, attendances['hours'],
             "Attendances should add up multiple contracts with varying work weeks.")
+
+    def test_alter_resource_calendar_of_resouce(self):
+        self.assertEqual(self.employee.resource_calendar_id, self.employee.resource_id.calendar_id)
+        self.assertEqual(self.employee.version_id.resource_calendar_id, self.employee.resource_id.calendar_id)
+        self.employee.resource_id.write({'calendar_id': self.calendar_40h})
+        self.assertEqual(self.employee.resource_calendar_id, self.employee.resource_id.calendar_id)
+        self.assertEqual(self.employee.version_id.resource_calendar_id, self.employee.resource_id.calendar_id)
