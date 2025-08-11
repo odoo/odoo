@@ -756,3 +756,7 @@ class StockMove(models.Model):
                         for move in self):
             res = 'assigned'
         return res
+
+    def _need_precise_unbuild(self):
+        self.ensure_one()
+        return bool(self.has_tracking != 'none' or self.origin_returned_move_id.move_line_ids.owner_id)

@@ -651,9 +651,8 @@ class TestCalendarTours(HttpCaseWithUserDemo):
     def test_calendar_res_id_fallback_when_res_id_is_0(self):
         user_admin = self.env.ref('base.user_admin')
         context_defaults = {
-            'default_res_model': 'res.partner',
-            'default_res_model_id': self.env['ir.model']._get('res.partner').id,
-            'default_res_id': self.user_demo.id,
+            'default_res_model': user_admin._name,
+            'default_res_id': user_admin.id,
         }
 
         self.env['mail.activity.type'].create({
