@@ -937,7 +937,7 @@ patch(PosStore.prototype, {
         const order = course.order_id;
         course.fired = true;
         order.deselectCourse();
-        await this.checkPreparationStateAndSentOrderInPreparation(order, {
+        await this.checkPreparationStateAndSentOrderInPreparation(order, false, {
             firedCourseId: course.id,
             byPassPrint: true,
         });
