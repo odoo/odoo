@@ -170,18 +170,18 @@
                                 <tbody t-foreach="challenge_lines" t-as="line">
                                     <tr style="font-weight:bold;">
                                         <td style="padding: 20px 0;" align="left">
-                                            <t t-out="line['name'] or ''"></t>
-                                            <t t-if="line['suffix'] or line['monetary']">
-                                                (<t t-out="line['full_suffix'] or ''"></t>)
+                                            <t t-out="line.get('name', '')"></t>
+                                            <t t-if="line.get('suffix') or line.get('monetary')">
+                                                (<t t-out="line.get('full_suffix', '')"></t>)
                                             </t>
                                         </td>
-                                        <td style="padding: 20px 0;" align="right"><t t-out="&quot;%.2f&quot; % line['target'] or ''"></t>
-                                            <t t-if="line['suffix']" t-out="line['suffix'] or ''"></t>
+                                        <td style="padding: 20px 0;" align="right"><t t-out="&quot;%.2f&quot; % line['target'] if line.get('target') else ''"></t>
+                                            <t t-out="line.get('suffix', '')"></t>
                                         </td>
-                                        <td style="padding: 20px 0;" align="right"><t t-out="&quot;%.2f&quot; % line['current'] or ''"></t>
-                                            <t t-if="line['suffix']" t-out="line['suffix'] or ''"></t>
+                                        <td style="padding: 20px 0;" align="right"><t t-out="&quot;%.2f&quot; % line['current'] if line.get('current') else ''"></t>
+                                            <t t-out="line.get('suffix', '')"></t>
                                         </td>
-                                        <td style="padding: 20px 0;font-size:25px;color:#9A6C8E;" align="right"><strong><t t-out="int(line['completeness']) or ''"></t>%</strong></td>
+                                        <td style="padding: 20px 0;font-size:25px;color:#9A6C8E;" align="right"><strong><t t-out="int(line['completeness']) if line.get('completeness') else ''"></t>%</strong></td>
                                     </tr>
                                     <tr>
                                         <td colspan="5" style="height:1px;background-color:#e3e3e3;"></td>
@@ -198,12 +198,12 @@
                                 <table cellspacing="0" cellpadding="0" width="100%" style="margin-top:35px;">
                                     <tr>
                                         <td width="50%">
-                                            <div>Top Achievers for goal <strong t-out="line['name'] or ''"></strong></div>
+                                            <div>Top Achievers for goal <strong t-out="line.get('name', '')"></strong></div>
                                         </td>
                                     </tr>
                                 </table>
                                 <!-- Podium -->
-                                <t t-if="len(line['goals']) == 2">
+                                <t t-if="line.get('goals') and len(line['goals']) == 2">
                                     <table cellspacing="0" cellpadding="0" width="100%" style="margin-top:10px;">
                                         <tr><td style="padding:0 30px;">
                                             <table cellspacing="0" cellpadding="0" width="100%" style="table-layout: fixed;">
@@ -239,19 +239,19 @@
                                                                 <div t-attf-style="height:{{ heightA }}px;">
                                                                     <t t-out="extra_div or ''"></t>
                                                                     <div style="height:55px;">
-                                                                        <img style="margin-bottom:5px;width:50px;height:50px;border-radius:50%;object-fit:cover;" t-att-src="image_data_uri(object.env['res.users'].browse(goal['user_id']).partner_id.image_128)" t-att-alt="goal['name']"/>
+                                                                        <img style="margin-bottom:5px;width:50px;height:50px;border-radius:50%;object-fit:cover;" t-att-src="image_data_uri(object.env['res.users'].browse(goal.get('user_id')).partner_id.image_128)" t-att-alt="goal.get('name')"/>
                                                                     </div>
                                                                     <div align="center" t-attf-style ="color:{{ bgColor }};height:20px">
-                                                                        <t t-out="goal['name'] or ''"></t>
+                                                                        <t t-out="goal.get('name', '')"></t>
                                                                     </div>
                                                                 </div>
                                                                 <div t-attf-style="background-color:{{ bgColor }};height:{{ heightB }}px;">
                                                                     <strong><span t-attf-style="color:#fff;font-size:{{ fontSize }}px;" t-out="podiumPosition or ''"></span></strong>
                                                                 </div>
                                                                 <div style="height:30px;">
-                                                                    <t t-out="&quot;%.2f&quot; % goal['current'] or ''"></t>
-                                                                    <t t-if="line['suffix'] or line['monetary']">
-                                                                        <t t-out="line['full_suffix'] or ''"></t>
+                                                                    <t t-out="&quot;%.2f&quot; % goal.get('current', '')"></t>
+                                                                    <t t-if="line.get('suffix') or line.get('monetary')">
+                                                                        <t t-out="line.get('full_suffix', '')"></t>
                                                                     </t>
                                                                 </div>
                                                             </div>
@@ -273,10 +273,10 @@
                                                         <th style="width:15%;text-align:center;">Rank</th>
                                                         <th style="width:25%;text-align:left;">Name</th>
                                                         <th style="width:30%;text-align:right;">Performance 
-                                                            <t t-if="line['suffix']">
-                                                                (<t t-out="line['suffix'] or ''"></t>)
+                                                            <t t-if="line.get('suffix')">
+                                                                (<t t-out="line.get('suffix', '')"></t>)
                                                             </t>
-                                                            <t t-elif="line['monetary']">
+                                                            <t t-elif="line.get('monetary')">
                                                                 (<t t-out="company.currency_id.symbol or ''"></t>)
                                                             </t>
                                                         </th>
@@ -292,12 +292,12 @@
                                                         <t t-set="tdColor" t-value="'gray'"/>
                                                         <t t-set="mutedColor" t-value="'#AAAAAA'"/>
                                                         <t t-set="tdPercentageColor" t-value="'#9A6C8E'"/>
-                                                        <td width="15%" align="center" valign="middle" t-attf-style="background-color:{{ tdBgColor }};padding :5px 0;font-size:20px;"><t t-out="goal['rank']+1 or ''"></t>
+                                                        <td width="15%" align="center" valign="middle" t-attf-style="background-color:{{ tdBgColor }};padding :5px 0;font-size:20px;"><t t-out="goal['rank']+1 if goal.get('rank') else ''"></t>
                                                         </td>
-                                                        <td width="25%" align="left" valign="middle" t-attf-style="background-color:{{ tdBgColor }};padding :5px 0;font-size:13px;"><t t-out="goal['name'] or ''"></t></td>
-                                                        <td width="30%" align="right" t-attf-style="background-color:{{ tdBgColor }};padding:5px 0;line-height:1;"><t t-out="&quot;%.2f&quot; % goal['current'] or ''"></t><br/><span t-attf-style="font-size:13px;color:{{ mutedColor }};">on <t t-out="&quot;%.2f&quot; % line['target'] or ''"></t></span>
+                                                        <td width="25%" align="left" valign="middle" t-attf-style="background-color:{{ tdBgColor }};padding :5px 0;font-size:13px;"><t t-out="goal.get('name', '')"></t></td>
+                                                        <td width="30%" align="right" t-attf-style="background-color:{{ tdBgColor }};padding:5px 0;line-height:1;"><t t-out="&quot;%.2f&quot; % goal.get('current', '')"></t><br/><span t-attf-style="font-size:13px;color:{{ mutedColor }};">on <t t-out="&quot;%.2f&quot; % line.get('target', '')"></t></span>
                                                         </td>
-                                                        <td width="30%" t-attf-style="color:{{ tdPercentageColor }};background-color:{{ tdBgColor }};padding-right:15px;font-size:22px;" align="right"><strong><t t-out="int(goal['completeness']) or ''"></t>%</strong></td>
+                                                        <td width="30%" t-attf-style="color:{{ tdPercentageColor }};background-color:{{ tdBgColor }};padding-right:15px;font-size:22px;" align="right"><strong><t t-out="int(goal['completeness']) if goal.get('completeness') else ''"></t>%</strong></td>
                                                     </tr>
                                                     <tr>
                                                         <td colspan="5" style="height:1px;background-color:#DADADA;"></td>
@@ -345,8 +345,8 @@
                 <div style="margin: 16px 0px 16px 0px;">
                     <t t-set="gamification_redirection_data" t-value="object.get_gamification_redirection_data()"/>
                     <t t-foreach="gamification_redirection_data" t-as="data">
-                        <t t-set="url" t-value="data['url']"/>
-                        <t t-set="label" t-value="data['label']"/>
+                        <t t-set="url" t-value="data.get('url')"/>
+                        <t t-set="label" t-value="data.get('label')"/>
                         <a t-att-href="url" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;" t-out="label or ''">LABEL</a>
                     </t>
                 </div>
