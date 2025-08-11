@@ -14,9 +14,9 @@ class PortalTest(http.Controller):
         record = request.env["mail.test.portal"]._get_thread_with_access(res_id, **kwargs)
         values = {
             "object": record,
-            "token": kwargs.get("access_token", None),
-            "hash": kwargs.get("hash", None),
-            "pid": kwargs.get("pid", None),
+            "token": kwargs.get("token"),
+            "hash": kwargs.get("hash"),
+            "pid": kwargs.get("pid"),
         }
         return request.render("test_mail_full.test_portal_template", values)
 
