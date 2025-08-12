@@ -428,6 +428,12 @@ export const datetimePickerService = {
                 /** @type {DateTimePickerProps} */
                 const rawPickerProps = {
                     ...DateTimePicker.defaultProps,
+                    onReset: () => {
+                        updateValue(
+                            ensureArray(pickerProps.value).length === 2 ? [false, false] : false
+                        );
+                        saveAndClose();
+                    },
                     onSelect: (value, unit) => {
                         value &&= markRaw(value);
                         updateValue(value, unit, "picker");

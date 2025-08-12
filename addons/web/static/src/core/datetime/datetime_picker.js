@@ -32,6 +32,7 @@ const { DateTime, Info } = luxon;
  * @property {PrecisionLevel} [maxPrecision="decades"]
  * @property {DateLimit} [minDate]
  * @property {PrecisionLevel} [minPrecision="days"]
+ * @property {() => any} [onReset]
  * @property {(value: DateTime | DateRange, unit: "date" | "time") => any} [onSelect]
  * @property {boolean} [range]
  * @property {number} [rounding=5] the rounding in minutes, pass 0 to show seconds, pass 1 to avoid
@@ -297,6 +298,7 @@ export class DateTimePicker extends Component {
             type: [...PRECISION_LEVELS.keys()].map((value) => ({ value })),
             optional: true,
         },
+        onReset: { type: Function, optional: true },
         onSelect: { type: Function, optional: true },
         range: { type: Boolean, optional: true },
         rounding: { type: Number, optional: true },
