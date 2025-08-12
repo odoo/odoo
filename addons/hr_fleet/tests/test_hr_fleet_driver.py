@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
+from odoo import fields
 from odoo.tests import common
 
 
@@ -85,3 +87,56 @@ class TestHrFleetDriver(common.TransactionCase):
         ])
         self.assertEqual(len(assignation_log), 1)
         self.assertEqual(assignation_log.driver_employee_id, test_employee2)
+
+    def test_assignation_log_create_sets_vehicle_driver(self):
+        """
+        Creating a fleet.vehicle.assignation.log should assign vehicle.driver_id
+        only if vehicle has no driver and today is within assignation period.
+        """
+
+        today = fields.Date.today()
+        yesterday = today - timedelta(days=1)
+        tomorrow = today + timedelta(days=1)
+
+        # vehicle with no driver yet
+        vehicle = self.car2
+        vehicle.write({"plan_to_change_car": True})
+        self.assertFalse(vehicle.driver_id, "Precondition: vehicle2 has no driver")
+
+        # Create assignation log with valid today-included date range
+        self.env["fleet.vehicle.assignation.log"].create({
+            "vehicle_id": vehicle.id,
+            "driver_id": self.test_employee.work_contact_id.id,
+            "date_start": yesterday,
+            "date_end": tomorrow,
+        })
+        self.assertEqual(
+            vehicle.driver_id,
+            self.test_employee.work_contact_id,
+            "Vehicle driver should be set when date includes today and no driver assigned",
+        )
+        self.assertFalse(vehicle.plan_to_change_car, "Plan to change car should be set to False")
+        # Create another assignation for same vehicle, driver should NOT be changed because vehicle has driver
+        self.env["fleet.vehicle.assignation.log"].create({
+            "vehicle_id": vehicle.id,
+            "driver_id": self.test_user.partner_id.id,
+            "date_start": yesterday,
+            "date_end": tomorrow,
+        })
+        # driver stays unchanged
+        self.assertEqual(
+            vehicle.driver_id,
+            self.test_employee.work_contact_id,
+            "Vehicle driver should not change if already assigned",
+        )
+
+        # Create assignation where date range excludes today, driver should NOT be assigned
+        vehicle3 = self.car
+        vehicle3.driver_id = False  # reset driver for test
+        self.env["fleet.vehicle.assignation.log"].create({
+            "vehicle_id": vehicle3.id,
+            "driver_id": self.test_user.partner_id.id,
+            "date_start": today + timedelta(days=2),
+            "date_end": today + timedelta(days=3),
+        })
+        self.assertFalse(vehicle3.driver_id, "Vehicle driver should not be set if today not in assignation period")

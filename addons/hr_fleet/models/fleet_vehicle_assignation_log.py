@@ -38,3 +38,24 @@ class FleetVehicleAssignationLog(models.Model):
         res['domain'] = [('res_model', '=', 'fleet.vehicle.assignation.log'), ('res_id', 'in', self.ids)]
         res['context'] = {'default_res_model': 'fleet.vehicle.assignation.log', 'default_res_id': self.id}
         return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        if self.env.context.get("skip_driver_history"):
+            return True  # To avoid recursion calls for this method when setting the driver_id
+        records = super().create(vals_list)
+        today = fields.Date.today()
+        for rec in records:
+            vehicle = rec.vehicle_id
+            if (
+                vehicle.driver_id
+                or (rec.date_start and rec.date_start > today)
+                or (rec.date_end and rec.date_end < today)
+            ):
+                continue
+            vehicle.with_context(skip_driver_history=True).write({
+                "driver_id": records.driver_id.id,
+                "plan_to_change_car": False,
+            })
+
+        return records
