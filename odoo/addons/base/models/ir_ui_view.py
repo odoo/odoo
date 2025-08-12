@@ -2838,7 +2838,7 @@ class Base(models.AbstractModel):
             the attribute) or not
             """
             for item in seq:
-                if item in in_:
+                if item in in_ and in_[item]._description_searchable:
                     view.set(to, item)
                     return True
             return False
