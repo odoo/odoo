@@ -102,12 +102,18 @@ class IrConfig_Parameter(models.Model):
 
     @api.model
     def set(self, key, value, type_=None):
-        if value is not None and value == self._get(key):
+        old_value = self._get(key)
+        if old_value is not None and (
+            value == old_value or
+            value == False and old_value == '' and (type_ == 'str' or type_ is None)  # spical optimization for res.config.settings.set_values() for char fields
+        ):
             return
         param = self.search_fetch([('key', '=', key)], ['type'])
         type_ = type_ or param.type or 'str'
         value = str(self._convert_to_type(value, type_))
         if param:
+            if value == param.value:  # spical optimization for str2bool e.g. 'yes', 'no'...
+                return
             param.write({'value': value, 'type': type_})
         else:
             self.create({'key': key, 'value': value, 'type': type_})
@@ -141,19 +147,9 @@ class IrConfig_Parameter(models.Model):
                  not exist.
         :rtype: string
         """
-        param = self.search([('key', '=', key)])
-        if param:
-            old = param.value
-            if value is not False and value is not None:
-                if str(value) != old:
-                    param.write({'value': value})
-            elif old is not False:
-                param.write({'value': False})
-            return old
-        else:
-            if value is not False and value is not None:
-                self.create({'key': key, 'value': value})
-            return False
+        if value is not None and value is not False:
+            value = str(value)
+        self.set(key, value)
 
     @api.model_create_multi
     def create(self, vals_list):
