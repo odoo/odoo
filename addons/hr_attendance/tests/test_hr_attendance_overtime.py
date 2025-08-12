@@ -724,6 +724,13 @@ class TestHrAttendanceOvertime(TransactionCase):
         self.assertAlmostEqual(attendance.overtime_hours, 1, 2)
         self.assertAlmostEqual(attendance.validated_overtime_hours, 1, 2)
 
+        # Check changing check out through UI correctly recomputes validated_overtime_hours as the
+        # field has not been modified yet.
+        with Form(attendance) as attendance_form:
+            attendance_form.check_out = datetime(2023, 1, 2, 19, 0)
+        self.assertAlmostEqual(attendance.overtime_hours, 2, 2)
+        self.assertAlmostEqual(attendance.validated_overtime_hours, 2, 2)
+
         attendance.validated_overtime_hours = previous = 0.5
         self.assertNotEqual(attendance.validated_overtime_hours, attendance.overtime_hours)
 
@@ -734,3 +741,8 @@ class TestHrAttendanceOvertime(TransactionCase):
             'check_out': datetime(2023, 1, 4, 18, 0)
         })
         self.assertEqual(attendance.validated_overtime_hours, previous, "Extra hours shouldn't be recomputed")
+
+        # Changing check out should recompute extra hours
+        with Form(attendance) as attendance_form:
+            attendance_form.check_out = datetime(2023, 1, 2, 19, 15)
+        self.assertAlmostEqual(attendance.validated_overtime_hours, 2.25, 2)
