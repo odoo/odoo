@@ -40,10 +40,6 @@ class PosOrder(models.Model):
         string="Veri*Factu QR Code",
         compute='_compute_l10n_es_edi_verifactu_qr_code',
     )
-    l10n_es_edi_verifactu_show_cancel_button = fields.Boolean(
-        string="Show Veri*Factu Cancel Button",
-        compute='_compute_l10n_es_edi_verifactu_show_cancel_button',
-    )
     l10n_es_edi_verifactu_refund_reason = fields.Selection(
         selection=[
             ('R1', "R1: Art 80.1 and 80.2 and error of law"),
@@ -96,11 +92,6 @@ class PosOrder(models.Model):
                 url = last_submission._get_qr_code_img_url() if last_submission else False
             order.l10n_es_edi_verifactu_qr_code = url
 
-    @api.depends('l10n_es_edi_verifactu_state')
-    def _compute_l10n_es_edi_verifactu_show_cancel_button(self):
-        for order in self:
-            order.l10n_es_edi_verifactu_show_cancel_button = order.l10n_es_edi_verifactu_state in ('registered_with_errors', 'accepted')
-
     def _l10n_es_edi_verifactu_get_tax_applicability(self):
         """
         Currently we only support a single Veri*Factu Tax Applicability per Veri*Factu document.
@@ -131,9 +122,6 @@ class PosOrder(models.Model):
         )
         return selected_clave_regimen and selected_clave_regimen.split('_', 1)[0]
 
-    def l10n_es_edi_verifactu_button_cancel(self):
-        self._l10n_es_edi_verifactu_mark_for_next_batch(cancellation=True)
-
     def l10n_es_edi_verifactu_button_send(self):
         self._l10n_es_edi_verifactu_mark_for_next_batch()
 
@@ -141,8 +129,8 @@ class PosOrder(models.Model):
         self.ensure_one()
         errors = []
 
-        if self.state != 'paid':
-            errors.append(_("Veri*Factu documents can only be generated for paid Point of Sale Orders."))
+        if self.state not in ('paid', 'done'):
+            errors.append(_("Veri*Factu documents can only be generated for paid or posted Point of Sale Orders."))
 
         return errors
 
