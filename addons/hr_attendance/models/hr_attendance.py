@@ -168,6 +168,9 @@ class HrAttendance(models.Model):
                 attendance.validated_overtime_hours = 0
 
         for attendance in no_validation:
+            if isinstance(attendance.id, models.NewId):
+                # We ignore NewId records here as we want to make sure a new value means it has been manually set by the user.
+                continue
             attendance.validated_overtime_hours = attendance.overtime_hours
 
     @api.depends('validated_overtime_hours')
