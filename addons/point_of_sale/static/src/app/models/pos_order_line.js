@@ -1,5 +1,9 @@
 import { registry } from "@web/core/registry";
-import { constructFullProductName, uuidv4 } from "@point_of_sale/utils";
+import {
+    constructFullProductName,
+    uuidv4,
+    constructFullProductNameWithProduct,
+} from "@point_of_sale/utils";
 import { Base } from "./related_models";
 import { parseFloat } from "@web/views/fields/parsers";
 import { formatFloat, roundDecimals, roundPrecision, floatIsZero } from "@web/core/utils/numbers";
@@ -29,7 +33,11 @@ export class PosOrderline extends Base {
     }
 
     set_full_product_name() {
-        this.full_product_name = constructFullProductName(this);
+        if (this.attribute_value_ids?.length) {
+            this.full_product_name = constructFullProductName(this);
+        } else if (this.product_id.attribute_line_ids?.length) {
+            this.full_product_name = constructFullProductNameWithProduct(this.product_id);
+        }
     }
 
     setOptions(options) {

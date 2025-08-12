@@ -33,27 +33,44 @@ export function deduceUrl(url) {
 
 export function constructFullProductName(line) {
     let attributeString = "";
-
-    if (line.attribute_value_ids && line.attribute_value_ids.length > 0) {
-        for (const value of line.attribute_value_ids) {
-            if (value.is_custom) {
-                const customValue = line.custom_attribute_value_ids.find(
-                    (cus) =>
-                        cus.custom_product_template_attribute_value_id?.id == parseInt(value.id)
-                );
-                if (customValue) {
-                    attributeString += `${value.attribute_id.name}: ${value.name}: ${customValue.custom_value}, `;
-                }
-            } else {
-                attributeString += `${value.name}, `;
+    for (const value of line.attribute_value_ids) {
+        if (value.is_custom) {
+            const customValue = line.custom_attribute_value_ids.find(
+                (cus) => cus.custom_product_template_attribute_value_id?.id == parseInt(value.id)
+            );
+            if (customValue) {
+                attributeString += `${value.attribute_id.name}: ${value.name}: ${customValue.custom_value}, `;
             }
+        } else {
+            attributeString += `${value.name}, `;
         }
+    }
 
+    attributeString = attributeString.slice(0, -2);
+    attributeString = ` (${attributeString})`;
+
+    return `${line?.product_id?.display_name}${attributeString}`;
+}
+
+export function constructFullProductNameWithProduct(product) {
+    let attributeString = "";
+    let hasMultipleValues = false;
+    for (const value of product.attribute_line_ids) {
+        if (value.product_template_value_ids.length === 1) {
+            attributeString += `${value.product_template_value_ids[0].name}, `;
+        } else if (product.attribute_line_ids.length > 1) {
+            hasMultipleValues = true;
+        }
+    }
+    if (hasMultipleValues && attributeString !== "") {
+        product.display_name = product.display_name.slice(0, -1);
+        attributeString = attributeString.slice(0, -2);
+        attributeString = `, ${attributeString})`;
+    } else if (attributeString !== "") {
         attributeString = attributeString.slice(0, -2);
         attributeString = ` (${attributeString})`;
     }
-
-    return `${line?.product_id?.display_name}${attributeString}`;
+    return `${product.display_name}${attributeString}`;
 }
 /**
  * Returns a random 5 digits alphanumeric code

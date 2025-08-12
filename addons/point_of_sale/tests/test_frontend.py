@@ -2172,6 +2172,83 @@ class TestUi(TestPointOfSaleHttpCommon):
             self.start_pos_tour("test_sync_from_ui_one_by_one", login="pos_user")
             self.assertEqual(sync_counter['count'], 6)
 
+    def test_single_attributes_dont_show_in_name(self):
+        """
+        Tests that if only attributes with singles values are available
+        for a product, these values will not be displayed in when selecting said product
+        on it's order line.
+        """
+        product_always, product_never = self.env['product.template'].create([
+            {
+                'name': 'Product with Attributes',
+                'available_in_pos': True,
+                'list_price': 10,
+                'taxes_id': False,
+            }, {
+                'name': 'Product without Attributes',
+                'available_in_pos': True,
+                'list_price': 10,
+                'taxes_id': False,
+            },
+        ])
+        color, size, weight = self.env['product.attribute'].create([
+            {
+                'name': 'Color',
+                'create_variant': 'always',
+                'display_type': 'radio',
+                'value_ids': [
+                    Command.create({
+                        'name': 'red',
+                    }),
+                    Command.create({
+                        'name': 'blue',
+                    }),
+                ],
+            }, {
+                'name': 'Size',
+                'create_variant': 'always',
+                'value_ids': [Command.create({
+                    'name': 'big',
+                })],
+            }, {
+                'name': 'Weight',
+                'create_variant': 'always',
+                'value_ids': [Command.create({
+                    'name': 'heavy',
+                })],
+            }
+        ])
+
+        self.env['product.template.attribute.line'].create([{
+            'product_tmpl_id': product_always.id,
+            'attribute_id': color.id,
+            'value_ids': [(6, 0, color.value_ids.ids)],
+            'sequence': 1,
+        }, {
+            'product_tmpl_id': product_always.id,
+            'attribute_id': size.id,
+            'value_ids': [(6, 0, size.value_ids.ids)],
+            'sequence': 2,
+        }, {
+            'product_tmpl_id': product_always.id,
+            'attribute_id': weight.id,
+            'value_ids': [(6, 0, weight.value_ids.ids)],
+            'sequence': 3,
+        }, {
+            'product_tmpl_id': product_never.id,
+            'attribute_id': size.id,
+            'value_ids': [(6, 0, size.value_ids.ids)],
+            'sequence': 2,
+        }, {
+            'product_tmpl_id': product_never.id,
+            'attribute_id': weight.id,
+            'value_ids': [(6, 0, weight.value_ids.ids)],
+            'sequence': 3,
+        }])
+        product_never.product_variant_ids[0].write({'barcode': '0100201'})
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_single_attributes_dont_show_in_name', login="pos_user")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):

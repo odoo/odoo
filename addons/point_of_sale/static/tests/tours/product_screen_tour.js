@@ -751,3 +751,21 @@ registry.category("web_tour.tours").add("test_pos_ui_round_globally", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_single_attributes_dont_show_in_name", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Product with Attributes"),
+            {
+                content: "Check that the product configurator is opened",
+                trigger: ".section-product-info-title:contains('Product with Attributes')",
+            },
+            Dialog.confirm("Add"),
+            ProductScreen.selectedOrderlineHas("Product with Attributes (red, big, heavy)", "1.0"),
+            ProductScreen.clickDisplayedProduct("Product without Attributes"),
+            scan_barcode("0100201"),
+            ProductScreen.selectedOrderlineHas("Product without Attributes (big, heavy)", "2.0"),
+        ].flat(),
+});
