@@ -18144,3 +18144,20 @@ test(`list with custom cog action that has a confirmation target="new" action`, 
         "web_read",
     ]);
 });
+
+test(`basic open record with allowOpenAction`, async () => {
+    mockService("action", {
+        doActionButton(params) {
+            const { name } = params;
+            expect.step(`execute_action: ${name}`, params);
+        },
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list action="test_action" type="object"><field name="foo"/></list>`,
+        allowOpenAction: false,
+    });
+    await contains(".o_field_cell").click();
+    expect.verifySteps([]);
+});
