@@ -140,11 +140,12 @@ class PaymentProvider(models.Model):
         :raise ValidationError: If the Razorpay credentials are not valid.
         """
         for provider in self.filtered(lambda p: p.code == 'razorpay' and p.state != 'disabled'):
-            if not provider.razorpay_key_id or not provider.razorpay_key_secret:
-                raise ValidationError(_(
-                    "Razorpay credentials are missing. Click the \"Connect\" button to set up your"
-                    " account"
-                ))
+            if not provider.razorpay_account_id:
+                if not provider.razorpay_key_id or not provider.razorpay_key_secret:
+                    raise ValidationError(_(
+                        "Razorpay credentials are missing. Click the \"Connect\" button to set up"
+                        " your account"
+                    ))
 
     # === BUSINESS METHODS - OAUTH === #
 
