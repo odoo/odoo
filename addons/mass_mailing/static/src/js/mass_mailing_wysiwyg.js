@@ -18,7 +18,7 @@ export class MassMailingWysiwyg extends Wysiwyg {
         const res = await super.startEdition(...arguments);
         // Prevent selection change outside of snippets.
         this.$editable.on('mousedown', e => {
-            if ($(e.target).is('.o_editable:empty') || e.target.querySelector('.o_editable')) {
+            if ($(e.target).is('.o_savable:empty') || e.target.querySelector('.o_savable')) {
                 e.preventDefault();
             }
         });

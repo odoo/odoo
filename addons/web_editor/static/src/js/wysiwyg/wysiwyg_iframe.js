@@ -133,7 +133,7 @@ patch(Wysiwyg.prototype, {
 
                 const $iframeWrapper = $('<div class="iframe-editor-wrapper odoo-editor">');
                 const $codeview = $('<textarea class="o_codeview d-none"/>');
-                self.$editable.addClass('o_editable oe_structure');
+                self.$editable.addClass('o_savable oe_structure');
 
                 $iframeTarget.append($codeview);
                 $iframeTarget.append($iframeWrapper);

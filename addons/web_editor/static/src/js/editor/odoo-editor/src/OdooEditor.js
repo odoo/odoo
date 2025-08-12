@@ -4780,7 +4780,7 @@ export class OdooEditor extends EventTarget {
         let selectionInBlockRoot;
         let currentNode = closestElement(selection.anchorNode);
         while (
-            !currentNode.classList.contains('o_editable') &&
+            !currentNode.classList.contains('o_savable') &&
             !currentNode.classList.contains('odoo-editor-editable') &&
             !selectionInBlockRoot
         ) {

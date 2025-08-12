@@ -1,12 +1,12 @@
 // jQuery extensions
 $.extend($.expr[':'], {
-    o_editable: function (node, i, m) {
+    o_savable: function (node, i, m) {
         while (node) {
             if (node.className && typeof node.className === "string") {
                 if (node.className.indexOf('o_not_editable') !== -1) {
                     return false;
                 }
-                if (node.className.indexOf('o_editable') !== -1) {
+                if (node.className.indexOf('o_savable') !== -1) {
                     return true;
                 }
             }

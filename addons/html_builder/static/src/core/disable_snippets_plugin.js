@@ -19,7 +19,7 @@ export class DisableSnippetsPlugin extends Plugin {
 
         // TODO only for website ?
         // TODO improve to add case when "+" menu appears (resize event ?)
-        const editableDropdownEls = this.editable.querySelectorAll(".dropdown-menu.o_editable");
+        const editableDropdownEls = this.editable.querySelectorAll(".dropdown-menu.o_savable");
         editableDropdownEls.forEach((dropdownEl) => {
             const dropdownToggleEl = dropdownEl.parentNode.querySelector(".dropdown-toggle");
             this.addDomListener(dropdownToggleEl, "shown.bs.dropdown", this._disableSnippets);

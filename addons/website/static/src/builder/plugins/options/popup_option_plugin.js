@@ -78,8 +78,7 @@ export class MoveBlockAction extends BuilderAction {
             : value === "currentPage";
     }
     apply({ editingElement, value }) {
-        const selector =
-            value === "allPages" ? "#o_shared_blocks" : "main .oe_structure.o_editable";
+        const selector = value === "allPages" ? "#o_shared_blocks" : "main .oe_structure.o_savable";
         const whereEl = this.editable.querySelector(selector);
         const popupEl = editingElement.closest(".s_popup");
         whereEl.insertAdjacentElement("afterbegin", popupEl);

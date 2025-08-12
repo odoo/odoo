@@ -98,7 +98,7 @@ var SnippetEditor = publicWidget.Widget.extend({
         this.isTargetMovable = false;
         this.$scrollingElement = $().getScrollingElement(this.$editable[0].ownerDocument);
         if (!this.$scrollingElement[0]) {
-            this.$scrollingElement = $(this.ownerDocument).find('.o_editable');
+            this.$scrollingElement = $(this.ownerDocument).find('.o_savable');
         }
         this.displayOverlayOptions = false;
         this._$toolbarContainer = $();
@@ -117,7 +117,7 @@ var SnippetEditor = publicWidget.Widget.extend({
         defs.push(this._initializeOptions());
         var $customize = this._customize$Elements[this._customize$Elements.length - 1];
 
-        this.isTargetParentEditable = this.$target.parent().is(':o_editable');
+        this.isTargetParentEditable = this.$target.parent().is(':o_savable');
         this.isTargetMovable = this.isTargetParentEditable && this.isTargetMovable && !this.$target.hasClass('oe_unmovable');
         this.isTargetRemovable = this.isTargetParentEditable && !this.$target.parent().is('[data-oe-type="image"]') && !isUnremovable(this.$target[0]);
         this.displayOverlayOptions = this.displayOverlayOptions || this.isTargetMovable || !this.isTargetParentEditable;
@@ -449,7 +449,7 @@ var SnippetEditor = publicWidget.Widget.extend({
         while (previousSibling && !isVisible(previousSibling)) {
             previousSibling = previousSibling.previousElementSibling;
         }
-        if ($(parent).is('.o_editable:not(body)')) {
+        if ($(parent).is('.o_savable:not(body)')) {
             // If we target the editable, we want to reset the selection to the
             // body. If the editable has options, we do not want to show them.
             parent = $(parent).closest('body');
@@ -2177,7 +2177,7 @@ class SnippetsMenu extends Component {
         // Show it again and recompute all the overlays after the scroll.
         this.$scrollingElement = $().getScrollingElement(this.$body[0].ownerDocument);
         if (!this.$scrollingElement[0]) {
-            this.$scrollingElement = $(this.ownerDocument).find('.o_editable');
+            this.$scrollingElement = $(this.ownerDocument).find('.o_savable');
         }
         this.$scrollingTarget = $().getScrollingTarget(this.$scrollingElement);
         this._onScrollingElementScroll = throttleForAnimation(() => {
@@ -3604,7 +3604,7 @@ class SnippetsMenu extends Component {
         let dragAndDropResolve;
         let $scrollingElement = $().getScrollingElement(this.$body[0].ownerDocument);
         if (!$scrollingElement[0]) {
-            $scrollingElement = $(this.ownerDocument).find('.o_editable');
+            $scrollingElement = $(this.ownerDocument).find('.o_savable');
         }
         const oNotebook = this.ownerDocument.querySelector(".o_notebook");
         if (oNotebook) {
@@ -4754,8 +4754,8 @@ class SnippetsMenu extends Component {
         );
         const isInsideTD = !!(
             range &&
-            $(range.startContainer).closest('.o_editable td').length &&
-            $(range.endContainer).closest('.o_editable td').length
+            $(range.startContainer).closest('.o_savable td').length &&
+            $(range.endContainer).closest('.o_savable td').length
         );
         $toolbarTableContainer.toggleClass('d-none', !isInsideTD);
     }
