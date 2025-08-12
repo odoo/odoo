@@ -780,14 +780,20 @@ class PaymentTransaction(models.Model):
     def _validate_amount(self, payment_data):
         """Ensure that the transaction's amount and currency match the ones from the payment data.
 
+        Validation transactions and transactions for which providers opt out of the amount check are
+        skipped.
+
         :param dict payment_data: The payment data sent by the provider.
         :return: None
         """
         self.ensure_one()
 
+        if self.operation == 'validation':
+            return  # Skip validation for $0-auth transactions.
+
         amount_data = self._extract_amount_data(payment_data)
         if amount_data is None:
-            return  # Skip the amount validation.
+            return  # Skip validation for transactions where the provider opts out of amount check.
 
         amount = amount_data['amount']
         currency_code = amount_data['currency_code']
