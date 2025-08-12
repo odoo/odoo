@@ -46,7 +46,7 @@ registerWebsitePreviewTour("snippet_visibility_option", {
     },
     {
         content: "Check that only the banner is marked as invisible and the column entry does not appear in the panel.",
-        trigger: ".o_we_invisible_root_parent",
+        trigger: "li > .o_we_invisible_entry",
         run: () => {
             const isBlockInvisible = document.querySelector("li .o_we_invisible_entry i").classList.contains("fa-eye-slash");
             const isColumnEntryDisplayed = document.querySelector("li li .o_we_invisible_entry");
@@ -80,7 +80,7 @@ registerWebsitePreviewTour("snippet_visibility_option", {
     },
     {
         content: "Check that the popup and banner are visible and the column is still invisible.",
-        trigger: "li > .o_we_invisible_entry",
+        trigger: "li li > .o_we_invisible_entry",
         run: () => {
             const isPopupVisible = document.querySelector(".o_we_invisible_root_parent i").classList.contains("fa-eye");
             const isBannerVisible = document.querySelector("li .o_we_invisible_entry i").classList.contains("fa-eye");
