@@ -5,7 +5,7 @@ import { VerticalAlignmentOption } from "@html_builder/plugins/vertical_alignmen
 import { withSequence } from "@html_editor/utils/resource";
 import { VERTICAL_ALIGNMENT } from "@html_builder/utils/option_sequence";
 
-class VerticalAlignmentOptionPlugin extends Plugin {
+export class VerticalAlignmentOptionPlugin extends Plugin {
     static id = "verticalAlignmentOption";
     resources = {
         builder_options: [
@@ -17,6 +17,7 @@ class VerticalAlignmentOptionPlugin extends Plugin {
                 props: {
                     level: 1,
                 },
+                name: "verticalAlignmentOption",
             }),
         ],
         builder_actions: {

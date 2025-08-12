@@ -77,7 +77,7 @@ export class DisableSnippetsPlugin extends Plugin {
         // Disable the snippets that cannot be dropped.
         const snippetGroups = this.snippetModel.snippetsByCategory["snippet_groups"];
         let areGroupsDisabled = false;
-        if (!canDrop(snippetGroups[0])) {
+        if (snippetGroups.length && !canDrop(snippetGroups[0])) {
             snippetGroups.forEach((snippetGroup) => (snippetGroup.isDisabled = true));
             areGroupsDisabled = true;
         }

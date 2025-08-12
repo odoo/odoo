@@ -9,7 +9,7 @@
                 <button type="button"  t-on-click="() => this.redo()" class="o-hb-btn btn fa fa-repeat" t-att-disabled="!state.canRedo"/>
             </div>
             <div class="d-flex gap-1">
-                <button t-on-click="onMobilePreviewClick" type="button" class="o-hb-btn btn d-flex align-items-center" t-att-class="{active: props.isMobile}" data-action="mobile" title="Mobile Preview" accesskey="v" style="--btn-font-size: 20px"><span class="fa fa-mobile" role="img"/></button>
+                <button t-on-click="onMobilePreviewClick" type="button" class="o-hb-btn btn d-flex align-items-center" t-att-class="{ active: props.isMobile }" data-action="mobile" title="Mobile Preview" accesskey="m" style="--btn-font-size: 20px"><span class="fa fa-mobile" role="img"/></button>
                 <button type="button"  t-on-click="discard" class="o-hb-btn btn" data-action="cancel" title="Tip: Esc to preview" accesskey="j">Discard</button>
                 <button type="button" t-on-click="save" class="o-hb-btn btn btn-success px-3" data-action="save" accesskey="s">Save</button>
             </div>
