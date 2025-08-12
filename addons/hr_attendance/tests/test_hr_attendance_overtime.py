@@ -822,7 +822,20 @@ class TestHrAttendanceOvertime(TransactionCase):
         self.assertAlmostEqual(attendance.overtime_hours, 1, 2)
         self.assertAlmostEqual(attendance.validated_overtime_hours, 1, 2)
 
+<<<<<<< 2e2a4180106d28a477798d8011de6f07d1a58615
         attendance._linked_overtimes().manual_duration = previous = 0.5
+||||||| 077e96f5347b2f1933d092917353fd189bcb611d
+        attendance.validated_overtime_hours = previous = 0.5
+=======
+        # Check changing check out through UI correctly recomputes validated_overtime_hours as the
+        # field has not been modified yet.
+        with Form(attendance) as attendance_form:
+            attendance_form.check_out = datetime(2023, 1, 2, 19, 0)
+        self.assertAlmostEqual(attendance.overtime_hours, 2, 2)
+        self.assertAlmostEqual(attendance.validated_overtime_hours, 2, 2)
+
+        attendance.validated_overtime_hours = previous = 0.5
+>>>>>>> e827543ac1af88a362697a90cf4ec8d970420ad5
         self.assertNotEqual(attendance.validated_overtime_hours, attendance.overtime_hours)
 
         # Create another attendance for the same employee
@@ -832,6 +845,7 @@ class TestHrAttendanceOvertime(TransactionCase):
             'check_out': datetime(2023, 1, 4, 18, 0)
         })
         self.assertEqual(attendance.validated_overtime_hours, previous, "Extra hours shouldn't be recomputed")
+<<<<<<< 2e2a4180106d28a477798d8011de6f07d1a58615
 
     def _check_overtimes(self, overtimes, vals_list):
         self.assertEqual(len(overtimes), len(vals_list), "Wrong number of overtimes")
@@ -966,3 +980,11 @@ class TestHrAttendanceOvertime(TransactionCase):
     def test_overtime_rule_combined(self):
         # TODO
         pass
+||||||| 077e96f5347b2f1933d092917353fd189bcb611d
+=======
+
+        # Changing check out should recompute extra hours
+        with Form(attendance) as attendance_form:
+            attendance_form.check_out = datetime(2023, 1, 2, 19, 15)
+        self.assertAlmostEqual(attendance.validated_overtime_hours, 2.25, 2)
+>>>>>>> e827543ac1af88a362697a90cf4ec8d970420ad5

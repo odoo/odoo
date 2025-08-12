@@ -155,12 +155,23 @@ class HrAttendance(models.Model):
         for a in all_attendances:
             attendances_by_employee_and_date[a.employee_id, a.date] |= a
 
+<<<<<<< 2e2a4180106d28a477798d8011de6f07d1a58615
         domain = Domain.AND([domain, [('status', '=', 'approved')]])
         overtime_durations = self.env['hr.attendance.overtime.line']._read_group(
             domain,
             groupby=['employee_id', 'date:day'],
             aggregates=['manual_duration:sum']
         )
+||||||| 077e96f5347b2f1933d092917353fd189bcb611d
+        for attendance in no_validation:
+            attendance.validated_overtime_hours = attendance.overtime_hours
+=======
+        for attendance in no_validation:
+            if not attendance.id:
+                # We ignore NewId records here as we want to make sure a new value means it has been manually set by the user.
+                continue
+            attendance.validated_overtime_hours = attendance.overtime_hours
+>>>>>>> e827543ac1af88a362697a90cf4ec8d970420ad5
 
         for employee_id, date, overtime_reserve in overtime_durations:
             # Distribute overtime to attendances
