@@ -741,6 +741,27 @@ class AccountJournal(models.Model):
 
         return query, selects
 
+<<<<<<< 4a8fc35bcd9a322af744ae2ef840156cb5fed19b
+||||||| ee63fe7863dfa0083674dc927c1aa67c9e36c481
+    def _get_to_check_payment_query(self):
+        # todo in master: use this hook function in _fill_general_dashboard_data as it's the same domain
+        return self.env['account.move']._where_calc([
+            *self.env['account.move']._check_company_domain(self.env.companies),
+            ('journal_id', 'in', self.ids),
+            ('checked', '=', False),
+        ])
+
+=======
+    def _get_to_check_payment_query(self):
+        # todo in master: use this hook function in _fill_general_dashboard_data as it's the same domain
+        return self.env['account.move']._where_calc([
+            *self.env['account.move']._check_company_domain(self.env.companies),
+            ('journal_id', 'in', self.ids),
+            ('checked', '=', False),
+            ('state', '=', 'posted'),
+        ])
+
+>>>>>>> 1525422e315bd0a9f5f2f6832468198317f4a3c0
     def _count_results_and_sum_amounts(self, results_dict, target_currency):
         """ Loops on a query result to count the total number of invoices and sum
         their amount_total field (expressed in the given target currency).
