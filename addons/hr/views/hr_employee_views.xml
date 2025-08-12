@@ -725,20 +725,6 @@
             <field name="search_view_id" ref="view_employee_filter"/>
         </record>
 
-        <record id="action_hr_employee_my_activities" model="ir.actions.act_window">
-            <field name="name">My activities</field>
-            <field name="path">my_activities</field>
-            <field name="res_model">hr.employee</field>
-            <field name="domain">[
-                ('company_id', 'in', allowed_company_ids),
-                ('activity_user_id', '=', uid),
-            ]</field>
-            <field name="context">{'chat_icon': True, 'searchpanel_default_company_id': allowed_company_ids[0]}</field>
-            <field name="view_mode">list,kanban,form,activity,graph,pivot</field>
-            <field name="view_id" eval="False"/>
-            <field name="search_view_id" ref="view_employee_filter"/>
-        </record>
-
         <record id="action_hr_employee_all_activities" model="ir.actions.act_window">
             <field name="name">All activities</field>
             <field name="path">all_activities</field>
