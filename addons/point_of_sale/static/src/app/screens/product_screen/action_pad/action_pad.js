@@ -30,7 +30,7 @@ export class ActionpadWidget extends Component {
 
     get showFastPaymentMethods() {
         return (
-            this.pos.config.is_fast_payment &&
+            this.pos.config.use_fast_payment &&
             this.pos.config.fast_payment_method_ids?.length &&
             this.pos.router.state.current === "ProductScreen"
         );

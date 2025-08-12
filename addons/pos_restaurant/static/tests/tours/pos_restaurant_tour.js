@@ -17,6 +17,7 @@ import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_in
 import * as PreparationReceipt from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
 import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
+import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
@@ -793,18 +794,115 @@ registry.category("web_tour.tours").add("test_open_default_register_screen_confi
 
 registry
     .category("web_tour.tours")
-    .add("test_fast_payment_validation_from_restaurant_product_screen", {
-        steps: () =>
-            [
-                Chrome.startPoS(),
-                Dialog.confirm("Open Register"),
-                FloorScreen.clickTable("2"),
-                ProductScreen.clickDisplayedProduct("Coca-Cola"),
-                ProductScreen.clickFastPaymentButton("Bank"),
-                Dialog.discard(),
-                ReceiptScreen.isShown(),
-            ].flat(),
-    });
+    .add(
+        "test_fast_payment_validation_from_restaurant_product_screen_with_automatic_receipt_printing",
+        {
+            steps: () =>
+                [
+                    Chrome.startPoS(),
+                    Dialog.confirm("Open Register"),
+                    FloorScreen.clickTable("2"),
+                    ProductScreen.clickDisplayedProduct("Coca-Cola"),
+                    {
+                        content: "Check the content of the preparation receipt",
+                        trigger: "body",
+                        run: async () => {
+                            const receipts = await PreparationReceipt.generatePreparationReceipts();
+                            if (!receipts[0].innerHTML.includes("Coca-Cola")) {
+                                throw new Error("Coca-Cola not found in printed receipt");
+                            }
+                            if (!receipts[0].innerHTML.includes("NEW")) {
+                                throw new Error("NEW not found in printed receipt");
+                            }
+                        },
+                    },
+                    ProductScreen.clickFastPaymentButton("Bank"),
+                    Dialog.discard(),
+                    FeedbackScreen.isShown(),
+                    Dialog.confirm(),
+                    FeedbackScreen.clickScreen(),
+                    FloorScreen.isShown(),
+                    FloorScreen.clickTable("2"),
+                    ProductScreen.clickDisplayedProduct("Coca-Cola"),
+                    {
+                        content: "Check the content of the preparation receipt",
+                        trigger: "body",
+                        run: async () => {
+                            const receipts = await PreparationReceipt.generatePreparationReceipts();
+                            if (!receipts[0].innerHTML.includes("Coca-Cola")) {
+                                throw new Error("Coca-Cola not found in printed receipt");
+                            }
+                            if (!receipts[0].innerHTML.includes("NEW")) {
+                                throw new Error("NEW not found in printed receipt");
+                            }
+                        },
+                    },
+                    ProductScreen.clickPayButton(),
+                    PaymentScreen.clickPaymentMethod("Bank"),
+                    PaymentScreen.clickValidate(),
+                    Dialog.discard(),
+                    FeedbackScreen.isShown(),
+                    Dialog.confirm(),
+                    FeedbackScreen.clickScreen(),
+                    FloorScreen.isShown(),
+                ].flat(),
+        }
+    );
+
+registry
+    .category("web_tour.tours")
+    .add(
+        "test_fast_payment_validation_from_restaurant_product_screen_without_automatic_receipt_printing",
+        {
+            steps: () =>
+                [
+                    Chrome.startPoS(),
+                    Dialog.confirm("Open Register"),
+                    FloorScreen.clickTable("2"),
+                    ProductScreen.clickDisplayedProduct("Coca-Cola"),
+                    {
+                        content: "Check the content of the preparation receipt",
+                        trigger: "body",
+                        run: async () => {
+                            const receipts = await PreparationReceipt.generatePreparationReceipts();
+                            if (!receipts[0].innerHTML.includes("Coca-Cola")) {
+                                throw new Error("Coca-Cola not found in printed receipt");
+                            }
+                            if (!receipts[0].innerHTML.includes("NEW")) {
+                                throw new Error("NEW not found in printed receipt");
+                            }
+                        },
+                    },
+                    ProductScreen.clickFastPaymentButton("Bank"),
+                    Dialog.discard(),
+                    ReceiptScreen.isShown(),
+                    ReceiptScreen.clickNextOrder(),
+                    FloorScreen.isShown(),
+                    FloorScreen.clickTable("2"),
+                    ProductScreen.clickDisplayedProduct("Coca-Cola"),
+                    {
+                        content: "Check the content of the preparation receipt",
+                        trigger: "body",
+                        run: async () => {
+                            const receipts = await PreparationReceipt.generatePreparationReceipts();
+                            if (!receipts[0].innerHTML.includes("Coca-Cola")) {
+                                throw new Error("Coca-Cola not found in printed receipt");
+                            }
+                            if (!receipts[0].innerHTML.includes("NEW")) {
+                                throw new Error("NEW not found in printed receipt");
+                            }
+                        },
+                    },
+                    ProductScreen.clickPayButton(),
+                    PaymentScreen.clickPaymentMethod("Bank"),
+                    PaymentScreen.clickValidate(),
+                    Dialog.discard(),
+                    ReceiptScreen.isShown(),
+                    ReceiptScreen.clickNextOrder(),
+                    FloorScreen.isShown(),
+                ].flat(),
+        }
+    );
 
 registry.category("web_tour.tours").add("test_transfering_orders", {
     steps: () =>

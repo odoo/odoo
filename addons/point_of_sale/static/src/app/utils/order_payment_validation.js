@@ -86,14 +86,15 @@ export default class OrderPaymentValidation {
         if (nextPage.page === "FeedbackScreen") {
             const waitForFn = async () => {
                 await this.finalizeValidation();
-                await this.afterOrderValidation();
             };
             nextPage.params.waitFor = waitForFn();
         } else {
             try {
                 this.pos.env.services.ui.block();
-                await this.finalizeValidation();
-                await this.afterOrderValidation();
+                const response = await this.finalizeValidation();
+                if (response instanceof RPCError) {
+                    return false;
+                }
             } finally {
                 this.pos.env.services.ui.unblock();
             }
@@ -178,6 +179,8 @@ export default class OrderPaymentValidation {
             if (postPushOrders.length > 0) {
                 await this.postPushOrderResolve(postPushOrders.map((order) => order.id));
             }
+
+            return await this.afterOrderValidation(!!syncOrderResult && syncOrderResult.length > 0);
         } catch (error) {
             return this.handleValidationError(error);
         }
@@ -197,7 +200,7 @@ export default class OrderPaymentValidation {
         // Always show the next screen regardless of error since pos has to
         // continue working even offline.
         if (!this.pos.config.module_pos_restaurant) {
-            this.pos.sendOrderInPreparationUpdateLastChange(this.order, {
+            this.pos.checkPreparationStateAndSentOrderInPreparation(this.order, {
                 orderDone: true,
             });
         }
@@ -207,14 +210,6 @@ export default class OrderPaymentValidation {
             if (invoiced_finalized) {
                 await this.pos.printReceipt({ order: this.order });
             }
-        }
-    }
-
-    selectNextOrder() {
-        if (this.order.originalSplittedOrder) {
-            this.pos.selectedOrderUuid = this.order.uiState.splittedOrderUuid;
-        } else {
-            this.pos.addNewOrder();
         }
     }
 

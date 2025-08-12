@@ -128,7 +128,7 @@ export class PosConfig extends models.ServerModel {
             create_date: "2025-07-03 12:40:00",
             write_date: "2025-07-03 14:35:55",
             epson_printer_ip: false,
-            is_fast_payment: true,
+            use_fast_payment: true,
             fast_payment_method_ids: [1],
         },
     ];
