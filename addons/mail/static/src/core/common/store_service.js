@@ -30,8 +30,6 @@ export const pyToJsModels = {
 
 export const addFieldsByPyModel = {
     "discuss.channel": { model: "discuss.channel" },
-    "mail.guest": { type: "guest" },
-    "res.partner": { type: "partner" },
 };
 
 patch(storeInsertFns, {

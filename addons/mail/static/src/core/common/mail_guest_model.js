@@ -14,7 +14,6 @@ const { DateTime } = luxon;
  * @property {number} id
  * @property {string} name
  * @property {string} email
- * @property {'partner'|'guest'} type
  * @property {ImStatus} im_status
  */
 
