@@ -25,6 +25,8 @@ class HrVersion(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        if self.env.context.get('employee_create_version'):
+            return super().create(vals_list)
         all_new_leave_origin = []
         all_new_leave_vals = []
         leaves_state = {}
