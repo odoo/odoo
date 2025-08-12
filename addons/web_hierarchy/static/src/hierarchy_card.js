@@ -53,11 +53,11 @@ export class HierarchyCard extends Component {
         };
     }
 
-    onGlobalClick(ev) {
+    onGlobalClick(ev, newWindow) {
         if (ev.target.closest("button")) {
             return;
         }
-        this.props.openRecord(this.props.node);
+        this.props.openRecord(this.props.node, newWindow);
     }
 
     onClickArrowUp(ev) {
