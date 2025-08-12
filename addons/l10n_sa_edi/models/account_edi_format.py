@@ -399,9 +399,11 @@ class AccountEdiFormat(models.Model):
             errors.append(_("- The Journal (%s) is not onboarded yet. Please onboard it and try again.", journal.name))
 
         if not company._l10n_sa_check_organization_unit():
-            errors.append(_("- Please set the VAT Number on the Company to be 15 digits, with first and last digits being 3."))
-        if not company.sudo().l10n_sa_private_key_id:
-            errors.append(_("- Something went wrong. Please onboard the journal again."))
+            errors.append(
+                _("- The company VAT identification must contain 15 digits, with the first and last digits being '3' as per the BR-KSA-39 and BR-KSA-40 of ZATCA KSA business rule."))
+        if not journal.company_id.sudo().l10n_sa_private_key_id:
+            errors.append(
+                _("- No Private Key was generated for company %s. A Private Key is mandatory in order to generate Certificate Signing Requests (CSR).", company.name))
 
         supplier_missing_info = self._l10n_sa_check_seller_missing_info(invoice)
         customer_missing_info = self._l10n_sa_check_buyer_missing_info(invoice)

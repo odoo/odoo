@@ -2,11 +2,11 @@ import base64
 import uuid
 from markupsafe import Markup
 from odoo import _, fields, models, api
+from odoo.exceptions import UserError
 from odoo.tools import float_repr
 from datetime import datetime
 from base64 import b64decode, b64encode
 from lxml import etree
-from odoo.exceptions import UserError
 
 
 class AccountMove(models.Model):
@@ -59,7 +59,7 @@ class AccountMove(models.Model):
                 if move._l10n_sa_is_simplified():
                     x509_cert = move.journal_id.l10n_sa_production_csid_certificate_id
                     xml_content = self.env.ref('l10n_sa_edi.edi_sa_zatca')._l10n_sa_generate_zatca_template(move)
-                    qr_code_str = move._l10n_sa_get_qr_code(move.journal_id, xml_content, x509_cert,
+                    qr_code_str = move._l10n_sa_get_qr_code(move.company_id, xml_content, x509_cert,
                                                             move.l10n_sa_invoice_signature, True)
                     qr_code_str = b64encode(qr_code_str).decode()
                 elif zatca_document.state == 'sent' and zatca_document.attachment_id.datas:
@@ -91,7 +91,7 @@ class AccountMove(models.Model):
         return self.debit_origin_id or self.reversed_entry_id or self.ref
 
     @api.model
-    def _l10n_sa_get_qr_code(self, journal_id, unsigned_xml, certificate, signature, is_b2c=False):
+    def _l10n_sa_get_qr_code(self, company_id, unsigned_xml, certificate, signature, is_b2c=False):
         """
             Generate QR code string based on XML content of the Invoice UBL file, X509 Production Certificate
             and company info.
@@ -113,14 +113,14 @@ class AccountMove(models.Model):
         invoice_time = xpath_ns('//cbc:IssueTime')
         invoice_datetime = datetime.strptime(invoice_date + ' ' + invoice_time, '%Y-%m-%d %H:%M:%S')
 
-        if invoice_datetime and journal_id.company_id.vat and certificate and signature:
+        if invoice_datetime and company_id.vat and certificate and signature:
             prehash_content = etree.tostring(root)
             invoice_hash = edi_format._l10n_sa_generate_invoice_xml_hash(prehash_content, 'digest')
 
             amount_total = float(xpath_ns('//cbc:PayableAmount'))
             amount_tax = float(xpath_ns('//cac:TaxTotal/cbc:TaxAmount'))
-            seller_name_enc = self._l10n_sa_get_qr_code_encoding(1, journal_id.company_id.display_name.encode())
-            seller_vat_enc = self._l10n_sa_get_qr_code_encoding(2, journal_id.company_id.vat.encode())
+            seller_name_enc = self._l10n_sa_get_qr_code_encoding(1, company_id.display_name.encode())
+            seller_vat_enc = self._l10n_sa_get_qr_code_encoding(2, company_id.vat.encode())
             timestamp_enc = self._l10n_sa_get_qr_code_encoding(3,
                                                                invoice_datetime.strftime("%Y-%m-%dT%H:%M:%S").encode())
             amount_total_enc = self._l10n_sa_get_qr_code_encoding(4, float_repr(abs(amount_total), 2).encode())
@@ -314,11 +314,6 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         return self.l10n_sa_edi_chain_head_id._get_records_action(name=_("Chain Head"))
-
-    def action_post(self):
-        if self.filtered(lambda move: move.country_code == "SA" and move.move_type in ('out_invoice', 'out_refund') and move.company_id != move.journal_id.company_id):
-            raise UserError(_("Please make sure that the invoice company matches the journal company on all invoices you wish to confirm"))
-        return super().action_post()
 
 
 class AccountMoveLine(models.Model):
