@@ -53,10 +53,10 @@
                         <ImStatus persona="installationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
                     </t>
                     <t t-set-slot="sideContent">
-                        <div class="d-flex align-items-center justify-content-center o-gap-1_5" t-att-class="{ 'pe-1': !ui.isSmall }">
+                        <div class="d-flex align-items-center justify-content-center o-gap-1_5" t-att-class="{ 'o-pe-0_5': !ui.isSmall }">
                             <a t-if="ui.isSmall" class="btn fa fa-cloud-download px-0"/>
                             <t t-else="">
-                                <a class="btn btn-primary px-2 py-1 smaller">Install</a>
+                                <a class="btn btn-primary px-1 py-0 smaller">Install</a>
                                 <span t-if="!hasTouch()" t-on-click.stop="() => this.pwa.decline()" class="text-dark bg-transparent oi oi-close opacity-50 opacity-100-hover" title="Dismiss"></span>
                             </t>
                         </div>
@@ -77,7 +77,7 @@
                         <ImStatus persona="notificationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
                     </t>
                     <t t-set-slot="sideContent">
-                        <div class="d-flex align-items-center justify-content-center o-gap-1_5" t-att-class="{ 'pe-1': !ui.isSmall }">
+                        <div class="d-flex align-items-center justify-content-center o-gap-1_5" t-att-class="{ 'o-pe-0_5': !ui.isSmall }">
                             <a t-if="ui.isSmall" class="btn fa fa-bell px-0"/>
                             <t t-else="">
                                 <a class="btn btn-primary btn-sm px-1 py-0">Enable</a>
