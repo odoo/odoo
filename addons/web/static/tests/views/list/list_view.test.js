@@ -18833,3 +18833,20 @@ test(`cache web_read_group (with sample data, change)`, async () => {
     expect(`.o_group_header`).toHaveCount(2);
     expect(queryAllTexts(`.o_group_header`)).toEqual(["-4 (1)", "44 (1)"]);
 });
+
+test(`basic open record with allowOpenAction`, async () => {
+    mockService("action", {
+        doActionButton(params) {
+            const { name } = params;
+            expect.step(`execute_action: ${name}`, params);
+        },
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list action="test_action" type="object"><field name="foo"/></list>`,
+        allowOpenAction: false,
+    });
+    await contains(".o_field_cell").click();
+    expect.verifySteps([]);
+});
