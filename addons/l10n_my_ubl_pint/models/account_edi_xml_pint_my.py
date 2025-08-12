@@ -75,7 +75,7 @@ class AccountEdiXmlPint_My(models.AbstractModel):
             party_node['cac:PartyTaxScheme'].append(
                 {
                     **party_node['cac:PartyTaxScheme'][0],
-                    'cbc:CompanyID': {'_text': commercial_partner.vat},
+                    'cbc:CompanyID': {'_text': commercial_partner.vat or 'NA'},
                     'cac:TaxScheme': {
                         'cbc:ID': {'_text': 'GST'}
                     }
