@@ -88,7 +88,9 @@ patch(Thread.prototype, {
             !this.livechat_end_dt &&
             !force
         ) {
-            await this.askLeaveConfirmation(_t("Leaving will end the livechat. Proceed leaving?"));
+            await this.askLeaveConfirmation(
+                _t("Leaving will end the live chat. Do you want to proceed?")
+            );
         }
         super.leaveChannel(...arguments);
     },
