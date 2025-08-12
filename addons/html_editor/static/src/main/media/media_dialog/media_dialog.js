@@ -4,7 +4,6 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { Notebook } from "@web/core/notebook/notebook";
 import { ImageSelector } from "./image_selector";
 import { IconSelector } from "./icon_selector";
-import { VideoSelector } from "./video_selector";
 
 import { Component, useState, useRef, useEffect } from "@odoo/owl";
 
@@ -20,12 +19,6 @@ export const TABS = {
         title: _t("Icons"),
         Component: IconSelector,
         sequence: 20,
-    },
-    VIDEOS: {
-        id: "VIDEOS",
-        title: _t("Videos"),
-        Component: VideoSelector,
-        sequence: 30,
     },
 };
 
@@ -166,12 +159,6 @@ export class MediaDialog extends Component {
                     }
                 }
             }
-        }
-        if (!this.props.noVideos) {
-            this.addTab(TABS.VIDEOS, {
-                vimeoPreviewIds: this.props.vimeoPreviewIds,
-                isForBgVideo: this.props.isForBgVideo,
-            });
         }
         this.props.extraTabs.forEach((tab) => this.addTab(tab));
     }

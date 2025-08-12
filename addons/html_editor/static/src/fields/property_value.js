@@ -76,7 +76,7 @@ patch(PropertyValue.prototype, {
             placeholder: this.props.placeholder,
             Plugins: plugins,
             dropImageAsAttachment: true,
-            allowMediaDialogVideo: false,
+            allowVideo: false,
             getRecordInfo: () => {
                 const { resModel, resId, data, fields, id } = this.props.record;
                 return { resModel, resId, data, fields, id };

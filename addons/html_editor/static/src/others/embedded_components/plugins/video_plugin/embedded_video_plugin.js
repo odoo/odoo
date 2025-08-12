@@ -1,51 +1,23 @@
-import { Plugin } from "@html_editor/plugin";
-import { _t } from "@web/core/l10n/translation";
+import { VideoPlugin } from "@html_editor/main/media/video_plugin";
 import { VideoSelectorDialog } from "@html_editor/others/embedded_components/plugins/video_plugin/video_selector_dialog/video_selector_dialog";
-import { renderToElement } from "@web/core/utils/render";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { EmbeddedVideoSelector } from "./video_selector_dialog/embedded_video_selector";
 
-export class VideoPlugin extends Plugin {
-    static id = "video";
-    static dependencies = ["embeddedComponents", "dom", "selection", "link", "history", "overlay"];
+/**
+ * This plugin is meant to replace the Video plugin.
+ */
+export class EmbeddedVideoPlugin extends VideoPlugin {
+    static id = "embeddedVideo";
+    static dependencies = ["embeddedComponents", "selection", "history", "overlay"];
+
+    // Extends the base class resources
     resources = {
-        user_commands: [
-            {
-                id: "openVideoSelectorDialog",
-                title: _t("Video Link"),
-                description: _t("Insert a Video"),
-                icon: "fa-play",
-                run: () => {
-                    this.openVideoSelectorDialog((media) => {
-                        this.insertVideo(media);
-                    });
-                },
-                isAvailable: isHtmlContentSupported,
-            },
-        ],
-        powerbox_items: [
-            {
-                categoryId: "navigation",
-                commandId: "openVideoSelectorDialog",
-            },
-        ],
+        ...this.resources,
         mount_component_handlers: this.extendEmbeddedVideoProps.bind(this),
     };
 
-    /**
-     * Inserts a video in the editor
-     * @param {Object} media
-     */
-    insertVideo(media) {
-        const videoBlock = renderToElement("html_editor.EmbeddedVideoBlueprint", {
-            embeddedProps: JSON.stringify({
-                videoId: media.videoId,
-                platform: media.platform,
-                params: media.params || {},
-            }),
-        });
-        this.dependencies.dom.insert(videoBlock);
-        this.dependencies.selection.focusEditable();
-        this.dependencies.history.addStep();
+    /** @override */
+    get componentForMediaDialog() {
+        return EmbeddedVideoSelector;
     }
 
     /**

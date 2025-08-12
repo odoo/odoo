@@ -25,6 +25,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 /**
  * @typedef { Object } MediaShared
  * @property { MediaPlugin['savePendingImages'] } savePendingImages
+ * @property { MediaPlugin['openMediaDialog'] } openMediaDialog
  */
 
 export class MediaPlugin extends Plugin {
@@ -33,7 +34,6 @@ export class MediaPlugin extends Plugin {
     static shared = ["savePendingImages", "openMediaDialog"];
     static defaultConfig = {
         allowImage: true,
-        allowMediaDialogVideo: true,
         allowMediaDocuments: true,
     };
     resources = {
@@ -48,7 +48,9 @@ export class MediaPlugin extends Plugin {
             {
                 id: "insertMedia",
                 title: _t("Media"),
-                description: _t("Insert image or icon"),
+                description: this.config.allowVideo
+                    ? _t("Insert image, icon or video")
+                    : _t("Insert image or icon"),
                 keywords: [_t("Image"), _t("Icon")],
                 icon: "fa-file-image-o",
                 run: this.openMediaDialog.bind(this),
@@ -199,7 +201,6 @@ export class MediaPlugin extends Plugin {
             ), // @todo @phoenix: should be removed and moved to config.mediaModalParams
             media: params.node,
             onAttachmentChange: this.config.onAttachmentChange || (() => {}),
-            noVideos: !this.config.allowMediaDialogVideo,
             noImages: !this.config.allowImage,
             extraTabs: this.getResource("media_dialog_extra_tabs"),
             ...this.config.mediaModalParams,

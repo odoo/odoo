@@ -1,6 +1,12 @@
 import { MediaDialog } from "@html_editor/main/media/media_dialog/media_dialog";
+import { VideoSelector } from "@html_editor/main/media/media_dialog/video_selector";
+import { _t } from "@web/core/l10n/translation";
 
 export class CustomMediaDialog extends MediaDialog {
+    static defaultProps = {
+        ...MediaDialog.defaultProps,
+        extraTabs: [{ id: "VIDEOS", title: _t("Videos"), Component: VideoSelector }],
+    };
     async save() {
         if (this.errorMessages[this.state?.activeTab]) {
             this.notificationService.add(this.errorMessages[this.state.activeTab], {
