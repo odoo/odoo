@@ -687,8 +687,8 @@ class ProjectProject(models.Model):
         if excluded_move_line_ids is None:
             excluded_move_line_ids = []
         aml_fetch_fields = [
-            'price_subtotal', 'parent_state', 'currency_id', 'analytic_distribution', 'move_type',
-            'move_id', 'display_type',
+            'balance', 'parent_state', 'company_currency_id', 'analytic_distribution', 'move_id',
+            'display_type', 'date',
         ]
         invoices_move_lines = self.env['account.move.line'].sudo().search_fetch(
             expression.AND([
@@ -717,23 +717,17 @@ class ProjectProject(models.Model):
             for move_lines, ml_type in ((revenues_lines, 'revenues'), (cogs_lines, 'costs')):
                 amount_invoiced = amount_to_invoice = 0.0
                 for move_line in move_lines:
-                    currency = move_line.currency_id
-                    price_subtotal = currency._convert(move_line.price_subtotal, self.currency_id, self.company_id)
+                    currency = move_line.company_currency_id
+                    line_balance = currency._convert(move_line.balance, self.currency_id, self.company_id, move_line.date)
                     # an analytic account can appear several time in an analytic distribution with different repartition percentage
                     analytic_contribution = sum(
                         percentage for ids, percentage in move_line.analytic_distribution.items()
                         if str(self.account_id.id) in ids.split(',')
                     ) / 100.
                     if move_line.parent_state == 'draft':
-                        if move_line.move_type == 'out_invoice':
-                            amount_to_invoice += price_subtotal * analytic_contribution
-                        else:  # move_line.move_type == 'out_refund'
-                            amount_to_invoice -= price_subtotal * analytic_contribution
+                        amount_to_invoice -= line_balance * analytic_contribution
                     else:  # move_line.parent_state == 'posted'
-                        if move_line.move_type == 'out_invoice':
-                            amount_invoiced += price_subtotal * analytic_contribution
-                        else:  # moves_read['move_type'] == 'out_refund'
-                            amount_invoiced -= price_subtotal * analytic_contribution
+                        amount_invoiced -= line_balance * analytic_contribution
                 # don't display the section if the final values are both 0 (invoice -> credit note)
                 if amount_invoiced != 0 or amount_to_invoice != 0:
                     section_id = 'other_invoice_revenues' if ml_type == 'revenues' else 'cost_of_goods_sold'
