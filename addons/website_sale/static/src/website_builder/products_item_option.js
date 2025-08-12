@@ -1,4 +1,4 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { onWillStart, onMounted, useState, useRef } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
@@ -18,20 +18,33 @@ export class ProductsItemOption extends BaseOptionComponent {
             itemSize: this.props.itemSize,
         });
 
+        this.productsGridTableEl = this.env.getEditingElement().closest(".o_wsale_products_grid_table");
+
+        this.domState = useDomState(() => {
+
+            // If /shop page layout is list, do not display Size option
+            const displaySizeOption = !this.productsGridTableEl?.classList.contains("o_wsale_products_opt_layout_list");
+
+            if(displaySizeOption && this.state.itemSize) {
+                this.addClassToTableCells(this.state.itemSize.x, this.state.itemSize.y, "selected");
+            }
+
+            return {
+                displaySizeOption,
+            }
+        });
+
         onWillStart(async () => {
             this.defaultSort = await this.props.loadInfo();
 
             // need to display "re-order" option only if shop_default_sort is 'website_sequence asc'
             this.displayReOrder = this.defaultSort[0].shop_default_sort === "website_sequence asc";
-
-            // If /shop page layout is list, do not display Size option
-            const wsale_container = this.env.getEditingElement().closest("#o_wsale_container");
-            this.displaySizeOption = !wsale_container.classList.contains("o_wsale_products_opt_layout_list");
-            this.maxWidth = parseInt(wsale_container.dataset.ppr) || 5;
+            const pprValue = this.productsGridTableEl.style.getPropertyValue('--o-wsale-ppr').trim();
+            this.maxWidth = parseInt(pprValue) || 5;
         });
 
         onMounted(() => {
-            if (this.displaySizeOption) {
+            if (this.domState.displaySizeOption) {
                 this.addClassToTableCells(this.state.itemSize.x, this.state.itemSize.y, "selected");
             }
         });
@@ -40,7 +53,12 @@ export class ProductsItemOption extends BaseOptionComponent {
     addClassToTableCells(x, y, className) {
         const table = this.tableRef.el;
 
+        // By default, this.domState.displaySizeOption is undefined, so the table is not displayed
+        // We need to check if the table is visible before adding classes to the cells
+        if(!table) { return; }
+
         const rows = table.rows;
+
         for (let row = 0; row < y; row++) {
             const cells = rows[row].cells;
             for (let col = 0; col < x; col++) {
