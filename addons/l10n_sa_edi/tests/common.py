@@ -27,6 +27,7 @@ class TestSaEdiCommon(AccountEdiTestCommon):
 
         # Setup test data
         cls._setup_company()
+        cls._setup_branches()
         cls._setup_partners()
         cls._setup_products()
         cls._setup_taxes()
@@ -34,9 +35,8 @@ class TestSaEdiCommon(AccountEdiTestCommon):
         cls._setup_xpath_templates()
 
     @classmethod
-    def _setup_company(cls):
-        """Configure the test company with Saudi Arabia specific settings."""
-        cls.company.write({
+    def _get_company_vals(cls, defaults=None):
+        return {
             'name': 'SA Company Test',
             'email': 'info@company.saexample.com',
             'phone': '+966 51 234 5678',
@@ -53,8 +53,19 @@ class TestSaEdiCommon(AccountEdiTestCommon):
             'l10n_sa_edi_plot_identification': '1234',
             'l10n_sa_additional_identification_number': '2525252525252',
             'l10n_sa_additional_identification_scheme': 'CRN',  # Commercial Registration Number
-        })
+            **(defaults or {})
+        }
+
+    @classmethod
+    def _setup_company(cls):
+        """Configure the test company with Saudi Arabia specific settings."""
+        cls.company.write(cls._get_company_vals())
         cls.company.l10n_sa_private_key = cls.env['res.company']._l10n_sa_generate_private_key()
+
+    @classmethod
+    def _setup_branches(cls):
+        vals = cls._get_company_vals({"name": "SA Branch", "parent_id": cls.company.id})
+        cls.sa_branch = cls.setup_company_data("SA Branch", "sa", **vals)["company"]
 
     @classmethod
     def _setup_partners(cls):
