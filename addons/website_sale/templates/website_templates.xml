@@ -31,9 +31,13 @@
     <template id="website_sale.website_sale_layout" inherit_id="website.layout" priority="1">
         <body position="before">
             <t
-                t-if="website._get_product_image_ratio() != '1_1'"
+                t-set="product_image_ratio_classes"
+                t-value="website._get_product_image_ratio_classes()"
+            />
+            <t
+                t-if="product_image_ratio_classes"
                 t-set="body_classname"
-                t-value="'o_wsale_products_opt_thumb_' + website._get_product_image_ratio() + (' ' + body_classname if body_classname else '')"
+                t-value="product_image_ratio_classes + (' ' + body_classname if body_classname else '')"
             />
         </body>
         <head position="inside">

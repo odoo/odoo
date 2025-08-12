@@ -9,6 +9,7 @@
         <t t-set="gridLabel">Grid</t>
         <t t-set="showcaseLabel">Showcase</t>
         <t t-set="bentoLabel">Bento</t>
+        <t t-set="LargeLabel">Large</t>
 
         <t t-set="suggestedClassesCatalogDefault">
             o_wsale_products_opt_name_color_regular
@@ -131,6 +132,15 @@
                 img: '/website_sale/static/src/img/products_entries_design/style_list_condensed.svg',
                 suggestedClasses: suggestedClassesListDefault + ' o_wsale_products_opt_cc o_wsale_products_opt_cc1 o_wsale_products_opt_rounded_1 o_wsale_products_opt_actions_promote o_wsale_products_opt_name_size_body',
                 gap: 4,
+            },
+            {
+                id: 'wsale_design_list_large',
+                label: LargeLabel,
+                type: 'list',
+                className: 'o_wsale_products_opt_layout_list o_wsale_products_opt_design_list_large',
+                img: '/website_sale/static/src/img/products_entries_design/style_list_large.svg',
+                suggestedClasses: suggestedClassesListDefault + ' o_wsale_products_opt_cc o_wsale_products_opt_cc1 o_wsale_products_opt_actions_promote o_wsale_products_opt_has_description o_wsale_products_opt_img_secondary_show',
+                gap: 16,
             },
         ]"/>
 
@@ -307,7 +317,7 @@
                 label.translate="Colors"
                 tooltip.translate="Color combinations are defined in the Theme Tab"
             >
-                <BuilderSelect t-if="!anyThumb and !this.isActiveItem('wsale_design_condensed_list')">
+                <BuilderSelect t-if="!anyThumb and !this.isActiveItem('wsale_design_condensed_list') and !this.isActiveItem('wsale_design_list_large')">
                     <BuilderSelectItem
                         classAction="'.o_wsale_products_opt_cc o_wsale_products_opt_cc1'"
                     >
@@ -426,67 +436,81 @@
             </BuilderRow>
 
             <t t-set="imageRatioLabel">Image Ratio</t>
-            <t t-set="imageRatioLabelMobile">Mobile Ratio</t>
+
+            <t t-set="imgRatios" t-value="[
+                {
+                    label: 'WideScreen (16/9)',
+                    className: 'o_wsale_products_opt_thumb_16_9',
+                },
+                {
+                    label: 'Landscape (4/3)',
+                    className: 'o_wsale_products_opt_thumb_4_3',
+                },
+                {
+                    label: 'Horizontal (6/5)',
+                    className: 'o_wsale_products_opt_thumb_6_5',
+                },
+                {
+                    label: 'Default (1/1)',
+                    className: '',
+                },
+                {
+                    label: 'Portrait (4/5)',
+                    className: 'o_wsale_products_opt_thumb_4_5',
+                },
+                {
+                    label: 'Vertical (2/3)',
+                    className: 'o_wsale_products_opt_thumb_2_3',
+                },
+            ]"/>
+            <t t-set="imgRatiosBento" t-value="[
+                {
+                    label: 'Horizontal (6/5)', className: 'o_wsale_products_opt_thumb_6_5',
+                },
+                {
+                    label: 'Default (1/1)', className: '',
+                },
+                {
+                    label: 'Portrait (4/5)', className: 'o_wsale_products_opt_thumb_4_5',
+                },
+                {
+                    label: 'Vertical (2/3)', className: 'o_wsale_products_opt_thumb_2_3',
+                },
+            ]"/>
+
+            <!-- Desktop/Image Ratio (visible for all except Showcase) -->
             <BuilderRow
-                label="this.isActiveItem('wsale_design_showcase_list') ? imageRatioLabelMobile : imageRatioLabel"
+                label="this.isActiveItem('wsale_design_list_large') ? 'Desktop Ratio' : imageRatioLabel"
+                t-if="!this.isActiveItem('wsale_design_showcase_list')"
             >
                 <BuilderSelect>
-                    <t t-if="catalogBento" t-set="imgRatios" t-value="[
-                        {
-                            label: 'Horizontal (6/5)',
-                            className: 'o_wsale_products_opt_thumb_6_5',
-                        },
-                        {
-                            label: 'Default (1/1)',
-                            className: '',
-                        },
-                        {
-                            label: 'Portrait (4/5)',
-                            className: 'o_wsale_products_opt_thumb_4_5',
-                        },
-                        {
-                            label: 'Vertical (2/3)',
-                            className: 'o_wsale_products_opt_thumb_2_3',
-                        },
-                    ]"/>
-                    <t t-else="" t-set="imgRatios" t-value="[
-                        {
-                            label: 'WideScreen (16/9)',
-                            className: 'o_wsale_products_opt_thumb_16_9',
-                        },
-                        {
-                            label: 'Landscape (4/3)',
-                            className: 'o_wsale_products_opt_thumb_4_3',
-                        },
-                        {
-                            label: 'Horizontal (6/5)',
-                            className: 'o_wsale_products_opt_thumb_6_5',
-                        },
-                        {
-                            label: 'Default (1/1)',
-                            className: '',
-                        },
-                        {
-                            label: 'Portrait (4/5)',
-                            className: 'o_wsale_products_opt_thumb_4_5',
-                        },
-                        {
-                            label: 'Vertical (2/3)',
-                            className: 'o_wsale_products_opt_thumb_2_3',
-                        },
-                    ]"/>
-                    <t t-foreach="imgRatios" t-as="imgRatio" t-key="imgRatio_index">
-                        <BuilderSelectItem
-                            classAction="imgRatio.className">
+                    <t t-set="currentRatios" t-value="catalogBento ? imgRatiosBento : imgRatios"/>
+                    <t t-foreach="currentRatios" t-as="imgRatio" t-key="imgRatio_index">
+                        <BuilderSelectItem classAction="imgRatio.className">
                             <t t-out="imgRatio.label"/>
                         </BuilderSelectItem>
                     </t>
                 </BuilderSelect>
-                <t t-set-slot="collapse" t-if="!this.isActiveItem('wsale_design_showcase_list')">
+                <t t-set-slot="collapse">
                     <BuilderRow label.translate="Auto-crop" level="1">
                         <BuilderCheckbox classAction="'o_wsale_products_opt_thumb_cover'"/>
                     </BuilderRow>
                 </t>
+            </BuilderRow>
+
+            <!-- Mobile Ratio (visible for Showcase and List Large) -->
+            <BuilderRow
+                label.translate="Mobile Ratio"
+                t-if="this.isActiveItem('wsale_design_showcase_list') || this.isActiveItem('wsale_design_list_large')"
+            >
+                <BuilderSelect>
+                    <t t-foreach="imgRatios" t-as="imgRatio" t-key="imgRatio_index">
+                        <BuilderSelectItem
+                            classAction="imgRatio.className ? imgRatio.className + '_mobile' : ''">
+                            <t t-out="imgRatio.label"/>
+                        </BuilderSelectItem>
+                    </t>
+                </BuilderSelect>
             </BuilderRow>
 
             <BuilderRow label.translate="Hover Effect">
