@@ -249,6 +249,24 @@ describe("popover should edit,copy,remove the link", () => {
             '<p>this is a <a href="/contactus">li[]nk</a></p>'
         );
     });
+    test("Should properly show the preview if fetching metadata fails", async () => {
+        const id = Math.random().toString();
+        onRpc("/html_editor/link_preview_internal", () =>
+            Promise.reject(new Error(`No data ${id}`))
+        );
+        onRpc("/contactus", () => ({}));
+        const originalConsoleWarn = console.warn.bind(console);
+        patchWithCleanup(console, {
+            warn: (msg, error, ...args) => {
+                if (!error?.message?.includes?.(id)) {
+                    originalConsoleWarn(msg, error, ...args);
+                }
+            },
+        });
+        const { el } = await setupEditor('<p><a href="/contactus">a[]b</a></p>');
+        await waitFor(".o-we-linkpopover");
+        expect(cleanLinkArtifacts(getContent(el))).toBe('<p><a href="/contactus">a[]b</a></p>');
+    });
     test("after clicking on copy button, the url should be copied to clipboard", async () => {
         await setupEditor('<p>this is a <a href="http://test.com/">li[]nk</a></p>');
         await waitFor(".o-we-linkpopover");

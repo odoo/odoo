@@ -482,7 +482,12 @@ export class LinkPopover extends Component {
             // Set state based on cached link meta data
             // for record missing errors, we push a warning that the url is likely invalid
             // for other errors, we log them to not block the ui
-            const internalMetadata = await this.props.getInternalMetaData(url.href);
+            const internalMetadata = await this.props
+                .getInternalMetaData(url.href)
+                .catch((error) => {
+                    console.warn(`Error fetching internal metadata for ${url.href}:`, error);
+                    return {};
+                });
             if (internalMetadata.favicon) {
                 this.state.previewIcon = {
                     type: "imgSrc",
