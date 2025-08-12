@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import unittest
 from unittest.mock import patch
 
 from werkzeug.urls import url_encode
@@ -115,13 +114,11 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
     @mute_logger('odoo.addons.payment_stripe.controllers.main')
     def test_webhook_notification_tokenizes_payment_method(self):
         """ Test the processing of a webhook notification. """
+        self.amount = 0.0
         self._create_transaction('dummy', operation='validation', tokenize=True)
         url = self._build_url(StripeController._webhook_url)
-        payment_method_response = {
-            'card': {'last4': '4242'},
-            'id': 'pm_1KVZSNAlCFm536g8sYB92I1G',
-            'type': 'card'
-        }
+        data = self.payment_data['data']
+        payment_method_response = data['object'] = self._mock_setup_intent_request()
         with patch(
             'odoo.addons.payment_stripe.controllers.main.StripeController._verify_signature'
         ), patch(
@@ -148,12 +145,24 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             self._make_json_request(url, data=self.payment_data)
             self.assertEqual(signature_check_mock.call_count, 1)
 
+    @mute_logger('odoo.addons.payment_stripe.controllers.main')
+    def test_return_from_tokenization_request(self):
+        tx = self._create_transaction('direct', amount=0, operation='validation', tokenize=True)
+        url = self._build_url(StripeController._return_url)
+        PaymentProvider = self.env.registry['payment.provider']
+        with (
+            patch.object(StripeController, '_verify_signature'),
+            patch.object(PaymentProvider, '_send_api_request', self._mock_setup_intent_request),
+        ):
+            res = self._make_http_get_request(url, params={'reference': tx.reference})
+            self.assertTrue(res.ok, msg=res.content.decode())
+
     def test_onboarding_action_redirect_to_url(self):
         """ Test that the action generate and return an URL when the provider is disabled. """
         if country := self.env['res.country'].search([('code', 'in', list(const.SUPPORTED_COUNTRIES))], limit=1):
             self.env.company.country_id = country
         else:
-            raise unittest.SkipTest("Unable to find a country supported by both odoo and stripe")
+            self.skipTest("Unable to find a country supported by both odoo and stripe")
 
         with patch.object(
             type(self.env['payment.provider']), '_stripe_fetch_or_create_connected_account',

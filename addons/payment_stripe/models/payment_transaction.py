@@ -12,7 +12,6 @@ from odoo.addons.payment_stripe import const
 from odoo.addons.payment_stripe import utils as stripe_utils
 from odoo.addons.payment_stripe.controllers.main import StripeController
 
-
 _logger = get_payment_logger(__name__, const.SENSITIVE_KEYS)
 
 
@@ -300,16 +299,14 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'stripe':
             return super()._extract_amount_data(payment_data)
 
-        if self.operation == 'validation':
-            payment_data = payment_data['setup_intent']
-        elif self.operation == 'refund':
+        if self.operation == 'refund':
             payment_data = payment_data['refund']
         else:  # 'online_direct', 'online_token', 'offline'
             payment_data = payment_data['payment_intent']
         amount = payment_utils.to_major_currency_units(
-            payment_data.get('amount', 0), self.currency_id
+            payment_data.get('amount', 0), self.currency_id,
         )
-        currency_code = payment_data.get('currency').upper()
+        currency_code = payment_data.get('currency', '').upper()
         return {
             'amount': amount,
             'currency_code': currency_code,
