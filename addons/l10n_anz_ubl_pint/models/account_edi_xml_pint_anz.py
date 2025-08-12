@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, _
+from odoo.tools import float_is_zero
 
 ANZ_TAX_CATEGORIES = {'S', 'E', 'Z', 'G', 'O'}
 
@@ -81,6 +82,18 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
                 vals['company_id_attrs'] = {'schemeID': partner.peppol_eas}
         return vals_list
 
+    def _get_invoice_line_item_vals(self, line, taxes_vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        line_item_vals = super()._get_invoice_line_item_vals(line, taxes_vals)
+
+        for val in line_item_vals['classified_tax_category_vals']:
+            # As of PINT A-NZ v1.1.0: [aligned-ibrp-o-05-aunz] tax categories of type "Not Subject to tax" (i.e. tax_category_code == 'O') must NOT have
+            # tax rate ('cbc:Percent').
+            if val.get('id') == 'O' and float_is_zero(val.get('percent'), precision_digits=2):
+                del val['percent']
+
+        return line_item_vals
+
     def _export_invoice_vals(self, invoice):
         # EXTENDS account_edi_ubl_cii
         vals = super()._export_invoice_vals(invoice)
@@ -105,6 +118,39 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
             for tax_subtotal_val in tax_total_val.get('tax_subtotal_vals', ()):
                 if tax_subtotal_val['tax_category_vals']['tax_category_code'] not in ANZ_TAX_CATEGORIES:
                     constraints['sg_vat_category_required'] = _("You must set a tax category on each taxes of the invoice.\nValid categories are: S, E, Z, G, O")
+
+        # Tax category of type "Not subject to tax" must have tax amount 0
+        count_outside_of_scope_breakdown = 0
+        for tax_category, tax_category_vals in vals['taxes_vals']['tax_details'].items():
+            if tax_category['tax_category_id'] != 'O':
+                continue
+            count_outside_of_scope_breakdown += 1
+
+            if float_is_zero(tax_category_vals['tax_amount'], precision_digits=2):
+                continue
+
+            if vals['supplier'].vat:
+                constraints['anz_tax_breakdown_amount'] = \
+                    self.env._("A tax category of type 'Not subject to tax' must have tax"
+                               " amount set to 0")
+            else:
+                # If a company is not GST registered, this module remaps all tax categories
+                # to 'O' (Other/Out of Scope). This causes an issue when a line contained a
+                # non-zero tax, as it would create a tax subtotal with (Code: 'O', Amount:
+                # non-zero), which violates PINT rules.
+                # Since the code silently remaps tax classification code, the original error
+                # message might be misleading for users. This constraint contains better
+                # explaination of error and intructions on how to prevent it.
+                constraints['anz_non_gst_supplier_tax_scope'] = \
+                    self.env._("Suppliers not registered for GST cannot use taxes that are"
+                               " not zero-rated. Please ensure the tax category is set to"
+                               " 'O' (Services outside scope of tax) with a tax amount of 0.")
+
+        # There should be at most one tax breakdown of type "Not subject to tax".
+        if count_outside_of_scope_breakdown > 1 and vals['supplier'].vat:
+            constraints['anz_duplicate_tax_breakdown'] = \
+                self.env._("A tax breakdown of type 'Not subject to tax' should appear at most"
+                           " once in the tax breakdown")
 
         # ALIGNED-IBR-001-AUNZ and ALIGNED-IBR-002-AUNZ
         for partner_type in ('supplier', 'customer'):
