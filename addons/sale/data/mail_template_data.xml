@@ -193,7 +193,11 @@
                     <tr t-att-style="'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'">
                         <t t-set="loop_cycle_number" t-value="loop_cycle_number + 1" />
                         <td style="width: 150px;">
-                            <img t-attf-src="/web/image/product.product/{{ line.product_id.id }}/image_128" style="width: 64px; height: 64px; object-fit: contain;" alt="Product image"></img>
+                            <img
+                                t-attf-src="/web/image/product.product/{{ line.product_id.id }}/image_128"
+                                t-attf-style="width: 64px; height: {{object.website_id and object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: cover; object-position: center;"
+                                alt="Product image"
+                            />
                         </td>
                         <td align="left" t-out="line.product_id.name or ''">	Taking care of Trees Course</td>
                         <td width="15%" align="center" t-out="line.product_uom_qty or ''">1</td>

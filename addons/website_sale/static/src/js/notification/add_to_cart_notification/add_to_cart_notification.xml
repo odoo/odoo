@@ -18,11 +18,13 @@
     <t t-name="website_sale.cartLine">
         <div class="d-flex gap-3">
             <div class="position-relative">
-                <img
-                    class="img o_image_64_max rounded mb-2 img-fluid"
-                    t-att-src="line.image_url"
-                    t-att-alt="line.name"
-                />
+                <div class="o_cart_product_image">
+                    <img
+                        class="img o_image_64_max rounded mb-2 img-fluid"
+                        t-att-src="line.image_url"
+                        t-att-alt="line.name"
+                    />
+                </div>
                 <span
                     class="o_cart_item_count badge bg-secondary position-absolute top-0 start-100 translate-middle"
                     t-out="line.quantity"

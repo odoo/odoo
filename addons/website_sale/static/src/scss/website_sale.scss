@@ -1765,28 +1765,6 @@ $-product-radius-map: (
         flex-direction: column;
     }
 
-    #shop_cart {
-        &.o_img_ratio_16_9 {
-            --card-product-img-ratio: 4/3;
-        }
-
-        &.o_img_ratio_4_3 {
-            --card-product-img-ratio: 4/3;
-        }
-
-        &.o_img_ratio_6_5 {
-            --card-product-img-ratio: 6/5;
-        }
-
-        &.o_img_ratio_4_5 {
-            --card-product-img-ratio: 4/5;
-        }
-
-        &.o_img_ratio_2_3 {
-            --card-product-img-ratio: 2/3;
-        }
-    }
-
     #cart_products, .o_wsale_quick_reorder_line_group {
         --cart-product-img-size-lg: 6rem;
 
@@ -1795,10 +1773,6 @@ $-product-radius-map: (
                 @include media-breakpoint-down(md) {
                     --cart-product-img-size-sm: 4rem;
                 }
-
-                aspect-ratio: var(--card-product-img-ratio, 1/1);
-                object-fit: cover;
-                object-position: center;
                 width: var(--cart-product-img-size-sm, var(--cart-product-img-size-lg));
             }
         }
@@ -1910,6 +1884,42 @@ $-product-radius-map: (
             }
         }
     }
+}
+
+// Unified product image aspect ratios
+
+%o-wsale-product-img {
+    object-fit: cover;
+    object-position: center;
+}
+
+@mixin o-wsale-product-img-ratio($ratio) {
+    .o_cart_product_image img,
+    .o_sale_product_configurator_img img,
+    .o_wsale_comparison_bottom_bar img,
+    .o_wsale_compare_table_column img,
+    .product-card img {
+        aspect-ratio: $ratio;
+        @extend %o-wsale-product-img;
+    }
+}
+
+.o_wsale_products_opt_thumb_16_9 { @include o-wsale-product-img-ratio(16/9); }
+.o_wsale_products_opt_thumb_4_3 { @include o-wsale-product-img-ratio(4/3); }
+.o_wsale_products_opt_thumb_6_5 { @include o-wsale-product-img-ratio(6/5); }
+.o_wsale_products_opt_thumb_4_5 { @include o-wsale-product-img-ratio(4/5); }
+.o_wsale_products_opt_thumb_2_3 { @include o-wsale-product-img-ratio(2/3); }
+
+.o_cart_product_image img {
+    max-width: 64px;
+    aspect-ratio: 1/1; // Default fallback
+    @extend %o-wsale-product-img;
+}
+
+.o_sale_product_configurator_img img,
+.product-card img {
+    aspect-ratio: 1/1; // Default fallback
+    @extend %o-wsale-product-img;
 }
 
 .oe_website_sale {

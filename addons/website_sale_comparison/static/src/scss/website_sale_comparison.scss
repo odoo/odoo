@@ -35,22 +35,6 @@
 
         width: var(--o-website-sale-comparison-table-column-width);
         padding: 0 var(--o-website-sale-comparison-table-column-padding-x);
-
-        img {
-            aspect-ratio: var(--card-product-img-ratio, 1/1);
-
-            &.o_img_ratio_4_3 {
-                --card-product-img-ratio: 4/3;
-            }
-
-            &.o_img_ratio_4_5 {
-                --card-product-img-ratio: 4/5;
-            }
-
-            &.o_img_ratio_2_3 {
-                --card-product-img-ratio: 2/3;
-            }
-        }
     }
 
     #o_comparelist_table {
@@ -110,10 +94,6 @@
 }
 
 .o_wsale_comparison_bottom_bar {
-    .o_product_image {
-        width: 2.5rem;
-    }
-
     .btn[data-bs-toggle="collapse"] {
         .oi-chevron-up {
             transition: transform 0.2s ease-in-out;
@@ -136,6 +116,13 @@
         background: $light;
     }
 
+    .o_wsale_comparison_bottom_bar_image {
+        width: 2.5rem;
+        height: fit-content;
+        aspect-ratio: var(--wsale-product-thumb-aspect-ratio, 1/1);
+        object-fit: cover;
+        object-position: center;
+    }
 }
 
 // Style the <main> element when comparison bar is present

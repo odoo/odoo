@@ -1009,3 +1009,34 @@ class Website(models.Model):
 
     def _get_snippet_defaults(self, snippet):
         return super()._get_snippet_defaults(snippet) | const.SNIPPET_DEFAULTS.get(snippet, {})
+
+    def _get_product_image_ratio(self):
+        """Get the product image aspect ratio based on the website's design classes.
+
+        Returns:
+            str: The aspect ratio as a string (e.g., '16_9', '4_3', '1_1')
+        """
+        classes = self.shop_opt_products_design_classes or ''
+        ratio_mapping = {
+            'o_wsale_products_opt_thumb_16_9': '16_9',
+            'o_wsale_products_opt_thumb_4_3': '4_3',
+            'o_wsale_products_opt_thumb_6_5': '6_5',
+            'o_wsale_products_opt_thumb_4_5': '4_5',
+            'o_wsale_products_opt_thumb_2_3': '2_3',
+        }
+        for class_name, ratio in ratio_mapping.items():
+            if class_name in classes:
+                return ratio
+        return '1_1'
+
+    def _get_product_image_ratio_height(self):
+        match self._get_product_image_ratio():
+            case '16_9':
+                return '36px'
+            case '4_3':
+                return '48px'
+            case '6_5':
+                return '53px'
+            case '4_5':
+                return '96px'
+        return '64px'

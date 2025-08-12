@@ -23,6 +23,13 @@
 
         <!-- Insert JSON-LD markup data for SEO. -->
     <template id="website_sale_layout" inherit_id="website.layout" priority="1">
+        <body position="before">
+            <t
+                t-if="website._get_product_image_ratio() != '1_1'"
+                t-set="body_classname"
+                t-value="'o_wsale_products_opt_thumb_' + website._get_product_image_ratio() + (' ' + body_classname if body_classname else '')"
+            />
+        </body>
         <head position="inside">
             <!-- Company markup data, in all pages. -->
             <t t-set="base_url" t-value="website.get_base_url()"/>
@@ -3085,16 +3092,7 @@
                      t-att-id) and each template needs to define a div element. -->
                 <div class="oe_structure" id="oe_structure_website_sale_cart_2"/>
             </t>
-            <div
-                id="shop_cart"
-                t-att-class="'col ' + (
-                        'o_img_ratio_16_9' if 'o_wsale_products_opt_thumb_16_9' in website.shop_opt_products_design_classes else
-                        'o_img_ratio_4_3' if 'o_wsale_products_opt_thumb_4_3' in website.shop_opt_products_design_classes else
-                        'o_img_ratio_6_5' if 'o_wsale_products_opt_thumb_6_5' in website.shop_opt_products_design_classes else
-                        'o_img_ratio_4_5' if 'o_wsale_products_opt_thumb_4_5' in website.shop_opt_products_design_classes else
-                        'o_img_ratio_2_3' if 'o_wsale_products_opt_thumb_2_3' in website.shop_opt_products_design_classes else
-                        '')
-            ">
+            <div id="shop_cart" class="col">
                 <div class="d-flex align-items-center mb-3">
                     <h4 class="mb-0">Order summary</h4>
                     <div class="ms-3 border-start ps-2"><t t-call="website_sale.quick_reorder_button"/></div>
@@ -3899,20 +3897,20 @@
                             t-att-class="line_last and 'border-transparent'"
                         >
                             <td class="td-img ps-0 pt-3">
-                                <div class="position-relative">
+                                <div class="o_cart_product_image position-relative">
                                     <span
                                         t-if="not line._is_sellable() and line.product_id.image_128"
                                     >
                                         <img
                                             t-att-src="image_data_uri(line.product_id.image_128)"
-                                            class="o_image_64_max img rounded"
+                                            class="img rounded"
                                             t-att-alt="line.name_short"
                                         />
                                     </span>
                                     <span
                                         t-else=""
                                         t-field="line.product_id.image_128"
-                                        t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'o_image_64_max rounded'}"
+                                        t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded'}"
                                     />
                                     <span class="o_cart_item_count badge bg-secondary position-absolute top-0 start-100 translate-middle">
                                         <t t-out="int(line.product_uom_qty)" />
