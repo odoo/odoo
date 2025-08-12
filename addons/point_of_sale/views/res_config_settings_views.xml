@@ -109,11 +109,11 @@
                                     </div>
                                 </setting>
                                 <setting title="Online payment, delivery payment, terminal payment, and methods that require customer identification are not supported for fast payment validation." help="Shortcut to skip payment screen" invisible="is_kiosk_mode">
-                                    <field name="pos_is_fast_payment" string="One-click Payment" />
-                                    <div class="content-group mt16" invisible="not pos_is_fast_payment">
+                                    <field name="pos_use_fast_payment" string="One-click Payment" />
+                                    <div class="content-group mt16" invisible="not pos_use_fast_payment">
                                         <label for="pos_fast_payment_method_ids" class="fw-bold me-2"/>
                                         <field name="pos_fast_payment_method_ids" widget="many2many_tags" string="Payment Methods"
-                                            options="{'no_create': True}" required="pos_is_fast_payment" domain="[('id', 'in', pos_payment_method_ids), ('use_payment_terminal', '=', False), ('split_transactions', '=', False)]"/>
+                                            options="{'no_create': True}" required="pos_use_fast_payment" domain="[('id', 'in', pos_payment_method_ids), ('use_payment_terminal', '=', False), ('split_transactions', '=', False)]"/>
                                     </div>
                                 </setting>
                                 <setting id="set_maximum_difference" help="Set a maximum difference allowed between the expected and counted money during the closing of the session">

@@ -620,14 +620,47 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_open_default_register_screen_config')
 
-    def test_fast_payment_validation_from_restaurant_product_screen(self):
+    def test_fast_payment_validation_from_restaurant_product_screen_with_automatic_receipt_printing(self):
+        self.env['pos.printer'].create({
+                'name': 'Printer',
+                'printer_type': 'epson_epos',
+                'epson_printer_ip': '0.0.0.0',
+                'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+            })
         self.main_pos_config.write({
-            'is_fast_payment': True,
+            'use_fast_payment': True,
             'fast_payment_method_ids': [(6, 0, self.bank_payment_method.ids)],
-            'printer_ids': False,
+            'is_order_printer': True,
+            'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
+            'iface_print_auto': True,
+            'iface_print_skip_screen': True,
+            'other_devices': True,
+            'epson_printer_ip': '127.0.0.1:8069/receipt_receiver',
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('test_fast_payment_validation_from_restaurant_product_screen')
+        self.start_pos_tour('test_fast_payment_validation_from_restaurant_product_screen_with_automatic_receipt_printing')
+        order = self.main_pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.state, 'paid', "The order should be paid after the fast payment validation")
+        self.assertEqual(len(order.payment_ids), 1, "There should be one payment method used for the fast payment")
+        self.assertEqual(order.payment_ids.payment_method_id, self.bank_payment_method, "The payment method used should be the bank payment method")
+
+    def test_fast_payment_validation_from_restaurant_product_screen_without_automatic_receipt_printing(self):
+        self.env['pos.printer'].create({
+                'name': 'Printer',
+                'printer_type': 'epson_epos',
+                'epson_printer_ip': '0.0.0.0',
+                'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+            })
+        self.main_pos_config.write({
+            'use_fast_payment': True,
+            'fast_payment_method_ids': [(6, 0, self.bank_payment_method.ids)],
+            'is_order_printer': True,
+            'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
+            'other_devices': True,
+            'epson_printer_ip': '127.0.0.1:8069/receipt_receiver',
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_fast_payment_validation_from_restaurant_product_screen_without_automatic_receipt_printing')
         order = self.main_pos_config.current_session_id.order_ids[0]
         self.assertEqual(order.state, 'paid', "The order should be paid after the fast payment validation")
         self.assertEqual(len(order.payment_ids), 1, "There should be one payment method used for the fast payment")
