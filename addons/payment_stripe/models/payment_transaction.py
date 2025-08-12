@@ -372,18 +372,20 @@ class PaymentTransaction(models.Model):
             notification data.
         """
         if self.provider_code != 'stripe':
-            return super()._compare_notification_data(notification_data)
+            super()._compare_notification_data(notification_data)
+            return
 
         if self.operation == 'validation':
-            payment_data = notification_data['setup_intent']
-        elif self.operation == 'refund':
+            return  # no need to validate validations
+
+        if self.operation == 'refund':
             payment_data = notification_data['refund']
         else:  # 'online_direct', 'online_token', 'offline'
             payment_data = notification_data['payment_intent']
         amount = payment_utils.to_major_currency_units(
             payment_data.get('amount', 0), self.currency_id
         )
-        currency_code = payment_data.get('currency').upper()
+        currency_code = payment_data.get('currency', '').upper()
         self._validate_amount_and_currency(amount, currency_code)
 
     def _process_notification_data(self, notification_data):

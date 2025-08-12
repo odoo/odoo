@@ -710,6 +710,9 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
+        if self.operation == 'validation':
+            return  # no need to validate validations
+
         if not amount or not currency_code:
             raise ValidationError(_("The amount or currency is missing from the payment data."))
 
