@@ -153,7 +153,7 @@ class PaymentProvider(models.Model):
     def _build_request_headers(self, method, *args, idempotency_key=None, **kwargs):
         """Override of `payment` to include the API key and idempotency key in the headers."""
         if self.code != 'adyen':
-            return self._build_request_headers(
+            return super()._build_request_headers(
                 method, *args, idempotency_key=idempotency_key, **kwargs
             )
 
