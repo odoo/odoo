@@ -18,7 +18,7 @@
     </record>
 
     <record id="group_product_manager" model="res.groups">
-        <field name="name">Admin en Products / Create</field>
+        <field name="name">Create</field>
         <field name="implied_by_ids" eval="[Command.link(ref('base.group_system'))]"/>
         <field name="user_ids" eval="[Command.link(ref('base.user_root'))]"/>
         <field name="privilege_id" ref="res_groups_privilege_product"/>
