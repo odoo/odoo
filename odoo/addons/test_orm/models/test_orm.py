@@ -2442,3 +2442,15 @@ class BinaryTest(models.Model):
 
     def _compute_bin2(self):
         self.bin2 = {}
+
+
+class CalendarTest(models.Model):
+    _name = _description = "calendar.test"
+
+    date_start = fields.Date(compute="_compute_date")
+    date_end = fields.Date(compute="_compute_date")
+    x_date_start = fields.Date()
+    x_date_end = fields.Date()
+
+    def _compute_date(self):
+        self.date_start = self.date_end = fields.Date.today()

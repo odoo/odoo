@@ -28,6 +28,12 @@ class TestDefaultView(common.TransactionCase):
             b'<form><sheet string="binary.test"><group><group><field name="img"/></group><group><field name="bin1"/></group></group><group><separator/></group></sheet></form>'
         )
 
+    def test_default_calender_view(self):
+        self.assertEqual(
+            etree.tostring(self.env['calendar.test']._get_default_calendar_view()),
+            b'<calendar string="calendar.test" date_start="x_date_start" date_stop="x_date_end"><field name="id"/></calendar>'
+        )
+
 
 @common.tagged('at_install', 'groups')
 class TestViewGroups(ViewCase):
