@@ -268,3 +268,13 @@ class TestPoSStock(TestPoSCommon):
         self.pos_session.action_pos_session_validate()
         expense_account_move_line = self.env['account.move.line'].search([('account_id', '=', self.expense_account.id), ('product_id', '=', False)])
         self.assertEqual(expense_account_move_line.balance, 0.0, "Expense account should be 0.0")
+
+    def test_stock_duplicate_warehouse_with_PoS_operation_type(self):
+        wh = self.env['stock.warehouse'].create({
+            'name': 'WH1',
+            'code': 'WH1',
+            'company_id': self.env.company.id,
+        })
+        wh_copy = wh.copy()
+        self.assertTrue(wh_copy.pos_type_id)
+        self.assertNotEqual(wh.pos_type_id, wh_copy.pos_type_id)
