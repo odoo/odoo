@@ -21,6 +21,7 @@ class TestAnzUBLPint(AccountTestInvoicingCommon):
         # TIN number is required
         cls.company_data['company'].write({
             'vat': '11225459588',
+            'l10n_au_is_gst_registered': True,
             'street': 'Henry Lawson Drive',
             'zip': '2850',
             'city': 'Home Rule',
