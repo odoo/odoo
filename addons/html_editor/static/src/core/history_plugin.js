@@ -523,8 +523,8 @@ export class HistoryPlugin extends Plugin {
                 const oldId = this.nodeMap.getId(removedNodes[0]);
                 if (oldId) {
                     this.nodeMap.set(oldId, addedNodes[0]);
+                    continue;
                 }
-                continue;
             }
             filteredRecords.push(record);
         }
