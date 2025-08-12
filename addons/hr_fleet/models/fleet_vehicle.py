@@ -97,6 +97,16 @@ class FleetVehicle(models.Model):
 
     def write(self, vals):
         self._update_create_write_vals(vals)
+        if 'driver_employee_id' in vals and not vals['driver_employee_id']:
+            today = fields.Date.today()
+            for vehicle in self:
+                if vehicle.driver_employee_id:
+                    current_log = self.env['fleet.vehicle.assignation.log'].search([
+                        ('vehicle_id', '=', vehicle.id),
+                        ('date_end', '=', False)])
+                    if current_log:
+                        current_log.date_end = today
+
         if 'driver_employee_id' in vals:
             for vehicle in self:
                 if vehicle.driver_employee_id and vehicle.driver_employee_id.id != vals['driver_employee_id']:

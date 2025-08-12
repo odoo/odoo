@@ -593,7 +593,7 @@
             <list default_order="date_start desc, id desc" string="Assignment Logs" editable="bottom">
                 <field name="vehicle_id" />
                 <field name="driver_id" widget="many2one_avatar_user" string="Current Driver" />
-                <field name="date_start"/>
+                <field name="date_start" required="True"/>
                 <field name="date_end"/>
             </list>
         </field>
