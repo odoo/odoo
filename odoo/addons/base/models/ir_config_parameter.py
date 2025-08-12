@@ -103,16 +103,16 @@ class IrConfig_Parameter(models.Model):
     @api.model
     def set(self, key, value, type_=None):
         old_value = self._get(key)
-        if old_value is not None and (
+        if old_value is not None and type_ is None and (
             value == old_value or
-            value == False and old_value == '' and (type_ == 'str' or type_ is None)  # spical optimization for res.config.settings.set_values() for char fields
+            value == False and old_value == ''  # spical optimization for res.config.settings.set_values() for char fields
         ):
             return
         param = self.search_fetch([('key', '=', key)], ['type'])
         type_ = type_ or param.type or 'str'
         value = str(self._convert_to_type(value, type_))
         if param:
-            if value == param.value:  # spical optimization for str2bool e.g. 'yes', 'no'...
+            if value == param.value and 'type' == param.type:  # spical optimization for str2bool e.g. 'yes', 'no'...
                 return
             param.write({'value': value, 'type': type_})
         else:

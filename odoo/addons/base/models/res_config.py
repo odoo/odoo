@@ -153,7 +153,7 @@ class ResConfigSettings(models.TransientModel):
         module = self.env.context.get('module')
         if not module:
             return
-        config_parameters = []
+        config_parameters = {}
         for field in self._fields.values():
             if module in field._modules and getattr(field, 'config_parameter', None):
                 value = False
@@ -172,14 +172,32 @@ class ResConfigSettings(models.TransientModel):
                     raise ValueError(f'Invalid type {field.type} for field {field.name} with config_parameter')
 
                 value = str(self.env['ir.config_parameter']._convert_to_type(value, type_))
-                config_parameters.append((field.config_parameter, value, type_))
+                if field.config_parameter in config_parameters:
+                    if config_parameters[field.config_parameter] != (field.config_parameter, value, type_):
+                        raise UserError(_('Cannot set the same config_parameter with different default or type %s') % field.config_parameter)
+                else:
+                    config_parameters[field.config_parameter] = (field.config_parameter, value, type_)
         if config_parameters:
             self.env.cr.execute(SQL("""
-            INSERT INTO ir_config_parameter ("key", "value", "type")
-            VALUES %s
-            ON CONFLICT ("key")
-            DO NOTHING
-            """, SQL(", ").join(config_parameters)))
+                INSERT INTO ir_config_parameter (key, value, type)
+                VALUES %s
+                ON CONFLICT ("key")
+                DO NOTHING
+                RETURNING key
+                """,
+                SQL(", ").join((config_parameters.values())))
+            )
+            updated_rows = self.env.cr.rowcount
+            if updated_rows != len(config_parameters):
+                # get key, type which conflicts with config_parameters
+                self.env.cr.execute(SQL("""
+                    SELECT key, type FROM ir_config_parameter 
+                    WHERE key IN %s
+                    """, tuple(config_parameters)))
+                existing_params = dict(self.env.cr.fetchall())
+                for key, type in existing_params.items():
+                    if type != config_parameters[key][2]:
+                        _logger.error('res.config.settings cannot change config_parameter %s from type %s to type %s', key, type, config_parameters[key][2])
 
     def _valid_field_parameter(self, field, name):
         return (
