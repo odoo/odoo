@@ -6,10 +6,18 @@ import {
     TableOfContentManager,
 } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { fixNonEditableFirstChild } from "@html_editor/utils/dom";
 
 export class TableOfContentPlugin extends Plugin {
     static id = "tableOfContent";
-    static dependencies = ["dom", "selection", "embeddedComponents", "link", "history"];
+    static dependencies = [
+        "dom",
+        "selection",
+        "embeddedComponents",
+        "link",
+        "history",
+        "baseContainer",
+    ];
     resources = {
         user_commands: [
             {
@@ -51,6 +59,11 @@ export class TableOfContentPlugin extends Plugin {
     insertTableOfContent() {
         const tableOfContentBlueprint = renderToElement("html_editor.TableOfContentBlueprint");
         this.dependencies.dom.insert(tableOfContentBlueprint);
+        fixNonEditableFirstChild(
+            this.editable,
+            tableOfContentBlueprint,
+            this.dependencies.baseContainer.getDefaultNodeName()
+        );
         this.dependencies.history.addStep();
     }
 
