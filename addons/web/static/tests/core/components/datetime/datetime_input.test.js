@@ -499,7 +499,7 @@ describe("DateTimeInput (datetime)", () => {
         expect(".o_datetime_input").toHaveValue("08/02/1997 15:45:00");
     });
 
-    test("Clicking clear button doesn't close datetime picker", async () => {
+    test("Clicking clear button closes datetime picker", async () => {
         await mountWithCleanup(DateTimeInputComp, {
             props: {
                 value: DateTime.fromFormat("09/01/1997 12:30:01", "dd/MM/yyyy HH:mm:ss"),
@@ -510,7 +510,7 @@ describe("DateTimeInput (datetime)", () => {
         await contains(".o_datetime_input").click();
         await contains(".o_datetime_picker .o_datetime_buttons .btn-secondary").click();
 
-        expect(".o_datetime_picker").toHaveCount(1);
+        expect(".o_datetime_picker").toHaveCount(0);
     });
 
     test("Clicking apply button closes datetime picker", async () => {
