@@ -1311,6 +1311,17 @@ class ResUsers(models.Model):
     def fields_get(self, allfields=None, attributes=None):
         res = super().fields_get(allfields, attributes=attributes)
 
+        # Try to find the missing field metadata in the corresponding
+        # res.users.settings field. This is usually handled automatically
+        # by related fields, but settings fields are implemented with a compute
+        # + inverse instead of a related.
+        settings_fields = self.env["res.users.settings"]._fields
+        for fname, attributes in res.items():
+            if fname not in settings_fields:
+                continue
+            if "help" not in attributes and settings_fields[fname].help:
+                attributes["help"] = settings_fields[fname].help
+
         # add self readable/writable fields
         readable_fields, writeable_fields = self._self_accessible_fields()
         missing = (writeable_fields | readable_fields).difference(res.keys())
