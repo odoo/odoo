@@ -380,6 +380,11 @@ def load_modules(
             cr.execute("SELECT model || '.' || name FROM ir_model_fields WHERE translate IS TRUE")
             registry._database_translated_fields = {row[0] for row in cr.fetchall()}
 
+            # determine the fields which are currently company dependent in the database
+            if odoo.tools.sql.column_exists(cr, 'ir_model_fields', 'company_dependent'):
+                cr.execute("SELECT model || '.' || name FROM ir_model_fields WHERE company_dependent IS TRUE")
+                registry._database_company_dependent_fields = {row[0] for row in cr.fetchall()}
+
         report = registry._assertion_report
         env = api.Environment(cr, api.SUPERUSER_ID, {})
         load_module_graph(
