@@ -56,6 +56,7 @@ export class ListController extends Component {
         onSelectionChanged: { type: Function, optional: true },
         readonly: { type: Boolean, optional: true },
         showButtons: { type: Boolean, optional: true },
+        allowOpenAction: { type: Boolean, optional: true },
         Model: Function,
         Renderer: Function,
         buttonTemplate: String,
@@ -66,6 +67,7 @@ export class ListController extends Component {
         createRecord: () => {},
         selectRecord: () => {},
         showButtons: true,
+        allowOpenAction: true,
     };
 
     setup() {
@@ -311,7 +313,7 @@ export class ListController extends Component {
         if (dirty) {
             await record.save();
         }
-        if (this.archInfo.openAction) {
+        if (this.props.allowOpenAction && this.archInfo.openAction) {
             this.actionService.doActionButton(
                 {
                     name: this.archInfo.openAction.action,
