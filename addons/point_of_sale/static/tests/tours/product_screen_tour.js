@@ -23,6 +23,16 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
             // Go by default to home category
 
             Chrome.startPoS(),
+            // Make sure we don't have any scroll bar on the product list
+            {
+                trigger: ".product-list",
+                run: function () {
+                    const productList = document.querySelector(".product-list");
+                    if (productList.scrollWidth > document.documentElement.scrollWidth) {
+                        throw new Error("Product list is overflowing");
+                    }
+                },
+            },
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0", "5.10"),
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "2.0", "10.20"),
             ProductScreen.clickDisplayedProduct("Letter Tray", true, "1.0", "5.28"),
@@ -622,6 +632,7 @@ registry.category("web_tour.tours").add("test_barcode_search_attributes_preset",
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
 
+            // Step 1: Search and add first variant
             ProductScreen.searchProduct("12341357"),
             ProductScreen.clickDisplayedProduct("Product with Attributes"),
             {
@@ -634,6 +645,16 @@ registry.category("web_tour.tours").add("test_barcode_search_attributes_preset",
                 "1.0"
             ),
 
+            // Step 2: Search and add product without attributes (used to delay UI update)
+            ProductScreen.searchProduct("987654321"),
+            {
+                content: "Wait for the product without attributes to be visible",
+                trigger: '.product:contains("Product without Attributes")',
+            },
+            ProductScreen.clickDisplayedProduct("Product without Attributes"),
+            ProductScreen.selectedOrderlineHas("Product without Attributes", "1.0"),
+
+            // Step 3: Search and add second variant of the original product
             ProductScreen.searchProduct("12342468"),
             ProductScreen.clickDisplayedProduct("Product with Attributes"),
             {
