@@ -1013,7 +1013,10 @@ class Cache(object):
             cache_value = field_cache[record._ids[0]]
             if field.translate and cache_value is not None:
                 lang = record.env.lang or 'en_US'
-                return cache_value[lang]
+                if lang == 'en_US' or (field.store and record._origin):
+                    return cache_value[lang]
+                # nothing to be found in database
+                return cache_value.get(lang) or cache_value['en_US']
             return cache_value
         except KeyError:
             if default is NOTHING:
@@ -1036,9 +1039,8 @@ class Cache(object):
             lang = record.env.lang or 'en_US'
             cache_value = field_cache.get(record._ids[0]) or {}
             cache_value[lang] = value
-            if not record._origin:
-                for code, _ in record.env['res.lang'].get_installed():
-                    cache_value.setdefault(code, None)
+            if not (field.store and record._origin) and 'en_US' not in cache_value:
+                cache_value['en_US'] = value
             value = cache_value
         field_cache[record._ids[0]] = value
 

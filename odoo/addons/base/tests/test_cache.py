@@ -133,6 +133,7 @@ class TestRecordCache(TransactionCaseWithUserDemo):
         """ Check that the cache persists across multiple language reads and writes. """
         self.env['res.lang']._activate_lang('en_US')
         self.env['res.lang']._activate_lang('fr_FR')
+        self.env['res.lang']._activate_lang('nl_NL')
 
         model = self.env['ir.actions.actions']
 
@@ -143,5 +144,5 @@ class TestRecordCache(TransactionCaseWithUserDemo):
 
         # Ensure the value in second lang persists after reading the env lang value
         record = model.with_context(lang='fr_FR').new({'name': 'action de test'})
-        _ = record.with_context(lang='en_US').name
+        _ = record.with_context(lang='nl_NL').name
         self.assertTrue(record.name)
