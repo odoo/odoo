@@ -5,7 +5,9 @@ import {
     onMounted,
     onWillDestroy,
     onWillStart,
+    onWillUnmount,
     onWillUpdateProps,
+    status,
     useRef,
     useState,
     useSubEnv,
@@ -101,7 +103,7 @@ export class Builder extends Component {
                     await this.props.closeEditor();
                 },
                 installSnippetModule: async (snippet) =>
-                    this.props.installSnippetModule(snippet, this.save.bind(this)),
+                    this.props.installSnippetModule?.(snippet, this.save.bind(this)),
                 resources: {
                     trigger_dom_updated: () => {
                         this.triggerDomUpdated();
@@ -176,6 +178,9 @@ export class Builder extends Component {
             // instantiating the sub components that potentially need the
             // editor.
             const iframeEl = await this.props.iframeLoaded;
+            if (status(this) === "destroyed") {
+                return;
+            }
             this.editableEl = iframeEl.contentDocument.body.querySelector(
                 this.props.editableSelector
             );
@@ -190,7 +195,6 @@ export class Builder extends Component {
                 }
             };
             this.editor.attachTo(this.editableEl);
-            this.editableEl.addEventListener("dragstart", this.onDragStart);
         });
 
         useSubEnv({
@@ -204,7 +208,6 @@ export class Builder extends Component {
         // });
         onWillDestroy(() => {
             this.editor.destroy();
-            this.editableEl.removeEventListener("dragstart", this.onDragStart);
             // actionService.setActionMode("current");
         });
 
@@ -218,6 +221,10 @@ export class Builder extends Component {
             setBuilderCSSVariables(getHtmlStyle(this.editor.document));
             // TODO: onload editor
             this.updateInvisibleEls();
+            this.editableEl.addEventListener("dragstart", this.onDragStart);
+        });
+        onWillUnmount(() => {
+            this.editableEl.removeEventListener("dragstart", this.onDragStart);
         });
         onWillUpdateProps((nextProps) => {
             if (nextProps.isMobile !== this.props.isMobile) {
