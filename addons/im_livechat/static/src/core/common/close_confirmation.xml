@@ -7,7 +7,7 @@
                 <div class="position-absolute top-0 end-0 p-1 o-xsmaller">
                     <button class="o-livechat-CloseConfirmation-close btn-close" t-on-click.stop="() => this.props.onCloseConfirmationDialog()"/>
                 </div>
-                <span class="pt-2 pb-3">Leaving will end the livechat. Proceed leaving?</span>
+                <span class="pt-2 pb-3">Leaving will end the live chat. Do you want to proceed?</span>
                 <button class="o-livechat-CloseConfirmation-leave btn btn-danger p-2 gap-1" t-on-keydown.stop.prevent="onKeydown" t-on-click.stop="() => this.props.onClickLeaveConversation()" t-ref="confirm"><i class="fa fa-fw fa-sign-out"/>Yes, leave conversation</button>
             </div>
         </div>

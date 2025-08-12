@@ -94,13 +94,13 @@ test("can close confirm livechat with keyboard", async () => {
     await contains(".o-mail-Thread:not([data-transient])");
     await triggerHotkey("Escape");
     await contains(".o-livechat-CloseConfirmation", {
-        text: "Leaving will end the livechat. Proceed leaving?",
+        text: "Leaving will end the live chat. Do you want to proceed?",
     });
     await triggerHotkey("Escape");
     await contains(".o-livechat-CloseConfirmation", { count: 0 });
     await triggerHotkey("Escape");
     await contains(".o-livechat-CloseConfirmation", {
-        text: "Leaving will end the livechat. Proceed leaving?",
+        text: "Leaving will end the live chat. Do you want to proceed?",
     });
     await triggerHotkey("Enter");
     await waitForSteps(["/im_livechat/visitor_leave_session"]);
