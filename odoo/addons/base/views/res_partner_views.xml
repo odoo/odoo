@@ -274,6 +274,7 @@
                                             </group>
                                         </group>
                                         <group>
+                                            <field name="vat" placeholder="e.g. BE0477472701" invisible="type != 'delivery'"/>
                                             <field name="company_id" invisible="1"/>    <!-- Need to save value from parented record, cf onchange -->
                                             <label for="comment"/>
                                             <field name="comment" options="{'height': 100}" placeholder="Internal notes..." nolabel="1"/>

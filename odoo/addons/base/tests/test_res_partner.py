@@ -862,6 +862,13 @@ class TestPartnerAddressCompany(TransactionCase):
         for partner in company_2 + contact + contact_dlr + contact_ct + contact2:
             self.assertEqual(partner.vat, contactvat, 'Commercial sync works upstream, therefore also for siblings')
 
+        # change vat of delivery contact - shouldn't be propagated upstream
+        deliveryvat = 'BE0729163846'
+        contact_dlr.write({'vat': deliveryvat})
+        self.assertEqual(contact_dlr.vat, deliveryvat, 'VAT changed for delivery contact')
+        for partner in company_2 + contact + contact_ct + contact2:
+            self.assertEqual(partner.vat, contactvat, 'VAT not propagated upstream')
+
         # MISC PARENT MANIPULATION
         # promote p1 to commercial entity
         newcontactvat = 'BE998877'
