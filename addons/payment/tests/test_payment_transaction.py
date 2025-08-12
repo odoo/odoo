@@ -251,6 +251,16 @@ class TestPaymentTransaction(PaymentCommon):
                 "'done'."
         )
 
+    def test_validate_amount_skips_validation_transactions(self):
+        """Test that the amount validation is skipped for validation transactions."""
+        tx = self._create_transaction('redirect', operation='validation')
+        with patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._extract_amount_data', return_value={'amount': None, 'currency_code': None},
+        ):
+            tx._validate_amount({})
+        self.assertNotEqual(tx.state, 'error')
+
     def test_processing_does_not_apply_updates_when_amount_data_is_invalid(self):
         tx = self._create_transaction('redirect', state='draft', amount=100)
         with patch(

@@ -2,6 +2,7 @@
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.tests.common import PaymentCommon
+from odoo.addons.payment_stripe import const
 
 
 class StripeCommon(PaymentCommon):
@@ -68,4 +69,27 @@ class StripeCommon(PaymentCommon):
                 'object': dict(cls.refund_object, status='failed'),
             },
             'type': 'charge.refund.updated',
+        }
+
+    def _mock_setup_intent_request(self, *args, **kwargs):
+        # See: https://docs.stripe.com/api/setup_intents/confirm
+        mandate_options = {
+            'amount': 1500000,
+            'amount_type': 'maximum',
+            'currency': self.currency.name.lower(),
+        } if self.currency.name in const.INDIAN_MANDATES_SUPPORTED_CURRENCIES else None
+        return {
+            'object': 'setup_intent',
+            'id': 'seti_XXXX',
+            'customer': 'cus_XXXX',
+            'description': self.reference,
+            'payment_method': {
+                'id': 'pm_XXXX',
+                'type': 'card',
+                'card': {'brand': 'dummy'},
+            },
+            'payment_method_options': {'card': {
+                'mandate_options': mandate_options,
+            }},
+            'status': 'succeeded',
         }
