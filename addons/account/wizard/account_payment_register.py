@@ -531,12 +531,17 @@ class AccountPaymentRegister(models.TransientModel):
             return self._get_total_amount_using_same_currency(batch_result, early_payment_discount=early_payment_discount)
         elif self.source_currency_id != comp_curr and self.currency_id == comp_curr:
             # Foreign currency on source line but the company currency one on the opposite line.
-            return self.source_currency_id._convert(
-                self.source_amount_currency,
-                comp_curr,
-                self.company_id,
-                self.payment_date,
-            ), False
+            payment_rate = self.currency_id._get_conversion_rate(self.source_currency_id, comp_curr, self.company_id, self.payment_date)
+            residual_amount = 0.0
+            residual_amount_to_convert = 0.0
+            for aml in batch_result['lines']:
+                aml_rate = abs(aml.balance / aml.amount_currency) if aml.amount_currency else None
+                if aml_rate is not None and aml_rate == payment_rate:
+                    residual_amount_to_convert += aml.amount_residual
+                else:
+                    residual_amount_to_convert += aml.amount_residual_currency
+            residual_amount += comp_curr.round(residual_amount_to_convert * aml_rate)
+            return abs(residual_amount), False
         elif self.source_currency_id == comp_curr and self.currency_id != comp_curr:
             # Company currency on source line but a foreign currency one on the opposite line.
             residual_amount = 0.0

@@ -1748,3 +1748,44 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         ctx = {'active_model': 'account.move', 'active_ids': self.out_invoice_1.ids}
         wizard = self.env['account.payment.register'].with_context(**ctx).create({})
         self.assertEqual(wizard.communication, "test")
+
+    def test_payment_register_wizard_convert_rounding(self):
+        """
+        Test that the payment register wizard convert the amount the same way as the account move when conversion are involved
+        """
+        eur_curr = self.env.ref('base.EUR')
+        eur_curr.active = True
+
+        self.env['res.currency.rate'].create({
+            'currency_id': eur_curr.id,
+            'name': '2025-10-03',
+            'company_rate': 0.051908143350,
+            'inverse_company_rate': 19.264800000000,
+        })
+
+        tax_16 = self.env['account.tax'].create({
+            'name': 'tax 16%',
+            'amount_type': 'percent',
+            'amount': 16.0,
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': eur_curr.id,
+            'date': '2025-10-03',
+            'line_ids': [Command.create({
+                'name': 'line',
+                'quantity': 2.0,
+                'price_unit': 432.0,
+                'tax_ids': [tax_16.id],
+            })]
+        })
+        invoice.action_post()
+
+        ctx = {'active_model': 'account.move', 'active_ids': invoice.ids}
+        wizard = self.env['account.payment.register'].with_context(**ctx).create({
+            'currency_id': self.env.company.currency_id.id,
+        })
+
+        self.assertEqual(wizard.amount, invoice.line_ids[2].balance)
