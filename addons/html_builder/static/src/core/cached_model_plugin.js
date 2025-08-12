@@ -29,7 +29,9 @@ export class CachedModelPlugin extends Plugin {
         this.modelEditCache.invalidate();
     }
     ormRead(model, ids, fields) {
-        return this.ormReadCache.read({ model, ids, fields });
+        const SAFE_NULL = -1;
+        const newIds = ids.map((id) => (id === null ? SAFE_NULL : id));
+        return this.ormReadCache.read({ model, ids: newIds, fields });
     }
     ormSearchRead(model, domain, fields) {
         return this.ormSearchReadCache.read({ model, domain, fields });
