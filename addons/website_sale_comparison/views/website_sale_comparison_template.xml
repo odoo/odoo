@@ -219,17 +219,6 @@
                 <div class="oe_structure oe_empty" id="oe_structure_website_sale_comparison_product_compare_1"/>
                 <div t-attf-class="oe_website_sale o_wsale_comparison_page pb-5 #{website.shop_page_container == 'fluid' and 'container-fluid' or 'container'}">
                     <h1 class="h4 mt-4 mb-3">Compare Products</h1>
-                    <t
-                        t-set="img_ratio_class"
-                        t-value="
-                           'o_img_ratio_16_9' if 'o_wsale_products_opt_thumb_16_9' in website.shop_opt_products_design_classes else
-                            'o_img_ratio_4_3' if 'o_wsale_products_opt_thumb_4_3' in website.shop_opt_products_design_classes else
-                            'o_img_ratio_6_5' if 'o_wsale_products_opt_thumb_6_5' in website.shop_opt_products_design_classes else
-                            'o_img_ratio_4_5' if 'o_wsale_products_opt_thumb_4_5' in website.shop_opt_products_design_classes else
-                            'o_img_ratio_2_3' if 'o_wsale_products_opt_thumb_2_3' in website.shop_opt_products_design_classes else
-                            ''
-                        "
-                    />
 
                     <!-- Mini sticky product overview (initially hidden) -->
                     <div
@@ -255,7 +244,7 @@
                                             <div class="o_mini_product_img_container flex-shrink-0">
                                                 <img
                                                     t-att-src="product._get_image_1024_url()"
-                                                    t-attf-class="img-fluid flex-shrink-0 w-100 h-100 rounded border object-fit-cover #{img_ratio_class}"
+                                                    class="img-fluid flex-shrink-0 w-100 h-100 rounded border object-fit-cover"
                                                     t-att-alt="combination_info['display_name']"
                                                 />
                                             </div>
@@ -316,7 +305,7 @@
                                     <a t-att-href="product.website_url">
                                         <img
                                             t-att-src="product._get_image_1024_url()"
-                                            t-attf-class="img img-fluid w-100 h-100 object-fit-cover border rounded #{img_ratio_class}"
+                                            class="img img-fluid w-100 h-100 object-fit-cover border rounded"
                                             alt="Product image"
                                         />
                                     </a>
