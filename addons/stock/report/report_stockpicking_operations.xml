@@ -130,7 +130,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-foreach="o.move_ids.filtered(lambda m: m.quantity and any(not ml.is_entire_pack for ml in m.move_line_ids))" t-as="move">
+                                    <t t-foreach="o.move_ids.filtered(lambda m: m.quantity and any(not ml.is_entire_pack for ml in m.move_line_ids)).sorted(key=lambda
+                                                  move: (move.move_line_ids and move.move_line_ids[0].location_id.complete_name,
+                                                  move.move_line_ids and move.move_line_ids[0].location_dest_id.complete_name))" t-as="move">
                                         <t t-set="move_lines_without_entire_pack" t-value="move.move_line_ids.filtered(lambda ml: not ml.is_entire_pack)"/>
                                         <!-- This flag is true if there are multiple move lines in a move, or if there is at least one tracked move line -->
                                         <t t-set="move_has_multiple_lines" t-value="len(move.move_line_ids) > 1 or any(move_line.lot_id or move_line.lot_name for move_line in move_lines_without_entire_pack)"/>
@@ -178,7 +180,8 @@
                                             </td>
                                         </tr>
                                         <!-- If a move has multiple move lines, we then loop over them and print a breakdown -->
-                                        <t t-foreach="move_lines_without_entire_pack" t-as="line" t-if="move_has_multiple_lines">
+                                        <t t-foreach="move_lines_without_entire_pack.sorted(key=lambda ml: (ml.location_id.complete_name,
+                                                      ml.location_dest_id.complete_name))" t-as="line" t-if="move_has_multiple_lines">
                                             <tr>
                                                 <td class="text-start">
                                                     <span style="margin-left: 50px;" t-if="line.lot_id or line.lot_name" t-out="line.lot_id.name"></span>
