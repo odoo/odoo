@@ -134,7 +134,7 @@ class HrLeave(models.Model):
     user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, compute_sudo=True, store=True, readonly=True, index=True)
     # leave type configuration
     work_entry_type_id = fields.Many2one(
-        "hr.work.entry.type", compute='_compute_from_employee_id',
+        "hr.work.entry.type", compute='_compute_work_entry_type_id',
         store=True, string="Time Off Type",
         required=True, readonly=False,
         domain="""[
@@ -434,7 +434,7 @@ class HrLeave(models.Model):
                 holiday.date_from = False
                 continue
 
-            if holiday.work_entry_type_request_unit != 'hour' and holiday.work_entry_type_request_unit != 'half_day' and not holiday.request_date_to:
+            if not holiday.request_date_to:
                 holiday.date_to = False
                 continue
 
@@ -477,16 +477,20 @@ class HrLeave(models.Model):
             ]
         return domain
 
-    @api.depends('employee_id')
-    def _compute_from_employee_id(self):
+    @api.depends('employee_id', 'request_date_from', 'request_date_to')
+    def _compute_work_entry_type_id(self):
+        local_work_entry_types = self.env['hr.work.entry.type'].search([('country_id', 'in', self.employee_id.country_id.ids + [False])])
+        all_valid_work_entry_types = local_work_entry_types.filtered_domain([('has_valid_allocation', '=', True)])
+        no_allocation_required_work_entry_types = local_work_entry_types.filtered_domain([('requires_allocation', '=', False)])
         for holiday in self:
             if not holiday.work_entry_type_id.requires_allocation:
                 continue
-            if not holiday.employee_id:
-                holiday.work_entry_type_id = False
-            elif holiday.employee_id.user_id != self.env.user and holiday._origin.employee_id != holiday.employee_id:
-                if holiday.employee_id and not holiday.work_entry_type_id.with_context(employee_id=holiday.employee_id.id).has_valid_allocation:
-                    holiday.work_entry_type_id = False
+            if not holiday.work_entry_type_id.get_work_entry_types_with_valid_allocations(holiday.request_date_from, holiday.request_date_to, holiday.employee_id.id):
+                valid_types = all_valid_work_entry_types.get_work_entry_types_with_valid_allocations(holiday.request_date_from, holiday.request_date_to, holiday.employee_id.id)
+                if not valid_types or not holiday.employee_id:
+                    holiday.work_entry_type_id = no_allocation_required_work_entry_types[0] if no_allocation_required_work_entry_types else None
+                else:
+                    holiday.work_entry_type_id = valid_types[0]
 
     @api.depends('employee_id')
     def _compute_department_id(self):

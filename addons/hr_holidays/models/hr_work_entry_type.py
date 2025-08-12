@@ -186,11 +186,7 @@ class HrWorkEntryType(models.Model):
                     raise ValidationError(_("You cannot modify the 'Public Holiday Included' setting since one or more leaves for that \
                         time off type are overlapping with public holidays, meaning that the balance of those employees would be affected by this change."))
 
-    @api.depends('requires_allocation', 'max_leaves', 'virtual_remaining_leaves')
-    def _compute_valid(self):
-        date_from = self.env.context.get('default_date_from', fields.Datetime.today())
-        date_to = self.env.context.get('default_date_to', fields.Datetime.today())
-        employee_id = self.env.context.get('default_employee_id', self.env.context.get('employee_id', self.env.user.employee_id.id))
+    def get_work_entry_types_with_valid_allocations(self, date_from, date_to, employee_id):
         allocation_by_work_entry_type = dict(self.env['hr.leave.allocation']._read_group(
             domain=Domain([
                 ('work_entry_type_id', 'in', self.filtered(lambda work_entry_type: work_entry_type.requires_allocation).ids),
@@ -203,6 +199,7 @@ class HrWorkEntryType(models.Model):
             groupby=['work_entry_type_id'],
             aggregates=['id:recordset'],
         ))
+        valid_types = self.env['hr.work.entry.type']
         for work_entry_type in self:
             if work_entry_type.requires_allocation:
                 allocations = allocation_by_work_entry_type.get(work_entry_type, self.env['hr.leave.allocation'])
@@ -211,9 +208,20 @@ class HrWorkEntryType(models.Model):
                     alloc.allocation_type == 'accrual'
                     or (alloc.max_leaves > 0 and alloc.virtual_remaining_leaves > -allowed_excess)
                 )
-                work_entry_type.has_valid_allocation = bool(allocations)
+                if allocations:
+                    valid_types += work_entry_type
             else:
-                work_entry_type.has_valid_allocation = True
+                valid_types += work_entry_type
+        return valid_types
+
+    @api.depends('requires_allocation', 'max_leaves', 'virtual_remaining_leaves')
+    def _compute_valid(self):
+        self.has_valid_allocation = False
+        date_from = self.env.context.get('default_date_from', self.env.context.get('date_from', fields.Datetime.today()))
+        date_to = self.env.context.get('default_date_to', self.env.context.get('date_to', fields.Datetime.today()))
+        employee_id = self.env.context.get('default_employee_id', self.env.context.get('employee_id', self.env.user.employee_id.id))
+        valid_types = self.get_work_entry_types_with_valid_allocations(date_from, date_to, employee_id)
+        valid_types.has_valid_allocation = True
 
     def _load_records_write(self, values):
         if 'requires_allocation' in values and self.requires_allocation == values['requires_allocation']:

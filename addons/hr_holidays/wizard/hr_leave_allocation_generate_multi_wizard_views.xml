@@ -6,12 +6,6 @@
             <form string="Generate time off allocations for multiple employees">
                     <group>
                         <field name="employee_ids" widget="many2many_avatar_employee" placeholder="All Employees"/>
-                        <field name="work_entry_type_id"/>
-                        <field name="allocation_type" widget="radio"/>
-                        <field name="unit_of_measure" invisible="1"/>
-                        <field name="accrual_plan_id"
-                            invisible="allocation_type == 'regular'"
-                            required="allocation_type == 'accrual'"/>
                         <div class="o_td_label" name="validity_label">
                             <label for="date_from" string="Validity Period"
                                 invisible="allocation_type == 'accrual'"/>
@@ -24,6 +18,11 @@
                             <field name="date_to" nolabel="1" placeholder="No Limit"/>
                             <div id="no_limit_label" class="oe_read_only" invisible="date_to">No limit</div>
                         </div>
+                        <field name="allocation_type" widget="radio"/>
+                        <field name="accrual_plan_id"
+                            invisible="allocation_type == 'regular'"
+                            required="allocation_type == 'accrual'"/>
+                        <field name="work_entry_type_id"/>
                         <div class="o_td_label">
                             <label for="duration"/>
                         </div>

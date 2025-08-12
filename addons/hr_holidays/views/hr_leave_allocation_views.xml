@@ -127,18 +127,6 @@
                             <field name="type_request_unit" invisible="1"/>
                             <!-- Save already_accrued when creating record to avoid double allocation when cron runs -->
                             <field name="already_accrued" invisible="1"/>
-                            <field name="work_entry_type_id"
-                                context="{'employee_id':employee_id, 'default_date_from':current_date, 'request_type':'allocation'}"
-                                readonly="state in ['refuse', 'validate']"/>
-                            <field name="allocation_type"
-                                widget="radio"
-                                invisible="1"
-                                readonly="not is_officer or state in ['refuse', 'validate']"/>
-                            <field name="is_officer" invisible="1"/>
-                            <field name="accrual_plan_id"
-                                invisible="allocation_type == 'regular'"
-                                required="allocation_type == 'accrual'"
-                                readonly="not is_officer or state in ['refuse', 'validate']"/>
                             <div class="o_td_label" name="validity_label" invisible="not is_officer">
                                 <label for="date_from" string="Validity Period"
                                     invisible="allocation_type == 'accrual' or state != 'confirm'"/>
@@ -163,6 +151,13 @@
                                  invisible="id or not date_to or date_to &gt;= context_today().strftime('%Y-%m-%d')">
                                 <span>The allocated days cannot be used, because the allocation is set to finish in the past.</span>
                             </div>
+                            <field name="accrual_plan_id"
+                                invisible="allocation_type == 'regular'"
+                                required="allocation_type == 'accrual'"
+                                readonly="not is_officer or state in ['refuse', 'validate']"/>
+                            <field name="work_entry_type_id"
+                                context="{'employee_id':employee_id, 'default_date_from':current_date, 'request_type':'allocation'}"
+                                readonly="state in ['refuse', 'validate']"/>
                             <field name="number_of_days" invisible="1"/>
                             <div class="o_td_label">
                                 <label for="number_of_days_display" string="Allocation"
@@ -211,8 +206,10 @@
                     readonly="state in ['refuse', 'validate']"
                     widget="many2one_avatar_employee"/>
             </field>
-            <field name="allocation_type" position="attributes">
-                <attribute name="invisible">0</attribute>
+            <field name="accrual_plan_id" position="before">
+                <field name="allocation_type"
+                    widget="radio"
+                    readonly="not is_officer or state == 'validate'"/>
             </field>
             <label for="date_from" position="replace">
                 <label for="date_from" string="Validity Period" invisible="allocation_type == 'accrual'"/>
