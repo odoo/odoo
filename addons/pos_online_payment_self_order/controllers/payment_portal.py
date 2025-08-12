@@ -33,3 +33,5 @@ class PaymentPortalSelfOrder(PaymentPortal):
                 'pos.payment': pos_order.payment_ids.read(pos_order.payment_ids._load_pos_self_data_fields(pos_order.config_id), load=False),
             }
         })
+        if status == 'success':
+            pos_order._send_order()
