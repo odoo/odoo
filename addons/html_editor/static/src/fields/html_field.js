@@ -269,10 +269,11 @@ export class HtmlField extends Component {
 
         const { sanitize_tags, sanitize } = this.props.record.fields[this.props.name];
         if (
-            !("allowMediaDialogVideo" in config) &&
+            !("allowVideo" in config) &&
+            !this.props.embeddedComponents &&
             (sanitize_tags || (sanitize_tags === undefined && sanitize))
         ) {
-            config.allowMediaDialogVideo = false; // Tag-sanitized fields remove videos.
+            config.allowVideo = false; // Tag-sanitized fields remove videos.
         }
         if (this.props.codeview) {
             config.resources = {
@@ -337,11 +338,11 @@ export const htmlField = {
         if ("allowImage" in options) {
             editorConfig.allowImage = Boolean(options.allowImage);
         }
-        if ("allowMediaDialogVideo" in options) {
-            editorConfig.allowMediaDialogVideo = Boolean(options.allowMediaDialogVideo);
-        }
         if ("allowMediaDocuments" in options) {
             editorConfig.allowMediaDocuments = Boolean(options.allowMediaDocuments);
+        }
+        if ("allowVideo" in options) {
+            editorConfig.allowVideo = Boolean(options.allowVideo);
         }
         if ("allowFile" in options) {
             editorConfig.allowFile = Boolean(options.allowFile);

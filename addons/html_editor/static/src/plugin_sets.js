@@ -52,6 +52,7 @@ import { TableUIPlugin } from "./main/table/table_ui_plugin";
 import { TabulationPlugin } from "./main/tabulation_plugin";
 import { TextDirectionPlugin } from "./main/text_direction_plugin";
 import { ToolbarPlugin } from "./main/toolbar/toolbar_plugin";
+import { VideoPlugin } from "./main/media/video_plugin";
 import { YoutubePlugin } from "./main/youtube_plugin";
 import { PlaceholderPlugin } from "./main/placeholder_plugin";
 import { CollaborationOdooPlugin } from "./others/collaboration/collaboration_odoo_plugin";
@@ -61,7 +62,7 @@ import { CollaborationSelectionPlugin } from "./others/collaboration/collaborati
 import { EmbeddedComponentPlugin } from "./others/embedded_component_plugin";
 import { TableOfContentPlugin } from "@html_editor/others/embedded_components/plugins/table_of_content_plugin/table_of_content_plugin";
 import { ToggleBlockPlugin } from "@html_editor/others/embedded_components/plugins/toggle_block_plugin/toggle_block_plugin";
-import { VideoPlugin } from "@html_editor/others/embedded_components/plugins/video_plugin/video_plugin";
+import { EmbeddedVideoPlugin } from "@html_editor/others/embedded_components/plugins/video_plugin/embedded_video_plugin";
 import { CaptionPlugin } from "@html_editor/others/embedded_components/plugins/caption_plugin/caption_plugin";
 import { EmbeddedFilePlugin } from "@html_editor/others/embedded_components/plugins/embedded_file_plugin/embedded_file_plugin";
 import { QWebPlugin } from "./others/qweb_plugin";
@@ -153,7 +154,6 @@ export const MAIN_PLUGINS = [
     ToolbarPlugin,
     FontPlugin, // note: if before ListPlugin, there are a few split tests that fails
     FontFamilyPlugin,
-    YoutubePlugin,
     IconPlugin,
     ImagePlugin,
     ImagePostProcessPlugin,
@@ -185,12 +185,12 @@ export const EMBEDDED_COMPONENT_PLUGINS = [
     EmbeddedComponentPlugin,
     TableOfContentPlugin,
     ToggleBlockPlugin,
-    VideoPlugin,
+    EmbeddedVideoPlugin,
     CaptionPlugin,
     EmbeddedFilePlugin,
 ];
 
-export const NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS = [FilePlugin];
+export const NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS = [FilePlugin, VideoPlugin, YoutubePlugin];
 
 export const EXTRA_PLUGINS = [
     ...COLLABORATION_PLUGINS,
