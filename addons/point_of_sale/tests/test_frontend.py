@@ -2050,6 +2050,41 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_barcode_search_attributes_preset', login="pos_user")
 
+    def test_pos_ui_round_globally(self):
+        self.main_pos_config.company_id.tax_calculation_rounding_method = 'round_globally'
+        tax_16 = self.env['account.tax'].create({
+            'name': 'Tax 16%',
+            'amount': 16,
+        })
+        self.env['product.product'].create([{
+            'name': 'Test Product 1',
+            'list_price': 7051.73,
+            'taxes_id': [(6, 0, [tax_16.id])],
+            'available_in_pos': True,
+        }, {
+            'name': 'Test Product 2',
+            'list_price': 352.59,
+            'taxes_id': [(6, 0, [tax_16.id])],
+            'available_in_pos': True,
+        }])
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_pos_ui_round_globally', login="pos_user")
+
+        pos_session = self.main_pos_config.current_session_id
+        self.assertEqual(pos_session.order_ids[0].payment_ids[0].amount, 7771.01)
+
+        # Close the session and check the session journal entry.
+        pos_session.action_pos_session_validate()
+
+        lines = pos_session.move_id.line_ids.sorted('balance')
+
+        self.assertEqual(len(lines), 5, "There should be 5 lines in the session journal entry")
+        self.assertAlmostEqual(lines[0].balance, -7051.73)
+        self.assertAlmostEqual(lines[1].balance, -1128.28)
+        self.assertAlmostEqual(lines[2].balance, 56.41)
+        self.assertAlmostEqual(lines[3].balance, 352.59)
+        self.assertAlmostEqual(lines[4].balance, 7771.01)
+
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
     browser_size = '375x667'

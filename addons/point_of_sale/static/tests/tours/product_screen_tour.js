@@ -649,3 +649,23 @@ registry.category("web_tour.tours").add("test_barcode_search_attributes_preset",
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_pos_ui_round_globally", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product 1"),
+            ProductScreen.clickDisplayedProduct("Test Product 2"),
+            inLeftSide([
+                ...["+/-"].map(Numpad.click),
+                ...ProductScreen.selectedOrderlineHasDirect("Test Product 2", "-1.0"),
+            ]),
+            ProductScreen.totalAmountIs("7,771.01"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            Chrome.endTour(),
+        ].flat(),
+});
