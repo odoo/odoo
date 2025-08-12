@@ -88,7 +88,7 @@
     <t t-name="discuss.GifPicker.gif">
         <div class="o-discuss-Gif position-relative mt-1 fs-5 cursor-pointer rounded overflow-hidden">
             <i
-                t-if="store.self.type === 'partner'"
+                t-if="store.self_partner"
                 class="position-absolute top-0 end-0 me-3 mt-3 p-2 o-bg-black bg-opacity-75 fa cursor-pointer opacity-0"
                 t-att-class="{ 'o-text-white fa-star-o': !isFavorite(gif_value), 'fa-star o-starred': isFavorite(gif_value) }"
                 t-on-click="() => this.onClickFavorite(gif_value)"
