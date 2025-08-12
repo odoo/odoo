@@ -27,8 +27,22 @@ class HrLeave(models.Model):
             if not leave.employee_id:
                 continue
 
+<<<<<<< 39c1bd75203b64f8413f18361eb3bb7b43aa98b2
             if leave.employee_id.resource_calendar_id.flexible_hours and (leave.request_unit_hours or leave.request_unit_half):
                 calendar_timezone = pytz.timezone(leave.employee_id.resource_calendar_id.tz)
+||||||| 35773ee4b62cc7858c81bae94d4b0d7ea837a28c
+            calendar = leave.employee_id.resource_calendar_id
+            calendar_timezone = pytz.timezone(calendar.tz)
+
+            if calendar.flexible_hours and (leave.request_unit_hours or leave.request_unit_half or leave.date_from.date() == leave.date_to.date()):
+                leave_date = leave.date_from.astimezone(calendar_timezone).date()
+=======
+            calendar = leave.employee_id.resource_calendar_id
+            calendar_timezone = pytz.timezone((calendar or leave.employee_id).tz)
+
+            if calendar.flexible_hours and (leave.request_unit_hours or leave.request_unit_half or leave.date_from.date() == leave.date_to.date()):
+                leave_date = leave.date_from.astimezone(calendar_timezone).date()
+>>>>>>> 4048337ca5dfe729f29ba6512e01f1997346fec5
                 if leave.request_unit_hours:
                     work_hours_data = [(leave.date_from.astimezone(calendar_timezone).date(), leave.request_hour_to - leave.request_hour_from)]
                 else:

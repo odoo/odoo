@@ -289,6 +289,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
             'requires_allocation': False,
         })
 
+<<<<<<< 39c1bd75203b64f8413f18361eb3bb7b43aa98b2
         self.env['hr.leave'].sudo().create([
             {
                 'holiday_status_id': leave_type.id,
@@ -319,3 +320,36 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         self.assertEqual(fields.Date.to_string(timesheets[0].date), '2025-05-26')
         self.assertEqual(timesheets[1].employee_id, self.empl_employee)
         self.assertEqual(fields.Date.to_string(timesheets[1].date), '2025-05-29')
+||||||| 35773ee4b62cc7858c81bae94d4b0d7ea837a28c
+        timesheet = self.env['account.analytic.line'].search([
+            ('date', '>=', datetime(2025, 7, 12)),
+            ('date', '<=', datetime(2025, 7, 12)),
+            ('employee_id', '=', self.empl_employee.id),
+        ])
+        self.assertEqual(len(timesheet), 1, "One timesheet should be created")
+        self.assertEqual(sum(timesheet.mapped('unit_amount')), 10, "The duration of the timesheet for flexible employee leave "
+                                                        "should be 10 hours")
+=======
+        timesheet = self.env['account.analytic.line'].search([
+            ('date', '>=', datetime(2025, 7, 12)),
+            ('date', '<=', datetime(2025, 7, 12)),
+            ('employee_id', '=', self.empl_employee.id),
+        ])
+        self.assertEqual(len(timesheet), 1, "One timesheet should be created")
+        self.assertEqual(sum(timesheet.mapped('unit_amount')), 10, "The duration of the timesheet for flexible employee leave "
+                                                        "should be 10 hours")
+
+    def test_timeoff_validation_fully_flexible_employee(self):
+        self.empl_employee.resource_calendar_id = False
+
+        time_off = self.Requests.with_user(self.user_employee).create({
+            'name': 'Test Fully Flexible Employee Validation',
+            'employee_id': self.empl_employee.id,
+            'holiday_status_id': self.hr_leave_type_with_ts.id,
+            'request_date_from': datetime(2025, 8, 12),
+            'request_date_to': datetime(2025, 8, 12)
+        })
+        time_off.with_user(SUPERUSER_ID)._action_validate()
+
+        self.assertEqual(time_off.state, 'validate', "The time off for a fully flexible employee should be validated")
+>>>>>>> 4048337ca5dfe729f29ba6512e01f1997346fec5
