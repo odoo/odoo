@@ -3,7 +3,8 @@
 from odoo import models, _
 
 
-SG_TAX_CATEGORIES = {'SR', 'SRCA-S', 'SRCA-C', 'SROVR-RS', 'SROVR-LVG', 'SRLVG', 'ZR', 'ES33', 'ESN33', 'DS', 'OS', 'NG', 'NA'}
+SG_TAX_CATEGORIES = {'SR', 'SRCA-S', 'SRCA-C', 'SROVR-RS', 'SRRC', 'SROVR-LVG', 'SRLVG', 'ZR', 'ES33', 'ESN33', 'DS', 'OS', 'NG', 'NA'}
+SG_GST_CODES_REQUIRING_ADDRESS = {'SR', 'SRCA-S', 'SRCA-C', 'ZR', 'SRRC', 'SROVR-RS', 'SROVR-LVG', 'SRLVG', 'NA'}
 
 
 class AccountEdiXmlPint_Sg(models.AbstractModel):
@@ -97,5 +98,14 @@ class AccountEdiXmlPint_Sg(models.AbstractModel):
         for tax_subtotal_node in tax_total_node['cac:TaxSubtotal']:
             if tax_subtotal_node['cac:TaxCategory']['cbc:ID']['_text'] not in SG_TAX_CATEGORIES:
                 constraints['sg_vat_category_required'] = _("You must set a Singaporean tax category on each taxes of the invoice.")
+
+            # Invoice with GST category code of value 'SR', 'SRCA-S', 'SRCA-C', 'ZR', 'SRRC',
+            # 'SROVR-RS', 'SROVR-LVG', 'SRLVG', 'NA' should contain seller address line and seller
+            # post code
+            if tax_subtotal_node['cac:TaxCategory']['cbc:ID']['_text'] in SG_GST_CODES_REQUIRING_ADDRESS:
+                constraints['sg_seller_street_addr_required'] = \
+                    self._check_required_fields(vals['supplier'], 'street')
+                constraints['sg_seller_post_code_required'] = \
+                    self._check_required_fields(vals['supplier'], 'zip')
 
         return constraints
