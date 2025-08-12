@@ -1,3 +1,5 @@
+import stdnum
+
 from odoo import fields, models
 
 
@@ -17,3 +19,15 @@ class ResPartner(models.Model):
         formats_info = super()._get_ubl_cii_formats_info()
         formats_info['ciusro'] = {'countries': ['RO']}
         return formats_info
+
+    def _compute_is_company(self):
+        l10n_ro_partners = self.filtered(lambda p: p.vat and p.country_code == 'RO')
+        for partner in l10n_ro_partners:
+            partner.is_company = False
+            _, vat_number = self._split_vat(partner.vat)
+            if not self._check_tin1_ro_natural_persons.match(vat_number)\
+                and not self._check_tin2_ro_natural_persons.match(vat_number)\
+                and stdnum.util.get_cc_module('ro', 'vat').is_valid(vat_number):
+                partner.is_company = True
+
+        super(ResPartner, self - l10n_ro_partners)._compute_is_company()
