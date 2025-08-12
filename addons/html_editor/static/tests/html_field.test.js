@@ -2294,3 +2294,30 @@ describe("codeview enabled", () => {
         expect(queryAllTexts(".o-we-command-name")).toEqual(["Video Link"]);
     });
 });
+
+test("should never insert Table of Contents as the first child of the editable", async () => {
+    Partner._records = [
+        {
+            id: 1,
+            txt: `<h1>first</h1>`,
+        },
+    ];
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    setSelectionInHtmlField("h1");
+    await insertText(htmlEditor, "/tableofcontents");
+    await waitFor(".o-we-powerbox");
+    expect(queryAllTexts(".o-we-command-name")[0]).toBe("Table of Contents");
+    await press("Enter");
+    await animationFrame();
+    const firstChild = htmlEditor.editable.firstChild;
+    expect(firstChild.getAttribute("data-embedded")).not.toBe("tableOfContent");
+    expect(firstChild).toHaveOuterHTML('<div class="o-paragraph"><br></div>');
+});

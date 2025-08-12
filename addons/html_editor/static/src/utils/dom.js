@@ -291,3 +291,24 @@ export function splitTextNode(textNode, offset, originalNodeSide = DIRECTIONS.RI
     }
     return parentOffset;
 }
+
+/**
+ * Ensures that the first child of the editable container is editable.
+ *
+ * A Chromium bug prevents selecting the container if editable's first child
+ * is contenteditable= false element. To avoid this, a base container is
+ * inserted before the non-editable node so it no longer appears as
+ * the first child.
+ *
+ * @param {HTMLElement} editable
+ * @param {Node} node The non-editable first child of the editable container.
+ * @param {string} baseContainerNodeName
+ */
+export function fixNonEditableFirstChild(editable, node, baseContainerNodeName) {
+    if (editable.firstChild === node) {
+        const ownerDocument = node.ownerDocument;
+        const firstBaseContainer = createBaseContainer(baseContainerNodeName, ownerDocument);
+        firstBaseContainer.append(ownerDocument.createElement("br"));
+        node.before(firstBaseContainer);
+    }
+}
