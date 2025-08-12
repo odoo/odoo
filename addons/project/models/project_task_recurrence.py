@@ -98,7 +98,7 @@ class ProjectTaskRecurrence(models.Model):
             fields_to_postpone.pop('id', None)
             create_values = {
                 'priority': '0',
-                'stage_id': task.project_id.type_ids[0].id if task.project_id.type_ids else task.stage_id.id,
+                'stage_id': task.sudo().project_id.type_ids[0].id if task.sudo().project_id.type_ids else task.stage_id.id,
                 'child_ids': [Command.create(vals) for vals in self._create_next_occurrences_values({child: recurrence for child in task.child_ids})]
             }
             create_values.update({
