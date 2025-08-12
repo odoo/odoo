@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { fillShrunkPhrasingParent } from "@html_editor/utils/dom";
+import { fillShrunkPhrasingParent, fixNonEditableFirstChild } from "@html_editor/utils/dom";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { withSequence } from "@html_editor/utils/resource";
@@ -119,18 +119,12 @@ export class BannerPlugin extends Plugin {
             </div>`
         ).childNodes[0];
         this.dependencies.dom.insert(bannerElement);
+        const baseContainerNodeName = this.dependencies.baseContainer.getDefaultNodeName();
         const nextNode = this.dependencies.baseContainer.isCandidateForBaseContainer(blockEl)
             ? blockEl.nodeName
-            : this.dependencies.baseContainer.getDefaultNodeName();
+            : baseContainerNodeName;
         this.dependencies.dom.setTag({ tagName: nextNode });
-        // If the first child of editable is contenteditable false element
-        // a chromium bug prevents selecting the container.
-        // Add a baseContainer above it so it's no longer the first child.
-        if (this.editable.firstChild === bannerElement) {
-            const firstBaseContainer = this.dependencies.baseContainer.createBaseContainer();
-            firstBaseContainer.append(this.document.createElement("br"));
-            bannerElement.before(firstBaseContainer);
-        }
+        fixNonEditableFirstChild(this.editable, bannerElement, baseContainerNodeName);
         this.dependencies.selection.setCursorEnd(
             bannerElement.querySelector(`.o_editor_banner_content > ${baseContainer.tagName}`)
         );
