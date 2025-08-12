@@ -485,8 +485,8 @@ export class HistoryPlugin extends Plugin {
                     this.idToNodeMap.delete(oldId);
                     this.nodeToIdMap.set(addedNodes[0], oldId);
                     this.idToNodeMap.set(oldId, addedNodes[0]);
+                    continue;
                 }
-                continue;
             }
             filteredRecords.push(record);
         }

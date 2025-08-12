@@ -774,6 +774,20 @@ describe("same text node mutations", () => {
         editor.shared.history.redo();
         expect(getContent(el)).toBe(`<p>[]hello world</p>`);
     });
+    test("same text node mutation on newly added node should not break history", async () => {
+        const { el, editor } = await setupEditor(`<p>[]hello </p>`);
+        const p = el.querySelector("p");
+        const textNode = editor.document.createTextNode("world");
+        p.append(textNode);
+        expect(getContent(el)).toBe(`<p>[]hello world</p>`);
+        p.replaceChild(textNode.cloneNode(true), textNode);
+        editor.shared.history.addStep();
+        expect(getContent(el)).toBe(`<p>[]hello world</p>`);
+        editor.shared.history.undo();
+        expect(getContent(el)).toBe(`<p>[]hello </p>`);
+        editor.shared.history.redo();
+        expect(getContent(el)).toBe(`<p>[]hello world</p>`);
+    });
 });
 
 describe("unobserved mutations", () => {
