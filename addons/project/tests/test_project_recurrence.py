@@ -365,3 +365,38 @@ class TestProjectRecurrence(TransactionCase):
         self.user_projectuser.action_archive()
         parent_task.write({'state': '1_done'})
         self.assertEqual((parent_task.recurrence_id.task_ids - parent_task).child_ids.user_ids, self.user)
+
+    def test_close_recurring_task_private_project(self):
+        """
+            Test that an assigned employee to a recurrent task can close it
+            even when they don't have access to the project.
+
+            Test Case:
+            ==========
+            1) Create a private project with a parent task and a recurrent subtask.
+            2) assign an employee to the subtask.
+            3) Ensure the employee can close the subtask even if they don't have
+               access to the project.
+        """
+        employee = self.env['res.users'].create({
+            'name': 'Employee',
+            'login': 'employee',
+            'email': 'employee@odoo.com',
+            'group_ids': [(6, 0, [self.env.ref('project.group_project_user').id])],
+        })
+        private_project = self.env['project.project'].create({
+            'name': 'Private Project',
+            'privacy_visibility': 'followers',
+        })
+        task = self.env['project.task'].create({
+            'name': 'Parent Task',
+            'project_id': private_project.id,
+            'user_ids': [(4, employee.id)],
+            'recurring_task': True,
+            'repeat_type': 'forever',
+            'state': '01_in_progress',
+        })
+
+        self.env.invalidate_all()
+        task.with_user(employee).write({'state': '1_done'})
+        self.assertEqual(task.state, '1_done', "The employee should be able to mark the task as done.")
