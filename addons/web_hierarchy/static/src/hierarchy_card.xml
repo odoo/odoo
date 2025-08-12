@@ -17,7 +17,7 @@
                     'border-bottom-0': props.node.nodes.length or props.node.canShowChildNodes,
                 }"
                 t-att-data-node-id="props.node.id"
-                t-on-click.synthetic="onGlobalClick"
+                t-custom-click.synthetic="onGlobalClick"
             >
                 <div class="o_hierarchy_node_content">
                     <Record resModel="props.node.model.resModel"

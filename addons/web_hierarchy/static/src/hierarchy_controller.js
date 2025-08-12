@@ -73,9 +73,9 @@ export class HierarchyController extends Component {
         return this.model.resIds.length === 0;
     }
 
-    async openRecord(node) {
+    async openRecord(node, newWindow) {
         const activeIds = this.model.root.resIds;
-        this.props.selectRecord(node.resId, { activeIds });
+        this.props.selectRecord(node.resId, { activeIds, newWindow });
     }
 
     async beforeExecuteActionButton(clickParams) {}
