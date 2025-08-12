@@ -532,8 +532,9 @@
 }
 
 .o_wsale_products_opt_design_cards {
+    --_padding-base: #{map-get($spacers, 2)};
     --o-wsale-card-border-width: 1px;
-    --o-wsale-card-info-padding: #{map-get($spacers, 2)} #{map-get($spacers, 2)} #{map-get($spacers, 3)};
+    --o-wsale-card-info-padding: #{map-get($spacers, 2)} var(--_padding-base) var(--_padding-base);
     --o-wsale-card-info-grow: 1;
     --o-wsale-card-border-radius: var(--o-wsale-opt-border-radius, 0px);
     --o-wsale-card-pseudobg-y: 0;
@@ -543,6 +544,20 @@
 
     $-br-top: MAX(0px, calc(var(--o-wsale-card-border-radius) - 1px));
     --o-wsale-card-thumb-border-radius: #{$-br-top} #{$-br-top} 0 0;
+
+    &:where(.o_wsale_products_opt_rounded_5) {
+        --_padding-base: min(#{map-get($spacers, 3)}, max(calc(var(--o-wsale-opt-border-radius) - var(--btn-border-radius)), #{map-get($spacers, 2)}));
+        &.o_wsale_products_opt_actions_onhover {
+            --o-wsale-card-info-padding: #{map-get($spacers, 2)} var(--_padding-base);
+        }
+    }
+
+    &.o_wsale_products_opt_actions_inline {
+        &:where(:not(.o_wsale_products_opt_rounded_0)) {
+            --o-wsale-card-info-padding: #{map-get($spacers, 2)} max(var(--_padding-base), calc(var(--o-wsale-opt-border-radius) - max(var(--btn-border-radius), var(--_padding-base)))) var(--_padding-base);
+        }
+    }
+
 
     &.o_wsale_products_opt_layout_list {
         $-br-top: MAX(0px, calc(var(--o-wsale-opt-border-radius, 0px) - 1px));
@@ -589,6 +604,7 @@
 
     --o-wsale-card-border-width: #{$border-width};
     --o-wsale-card-border-radius: var(--o-wsale-opt-border-radius, 0px);
+    --o-wsale-card-info-padding: #{map-get($spacers, 2)} 0 0 0;
     --o-wsale-card-padding: var(--_padding-base);
     --o-wsale-card-btns-margin-bottom: 0;
     --o-wsale-card-pseudobg-y: 0;
@@ -603,6 +619,9 @@
     }
 
     &:where(:not(.o_wsale_products_opt_rounded_0)) {
+        &.o_wsale_products_opt_actions_inline {
+            --o-wsale-card-info-padding: #{map-get($spacers, 2)} 0 min(#{map-get($spacers, 2)}, calc(var(--o-wsale-opt-border-radius) - calc(var(--_padding-base) + var(--btn-border-radius)))) 0;
+        }
         --o-wsale-card-thumb-border-radius: max(var(--border-radius-sm), calc(var(--o-wsale-opt-border-radius) - var(--_padding-base)));
 
         --_offset-top: calc(var(--o-wsale-card-thumb-border-radius) * 0.1);
