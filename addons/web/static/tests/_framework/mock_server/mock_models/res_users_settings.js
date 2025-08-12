@@ -1,11 +1,5 @@
 import { ServerModel } from "../mock_model";
-import { getKwArgs } from "../mock_server_utils";
 import { ensureArray } from "@web/core/utils/arrays";
-
-/**
- * @template T
- * @typedef {import("@web/../tests/web_test_helpers").KwArgs<T>} KwArgs
- */
 
 const ORM_AUTOMATIC_FIELDS = new Set([
     "create_date",
@@ -17,7 +11,6 @@ const ORM_AUTOMATIC_FIELDS = new Set([
 ]);
 
 export class ResUsersSettings extends ServerModel {
-    // TODO: merge this class with mail models
     _name = "res.users.settings";
 
     /** @param {number|number[]} userIdOrIds */
@@ -36,11 +29,6 @@ export class ResUsersSettings extends ServerModel {
      * @param {string[]} [fields_to_format]
      */
     res_users_settings_format(id, fields_to_format) {
-        const kwargs = getKwArgs(arguments, "id", "fields_to_format");
-        id = kwargs.id;
-        delete kwargs.id;
-        fields_to_format = kwargs.fields_to_format;
-
         const [settings] = this.browse(id);
         const filterPredicate = fields_to_format
             ? ([fieldName]) => fields_to_format.includes(fieldName)
@@ -55,14 +43,8 @@ export class ResUsersSettings extends ServerModel {
     /**
      * @param {number | Iterable<number>} idOrIds
      * @param {Object} newSettings
-     * @param {KwArgs<{ new_settings }>} [kwargs]
      */
     set_res_users_settings(idOrIds, new_settings) {
-        const kwargs = getKwArgs(arguments, "idOrIds", "new_settings");
-        idOrIds = kwargs.idOrIds;
-        delete kwargs.idOrIds;
-        new_settings = kwargs.new_settings || {};
-
         const [id] = ensureArray(idOrIds);
         const [oldSettings] = this.browse(id);
         const changedSettings = {};

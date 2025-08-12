@@ -147,7 +147,6 @@ class ResUsersSettings extends WebResUsersSettings {
         } else {
             ResUsersSettingsEmbeddedAction.write(embeddedSettings.id, vals);
         }
-        return embeddedSettings;
     }
 }
 
@@ -268,6 +267,7 @@ defineActions([
 
 beforeEach(() => {
     user.updateUserSettings("id", 1); // workaround to populate the user settings
+    user.updateUserSettings("embedded_actions_config_ids", {}); // workaround to populate the embedded user settings
 });
 
 test("can display embedded actions linked to the current action", async () => {
@@ -310,6 +310,14 @@ test("can toggle visibility of embedded actions", async () => {
     ).click();
     expect(".o_embedded_actions > button").toHaveCount(3, {
         message: "Should have 2 embedded actions in the embedded + the dropdown button",
+    });
+    expect(user.settings.embedded_actions_config_ids).toEqual({
+        "1+": {
+            embedded_actions_order: [],
+            embedded_actions_visibility: [false, 102],
+            embedded_visibility: true,
+            res_model: "partner",
+        },
     });
 });
 
@@ -441,6 +449,14 @@ test("a view coming from a embedded can be saved in the embedded actions", async
     expect(".o_embedded_actions > button").toHaveCount(4, {
         message: "Should have 2 embedded actions in the embedded + the dropdown button",
     });
+    expect(user.settings.embedded_actions_config_ids).toEqual({
+        "1+": {
+            embedded_actions_order: [false, 102, 103, 4],
+            embedded_actions_visibility: [false, 102, 4],
+            embedded_visibility: true,
+            res_model: "partner",
+        },
+    });
 });
 
 test("a view coming from a embedded with python_method can be saved in the embedded actions", async () => {
@@ -499,6 +515,14 @@ test("a view coming from a embedded with python_method can be saved in the embed
     expect(".o_embedded_actions > button").toHaveCount(4, {
         message: "Should have 2 embedded actions in the embedded + the dropdown button",
     });
+    expect(user.settings.embedded_actions_config_ids).toEqual({
+        "1+": {
+            embedded_actions_order: [false, 102, 103, 4],
+            embedded_actions_visibility: [false, 103, 4],
+            embedded_visibility: true,
+            res_model: "partner",
+        },
+    });
 });
 
 test("the embedded actions should not be displayed when switching view", async () => {
@@ -532,6 +556,14 @@ test("User can move the main (first) embedded action", async () => {
     expect(".o_embedded_actions > button:nth-child(2) > span").toHaveText("Partners Action 1", {
         message: "Main embedded action should've been moved to 2nd position",
     });
+    expect(user.settings.embedded_actions_config_ids).toEqual({
+        "1+": {
+            embedded_actions_order: [102, false, 103],
+            embedded_actions_visibility: [false, 102],
+            embedded_visibility: true,
+            res_model: "partner",
+        },
+    });
 });
 
 test("User can unselect the main (first) embedded action", async () => {
@@ -547,6 +579,14 @@ test("User can unselect the main (first) embedded action", async () => {
     await contains(dropdownItem).click();
     expect(dropdownItem).not.toHaveClass("selected", {
         message: "Main embedded action should be unselected",
+    });
+    expect(user.settings.embedded_actions_config_ids).toEqual({
+        "1+": {
+            embedded_actions_order: [],
+            embedded_actions_visibility: [],
+            embedded_visibility: true,
+            res_model: "partner",
+        },
     });
 });
 
