@@ -94,6 +94,7 @@ class EventLeadRule(models.Model):
     event_id = fields.Many2one(
         'event.event', string='Event',
         domain="[('company_id', 'in', [company_id or current_company_id, False])]",
+        ondelete="cascade",
         help='Filter the attendees to include those of this specific event. If not set, no event restriction will be applied.')
     company_id = fields.Many2one(
         'res.company', string='Company',
