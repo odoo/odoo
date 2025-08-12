@@ -339,6 +339,35 @@ test("toolbar works: can select font size", async () => {
     expect(inputEl).toHaveValue(oSmallSize);
 });
 
+<<<<<<< ea60d32efcdb39048033eafa83db47b324f721b6
+||||||| 39b59295799643cf46f32815d2ab844955ec0781
+test("should focus the editable area after selecting a font size item", async () => {
+    const { editor, el } = await setupEditor("<p>[test]</p>");
+    await expectElementCount(".o-we-toolbar", 1);
+    const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
+    const inputEl = iframeEl.contentWindow.document?.querySelector("input");
+    await click(inputEl);
+    await contains(".o_font_size_selector_menu .dropdown-item:contains('34')").click();
+    expect(getActiveElement()).toBe(editor.editable);
+    expect(getActiveElement()).not.toBe(inputEl);
+    expect(getContent(el)).toBe(`<p><span class="h1-fs">[test]</span></p>`);
+});
+
+=======
+test("should focus the editable area after selecting a font size item", async () => {
+    const { editor, el } = await setupEditor("<p>[test]</p>");
+    await expectElementCount(".o-we-toolbar", 1);
+    const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
+    const inputEl = iframeEl.contentWindow.document?.querySelector("input");
+    await click(inputEl);
+    await expectElementCount(".o_font_size_selector_menu .dropdown-item:contains('34')", 1);
+    await contains(".o_font_size_selector_menu .dropdown-item:contains('34')").click();
+    expect(getActiveElement()).toBe(editor.editable);
+    expect(getActiveElement()).not.toBe(inputEl);
+    expect(getContent(el)).toBe(`<p><span class="h1-fs">[test]</span></p>`);
+});
+
+>>>>>>> f26bdb1a2bafca8a1d5992164f7a815c4583c671
 test.tags("desktop");
 test("toolbar works: display correct font size on select all", async () => {
     const { el } = await setupEditor("<p>test</p>");
