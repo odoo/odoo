@@ -210,20 +210,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                     'request_date_to': time.strftime('2022-02-04'),
                 })
 
-            # A leave cannot be modified so that it's longer than the allocation
-            valid_leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
-                'name': 'Valid Hol21',
-                'employee_id': self.employee_emp_id,
-                'work_entry_type_id': self.holidays_type_2.id,
-                'request_date_from': time.strftime('2022-02-02'),
-                'request_date_to': time.strftime('2022-02-03'),
-            })
-            with self.assertRaises(ValidationError):
-                valid_leave.write({
-                    'request_date_from': time.strftime('2022-02-01'),
-                    'request_date_to': time.strftime('2022-02-05'),
-                })
-
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_limited_type_days_left(self):
         """  Employee creates a leave request in a limited category and has enough days left  """

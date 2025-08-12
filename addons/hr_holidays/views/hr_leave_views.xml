@@ -351,23 +351,7 @@
                             <field name="display_name" invisible="not work_entry_type_id"/>
                         </div>
                         <group name="col_left" class="m-0">
-                            <field name="work_entry_type_id" force_save="1"
-                                domain="[
-                                    '|',
-                                        ('requires_allocation', '=', False),
-                                        '&amp;',
-                                            ('has_valid_allocation', '=', True),
-                                            '|',
-                                                ('allows_negative', '=', True),
-                                                '&amp;',
-                                                    ('virtual_remaining_leaves', '&gt;', 0),
-                                                    ('allows_negative', '=', False),
-                                ]"
-                                context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to}"
-                                options="{'no_create': True, 'request_type': 'leave'}"
-                                readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
-                            <label for="request_date_from" invisible="work_entry_type_request_unit not in('hour', 'half_day')" string="Date" />
-                            <label for="request_date_from" invisible="work_entry_type_request_unit in ('half_day', 'hour')" string="Dates" />
+                            <label for="request_date_from" string="Dates"/>
                             <div id="full_date" class="o_row">
                                 <field
                                     name="request_date_from"
@@ -403,10 +387,26 @@
                                 <label for="date_to" string="To" />
                                 <field name="date_to" readonly="1"/>
                             </div>
+                            <field name="work_entry_type_id" force_save="1"
+                                domain="[
+                                    '|',
+                                        ('requires_allocation', '=', False),
+                                        '&amp;',
+                                            ('has_valid_allocation', '=', True),
+                                            '|',
+                                                ('allows_negative', '=', True),
+                                                '&amp;',
+                                                    ('virtual_remaining_leaves', '&gt;', 0),
+                                                    ('allows_negative', '=', False),
+                                ]"
+                                context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to}"
+                                options="{'no_create': True, 'request_type': 'leave'}"
+                                readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"
+                                placeholder="eg. Sickness, Paid time off, Unpaid, ..."/>
                             <field name="name" readonly="state != 'confirm'" widget="text" nolabel="1" colspan="2" placeholder="No description provided" />
                         </group>
-                        <group>
-                            <field name="supported_attachment_ids" widget="many2many_binary" nolabel="1" invisible="state != 'confirm'" colspan="2"/>
+                        <group name="attachments_relapse">
+                        <!-- to be filled in inheritance -->
                         </group>
                     </div>
                     <div class="o_hr_leave_column col_right col-md-6 col-12">
@@ -427,9 +427,9 @@
         <field name="mode">primary</field>
         <field name="priority">100</field>
         <field name="arch" type="xml">
-            <field name="work_entry_type_id" position="before">
+            <xpath expr="//group[@name='col_left']/*[1]" position="before">
                 <field name="employee_id" widget="many2one_avatar_employee" readonly="1"/>
-            </field>
+            </xpath>
             <xpath expr="//header" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
@@ -439,6 +439,9 @@
             </xpath>
             <xpath expr="//div[hasclass('o_attachment_preview')]" position="attributes">
                 <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//group[@name='attachments_relapse']" position="inside">
+                <field name="supported_attachment_ids" widget="many2many_binary" nolabel="1" invisible="state != 'confirm'" colspan="2"/>
             </xpath>
         </field>
     </record>
@@ -542,7 +545,7 @@
             <xpath expr="//div[@name='title']" position="attributes">
                 <attribute name="invisible">0</attribute>
             </xpath>
-            <xpath expr="//field[@name='work_entry_type_id']" position="before">
+            <xpath expr="//group[@name='col_left']/*[1]" position="before">
                 <field name="employee_id" groups="hr_holidays.group_hr_holidays_responsible" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" widget="many2one_avatar_employee"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="department_id" groups="hr_holidays.group_hr_holidays_responsible" readonly="1"/>
