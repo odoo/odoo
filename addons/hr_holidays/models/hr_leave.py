@@ -268,6 +268,17 @@ class HrLeave(models.Model):
             leave.request_hour_from = hour_from
             leave.request_hour_to = hour_to
 
+    @api.onchange('request_date_from', 'request_date_to')
+    def _onchange_dates(self):
+        if not self.holiday_status_id.get_leave_types_with_valid_allocaions(self.request_date_from, self.request_date_to, self.employee_id.id):
+            valid_types = self.env['hr.leave.type'].search([]).get_leave_types_with_valid_allocaions(self.request_date_from, self.request_date_to, self.employee_id.id)
+            if not valid_types or not self.employee_id:
+                domain = [('requires_allocation', '=', False)]
+                leave_types = self.env['hr.leave.type'].search(domain)
+                self.holiday_status_id = leave_types[0] if leave_types else None
+            elif valid_types:
+                self.holiday_status_id = valid_types[0]
+
     @api.depends('employee_id', 'leave_type_request_unit', 'request_date_from', 'request_date_to',
             'request_hour_from', 'request_hour_to', 'request_date_from_period', 'request_date_to_period')
     def _compute_dashboard_warning_message(self):
