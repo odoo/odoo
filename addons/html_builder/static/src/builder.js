@@ -87,6 +87,7 @@ export class Builder extends Component {
                         this.updateInvisibleEls();
                         this.editorBus.trigger("UPDATE_EDITING_ELEMENT");
                         this.triggerDomUpdated();
+                        this.props.config.onChange?.();
                     }
                 },
                 reloadEditor: async (param = {}) => {
