@@ -10,6 +10,7 @@ class WidthOptionPlugin extends Plugin {
             withSequence(WIDTH, {
                 template: "html_builder.WidthOption",
                 selector: ".s_alert, .s_blockquote, .s_text_highlight",
+                name: "widthOption",
             }),
         ],
     };

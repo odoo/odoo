@@ -7,7 +7,7 @@
     <div class="o_block_tab"
          t-att-class="{'o_we_ongoing_insertion': this.state.ongoingInsertion}"
          t-ref="block-tab">
-        <div class="o_snippets_container" id="snippet_groups">
+        <div t-if="this.snippetModel.snippetGroups.length" class="o_snippets_container" id="snippet_groups">
             <div class="o_snippets_container_header"><span>Categories</span></div>
             <div class="o_snippets_container_body">
                 <t t-foreach="this.snippetModel.snippetGroups" t-as="snippet" t-key="snippet.id">
@@ -33,7 +33,8 @@
             </div>
         </t>
 
-        <div class="o_snippets_container" id="snippet_content">
+        <div t-if="this.snippetModel.snippetInnerContents.length"
+            class="o_snippets_container" id="snippet_content">
             <div class="o_snippets_container_header"><span>Inner Content</span></div>
             <div class="o_snippets_container_body">
                 <t t-foreach="this.snippetModel.snippetInnerContents" t-as="snippet" t-key="snippet.id">
