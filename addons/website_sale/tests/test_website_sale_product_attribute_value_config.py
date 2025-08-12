@@ -157,3 +157,21 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
             combination_info = product._get_combination_info()
         self.assertEqual(round(combination_info['price'], 2), 456.52, "434.78$ + 5% tax (mapped from fp 15% -> 5% for BE)")
         self.assertEqual(round(combination_info['list_price'], 2), 456.52, "434.78$ + 5% tax (mapped from fp 15% -> 5% for BE)")
+
+    def test_hide_attribute_value_without_matching_product_variant(self):
+        """Ensure attribute values are hidden if they don't have a matching product variant"""
+        self.ssd_attribute.preview_variants = 'visible'
+
+        product_template = self.env['product.template'].create({
+            'name': 'Test Product Template',
+        })
+
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product_template.id,
+            'attribute_id': self.ssd_attribute.id,
+            'value_ids': [Command.set((self.ssd_256.id, self.ssd_512.id))],
+        })
+
+        product_template.product_variant_ids.unlink()
+        previewed_attribute_values = product_template._get_previewed_attribute_values()
+        self.assertFalse(previewed_attribute_values)

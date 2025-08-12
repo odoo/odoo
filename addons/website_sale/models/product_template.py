@@ -350,7 +350,9 @@ class ProductTemplate(models.Model):
             )
             if available_attribute_lines:
                 previewed_ptal = available_attribute_lines[0]
-                previewed_ptavs = previewed_ptal.product_template_value_ids._only_active()
+                previewed_ptavs = previewed_ptal.product_template_value_ids.filtered(
+                    lambda ptav: ptav.ptav_active and ptav.ptav_product_variant_ids
+                )
                 if len(previewed_ptavs) > 1:
                     previewed_ptavs_data = []
                     for ptav in previewed_ptavs[:show_count]:
