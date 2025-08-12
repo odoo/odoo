@@ -91,6 +91,9 @@ export class NavigableList extends Component {
 
     selectOption(ev, index, params = {}) {
         const option = this.props.options[index];
+        if (!option) {
+            return;
+        }
         if (option.unselectable) {
             this.close();
             return;
