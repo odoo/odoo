@@ -3,6 +3,7 @@
 import base64
 import json
 import logging
+import re
 
 from lxml import etree
 from werkzeug import urls
@@ -1030,35 +1031,34 @@ class Website(models.Model):
     def _get_snippet_defaults(self, snippet):
         return super()._get_snippet_defaults(snippet) | const.SNIPPET_DEFAULTS.get(snippet, {})
 
-    def _get_product_image_ratio(self):
-        """Get the product image aspect ratio based on the website's design classes.
-
-        Returns:
-            str: The aspect ratio as a string (e.g., '16_9', '4_3', '1_1')
+    def _get_product_image_ratio_classes(self):
+        """ Return the classes defining the product image aspect ratio from the website's design
+        classes.
         """
-        classes = self.shop_opt_products_design_classes or ''
-        ratio_mapping = {
-            'o_wsale_products_opt_thumb_16_9': '16_9',
-            'o_wsale_products_opt_thumb_4_3': '4_3',
-            'o_wsale_products_opt_thumb_6_5': '6_5',
-            'o_wsale_products_opt_thumb_4_5': '4_5',
-            'o_wsale_products_opt_thumb_2_3': '2_3',
-        }
-        for class_name, ratio in ratio_mapping.items():
-            if class_name in classes:
-                return ratio
-        return '1_1'
+        if (design_classes := self.shop_opt_products_design_classes):
+            image_ratio_class_regex = r'o_wsale_products_opt_thumb_\d+_\d+(?:_mobile)?\b'
+            ratio_classes = re.findall(image_ratio_class_regex, design_classes)
+            has_mobile_ratio = (
+                'o_wsale_products_opt_design_list_large' in design_classes or
+                'o_wsale_products_opt_design_showcase' in design_classes
+            )
+            if has_mobile_ratio:
+                ratio_classes.append('o_wsale_has_mobile_ratio')
+            return ' '.join(ratio_classes)
+        return ''
 
     def _get_product_image_ratio_height(self):
-        match self._get_product_image_ratio():
-            case '16_9':
-                return '36px'
-            case '4_3':
-                return '48px'
-            case '6_5':
-                return '53px'
-            case '4_5':
-                return '96px'
+        """ Return the image height of products images, used in `sale.mail_template_data.xml`. """
+        design_classes = self.shop_opt_products_design_classes or ''
+        image_ratio_height_mapping = {
+            'o_wsale_products_opt_thumb_16_9': '36px',
+            'o_wsale_products_opt_thumb_4_3': '48px',
+            'o_wsale_products_opt_thumb_6_5': '53px',
+            'o_wsale_products_opt_thumb_4_5': '96px',
+        }
+        for class_name, image_height in image_ratio_height_mapping.items():
+            if class_name in design_classes:
+                return image_height
         return '64px'
 
     def _populate_product_feeds(self):

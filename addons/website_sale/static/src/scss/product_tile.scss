@@ -518,7 +518,7 @@
         --o-wsale-card-info-padding: #{map-get($spacers, 2)} 0;
     }
     &.o_wsale_products_opt_layout_list {
-        --o-wsale-card-border-width: 0 0 1px;
+        --o-wsale-card-border-width: 0 0 #{$border-width};
         --o-wsale-card-padding: 0 0 var(--o-wsale-products-grid-gap);
         --o-wsale-card-info-padding: 0 0 0 #{map-get($spacers, 2)};
         --o-wsale-card-info-attributes-display: flex;
@@ -1279,6 +1279,93 @@
     }
 }
 
+.o_wsale_products_opt_design_list_large {
+    --o-wsale-card-thumb-size: 33%;
+    --o-wsale-card-thumb-border-radius: var(--o-wsale-opt-border-radius, 0px);
+    --o-wsale-card-info-gap: #{map-get($spacers, 5)};
+    --o-wsale-card-info-padding: #{map-get($spacers, 3)} 0 #{map-get($spacers, 3)} #{map-get($spacers, 3)};
+    --o-wsale-card-info-margin: 0;
+    --o-wsale-card-attribute-previewer-padding: #{map-get($spacers, 3)} 0 0;
+    --o-wsale-card-attribute-previewer-width: 100%;
+    --o-wsale-card-sub-display: contents;
+    --o-wsale-card-border-width: 0 0 1px;
+    --o-wsale-card-padding: 0 0 var(--o-wsale-products-grid-gap, 16px);
+    --o-wsale-card-info-attributes-display: flex;
+    --o-wsale-card-btns-justify-content: end;
+    --o-wsale-card-btn-label-display: none;
+    --o-wsale-card-price-min-width: auto;
+    --o-wsale-card-btn-submit-order: 1;
+
+    .o_wsale_product_information {
+        display: grid;
+        align-self: stretch;
+        grid-template-columns: 1fr auto;
+        grid-template-rows: 1fr auto;
+        grid-template-areas:
+            "text prices"
+            "buttons buttons";
+    }
+
+    .o_wsale_product_info_attributes_wrapper {
+        grid-area: text;
+        align-self: start;
+        width: 100%;
+        padding: 0;
+    }
+
+    .product_price {
+        grid-area: prices;
+        align-self: start;
+
+        > del {
+            margin-right: 0 !important;
+        }
+    }
+
+    .o_wsale_product_btn {
+        grid-area: buttons;
+    }
+
+    @include media-breakpoint-down(md) {
+        --o-wsale-card-info-padding: 0 0 0 #{map-get($spacers, 3)};
+        --o-wsale-card-btns-justify-content: start;
+        --o-wsale-card-btn-submit-order: -1;
+        --o-wsale-card-btn-submit-label-display: none;
+        --o-wsale-card-info-gap: #{map-get($spacers, 2)};
+        --o-wsale-card-attribute-previewer-padding: #{map-get($spacers, 2)} 0 #{map-get($spacers, 2)};
+
+        .o_wsale_product_information {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto auto;
+            grid-template-areas:
+                "text"
+                "prices"
+                "buttons";
+        }
+    }
+
+    @include media-breakpoint-up(lg) {
+        --o-wsale-card-info-title-font-size: calc(#{$h4-font-size} * 1.1);
+
+        .btn:not(.o_wsale_product_ptav_pill)  {
+            @include o-wsale-card-btn-lg();
+                --btn-padding-x: var(--btn-padding-y);
+        }
+
+        .o_wsale_product_btn {
+            .btn:where(:not(.o_wsale_product_btn_primary)) {
+                --btn-border-radius: 100%;
+                --o-wsale-card-btn-aspect-ratio: 1;
+                --o-wsale-card-btn-padding-x: 0;
+            }
+
+            .o_wsale_product_btn_primary {
+                --btn-border-radius: #{$border-radius-pill};
+            }
+        }
+    }
+}
+
 // ==== Products list decorations
 $_wsale_products_roundness_map: (
     0: 0px,
@@ -1529,6 +1616,32 @@ $_wsale_products_roundness_map: (
 
     &.o_wsale_products_opt_thumb_cover {
         --o-wsale-card-thumb-fill-mode: cover;
+    }
+}
+
+// ==== Products list mobile-specific thumb options
+#o_wsale_products_grid {
+    // For designs with mobile ratio option, desktop ratio only applies on md+
+    &.o_wsale_products_opt_design_list_large,
+    &.o_wsale_products_opt_design_showcase {
+        @each $name, $ratio in $o-wsale-shop-ratios {
+            &.o_wsale_products_opt_thumb_#{$name} {
+                --o-wsale-card-thumb-aspect-ratio: 1;
+
+                @include media-breakpoint-up(md) {
+                    --o-wsale-card-thumb-aspect-ratio: #{$ratio};
+                }
+            }
+        }
+
+        // Mobile-specific ratio
+        @each $name, $ratio in $o-wsale-shop-ratios {
+            &.o_wsale_products_opt_thumb_#{$name}_mobile {
+                @include media-breakpoint-down(md) {
+                    --o-wsale-card-thumb-aspect-ratio: #{$ratio};
+                }
+            }
+        }
     }
 }
 
