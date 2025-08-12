@@ -1914,7 +1914,9 @@ class Website(models.Model):
                 and not self.env.user.has_group('base.group_user')
             )
             if filter_is_published:
-                where_clause = sql.SQL("WHERE is_published")
+                where_clause = sql.SQL("WHERE {table}.is_published").format(
+                    table=sql.Identifier(model._table),
+                )
 
             from_clause = sql.SQL("FROM {table}").format(table=sql.Identifier(model._table))
             # Specific handling for fields being actually part of another model
