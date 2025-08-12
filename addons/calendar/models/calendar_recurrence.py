@@ -120,7 +120,7 @@ class RecurrenceRule(models.Model):
     weekday = fields.Selection(WEEKDAY_SELECTION, string='Weekday')
     byday = fields.Selection(BYDAY_SELECTION, string='By day')
     until = fields.Date('Repeat Until')
-    trigger_id = fields.Many2one('ir.cron.trigger')
+    trigger_id = fields.Many2one('ir.cron.trigger', index="btree_not_null")
 
     _sql_constraints = [
         ('month_day',
