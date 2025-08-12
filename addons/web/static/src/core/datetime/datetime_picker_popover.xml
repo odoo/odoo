@@ -6,7 +6,7 @@
                 <button
                     class="btn btn-sm btn-secondary"
                     tabindex="-1"
-                    t-on-click="() => props.pickerProps.range || props.pickerProps.focusedDateIndex ? props.pickerProps.onSelect([false, false]) : props.pickerProps.onSelect(false)"
+                    t-on-click="props.pickerProps.onReset"
                 >
                     <i class="fa fa-eraser" />
                 </button>
