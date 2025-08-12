@@ -1229,12 +1229,6 @@ export class StoreOne extends StoreRelation {
         if (this.records._name === "discuss.channel") {
             return { id, model: "discuss.channel" };
         }
-        if (this.records._name === "mail.guest") {
-            return { id, type: "guest" };
-        }
-        if (this.records._name === "res.partner") {
-            return { id, type: "partner" };
-        }
         return id;
     }
 }
