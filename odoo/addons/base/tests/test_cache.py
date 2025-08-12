@@ -146,3 +146,9 @@ class TestRecordCache(TransactionCaseWithUserDemo):
         record = model.with_context(lang='fr_FR').new({'name': 'action de test'})
         _ = record.with_context(lang='nl_NL').name
         self.assertTrue(record.name)
+
+        # Ensure field assignment does not nullify the values in other langs
+        record = model.new({'name': 'Another Test Action'})
+        record.with_context(lang='fr_FR').name = 'Autre action de test'
+        self.assertTrue(record.name)
+        self.assertTrue(record.with_context(lang='fr_FR').name)
