@@ -561,12 +561,13 @@ export class PosStore extends WithLazyGetterTrap {
      * @returns {Promise<Object>}
      */
     async loadNewProducts(domain, offset = 0, limit = 0) {
-        const result = await this.data.callRelated("product.template", "load_product_from_pos", [
-            odoo.pos_config_id,
-            domain,
-            offset,
-            limit,
-        ]);
+        const result = await this.data.callRelated(
+            "product.template",
+            "load_product_from_pos",
+            [odoo.pos_config_id, domain, offset, limit],
+            {},
+            false
+        );
         this.productAttributesExclusion = this.computeProductAttributesExclusion();
         return result;
     }
