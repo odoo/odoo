@@ -25,7 +25,9 @@ class AlarmManager(models.AbstractModel):
         result = {}
         delta_request = """
             SELECT
-                rel.calendar_event_id, max(alarm.duration_minutes) AS max_delta,min(alarm.duration_minutes) AS min_delta
+                rel.calendar_event_id,
+                max(alarm.duration_minutes) AS max_delta,
+                min(alarm.duration_minutes) AS min_delta
             FROM
                 calendar_alarm_calendar_event_rel AS rel
             LEFT JOIN calendar_alarm AS alarm ON alarm.id = rel.calendar_alarm_id
@@ -33,30 +35,24 @@ class AlarmManager(models.AbstractModel):
             GROUP BY rel.calendar_event_id
         """
         base_request = """
-                    SELECT
-                        cal.id,
-                        cal.start - interval '1' minute  * calcul_delta.max_delta AS first_alarm,
-                        CASE
-                            WHEN cal.recurrency THEN rrule.until - interval '1' minute  * calcul_delta.min_delta
-                            ELSE cal.stop - interval '1' minute  * calcul_delta.min_delta
-                        END as last_alarm,
-                        cal.start as first_event_date,
-                        CASE
-                            WHEN cal.recurrency AND rrule.end_type = 'end_date' THEN rrule.until
-                            ELSE cal.stop
-                        END as last_event_date,
-                        calcul_delta.min_delta,
-                        calcul_delta.max_delta,
-                        rrule.rrule AS rule
-                    FROM
-                        calendar_event AS cal
-                    RIGHT JOIN calcul_delta ON calcul_delta.calendar_event_id = cal.id
-                    LEFT JOIN calendar_recurrence as rrule ON rrule.id = cal.recurrence_id
-             """
-
+            SELECT
+                cal.id,
+                cal.start - interval '1' minute * calcul_delta.max_delta AS first_alarm,
+                cal.stop - interval '1' minute * calcul_delta.min_delta AS last_alarm,
+                cal.start AS first_meeting,
+                cal.stop AS last_meeting,
+                calcul_delta.min_delta,
+                calcul_delta.max_delta
+            FROM
+                calendar_event AS cal
+            INNER JOIN calcul_delta ON calcul_delta.calendar_event_id = cal.id
+            WHERE cal.active = True
+        """
         filter_user = """
-                RIGHT JOIN calendar_event_res_partner_rel AS part_rel ON part_rel.calendar_event_id = cal.id
-                    AND part_rel.res_partner_id IN %s
+            INNER JOIN calendar_event_res_partner_rel AS part_rel
+                ON part_rel.calendar_event_id = cal.id
+                AND part_rel.res_partner_id IN %s
+            WHERE cal.active = True
         """
 
         # Add filter on alarm type
@@ -64,7 +60,7 @@ class AlarmManager(models.AbstractModel):
 
         # Add filter on partner_id
         if partners:
-            base_request += filter_user
+            base_request = base_request.replace("WHERE cal.active = True", filter_user)
             tuple_params += (tuple(partners.ids), )
 
         # Upper bound on first_alarm of requested events
@@ -86,12 +82,12 @@ class AlarmManager(models.AbstractModel):
         self._cr.execute("""
             WITH calcul_delta AS (%s)
             SELECT *
-                FROM ( %s WHERE cal.active = True ) AS ALL_EVENTS
-               WHERE ALL_EVENTS.first_alarm < %s
-                 AND ALL_EVENTS.last_event_date > (now() at time zone 'utc')
+                FROM ( %s ) AS ALL_EVENTS
+            WHERE ALL_EVENTS.first_alarm < %s
+                AND ALL_EVENTS.last_alarm > (now() at time zone 'utc')
         """ % (delta_request, base_request, first_alarm_max_value), tuple_params)
 
-        for event_id, first_alarm, last_alarm, first_meeting, last_meeting, min_duration, max_duration, rule in self._cr.fetchall():
+        for event_id, first_alarm, last_alarm, first_meeting, last_meeting, min_duration, max_duration in self._cr.fetchall():
             result[event_id] = {
                 'event_id': event_id,
                 'first_alarm': first_alarm,
@@ -100,7 +96,6 @@ class AlarmManager(models.AbstractModel):
                 'last_meeting': last_meeting,
                 'min_duration': min_duration,
                 'max_duration': max_duration,
-                'rrule': rule
             }
 
         # determine accessible events
