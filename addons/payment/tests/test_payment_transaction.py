@@ -2,7 +2,7 @@
 
 from unittest.mock import patch
 
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -267,3 +267,30 @@ class TestPaymentTransaction(PaymentCommon):
             self.assertRegex(cm.output[0], r".reference.: .TX-12345.", "Values should be logged")
             self.assertNotRegex(cm.output[0], r"provider_id", "Secret keys should be hidden")
             self.assertEqual(values['provider_id'], tx.provider_id.id)
+
+    def test_validate_amount_and_currency(self):
+        amount = self.amount = 123.45
+        currency = self.currency = self.env.ref('base.CHF')
+
+        direct_tx = self._create_transaction('direct', state='done', reference='tx-direct')
+        redirect_tx = self._create_transaction('redirect', reference='tx-redirect')
+        refund_tx = direct_tx._create_child_transaction(amount, is_refund=True)
+
+        for tx in (direct_tx, redirect_tx, refund_tx):
+            tx._validate_amount_and_currency(amount, currency.name)
+            with self.assertRaises(ValidationError):
+                tx._validate_amount_and_currency(-amount, currency.name)
+            with self.assertRaises(ValidationError):
+                tx._validate_amount_and_currency(amount, 'EUR')
+
+        # Special case 1: tolerate small rounding errors only
+        epsilon = currency.rounding
+        direct_tx._validate_amount_and_currency(amount + epsilon / 10, currency.name)
+        with self.assertRaises(ValidationError):
+            direct_tx._validate_amount_and_currency(amount + epsilon, currency.name)
+
+        # Special case 2: don't validate validation transactions
+        validation_tx = self._create_transaction(
+            'redirect', operation='validation', amount=0, reference='tx-validation',
+        )
+        validation_tx._validate_amount_and_currency(None, None)
