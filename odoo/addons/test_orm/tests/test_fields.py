@@ -3225,6 +3225,42 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             records.mapped('harry')  # fetch all fields with prefetch='Harry Potter'
             records.mapped('rare_description')  # fetch that field only
 
+    def test_100_rename_custom_field(self):
+        model_record = self.env['ir.model']._get('res.partner')
+        FIELD_PARAMS = {
+            'boolean': {},
+            'many2many': {
+                'relation': 'res.groups',
+                'relation_table': 'test_res_partner_res_groups',
+            },
+        }
+
+        for ttype, field_values in FIELD_PARAMS.items():
+            with self.subTest(ttype):
+                old_name = f'x_{ttype}_field_1'
+                new_name = f'x_{ttype}_field_2'
+
+                field_record = self.env['ir.model.fields'].create({
+                    'field_description': f'Custom {ttype} field',
+                    'name': old_name,
+                    'model_id': model_record.id,
+                    'ttype': ttype,
+                    **field_values,
+                })
+                self.assertEqual(field_record, self.env['ir.model.fields']._get('res.partner', old_name))
+
+                # check the registry after field creation
+                self.assertIn(old_name, self.env['res.partner']._fields)
+                self.assertIn(old_name, self.env['res.users']._fields)
+
+                field_record.write({"name": new_name})
+
+                # check the registry after field renaming
+                self.assertNotIn(old_name, self.env['res.partner']._fields)
+                self.assertNotIn(old_name, self.env['res.users']._fields)
+                self.assertIn(new_name, self.env['res.partner']._fields)
+                self.assertIn(new_name, self.env['res.users']._fields)
+
     def test_cache_key_invalidation(self):
         company0 = self.env.ref('base.main_company')
         company1 = self.env['res.company'].create({'name': 'A'})
