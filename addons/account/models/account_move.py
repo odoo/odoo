@@ -1143,8 +1143,8 @@ class AccountMove(models.Model):
 
         groups = self.grouped(lambda move:
             'legacy' if move.payment_state == 'invoicing_legacy' else
-            'invoices' if _invoice_qualifies(move) else
             'blocked' if move.payment_state == 'blocked' else
+            'invoices' if _invoice_qualifies(move) else
             'unpaid'
         )
         groups.get('unpaid', self.browse()).payment_state = 'not_paid'
