@@ -1,5 +1,5 @@
 {
-  "version": "18.4.14",
+  "version": "18.5.10",
   "sheets": [
     {
       "id": "sheet1",
@@ -265,40 +265,6 @@
           "width": 475,
           "height": 344,
           "tag": "chart",
-          "data": {
-            "title": { "text": "" },
-            "background": "#FFFFFF",
-            "legendPosition": "top",
-            "metaData": {
-              "groupBy": ["stage_id", "state"],
-              "measure": "__count",
-              "order": null,
-              "resModel": "report.project.task.user",
-              "mode": "bar",
-              "cumulatedStart": false
-            },
-            "searchParams": {
-              "comparison": null,
-              "context": {
-                "group_by": [],
-                "graph_measure": "__count__"
-              },
-              "domain": [],
-              "groupBy": ["stage_id", "state"],
-              "orderBy": []
-            },
-            "type": "odoo_bar",
-            "dataSets": [],
-            "verticalAxisPosition": "left",
-            "stacked": true,
-            "fieldMatching": {
-              "83b5c62c-1c67-4477-a057-c0ec29edd595": { "chain": "create_date", "type": "datetime", "offset": 0 },
-              "fb7f6ae2-e19c-40d5-9976-7a05b1f18c2d": { "chain": "user_ids", "type": "many2many" },
-              "3fc9b370-1aae-436e-b77e-6bbc5f10f56c": { "chain": "project_id", "type": "many2one" },
-              "cfccbf2c-c86e-4915-a73d-c1e8ae69abe9": { "chain": "tag_ids", "type": "many2many" },
-              "9c9461c3-974d-41c1-8cbd-2fa8e89de148": { "chain": "partner_id", "type": "many2one" }
-            }
-          },
           "offset": { "x": 0, "y": 178 },
           "col": 0,
           "row": 0
@@ -308,38 +274,6 @@
           "width": 480,
           "height": 344,
           "tag": "chart",
-          "data": {
-            "title": { "text": "" },
-            "background": "#FFFFFF",
-            "legendPosition": "top",
-            "metaData": {
-              "groupBy": ["state"],
-              "measure": "__count",
-              "order": null,
-              "resModel": "report.project.task.user",
-              "mode": "pie",
-              "cumulatedStart": false
-            },
-            "searchParams": {
-              "comparison": null,
-              "context": {
-                "group_by": [],
-                "graph_measure": "__count__"
-              },
-              "domain": [],
-              "groupBy": ["state"],
-              "orderBy": []
-            },
-            "type": "odoo_pie",
-            "dataSets": [],
-            "fieldMatching": {
-              "83b5c62c-1c67-4477-a057-c0ec29edd595": { "chain": "create_date", "type": "datetime", "offset": 0 },
-              "fb7f6ae2-e19c-40d5-9976-7a05b1f18c2d": { "chain": "user_ids", "type": "many2many" },
-              "3fc9b370-1aae-436e-b77e-6bbc5f10f56c": { "chain": "project_id", "type": "many2one" },
-              "cfccbf2c-c86e-4915-a73d-c1e8ae69abe9": { "chain": "tag_ids", "type": "many2many" },
-              "9c9461c3-974d-41c1-8cbd-2fa8e89de148": { "chain": "partner_id", "type": "many2one" }
-            }
-          },
           "offset": { "x": 525, "y": 178 },
           "col": 0,
           "row": 0
@@ -349,16 +283,6 @@
           "width": 200,
           "height": 108,
           "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "difference",
-            "title": { "text": "Tasks", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#EFF6FF",
-            "keyValue": "Data!D2",
-            "humanize": false
-          },
           "offset": { "x": 0, "y": 10 },
           "col": 0,
           "row": 0
@@ -368,18 +292,6 @@
           "width": 200,
           "height": 108,
           "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "percentage",
-            "title": { "text": "Hours Logged", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#FEF2F2",
-            "baseline": "Data!E3",
-            "baselineDescr": { "text": "since last period" },
-            "keyValue": "Data!D3",
-            "humanize": false
-          },
           "offset": { "x": 210, "y": 10 },
           "col": 0,
           "row": 0
@@ -389,18 +301,6 @@
           "width": 200,
           "height": 108,
           "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "difference",
-            "title": { "text": "Time to Assign", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#FEF2F2",
-            "baseline": "Data!E4",
-            "baselineDescr": { "text": "last period" },
-            "keyValue": "Data!D4",
-            "humanize": false
-          },
           "offset": { "x": 420, "y": 10 },
           "col": 0,
           "row": 0
@@ -410,18 +310,6 @@
           "width": 200,
           "height": 108,
           "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "difference",
-            "title": { "text": "Time to Close", "color": "#434343", "bold": true },
-            "type": "scorecard",
-            "background": "#FEF2F2",
-            "baseline": "Data!E5",
-            "baselineDescr": { "text": "last period" },
-            "keyValue": "Data!D5",
-            "humanize": false
-          },
           "offset": { "x": 629, "y": 10 },
           "col": 0,
           "row": 0
@@ -489,8 +377,140 @@
           }
         }
       ],
-      "areGridLinesVisible": true,
+      "charts": {
+        "26f09a19-26d7-4d7d-b8d9-9eda7661ef5a": {
+          "figureId": "26f09a19-26d7-4d7d-b8d9-9eda7661ef5a",
+          "chart": {
+            "title": { "text": "" },
+            "background": "#FFFFFF",
+            "legendPosition": "top",
+            "metaData": {
+              "groupBy": ["stage_id", "state"],
+              "measure": "__count",
+              "order": null,
+              "resModel": "report.project.task.user",
+              "mode": "bar"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {
+                "group_by": [],
+                "graph_measure": "__count__"
+              },
+              "domain": [],
+              "groupBy": ["stage_id", "state"],
+              "orderBy": []
+            },
+            "type": "odoo_bar",
+            "dataSets": [],
+            "verticalAxisPosition": "left",
+            "stacked": true,
+            "fieldMatching": {
+              "83b5c62c-1c67-4477-a057-c0ec29edd595": { "chain": "create_date", "type": "datetime", "offset": 0 },
+              "fb7f6ae2-e19c-40d5-9976-7a05b1f18c2d": { "chain": "user_ids", "type": "many2many" },
+              "3fc9b370-1aae-436e-b77e-6bbc5f10f56c": { "chain": "project_id", "type": "many2one" },
+              "cfccbf2c-c86e-4915-a73d-c1e8ae69abe9": { "chain": "tag_ids", "type": "many2many" },
+              "9c9461c3-974d-41c1-8cbd-2fa8e89de148": { "chain": "partner_id", "type": "many2one" }
+            }
+          }
+        },
+        "70a88eff-8ce0-4392-8905-156ef2771086": {
+          "figureId": "70a88eff-8ce0-4392-8905-156ef2771086",
+          "chart": {
+            "title": { "text": "" },
+            "background": "#FFFFFF",
+            "legendPosition": "top",
+            "metaData": {
+              "groupBy": ["state"],
+              "measure": "__count",
+              "order": null,
+              "resModel": "report.project.task.user",
+              "mode": "pie"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {
+                "group_by": [],
+                "graph_measure": "__count__"
+              },
+              "domain": [],
+              "groupBy": ["state"],
+              "orderBy": []
+            },
+            "type": "odoo_pie",
+            "dataSets": [],
+            "fieldMatching": {
+              "83b5c62c-1c67-4477-a057-c0ec29edd595": { "chain": "create_date", "type": "datetime", "offset": 0 },
+              "fb7f6ae2-e19c-40d5-9976-7a05b1f18c2d": { "chain": "user_ids", "type": "many2many" },
+              "3fc9b370-1aae-436e-b77e-6bbc5f10f56c": { "chain": "project_id", "type": "many2one" },
+              "cfccbf2c-c86e-4915-a73d-c1e8ae69abe9": { "chain": "tag_ids", "type": "many2many" },
+              "9c9461c3-974d-41c1-8cbd-2fa8e89de148": { "chain": "partner_id", "type": "many2one" }
+            }
+          }
+        },
+        "8eae55ae-5435-49ee-ad58-dae822bbd9dd": {
+          "figureId": "8eae55ae-5435-49ee-ad58-dae822bbd9dd",
+          "chart": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": { "text": "Tasks", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "keyValue": "Data!D2",
+            "humanize": false
+          }
+        },
+        "746a2799-0dc9-4bce-b309-4cedffa67a3a": {
+          "figureId": "746a2799-0dc9-4bce-b309-4cedffa67a3a",
+          "chart": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "percentage",
+            "title": { "text": "Hours Logged", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#FEF2F2",
+            "baseline": "Data!E3",
+            "baselineDescr": { "text": "since last period" },
+            "keyValue": "Data!D3",
+            "humanize": false
+          }
+        },
+        "488da38e-01db-46a0-b4b0-e2fafc4ad390": {
+          "figureId": "488da38e-01db-46a0-b4b0-e2fafc4ad390",
+          "chart": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": { "text": "Time to Assign", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#FEF2F2",
+            "baseline": "Data!E4",
+            "baselineDescr": { "text": "last period" },
+            "keyValue": "Data!D4",
+            "humanize": false
+          }
+        },
+        "ce7e17ea-eed0-493e-9968-5905c0969ca9": {
+          "figureId": "ce7e17ea-eed0-493e-9968-5905c0969ca9",
+          "chart": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": { "text": "Time to Close", "color": "#434343", "bold": true },
+            "type": "scorecard",
+            "background": "#FEF2F2",
+            "baseline": "Data!E5",
+            "baselineDescr": { "text": "last period" },
+            "keyValue": "Data!D5",
+            "humanize": false
+          }
+        }
+      },
+      "carousels": {},
+      "images": {},
       "isVisible": true,
+      "areGridLinesVisible": true,
       "headerGroups": {
         "ROW": [],
         "COL": []
@@ -545,8 +565,11 @@
       "dataValidationRules": [],
       "figures": [],
       "tables": [],
-      "areGridLinesVisible": true,
+      "charts": {},
+      "carousels": {},
+      "images": {},
       "isVisible": true,
+      "areGridLinesVisible": true,
       "headerGroups": {
         "ROW": [],
         "COL": []

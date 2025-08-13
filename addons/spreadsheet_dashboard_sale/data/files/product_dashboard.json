@@ -1,5 +1,5 @@
 {
-  "version": "18.4.14",
+  "version": "18.5.10",
   "sheets": [
     {
       "id": "sheet1",
@@ -152,43 +152,6 @@
           "width": 1000,
           "height": 436,
           "tag": "chart",
-          "data": {
-            "title": { "text": "" },
-            "background": "#FFFFFF",
-            "legendPosition": "none",
-            "metaData": {
-              "groupBy": ["product_id"],
-              "measure": "price_subtotal",
-              "order": "DESC",
-              "resModel": "sale.report",
-              "mode": "bar",
-              "cumulatedStart": false
-            },
-            "searchParams": {
-              "comparison": null,
-              "context": {
-                "group_by": []
-              },
-              "domain": [
-                [
-                  "state",
-                  "not in",
-                  ["draft", "sent", "cancel"]
-                ]
-              ],
-              "groupBy": ["product_id"],
-              "orderBy": []
-            },
-            "type": "odoo_bar",
-            "dataSets": [],
-            "verticalAxisPosition": "left",
-            "stacked": true,
-            "fieldMatching": {
-              "a6c3274b-e53c-4c6b-90a8-bc3e3d109f52": { "chain": "date", "type": "datetime", "offset": 0 },
-              "36814ad9-adac-4aba-a5ad-df595a306ef7": { "chain": "product_id", "type": "many2one" },
-              "edaf4d0c-df4b-48bc-b61a-48a07e8afd91": { "chain": "categ_id", "type": "many2one" }
-            }
-          },
           "offset": { "x": 0, "y": 178 },
           "col": 0,
           "row": 0
@@ -198,43 +161,6 @@
           "width": 1000,
           "height": 438,
           "tag": "chart",
-          "data": {
-            "title": { "text": "" },
-            "background": "#FFFFFF",
-            "legendPosition": "none",
-            "metaData": {
-              "groupBy": ["product_id"],
-              "measure": "product_uom_qty",
-              "order": "DESC",
-              "resModel": "sale.report",
-              "mode": "bar",
-              "cumulatedStart": false
-            },
-            "searchParams": {
-              "comparison": null,
-              "context": {
-                "group_by": []
-              },
-              "domain": [
-                [
-                  "state",
-                  "not in",
-                  ["draft", "sent", "cancel"]
-                ]
-              ],
-              "groupBy": ["product_id"],
-              "orderBy": []
-            },
-            "type": "odoo_bar",
-            "dataSets": [],
-            "verticalAxisPosition": "left",
-            "stacked": true,
-            "fieldMatching": {
-              "a6c3274b-e53c-4c6b-90a8-bc3e3d109f52": { "chain": "date", "type": "datetime", "offset": 0 },
-              "36814ad9-adac-4aba-a5ad-df595a306ef7": { "chain": "product_id", "type": "many2one" },
-              "edaf4d0c-df4b-48bc-b61a-48a07e8afd91": { "chain": "categ_id", "type": "many2one" }
-            }
-          },
           "offset": { "x": 0, "y": 655 },
           "col": 0,
           "row": 0
@@ -244,18 +170,6 @@
           "width": 450,
           "height": 108,
           "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "text",
-            "title": { "text": "Best Seller", "color": "#434343", "bold": true },
-            "type": "scorecard",
-            "background": "#FEF2F2",
-            "baseline": "Data!C2",
-            "baselineDescr": { "text": "sold" },
-            "keyValue": "Data!B2",
-            "humanize": false
-          },
           "offset": { "x": 0, "y": 12 },
           "col": 0,
           "row": 0
@@ -265,18 +179,6 @@
           "width": 450,
           "height": 108,
           "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "text",
-            "title": { "text": "Best Category", "color": "#434343", "bold": true },
-            "type": "scorecard",
-            "background": "#FEF2F2",
-            "baseline": "Data!C3",
-            "baselineDescr": { "text": "sold" },
-            "keyValue": "Data!B3",
-            "humanize": false
-          },
           "offset": { "x": 459, "y": 12 },
           "col": 0,
           "row": 0
@@ -314,8 +216,120 @@
           }
         }
       ],
-      "areGridLinesVisible": true,
+      "charts": {
+        "e35856cf-9090-489b-b055-2d441380d954": {
+          "figureId": "e35856cf-9090-489b-b055-2d441380d954",
+          "chart": {
+            "title": { "text": "" },
+            "background": "#FFFFFF",
+            "legendPosition": "none",
+            "metaData": {
+              "groupBy": ["product_id"],
+              "measure": "price_subtotal",
+              "order": "DESC",
+              "resModel": "sale.report",
+              "mode": "bar"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {
+                "group_by": []
+              },
+              "domain": [
+                [
+                  "state",
+                  "not in",
+                  ["draft", "sent", "cancel"]
+                ]
+              ],
+              "groupBy": ["product_id"],
+              "orderBy": []
+            },
+            "type": "odoo_bar",
+            "dataSets": [],
+            "verticalAxisPosition": "left",
+            "stacked": true,
+            "fieldMatching": {
+              "a6c3274b-e53c-4c6b-90a8-bc3e3d109f52": { "chain": "date", "type": "datetime", "offset": 0 },
+              "36814ad9-adac-4aba-a5ad-df595a306ef7": { "chain": "product_id", "type": "many2one" },
+              "edaf4d0c-df4b-48bc-b61a-48a07e8afd91": { "chain": "categ_id", "type": "many2one" }
+            }
+          }
+        },
+        "d0171069-d2cd-4c2c-a686-cd7515e93bb5": {
+          "figureId": "d0171069-d2cd-4c2c-a686-cd7515e93bb5",
+          "chart": {
+            "title": { "text": "" },
+            "background": "#FFFFFF",
+            "legendPosition": "none",
+            "metaData": {
+              "groupBy": ["product_id"],
+              "measure": "product_uom_qty",
+              "order": "DESC",
+              "resModel": "sale.report",
+              "mode": "bar"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {
+                "group_by": []
+              },
+              "domain": [
+                [
+                  "state",
+                  "not in",
+                  ["draft", "sent", "cancel"]
+                ]
+              ],
+              "groupBy": ["product_id"],
+              "orderBy": []
+            },
+            "type": "odoo_bar",
+            "dataSets": [],
+            "verticalAxisPosition": "left",
+            "stacked": true,
+            "fieldMatching": {
+              "a6c3274b-e53c-4c6b-90a8-bc3e3d109f52": { "chain": "date", "type": "datetime", "offset": 0 },
+              "36814ad9-adac-4aba-a5ad-df595a306ef7": { "chain": "product_id", "type": "many2one" },
+              "edaf4d0c-df4b-48bc-b61a-48a07e8afd91": { "chain": "categ_id", "type": "many2one" }
+            }
+          }
+        },
+        "5f383918-4073-4f19-9cc9-603216c953ad": {
+          "figureId": "5f383918-4073-4f19-9cc9-603216c953ad",
+          "chart": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": { "text": "Best Seller", "color": "#434343", "bold": true },
+            "type": "scorecard",
+            "background": "#FEF2F2",
+            "baseline": "Data!C2",
+            "baselineDescr": { "text": "sold" },
+            "keyValue": "Data!B2",
+            "humanize": false
+          }
+        },
+        "ec57f69b-f2b1-4dfc-990c-91ab61b526bf": {
+          "figureId": "ec57f69b-f2b1-4dfc-990c-91ab61b526bf",
+          "chart": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": { "text": "Best Category", "color": "#434343", "bold": true },
+            "type": "scorecard",
+            "background": "#FEF2F2",
+            "baseline": "Data!C3",
+            "baselineDescr": { "text": "sold" },
+            "keyValue": "Data!B3",
+            "humanize": false
+          }
+        }
+      },
+      "carousels": {},
+      "images": {},
       "isVisible": true,
+      "areGridLinesVisible": true,
       "headerGroups": {
         "ROW": [],
         "COL": []
@@ -351,8 +365,11 @@
       "dataValidationRules": [],
       "figures": [],
       "tables": [],
-      "areGridLinesVisible": true,
+      "charts": {},
+      "carousels": {},
+      "images": {},
       "isVisible": true,
+      "areGridLinesVisible": true,
       "headerGroups": {
         "ROW": [],
         "COL": []

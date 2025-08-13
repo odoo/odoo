@@ -1,5 +1,5 @@
 {
-  "version": "18.4.14",
+  "version": "18.5.10",
   "sheets": [
     {
       "id": "91067711-0fdf-451a-b1ec-9e8bdcff23f0",
@@ -256,36 +256,6 @@
           "width": 1000,
           "height": 344,
           "tag": "chart",
-          "data": {
-            "title": { "text": "" },
-            "background": "#FFFFFF",
-            "legendPosition": "top",
-            "metaData": {
-              "groupBy": ["date:month", "product_id"],
-              "measure": "total_amount",
-              "order": null,
-              "resModel": "hr.expense",
-              "mode": "bar",
-              "cumulatedStart": false
-            },
-            "searchParams": {
-              "comparison": null,
-              "context": {},
-              "domain": [],
-              "groupBy": ["date:month", "product_id"],
-              "orderBy": []
-            },
-            "type": "odoo_bar",
-            "dataSets": [],
-            "verticalAxisPosition": "left",
-            "stacked": true,
-            "fieldMatching": {
-              "54e94f8d-739d-4a02-8205-c25be895720e": { "chain": "date", "type": "date", "offset": 0 },
-              "0e80d79f-8175-422a-bdda-f5e491a6a201": { "chain": "product_id", "type": "many2one" },
-              "e1b40389-7f46-44c0-acee-52033634fc5f": { "chain": "sale_order_id", "type": "many2one" },
-              "88fbcc54-dcb5-42ec-86e9-1676c4c73c6e": { "chain": "employee_id", "type": "many2one" }
-            }
-          },
           "offset": { "x": 0, "y": 178 },
           "col": 0,
           "row": 0
@@ -295,16 +265,6 @@
           "width": 200,
           "height": 106,
           "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "difference",
-            "title": { "text": "Expenses", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#EFF6FF",
-            "keyValue": "Data!C1",
-            "humanize": false
-          },
           "offset": { "x": 0, "y": 12 },
           "col": 0,
           "row": 0
@@ -314,16 +274,6 @@
           "width": 200,
           "height": 106,
           "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "difference",
-            "title": { "text": "To report", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#FFF7ED",
-            "keyValue": "Data!C2",
-            "humanize": false
-          },
           "offset": { "x": 210, "y": 12 },
           "col": 0,
           "row": 0
@@ -333,16 +283,6 @@
           "width": 200,
           "height": 106,
           "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "difference",
-            "title": { "text": "To validate", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#FFF7ED",
-            "keyValue": "Data!C3",
-            "humanize": false
-          },
           "offset": { "x": 420, "y": 12 },
           "col": 0,
           "row": 0
@@ -352,16 +292,6 @@
           "width": 200,
           "height": 106,
           "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "difference",
-            "title": { "text": "To reimburse", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#FFF7ED",
-            "keyValue": "Data!C4",
-            "humanize": false
-          },
           "offset": { "x": 629, "y": 12 },
           "col": 0,
           "row": 0
@@ -429,8 +359,96 @@
           }
         }
       ],
-      "areGridLinesVisible": true,
+      "charts": {
+        "6ce637db-4068-457f-91a4-ce83736932ff": {
+          "figureId": "6ce637db-4068-457f-91a4-ce83736932ff",
+          "chart": {
+            "title": { "text": "" },
+            "background": "#FFFFFF",
+            "legendPosition": "top",
+            "metaData": {
+              "groupBy": ["date:month", "product_id"],
+              "measure": "total_amount",
+              "order": null,
+              "resModel": "hr.expense",
+              "mode": "bar"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {},
+              "domain": [],
+              "groupBy": ["date:month", "product_id"],
+              "orderBy": []
+            },
+            "type": "odoo_bar",
+            "dataSets": [],
+            "verticalAxisPosition": "left",
+            "stacked": true,
+            "fieldMatching": {
+              "54e94f8d-739d-4a02-8205-c25be895720e": { "chain": "date", "type": "date", "offset": 0 },
+              "0e80d79f-8175-422a-bdda-f5e491a6a201": { "chain": "product_id", "type": "many2one" },
+              "e1b40389-7f46-44c0-acee-52033634fc5f": { "chain": "sale_order_id", "type": "many2one" },
+              "88fbcc54-dcb5-42ec-86e9-1676c4c73c6e": { "chain": "employee_id", "type": "many2one" }
+            }
+          }
+        },
+        "34d7af0c-d66d-46f5-9b4f-91a8f26be506": {
+          "figureId": "34d7af0c-d66d-46f5-9b4f-91a8f26be506",
+          "chart": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": { "text": "Expenses", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "keyValue": "Data!C1",
+            "humanize": false
+          }
+        },
+        "64e233df-0643-4205-86c8-d051c45326a4": {
+          "figureId": "64e233df-0643-4205-86c8-d051c45326a4",
+          "chart": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": { "text": "To report", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#FFF7ED",
+            "keyValue": "Data!C2",
+            "humanize": false
+          }
+        },
+        "62c97109-f819-42a7-929d-e76a1204be62": {
+          "figureId": "62c97109-f819-42a7-929d-e76a1204be62",
+          "chart": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": { "text": "To validate", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#FFF7ED",
+            "keyValue": "Data!C3",
+            "humanize": false
+          }
+        },
+        "a84056d3-f845-4555-9bd9-3281b8b1c872": {
+          "figureId": "a84056d3-f845-4555-9bd9-3281b8b1c872",
+          "chart": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": { "text": "To reimburse", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#FFF7ED",
+            "keyValue": "Data!C4",
+            "humanize": false
+          }
+        }
+      },
+      "carousels": {},
+      "images": {},
       "isVisible": true,
+      "areGridLinesVisible": true,
       "headerGroups": {
         "ROW": [],
         "COL": []
@@ -478,8 +496,11 @@
       "dataValidationRules": [],
       "figures": [],
       "tables": [],
-      "areGridLinesVisible": true,
+      "charts": {},
+      "carousels": {},
+      "images": {},
       "isVisible": true,
+      "areGridLinesVisible": true,
       "headerGroups": {
         "ROW": [],
         "COL": []

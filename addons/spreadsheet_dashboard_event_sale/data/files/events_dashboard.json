@@ -1,5 +1,5 @@
 {
-  "version": "18.4.14",
+  "version": "18.5.10",
   "sheets": [
     {
       "id": "sheet1",
@@ -213,37 +213,6 @@
           "width": 475,
           "height": 345,
           "tag": "chart",
-          "data": {
-            "title": { "text": "" },
-            "background": "#FFFFFF",
-            "legendPosition": "none",
-            "metaData": {
-              "groupBy": ["state"],
-              "measure": "__count",
-              "order": null,
-              "resModel": "event.registration",
-              "mode": "bar",
-              "cumulatedStart": false
-            },
-            "searchParams": {
-              "comparison": null,
-              "context": { "registration_view_hide_group_by_create_date_week": 1 },
-              "domain": [],
-              "groupBy": ["state"],
-              "orderBy": []
-            },
-            "type": "odoo_bar",
-            "dataSets": [],
-            "verticalAxisPosition": "left",
-            "stacked": true,
-            "fieldMatching": {
-              "f849aaa6-4c1a-43f6-9c0b-7a5ea9c83eae": { "chain": "event_begin_date", "type": "datetime", "offset": 0 },
-              "62e15eb2-9410-4803-b189-5fa789a7e94f": { "chain": "event_id.address_id", "type": "many2one" },
-              "d9cfb0b0-01a0-45be-996e-723f4283000b": { "chain": "event_id.event_type_id", "type": "many2one" },
-              "43c04fb0-d3b7-47c8-852b-b823c36df0ee": { "chain": "event_id.tag_ids", "type": "many2many" },
-              "4a35bef8-8a57-48ae-8dc6-5883d97cc9da": { "chain": "event_organizer_id", "type": "many2one" }
-            }
-          },
           "offset": { "x": 525, "y": 178 },
           "col": 0,
           "row": 0
@@ -253,37 +222,6 @@
           "width": 475,
           "height": 345,
           "tag": "chart",
-          "data": {
-            "title": { "text": "" },
-            "background": "#FFFFFF",
-            "legendPosition": "none",
-            "metaData": {
-              "groupBy": ["stage_id"],
-              "measure": "__count",
-              "order": null,
-              "resModel": "event.event",
-              "mode": "bar",
-              "cumulatedStart": false
-            },
-            "searchParams": {
-              "comparison": null,
-              "context": {},
-              "domain": [],
-              "groupBy": ["stage_id"],
-              "orderBy": []
-            },
-            "type": "odoo_bar",
-            "dataSets": [],
-            "verticalAxisPosition": "left",
-            "stacked": true,
-            "fieldMatching": {
-              "f849aaa6-4c1a-43f6-9c0b-7a5ea9c83eae": { "chain": "date_begin", "type": "datetime", "offset": 0 },
-              "62e15eb2-9410-4803-b189-5fa789a7e94f": { "chain": "address_id", "type": "many2one" },
-              "d9cfb0b0-01a0-45be-996e-723f4283000b": { "chain": "event_type_id", "type": "many2one" },
-              "43c04fb0-d3b7-47c8-852b-b823c36df0ee": { "chain": "tag_ids", "type": "many2many" },
-              "4a35bef8-8a57-48ae-8dc6-5883d97cc9da": { "chain": "organizer_id", "type": "many2one" }
-            }
-          },
           "offset": { "x": 0, "y": 178 },
           "col": 0,
           "row": 0
@@ -293,18 +231,6 @@
           "width": 200,
           "height": 105,
           "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "percentage",
-            "title": { "text": "Events", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#EFF6FF",
-            "baseline": "Data!E3",
-            "baselineDescr": { "text": "since last period" },
-            "keyValue": "Data!D3",
-            "humanize": false
-          },
           "offset": { "x": 0, "y": 9 },
           "col": 0,
           "row": 0
@@ -314,18 +240,6 @@
           "width": 200,
           "height": 105,
           "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "percentage",
-            "title": { "text": "Revenue", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#FFF7ED",
-            "baseline": "Data!E4",
-            "baselineDescr": { "text": "since last period" },
-            "keyValue": "Data!D4",
-            "humanize": false
-          },
           "offset": { "x": 210, "y": 9 },
           "col": 0,
           "row": 0
@@ -335,18 +249,6 @@
           "width": 200,
           "height": 105,
           "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "percentage",
-            "title": { "text": "Attendees", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#EFF6FF",
-            "baseline": "Data!E2",
-            "baselineDescr": { "text": "since last period" },
-            "keyValue": "Data!D2",
-            "humanize": false
-          },
           "offset": { "x": 420, "y": 9 },
           "col": 0,
           "row": 0
@@ -414,8 +316,123 @@
           }
         }
       ],
-      "areGridLinesVisible": true,
+      "charts": {
+        "d9898682-9b91-4fe2-9900-a4b2583eb459": {
+          "figureId": "d9898682-9b91-4fe2-9900-a4b2583eb459",
+          "chart": {
+            "title": { "text": "" },
+            "background": "#FFFFFF",
+            "legendPosition": "none",
+            "metaData": {
+              "groupBy": ["state"],
+              "measure": "__count",
+              "order": null,
+              "resModel": "event.registration",
+              "mode": "bar"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": { "registration_view_hide_group_by_create_date_week": 1 },
+              "domain": [],
+              "groupBy": ["state"],
+              "orderBy": []
+            },
+            "type": "odoo_bar",
+            "dataSets": [],
+            "verticalAxisPosition": "left",
+            "stacked": true,
+            "fieldMatching": {
+              "f849aaa6-4c1a-43f6-9c0b-7a5ea9c83eae": { "chain": "event_begin_date", "type": "datetime", "offset": 0 },
+              "62e15eb2-9410-4803-b189-5fa789a7e94f": { "chain": "event_id.address_id", "type": "many2one" },
+              "d9cfb0b0-01a0-45be-996e-723f4283000b": { "chain": "event_id.event_type_id", "type": "many2one" },
+              "43c04fb0-d3b7-47c8-852b-b823c36df0ee": { "chain": "event_id.tag_ids", "type": "many2many" },
+              "4a35bef8-8a57-48ae-8dc6-5883d97cc9da": { "chain": "event_organizer_id", "type": "many2one" }
+            }
+          }
+        },
+        "092dd971-dc10-41c5-96c4-d760820e9cf2": {
+          "figureId": "092dd971-dc10-41c5-96c4-d760820e9cf2",
+          "chart": {
+            "title": { "text": "" },
+            "background": "#FFFFFF",
+            "legendPosition": "none",
+            "metaData": {
+              "groupBy": ["stage_id"],
+              "measure": "__count",
+              "order": null,
+              "resModel": "event.event",
+              "mode": "bar"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {},
+              "domain": [],
+              "groupBy": ["stage_id"],
+              "orderBy": []
+            },
+            "type": "odoo_bar",
+            "dataSets": [],
+            "verticalAxisPosition": "left",
+            "stacked": true,
+            "fieldMatching": {
+              "f849aaa6-4c1a-43f6-9c0b-7a5ea9c83eae": { "chain": "date_begin", "type": "datetime", "offset": 0 },
+              "62e15eb2-9410-4803-b189-5fa789a7e94f": { "chain": "address_id", "type": "many2one" },
+              "d9cfb0b0-01a0-45be-996e-723f4283000b": { "chain": "event_type_id", "type": "many2one" },
+              "43c04fb0-d3b7-47c8-852b-b823c36df0ee": { "chain": "tag_ids", "type": "many2many" },
+              "4a35bef8-8a57-48ae-8dc6-5883d97cc9da": { "chain": "organizer_id", "type": "many2one" }
+            }
+          }
+        },
+        "18361546-49c2-4212-88eb-b2ee50127d41": {
+          "figureId": "18361546-49c2-4212-88eb-b2ee50127d41",
+          "chart": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "percentage",
+            "title": { "text": "Events", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baseline": "Data!E3",
+            "baselineDescr": { "text": "since last period" },
+            "keyValue": "Data!D3",
+            "humanize": false
+          }
+        },
+        "98d2b15d-9117-4ecf-9732-dc62df949dc1": {
+          "figureId": "98d2b15d-9117-4ecf-9732-dc62df949dc1",
+          "chart": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "percentage",
+            "title": { "text": "Revenue", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#FFF7ED",
+            "baseline": "Data!E4",
+            "baselineDescr": { "text": "since last period" },
+            "keyValue": "Data!D4",
+            "humanize": false
+          }
+        },
+        "6510bff8-7b28-42c6-af4b-c750bed2205c": {
+          "figureId": "6510bff8-7b28-42c6-af4b-c750bed2205c",
+          "chart": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "percentage",
+            "title": { "text": "Attendees", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baseline": "Data!E2",
+            "baselineDescr": { "text": "since last period" },
+            "keyValue": "Data!D2",
+            "humanize": false
+          }
+        }
+      },
+      "carousels": {},
+      "images": {},
       "isVisible": true,
+      "areGridLinesVisible": true,
       "headerGroups": {
         "ROW": [],
         "COL": []
@@ -464,8 +481,11 @@
       "dataValidationRules": [],
       "figures": [],
       "tables": [],
-      "areGridLinesVisible": true,
+      "charts": {},
+      "carousels": {},
+      "images": {},
       "isVisible": true,
+      "areGridLinesVisible": true,
       "headerGroups": {
         "ROW": [],
         "COL": []

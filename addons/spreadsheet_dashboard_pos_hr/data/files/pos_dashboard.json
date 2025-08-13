@@ -1,5 +1,5 @@
 {
-  "version": "18.4.14",
+  "version": "18.5.10",
   "sheets": [
     {
       "id": "sheet1",
@@ -365,18 +365,6 @@
           "width": 209,
           "height": 111,
           "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "percentage",
-            "title": { "text": "Orders", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#EFF6FF",
-            "baseline": "Data!E2",
-            "baselineDescr": { "text": "since last period" },
-            "keyValue": "Data!D2",
-            "humanize": false
-          },
           "offset": { "x": 0, "y": 9 },
           "col": 0,
           "row": 0
@@ -386,18 +374,6 @@
           "width": 200,
           "height": 111,
           "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "percentage",
-            "title": { "text": "Revenue", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#EFF6FF",
-            "baseline": "Data!E3",
-            "baselineDescr": { "text": "since last period" },
-            "keyValue": "Data!D3",
-            "humanize": false
-          },
           "offset": { "x": 217, "y": 9 },
           "col": 0,
           "row": 0
@@ -407,18 +383,6 @@
           "width": 197,
           "height": 111,
           "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "percentage",
-            "title": { "text": "Average order", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#EFF6FF",
-            "baseline": "Data!E4",
-            "baselineDescr": { "text": "since last period" },
-            "keyValue": "Data!D4",
-            "humanize": false
-          },
           "offset": { "x": 426, "y": 9 },
           "col": 0,
           "row": 0
@@ -428,47 +392,6 @@
           "width": 1005,
           "height": 367,
           "tag": "chart",
-          "data": {
-            "title": { "text": "" },
-            "background": "#FFFFFF",
-            "legendPosition": "none",
-            "metaData": {
-              "groupBy": ["date:month"],
-              "measure": "__count",
-              "order": null,
-              "resModel": "report.pos.order",
-              "mode": "line",
-              "cumulatedStart": false
-            },
-            "searchParams": {
-              "comparison": null,
-              "context": {
-                "group_by": []
-              },
-              "domain": [
-                [
-                  "state",
-                  "in",
-                  ["paid", "done", "invoiced"]
-                ]
-              ],
-              "groupBy": ["date:month"],
-              "orderBy": []
-            },
-            "type": "odoo_line",
-            "dataSets": [],
-            "verticalAxisPosition": "left",
-            "stacked": false,
-            "cumulatedStart": false,
-            "fillArea": true,
-            "fieldMatching": {
-              "ff0e1a26-3d4c-48b6-85a6-2777b522bb52": { "chain": "date", "type": "datetime", "offset": 0 },
-              "b2ea6617-2767-4a88-bb69-ca205c8d8ff8": { "chain": "session_id", "type": "many2one" },
-              "c63f2c18-e213-4d37-bbee-f72eed4f6a81": { "chain": "config_id", "type": "many2one" },
-              "67147662-1091-4723-a818-6ce393d39ef8": { "chain": "user_id", "type": "many2one" },
-              "9508017b-f441-4787-8339-40bdc1af3b46": { "chain": "product_tmpl_id", "type": "many2one" }
-            }
-          },
           "offset": { "x": 0, "y": 178 },
           "col": 0,
           "row": 0
@@ -551,8 +474,101 @@
           }
         }
       ],
-      "areGridLinesVisible": true,
+      "charts": {
+        "cfee1ef1-ac54-4e9f-bdde-0162652de2cf": {
+          "figureId": "cfee1ef1-ac54-4e9f-bdde-0162652de2cf",
+          "chart": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "percentage",
+            "title": { "text": "Orders", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baseline": "Data!E2",
+            "baselineDescr": { "text": "since last period" },
+            "keyValue": "Data!D2",
+            "humanize": false
+          }
+        },
+        "d141cc35-0b60-4e91-b736-5c1453fea925": {
+          "figureId": "d141cc35-0b60-4e91-b736-5c1453fea925",
+          "chart": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "percentage",
+            "title": { "text": "Revenue", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baseline": "Data!E3",
+            "baselineDescr": { "text": "since last period" },
+            "keyValue": "Data!D3",
+            "humanize": false
+          }
+        },
+        "615fb94e-8098-456e-9f71-7799b82f04c4": {
+          "figureId": "615fb94e-8098-456e-9f71-7799b82f04c4",
+          "chart": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "percentage",
+            "title": { "text": "Average order", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baseline": "Data!E4",
+            "baselineDescr": { "text": "since last period" },
+            "keyValue": "Data!D4",
+            "humanize": false
+          }
+        },
+        "e012bf45-55dc-4c46-b069-bc090a467d73": {
+          "figureId": "e012bf45-55dc-4c46-b069-bc090a467d73",
+          "chart": {
+            "title": { "text": "" },
+            "background": "#FFFFFF",
+            "legendPosition": "none",
+            "metaData": {
+              "groupBy": ["date:month"],
+              "measure": "__count",
+              "order": null,
+              "resModel": "report.pos.order",
+              "mode": "line",
+              "cumulatedStart": false
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {
+                "group_by": []
+              },
+              "domain": [
+                [
+                  "state",
+                  "in",
+                  ["paid", "done", "invoiced"]
+                ]
+              ],
+              "groupBy": ["date:month"],
+              "orderBy": []
+            },
+            "type": "odoo_line",
+            "dataSets": [],
+            "verticalAxisPosition": "left",
+            "stacked": false,
+            "cumulatedStart": false,
+            "fillArea": true,
+            "fieldMatching": {
+              "ff0e1a26-3d4c-48b6-85a6-2777b522bb52": { "chain": "date", "type": "datetime", "offset": 0 },
+              "b2ea6617-2767-4a88-bb69-ca205c8d8ff8": { "chain": "session_id", "type": "many2one" },
+              "c63f2c18-e213-4d37-bbee-f72eed4f6a81": { "chain": "config_id", "type": "many2one" },
+              "67147662-1091-4723-a818-6ce393d39ef8": { "chain": "user_id", "type": "many2one" },
+              "9508017b-f441-4787-8339-40bdc1af3b46": { "chain": "product_tmpl_id", "type": "many2one" }
+            }
+          }
+        }
+      },
+      "carousels": {},
+      "images": {},
       "isVisible": true,
+      "areGridLinesVisible": true,
       "headerGroups": {
         "ROW": [],
         "COL": []
@@ -596,8 +612,11 @@
       "dataValidationRules": [],
       "figures": [],
       "tables": [],
-      "areGridLinesVisible": true,
+      "charts": {},
+      "carousels": {},
+      "images": {},
       "isVisible": true,
+      "areGridLinesVisible": true,
       "headerGroups": {
         "ROW": [],
         "COL": []
