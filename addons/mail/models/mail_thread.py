@@ -4787,15 +4787,10 @@ class MailThread(models.AbstractModel):
         store.add_records_fields(self, fields, as_thread=True)
         for thread in self:
             res = {}
-            if is_request:
-                res["hasReadAccess"] = True
-                res["hasWriteAccess"] = False
+            if is_request and store.target.is_current_user(self.env):
+                res["hasReadAccess"] = thread.sudo(False).has_access("read")
+                res["hasWriteAccess"] = thread.sudo(False).has_access("write")
                 res["canPostOnReadonly"] = self._mail_post_access == "read"
-                try:
-                    thread.check_access("write")
-                    res["hasWriteAccess"] = True
-                except AccessError:
-                    pass
             if (
                "activities" in request_list
                 and isinstance(self.env[self._name], self.env.registry["mail.activity.mixin"])
