@@ -91,7 +91,6 @@ class TestAuditTrail(AccountTestInvoicingCommon):
 
         self.move.button_draft()
         messages.append("Updated\nTrue ⇨ False (Reviewed)\nPosted ⇨ Draft (Status)")
-        messages.append("Updated\nTrue ⇨ False (Reviewed)")
         self.assertTrail(self.get_trail(self.move), messages)
 
         self.move.name = "nawak"
