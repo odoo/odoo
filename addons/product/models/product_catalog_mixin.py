@@ -293,17 +293,13 @@ class ProductCatalogMixin(models.AbstractModel):
         move_block = lines.filtered_domain([
             '|',
             ('id', '=', move_section['id']),
-            '|',
             ('id', 'child_of', move_section['id']),
-            ('parent_id', '=', False),
         ])
 
         target_block = lines.filtered_domain([
             '|',
             ('id', '=', target_section['id']),
-            '|',
             ('id', 'child_of', target_section['id']),
-            ('parent_id', '=', False),
         ])
 
         remaining_lines = lines - move_block

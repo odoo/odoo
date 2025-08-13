@@ -364,9 +364,7 @@ class ProductProduct(models.Model):
             return []
 
         product_ids = self.env[order_model].browse(order_id)[line_field].filtered_domain([
-            '|',
             ('id', 'child_of', ctx.get('selected_section_id')),
-            ('parent_id', '=', False),
         ]).mapped('product_id').ids
 
         return [('id', 'in', product_ids)]

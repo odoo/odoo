@@ -339,19 +339,19 @@ class AccountMoveLine(models.Model):
     collapse_composition = fields.Boolean(
         string="Hide Composition",
         help="If checked, the lines below this section will not be displayed in reports and portal.",
-        compute="_compute_section_visibility_fields", store=True, readonly=False,
+        compute="_compute_section_visibility_fields", store=True, copy=True,
     )
     collapse_prices = fields.Boolean(
         string="Hide Prices",
         help="If checked, the prices of the lines below this section will not be displayed in reports and portal.",
-        compute="_compute_section_visibility_fields", store=True, readonly=False,
+        compute="_compute_section_visibility_fields", store=True, copy=True,
     )
     parent_id = fields.Many2one(
         'account.move.line',
         string="Parent Section Line",
         compute='_compute_parent_id',
         index='btree_not_null',
-        copy=False, store=True,
+        store=True,
     )
     child_ids = fields.One2many(comodel_name='account.move.line', inverse_name='parent_id')
     product_id = fields.Many2one(
@@ -1179,35 +1179,38 @@ class AccountMoveLine(models.Model):
             )
             line.reconciled_lines_excluding_exchange_diff_ids = all_lines - excluded_ids
 
-    @api.depends('sequence', 'move_id')
+    @api.depends('move_id.invoice_line_ids.move_id')
     def _compute_parent_id(self):
-        for _move, lines in self.grouped('move_id').items():
+        amls = set(self)
+        for move in self.grouped('move_id'):
             last_section = False
             last_sub = False
-            for line in lines.sorted('sequence'):
+            for line in move.invoice_line_ids.sorted('sequence'):
                 if line.display_type == 'line_section':
                     last_section = line
-                    line.parent_id = False
+                    if line in amls:
+                        line.parent_id = False
                     last_sub = False
                 elif line.display_type == 'line_subsection':
-                    line.parent_id = last_section
+                    if line in amls:
+                        line.parent_id = last_section
                     last_sub = line
-                elif line.display_type == 'product':
-                    line.parent_id = last_sub or last_section or False
-                else:
-                    line.parent_id = False
+                elif line in amls:
+                    line.parent_id = last_sub or last_section
 
     @api.depends('parent_id')
     def _compute_section_visibility_fields(self):
-        for line in self:
-            if line.display_type in ('line_section', 'line_subsection'):
-                continue
+        for move in self.grouped('move_id'):
+            for line in move.invoice_line_ids.sorted('sequence'):
+                if line.display_type == 'line_section':
+                    continue
 
-            line.collapse_prices = line.parent_id.collapse_prices
-            line.collapse_composition = line.parent_id.collapse_composition
-
-    def _search_parent_id(self, operator, value):
-        return [('id', operator, value)]
+                if line.display_type == 'line_subsection':
+                    line.collapse_prices = line.collapse_prices or line.parent_id.collapse_prices
+                    line.collapse_composition = line.collapse_composition or line.parent_id.collapse_composition
+                else:
+                    line.collapse_prices = line.parent_id.collapse_prices
+                    line.collapse_composition = line.parent_id.collapse_composition
 
     @api.depends('move_id.move_type')
     def _compute_no_followup(self):
@@ -3406,6 +3409,8 @@ class AccountMoveLine(models.Model):
             'ids': [],
             'price_subtotal': 0.0,
             'price_total': 0.0,
+            'quantity': 0,
+            'display_type': 'product',
         }]
 
     def get_section_subtotal(self):

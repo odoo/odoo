@@ -453,6 +453,11 @@ class PurchaseOrder(models.Model):
         """
         self.order_line._compute_tax_id()
 
+    @api.onchange('order_line')
+    def _onchange_order_line(self):
+        self.order_line.invalidate_recordset(['parent_id'])
+        self.env.add_to_compute(self.order_line._fields['parent_id'], self.order_line)
+
     # ------------------------------------------------------------
     # MAIL.THREAD
     # ------------------------------------------------------------
@@ -1273,9 +1278,7 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         pol = self.order_line.filtered_domain([
             ('product_id', '=', product_id),
-            '|',
             ('id', 'child_of', selected_section_id),
-            ('parent_id', '=', False),
         ])
         if pol:
             if quantity != 0:
