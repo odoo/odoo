@@ -68,6 +68,7 @@ export class MediaPlugin extends Plugin {
             ...(this.config.allowImage ? [{ categoryId: "media", commandId: "insertMedia" }] : []),
         ],
         power_buttons: withSequence(1, { commandId: "insertMedia" }),
+        closest_savable_providers: withSequence(20, (el) => this.editable),
 
         /** Handlers */
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
@@ -210,17 +211,26 @@ export class MediaPlugin extends Plugin {
     }
 
     async savePendingImages(editableEl = this.editable) {
-        const { resModel, resId } = this.getRecordInfo(editableEl);
         // When saving a webp, o_b64_image_to_save is turned into
         // o_modified_image_to_save by saveB64Image to request the saving
         // of the pre-converted webp resizes and all the equivalent jpgs.
+        const getClosestSavable = (el) => {
+            for (const provider of this.getResource("closest_savable_providers")) {
+                const value = provider(el);
+                if (value) {
+                    return value;
+                }
+            }
+        };
         const b64Proms = [...editableEl.querySelectorAll(".o_b64_image_to_save")].map(
             async (el) => {
+                const { resModel, resId } = this.getRecordInfo(getClosestSavable(el));
                 await this.saveB64Image(el, resModel, resId);
             }
         );
         const modifiedProms = [...editableEl.querySelectorAll(".o_modified_image_to_save")].map(
             async (el) => {
+                const { resModel, resId } = this.getRecordInfo(getClosestSavable(el));
                 await this.saveModifiedImage(el, resModel, resId);
             }
         );
