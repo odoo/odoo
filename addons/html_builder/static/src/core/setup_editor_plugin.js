@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 
 export class SetupEditorPlugin extends Plugin {
@@ -6,6 +7,7 @@ export class SetupEditorPlugin extends Plugin {
     static shared = ["getEditableAreas"];
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
+        closest_savable_providers: withSequence(10, (el) => el.closest(".o_editable")),
     };
 
     setup() {
