@@ -152,8 +152,6 @@ class HrEmployee(models.Model):
     contract_date_end = fields.Date(readonly=False, related="version_id.contract_date_end", inherited=True, groups="hr.group_hr_manager")
     trial_date_end = fields.Date(readonly=False, related="version_id.trial_date_end", inherited=True, groups="hr.group_hr_manager")
     contract_wage = fields.Monetary(related="version_id.contract_wage", inherited=True, groups="hr.group_hr_manager")
-    date_start = fields.Date(related='version_id.date_start', inherited=True, groups="hr.group_hr_manager")
-    date_end = fields.Date(related='version_id.date_end', inherited=True, groups="hr.group_hr_manager")
     is_current = fields.Boolean(related='version_id.is_current', inherited=True, groups="hr.group_hr_manager")
     is_past = fields.Boolean(related='version_id.is_past', inherited=True, groups="hr.group_hr_manager")
     is_future = fields.Boolean(related='version_id.is_future', inherited=True, groups="hr.group_hr_manager")
@@ -313,7 +311,7 @@ class HrEmployee(models.Model):
         self.ensure_one()
         versions = self.version_ids
         if self.env.context.get('before_date'):
-            versions = versions.filtered(lambda c: c.date_start <= self.env.context['before_date'])
+            versions = versions.filtered(lambda c: c.contract_date_start <= self.env.context['before_date'])
         return versions
 
     def _get_first_version_date(self, no_gap=True):
@@ -330,19 +328,19 @@ class HrEmployee(models.Model):
                 return versions
             current_version = versions[0]
             older_versions = versions[1:]
-            current_date = current_version.date_start
+            current_date = current_version.contract_date_start
             for i, other_version in enumerate(older_versions):
-                # Consider current_version.date_end being false as an error and cut the loop
-                gap = (current_date - (other_version.date_end or date(2100, 1, 1))).days
-                current_date = other_version.date_start
+                # Consider current_version.contract_date_end being false as an error and cut the loop
+                gap = (current_date - (other_version.contract_date_end or date(2100, 1, 1))).days
+                current_date = max(other_version.date_version, other_version.contract_date_start)
                 if gap >= 4:
                     return older_versions[0:i] + current_version
             return older_versions + current_version
 
-        versions = self._get_first_versions().sorted('date_start', reverse=True)
+        versions = self._get_first_versions().sorted('contract_date_start', reverse=True)
         if no_gap:
             versions = remove_gap(versions)
-        return min(versions.mapped('date_start')) if versions else False
+        return min(versions.mapped('contract_date_start')) if versions else False
 
     @api.depends('name')
     def _compute_legal_name(self):
@@ -1341,12 +1339,13 @@ class HrEmployee(models.Model):
                 # if employee is under fully flexible contract, use timezone of the employee
                 calendar_tz = timezone(version.resource_calendar_id.tz) if version.resource_calendar_id else timezone(employee.resource_id.tz)
                 date_start = datetime.combine(
-                    version.date_start,
+                    version.contract_date_start,
                     time(0, 0, 0)
                 ).replace(tzinfo=calendar_tz).astimezone(utc)
-                if version.date_end:
+                if version.contract_date_end or version.get_next_version_start():
+                    next_version_start = version.get_next_version_start()
                     date_end = datetime.combine(
-                        version.date_end + relativedelta(days=1),
+                        min(version.contract_date_end, next_version_start) + relativedelta(days=1),
                         time(0, 0, 0)
                     ).replace(tzinfo=calendar_tz).astimezone(utc)
                 else:
@@ -1379,8 +1378,9 @@ class HrEmployee(models.Model):
             )
         unusual_days = {}
         for version in employee_versions:
-            tmp_date_from = max(date_from_date, version.date_start)
-            tmp_date_to = min(date_to_date, version.date_end) if version.date_end else date_to_date
+            tmp_date_from = max(date_from_date, version.contract_date_start, version.date_version)
+            next_version_start = version.get_next_version_start()
+            tmp_date_to = min(date_to_date, version.contract_date_end, next_version_start) if (version.contract_date_end or next_version_start) else date_to_date
             unusual_days.update(version.resource_calendar_id.sudo(False)._get_unusual_days(
                 datetime.combine(fields.Date.from_string(tmp_date_from), time.min).replace(tzinfo=UTC),
                 datetime.combine(fields.Date.from_string(tmp_date_to), time.max).replace(tzinfo=UTC),
@@ -1400,8 +1400,14 @@ class HrEmployee(models.Model):
             employee_tz = timezone(self.tz) if self.tz else None
             duration_data = Intervals()
             for version in valid_versions:
-                version_start = datetime.combine(version.date_start, time.min, employee_tz)
-                version_end = datetime.combine(version.date_end or date.max, time.max, employee_tz)
+                date_start = max(version.date_version, version.contract_date_start) if version.contract_date_start else version.date_version
+                version_start = datetime.combine(date_start, time.min, employee_tz)
+                next_version_date_start = version.get_next_version_start()
+                if next_version_date_start and version.contract_date_end:
+                    date_end = min(next_version_date_start, version.contract_date_end)
+                else:
+                    date_end = next_version_date_start if next_version_date_start else version.contract_date_end
+                version_end = datetime.combine(date_end or date.max, time.max, employee_tz)
                 calendar = version.resource_calendar_id or version.company_id.resource_calendar_id
                 lunch_intervals = calendar._attendance_intervals_batch(
                     max(start, version_start),
@@ -1427,8 +1433,14 @@ class HrEmployee(models.Model):
             return calendar_intervals
         duration_data = Intervals()
         for version in valid_versions:
-            version_start = datetime.combine(version.date_start, time.min, employee_tz)
-            version_end = datetime.combine(version.date_end or date.max, time.max, employee_tz)
+            date_start = max(version.contract_date_start, version.date_version) if version.contract_date_start else version.date_version
+            version_start = datetime.combine(date_start, time.min, employee_tz)
+            next_version_date_start = version.get_next_version_start()
+            if next_version_date_start and version.contract_date_end:
+                date_end = min(next_version_date_start, version.contract_date_end)
+            else:
+                date_end = next_version_date_start if next_version_date_start else version.contract_date_end
+            version_end = datetime.combine(date_end or date.max, time.max, employee_tz)
             calendar = version.resource_calendar_id or version.company_id.resource_calendar_id
             version_intervals = calendar._work_intervals_batch(
                                     max(date_from, version_start),
@@ -1451,8 +1463,9 @@ class HrEmployee(models.Model):
                 domain=[('company_id', 'in', [False, self.company_id.id])])
         duration_data = {'days': 0, 'hours': 0}
         for version in valid_versions:
-            version_start = datetime.combine(version.date_start, time.min, employee_tz)
-            version_end = datetime.combine(version.date_end or date.max, time.max, employee_tz)
+            version_start = datetime.combine(version.contract_date_start, time.min, employee_tz)
+            next_version_start = version.get_next_version_start()
+            version_end = datetime.combine(min(version.contract_date_end, next_version_start) or date.max, time.max, employee_tz)
             calendar = version.resource_calendar_id or version.company_id.resource_calendar_id
             version_duration_data = calendar\
                 .with_context(employee_timezone=employee_tz)\
@@ -1481,7 +1494,7 @@ class HrEmployee(models.Model):
         # Primarily used in the archive wizard
         # to pick a good default for the departure date
         self.ensure_one()
-        if self.date_end and self.date_end < fields.Date.today():
+        if self.contract_date_end and self.contract_date_end < fields.Date.today():
             return self.departure_date
         return False
 

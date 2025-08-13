@@ -360,8 +360,8 @@ class HrLeave(models.Model):
             if not leave.employee_id:
                 continue
             contracts = self.env['hr.version'].search([('employee_id', '=', leave.employee_id.id)]).filtered(
-                lambda c: c.date_start <= leave.request_date_to and
-                          (not c.date_end or c.date_end >= leave.request_date_from))
+                lambda c: (c.contract_date_start or c.date_version) <= leave.request_date_to and
+                          (not (c.contract_date_end or c.get_next_version_start()) or (c.contract_date_end or c.get_next_version_start()) >= leave.request_date_from))
             if contracts:
                 # If there are more than one contract they should all have the
                 # same calendar, otherwise a constraint is violated.
@@ -405,8 +405,8 @@ Versions:
                       versions='\n'.join(_(
                           "- '%(version)s' from %(start_date)s to %(end_date)s",
                           version=version.name or version.employee_id.name,
-                          start_date=format_date(self.env, version.date_start),
-                          end_date=format_date(self.env, version.date_end) if version.date_end else self.env._("undefined"),
+                          start_date=format_date(self.env, version.contract_date_start if version.contract_date_start else version.date_version),
+                          end_date=format_date(self.env, version.contract_date_end) if version.contract_date_end else self.env._("undefined"),
                       ) for version in versions)))
 
     @api.depends('request_date_from_period', 'request_hour_from', 'request_hour_to', 'request_date_from', 'request_date_to',
