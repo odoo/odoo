@@ -493,3 +493,19 @@ class One2manyCase(TransactionExpressionCase):
         with self.assertRaisesRegex(ValueError, r'it is not stored'):
             # Make sure the parent_record1 only has its own child records
             self.assertEqual(parent_record1.child_ids.ids, children[parent_record1.id])
+
+    def test_computed_inverse_one2many(self):
+        record = self.env['test_new_api.computed_inverse_one2many'].create({
+            'name': 'SuperRecord',
+            'low_priority_line_ids': [Command.create({
+                'name': 'SuperChild 01',
+                'priority': 1,
+            })],
+        })
+        self.assertTrue(record.low_priority_line_ids.ids)
+
+        record.low_priority_line_ids = [Command.create({
+            'name': 'SuperChild 02',
+            'priority': 2,
+        })]
+        self.assertEqual(len(record.low_priority_line_ids.ids), 2)

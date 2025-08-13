@@ -997,6 +997,36 @@ class Test_New_ApiOne2manyLine(models.Model):
     container_id = fields.Many2one('test_new_api.one2many', required=True)
 
 
+class Test_New_ApiComputedInverseOne2many(models.Model):
+    _name = 'test_new_api.computed_inverse_one2many'
+    _description = "A computed/inverse o2m, subset of a main one"
+
+    name = fields.Char()
+    all_line_ids = fields.One2many('test_new_api.computed_inverse_one2many_line', 'parent_id')
+    low_priority_line_ids = fields.One2many('test_new_api.computed_inverse_one2many_line', compute='_compute_priority_line_ids', inverse='_inverse_line_ids')
+    high_priority_line_ids = fields.One2many('test_new_api.computed_inverse_one2many_line', compute='_compute_priority_line_ids', inverse='_inverse_line_ids')
+
+    @api.depends('all_line_ids')
+    def _compute_priority_line_ids(self):
+        for record in self:
+            low_lines = record.all_line_ids.filtered(lambda line: line.priority < 4)
+            record.low_priority_line_ids = low_lines
+            record.high_priority_line_ids = record.all_line_ids - low_lines
+
+    def _inverse_line_ids(self):
+        for record in self:
+            record.all_line_ids = record.low_priority_line_ids | record.high_priority_line_ids
+
+
+class Test_New_ApiComputedInverseOne2manyLine(models.Model):
+    _name = 'test_new_api.computed_inverse_one2many_line'
+    _description = "Line of a computed/inverse one2many"
+
+    name = fields.Char()
+    priority = fields.Integer()
+    parent_id = fields.Many2one('test_new_api.computed_inverse_one2many')
+
+
 class Test_New_ApiModel_Binary(models.Model):
     _name = 'test_new_api.model_binary'
     _description = 'Test Image field'
