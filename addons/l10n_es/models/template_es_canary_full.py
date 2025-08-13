@@ -37,4 +37,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @template('es_canary_full', 'account.asset')
     def _get_es_canary_full_account_asset(self):
+        # account_asset is not auto-installed when l10n_es is installed
+        if 'account.asset' not in self.env:
+            return {}
         return self._parse_csv('es_full', 'account.asset', module='l10n_es')
