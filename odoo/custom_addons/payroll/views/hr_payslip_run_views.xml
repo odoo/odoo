@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- payslip runs -->
+    <record id="hr_payslip_run_view_search" model="ir.ui.view">
+        <field name="name">hr.payslip.run.search</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="arch" type="xml">
+            <search string="Search Payslip Batches">
+                <field name="name" string="Payslip Batches" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="date_start" />
+                <field name="date_end" />
+                <filter
+                    string="Draft"
+                    name="draft"
+                    domain="[('state','=','draft')]"
+                    help="Draft Payslip Batches"
+                />
+                <filter
+                    name="done_filter"
+                    string="Done"
+                    domain="[('state','=','close')]"
+                    help="Done Payslip Batches"
+                />
+            </search>
+        </field>
+    </record>
+    <record id="hr_payslip_run_view_tree" model="ir.ui.view">
+        <field name="name">hr.payslip.run.tree</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="arch" type="xml">
+            <tree
+                decoration-info="state in ('confirm','hr_check','accont_check')"
+                decoration-muted="state == 'cancel'"
+                multi_edit="1"
+                sample="1"
+            >
+                <field name="name" />
+                <field name="date_start" decoration-bf="1" />
+                <field name="date_end" decoration-bf="1" />
+                <field name="activity_ids" widget="list_activity" optional="show" />
+                <field name="credit_note" />
+                <field
+                    name="state"
+                    decoration-success="state == 'close'"
+                    decoration-info="state == 'draft'"
+                    widget="badge"
+                    optional="show"
+                />
+                <field name="message_needaction" column_invisible="1" />
+                <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    optional="show"
+                />
+            </tree>
+        </field>
+    </record>
+    <record id="hr_payslip_run_view_kanban" model="ir.ui.view">
+        <field name="name">hr.payslip.run.kanban</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>
+                                        <field name="name" />
+                                        <field
+                                            name="company_id"
+                                            groups="base.group_multi_company"
+                                        />
+                                    </strong>
+                                </div>
+                                <div class="col-6">
+                                    <span class="float-right badge badge-secondary">
+                                        <field name="state" />
+                                    </span>
+                                </div>
+                                <div class="col-12">
+                                    <span>
+                                        <field name="date_start" />
+                                        -
+                                        <field name="date_end" />
+                                    </span>
+                                    <span
+                                        class="float-right"
+                                        title="Is a Blocking Reason?"
+                                    >
+                                        <field name="credit_note" widget="boolean" />
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="hr_payslip_run_view_form" model="ir.ui.view">
+        <field name="name">hr.payslip.run.form</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="arch" type="xml">
+            <form string="Payslips Batches">
+                <header>
+                    <button
+                        name="close_payslip_run"
+                        type="object"
+                        string="Close"
+                        invisible="state != 'draft'"
+                        class="oe_highlight"
+                    />
+                    <button
+                        name="%(action_hr_payslip_by_employees)d"
+                        type="action"
+                        invisible="state != 'draft'"
+                        string="Generate Payslips"
+                        class="oe_highlight"
+                    />
+                    <button
+                        string="Set to Draft"
+                        name="draft_payslip_run"
+                        type="object"
+                        invisible="state != 'close'"
+                    />
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <label for="name" class="oe_edit_only" />
+                    <h1>
+                        <field name="name" readonly="state != 'draft'" />
+                    </h1>
+                    <group>
+                        <group name="period_group">
+                            <label for="date_start" string="Period" />
+                            <div>
+                                <field
+                                    name="date_start"
+                                    widget="daterange"
+                                    class="oe_inline"
+                                    options="{'end_date_field': 'date_end'}"
+                                    readonly="state != 'draft'"
+                                />
+                            </div>
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                        </group>
+                        <group name="other">
+                            <field name="struct_id" readonly="state != 'draft'" />
+                            <field name="credit_note" readonly="state != 'draft'" />
+                        </group>
+                    </group>
+                    <separator string="Payslips" />
+                    <field name="slip_ids" readonly="state != 'draft'" />
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="hr_payslip_run_action" model="ir.actions.act_window">
+        <field name="name">Payslips Batches</field>
+        <field name="res_model">hr.payslip.run</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="search_view_id" ref="hr_payslip_run_view_search" />
+    </record>
+    <menuitem
+        action="hr_payslip_run_action"
+        id="hr_payslip_run_menu"
+        parent="payroll_menu_root"
+    />
+</odoo>

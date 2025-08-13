@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+<!--Copyright 2019 - Eficent http://www.eficent.com/-->
+<!--Copyright 2019 Serpent Consulting Services Pvt. Ltd.-->
+<!--License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).-->
+    <record id="hr_payslip_change_state_form" model="ir.ui.view">
+        <field name="name">hr.payslip.change.state.form</field>
+        <field name="model">hr.payslip.change.state</field>
+        <field name="arch" type="xml">
+            <form string="Change state">
+                <group>
+                    <field name="state" />
+                </group>
+                <footer>
+                    <button
+                        string="Execute"
+                        name="change_state_confirm"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hr_payslip_change_state_form" model="ir.actions.act_window">
+        <field name="name">Change state</field>
+        <field name="res_model">hr.payslip.change.state</field>
+        <field name="view_mode">form,tree</field>
+        <field name="view_id" ref="hr_payslip_change_state_form" />
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="payroll.model_hr_payslip" />
+    </record>
+</odoo>

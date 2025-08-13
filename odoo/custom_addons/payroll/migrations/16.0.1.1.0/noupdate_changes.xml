@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<odoo>
+    <record id="mail_template_hr_payslip" model="mail.template">
+        <field name="email_from">{{user.employee_id.work_email}}</field>
+        <field name="email_to">{{object.employee_id.work_contact_id.email}}</field>
+        <field name="reply_to">{{user.employee_id.work_email}}</field>
+        <field
+            name="subject"
+        >Payslip for {{object.payslip_run_id.name}} from {{object.company_id.name}}</field>
+        <field name="lang">{{object.employee_id.work_contact_id.lang}}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Dear <t t-out="object.employee_id.name" />,
+                    <br /><br />
+                    Please find attached the payslip for <t
+                        t-out="object.payslip_run_id.name"
+                    />.
+                    <br /><br />
+                    Do not hesitate to contact us if you have any questions.
+                    <br /><br />
+                    <t t-out="user.signature" />
+                </p>
+            </div>
+        </field>
+    </record>
+</odoo>

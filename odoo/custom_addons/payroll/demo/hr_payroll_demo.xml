@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="contrib_register_employees" model="hr.contribution.register">
+        <field name="name">Employees</field>
+        <field name="partner_id" eval="False" />
+    </record>
+    <record id="BASIC" model="hr.salary.rule.category">
+        <field name="name">Basic</field>
+        <field name="code">BASIC</field>
+    </record>
+    <record id="ALW" model="hr.salary.rule.category">
+        <field name="name">Allowance</field>
+        <field name="code">ALW</field>
+    </record>
+    <record id="GROSS" model="hr.salary.rule.category">
+        <field name="name">Gross</field>
+        <field name="code">GROSS</field>
+    </record>
+    <record id="DED" model="hr.salary.rule.category">
+        <field name="name">Deduction</field>
+        <field name="code">DED</field>
+    </record>
+    <record id="NET" model="hr.salary.rule.category">
+        <field name="name">Net</field>
+        <field name="code">NET</field>
+    </record>
+    <record id="COMP" model="hr.salary.rule.category">
+        <field name="name">Company Contribution</field>
+        <field name="code">COMP</field>
+    </record>
+    <record id="hr_rule_basic" model="hr.salary.rule">
+        <field name="name">Basic Salary</field>
+        <field name="sequence" eval="1" />
+        <field name="code">BASIC</field>
+        <field name="category_id" ref="payroll.BASIC" />
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = contract.wage
+        </field>
+    </record>
+    <record id="hr_rule_taxable" model="hr.salary.rule">
+        <field name="name">Gross</field>
+        <field name="sequence" eval="100" />
+        <field name="code">GROSS</field>
+        <field name="category_id" ref="payroll.GROSS" />
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories.BASIC + categories.ALW
+        </field>
+    </record>
+    <record id="hr_rule_net" model="hr.salary.rule">
+        <field name="name">Net Salary</field>
+        <field name="sequence" eval="200" />
+        <field name="code">NET</field>
+        <field name="category_id" ref="payroll.NET" />
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories.BASIC + categories.ALW + categories.DED
+        </field>
+        <field name="register_id" ref="contrib_register_employees" />
+    </record>
+    <!-- Salary Structure -->
+    <record id="structure_base" model="hr.payroll.structure">
+        <field name="code">BASE</field>
+        <field name="name">Base for new structures</field>
+        <field
+            eval="[(6, 0, [ref('hr_rule_basic'), ref('hr_rule_taxable'),ref('hr_rule_net')])]"
+            name="rule_ids"
+        />
+        <field name="company_id" ref="base.main_company" />
+    </record>
+    <!-- Contribution Register -->
+    <record id="hr_houserent_register" model="hr.contribution.register">
+        <field name="name">House Rent Allowance Register</field>
+    </record>
+    <record id="hr_provident_fund_register" model="hr.contribution.register">
+        <field name="name">Provident Fund Register</field>
+    </record>
+    <record id="hr_professional_tax_register" model="hr.contribution.register">
+        <field name="name">Professional Tax Register</field>
+    </record>
+    <record id="hr_meal_voucher_register" model="hr.contribution.register">
+        <field name="name">Meal Voucher Register</field>
+    </record>
+    <!-- Salary Rules -->
+    <record id="hr_salary_rule_houserentallowance1" model="hr.salary.rule">
+        <field name="amount_select">percentage</field>
+        <field eval="40.0" name="amount_percentage" />
+        <field name="amount_percentage_base">contract.wage</field>
+        <field name="code">HRA</field>
+        <field name="category_id" ref="payroll.ALW" />
+        <field name="register_id" ref="hr_houserent_register" />
+        <field name="name">House Rent Allowance</field>
+        <field name="sequence" eval="5" />
+    </record>
+    <record id="hr_salary_rule_convanceallowance1" model="hr.salary.rule">
+        <field name="amount_select">fix</field>
+        <field eval="800.0" name="amount_fix" />
+        <field name="code">CA</field>
+        <field name="category_id" ref="payroll.ALW" />
+        <field name="name">Conveyance Allowance</field>
+        <field name="sequence" eval="10" />
+    </record>
+    <record id="hr_salary_rule_professionaltax1" model="hr.salary.rule">
+        <field name="amount_select">fix</field>
+        <field eval="150" name="sequence" />
+        <field eval="-200.0" name="amount_fix" />
+        <field name="code">PT</field>
+        <field name="category_id" ref="payroll.DED" />
+        <field name="register_id" ref="hr_professional_tax_register" />
+        <field name="name">Professional Tax</field>
+    </record>
+    <record id="hr_salary_rule_providentfund1" model="hr.salary.rule">
+        <field name="amount_select">percentage</field>
+        <field eval="120" name="sequence" />
+        <field eval="-12.5" name="amount_percentage" />
+        <field name="amount_percentage_base">contract.wage</field>
+        <field name="code">PF</field>
+        <field name="category_id" ref="payroll.DED" />
+        <field name="register_id" ref="hr_provident_fund_register" />
+        <field name="name">Provident Fund</field>
+    </record>
+    <record id="hr_salary_rule_ca_demo" model="hr.salary.rule">
+        <field name="amount_select">fix</field>
+        <field eval="600.0" name="amount_fix" />
+        <field name="code">CAMD</field>
+        <field name="category_id" ref="payroll.ALW" />
+        <field name="name">Conveyance Allowance For Marc Demo</field>
+        <field name="sequence" eval="15" />
+    </record>
+    <record id="hr_salary_rule_meal_voucher" model="hr.salary.rule">
+        <field name="amount_select">fix</field>
+        <field eval="10" name="amount_fix" />
+        <field name="quantity">
+            worked_days.WORK100 and worked_days.WORK100.number_of_days
+        </field>
+        <field name="code">MA</field>
+        <field name="category_id" ref="payroll.ALW" />
+        <field name="register_id" ref="hr_meal_voucher_register" />
+        <field name="name">Meal Voucher</field>
+        <field name="sequence" eval="16" />
+    </record>
+    <record id="hr_salary_rule_sales_commission" model="hr.salary.rule">
+        <field name="amount_select">code</field>
+        <field name="code">SALE</field>
+        <field name="category_id" ref="payroll.ALW" />
+        <field name="name">Get 1% of sales</field>
+        <field name="sequence" eval="17" />
+        <field name="amount_python_compute">
+result = ((inputs.SALEURO and inputs.SALEURO.amount) + (inputs.SALASIA and
+inputs.SALASIA.amount)) * 0.01
+        </field>
+    </record>
+    <!-- Rule Inputs -->
+    <record id="hr_rule_input_sale_a" model="hr.rule.input">
+        <field name="code">SALEURO</field>
+        <field name="name">Sales to Europe</field>
+        <field name="input_id" ref="hr_salary_rule_sales_commission" />
+    </record>
+    <record id="hr_rule_input_sale_b" model="hr.rule.input">
+        <field name="code">SALASIA</field>
+        <field name="name">Sales to Asia</field>
+        <field name="input_id" ref="hr_salary_rule_sales_commission" />
+    </record>
+    <!-- Salary Structure -->
+    <record id="structure_001" model="hr.payroll.structure">
+        <field name="code">ME</field>
+        <field name="name">Marketing Executive</field>
+        <field
+            eval="[(6, 0, [ref('hr_salary_rule_houserentallowance1'),
+ref('hr_salary_rule_convanceallowance1'),ref('hr_salary_rule_professionaltax1'),ref('hr_salary_rule_providentfund1')])]"
+            name="rule_ids"
+        />
+        <field name="company_id" ref="base.main_company" />
+        <field name="parent_id" ref="structure_base" />
+    </record>
+    <record id="structure_002" model="hr.payroll.structure">
+        <field name="code">MEMD</field>
+        <field name="name">Marketing Executive for Marc Demo</field>
+        <field
+            eval="[(6, 0, [ref('hr_salary_rule_ca_demo'), ref('hr_salary_rule_meal_voucher')])]"
+            name="rule_ids"
+        />
+        <field name="company_id" ref="base.main_company" />
+        <field name="parent_id" ref="structure_001" />
+    </record>
+    <!-- Employee -->
+    <record id="hr_employee_payroll" model="hr.employee">
+        <field name="company_id" ref="base.main_company" />
+        <field eval="1" name="active" />
+        <field name="name">Roger Scott</field>
+        <field name="work_phone">+3282823500</field>
+        <field
+            name="image_1920"
+            type="base64"
+            file="payroll/static/img/hr_employee_payroll-image.jpg"
+        />
+    </record>
+    <!-- Employee Contract -->
+    <record id="hr_contract_firstcontract1" model="hr.contract">
+        <field name="name">Marketing Executive Contract</field>
+        <field name="date_start" eval="time.strftime('%Y-%m')+'-1'" />
+        <field name="date_end" eval="time.strftime('%Y')+'-12-31'" />
+        <field name="struct_id" ref="payroll.structure_001" />
+        <field name="employee_id" ref="hr_employee_payroll" />
+        <field name="notes">Default contract for marketing executives</field>
+        <field eval="4000.0" name="wage" />
+    </record>
+    <record id="hr_contract_marc_demo" model="hr.contract">
+        <field name="name">Contract For Marc Demo</field>
+        <field name="date_start" eval="time.strftime('%Y-%m')+'-1'" />
+        <field name="date_end" eval="time.strftime('%Y')+'-12-31'" />
+        <field name="struct_id" ref="payroll.structure_002" />
+        <field name="employee_id" ref="hr.employee_qdp" />
+        <field name="notes">This is Marc Demo's contract</field>
+        <field eval="5000.0" name="wage" />
+    </record>
+</odoo>

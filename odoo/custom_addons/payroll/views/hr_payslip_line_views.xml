@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="hr_payslip_line_view_tree" model="ir.ui.view">
+        <field name="name">hr.payslip.line.tree</field>
+        <field name="model">hr.payslip.line</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" decoration-info="total == 0">
+
+                <field name="allow_edit_payslip_lines" column_invisible="1" />
+                <field name="category_id" />
+                <field name="employee_id" column_invisible="1" />
+                <field name="sequence" />
+                <field name="name" />
+                <field name="code" />
+                <field name="quantity" readonly="not allow_edit_payslip_lines" />
+                <field name="rate" readonly="not allow_edit_payslip_lines" />
+                <field name="amount" readonly="not allow_edit_payslip_lines" />
+                <field name="total" />
+                <field name="amount_select" column_invisible="1" />
+                <field name="register_id" column_invisible="1" />
+                <field name="payslip_run_id" optional="hide" />
+            </tree>
+        </field>
+    </record>
+    <record id="hr_payslip_line_view_form" model="ir.ui.view">
+        <field name="name">hr.payslip.line.form</field>
+        <field name="model">hr.payslip.line</field>
+        <field name="arch" type="xml">
+            <form string="Payslip Line">
+                <h2>
+                    <field name="slip_id" readonly="1" />
+                </h2>
+                <group>
+                    <group string="Payslip Line Details">
+                        <field name="name" />
+                        <field name="code" readonly="1" />
+                        <field name="employee_id" readonly="1" />
+                        <field name="contract_id" readonly="1" />
+                    </group>
+                    <group string="Calculations">
+                        <field name="category_id" readonly="1" />
+                        <field name="amount_select" readonly="1" />
+                        <field
+                            name="amount_fix"
+                            invisible="amount_select != 'fix'"
+                            readonly="1"
+                        />
+                        <field
+                            name="amount_percentage"
+                            invisible="amount_select != 'percentage'"
+                            readonly="1"
+                        />
+                        <field name="sequence" readonly="1" />
+                        <separator />
+                        <field name="quantity" readonly="1" />
+                        <field name="rate" readonly="1" />
+                        <field name="amount" readonly="1" />
+                        <field name="total" decoration-bf="1" readonly="1" />
+                    </group>
+                    <field name="note" />
+                </group>
+                <notebook>
+                    <page name="child_ids" string="Child Line Details">
+                        <group>
+                            <field name="child_ids" readonly="1" nolabel="1">
+                                <tree
+                                    editable="false"
+                                    decoration-info="total == 0"
+                                    decoration-bf="parent_line_id == False"
+                                >
+                                    <field name="sequence" column_invisible="1" />
+                                    <field name="parent_line_id" column_invisible="1" />
+                                    <field name="name" />
+                                    <field name="code" />
+                                    <field name="category_id" />
+                                    <field name="salary_rule_id" />
+                                    <field name="quantity" />
+                                    <field name="rate" />
+                                    <field name="amount" />
+                                    <field
+                                        name="total"
+                                        decoration-danger="0 > total and parent_line_id == False"
+                                        decoration-success="total > 0 and parent_line_id == False"
+                                        sum="total_net"
+                                    />
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+    <record id="hr_payslip_line_view_pivot" model="ir.ui.view">
+        <field name="name">hr.payslip.line.pivot</field>
+        <field name="model">hr.payslip.line</field>
+        <field name="mode">primary</field>
+        <field name="priority" eval="20" />
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="salary_rule_id" type="row" />
+                <field name="total" type="measure" />
+            </pivot>
+        </field>
+    </record>
+    <record id="hr_payslip_line_view_search" model="ir.ui.view">
+        <field name="name">hr.payslip.line.select</field>
+        <field name="model">hr.payslip.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Payslip Lines">
+                <field
+                    name="name"
+                    string="Payslip Lines"
+                    filter_domain="['|',('name','ilike',self),('code','ilike',self)]"
+                />
+                <field name="amount_select" />
+                <field name="slip_id" />
+                <field name="payslip_run_id" />
+                <group col="8" colspan="4" expand="0" string="Group By">
+                    <filter
+                        string="Salary Rule Category"
+                        name="category_id"
+                        context="{'group_by':'category_id'}"
+                    />
+                    <filter
+                        string="Contribution Register"
+                        name="register_id"
+                        context="{'group_by':'register_id'}"
+                    />
+                    <filter
+                        string="Amount Type"
+                        name="amount_select"
+                        context="{'group_by':'amount_select'}"
+                    />
+                    <filter
+                        string="Employees"
+                        name="employee_id"
+                        context="{'group_by':'employee_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="hr_payslip_line_action" model="ir.actions.act_window">
+        <field name="name">Payslip Lines</field>
+        <field name="res_model">hr.payslip.line</field>
+        <field name="domain">[('register_id', '=', active_id)]</field>
+        <field name="context">
+            {'default_register_id': active_id, 'search_default_register_id': 1}
+        </field>
+        <field name="binding_model_id" ref="model_hr_payslip" />
+    </record>
+    <record
+        id="hr_payslip_line_action_computation_details"
+        model="ir.actions.act_window"
+    >
+        <field name="name">Payslip Computation Details</field>
+        <field name="res_model">hr.payslip.line</field>
+        <field name="view_mode">tree,pivot,form</field>
+        <field name="domain">[('slip_id', 'in', active_ids)]</field>
+        <field name="binding_model_id" ref="model_hr_payslip" />
+    </record>
+    <record id="action_get_batch_payslip_lines" model="ir.actions.act_window">
+        <field name="name">Batch Payslip Lines</field>
+        <field name="res_model">hr.payslip.line</field>
+        <field name="view_mode">pivot,tree,form</field>
+        <field name="domain">[('payslip_run_id', 'in', active_ids)]</field>
+        <field name="binding_model_id" ref="model_hr_payslip_run" />
+    </record>
+</odoo>

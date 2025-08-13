@@ -1,0 +1,30 @@
+<odoo>
+  <record id="view_contract_form_tn_custom" model="ir.ui.view">
+    <field name="name">hr.contract.form.tn.custom</field>
+    <field name="model">hr.contract</field>
+    <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//notebook" position="inside">
+
+        <page string="Tunisie 🇹🇳">
+          <group string="Données CNSS" col="2">
+            <field name="cnss_employee_rate"/>
+            <field name="cnss_employer_rate"/>
+          </group>
+
+          <group string="IRPP" col="2">
+            <field name="irpp_exempt"/>
+            <field name="number_of_children"/>
+          </group>
+
+          <group string="Contrat - Tunisie" col="2">
+            <field name="tunisian_contract_type"/>
+            <field name="seniority_bonus_applicable"/>
+          </group>
+        </page>
+
+      </xpath>
+
+    </field>
+  </record>
+</odoo>

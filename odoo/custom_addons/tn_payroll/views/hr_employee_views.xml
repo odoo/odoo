@@ -1,0 +1,23 @@
+<odoo>
+  <record id="view_employee_form_tn_custom" model="ir.ui.view">
+    <field name="name">hr.employee.form.tn.custom</field>
+    <field name="model">hr.employee</field>
+    <field name="inherit_id" ref="hr.view_employee_form"/>
+    <field name="arch" type="xml">
+
+      <!-- نزيد الحقل مع الزر في نفس المجموعة -->
+      <xpath expr="//field[@name='work_phone']" position="after">
+        <group string="CNSS Info">
+          <field name="cnss_number"/>
+          <button name="generate_cnss_number"
+                  type="object"
+                  string="Auto"
+                  class="oe_highlight"
+                  icon="fa-magic"/>
+          <field name="professional_category"/>
+        </group>
+      </xpath>
+
+    </field>
+  </record>
+</odoo>

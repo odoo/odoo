@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="report_payslipdetails">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Pay Slip</h2>
+                        <p t-field="o.name" />
+                        <table class="table table-sm table-bordered">
+                            <tr>
+                                <td>
+                                    <strong>Name</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.employee_id" />
+                                </td>
+                                <td>
+                                    <strong>Designation</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.employee_id.job_id" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Address</strong>
+                                </td>
+                                <td colspan="3">
+                                    <div
+                                        t-field="o.employee_id.work_contact_id"
+                                        t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Email</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.employee_id.work_email" />
+                                </td>
+                                <td>
+                                    <strong>Identification No</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.employee_id.identification_id" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Reference</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.number" />
+                                </td>
+                                <td>
+                                    <strong>Bank Account</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.employee_id.bank_account_id" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Date From</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.date_from" />
+                                </td>
+                                <td>
+                                    <strong>Date To</strong>
+                                </td>
+                                <td>
+                                    <span t-field="o.date_to" />
+                                </td>
+                            </tr>
+                        </table>
+                        <h3>Details by Salary Rule Category</h3>
+                        <table class="table table-sm mb32">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Salary Rule Category</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    t-foreach="get_details_by_rule_category.get(o.id, [])"
+                                    t-as="h"
+                                >
+                                    <td>
+                                        <span t-esc="h['code']" />
+                                    </td>
+                                    <td>
+                                        <span t-esc="'..'*h['level']" />
+                                        <span t-esc="h['rule_category']" />
+                                    </td>
+                                    <td class="text-right">
+                                        <span
+                                            t-esc="h['total']"
+                                            t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'
+                                        />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h3>Payslip Lines by Contribution Register</h3>
+                        <table class="table table-sm mt32">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Quantity/rate</th>
+                                    <th>Amount</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    t-foreach="get_lines_by_contribution_register.get(o.id, [])"
+                                    t-as="p"
+                                >
+                                    <td>
+                                        <span t-esc="p.get('code', '')" />
+                                    </td>
+                                    <td>
+                                        <span t-esc="p.get('name', '')" />
+                                    </td>
+                                    <td>
+                                        <span t-esc="p.get('quantity', '')" />
+                                    </td>
+                                    <td>
+                                        <span t-esc="p.get('amount', 0)" />
+                                    </td>
+                                    <td class="text-right">
+                                        <span
+                                            t-esc="p.get('total', 0)"
+                                            t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'
+                                        />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="text-right">
+                            <strong>Authorized signature</strong>
+                        </p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
