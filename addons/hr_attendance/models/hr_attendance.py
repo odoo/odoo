@@ -137,7 +137,8 @@ class HrAttendance(models.Model):
                     break
                 ot_hours = min(overtime_reserve, att.worked_hours)
                 overtime_reserve -= ot_hours
-                att.overtime_hours = ot_hours
+                if att.overtime_hours != ot_hours:
+                    att.overtime_hours = ot_hours
 
     @api.depends('employee_id', 'overtime_status', 'overtime_hours')
     def _compute_validated_overtime_hours(self):
