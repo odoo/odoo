@@ -154,13 +154,12 @@ class TestHasGroup(TransactionCase):
             dict(xml_id='test_two_user_types.implied_groups', values={'name': 'Test Group'})
         ])
         grp_test.implied_ids += self.grp_internal
-        grp_test.implied_ids += self.grp_portal
 
         with self.assertRaises(ValidationError):
             self.env['res.users'].create({
                 'login': 'test_two_user_types',
                 'name': "Test User with two user types",
-                'group_ids': [Command.set([grp_test.id])]
+                'group_ids': [Command.set([grp_test.id, self.grp_portal.id])]
             })
 
         #Add a user with portal to the group Internal

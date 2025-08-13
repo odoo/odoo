@@ -83,7 +83,31 @@ class ResGroups(models.Model):
     def _check_disjoint_groups(self):
         # check for users that might have two exclusive groups
         self.env.registry.clear_cache('groups')
-        self.all_implied_by_ids._check_user_disjoint_groups()
+
+        try:
+            if any(
+                group.all_implied_ids & group.all_implied_by_ids.all_implied_ids.disjoint_ids
+                for group in self
+            ):
+                # A implies B C                       A
+                # B implies D E                     /   \
+                # C implies F G                  [B]      C
+                # E disjoint G                   / \     / \
+                #                               D   E*  F   G*
+                # g = B
+                # g.all_implied_ids = BDE
+                # g.all_implied_by_ids = AB
+                #    .all_implied_ids = ABCDEFG
+                #       .disjoint_ids = EG
+                # & => E
+                msg = self.env._("This makes a group imply two disjoint groups.")
+                raise ValidationError(msg)  # noqa: TRY301
+
+            self._check_user_disjoint_groups()
+
+        except ValidationError:
+            self.env.registry.clear_cache('groups')
+            raise
 
     @api.constrains('user_ids')
     def _check_user_disjoint_groups(self):
@@ -93,19 +117,32 @@ class ResGroups(models.Model):
         #
         # But that wouldn't scale at all for large groups, like more than 10K
         # users.  So instead we search for such a nasty user.
-        gids = self._get_user_type_groups().ids
-        domain = (
-            Domain('active', '=', True)
-            & Domain('group_ids', 'in', self.ids)
-            & Domain.OR(
-                Domain('all_group_ids', 'in', [gids[index]])
-                & Domain('all_group_ids', 'in', gids[index+1:])
-                for index in range(0, len(gids) - 1)
+
+        # those are the only disjoint groups
+        user_type_groups = self._get_user_type_groups()
+
+        for group in self:
+            user_type_group = user_type_groups & group.all_implied_ids
+            if not user_type_group:
+                # as 'group' does not imply any of the user type groups, no user
+                # with 'group' may end up having two disjoint groups
+                continue
+            domain = (
+                # user is active
+                Domain('active', '=', True)
+                # and user has 'group', and thus also has 'user_type_group'
+                & Domain('group_ids', 'in', group.all_implied_by_ids.ids)
+                # and user has another user type group
+                & Domain('group_ids', 'in', (user_type_groups - user_type_group).all_implied_by_ids.ids)
             )
-        )
-        user = self.env['res.users'].search(domain, order='id', limit=1)
-        if user:
-            user._check_disjoint_groups()  # raises a ValidationError
+            user = self.env['res.users'].search(domain, order='id', limit=1)
+            if user:
+                disjoint_groups = user.all_group_ids & user_type_groups
+                raise ValidationError(self.env._(
+                    "User %(user)s cannot be at the same time in exclusive groups %(groups)s.",
+                    user=repr(user.name),
+                    groups=", ".join(repr(g.display_name) for g in disjoint_groups),
+                ))
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_settings_group(self):
@@ -188,13 +225,8 @@ class ResGroups(models.Model):
         if self.ids:
             self.env['ir.model.access'].call_cache_clearing_methods()
 
-        res = super().write(vals)
-
-        if 'implied_ids' in vals or 'implied_by_ids' in vals:
-            # Invalidate the cache of groups and their relationships
-            self.env.registry.clear_cache('groups')
-
-        return res
+        # The cache of groups and their relationships is invalidated by _check_disjoint_groups
+        return super().write(vals)
 
     def _ensure_xml_id(self):
         """Return the groups external identifiers, creating the external identifier for groups missing one"""
@@ -275,10 +307,11 @@ class ResGroups(models.Model):
 
     def _get_user_type_groups(self):
         """ Return the (disjoint) user type groups (employee, portal, public). """
+        group_definitions = self._get_group_definitions()
         group_ids = [
             gid
             for xid in ('base.group_user', 'base.group_portal', 'base.group_public')
-            if (gid := self.env['ir.model.data']._xmlid_to_res_id(xid, raise_if_not_found=False))
+            if (gid := group_definitions.get_id(xid))
         ]
         return self.sudo().browse(group_ids)
 
