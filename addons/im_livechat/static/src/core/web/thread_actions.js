@@ -12,7 +12,6 @@ registerThreadAction("livechat-info", {
     icon: "fa fa-fw fa-info",
     iconLarge: "fa fa-fw fa-lg fa-info",
     name: _t("Information"),
-    nameActive: _t("Close Information"),
     sequence: 10,
     sequenceGroup: 7,
     toggle: true,
