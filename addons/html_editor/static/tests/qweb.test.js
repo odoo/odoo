@@ -307,3 +307,20 @@ test("cleaning removes content editable", async () => {
             <t t-raw="test">Hello</t>
         </div>`);
 });
+
+test("cleaning does not remove t-out links", async () => {
+    const { el, editor } = await setupEditor(
+        `
+        <ul>
+            <li><a href="xyz" t-out="xyz"/></li>
+        </ul>
+    `,
+        { config }
+    );
+    expect(el.innerHTML.trim().replace(/\s+/g, " ")).toBe(
+        `<ul> <li> <a href="xyz" t-out="xyz" data-oe-protected="true" contenteditable="false"> </a> </li> </ul>`
+    );
+    expect(editor.getContent().trim().replace(/\s+/g, " ")).toBe(
+        '<ul> <li><a href="xyz" t-out="xyz"></a></li> </ul>'
+    );
+});

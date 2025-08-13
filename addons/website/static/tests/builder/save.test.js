@@ -380,6 +380,20 @@ test("Drag and drop from the page should only mark the concerned elements as dir
     expect(":iframe .o_dirty").toHaveCount(0);
 });
 
+test("empty links with o_translate_inline are removed on save", async () => {
+    setupSaveAndReloadIframe();
+    await setupWebsiteBuilder(
+        `<section><a href="http://test.test" class="o_translate_inline">x</a></section>`
+    );
+    const link = queryOne(":iframe a");
+    link.replaceChildren("");
+    expect(":iframe a").toHaveCount(1);
+    expect(":iframe a").toHaveText("");
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    await animationFrame();
+    expect(":iframe a").toHaveCount(0);
+});
+
 function setupSaveAndReloadIframe() {
     const resultSave = [];
     onRpc("ir.ui.view", "save", ({ args }) => {
