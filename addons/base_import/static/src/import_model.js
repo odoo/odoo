@@ -78,13 +78,12 @@ const strftimeToHumanFormat = memoize(function strftimeToHumanFormat(value) {
  *
  */
 export class BaseImportModel {
-    constructor({ env, resModel, context, orm }) {
+    constructor({ env, context, orm }) {
         this.id = 1;
         this.env = env;
         this.orm = orm;
         this.handleInterruption = false;
 
-        this.resModel = resModel;
         this.context = context || {};
 
         this.fields = [];
@@ -228,6 +227,10 @@ export class BaseImportModel {
 
     unblock() {
         mainComponentRegistry.remove("ImportBlockUI");
+    }
+
+    setResModel(resModel) {
+        this.resModel = resModel;
     }
 
     async init() {
@@ -863,6 +866,7 @@ export class BaseImportModel {
 /**
  * @returns {BaseImportModel}columns
  */
-export function useImportModel({ env, resModel, context, orm }) {
-    return useState(new BaseImportModel({ env, resModel, context, orm }));
+export function useImportModel({ env, context }) {
+    const orm = useService("orm");
+    return useState(new BaseImportModel({ env, context, orm }));
 }
