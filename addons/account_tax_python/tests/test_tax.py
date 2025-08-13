@@ -61,7 +61,7 @@ class TestTaxPython(TestTaxCommon):
             res
         )
 
-    def test_price_included_multi_taxes_with_python_tax(self):
+    def test_price_included_multi_taxes_with_python_tax_1(self):
         """ Test multiple price-included taxes with a Python code tax applied last
         to ensure the total matches the price, and cached tax didn't bypassing the rounding correction.
         """
@@ -94,4 +94,36 @@ class TestTaxPython(TestTaxCommon):
                 (440.63, 22.5),
             ],
             res
+        )
+
+    def test_price_included_multi_taxes_with_python_tax_2(self):
+        tax_python = self.env['account.tax'].create({
+            'name': "Python Tax",
+            'amount_type': 'code',
+            'python_compute': "result = 5",
+            'price_include': True,
+            'include_base_amount': True,
+            'sequence': 1,  # Ensure this tax is applied first
+        })
+
+        tax_12_percent = self.env['account.tax'].create({
+            'name': "Tax 12%",
+            'amount_type': 'percent',
+            'amount': 15.0,
+            'price_include': True,
+            'include_base_amount': False,
+            'sequence': 2,  # Ensure this tax is applied after the 12% tax
+        })
+
+        taxes = tax_python + tax_12_percent
+        res = taxes.compute_all(100.00)
+
+        self._check_compute_all_results(
+            total_included=100.0,
+            total_excluded=81.96,
+            taxes=[
+                (81.96, 5.0),
+                (86.96, 13.04),
+            ],
+            res=res,
         )
