@@ -1,13 +1,12 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-export class WebsiteSaleTotalCardStickyReactive extends Interaction {
-    static selector = ".o_website_sale_checkout_container";
+export class WebsiteSaleStickyObject extends Interaction {
+    static selector = ".o_wsale_sticky_object";
 
     dynamicContent = {
-        ".o_total_card": {
+        _root: {
             "t-att-style": () => ({
-                "opacity": "1",
                 "top": `${this.position || 16}px`,
             }),
         }
@@ -45,4 +44,8 @@ export class WebsiteSaleTotalCardStickyReactive extends Interaction {
 }
 registry
     .category("public.interactions")
-    .add("website.website_sale_total_card_sticky_reactive", WebsiteSaleTotalCardStickyReactive);
+    .add("website.website_sale_product_sticky_col", WebsiteSaleStickyObject);
+
+registry
+    .category("public.interactions.edit")
+    .add("website.website_sale_product_sticky_col", { Interaction: WebsiteSaleStickyObject});
