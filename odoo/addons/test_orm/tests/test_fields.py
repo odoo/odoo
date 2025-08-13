@@ -3224,13 +3224,13 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
         record = self.env['test_orm.mixed'].create({})
         record.json = 0
-        check(record.json, False)
+        check(record.json, 0)
         record.json = 0.0
-        check(record.json, False)
+        check(record.json, 0.0)
         record.json = False
         check(record.json, False)
         record.json = ''
-        check(record.json, False)
+        check(record.json, '')
         record.json = []
         check(record.json, False)
         record.json = {}

@@ -599,9 +599,9 @@ class test_json_field(CreatorCase):
         """Test export of empty JSON field"""
         self.assertEqual(self.export(None), [['']])
         self.assertEqual(self.export(False), [['']])
-        self.assertEqual(self.export(0), [['']])
-        self.assertEqual(self.export(0.0), [['']])
-        self.assertEqual(self.export(''), [['']])
+        self.assertEqual(self.export(0), [['0']])
+        self.assertEqual(self.export(0.0), [['0.0']])
+        self.assertEqual(self.export(''), [['""']])
         self.assertEqual(self.export([]), [['']])
         self.assertEqual(self.export({}), [['']])
 

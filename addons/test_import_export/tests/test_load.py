@@ -1526,10 +1526,10 @@ class test_json_field(ImporterCase):
             self.assertIs(type(value), type(expected))
 
         test_cases = [
-            ('0', False),
-            ('0.0', False),
+            ('0', 0),
+            ('0.0', 0.0),
             ('', False),
-            ('""', False),
+            ('""', ""),
             ('[]', False),
             ('{}', False),
         ]
