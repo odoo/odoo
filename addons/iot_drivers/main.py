@@ -7,7 +7,7 @@ from threading import Thread
 import time
 
 from odoo.addons.iot_drivers.tools import certificate, helpers, upgrade, wifi
-from odoo.addons.iot_drivers.tools.system import IS_RPI
+from odoo.addons.iot_drivers.tools.system import IS_RPI, IS_TESTING
 from odoo.addons.iot_drivers.websocket_client import WebsocketClient
 
 if IS_RPI:
@@ -181,4 +181,7 @@ class Manager(Thread):
 
 
 manager = Manager()
-manager.start()
+if not IS_TESTING:
+    # Start the IoT manager if not in test mode
+    # Tests will simulate the IoT manager to avoid extra thread and have full control
+    manager.start()
