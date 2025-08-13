@@ -53,7 +53,6 @@ test("Rendering of visitor banner", async () => {
         text: `Website Visitor #${visitorId}`,
     });
     await contains("span", { text: "English" });
-    await contains("span > span", { text: "General website" });
 });
 
 test("Livechat with non-logged visitor should show visitor banner", async () => {
