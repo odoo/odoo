@@ -893,6 +893,9 @@ class SaleOrder(models.Model):
 
     @api.onchange('order_line')
     def _onchange_order_line(self):
+        self.order_line.invalidate_recordset(['parent_id'])
+        self.env.add_to_compute(self.order_line._fields['parent_id'], self.order_line)
+
         for index, line in enumerate(self.order_line):
             if line.product_type != 'combo':
                 continue

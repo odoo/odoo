@@ -4278,6 +4278,9 @@ class AccountMove(models.Model):
 
     @api.onchange('invoice_line_ids')
     def _onchange_quick_edit_line_ids(self):
+        self.invoice_line_ids._conditional_add_to_compute('parent_id', lambda line: (
+            line.display_type in ('line_section', 'line_subsection', 'line_note', 'product')
+        ))
         quick_encode_suggestion = self.env.context.get('quick_encoding_vals')
         if (
             not self.quick_edit_total_amount
