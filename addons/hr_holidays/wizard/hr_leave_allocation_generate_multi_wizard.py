@@ -114,6 +114,9 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
                 'view_mode': 'list',
                 'res_model': 'hr.leave.allocation',
                 'domain': [('id', 'in', allocations.ids)],
+                'context': {
+                    'active_id': False,
+                },
             }
         return None
 
