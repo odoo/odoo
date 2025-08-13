@@ -289,6 +289,55 @@ describe("range not collapsed", () => {
                     '<p contenteditable="false">ab<a contenteditable="true" href="http://test.test">[cd]</a>ef</p>',
             });
         });
+
+        test("should not remove unremovable links when inside selection with other links", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p>[a<a href="http://test.test">b</a>c<a class="oe_unremovable" href="http://test.test">d</a>e<a href="http://test.test">f]</a></p>',
+                stepFunction: unlinkByCommand,
+                contentAfter:
+                    '<p>[abc<a class="oe_unremovable" href="http://test.test">d</a>ef]</p>',
+            });
+        });
+
+        test("should not remove selected part of unremovable links when partially selected with other links", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p><a class="oe_unremovable" href="http://test.test">a[b</a>c<a href="http://test.test">d</a>e<a class="oe_unremovable" href="http://test.test">f]g</a></p>',
+                stepFunction: unlinkByCommand,
+                contentAfter:
+                    '<p><a class="oe_unremovable" href="http://test.test">a[b</a>cde<a class="oe_unremovable" href="http://test.test">f]g</a></p>',
+            });
+        });
+        test("should not remove unremovable links when fully selected with other links", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p>a<a class="oe_unremovable" href="http://test.test">[b</a>c<a href="http://test.test">d</a>e<a class="oe_unremovable" href="http://test.test">f]</a></p>',
+                stepFunction: unlinkByCommand,
+                contentAfter:
+                    '<p>a<a class="oe_unremovable" href="http://test.test">[b</a>cde<a class="oe_unremovable" href="http://test.test">f]</a></p>',
+            });
+        });
+        test("should not remove unremovable links when fully selected (including feff) with other links", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p>a<a class="oe_unremovable" href="http://test.test">[b</a>c<a href="http://test.test">d</a>e<a class="oe_unremovable" href="http://test.test">f]</a></p>',
+                /** @param {import("@html_editor/plugin").Editor} editor */
+                stepFunction: (editor) => {
+                    const selection = editor.shared.selection.getEditableSelection();
+                    // extends selection to contain the feffs
+                    editor.shared.selection.setSelection({
+                        anchorNode: selection.anchorNode.previousSibling,
+                        anchorOffset: 0,
+                        focusNode: selection.focusNode.nextSibling,
+                        focusOffset: 1,
+                    });
+                    unlinkByCommand(editor);
+                },
+                contentAfter:
+                    '<p>a<a class="oe_unremovable" href="http://test.test">[b</a>cde<a class="oe_unremovable" href="http://test.test">f]</a></p>',
+            });
+        });
     });
     test("should be able to remove link if selection has FEFF character", async () => {
         const { el } = await setupEditor(
