@@ -24,22 +24,16 @@ export class ImportAction extends Component {
         DocumentationLink,
     };
     static props = { ...standardActionServiceProps };
+    static path = "import";
+    static displayName = _t("Import a File");
 
     setup() {
         this.actionService = useService("action");
         this.notification = useService("notification");
-        this.orm = useService("orm");
         this.env.config.setDisplayName(this.props.action.name || _t("Import a File"));
-        // this.props.action.params.model is there for retro-compatiblity issues
-        this.resModel = this.props.action.params.model || this.props.action.params.active_model;
-        if (this.resModel) {
-            this.props.updateActionState({ active_model: this.resModel });
-        }
         this.model = useImportModel({
             env: this.env,
-            resModel: this.resModel,
-            context: this.props.action.params.context || {},
-            orm: this.orm,
+            context: this.props.action.params?.context || {},
         });
 
         this.state = useState({
@@ -94,26 +88,39 @@ export class ImportAction extends Component {
             }
         });
 
-        onWillStart(() => this.model.init());
+        onWillStart(async () => {
+            this.action = await this.actionService.currentAction;
+            if (!this.action) {
+                return this.env.config.historyBack();
+            }
+            if (this.action.type !== "ir.actions.act_window") {
+                return this.actionService.restore(this.actionService.currentController.jsId);
+            }
+
+            this.resModel = this.action.res_model;
+            this.model.setResModel(this.resModel);
+            return this.model.init();
+        });
     }
 
-    exit(resIds) {
-        if (resIds?.length > 0) {
-            this.actionService.doAction({
-                type: "ir.actions.act_window",
-                name: _t("Imported records"),
-                res_model: this.model.resModel,
-                view_mode: "tree,form",
-                views: [
-                    [false, "list"],
-                    [false, "form"],
-                ],
-                domain: [["id", "in", resIds]],
-                target: "current",
-            });
-        } else {
-            this.env.config.historyBack();
-        }
+    cancel() {
+        this.env.config.historyBack();
+    }
+
+    openRecords(resIds) {
+        this.actionService.doAction({
+            type: "ir.actions.act_window",
+            name: _t("Imported records"),
+            res_model: this.model.resModel,
+            view_mode: this.action.view_mode || "list,form",
+            views: this.action.views || [
+                [false, "list"],
+                [false, "form"],
+            ],
+            domain: [["id", "in", resIds]],
+            target: "current",
+            path: "imported-records",
+        });
     }
 
     get display() {
@@ -245,7 +252,7 @@ export class ImportAction extends Component {
                     type: "success",
                 });
                 if (!this.state.isPaused) {
-                    this.exit(res.ids);
+                    this.openRecords(res.ids);
                 }
             } else {
                 this.state.isTested = true;
