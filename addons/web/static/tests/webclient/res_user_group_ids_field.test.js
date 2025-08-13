@@ -708,3 +708,23 @@ test("privileges without category", async () => {
     await contains(`.o_form_button_save`).click();
     expect.verifySteps(["web_save"]);
 });
+
+test("implied groups placeholder rendering", async () => {
+    ResUsers._records[0].view_group_hierarchy.privileges[122].placeholder = "Empty Placeholder";
+    await mountView({
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="group_ids" widget="res_user_group_ids"/>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+    expect(".o_field_widget[name=group_ids] .o_inner_group").toHaveCount(2);
+    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(0) .o_form_label").toHaveText("Administration");
+    await contains(".o_field_widget[name=group_ids] .o_inner_group:eq(0) select:eq(0)").select("false");
+    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(0) select:eq(0)").toHaveValue("false");
+    expect(".o_field_widget[name=group_ids] .o_inner_group:eq(0) select:eq(0) option.o_select_placeholder").toHaveText("Empty Placeholder");
+});
