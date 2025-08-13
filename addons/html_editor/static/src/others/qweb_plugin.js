@@ -51,6 +51,8 @@ export class QWebPlugin extends Plugin {
         unremovable_node_predicates: isUnremovableQWebElement,
         unsplittable_node_predicates: isUnsplittableQWebElement,
         clipboard_content_processors: this.clearDataAttributes.bind(this),
+        legit_empty_link_predicates: (linkEl) =>
+            linkEl.getAttributeNames().some((name) => name.startsWith("t-")),
     };
 
     setup() {
