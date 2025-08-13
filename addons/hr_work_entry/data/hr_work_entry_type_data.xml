@@ -620,6 +620,13 @@
         <field name="is_leave" eval="True"/>
     </record>
 
+    <record id="l10n_eg_work_entry_type_weekend" model="hr.work.entry.type">
+        <field name="name">Weekend</field>
+        <field name="code">SALEAVE600</field>
+        <field name="country_id" ref="base.eg"/>
+        <field name="is_leave" eval="True"/>
+    </record>
+
 <!-- HK : Hong Kong -->
     <record id="l10n_hk_work_entry_type_sick_leave_80" model="hr.work.entry.type">
         <field name="name">Sick Leave 80%</field>
@@ -845,6 +852,12 @@
     <record id="l10n_sa_work_entry_type_emergency" model="hr.work.entry.type">
         <field name="name">Emergency Leave</field>
         <field name="code">SAEMERGENCY</field>
+        <field name="is_leave" eval="True"/>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+    <record id="l10n_sa_work_entry_type_weekend" model="hr.work.entry.type">
+        <field name="name">Weekend</field>
+        <field name="code">SALEAVE600</field>
         <field name="is_leave" eval="True"/>
         <field name="country_id" ref="base.sa"/>
     </record>
