@@ -19,7 +19,7 @@ class TestDefaultView(common.TransactionCase):
         )
         self.assertEqual(
             etree.tostring(self.env['test_orm.mixed']._get_default_form_view()),
-            b'<form><sheet string="Test ORM Mixed"><group><group><field name="foo"/></group></group><group><field name="text"/></group><group><group><field name="truth"/><field name="number"/><field name="date"/><field name="now"/><field name="reference"/></group><group><field name="count"/><field name="number2"/><field name="moment"/><field name="lang"/></group></group><group><field name="comment0"/></group><group><field name="comment1"/></group><group><field name="comment2"/></group><group><field name="comment3"/></group><group><field name="comment4"/></group><group><field name="comment5"/></group><group><group><field name="currency_id"/></group><group><field name="amount"/></group></group><group><separator/></group></sheet></form>',
+            b'<form><sheet string="Test ORM Mixed"><group><group><field name="foo"/></group></group><group><field name="text"/></group><group><group><field name="truth"/><field name="number"/><field name="date"/><field name="now"/><field name="reference"/></group><group><field name="count"/><field name="number2"/><field name="moment"/><field name="lang"/></group></group><group><field name="comment0"/></group><group><field name="comment1"/></group><group><field name="comment2"/></group><group><field name="comment3"/></group><group><field name="comment4"/></group><group><field name="comment5"/></group><group><group><field name="json"/><field name="amount"/></group><group><field name="currency_id"/></group></group><group><separator/></group></sheet></form>',
         )
 
     def test_default_view_with_binaries(self):

@@ -375,6 +375,7 @@ class TestOrmMixed(models.Model):
     comment3 = fields.Html(sanitize_attributes=True, strip_classes=True)
     comment4 = fields.Html(sanitize_attributes=True, strip_style=True)
     comment5 = fields.Html(sanitize_overridable=True, sanitize_attributes=False)
+    json = fields.Json()
 
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.ref('base.EUR'))
     amount = fields.Monetary()

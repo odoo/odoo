@@ -1,4 +1,5 @@
 import itertools
+import json
 import pstats
 from cProfile import Profile
 
@@ -589,6 +590,20 @@ class test_function(CreatorCase):
     def test_value(self):
         """Exports value normally returned by accessing the function field"""
         self.assertEqual(self.export(42), [[3]])
+
+
+class test_json_field(CreatorCase):
+    model_name = 'export.json'
+
+    def test_empty(self):
+        """Test export of empty JSON field"""
+        self.assertEqual(self.export(None), [['']])
+        self.assertEqual(self.export(False), [['']])
+        self.assertEqual(self.export(0), [['']])
+        self.assertEqual(self.export(0.0), [['']])
+        self.assertEqual(self.export(''), [['']])
+        self.assertEqual(self.export([]), [['']])
+        self.assertEqual(self.export({}), [['']])
 
 
 @common.tagged('-standard', 'bench')

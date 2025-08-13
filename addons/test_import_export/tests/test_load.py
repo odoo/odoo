@@ -1516,6 +1516,33 @@ class test_datetime(ImporterCase):
         self.assertEqual([fields.Datetime.to_string(value['value']) for value in self.read(domain=[('id', 'in', result['ids'])])], ['2012-02-03 11:11:11'])
 
 
+class test_json_field(ImporterCase):
+    model_name = 'export.json'
+
+    def test_falsy_values(self):
+
+        def check(value, expected):
+            self.assertEqual(value, expected)
+            self.assertIs(type(value), type(expected))
+
+        test_cases = [
+            ('0', False),
+            ('0.0', False),
+            ('', False),
+            ('""', False),
+            ('[]', False),
+            ('{}', False),
+        ]
+
+        for json_data, expected_value in test_cases:           
+            result = self.import_(['value'], [[json_data]])
+            self.assertEqual(len(result['ids']), 1)
+            self.assertFalse(result['messages'])
+            records = self.read(domain=[('id', 'in', result['ids'])])
+            value = values(records)[0]
+            check(value, expected_value)
+
+
 class test_unique(ImporterCase):
     model_name = 'export.unique'
 

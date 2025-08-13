@@ -3215,6 +3215,26 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(record.comment0, record_value)
         record.invalidate_recordset()
         self.assertEqual(record.comment0, record_value)
+    
+    def test_json_falsy_values(self):
+
+        def check(value, expected):
+            self.assertEqual(value, expected)
+            self.assertIs(type(value), type(expected))
+
+        record = self.env['test_orm.mixed'].create({})
+        record.json = 0
+        check(record.json, False)
+        record.json = 0.0
+        check(record.json, False)
+        record.json = False
+        check(record.json, False)
+        record.json = ''
+        check(record.json, False)
+        record.json = []
+        check(record.json, False)
+        record.json = {}
+        check(record.json, False)
 
 
 class TestX2many(TransactionExpressionCase):
