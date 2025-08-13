@@ -279,6 +279,16 @@ describe("range not collapsed", () => {
                 contentAfter: '<p>[ab<a contenteditable="false" href="exist">cd</a>ef]</p>',
             });
         });
+
+        test("should not unlink editable links with selection in non-editable", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p contenteditable="false">ab<a contenteditable="true" href="http://test.test">[cd]</a>ef</p>',
+                stepFunction: unlinkByCommand,
+                contentAfter:
+                    '<p contenteditable="false">ab<a contenteditable="true" href="http://test.test">[cd]</a>ef</p>',
+            });
+        });
     });
     test("should be able to remove link if selection has FEFF character", async () => {
         const { el } = await setupEditor(
