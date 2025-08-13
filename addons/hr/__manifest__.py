@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -52,7 +51,6 @@
     ],
     'installable': True,
     'application': True,
-    'post_init_hook': '_install_hr_localization',
     'assets': {
         'web.assets_backend': [
             'hr/static/src/**/*',
