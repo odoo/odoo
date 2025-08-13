@@ -100,7 +100,7 @@ def _initialize_db(db_name, demo, lang, user_password, login='admin', country_co
 
 
 def _check_faketime_mode(db_name):
-    if os.getenv('ODOO_FAKETIME_TEST_MODE') and db_name != 'postgres':
+    if os.getenv('ODOO_FAKETIME_TEST_MODE') and db_name in odoo.tools.config['db_name'].split(','):
         try:
             db = odoo.sql_db.db_connect(db_name)
             with db.cursor() as cursor:
