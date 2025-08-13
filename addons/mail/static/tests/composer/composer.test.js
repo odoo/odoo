@@ -16,6 +16,7 @@ import {
     setupChatHub,
     start,
     startServer,
+    triggerEvents,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
@@ -1159,4 +1160,25 @@ test("composer reply-to message is restored page reload", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer:contains('Replying to')");
+});
+
+test.tags("focus required");
+test("composer send button is disabled while holding shift", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        name: "test",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-input:focus");
+    await insertText(".o-mail-Composer-input", "Test");
+    triggerEvents(".o-mail-Composer-input", [["keydown", { key: "Shift", shiftKey: true }]]);
+    await contains(".o-sendMessageActive", { count: 0 });
+    triggerEvents(".o-mail-Composer-input", [["keyup", { key: "Shift", shiftKey: false }]]);
+    await contains(".o-sendMessageActive");
 });

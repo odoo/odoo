@@ -66,6 +66,7 @@
                             t-att-class="inputClasses"
                             t-ref="textarea"
                             t-on-keydown="onKeydown"
+                            t-on-keyup="onKeyup"
                             t-on-focusin="onFocusin"
                             t-on-focusout="onFocusout"
                             t-on-click="(ev) => markEventHandled(ev, 'composer.onClickTextarea')"

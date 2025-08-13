@@ -113,6 +113,7 @@ export class Composer extends Component {
         this.state = useState({
             active: true,
             isFullComposerOpen: false,
+            canPost: true,
         });
         this.fullComposerBus = new EventBus();
         this.selection = useSelection({
@@ -333,7 +334,7 @@ export class Composer extends Component {
         const attachments = this.props.composer.attachments;
         return (
             !this.state.active ||
-            (!this.props.composer.text && attachments.length === 0) ||
+            ((!this.props.composer.text || !this.state.canPost) && attachments.length === 0) ||
             attachments.some(({ uploading }) => Boolean(uploading))
         );
     }
@@ -475,6 +476,20 @@ export class Composer extends Component {
         }
     }
 
+    updateCanPost(ev) {
+        if (!this.env.inChatter && !this.isMobileOS) {
+            this.state.canPost = !ev.shiftKey;
+        }
+    }
+
+    onKeyup(ev) {
+        switch (ev.key) {
+            case "Shift":
+                this.updateCanPost(ev);
+                break;
+        }
+    }
+
     onKeydown(ev) {
         const composer = toRaw(this.props.composer);
         switch (ev.key) {
@@ -494,7 +509,8 @@ export class Composer extends Component {
                 if (this.isMobileOS) {
                     return;
                 }
-                const shouldPost = this.env.inChatter ? ev.ctrlKey : !ev.shiftKey;
+                this.updateCanPost(ev);
+                const shouldPost = this.env.inChatter ? ev.ctrlKey : this.state.canPost;
                 if (!shouldPost) {
                     return;
                 }
@@ -506,6 +522,9 @@ export class Composer extends Component {
                 }
                 break;
             }
+            case "Shift":
+                this.updateCanPost(ev);
+                break;
             case "Escape":
                 if (isEventHandled(ev, "NavigableList.close")) {
                     return;
