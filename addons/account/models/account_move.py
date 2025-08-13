@@ -1145,8 +1145,8 @@ class AccountMove(models.Model):
     def _compute_payment_state(self):
         groups = self.grouped(lambda move:
             'legacy' if move.payment_state == 'invoicing_legacy' else
-            'posted_invoice' if move.state == 'posted' and move.is_invoice(True) else
             'blocked' if move.payment_state == 'blocked' else
+            'posted_invoice' if move.state == 'posted' and move.is_invoice(True) else
             'unpaid'
         )
         groups.get('unpaid', self.browse()).payment_state = 'not_paid'
