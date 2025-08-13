@@ -514,7 +514,10 @@ class GettextAlias(object):
             if not lang:
                 try:
                     from odoo.http import request
-                    lang = request.env.lang
+                    if request.httprequest.cookies:
+                        lang = request.httprequest.cookies.get('frontend_lang')
+                    if not lang:
+                        lang = request.env.lang
                 except RuntimeError:
                     pass
             if not lang:
