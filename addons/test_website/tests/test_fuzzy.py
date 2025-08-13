@@ -119,6 +119,7 @@ class TestAutoComplete(TransactionCase):
         test_page.groups_id = False
 
         # Public user don't see restricted page
+        saved_env = self.env
         self.website.env = self.env = self.env(user=self.website.user_id)
         self._autocomplete_page('testTotallyUnique', 0, "Not found")
 
@@ -137,3 +138,6 @@ class TestAutoComplete(TransactionCase):
 
         test_page.visibility = 'connected'
         self._autocomplete_page('testTotallyUnique', 0, "Not found")
+
+        # restore website env for next tests
+        self.website.env = self.env = saved_env
