@@ -339,6 +339,37 @@ test("toolbar works: can select font size", async () => {
     expect(inputEl).toHaveValue(oSmallSize);
 });
 
+<<<<<<< deb9baf9171a365df1a1b86c7a4736f16f70ea95
+||||||| a6ac6eafa3f21fd3ca4174fe33cd2190e2f99c15
+test("should focus the editable area after selecting a font size item", async () => {
+    const { editor, el } = await setupEditor("<p>[test]</p>");
+    await expectElementCount(".o-we-toolbar", 1);
+    const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
+    const inputEl = iframeEl.contentWindow.document?.querySelector("input");
+    await click(inputEl);
+    await expectElementCount(".o_font_size_selector_menu .dropdown-item:contains('34')", 1);
+    await contains(".o_font_size_selector_menu .dropdown-item:contains('34')").click();
+    expect(getActiveElement()).toBe(editor.editable);
+    expect(getActiveElement()).not.toBe(inputEl);
+    expect(getContent(el)).toBe(`<p><span class="h1-fs">[test]</span></p>`);
+});
+
+=======
+test("should focus the editable area after selecting a font size item", async () => {
+    const { editor, el } = await setupEditor("<p>[test]</p>");
+    await expectElementCount(".o-we-toolbar", 1);
+    const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
+    const inputEl = iframeEl.contentWindow.document?.querySelector("input");
+    await contains(".o-we-toolbar [name='font-size'] .dropdown-toggle").click();
+    expect(getActiveElement()).toBe(inputEl);
+    await expectElementCount(".o_font_size_selector_menu .dropdown-item:contains('34')", 1);
+    await contains(".o_font_size_selector_menu .dropdown-item:contains('34')").click();
+    expect(getActiveElement()).toBe(editor.editable);
+    expect(getActiveElement()).not.toBe(inputEl);
+    expect(getContent(el)).toBe(`<p><span class="h1-fs">[test]</span></p>`);
+});
+
+>>>>>>> a8b98b09fe886b541cc0cde5557ddb404dc6d2f3
 test.tags("desktop");
 test("toolbar works: display correct font size on select all", async () => {
     const { el } = await setupEditor("<p>test</p>");
