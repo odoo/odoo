@@ -454,3 +454,62 @@ class IrHttp(models.AbstractModel):
     @api.model
     def _verify_request_recaptcha_token(self, action: str):
         return
+
+    def _get_robots_directives(self):
+        """
+        Retrieve the robots.txt configuration for the website.
+
+        This method can be overridden by subclasses or modules to customize
+        the robots.txt generation behavior.
+
+        :returns: Dictionary representing the robots.txt configuration.
+        :rtype: dict
+
+        The returned dictionary has the following structure::
+
+            {
+                'user_agent_name': {
+                    'allow': [list of allowed paths],
+                    'disallow': [list of disallowed paths],
+                },
+            }
+        """
+        return {
+            '*': {
+                'allow': [],
+                'disallow': [],
+            }
+        }
+
+    def _format_robots_content(self, config, langs=None):
+        """Format the robots configuration into proper robots.txt syntax with language prefixes"""
+        sections = []
+        for user_agent, directives in config.items():
+            disallow_directives = directives.get('disallow', [])
+            allow_directives = directives.get('allow', [])
+
+            if not allow_directives and not disallow_directives:
+                continue
+
+            if langs:
+                disallow_directives = self._extend_paths_with_languages(disallow_directives, langs)
+                allow_directives = self._extend_paths_with_languages(allow_directives, langs)
+
+            lines = [f"User-agent: {user_agent}"]
+            lines.extend(f"Allow: {path}" for path in allow_directives)
+            lines.extend(f"Disallow: {path}" for path in disallow_directives)
+
+            sections.append('\n'.join(lines))
+
+        return '\n\n'.join(sections)
+
+    def _extend_paths_with_languages(self, paths, langs):
+        """Helper to extend paths with language prefixes"""
+        extended_paths = list(paths)
+
+        for lang in langs:
+            for path in paths:
+                lang_path = f"/{lang.url_code}{path}" if path.startswith('/') else f"/{lang.url_code}/{path}"
+                extended_paths.append(lang_path)
+
+        return extended_paths
