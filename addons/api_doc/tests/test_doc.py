@@ -1,4 +1,5 @@
 import textwrap
+from datetime import datetime, timedelta
 from http import HTTPStatus
 
 from odoo.fields import Command
@@ -36,9 +37,17 @@ class TestDoc(HttpCaseWithUserDemo):
         self.assertEqual(res.headers.get('Content-Type'), 'text/html; charset=utf-8')
         self.assertTrue(res.content, "There must be a rich web client")
 
-    def test_doc_index(self):
+    def test_doc_index_user(self):
         self.authenticate('demo', 'demo')
-        res = self.url_open('/doc/index.json', allow_redirects=False)
+        self._doc_index('doc')
+
+    def test_doc_index_bearer(self):
+        key = self.env['res.users.apikeys'].with_user(self.user_demo)._generate(
+            scope='rpc', name='test', expiration_date=datetime.now() + timedelta(days=0.5))
+        self._doc_index('doc-bearer', headers={"Authorization": f"Bearer {key}"})
+
+    def _doc_index(self, prefix, headers={}):
+        res = self.url_open(f'/{prefix}/index.json', allow_redirects=False, headers=headers)
         res.raise_for_status()
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
@@ -66,9 +75,17 @@ class TestDoc(HttpCaseWithUserDemo):
         self.assertGreater(set(res_partner_methods), {'search', 'create_company'})
         self.assertGreater(set(res_partner_fields), {'id', 'create_uid', 'lang', 'tz'})
 
-    def test_doc_model(self):
+    def test_doc_model_user(self):
         self.authenticate('demo', 'demo')
-        res = self.url_open('/doc/res.partner.json', allow_redirects=False)
+        self._doc_model('doc')
+
+    def test_doc_model_bearer(self):
+        key = self.env['res.users.apikeys'].with_user(self.user_demo)._generate(
+            scope='rpc', name='test', expiration_date=datetime.now() + timedelta(days=0.5))
+        self._doc_model('doc-bearer', headers={"Authorization": f"Bearer {key}"})
+
+    def _doc_model(self, prefix, headers={}):
+        res = self.url_open(f'/{prefix}/res.partner.json', allow_redirects=False, headers=headers)
         res.raise_for_status()
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
