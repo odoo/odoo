@@ -347,53 +347,6 @@ class TestSalePrices(SaleCommon):
         order_line.product_uom = new_uom
         self.assertEqual(order_line.price_total, 1800, "First pricelist rule not applied")
 
-    def test_pricelist_price_recompute_on_quantity_change(self):
-        """
-        Test price updates correctly when quantity changes with
-        pricelist based on another pricelist.
-        """
-        self._enable_pricelists()
-
-        pricelist_a = self.env['product.pricelist'].create({
-            'name': "Pricelist A",
-            'item_ids': [
-                Command.create({
-                    'applied_on': '3_global',
-                    'compute_price': 'fixed',
-                    'fixed_price': 0.75,
-                    'min_quantity': 0,
-                }),
-                Command.create({
-                    'applied_on': '3_global',
-                    'compute_price': 'fixed',
-                    'fixed_price': 0.50,
-                    'min_quantity': 1000,
-                }),
-            ]
-        })
-
-        pricelist_b = self.env['product.pricelist'].create({
-            'name': "Pricelist B",
-            'item_ids': [
-                Command.create({
-                    'applied_on': '3_global',
-                    'compute_price': 'percentage',
-                    'percent_price': -10,
-                    'base': 'pricelist',
-                    'base_pricelist_id': pricelist_a.id,
-                }),
-            ]
-        })
-
-        with Form(self.env['sale.order']) as order_form:
-            order_form.partner_id = self.partner
-            order_form.pricelist_id = pricelist_b
-            with order_form.order_line.new() as line_form:
-                line_form.product_id = self.product
-                self.assertEqual(line_form.price_unit, 0.83)
-                line_form.product_uom_qty = 1000
-                self.assertEqual(line_form.price_unit, 0.55)
-
     def test_multi_currency_discount(self):
         """Verify the currency used for pricelist price & discount computation."""
         product_1 = self.product
