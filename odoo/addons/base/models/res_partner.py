@@ -264,7 +264,6 @@ class ResPartner(models.Model):
     category_id: ResPartnerCategory = fields.Many2many('res.partner.category', column1='partner_id',
                                     column2='category_id', string='Tags', default=_default_category)
     active = fields.Boolean(default=True)
-    employee = fields.Boolean(help="Check this box if this contact is an Employee.")
     function = fields.Char(string='Job Position')
     type = fields.Selection(
         [('contact', 'Contact'),
@@ -413,15 +412,14 @@ class ResPartner(models.Model):
     @api.depends('parent_id')
     def _compute_lang(self):
         """ While creating / updating child contact, take the parent lang by
-        default if any. 0therwise, fallback to default context / DB lang """
+        default if any. Otherwise, fallback to default context / DB lang """
         for partner in self.filtered('parent_id'):
             partner.lang = partner.parent_id.lang or self.default_get(['lang']).get('lang') or self.env.lang
 
     @api.depends('lang')
     def _compute_active_lang_count(self):
         lang_count = len(self.env['res.lang'].get_installed())
-        for partner in self:
-            partner.active_lang_count = lang_count
+        self.active_lang_count = lang_count
 
     @api.depends('tz')
     def _compute_tz_offset(self):
