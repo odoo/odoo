@@ -1,6 +1,6 @@
 import { describe, test } from "@odoo/hoot";
-import { deleteBackward } from "../_helpers/user_actions";
-import { testEditor } from "../_helpers/editor";
+import { deleteBackward, deleteImage } from "../_helpers/user_actions";
+import { base64Img, testEditor } from "../_helpers/editor";
 
 describe("delete selection involving links", () => {
     test("should remove link", async () => {
@@ -30,6 +30,23 @@ describe("delete selection involving links", () => {
             contentAfterEdit:
                 '<p>\ufeff<a href="#" class="o_link_in_selection">\ufeff[]\ufeff</a>\ufeffdef</p>',
             contentAfter: "<p>[]def</p>",
+        });
+    });
+});
+
+describe("delete images in a link", () => {
+    test("should remove link", async () => {
+        await testEditor({
+            contentBefore: `<p>x<a href="http://test.test/">[<img src="${base64Img}">]</a></p>`,
+            stepFunction: deleteImage,
+            contentAfter: `<p>x[]</p>`,
+        });
+    });
+    test("should not remove unremovable link", async () => {
+        await testEditor({
+            contentBefore: `<p>x<a class="oe_unremovable" href="http://test.test/">[<img src="${base64Img}">]</a></p>`,
+            stepFunction: deleteImage,
+            contentAfter: `<p>x<a class="oe_unremovable" href="http://test.test/">[]</a></p>`,
         });
     });
 });

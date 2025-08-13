@@ -243,6 +243,10 @@ export async function unlinkFromPopover() {
     await click(".o_we_remove_link");
 }
 
+export function deleteImage(editor) {
+    execCommand(editor, "deleteImage");
+}
+
 /** @param {Editor} editor */
 export async function keydownTab(editor) {
     await manuallyDispatchProgrammaticEvent.as("keydownTab")(editor.editable, "keydown", {
