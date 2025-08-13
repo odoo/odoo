@@ -20,6 +20,7 @@ import {
     getTaxesAfterFiscalPosition,
     getTaxesValues,
 } from "@point_of_sale/app/models/utils/tax_utils";
+import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 
 export class SelfOrder extends Reactive {
     constructor(...args) {
@@ -148,6 +149,9 @@ export class SelfOrder extends Reactive {
             this.addToCart(productTemplate, 1, "", {}, {});
             this.router.navigate("cart");
         });
+        if (this.config.epson_printer_ip && this.config.other_devices) {
+            this.printer.setPrinter(new EpsonPrinter({ ip: this.config.epson_printer_ip }));
+        }
     }
 
     get selfService() {
@@ -453,6 +457,9 @@ export class SelfOrder extends Reactive {
     }
 
     createPrinter(printer) {
+        if (printer.printer_type === "epson_epos") {
+            return new EpsonPrinter({ ip: printer.epson_printer_ip });
+        }
         const url = deduceUrl(printer.proxy_ip || "");
         return new HWPrinter({ url });
     }

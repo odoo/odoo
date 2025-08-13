@@ -8,7 +8,7 @@ const STATUS_ROLL_PAPER_HAS_ALMOST_RUN_OUT = 0x00020000;
 const ERROR_CODE_PRINTER_NOT_REACHABLE = "PRINTER_NOT_REACHABLE";
 
 function ePOSPrint(children) {
-    let ePOSLayout = getTemplate("pos_epson_printer.ePOSLayout");
+    let ePOSLayout = getTemplate("point_of_sale.ePOSLayout");
     if (!ePOSLayout) {
         throw new Error("'ePOSLayout' not loaded");
     }

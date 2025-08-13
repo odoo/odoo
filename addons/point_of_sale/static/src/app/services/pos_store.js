@@ -38,6 +38,7 @@ import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_i
 import { RetryPrintPopup } from "@point_of_sale/app/components/popups/retry_print_popup/retry_print_popup";
 import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
 import { DebugWidget } from "../utils/debug/debug_widget";
+import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 
 const { DateTime } = luxon;
 
@@ -634,6 +635,10 @@ export class PosStore extends WithLazyGetterTrap {
 
         this.markReady();
         await this.deviceSync.readDataFromServer();
+
+        if (this.config.other_devices && this.config.epson_printer_ip) {
+            this.hardwareProxy.printer = new EpsonPrinter({ ip: this.config.epson_printer_ip });
+        }
     }
 
     get productViewMode() {
@@ -1048,6 +1053,9 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     createPrinter(config) {
+        if (config.printer_type === "epson_epos") {
+            return new EpsonPrinter({ ip: config.epson_printer_ip });
+        }
         const url = deduceUrl(config.proxy_ip || "");
         return new HWPrinter({ url });
     }
