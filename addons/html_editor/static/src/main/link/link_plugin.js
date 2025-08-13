@@ -854,7 +854,7 @@ export class LinkPlugin extends Plugin {
             return;
         }
         const cursors = this.dependencies.selection.preserveSelection();
-        if (link && link.isContentEditable) {
+        if (link && link.isContentEditable && link.parentElement.isContentEditable) {
             cursors.update(callbacksForCursorUpdate.unwrap(link));
             unwrapContents(link);
         }
