@@ -1,4 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
 from pytz import UTC
@@ -87,12 +86,22 @@ class PurchaseOrderLine(models.Model):
     product_template_attribute_value_ids = fields.Many2many(related='product_id.product_template_attribute_value_ids', readonly=True)
     product_no_variant_attribute_value_ids = fields.Many2many('product.template.attribute.value', string='Product attribute values that do not create variants', ondelete='restrict')
     purchase_line_warn_msg = fields.Text(related='product_id.purchase_line_warn_msg')
+    collapse_composition = fields.Boolean(
+        string="Hide Composition",
+        help="If checked, the lines below this section will not be displayed in reports and portal.",
+        compute="_compute_section_visibility_fields", store=True, copy=True,
+    )
+    collapse_prices = fields.Boolean(
+        string="Hide Prices",
+        help="If checked, the prices of the lines below this section will not be displayed in reports and portal.",
+        compute="_compute_section_visibility_fields", store=True, copy=True,
+    )
     parent_id = fields.Many2one(
         'purchase.order.line',
         string="Parent Section Line",
         compute='_compute_parent_id',
         index='btree_not_null',
-        copy=False, store=True,
+        store=True
     )
     child_ids = fields.One2many(comodel_name='purchase.order.line', inverse_name='parent_id')
     technical_price_unit = fields.Float(help="Technical field for price computation")
@@ -404,21 +413,38 @@ class PurchaseOrderLine(models.Model):
             price_unit *= self.product_id.uom_id.factor / self.product_uom_id.factor
         return price_unit
 
-    @api.depends('order_id.order_line.sequence', 'order_id')
+    @api.depends('order_id.order_line.order_id')
     def _compute_parent_id(self):
-        for _orders, lines in self.grouped('order_id').items():
-            current_section = None
-            current_subsection = None
-            for line in lines.sorted('sequence'):
+        purchase_order_lines = set(self)
+        for order in self.grouped('order_id'):
+            last_section = False
+            last_sub = False
+            for line in order.order_line.sorted('sequence'):
                 if line.display_type == 'line_section':
-                    line.parent_id = None
-                    current_section = line
-                    current_subsection = None
+                    last_section = line
+                    if line in purchase_order_lines:
+                        line.parent_id = False
+                    last_sub = False
                 elif line.display_type == 'line_subsection':
-                    line.parent_id = current_section
-                    current_subsection = line
+                    if line in purchase_order_lines:
+                        line.parent_id = last_section
+                    last_sub = line
+                elif line in purchase_order_lines:
+                    line.parent_id = last_sub or last_section
+
+    @api.depends('parent_id')
+    def _compute_section_visibility_fields(self):
+        for order in self.grouped('order_id'):
+            for line in order.order_line.sorted('sequence'):
+                if line.display_type == 'line_section':
+                    continue
+
+                if line.display_type == 'line_subsection':
+                    line.collapse_prices = line.collapse_prices or line.parent_id.collapse_prices
+                    line.collapse_composition = line.collapse_composition or line.parent_id.collapse_composition
                 else:
-                    line.parent_id = current_subsection or current_section
+                    line.collapse_prices = line.parent_id.collapse_prices
+                    line.collapse_composition = line.parent_id.collapse_composition
 
     def action_add_from_catalog(self):
         order = self.env['purchase.order'].browse(self.env.context.get('order_id'))
