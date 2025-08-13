@@ -102,5 +102,8 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
                 "views": [[self.env.ref('hr_holidays.hr_leave_allocation_view_tree').id, "list"], [self.env.ref('hr_holidays.hr_leave_allocation_view_form_manager').id, "form"]],
                 'view_mode': 'list',
                 'res_model': 'hr.leave.allocation',
-                'domain': [('id', 'in', allocations.ids)]
+                'domain': [('id', 'in', allocations.ids)],
+                'context': {
+                    'active_id': False,
+                },
             }
