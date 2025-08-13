@@ -553,10 +553,6 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_id', 'product_uom_id', 'product_uom_qty')
     def _compute_price_unit(self):
-        def has_manual_price(line):
-            return line.currency_id.compare_amounts(line.technical_price_unit, line.price_unit)
-
-        force_recompute = self.env.context.get('force_price_recomputation')
         for line in self:
             # Don't compute the price for deleted lines or lines for which the
             # price unit doesn't come from the product.
@@ -566,7 +562,7 @@ class SaleOrderLine(models.Model):
             # check if the price has been manually set or there is already invoiced amount.
             # if so, the price shouldn't change as it might have been manually edited.
             if (
-                (not force_recompute and has_manual_price(line))
+                (line.technical_price_unit != line.price_unit and not line.env.context.get('force_price_recomputation'))
                 or line.qty_invoiced > 0
                 or (line.product_id.expense_policy == 'cost' and line.is_expense)
             ):
