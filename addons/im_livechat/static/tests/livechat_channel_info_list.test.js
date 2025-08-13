@@ -78,11 +78,11 @@ test("editing livechat note is synced between tabs", async () => {
         target: tab1,
         replace: true,
     });
-    await document.querySelector(".o-livechat-ChannelInfoList textarea").blur(); // Trigger the blur event to save the note
+    await click(".o-mail-ActionPanel-header", { target: tab1 }); // Trigger the blur event to save the note
     await contains(
         ".o-livechat-ChannelInfoList textarea",
         { value: "Updated note" },
-        { target: tab1 }
+        { target: tab2 }
     ); // Note should be synced with bus
 });
 
