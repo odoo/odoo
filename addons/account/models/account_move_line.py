@@ -1,3 +1,4 @@
+from bisect import bisect_left
 from collections import defaultdict
 from contextlib import contextmanager, ExitStack
 from datetime import date
@@ -1192,28 +1193,27 @@ class AccountMoveLine(models.Model):
             )
             line.reconciled_lines_excluding_exchange_diff_ids = all_lines - excluded_ids
 
-    @api.depends('sequence', 'move_id')
+    @api.depends('move_id.invoice_line_ids.sequence', 'move_id')
     def _compute_parent_id(self):
-        for _move, lines in self.grouped('move_id').items():
-            last_section = False
-            last_sub = False
-            for line in lines.sorted('sequence'):
-                if line.display_type == 'line_section':
-                    last_section = line
-                    line.parent_id = False
-                    last_sub = False
-                elif line.display_type == 'line_subsection':
-                    line.parent_id = last_section
-                    last_sub = line
-                elif line.display_type == 'product':
-                    line.parent_id = last_sub or last_section or False
-                else:
-                    line.parent_id = False
+        section_lines_ordered = (self.move_id.invoice_line_ids
+            .filtered(lambda line: line.display_type in ('line_section', 'line_subsection'))
+            .sorted('sequence')
+            .grouped('sequence'))
+        section_lines_ordered_sequences = list(section_lines_ordered)
+
+        for line in self:
+            if line.display_type == 'line_subsection':
+                line_index = bisect_left(section_lines_ordered_sequences, line.sequence, key=lambda line: section_lines_ordered[line][0].display_type == 'line_section')
+            else:
+                line_index = bisect_left(section_lines_ordered_sequences, line.sequence)
+            line.parent_id = section_lines_ordered[
+                section_lines_ordered_sequences[line_index - 1]
+            ][0] if line.display_type in ('line_subsection', 'product') and section_lines_ordered_sequences and line_index > 0 else False
 
     @api.depends('parent_id')
     def _compute_section_visibility_fields(self):
         for line in self:
-            if line.display_type in ('line_section', 'line_subsection'):
+            if line.display_type == 'line_section' or (line.display_type == 'line_subsection' and (line.collapse_prices or line.collapse_composition)):
                 continue
 
             line.collapse_prices = line.parent_id.collapse_prices
