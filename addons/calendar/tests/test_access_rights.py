@@ -3,6 +3,7 @@
 from datetime import datetime, timedelta
 
 from odoo.tests.common import TransactionCase, new_test_user
+from odoo.tests import Form
 from odoo.exceptions import AccessError
 from odoo.tools import mute_logger
 
@@ -334,3 +335,34 @@ class TestAccessRights(TransactionCase):
             admin_user_private_evt.with_user(self.raoul)._check_private_event_conditions(),
             "Privacy check must be True since the new event is private (following John's calendar default privacy)."
         )
+
+    def test_recurring_event_with_alarms_for_non_admin(self):
+        """
+        Test that non-admin user can modify recurring events with alarms
+        without triggering access errors when accessing ir.cron.trigger records.
+        """
+
+        alarm = self.env['calendar.alarm'].create({
+            'name': '15 minutes before',
+            'alarm_type': 'email',
+            'duration': 15,
+            'interval': 'minutes',
+        })
+
+        with Form(self.env['calendar.event'].with_user(self.john)) as event_form:
+            event_form.name = 'yearly Team Meeting'
+            event_form.start = datetime(2024, 1, 15, 9, 0)
+            event_form.stop = datetime(2024, 1, 15, 10, 0)
+            event_form.recurrency = True
+            event_form.rrule_type_ui = 'yearly'
+            event_form.count = 3
+            event_form.alarm_ids.add(alarm)
+            event_form.partner_ids.add(self.john.partner_id)
+            recurring_event = event_form.save()
+
+        self.assertTrue(recurring_event.recurrence_id, "Recurrence should be created")
+
+        with Form(recurring_event.with_user(self.john)) as form:
+            form.partner_ids.add(self.raoul.partner_id)
+
+        self.assertIn(self.raoul.partner_id.id, recurring_event.partner_ids.ids, "Partner should be added as attendee")
