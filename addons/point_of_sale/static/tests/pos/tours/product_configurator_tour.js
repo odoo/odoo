@@ -142,3 +142,17 @@ registry.category("web_tour.tours").add("test_combo_variant_mix", {
             ),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_exclusion_attribute_values", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Configurable Chair"),
+            ProductConfigurator.pickColor("Red"),
+            ProductConfigurator.pickSelect("Metal"),
+            ProductConfigurator.isUnavailable("Other"),
+            ProductConfigurator.isUnavailable("Wool"),
+            Chrome.endTour(),
+        ].flat(),
+});
