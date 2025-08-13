@@ -78,8 +78,8 @@ patch(ProductPage.prototype, {
      * @param {Element} parent
      * @param {Object} combination
      */
-    _onChangeCombination(ev, parent, combination) {
-        super._onChangeCombination(...arguments);
+    async _onChangeCombination(ev, parent, combination) {
+        await super._onChangeCombination(...arguments);
         const has_max_combo_quantity = 'max_combo_quantity' in combination
         if (!combination.is_storable && !has_max_combo_quantity) return;
         if (!combination.product_id) return; // If the product is dynamic.
@@ -91,7 +91,8 @@ patch(ProductPage.prototype, {
         ctaWrapper.classList.remove('out_of_stock');
 
         if (!combination.allow_out_of_stock_order) {
-            combination.free_qty -= parseInt(combination.cart_qty);
+            const unavailableQty = await this.waitFor(this._getUnavailableQty(combination));
+            combination.free_qty -= unavailableQty;
             addQtyInput.dataset.max = combination.free_qty || 1;
             if (combination.free_qty < 0) {
                 combination.free_qty = 0;
@@ -140,5 +141,9 @@ patch(ProductPage.prototype, {
         this.el.querySelector('div.availability_messages').append(renderToFragment(
             'website_sale_stock.product_availability', combination
         ));
+    },
+
+    async _getUnavailableQty(combination) {
+        return parseInt(combination.cart_qty);
     },
 });

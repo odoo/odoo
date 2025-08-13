@@ -10,8 +10,8 @@ patch(ProductPage.prototype, {
      * @param {Element} parent
      * @param {Object} combination
      */
-    _onChangeCombination(ev, parent, combination) {
-        super._onChangeCombination(...arguments);
+    async _onChangeCombination(ev, parent, combination) {
+        await super._onChangeCombination(...arguments);
         const currencyValue = parent.querySelector(
             '.o_l10n_ar_price_tax_excluded .oe_currency_value'
         );

@@ -10,8 +10,8 @@ patch(ProductPage.prototype, {
      * @param {Element} parent
      * @param {Object} combination
      */
-    _onChangeCombination(ev, parent, combination) {
-        super._onChangeCombination(...arguments);
+    async _onChangeCombination(ev, parent, combination) {
+        await super._onChangeCombination(...arguments);
         this.env.bus.trigger('updateCombinationInfo', combination);
     },
 });
