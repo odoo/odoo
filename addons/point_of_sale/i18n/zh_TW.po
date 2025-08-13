@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-08 18:36+0000\n"
-"PO-Revision-Date: 2025-08-12 00:31+0000\n"
+"PO-Revision-Date: 2025-08-13 00:31+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-s18-2/point_of_sale/zh_Hant/>\n"
@@ -165,7 +165,7 @@ msgstr "已匯入 %s 份訂單"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "%s required"
-msgstr ""
+msgstr "必須提供 %s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -177,7 +177,7 @@ msgstr "%s 未連稅"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 msgid "(DUPLICATE !)"
-msgstr ""
+msgstr "（重複！）"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -543,7 +543,7 @@ msgstr "已有相同名稱的備註"
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_payment_unique_uuid
 msgid "A payment with this uuid already exists"
-msgstr ""
+msgstr "已有此唯一識別碼（UUID）的付款"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -1021,12 +1021,12 @@ msgstr "印表機的內部辨識碼"
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_line_unique_uuid
 msgid "An order line with this uuid already exists"
-msgstr ""
+msgstr "已有此唯一識別碼（UUID）的訂單資料行"
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_unique_uuid
 msgid "An order with this uuid already exists"
-msgstr ""
+msgstr "已有此唯一識別碼（UUID）的訂單"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3436,7 +3436,7 @@ msgstr "從憑單收付款"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 msgid "Full"
-msgstr "填滿"
+msgstr "完全"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__full_product_name
@@ -4090,7 +4090,7 @@ msgstr "似乎你未有足夠權限去建立銷售點配置。"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "It seems like you don't have enough rights to load data."
-msgstr ""
+msgstr "你似乎沒有足夠權限去載入資料。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4319,7 +4319,7 @@ msgstr "輕巧麻質飛行外套，羅紋立領，前方拉鏈。"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 msgid "Limited"
-msgstr "受限制"
+msgstr "有限度"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4567,7 +4567,7 @@ msgstr "雜項"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Missing required"
-msgstr ""
+msgstr "須提供缺漏資料"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__mobile
@@ -5251,7 +5251,7 @@ msgstr "訂單號碼"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Order Outdated"
-msgstr ""
+msgstr "訂單已過期"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_order_printer
@@ -5839,7 +5839,7 @@ msgstr "請選擇付款方式"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid "Please select a time slot before proceeding."
-msgstr ""
+msgstr "請選擇一個時段，然後才繼續操作。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7702,7 +7702,7 @@ msgstr "跳過預覽螢幕"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid "Slot"
-msgstr ""
+msgstr "時段"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.small_shelf_product_template
@@ -7747,7 +7747,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Some required information is missing."
-msgstr ""
+msgstr "部份必須提供的資料缺漏。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8311,6 +8311,9 @@ msgid ""
 "The order will be sent to the server with the last changes made on this "
 "device."
 msgstr ""
+"其他裝置已修改此訂單。如果你已修改現有的資料行，請檢查你的變更有否被覆蓋。\n"
+"\n"
+"訂單將會連同此裝置所作的最新修改，一併發送至伺服器。"
 
 #. module: point_of_sale
 #. odoo-javascript
