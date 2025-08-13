@@ -3,6 +3,7 @@
 from . import test_attendances
 from . import test_calendar_sync
 from . import test_hr_employee
+from . import test_hr_employee_public
 from . import test_channel
 from . import test_self_user_access
 from . import test_mail_activity_plan
