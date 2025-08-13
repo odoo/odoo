@@ -5639,6 +5639,7 @@ class AccountMove(models.Model):
         # We remove all the analytics entries for this journal
         self.line_ids.analytic_line_ids.with_context(skip_analytic_sync=True).unlink()
         self.state = 'draft'
+        self.sending_data = False
 
         self._detach_attachments()
 
@@ -5833,7 +5834,10 @@ class AccountMove(models.Model):
                 },
             ]
 
-        domain = [('sending_data', '!=', False)]
+        domain = [
+            ('sending_data', '!=', False),
+            ('state', '=', 'posted'),
+        ]
         to_process = self.search(domain, limit=job_count).try_lock_for_update()
         if not to_process:
             return
