@@ -21,7 +21,7 @@ import { markup } from "@odoo/owl";
  * @param {Element} parent
  * @param {Array} combination
  */
-VariantMixin._onChangeCombinationStock = function (ev, parent, combination) {
+VariantMixin._onChangeCombinationStock = async function (ev, parent, combination) {
     const has_max_combo_quantity = 'max_combo_quantity' in combination
     if (!combination.is_storable && !has_max_combo_quantity) {
         return;
@@ -39,7 +39,8 @@ VariantMixin._onChangeCombinationStock = function (ev, parent, combination) {
     ctaWrapper.classList.remove('out_of_stock');
 
     if (!combination.allow_out_of_stock_order) {
-        combination.free_qty -= parseInt(combination.cart_qty);
+        const unavailableQty = await this.waitFor(VariantMixin._getUnavailableQty(combination));
+        combination.free_qty -= unavailableQty;
         addQtyInput.dataset.max = combination.free_qty || 1;
         if (combination.free_qty < 0) {
             combination.free_qty = 0;
@@ -91,6 +92,10 @@ VariantMixin._onChangeCombinationStock = function (ev, parent, combination) {
     this.el.querySelector('div.availability_messages').append(renderToFragment(
         'website_sale_stock.product_availability', combination
     ));
+};
+
+VariantMixin._getUnavailableQty = async function (combination) {
+    return parseInt(combination.cart_qty);
 };
 
 export default VariantMixin;
