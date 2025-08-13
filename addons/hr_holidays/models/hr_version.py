@@ -99,8 +99,8 @@ class HrVersion(models.Model):
         domain = [
             ('state', '!=', 'refuse'),
             ('employee_id', 'in', self.mapped('employee_id.id')),
-            ('date_from', '<=', max(end or date.max for end in self.mapped('date_end'))),
-            ('date_to', '>=', min(self.mapped('date_start'))),
+            ('date_from', '<=', max(end or date.max for end in self.mapped('contract_date_end'))),
+            ('date_to', '>=', min(self.mapped('contract_date_start'))),
         ]
         if extra_domain:
             domain = Domain.AND([domain, extra_domain])

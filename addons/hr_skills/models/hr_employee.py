@@ -159,10 +159,10 @@ class HrEmployee(models.Model):
             return [{
                 'id': employee_versions[0].id,
                 'job_title': employee_versions[0].job_title,
-                'date_start': employee_versions[0].date_start,
+                'date_start': employee_versions[0].contract_date_start,
                 'date_end': False,
             }]
-        current_date_start = employee_versions[0].date_start
+        current_date_start = employee_versions[0].contract_date_start
         for i in range(len(employee_versions) - 1):
             current_version = employee_versions[i]
             next_version = employee_versions[i + 1]
@@ -171,9 +171,9 @@ class HrEmployee(models.Model):
                     'id': current_version.id,
                     'job_title': current_version.job_title,
                     'date_start': current_date_start,
-                    'date_end': next_version.date_start - relativedelta(days=1),
+                    'date_end': next_version.contract_date_start - relativedelta(days=1),
                 })
-                current_date_start = next_version.date_start
+                current_date_start = next_version.contract_date_start
             if i == len(employee_versions) - 2:
                 # Last version, add it to the result
                 res.append({

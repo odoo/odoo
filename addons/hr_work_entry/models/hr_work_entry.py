@@ -63,7 +63,7 @@ class HrWorkEntry(models.Model):
                         hr_version AS v
                     ON
                         hwe.employee_id=v.employee_id AND
-                        hwe.date = v.date_start
+                        hwe.date = v.contract_date_start
                     WHERE
                         hwe.version_id IS NULL
                     GROUP BY
