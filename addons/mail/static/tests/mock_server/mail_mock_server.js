@@ -227,7 +227,10 @@ async function channel_call_leave(request) {
     const ResPartner = this.env["res.partner"];
 
     const { channel_id } = await parseRequestParams(request);
-    const channelMembers = DiscussChannelMember._filter([["channel_id", "=", channel_id]]);
+    const channelMembers = DiscussChannelMember._filter([
+        ["channel_id", "=", channel_id],
+        ["is_self", "=", true],
+    ]);
     const rtcSessions = DiscussChannelRtcSession._filter([
         ["channel_member_id", "in", channelMembers.map((channelMember) => channelMember.id)],
     ]);
@@ -263,6 +266,7 @@ async function channel_call_leave(request) {
             { sessionId: rtcSession.id },
         ]);
     }
+    this.env["discuss.channel.rtc.session"].unlink(Array.from(rtcSessions).map(({ id }) => id));
     BusBus._sendmany(notifications);
 }
 

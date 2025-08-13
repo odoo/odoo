@@ -134,6 +134,26 @@ const ThreadPatch = {
                 return raisingHandCards.concat(sessionCards, invitationCards);
             },
         });
+        this.useCameraByDefault = fields.Attr(null, {
+            /** @this {import("models").Thread} */
+            compute() {
+                if (this.channel_type === "chat" && this.store.rtc.selfSession?.channel.eq(this)) {
+                    return this.store.rtc.selfSession.is_camera_on;
+                }
+                return JSON.parse(
+                    localStorage.getItem(`discuss_channel_camera_default_${this.id}`)
+                );
+            },
+            /** @this {import("models").Thread} */
+            onUpdate() {
+                if (this.useCameraByDefault !== null) {
+                    localStorage.setItem(
+                        `discuss_channel_camera_default_${this.id}`,
+                        JSON.stringify(this.useCameraByDefault)
+                    );
+                }
+            },
+        });
     },
     get showCallView() {
         return !this.store.rtc.state.isFullscreen && this.rtc_session_ids.length > 0;
