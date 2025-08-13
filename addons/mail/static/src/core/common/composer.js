@@ -4,10 +4,14 @@ import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { NavigableList } from "@mail/core/common/navigable_list";
+import { MAIL_PLUGINS, MAIL_SMALL_UI_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
 import { useSuggestion } from "@mail/core/common/suggestion_hook";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 import { useSelection } from "@mail/utils/common/hooks";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
+
+import { Wysiwyg } from "@html_editor/wysiwyg";
+
 import { rpc } from "@web/core/network/rpc";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { browser } from "@web/core/browser/browser";
@@ -64,6 +68,7 @@ export class Composer extends Component {
         DropdownItem,
         FileUploader,
         NavigableList,
+        Wysiwyg,
     };
     static defaultProps = {
         mode: "normal",
@@ -106,6 +111,7 @@ export class Composer extends Component {
             { composer: this.props.composer }
         );
         this.ui = useService("ui");
+        this.composerService = useService("mail.composer");
         this.ref = useRef("textarea");
         this.fakeTextarea = useRef("fakeTextarea");
         this.inputContainerRef = useRef("input-container");
@@ -186,7 +192,7 @@ export class Composer extends Component {
         );
         useEffect(
             () => {
-                if (this.fakeTextarea.el.scrollHeight) {
+                if (this.fakeTextarea.el?.scrollHeight) {
                     let wasEmpty = false;
                     if (!this.fakeTextarea.el.value) {
                         wasEmpty = true;
@@ -212,7 +218,7 @@ export class Composer extends Component {
             () => [this.props.composer.forceCursorMove]
         );
         onMounted(() => {
-            this.ref.el.scrollTo({ top: 0, behavior: "instant" });
+            this.ref.el?.scrollTo({ top: 0, behavior: "instant" });
             if (!this.props.composer.text) {
                 this.restoreContent();
             }
@@ -251,6 +257,14 @@ export class Composer extends Component {
 
     get showQuickAction() {
         return true;
+    }
+
+    get wysiwygConfig() {
+        return {
+            content: markup("<p><br></p>"),
+            Plugins: this.ui.isSmall ? MAIL_SMALL_UI_PLUGINS : MAIL_PLUGINS,
+            classList: ["o-mail-Composer-html"],
+        };
     }
 
     onClickCancelOrSaveEditText(ev) {

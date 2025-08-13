@@ -1160,3 +1160,22 @@ test("composer reply-to message is restored page reload", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Composer:contains('Replying to')");
 });
+
+test.tags("html composer");
+test("html composer: basic rendering", async () => {
+    await startServer();
+    await start();
+    const composerService = getService("mail.composer");
+    await openFormView("res.partner", serverState.partnerId);
+    await click("button", { text: "Send message" });
+    await contains("textarea.o-mail-Composer-input[placeholder='Send a message to followers…']");
+    await contains(".o-mail-Composer-html.odoo-editor-editable", { count: 0 });
+    composerService.setHtmlComposer();
+    await contains(".o-mail-Composer-html.odoo-editor-editable");
+    await contains("textarea.o-mail-Composer-input[placeholder='Send a message to followers…']", {
+        count: 0,
+    });
+    composerService.setTextComposer();
+    await contains("textarea.o-mail-Composer-input[placeholder='Send a message to followers…']");
+    await contains(".o-mail-Composer-html.odoo-editor-editable", { count: 0 });
+});
