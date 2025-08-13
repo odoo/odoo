@@ -1070,7 +1070,11 @@ export class LinkPlugin extends Plugin {
     }
 
     deleteImageLink(imageToDelete) {
-        if (imageToDelete.parentElement.tagName === "A") {
+        if (
+            imageToDelete.parentElement.tagName === "A" &&
+            !this.isUnremovable(imageToDelete.parentElement) &&
+            imageToDelete.parentElement.parentElement.isContentEditable
+        ) {
             // If the link is empty after removing the image, remove it.
             const cursors = this.dependencies.selection.preserveSelection();
             cursors.update(callbacksForCursorUpdate.remove(imageToDelete));
