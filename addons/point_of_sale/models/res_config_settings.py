@@ -119,6 +119,7 @@ class ResConfigSettings(models.TransientModel):
     pos_basic_receipt = fields.Boolean(related='pos_config_id.basic_receipt', readonly=False)
     pos_fallback_nomenclature_id = fields.Many2one(related='pos_config_id.fallback_nomenclature_id', domain="[('id', '!=', barcode_nomenclature_id)]", readonly=False)
     group_pos_preset = fields.Boolean(string="Presets", implied_group="point_of_sale.group_pos_preset", help="Hide or show the Presets menu in the Point of Sale configuration.")
+    pos_epson_printer_ip = fields.Char(related='pos_config_id.epson_printer_ip', readonly=False)
 
     def open_payment_method_form(self):
         bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', 'in', self.env.company.parent_ids.ids)], limit=1)
@@ -226,7 +227,10 @@ class ResConfigSettings(models.TransientModel):
 
     @api.model
     def _is_cashdrawer_displayed(self, res_config):
-        return res_config.pos_iface_print_via_proxy
+        return res_config.pos_iface_print_via_proxy or (
+            res_config.pos_other_devices
+            and bool(res_config.pos_epson_printer_ip)
+        )
 
     @api.depends('pos_module_pos_restaurant', 'pos_config_id')
     def _compute_pos_printer(self):
@@ -251,7 +255,7 @@ class ResConfigSettings(models.TransientModel):
             else:
                 res_config.pos_selectable_categ_ids = self.env['pos.category'].search([])
 
-    @api.depends('pos_iface_print_via_proxy', 'pos_config_id')
+    @api.depends('pos_iface_print_via_proxy', 'pos_config_id', 'pos_epson_printer_ip', 'pos_other_devices')
     def _compute_pos_iface_cashdrawer(self):
         for res_config in self:
             if self._is_cashdrawer_displayed(res_config):
