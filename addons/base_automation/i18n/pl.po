@@ -1,25 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_automation
-# 
+# * base_automation
+#
 # Translators:
 # Marta Wacławek, 2025
 # Paweł Wodyński <pw@myodoo.pl>, 2025
 # Wil Odoo, 2025
-# 
+# "Marta (wacm)" <wacm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-16 18:37+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"PO-Revision-Date: 2025-08-13 09:22+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s18-4/"
+"base_automation/pl/>\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pl\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && ("
+"n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base_automation
 #. odoo-javascript
@@ -79,6 +83,8 @@ msgid ""
 "<code>payload</code>: the payload of the call (GET parameters, JSON body), "
 "as a dict."
 msgstr ""
+"<code>payload</code>: payload połączenia (parametry GET, body JSON), jako "
+"słownik."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -118,7 +124,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_server_action_form
 msgid "<span class=\"o_stat_text\">Automation</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Automatyzacja</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -279,7 +285,7 @@ msgstr "Opóźnienie"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range_mode
 msgid "Delay mode"
-msgstr ""
+msgstr "Tryb opóźnienia"
 
 #. module: base_automation
 #. odoo-python
@@ -287,17 +293,19 @@ msgstr ""
 msgid ""
 "Delay must be positive. Set 'Delay mode' to 'Before' to negate the delay."
 msgstr ""
+"Opóźnienie musi być dodatnie. Skonfiguruj \"tryb opóźnienia\" na \"przed\", "
+"aby odwrócić opóźnienie."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range_type
 msgid "Delay unit"
-msgstr ""
+msgstr "Jednostka opóźnienia"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Deprecated (do not use)"
-msgstr ""
+msgstr "Przestarzałe (nie używać)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__description
@@ -327,7 +335,7 @@ msgstr "Edytuj"
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Email Events"
-msgstr ""
+msgstr "Wydarzenia email"
 
 #. module: base_automation
 #. odoo-python
@@ -336,6 +344,9 @@ msgid ""
 "Email, follower or activity action types cannot be used when deleting "
 "records, as there are no more records to apply these changes to!"
 msgstr ""
+"Email, obserwujący lub typ akcji aktywności nie mogą być użyte przy usuwaniu "
+"rekordów, ponieważ nie ma już rekordów, do których można zastosować te "
+"zmiany!"
 
 #. module: base_automation
 #. odoo-javascript
@@ -437,6 +448,8 @@ msgid ""
 "If renewed, update the secret URL in the third-party app that calls this "
 "webhook."
 msgstr ""
+"W przypadku odnowienia należy zaktualizować tajny adres URL w aplikacji "
+"innej firmy, która wywołuje ten webhook."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__message_is_follower
@@ -446,7 +459,7 @@ msgstr "Jest obserwatorem"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Keep track of what this automation does and why it exists..."
-msgstr ""
+msgstr "Śledź, co robi ta automatyzacja i dlaczego została wdrożona..."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
@@ -480,6 +493,8 @@ msgid ""
 "Mail event can not be configured on model %s. Only models with discussion "
 "feature can be used."
 msgstr ""
+"Wydarzenie mailowe nie może być skonfigurowane na modelu %s. Jedynie modele "
+"z funkcją dyskusji mogą być użyte."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__message_has_error
@@ -513,6 +528,8 @@ msgid ""
 "Model of action %(action_name)s should match the one from automated rule "
 "%(rule_name)s."
 msgstr ""
+"Model działania %(action_name)s powinien odpowiadać modelowi ze "
+"zautomatyzowanej reguły %(rule_name)s."
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__month
@@ -548,7 +565,7 @@ msgstr "Typ następnej czynności"
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "No record to run the automation on was found."
-msgstr ""
+msgstr "Znaleziono rekord do przeprowadzania automatyzacji."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -583,62 +600,62 @@ msgstr "Wyzwalacz pól onchange"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
 msgid "On UI change"
-msgstr ""
+msgstr "Przy zmianie UI"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_archive
 msgid "On archived"
-msgstr ""
+msgstr "Przy archiwizacji"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
 msgid "On create"
-msgstr ""
+msgstr "Przy tworzeniu"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create_or_write
 msgid "On create and edit"
-msgstr ""
+msgstr "Podczas tworzenia i edycji"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unlink
 msgid "On deletion"
-msgstr ""
+msgstr "Podczas usuwania"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_received
 msgid "On incoming message"
-msgstr ""
+msgstr "Przy dostarczeniu wiadomości"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_sent
 msgid "On outgoing message"
-msgstr ""
+msgstr "Przy wysyłaniu wiadomości"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unarchive
 msgid "On unarchived"
-msgstr ""
+msgstr "Przy odarchiwizowywaniu"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_write
 msgid "On update"
-msgstr ""
+msgstr "Przy aktualizacji"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_webhook
 msgid "On webhook"
-msgstr ""
+msgstr "Przy webhooku"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__previous_domain
 msgid "Previous Domain"
-msgstr ""
+msgstr "Poprzednia domena"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_priority_set
 msgid "Priority is set to"
-msgstr ""
+msgstr "Priorytet jest ustawiony na"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__rating_ids
@@ -648,7 +665,7 @@ msgstr "Oceny"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__record_getter
 msgid "Record Getter"
-msgstr ""
+msgstr "Getter rekordu"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -679,27 +696,27 @@ msgstr "Zaplanowane akcje"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Scheduled action"
-msgstr ""
+msgstr "Zaplanowane działanie"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Secret URL"
-msgstr ""
+msgstr "Tajny URL"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select a date field..."
-msgstr ""
+msgstr "Wybierz pole daty..."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select a value..."
-msgstr ""
+msgstr "Wybierz wartość..."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select fields..."
-msgstr ""
+msgstr "Wybierz pola..."
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -719,6 +736,10 @@ msgid ""
 " inactivity or remind yourself to follow-up on tasks when a specific tag is "
 "added.<br>With Automation Rules, you can automate any workflow."
 msgstr ""
+"Wysyłaj wiadomości e-mail, gdy obiekt zmieni stan, archiwizuj rekordy po "
+"miesiącu bezczynności lub przypominaj sobie o kontynuowaniu zadań po dodaniu "
+"określonego tagu. Dzięki regułom automatyzacji możecie zautomatyzować "
+"dowolny przepływ pracy."
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
@@ -751,18 +772,18 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_stage_set
 msgid "Stage is set to"
-msgstr ""
+msgstr "Etap jest nastawiony na"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/group_config_menu_patch.js:0
 msgid "Stage is set to \"%s\""
-msgstr ""
+msgstr "Etap jest nastawiony na \"%s\""
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_state_set
 msgid "State is set to"
-msgstr ""
+msgstr "Stan jest nastawiony na"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_state
@@ -780,19 +801,19 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_tag_set
 msgid "Tag is added"
-msgstr ""
+msgstr "Tag został dodany"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Target Record"
-msgstr ""
+msgstr "Rekord docelowy"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid ""
 "Target model of actions %(action_names)s are different from rule model."
-msgstr ""
+msgstr "Docelowy model działań %(action_names)s jest różny od modelu reguły."
 
 #. module: base_automation
 #. odoo-python
@@ -801,8 +822,8 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr ""
-"\"%(trigger_value)s\"  %(trigger_label)s może być użyty tylko z typem akcji "
-"\"%(state_value)s\"."
+"\"%(trigger_value)s\" %(trigger_label)s może być użyty tylko z typem akcji "
+"\"%(state_value)s\""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -821,12 +842,14 @@ msgid ""
 "The error occurred during the execution of the automation rule\n"
 "                \""
 msgstr ""
+"Podczas wykonywania reguły automatyzacji wystąpił błąd\n"
+"                \""
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "The scheduled action for Automation Rules seems to have vanished."
-msgstr ""
+msgstr "Zniknęło zaplanowane działanie dla reguł automatyzacji."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__record_getter
@@ -841,13 +864,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Timing Conditions"
-msgstr ""
+msgstr "Warunki czasowe"
 
 #. module: base_automation
 #: model:digest.tip,name:base_automation.digest_tip_base_automation_0
 #: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
 msgid "Tip: Automate everything with Automation Rules"
-msgstr ""
+msgstr "Wskazówka: Zautomatyzuj wszystko z pomocą reguł automatyzacji"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -904,17 +927,18 @@ msgstr "Stosuj kalendarz"
 #: model:ir.model.fields,help:base_automation.field_base_automation__url
 msgid "Use this URL in the third-party app to call this webhook."
 msgstr ""
+"Skorzystaj z tego URL w aplikacji strony trzeciej, aby wywołać ten webhook."
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_user_set
 msgid "User is set"
-msgstr ""
+msgstr "Użytkownik jest skonfigurowany"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 msgid "Values Updated"
-msgstr ""
+msgstr "Zaktualizowano wartości"
 
 #. module: base_automation
 #. odoo-python
@@ -926,13 +950,13 @@ msgstr "Ostrzeżenie"
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "Webhook Log"
-msgstr ""
+msgstr "Dziennik webhook"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "Webhook Logs"
-msgstr ""
+msgstr "Dzienniki Webhooków"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__webhook_uuid
@@ -976,7 +1000,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "When updating"
-msgstr ""
+msgstr "Przy aktualizacji"
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -992,6 +1016,7 @@ msgstr ""
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid "You can ask an administrator to disable or fix this automation."
 msgstr ""
+"Możesz poprosić administratora, żeby wyłączył lub naprawił tę automatyzację."
 
 #. module: base_automation
 #. odoo-python
@@ -1006,16 +1031,16 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 msgid "based on"
-msgstr ""
+msgstr "na podstawie"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.xml:0
 msgid "no action defined..."
-msgstr ""
+msgstr "nie zdefiniowano żadnego działania..."
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "path"
-msgstr ""
+msgstr "ścieżka"

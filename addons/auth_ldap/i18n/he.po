@@ -1,25 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* auth_ldap
+# * auth_ldap
 #
 # Translators:
 # Yihya Hugirat <hugirat@gmail.com>, 2019
 # hed shefetr <hed@laylinetech.com>, 2019
 # דודי מלכה <Dudimalka6@gmail.com>, 2019
-#
+# Yoram Lavi <yoram@digitale.co.il>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: דודי מלכה <Dudimalka6@gmail.com>, 2019\n"
-"Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
+"PO-Revision-Date: 2025-08-13 09:22+0000\n"
+"Last-Translator: Yoram Lavi <yoram@digitale.co.il>\n"
+"Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-s18-4/"
+"auth_ldap/he/>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
+"n % 10 == 0) ? 2 : 3));\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
@@ -37,6 +40,20 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"    המסנן משמש לחיפוש חשבונות משתמשים במסד הנתונים של LDAP. זהו מסנן LDAP "
+"שרירותי בייצוג מחרוזת. כל מציין מקום `%s` יוחלף בשם המשתמש (המזהה) שסיפק "
+"המשתמש, והמסנן צריך להכיל לפחות מציין מקום אחד כזה.\n"
+"\n"
+"המסנן חייב להחזיר בדיוק תוצאה אחת (1), אחרת ההתחברות תיחשב כלא תקפה.\n"
+"\n"
+"דוגמה (התכונות בפועל תלויות בשרת ה־LDAP ובתצורה):\n"
+"\n"
+"    (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"או\n"
+"\n"
+"    (|(mail=%s)(uid=%s))\n"
+"    "
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user

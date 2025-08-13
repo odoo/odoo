@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:30+0000\n"
-"PO-Revision-Date: 2025-08-11 12:35+0000\n"
+"PO-Revision-Date: 2025-08-13 09:22+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s18-4/base/"
 "de/>\n"
@@ -4146,6 +4146,10 @@ msgid ""
 "\n"
 "Bridge module for Event/Sale/IoT. Only used to prevent auto-printing if a registration is not yet sold.\n"
 msgstr ""
+"\n"
+"Brückenmodul für Veranstaltungen/Verkauf/IoT. Wird nur verwendet, um den "
+"automatischen Druck zu verhindern, wenn eine Registrierung noch nicht "
+"verkauft wurde.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_event_iot
@@ -4153,6 +4157,9 @@ msgid ""
 "\n"
 "Bridge module for PoS/Event/IoT. Used to print with IoT upon selling an event ticket.\n"
 msgstr ""
+"\n"
+"Brückenmodul für Kassensystem/Veranstaltungen/IoT. Wird verwendet, um beim "
+"Verkauf eines Veranstaltungstickets mit IoT zu drucken.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_enterprise
@@ -7042,6 +7049,8 @@ msgid ""
 "\n"
 "It can be installed running: %s"
 msgstr ""
+"\n"
+"Kann installiert werden mit: %s"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jo_hr_payroll
@@ -8481,6 +8490,16 @@ msgid ""
 "- Fiscal Positions\n"
 "- States\n"
 msgstr ""
+"\n"
+"Buchhaltung für den Oman\n"
+"=================================================================\n"
+"Kontenplan und Lokalisierung für den Oman.\n"
+"Aktiviert:\n"
+"- Kontenplan\n"
+"- Steuern\n"
+"- MwSt.-Erklärung\n"
+"- Steuerpositionen\n"
+"- Staaten\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_org_chart
@@ -9941,6 +9960,10 @@ msgid ""
 "This addon contains a generic html builder application. It is designed to be\n"
 "used by the website builder and mass mailing editor.\n"
 msgstr ""
+"\n"
+"Dieses Add-on enthält eine generische HTML-Builder-App. Es ist für die "
+"Verwendung\n"
+"mit dem Website-Builder und dem Massen-E-Mail-Editor vorgesehen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_purchase
@@ -11310,6 +11333,18 @@ msgid ""
 "-----------------\n"
 "Three layouts copied from the US check printing module, adjusted for DO\n"
 msgstr ""
+"\n"
+"Mit diesem Modul können Sie Ihre Zahlungen auf vorgedrucktem Scheckpapier "
+"ausdrucken.\n"
+"Sie können die Ausgabe (Layout, Informationen auf den Abschnitten usw.) in "
+"den Unternehmenseinstellungen konfigurieren und die\n"
+"Schecknummerierung (wenn Sie vorgedruckte Schecks ohne Nummern verwenden) in "
+"den Journaleinstellungen verwalten.\n"
+"\n"
+"Unterstützte Formate\n"
+"-----------------\n"
+"Drei Layouts, die aus dem US-Scheckdruckmodul kopiert und für DO angepasst "
+"wurden.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ph_check_printing
@@ -14131,6 +14166,12 @@ msgid ""
 "                                <span colspan=\"2\">ISO 8601 Week Year without Century: %(isoy)s</span>\n"
 "                                <span colspan=\"2\">ISO 8601 Week Number: %(isoweek)s</span>"
 msgstr ""
+"<span colspan=\"2\">ISO 8601 Woche, Jahr mit Jahrhundert: %(isoyear)s</span>"
+"\n"
+"                                <span colspan=\"2\">ISO 8601 Woche, Jahr "
+"ohne Jahrhundert: %(isoy)s</span>\n"
+"                                <span colspan=\"2\">ISO 8601 Wochennummer: "
+"%(isoweek)s</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -14138,6 +14179,10 @@ msgid ""
 "<span invisible=\"evaluation_type != 'value' or update_field_type in ['one2many', 'many2many']\">to</span>\n"
 "                                <span invisible=\"evaluation_type != 'sequence'\">with</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value' or update_field_type in "
+"['one2many', 'many2many']\">an</span>\n"
+"                                <span invisible="
+"\"evaluation_type != 'sequence'\">mit</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -14172,6 +14217,13 @@ msgid ""
 "                                    to this Python expression:\n"
 "                                </span>"
 msgstr ""
+"<span invisible=\"update_field_id != False or evaluation_type != 'value'\" "
+"class=\"o_actions_server_set_a_value text-muted\">Einen Wert festlegen "
+"...</span>\n"
+"                                <span invisible="
+"\"evaluation_type != 'equation'\">\n"
+"                                    für diesen Python-Ausdruck:\n"
+"                                </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -14627,7 +14679,7 @@ msgstr "Ein Modul, um Odoo-Code mit unterschiedlichen Lints zu testen."
 #. module: base
 #: model:ir.module.module,description:base.module_test_orm
 msgid "A module to test the ORM."
-msgstr ""
+msgstr "Ein Modul zum Testen der ORM."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_rpc
@@ -14742,7 +14794,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "A sequence must only be used with character fields."
-msgstr ""
+msgstr "Eine Sequenz darf nur mit Zeichenfeldern verwendet werden."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_contact
@@ -15565,6 +15617,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_account_withholding_tax_pos
 msgid "Add support for the withholding tax module in the PoS."
 msgstr ""
+"Fügen Sie die Unterstützung für das Quellensteuermodul im Kassensystem hinzu."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_picking_batch
@@ -15969,7 +16022,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_odoo_experts
 msgid "Advisor, Corporate, Service, Business, Finance, IT"
-msgstr ""
+msgstr "Berater, Unternehmen, Dienstleistungen, Wirtschaft, Finanzen, IT"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__agpl-3
@@ -16495,6 +16548,7 @@ msgid ""
 "Allows to register withholding taxes during the payment of an invoice or "
 "bill."
 msgstr ""
+"Ermöglicht die Erfassung von Quellensteuern bei der Zahlung einer Rechnung."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_withholding
@@ -17442,7 +17496,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_paymob
 msgid "An Egyptian payment provider for the Middle East."
-msgstr ""
+msgstr "Ein ägyptischer Zahlungsdienstleister für den Nahen Osten."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_stripe
@@ -17559,12 +17613,12 @@ msgstr "Andorra"
 #. module: base
 #: model:ir.module.module,description:base.module_theme_anelusia
 msgid "Anelusia Fashion Theme"
-msgstr ""
+msgstr "Designmotiv Anelusia Fashion"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_anelusia
 msgid "Anelusia Theme"
-msgstr ""
+msgstr "Designmotiv Anelusia"
 
 #. module: base
 #: model:res.country,name:base.ao
@@ -17806,7 +17860,7 @@ msgstr "Arch zu vergleichen mit"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_enark
 msgid "Architect, Corporate, Business, Finance, Services"
-msgstr ""
+msgstr "Architekt, Unternehmen, Wirtschaft, Finanzen, Dienstleistungen"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
@@ -17887,7 +17941,7 @@ msgstr "Argentinien - Kassensystem mit AR-Dok."
 #: model:ir.module.module,description:base.module_l10n_ar_stock
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_stock
 msgid "Argentinean - Stock"
-msgstr ""
+msgstr "Argentinien - Bestand"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_reports
@@ -17926,16 +17980,18 @@ msgstr "Armenien"
 msgid ""
 "Artist, Arts, Galleries, Creative, Paintings, Photography, Shows, Stores"
 msgstr ""
+"Künstler, Kunst, Galerien, Kreativität, Gemälde, Fotografie, Ausstellungen, "
+"Geschäfte"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_artists
 msgid "Artists Theme"
-msgstr ""
+msgstr "Designmotiv Artists"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_artists
 msgid "Artists Theme - Art Galleries, Photography, Painting"
-msgstr ""
+msgstr "Designmotiv Artists – Kunstgalerien, Fotografie, Malerei"
 
 #. module: base
 #: model:res.country,name:base.aw
@@ -18946,12 +19002,13 @@ msgstr "Verfügbare Modelle"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_avantgarde
 msgid "Avantgarde Theme"
-msgstr ""
+msgstr "Designmotiv Avantgarde"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_avantgarde
 msgid "Avantgarde is a sophisticated theme to inspire and impress"
 msgstr ""
+"Avantgarde ist ein anspruchsvolles Design, das inspiriert und beeindruckt"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__avatar_1920
@@ -19027,12 +19084,13 @@ msgstr "Avatax für Geolokalisierung"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_aviato
 msgid "Aviato Theme"
-msgstr ""
+msgstr "Designmotiv Aviato"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_aviato
 msgid "Aviato Theme - Responsive Bootstrap Theme for Odoo CMS"
 msgstr ""
+"Designmotive Aviato - Reaktionsschnelles Bootstrap-Designmotiv für Odoo CMS"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_fsm
@@ -19175,6 +19233,8 @@ msgstr "Sperren"
 #: model:ir.module.module,summary:base.module_theme_notes
 msgid "Band, Musics, Sound, Concerts, Artists, Records, Event, Food, Stores"
 msgstr ""
+"Band, Musik, Sound, Konzerte, Künstler, Platten, Veranstaltungen, Essen, "
+"Geschäfte"
 
 #. module: base
 #: model:res.country,name:base.bd
@@ -19445,7 +19505,7 @@ msgstr "Stapeltransfer, Zusteller"
 #: model:ir.module.module,description:base.module_theme_bewise
 #: model:ir.module.module,shortdesc:base.module_theme_bewise
 msgid "Be Wise Theme"
-msgstr ""
+msgstr "Deisgnmotiv Be Wise"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
@@ -19459,17 +19519,17 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_beauty
 msgid "Beauty Theme"
-msgstr ""
+msgstr "Designmotiv Beauty"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_beauty
 msgid "Beauty Theme - Cosmetics, Beauty, Make Up, Hairdresser"
-msgstr ""
+msgstr "Designmotiv Beauty – Kosmetik, Schönheit, Make-up, Friseur"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_beauty
 msgid "Beauty, Health, Care, Make Up, Cosmetics, Hair Dressers, Stores"
-msgstr ""
+msgstr "Schönheit, Gesundheit, Pflege, Make-up, Kosmetik, Friseure, Geschäfte"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__before
@@ -19702,17 +19762,17 @@ msgstr "Birr"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_bistro
 msgid "Bistro Theme"
-msgstr ""
+msgstr "Designmotiv Bistro"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_bistro
 msgid "Bistro Theme - Restaurant, Food/Drink, Catering, Food trucks"
-msgstr ""
+msgstr "Designmotiv Bistro - Restaurant, Speisen/Getränke, Catering, Foodtrucks"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_bistro
 msgid "Bistro, Restaurant, Bar, Pub, Cafe, Food, Catering"
-msgstr ""
+msgstr "Bistro, Restaurant, Bar, Kneipe, Café, Speisen, Catering"
 
 #. module: base
 #. odoo-python
@@ -19767,12 +19827,12 @@ msgstr "Bonaire, Sint Eustatius und Saba"
 #. module: base
 #: model:ir.module.module,description:base.module_theme_bookstore
 msgid "Books, Magazines, Music"
-msgstr ""
+msgstr "Bücher, Zeitschriften, Musik"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_bookstore
 msgid "Bookstore Theme"
-msgstr ""
+msgstr "Designmotiv Bookstore"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__update_boolean_value
@@ -19907,7 +19967,7 @@ msgstr "EDI für brasilianische Buchhaltung für Bestand"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_website_sale
 msgid "Bridge Website Sale for Argentina"
-msgstr ""
+msgstr "Brücken für Website und Verkauf für Argentinien"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br_website_sale
@@ -20191,12 +20251,13 @@ msgstr "Butut"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_buzzy
 msgid "Buzzy Theme"
-msgstr ""
+msgstr "Designmotiv Buzzy"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_buzzy
 msgid "Buzzy Theme - Responsive Bootstrap Theme for Odoo CMS"
 msgstr ""
+"Designmotiv Buzzy - Reaktionsschnelles Bootstrap-Designmotiv für Odoo CMS"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -20247,12 +20308,12 @@ msgstr "CPA005-Zahlungen"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__cpu_duration
 msgid "CPU Duration"
-msgstr ""
+msgstr "CPU-Dauer"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_profile__cpu_duration
 msgid "CPU clock (not including other processes or SQL)"
-msgstr ""
+msgstr "CPU-Uhr (ohne andere Prozesse oder SQL)"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_crm
@@ -20327,6 +20388,8 @@ msgid ""
 "Calculate and report your company's Environmental, Social, and Governance "
 "impact."
 msgstr ""
+"Berechnen und dokumentieren Sie die Auswirkungen Ihres Unternehmens auf "
+"Umwelt, Gesellschaft und Unternehmensführung."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__calendar
@@ -20965,7 +21028,7 @@ msgstr "China - Buchhaltung"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cn_reports
 msgid "China - Accounting Reports"
-msgstr ""
+msgstr "China - Buchhaltungsberichte"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cn_city
@@ -21045,13 +21108,13 @@ msgstr "Stadt"
 #: model:ir.module.module,description:base.module_theme_clean
 #: model:ir.module.module,shortdesc:base.module_theme_clean
 msgid "Clean Theme"
-msgstr ""
+msgstr "Designmotiv Clean"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_cobalt
 #: model:ir.module.module,description:base.module_theme_paptic
 msgid "Clean and sharp design."
-msgstr ""
+msgstr "Klares und prägnantes Design."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__clearing_number
@@ -21122,7 +21185,7 @@ msgstr "Cloudflare Turnstile"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_cobalt
 msgid "Cobalt Theme"
-msgstr ""
+msgstr "Designmotiv Cobalt"
 
 #. module: base
 #: model:res.country,name:base.cc
@@ -21772,7 +21835,7 @@ msgstr "Baugewerbe"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_paptic
 msgid "Consultancy, Design, Tech, Computers, IT, Blogs"
-msgstr ""
+msgstr "Beratung, Design, Technik, Computer, IT, Blogs"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_8
@@ -21927,7 +21990,7 @@ msgstr "Unternehmen"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_buzzy
 msgid "Corporate, Services, Technology, Shapes, Illustrations"
-msgstr ""
+msgstr "Unternehmen, Dienstleistungen, Technologie, Formen, Illustrationen"
 
 #. module: base
 #: model:res.country,name:base.cr
@@ -22171,6 +22234,8 @@ msgstr "Erstellen Sie einen neuen Lieferanten in Ihrem Adressbuch"
 #: model:ir.module.module,summary:base.module_test_themes
 msgid "Create a new website for each Odoo theme for an easy preview."
 msgstr ""
+"Erstellen Sie für jedes Odoo-Designmotiv eine neue Website, um eine einfache "
+"Vorschau zu ermöglichen."
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.res_partner_industry_action
@@ -22681,7 +22746,7 @@ msgstr "Benutzerdefinierte Tastaturkürzel"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_test_custo
 msgid "Custom Theme (Testing suite)"
-msgstr ""
+msgstr "Benutzerdefiniertes Designmotiv (Testsuite)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__selection_value
@@ -22881,7 +22946,7 @@ msgstr "Dashboards"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__cache
 msgid "Data Caching"
-msgstr ""
+msgstr "Datenzwischenspeicherung"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_data_cleaning
@@ -23378,6 +23443,8 @@ msgid ""
 "Design, Fine Art, Artwork, Creative, Creativity, Galleries, Trends, Shows, "
 "Magazines, Blogs"
 msgstr ""
+"Design, Bildende Kunst, Kunstwerke, Kreativität, Kreativität, Galerien, "
+"Trends, Ausstellungen, Zeitschriften, Blogs"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_sms
@@ -23439,7 +23506,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_cobalt
 msgid "Development, IT development, Design, Tech, Computers, IT, Blogs"
-msgstr ""
+msgstr "Entwicklung, IT-Entwicklung, Design, Technik, Computer, IT, Blogs"
 
 #. module: base
 #: model:ir.model,name:base.model_res_device_log
@@ -23475,6 +23542,8 @@ msgid ""
 "Digital, Marketing, Copywriting, Media, Events, Non Profit, NGO, Corporate, "
 "Business, Services"
 msgstr ""
+"Digital, Marketing, Texterstellung, Medien, Veranstaltungen, Gemeinnützige "
+"Organisationen, NGO, Unternehmen, Wirtschaft, Dienstleistungen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_extract
@@ -23803,7 +23872,7 @@ msgstr "Angezeigte Felder"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_anelusia
 msgid "Diversity, Fashions, Trends, Clothes, Shoes, Sports, Fitness, Stores"
-msgstr ""
+msgstr "Vielfalt, Mode, Trends, Kleidung, Schuhe, Sport, Fitness, Geschäfte"
 
 #. module: base
 #: model:res.country,name:base.dj
@@ -24022,7 +24091,7 @@ msgstr "Dominikanische Republik - Buchhaltungsberichte"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_do_check_printing
 msgid "Dominican Republic - Checks Layout"
-msgstr ""
+msgstr "Dominikanische Republik - Schecklayout"
 
 #. module: base
 #. odoo-python
@@ -24088,7 +24157,7 @@ msgstr "Verwaltung des Streckengeschäfts und der Unterauftragvergabe"
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "Duplicate %(record)s"
-msgstr ""
+msgstr "%(record)s duplizieren"
 
 #. module: base
 #. odoo-python
@@ -24625,7 +24694,7 @@ msgstr "Aktiviert VoIP-Kompatibilität mit OnSIP."
 #: model:ir.module.module,description:base.module_theme_enark
 #: model:ir.module.module,shortdesc:base.module_theme_enark
 msgid "Enark Theme"
-msgstr ""
+msgstr "Designmotiv Enark"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_D
@@ -24732,6 +24801,8 @@ msgid ""
 "Environment, Nature, Ecology, Sustainable Development, Non Profit, NGO, "
 "Travels"
 msgstr ""
+"Umwelt, Natur, Ökologie, Nachhaltige Entwicklung, Gemeinnützige "
+"Organisationen, Nichtregierungsorganisationen, Reisen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_epson_printer
@@ -25432,6 +25503,8 @@ msgid ""
 "Event, Restaurants, Bars, Pubs, Cafes, Catering, Food, Drinks, Concerts, "
 "Shows, Musics, Dance, Party"
 msgstr ""
+"Veranstaltungen, Restaurants, Bars, Kneipen, Cafés, Catering, Speisen, "
+"Getränke, Konzerte, Shows, Musik, Tanz, Partys"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_exhibitor
@@ -25590,12 +25663,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_theme_odoo_experts
 msgid "Experts Business Theme"
-msgstr ""
+msgstr "Designmotiv Experts Business"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_odoo_experts
 msgid "Experts Theme"
-msgstr ""
+msgstr "Designmotiv Experts"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys__expiration_date
@@ -25789,7 +25862,7 @@ msgstr "Externe ID"
 #. odoo-python
 #: code:addons/base/models/ir_qweb.py:0
 msgid "External ID can not be loaded: %s"
-msgstr ""
+msgstr "Externe ID kann nicht geladen werden: %s"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_model_data_name_nospaces
@@ -26432,7 +26505,7 @@ msgstr "Fuhrpark aus Dokumente"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_orchid
 msgid "Florist, Gardens, Flowers, Nature, Green, Beauty, Stores"
-msgstr ""
+msgstr "Florist, Gärten, Blumen, Natur, Grün, Schönheit, Geschäfte"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_4
@@ -26792,7 +26865,7 @@ msgstr "Funktion"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_loftspace
 msgid "Furniture, Toys, Games, Kids, Boys, Girls, Stores"
-msgstr ""
+msgstr "Möbel, Spielzeug, Spiele, Kinder, Jungen, Mädchen, Geschäfte"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_G
@@ -27023,7 +27096,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_html_builder
 msgid "Generic html builder"
-msgstr ""
+msgstr "Generischer HTML-Builder"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__partner_latitude
@@ -27246,7 +27319,7 @@ msgstr "Grafik"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_graphene
 msgid "Graphene Theme"
-msgstr ""
+msgstr "Designmotiv Graphene"
 
 #. module: base
 #: model:res.country,name:base.gr
@@ -27561,7 +27634,7 @@ msgstr "HTML"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_html_builder
 msgid "HTML Builder"
-msgstr ""
+msgstr "HTML-Builder"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_html_editor
@@ -28287,6 +28360,9 @@ msgid ""
 "If enabled, this action will cache the related data used in list, Kanban and"
 " form views with the aim to increase the loading speed"
 msgstr ""
+"Wenn diese Option aktiviert ist, werden die in Listen-, Kanban- und "
+"Formularansichten verwendeten Daten zwischengespeichert, um die "
+"Ladegeschwindigkeit zu erhöhen."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_rule__global
@@ -29582,12 +29658,12 @@ msgstr "IoT für Lieferung"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_sale_iot
 msgid "IoT for Event/Sale"
-msgstr ""
+msgstr "IoT für Veranstaltungen/Verkauf"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_iot
 msgid "IoT for Events"
-msgstr ""
+msgstr "IoT für Veranstaltungen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_iot
@@ -29597,7 +29673,7 @@ msgstr "IoT für Kassensystem"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_event_iot
 msgid "IoT for PoS/Event"
-msgstr ""
+msgstr "IoT für Kassensystem/Veranstaltungen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_self_order_iot
@@ -29987,7 +30063,7 @@ msgstr "Kasachstan - Buchhaltungsberichte"
 #: model:ir.module.module,description:base.module_theme_kea
 #: model:ir.module.module,shortdesc:base.module_theme_kea
 msgid "Kea Theme"
-msgstr ""
+msgstr "Designmotiv Kea"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__password
@@ -30078,12 +30154,12 @@ msgstr "Khoums"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_kiddo
 msgid "Kiddo Theme"
-msgstr ""
+msgstr "Designmotiv Kiddo"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_kiddo
 msgid "Kiddo theme for Odoo Website"
-msgstr ""
+msgstr "Designmotiv Kiddo für Odoo Website"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.PGK
@@ -30647,7 +30723,7 @@ msgstr "Legal    3   8,5 x 14 Zoll, 215,9 x 355,6 mm"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_clean
 msgid "Legal, Corporate, Business, Tech, Services"
-msgstr ""
+msgstr "Recht, Unternehmen, Wirtschaft, Technologie, Dienstleistungen"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -30739,7 +30815,7 @@ msgstr "Liberia"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_bookstore
 msgid "Library, Books, Magazines, Literature, Musics, Media, Store"
-msgstr ""
+msgstr "Bibliothek, Bücher, Zeitschriften, Literatur, Musik, Medien, Geschäft"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__libya
@@ -30759,13 +30835,14 @@ msgstr "Liechtenstein"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_lifestyle
+#, fuzzy
 msgid "Lifestyle"
-msgstr ""
+msgstr "Lifestyle"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_graphene
 msgid "Light colours, thin text, clean and sharp design."
-msgstr ""
+msgstr "Helle Farben, dünner Text, klares und prägnantes Design."
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.SZL
@@ -31034,12 +31111,12 @@ msgstr "Lokalisierung"
 #. module: base
 #: model:ir.module.module,description:base.module_theme_loftspace
 msgid "Loftspace Fashion Theme"
-msgstr ""
+msgstr "Designmotiv Loftspace Fashion"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_loftspace
 msgid "Loftspace Theme"
-msgstr ""
+msgstr "Designmotiv Loftspace"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
@@ -31321,7 +31398,7 @@ msgstr "Hauptsequenz"
 #: model:ir.model.fields,field_description:base.field_res_partner__main_user_id
 #: model:ir.model.fields,field_description:base.field_res_users__main_user_id
 msgid "Main User"
-msgstr ""
+msgstr "Hauptbenutzer"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window__target__main
@@ -31359,6 +31436,7 @@ msgstr "Tätigen und Erhalt von Telefonanrufen aus Odoo heraus."
 #: model:ir.module.module,summary:base.module_theme_nano
 msgid "Maker, Agencies, Creative, Design, IT, Services, Fancy"
 msgstr ""
+"Hersteller, Agenturen, Kreative, Design, IT, Dienstleistungen, Ausgefallenes"
 
 #. module: base
 #: model:res.country,name:base.mw
@@ -32553,6 +32631,9 @@ msgid ""
 "Modifications to the forecast widget on SO lines to show fresh stock, i.e. "
 "ignoring stock to be removed due to expiration."
 msgstr ""
+"Änderungen am Prognose-Widget in Verkaufsauftragszeilen, um den aktuellen "
+"Bestand anzuzeigen, d. h. den aufgrund des Ablaufs zu entfernenden Bestand "
+"wird ignoriert."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_updated
@@ -32708,12 +32789,12 @@ msgstr "Montag"
 #. module: base
 #: model:ir.module.module,description:base.module_theme_monglia
 msgid "Monglia Catering Theme"
-msgstr ""
+msgstr "Designmotiv Monglia Catering"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_monglia
 msgid "Monglia Theme"
-msgstr ""
+msgstr "Designmotiv Monglia"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.MNT
@@ -32993,12 +33074,13 @@ msgstr "Namibia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_nano
 msgid "Nano Theme"
-msgstr ""
+msgstr "Designmotiv Nano"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_nano
 msgid "Nano Theme - Responsive Bootstrap Theme for Odoo CMS"
 msgstr ""
+"Designmotiv Nano - Reaktionsschnelles Bootstrap-Designmotiv für Odoo CMS"
 
 #. module: base
 #. odoo-python
@@ -33297,7 +33379,7 @@ msgstr "Keine Leerzeichen erlaubt in view_mode: „%s“"
 #. odoo-python
 #: code:addons/translate.py:0
 msgid "No translatable terms were found in %s."
-msgstr ""
+msgstr "Es wurden keine übersetzbaren Begriffe in %s gefunden."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__noupdate
@@ -33426,7 +33508,7 @@ msgstr "Notizen"
 #: model:ir.module.module,description:base.module_theme_notes
 #: model:ir.module.module,shortdesc:base.module_theme_notes
 msgid "Notes & Play Theme"
-msgstr ""
+msgstr "Designmotiv Notes & Play"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_stock_wishlist
@@ -33471,7 +33553,7 @@ msgstr "Anzahl Benutzer mit dieser Gruppe (implizit oder explizit)"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_kiddo
 msgid "Nursery, Toys, Games, Kids, Boys, Girls, Stores"
-msgstr ""
+msgstr "Kinderzimmer, Spielzeug, Spiele, Kinder, Jungen, Mädchen, Geschäfte"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_O
@@ -35408,7 +35490,7 @@ msgstr "Oman"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_om
 msgid "Oman - Accounting"
-msgstr ""
+msgstr "Oman - Buchhaltung"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__on_delete
@@ -35674,12 +35756,12 @@ msgstr "Optionen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_orchid
 msgid "Orchid Theme"
-msgstr ""
+msgstr "Designmotiv Orchid"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_orchid
 msgid "Orchid Theme - Flowers, Beauty"
-msgstr ""
+msgstr "Designmotiv Orchid - Blumen, Schönheit"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__order
@@ -36731,7 +36813,7 @@ msgstr "Papierformat"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_paptic
 msgid "Paptic Theme"
-msgstr ""
+msgstr "Designmotiv Paptic"
 
 #. module: base
 #: model:res.country,name:base.pg
@@ -37073,7 +37155,7 @@ msgstr "Zahlungsanbieter: Nuvei"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_paymob
 msgid "Payment Provider: Paymob"
-msgstr ""
+msgstr "Zahlungsanbieter: Paymob"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_paypal
@@ -37681,7 +37763,7 @@ msgstr "Kanadische Schecks drucken"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_do_check_printing
 msgid "Print Dominican Republic Checks"
-msgstr ""
+msgstr "Schecks für die Dominikanische Republik drucken"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ph_check_printing
@@ -38723,12 +38805,12 @@ msgstr "Immobilien"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_real_estate
 msgid "Real Estate Theme"
-msgstr ""
+msgstr "Designmotiv Real Estate"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_real_estate
 msgid "Real Estate Theme - Houses, Appartments, Real Estate Agencies"
-msgstr ""
+msgstr "Designmotiv Real Estate - Häuser, Appartements, Immobilienagenturen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_real_estate
@@ -38736,11 +38818,13 @@ msgid ""
 "Real Estate, Agencies, Construction, Services, Accomodations, Lodging, "
 "Hosting, Houses, Appartments, Vacations, Holidays, Travels"
 msgstr ""
+"Immobilien, Agenturen, Bauwesen, Dienstleistungen, Unterkünfte, "
+"Beherbergung, Hosting, Häuser, Wohnungen, Urlaub, Ferien, Reisen"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_profile__duration
 msgid "Real elapsed time"
-msgstr ""
+msgstr "Tatsächlich verstrichene Zeit"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__resource_ref
@@ -39834,7 +39918,7 @@ msgstr "Verkauf Bestand Marge"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_stock_product_expiry
 msgid "Sale Stock Product Expiry"
-msgstr ""
+msgstr "Verkauf Bestand Produkt Ablaufdatum"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_stock
@@ -40288,7 +40372,7 @@ msgstr "Ein Feld auswählen zur Verknüpfung des Datensatzes mit"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Select a sequence..."
-msgstr ""
+msgstr "Eine Sequenz auswählen ..."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -40392,6 +40476,8 @@ msgstr "Mietprodukte in Ihrem E-Commerce verkaufen und den Bestand verwalten"
 msgid ""
 "Sell rental products on your eCommerce and plan your material resources"
 msgstr ""
+"Vermieten Sie Produkte über Ihren E-Commerce und planen Sie Ihre "
+"Materialressourcen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_subscription
@@ -40448,7 +40534,7 @@ msgstr "Webhook-Benachrichtigung versenden"
 #. module: base
 #: model:ir.module.module,summary:base.module_sign
 msgid "Send and request electronic signatures."
-msgstr ""
+msgstr "Elektronische Signaturen senden und anfordern"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_push_notifications
@@ -40654,7 +40740,7 @@ msgstr "Sequenzgröße"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__sequence_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__sequence_id
 msgid "Sequence to use"
-msgstr ""
+msgstr "Zu verwendende Sequenz"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_form
@@ -40744,6 +40830,8 @@ msgstr "Dienstleistungsmargen in Verkaufsaufträgen"
 #: model:ir.module.module,summary:base.module_theme_graphene
 msgid "Service, Corporate, Design, Technology, Robotics, Computers, IT, Blogs"
 msgstr ""
+"Dienstleistungen, Unternehmen, Design, Technologie, Robotik, Computer, IT, "
+"Blogs"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services
@@ -41131,13 +41219,16 @@ msgstr "Mahnungen per Post"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_common
+#, fuzzy
 msgid "Snippets Library"
-msgstr ""
+msgstr "Snippet-Bibliothek"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_common
 msgid "Snippets library containing snippets to be styled in themes."
 msgstr ""
+"Snippets-Bibliothek mit Snippets, die in Designmotiven gestaltet werden "
+"können."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_social
@@ -42087,7 +42178,7 @@ msgstr "Schweiz - Personalabrechnung mit Buchhaltung"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch_hr_payroll
 msgid "Switzerland - Swissdec Certified ELM 5.0 - Payroll"
-msgstr ""
+msgstr "Schweiz - Swissdec-zertifiziert ELM 5.0 - Personalabrechnung"
 
 #. module: base
 #: model:res.country.group,name:base.ch_and_li
@@ -42194,8 +42285,9 @@ msgstr "TPIN"
 
 #. module: base
 #: model:res.country,vat_label:base.ae
+#, fuzzy
 msgid "TRN"
-msgstr ""
+msgstr "TRN"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__tabloid
@@ -42412,7 +42504,7 @@ msgstr "Technologie"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_kea
 msgid "Technology, Tech, IT, Computers, Stores, Virtual Reality"
-msgstr ""
+msgstr "Technologie, Technik, IT, Computer, Geschäfte, Virtuelle Realität"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_name
@@ -42423,7 +42515,7 @@ msgstr "Vorlagenname"
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Template does not exist or has been deleted: %s"
-msgstr ""
+msgstr "Die Vorlage existiert nicht oder wurde gelöscht: %s"
 
 #. module: base
 #. odoo-python
@@ -42435,7 +42527,7 @@ msgstr "Der Vorlagenname fehlt."
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Template not found: %s"
-msgstr ""
+msgstr "Vorlage nicht gefunden: %s"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.TMT
@@ -42549,7 +42641,7 @@ msgstr "Test Hauptablauf"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_orm
 msgid "Test ORM"
-msgstr ""
+msgstr "ORM testen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_rpc
@@ -43536,8 +43628,9 @@ msgstr "Designmotiv"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_common
+#, fuzzy
 msgid "Theme Common"
-msgstr ""
+msgstr "Designmotiv Common"
 
 #. module: base
 #: model:ir.actions.act_url,name:base.action_theme_store
@@ -43549,7 +43642,7 @@ msgstr "Designmotiv-Shop"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_themes
 msgid "Themes Testing Module"
-msgstr ""
+msgstr "Testmodul für Designmotive"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -43564,6 +43657,9 @@ msgid ""
 "There can be several users related to the same partner. When a single user "
 "is needed, this field attempts to find the most appropriate one."
 msgstr ""
+"Es können mehrere Benutzer mit demselben Partner verknüpft sein. Wenn ein "
+"einzelner Benutzer benötigt wird, versucht dieses Feld, den am besten "
+"geeigneten zu finden."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_latam_check
@@ -43715,6 +43811,9 @@ msgid ""
 "         Please install the new \"DHL Express Shipping\" module and "
 "uninstall this one as soon as possible."
 msgstr ""
+"Dies ist die alte Integration mit DHL Express, die nicht mehr unterstützt "
+"wird.         Bitte installieren Sie das neue Modul „DHL-Express-Versand“ "
+"und deinstallieren Sie dieses Modul so schnell wie möglich."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex
@@ -43855,6 +43954,8 @@ msgid ""
 "This module allows to publish your available job positions on your website "
 "and keep track of application submissions easily."
 msgstr ""
+"Mit diesem Modul können Sie Ihre offenen Stellen auf Ihrer Website "
+"veröffentlichen und Bewerbungen einfach verfolgen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_iot_box_image
@@ -44221,6 +44322,13 @@ msgid ""
 "    It will simply create a new website for each Odoo theme and install every\n"
 "    theme on one website."
 msgstr ""
+"Dieses Modul unterstützt Sie dabei, alle Odoo-Designmotive schnell zu "
+"testen, \n"
+"    ohne auf Ihrer Website zwischen verschiedenen Designmotiven wechseln zu "
+"müssen.\n"
+"    Es erstellt einfach für jedes Odoo-Designmotiv eine neue Website und "
+"installiert jedes Designmotiv\n"
+"     auf einer Website."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -44652,17 +44760,18 @@ msgstr "Transport/Logistik"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_aviato
 msgid "Travel, Excursion, Plane, Tour, Agency "
-msgstr ""
+msgstr "Reisen, Ausflug, Flug, Tour, Agentur "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_treehouse
 msgid "Treehouse Theme"
-msgstr ""
+msgstr "Designmotiv Treehouse"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_treehouse
 msgid "Treehouse Theme - Responsive Bootstrap Theme for Odoo CMS"
 msgstr ""
+"Designmotiv Treehouse - Reaktionsschnelles Bootstrap-Designmotiv für Odoo CMS"
 
 #. module: base
 #. odoo-python
@@ -45273,7 +45382,7 @@ msgstr "Universal"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_bewise
 msgid "University, Education, Schools, Young, Play, Kids"
-msgstr ""
+msgstr "Universität, Bildung, Schulen, Jugend, Spiel, Kinder"
 
 #. module: base
 #. odoo-python
@@ -45391,7 +45500,7 @@ msgstr "Aktualisieren"
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "Update %(model_name)s"
-msgstr ""
+msgstr "%(model_name)s aktualisieren"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_view_base_module_update
@@ -45497,7 +45606,7 @@ msgstr "Einsatz von IoT-Geräten im Kassensystem"
 #: model:ir.module.module,summary:base.module_event_sale_iot
 #: model:ir.module.module,summary:base.module_pos_event_iot
 msgid "Use IoT device integrations for events"
-msgstr ""
+msgstr "IoT-Geräteintegrationen für Veranstaltungen verwenden"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_iot
@@ -45636,6 +45745,8 @@ msgid ""
 "Use your employee data to measure important ESG metrics (e.g. employee "
 "commuting, sex parity)."
 msgstr ""
+"Nutzen Sie Ihre Mitarbeiterdaten, um wichtige ESG-Kennzahlen zu messen (z. "
+"B. Pendelverhalten der Mitarbeiter, Geschlechterparität)."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__relation_table
@@ -45949,12 +46060,12 @@ msgstr "Vatu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_vehicle
 msgid "Vehicle Theme"
-msgstr ""
+msgstr "Designmotiv Vehicle"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_vehicle
 msgid "Vehicle Theme - Cars, Motorbikes, Bikes, Tires"
-msgstr ""
+msgstr "Designmotiv Vehicle - Autos, Motorräder, Fahrräder, Reifen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_vehicle
@@ -45962,6 +46073,8 @@ msgid ""
 "Vehicle, Cars, Motorbikes, Bikes, Tires, Transports, Repair, Mechanics, "
 "Garages, Sports, Services"
 msgstr ""
+"Fahrzeuge, Autos, Motorräder, Fahrräder, Reifen, Transport, Reparatur, "
+"Mechanik, Werkstätten, Sport, Dienstleistungen"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_0
@@ -46523,7 +46636,7 @@ msgstr "Website-Profil"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_yes
 msgid "Wedding, Love, Photography, Services"
-msgstr ""
+msgstr "Hochzeit, Liebe, Fotografie, Dienstleistungen"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__3
@@ -46755,12 +46868,12 @@ msgstr "Fensteraktionen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_account_withholding_tax
 msgid "Withholding Tax on Payment"
-msgstr ""
+msgstr "Quellensteuer auf Zahlungen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_account_withholding_tax_pos
 msgid "Withholding Tax on Payment - PoS"
-msgstr ""
+msgstr "Quellensteuer auf Zahlungen - Kassensystem"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_line__wizard_id
@@ -46831,7 +46944,7 @@ msgstr "Arbeitseinträge - Anwesenheit"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_enterprise
 msgid "Work Entries - Enterprise"
-msgstr ""
+msgstr "Arbeitseinträge - Enterprise"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_planning
@@ -46936,12 +47049,12 @@ msgstr "Ja (Wahr)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_yes
 msgid "Yes Theme"
-msgstr ""
+msgstr "Designmotiv Yes"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_yes
 msgid "Yes Theme - Wedding"
-msgstr ""
+msgstr "Designmotiv Yes - Hochzeit"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -47158,6 +47271,8 @@ msgid ""
 "You cannot create two date ranges for the same sequence with the same date "
 "range."
 msgstr ""
+"Sie können nicht zwei Datumsbereiche für dieselbe Sequenz mit demselben "
+"Datumsbereich erstellen."
 
 #. module: base
 #. odoo-python
@@ -47398,12 +47513,12 @@ msgstr "Sambia - Buchhaltungsberichte"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_zap
 msgid "Zap Theme"
-msgstr ""
+msgstr "Designmotiv Zap"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_zap
 msgid "Zap Theme - Corporate, Business, Marketing, Copywriting"
-msgstr ""
+msgstr "Designmotiv Zap - Unternehmen, Wirtschaft, Marketing, Texterstellung"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.ZIG
@@ -47672,7 +47787,7 @@ msgstr "E-Commerce-Vermietung"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_renting_planning
 msgid "eCommerce Rental with Planning"
-msgstr ""
+msgstr "E-Commerce-Vermietung mit Planung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock_renting
@@ -47984,8 +48099,9 @@ msgstr "selection_value"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__sequence_id
+#, fuzzy
 msgid "sequence_id"
-msgstr ""
+msgstr "sequence_id"
 
 #. module: base
 #. odoo-python
