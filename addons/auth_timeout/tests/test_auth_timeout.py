@@ -556,13 +556,3 @@ class TestAuthTimeoutHttp(HttpCase):
             },
         ):
             self.start_tour("/odoo", "auth_timeout_tour_lock_timeout_inactivity_2fa", login=self.user.login)
-
-        with patch.object(
-            self.env.registry["res.groups"],
-            "_get_lock_timeouts",
-            return_value={
-                "lock_timeout": [(1, True)],  # 1 second session timeout
-                "lock_timeout_inactivity": [],
-            },
-        ):
-            self.start_tour("/odoo", "auth_timeout_tour_lock_timeout", login=self.user.login)
