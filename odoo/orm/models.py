@@ -4405,7 +4405,12 @@ class BaseModel(metaclass=MetaModel):
                     })
                     inv_rec_ids.append(record.id)
 
-                next(iter(fields)).determine_inverse(self.browse(inv_rec_ids))
+                inv_records = self.browse(inv_rec_ids)
+                next(iter(fields)).determine_inverse(inv_records)
+                # Values of non-stored fields were cached before running inverse methods. In case of x2many create
+                # commands, the cache may therefore hold NewId records. We must now invalidate those values.
+                inv_relational_fnames = [field.name for field in fields if field.type in ('one2many', 'many2many') and not field.store]
+                inv_records.invalidate_recordset(fnames=inv_relational_fnames)
 
         # check Python constraints for non-stored inversed fields
         for data in data_list:
