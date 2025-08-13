@@ -17,6 +17,7 @@ export const uploadLocalFileService = {
         async function selectLocalFiles({ multiple, accept }) {
             input.multiple = multiple;
             input.accept = accept;
+            input.value = ""; // clear previously selected files
 
             // Open system's file selector
             input.click();
