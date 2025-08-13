@@ -25,6 +25,7 @@ import {
     asyncStep,
     Command,
     mockService,
+    onRpc,
     patchWithCleanup,
     serverState,
     waitForSteps,
@@ -689,4 +690,59 @@ test("shows warning on infinite mirror effect (screen-sharing then fullscreen)",
     await contains("button:contains('Stream paused') i.fa-pause-circle-o");
     await hover(queryFirst("button:contains('Stream paused')"));
     await contains("button:contains('Resume stream') i.fa-play-circle-o");
+});
+
+test("single 'join' (without camera) button when last call was audio-only", async () => {
+    const pyEnv = await startServer();
+    onRpc("/mail/rtc/session/notify_call_members", () => true);
+    const alfredPartnerId = pyEnv["res.partner"].create({ name: "Alfred" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: alfredPartnerId }),
+        ],
+    });
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: alfredPartnerId,
+        }),
+        channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Join Call']");
+    await contains(".o-discuss-Call.o-selfInCall");
+    await click("button[title='Disconnect'");
+    await click("button[title='Join Call']", { text: "Join", contains: [".fa-phone"] });
+});
+
+test("single 'join' (with camera) button when last call had camera on", async () => {
+    const pyEnv = await startServer();
+    onRpc("/mail/rtc/session/notify_call_members", () => true);
+    const alfredPartnerId = pyEnv["res.partner"].create({ name: "Alfred" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: alfredPartnerId }),
+        ],
+    });
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: alfredPartnerId,
+        }),
+        channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Join Video Call']");
+    await contains(".o-discuss-CallParticipantCard[title='Mitchell Admin'] video");
+    await click("button[title='Disconnect']");
+    await click("button[title='Join Video Call']", {
+        text: "Join",
+        contains: [".fa-video-camera"],
+    });
 });

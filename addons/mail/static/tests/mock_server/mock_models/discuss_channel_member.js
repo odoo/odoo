@@ -10,6 +10,7 @@ export class DiscussChannelMember extends models.ServerModel {
     _name = "discuss.channel.member";
 
     is_pinned = fields.Generic({ compute: "_compute_is_pinned" });
+    is_self = fields.Boolean({ compute: "_compute_is_self" });
     unpin_dt = fields.Datetime({ string: "Unpin date" });
     message_unread_counter = fields.Generic({ default: 0 });
     last_interest_dt = fields.Datetime({
@@ -119,6 +120,15 @@ export class DiscussChannelMember extends models.ServerModel {
                 !member.unpin_dt ||
                 member?.last_interest_dt >= member.unpin_dt ||
                 channel?.last_interest_dt >= member.unpin_dt;
+        }
+    }
+
+    _compute_is_self() {
+        const [partner, guest] = this.env["res.partner"]._get_current_persona();
+        for (const member of this) {
+            member.is_self = member.partner_id
+                ? member.partner_id === partner?.id
+                : member.guest_id === guest?.id;
         }
     }
 
