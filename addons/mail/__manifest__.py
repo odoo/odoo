@@ -233,6 +233,8 @@ For more specific needs, you may also assign custom-defined actions
             'bus/static/src/workers/*.js',
             ('remove', 'bus/static/src/workers/bus_worker_script.js'),
 
+            ("include", "html_editor.assets_editor"),
+
             'mail/static/src/model/**/*',
             'mail/static/src/core/common/**/*',
             'mail/static/src/core/public_web/**/*',
