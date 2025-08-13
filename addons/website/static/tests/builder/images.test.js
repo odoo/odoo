@@ -13,7 +13,12 @@ import {
     waitForNone,
 } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder, dummyBase64Img } from "./website_helpers";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+    dummyBase64Img,
+    setupWebsiteBuilderOeId,
+} from "./website_helpers";
 import { testImg } from "./image_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
@@ -112,6 +117,8 @@ test("pasted/dropped images are converted to attachments on save in website edit
             params.data ===
                 "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII="
         ).toBe(true);
+        expect(params.res_id).toBe(`${setupWebsiteBuilderOeId}`);
+        expect(params.res_model).toBe("ir.ui.view");
         expect.step("add_data");
         return {
             image_src: "/test_image_url.png",
@@ -279,4 +286,31 @@ describe("Image format/optimize", () => {
 
         expect(img.dataset.quality).toBe("50");
     });
+});
+
+test("Save image with correct parameter", async () => {
+    const originalId = 1;
+    onRpc(`/html_editor/modify_image/${originalId}`, async (request) => {
+        const { params } = await request.json();
+        expect(params.res_id).toBe(setupWebsiteBuilderOeId);
+        expect(params.res_model).toBe("ir.ui.view");
+        expect.step("modify_image");
+        return {
+            image_src: "/test_image_url.png",
+            access_token: "1234",
+            public: false,
+        };
+    });
+    onRpc("ir.ui.view", "save", ({ args }) => true);
+    await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            <img src='${dummyBase64Img}'
+                data-original-id="${originalId}"
+                data-original-src="/website/static/src/img/snippets_demo/s_text_image.jpg"
+                data-mimetype-before-conversion="image/jpeg"
+                class="o_modified_image_to_save"
+            >
+        </div>`);
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    expect.verifySteps(["modify_image"]);
 });
