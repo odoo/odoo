@@ -124,23 +124,9 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             run: "click",
         },
         {
-            content: "Reload page (fetch reactions)",
-            trigger: ".o-mail-Message",
-            run() {
-                location.reload();
-            },
-        },
-        {
             content: "Remove reaction",
             trigger: ".o-mail-MessageReaction:contains('🙂')",
             run: "click",
-        },
-        {
-            content: "Reload page (fetch reactions)",
-            trigger: ".o-mail-Message:not(:has(.o-mail-MessageReaction:contains('🙂')))",
-            run() {
-                location.reload();
-            },
         },
         {
             trigger: ".o-mail-Message:not(:has(.o-mail-MessageReaction:contains('🙂')))",
