@@ -164,14 +164,19 @@ export class LinkPlugin extends Plugin {
                 description: _t("Remove Link"),
                 icon: "fa-unlink",
                 isAvailable: (selection) => {
-                    const linkEl = findInSelection(selection, "a");
-                    return (
-                        !!linkEl &&
-                        !this.isLinkImmutable(linkEl) &&
-                        linkEl.parentElement?.isContentEditable &&
-                        !this.isUnremovable(linkEl) &&
-                        isHtmlContentSupported(selection)
-                    );
+                    if (!isHtmlContentSupported(selection)) {
+                        return false;
+                    }
+                    for (const node of this.dependencies.selection.getTargetedNodes()) {
+                        const linkEl = closestElement(node, "a");
+                        if (
+                            linkEl &&
+                            !this.isLinkImmutable(linkEl) &&
+                            linkEl.parentElement.isContentEditable
+                        ) {
+                            return true;
+                        }
+                    }
                 },
                 run: this.removeLinkFromSelection.bind(this),
             },
@@ -193,6 +198,7 @@ export class LinkPlugin extends Plugin {
                 id: "unlink",
                 groupId: "link",
                 commandId: "removeLinkFromSelection",
+                isDisabled: () => this.removeLinkFromSelectionIsDisabled(),
             },
             {
                 id: "link",
@@ -205,6 +211,7 @@ export class LinkPlugin extends Plugin {
                 id: "unlink",
                 groupId: "image_link",
                 commandId: "removeLinkFromSelection",
+                isDisabled: () => this.removeLinkFromSelectionIsDisabled(),
             },
         ],
 
@@ -862,6 +869,15 @@ export class LinkPlugin extends Plugin {
         this.dependencies.history.addStep();
     }
 
+    removeLinkFromSelectionIsDisabled(selection) {
+        for (const node of this.dependencies.selection.getTargetedNodes()) {
+            const linkEl = closestElement(node, "a");
+            if (linkEl && !this.isLinkImmutable(linkEl) && !this.isUnremovable(linkEl)) {
+                return false;
+            }
+        }
+        return true;
+    }
     removeLinkFromSelection() {
         const selection = this.dependencies.split.splitSelection();
 
@@ -934,7 +950,12 @@ export class LinkPlugin extends Plugin {
         }
         const startBlock = closestBlock(startLink);
         const endBlock = closestBlock(endLink);
-        if (startLink && startLink.isConnected) {
+        if (
+            startLink &&
+            startLink.isConnected &&
+            startLink.parentElement.isContentEditable &&
+            !this.isUnremovable(startLink)
+        ) {
             anchorNode = this.dependencies.split.splitAroundUntil(anchorNode, startLink);
             anchorOffset = direction === DIRECTIONS.RIGHT ? 0 : nodeSize(anchorNode);
             this.dependencies.selection.setSelection(
@@ -943,7 +964,12 @@ export class LinkPlugin extends Plugin {
             );
         }
         // Only split the end link if it was not already done above.
-        if (endLink && endLink.isConnected) {
+        if (
+            endLink &&
+            endLink.isConnected &&
+            endLink.parentElement.isContentEditable &&
+            !this.isUnremovable(endLink)
+        ) {
             focusNode = this.dependencies.split.splitAroundUntil(focusNode, endLink);
             focusOffset = direction === DIRECTIONS.RIGHT ? nodeSize(focusNode) : 0;
             this.dependencies.selection.setSelection(
@@ -955,7 +981,13 @@ export class LinkPlugin extends Plugin {
         const links = new Set(
             targetedNodes
                 .map((node) => closestElement(node, "a"))
-                .filter((a) => a && a.isContentEditable)
+                .filter(
+                    (a) =>
+                        a &&
+                        a.isContentEditable &&
+                        a.parentElement.isContentEditable &&
+                        !this.isUnremovable(a)
+                )
         );
         if (links.size) {
             for (const link of links) {
