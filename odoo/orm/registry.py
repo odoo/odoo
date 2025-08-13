@@ -413,8 +413,14 @@ class Registry(Mapping[str, type["BaseModel"]]):
             self.field_depends_context.clear()
 
         else:
-            # only mark impacted models for setup
-            for model_name in self.descendants(model_names, '_inherit', '_inherits'):
+            # only mark impacted models for setup and invalidate related fields
+            model_names_to_setup = self.descendants(model_names, '_inherit', '_inherits')
+            for fields in self.many2many_relations.values():
+                for pair in list(fields):
+                    if pair[0] in model_names_to_setup:
+                        fields.discard(pair)
+
+            for model_name in model_names_to_setup:
                 self[model_name]._setup_done__ = False
 
             # recursively mark fields to re-setup
