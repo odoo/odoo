@@ -112,8 +112,12 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             content: "Reload page (fetch reactions)",
             trigger: ".o-mail-Message",
             run() {
+                document.body.classList.add("before-reload-1");
                 location.reload();
             },
+        },
+        {
+            trigger: "body:not(.before-reload-1)",
         },
         {
             content: "Remove reaction",
@@ -124,8 +128,12 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             content: "Reload page (fetch reactions)",
             trigger: ".o-mail-Message:not(:has(.o-mail-MessageReaction:contains('🙂')))",
             run() {
+                document.body.classList.add("before-reload-2");
                 location.reload();
             },
+        },
+        {
+            trigger: "body:not(.before-reload-2)",
         },
         {
             trigger: ".o-mail-Message:not(:has(.o-mail-MessageReaction:contains('🙂')))",

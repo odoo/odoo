@@ -380,6 +380,7 @@ export class PosOrderline extends Base {
                 this.config._product_default_values,
                 product
             ),
+            is_refund: this.qty * priceUnit < 0,
             ...customValues,
         };
         if (order.fiscal_position_id) {
