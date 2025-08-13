@@ -5,17 +5,20 @@
             <t t-set="visitor" t-value="props.thread.livechat_visitor_id"/>
             <div t-if="visitor?.history" class="d-flex flex-column bg-inherit gap-1">
                 <h3 class="pt-3">Recent page views</h3>
-                <div class="mt-1">
-                    <span t-esc="visitor.history"/>
+                <div t-if="visitor.website_id">
+                    <i class="me-1 fa fa-globe" aria-label="Website"/>
+                    <span t-esc="visitor.website_id.name"/>
                 </div>
+                <span t-esc="visitor.history"/>
             </div>
-            <div t-if="recentConversations.length" class="d-flex flex-column bg-inherit gap-1">
+            <div t-if="!props.thread.livechat_end_dt and recentConversations.length" class="d-flex flex-column bg-inherit gap-1">
                 <h3 class="pt-3">Recent conversations</h3>
                 <div class="btn btn-group o-rounded-bubble d-flex flex-column w-100 p-0 m-0" style="gap: 1px;">
-                    <button
+                    <a
                         t-foreach="recentConversations" t-as="thread" t-key="thread.localId"
-                        class="btn btn-sm btn-secondary btn-group-item d-flex align-items-baseline justify-content-start gap-1 w-100 m-0 px-3 py-1"
-                        t-on-click="()=>thread.open()"
+                        class="btn btn-sm btn-secondary btn-group-item d-flex align-items-center justify-content-start gap-1 w-100 m-0 px-3 py-1"
+                        t-attf-href="/odoo/discuss?active_id={{thread.model}}_{{thread.id}}"
+                        target="_blank"
                         t-att-class="{
                             'o-rounded-top-bubble': thread_first,
                             'o-rounded-bottom-bubble': thread_last,
@@ -26,7 +29,7 @@
                         <i class="fa fa-external-link opacity-75"/>
                         <span class="ms-1 fw-bold" t-esc="thread.displayName"/>
                         <span t-if="thread.livechat_end_dt" class="o-xsmaller text-muted" t-out="CLOSED_ON_TEXT(thread)"/>
-                    </button>
+                    </a>
                 </div>
             </div>
         </xpath>

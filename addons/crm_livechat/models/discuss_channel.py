@@ -73,10 +73,13 @@ class DiscussChannel(models.Model):
 
     def _get_livechat_session_fields_to_store(self):
         fields_to_store = super()._get_livechat_session_fields_to_store()
+        if not self.env["crm.lead"].has_access("read"):
+            return fields_to_store
         fields_to_store.append(
             Store.Many(
                 "livechat_customer_partner_ids",
                 [Store.Many("opportunity_ids", ["id", "name"])],
+                only_data=True,
             ),
         )
         return fields_to_store

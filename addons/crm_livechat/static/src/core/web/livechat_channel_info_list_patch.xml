@@ -7,7 +7,7 @@
                 <t t-set="templateParams"
                     t-value="{
                         title,
-                        'info_records': props.thread.livechatVisitorMember?.persona?.opportunity_ids,
+                        'info_records': props.thread.livechatVisitorMember.persona.opportunity_ids,
                         'model': 'crm.lead'
                     }"
                 />
