@@ -338,7 +338,8 @@ test("should focus the editable area after selecting a font size item", async ()
     await expectElementCount(".o-we-toolbar", 1);
     const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
     const inputEl = iframeEl.contentWindow.document?.querySelector("input");
-    await click(inputEl);
+    await contains(".o-we-toolbar [name='font-size'] .dropdown-toggle").click();
+    expect(getActiveElement()).toBe(inputEl);
     await expectElementCount(".o_font_size_selector_menu .dropdown-item:contains('34')", 1);
     await contains(".o_font_size_selector_menu .dropdown-item:contains('34')").click();
     expect(getActiveElement()).toBe(editor.editable);
