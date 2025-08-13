@@ -2783,10 +2783,12 @@ class Application:
                     pass
                 elif isinstance(exc, SessionExpiredException):
                     _logger.info(exc)
-                elif isinstance(exc, (UserError, AccessError)):
+                elif isinstance(exc, AccessError):
+                    _logger.warning(exc, exc_info='access' in config['dev_mode'])
+                elif isinstance(exc, UserError):
                     _logger.warning(exc)
                 else:
-                    _logger.error("Exception during request handling.", exc_info=True)
+                    _logger.exception("Exception during request handling.")
 
                 # Ensure there is always a WSGI handler attached to the exception.
                 if not hasattr(exc, 'error_response'):
