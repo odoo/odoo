@@ -372,9 +372,18 @@ class HrLeave(models.Model):
             # used to get the contracts for which these leaves apply and
             # contract start- and end-dates are just dates (and not datetimes)
             # these dates are comparable.
-            contracts = contracts_by_employee.get(leave.employee_id, self.env['hr.version']).filtered(
-                lambda c: c.date_start <= leave.request_date_to and
-                          (not c.date_end or c.date_end >= leave.request_date_from))
+            contracts = contracts_by_employee.get(
+                leave.employee_id, self.env["hr.version"]
+            ).filtered(
+                lambda c: (
+                        (
+                        max(c.contract_date_start, c.date_version) <= leave.request_date_to
+                        if c.contract_date_start
+                        else c.date_version <= leave.request_date_to
+                    )
+                        and c._get_version_validity_end_date() >= leave.request_date_from
+                )
+            )
             if contracts:
                 # If there are more than one contract they should all have the
                 # same calendar, otherwise a constraint is violated.
@@ -419,8 +428,8 @@ class HrLeave(models.Model):
                       versions='\n'.join(_(
                           "- '%(version)s' from %(start_date)s to %(end_date)s",
                           version=version.name or version.employee_id.name,
-                          start_date=format_date(self.env, version.date_start),
-                          end_date=format_date(self.env, version.date_end) if version.date_end else self.env._("undefined"),
+                          start_date=format_date(self.env, version.contract_date_start),
+                          end_date=format_date(self.env, version.contract_date_end) if version.contract_date_end else self.env._("undefined"),
                       ) for version in versions)))
 
     @api.depends('request_date_from_period', 'request_date_to_period', 'request_hour_from', 'request_hour_to',

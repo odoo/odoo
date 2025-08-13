@@ -431,9 +431,12 @@ class HrVersion(models.Model):
         for tz, versions in self.grouped("tz").items():
             tz = ZoneInfo(tz) if tz else UTC
             for version in versions:
-                version_start = fields.Datetime.to_datetime(version.date_start).replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
-                version_stop = datetime.combine(fields.Datetime.to_datetime(version.date_end or date_stop),
-                                                 datetime.max.time()).replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                version_start = fields.Datetime.to_datetime(max(version.date_version, version.contract_date_start or date.min)).replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                version_stop = datetime.combine(
+                    min(fields.Datetime.to_datetime(version._get_version_validity_end_date()), date_stop),
+                    datetime.max.time()
+                ).replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+
                 if version_stop < date_start:
                     continue
                 if version_stop < date_stop:
@@ -617,15 +620,15 @@ class HrVersion(models.Model):
         ''' Remove all work_entries that are outside contract period (function used after writing new start or/and end date) '''
         all_we_to_unlink = self.env['hr.work.entry']
         for version in self:
-            date_start = fields.Datetime.to_datetime(version.date_start)
+            date_start = fields.Datetime.to_datetime(version.contract_date_start or version.date_version)
             if version.date_generated_from < date_start:
                 we_to_remove = self.env['hr.work.entry'].search([('date', '<', date_start), ('version_id', '=', version.id)])
                 if we_to_remove:
                     version.date_generated_from = date_start
                     all_we_to_unlink |= we_to_remove
-            if not version.date_end:
+            if not (version.contract_date_end or version.next_version.date_version):
                 continue
-            date_end = datetime.combine(version.date_end, datetime.max.time())
+            date_end = datetime.combine(version.contract_date_end or version.next_version.date_version + relativedelta(days=-1), datetime.max.time())
             if version.date_generated_to > date_end:
                 we_to_remove = self.env['hr.work.entry'].search([('date', '>', date_end), ('version_id', '=', version.id)])
                 if we_to_remove:
@@ -638,13 +641,13 @@ class HrVersion(models.Model):
             return
         domains = []
         for version in self:
-            date_start = fields.Datetime.to_datetime(version.date_start)
+            date_start = fields.Datetime.to_datetime(version.contract_date_start)
             version_domain = Domain([
                 ('version_id', '=', version.id),
                 ('date', '>=', date_start),
             ])
-            if version.date_end:
-                date_end = datetime.combine(version.date_end, datetime.max.time())
+            if version.contract_date_end:
+                date_end = datetime.combine(version.contract_date_end, datetime.max.time())
                 version_domain &= Domain('date', '<=', date_end)
             domains.append(version_domain)
         domain = Domain.OR(domains) & Domain('state', '!=', 'validated')
@@ -661,9 +664,10 @@ class HrVersion(models.Model):
         dependent_fields = self._get_fields_that_recompute_we()
         if any(key in dependent_fields for key in vals):
             for version_sudo in self.sudo():
-                date_from = max(version_sudo.date_start, version_sudo.date_generated_from.date())
-                date_to = min(version_sudo.date_end or date.max, version_sudo.date_generated_to.date())
+                date_from = max(version_sudo.contract_date_start or version_sudo.date_version, version_sudo.date_generated_from.date())
+                date_to = min(version_sudo.contract_date_end or date.max, version_sudo.date_generated_to.date())
                 if date_from != date_to and self.employee_id:
+                    version_sudo._recompute_work_entries(date_from, date_to)
                     version_sudo._recompute_work_entries(date_from, date_to)
         return result
 

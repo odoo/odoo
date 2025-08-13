@@ -22,8 +22,8 @@ class ResourceCalendarLeaves(models.Model):
         )
         for contract, leaves in leaves_by_contract.items():
             tz = ZoneInfo(contract.resource_calendar_id.tz or 'UTC')
-            start_dt = date2datetime(contract.date_start, tz)
-            end_dt = date2datetime(contract.date_end, tz) if contract.date_end else datetime.max
+            start_dt = date2datetime(contract.contract_date_start or contract.date_version, tz)
+            end_dt = date2datetime(contract._get_version_validity_end_date(), tz)
             # only modify leaves that fall under the active contract
             leaves.filtered(
                 lambda leave: start_dt <= leave.date_from < end_dt

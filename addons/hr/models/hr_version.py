@@ -51,6 +51,7 @@ class HrVersion(models.Model):
     active = fields.Boolean(default=True, tracking=1)
 
     date_version = fields.Date(string="Effective Date", required=True, default=fields.Date.today, tracking=1, groups="hr.group_hr_user")
+    next_version = fields.Many2one('hr.version', compute="_compute_next_version", store=True, groups="hr.group_hr_user")
     last_modified_uid = fields.Many2one('res.users', string='Last Modified by',
                                         default=lambda self: self.env.uid, required=True, groups="hr.group_hr_user")
     last_modified_date = fields.Datetime(string='Last Modified on', default=fields.Datetime.now, required=True,
@@ -150,8 +151,6 @@ class HrVersion(models.Model):
         groups="hr.group_hr_manager")
     trial_date_end = fields.Date('End of Trial Period', help="End date of the trial period (if there is one).",
                                  groups="hr.group_hr_manager", tracking=1)
-    date_start = fields.Date(compute='_compute_dates', groups="hr.group_hr_manager", search="_search_start_date")
-    date_end = fields.Date(compute='_compute_dates', groups="hr.group_hr_manager", search="_search_end_date")
     is_current = fields.Boolean(compute='_compute_is_current', groups="hr.group_hr_manager")
     is_past = fields.Boolean(compute='_compute_is_past', groups="hr.group_hr_manager")
     is_future = fields.Boolean(compute='_compute_is_future', groups="hr.group_hr_manager")
@@ -178,6 +177,14 @@ class HrVersion(models.Model):
 
     def _get_hr_responsible_domain(self):
         return "[('share', '=', False), ('company_ids', 'in', company_id), ('all_group_ids', 'in', %s)]" % self.env.ref('hr.group_hr_user').id
+
+    def _get_version_validity_end_date(self):
+        """ Retrieve the closest end date for the version
+        Returns:
+            :datetime.date The end of contract or the day before the next version starts
+        """
+        self.ensure_one()
+        return min(self.contract_date_end or date.max, self.next_version.date_version - relativedelta(days=1) if self.next_version else date.max)
 
     hr_responsible_id = fields.Many2one(
         'res.users', 'HR Responsible', tracking=1,
@@ -384,20 +391,25 @@ class HrVersion(models.Model):
         for version in self:
             version.display_name = version.name if not version.employee_id else format_date_abbr(version.env, version.date_version)
 
+    @api.depends('employee_id.version_ids.date_version')
+    def _compute_next_version(self):
+        for version in self:
+            version.next_version = version.employee_id.version_ids.filtered(lambda v: v.date_version > version.date_version).sorted("date_version")[:1]
+
     def _compute_is_current(self):
         today = fields.Date.today()
         for version in self:
-            version.is_current = version.date_start <= today and (not version.date_end or version.date_end >= today)
+            version.is_current = (version.contract_date_start or version.date_version) <= today <= version._get_version_validity_end_date()
 
     def _compute_is_past(self):
         today = fields.Date.today()
         for version in self:
-            version.is_past = version.date_end and version.date_end < today
+            version.is_past = version.contract_date_end and version.contract_date_end < today
 
     def _compute_is_future(self):
         today = fields.Date.today()
         for version in self:
-            version.is_future = version.date_start > today
+            version.is_future = (version.contract_date_start or version.date_version) > today
 
     def _compute_is_in_contract(self):
         for version in self:
@@ -407,7 +419,7 @@ class HrVersion(models.Model):
         # Return True if the employee is in contract on a given date
         if not self.contract_date_start:
             return False
-        return self.date_start <= date and (not self.date_end or self.date_end >= date)
+        return self.contract_date_start <= date <= self._get_version_validity_end_date()
 
     def _is_overlapping_period(self, date_from, date_to):
         """
@@ -415,12 +427,12 @@ class HrVersion(models.Model):
         :param date date_from: the start of the period
         :param date date_to: the stop of the period
         """
+        self.ensure_one()
         if not (self.contract_date_start and date_from and date_to):
             return False
         period_start = date_from or date.min
         period_end = date_to or date.max
-        contract_end = self.date_end or date.max
-        return period_start <= contract_end and self.date_start <= period_end
+        return period_start <= self._get_version_validity_end_date() and period_end >= max(self.contract_date_start, self.date_version)
 
     def _is_fully_flexible(self):
         """ return True if the version has a fully flexible working calendar """
@@ -546,27 +558,6 @@ class HrVersion(models.Model):
     def _inverse_km_home_work(self):
         for version in self:
             version.distance_home_work = version.km_home_work / 1.609 if version.distance_home_work_unit == "miles" else version.km_home_work
-
-    @api.depends(
-        'contract_date_start', 'contract_date_end', 'date_version', 'employee_id',
-        'employee_id.version_ids.date_version')
-    def _compute_dates(self):
-        for version in self:
-            version.date_start = max(version.date_version, version.contract_date_start) \
-                if version.contract_date_start \
-                else version.date_version
-
-            next_version = self.env['hr.version'].search([
-                ('employee_id', 'in', version.employee_id.ids),
-                ('date_version', '>', version.date_version)], limit=1)
-            date_version_end = next_version.date_version + relativedelta(days=-1) if next_version else False
-
-            if date_version_end and version.contract_date_end:
-                version.date_end = min(date_version_end, version.contract_date_end)
-            elif date_version_end:
-                version.date_end = date_version_end
-            else:
-                version.date_end = version.contract_date_end
 
     def _search_start_date(self, operator, value):
         return [('contract_date_start', operator, value)]
