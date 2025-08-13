@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="sms_twilio.manage_connection_wizard_view_form" model="ir.ui.view">
-        <field name="name">sms_twilio.manage.connection.wizard.view.form</field>
-        <field name="model">sms_twilio.manage.connection.wizard</field>
+    <record id="sms_twilio_account_manage_view_form" model="ir.ui.view">
+        <field name="name">sms.twilio.account.manage.view.form</field>
+        <field name="model">sms.twilio.account.manage</field>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <form string="Twilio SMS Manage Connection">
@@ -15,6 +15,7 @@
                 </div>
 
                 <group string="Credentials">
+                    <field name="company_id" invisible="1"/>
                     <field name="sms_twilio_account_sid" placeholder="ACabcde12345abcde12345abcde12345ab"/>
                     <field name="sms_twilio_auth_token" password="True" placeholder="abcde12345abcde12345abcde12345ab"/>
                 </group>
@@ -27,7 +28,7 @@
                     </p>
                     <button
                         class="btn btn-secondary" colspan="2"
-                        type="object" name="reload_numbers"
+                        type="object" name="action_reload_numbers"
                         string="Reload Numbers from Twilio" icon="fa-refresh"
                         confirm="Any number here that is not on Twilio will be deleted and the ordering will be reset to Twilio's."
                     />
@@ -45,7 +46,7 @@
                     <field name="sms_twilio_to_number" placeholder="+1 555-123-4567"/>
 
                     <div colspan="2">
-                        <button name="action_test" string="Send test SMS" icon="fa-send" type="object" class="btn btn-secondary"/>
+                        <button name="action_send_test" string="Send test SMS" icon="fa-send" type="object" class="btn btn-secondary"/>
                     </div>
 
                 </group>

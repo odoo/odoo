@@ -33,7 +33,7 @@ class MassSMSTest(models.TransientModel):
             body = self.env['mail.render.mixin']._render_template(body, self.mailing_id.mailing_model_real, record.ids)[record.id]
 
         new_sms_messages_sudo = self.env['sms.sms'].sudo().create([{'body': body, 'number': number} for number in sanitized_numbers])
-        sms_api = SmsApi(new_sms_messages_sudo._get_sms_company())
+        sms_api = SmsApi(self.env)
         sent_sms_list = sms_api._send_sms_batch([{
             'content': body,
             'numbers': [{'number': sms_id.number, 'uuid': sms_id.uuid} for sms_id in new_sms_messages_sudo],

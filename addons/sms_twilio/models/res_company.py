@@ -35,14 +35,11 @@ class ResCompany(models.Model):
         if not re.match(r'^[A-Za-z0-9]{32}$', account_sid[2:]):
             raise UserError(_("Invalid Twilio Account SID: must only contain alphanumeric characters after 'AC'."))
 
-    def _action_sms_twilio_open_manage_connection_wizard(self, wizard=False):
-        wizard = wizard or self.env['sms_twilio.manage.connection.wizard'].create({
-            'company_id': self.id,
-        })
+    def _action_open_sms_twilio_account_manage(self):
         return {
             'name': _('Manage Twilio SMS'),
-            'res_model': 'sms_twilio.manage.connection.wizard',
-            'res_id': wizard.id,
+            'res_model': 'sms.twilio.account.manage',
+            'res_id': False,
             'context': self.env.context,
             'type': 'ir.actions.act_window',
             'views': [(False, 'form')],

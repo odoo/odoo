@@ -3,11 +3,12 @@
 
 import logging
 import threading
-from collections import defaultdict
+
 from uuid import uuid4
 from werkzeug.urls import url_join
 
 from odoo import api, fields, models, tools, _
+from odoo.addons.sms.tools.sms_api import SmsApi
 
 _logger = logging.getLogger(__name__)
 
@@ -99,20 +100,21 @@ class SmsSms(models.Model):
           :param auto_commit: commit after each batch of SMS;
           :param raise_exception: raise if there is an issue contacting IAP;
         """
-        self = self.filtered(lambda sms: sms.state == 'outgoing' and not sms.to_delete)
+        to_send = self.filtered(lambda sms: sms.state == 'outgoing' and not sms.to_delete)
 
-        # Group by company as different companies can have different providers (IAP vs Twilio,
-        # or even different Twilio credentials depending on the company)
-        sms_by_company = defaultdict(lambda: self.env['sms.sms'])  # TODO RIGR: in master, let's be smarter and group by provider/twilio account (e.g.: IAP/twilio1/twilio2)
-        for sms in self:
-            sms_by_company[sms._get_sms_company()] += sms
-
-        for sms_in_company in sms_by_company.values():
-            for batch_ids in sms_in_company._split_batch():
-                self.env['sms.sms'].browse(batch_ids)._send(unlink_failed=unlink_failed, unlink_sent=unlink_sent, raise_exception=raise_exception)
+        for sms_api, sms in to_send._split_by_api():
+            for batch_ids in sms._split_batch():
+                self.env['sms.sms'].browse(batch_ids).with_context(sms_api=sms_api)._send(
+                    unlink_failed=unlink_failed,
+                    unlink_sent=unlink_sent,
+                    raise_exception=raise_exception,
+                )
                 # auto-commit if asked except in testing mode
                 if auto_commit is True and not getattr(threading.current_thread(), 'testing', False):
                     self._cr.commit()
+
+    def _split_by_api(self):
+        yield SmsApi(self.env), self
 
     def resend_failed(self):
         sms_to_send = self.filtered(lambda sms: sms.state == 'error' and not sms.to_delete)
@@ -180,16 +182,27 @@ class SmsSms(models.Model):
 
     def _send(self, unlink_failed=False, unlink_sent=True, raise_exception=False):
         """Send SMS after checking the number (presence and formatting)."""
+        sms_api = self.env.context.get('sms_api')
+        if not sms_api:
+            company = self._get_sms_company()
+            company.ensure_one()  # This should always be the case since the grouping is done in `send`
+            sms_api = company._get_sms_api_class()(self.env)
+
+        return self._send_with_api(
+            sms_api,
+            unlink_failed=unlink_failed,
+            unlink_sent=unlink_sent,
+            raise_exception=raise_exception,
+        )
+
+    def _send_with_api(self, sms_api, unlink_failed=False, unlink_sent=True, raise_exception=False):
+        """Send SMS after checking the number (presence and formatting)."""
         messages = [{
             'content': body,
             'numbers': [{'number': sms.number, 'uuid': sms.uuid} for sms in body_sms_records],
         } for body, body_sms_records in self.grouped('body').items()]
 
-        company = self._get_sms_company()
-        company.ensure_one()  # This should always be the case since the grouping is done in `send`
-
         delivery_reports_url = url_join(self[0].get_base_url(), '/sms/status')
-        sms_api = company._get_sms_api_class()(company)
         try:
             results = sms_api._send_sms_batch(messages, delivery_reports_url=delivery_reports_url)
         except Exception as e:

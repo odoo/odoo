@@ -10,7 +10,7 @@
                 <xpath expr="//widget[@service_name='sms']" position="before">
                     <field name="sms_provider"/>
                     <div class="content-group" invisible="sms_provider != 'twilio'">
-                        <button name="action_sms_twilio_open_manage_connection_wizard" type="object" class="btn btn-secondary" string="Manage Twilio Connection"/>
+                        <button name="action_open_sms_twilio_account_manage" type="object" class="btn btn-secondary" string="Manage Twilio Connection"/>
                     </div>
                 </xpath>
                 <xpath expr="//widget[@service_name='sms']" position="attributes">

@@ -11,16 +11,19 @@ class SmsApiBase:
         'server_error': 'sms_server',
     }
 
-    def __init__(self, company):
-        self.company = company
-        self.env = self.company.env
-
-    def _send_sms_batch(self, messages, delivery_reports_url=False):
-        raise NotImplementedError()
+    def __init__(self, env):
+        self.env = env
+        self.company = env.company
 
     def _get_sms_api_error_messages(self):
         """Return a mapping of `_send_sms_batch` errors to an error message."""
         raise NotImplementedError()
+
+    def _send_sms_batch(self, messages, delivery_reports_url=False):
+        raise NotImplementedError()
+
+    def _set_company(self, company):
+        self.company = company
 
 
 class SmsApi(SmsApiBase):  # TODO RIGR in master: rename SmsApi to SmsApiIAP, and  SmsApiBase to SmsApi

@@ -2,15 +2,15 @@ import logging
 import requests
 
 from odoo import _, fields, models
+from odoo.addons.phone_validation.tools import phone_validation
+from odoo.addons.sms_twilio.tools.sms_twilio import get_twilio_from_number
 from odoo.exceptions import UserError
-
-from odoo.addons.sms_twilio.tools.sms_tools import get_country_code_from_phone, get_twilio_from_number
 
 _logger = logging.getLogger(__name__)
 
 
-class SmsTwilioManageConnectionWizard(models.TransientModel):
-    _name = 'sms_twilio.manage.connection.wizard'
+class SmsTwilioAccountManage(models.TransientModel):
+    _name = 'sms.twilio.account.manage'
     _description = 'SMS Twilio Connection Wizard'
 
     company_id = fields.Many2one(comodel_name='res.company', required=True, readonly=True, default=lambda self: self.env.company)
@@ -21,7 +21,7 @@ class SmsTwilioManageConnectionWizard(models.TransientModel):
     sms_twilio_number_ids = fields.One2many(related='company_id.sms_twilio_number_ids', readonly=False)
     sms_twilio_to_number = fields.Char("To Number")
 
-    def reload_numbers(self):
+    def action_reload_numbers(self):
         """Fetch the available numbers from Twilio account"""
         self.company_id._assert_twilio_sid()
         try:
@@ -47,7 +47,7 @@ class SmsTwilioManageConnectionWizard(models.TransientModel):
 
         self.sms_twilio_number_ids.unlink()
         for twilio_number in json_response.get('incoming_phone_numbers', []):
-            country_code = get_country_code_from_phone(twilio_number.get('phone_number'))
+            country_code = phone_validation.phone_get_country_code_for_number(twilio_number.get('phone_number'))
             country_id = self.env['res.country'].search([
                 ('code', '=', country_code)
             ], limit=1)
@@ -61,9 +61,18 @@ class SmsTwilioManageConnectionWizard(models.TransientModel):
                     'number': twilio_number.get('phone_number'),
                     'country_id': country_id.id,
                 })
-        return self.company_id._action_sms_twilio_open_manage_connection_wizard(self)
+        return {
+            'name': _('Manage Twilio SMS'),
+            'res_model': self._name,
+            'res_id': self.id,
+            'context': self.env.context,
+            'type': 'ir.actions.act_window',
+            'views': [(False, 'form')],
+            'view_mode': 'form',
+            'target': 'new',
+        }
 
-    def action_test(self):
+    def action_send_test(self):
         if not self.sms_twilio_to_number:
             raise UserError(_("Please set the number to which you want to send a test SMS."))
         temp_partner = self.env['res.partner'].create({
