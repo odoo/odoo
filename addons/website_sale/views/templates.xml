@@ -3701,7 +3701,7 @@
                             t-else=""
                             class="d-none d-lg-block offset-xxl-1 col-12 col-lg-5 col-xxl-4 rounded"
                         >
-                            <div class="o_total_card card sticky-lg-top mb-3 mb-lg-0">
+                            <div class="o_total_card card sticky-lg-top o_wsale_sticky_object mb-3 mb-lg-0">
                                 <div class="card-body p-lg-4 pt-lg-3">
                                     <div class="d-none d-lg-block">
                                         <t t-call="website_sale.cart_summary_content"/>
@@ -3794,7 +3794,7 @@
     <template id="website_sale.shorter_cart_summary">
         <div
             t-if="website_sale_order and website_sale_order.website_order_line"
-            class="o_total_card card sticky-lg-top"
+            class="o_total_card card o_wsale_sticky_object sticky-lg-top"
         >
             <div class="card-body p-0 p-lg-4" name="o_cart_total_card_body">
                 <t t-call="website_sale.total">
