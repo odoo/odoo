@@ -1233,7 +1233,7 @@ class CalendarEvent(models.Model):
         events_to_notify = self.env['calendar.event']
         triggers_by_events = {}
         for event in self:
-            existing_trigger = event.recurrence_id.trigger_id
+            existing_trigger = event.recurrence_id.sudo().trigger_id
             for alarm in (alarm for alarm in event.alarm_ids if alarm.alarm_type in alarm_types):
                 at = event.start - timedelta(minutes=alarm.duration_minutes)
                 create_trigger = not existing_trigger or existing_trigger and existing_trigger.call_at != at
