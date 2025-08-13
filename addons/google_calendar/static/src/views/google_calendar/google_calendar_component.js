@@ -3,15 +3,27 @@ import { AttendeeCalendarController } from "@calendar/views/attendee_calendar/at
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { patch } from "@web/core/utils/patch";
+import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
+import { useState } from "@odoo/owl";
 import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { Component } from "@odoo/owl";
 
-patch(AttendeeCalendarController.prototype, {
+export class GoogleCalendarComponent extends Component {
+    static template = "google_calendar.GoogleCalendarComponent";
+
     setup() {
         super.setup(...arguments);
         this.dialog = useService("dialog");
+        this.orm = useService("orm");
         this.notification = useService("notification");
-    },
+        this.googlePendingSync = false;
+        this.state = useState({
+            googleHasCredentials: true,
+            googleIsSync: false,
+            googleIsPaused: false,
+        });
+    }
 
     async onGoogleSyncCalendar() {
         await this.orm.call(
@@ -19,7 +31,8 @@ patch(AttendeeCalendarController.prototype, {
             "restart_google_synchronization",
             [[user.userId]],
         );
-        const syncResult = await this.model.syncGoogleCalendar();
+        const syncResult = await this.syncGoogleCalendar();
+        console.log(syncResult);
         if (syncResult.status === "need_auth") {
             window.location.assign(syncResult.url);
         } else if (syncResult.status === "need_config_from_admin") {
@@ -42,7 +55,7 @@ patch(AttendeeCalendarController.prototype, {
             await this.model.load();
             this.render(true);
         }
-    },
+    }
 
     async onStopGoogleSynchronization() {
         await this.orm.call(
@@ -50,9 +63,10 @@ patch(AttendeeCalendarController.prototype, {
             "stop_google_synchronization",
             [[user.userId]],
         );
-        await this.model.load();
+        // To find.
+        //await this.model.load();
         this.render(true);
-    },
+    }
 
     async onUnpauseGoogleSynchronization() {
         await this.orm.call(
@@ -63,4 +77,52 @@ patch(AttendeeCalendarController.prototype, {
         await this.onStopGoogleSynchronization();
         this.render(true);
     }
-});
+
+    async updateData() {
+        if (this.googlePendingSync) {
+            return super.updateData(...arguments);
+        }
+        try {
+            await Promise.race([
+                new Promise(resolve => setTimeout(resolve, 1000)),
+                this.syncGoogleCalendar(true)
+            ]);
+        } catch (error) {
+            if (error.event) {
+                error.event.preventDefault();
+            }
+            console.error("Could not synchronize Google events now.", error);
+            this.googlePendingSync = false;
+        }
+        if (this.isAlive()) {
+            return super.updateData(...arguments);
+        }
+        return new Promise(() => {});
+    }
+
+    async syncGoogleCalendar(silent = false) {
+        this.googlePendingSync = true;
+        const result = await rpc(
+            "/google_calendar/sync_data",
+            {
+                model: this.resModel,
+                fromurl: window.location.href
+            },
+            {
+                silent,
+            },
+        );
+        if (["need_config_from_admin", "need_auth", "sync_stopped", "sync_paused"].includes(result.status)) {
+            this.state.googleIsSync = false;
+        } else if (result.status === "no_new_event_from_google" || result.status === "need_refresh") {
+            this.state.googleIsSync = true;
+        }
+        this.state.googleIsPaused = result.status == "sync_paused";
+        this.googlePendingSync = false;
+        return result;
+    }
+
+    get googleHasCredentials () {
+        return rpc("/calendar/check_credentials")['google_calendar'] ?? false;
+    }
+}
