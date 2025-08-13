@@ -29,10 +29,17 @@ export function clickDropDownItemText(text) {
     };
 }
 
-export function clickSettleOrderName(name) {
+export function clickSettleOrderName(prefix, suffix = "", checkCurrentYear = false) {
+    let trigger = `tr.o_data_row td[name='name']:contains("${prefix}")`;
+    if (checkCurrentYear) {
+        trigger += `:contains("${new Date().getFullYear()}")`;
+    }
+    if (suffix) {
+        trigger += `:contains("${suffix}")`;
+    }
     return {
         content: "Check the settle due account line is present",
-        trigger: `tr.o_data_row td[name='name']:contains("${name}")`,
+        trigger,
         run: "click",
     };
 }
