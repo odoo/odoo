@@ -45,6 +45,24 @@ class Partner extends models.Model {
         comodel_name: "comodel.test",
     });
     _records = [];
+    _views = {
+        form: `
+            <form>
+                <field name="foo"/>
+            </form>
+        `,
+        list: `<list><field name="foo"/></list>`,
+        kanban: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>
+        `,
+        search: `<search/>`,
+    };
 }
 
 defineModels([Partner]);
@@ -57,11 +75,22 @@ defineActions([
         tag: "import",
         target: "current",
         type: "ir.actions.client",
-        params: {
-            active_model: "partner",
-        },
+    },
+    {
+        id: 2,
+        name: "Partner",
+        res_model: "partner",
+        view_mode: "list,kanban,form",
+        views: [
+            [false, "list"],
+            [false, "kanban"],
+            [false, "form"],
+            [false, "search"],
+        ],
     },
 ]);
+
+onRpc("has_group", () => true);
 
 let totalRows = 0;
 
@@ -258,7 +287,7 @@ describe("Import view", () => {
     test("UI before file upload", async () => {
         const templateURL = "/myTemplateURL.xlsx";
 
-        redirect("/odoo");
+        redirect("/odoo/action-2");
 
         onRpc("partner", "get_import_templates", ({ route }) => {
             expect.step(route);
@@ -272,12 +301,7 @@ describe("Import view", () => {
             "/web/dataset/call_kw/partner/get_import_templates",
             "/web/dataset/call_kw/base_import.import/create",
         ]);
-        expect(browser.location.href).toBe(
-            "https://www.hoot.test/odoo/import?active_model=partner",
-            {
-                message: "the url contains the active_model",
-            }
-        );
+        expect(browser.location.href).toBe("https://www.hoot.test/odoo/action-2/import");
         expect(".o_import_action").toHaveCount(1);
         expect(".o_nocontent_help .btn-outline-primary").toHaveText("Some Import Template");
         expect(".o_nocontent_help .btn-outline-primary").toHaveProperty(
@@ -285,6 +309,26 @@ describe("Import view", () => {
             "https://www.hoot.test" + templateURL
         );
         expect(".o_control_panel button").toHaveCount(2);
+    });
+
+    test("open import directlty from URL", async () => {
+        const templateURL = "/myTemplateURL.xlsx";
+
+        redirect("/odoo/action-2/import");
+
+        onRpc("partner", "get_import_templates", ({ route }) => {
+            expect.step(route);
+            return [{ label: "Some Import Template", template: templateURL }];
+        });
+        onRpc("base_import.import", "create", ({ route }) => expect.step(route));
+        await mountWebClient();
+        await animationFrame(); // pushState is debounced
+        expect.verifySteps([
+            "/web/dataset/call_kw/partner/get_import_templates",
+            "/web/dataset/call_kw/base_import.import/create",
+        ]);
+        expect(browser.location.href).toBe("https://www.hoot.test/odoo/action-2/import");
+        expect(".o_import_action").toHaveCount(1);
     });
 
     test("import a file with multiple sheets", async () => {
@@ -300,6 +344,7 @@ describe("Import view", () => {
         onRpc("base_import.import", "parse_preview", ({ route }) => expect.step(route));
         onRpc("base_import.import", "create", ({ route }) => expect.step(route));
 
+        redirect("/odoo/action-2");
         await mountWebClient();
         await getService("action").doAction(1);
         expect.verifySteps([
@@ -381,6 +426,7 @@ describe("Import view", () => {
             });
         });
         onRpc("base_import.import", "create", ({ route }) => expect.step(route));
+        redirect("/odoo/action-2");
         await mountWebClient();
         await getService("action").doAction(1);
         expect.verifySteps([
@@ -560,18 +606,27 @@ describe("Import view", () => {
             doAction(action) {
                 expect.step("action");
                 if (action !== 1) {
-                    expect(action).toEqual({
-                        type: "ir.actions.act_window",
-                        name: "Imported records",
-                        res_model: "partner",
-                        view_mode: "tree,form",
-                        views: [
-                            [false, "list"],
-                            [false, "form"],
-                        ],
-                        domain: [["id", "in", [1]]],
-                        target: "current",
-                    });
+                    expect(action).toEqual(
+                        {
+                            type: "ir.actions.act_window",
+                            name: "Imported records",
+                            path: "imported-records",
+                            res_model: "partner",
+                            view_mode: "list,kanban,form",
+                            views: [
+                                [false, "list"],
+                                [false, "kanban"],
+                                [false, "form"],
+                                [false, "search"],
+                            ],
+                            domain: [["id", "in", [1]]],
+                            target: "current",
+                        },
+                        {
+                            message:
+                                "The views and views_mode come from the previous action (action-2)",
+                        }
+                    );
                 }
                 return super.doAction(...arguments);
             },
@@ -579,6 +634,7 @@ describe("Import view", () => {
         onRpc("base_import.import", "execute_import", ({ route }) => {
             expect.step(route);
         });
+        redirect("/odoo/action-2");
         await mountWebClient();
         await getService("action").doAction(1);
         expect.verifySteps(["action"]);
@@ -602,6 +658,9 @@ describe("Import view", () => {
             "action",
         ]);
         expect(".o_list_view").toHaveCount(1);
+        expect(browser.location.href).toBe(
+            "https://www.hoot.test/odoo/action-2/import/imported-records"
+        );
     });
 
     test("additional options in debug", async () => {
