@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* point_of_sale
+# * point_of_sale
 #
 # Translators:
 # Martin Trigaux, 2024
@@ -9,21 +9,23 @@
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2025
 # Wil Odoo, 2025
 # Larissa Manderfeld, 2025
-#
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-08 18:37+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Larissa Manderfeld, 2025\n"
-"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
+"PO-Revision-Date: 2025-08-12 22:21+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-18/"
+"point_of_sale/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
-"1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -500,8 +502,9 @@ msgstr "Ya existe una nota con este nombre"
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_payment_uuid_unique
+#, fuzzy
 msgid "A payment with this uuid already exists"
-msgstr ""
+msgstr "Ya existe un pago con este UUID"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__login_number
@@ -1004,12 +1007,12 @@ msgstr "Un identificador interno de la impresora"
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_line_uuid_unique
 msgid "An order line with this uuid already exists"
-msgstr ""
+msgstr "Ya existe una línea de pedido con este UUID"
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_uuid_unique
 msgid "An order with this uuid already exists"
-msgstr ""
+msgstr "Ya existe un pedido con este UUID"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4885,7 +4888,7 @@ msgstr "Número de pedido"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
 msgid "Order Outdated"
-msgstr ""
+msgstr "Pedido obsoleto"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_order_printer
@@ -7832,6 +7835,11 @@ msgid ""
 "The order will be sent to the server with the last changes made on this "
 "device."
 msgstr ""
+"El pedido ha sido modificado en otro dispositivo. Si ha realizado cambios en "
+"las líneas del pedido, compruebe que no se hayan sobrescrito.\n"
+"\n"
+"El pedido se enviará al servidor con los últimos cambios realizados desde "
+"este dispositivo."
 
 #. module: point_of_sale
 #. odoo-javascript

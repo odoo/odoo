@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-08 18:37+0000\n"
-"PO-Revision-Date: 2025-08-08 15:25+0000\n"
-"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"PO-Revision-Date: 2025-08-13 14:20+0000\n"
+"Last-Translator: Rémi CAZENAVE <remi@le-filament.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-18/account/"
 "fr/>\n"
 "Language: fr\n"
@@ -3201,7 +3201,7 @@ msgstr "Analytique"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_unique_name
 msgid "Another entry with the same name already exists."
-msgstr "Une autre écriture avec le même nom existe déjà."
+msgstr "Une autre pièce avec le même nom existe déjà."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__hard_lock_date
@@ -3210,8 +3210,8 @@ msgid ""
 "in accordance with its journal sequence. This lock date is irreversible and "
 "does not allow any exception."
 msgstr ""
-"Toute écriture jusqu'à cette date incluse sera reportée à une date "
-"ultérieure, conformément à la séquence du journal. Cette date de blocage est "
+"Toute pièce jusqu'à cette date incluse sera reportée à une date ultérieure, "
+"conformément à la séquence du journal. Cette date de blocage est "
 "irréversible et ne tolère aucune exception."
 
 #. module: account
@@ -3220,8 +3220,8 @@ msgid ""
 "Any entry up to and including that date will be postponed to a later time, "
 "in accordance with its journal's sequence."
 msgstr ""
-"Toute écriture jusqu'à cette date incluse sera reportée à une date "
-"ultérieure, conformément à la séquence du journal."
+"Toute pièce jusqu'à cette date incluse sera reportée à une date ultérieure, "
+"conformément à la séquence du journal."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__tax_lock_date
@@ -3230,10 +3230,10 @@ msgid ""
 "later time, in accordance with its journal's sequence. The tax lock date is "
 "automatically set when the tax closing entry is posted."
 msgstr ""
-"Toute écriture comportant des taxes jusqu'à cette date incluse sera reportée "
-"à une date ultérieure, conformément à la séquence du journal. La date de "
-"blocage de la TVA est automatiquement fixée lors de l'enregistrement de "
-"l'écriture de clôture de la TVA."
+"Toute pièce comportant des taxes jusqu'à cette date incluse sera reportée à "
+"une date ultérieure, conformément à la séquence du journal. La date de "
+"blocage de la TVA est automatiquement fixée lors de l'enregistrement de la "
+"pièce de clôture de la TVA."
 
 #. module: account
 #. odoo-python
@@ -15450,10 +15450,10 @@ msgid ""
 "option from the actions menu, available in developer mode."
 msgstr ""
 "Le %(date_field)s (%(date)s) que vous avez indiqué n'est pas conforme au "
-"numéro de séquence existant (%(sequence)s). Effacez le numéro de séquence "
-"pour continuer.\n"
-"Pour utiliser des séquences basées sur la date, sélectionnez des entrées et "
-"utilisez l'option de remise en séquence du menu d'actions, disponible en "
+"numéro de séquence existant (%(sequence)s). Réinitialisez le numéro de "
+"séquence pour continuer.\n"
+"Pour utiliser des séquences basées sur la date, sélectionnez des pièces "
+"comptables et utilisez l'option Reséquencer du menu d'actions, disponible en "
 "mode développeur."
 
 #. module: account
@@ -15754,8 +15754,8 @@ msgstr ""
 msgid ""
 "The commercial partner has been updated for all related accounting entries."
 msgstr ""
-"Le partenaire commercial a été mis à jour pour toutes les écritures "
-"comptables associées."
+"Le partenaire commercial a été mis à jour pour toutes les pièces comptables "
+"associées."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -15986,7 +15986,7 @@ msgid ""
 "The following entries are unbalanced:\n"
 "\n"
 msgstr ""
-"Les écritures suivantes ne sont pas équilibrées :\n"
+"Les pièces comptables suivantes ne sont pas équilibrées :\n"
 "\n"
 
 #. module: account
@@ -16645,11 +16645,12 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
+#, fuzzy
 msgid ""
 "There are entries that cannot be hashed. They can be protected by the Hard "
 "Lock Date."
 msgstr ""
-"Certaines écritures ne peuvent pas être hachées. Elles peuvent être "
+"Certaines pièces comptables ne peuvent pas être hachées. Elles peuvent être "
 "protégées par la date de verrouillage ferme."
 
 #. module: account
@@ -16669,11 +16670,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid "There are still draft entries before the selected date."
-msgstr "Il existe des écritures en brouillon avant la date sélectionnée."
+msgstr ""
+"Il existe des pièces comptables en brouillon avant la date sélectionnée."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
+#, fuzzy
 msgid ""
 "There are still draft entries in the period you want to hard lock. You "
 "should either post or delete them."
@@ -16689,9 +16692,9 @@ msgid ""
 "The entries from journal prefixes containing them will not be secured: %"
 "(prefix_info)s"
 msgstr ""
-"Il y a encore des lignes d'extrait de compte non rapprochées avant la date "
-"sélectionnée. Les écritures des préfixes de journal qui les contiennent ne "
-"seront pas sécurisées : %(prefix_info)s"
+"Il y a encore des lignes de relevé bancaire non rapprochées avant la date "
+"sélectionnée. Les pièces comptables avec les préfixes de journaux suivants "
+"ne seront pas sécurisées : %(prefix_info)s"
 
 #. module: account
 #. odoo-python
@@ -18602,8 +18605,8 @@ msgid ""
 "You can't change the company of your journal since there are some journal "
 "entries linked to it."
 msgstr ""
-"Vous ne pouvez pas changer la société sur votre journal puisqu'il y existe "
-"des pièces comptables liées."
+"Vous ne pouvez pas changer la société sur votre journal puisque des pièces "
+"comptables y sont liées."
 
 #. module: account
 #. odoo-python
@@ -18644,7 +18647,7 @@ msgid ""
 "You can't create payments for entries belonging to different branches "
 "without access to parent company."
 msgstr ""
-"Vous ne pouvez pas créer de paiements pour des écritures appartenant à "
+"Vous ne pouvez pas créer de paiements pour des pièces comptables liées à "
 "différentes branches sans avoir accès à la société mère."
 
 #. module: account
@@ -18652,8 +18655,8 @@ msgstr ""
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "You can't create payments for entries belonging to different companies."
 msgstr ""
-"Vous ne pouvez pas créer de paiements pour des écritures appartenant à des "
-"sociétés différentes."
+"Vous ne pouvez pas créer de paiements pour des pièces comptables appartenant "
+"à des sociétés différentes."
 
 #. module: account
 #. odoo-python
@@ -18746,7 +18749,8 @@ msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
 msgstr ""
-"Vous ne pouvez pas modifier ces écritures. Demandez plutôt une annulation."
+"Vous ne pouvez pas remettre en brouillon ces pièces comptables. Demandez "
+"plutôt une annulation."
 
 #. module: account
 #. odoo-python
@@ -18764,8 +18768,8 @@ msgstr ""
 msgid ""
 "You cannot add/modify entries prior to and inclusive of: %(lock_date_info)s."
 msgstr ""
-"Vous ne pouvez pas ajouter/modifier des écritures avant, et y compis, cette "
-"date :%(lock_date_info)s."
+"Vous ne pouvez pas ajouter/modifier des pièces comptable avant cette date "
+"(incluse) :%(lock_date_info)s."
 
 #. module: account
 #. odoo-python
@@ -18935,7 +18939,7 @@ msgid ""
 "%(entries)s"
 msgstr ""
 "Vous ne pouvez pas modifier les champs suivants : %(fields)s.\n"
-"Les écritures suivantes sont déjà hachées :\n"
+"Les pièces comptables suivantes sont déjà hachées :\n"
 "%(entries)s"
 
 #. module: account
@@ -18948,7 +18952,7 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas modifier le journal d'une pièce comptable s'il a été "
 "comptabilisé une fois, à moins que le nom ne soit supprimé ou défini sur "
-"« / ». Cela pourrait créer un vide dans la séquence."
+"\" / \". Cela pourrait créer un vide dans la séquence."
 
 #. module: account
 #. odoo-python
@@ -19018,7 +19022,7 @@ msgid ""
 "You cannot modify the field %s of a journal that already has accounting "
 "entries."
 msgstr ""
-"Vous ne pouvez pas modifier le champ %s d'un journal contenant des écritures "
+"Vous ne pouvez pas modifier le champ %s d'un journal contenant des pièces "
 "comptables."
 
 #. module: account
@@ -19063,14 +19067,14 @@ msgid ""
 "already been used to make accounting entries."
 msgstr ""
 "Vous ne pouvez pas réduire le nombre de décimales d'une devise déjà utilisée "
-"pour des écritures comptables."
+"dans des pièces comptables."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot register payments for miscellaneous entries."
 msgstr ""
-"Vous ne pouvez pas enregistrer de paiements pour des écritures diverses."
+"Vous ne pouvez pas enregistrer de paiements pour des opérations diverses."
 
 #. module: account
 #. odoo-python
@@ -19137,8 +19141,8 @@ msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
 msgstr ""
-"Vous ne pouvez pas choisir une devise pour ce compte car il existe déjà des "
-"pièces dans le journal ayant des devises différentes."
+"Vous ne pouvez pas choisir cette devise pour ce compte car il existe déjà "
+"des pièces dans le journal ayant des devises différentes."
 
 #. module: account
 #. odoo-python
@@ -19217,8 +19221,8 @@ msgid ""
 "You cannot use this wizard on journal entries belonging to different "
 "companies."
 msgstr ""
-"Vous ne pouvez pas utiliser ce wizard sur les pièces comptables d'autres "
-"sociétés."
+"Vous ne pouvez pas utiliser cet assistant sur les pièces comptables liées à "
+"plusieurs sociétés différentes."
 
 #. module: account
 #. odoo-python
@@ -19283,7 +19287,7 @@ msgid ""
 msgstr ""
 "Vous devez configurer le 'Journal de gain ou de perte de change' dans les "
 "paramètres de votre société, pour automatiser les écritures comptables liées "
-"aux différents de change."
+"aux différences de change."
 
 #. module: account
 #. odoo-python
@@ -19566,7 +19570,7 @@ msgstr "format eInvoice"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "entries"
-msgstr "écritures"
+msgstr "pièces comptables"
 
 #. module: account
 #. odoo-python
