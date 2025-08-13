@@ -2229,6 +2229,12 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_barcode_search_attributes_preset', login="pos_user")
 
+    def test_auto_validate_force_done(self):
+        self.main_pos_config.write({
+            'auto_validate_terminal_payment': True
+        })
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_auto_validate_force_done', login="pos_user")
+
     def test_pos_ui_round_globally(self):
         self.main_pos_config.company_id.tax_calculation_rounding_method = 'round_globally'
         tax_16 = self.env['account.tax'].create({

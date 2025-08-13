@@ -240,3 +240,25 @@ registry.category("web_tour.tours").add("point_of_sale.test_printed_receipt_tour
             }, "Basic receipt doesn't have price"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_auto_validate_force_done", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Whiteboard Pen", "1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            {
+                trigger: "body",
+                run: () => {
+                    posmodel.getOrder().payment_ids[0].setPaymentStatus("force_done");
+                },
+            },
+            {
+                trigger: ".send_force_done",
+                run: "click",
+            },
+            ReceiptScreen.receiptIsThere(),
+        ].flat(),
+});
