@@ -4,20 +4,178 @@
     <field name="model">hr.employee</field>
     <field name="inherit_id" ref="hr.view_employee_form"/>
     <field name="arch" type="xml">
-
-      <!-- نزيد الحقل مع الزر في نفس المجموعة -->
-      <xpath expr="//field[@name='work_phone']" position="after">
+      <xpath expr="//page[@name='personal_information']/group" position="inside">
         <group string="CNSS Info">
           <field name="cnss_number"/>
-          <button name="generate_cnss_number"
-                  type="object"
-                  string="Auto"
-                  class="oe_highlight"
-                  icon="fa-magic"/>
-          <field name="professional_category"/>
         </group>
       </xpath>
+      <xpath expr="//page[@name='personal_information']//group[.//field[@name='country_id'] and .//field[@name='birthday']]/field[@name='birthday']" position="after">
+        <field name="age"/>
+      </xpath>
+      <xpath expr="//page[@name='personal_information']//group[.//field[@name='marital'] and .//field[@name='children']]/field[@name='children']" position="after">
+    <field name="handicapped" readonly="children == 0"/>
+      </xpath>
+      <xpath expr="//notebook" position="inside">
+       <page string="Avance/retenues du mois">
+         <group>
+           <field name="avances_sur_salaire"/>
+           <field name="autres_retenues"/>
+         </group>
+       </page>
+      </xpath>
+      <xpath expr="//notebook" position="inside">
+  <page string="Gestion des présences">
+    <!-- Side-by-side fields -->
+    <div class="d-flex presences_tab_container">
+      <group class="presences_tab" colspan="6">
+        <field name="mode"/>
+      </group>
+      <group class="presences_tab" colspan="6">
+        <field name="point"/>
+      </group>
+    </div>
 
+    <!-- Cas Horaire Table -->
+    <div invisible="mode != 'H'">
+
+      <table class="table table-bordered table-sm mb-4">
+        <thead class="table-light">
+          <tr>
+            <th>Type</th>
+            <th>Quantité</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Heures travaillées durant le mois</td>
+            <td><field name="heures_travaillees" nolabel="1"/></td>
+          </tr>
+          <tr>
+            <td>Jours travaillés (mensuel)</td>
+            <td><field name="jours_travailles" nolabel="1"/></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Cas Mensuel Table -->
+    <div invisible="mode != 'M'">
+      <table class="table table-bordered table-sm mb-4">
+        <thead class="table-light">
+          <tr>
+            <th>Type</th>
+            <th>Quantité</th>
+            <th>Horaire Légal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Heures</td>
+            <td><field name="quantite" nolabel="1"/></td>
+            <td><field name="horaire_legal" nolabel="1"/></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </page>
+</xpath>
+      <xpath expr="//notebook" position="inside">
+        <page string="Saisie des heures sup">
+          <div >
+      <table class="table table-bordered table-sm mb-4">
+        <thead class="table-light">
+          <tr>
+            <th>Type</th>
+            <th>Quantité</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Heures sup. à 25%</td>
+            <td><field name="quantite25" nolabel="1"/></td>
+          </tr>
+          <tr>
+            <td>Heures sup. à 50%</td>
+            <td><field name="quantite50" nolabel="1"/></td>
+          </tr>
+          <tr>
+            <td>Heures sup. à 75%</td>
+            <td><field name="quantite75" nolabel="1"/></td>
+          </tr>
+          <tr>
+            <td>Heures sup. à 100%</td>
+            <td><field name="quantite100" nolabel="1"/></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+        </page>
+      </xpath>
+      <xpath expr="//notebook" position="inside">
+        <page string="Congé/Absence">
+          <h2>Gestion des Congés Payés</h2>
+          <div >
+      <table class="table table-bordered table-sm mb-4">
+        <thead class="table-light">
+          <tr>
+            <th>Type</th>
+            <th>Quantité</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Nombre de mois à considérer pour le congé</td>
+            <td><field name="quantite1" nolabel="1"/></td>
+          </tr>
+                    <tr>
+            <td>Jours de congés acquis par mois travaillé</td>
+            <td><field name="quantite2" nolabel="1"/></td>
+          </tr>
+
+                    <tr>
+            <td>Cumul des congés</td>
+            <td><field name="quantite3" nolabel="1"/></td>
+          </tr>
+
+                    <tr>
+            <td>Congé pris</td>
+            <td><field name="quantite4" nolabel="1"/></td>
+          </tr>
+          <tr>
+            <td>Congé restant</td>
+            <td><field name="quantite5" nolabel="1"/></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+          <h2>Saisie des Congés/Maladies du Mois
+</h2>
+          <div>
+      <table class="table table-bordered table-sm mb-4">
+        <thead class="table-light">
+          <tr>
+            <th>Type</th>
+            <th>Quantité</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Congé Maladie en heures (absence)</td>
+            <td><field name="quantite6" nolabel="1"/></td>
+          </tr>
+          <tr>
+            <td>Congé Maladie en jours (absence)</td>
+            <td><field name="quantite7" nolabel="1"/></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+        </page>
+
+      </xpath>
     </field>
   </record>
 </odoo>

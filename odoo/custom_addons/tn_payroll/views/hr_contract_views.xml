@@ -4,27 +4,132 @@
     <field name="model">hr.contract</field>
     <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
     <field name="arch" type="xml">
-      <xpath expr="//notebook" position="inside">
 
-        <page string="Tunisie 🇹🇳">
-          <group string="Données CNSS" col="2">
-            <field name="cnss_employee_rate"/>
-            <field name="cnss_employer_rate"/>
-          </group>
+     <xpath expr="//group[@name='salary']/div[@name='wage']" position="replace">
+  <group string="Informations Tunisie" col="2">
+    <field name="type_de_salaire"/>
+    <field name="tunisian_contract_type"/>
+    <field name="an"/>
+    <field name="professional_category"/>
+    <field name="modepai"/>
+    <field name="salaire"/>
+  </group>
+</xpath>
 
-          <group string="IRPP" col="2">
-            <field name="irpp_exempt"/>
-            <field name="number_of_children"/>
-          </group>
+<!-- Supprimer le label qui référence le champ supprimé -->
+<xpath expr="//group[@name='salary']/label[@for='wage']" position="replace"/>
+<xpath expr="//notebook" position="inside">
+       <page string="Primes et indemnités">
+         <group>
 
-          <group string="Contrat - Tunisie" col="2">
-            <field name="tunisian_contract_type"/>
-            <field name="seniority_bonus_applicable"/>
-          </group>
-        </page>
+         </group>
+<div invisible="tunisian_contract_type != 'cdi' and tunisian_contract_type != 'cdd'">
+  <h2>Primes et indemnités affranchies CNSS et IRPP</h2>
+  <table class="table table-bordered table-sm mb-4">
+    <thead class="table-light">
+      <tr>
+        <th>Rubrique</th>
+        <th>Montant</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Indemnité de logement (Cas isolement)</td>
+        <td><field name="indemn_logement" nolabel="1"/></td>
+      </tr>
+      <tr>
+        <td>Indemnité de licenciement</td>
+        <td><field name="indemn_licenciement" nolabel="1"/></td>
+      </tr>
+      <tr>
+        <td>Indemnité de zone géographique</td>
+        <td><field name="indemn_zone_geo" nolabel="1"/></td>
+      </tr>
+      <tr>
+        <td>Indemnité de salaire unique</td>
+        <td><field name="indemn_salaire_unique" nolabel="1"/></td>
+      </tr>
+      <tr>
+        <td>Indemnité de mission (frais)</td>
+        <td><field name="indemn_mission" nolabel="1"/></td>
+      </tr>
+      <tr>
+        <td>Indemnité de scolarité</td>
+        <td><field name="indemn_scolarite" nolabel="1"/></td>
+      </tr>
+      <tr>
+        <td>Indemnité événement familial</td>
+        <td><field name="indemn_evenement" nolabel="1"/></td>
+      </tr>
+      <tr>
+        <td>Indemnité représentative de frais</td>
+        <td><field name="indemn_representation" nolabel="1"/></td>
+      </tr>
+      <tr>
+        <td>Autres indemnités affranchies CNAS et IRG</td>
+        <td><field name="autres_indem_affranchies" nolabel="1"/></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
+<div invisible="tunisian_contract_type == 'cdi' or tunisian_contract_type == 'cdd'">
+  <h2>Primes et indemnités affranchies CNSS</h2>
+  <table class="table table-bordered table-sm mb-4">
+    <thead class="table-light">
+      <tr>
+        <th>Rubrique</th>
+        <th>Montant</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Indemnité de panier</td>
+        <td><field name="indemn_panier" nolabel="1"/></td>
+      </tr>
+      <tr>
+        <td>Indemnité de transport</td>
+        <td><field name="indemn_transport" nolabel="1"/></td>
+      </tr>
+      <tr>
+        <td>Indemnité d'outillage</td>
+        <td><field name="indemn_outillage" nolabel="1"/></td>
+      </tr>
+      <tr>
+        <td>Indemnité de zone géographique</td>
+        <td><field name="indemn_zone_geo" nolabel="1"/></td>
+      </tr>
+      <tr>
+        <td>Indemnité de salissure</td>
+        <td><field name="indemn_salissure" nolabel="1"/></td>
+      </tr>
+      <tr>
+        <td>Indemnité de froid</td>
+        <td><field name="indemn_froid" nolabel="1"/></td>
+      </tr>
+      <tr>
+        <td>Indemnité de risque</td>
+        <td><field name="indemn_risque" nolabel="1"/></td>
+      </tr>
+      <tr>
+        <td>Indemnité de difficultés</td>
+        <td><field name="indemn_difficultes" nolabel="1"/></td>
+      </tr>
+      <tr>
+        <td>Indemnité d'astreinte</td>
+        <td><field name="indemn_astreinte" nolabel="1"/></td>
+      </tr>
+      <tr>
+        <td>Autres indemnités affranchies CNSS</td>
+        <td><field name="autres_indem_cnss" nolabel="1"/></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+       </page>
       </xpath>
-
     </field>
   </record>
 </odoo>
+

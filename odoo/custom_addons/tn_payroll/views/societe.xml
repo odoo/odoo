@@ -1,0 +1,207 @@
+<odoo>
+  <!-- Action pour afficher les sociétés -->
+  <record id="action_tn_societe" model="ir.actions.act_window">
+    <field name="name">Sociétés</field>
+    <field name="res_model">tn.societe</field>
+    <field name="view_mode">tree,form</field>
+    <field name="help" type="html">
+      <p class="o_view_nocontent_smiling_face">Créer des sociétés (nom uniquement).</p>
+    </field>
+  </record>
+
+  <menuitem id="menu_societe_root"
+            name="Sociétés"
+            sequence="16"/>
+
+  <!-- Sous-menu avec l'action -->
+  <menuitem id="menu_societe_list"
+            name="Liste des sociétés"
+            parent="menu_societe_root"
+            action="action_tn_societe"
+            sequence="10"/>
+
+  <!-- Vue liste -->
+  <record id="view_tn_societe_tree" model="ir.ui.view">
+    <field name="name">tn.societe.tree</field>
+    <field name="model">tn.societe</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="name"/>
+      </tree>
+    </field>
+  </record>
+
+  <!-- Vue formulaire -->
+  <record id="view_tn_societe_form" model="ir.ui.view">
+    <field name="name">tn.societe.form</field>
+    <field name="model">tn.societe</field>
+    <field name="arch" type="xml">
+      <form string="Société">
+        <sheet>
+          <group>
+            <field name="name"/>
+          </group>
+
+          <!-- Notebook with empty pages -->
+          <notebook>
+            <page string="Informations générales">
+              <group>
+                <!-- Add fields here later -->
+              </group>
+            </page>
+<page string="Taux cotisation sociales">
+  <group>
+   <div class="two-columns-container">
+
+  <!-- Colonne 1 -->
+  <div class="column-item">
+    <p>
+      Cochez pour afficher le tableau des cotisations...
+      <field name="btn"/>
+    </p>
+    <div invisible="btn == False">
+    <table class="">
+        <thead>
+          <tr>
+            <th>Rubrique</th>
+            <th>Taux/Montant</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Vieillesse,invalidité,survivants(patronal)</td>
+            <td><field name="vp" nolabel="1"/></td>
+          </tr>
+          <tr>
+            <td>Vieillesse,invalidité,survivants(salarial)</td>
+            <td><field name="vs" nolabel="1"/></td>
+          </tr>
+          <tr>
+            <td>Maladie,maternité(patronal)</td>
+            <td><field name="mp" nolabel="1"/></td>
+          </tr>
+
+          <tr>
+            <td>Maladie,maternité(salarial)</td>
+            <td><field name="ms" nolabel="1"/></td>
+          </tr>
+
+          <tr>
+            <td>Prestations familiales(patronal)</td>
+            <td><field name="fp" nolabel="1"/></td>
+          </tr>
+
+          <tr>
+            <td>Prestations familiales(salarial)</td>
+            <td><field name="fs" nolabel="1"/></td>
+          </tr>
+           <tr>
+            <td>prévoyance sociale des travailleurs - Fonds spécial d'Etat (patronal)</td>
+            <td><field name="pre" nolabel="1"/></td>
+          </tr>
+           <tr>
+            <td>prévoyance sociale des travailleurs - Fonds spécial d'Etat (salarial)</td>
+            <td><field name="pre1" nolabel="1"/></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Colonne 2 -->
+  <div class="column-item">
+    <p>
+      Établissement adhérent à la retraite complémentaire
+      <field name="btn1"/>
+    </p>
+    <div invisible="btn1 == False">
+      <table class="">
+        <thead>
+          <tr>
+            <th>Rubrique</th>
+            <th>Taux/Montant</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Retraite complémentaire(patronal)</td>
+            <td><field name="rp" nolabel="1"/></td>
+          </tr>
+           <tr>
+            <td>Retraite complémentaire (salarial) </td>
+            <td><field name="rs" nolabel="1"/></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+  </group>
+</page>
+
+
+            <page string="Tableau IRPP">
+              <group>
+<div class="two-columns-container">
+
+  <!-- Colonne 1 -->
+  <div class="column-item">
+    <p>
+      Cochez pour afficher le tableau IRPP...
+      <field name="btn2"/>
+    </p>
+    <div invisible="btn2 == False">
+    <table class="">
+        <thead>
+          <tr>
+            <th>Brut imposable (du)</th>
+            <th>Brut imposable (au)</th>
+            <th>Taux</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><field name="brutdu" nolabel="1"/></td>
+            <td><field name="brutau" nolabel="1"/></td>
+            <td><field name="taux" nolabel="1"/></td>
+
+          </tr>
+          <tr>
+            <td><field name="brutdu1" nolabel="1"/></td>
+            <td><field name="brutau1" nolabel="1"/></td>
+            <td><field name="taux1" nolabel="1"/></td>
+
+          </tr> <tr>
+            <td><field name="brutdu2" nolabel="1"/></td>
+            <td><field name="brutau2" nolabel="1"/></td>
+            <td><field name="taux2" nolabel="1"/></td>
+
+          </tr> <tr>
+            <td><field name="brutdu3" nolabel="1"/></td>
+            <td><field name="brutau3" nolabel="1"/></td>
+            <td><field name="taux3" nolabel="1"/></td>
+          </tr>
+          <tr>
+            <td><field name="brutdu4" nolabel="1"/></td>
+            <td><field name="brutau4" nolabel="1"/></td>
+            <td><field name="taux4" nolabel="1"/></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+              </group>
+            </page>
+          </notebook>
+
+        </sheet>
+      </form>
+    </field>
+  </record>
+</odoo>

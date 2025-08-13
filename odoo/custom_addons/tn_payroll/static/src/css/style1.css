@@ -1,0 +1,73 @@
+/* Simple two-column layout */
+.two-columns-container {
+  display: flex;
+  gap: 30px;
+  width: 100%;
+  margin: 20px 0;
+}
+
+/* Column styling */
+.column-item {
+  flex: 1;
+  min-width: 400px;
+}
+
+/* Simple header */
+.column-item p {
+  font-weight: 500;
+  margin-bottom: 15px;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Clean table styling */
+.column-item table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+}
+
+.column-item table th {
+  background-color: #f8f9fa;
+  padding: 10px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.column-item table td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+/* Simple input styling */
+.column-item table input {
+  width: 60px;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.column-item table input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .two-columns-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .column-item {
+    min-width: auto;
+  }
+}
