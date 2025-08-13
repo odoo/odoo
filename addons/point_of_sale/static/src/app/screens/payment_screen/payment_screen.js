@@ -640,6 +640,17 @@ export class PaymentScreen extends Component {
     }
     async sendForceDone(line) {
         line.setPaymentStatus("done");
+        const config = this.pos.config;
+        const currency = this.pos.currency;
+        const currentOrder = line.pos_order_id;
+        if (
+            currentOrder.isPaid() &&
+            currency.isZero(currentOrder.getDue()) &&
+            config.auto_validate_terminal_payment &&
+            !currentOrder.isRefundInProcess()
+        ) {
+            this.validateOrder(false);
+        }
     }
 
     checkCashRoundingHasBeenWellApplied() {
