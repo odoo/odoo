@@ -116,6 +116,9 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
             'view_mode': 'list',
             'res_model': 'hr.leave',
             'domain': [('id', 'in', leaves.ids)],
+            'context': {
+                'active_id': False,
+            },
         }
 
     @api.constrains('allocation_mode')
