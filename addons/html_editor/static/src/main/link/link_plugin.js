@@ -168,6 +168,7 @@ export class LinkPlugin extends Plugin {
                     return (
                         !!linkEl &&
                         !this.isLinkImmutable(linkEl) &&
+                        linkEl.parentElement?.isContentEditable &&
                         !this.isUnremovable(linkEl) &&
                         isHtmlContentSupported(selection)
                     );
@@ -246,6 +247,7 @@ export class LinkPlugin extends Plugin {
             "[data-oe-model]",
             ":has(>[data-oe-model])",
         ],
+        legit_empty_link_predicates: (linkEl) => linkEl.hasAttribute("data-mimetype"),
 
         /** Handlers */
         beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),
@@ -317,7 +319,6 @@ export class LinkPlugin extends Plugin {
                 },
             }
         );
-        this.ignoredClasses = new Set(this.getResource("system_classes"));
 
         this.getExternalMetaData = memoize(fetchExternalMetaData);
         this.getInternalMetaData = memoize(fetchInternalMetaData);
@@ -620,7 +621,10 @@ export class LinkPlugin extends Plugin {
             recordInfo: this.config.getRecordInfo?.() || {},
             canEdit:
                 !this.linkInDocument || !this.linkInDocument.classList.contains("o_link_readonly"),
-            canRemove: this.linkInDocument && !this.isUnremovable(this.linkInDocument),
+            canRemove:
+                this.linkInDocument &&
+                this.linkInDocument.parentElement.isContentEditable &&
+                !this.isUnremovable(this.linkInDocument),
             canUpload: this.config.allowFile,
             onUpload: this.config.onAttachmentChange,
             type: this.type || "",
@@ -845,7 +849,7 @@ export class LinkPlugin extends Plugin {
      * Remove the link from the collapsed selection
      */
     removeLinkInDocument(link = this.linkInDocument) {
-        if (this.isUnremovable(link)) {
+        if (!link.parentElement.isContentEditable || this.isUnremovable(link)) {
             return;
         }
         const cursors = this.dependencies.selection.preserveSelection();
@@ -972,23 +976,26 @@ export class LinkPlugin extends Plugin {
     }
 
     removeEmptyLinks(root) {
-        // @todo: check for unremovables
+        const remove = (node) => {
+            for (const child of node.childNodes) {
+                remove(child);
+            }
+            if (!this.isUnremovable(node)) {
+                node.before(...node.childNodes);
+                node.remove();
+            }
+        };
         // @todo: preserve spaces
-        const buttonClassRegex =
-            /^(btn|btn-(sm|lg|(?:[a-z0-9_]+-)?(?:primary|secondary))|rounded-circle)$/;
         for (const link of root.querySelectorAll("a")) {
-            if ([...link.childNodes].some(isVisible)) {
+            if (
+                [...link.childNodes].some(isVisible) ||
+                !link.parentElement.isContentEditable ||
+                this.isUnremovable(link) ||
+                this.getResource("legit_empty_link_predicates").some((p) => p(link))
+            ) {
                 continue;
             }
-            const classes = [...link.classList].filter(
-                (c) => !this.ignoredClasses.has(c) && !buttonClassRegex.test(c)
-            );
-            const attributes = [...link.attributes].filter(
-                (a) => !["style", "href", "class"].includes(a.name)
-            );
-            if (!classes.length && !attributes.length && link.parentElement.isContentEditable) {
-                link.remove();
-            }
+            remove(link);
         }
     }
 
