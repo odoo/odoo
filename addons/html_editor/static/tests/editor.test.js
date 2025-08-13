@@ -113,14 +113,14 @@ test("clean_for_save_listeners is done last", async () => {
 test("Convert self closing a elements to opening/closing tags", async () => {
     const { el, editor } = await setupEditor(`
         <ul>
-            <li><a href="xyz" t-out="xyz"/></li>
+            <li><a href="xyz" class="oe_unremovable"/></li>
         </ul>
     `);
     expect(el.innerHTML.trim().replace(/\s+/g, " ")).toBe(
-        `<ul> <li> <a href="xyz" t-out="xyz"> </a> </li> </ul>`
+        `<ul> <li> <a href="xyz" class="oe_unremovable"> </a> </li> </ul>`
     );
     expect(editor.getContent().trim().replace(/\s+/g, " ")).toBe(
-        '<ul> <li><a href="xyz" t-out="xyz"></a></li> </ul>'
+        '<ul> <li><a href="xyz" class="oe_unremovable"></a></li> </ul>'
     );
 });
 
