@@ -188,7 +188,7 @@
                 max-width: 40%;
             }
             &:has(.css_attribute_preview_thumbnail) {
-                width: 14%;
+                width: var(--o-wsale-card-attribute-previewer-thumbnail-width, 14%);
                 min-width: 2.6rem;
 
                 * {
@@ -563,6 +563,7 @@
         --o-wsale-card-attribute-previewer-width: 100%;
         --o-wsale-card-attribute-previewer-order: 7;
         --o-wsale-card-attribute-previewer-padding: 0 0 #{map-get($spacers, 2)};
+        --o-wsale-card-attribute-previewer-thumbnail-width: MIN(14%, 3rem);
         --o-wsale-card-btns-btn-padding-x: #{$btn-padding-x};
         --o-wsale-card-btn-label-display: none;
         --o-wsale-card-btn-submit-label-display: inline;
