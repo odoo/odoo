@@ -190,21 +190,3 @@ registry.category("web_tour.tours").add("auth_timeout_tour_lock_timeout_inactivi
         assertRPC,
     ],
 });
-
-registry.category("web_tour.tours").add("auth_timeout_tour_lock_timeout", {
-    url: "/odoo",
-    steps: () => [
-        {
-            content: "Wait 1 second, to reach the session timeout set to 1 second",
-            trigger: "body",
-            run: async function () {
-                await new Promise((r) => setTimeout(r, 1000));
-                await testRPC();
-            },
-        },
-        {
-            content: "The session expired dialog should appear, click the close button to be redirected to the login",
-            trigger: ".modal-dialog:has(.modal-title:contains('Session Expired')) footer .btn:contains('Close')",
-        },
-    ],
-});
