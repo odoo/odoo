@@ -53,6 +53,8 @@ class IrUiView extends models.Model {
     }
 }
 
+export const setupWebsiteBuilderOeId = 539;
+
 export const exampleWebsiteContent = '<h1 class="title">Hello</h1>';
 
 export const invisibleEl =
@@ -112,7 +114,7 @@ export async function setupWebsiteBuilder(
     let originalIframeLoaded;
     let resolveIframeLoaded = () => {};
     const bodyHTML = `${beforeWrapwrapContent}
-        <div id="wrapwrap">${headerContent} <div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${websiteContent}</div></div>`;
+        <div id="wrapwrap">${headerContent} <div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="${setupWebsiteBuilderOeId}" data-oe-field="arch">${websiteContent}</div></div>`;
     const iframeLoaded = new Promise((resolve) => {
         resolveIframeLoaded = (el) => {
             const iframe = el;
