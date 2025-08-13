@@ -60,7 +60,7 @@ class HrEmployeePublic(models.Model):
     is_manager = fields.Boolean(compute='_compute_is_manager')
     is_user = fields.Boolean(compute='_compute_is_user')
 
-    employee_id = fields.Many2one('hr.employee', 'Employee', compute="_compute_employee_id", search="_search_employee_id", compute_sudo=True)
+    employee_id = fields.Many2one('hr.employee', 'Employee', readonly=True)
     # hr.employee.public specific fields
     child_ids = fields.One2many('hr.employee.public', 'parent_id', string='Direct subordinates', readonly=True)
     image_1920 = fields.Image("Image", related='employee_id.image_1920', compute_sudo=True)
@@ -173,13 +173,6 @@ class HrEmployeePublic(models.Model):
                 for f in manager_fields:
                     employee[f] = False
 
-    def _search_employee_id(self, operator, value):
-        return [('id', operator, value)]
-
-    def _compute_employee_id(self):
-        for employee in self:
-            employee.employee_id = self.env['hr.employee'].browse(employee.id)
-
     def _compute_newly_hired(self):
         self._compute_from_employee('newly_hired')
 
@@ -194,10 +187,13 @@ class HrEmployeePublic(models.Model):
 
     @api.model
     def _get_fields(self):
-        return 'e.id AS id,e.name AS name,e.active AS active,' + ','.join(
-            ('v.%s' if name in self.env['hr.version']._fields and self.env['hr.version']._fields[name].store else 'e.%s') % name
+        base_fields = ('id', 'employee_id', 'name', 'active')
+        version_fields = self.env['hr.version']._fields
+        return 'e.id AS id,e.id AS employee_id,e.name AS name,e.active AS active,' + ','.join(
+            (f'v.{name}' if name in version_fields and version_fields[name].store else f'e.{name}')
             for name, field in self._fields.items()
-            if field.store and field.type not in ['many2many', 'one2many'] and name not in ['id', 'name', 'active'])
+            if name not in base_fields and field.store and field.column_type
+        )
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
