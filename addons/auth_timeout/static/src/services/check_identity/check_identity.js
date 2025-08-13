@@ -267,24 +267,23 @@ export const checkIdentityService = {
             startInactivityTimer();
         }
 
+        const checkIdentityErrorHandler = (env, error, originalError) => {
+            if (originalError instanceof RPCError) {
+                if (originalError.data.name === "odoo.addons.auth_timeout.models.ir_http.CheckIdentityException") {
+                    run();
+                    return true;
+                }
+            }
+        };
+        registry.category("error_handlers").add("checkIdentityErrorHandler", checkIdentityErrorHandler);
+
         return {
             bus,
             check,
             getInitData,
-            run,
         };
     },
 };
 
-const checkIdentityErrorHandler = (env, error, originalError) => {
-    if (originalError instanceof RPCError) {
-        if (originalError.data.name === "odoo.addons.auth_timeout.models.ir_http.CheckIdentityException") {
-            useService("check_identity").run();
-            return true;
-        }
-    }
-};
-
 registry.category("public_components").add("auth_timeout.check_identity_form", CheckIdentityForm);
 registry.category("services").add("check_identity", checkIdentityService);
-registry.category("error_handlers").add("checkIdentityErrorHandler", checkIdentityErrorHandler);
