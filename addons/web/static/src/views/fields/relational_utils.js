@@ -421,6 +421,12 @@ export class Many2XAutocomplete extends Component {
                     classList: "o_m2o_no_result",
                     unselectable: true,
                 });
+            } else if (!request.length && !this.activeActions.createEdit) {
+                options.push({
+                    label: _t("Start typing..."),
+                    classList: "o_m2o_start_typing",
+                    unselectable: true,
+                });
             }
         }
 
