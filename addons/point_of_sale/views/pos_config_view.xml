@@ -52,6 +52,20 @@
                         </setting>
                         <setting id="other_devices" string="ePos Printer" help="Connect device to your PoS without an IoT Box">
                             <field name="other_devices" />
+                            <div class="content-group" invisible="not other_devices">
+                                <field name="epson_printer_ip" placeholder="Epson Receipt Printer IP Address" />
+                                <div class="row" invisible="epson_printer_ip in [False, '']">
+                                    <div class="col-lg-5 o_light_label">
+                                        <label string="Cashdrawer" for="iface_cashdrawer"/>
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <field name="iface_cashdrawer"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div role="alert" class="alert alert-warning" invisible="not iface_print_via_proxy or not other_devices or epson_printer_ip in [False, '']">
+                                The Epson receipt printer will be used instead of the receipt printer connected to the IoT Box.
+                            </div>
                         </setting>
                         <setting string="IoT Box" help="Connect devices using an IoT Box">
                                 <field name="is_posbox" />
