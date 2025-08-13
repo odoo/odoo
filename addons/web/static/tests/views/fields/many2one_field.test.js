@@ -991,6 +991,35 @@ test("empty many2one field with no result", async () => {
     expect(".dropdown-menu li.o_m2o_no_result").toHaveCount(0);
 });
 
+test("empty many2one field with no result and no create & edit", async () => {
+    class M2O extends models.Model {
+        m2o = fields.Many2one({ relation: "m2o" });
+    }
+    defineModels([M2O]);
+    await mountView({
+        type: "form",
+        resModel: "m2o",
+        arch: `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="m2o" options="{'no_create_edit': 1}"/>
+                    </group>
+                </sheet>
+            </form>`,
+    });
+
+    await contains(".o_field_many2one input").click();
+    expect(".dropdown-menu li").toHaveCount(1);
+    expect(".dropdown-menu li.o_m2o_start_typing").toHaveCount(1);
+
+    await contains(".o_field_many2one input").edit("a", { confirm: false });
+    await runAllTimers();
+
+    expect(".dropdown-menu li").toHaveCount(1);
+    expect(".dropdown-menu li.o_m2o_dropdown_option_create").toHaveCount(1);
+});
+
 test("empty many2one field with node options", async () => {
     expect.assertions(2);
 
