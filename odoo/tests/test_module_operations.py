@@ -206,7 +206,7 @@ def test_standalone(args):
 if __name__ == '__main__':
     args = parse_args()
 
-    config['dbname'] = threading.current_thread().dbname = args.database
+    config['db_name'] = threading.current_thread().dbname = args.database
     # handle paths option
     if args.addons_path:
         config['addons_path'] = args.addons_path + config['addons_path']
