@@ -1,5 +1,4 @@
 import { VideoPlugin } from "@html_editor/main/media/video_plugin";
-import { VideoSelectorDialog } from "@html_editor/others/embedded_components/plugins/video_plugin/video_selector_dialog/video_selector_dialog";
 import { EmbeddedVideoSelector } from "./video_selector_dialog/embedded_video_selector";
 
 /**
@@ -7,7 +6,7 @@ import { EmbeddedVideoSelector } from "./video_selector_dialog/embedded_video_se
  */
 export class EmbeddedVideoPlugin extends VideoPlugin {
     static id = "embeddedVideo";
-    static dependencies = ["embeddedComponents", "selection", "history", "overlay"];
+    static dependencies = ["embeddedComponents", "selection", "history", "overlay", "media"];
 
     // Extends the base class resources
     resources = {
@@ -38,29 +37,19 @@ export class EmbeddedVideoPlugin extends VideoPlugin {
     }
 
     /**
-     * Inserts a dialog allowing the user to insert a video
+     * Open media dialog allowing the user to insert a video
      * @param {function} save
      * @param {HTMLIFrameElement} iframe
      */
     openVideoSelectorDialog(save, iframe) {
-        const selection = this.dependencies.selection.getEditableSelection();
-        let restoreSelection = () => {
-            this.dependencies.selection.setSelection(selection);
-        };
-        this.services.dialog.add(
-            VideoSelectorDialog,
-            {
-                save: (media) => {
+        this.dependencies.media.openMediaDialog({
+            node: iframe,
+            save: (elements, [media]) => {
+                if (media.src) {
                     save(media);
-                    restoreSelection = () => {};
-                },
-                ...(iframe && { videoIframe: iframe }),
+                }
             },
-            {
-                onClose: () => {
-                    restoreSelection();
-                },
-            }
-        );
+            visibleTabs: ["VIDEOS"],
+        });
     }
 }
