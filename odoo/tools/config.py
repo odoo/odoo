@@ -26,6 +26,7 @@ _dangerous_logger = logging.getLogger(__name__)  # use config._log() instead
 
 optparse._ = str  # disable gettext
 
+ALL_DEV_MODE = ['access', 'qweb', 'reload', 'xml']
 DEFAULT_SERVER_WIDE_MODULES = ['base', 'rpc', 'web']
 REQUIRED_SERVER_WIDE_MODULES = ['base', 'web']
 
@@ -419,7 +420,8 @@ class configmanager:
                          # optparse uses a fixed 55 chars to print the help no matter the
                          # terminal size, abuse that to align the features
                          help="Enable developer features (comma-separated list, use   "
-                              '"all" for reload,qweb,xml). Available features:        '
+                              '"all" for access,reload,qweb,xml). Available features: '
+                              "- access: log the traceback of access errors           "
                               "- qweb: log the compiled xml with qweb errors          "
                               "- reload: restart server on change in the source code  "
                               "- replica: simulate a deployment with readonly replica "
@@ -696,7 +698,7 @@ class configmanager:
                 self._runtime_options['dev_mode'] = self['dev_mode'] + ['replica']
 
         if 'all' in self['dev_mode']:
-            self._runtime_options['dev_mode'] = self['dev_mode'] + ['reload', 'qweb', 'xml']
+            self._runtime_options['dev_mode'] = self['dev_mode'] + ALL_DEV_MODE
 
         if test_file := self['test_file']:
             if not os.path.isfile(test_file):
