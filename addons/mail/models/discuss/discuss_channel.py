@@ -1405,6 +1405,13 @@ class DiscussChannel(models.Model):
         )
         return self.env["mail.message"].browse([mid for (mid,) in self.env.cr.fetchall() if mid])
 
+    def _clean_empty_message(self, message):
+        super()._clean_empty_message(message)
+        message.parent_id = False
+
+    def _get_store_message_update_extra_fields(self):
+        return super()._get_store_message_update_extra_fields() + [Store.One("parent_id")]
+
     # ------------------------------------------------------------
     # COMMANDS
     # ------------------------------------------------------------

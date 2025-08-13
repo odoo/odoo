@@ -696,6 +696,10 @@ async function mail_message_update_content(request) {
         );
         msg_values.attachment_ids = attachment_ids;
     }
+    if (!body && attachment_ids.length === 0) {
+        msg_values.partner_ids = false;
+        msg_values.parent_id = false;
+    }
     MailMessage.write([message_id], msg_values);
     BusBus._sendone(
         MailMessage._bus_notification_target(message.id),
@@ -703,6 +707,7 @@ async function mail_message_update_content(request) {
         new mailDataHelpers.Store(MailMessage.browse(message.id), {
             attachment_ids: mailDataHelpers.Store.many(IrAttachment.browse(message.attachment_ids)),
             body: ["markup", message.body],
+            parent_id: mailDataHelpers.Store.one(MailMessage.browse(message.parent_id)),
             partner_ids: mailDataHelpers.Store.many(
                 this.env["res.partner"].browse(message.partner_ids),
                 makeKwArgs({ fields: ["avatar_128", "name"] })
