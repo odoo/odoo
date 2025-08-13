@@ -2992,3 +2992,56 @@ class TestUi(TestPointOfSaleHttpCommon):
             "test_max_usage_partner_with_point",
             login="pos_user",
         )
+
+    def test_multiple_reward_line_free_product(self):
+        """
+        Test that multiple reward lines with free product are correctly applied
+        when the product is added to the cart.
+        """
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        products = self.env['product.product'].create([
+            {
+                'name': 'Product A',
+                'list_price': 10,
+                'available_in_pos': True,
+                'taxes_id': False,
+            },
+            {
+                'name': 'Product B',
+                'list_price': 5,
+                'available_in_pos': True,
+                'taxes_id': False,
+            },
+        ])
+
+        self.env['loyalty.program'].create({
+            'name': 'Buy 2 Take 1',
+            'program_type': 'buy_x_get_y',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'product_ids': products.ids,
+                'reward_point_mode': 'unit',
+                'minimum_qty': 0,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': products[0].id,
+                'reward_product_qty': 1,
+                'required_points': 2,
+            }), (0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': products[1].id,
+                'reward_product_qty': 1,
+                'required_points': 2,
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_multiple_reward_line_free_product",
+            login="pos_user",
+        )
