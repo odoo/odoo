@@ -773,6 +773,7 @@ class TestCRMLead(TestCrmCommon):
         """Test that the help message is the right one if we are on multiple team with different settings."""
         # archive other teams
         self.env['crm.team'].search([]).active = False
+        self.env['ir.config_parameter'].sudo().set_param("sales_team.membership_multi", True)
 
         self._activate_multi_company()
         team_other_comp = self.team_company2
@@ -798,6 +799,10 @@ class TestCRMLead(TestCrmCommon):
             'use_leads': False,
             'member_ids': [],
         }])
+
+        # Additional check to ensure proper team creation
+        user_team_leads.invalidate_recordset(fnames=['member_ids'])
+        self.assertEqual(user_team_leads.member_ids.ids, [self.env.user.id])
 
         self.env['crm.lead'].create([{
             'name': 'LeadOurTeam',
