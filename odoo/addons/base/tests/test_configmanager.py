@@ -725,7 +725,14 @@ class TestConfigManager(TransactionCase):
             (['--test-file', __file__], True),
         ]:
             with self.subTest(args=args):
-                _, options = self.parse_reset(args)
+                if any('--test' in arg for arg in args):
+                    with self.assertLogs('odoo.tools.config', 'WARNING') as capture:
+                        _, options = self.parse_reset(args)
+                    self.assertEqual(capture.output, [
+                        "WARNING:odoo.tools.config:Empty -d/--database/db_name, tests won't run",
+                    ])
+                else:
+                    _, options = self.parse_reset(args)
                 self.assertEqual(options['stop_after_init'], stop_after_init)
 
     def test_13_empty_db_replica_host(self):
