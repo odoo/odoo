@@ -246,6 +246,11 @@ formatsSpecs.highlight = {
     isFormatted: (node) => closestElement(node)?.classList.contains("o_text_highlight"),
     hasStyle: (node) => closestElement(node)?.classList.contains("o_text_highlight"),
     addStyle: (node, { highlightId, thicknessToRestore, colorToRestore }) => {
+        const styledNode = closestElement(node, ".o_text_highlight");
+        if (styledNode) {
+            formatsSpecs.highlight.removeStyle(styledNode);
+            node = styledNode;
+        }
         node.classList.add("o_text_highlight", `o_text_highlight_${highlightId}`);
         if (colorToRestore && colorToRestore !== "currentColor") {
             node.style.setProperty("--text-highlight-color", colorToRestore);
