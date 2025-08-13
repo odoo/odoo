@@ -924,7 +924,7 @@ class AccountTax(models.Model):
             tax_amount = float_round(tax_amount, precision_rounding=prec)
             factorized_tax_amount = float_round(tax_amount * sum_repartition_factor, precision_rounding=prec)
 
-            if price_include and total_included_checkpoints.get(i) is None:
+            if price_include and total_included_checkpoints.get(i) is None and not tax.include_base_amount:
                 cumulated_tax_included_amount += factorized_tax_amount
 
             # If the tax affects the base of subsequent taxes, its tax move lines must
