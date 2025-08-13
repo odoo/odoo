@@ -416,6 +416,11 @@ export class Many2XAutocomplete extends Component {
                     cssClass: "o_m2o_no_result",
                     label: _t("No records"),
                 });
+            } else if (!request.length && !this.activeActions.createEdit) {
+                options.push({
+                    cssClass: "o_m2o_start_typing",
+                    label: _t("Start typing..."),
+                });
             }
         }
 
