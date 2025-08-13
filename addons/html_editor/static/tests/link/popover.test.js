@@ -1494,6 +1494,30 @@ describe("readonly mode", () => {
     });
 });
 
+describe("link in contenteditable=false", () => {
+    test("popover should not display remove button if link is in a contenteditable=false", async () => {
+        await setupEditor(
+            '<p contenteditable="false"><a contenteditable="true" href="http://test.test/">link[]</a></p>'
+        );
+        await waitFor(".o-we-linkpopover");
+        // Copy and edit link button should be available
+        expect(".o-we-linkpopover .o_we_copy_link").toHaveCount(1);
+        expect(".o-we-linkpopover .o_we_edit_link").toHaveCount(1);
+        // Unlink buttons should not be available
+        expect(".o-we-linkpopover .o_we_remove_link").toHaveCount(0);
+    });
+    test("toolbar should not display unlink button if link is in a contenteditable=false", async () => {
+        await setupEditor(
+            '<p contenteditable="false"><a contenteditable="true" href="http://test.test/">l[in]k</a></p>'
+        );
+        await waitFor(".o-we-toolbar");
+        // Link button should be available and active
+        expect(".o-we-toolbar button.active .fa-link").toHaveCount(1);
+        // Unlink button should not be available
+        expect(".o-we-toolbar .fa-unlink").toHaveCount(0);
+    });
+});
+
 describe("upload file via link popover", () => {
     test("should display upload button when url input is empty", async () => {
         const { editor } = await setupEditor("<p>[]<br></p>", {
