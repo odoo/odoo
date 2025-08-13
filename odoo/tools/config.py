@@ -716,6 +716,9 @@ class configmanager:
         self._runtime_options['test_enable'] = bool(self['test_tags'])
         if self._runtime_options['test_enable']:
             self._runtime_options['stop_after_init'] = True
+            if not self['db_name']:
+                self._log(logging.WARNING,
+                    "Empty %s, tests won't run", self.options_index['db_name'])
 
     def _warn_deprecated_options(self):
         for old_option_name, new_option_name in self.aliases.items():
