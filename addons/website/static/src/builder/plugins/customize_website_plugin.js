@@ -709,6 +709,10 @@ export class WebsiteConfigAction extends BuilderAction {
 export class PreviewableWebsiteConfigAction extends BuilderAction {
     static id = "previewableWebsiteConfig";
     static dependencies = ["customizeWebsite", "history"];
+    setup() {
+        // we need this so autoHideMenu recomputes the layout after our changes
+        this.dispatchResize = () => this.window.dispatchEvent(new Event("resize"));
+    }
     getPriority({ params }) {
         return (params.previewClass || "")?.trim().split(/\s+/).filter(Boolean).length || 0;
     }
@@ -722,6 +726,10 @@ export class PreviewableWebsiteConfigAction extends BuilderAction {
         if (params.previewClass) {
             params.previewClass.split(/\s+/).forEach((cls) => el.classList.add(cls));
         }
+        this.dependencies.history.applyCustomMutation({
+            apply: this.dispatchResize,
+            revert: this.dispatchResize,
+        });
         if (!isPreviewing) {
             const viewsToApply = params["views"] || [];
             let undoApplyCallback;
@@ -742,6 +750,10 @@ export class PreviewableWebsiteConfigAction extends BuilderAction {
         if (params.previewClass) {
             params.previewClass.split(/\s+/).forEach((cls) => el.classList.remove(cls));
         }
+        this.dependencies.history.applyCustomMutation({
+            apply: this.dispatchResize,
+            revert: this.dispatchResize,
+        });
         if (!isPreviewing) {
             const viewsToClean = params["views"] || [];
             let undoCleanCallback;
