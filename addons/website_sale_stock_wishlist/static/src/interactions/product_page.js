@@ -33,8 +33,8 @@ patch(ProductPage.prototype, {
      * @param {Element} parent
      * @param {Object} combination
      */
-    _onChangeCombination(ev, parent, combination) {
-        super._onChangeCombination(...arguments);
+    async _onChangeCombination(ev, parent, combination) {
+        await super._onChangeCombination(...arguments);
         if (this.el.querySelector('.o_add_wishlist_dyn')) {
             const messageEl = this.el.querySelector('div.availability_messages');
             if (messageEl && !this.el.querySelector('#stock_wishlist_message')) {

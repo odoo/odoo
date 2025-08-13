@@ -545,7 +545,7 @@ export class ProductPage extends Interaction {
      * @param {Element} parent
      * @param {Object} combination
      */
-    _onChangeCombination(ev, parent, combination) {
+    async _onChangeCombination(ev, parent, combination) {
         const isCombinationPossible = !!combination.is_combination_possible;
         const pricePerUom = parent.querySelector('.o_base_unit_price')
             ?.querySelector('.oe_currency_value');
