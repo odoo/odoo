@@ -424,14 +424,26 @@ class PaymentProvider(models.Model):
         (unsupported_pms + unsupported_pms.brand_ids).active = False
 
     def _activate_default_pms(self):
-        """ Activate the default payment methods of the provider.
+        """Activate the default payment methods of the provider.
 
         :return: None
         """
-        for provider in self:
-            pm_codes = provider._get_default_payment_method_codes()
-            pms = provider.with_context(active_test=False).payment_method_ids
-            (pms + pms.brand_ids).filtered(lambda pm: pm.code in pm_codes).active = True
+        # Filter out pms that are not compatible with manual capture if any provider requires it.
+        manual_capture_providers = self.env['payment.provider'].search([
+            ('state', 'in', ['enabled', 'test']), ('capture_manually', '=', True)
+        ])
+        compatible_pms = self.with_context(active_test=False).payment_method_ids.filtered(
+            lambda pm: (
+                not pm.provider_ids & manual_capture_providers
+                or pm.support_manual_capture != 'none'
+            )
+        )
+        # Activate the compatible PMs and brands that are listed as default methods.
+        default_pm_codes = {code for p in self for code in p._get_default_payment_method_codes()}
+        pms_to_activate = (compatible_pms + compatible_pms.brand_ids).filtered(
+            lambda pm: pm.code in default_pm_codes
+        )
+        pms_to_activate.active = True
 
     def _get_default_payment_method_codes(self):
         """Return the default payment methods for this provider.
