@@ -89,7 +89,7 @@ class BaseCommon(TransactionCase):
 
     @classmethod
     def get_default_groups(cls):
-        return cls.env['res.users']._default_groups()
+        return cls.env.ref('base.group_user')
 
     @classmethod
     def setup_main_company(cls, currency_code='USD'):
