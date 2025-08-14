@@ -53,7 +53,7 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
             prepaCategoryIds.has(id)
         );
 
-        if (prepaCategoryIds.size === 0 || productCategoryIds.length > 0) {
+        if (productCategoryIds.length > 0) {
             const key = Object.keys(order.last_order_preparation_change.lines).find((k) =>
                 k.startsWith(orderline.uuid)
             ); // find old data but note changed
