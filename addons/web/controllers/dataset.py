@@ -25,7 +25,7 @@ class DataSet(http.Controller):
                 return method._readonly
         return False
 
-    @http.route(['/web/dataset/call_kw', '/web/dataset/call_kw/<path:path>'], type='jsonrpc', auth="user", readonly=_call_kw_readonly)
+    @http.route(['/web/dataset/call_kw', '/web/dataset/call_kw/<path:path>'], type='jsonrpc', auth="user", readonly=_call_kw_readonly, fingerprint=True)
     def call_kw(self, model, method, args, kwargs, path=None):
         if path != f'{model}.{method}':
             thread_local.rpc_model_method = f'{model}.{method}'

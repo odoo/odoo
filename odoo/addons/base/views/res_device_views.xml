@@ -9,17 +9,25 @@
                 <form>
                     <group>
                         <group>
+                            <field name="session_identifier"/>
                             <field name="user_id"/>
-                            <field name="display_name" string="Name"/>
-                            <field name="ip_address" string="Last IP Address"/>
                         </group>
                         <group>
                             <field name="first_activity"/>
                             <field name="last_activity"/>
                         </group>
-                        <group>
-                            <field name="linked_ip_addresses"/>
-                        </group>
+                        <field name="device_line_ids" mode="list">
+                            <list decoration-danger="suspicious" decoration-success="not suspicious">
+                                <field name="platform"/>
+                                <field name="browser"/>
+                                <field name="ip_address"/>
+                                <field name="country"/>
+                                <field name="city"/>
+                                <field name="first_activity"/>
+                                <field name="last_activity"/>
+                                <button type="object" name="mark_as_not_suspicious" string="Trust" class="btn btn-secondary"/>
+                            </list>
+                        </field>
                     </group>
                 </form>
             </field>
@@ -29,14 +37,13 @@
             <field name="name">res.device.list</field>
             <field name="model">res.device</field>
             <field name="arch" type="xml">
-                <list default_order="last_activity desc">
+                <list>
+                    <!-- Not use computed fields for performance (and not `display_name`) -->
+                    <field name="session_identifier"/>
                     <field name="user_id"/>
-                    <field name="display_name" string="Name"/>
-                    <field name="ip_address"/>
                     <field name="first_activity"/>
                     <field name="last_activity"/>
-                    <field name="country" optional="hidden"/>
-                    <field name="city" optional="hidden"/>
+                    <field name="suspicious"/>
                     <button type="object" name="revoke" string="Revoke" class="btn btn-secondary"/>
                 </list>
             </field>
@@ -46,11 +53,12 @@
             <field name="name">res.device.kanban</field>
             <field name="model">res.device</field>
             <field name="arch" type="xml">
-                <kanban create="0" can_open="0" default_order="is_current desc, last_activity desc">
+                <kanban create="0" can_open="1" default_order="is_current desc, last_activity desc">
                     <field name="id"/>
                     <field name="device_type"/>
                     <field name="last_activity"/>
                     <field name="is_current"/>
+                    <field name="suspicious"/>
                     <templates>
                         <t t-name="card" class="flex-row">
                             <span t-if="record.device_type.raw_value === 'computer'" class="fa fa-laptop fs-1 col-1 mx-auto" title="Computer" role="img" aria-label="Computer"/>
@@ -59,9 +67,8 @@
                                 <div class="d-flex flex-column ms-2">
                                     <div class="d-flex align-items-center">
                                         <field name="display_name" string="Name" class="fw-bolder"/>
-                                        <t t-if="record.is_current.raw_value">
-                                            <span class="ms-2 text-success o_status o_status_green"></span>
-                                        </t>
+                                        <span t-if="record.is_current.raw_value" class="ms-2 text-success o_status o_status_green"/>
+                                        <span t-if="record.suspicious.raw_value" class="ms-2 text-danger fa fa-exclamation-circle" title="This device behaves suspiciously"/>
                                         <span t-out="luxon.DateTime.fromISO(record.last_activity.raw_value).toRelative()"
                                            class="ms-2 text-muted"/>
                                     </div>

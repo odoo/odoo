@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import hashlib
+
 import odoo
 from odoo import api, models, fields
 from odoo.http import request, DEFAULT_MAX_CONTENT_LENGTH
@@ -95,6 +97,7 @@ class IrHttp(models.AbstractModel):
         ))
         is_internal_user = user._is_internal()
         session_info = {
+            'fingerprint_text': hashlib.sha256(f'{session_uid}{int(user.create_date.timestamp())}'.encode()).hexdigest(),
             "uid": session_uid,
             "is_system": user._is_system() if session_uid else False,
             "is_admin": user._is_admin() if session_uid else False,
@@ -171,6 +174,7 @@ class IrHttp(models.AbstractModel):
         user = self.env.user
         session_uid = request.session.uid
         session_info = {
+            'fingerprint_text': hashlib.sha256(f'{session_uid}{int(user.create_date.timestamp())}'.encode()).hexdigest() if session_uid else None,
             'is_admin': user._is_admin() if session_uid else False,
             'is_system': user._is_system() if session_uid else False,
             'is_public': user._is_public(),

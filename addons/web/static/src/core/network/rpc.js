@@ -1,6 +1,8 @@
 import { EventBus } from "@odoo/owl";
 import { browser } from "../browser/browser";
 import { omit } from "../utils/objects";
+import { session } from "@web/session";
+import { registry } from "../registry";
 
 export const rpcBus = new EventBus();
 
@@ -53,6 +55,62 @@ export function makeErrorFromResponse(reponse) {
     error.code = code;
     return error;
 }
+
+// -----------------------------------------------------------------------------
+// RPC fingerprint
+// -----------------------------------------------------------------------------
+
+let rpcFingerprint;
+
+rpc.setFingerprint = async function () {
+    const canvas = new OffscreenCanvas(200, 200);
+    const context = canvas.getContext('2d');
+
+    const txt = session.fingerprint_text;
+
+    context.textBaseline = "top";
+    context.font = "14px 'Arial'";
+    context.textBaseline = "alphabetic";
+
+    const txtWidth = context.measureText(txt).width;
+    const txtX = 2;
+    const txtY = 15;
+
+    context.fillStyle = "#f60";
+    context.fillRect(2 + txtWidth / 2, 1, txtWidth / 2, 20);  // X, Y, width, height
+
+    context.rotate(0.0174533);  // 1 * Math.PI / 180
+    context.fillStyle = "rgba(0, 100, 0, 0.6)";
+    context.fillText(txt, txtX + 1, txtY + 1);
+    context.fillStyle = "#069";
+    context.fillText(txt, txtX, txtY);
+
+    const blob = await canvas.convertToBlob();
+    const buffer = await blob.arrayBuffer();
+
+    try {
+        const hashBuffer = await window.crypto.subtle.digest("SHA-256", buffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        rpcFingerprint = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+    } catch {
+        const byteArray = new Uint8Array(buffer);
+        let checksum = 0;
+        for (let i = 0; i < byteArray.length; i++) {
+            checksum = (checksum + byteArray[i]) >>> 0; // 32-bit unsigned (from 0 to 4,294,967,295)
+        }
+        rpcFingerprint = checksum.toString(16).padStart(8, "0");
+    }
+};
+
+rpc.getFingerprint = function () {
+    return rpcFingerprint;
+}
+
+registry.category("services").add("rpcFingerprint", {
+    async start() {
+        await rpc.setFingerprint();
+    }
+});
 
 // -----------------------------------------------------------------------------
 // Cache RPC method
@@ -137,6 +195,7 @@ rpc._rpc = function (url, params, settings) {
         request.open("POST", url);
         const headers = settings.headers || {};
         headers["Content-Type"] = "application/json";
+        headers["X-Rpcfingerprint"] = rpc.getFingerprint();
         for (const [header, value] of Object.entries(headers)) {
             request.setRequestHeader(header, value);
         }
