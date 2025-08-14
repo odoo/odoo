@@ -150,6 +150,8 @@ export class SplitBillScreen extends Component {
                     true
                 );
 
+                newLine.setHasChange(false);
+
                 if (line.combo_line_ids.length > 0) {
                     for (const comboLine of line.combo_line_ids) {
                         comboMap.set(comboLine.uuid, newLine);

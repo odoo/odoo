@@ -286,7 +286,6 @@ class TestFrontend(TestFrontendCommon):
         self.start_pos_tour('SplitBillScreenTour4ProductCombo')
 
     def test_10_save_last_preparation_changes(self):
-        self.pos_config.write({'printer_ids': False})
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SaveLastPreparationChangesTour')
         self.assertTrue(self.pos_config.current_session_id.order_ids.last_order_preparation_change, "There should be a last order preparation change")
@@ -318,7 +317,6 @@ class TestFrontend(TestFrontendCommon):
         self.assertEqual(order.crm_team_id.id, sale_team.id)
 
     def test_14_pos_payment_sync(self):
-        self.pos_config.write({'printer_ids': False})
         self.pos_config.with_user(self.pos_user).open_ui()
         def assert_payment(lines_count, amount):
             self.assertEqual(len(order.payment_ids), lines_count)
@@ -334,10 +332,10 @@ class TestFrontend(TestFrontendCommon):
 
     def test_15_split_bill_screen_actions(self):
         self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.write({'printer_ids': False})
         self.start_pos_tour('SplitBillScreenTour5Actions')
 
     def test_pos_restaurant_course(self):
-        self.pos_config.write({'printer_ids': False})
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_pos_restaurant_course')
 

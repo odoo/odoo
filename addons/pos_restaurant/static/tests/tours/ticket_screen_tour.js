@@ -23,7 +23,7 @@ registry.category("web_tour.tours").add("PosResTicketScreenTour", {
             ProductScreen.addOrderline("Minute Maid", "1", "3"),
             ProductScreen.totalAmountIs("3.0"),
             Chrome.clickPlanButton(),
-            FloorScreen.orderCountSyncedInTableIs("5", "1"),
+            FloorScreen.orderCountSyncedInTableIs("5", 0),
             Chrome.clickOrders(),
             TicketScreen.deleteOrder("001"),
             Dialog.confirm(),

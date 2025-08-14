@@ -215,6 +215,7 @@ registry.category("web_tour.tours").add("SaveLastPreparationChangesTour", {
             ProductScreen.clickDisplayedProduct("Coca-Cola", true, "1"),
             ProductScreen.orderlineIsToOrder("Coca-Cola"),
             ProductScreen.clickOrderButton(),
+            Chrome.closePrintingWarning(),
             FloorScreen.clickTable("5"),
             Chrome.waitRequest(),
             ProductScreen.orderlinesHaveNoChange(),
@@ -242,6 +243,7 @@ registry.category("web_tour.tours").add("test_pos_restaurant_course", {
             ProductScreen.clickDisplayedProduct("Minute Maid"),
             ProductScreen.clickCourseButton(),
             ProductScreen.clickOrderButton(),
+            Chrome.closePrintingWarning(),
             FloorScreen.clickTable("5"),
             // Check only 2 courses are there and empty course gets removed on clicking Order button
             {
@@ -261,6 +263,7 @@ registry.category("web_tour.tours").add("test_pos_restaurant_course", {
             ProductScreen.clickCourseButton(),
             ProductScreen.selectCourseLine("Course 2"),
             ProductScreen.fireCourseButton(),
+            Chrome.closePrintingWarning(),
             FloorScreen.clickTable("5"),
             {
                 trigger: negate('.order-course-name:eq(2) > span:contains("Course 3")'),
@@ -348,6 +351,7 @@ registry.category("web_tour.tours").add("PoSPaymentSyncTour1", {
             PaymentScreen.clickBackToProductScreen(),
             ProductScreen.isShown(),
             ProductScreen.clickOrderButton(),
+            Chrome.closePrintingWarning(),
             ProductScreen.orderlinesHaveNoChange(),
             Chrome.clickPlanButton(),
         ].flat(),
@@ -370,6 +374,7 @@ registry.category("web_tour.tours").add("PoSPaymentSyncTour2", {
             PaymentScreen.clickBackToProductScreen(),
             ProductScreen.isShown(),
             ProductScreen.clickOrderButton(),
+            Chrome.closePrintingWarning(),
             ProductScreen.orderlinesHaveNoChange(),
             Chrome.clickPlanButton(),
         ].flat(),
@@ -391,6 +396,7 @@ registry.category("web_tour.tours").add("PoSPaymentSyncTour3", {
             PaymentScreen.clickBackToProductScreen(),
             ProductScreen.isShown(),
             ProductScreen.clickOrderButton(),
+            Chrome.closePrintingWarning(),
             ProductScreen.orderlinesHaveNoChange(),
             Chrome.clickPlanButton(),
         ].flat(),
@@ -551,7 +557,6 @@ registry.category("web_tour.tours").add("LeaveResidualOrder", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.discardOrderWarningDialog(),
             ReceiptScreen.clickNextOrder(),
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
@@ -566,7 +571,7 @@ registry.category("web_tour.tours").add("FinishResidualOrder", {
     steps: () =>
         [
             Chrome.startPoS(),
-            FloorScreen.orderCountSyncedInTableIs("5", "1"),
+            FloorScreen.orderCountSyncedInTableIs("5", "0"),
             FloorScreen.clickTable("5"),
             Order.hasLine({
                 productName: "Coca-Cola",
@@ -577,7 +582,6 @@ registry.category("web_tour.tours").add("FinishResidualOrder", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.discardOrderWarningDialog(),
             ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
