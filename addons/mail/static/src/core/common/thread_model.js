@@ -738,7 +738,7 @@ export class Thread extends Record {
         return false;
     }
 
-    async openChatWindow({ focus = false, fromMessagingMenu, bypassCompact } = {}) {
+    async openChatWindow({ focus = false, fromMessagingMenu, bypassCompact, swapOpened } = {}) {
         const thread = await this.store.Thread.getOrFetch(this);
         if (!thread) {
             return;
@@ -747,7 +747,7 @@ export class Thread extends Record {
         const cw = this.store.ChatWindow.insert(
             assignDefined({ thread: this }, { fromMessagingMenu, bypassCompact })
         );
-        cw.open({ focus: focus });
+        cw.open({ focus, swapOpened });
         return cw;
     }
 

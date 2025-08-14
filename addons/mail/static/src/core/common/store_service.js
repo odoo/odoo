@@ -15,6 +15,7 @@ import { browser } from "@web/core/browser/browser";
 import { loader } from "@web/core/emoji_picker/emoji_picker";
 import { patch } from "@web/core/utils/patch";
 import { isMobileOS } from "@web/core/browser/feature_detection";
+import { getOrigin } from "@web/core/utils/urls";
 
 /**
  * @typedef {{isSpecial: boolean, channel_types: string[], label: string, displayName: string, description: string}} SpecialMention
@@ -384,28 +385,36 @@ export class Store extends BaseStore {
             ev.preventDefault();
             this.openChat({ partnerId: id });
             return true;
-        } else if (link.classList.contains("o_message_redirect_transformed") && id) {
+        } else if (link.classList.contains("o_message_redirect")) {
             const message = this["mail.message"].get(id);
             const targetThread = message?.thread;
+            const showAccessError = () =>
+                this.env.services.notification.add(_t("This conversation isn’t available."), {
+                    type: "danger",
+                });
             if (targetThread) {
                 targetThread.checkReadAccess().then((hasAccess) => {
                     if (hasAccess) {
                         targetThread.highlightMessage = message;
-                        const wasOpen = targetThread.open({ focus: true });
-                        if (!wasOpen) {
+                        let isOpen = targetThread.eq(thread);
+                        if (!isOpen) {
+                            isOpen = targetThread.open({ focus: true, swapOpened: false });
+                        }
+                        if (!isOpen) {
                             window.open(link.href);
                         }
                     } else {
                         if (this.self_partner) {
-                            this.env.services.notification.add(
-                                _t("You do not have the permission to access this thread."),
-                                { type: "warning" }
-                            );
+                            showAccessError();
                         } else {
                             window.open(link.href);
                         }
                     }
                 });
+                ev.preventDefault();
+                return true;
+            } else if (link.getAttribute("href")?.startsWith(getOrigin())) {
+                showAccessError();
                 ev.preventDefault();
                 return true;
             }

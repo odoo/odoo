@@ -86,11 +86,18 @@ export class ChatWindow extends Record {
         this.bypassCompact = false;
     }
 
-    async open({ focus = false, notifyState = true, jumpToNewMessage = false } = {}) {
+    async open({
+        focus = false,
+        notifyState = true,
+        jumpToNewMessage = false,
+        swapOpened = true,
+    } = {}) {
         await this.store.chatHub.initPromise;
         this.store.chatHub.folded.delete(this);
-        this.store.chatHub.opened.delete(this);
-        this.store.chatHub.opened.unshift(this);
+        if (swapOpened || !this.store.chatHub.opened.includes(this)) {
+            this.store.chatHub.opened.delete(this);
+            this.store.chatHub.opened.unshift(this);
+        }
         if (notifyState) {
             this.store.chatHub.save();
         }
