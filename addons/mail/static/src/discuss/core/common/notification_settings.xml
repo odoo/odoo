@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.NotificationSettings">
-        <ActionPanel title.translate="Notification Settings" resizable="false" icon="'fa fa-bell'">
+        <ActionPanel title.translate="Notification Settings" resizable="!!env.inMeetingView" initialWidth="400" icon="'fa fa-bell'">
             <div class="o-discuss-NotificationSettings">
                 <t t-if="props.thread.self_member_id?.mute_until_dt">
                     <button class="btn w-100 d-flex p-1 opacity-75 border-0" t-on-click="()=>this.setMute(false)">
@@ -13,7 +13,7 @@
                     </button>
                 </t>
                 <div class="d-flex">
-                    <Dropdown position="ui.isSmall ? 'bottom-end' : 'right-start'" menuClass="'o-mail-NotificationSettings-submenu d-flex flex-column my-0 o-discuss-dropdownMenu border-secondary'">
+                    <Dropdown position="ui.isSmall ? 'bottom-end' : 'right-start'" menuClass="'o-mail-NotificationSettings-submenu my-0 ' + store.discussDropdownMenuClass(this)">
                         <button class="btn w-100 d-flex p-1 opacity-75 border-0">
                             <div class="d-flex flex-grow-1 align-items-center px-0 py-1 w-100 rounded">
                                 <span class="text-wrap text-start text-break">Mute Conversation</span>

@@ -58,8 +58,8 @@ test("basic rendering", async () => {
     await contains("[title='More']");
     await contains(".o-discuss-CallActionList button[aria-label='Disconnect']");
     await click("[title='More']");
-    await contains("[title='Raise Hand']");
-    await contains("[title='Fullscreen']");
+    await contains(".o-dropdown-item:contains('Raise Hand')");
+    await contains(".o-discuss-Call-layoutActions button[title='Fullscreen']");
 });
 
 test("mobile UI", async () => {
@@ -83,8 +83,7 @@ test("keep the `more` popover active when hovering it", async () => {
     await click("[title='Start Call']");
     await contains(".o-discuss-Call");
     await contains(".o-discuss-CallActionList");
-    await click("[title='More']");
-    const enterFullScreenSelector = ".o-discuss-CallActionList-dropdownItem[title='Fullscreen']";
+    const enterFullScreenSelector = "button[title='Fullscreen']";
     await contains(enterFullScreenSelector);
     await hover(queryFirst(enterFullScreenSelector));
     await contains(enterFullScreenSelector);
@@ -265,12 +264,23 @@ test("Camera video stream stays in focus when on/off", async () => {
 });
 
 test("Create a direct message channel when clicking on start a meeting", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "Slytherin" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "some message",
+        date: "2019-04-20 10:00:00",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
     await start();
-    await openDiscuss();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Thread:contains('Welcome to #Slytherin!')");
+    await contains(".o-mail-Message");
     await click("button[title='New Meeting']");
     await contains(".o-mail-DiscussSidebarChannel", { text: "Mitchell Admin" });
     await contains(".o-discuss-Call");
-    await contains(".o-mail-Meeting-sidePanel:contains('Invite people')");
+    await contains(".o-mail-Meeting .o-mail-ActionPanel:contains('Invite people')");
 });
 
 test("Can share user camera and screen together", async () => {
@@ -332,10 +342,19 @@ test("'New Meeting' in mobile", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner 2" });
     pyEnv["res.users"].create({ partner_id: partnerId });
-    pyEnv["discuss.channel"].create({ name: "Slytherin" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "Slytherin" });
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "some message",
+        date: "2019-04-20 10:00:00",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
     await start();
-    await openDiscuss();
-    await contains("button.o-active", { text: "Notifications" });
+    await openDiscuss(channelId);
+    await contains(".o-mail-Thread:contains('Welcome to #Slytherin!')");
+    await contains(".o-mail-Message");
+    await contains("button[title*='Close Chat Window']");
     await click("button", { text: "Chats" });
     await click("button[title='New Meeting']");
     await click(".o-discuss-ChannelInvitation-selectable", { text: "Partner 2" });
@@ -356,9 +375,9 @@ test("Systray icon shows latest action", async () => {
     await openDiscuss(channelId);
     await click("[title='Start Call']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-microphone");
-    await click("[title='Mute (shift+m)']");
+    await click("[title='Mute']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-microphone-slash");
-    await click("[title='Deafen (shift+d)']");
+    await click("[title='Deafen']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-deaf");
     await click("[title='Turn camera on']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-video-camera");
@@ -367,7 +386,7 @@ test("Systray icon shows latest action", async () => {
     await contains(".o-discuss-CallMenu-buttonContent .fa-desktop");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
     await click("[title='More']");
-    await click("[title='Raise Hand']");
+    await click(".o-dropdown-item:contains('Raise Hand')");
     await contains(".o-discuss-CallMenu-buttonContent .fa-hand-paper-o");
 });
 
@@ -386,10 +405,10 @@ test("Systray icon keeps track of earlier actions", async () => {
     await click("[title='Turn camera on']");
     // stack: ["video", "share-screen"]
     await contains(".o-discuss-CallMenu-buttonContent .fa-video-camera");
-    await click("[title='Mute (shift+m)']");
+    await click("[title='Mute']");
     // stack: ["mute", "video", "share-screen"]
     await contains(".o-discuss-CallMenu-buttonContent .fa-microphone-slash");
-    await click("[title='Unmute (shift+m)']");
+    await click("[title='Unmute']");
     // stack: ["video", "share-screen"]
     await contains(".o-discuss-CallMenu-buttonContent .fa-video-camera");
     await click("[title='Stop camera']");
@@ -605,8 +624,8 @@ test("Cross tab calls: tabs can interact with calls remotely", async () => {
     await start();
     await openDiscuss(channelId);
     expect("[title='Disconnect']").not.toHaveCount();
-    expect("[title='Mute (shift+m)']").not.toHaveCount();
-    expect("[title='Deafen (shift+d)']").not.toHaveCount();
+    expect("[title='Mute']").not.toHaveCount();
+    expect("[title='Deafen']").not.toHaveCount();
     broadcastChannel.postMessage({
         type: CROSS_TAB_HOST_MESSAGE.UPDATE_REMOTE,
         hostedChannelId: channelId,
@@ -619,14 +638,14 @@ test("Cross tab calls: tabs can interact with calls remotely", async () => {
         },
     });
     await contains("[title='Disconnect']");
-    await contains("[title='Deafen (shift+d)']");
+    await contains("[title='Deafen']");
 
     broadcastChannel.onmessage = (event) => {
         if (event.data.type === CROSS_TAB_CLIENT_MESSAGE.REQUEST_ACTION) {
             asyncStep(`is_muted:${event.data.changes["is_muted"]}`);
         }
     };
-    await click("[title='Mute (shift+m)']");
+    await click("[title='Mute']");
     await waitForSteps(["is_muted:true"]);
 });
 
@@ -692,8 +711,7 @@ test("shows warning on infinite mirror effect (screen-sharing then fullscreen)",
     await click("[title='Share Screen']");
     await contains("video");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
-    await click("[title='More']");
-    await click("[title='Fullscreen']");
+    await click("button[title='Fullscreen']");
     await contains(".o-discuss-CallInfiniteMirroringWarning");
     await contains(
         ".o-discuss-CallInfiniteMirroringWarning:contains('To avoid the infinite mirror effect, please share a specific window or tab or another monitor.')"
@@ -795,8 +813,8 @@ test("dynamic focus switches to talking participant", async () => {
     rtc.updateSessionInfo({ [aliceSessionId]: { isTalking: false } });
     await contains(".o-discuss-CallParticipantCard[title='Bob']");
     await click("[title='More']");
-    await click(".o-discuss-CallActionList-dropdownItem:contains('Disable speaker autofocus')");
-    await contains(".o-discuss-CallActionList-dropdownItem", { count: 0 });
+    await click(".o-dropdown-item:contains('Disable speaker autofocus')");
+    await contains(".o-dropdown-item", { count: 0 });
     await click("[title='More']");
-    await contains(".o-discuss-CallActionList-dropdownItem:contains('Autofocus speaker')");
+    await contains(".o-dropdown-item:contains('Autofocus speaker')");
 });

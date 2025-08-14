@@ -28,13 +28,10 @@ export function messageActionOpenFullComposer(title, context, component) {
 }
 
 registerMessageAction("reply-all", {
-    condition: (component) => component.props.message.canReplyAll(component.props.thread),
+    condition: ({ message, thread }) => message.canReplyAll(thread),
     icon: "fa fa-reply",
-    iconLarge: "fa fa-lg fa-reply",
     name: _t("Reply All"),
-    onSelected: async (component) => {
-        const message = component.props.message;
-        const thread = component.props.thread;
+    onSelected: async ({ message, owner, thread }) => {
         const recipients = await rpc("/mail/thread/recipients", {
             thread_model: thread.model,
             thread_id: thread.id,
@@ -60,17 +57,15 @@ registerMessageAction("reply-all", {
             default_composition_comment_option: "reply_all",
             default_partner_ids: recipientIds,
         };
-        messageActionOpenFullComposer(_t("Reply All"), context, component);
+        messageActionOpenFullComposer(_t("Reply All"), context, owner);
     },
     sequence: 71,
 });
 registerMessageAction("forward", {
-    condition: (component) => component.props.message.canForward(component.props.thread),
+    condition: ({ message, thread }) => message.canForward(thread),
     icon: "fa fa-share",
-    iconLarge: "fa fa-lg fa-share",
     name: _t("Forward"),
-    onSelected: async (component) => {
-        const message = component.props.message;
+    onSelected: async ({ message, owner, store }) => {
         const emailFrom = message.author_id?.email || message.email_from;
         const [name, email] = parseEmail(emailFrom);
         const datetime = _t("%(date)s at %(time)s", {
@@ -85,7 +80,7 @@ registerMessageAction("forward", {
             name: name || email,
         });
         const attachmentIds = message.attachment_ids.map((a) => a.id);
-        const newAttachmentIds = await component.env.services.orm.call(
+        const newAttachmentIds = await store.env.services.orm.call(
             "ir.attachment",
             "copy",
             [attachmentIds],
@@ -99,7 +94,7 @@ registerMessageAction("forward", {
             default_composition_mode: "comment",
             default_composition_comment_option: "forward",
         };
-        messageActionOpenFullComposer(_t("Forward Message"), context, component);
+        messageActionOpenFullComposer(_t("Forward Message"), context, owner);
     },
     sequence: 72,
 });

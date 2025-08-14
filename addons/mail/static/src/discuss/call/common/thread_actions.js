@@ -1,87 +1,51 @@
+import { ACTION_TAGS } from "@mail/core/common/action";
 import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { CallSettings } from "@mail/discuss/call/common/call_settings";
 
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
 
 registerThreadAction("call", {
-    condition(component) {
-        return component.thread?.allowCalls && !component.thread?.eq(component.rtc.channel);
-    },
+    condition: ({ store, thread }) => thread?.allowCalls && !thread?.eq(store.rtc.channel),
     icon: "fa fa-fw fa-phone",
-    iconLarge: "fa fa-fw fa-lg fa-phone",
-    name(component) {
-        if (component.thread.rtc_session_ids.length > 0) {
-            return _t("Join the Call");
-        }
-        return _t("Start Call");
-    },
-    open(component) {
-        component.rtc.toggleCall(component.thread);
-    },
+    name: ({ thread }) =>
+        thread.rtc_session_ids.length > 0 ? _t("Join the Call") : _t("Start Call"),
+    open: ({ store, thread }) => store.rtc.toggleCall(thread),
     sequence: 10,
     sequenceQuick: 30,
-    setup(component) {
-        component.rtc = useService("discuss.rtc");
-    },
-    success: true,
+    tags: [ACTION_TAGS.SUCCESS, ACTION_TAGS.JOIN_LEAVE_CALL],
 });
 registerThreadAction("camera-call", {
-    condition(component) {
-        return component.thread?.allowCalls && !component.thread?.eq(component.rtc.channel);
-    },
+    condition: ({ store, thread }) => thread?.allowCalls && !thread?.eq(store.rtc.channel),
     icon: "fa fa-fw fa-video-camera",
-    iconLarge: "fa fa-fw fa-lg fa-video-camera",
-    name(component) {
-        if (component.thread.rtc_session_ids.length > 0) {
-            return _t("Join the Call with Camera");
-        }
-        return _t("Start Video Call");
-    },
-    open(component) {
-        component.rtc.toggleCall(component.thread, { camera: true });
-    },
+    name: ({ thread }) =>
+        thread.rtc_session_ids.length > 0
+            ? _t("Join the Call with Camera")
+            : _t("Start Video Call"),
+    open: ({ store, thread }) => store.rtc.toggleCall(thread, { camera: true }),
     sequence: 5,
-    sequenceQuick: (component) => (component.env.inDiscussApp ? 25 : 35),
-    setup(component) {
-        component.rtc = useService("discuss.rtc");
-    },
-    success: true,
+    sequenceQuick: ({ owner }) => (owner.env.inDiscussApp ? 25 : 35),
+    tags: [ACTION_TAGS.SUCCESS, ACTION_TAGS.JOIN_LEAVE_CALL],
 });
 registerThreadAction("call-settings", {
     actionPanelComponent: CallSettings,
-    actionPanelComponentProps(component, action) {
-        return { isCompact: true };
-    },
-    condition(component) {
-        return (
-            component.thread?.allowCalls &&
-            (component.props.chatWindow?.isOpen || component.store.inPublicPage) &&
-            !component.isDiscussSidebarChannelActions
-        );
-    },
+    actionPanelComponentProps: () => ({ isCompact: true }),
+    condition: ({ owner, store, thread }) =>
+        thread?.allowCalls &&
+        (owner.props.chatWindow?.isOpen || store.inPublicPage) &&
+        !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-gear",
-    iconLarge: "fa fa-fw fa-lg fa-gear",
     name: _t("Call Settings"),
     sequence: 20,
     sequenceGroup: 30,
-    setup(component) {
-        component.rtc = useService("discuss.rtc");
-    },
     toggle: true,
 });
 registerThreadAction("disconnect", {
-    condition: (component) =>
-        component.rtc.selfSession?.in(component.thread?.rtc_session_ids) &&
-        component.isDiscussSidebarChannelActions,
-    danger: true,
-    open: (component) => component.rtc.toggleCall(component.thread),
-    icon: "fa fa-fw fa-phone text-danger",
-    iconLarge: "fa fa-fw fa-lg fa-phone text-danger",
+    condition: ({ owner, store, thread }) =>
+        store.rtc.selfSession?.in(thread?.rtc_session_ids) && owner.isDiscussSidebarChannelActions,
+    open: ({ store, thread }) => store.rtc.toggleCall(thread),
+    icon: "fa fa-fw fa-phone",
     name: _t("Disconnect"),
     sequence: 30,
     sequenceGroup: 10,
-    setup(component) {
-        component.rtc = useService("discuss.rtc");
-    },
+    tags: ACTION_TAGS.DANGER,
 });

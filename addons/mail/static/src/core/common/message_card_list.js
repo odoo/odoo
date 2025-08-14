@@ -52,9 +52,10 @@ export class MessageCardList extends Component {
      */
     async onClickJump(message) {
         this.props.onClickJump?.();
-        if (this.ui.isSmall || this.env.inChatWindow) {
+        if (this.ui.isSmall || this.env.inChatWindow || this.env.inMeetingView) {
             this.env.pinMenu?.close();
             this.env.searchMenu?.close();
+            this.env.inMeetingView?.openChat();
         }
         // Give the time for menus to close before scrolling to the message.
         await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));

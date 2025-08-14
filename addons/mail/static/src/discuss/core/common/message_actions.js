@@ -8,23 +8,16 @@ import { createDocumentFragmentFromContent } from "@web/core/utils/html";
 import { patch } from "@web/core/utils/patch";
 
 registerMessageAction("set-new-message-separator", {
-    /** @param {import("@mail/core/common/message").Message} component */
-    condition: (component) => {
-        const thread = component.props.thread;
-        return (
-            thread &&
-            thread.self_member_id &&
-            thread.eq(component.message.thread) &&
-            !component.message.hasNewMessageSeparator &&
-            component.message.persistent
-        );
-    },
+    condition: ({ message, thread }) =>
+        thread &&
+        thread.self_member_id &&
+        thread.eq(message.thread) &&
+        !message.hasNewMessageSeparator &&
+        message.persistent,
     icon: "fa fa-eye-slash",
-    iconLarge: "fa fa-lg fa-eye-slash",
     name: _t("Mark as Unread"),
-    /** @param {import("@mail/core/common/message").Message} component */
-    onSelected: (component) => {
-        const message = toRaw(component.message);
+    onSelected: ({ message: msg }) => {
+        const message = toRaw(msg);
         const selfMember = message.thread?.self_member_id;
         if (selfMember) {
             selfMember.new_message_separator = message.id;
@@ -42,18 +35,17 @@ registerMessageAction("set-new-message-separator", {
 const editAction = messageActionsRegistry.get("edit");
 
 patch(editAction, {
-    /** @param {import("@mail/core/common/message").Message} component */
-    onSelected(component) {
-        const doc = createDocumentFragmentFromContent(component.message.body);
+    onSelected({ message, store }) {
+        const doc = createDocumentFragmentFromContent(message.body);
         const mentionedChannelElements = doc.querySelectorAll(".o_channel_redirect");
-        component.message.mentionedChannelPromises = Array.from(mentionedChannelElements)
+        message.mentionedChannelPromises = Array.from(mentionedChannelElements)
             .filter((el) => el.dataset.oeModel === "discuss.channel")
             .map(async (el) =>
-                component.store.Thread.getOrFetch({
+                store.Thread.getOrFetch({
                     id: el.dataset.oeId,
                     model: el.dataset.oeModel,
                 })
             );
-        return super.onSelected(component);
+        return super.onSelected(...arguments);
     },
 });

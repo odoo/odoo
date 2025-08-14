@@ -3,31 +3,29 @@ import { toRaw, useComponent, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { Deferred } from "@web/core/utils/concurrency";
+import { Action, ACTION_TAGS, UseActions } from "@mail/core/common/action";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
 import { isMobileOS } from "@web/core/browser/feature_detection";
-import { Action, UseActions } from "./action";
+import { useService } from "@web/core/utils/hooks";
 
 const { DateTime } = luxon;
 
 export const messageActionsRegistry = registry.category("mail.message/actions");
 
 /** @typedef {import("@odoo/owl").Component} Component */
-
 /** @typedef {import("@mail/core/common/action").ActionDefinition} ActionDefinition */
-
+/** @typedef {import("models").Message} Message */
+/** @typedef {import("models").Thread} Thread */
 /**
  * @typedef {Object} MessageActionSpecificDefinition
  * @property {boolean|(comp: Component) => boolean} [condition=true]
  */
-
 /**
  * @typedef {ActionDefinition & MessageActionSpecificDefinition} MessageActionDefinition
  */
-
 /**
  * @param {string} id
  * @param {MessageActionDefinition} definition
@@ -38,52 +36,50 @@ export function registerMessageAction(id, definition) {
 
 registerMessageAction("reaction", {
     component: QuickReactionMenu,
-    componentProps: (component) => ({
-        message: component.props.message,
+    componentProps: ({ message, owner }) => ({
+        message,
         action: messageActionsRegistry.get("reaction"),
-        messageActive: component.isActive,
+        messageActive: owner.isActive,
     }),
     componentCondition: () => !isMobileOS(),
-    condition: (component) => component.props.message.canAddReaction(component.props.thread),
+    condition: ({ message, thread }) => message.canAddReaction(thread),
     icon: "oi oi-smile-add",
-    iconLarge: "oi fa-lg oi-smile-add",
     name: _t("Add a Reaction"),
-    onSelected: async (component, action) =>
-        component.reactionPicker.open({
-            el: component.root?.el?.querySelector(`[name="${action.id}"]`),
-        }),
-    setup(component) {
-        component.reactionPicker = useEmojiPicker(undefined, {
-            onSelect: (emoji) => {
-                const reaction = component.props.message.reactions.find(
-                    ({ content, personas }) =>
-                        content === emoji && component.props.thread.effectiveSelf.in(personas)
-                );
-                if (!reaction) {
-                    component.props.message.react(emoji);
-                }
-            },
+    onSelected({ owner }) {
+        return owner.reactionPicker.open({
+            el: owner.root?.el?.querySelector(`[name="${this.id}"]`),
         });
     },
+    setup: ({ message, owner, thread }) =>
+        (owner.reactionPicker = useEmojiPicker(undefined, {
+            onSelect: (emoji) => {
+                const reaction = message.reactions.find(
+                    ({ content, personas }) =>
+                        content === emoji && thread.effectiveSelf.in(personas)
+                );
+                if (!reaction) {
+                    message.react(emoji);
+                }
+            },
+        })),
     sequence: 10,
 });
 registerMessageAction("reply-to", {
-    condition: (component) => {
-        const message = toRaw(component.props.message);
-        const thread = toRaw(component.props.thread);
+    condition: ({ message: msg, thread: thr }) => {
+        const message = toRaw(msg);
+        const thread = toRaw(thr);
         return (
             message.canReplyTo(thread) ||
-            (!["discuss.channel", "mail.box"].includes(thread.model) &&
+            (!["discuss.channel", "mail.box"].includes(thread?.model) &&
                 message.isNote &&
                 !message.isSelfAuthored)
         );
     },
     icon: "fa fa-reply",
-    iconLarge: "fa fa-lg fa-reply",
     name: _t("Reply"),
-    onSelected: (component) => {
-        const message = toRaw(component.props.message);
-        const thread = toRaw(component.props.thread);
+    onSelected: ({ message: msg, owner, thread: thr }) => {
+        const message = toRaw(msg);
+        const thread = toRaw(thr);
         const composer = thread.composer;
         if (message.eq(composer.replyToMessage)) {
             composer.replyToMessage = undefined;
@@ -102,70 +98,57 @@ registerMessageAction("reply-to", {
                 composer.insertText(mentionText, 0, { moveCursorToEnd: true });
             }
         }
-        component.env.inChatter?.toggleComposer("note", { force: true });
+        owner.env.inChatter?.toggleComposer("note", { force: true });
     },
-    sequence: (component) =>
-        component.props.thread?.eq(component.store.inbox) || component.props.message.isSelfAuthored
-            ? 55
-            : 20,
+    sequence: ({ message, store, thread }) =>
+        thread?.eq(store.inbox) || message.isSelfAuthored ? 55 : 20,
 });
 registerMessageAction("toggle-star", {
-    condition: (component) => component.props.message.canToggleStar,
-    icon: (component) =>
-        component.props.message.starred ? "fa fa-star o-mail-Message-starred" : "fa fa-star-o",
-    iconLarge: (component) =>
-        component.props.message.starred
-            ? "fa fa-lg fa-star o-mail-Message-starred"
-            : "fa fa-lg fa-star-o",
-    name: (component) => (component.props.message.starred ? _t("Remove Star") : _t("Add Star")),
-    onSelected: (component) => component.props.message.toggleStar(),
+    condition: ({ message }) => message.canToggleStar,
+    icon: ({ message }) => (message.starred ? "fa fa-star o-mail-Message-starred" : "fa fa-star-o"),
+    name: ({ message }) => (message.starred ? _t("Remove Star") : _t("Add Star")),
+    onSelected: ({ message }) => message.toggleStar(),
     sequence: 30,
 });
 registerMessageAction("mark-as-read", {
-    condition: (component) => component.props.thread?.eq(component.store.inbox),
+    condition: ({ store, thread }) => thread?.eq(store.inbox),
     icon: "fa fa-check",
-    iconLarge: "fa fa-lg fa-check",
     name: _t("Mark as Read"),
-    onSelected: (component) => component.props.message.setDone(),
+    onSelected: ({ message }) => message.setDone(),
     sequence: 40,
 });
 registerMessageAction("reactions", {
-    condition: (component) => component.message.reactions.length,
+    condition: ({ message }) => message.reactions.length,
     icon: "fa fa-smile-o",
-    iconLarge: "fa fa-lg fa-smile-o",
     name: _t("View Reactions"),
-    onSelected: (component) => component.openReactionMenu(),
+    onSelected: ({ owner }) => owner.openReactionMenu(),
     sequence: 50,
 });
 registerMessageAction("unfollow", {
-    condition: (component) => component.props.message.canUnfollow(component.props.thread),
+    condition: ({ message, thread }) => message.canUnfollow(thread),
     icon: "fa fa-user-times",
-    iconLarge: "fa fa-lg fa-user-times",
     name: _t("Unfollow"),
-    onSelected: (component) => component.props.message.unfollow(),
+    onSelected: ({ message }) => message.unfollow(),
     sequence: 60,
 });
 registerMessageAction("edit", {
-    condition: (component) => component.props.message.editable,
+    condition: ({ message }) => message.editable,
     icon: "fa fa-pencil",
-    iconLarge: "fa fa-lg fa-pencil",
     name: _t("Edit"),
-    onSelected: (component) => {
-        component.props.message.enterEditMode(component.props.thread);
-        component.optionsDropdown?.close();
+    onSelected: ({ message, owner, thread }) => {
+        message.enterEditMode(thread);
+        owner.optionsDropdown?.close();
     },
-    sequence: (component) => (component.props.message.isSelfAuthored ? 20 : 55),
+    sequence: ({ message }) => (message.isSelfAuthored ? 20 : 55),
 });
 registerMessageAction("delete", {
-    condition: (component) => component.props.message.editable,
+    condition: ({ message }) => message.editable,
     icon: "fa fa-trash",
-    iconLarge: "fa fa-lg fa-trash",
     name: _t("Delete"),
-    danger: true,
-    onSelected: async (component) => {
-        const message = toRaw(component.message);
+    onSelected: async ({ message: msg, owner, store }) => {
+        const message = toRaw(msg);
         const def = new Deferred();
-        component.dialog.add(
+        store.env.services.dialog.add(
             discussComponentRegistry.get("MessageConfirmDialog"),
             {
                 message,
@@ -173,30 +156,26 @@ registerMessageAction("delete", {
                 onConfirm: () => {
                     def.resolve(true);
                     message.remove({
-                        removeFromThread: component.shouldHideFromMessageListOnDelete,
+                        removeFromThread: owner.shouldHideFromMessageListOnDelete,
                     });
                 },
             },
-            { context: component, onClose: () => def.resolve(false) }
+            { context: owner, onClose: () => def.resolve(false) }
         );
         return def;
     },
-    setup: (component) => {
-        component.dialog = useService("dialog");
-    },
     sequence: 120,
+    tags: ACTION_TAGS.DANGER,
 });
 registerMessageAction("download_files", {
-    condition: (component) =>
-        component.message.attachment_ids.length > 1 &&
-        component.store.self.main_user_id?.share === false,
+    condition: ({ message, store }) =>
+        message.attachment_ids.length > 1 && store.self.main_user_id?.share === false,
     icon: "fa fa-download",
-    iconLarge: "fa fa-lg fa-download",
     name: _t("Download Files"),
-    onSelected: (component) =>
+    onSelected: ({ message }) =>
         download({
             data: {
-                file_ids: component.message.attachment_ids.map((rec) => rec.id),
+                file_ids: message.attachment_ids.map((rec) => rec.id),
                 zip_name: `attachments_${DateTime.local().toFormat("HHmmddMMyyyy")}.zip`,
             },
             url: "/mail/attachment/zip",
@@ -204,70 +183,74 @@ registerMessageAction("download_files", {
     sequence: 55,
 });
 registerMessageAction("toggle-translation", {
-    condition: (component) => component.props.message.isTranslatable(component.props.thread),
-    icon: (component) =>
-        `fa fa-language ${component.state.showTranslation ? "o-mail-Message-translated" : ""}`,
-    iconLarge: (component) =>
-        `fa fa-lg fa-language ${
-            component.state.showTranslation ? "o-mail-Message-translated" : ""
-        }`,
-    name: (component) => (component.state.showTranslation ? _t("Revert") : _t("Translate")),
-    onSelected: (component) => component.onClickToggleTranslation(),
+    condition: ({ message, thread }) => message.isTranslatable(thread),
+    icon: ({ owner }) =>
+        `fa fa-language ${owner.state.showTranslation ? "o-mail-Message-translated" : ""}`,
+    name: ({ owner }) => (owner.state.showTranslation ? _t("Revert") : _t("Translate")),
+    onSelected: ({ owner }) => owner.onClickToggleTranslation(),
     sequence: 100,
 });
 registerMessageAction("copy-message", {
-    condition: (component) => isMobileOS() && !component.message.isBodyEmpty,
-    onSelected: (component) => component.message.copyMessageText(),
+    condition: ({ message }) => isMobileOS() && !message.isBodyEmpty,
+    onSelected: ({ message }) => message.copyMessageText(),
     name: _t("Copy to Clipboard"),
     icon: "fa fa-copy",
-    iconLarge: "fa fa-lg fa-copy",
     sequence: 30,
 });
 registerMessageAction("copy-link", {
-    condition: (component) =>
-        component.message.message_type &&
-        component.message.message_type !== "user_notification" &&
-        (!component.props.thread.access_token || component.props.thread.hasReadAccess),
+    condition: ({ message, thread }) =>
+        message.message_type &&
+        message.message_type !== "user_notification" &&
+        thread &&
+        (!thread.access_token || thread.hasReadAccess),
     icon: "fa fa-link",
-    iconLarge: "fa fa-lg fa-link",
     name: _t("Copy Link"),
-    onSelected: (component) => component.message.copyLink(),
+    onSelected: ({ message }) => message.copyLink(),
     sequence: 110,
 });
 
-class MessageAction extends Action {
-    /** Condition to display this action. */
-    get condition() {
-        return messageActionsInternal.condition(this._component, this.id, this.explicitDefinition);
+export class MessageAction extends Action {
+    /** @type {() => Message} */
+    messageFn;
+    /** @type {() => Thread} */
+    threadFn;
+    /**
+     * @param {Object} param0
+     * @param {Thread|() => Thread} thread
+     */
+    constructor({ message, thread }) {
+        super(...arguments);
+        this.messageFn = typeof message === "function" ? message : () => message;
+        this.threadFn = typeof thread === "function" ? thread : () => thread;
+    }
+
+    get params() {
+        return Object.assign(super.params, { message: this.messageFn(), thread: this.threadFn() });
     }
 }
-
-export const messageActionsInternal = {
-    condition(component, id, action) {
-        if (!action?.condition) {
-            return true;
-        }
-        return typeof action.condition === "function"
-            ? action.condition(component)
-            : action.condition;
-    },
-    sequence(component, id, action) {
-        return typeof action.sequence === "function" ? action.sequence(component) : action.sequence;
-    },
-};
 
 class UseMessageActions extends UseActions {
     ActionClass = MessageAction;
 }
 
-export function useMessageActions() {
+/**
+ * @param {Object} [params0={}]
+ * @param {Message|() => Message} [message]
+ * @param {Thread|() => Thread} [thread] when set, the thread the message is being viewed
+ */
+export function useMessageActions({ message, thread } = {}) {
     const component = useComponent();
     const transformedActions = messageActionsRegistry
         .getEntries()
-        .map(([id, action]) => new MessageAction(component, id, action));
+        .map(
+            ([id, definition]) =>
+                new MessageAction({ owner: component, id, definition, message, thread })
+        );
     for (const action of transformedActions) {
         action.setup();
     }
-    const state = useState(new UseMessageActions(component, transformedActions));
+    const state = useState(
+        new UseMessageActions(component, transformedActions, useService("mail.store"))
+    );
     return state;
 }

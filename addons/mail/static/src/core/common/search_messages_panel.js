@@ -18,7 +18,7 @@ export class SearchMessagesPanel extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.messageSearch = useMessageSearch(this.props.thread);
+        this.messageSearch = this.env.messageSearch ?? useMessageSearch(this.props.thread);
         onWillUpdateProps((nextProps) => {
             if (this.props.thread.notEq(nextProps.thread)) {
                 this.env.searchMenu?.close();

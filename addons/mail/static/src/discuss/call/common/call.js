@@ -3,13 +3,25 @@ import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { CallParticipantCard } from "@mail/discuss/call/common/call_participant_card";
 import { PttAdBanner } from "@mail/discuss/call/common/ptt_ad_banner";
 
-import { Component, onMounted, onPatched, onWillUnmount, toRaw, useRef, useState } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onPatched,
+    onWillUnmount,
+    toRaw,
+    useRef,
+    useState,
+    useSubEnv,
+} from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useService } from "@web/core/utils/hooks";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
+import { useCallActions } from "@mail/discuss/call/common/call_actions";
+import { ActionList } from "@mail/core/common/action_list";
+import { ACTION_TAGS } from "@mail/core/common/action";
 
 /**
  * @typedef CardData
@@ -27,6 +39,7 @@ import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
  */
 export class Call extends Component {
     static components = {
+        ActionList,
         BlurPerformanceWarning,
         CallActionList,
         CallParticipantCard,
@@ -55,6 +68,7 @@ export class Call extends Component {
             insetCard: undefined,
         });
         this.store = useService("mail.store");
+        this.callActions = useCallActions({ thread: () => this.channel });
         onMounted(() => {
             this.resizeObserver = new ResizeObserver(() => this.arrangeTiles());
             this.resizeObserver.observe(this.grid.el);
@@ -67,6 +81,23 @@ export class Call extends Component {
         });
         useHotkey("shift+d", () => this.rtc.toggleDeafen());
         useHotkey("shift+m", () => this.rtc.toggleMicrophone());
+        const self = this;
+        useSubEnv({
+            inDiscussCallView: {
+                get isPip() {
+                    return self.props.isPip;
+                },
+            },
+        });
+    }
+
+    get layoutActions() {
+        if (!this.isActiveCall) {
+            return [];
+        }
+        return this.callActions.actions.filter((action) =>
+            action.tags.includes(ACTION_TAGS.CALL_LAYOUT)
+        );
     }
 
     get isFullSize() {

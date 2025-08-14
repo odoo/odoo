@@ -3,54 +3,68 @@ import { Thread } from "@mail/core/common/thread";
 import { Call } from "@mail/discuss/call/common/call";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
+import { useMessageScrolling } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, onWillUnmount, useChildSubEnv, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useChildSubEnv, useSubEnv } from "@odoo/owl";
 
-import { isMobileOS } from "@web/core/browser/feature_detection";
-import { _t } from "@web/core/l10n/translation";
+import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useService } from "@web/core/utils/hooks";
+import { MeetingSideActions } from "./meeting_side_actions";
+import { useThreadActions } from "@mail/core/common/thread_actions";
+import { useMessageSearch } from "@mail/core/common/message_search_hook";
 
 /** @typedef {"chat"|"invite"} MeetingPanel */
 
 /**
  * @typedef {Object} Props
- * @property {MeetingPanel} initialSidePanel
+ * @property {ThreadActionDefinition.id} [autoOpenAction]
  * @extends {Component<Props, Env>}
  */
 export class Meeting extends Component {
     static template = "mail.Meeting";
-    static props = ["initialSidePanel?"];
-    static components = { Call, CallActionList, ChannelInvitation, Composer, Thread };
+    static props = ["autoOpenAction?"];
+    static components = {
+        Call,
+        CallActionList,
+        ChannelInvitation,
+        Composer,
+        Dropdown,
+        MeetingSideActions,
+        Thread,
+    };
 
     setup() {
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.rtc = useService("discuss.rtc");
-        this.state = useState({
-            activeSidePanel: this.props.initialSidePanel,
-            jumpPresent: 0,
+        onMounted(() => {
+            if (this.props.autoOpenAction) {
+                this.threadActions.actions
+                    .find((a) => a.id === this.props.autoOpenAction)
+                    ?.onSelected();
+            }
         });
-        this.sidePanelRef = useRef("sidePanel");
-        this.isMobileOS = isMobileOS();
+        useSubEnv({
+            inMeetingView: {
+                openChat: () =>
+                    this.threadActions.actions
+                        .find((action) => action.id === "meeting-chat")
+                        ?.open(),
+            },
+        });
+        this.threadActions = useThreadActions({ thread: () => this.thread });
+        this.messageHighlight = useMessageScrolling();
+        this.messageSearch = useMessageSearch(this.thread);
+        useChildSubEnv({
+            closeActionPanel: () => this.threadActions.activeAction?.close(),
+            messageHighlight: this.messageHighlight,
+            messageSearch: this.messageSearch,
+        });
         onMounted(() => (this.store.meetingViewOpened = true));
         onWillUnmount(() => (this.store.meetingViewOpened = false));
-        useChildSubEnv({ inMeetingView: true });
     }
 
-    /** @param {MeetingPanel} panelName */
-    toggleSidePanel(panelName) {
-        this.state.activeSidePanel = this.state.activeSidePanel === panelName ? null : panelName;
-    }
-
-    get toggleChatPanelTitle() {
-        return this.state.activeSidePanel === "chat" ? _t("Close chat") : _t("Chat");
-    }
-
-    get toggleInvitePanelTitle() {
-        return this.state.activeSidePanel === "invite" ? _t("Close invite") : _t("Invite people");
-    }
-
-    get channelInvitationState() {
-        return { searchPlaceholder: _t("Enter name or email") };
+    get thread() {
+        return this.store.rtc.channel;
     }
 }

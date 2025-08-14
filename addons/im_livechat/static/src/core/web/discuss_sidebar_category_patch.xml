@@ -3,7 +3,7 @@
     <t t-inherit="mail.DiscussSidebarChannel.main" t-inherit-mode="extension">
         <xpath expr="//*[@name='threadAvatar']" position="before">
             <t t-call="im_livechat.LivechatStatusLabelOfThread">
-                <t t-set="livechatThread" t-value="props.thread"/>
+                <t t-set="templateParams" t-value="{ livechatThread: props.thread }"/>
             </t>
         </xpath>
     </t>
@@ -25,6 +25,7 @@
     </t>
 
     <t t-name="im_livechat.LivechatStatusLabelOfThread">
+        <t t-set="livechatThread" t-value="templateParams.livechatThread"/>
         <span t-if="livechatThread.channel_type === 'livechat' and (['waiting', 'need_help'].includes(livechatThread.livechat_status) or livechatThread.livechat_end_dt)" class="o-livechat-LivechatStatusLabel" t-att-title="livechatThread.livechatStatusLabel" t-att-class="{
             'o-livechat-LivechatStatusLabel-Sidebar position-absolute top-0 start-0': env.inDiscussSidebar or env.inChatBubble,
             'end-0 bottom-0 rounded-2 border': env.inDiscussSidebar,
@@ -43,6 +44,7 @@
     </t>
 
     <t t-name="im_livechat.LivechatStatusSelection">
+    <t t-set="livechatThread" t-value="templateParams.livechatThread"/>
         <div class="o-livechat-LivechatStatusSelection list-group" t-ref="livechat-status-selection">
             <t t-foreach="store.livechatStatusButtons" t-as="btn" t-key="btn.status">
                 <t t-set="isBtnActive" t-value="livechatThread.livechat_status === btn.status"/>
@@ -70,11 +72,4 @@
             </t>
         </div>
     </t>
-
-    <t t-name="im_livechat.LivechatStatusAction">
-        <t t-call="im_livechat.LivechatStatusSelection">
-            <t t-set="livechatThread" t-value="props.thread"/>
-        </t>
-    </t>
-
 </templates>

@@ -1,91 +1,219 @@
-import { useComponent } from "@odoo/owl";
+import { isRecord, STORE_SYM } from "@mail/model/misc";
+import { toRaw } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 import { Reactive } from "@web/core/utils/reactive";
 
+export const ACTION_TAGS = Object.freeze({
+    DANGER: "DANGER",
+    SUCCESS: "SUCCESS",
+    CALL_LAYOUT: "CALL_LAYOUT",
+    JOIN_LEAVE_CALL: "JOIN_LEAVE_CALL",
+});
+
 /** @typedef {import("@odoo/owl").Component} Component */
+/** @typedef {import("@mail/model/record").Record} Record */
+/** @typedef {Component|Record} ActionOwner */
 
 /**
  * @typedef {Object} ActionDefinition
- * @property {string|(comp: Component) => string} [btnClass]
+ * @property {Object|(action: Action) => Object} [btnAttrs]
+ * @property {string|(action: Action) => string} [btnClass]
  * @property {Component} [component]
- * @property {boolean|(comp: Component) => boolean} [componentCondition=true]
- * @property {(comp: Component) => Component<Props, Env>} [componentProps]
- * @property {boolean|(comp: Component) => boolean} [danger]
- * @property {boolean|(comp: Component) => boolean} [disabledCondition]
+ * @property {boolean|(action: Action) => boolean} [componentCondition=true]
+ * @property {(action: Action) => Component<Props, Env>} [componentProps]
+ * @property {boolean|(action: Action) => boolean} [disabledCondition]
  * @property {boolean} [dropdown]
- * @property {string|(comp: Component) => string} [hotkey]
- * @property {string|(comp: Component) => string} [icon]
- * @property {string|(comp: Component) => string} [iconLarge]
- * @property {boolean|(comp: Component) => boolean} [isActive]
- * @property {string|(comp: Component) => string} [name]
- * @property {(component: Component, ev: Event) => void} [onSelected]
- * @property {number|(comp: Component) => number} [sequence]
- * @property {boolean|(comp: Component) => boolean} [sequenceGroup]
- * @property {boolean|(comp: Component) => boolean} [sequenceQuick]
+ * @property {string|(action: Action) => string} [dropdownMenuClass]
+ * @property {string|(action: Action) => string} [dropdownPosition]
+ * @property {string|(action: Action) => string} [dropdownTemplate]
+ * @property {Object|(action: Action) => Object} [dropdownTemplateParams]
+ * @property {string|(action: Action) => string} [hotkey]
+ * @property {string|(action: Action) => string} [icon]
+ * @property {boolean|(action: Action) => boolean} [inlineName=false]
+ * @property {boolean|(action: Action) => boolean} [isActive]
+ * @property {string|(action: Action) => string} [name]
+ * @property {(action: Action, ev: Event) => void} [onSelected]
+ * @property {number|(action: Action) => number} [sequence]
+ * @property {boolean|(action: Action) => boolean} [sequenceGroup]
+ * @property {boolean|(action: Action) => boolean} [sequenceQuick]
  * @property {() => void} [setup]
- * @property {boolean|(comp: Component) => boolean} [success]
+ * @property {string|string[]|(action: Action) => string|string[]} [tags]
  */
 
 export class Action {
-    /** User-defined explicit definition of this action */
-    explicitDefinition;
-    /** Component in which the action is being used */
-    _component;
-    /** Unique id of this action. */
+    /** @type {ActionDefinition}  User-defined explicit definition of this action */
+    definition;
+    /** @type {ActionOwner} Entity that is using this action */
+    owner;
+    /** @type {string} Unique id of this action. */
     id;
+    /** @type {import("models").Store} */
+    store;
 
-    constructor(component, id, explicitDefinition) {
-        this.explicitDefinition = explicitDefinition;
+    /** param `store` is required for actions made with new Action() by hand in components and outside component.setup() */
+    constructor({ owner, id, definition, store }) {
+        this.definition = definition;
         this.id = id;
-        this._component = component;
+        this.owner = owner;
+        const rawOwner = toRaw(owner);
+        this.store =
+            store ?? rawOwner[STORE_SYM]
+                ? owner
+                : isRecord(owner)
+                ? owner.store
+                : useService("mail.store");
     }
 
+    get params() {
+        return { action: this, store: this.store, owner: this.owner };
+    }
+
+    /** @param {Action} action @returns {Object|undefined} */
+    _btnAttrs(action) {}
+    get btnAttrs() {
+        return (
+            this._btnAttrs(this.params) ??
+            (typeof this.definition.btnAttrs === "function"
+                ? this.definition.btnAttrs.call(this, this.params)
+                : this.definition.btnAttrs)
+        );
+    }
+
+    /** @param {Action} action @returns {string|undefined} */
+    _btnClass(action) {}
     get btnClass() {
-        return typeof this.explicitDefinition.btnClass === "function"
-            ? this.explicitDefinition.btnClass.call(this, this._component)
-            : this.explicitDefinition.btnClass;
+        return (
+            this._btnClass(this.params) ??
+            (typeof this.definition.btnClass === "function"
+                ? this.definition.btnClass.call(this, this.params)
+                : this.definition.btnClass)
+        );
     }
 
+    /** @param {Action} action @returns {Component|undefined} */
+    _component(action) {}
     /** When provided, this component is mounted for this action. UI/UX of action is fully managed by the component */
     get component() {
-        return this.explicitDefinition.component;
+        return this._component(this.params) ?? this.definition.component;
     }
 
+    /** @param {Action} action @returns {boolean|undefined} */
+    _componentCondition(action) {}
     /** When provided, action.component is conditionally picked based on this condition. When condition is false, the usual UI/UX of action from other explicit definitions is chosen */
     get componentCondition() {
-        return typeof this.explicitDefinition.componentCondition === "function"
-            ? this.explicitDefinition.componentCondition.call(this, this._component)
-            : this.explicitDefinition.componentCondition ?? true;
+        return (
+            this._componentCondition(this.params) ??
+            (typeof this.definition.componentCondition === "function"
+                ? this.definition.componentCondition.call(this, this.params)
+                : this.definition.componentCondition ?? true)
+        );
     }
 
+    /** @param {Action} action @returns {Object|undefined} */
+    _componentProps(action) {}
     /** Props to pass to the component of this action. */
     get componentProps() {
-        return this.explicitDefinition.componentProps?.call(this, this._component, this);
+        return (
+            this._componentProps(this.params) ??
+            this.definition.componentProps?.call(this, this.params)
+        );
     }
 
-    /** If set, this is considered as a danger (destructive) action. */
-    get danger() {
-        return typeof this.explicitDefinition.danger === "function"
-            ? this.explicitDefinition.danger.call(this, this._component)
-            : this.explicitDefinition.danger;
+    /** @param {Action} action @returns {boolean|undefined} */
+    _condition(action) {}
+    /** Condition for availability of this action */
+    get condition() {
+        return (
+            this._condition(this.params) ??
+            (typeof this.definition.condition === "function"
+                ? this.definition.condition.call(this, this.params)
+                : this.definition.condition ?? true)
+        );
     }
 
+    /** @param {Action} action @returns {boolean|undefined} */
+    _disabledCondition(action) {}
     /** Condition to disable the button of this action (but still display it). */
     get disabledCondition() {
-        return this.explicitDefinition.disabledCondition?.call(this, this._component);
+        return (
+            this._disabledCondition(this.params) ??
+            this.definition.disabledCondition?.call(this, this.params)
+        );
     }
 
+    /** @param {Action} action @returns {boolean|undefined} */
+    _dropdown(action) {}
     /** Determines whether this action opens a dropdown on selection. Value is shaped { template, menuClass } */
     get dropdown() {
-        return this.explicitDefinition.dropdown;
+        return this._dropdown(this.params) ?? this.definition.dropdown;
     }
 
+    /** @param {Action} action @returns {string|undefined} */
+    _dropdownMenuClass(action) {}
+    /** When action is a dropdown @see dropdown, this determines an optional menu class for the dropdown, in addition to default dropdown menu classes */
+    get dropdownMenuClass() {
+        return (
+            this._dropdownMenuClass(this.params) ??
+            (typeof this.definition.dropdownMenuClass === "function"
+                ? this.definition.dropdownMenuClass.call(this, this.params)
+                : this.definition.dropdownMenuClass)
+        );
+    }
+
+    /** @param {Action} action @returns {string|undefined} */
+    _dropdownPosition(action) {}
+    /** When action is a dropdown @see dropdown, this determines the preferred position of the dropdown */
+    get dropdownPosition() {
+        return (
+            this._dropdownPosition(this.params) ??
+            (typeof this.definition.dropdownPosition === "function"
+                ? this.definition.dropdownPosition.call(this, this.params)
+                : this.definition.dropdownPosition)
+        );
+    }
+
+    /** @param {Action} action @returns {string|undefined} */
+    _dropdownTemplate(action) {}
+    /** When action is a dropdown @see dropdown, this determines an optional template to use for the content slot */
+    get dropdownTemplate() {
+        return (
+            this._dropdownTemplate(this.params) ??
+            (typeof this.definition.dropdownTemplate === "function"
+                ? this.definition.dropdownTemplate.call(this, this.params)
+                : this.definition.dropdownTemplate)
+        );
+    }
+
+    /** @param {Action} action @returns {Object|undefined} */
+    _dropdownTemplateParams(action) {}
+    /**
+     * When action is a dropdown @see dropdown, this determines optional params to pass to template of the content slot of dropdown.
+     * The params are provided to template in object `templateParams` with named parameters as given by explicit definition.
+     * For example: `{ myParam1: 1 }` is retrieved in template with `templateParams.myParam1`.
+     */
+    get dropdownTemplateParams() {
+        return (
+            this._dropdownTemplateParams(this.params) ??
+            (typeof this.definition.dropdownTemplateParams === "function"
+                ? this.definition.dropdownTemplateParams.call(this, this.params)
+                : this.definition.dropdownTemplateParams)
+        );
+    }
+
+    /** @param {Action} action @returns {string|undefined} */
+    _hotkey(action) {}
     /** Determines whether this action has a keyboard hotkey to trigger the onSelected */
     get hotkey() {
-        return typeof this.explicitDefinition.hotkey === "function"
-            ? this.explicitDefinition.hotkey.call(this, this._component)
-            : this.explicitDefinition.hotkey;
+        return (
+            this._hotkey(this.params) ??
+            (typeof this.definition.hotkey === "function"
+                ? this.definition.hotkey.call(this, this.params)
+                : this.definition.hotkey)
+        );
     }
 
+    /** @param {Action} action @returns {string|Object|undefined} */
+    _icon(action) {}
     /**
      * Icon for the button this action.
      * - When a string, this is considered an icon as classname (.fa and .oi).
@@ -93,82 +221,170 @@ export class Action {
      *   Template params are provided in `params` and passed to template as a `t-set="templateParams"`
      */
     get icon() {
-        return typeof this.explicitDefinition.icon === "function"
-            ? this.explicitDefinition.icon.call(this, this._component)
-            : this.explicitDefinition.icon;
+        return (
+            this._icon(this.params) ??
+            (typeof this.definition.icon === "function"
+                ? this.definition.icon.call(this, this.params)
+                : this.definition.icon)
+        );
     }
 
-    /**
-     * Large icon for the button this action.
-     * - When a string, this is considered an icon as classname (.fa and .oi).
-     * - When an object with property `template`, this is an icon rendered in template.
-     *   Template params are provided in `params` and passed to template as a `t-set="templateParams"`
-     */
-    get iconLarge() {
-        return typeof this.explicitDefinition.iconLarge === "function"
-            ? this.explicitDefinition.iconLarge.call(this, this._component)
-            : this.explicitDefinition.iconLarge ?? this.icon;
+    /** @param {Action} action @returns {string|undefined} */
+    _inlineName(action) {}
+    /** If set, when action is used in inline, shows action name in addition to icon. */
+    get inlineName() {
+        return (
+            this._inlineName(this.params) ??
+            (typeof this.definition.inlineName === "function"
+                ? this.definition.inlineName.call(this, this.params)
+                : this.definition.inlineName) ??
+            false
+        );
     }
 
+    /** @param {Action} action @returns {boolean|undefined} */
+    _isActive(action) {}
     /** States whether this action is currently active. */
     get isActive() {
-        return typeof this.explicitDefinition.isActive === "function"
-            ? this.explicitDefinition.isActive.call(this, this._component)
-            : this.explicitDefinition.isActive;
+        return (
+            this._isActive(this.params) ??
+            (typeof this.definition.isActive === "function"
+                ? this.definition.isActive.call(this, this.params)
+                : this.definition.isActive)
+        );
     }
 
+    /** @param {Action} action @returns {string|undefined} */
+    _name(action) {}
     /** Name of this action, displayed to the user. */
     get name() {
-        return typeof this.explicitDefinition.name === "function"
-            ? this.explicitDefinition.name.call(this, this._component)
-            : this.explicitDefinition.name;
+        return (
+            this._name(this.params) ??
+            (typeof this.definition.name === "function"
+                ? this.definition.name.call(this, this.params)
+                : this.definition.name)
+        );
     }
 
-    /** Action to execute when this action is selected */
+    /** @param {Action} action @param {Event} ev @returns {true|undefined} */
+    _onSelected(action, ev) {}
+    /** Action to execute when this action is selected @param {Event} ev */
     onSelected(ev) {
-        return this.explicitDefinition.onSelected?.call(this, this._component, this, ev);
+        return (
+            this._onSelected(this.params, ev) ??
+            this.definition.onSelected?.call(this, this.params, ev)
+        );
     }
 
+    /** @param {Action} action @returns {number|undefined} */
+    _sequence(action) {}
     /** Determines the order of this action (smaller first). */
     get sequence() {
-        return typeof this.explicitDefinition.sequence === "function"
-            ? this.explicitDefinition.sequence.call(this, this._component)
-            : this.explicitDefinition.sequence;
+        return (
+            this._sequence(this.params) ??
+            (typeof this.definition.sequence === "function"
+                ? this.definition.sequence.call(this, this.params)
+                : this.definition.sequence)
+        );
     }
 
-    /** Component setup to execute when this action is registered. */
+    /** @param {Action} action @returns {number|undefined} */
+    _sequenceGroup(action) {}
+    get sequenceGroup() {
+        return (
+            this._sequenceGroup(this.params) ??
+            (typeof this.definition.sequenceGroup === "function"
+                ? this.definition.sequenceGroup.call(this, this.params)
+                : this.definition.sequenceGroup)
+        );
+    }
+
+    /** @param {Action} action @returns {number|undefined} */
+    _sequenceQuick(action) {}
+    get sequenceQuick() {
+        return (
+            this._sequenceQuick(this.params) ??
+            (typeof this.definition.sequenceQuick === "function"
+                ? this.definition.sequenceQuick.call(this, this.params)
+                : this.definition.sequenceQuick)
+        );
+    }
+
+    /** @param {Action} action @returns {true|undefined} */
+    _setup(action) {}
+    /** setup is executed when the owner is being setup. */
     setup() {
-        const component = useComponent();
-        return this.explicitDefinition.setup?.call(this, component);
+        return this._setup(this.params) ?? this.definition.setup?.call(this, this.params);
     }
 
-    /** If set, this is considered as a success (high-commitment positive) action. */
-    get success() {
-        return typeof this.explicitDefinition.success === "function"
-            ? this.explicitDefinition.success.call(this, this._component)
-            : this.explicitDefinition.success;
+    /** @param {Action} action @returns {string|string[]|undefined} */
+    _tags(action) {}
+    /** If set, list of tags of this action. */
+    get tags() {
+        const res =
+            this._tags(this.params) ??
+            (typeof this.definition.tags === "function"
+                ? this.definition.tags.call(this, this.params)
+                : this.definition.tags);
+        return Array.isArray(res) ? res : [res];
+    }
+
+    get tagClassNames() {
+        return this.tags.map((tag) => `o-tag-${tag}`).join(" ");
     }
 }
 
 export class UseActions extends Reactive {
     ActionClass = Action;
+    /** @type {Component} */
     component;
+    /** @type {Map<string, Action>} */
+    moreActions = new Map();
+    /** @type {Action[]} */
     transformedActions;
+    /** @type {import("models").Store} */
+    store;
 
-    constructor(component, transformedActions) {
+    constructor(component, transformedActions, store) {
         super();
         this.component = component;
         this.transformedActions = transformedActions;
+        this.store = store;
+    }
+
+    /**
+     * @typedef {Object} MoreActionSpecificDefinition
+     * @property {Action[]|Array<Action[]>} actions
+     */
+    /** @typedef {ActionDefinition & MoreActionSpecificDefinition} MoreActionDefinition */
+    /** @param {MoreActionDefinition} [data] */
+    more(data = {}, id) {
+        let moreAction = toRaw(this).moreActions.get(id);
+        if (moreAction) {
+            moreAction = this.moreActions.get(id);
+            moreAction.definition.actions = data.actions;
+        } else {
+            moreAction = new this.ActionClass({
+                owner: this.component,
+                id: `more-action:${id}`,
+                definition: {
+                    ...data,
+                    dropdown: true,
+                    icon: data?.icon ?? "oi oi-ellipsis-v",
+                    isMoreAction: true,
+                    sequence: data.sequence ?? 1000,
+                },
+                store: this.store,
+            });
+            toRaw(this).moreActions.set(data.id, moreAction);
+        }
+        return moreAction;
     }
 
     get actions() {
         const actions = this.transformedActions
             .filter((action) => action.condition)
             .sort((a1, a2) => a1.sequence - a2.sequence);
-        if (actions.length > 0) {
-            actions.at(0).isFirst = true;
-            actions.at(-1).isLast = true;
-        }
         return actions;
     }
 
