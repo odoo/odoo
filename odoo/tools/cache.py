@@ -142,15 +142,20 @@ class ormcache:
         except KeyError:
             counter.miss += 1
             counter.tx_miss += tx_first_lookup
+            miss = True
+        except TypeError:
+            _logger.warning("cache lookup error on %r", key, exc_info=True)
+            counter.err += 1
+            counter.tx_err += tx_first_lookup
+            miss = False
+
+        if miss:
             start = time.monotonic()
             value = self.method(*args, **kwargs)
             counter.gen_time += time.monotonic() - start
             d[key] = value
             return value
-        except TypeError:
-            _logger.warning("cache lookup error on %r", key, exc_info=True)
-            counter.err += 1
-            counter.tx_err += tx_first_lookup
+        else:
             return self.method(*args, **kwargs)
 
 
