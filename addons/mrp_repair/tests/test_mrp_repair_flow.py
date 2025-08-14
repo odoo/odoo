@@ -52,3 +52,32 @@ class TestMrpRepairFlow(TestMrpCommon):
         self.assertEqual(production.move_dest_ids.repair_id, repair)
         self.assertEqual(production.repair_count, 1)
         self.assertEqual(repair.production_count, 1)
+
+    def test_adding_kit_parts_to_confirmed_repair(self):
+        """Test adding a kit product to a confirmed repair order.
+        This ensures that:
+        - Its moves are correctly exploded into their component parts.
+        - The generated component moves are properly linked to the repair order.
+        """
+        repair = self.env['repair.order'].create({
+            'product_id': self.product.id,
+            'picking_type_id': self.warehouse_1.repair_type_id.id,
+        })
+        repair.action_validate()
+        self.assertEqual(repair.state, 'confirmed')
+        self.assertEqual(len(repair.move_ids), 0)
+        # Ensure the product is a kit
+        self.assertTrue(self.product_5.is_kits)
+        # Add the kit to the repair order
+        self.env['stock.move'].create({
+            'repair_id': repair.id,
+            'product_id': self.product_5.id,
+            'product_uom_qty': 1.0,
+            'repair_line_type': 'add',
+        })
+        # Check that the kit has been exploded into its components
+        self.assertEqual(len(repair.move_ids), 2)
+        self.assertEqual(
+            set(repair.move_ids.product_id.ids),
+            set(self.product_5.bom_ids.bom_line_ids.product_id.ids)
+        )
