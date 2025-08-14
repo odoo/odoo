@@ -30,10 +30,33 @@ class TestPaymentProvider(PaymentCommon):
             self.provider.state = 'disabled'
             with patch(
                 'odoo.addons.payment.models.payment_provider.PaymentProvider'
-                '._get_default_payment_method_codes', return_value=self.payment_method_code,
+                '._get_default_payment_method_codes', return_value={self.payment_method_code},
             ):
                 self.provider.state = new_state
                 self.assertTrue(self.payment_methods.active)
+
+    def test_enabling_manual_capture_provider_activates_compatible_default_pms(self):
+        """Test that only payment methods supporting manual capture are activated when a provider
+        requiring manual capture is enabled."""
+        payment_method_with_manual_capture = self.env['payment.method'].create({
+            'name': 'Payment Method With Manual Capture',
+            'code': 'pm_with_manual_capture',
+            'support_manual_capture': 'full_only',
+        })
+        self.provider.state = 'disabled'
+        self.provider.capture_manually = True
+        self.provider.payment_method_ids = [Command.set([
+            self.payment_method.id, payment_method_with_manual_capture.id
+        ])]
+        self.payment_method.support_manual_capture = 'none'
+        default_codes = {self.payment_method_code, payment_method_with_manual_capture.code}
+        with patch(
+            'odoo.addons.payment.models.payment_provider.PaymentProvider'
+            '._get_default_payment_method_codes', return_value=default_codes,
+        ):
+            self.provider.state = 'test'
+            self.assertFalse(self.payment_methods.active)
+            self.assertTrue(payment_method_with_manual_capture.active)
 
     def test_disabling_provider_deactivates_default_payment_methods(self):
         """ Test that the default payment methods of a provider are deactivated when it is
