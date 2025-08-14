@@ -33,6 +33,9 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
         'website.assets_edit_frontend': [
             'website_mass_mailing/static/src/website_builder/mailing_list_subscribe_option.inside.scss',
         ],
+        'html_builder.assets': [
+            'website_mass_mailing/static/src/plugins/form_option_plugin.js',
+        ],
         'web.assets_tests': [
             'website_mass_mailing/static/tests/tours/**/*',
         ],
