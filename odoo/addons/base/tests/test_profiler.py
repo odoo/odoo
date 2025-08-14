@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import sys
 import time
@@ -7,6 +6,7 @@ from unittest.mock import patch
 
 from odoo.exceptions import AccessError
 from odoo.tests.common import BaseCase, TransactionCase, tagged, new_test_user, HttpCase
+from odoo.tests.result import stats_logger
 from odoo.tools import profiler
 from odoo.tools.profiler import Profiler, ExecutionContext
 from odoo.tools.speedscope import Speedscope
@@ -592,8 +592,7 @@ def deep_call(func, depth):
         func()
 
 
-@tagged('-standard', 'profiling_performance')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install', 'profiling_performance')
 class TestPerformance(BaseCase):
 
     def test_collector_max_frequency(self):
@@ -601,7 +600,7 @@ class TestPerformance(BaseCase):
         Check the creation time of an entry
         """
         collector = profiler.Collector()
-        p = Profiler(collectors=[collector], db=None)
+        p = Profiler(collectors=[collector], db=None, disable_gc=True)
 
         def collect():
             collector.add()
@@ -612,11 +611,14 @@ class TestPerformance(BaseCase):
             while start + 1 > time.time():
                 deep_call(collect, 20)
 
-        self.assertGreater(len(collector.entries), 20000)  # ~40000
+        entry_count = len(collector.entries)
+        stats_logger.info("collector max frequency in %.3fμs", 1_000_000 / entry_count)
+        self.assertGreater(entry_count, 20000)  # ~40000
 
+    def test_collector_max_frequency_identical(self):
         # collect on identical stack
         collector = profiler.Collector()
-        p = Profiler(collectors=[collector], db=None)
+        p = Profiler(collectors=[collector], db=None, disable_gc=True)
 
         def collect_1_s():
             start = time.time()
@@ -626,7 +628,8 @@ class TestPerformance(BaseCase):
         with p:
             deep_call(collect_1_s, 20)
 
-        self.assertGreater(len(collector.entries), 50000)  # ~70000
+        entry_count = len(collector.entries)
+        self.assertGreater(entry_count, 50000)  # ~70000
 
     def test_frequencies_1ms_sleep(self):
         """
@@ -640,21 +643,53 @@ class TestPerformance(BaseCase):
         def sleep_2():
             time.sleep(0.0001)
 
-        with Profiler(collectors=['traces_async'], db=None) as res:
+        with Profiler(collectors=['traces_async'], db=None, disable_gc=True) as res:
             start = time.time()
             while start + 1 > time.time():
                 sleep_1()
                 sleep_2()
 
         entry_count = len(res.collectors[0].entries)
+        stats_logger.info("async collector overhead in %.3fms", 1000 / entry_count - 1)
         self.assertGreater(entry_count, 700)  # ~920
+
+    def test_async_max_frequency(self):
+        """
+        Check the number of entries generated in 1s
+        we need to artificially change the frame as often as possible to avoid
+        triggering the memory optimisation skipping identical frames
+        """
+        call_count = 0
+
+        def my_call():
+            pass
+
+        def sleep_1():
+            deep_call(my_call, 10)
+
+        def sleep_2():
+            deep_call(my_call, 30)
+
+        def noop(*a):
+            nonlocal call_count
+            call_count += 1
+
+        collector = profiler.PeriodicCollector()
+        collector.sleep = noop
+        with Profiler(collectors=[collector], db=None, disable_gc=True):
+            start = time.time()
+            while start + 1 > time.time():
+                sleep_1()
+                sleep_2()
+
+        stats_logger.info("async_trace max frequency in %.3fμs", 1_000_000 / call_count)
 
     def test_traces_async_memory_optimisation(self):
         """
         Identical frames should be saved only once.
         We should only have a few entries on a 1 second sleep.
         """
-        with Profiler(collectors=['traces_async'], db=None) as res:
+        with Profiler(collectors=['memory'], db=None, disable_gc=True) as res:
             time.sleep(1)
         entry_count = len(res.collectors[0].entries)
         self.assertLess(entry_count, 5)  # ~3
