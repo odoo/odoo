@@ -390,7 +390,6 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _get_values_500_error(cls, env, values, exception):
-        View = env["ir.ui.view"]
         values = super()._get_values_500_error(env, values, exception)
         if 'qweb_exception' in values:
             try:
@@ -398,7 +397,8 @@ class IrHttp(models.AbstractModel):
                 exception_template = int(exception.name)
             except ValueError:
                 exception_template = exception.name
-            view = View.sudo()._get_template_view(exception_template)
+            View = env["ir.ui.view"].sudo()
+            view = View._get_template_view(exception_template)
             if exception.html and exception.html in view.arch:
                 values['view'] = view
             else:
