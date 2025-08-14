@@ -129,7 +129,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             run: "click",
         },
         {
-            trigger: ".o-mail-Message:not(:has(.o-mail-MessageReaction))",
+            trigger: ".o-mail-Message:not(:has(.o-mail-MessageReaction:contains('🙂')))",
         },
         {
             content: "Click on more menu",
