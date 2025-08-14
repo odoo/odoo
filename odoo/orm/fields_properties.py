@@ -79,7 +79,7 @@ class Properties(Field):
 
     ALLOWED_TYPES = (
         # standard types
-        'boolean', 'integer', 'float', 'text', 'char', 'html', 'date', 'datetime',
+        'boolean', 'integer', 'float', 'text', 'char', 'html', 'date', 'datetime', 'monetary',
         # relational like types
         'many2one', 'many2many', 'selection', 'tags',
         # UI types
@@ -857,11 +857,13 @@ class PropertiesDefinition(Field):
     REQUIRED_KEYS = ('name', 'type')
     ALLOWED_KEYS = (
         'name', 'string', 'type', 'comodel', 'default',
-        'selection', 'tags', 'domain', 'view_in_cards', 'fold_by_default'
+        'selection', 'tags', 'domain', 'view_in_cards', 'fold_by_default',
+        'currency_field'
     )
     # those keys will be removed if the types does not match
     PROPERTY_PARAMETERS_MAP = {
         'comodel': {'many2one', 'many2many'},
+        'currency_field': {'monetary'},
         'domain': {'many2one', 'many2many'},
         'selection': {'selection'},
         'tags': {'tags'},
