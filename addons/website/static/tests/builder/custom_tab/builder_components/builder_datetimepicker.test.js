@@ -137,22 +137,3 @@ test("selects a date and properly applies it", async () => {
     const dateTimestamp = parseFloat(queryOne(":iframe .test-options-target").dataset.date);
     expect(Math.abs(expectedDateTimestamp - dateTimestamp)).toBeLessThan(TIME_TOLERANCE);
 });
-
-test("selects a date and synchronize the input field, while still in preview", async () => {
-    addOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderDateTimePicker dataAttributeAction="'date'" acceptEmptyDate="false"/>`,
-    });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
-    await contains(":iframe .test-options-target").click();
-    await contains(".we-bg-options-container input").click();
-    await contains(".o_date_item_cell.o_today + .o_date_item_cell").click();
-
-    const dateString = queryOne(".we-bg-options-container input").value;
-    const expectedDateTime = DateTime.now().plus({ days: 1 });
-    expect(isExpectedDateTime({ dateString, expectedDateTime })).toBe(true);
-
-    const expectedDateTimestamp = expectedDateTime.toUnixInteger();
-    const dateTimestamp = parseFloat(queryOne(":iframe .test-options-target").dataset.date);
-    expect(Math.abs(expectedDateTimestamp - dateTimestamp)).toBeLessThan(TIME_TOLERANCE);
-});

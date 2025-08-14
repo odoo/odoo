@@ -78,7 +78,6 @@ export class BuilderDateTimePicker extends Component {
             onChange: (value) => {
                 const dateString = this.formatDateTime(value);
                 this.preview(dateString);
-                state.value = this.parseDisplayValue(dateString);
             },
         });
     }
