@@ -1,3 +1,6 @@
+import { Deferred } from "@odoo/hoot-dom";
+
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { registry } from "@web/core/registry";
 
 /**
@@ -6,6 +9,15 @@ import { registry } from "@web/core/registry";
  */
 function getSteps(viewType) {
     let bobChatId;
+    const subscribeDoneDeferred = new Deferred();
+    patchWithCleanup(odoo.__WOWL_DEBUG__.root.env.services.bus_service, {
+        async addChannel(channel) {
+            await super.addChannel(...arguments);
+            if (channel === "im_livechat.looking_for_help") {
+                subscribeDoneDeferred.resolve();
+            }
+        },
+    });
     return [
         {
             trigger: ".o_control_panel .active:contains(Looking for Help)",
@@ -16,6 +28,7 @@ function getSteps(viewType) {
                     ? ".o_list_table:has(.o_data_row:contains(bob_looking_for_help))"
                     : ".o_kanban_renderer:has(.o_kanban_record [name=livechat_agent_partner_ids] [aria-label^=bob_looking_for_help])",
             async run() {
+                await subscribeDoneDeferred;
                 const { orm } = odoo.__WOWL_DEBUG__.root.env.services;
                 [bobChatId] = await orm.search("discuss.channel", [
                     ["livechat_status", "=", "need_help"],
