@@ -53,7 +53,7 @@ export class ChatWindow extends Component {
         });
         this.ui = useService("ui");
         this.contentRef = useRef("content");
-        this.threadActions = useThreadActions();
+        this.threadActions = useThreadActions({ thread: () => this.thread });
         this.actionsMenuButtonHover = useHover("actionsMenuButton");
         this.parentChannelHover = useHover("parentChannel");
         this.isMobileOS = isMobileOS();
@@ -149,7 +149,7 @@ export class ChatWindow extends Component {
             this.ui.isSmall ||
             this.state.editingName ||
             this.props.chatWindow.actionsDisabled ||
-            isEventHandled(ev, "DiscussAction.onSelected")
+            isEventHandled(ev, "ThreadAction.onSelected")
         ) {
             return;
         }

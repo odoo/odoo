@@ -3,7 +3,7 @@
         opacity: 12.5% !important;
     }
 
-    .o-mail-ActionList-group.o-odooControlPanelSwitchStyle:has(.rounded-circle) {
+    .o-mail-ActionList-group.o-hasBtnBg:has(.rounded-circle) {
         gap: map-get($spacers, 1);
     }
 
@@ -11,7 +11,7 @@
         z-index: 1;
         --btn-disabled-opacity: 0.25;
 
-        &:not(.o-odooControlPanelSwitchStyle) {
+        &:not(.o-hasBtnBg) {
             background-color: inherit;
         }
 
@@ -21,14 +21,14 @@
 
                 height: var(--o-mail-ActionList-Button-height, #{$_btn-height});
                 aspect-ratio: var(--o-mail-ActionList-Button-aspect-ratio, 1.1);
-                opacity: var(--o-mail-ActionList-Button-opacity);
+                filter: brightness(var(--o-mail-ActionList-Button-opacity));
                 line-height: 1;
 
                 &:where(.rounded-circle) {
                     aspect-ratio: 1;
                 }
-                &:hover, &:focus, &:active, &:focus-visible  {
-                    opacity: var(--o-mail-ActionList-Button-opacity--hover);
+                &:hover, &:focus, &:active, &.active, &:focus-visible {
+                    filter: brightness(var(--o-mail-ActionList-Button-opacity--hover));
                 }
             }
 
@@ -44,18 +44,20 @@
             }
         }
 
-        &.o-dropdown-item.btn-success, .o-mail-ChatWindow &.btn-success {
+        &.o-tag-JOIN_LEAVE_CALL i {
+            color: white !important;
+        }
+
+        &.o-tag-JOIN_LEAVE_CALL.o-dropdown-item, .o-mail-ChatWindow &.o-tag-JOIN_LEAVE_CALL {
             i {
                 opacity: 100%;
                 background: var(--btn-bg);
-                color: var(--btn-color);
                 aspect-ratio: 1;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 border-radius: 100%;
                 padding: 0.4em;
-                height: 1.2em;
                 box-sizing: content-box;
             }
 
@@ -66,11 +68,17 @@
                 }
             }
         }
-        &.o-dropdown-item.btn-success i {
+        &.o-tag-JOIN_LEAVE_CALL.o-dropdown-item i {
             font-size: 0.7em !important;
+            &.fa-phone::before {
+                transform: translateY(1px);
+            }
         }
-        .o-mail-ChatWindow &.btn-success i {
+        .o-mail-ChatWindow &.o-tag-JOIN_LEAVE_CALL i {
             font-size: 0.9em !important;
+            &.fa-phone::before {
+                transform: translateY(.5px);
+            }
         }
         &.o-dropdown-item.btn-danger {
             &.focus {

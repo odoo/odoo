@@ -1,40 +1,52 @@
-import { Component, useRef, useState, useExternalListener } from "@odoo/owl";
+import { Component, useRef, useState, useExternalListener, useSubEnv } from "@odoo/owl";
+import { useNavigation } from "@web/core/navigation/navigation";
 import { usePosition } from "@web/core/position/position_hook";
 
 /**
- * CallPopover is an alternative to the web popover for calls to make them available
+ * CallDropdown is an alternative to the web popover for calls to make them available
  * in cases where they cannot be overlays (main components), such as in picture-in-picture mode.
  */
-export class CallPopover extends Component {
-    static template = "discuss.CallPopover";
+export class CallDropdown extends Component {
+    static template = "discuss.CallDropdown";
     static props = {
         position: { type: String, optional: true },
         class: { type: String, optional: true },
-        contentClass: { type: String, optional: true },
-        clickToClose: { type: Boolean, optional: true },
+        menuClass: { type: String, optional: true },
         slots: { optional: true },
         openByDefault: { type: Boolean, optional: true },
+        state: { type: Object, optional: true },
     };
     static defaultProps = {
         position: "bottom",
         class: "",
-        contentClass: "",
-        clickToClose: false,
+        menuClass: "",
         openByDefault: false,
     };
 
     setup() {
         super.setup();
         this.triggerRef = useRef("trigger");
-        this.contentRef = useRef("content");
+        this.menuRef = useRef("menu");
         this.state = useState({ isOpen: this.props.openByDefault });
-        usePosition("content", () => this.triggerRef.el, {
+        usePosition("menu", () => this.triggerRef.el, {
             position: this.props.position,
             margin: 4,
             flip: true,
         });
-        useExternalListener(this.window, "click", this.onDocumentClick, { capture: true });
+        useExternalListener(this.window, "click", this.onClickAway, { capture: true });
         useExternalListener(this.window, "keydown", this.onKeydown);
+        useSubEnv({ inCallDropdown: { close: () => this.close() } });
+        this.navigation = useNavigation(this.menuRef, {
+            isNavigationAvailable: () => this.state.isOpen,
+            getItems: () => {
+                if (this.state.isOpen && this.menuRef.el) {
+                    return this.menuRef.el.querySelectorAll(
+                        ":scope .o-navigable, :scope .o-dropdown"
+                    );
+                }
+                return [];
+            },
+        });
     }
 
     get window() {
@@ -57,27 +69,25 @@ export class CallPopover extends Component {
         this.state.isOpen = false;
     }
 
-    onTriggerClick(ev) {
+    handleClick(ev) {
         ev.preventDefault();
         ev.stopPropagation();
         this.toggle();
     }
 
-    onDocumentClick(ev) {
+    onClickAway(ev) {
         if (!this.isOpen) {
             return;
         }
         const isOutsideClick =
-            !this.triggerRef.el?.contains(ev.target) && !this.contentRef.el?.contains(ev.target);
+            !this.triggerRef.el?.contains(ev.target) && !this.menuRef.el?.contains(ev.target);
         if (isOutsideClick) {
             this.close();
         }
     }
 
-    onContentClick(ev) {
-        if (this.props.clickToClose) {
-            this.close();
-        }
+    onClickMenu(ev) {
+        this.close();
         ev.stopPropagation();
     }
 

@@ -8,31 +8,30 @@ import { markEventHandled } from "@web/core/utils/misc";
 import { useGifPicker } from "./gif_picker";
 
 registerComposerAction("add-gif", {
-    condition: (component) =>
-        (component.store.hasGifPickerFeature || component.store.self.main_user_id?.is_admin) &&
-        !component.env.inChatter &&
-        !component.props.composer.message,
+    condition: ({ composer, owner, store }) =>
+        (store.hasGifPickerFeature || store.self.main_user_id?.is_admin) &&
+        !owner.env.inChatter &&
+        !composer.message,
     isPicker: true,
     pickerName: _t("GIF"),
     icon: "oi oi-gif-picker",
-    iconLarge: "oi fa-lg oi-gif-picker",
     name: _t("Add GIFs"),
-    onSelected: (component, action, ev) => {
-        pickerOnClick(component, action, ev);
+    onSelected({ owner }, ev) {
+        pickerOnClick(owner, this, ev);
         markEventHandled(ev, "Composer.onClickAddGif");
     },
-    setup(component) {
+    setup({ owner }) {
         pickerSetup(this, () =>
             useGifPicker(
                 undefined,
                 {
-                    onSelect: (gif) => component.sendGifMessage(gif),
-                    onClose: () => component.setActivePicker(null),
+                    onSelect: (gif) => owner.sendGifMessage(gif),
+                    onClose: () => owner.setActivePicker(null),
                 },
                 { arrow: false }
             )
         );
     },
-    sequence: (component) => (!component.env.inDiscussApp ? 40 : undefined),
-    sequenceQuick: (component) => (component.env.inDiscussApp ? 15 : undefined),
+    sequence: ({ owner }) => (!owner.env.inDiscussApp ? 40 : undefined),
+    sequenceQuick: ({ owner }) => (owner.env.inDiscussApp ? 15 : undefined),
 });

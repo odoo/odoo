@@ -79,6 +79,7 @@ export class Thread extends Component {
         this.onScroll = this.onScroll.bind(this);
         this.registerMessageRef = this.registerMessageRef.bind(this);
         this.store = useService("mail.store");
+        this.ui = useService("ui");
         this.state = useState({
             isFocused: false,
             isReplyingTo: false,

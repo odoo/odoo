@@ -112,6 +112,10 @@ export class Composer extends Record {
     get syncHtmlWithMessage() {
         return this.message && !this.isDirty;
     }
+
+    get targetThread() {
+        return this.replyToMessage?.thread ?? this.thread ?? null;
+    }
 }
 
 Composer.register();

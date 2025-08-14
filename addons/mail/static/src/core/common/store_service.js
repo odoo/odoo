@@ -16,6 +16,7 @@ import { loader } from "@web/core/emoji_picker/emoji_picker";
 import { patch } from "@web/core/utils/patch";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { getOrigin } from "@web/core/utils/urls";
+import { cookie } from "@web/core/browser/cookie";
 
 /**
  * @typedef {{isSpecial: boolean, channel_types: string[], label: string, displayName: string, description: string}} SpecialMention
@@ -195,6 +196,23 @@ export class Store extends BaseStore {
         },
     });
 
+    shouldSimulateDarkTheme(ctx) {
+        return (
+            (ctx?.env?.inDiscussCallView || ctx?.env?.inMeetingView) &&
+            this.isOdooWhiteTheme &&
+            !ctx?.env.inMeetingSideActions &&
+            !ctx?.env.inDiscussActionPanel
+        );
+    }
+
+    discussDropdownMenuClass(ctx) {
+        const res = ["o-discuss-dropdownMenu", "d-flex", "flex-column", "border-secondary"];
+        if (this.shouldSimulateDarkTheme(ctx)) {
+            res.push("o-simulateDarkTheme");
+        }
+        return res.join(" ");
+    }
+
     /**
      * @param {Object} params post message data
      * @param {import("models").Message} tmpMessage the associated temporary message
@@ -353,7 +371,7 @@ export class Store extends BaseStore {
         this.ChatWindow.get(thread)?.update({ autofocus: 0 });
         await this.env.services["discuss.rtc"].toggleCall(thread, { camera: true });
         if (this.rtc.selfSession) {
-            this.rtc.enterFullscreen({ initialSidePanel: "invite" });
+            this.rtc.enterFullscreen({ autoOpenAction: "invite-people" });
         }
     }
 
@@ -435,6 +453,7 @@ export class Store extends BaseStore {
 
     /** Provides an override point for when the store service has started. */
     onStarted() {
+        this.isOdooWhiteTheme = cookie.get("color_scheme") !== "dark";
         navigator.serviceWorker?.addEventListener("message", ({ data = {} }) => {
             const { type, payload } = data;
             if (type === "notification-display-request") {

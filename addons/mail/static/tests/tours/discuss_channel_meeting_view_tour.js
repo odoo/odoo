@@ -6,41 +6,41 @@ function getMeetingViewTourSteps({ inWelcomePage = false } = {}) {
     const steps = [
         { trigger: ".o-mail-Meeting" },
         {
-            trigger: "[title='Invite people']",
+            trigger: ".o-mail-Meeting [title='Invite People']",
             run: "click",
         },
-        { trigger: ".o-mail-Meeting-sidePanel:contains('Invite people')" },
+        { trigger: ".o-mail-Meeting .o-mail-ActionPanel:contains('Invite people')" },
         {
-            trigger: "[title='Close invite']",
+            trigger: ".o-mail-Meeting [title='Invite People']", // close it
             run: "click",
         },
-        { trigger: ".o-mail-Meeting:not(:has(.o-mail-Meeting-sidePanel))" },
+        { trigger: ".o-mail-Meeting:not(:has(.o-mail-ActionPanel))" },
         {
-            trigger: "[title='Invite people']",
+            trigger: ".o-mail-Meeting [title='Invite People']",
             run: "click",
         },
-        { trigger: ".o-mail-Meeting-sidePanel:contains('Invite people')" },
+        { trigger: ".o-mail-Meeting .o-mail-ActionPanel:contains('Invite people')" },
         {
-            trigger: "[title='Chat']",
+            trigger: ".o-mail-Meeting [title='Chat']",
             run: "click",
         },
         {
             trigger:
-                ".o-mail-Meeting-sidePanel .o-mail-Thread:contains('john (base.group_user) and bob (base.group_user)')",
+                ".o-mail-Meeting .o-mail-ActionPanel .o-mail-Thread:contains('john (base.group_user) and bob (base.group_user)')",
             async run({ waitFor }) {
                 const files = [new File(["hi there"], "file2.txt", { type: "text/plain" })];
-                await dragenterFiles(".o-mail-Meeting-sidePanel", files);
+                await dragenterFiles(".o-mail-Meeting .o-mail-ActionPanel", files);
                 // Ensure other dropzones such as discuss or chat window dropzones are not active in meeting view.
                 await waitFor(".o-Dropzone", { only: true });
             },
         },
         {
-            trigger: "[title='Close Side Panel']",
+            trigger: ".o-mail-Meeting [title='Close panel']",
             run: "click",
         },
-        { trigger: ".o-mail-Meeting:not(:has(.o-mail-Meeting-sidePanel))" },
+        { trigger: ".o-mail-Meeting:not(:has(.o-mail-ActionPanel))" },
         {
-            trigger: "[title='Exit Fullscreen']",
+            trigger: ".o-mail-Meeting [title='Exit Fullscreen']",
             run: "click",
         },
         { trigger: "body:not(:has(.o-mail-Meeting))" },

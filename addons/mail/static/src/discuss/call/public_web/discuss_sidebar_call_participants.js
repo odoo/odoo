@@ -2,7 +2,6 @@ import { Component, useEffect, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Thread } from "@mail/core/common/thread_model";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
-import { callActionsRegistry } from "../common/call_actions";
 import { useHover } from "@mail/utils/common/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -39,10 +38,6 @@ export class DiscussSidebarCallParticipants extends Component {
             },
             () => [this.rtc.selfSession, this.compact]
         );
-    }
-
-    get callActionsRegistry() {
-        return callActionsRegistry;
     }
 
     get compact() {

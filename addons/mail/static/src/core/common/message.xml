@@ -60,12 +60,7 @@
                             <t t-if="isAlignedRight" t-call="mail.Message.notification"/>
                             <t t-if="!isAlignedRight and !message.bubbleColor and !(props.asCard and isMobileOS)" t-call="mail.Message.actions"/>
                         </div>
-                        <div
-                            class="o-mail-Message-contentContainer position-relative d-flex"
-                            t-att-class="{
-                                   'flex-row-reverse': isAlignedRight,
-                                   }"
-                        >
+                        <div class="o-mail-Message-contentContainer position-relative d-flex">
                             <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': isEditing, 'opacity-50': message.isPending, 'pt-1': message.isNote }">
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': isEditing }">
                                     <t t-if="message.message_type === 'notification' and message.richBody" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
@@ -166,7 +161,7 @@
     >
         <t t-if="isMobileOS">
             <t t-call="mail.Message.emptyQuickAction"/>
-            <Dropdown state="optionsDropdown" menuClass="'o-discuss-dropdownMenu'">
+            <Dropdown state="optionsDropdown" menuClass="store.discussDropdownMenuClass(this)">
                 <button class="d-none"/>
                 <t t-set-slot="content">
                     <ActionList actions="messageActions.actions" dropdown="true"/>
@@ -176,31 +171,13 @@
         <t t-else="">
             <t t-set="isReverse" t-value="env.inChatWindow and isAlignedRight"/>
             <div class="d-flex rounded-1 overflow-hidden gap-1" t-att-class="{ 'flex-row-reverse': isReverse }">
-                <t t-set="quickActions" t-value="messageActions.actions.slice(0, messageActions.actions.length gt quickActionCount ? quickActionCount - 1 : quickActionCount)"/>
-                <ActionList actions="quickActions" inline="true"/>
-                <div t-if="messageActions.actions.length gt quickActionCount" class="d-flex rounded-0">
-                    <Dropdown state="optionsDropdown" position="isAlignedRight ? (message.threadAsNewest ? 'left-end' : 'left-start') : (message.threadAsNewest ? 'right-end' : 'right-start')" menuClass="'d-flex flex-column o-mail-Message-moreMenu o-discuss-dropdownMenu border-secondary'" >
-                        <t t-call="mail.Message.expandAction"/>
-                        <t t-set-slot="content">
-                            <ActionList actions="messageActions.actions.slice(quickActionCount - 1)" dropdown="true"/>
-                        </t>
-                    </Dropdown>
-                </div>
+                <ActionList actions="actions" inline="true" fw="false" groupClass="'gap-1'"/>
                 <t t-foreach="Array.from({ length: quickActionCount - quickActions.length - 1 })" t-as="emptyQuickAction" t-key="emptyQuickAction_index">
                     <t t-call="mail.Message.emptyQuickAction"/>
                 </t>
             </div>
         </t>
     </div>
-</t>
-
-<t t-name="mail.Message.expandAction">
-    <button class="btn border-0 rounded-0 o-mail-Message-expandBtn p-0" t-att-title="expandText" t-att-class="{
-        'rounded-start-1 me-n1': isReverse,
-        'rounded-end-1 ms-n1': !isReverse,
-    }">
-        <i class="oi oi-large oi-ellipsis-v" t-att-class="{ 'order-1': props.isInChatWindow, 'fa-fw': isMobileOS }" tabindex="1"/>
-    </button>
 </t>
 
 <t t-name="mail.Message.emptyQuickAction">

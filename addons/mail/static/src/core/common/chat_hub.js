@@ -1,5 +1,5 @@
 import { ChatWindow } from "@mail/core/common/chat_window";
-import { ActionList } from "./action_list";
+import { ActionList } from "@mail/core/common/action_list";
 import { useHover, useMovable } from "@mail/utils/common/hooks";
 import { Component, useEffect, useExternalListener, useRef, useState } from "@odoo/owl";
 
@@ -11,6 +11,7 @@ import { useService } from "@web/core/utils/hooks";
 import { ChatBubble } from "./chat_bubble";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
+import { Action } from "@mail/core/common/action";
 
 export class ChatHub extends Component {
     static components = { ActionList, ChatBubble, ChatWindow, Dropdown };
@@ -67,26 +68,42 @@ export class ChatHub extends Component {
     get optionActions() {
         const actions = [];
         if (this.chatHub.showConversations && !this.chatHub.compact) {
-            actions.push({
-                id: "hide-all",
-                name: _t("Hide all conversations"),
-                icon: "fa fa-eye-slash",
-                onSelected: () => this.chatHub.hideAll(),
-            });
-            actions.push({
-                id: "close-all",
-                name: _t("Close all conversations"),
-                icon: "oi oi-close",
-                onSelected: () => this.chatHub.closeAll(),
-            });
+            actions.push(
+                new Action({
+                    owner: this,
+                    id: "hide-all",
+                    definition: {
+                        name: _t("Hide all conversations"),
+                        icon: "fa fa-eye-slash",
+                        onSelected: () => this.chatHub.hideAll(),
+                    },
+                    store: this.store,
+                }),
+                new Action({
+                    owner: this,
+                    id: "close-all",
+                    definition: {
+                        name: _t("Close all conversations"),
+                        icon: "oi oi-close",
+                        onSelected: () => this.chatHub.closeAll(),
+                    },
+                    store: this.store,
+                })
+            );
         }
         if (this.position.dragged) {
-            actions.push({
-                id: "reset-position",
-                name: _t("Reset initial position"),
-                icon: "fa fa-undo",
-                onSelected: () => this.resetPosition(),
-            });
+            actions.push(
+                new Action({
+                    owner: this,
+                    id: "reset-position",
+                    definition: {
+                        name: _t("Reset initial position"),
+                        icon: "fa fa-undo",
+                        onSelected: () => this.resetPosition(),
+                    },
+                    store: this.store,
+                })
+            );
         }
         return actions;
     }

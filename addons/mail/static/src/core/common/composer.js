@@ -45,8 +45,8 @@ import { isEmail } from "@web/core/utils/strings";
 import { isDisplayStandalone, isIOS, isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useComposerActions } from "./composer_actions";
-import { ActionList } from "./action_list";
+import { useComposerActions } from "@mail/core/common/composer_actions";
+import { ActionList } from "@mail/core/common/action_list";
 import { lastLeaf } from "@html_editor/utils/dom_traversal";
 
 const EDIT_CLICK_TYPE = {
@@ -107,14 +107,14 @@ export class Composer extends Component {
         this.editor = undefined;
         this.isMobileOS = isMobileOS();
         this.isIosPwa = isIOS() && isDisplayStandalone();
-        this.composerActions = useComposerActions();
+        this.store = useService("mail.store");
+        this.composerActions = useComposerActions({ composer: () => this.props.composer });
         this.OR_PRESS_SEND_KEYBIND = _t("or press %(send_keybind)s", {
             send_keybind: htmlJoin(
                 this.sendKeybinds.map((key) => markup`<samp>${key}</samp>`),
                 " + "
             ),
         });
-        this.store = useService("mail.store");
         this.attachmentUploader = useAttachmentUploader(
             this.thread ?? this.props.composer.message.thread,
             { composer: this.props.composer }

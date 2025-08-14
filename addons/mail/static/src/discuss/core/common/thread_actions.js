@@ -9,7 +9,6 @@ import { Component, xml } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { useService } from "@web/core/utils/hooks";
 
 class ChannelActionDialog extends Component {
     static props = ["title", "contentComponent", "contentProps", "close?"];
@@ -23,15 +22,12 @@ class ChannelActionDialog extends Component {
 
 registerThreadAction("notification-settings", {
     actionPanelComponent: NotificationSettings,
-    condition(component) {
-        return (
-            component.thread?.model === "discuss.channel" &&
-            component.store.self_partner &&
-            (!component.props.chatWindow || component.props.chatWindow.isOpen)
-        );
-    },
-    setup(component) {
-        if (!component.props.chatWindow) {
+    condition: ({ owner, store, thread }) =>
+        thread?.model === "discuss.channel" &&
+        store.self_partner &&
+        (!owner.props.chatWindow || owner.props.chatWindow.isOpen),
+    setup({ owner }) {
+        if (!owner.props.chatWindow) {
             this.popover = usePopover(NotificationSettings, {
                 onClose: () => this.close(),
                 position: "bottom-end",
@@ -39,38 +35,26 @@ registerThreadAction("notification-settings", {
                 popoverClass: this.panelOuterClass,
             });
         }
-        this.dialogService = useService("dialog");
-        component.store = useService("mail.store");
     },
-    open(component, action) {
-        if (component.isDiscussSidebarChannelActions) {
-            action.dialogService?.add(ChannelActionDialog, {
-                title: component.thread.name,
+    open({ owner, store, thread }) {
+        if (owner.isDiscussSidebarChannelActions || owner.env.inMeetingView) {
+            store.env.services.dialog?.add(ChannelActionDialog, {
+                title: thread.name,
                 contentComponent: NotificationSettings,
-                contentProps: {
-                    thread: component.thread,
-                },
+                contentProps: { thread },
             });
         } else {
-            action.popover?.open(component.root.el.querySelector(`[name="${action.id}"]`), {
+            this.popover?.open(owner.root.el.querySelector(`[name="${this.id}"]`), {
                 hasSizeConstraints: true,
-                thread: component.thread,
+                thread,
             });
         }
     },
-    close(component, action) {
-        action.popover?.close();
-    },
-    icon(component) {
-        return component.thread.self_member_id?.mute_until_dt
+    close: ({ action }) => action.popover?.close(),
+    icon: ({ thread }) =>
+        thread.self_member_id?.mute_until_dt
             ? "fa fa-fw text-danger fa-bell-slash"
-            : "fa fa-fw fa-bell";
-    },
-    iconLarge(component) {
-        return component.thread.self_member_id?.mute_until_dt
-            ? "fa fa-fw fa-lg text-danger fa-bell-slash"
-            : "fa fa-fw fa-lg fa-bell";
-    },
+            : "fa fa-fw fa-bell",
     name: _t("Notification Settings"),
     panelOuterClass: "bg-100 border border-secondary",
     sequence: 10,
@@ -79,12 +63,11 @@ registerThreadAction("notification-settings", {
 });
 registerThreadAction("attachments", {
     actionPanelComponent: AttachmentPanel,
-    condition: (component) =>
-        component.thread?.hasAttachmentPanel &&
-        (!component.props.chatWindow || component.props.chatWindow.isOpen) &&
-        !component.isDiscussSidebarChannelActions,
+    condition: ({ owner, thread }) =>
+        thread?.hasAttachmentPanel &&
+        (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
+        !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-paperclip",
-    iconLarge: "fa fa-fw fa-lg fa-paperclip",
     name: _t("Attachments"),
     sequence: 10,
     sequenceGroup: 10,
@@ -92,89 +75,71 @@ registerThreadAction("attachments", {
 });
 registerThreadAction("invite-people", {
     actionPanelComponent: ChannelInvitation,
-    actionPanelComponentProps(component, action) {
-        return { close: () => action.close() };
-    },
-    close(component, action) {
-        action.popover?.close();
-    },
-    condition(component) {
-        return (
-            component.thread?.model === "discuss.channel" &&
-            (!component.props.chatWindow || component.props.chatWindow.isOpen)
-        );
-    },
-    panelOuterClass(component) {
-        return `o-discuss-ChannelInvitation ${
-            component.props.chatWindow ? "bg-inherit" : ""
-        } bg-100 border border-secondary`;
-    },
+    actionPanelComponentProps: ({ action }) => ({ close: () => action.close() }),
+    close: ({ action }) => action.popover?.close(),
+    condition: ({ owner, thread }) =>
+        thread?.model === "discuss.channel" &&
+        (!owner.props.chatWindow || owner.props.chatWindow.isOpen),
+    panelOuterClass: ({ owner }) =>
+        `o-discuss-ChannelInvitation ${
+            owner.props.chatWindow ? "bg-inherit" : ""
+        } bg-100 border border-secondary`,
     icon: "oi oi-fw oi-user-plus",
-    iconLarge: "oi oi-fw oi-large oi-user-plus",
     name: _t("Invite People"),
-    open(component, action) {
-        if (component.isDiscussSidebarChannelActions) {
-            action.dialogService?.add(ChannelActionDialog, {
-                title: component.thread.name,
+    open({ owner, store, thread }) {
+        if (owner.isDiscussSidebarChannelActions) {
+            store.env.services.dialog?.add(ChannelActionDialog, {
+                title: thread.name,
                 contentComponent: ChannelInvitation,
                 contentProps: {
                     autofocus: true,
-                    thread: component.thread,
-                    close: () => {
-                        action.dialogService.closeAll();
-                    },
+                    thread,
+                    close: () => store.env.services.dialog.closeAll(),
                 },
             });
-        } else {
-            action.popover?.open(component.root.el.querySelector(`[name="${action.id}"]`), {
+        } else if (!owner.env.inMeetingView) {
+            this.popover?.open(owner.root.el.querySelector(`[name="${this.id}"]`), {
                 hasSizeConstraints: true,
-                thread: component.thread,
+                thread,
             });
         }
     },
-    sequence: (component) => (component.isDiscussSidebarChannelActions ? 20 : 10),
+    sequence: ({ owner }) => (owner.isDiscussSidebarChannelActions ? 20 : 10),
     sequenceGroup: 20,
-    setup(component) {
-        if (!component.props.chatWindow) {
+    setup({ owner }) {
+        if (!owner.props.chatWindow && !owner.env.inMeetingView) {
             this.popover = usePopover(ChannelInvitation, {
                 onClose: () => this.close(),
                 popoverClass: this.panelOuterClass,
             });
         }
-        this.dialogService = useService("dialog");
     },
     toggle: true,
 });
 registerThreadAction("member-list", {
     actionPanelComponent: ChannelMemberList,
-    actionPanelComponentProps(component, action) {
-        return {
-            openChannelInvitePanel({ keepPrevious } = {}) {
-                component.threadActions.actions
-                    .find(({ id }) => id === "invite-people")
-                    ?.open({ keepPrevious });
-            },
-        };
-    },
-    condition(component) {
-        return (
-            component.thread?.hasMemberList &&
-            (!component.props.chatWindow || component.props.chatWindow.isOpen) &&
-            !component.isDiscussSidebarChannelActions
-        );
-    },
+    actionPanelComponentProps: ({ owner }) => ({
+        openChannelInvitePanel({ keepPrevious } = {}) {
+            owner.threadActions.actions
+                .find(({ id }) => id === "invite-people")
+                ?.open({ keepPrevious });
+        },
+    }),
+    condition: ({ owner, thread }) =>
+        thread?.hasMemberList &&
+        (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
+        !owner.isDiscussSidebarChannelActions,
     panelOuterClass: "o-discuss-ChannelMemberList bg-inherit",
     icon: "oi oi-fw oi-users",
-    iconLarge: "oi oi-fw oi-large oi-users",
     name: _t("Members"),
-    close(component) {
-        if (component.env.inDiscussApp) {
-            component.store.discuss.isMemberPanelOpenByDefault = false;
+    close: ({ owner, store }) => {
+        if (owner.env.inDiscussApp) {
+            store.discuss.isMemberPanelOpenByDefault = false;
         }
     },
-    open(component) {
-        if (component.env.inDiscussApp) {
-            component.store.discuss.isMemberPanelOpenByDefault = true;
+    open: ({ owner, store }) => {
+        if (owner.env.inDiscussApp) {
+            store.discuss.isMemberPanelOpenByDefault = true;
         }
     },
     sequence: 30,
@@ -182,14 +147,13 @@ registerThreadAction("member-list", {
     toggle: true,
 });
 registerThreadAction("mark-read", {
-    condition: (component) =>
-        component.thread?.self_member_id &&
-        component.thread.self_member_id.message_unread_counter > 0 &&
-        !component.thread.self_member_id.mute_until_dt &&
-        component.isDiscussSidebarChannelActions,
-    open: (component) => component.thread.markAsRead(),
+    condition: ({ owner, thread }) =>
+        thread?.self_member_id &&
+        thread.self_member_id.message_unread_counter > 0 &&
+        !thread.self_member_id.mute_until_dt &&
+        owner.isDiscussSidebarChannelActions,
+    open: ({ owner }) => owner.thread.markAsRead(),
     icon: "fa fa-fw fa-check",
-    iconLarge: "fa fa-lg fa-fw fa-check",
     name: _t("Mark Read"),
     sequence: 10,
     sequenceGroup: 20,

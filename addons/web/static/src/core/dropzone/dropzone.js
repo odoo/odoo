@@ -4,7 +4,7 @@ export class Dropzone extends Component {
     static props = {
         extraClass: { type: String, optional: true },
         onDrop: { type: Function, optional: true },
-        ref: Object,
+        ref: [Object, Function],
         slots: { type: Object, optional: true },
     };
     static template = "web.Dropzone";
