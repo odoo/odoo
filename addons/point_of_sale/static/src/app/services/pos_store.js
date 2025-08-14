@@ -1732,7 +1732,7 @@ export class PosStore extends WithLazyGetterTrap {
                 let reprint = false;
                 let orderChange = changesToOrder(
                     order,
-                    this.config.preparationCategories,
+                    this.config.printerCategories,
                     opts.cancelled
                 );
 
