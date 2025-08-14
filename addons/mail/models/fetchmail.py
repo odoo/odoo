@@ -335,6 +335,10 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                     _logger.warning('Failed to properly finish %s connection: %s.', *server_type_and_name, exc_info=True)
             _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", count, *server_type_and_name, (count - failed), failed)
             server.write({'date': fields.Datetime.now()})
+            # Commit before updating the progress because progress may be
+            # updated for messages using another transaction. Without a commit
+            # before updating the progress, we would have a serialization error.
+            self.env.cr.commit()
             if not self.env['ir.cron']._commit_progress(remaining=total_remaining):
                 break
         return result_exception
