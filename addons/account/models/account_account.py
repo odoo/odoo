@@ -339,13 +339,13 @@ class AccountAccount(models.Model):
         if self._cr.fetchone():
             raise ValidationError(_("You cannot change the type of an account set as Bank Account on a journal to Receivable or Payable."))
 
-    @api.depends('code')
+    @api.depends('code', 'company_id')
     def _compute_account_root(self):
         # this computes the first 2 digits of the account.
         # This field should have been a char, but the aim is to use it in a side panel view with hierarchy, and it's only supported by many2one fields so far.
         # So instead, we make it a many2one to a psql view with what we need as records.
         for record in self:
-            record.root_id = (ord(record.code[0]) * 1000 + ord(record.code[1:2] or '\x00')) if record.code else False
+            record.root_id = (record.company_id.id * 100000 + ord(record.code[0]) * 1000 + ord(record.code[1:2] or '\x00')) if record.code else False
 
     @api.depends('code')
     def _compute_account_group(self):
@@ -1016,13 +1016,13 @@ class AccountRoot(models.Model):
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute('''
             CREATE OR REPLACE VIEW %s AS (
-            SELECT DISTINCT ASCII(code) * 1000 + ASCII(SUBSTRING(code,2,1)) AS id,
+            SELECT DISTINCT company_id * 100000 + ASCII(code) * 1000 + ASCII(SUBSTRING(code,2,1)) AS id,
                    LEFT(code,2) AS name,
-                   ASCII(code) AS parent_id,
+                   company_id * 100000 + ASCII(code) AS parent_id,
                    company_id
             FROM account_account WHERE code != ''
             UNION ALL
-            SELECT DISTINCT ASCII(code) AS id,
+            SELECT DISTINCT company_id * 100000 + ASCII(code) AS id,
                    LEFT(code,1) AS name,
                    NULL::int AS parent_id,
                    company_id

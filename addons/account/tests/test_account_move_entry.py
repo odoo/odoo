@@ -1102,12 +1102,31 @@ class TestAccountMove(AccountTestInvoicingCommon):
             'company_id': self.env.company.id,
         })
         other_company = self.env['res.company'].create({'name': 'other company'})
-        self.env['account.account'].create({
+        other_account = self.env['account.account'].create({
             'name': 'other account',
             'code': 'ZZ',
             'account_type': 'asset_current',
             'company_id': other_company.id,
         })
+
+        # ids are company-scoped
+        self.assertTrue(account.root_id, "root_id should be set for 2-char code")
+        self.assertTrue(other_account.root_id, "root_id should be set for 2-char code (other company)")
+        self.assertNotEqual(
+            account.root_id.id, other_account.root_id.id,
+            "Same code in different companies must yield different account.root ids",
+        )
+        # Check that the root is correctly set
+        zz_root = self.env['account.root'].with_company(self.env.company).search([('name', '=', 'ZZ')], limit=1)
+        self.assertTrue(zz_root, "Missing 'ZZ' root in current company")
+        self.assertEqual(zz_root.id, account.root_id.id)
+        self.assertTrue(zz_root.parent_id, "Two-digit root should have a one-digit parent")
+        self.assertEqual(zz_root.parent_id.name, 'Z')
+        self.assertEqual(zz_root.parent_id.company_id, account.company_id)
+        # No duplicate ids for a given company
+        ids = self.env['account.root'].with_company(self.env.company).search([]).ids
+        self.assertEqual(len(ids), len(set(ids)), "account.root search should not return duplicate ids")
+
         self.env['account.move'].create({
             'move_type': 'entry',
             'date': fields.Date.from_string('2016-01-01'),
