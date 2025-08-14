@@ -236,7 +236,9 @@ class PaymentProvider(models.Model):
 
     def _build_request_url(self, endpoint, *, api_version='v1', is_proxy_request=False, **kwargs):
         if self.code != 'razorpay':
-            return super()._build_request_url(endpoint, **kwargs)
+            return super()._build_request_url(
+                endpoint, api_version=api_version, is_proxy_request=is_proxy_request, **kwargs
+            )
         if is_proxy_request:
             return f'{const.OAUTH_URL}{endpoint}'
         return f'https://api.razorpay.com/{api_version}/{endpoint}'
@@ -269,5 +271,7 @@ class PaymentProvider(models.Model):
 
     def _parse_response_content(self, response, *, is_proxy_request=False, **kwargs):
         if self.code != 'razorpay' or not is_proxy_request:
-            return super()._parse_response_content(response)
+            return super()._parse_response_content(
+                response, is_proxy_request=is_proxy_request, **kwargs
+            )
         return self._parse_proxy_response(response)
