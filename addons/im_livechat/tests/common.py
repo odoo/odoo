@@ -2,9 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import HttpCase, new_test_user
+from odoo.addons.bus.tests.common import BusCase
 
 
-class TestImLivechatCommon(HttpCase):
+class TestImLivechatCommon(HttpCase, BusCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
