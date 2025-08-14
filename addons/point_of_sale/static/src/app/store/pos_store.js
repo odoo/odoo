@@ -836,9 +836,6 @@ export class PosStore extends Reactive {
 
             if (!pack_lot_ids) {
                 return;
-            } else {
-                const packLotLine = pack_lot_ids.newPackLotLines;
-                values.pack_lot_ids = packLotLine.map((lot) => ["create", lot]);
             }
         }
 
@@ -908,7 +905,7 @@ export class PosStore extends Reactive {
             this.selectOrderLine(order, order.get_last_orderline());
         }
 
-        if (product.tracking === "serial") {
+        if (product.isTracked()) {
             this.selectedOrder.get_selected_orderline().setPackLotLines({
                 modifiedPackLotLines: pack_lot_ids.modifiedPackLotLines ?? [],
                 newPackLotLines: pack_lot_ids.newPackLotLines ?? [],

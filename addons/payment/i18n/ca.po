@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment
-# 
+# * payment
+#
 # Translators:
 # Eric Antones <eantones@users.noreply.github.com>, 2024
 # Jonatan Gk, 2024
@@ -27,20 +27,22 @@
 # Harcogourmet, 2025
 # Noemi Pla, 2025
 # Santiago Payà <santiagopim@gmail.com>, 2025
-# 
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-07 20:37+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Santiago Payà <santiagopim@gmail.com>, 2025\n"
-"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
+"PO-Revision-Date: 2025-08-12 22:21+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"Language-Team: Catalan <https://translate.odoo.com/projects/odoo-18/payment/"
+"ca/>\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ca\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard___data_fetched
@@ -49,13 +51,15 @@ msgstr " Dades recuperades"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report_records
+#, fuzzy
 msgid "(ID:"
-msgstr ""
+msgstr "(ID:"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_7eleven
+#, fuzzy
 msgid "7Eleven"
-msgstr ""
+msgstr "7Eleven"
 
 #. module: payment
 #. odoo-python
@@ -91,18 +95,26 @@ msgid ""
 " only be captured in full. Handle the transactions individually to capture a"
 " partial amount.\"/>"
 msgstr ""
+"<i class=\"fa fa-info-circle oe_inline\" invisible="
+"\"support_partial_capture != 'full_only'\" title=\"Some of the transactions "
+"you intend to capture can only be captured in full. Handle the transactions "
+"individually to capture a partial amount.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-"
 "toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
 msgstr ""
+"<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-toggle="
+"\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "<i class=\"oi oi-arrow-right me-1\"></i> Configure a payment provider"
 msgstr ""
+"<i class=\"oi oi-arrow-right me-1\"></i> Configura un proveïdor de pagament"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -110,21 +122,23 @@ msgid ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
 "                                            Enable Payment Methods"
 msgstr ""
+"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
+"                                            Activar mètodes de pagament"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 msgid "<small class=\"text-600\">Save my payment details</small>"
-msgstr ""
+msgstr "<small class=\"text-600\">Desar la informació de pagament</small>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "<span class=\"o_stat_text text-danger\">Unpublished</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text text-danger\">No publicat</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "<span class=\"o_stat_text text-success\">Published</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text text-success\">Publicat</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -138,6 +152,9 @@ msgid ""
 "                                All countries are supported.\n"
 "                            </span>"
 msgstr ""
+"<span class=\"oe_inline text-muted\" invisible=\"supported_country_ids\">\n"
+"                                Tots els països són compatibles.\n"
+"                            </span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -146,6 +163,9 @@ msgid ""
 "                                All currencies are supported.\n"
 "                            </span>"
 msgstr ""
+"<span class=\"oe_inline text-muted\" invisible=\"supported_currency_ids\">\n"
+"                                Totes les monedes són compatibles.\n"
+"                            </span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -157,21 +177,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
 msgstr ""
+"<strong><i class=\"fa fa-file-text\"/> Mostrar informe de "
+"disponibilitat</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong><i class=\"oi oi-arrow-right\"/> Payment Methods</strong>"
-msgstr ""
+msgstr "<strong><i class=\"oi oi-arrow-right\"/> Mètodes de pagament</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong><i class=\"oi oi-arrow-right\"/> Payment Providers</strong>"
 msgstr ""
+"<strong><i class=\"oi oi-arrow-right\"/> Proveïdors de pagament</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong>No payment method available</strong>"
-msgstr ""
+msgstr "<strong>No hi ha cap mètode de pagament disponible</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -256,17 +279,18 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ach_direct_debit
 msgid "ACH Direct Debit"
-msgstr ""
+msgstr "Domiciliació bancària ACH"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "ACTIVATE STRIPE"
-msgstr ""
+msgstr "ACTIVAR STRIPE"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_abitab
+#, fuzzy
 msgid "Abitab"
-msgstr ""
+msgstr "Abitab"
 
 #. module: payment
 #. odoo-python

@@ -9,6 +9,7 @@ import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
+import * as Utils from "@point_of_sale/../tests/tours/utils/common";
 
 registry.category("web_tour.tours").add("TicketScreenTour", {
     steps: () =>
@@ -300,6 +301,30 @@ registry.category("web_tour.tours").add("test_order_with_existing_serial", {
             ProductScreen.selectedOrderlineHas("Serial Product", "2.00"),
             inLeftSide({
                 trigger: ".info-list:contains('SN SN2')",
+            }),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_serial_number_do_not_duplicate_after_refresh", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.enterLotNumber("1"),
+            ProductScreen.selectedOrderlineHas("Product A", "1.00"),
+            Utils.refresh(),
+            inLeftSide({
+                content: `check serial number`,
+                trigger: `.info-list`,
+                run: () => {
+                    const serialNumberCount = document.querySelectorAll(
+                        "ul.info-list li:not(:first-child)"
+                    ).length;
+                    if (serialNumberCount !== 1) {
+                        throw new Error(`Expected 1 serial number, got ${serialNumberCount}`);
+                    }
+                },
             }),
         ].flat(),
 });
