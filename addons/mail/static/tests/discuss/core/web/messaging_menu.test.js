@@ -96,6 +96,37 @@ test("channel preview show deleted messages", async () => {
     });
 });
 
+test("deleted message should not show parent message reference and mentions", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "<p>Parent Message</p>",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    pyEnv["mail.message"].create({
+        body: "<p>reply message</p>",
+        message_type: "comment",
+        model: "discuss.channel",
+        parent_id: messageId,
+        partner_ids: [serverState.partnerId],
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-MessageInReply", { text: "Parent Message" });
+    await click("[title='Expand']", {
+        parent: [".o-mail-Message:has(.o-mail-Message-bubble.o-orange)", { text: "reply message" }],
+    });
+    await click(".o-mail-Message-moreMenu .o-dropdown-item:contains(Delete)");
+    await click(".o_dialog button:contains(Delete)");
+    await contains(".o-mail-Message:not(:has(.o-mail-Message-bubble.o-orange))", {
+        text: "This message has been removed",
+    });
+    await contains(".o-mail-MessageInReply", { count: 0 });
+});
+
 test("channel preview ignores transient message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
