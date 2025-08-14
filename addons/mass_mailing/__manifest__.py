@@ -109,7 +109,7 @@
             ('include', 'web.assets_frontend'),
             ('after', 'web/static/lib/bootstrap/scss/_maps.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
             ('include', 'web_editor.backend_assets_wysiwyg'),
-            ('include', 'mass_mailing.assets_snippets_menu'),
+            ('include', 'web_editor.assets_snippets_menu'),
             ('include', 'web_editor.wysiwyg_iframe_editor_assets'),
             ('include', 'html_builder.inside_builder_style'),
             'mass_mailing/static/src/scss/mass_mailing_mail.scss',
@@ -119,20 +119,12 @@
         'html_builder.iframe_add_dialog': [
             'mass_mailing/static/src/builder/snippet_viewer/*.scss',
         ],
-        'mass_mailing.iframe_css_assets_readonly': [
-            'mass_mailing/static/src/scss/mass_mailing_mail.scss',
-            'mass_mailing/static/src/css/basic_theme_readonly.css'
-        ],
         'mass_mailing.mailing_assets': [
             'mass_mailing/static/src/scss/mailing_portal.scss',
             'mass_mailing/static/src/interactions/subscribe.js',
             'mass_mailing/static/src/xml/mailing_portal_subscription_blocklist.xml',
             'mass_mailing/static/src/xml/mailing_portal_subscription_feedback.xml',
             'mass_mailing/static/src/xml/mailing_portal_subscription_form.xml',
-        ],
-        'web_editor.backend_assets_wysiwyg': [
-            'mass_mailing/static/src/js/mass_mailing_wysiwyg.js',
-            'mass_mailing/static/src/scss/mass_mailing.wysiwyg.scss',
         ],
         'web.assets_backend': [
             'mass_mailing/static/src/fields/**/*',
@@ -143,12 +135,7 @@
             'mass_mailing/static/src/scss/mass_mailing_mobile.scss',
             'mass_mailing/static/src/scss/mass_mailing_mobile_preview.scss',
             'mass_mailing/static/src/js/mailing_m2o_filter.js',
-            'mass_mailing/static/src/js/mass_mailing_design_constants.js',
-            'mass_mailing/static/src/js/mass_mailing_mobile_preview.js',
-            'mass_mailing/static/src/js/mass_mailing_html_field.js',
             'mass_mailing/static/src/xml/mailing_filter_widget.xml',
-            'mass_mailing/static/src/xml/mass_mailing.xml',
-            'mass_mailing/static/src/xml/mass_mailing_mobile_preview.xml',
             'mass_mailing/static/src/js/tours/**/*',
         ],
         'web.assets_backend_lazy': [
@@ -157,39 +144,12 @@
         'mass_mailing.assets_mail_themes': [
             'mass_mailing/static/src/scss/themes/**/*',
         ],
-        'mass_mailing.assets_mail_themes_edition': [
-            ('include', 'web._assets_helpers'),
-            'web/static/src/scss/pre_variables.scss',
-            'web/static/lib/bootstrap/scss/_variables.scss',
-            'web/static/lib/bootstrap/scss/_variables-dark.scss',
-            'web/static/lib/bootstrap/scss/_maps.scss',
-            'mass_mailing/static/src/scss/mass_mailing.ui.scss',
-        ],
-        'mass_mailing.assets_wysiwyg': [
-            'mass_mailing/static/src/js/mass_mailing_snippets.js',
-            'mass_mailing/static/src/snippets/s_masonry_block/options.js',
-            'mass_mailing/static/src/snippets/s_media_list/options.js',
-            'mass_mailing/static/src/snippets/s_showcase/options.js',
-            'mass_mailing/static/src/snippets/s_rating/options.js'
-        ],
-        'mass_mailing.assets_snippets_menu': [
-            ('include', 'web_editor.assets_snippets_menu'),
-            'mass_mailing/static/src/js/snippets.editor.js',
-            'mass_mailing/static/src/xml/mass_mailing.editor.xml',
-        ],
         'web.assets_frontend': [
             'mass_mailing/static/src/js/tours/**/*',
         ],
         'web.assets_tests': [
             'html_editor/static/tests/_helpers/selection.js',
             'mass_mailing/static/tests/tours/**/*',
-        ],
-        'web.qunit_suite_tests': [
-            'mass_mailing/static/src/js/mass_mailing_snippets.js',
-            'mass_mailing/static/src/snippets/s_media_list/options.js',
-            'mass_mailing/static/src/snippets/s_showcase/options.js',
-            'mass_mailing/static/src/snippets/s_rating/options.js',
-            'mass_mailing/static/tests/mass_mailing_html_tests.js',
         ],
         'web.assets_unit_tests': [
             ('include', 'mass_mailing.assets_builder'),
