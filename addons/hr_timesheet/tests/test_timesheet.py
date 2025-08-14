@@ -872,4 +872,14 @@ class TestTimesheet(TestCommonTimesheet):
             f"{self.project.account_id.id}": 50,
             f"{another_account.id}": 50,
         }
-        self.assertEqual(line.amount, -5)  # the line is split in 2
+        self.assertEqual(line.amount, -5)  # the line is split in 2b
+
+    def test_total_timesheet_time_minutes(self):
+        line = self.env['account.analytic.line'].create({
+            'name': 'Timesheet',
+            'unit_amount': 0.75,
+            'project_id': self.project.id,
+            'employee_id': self.empl_employee.id,
+        })
+        self.project._compute_total_timesheet_time()
+        self.assertEqual(self.project.total_timesheet_time, line['unit_amount'])
