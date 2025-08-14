@@ -191,4 +191,15 @@ describe("pos.order.line", () => {
         line1.merge(line2);
         expect(line1.qty).toBe(5);
     });
+
+    test("Test taxes after fiscal position", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const dataDict = getAllPricesData();
+        dataDict["pos.order"][0]["fiscal_position_id"] = 2;
+        const data = models.loadConnectedData(dataDict);
+        const orderLine = data["pos.order.line"][0];
+        const lineValues = orderLine.prepareBaseLineForTaxesComputationExtraValues();
+        expect(lineValues.tax_ids.length).toBe(0);
+    });
 });
