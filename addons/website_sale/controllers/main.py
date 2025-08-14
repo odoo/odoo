@@ -208,7 +208,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductTemplate = env['product.template']
         dom = sitemap_qs2dom(qs, SHOP_PATH, ProductTemplate._rec_name)
         dom += website.sale_product_domain()
-        for product in ProductTemplate.search(dom):
+        for product in ProductTemplate.with_context(prefetch_fields=False).search(dom):
             loc = f'{SHOP_PATH}/{env["ir.http"]._slug(product)}'
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
