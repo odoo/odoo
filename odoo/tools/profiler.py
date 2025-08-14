@@ -217,11 +217,17 @@ class _BasePeriodicCollector(Collector):
     def run(self):
         self.active = True
         self.last_time = real_time()
-        while self.active:  # maybe add a check on parent_thread state?
+        while self.active:
             self.progress()
-            time.sleep(self.frame_interval)
-
+            self.sleep()
         self._entries.append({'stack': [], 'start': real_time()})  # add final end frame
+
+    def sleep(self):
+        # Note: This may not be very precise. Most systems will sleep at
+        # minimum between 1 and 5 ms. "The suspension time may be longer
+        # than requested by an arbitrary amount, because of the scheduling
+        # of other activity in the system."
+        time.sleep(self.frame_interval)
 
     def stop(self):
         self.active = False
