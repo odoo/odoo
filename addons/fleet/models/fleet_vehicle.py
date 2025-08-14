@@ -71,8 +71,7 @@ class FleetVehicle(models.Model):
     next_assignation_date = fields.Date('Assignment Date', help='This is the date at which the car will be available, if not set it means available instantly')
     order_date = fields.Date('Order Date')
     acquisition_date = fields.Date('Registration Date', required=False,
-        default=fields.Date.today, tracking=True,
-        help='Date of vehicle registration')
+        tracking=True, help='Date of vehicle registration')
     write_off_date = fields.Date('Cancellation Date', tracking=True, help="Date when the vehicle's license plate has been cancelled/removed.")
     contract_date_start = fields.Date(string="First Contract Date", default=fields.Date.today, tracking=True)
     color = fields.Char(help='Color of the vehicle', compute='_compute_color', store=True, readonly=False)
