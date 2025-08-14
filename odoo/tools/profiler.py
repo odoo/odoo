@@ -187,7 +187,7 @@ class _BasePeriodicCollector(Collector):
 
     :param interval (float): time to wait in seconds between two samples.
     """
-    _min_interval = 0.001  # minimum interval allowed
+    _min_interval = 0.0001  # minimum interval allowed
     _max_interval = 5    # maximum interval allowed
     _default_interval = 0.001
 
@@ -196,7 +196,6 @@ class _BasePeriodicCollector(Collector):
         self._end_time = real_time()
         self.frame_interval = interval or self._default_interval
         self.__thread = threading.Thread(target=self.run)
-        self.last_frame = None
 
     def start(self):
         interval = self.profiler.params.get(f'{self.name}_interval')
@@ -232,27 +231,32 @@ class PeriodicCollector(_BasePeriodicCollector):
 
     name = 'traces_async'
 
+    def __init__(self, interval=None):
+        super().__init__(interval)
+        self._last_frame_id = 0  # incremental identifier if the frame has been seen
+        self._last_time = 0
+
     def add(self, entry=None, frame=None, check_limit=True):
         """ Add an entry (dict) to this collector. """
-        if self.last_frame:
-            duration = real_time() - self._last_time
-            if duration > self.frame_interval * 10 and self.last_frame:
-                # The profiler has unexpectedly slept for more than 10 frame intervals. This may
-                # happen when calling a C library without releasing the GIL. In that case, the
-                # last frame was taken before the call, and the next frame is after the call, and
-                # the call itself does not appear in any of those frames: the duration of the call
-                # is incorrectly attributed to the last frame.
-                self._entries[-1]['stack'].append(('profiling', 0, '⚠ Profiler freezed for %s s' % duration, ''))
-                self.last_frame = None  # skip duplicate detection for the next frame.
-        self._last_time = real_time()
+        now = real_time()
+        last_frame_id = self._last_frame_id
+        if last_frame_id and (duration := now - self._last_time) > self.frame_interval * 10:
+            # The profiler has unexpectedly slept for more than 10 frame intervals. This may
+            # happen when calling a C library without releasing the GIL. In that case, the
+            # last frame was taken before the call, and the next frame is after the call, and
+            # the call itself does not appear in any of those frames: the duration of the call
+            # is incorrectly attributed to the last frame.
+            self._entries[-1]['stack'].append(('profiling', 0, '⚠ Profiler freezed for %s s' % duration, ''))
+        self._last_time = now
 
         frame = frame or get_current_frame(self.profiler.init_thread)
-        if frame == self.last_frame:
+        frame_locals = frame.f_locals
+        if frame_locals.get('$__PeriodicCollectorId') == last_frame_id:
             # don't save if the frame is exactly the same as the previous one.
-            # maybe modify the last entry to add a last seen?
             return
-        self.last_frame = frame
-        super().add(entry=entry, frame=frame, check_limit=check_limit)
+        frame_locals['$__PeriodicCollectorId'] = self._last_frame_id = last_frame_id + 1
+        entry = {'start': now}
+        super().add(entry, frame, check_limit=check_limit)
 
 
 _lock = threading.Lock()
