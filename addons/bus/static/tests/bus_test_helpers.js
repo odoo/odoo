@@ -246,7 +246,7 @@ export async function waitForChannels(channels, { operation = "add" } = {}) {
         if (success) {
             def.resolve();
         } else {
-            def.reject(new Error(message(false, String.raw).join(" ")));
+            def.reject(new Error(message(false)));
         }
         done = true;
     }
