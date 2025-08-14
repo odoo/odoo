@@ -150,6 +150,7 @@ import warnings
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
 from hashlib import sha512
+from http import HTTPStatus
 from io import BytesIO
 from os.path import join as opj
 from pathlib import Path
@@ -274,6 +275,16 @@ for more details.
   passing the `csrf=False` parameter to the `route` decorator.
 """
 
+NOT_FOUND_NODB = """\
+<!DOCTYPE html>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>No database is selected and the requested URL was not found in the server-wide controllers.</p>
+<p>Please verify the hostname, <a href=/web/login>login</a> and try again.</p>
+
+<!-- Alternatively, use the X-Odoo-Database header. -->
+"""
+
 # The @route arguments to propagate from the decorated method to the
 # routing rule.
 ROUTING_KEYS = {
@@ -311,7 +322,7 @@ class RegistryError(RuntimeError):
 
 
 class SessionExpiredException(Exception):
-    pass
+    http_status = HTTPStatus.FORBIDDEN
 
 
 def content_disposition(filename, disposition_type='attachment'):
@@ -430,16 +441,16 @@ def is_cors_preflight(request, endpoint):
     return request.httprequest.method == 'OPTIONS' and endpoint.routing.get('cors', False)
 
 
-def serialize_exception(exception):
+def serialize_exception(exception, *, message=None, arguments=None):
     name = type(exception).__name__
     module = type(exception).__module__
 
     return {
         'name': f'{module}.{name}' if module else name,
-        'debug': traceback.format_exc(),
-        'message': exception_to_unicode(exception),
-        'arguments': exception.args,
+        'message': exception_to_unicode(exception) if message is None else message,
+        'arguments': exception.args if arguments is None else arguments,
         'context': getattr(exception, 'context', {}),
+        'debug': ''.join(traceback.format_exception(exception)),
     }
 
 
@@ -2067,7 +2078,8 @@ class Request:
                 if disp.is_compatible_with(self)
             ]
             e = (f"Request inferred type is compatible with {compatible_dispatchers} "
-                 f"but {routing['routes'][0]!r} is type={routing['type']!r}.")
+                 f"but {routing['routes'][0]!r} is type={routing['type']!r}.\n\n"
+                 "Please verify the Content-Type request header and try again.")
             # werkzeug doesn't let us add headers to UnsupportedMediaType
             # so use the following (ugly) to still achieve what we want
             res = UnsupportedMediaType(e).get_response()
@@ -2105,7 +2117,13 @@ class Request:
         database-free environment.
         """
         router = root.nodb_routing_map.bind_to_environ(self.httprequest.environ)
-        rule, args = router.match(return_rule=True)
+        try:
+            rule, args = router.match(return_rule=True)
+        except NotFound as exc:
+            exc.response = Response(NOT_FOUND_NODB, status=exc.code, headers=[
+                ('Content-Type', 'text/html; charset=utf-8'),
+            ])
+            raise
         self._set_request_dispatcher(rule)
         self.dispatcher.pre_dispatch(rule, args)
         response = self.dispatcher.dispatch(rule.endpoint, args)
