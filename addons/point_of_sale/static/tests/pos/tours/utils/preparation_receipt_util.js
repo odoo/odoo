@@ -7,7 +7,7 @@ export async function generateReceiptsToPrint(order, orderChange) {
     const { orderData, changes } = posmodel.generateOrderChange(
         order,
         orderChange,
-        Array.from(posmodel.config.preparationCategories),
+        Array.from(posmodel.config.printerCategories),
         false
     );
     const receiptsData = await posmodel.generateReceiptsDataToPrint(
@@ -26,11 +26,7 @@ export async function generateReceiptsToPrint(order, orderChange) {
 // Return rendered order change receipts that will be printed when clicking "Order" button
 export async function generatePreparationReceipts() {
     const order = posmodel.getOrder();
-    const orderChange = posmodel.changesToOrder(
-        order,
-        posmodel.config.preparationCategories,
-        false
-    );
+    const orderChange = posmodel.changesToOrder(order, posmodel.config.printerCategories, false);
     return await generateReceiptsToPrint(order, orderChange);
 }
 
