@@ -67,6 +67,10 @@ export const getTaxesAfterFiscalPosition = (taxes, fiscalPosition, models) => {
         return taxes;
     }
 
+    if (fiscalPosition.tax_ids?.length == 0) {
+        return [];
+    }
+
     const newTaxIds = [];
     for (const tax of taxes) {
         if (fiscalPosition.tax_map[tax.id]) {
