@@ -133,15 +133,18 @@ class SaleOrderLine(models.Model):
             sol_id = line.id or line._origin.id
             line.qty_delivered = reached_milestones_per_sol.get(sol_id, 0.0) * line.product_uom_qty
 
-    @api.depends('order_id.partner_id', 'product_id', 'order_id.project_id')
+    @api.depends('order_id.project_id')
     def _compute_analytic_distribution(self):
-        super()._compute_analytic_distribution()
         for line in self:
             project = line.product_id.project_id or line.order_id.project_id
-            if line.display_type or not line.product_id or not project:
-                continue
+            # Do not overwrite existing analytic distribution when adding a project
+            if not (project and line.analytic_distribution):
+                super(SaleOrderLine, line)._compute_analytic_distribution()
+                if line.display_type or not line.product_id or not project:
+                    continue
 
             if line.analytic_distribution:
+                # Check if project account can be added to existing analytic distribution
                 applied_root_plans = self.env['account.analytic.account'].browse(
                     list({int(account_id) for ids in line.analytic_distribution for account_id in ids.split(",")})
                 ).exists().root_plan_id

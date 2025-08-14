@@ -6,15 +6,18 @@ from odoo import api, models
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
-    @api.depends('product_id', 'order_id.partner_id', 'order_id.project_id')
+    @api.depends('order_id.project_id')
     def _compute_analytic_distribution(self):
-        super()._compute_analytic_distribution()
         ProjectProject = self.env['project.project']
         for line in self:
             project_id = line._context.get('project_id')
             project = ProjectProject.browse(project_id) if project_id else line.order_id.project_id
-            if line.display_type or not project:
-                continue
+            # Do not overwrite existing analytic distribution when adding a project
+            if not (project and line.analytic_distribution):
+                super(PurchaseOrderLine, line)._compute_analytic_distribution()
+                if line.display_type or not project:
+                    continue
+
             if line.analytic_distribution:
                 applied_root_plans = self.env['account.analytic.account'].browse(
                     list({int(account_id) for ids in line.analytic_distribution for account_id in ids.split(",")})
