@@ -143,3 +143,9 @@ class WebsocketCase(HttpCase):
         if expected_reason:
             # ensure the close reason is the one we expected
             self.assertEqual(payload[2:].decode(), expected_reason)
+
+
+class BusCase:
+    def _reset_bus(self):
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
+        self.env["bus.bus"].sudo().search([]).unlink()

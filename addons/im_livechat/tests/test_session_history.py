@@ -18,6 +18,7 @@ class TestImLivechatSessionHistory(TestImLivechatCommon):
         })
         channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
         channel.with_user(operator).message_post(body="Hello, how can I help you?")
+        self._reset_bus()
         action = self.env.ref("im_livechat.discuss_channel_action_from_livechat_channel")
         self.start_tour(
             f"/odoo/livechat/{self.livechat_channel.id}/action-{action.id}",
