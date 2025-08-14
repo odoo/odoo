@@ -14,18 +14,24 @@ class TestImLivechatSessionHistoryOpen(TestImLivechatCommon):
             [{
                 "name": "test 1",
                 "channel_type": "livechat",
-                "livechat_channel_id": 1,
+                "livechat_channel_id": self.livechat_channel.id,
                 "livechat_operator_id": operator.partner_id.id,
                 "channel_member_ids": [Command.create({"partner_id": user_1.id})],
             },
             {
                 "name": "test 2",
                 "channel_type": "livechat",
-                "livechat_channel_id": 1,
+                "livechat_channel_id": self.livechat_channel.id,
                 "livechat_operator_id": operator.partner_id.id,
                 "channel_member_ids": [Command.create({"partner_id": user_2.id})],
             }]
         )
         channel1.message_post(body="Test Channel 1 Msg", message_type="comment", subtype_xmlid="mail.mt_comment")
         channel2.message_post(body="Test Channel 2 Msg", message_type="comment", subtype_xmlid="mail.mt_comment")
-        self.start_tour("/web", "im_livechat_session_history_open", login="operator", step_delay=25)
+        action = self.env.ref("im_livechat.discuss_channel_action_from_livechat_channel")
+        self.start_tour(
+            f"/odoo/livechat/{self.livechat_channel.id}/action-{action.id}",
+            "im_livechat_session_history_open",
+            login="operator",
+            step_delay=25,
+        )
