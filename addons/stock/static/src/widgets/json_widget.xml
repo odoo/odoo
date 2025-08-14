@@ -24,18 +24,19 @@
         </table>
     </div>
 
-    <div t-name="stock.replenishmentHistory">
-        <h2>Sales History</h2>
-        <hr/>
-        <table t-if="jsonValue.replenishment_history" class="table table-borderless">
-            <tbody>
-                <t t-foreach="jsonValue.replenishment_history" t-key="line.name" t-as="line">
-                    <tr>
-                        <td><t t-esc="line.name"/></td>
-                        <td class="text-end text-nowrap" t-esc="line.quantity + ' ' + line.uom_name"/>
-                    </tr>
-                </t>
-            </tbody>
-        </table>
+    <div t-name="stock.replenishmentGraph" class="col-11">
+        <div class="o_replenishment_graph">
+            <canvas t-ref="canvas"/>
+        </div>
+        <div class="d-flex pt-3">
+            <h6 class="row text-muted">
+                <span>Daily Demand: <span t-out="dailyDemand"/> <span t-out="productUomName"/>/day</span>
+                <span class="pt-2">Average Stock: <span t-out="averageStock"/> <span t-out="productUomName"/></span>
+            </h6>
+            <h6 class="row text-muted">
+                <span>Ordering Frequency: <span t-out="orderingPeriod"/> day(s)</span>
+                <span class="pt-2">Lead Time: <span t-out="leadTime"/> day(s)</span>
+            </h6>
+        </div>
     </div>
 </templates>
