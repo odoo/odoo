@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="hr.EmployeeOnboarding">
+        <div class="o_nocontent_help">
+            <div t-if="showLoadSample">
+                <p class="text-center fs-1">
+                    Ready to start your experience?
+                </p>
+                <div class="px-2 py-2 row justify-content-center g-2 column-gap-3 mb-3">
+                    <div class="col-auto align-self-center">
+                        <a class="btn btn-primary text-nowrap text-overflow-ellipsis px-3"
+                            t-on-click="loadDemoData" id="loadSampleDataBtn">
+                            Load sample data
+                        </a>
+                    </div>
+                    <div class="col-auto">
+                        <div class="d-flex flex-column gap-1 align-items-center">
+                            <div class="d-flex align-items-center">
+                                <div class="vr" />
+                            </div>
+                            <p class="fst-italic m-0">
+                                or
+                            </p>
+                            <div class="d-flex align-items-center">
+                                <div class="vr" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-auto align-self-center">
+                        <a class="btn btn-primary text-nowrap text-overflow-ellipsis px-3"
+                            t-on-click="loadCreateEmployee">Create a new employee</a>
+                    </div>
+                </div>
+                <hr class="my-4 container mt-2 d-none d-md-block" />
+            </div>
+            <OnboardingHelperBlocks />
+        </div>
+    </t>
+</odoo>

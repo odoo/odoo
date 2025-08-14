@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="hr.EmployeeListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
+        <xpath expr="//thead" position="attributes">
+            <attribute name="t-if">!showOnboarding</attribute>
+        </xpath>
+        <xpath expr="//tbody" position="attributes">
+            <attribute name="t-if">!showOnboarding</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="inside">
+            <div class="o_view_nocontent">
+                <EmployeeOnboarding t-if="showOnboarding" showLoadSample="showLoadSample" />
+            </div>
+        </xpath>
+        <ActionHelper position="replace">
+            <t t-if="showNoContentHelper">
+                <ActionHelper noContentHelp="props.noContentHelp" showRibbon="false" />
+            </t>
+        </ActionHelper>
+    </t>
+</odoo>

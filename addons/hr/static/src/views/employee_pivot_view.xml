@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="hr.EmployeePivotController" t-inherit="web.PivotView" t-inherit-mode="primary">
+        <ActionHelper position="replace">
+            <t t-if="model.isReady and displayNoContent">
+                <ActionHelper noContentHelp="props.noContentHelp" showRibbon="false"/>
+            </t>
+        </ActionHelper>
+    </t>
+</odoo>

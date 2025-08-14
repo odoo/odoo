@@ -17,6 +17,7 @@
         'phone_validation',
         'resource_mail',
         'web',
+        'web_hierarchy',
     ],
     'data': [
         'security/hr_security.xml',
@@ -56,6 +57,12 @@
     'assets': {
         'web.assets_backend': [
             'hr/static/src/**/*',
+            ('remove', 'hr/static/src/views/employee_pivot_view.*'),
+            ('remove', 'hr/static/src/views/employee_graph_view.*'),
+        ],
+        'web.assets_backend_lazy': [
+            'hr/static/src/views/employee_pivot_view.*',
+            'hr/static/src/views/employee_graph_view.*',
         ],
         'web.qunit_suite_tests': [
             'hr/static/tests/legacy/**/*',

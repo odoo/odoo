@@ -1008,18 +1008,34 @@ class HrEmployee(models.Model):
         # the result is expected from this table, so we should link tables
         return super(HrEmployee, self.sudo())._search([('id', 'in', ids)], order=order)
 
+    @api.model
+    def is_main_company(self, company_ids):
+        return self.env.ref("base.main_company").id in company_ids
+
+    @api.model
+    def has_demo_data(self):
+        # In hr_scenario.xml
+        if self.env.ref("hr.dep_rd", raise_if_not_found=False):
+            return True
+        # In hr_skills_scenario.xml
+        if self.env.ref("hr.hr_skill_type_it", raise_if_not_found=False):
+            return True
+        return bool(self.env['ir.module.module'].search_count([
+            '&',
+                ('state', 'in', ['installed', 'to upgrade', 'uninstallable']),
+                ('demo', '=', True),
+        ]))
+
     def _load_demo_data(self):
-        dep_rd = self.env.ref('hr.dep_rd', raise_if_not_found=False)
-        action_reload = {
-            'type': 'ir.actions.client',
-            'tag': 'reload',
-        }
-        if dep_rd:
-            return action_reload
+        if self.has_demo_data():
+            return None
         convert.convert_file(env=self.sudo().env, module='hr', filename='data/scenarios/hr_scenario.xml', idref=None, mode='init', kind="data")
         if 'resume_line_ids' in self:
             convert.convert_file(env=self.env, module='hr_skills', filename='data/scenarios/hr_skills_scenario.xml', idref=None, mode='init', kind="data")
-        return action_reload
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
 
     def get_formview_id(self, access_uid=None):
         """ Override this method in order to redirect many2one towards the right model depending on access_uid """

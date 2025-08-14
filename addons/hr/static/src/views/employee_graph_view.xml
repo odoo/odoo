@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="hr.EmployeeGraphController" t-inherit="web.GraphView" t-inherit-mode="primary">
+        <ActionHelper position="replace">
+            <t t-if="!model.hasData() or model.useSampleModel and props.info.noContentHelp">
+                <ActionHelper noContentHelp="props.noContentHelp" showRibbon="false"/>
+            </t>
+        </ActionHelper>
+    </t>
+</odoo>

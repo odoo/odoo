@@ -24,6 +24,14 @@ class Employee extends models.Model {
         return false;
     }
 
+    has_demo_data() {
+        return false;
+    }
+
+    is_main_company(companyIds) {
+        return false;
+    }
+
     _views = {
         hierarchy: `
             <hierarchy js_class="hr_employee_hierarchy">

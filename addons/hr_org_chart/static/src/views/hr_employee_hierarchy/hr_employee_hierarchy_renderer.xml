@@ -9,6 +9,11 @@
                 displayName="row.parentNode.data.display_name || row.parentNode.data.name"
             />
         </xpath>
+        <xpath expr="//div[hasclass('o_hierarchy_renderer')]" position="attributes">
+            <attribute name="t-if">!showOnboarding</attribute>
+        </xpath>
+        <xpath expr="." position="inside">
+            <EmployeeOnboarding t-if="showOnboarding" showLoadSample="showLoadSample"/>
+        </xpath>
     </t>
-
 </templates>
