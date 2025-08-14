@@ -681,7 +681,6 @@ class AccountMove(models.Model):
         AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
 
         downpayment_lines = []
-        # Prepare for '_dispatch_negative_lines'
         for base_line in base_lines:
             tax_details = base_line['tax_details']
             discount = base_line['discount']
