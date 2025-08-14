@@ -827,7 +827,7 @@ class Field(typing.Generic[T]):
                     raise ValueError(
                         f"Wrong @depends on '{self.compute}' (compute method of field {self}). "
                         f"Dependency field '{fname}' not found in model {model_name}."
-                    )
+                    ) from None
                 if field is self and index and not self.recursive:
                     self.recursive = True
                     warnings.warn(f"Field {self} should be declared with recursive=True", stacklevel=1)
@@ -1687,9 +1687,12 @@ class Field(typing.Generic[T]):
             recs = self._to_prefetch(record)
             try:
                 recs._fetch_field(self)
+                fallback_single = False
             except AccessError:
                 if len(recs) == 1:
                     raise
+                fallback_single = True
+            if fallback_single:
                 record._fetch_field(self)
             value = field_cache.get(record_id, SENTINEL)
             if value is SENTINEL:
@@ -1708,9 +1711,12 @@ class Field(typing.Generic[T]):
                     if (rec_origin := rec._origin):
                         value = self.convert_to_cache(rec_origin[self.name], rec, validate=False)
                         self._update_cache(rec, value)
+                fallback_single = False
             except (AccessError, KeyError, MissingError):
                 if len(recs) == 1:
                     raise
+                fallback_single = True
+            if fallback_single:
                 value = self.convert_to_cache(record._origin[self.name], record, validate=False)
                 self._update_cache(record, value)
             # get the final value (see patches in x2many fields)
@@ -1725,7 +1731,10 @@ class Field(typing.Generic[T]):
                 recs = record if self.recursive else self._to_prefetch(record)
                 try:
                     self.compute_value(recs)
+                    fallback_single = False
                 except (AccessError, MissingError):
+                    fallback_single = True
+                if fallback_single:
                     self.compute_value(record)
                     recs = record
 
@@ -1839,15 +1848,18 @@ class Field(typing.Generic[T]):
             """ Apply `func` on `records`, with a fallback ignoring non-existent records. """
             try:
                 func(records)
+                return
             except MissingError:
-                existing = records.exists()
-                if existing:
-                    func(existing)
-                # mark the field as computed on missing records, otherwise they
-                # remain to compute forever, which may lead to an infinite loop
-                missing = records - existing
-                for f in records.pool.field_computed[self]:
-                    records.env.remove_to_compute(f, missing)
+                pass
+
+            existing = records.exists()
+            if existing:
+                func(existing)
+            # mark the field as computed on missing records, otherwise they
+            # remain to compute forever, which may lead to an infinite loop
+            missing = records - existing
+            for f in records.pool.field_computed[self]:
+                records.env.remove_to_compute(f, missing)
 
         if self.recursive:
             # recursive computed fields are computed record by record, in order
@@ -1866,8 +1878,10 @@ class Field(typing.Generic[T]):
                 recs = record.browse(itertools.islice(ids, PREFETCH_MAX))
                 try:
                     apply_except_missing(self.compute_value, recs)
+                    continue
                 except AccessError:
-                    self.compute_value(record)
+                    pass
+                self.compute_value(record)
 
     def compute_value(self, records: BaseModel) -> None:
         """ Invoke the compute method on ``records``; the results are in cache. """
