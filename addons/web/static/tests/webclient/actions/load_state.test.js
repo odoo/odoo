@@ -225,6 +225,20 @@ describe(`new urls`, () => {
         ]);
     });
 
+    test(`action loading, when action not found, load previous`, async () => {
+        redirect("/odoo/action-1001/action-666");
+        logHistoryInteractions();
+
+        await mountWebClient();
+        expect(`.test_client_action`).toHaveCount(1);
+        expect(`.o_menu_brand`).toHaveText("App1");
+        expect(browser.sessionStorage.getItem("menu_id")).toBe("1");
+        expect(browser.location.href).toBe("http://example.com/odoo/action-1001", {
+            message: "url changed",
+        });
+        expect.verifySteps(["pushState http://example.com/odoo/action-1001"]);
+    });
+
     test(`menu loading`, async () => {
         redirect("/odoo?menu_id=2");
         logHistoryInteractions();
