@@ -208,6 +208,7 @@ class TestEdiZatca(TestSaEdiCommon):
         """Test invoice generation with downpayment scenarios."""
         if 'sale' not in self.env["ir.module.module"]._installed():
             self.skipTest("Sale module is not installed")
+        self.env.user.group_ids += self.env.ref('sales_team.group_sale_salesman')
 
         freeze = datetime(2022, 9, 5, 8, 20, 2, tzinfo=timezone('Etc/GMT-3'))
 
