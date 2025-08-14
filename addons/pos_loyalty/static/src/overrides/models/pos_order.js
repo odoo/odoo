@@ -1020,7 +1020,7 @@ patch(PosOrder.prototype, {
         const orderProducts = orderLines.map((line) => line.product_id.id);
         const remainingAmountPerLine = {};
         for (const line of orderLines) {
-            if (!line.get_quantity() || !line.price_unit) {
+            if (!line.get_quantity() || !line.price_unit || !line.get_price_with_tax()) {
                 continue;
             }
             remainingAmountPerLine[line.uuid] = line.get_price_with_tax();
