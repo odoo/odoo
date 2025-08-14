@@ -12,7 +12,6 @@
                     <field name="company_has_template" invisible="1"/>
                     <field name="has_active_session" invisible="1"/>
                     <field name="other_devices" invisible="1"/>
-                    <field name="is_posbox" invisible="1"/>
                     <field name="module_pos_hr" invisible="1"/>
 
                     <div class="oe_title" id="title">
@@ -54,47 +53,10 @@
                             <field name="other_devices" />
                         </setting>
                         <setting string="IoT Box" help="Connect devices using an IoT Box">
-                                <field name="is_posbox" />
-                                <div class="content-group pos_iot_config ms-3" invisible="not is_posbox">
-                                    <div class="row">
-                                        <div class="col-lg-4 o_light_label">
-                                            <label string="IoT Box IP Address" for="proxy_ip"/>
-                                        </div>
-                                        <div class="col-lg-8">
-                                            <field name="proxy_ip"/>
-                                        </div>
-                                    </div>
-                                    <div class="row iot_barcode_scanner">
-                                        <div class="col-lg-5 o_light_label">
-                                            <label string="Scanner" for="iface_scan_via_proxy"/>
-                                        </div>
-                                        <div class="col-lg-7">
-                                            <field name="iface_scan_via_proxy"/>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-5 o_light_label">
-                                            <label string="Electronic Scale" for="iface_electronic_scale"/>
-                                        </div>
-                                        <div class="col-lg-7">
-                                            <field name="iface_electronic_scale"/>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-5 o_light_label">
-                                            <label string="Receipt Printer" for="iface_print_via_proxy"/>
-                                        </div>
-                                        <div class="col-lg-7">
-                                            <field name="iface_print_via_proxy"/>
-                                       </div>
-                                    </div>
-                                    <div class="row" invisible="not iface_print_via_proxy">
-                                        <div class="col-lg-5 o_light_label ps-4">
-                                            <label string="Cashdrawer" for="iface_cashdrawer"/>
-                                        </div>
-                                        <div class="col-lg-7">
-                                            <field name="iface_cashdrawer"/>
-                                        </div>
+                                <field name="module_pos_iot" />
+                                <div class="content-group" id="warning_text_pos_iot" invisible="not module_pos_iot">
+                                    <div class="text-warning mt16 mb4">
+                                        Save this page and come back here to set up the feature.
                                     </div>
                                 </div>
                         </setting>

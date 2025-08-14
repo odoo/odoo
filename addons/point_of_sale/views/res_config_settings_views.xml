@@ -13,7 +13,6 @@
                     <field name="pos_has_active_session" invisible="1"/>
                     <field name="pos_allowed_pricelist_ids" invisible="1"/>
                     <field name="pos_cash_control" invisible="1"/>
-                    <field name="pos_iface_print_via_proxy" invisible="1"/>
                     <field name="pos_company_has_template" invisible="1"/>
                     <field name="group_cash_rounding" invisible="1"/>
                 </t>
@@ -314,7 +313,7 @@
                                 </setting>
                                 <setting id="auto_printing" help="Print receipts automatically once the payment is registered" documentation="/applications/sales/point_of_sale/receipts_invoices.html">
                                     <field name="pos_iface_print_auto"/>
-                                    <div class="content-group mt16" invisible="not pos_iface_print_auto or not pos_is_posbox and not pos_other_devices">
+                                    <div class="content-group mt16" invisible="not pos_iface_print_auto or not pos_other_devices">
                                         <div>
                                             <field name="pos_iface_print_skip_screen" class="oe_inline"/><span class="oe_inline"><b>Skip Preview Screen</b></span>
                                         </div>
@@ -392,27 +391,10 @@
                                     <field name="pos_customer_display_bg_img" class="w-100" filename="pos_customer_display_bg_img_name"/>
                                 </setting>
                                 <setting string="IoT Box" help="Connect devices using an IoT Box">
-                                    <field name="pos_is_posbox"/>
-                                    <div class="content-group pos_iot_config" invisible="not pos_is_posbox">
-                                        <div class="row">
-                                            <label string="IoT Box IP Address" for="pos_proxy_ip" class="col-lg-4 o_light_label"/>
-                                            <field name="pos_proxy_ip"/>
-                                        </div>
-                                        <div class="row iot_barcode_scanner">
-                                            <label string="Barcode Scanner/Card Reader" for="pos_iface_scan_via_proxy" class="col-lg-4 o_light_label"/>
-                                            <field name="pos_iface_scan_via_proxy"/>
-                                        </div>
-                                        <div class="row">
-                                            <label string="Electronic Scale" for="pos_iface_electronic_scale" class="col-lg-4 o_light_label"/>
-                                            <field name="pos_iface_electronic_scale"/>
-                                        </div>
-                                        <div class="row">
-                                            <label string="Receipt Printer" for="pos_iface_print_via_proxy" class="col-lg-4 o_light_label"/>
-                                            <field name="pos_iface_print_via_proxy"/>
-                                        </div>
-                                        <div class="row" invisible="not pos_iface_print_via_proxy">
-                                            <label string="Cashdrawer" for="pos_iface_cashdrawer" class="col-lg-4 o_light_label"/>
-                                            <field name="pos_iface_cashdrawer"/>
+                                    <field name="pos_module_pos_iot"/>
+                                    <div class="content-group" id="warning_text_pos_iot" invisible="not pos_module_pos_iot">
+                                        <div class="text-warning mt16 mb4">
+                                            Save this page and come back here to set up the feature.
                                         </div>
                                     </div>
                                 </setting>

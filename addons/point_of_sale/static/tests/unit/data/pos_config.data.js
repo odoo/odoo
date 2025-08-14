@@ -98,7 +98,7 @@ export class PosConfig extends models.ServerModel {
             module_pos_avatax: false,
             module_pos_discount: false,
             module_pos_appointment: false,
-            is_posbox: false,
+            module_pos_iot: false,
             is_header_or_footer: false,
             module_pos_hr: false,
             amount_authorized_diff: 0.0,
