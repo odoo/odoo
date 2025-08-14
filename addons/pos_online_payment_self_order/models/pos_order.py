@@ -66,3 +66,13 @@ class PosOrder(models.Model):
             # flow is cancelled, and the default flow is self order if it is configured.
             self.use_self_order_online_payment = tools.float_is_zero(next_online_payment_amount, precision_rounding=self.currency_id.rounding) and self.config_id.self_order_online_payment_method_id
         return res
+
+    def _send_notification_online_payment_status(self, status):
+        self.config_id.notify_synchronisation(self.config_id.current_session_id.id, 0)
+        self.config_id._notify("ONLINE_PAYMENT_STATUS", {
+            'status': status,  # progress, success, fail
+            'data': {
+                'pos.order': self.read(self._load_pos_self_data_fields(self.config_id.id), load=False),
+                'pos.payment': self.payment_ids.read(self.payment_ids._load_pos_self_data_fields(self.config_id.id), load=False),
+            }
+        })
