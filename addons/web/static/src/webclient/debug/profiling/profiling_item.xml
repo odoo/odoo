@@ -28,6 +28,7 @@
                             <select class="profile_param form-select" t-on-change="(ev) => this.changeParam('traces_async_interval', ev)">
                                 <t t-set="interval" t-value="profiling.state.params.traces_async_interval"/>
                                 <option value="">Default</option>
+                                <option value="0.0001" t-att-selected="interval === '0.0001'">0.0001</option>
                                 <option value="0.001" t-att-selected="interval === '0.001'">0.001</option>
                                 <option value="0.01" t-att-selected="interval === '0.01'">0.01</option>
                                 <option value="0.1" t-att-selected="interval === '0.1'">0.1</option>
