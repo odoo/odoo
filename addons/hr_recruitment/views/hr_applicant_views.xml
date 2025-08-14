@@ -137,8 +137,9 @@
                 <field name="active" invisible="1"/>
                 <field name="legend_normal" invisible="1"/>
                 <field name="legend_blocked" invisible="1"/>
+                <field name="legend_waiting" invisible="1"/>
                 <field name="legend_done" invisible="1"/>
-                <field name="kanban_state" widget="state_selection" invisible="application_status == 'refused' or application_status == 'archived' or is_pool_applicant"/>
+                <field name="kanban_state" widget="hr_applicant_state_selection" invisible="application_status == 'refused' or application_status == 'archived' or is_pool_applicant" class="o_field_state_selection"/>
                 <div class="oe_title pe-0">
                     <label for="partner_name" class="oe_edit_only" string="Applicant" invisible="is_pool_applicant"/>
                     <label for="partner_name" class="oe_edit_only" string="Talent" invisible="not is_pool_applicant"/>
@@ -276,6 +277,7 @@
                 <filter string="Hired" name="hired" domain="[('date_closed', '!=', False)]"/>
                 <separator/>
                 <filter string="Ready for Next Stage" name="done" domain="[('kanban_state', '=', 'done')]"/>
+                <filter string="Waiting" name="waiting" domain="[('kanban_state', '=', 'waiting')]"/>
                 <filter string="Blocked" name="blocked" domain="[('kanban_state', '=', 'blocked')]"/>
                 <separator/>
                 <filter string="Directly Available" name="applicant_availability" domain="['|',('availability', '&lt;=', 'today'),('availability','=', False)]"/>
@@ -376,6 +378,7 @@
                 <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Requirements"}}'/>
                 <field name="legend_normal"/>
                 <field name="legend_blocked"/>
+                <field name="legend_waiting"/>
                 <field name="legend_done"/>
                 <field name="date_closed"/>
                 <field name="color"/>
@@ -383,7 +386,7 @@
                 <field name="active"/>
                 <field name="application_status" />
                 <field name="company_id" invisible="1"/> <!-- We need to keep this field as it is used in the domain of user_id in the model -->
-                <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
+                <progressbar field="kanban_state" colors='{"done": "success", "waiting": "warning", "blocked": "danger"}'/>
                 <templates>
                     <t t-name="menu">
                         <a role="menuitem" name="action_create_meeting" type="object" class="dropdown-item">Schedule Interview</a>
@@ -410,7 +413,7 @@
                                     <i class='fa fa-paperclip' role="img" aria-label="Documents"/>
                                     <field name="attachment_number"/>
                                 </a>
-                                <field name="kanban_state" class="mx-1" widget="state_selection"/>
+                                <field name="kanban_state" class="mx-1" widget="hr_applicant_state_selection"/>
                                 <field name="user_id" widget="many2one_avatar_user"/>
                             </div>
                         </footer>

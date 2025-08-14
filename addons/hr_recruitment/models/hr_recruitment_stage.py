@@ -26,6 +26,8 @@ class HrRecruitmentStage(models.Model):
         help="If checked, this stage is used to determine the hire date of an applicant")
     legend_blocked = fields.Char(
         'Red Kanban Label', default=lambda self: _('Blocked'), translate=True, required=True)
+    legend_waiting = fields.Char(
+        'Orange Kanban Label', default=lambda self: _('Waiting'), translate=True, required=True)
     legend_done = fields.Char(
         'Green Kanban Label', default=lambda self: _('Ready for Next Stage'), translate=True, required=True)
     legend_normal = fields.Char(
