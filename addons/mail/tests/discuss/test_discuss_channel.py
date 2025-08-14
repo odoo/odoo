@@ -891,17 +891,18 @@ class TestChannelInternals(MailCommon, HttpCase):
                     "payload": {
                         "mail.message": [
                             {
-                                "id": message.id,
                                 "attachment_ids": [],
                                 "body": ['markup', '<p>Test update</p><span class="o-mail-Message-edited"></span>'],
+                                "id": message.id,
+                                "parent_id": False,
                                 "partner_ids": message.partner_ids.ids,
                                 "pinned_at": message.pinned_at,
-                                "write_date": fields.Datetime.to_string(message.write_date),
                                 "translationValue": False,
-                            }
+                                "write_date": fields.Datetime.to_string(message.write_date),
+                            },
                         ],
                     },
-                }
+                },
             ],
         ):
             channel._message_update_content(message, Markup("<p>Test update</p>"), [])
