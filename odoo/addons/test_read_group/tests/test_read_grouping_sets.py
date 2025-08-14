@@ -681,3 +681,30 @@ class TestFormattedReadGroupingSets(common.TransactionCase):
                 RelatedBase.formatted_read_grouping_sets([], grouping_sets, aggregates),
                 expected_result,
             )
+
+        # Targeting the same source field but with different path
+        grouping_sets = [
+            [],
+            # Targeting the same many2many
+            ['foo_id.bar_id.base_ids'],
+            ['foo_id.bar_base_ids'],
+            # All targeting foo_id.name
+            ['foo_id.name'],
+            ['foo_id.name'],
+            ['foo_id_name'],
+            ['foo_id_name_sudo'],
+            ['foo_id_name_sudo', 'value'],
+            # All targeting foo_id.bar_id.name
+            ['foo_id.bar_id.name'],
+            ['foo_id_bar_id_name'],
+            ['foo_id_bar_name'],
+        ]
+        for aggregates in aggregates_sets:
+            expected_result = [
+                RelatedBase.formatted_read_group([], groupby, aggregates)
+                for groupby in grouping_sets
+            ]
+            self.assertEqual(
+                RelatedBase.formatted_read_grouping_sets([], grouping_sets, aggregates),
+                expected_result,
+            )
