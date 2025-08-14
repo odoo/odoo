@@ -674,12 +674,12 @@
                         domain="[('activity_user_id', '=', uid)]"/>
                     <separator invisible="1"/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
-                            domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                            domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                             help="Show all opportunities for which the next action date is before today"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
-                            domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                            domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                            domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                            domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
@@ -836,16 +836,16 @@
                  to 0. but this approach is not working. the work around is temporary -->
                 <xpath expr="//filter[@name='activities_overdue']" position="replace">
                     <filter string="Late Activities" name="activities_overdue"
-                        domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all opportunities for which the next action date is before today"/>
                 </xpath>
                 <xpath expr="//filter[@name='activities_today']" position="replace">
                     <filter string="Today Activities" name="activities_today"
-                        domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 </xpath>
                 <xpath expr="//filter[@name='activities_upcoming_all']" position="replace">
                     <filter string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 </xpath>
                 <xpath expr="//filter[@name='assigned_to_me']" position="replace">
                     <filter string="My Activities" name="assigned_to_me"
