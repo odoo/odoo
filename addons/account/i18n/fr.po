@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-16 18:36+0000\n"
-"PO-Revision-Date: 2025-08-13 14:26+0000\n"
+"PO-Revision-Date: 2025-08-14 23:11+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s18-4/"
 "account/fr/>\n"
@@ -1068,7 +1068,7 @@ msgstr "<span class=\"o_stat_text\">1 paiement</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span class=\"o_stat_text\">Cash Basis Entries</span>"
-msgstr "<span class=\"o_stat_text\">Pièces comptables sur base d'espèces</span>"
+msgstr "<span class=\"o_stat_text\">Pièces comptables de trésorerie</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -1119,7 +1119,8 @@ msgid ""
 "                            </span>"
 msgstr ""
 "<span class=\"text-muted\">\n"
-"                                <i>Sécuriser les entrées pour</i>\n"
+"                                <i>Sécuriser les pièces comptables "
+"jusqu'au</i>\n"
 "                            </span>"
 
 #. module: account
@@ -1776,14 +1777,16 @@ msgstr "@De : %(email)s"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_view_bank_statement_tree
+#, fuzzy
 msgid ""
 "A Cash Register allows you to manage cash entries in your cash\n"
 "                journals. This feature provides an easy way to follow up cash\n"
 "                payments on a daily basis."
 msgstr ""
-"Une caisse enregistreuse vous permet de gérer les transactions d'espèce dans ton journal d'espèce\n"
-"Cette fonctionnalité offre un moyen facile de suivre les paiements en espèces \n"
-" sur une base quotidienne"
+"Une caisse enregistreuse vous permet de gérer les transactions en espèces "
+"dans le journal correspondant.\n"
+"                Cette fonctionnalité offre un moyen facile de suivre \n"
+"                les paiements en espèces au quotidien."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
@@ -2114,7 +2117,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__account_has_hashed_entries
 msgid "Account Has Hashed Entries"
-msgstr "Le compte a des écritures hachées"
+msgstr "Le compte a des pièces comptables hachées"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__company_partner_id
@@ -3231,7 +3234,7 @@ msgid ""
 "reconciled."
 msgstr ""
 "Une erreur s'est produite lors du calcul de l'inaltérabilité. Toutes les "
-"écritures doivent être rapprochées."
+"pièces comptables doivent être rapprochées."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -5208,8 +5211,8 @@ msgstr ""
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Contains hashed entries, but %s also has hashed entries."
 msgstr ""
-"Contient des entrées hachées, mais %s comporte également des entrées "
-"hachées."
+"Contient des pièces comptables hachées, mais %s comporte également des "
+"pièces comptables hachées."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__body
@@ -5338,7 +5341,7 @@ msgstr "Créer"
 #. module: account
 #: model:ir.model,name:account.model_account_automatic_entry_wizard
 msgid "Create Automatic Entries"
-msgstr "Créer des écritures automatiques"
+msgstr "Créer les pièces comptables automatiquement"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -7039,8 +7042,9 @@ msgstr "Avoir brouillon"
 #: code:addons/account/models/company.py:0
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 #: model:ir.model.fields,field_description:account.field_account_report__filter_show_draft
+#, fuzzy
 msgid "Draft Entries"
-msgstr "Écritures brouillon"
+msgstr "Pièces comptables brouillon"
 
 #. module: account
 #. odoo-python
@@ -7425,7 +7429,7 @@ msgstr "Ecritures"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__entries_count
 msgid "Entries Count"
-msgstr "Nombre d'écritures"
+msgstr "Nombre de pièces comptables"
 
 #. module: account
 #. odoo-python
@@ -7444,14 +7448,13 @@ msgstr "Les écritures ne sont pas du même compte : %s"
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Entries can only be created for a single company at a time."
 msgstr ""
-"Les écritures ne peuvent être créées que pour une seule entreprise à la "
-"fois."
+"Les écritures ne peuvent être créées que pour une seule société à la fois."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Entries don't belong to the same company: %s"
-msgstr "Les écritures n'appartiennent pas à la même entreprise : %s"
+msgstr "Les écritures n'appartiennent pas à la même société : %s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_validate_account_move__force_post
@@ -7464,8 +7467,9 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#, fuzzy
 msgid "Entries to Review"
-msgstr "Écritures à vérifier"
+msgstr "Pièces comptables à vérifier"
 
 #. module: account
 #. odoo-python
@@ -8094,13 +8098,14 @@ msgstr "Piste d’audit forcée"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__currency_id
+#, fuzzy
 msgid ""
 "Forces all journal items in this account to have a specific currency (i.e. "
 "bank journals). If no currency is set, entries can use any currency."
 msgstr ""
-"Force toutes les écritures comptables de ce compte à avoir une devise "
-"spécifique (c'est-à-dire les journaux bancaires). Si aucune devise n'est "
-"définie, les entrées peuvent utiliser n'importe quelle devise."
+"Force toutes les écritures comptables de ce compte à utiliser cette devise "
+"spécifique (par ex. les journaux bancaires). Si aucune devise n'est définie, "
+"les entrées peuvent utiliser n'importe quelle devise."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__foreign_currency_id
@@ -8457,13 +8462,15 @@ msgstr "Date de verrouillage ferme"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
+#, fuzzy
 msgid "Has Accounting Entries"
-msgstr "Présente des écritures comptables"
+msgstr "Présente des pièces comptables"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_entries
+#, fuzzy
 msgid "Has Entries"
-msgstr "A des écritures"
+msgstr "A des pièces comptables"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_update_fpos
@@ -8504,8 +8511,9 @@ msgstr "A un facteur négatif"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_posted_entries
+#, fuzzy
 msgid "Has Posted Entries"
-msgstr "A des écritures comptabilisées"
+msgstr "A des pièces comptabilisées"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__has_reconciled_entries
@@ -8525,8 +8533,9 @@ msgstr "A des lignes de relevé"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__hash_date
+#, fuzzy
 msgid "Hash All Entries"
-msgstr "Hacher toutes les écritures"
+msgstr "Hacher toutes les pièces comptables"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_account_hash_integrity
@@ -8582,9 +8591,9 @@ msgid ""
 "date are secured. Only journal entries after the hard lock date are "
 "considered."
 msgstr ""
-"Date la plus éloignée de telle sorte que toutes les écritures enregistrées "
-"avant (y compris) la date sont sécurisées. Seules les écritures postérieures"
-" à la date de verrouillage sont prises en compte."
+"Date la plus éloignée de telle sorte que toutes les pièces comptabilisées "
+"jusqu'à cette date (incluse) sont sécurisées. Seules les pièces comptables "
+"postérieures à la date de verrouillage ferme sont prises en compte."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highest_name
@@ -8847,10 +8856,11 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+#, fuzzy
 msgid "If set, this account is used to automatically balance entries."
 msgstr ""
-"Si défini, ce compte est utilisé pour équilibrer automatiquement les "
-"écritures."
+"Si défini, ce compte est utilisé pour équilibrer automatiquement les pièces "
+"comptables."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__non_trade
@@ -8886,15 +8896,16 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
 #: model:ir.model.fields,help:account.field_account_journal__restrict_mode_hash_table
 #: model:ir.model.fields,help:account.field_account_move__restrict_mode_hash_table
+#, fuzzy
 msgid ""
 "If ticked, when an entry is posted, we retroactively hash all moves in the "
 "sequence from the entry back to the last hashed entry. The hash can also be "
 "performed on demand by the Secure Entries wizard."
 msgstr ""
-"Si cette case est cochée, lorsqu'une écriture est publiée, tous les "
-"mouvements de la séquence de cette écriture sont rétroactivement hachés "
-"jusqu'à la dernière écriture hachée. Le hachage peut également être effectué"
-" à la demande par l'assistant Sécuriser les entrées."
+"Si cette case est cochée, lorsqu'une pièces est comptabilisée, un hachage de "
+"toutes les pièces non encore sécurisées depuis la dernière pièce sécurisée "
+"est réalisé. Le hachage peut également être effectué à la demande par "
+"l'assistant Sécuriser les entrées."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9802,8 +9813,9 @@ msgstr "Est éditeur"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__is_entries
+#, fuzzy
 msgid "Is Entries"
-msgstr "Est une écriture"
+msgstr "Sont des pièces comptables"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_is_follower
@@ -11408,8 +11420,9 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+#, fuzzy
 msgid "No payment journal entries"
-msgstr "Pas d'écritures de paiement"
+msgstr "Pas de pièce comptable de paiement"
 
 #. module: account
 #. odoo-python
@@ -12405,10 +12418,11 @@ msgstr "Partenaires sans compte bancaire"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
+#, fuzzy
 msgid "Partners that are used in hashed entries cannot be merged."
 msgstr ""
-"Les partenaires qui sont utilisés dans les écritures hachées ne peuvent pas "
-"être fusionnés."
+"Les partenaires qui sont utilisés dans les pièces comptables hachées ne "
+"peuvent pas être fusionnés."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -14244,8 +14258,9 @@ msgstr "Sections"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_secure_entries
 #: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
+#, fuzzy
 msgid "Secure Entries"
-msgstr "Sécuriser les entrées"
+msgstr "Sécuriser les pièces comptables"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_account_secure_entries_wizard
@@ -14279,10 +14294,11 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
+#, fuzzy
 msgid "Securing these entries will create at least one gap in the sequence."
 msgstr ""
-"La sécurisation de ces entrées créera au moins une discontinuité dans la "
-"séquence."
+"La sécurisation de ces pièces comptables créera au moins une discontinuité "
+"dans la séquence."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__access_token
@@ -14811,8 +14827,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
+#, fuzzy
 msgid "Show draft entries"
-msgstr "Afficher les écritures en brouillon"
+msgstr "Afficher les pièces comptables en brouillon"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search

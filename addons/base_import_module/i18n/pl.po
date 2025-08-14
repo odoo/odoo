@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-16 18:37+0000\n"
-"PO-Revision-Date: 2025-08-12 23:11+0000\n"
+"PO-Revision-Date: 2025-08-14 23:11+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s18-4/"
 "base_import_module/pl/>\n"
@@ -75,7 +75,7 @@ msgstr ""
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "Connection to %s failed The list of industry modules cannot be fetched"
 msgstr ""
-"Połączenie z %s nie powiodło się. Lista modułów przemysłu nie może zostać "
+"Połączenie z %s nie powiodło się. Lista modułów branżowych nie może zostać "
 "pobrana."
 
 #. module: base_import_module
@@ -132,8 +132,8 @@ msgstr "Wymuś inicjalizację"
 msgid ""
 "Force init mode even if installed. (will update `noupdate='1'` records)"
 msgstr ""
-"Wymusza inicjalizację  nawet jeśli moduł był już instalowany. (zaktualizuje "
-"rekordy z 'noupdate=1')"
+"Wymusza tryb inicjalizacji nawet jeśli moduł był już instalowany. ("
+"zaktualizuje rekordy z 'noupdate=1')"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__id
@@ -252,13 +252,14 @@ msgstr "Nie przesłano pliku."
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "No manifest found in '%(modules)s'. Can't import the zip file."
 msgstr ""
+"Nie znaleziono listu przewozowego w '%(modules)s'. Nie można zaimportować "
+"pliku zip."
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Note: you can only import data modules (.xml files and static assets)"
 msgstr ""
-"Uwaga: możesz importować tylko moduły danych (pliki .xml i zasoby "
-"statyczne)."
+"Uwaga: możesz importować tylko moduły danych (pliki .xml i zasoby statyczne)"
 
 #. module: base_import_module
 #: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__official
@@ -281,7 +282,7 @@ msgstr "Tylko administratorzy mogą przesłać moduł"
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "Only zip files are supported."
-msgstr "Tylko pliki zip są wspierane. "
+msgstr "Obsługiwane są tylko pliki .zip."
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__state
@@ -301,6 +302,8 @@ msgid ""
 "The installation of the data module would fail as the following dependencies"
 " can't be found in the addons-path:\n"
 msgstr ""
+"Instalacja modułu danych nie powiedzie się, ponieważ w ścieżce dodatków nie "
+"można znaleźć następujących zależności:\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -308,18 +311,19 @@ msgstr ""
 msgid ""
 "The list of industry applications cannot be fetched. Please try again later"
 msgstr ""
+"Nie można pobrać listy zastosowań przemysłowych. Spróbuj ponownie później."
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "The module %s cannot be downloaded"
-msgstr ""
+msgstr "Nie można pobrać modułu %s"
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "Unknown module dependencies:"
-msgstr ""
+msgstr "Nieznane zależności modułu:"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit

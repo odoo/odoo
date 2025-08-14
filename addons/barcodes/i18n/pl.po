@@ -1,23 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* barcodes
-# 
+# * barcodes
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
+# "Marta (wacm)" <wacm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-01 09:07+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"PO-Revision-Date: 2025-08-14 23:11+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s18-4/"
+"barcodes/pl/>\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pl\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && ("
+"n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: barcodes
 #. odoo-python
@@ -68,7 +73,7 @@ msgstr "Zawsze"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__name
 msgid "An internal identification for this barcode nomenclature rule"
-msgstr "Wewnętrzna identyfikacja tej reguły nomelnklatury kodu kreskowego "
+msgstr "Wewnętrzna identyfikacja tej reguły nomenklatury kodu kreskowego."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__name
@@ -95,7 +100,7 @@ msgstr "Kod kreskowy"
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
 msgid "Barcode Event Mixin"
-msgstr "Barcode Event Mixin"
+msgstr "Mixin kodów kreskowych wydarzenia"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
@@ -206,6 +211,8 @@ msgid ""
 "In order to use barcodes.barcode_events_mixin, method on_barcode_scanned "
 "must be implemented"
 msgstr ""
+"Aby korzystać z barcodes.barcode_events_mixin musi być zaimplementowana "
+"metoda on_barcode_scanned"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
@@ -310,7 +317,7 @@ msgid ""
 "contain one pair of braces."
 msgstr ""
 "Błąd składni we wzorze kodu %(pattern)s: reguła może zawierać tylko jedną "
-"parę nawiasów"
+"parę nawiasów."
 
 #. module: barcodes
 #. odoo-python
@@ -320,14 +327,14 @@ msgid ""
 "contain N's followed by D's."
 msgstr ""
 "Błąd składni we wzorze kodu %(pattern)s: nawiasy mogą zawierać jedynie N i "
-"następujące po nich D"
+"następujące po nich D."
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
-msgstr "Błąd składni we wzorze kodu %(pattern)s: puste nawiasy"
+msgstr "Błąd składni we wzorze kodu %(pattern)s: puste nawiasy klamrowe."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
@@ -391,4 +398,4 @@ msgstr ""
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
 msgid "Value of the last barcode scanned."
-msgstr "Wartość ostaniego zeskanowanego kodu kreskowego"
+msgstr "Wartość ostatniego zeskanowanego kodu kreskowego."
