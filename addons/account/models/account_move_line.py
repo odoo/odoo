@@ -785,19 +785,18 @@ class AccountMoveLine(models.Model):
     def _compute_tax_tag_invert(self):
         for record in self:
             origin_move_id = record.move_id.tax_cash_basis_origin_move_id or record.move_id
-            if not record.tax_repartition_line_id and not record.tax_ids:
+            if origin_move_id.move_type == 'entry':
+                # For misc operations, cash basis entries and write-offs from the bank reconciliation widget
+                is_refund = record.is_refund
+                if record.display_type == 'epd':  # In case of early payment, tax_tag_invert is independent of the balance of the line
+                    record.tax_tag_invert = record._is_purchase()
+                else:
+                    record.tax_tag_invert = (record._is_purchase and is_refund) or (record._is_sale() and not is_refund)
+
+            elif not record.tax_repartition_line_id and not record.tax_ids:
                 # Invoices imported from other softwares might only have kept the tags, not the taxes.
                 record.tax_tag_invert = record.tax_tag_ids and origin_move_id.is_inbound()
 
-            elif origin_move_id.move_type == 'entry':
-                # For misc operations, cash basis entries and write-offs from the bank reconciliation widget
-                tax = record.tax_repartition_line_id.tax_id or record.tax_ids[:1]
-                is_refund = record.is_refund
-                tax_type = tax.type_tax_use
-                if record.display_type == 'epd':  # In case of early payment, tax_tag_invert is independent of the balance of the line
-                    record.tax_tag_invert = tax_type == 'purchase'
-                else:
-                    record.tax_tag_invert = (tax_type == 'purchase' and is_refund) or (tax_type == 'sale' and not is_refund)
             else:
                 # For invoices with taxes
                 record.tax_tag_invert = origin_move_id.is_inbound()
@@ -1045,10 +1044,9 @@ class AccountMoveLine(models.Model):
                 if line.tax_repartition_line_id:
                     is_refund = line.tax_repartition_line_id.document_type == 'refund'
                 else:
-                    tax_type = line.tax_ids[:1].type_tax_use
-                    if tax_type == 'sale' and line.credit == 0:
+                    if line._is_sale() and line.credit == 0:
                         is_refund = True
-                    elif tax_type == 'purchase' and line.debit == 0:
+                    elif line._is_purchase() and line.debit == 0:
                         is_refund = True
 
                     if line.tax_ids and line.move_id.reversed_entry_id:
@@ -3336,6 +3334,25 @@ class AccountMoveLine(models.Model):
     # -------------------------------------------------------------------------
     # MISC
     # -------------------------------------------------------------------------
+
+    def _get_line_type(self):
+        self.ensure_one()
+        tax = self.tax_repartition_line_id.tax_id or self.tax_ids[:1]
+        account_sale_type = (self.account_id.account_type == 'asset_receivable'
+                             or (self.account_id.account_type == 'liability_current' and self.account_id.internal_group == 'tax'))
+        account_purchase_type = self.account_id.account_type in ('liability_payable', 'liability_credit_card', 'asset_current')
+        if account_purchase_type or tax.type_tax_use == 'purchase':
+            return 'purchase'
+        if account_sale_type or tax.type_tax_use == 'sale':
+            return 'sale'
+
+    def _is_sale(self):
+        self.ensure_one()
+        return self._get_line_type() == 'sale'
+
+    def _is_purchase(self):
+        self.ensure_one()
+        return self._get_line_type() == 'purchase'
 
     def _get_integrity_hash_fields(self):
         # Use the new hash version by default, but keep the old one for backward compatibility when generating the integrity report.
