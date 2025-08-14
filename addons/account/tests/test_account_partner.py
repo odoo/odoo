@@ -119,3 +119,19 @@ class TestAccountPartner(AccountTestInvoicingCommon):
         self.partner_b.vat = 'DIFFERENT'
         with self.assertRaisesRegex(UserError, "different Tax ID"):
             self.partner_a.parent_id = self.partner_b
+
+    def test_manually_write_partner_id_empty_string_vs_False(self):
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2025-04-29',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'quantity': 1,
+                'price_unit': 500.0,
+            })],
+        })
+        move.action_post()
+        self.partner_a.vat = ''
+        self.partner_b.vat = False
+
+        self.partner_a.parent_id = self.partner_b
