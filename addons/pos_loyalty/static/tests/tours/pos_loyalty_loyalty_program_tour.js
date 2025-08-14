@@ -303,7 +303,13 @@ registry.category("web_tour.tours").add("PosOrderNoPoints", {
         [
             Chrome.startPoS(),
             ProductScreen.clickPartnerButton(),
+<<<<<<< e61cbbb2e208846370c9c2b3b9634148f1d12ef7
             ProductScreen.clickCustomer("AA Test Partner 2"),
+||||||| aadb877f971c638bc39e91136bfe7f8dc2fce500
+            ProductScreen.clickCustomer("Test Partner 2"),
+=======
+            ProductScreen.clickCustomer("AAA Test Partner 2"),
+>>>>>>> 1857449dfcd918ebc0ca741d7fcd70ef7534e53a
             ProductScreen.addOrderline("Desk Organizer", "3"),
             PosLoyalty.isPointsDisplayed(false),
             PosLoyalty.finalizeOrder("Cash", "15.3"),
@@ -374,7 +380,13 @@ registry.category("web_tour.tours").add("test_max_usage_partner_with_point", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
+<<<<<<< e61cbbb2e208846370c9c2b3b9634148f1d12ef7
             ProductScreen.clickCustomer("AAA Partner 2"),
+||||||| aadb877f971c638bc39e91136bfe7f8dc2fce500
+            ProductScreen.clickCustomer("Test Partner 2"),
+=======
+            ProductScreen.clickCustomer("AAA Test Partner 2"),
+>>>>>>> 1857449dfcd918ebc0ca741d7fcd70ef7534e53a
             ProductScreen.addOrderline("Desk Organizer", "3"),
             PosLoyalty.claimReward("100% on your order"),
             PosLoyalty.finalizeOrder("Cash", "0"),

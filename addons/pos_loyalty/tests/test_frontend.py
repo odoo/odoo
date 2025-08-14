@@ -2737,8 +2737,16 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_not_create_loyalty_card_max_usage_program(self):
         self.env['loyalty.program'].search([]).write({'active': False})
+<<<<<<< e61cbbb2e208846370c9c2b3b9634148f1d12ef7
         self.env['res.partner'].create({'name': 'AA Test Partner'})
         self.env['res.partner'].create({'name': 'AA Test Partner 2'})
+||||||| aadb877f971c638bc39e91136bfe7f8dc2fce500
+        self.env['res.partner'].create({'name': 'Test Partner'})
+        self.env['res.partner'].create({'name': 'Test Partner 2'})
+=======
+        self.env['res.partner'].create({'name': 'Test Partner'})
+        self.env['res.partner'].create({'name': 'AAA Test Partner 2'})
+>>>>>>> 1857449dfcd918ebc0ca741d7fcd70ef7534e53a
 
         loyalty_program = self.env['loyalty.program'].create({
             'name': 'Loyalty Program',
@@ -3072,8 +3080,16 @@ class TestUi(TestPointOfSaleHttpCommon):
         partners that already have points in the loyalty program cannot claim rewards anymore."""
 
         self.env['loyalty.program'].search([]).write({'active': False})
+<<<<<<< e61cbbb2e208846370c9c2b3b9634148f1d12ef7
         test_partner = self.env['res.partner'].create({'name': 'AAA Partner'})
         self.env['res.partner'].create({'name': 'AAA Partner 2'})
+||||||| aadb877f971c638bc39e91136bfe7f8dc2fce500
+        test_partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        self.env['res.partner'].create({'name': 'Test Partner 2'})
+=======
+        test_partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        self.env['res.partner'].create({'name': 'AAA Test Partner 2'})
+>>>>>>> 1857449dfcd918ebc0ca741d7fcd70ef7534e53a
 
         loyalty_program = self.env['loyalty.program'].create({
             'name': 'Loyalty Program',
