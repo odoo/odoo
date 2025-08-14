@@ -3,8 +3,9 @@
 from collections import defaultdict
 from datetime import timedelta, datetime, date
 import calendar
+from contextlib import contextmanager
 
-from odoo import fields, models, api, _, Command
+from odoo import fields, models, modules, api, _, Command
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
 from odoo.osv import expression
 from odoo.tools import date_utils, format_list, SQL
@@ -1017,6 +1018,41 @@ class ResCompany(models.Model):
             raise UserError(_("Some documents are being sent by another process already."))
         else:
             return all_locked
+
+    def _prevent_commit(self):
+        if self.env.cr.precommit.data.get('prevent_commit'):
+            raise UserError(_("Cannot commit while inside a critical section."))
+
+    @contextmanager
+    def _critical_section(self, records, allow_raising=True):
+        """ A context manager that ensures that:
+            - the enclosed code has an up-to-date view of the database, and
+            - prevents concurrent execution of the enclosed code on the same records.
+
+        This does the following:
+        (1) Commits the transaction to ensure we have the latest data from the database.
+        (2) Attempts to acquire a lock on the records
+        (3) Once the lock is acquired, prevents committing the transaction while inside the context manager.
+
+        :param records: The records to lock.
+        """
+        # Commit to ensure we have the latest data from the database.
+        if not modules.module.current_test:
+            self.env.cr.commit()
+
+        # Attempt to acquire a lock on the records.
+        if not self._with_locked_records(records, allow_raising):
+            yield False
+            return
+
+        # Prevent committing the transaction while inside the context manager.
+        self.env.cr.precommit.add(self._prevent_commit)
+
+        # This is a counter of the number of times the context manager is entered.
+        self.env.cr.precommit.data.setdefault('prevent_commit', 0)
+        self.env.cr.precommit.data['prevent_commit'] += 1
+        yield True
+        self.env.cr.precommit.data['prevent_commit'] -= 1
 
     def compute_fiscalyear_dates(self, current_date):
         """
