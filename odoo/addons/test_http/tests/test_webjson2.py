@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, timedelta
 from http import HTTPStatus
+from textwrap import dedent
 
-from odoo.tests import Like, get_db_name, new_test_user, tagged
+from odoo.tests import Like, get_db_name, mute_logger, new_test_user, tagged
+from odoo.tools.misc import submap
 
 from .test_common import TestHttpBase
 from odoo.addons.test_http.controllers import CT_JSON
@@ -26,6 +28,16 @@ class TestHttpWebJson_2(TestHttpBase):
             scope='rpc', name='test', expiration_date=datetime.now() + timedelta(days=0.5))
         cls.bearer_header = {"Authorization": f"Bearer {key}"}
 
+    def assertErrorLike(self, response, expected_error):
+        try:
+            body = response.json()
+        except ValueError as exc:
+            exc.add_note(response.text)
+            raise
+        self.assertIsInstance(body, dict, body)
+        self.assertEqual(list(body), ['name', 'message', 'arguments', 'context', 'debug'])
+        self.assertEqual(submap(body, expected_error), expected_error)
+
     def test_webjson2_multi_db_no_header(self):
         res = self.multidb_url_open(
             '/json/2/res.users/search',
@@ -33,7 +45,7 @@ class TestHttpWebJson_2(TestHttpBase):
             headers=CT_JSON | self.bearer_header,
             dblist=(get_db_name(), 'another-database'),
         )
-        self.assertIn("The requested URL was not found on the server.", res.text)
+        self.assertIn("URL was not found in the server-wide controllers.</p>", res.text)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         self.assertEqual(res.headers.get('Content-Type'), 'text/html; charset=utf-8')
 
@@ -46,7 +58,7 @@ class TestHttpWebJson_2(TestHttpBase):
             },
             dblist=(get_db_name(), 'another-database'),
         )
-        self.assertIn("The requested URL was not found on the server.", res.text)
+        self.assertIn("URL was not found in the server-wide controllers.</p>", res.text)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         self.assertEqual(res.headers.get('Content-Type'), 'text/html; charset=utf-8')
 
@@ -74,6 +86,7 @@ class TestHttpWebJson_2(TestHttpBase):
             ...Request inferred type is compatible with...http...but...
             /json/2...is type=...json...
         """))
+        self.assertIn("Please verify the Content-Type request header and try again.", res.text)
         self.assertEqual(res.status_code, HTTPStatus.UNSUPPORTED_MEDIA_TYPE)
         self.assertEqual(res.headers.get('Content-Type'), 'text/html; charset=utf-8')
         self.assertEqual(res.headers.get('Accept'), 'application/json')
@@ -84,7 +97,12 @@ class TestHttpWebJson_2(TestHttpBase):
             data=r"not json",
             headers=CT_JSON | self.bearer_header,
         )
-        self.assertEqual(res.text, '"could not parse the body as json: Expecting value: line 1 column 1 (char 0)"')
+        m = "could not parse the body as json: Expecting value: line 1 column 1 (char 0)"
+        self.assertErrorLike(res, {
+            'name': "werkzeug.exceptions.BadRequest",
+            'message': m,
+            'arguments': [m, HTTPStatus.BAD_REQUEST],
+        })
         self.assertEqual(res.status_code, HTTPStatus.BAD_REQUEST)
         self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
 
@@ -94,7 +112,12 @@ class TestHttpWebJson_2(TestHttpBase):
             data=r'null',
             headers=CT_JSON | self.bearer_header,
         )
-        self.assertEqual(res.text, '''"could not parse the body, expecting a json object"''')
+        m = "could not parse the body, expecting a json object"
+        self.assertErrorLike(res, {
+            'name': "werkzeug.exceptions.BadRequest",
+            'message': m,
+            'arguments': [m, HTTPStatus.BAD_REQUEST],
+        })
         self.assertEqual(res.status_code, HTTPStatus.BAD_REQUEST)
         self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
 
@@ -104,7 +127,15 @@ class TestHttpWebJson_2(TestHttpBase):
             data=r'{"domain": []}',
             headers=CT_JSON,
         )
+        m = 'User not authenticated, use an API Key with a Bearer Authorization header.'
+        self.assertErrorLike(res, {
+            'name': "werkzeug.exceptions.Unauthorized",
+            'message': m,
+            'arguments': [m, HTTPStatus.UNAUTHORIZED],
+        })
         self.assertEqual(res.status_code, HTTPStatus.UNAUTHORIZED)
+        self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
+        self.assertEqual(res.headers.get('WWW-Authenticate', '').lower().strip(), 'bearer')
 
     def test_webjson2_missing_argument(self):
         res = self.db_url_open(
@@ -112,8 +143,51 @@ class TestHttpWebJson_2(TestHttpBase):
             data=r'{}',
             headers=CT_JSON | self.bearer_header,
         )
-        self.assertEqual(res.text, '''"missing a required argument: 'domain'"''')
+        m = "missing a required argument: 'domain'"
+        self.assertErrorLike(res, {
+            'name': "werkzeug.exceptions.UnprocessableEntity",
+            'message': m,
+            'arguments': [m, HTTPStatus.UNPROCESSABLE_ENTITY],
+        })
         self.assertEqual(res.status_code, HTTPStatus.UNPROCESSABLE_ENTITY)
+        self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
+
+    def test_webjson2_bad_domain(self):
+        with mute_logger('odoo.http'):
+            res = self.db_url_open(
+                '/json/2/res.users/search',
+                data=r'{"domain": [["bad field", "=", "foo"]]}',
+                headers=CT_JSON | self.bearer_header,
+            )
+        m = "Invalid field res.users.bad field in condition ('bad field', '=', 'foo')"
+        self.assertErrorLike(res, {
+            'name': "builtins.ValueError",
+            'message': m,
+            'arguments': [m],
+        })
+        self.assertEqual(res.status_code, HTTPStatus.INTERNAL_SERVER_ERROR)
+        self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
+
+    def test_webjson2_access_error(self):
+        with mute_logger('odoo.http'):
+            res = self.db_url_open(
+                '/json/2/ir.cron/search',
+                data=r'{"domain": []}',
+                headers=CT_JSON | self.bearer_header,
+            )
+        m = dedent("""\
+            You are not allowed to access 'Scheduled Actions' (ir.cron) records.
+
+            This operation is allowed for the following groups:
+            \t- Role / Administrator
+
+            Contact your administrator to request access if necessary.""")
+        self.assertErrorLike(res, {
+            'name': "odoo.exceptions.AccessError",
+            'message': m,
+            'arguments': [m],
+        })
+        self.assertEqual(res.status_code, HTTPStatus.FORBIDDEN)
         self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
 
     def test_webjson2_good(self):
@@ -132,7 +206,12 @@ class TestHttpWebJson_2(TestHttpBase):
             data=r'{"ids": [0]}',
             headers=CT_JSON | self.bearer_header,
         )
-        self.assertEqual(res.text, '''"cannot call res.users.create with ids"''')
+        m = "cannot call res.users.create with ids"
+        self.assertErrorLike(res, {
+            'name': "werkzeug.exceptions.UnprocessableEntity",
+            'message': m,
+            'arguments': [m, HTTPStatus.UNPROCESSABLE_ENTITY],
+        })
         self.assertEqual(res.status_code, HTTPStatus.UNPROCESSABLE_ENTITY)
         self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
 
@@ -142,6 +221,11 @@ class TestHttpWebJson_2(TestHttpBase):
             data=r'{}',
             headers=CT_JSON | self.bearer_header,
         )
-        self.assertEqual(res.text, '''"Did you mean POST /json/2/<model>/<method>?"''')
+        m = "Did you mean POST /json/2/<model>/<method>?"
+        self.assertErrorLike(res, {
+            'name': "werkzeug.exceptions.NotFound",
+            'message': m,
+            'arguments': [m, HTTPStatus.NOT_FOUND],
+        })
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
