@@ -216,6 +216,40 @@ class TestUBLRO(TestUBLCommon):
         attachment = self.get_attachment(refund)
         self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_refund.xml')
 
+    def test_export_credit_note_with_negative_quantity(self):
+        refund = self._generate_move(
+            self.env.company.partner_id,
+            self.partner_a,
+            send=True,
+            move_type="out_refund",
+            currency_id=self.company.currency_id.id,
+            invoice_line_ids=[
+                {
+                    'name': 'Test Product A',
+                    'product_id': self.product_a.id,
+                    'quantity': -1.0,
+                    'price_unit': 500.0,
+                    'tax_ids': [Command.set(self.tax_19.ids)],
+                },
+                {
+                    'name': 'Test Product B',
+                    'product_id': self.product_b.id,
+                    'quantity': -1.0,
+                    'price_unit': 0.0,
+                    'tax_ids': [Command.set(self.tax_19.ids)],
+                },
+                {
+                    'name': 'Test Downpayment',
+                    'product_id': False,
+                    'quantity': 1.0,
+                    'price_unit': 600.0,
+                    'tax_ids': [Command.set(self.tax_19.ids)],
+                }
+            ]
+        )
+        attachment = self.get_attachment(refund)
+        self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_refund_negative_quantity.xml')
+
     def test_export_invoice_different_currency(self):
         invoice = self.create_move("out_invoice")
         attachment = self.get_attachment(invoice)
