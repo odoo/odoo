@@ -2056,6 +2056,114 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         with self.assertRaisesRegex(UserError, error_message), self.env.cr.savepoint():
             so.with_company(new_company).action_confirm()
 
+<<<<<<< 1ea83c2588ac2401aa25f1ad6d4378acf010fba4
+||||||| 335a7ed6780531f863593c488c8a2a5d6c92c1f3
+    def test_package_with_moves_to_different_location_dest(self):
+        """
+        Create a two-step delivery with two products, and package both products together.
+        Ensure that the destination location is different for the two moves in the second
+        picking. check that the first picking can be validated.
+        """
+        # Set-up multi-step routes
+        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
+        warehouse = self.company_data['default_warehouse']
+        # Create two child locations.
+        parent_location = self.partner_a.property_stock_customer
+        child_location_1 = self.env['stock.location'].create({
+                'name': 'child_1',
+                'location_id': parent_location.id,
+        })
+        child_location_2 = self.env['stock.location'].create({
+                'name': 'child_2',
+                'location_id': parent_location.id,
+        })
+        # Enable 2-steps delivery
+        with Form(warehouse) as w:
+            w.delivery_steps = 'pick_ship'
+        delivery_route = warehouse.delivery_route_id
+        delivery_route.rule_ids[0].write({
+            'location_dest_id': delivery_route.rule_ids[1].location_src_id.id,
+        })
+        delivery_route.rule_ids[1].write({'action': 'pull'})
+        so = self._get_new_sale_order(product=self.product_a)
+        self.env['sale.order.line'].create({
+            'product_id': self.product_b.id,
+            'order_id': so.id,
+        })
+        self.assertEqual(len(so.order_line), 2)
+        so.action_confirm()
+        self.assertEqual(len(so.picking_ids), 2)
+        so.picking_ids[1].move_ids[0].location_dest_id = child_location_1
+        so.picking_ids[1].move_ids[1].location_dest_id = child_location_2
+        # Pack the moves of the first picking together.
+        package = so.picking_ids[0].action_put_in_pack()
+        # a new package is made and done quantities should be in same package
+        self.assertTrue(package)
+        so.picking_ids[0].button_validate()
+        self.assertEqual(so.picking_ids[0].state, 'done')
+        self.assertEqual(so.picking_ids[1].move_ids.move_line_ids[0].location_dest_id, child_location_1)
+        self.assertEqual(so.picking_ids[1].move_ids.move_line_ids[1].location_dest_id, child_location_2)
+
+=======
+    def test_package_with_moves_to_different_location_dest(self):
+        """
+        Create a two-step delivery with two products, and package both products together.
+        Ensure that the destination location is different for the two moves in the second
+        picking. check that the first picking can be validated.
+        """
+        # Set-up multi-step routes
+        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
+        warehouse = self.company_data['default_warehouse']
+        customer_location = self.env.ref('stock.stock_location_customers')
+        # Create two child locations.
+        parent_location = self.partner_a.property_stock_customer
+        child_location_1 = self.env['stock.location'].create({
+                'name': 'child_1',
+                'location_id': customer_location.id,
+        })
+        child_location_2 = self.env['stock.location'].create({
+                'name': 'child_2',
+                'location_id': customer_location.id,
+        })
+        # Enable 2-steps delivery
+        with Form(warehouse) as w:
+            w.delivery_steps = 'pick_ship'
+        delivery_route = warehouse.delivery_route_id
+        delivery_route.rule_ids[0].write({
+            'location_dest_id': delivery_route.rule_ids[1].location_src_id.id,
+        })
+        delivery_route.rule_ids[1].write({'action': 'pull'})
+        # update the qty available for the products
+        (self.product_a | self.product_b).is_storable = True
+        self.env['stock.quant']._update_available_quantity(self.product_a, warehouse.pick_type_id.default_location_src_id, 10)
+        self.env['stock.quant']._update_available_quantity(self.product_b, warehouse.pick_type_id.default_location_src_id, 1)
+        so = self._get_new_sale_order(product=self.product_a)
+        self.env['sale.order.line'].create({
+            'product_id': self.product_b.id,
+            'order_id': so.id,
+        })
+        self.assertEqual(len(so.order_line), 2)
+        so.action_confirm()
+        self.assertEqual(len(so.picking_ids), 2)
+        pick_picking = so.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.pick_type_id)
+        self.assertEqual(pick_picking.state, 'assigned')
+        delivery_picking = so.picking_ids - pick_picking
+        self.assertEqual(delivery_picking.state, 'waiting')
+        delivery_picking.move_ids[0].location_dest_id = child_location_1
+        delivery_picking.move_ids[1].location_dest_id = child_location_2
+        # Pack the moves of the first picking together.
+        package = pick_picking.action_put_in_pack()
+        # a new package is made and done quantities should be in same package
+        self.assertTrue(package)
+        pick_picking.button_validate()
+        self.assertEqual(pick_picking.state, 'done')
+        self.assertEqual(delivery_picking.state, 'assigned')
+        self.assertEqual(delivery_picking.move_ids.move_line_ids[0].location_dest_id, child_location_1)
+        self.assertEqual(delivery_picking.move_ids.move_line_ids[1].location_dest_id, child_location_2)
+
+>>>>>>> 2902aa7034d6903b30f973c4514a1ac364a4f558
     def test_custom_delivery_route_new_sale_line(self):
         """
         Create a custom delivery route Stock -> Transit -> Customer that uses pull rules.
