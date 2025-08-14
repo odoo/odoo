@@ -13,4 +13,4 @@ class AccountFiscalPosition(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'name', 'display_name', 'tax_map']
+        return ['id', 'name', 'display_name', 'tax_map', 'tax_ids']
