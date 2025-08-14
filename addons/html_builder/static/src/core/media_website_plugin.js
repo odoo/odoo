@@ -40,14 +40,9 @@ export class MediaWebsitePlugin extends Plugin {
 
     setup() {
         const basicMediaSelector = `${MEDIA_SELECTOR}, img`;
-        // (see isImageSupportedForStyle).
-        const mediaSelector = basicMediaSelector
-            .split(",")
-            .map((s) => `${s}:not([data-oe-xpath])`)
-            .join(",");
 
         this.addDomListener(this.editable, "dblclick", async (ev) => {
-            const targetEl = ev.target.closest(mediaSelector);
+            const targetEl = ev.target.closest(basicMediaSelector);
             if (!targetEl) {
                 return;
             }
@@ -59,7 +54,7 @@ export class MediaWebsitePlugin extends Plugin {
         this.popover = this.services.popover;
         this.removeCurrentTooltip = () => {};
         this.addDomListener(this.editable, "click", (ev) => {
-            const targetEl = ev.target.closest(mediaSelector);
+            const targetEl = ev.target.closest(basicMediaSelector);
             if (!targetEl) {
                 return;
             }
