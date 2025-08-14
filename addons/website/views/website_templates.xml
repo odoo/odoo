@@ -2877,9 +2877,12 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
         <attribute name="t-attf-class" remove="s_searchbar_input" separator=" "/>
     </xpath>
     <xpath expr="//div[@role='search']" position="replace">
-        <form t-attf-class="o_searchbar_form s_searchbar_input #{_form_classes}" t-att-action="action" method="get" t-attf-data-snippet="s_searchbar_input">
+        <form t-attf-class="o_searchbar_form s_searchbar_input #{_form_classes}" t-att-action="action" t-att-method="form_method or 'get'" t-attf-data-snippet="s_searchbar_input">
             <t>$0</t>
             <input name="order" type="hidden" class="o_search_order_by" t-att-value="order_by if order_by else 'name asc'"/>
+            <t t-if="form_method and form_method.lower() == 'post'">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+            </t>
             <t t-out="0"/>
         </form>
     </xpath>
