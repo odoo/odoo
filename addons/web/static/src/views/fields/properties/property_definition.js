@@ -48,6 +48,7 @@ export class PropertyDefinition extends Component {
     };
     static _propertyParametersMap = new Map([
         ["comodel", ["many2one", "many2many"]],
+        ["currency_field", ["monetary"]],
         ["domain", ["many2one", "many2many"]],
         ["selection", ["selection"]],
         ["tags", ["tags"]],
@@ -121,6 +122,7 @@ export class PropertyDefinition extends Component {
             ["boolean", _t("Checkbox")],
             ["integer", _t("Integer")],
             ["float", _t("Decimal")],
+            ["monetary", _t("Monetary")],
             ["date", _t("Date")],
             ["datetime", _t("Date & Time")],
             ["selection", _t("Selection")],
@@ -129,6 +131,17 @@ export class PropertyDefinition extends Component {
             ["many2many", _t("Many2many")],
             ["separator", _t("Separator")],
         ];
+    }
+
+    get currencyFields() {
+        return Object
+            .values(this.props.record.fields)
+            .filter((fieldDef) => fieldDef.type === "many2one" && fieldDef.relation === "res.currency");
+    }
+
+    get defaultCurrencyField() {
+        const currencyFields = this.currencyFields.map((fieldDef) => fieldDef.name);
+        return currencyFields.includes("currency_id") ? "currency_id" : currencyFields[0] || false;
     }
 
     /**
@@ -219,12 +232,16 @@ export class PropertyDefinition extends Component {
             ...this.state.propertyDefinition,
             type: newType,
         };
-        if (["integer", "float"].includes(newType)) {
+        if (["integer", "float", "monetary"].includes(newType)) {
             propertyDefinition.value = 0;
             propertyDefinition.default = 0;
         } else {
             propertyDefinition.value = false;
             propertyDefinition.default = false;
+        }
+
+        if (newType === "monetary") {
+            propertyDefinition.currency_field = this.defaultCurrencyField;
         }
 
         PropertyDefinition._propertyParametersMap.forEach((types, param) => {
@@ -362,6 +379,15 @@ export class PropertyDefinition extends Component {
         const propertyDefinition = {
             ...this.state.propertyDefinition,
             fold_by_default: checked,
+        };
+        this.props.onChange(propertyDefinition);
+        this.state.propertyDefinition = propertyDefinition;
+    }
+
+    onCurrencyFieldUpdate(path) {
+        const propertyDefinition = {
+            ...this.state.propertyDefinition,
+            currency_field: path,
         };
         this.props.onChange(propertyDefinition);
         this.state.propertyDefinition = propertyDefinition;
