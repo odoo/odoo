@@ -21,7 +21,7 @@ class TestAuditTrailDE(AccountTestInvoicingHttpCommon):
                 'name': 'folder_test',
                 'type': 'folder',
             })
-            cls.env['documents.account.folder.setting'].create({
+            cls.env['documents.account.folder.setting'].sudo().create({
                 'folder_id': folder_test.id,
                 'journal_id': cls.company_data['default_journal_sale'].id,
             })
