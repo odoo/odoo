@@ -26,9 +26,17 @@ class MailComposeMessage(models.TransientModel):
             ])
             for mail_values, body in zip(mail_values_all.values(), processed_bodies):
                 if body is not None:
+                    # in a mailing these are the same
+                    mail_values['body'] = body
                     mail_values['body_html'] = body
 
         return mail_values_all
+
+    def _get_done_emails(self, mail_values_dict):
+        """Consider every target gets a different card, hence we don't want unique message per email address."""
+        if self.mass_mailing_id.card_campaign_id:
+            return []
+        return super()._get_done_emails(mail_values_dict)
 
     @api.model
     def _process_generic_card_url_body(self, card_body_pairs: list[tuple[models.Model, str]]) -> list[str]:

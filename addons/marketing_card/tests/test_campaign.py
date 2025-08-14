@@ -29,6 +29,21 @@ def _extract_values_from_document(rendered_document):
 
 class TestMarketingCardMail(MailCase, MarketingCardCommon):
 
+    def assertSentMailCorrectCard(self, sent_mails, cards):
+        IrHttp = self.env['ir.http']
+        sent_cards = self.env['card.card']
+        for sent_mail in sent_mails:
+            record_id = int(sent_mail['object_id'].split('-')[0])
+            card = cards.filtered(lambda card: card.res_id == record_id)
+            self.assertEqual(len(card), 1)
+            sent_cards += card
+            campaign_base_url = card.campaign_id.get_base_url()
+            preview_url = f"{campaign_base_url}/cards/{IrHttp._slug(card)}/preview"
+            image_url = f"{campaign_base_url}/cards/{IrHttp._slug(card)}/card.jpg"
+            self.assertIn(f'<a href="{preview_url}"', sent_mail['body'])
+            self.assertIn(f'<img src="{image_url}"', sent_mail['body'])
+        self.assertEqual(sent_cards, cards)
+
     @users('marketing_card_user')
     @warmup
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -88,18 +103,41 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
 
         cards = self.env['card.card'].search([('campaign_id', '=', campaign.id)])
         self.assertEqual(len(cards), 6)
-        self.assertEqual(len(cards.filtered(lambda card: not card.requires_sync)), 5)
+        sent_cards = cards.filtered(lambda card: not card.requires_sync)
+        self.assertEqual(len(sent_cards), 5)
         self.assertEqual(len(self._mails), 5)
 
-        IrHttp = self.env['ir.http']
-        for sent_mail in self._mails:
-            record_id = int(sent_mail['object_id'].split('-')[0])
-            card = cards.filtered(lambda card: card.res_id == record_id)
-            self.assertEqual(len(card), 1)
-            preview_url = f"{campaign.get_base_url()}/cards/{IrHttp._slug(card)}/preview"
-            image_url = f"{campaign.get_base_url()}/cards/{IrHttp._slug(card)}/card.jpg"
-            self.assertIn(f'<a href="{preview_url}"', sent_mail['body'])
-            self.assertIn(f'<img src="{image_url}"', sent_mail['body'])
+        self.assertSentMailCorrectCard(self._mails, sent_cards)
+
+    @users('marketing_card_user')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_campaign_send_mailing_with_duplicates(self):
+        # set a low batch size to make sure mailing "seen list" does not affect card mailings
+        # as it is based on traces existing with some email -> traces created in batches with mail.mail
+        self.env['ir.config_parameter'].sudo().set_param('mail.batch_size', 5)
+
+        campaign = self.campaign.with_user(self.env.user)
+        self.env.user.sudo().group_ids += self.env.ref('mass_mailing.group_mass_mailing_user')
+        partners = self.env['res.partner'].sudo().create([{'name': f'Part{n}', 'email': f'email{n % 3}@test.lan'} for n in range(10)])
+        mailing_context = campaign.action_share().get('context') | {
+            'default_email_from': 'test@test.lan',
+            'default_mailing_domain': [('id', 'in', partners.ids)],
+            'default_reply_to': 'test@test.lan',
+        }
+        mailing = Form(self.env['mailing.mailing'].with_context(mailing_context)).save()
+        mailing.body_html = mailing.body_arch  # normally the js html_field would fill this in
+
+        with self.mock_image_renderer():
+            mailing.action_update_cards()
+
+        cards = self.env['card.card'].search([('campaign_id', '=', campaign.id)])
+        self.assertEqual(len(cards), 10)
+
+        with self.mock_mail_gateway():
+            mailing._action_send_mail()
+        self.assertEqual(len(self._mails), 10)
+
+        self.assertSentMailCorrectCard(self._mails, cards)
 
 
 class TestMarketingCardRender(MarketingCardCommon):
