@@ -10,3 +10,7 @@ class StockValuationLayer(models.Model):
         :param layer: the layer the price unit is derived from
         """
         return self.value / self.quantity
+
+    def _get_related_product(self):
+        res = super()._get_related_product()
+        return self.stock_move_id.purchase_line_id.product_id if self.stock_move_id.purchase_line_id else res

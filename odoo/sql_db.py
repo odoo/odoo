@@ -276,7 +276,7 @@ class Cursor(BaseCursor):
 
         self.cache = {}
         self._now = None
-        if self.dbname != 'postgres' and os.getenv('ODOO_FAKETIME_TEST_MODE'):
+        if os.getenv('ODOO_FAKETIME_TEST_MODE') and self.dbname in tools.config['db_name'].split(','):
             self.execute("SET search_path = public, pg_catalog;")
             self.commit()  # ensure that the search_path remains after a rollback
 

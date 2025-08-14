@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account
+# * account
 #
 # Translators:
 # SBO-Sebastien <sbo@irokoo.fr>, 2023
@@ -10,21 +10,23 @@
 # allanot nicolas <n.allanot@free.fr>, 2024
 # Manon Rondou, 2025
 # Wil Odoo, 2025
-#
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-07 18:36+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"PO-Revision-Date: 2025-08-14 01:11+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-17/account/"
+"fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
-"1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account
 #. odoo-python
@@ -17239,13 +17241,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "You can't change the company of your journal since there are some journal "
 "entries linked to it."
 msgstr ""
-"Vous ne pouvez pas changer la société sur votre journal puisqu'il y existe "
-"des pièces comptables liées."
+"Vous ne pouvez pas changer la société sur votre journal puisque des pièces "
+"comptables y sont liées."
 
 #. module: account
 #. odoo-python
@@ -17284,22 +17286,22 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "You can't create payments for entries belonging to different branches "
 "without access to parent company."
 msgstr ""
-"Vous ne pouvez pas créer de paiements pour des écritures appartenant à "
+"Vous ne pouvez pas créer de paiements pour des pièces comptables liées à "
 "différentes branches sans avoir accès à la société mère."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
-#, python-format
+#, fuzzy, python-format
 msgid "You can't create payments for entries belonging to different companies."
 msgstr ""
-"Vous ne pouvez pas créer de paiements pour des écritures appartenant à des "
-"sociétés différentes."
+"Vous ne pouvez pas créer de paiements pour des pièces comptables appartenant "
+"à des sociétés différentes."
 
 #. module: account
 #. odoo-python
@@ -17405,12 +17407,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
 msgstr ""
-"Vous ne pouvez pas modifier ces écritures. Demandez plutôt une annulation."
+"Vous ne pouvez pas remettre en brouillon ces pièces comptables. Demandez "
+"plutôt une annulation."
 
 #. module: account
 #. odoo-python
@@ -17696,12 +17699,12 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "You cannot modify the field %s of a journal that already has accounting "
 "entries."
 msgstr ""
-"Vous ne pouvez pas modifier le champ %s d'un journal contenant des écritures "
+"Vous ne pouvez pas modifier le champ %s d'un journal contenant des pièces "
 "comptables."
 
 #. module: account
@@ -17747,13 +17750,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/res_currency.py:0
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
 "already been used to make accounting entries."
 msgstr ""
 "Vous ne pouvez pas réduire le nombre de décimales d'une devise déjà utilisée "
-"pour des écritures comptables."
+"dans des pièces comptables."
 
 #. module: account
 #. odoo-python
@@ -17798,13 +17801,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
 msgstr ""
-"Vous ne pouvez pas choisir une devise pour ce compte car il existe déjà des "
-"pièces dans le journal ayant des devises différentes."
+"Vous ne pouvez pas choisir cette devise pour ce compte car il existe déjà "
+"des pièces dans le journal ayant des devises différentes."
 
 #. module: account
 #. odoo-python
@@ -17876,13 +17879,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "You cannot use this wizard on journal entries belonging to different "
 "companies."
 msgstr ""
-"Vous ne pouvez pas utiliser ce wizard sur les pièces comptables d'autres "
-"sociétés."
+"Vous ne pouvez pas utiliser cet assistant sur les pièces comptables liées à "
+"plusieurs sociétés différentes."
 
 #. module: account
 #. odoo-python
@@ -17934,7 +17937,7 @@ msgstr "Vous avez des"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "You have to configure the 'Exchange Gain or Loss Journal' in your company "
 "settings, to manage automatically the booking of accounting entries related "
@@ -17942,7 +17945,7 @@ msgid ""
 msgstr ""
 "Vous devez configurer le 'Journal de gain ou de perte de change' dans les "
 "paramètres de votre société, pour automatiser les écritures comptables liées "
-"aux différents de change."
+"aux différences de change."
 
 #. module: account
 #. odoo-python
