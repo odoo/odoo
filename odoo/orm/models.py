@@ -1761,7 +1761,7 @@ class BaseModel(metaclass=MetaModel):
         ]
         if groupby_terms:
             # grouping_select_sql: GROUPING(a, b)
-            grouping_select_sql = SQL("GROUPING(%s)", SQL(", ").join(groupby_terms.values()))
+            grouping_select_sql = SQL("GROUPING(%s)", SQL(", ").join(unique(groupby_terms.values())))
         else:
             # GROUPING() is invalid SQL, so we use the 0 as literal
             grouping_select_sql = SQL("0")
@@ -1775,7 +1775,7 @@ class BaseModel(metaclass=MetaModel):
             SQL("(%s)", SQL(", ").join(groupby_terms[groupby_spec] for groupby_spec in grouping_set))
             for grouping_set in grouping_sets
         ]
-        query.groupby = SQL("GROUPING SETS (%s)", SQL(", ").join(grouping_sets_sql))
+        query.groupby = SQL("GROUPING SETS (%s)", SQL(", ").join(unique(grouping_sets_sql)))
 
         # This handles the case where `order` adds columns that must also be in `GROUP BY`.
         # Rebuild the grouping sets to include these extra terms.
@@ -1795,30 +1795,37 @@ class BaseModel(metaclass=MetaModel):
         # Map each possible GROUPING() bitmask to its corresponding result list and value extractor.
         # {GROUPING(...): (append_method, extractor_method)}
         mask_grouping_mapping = {}
-        for result_index, groupby_specs in enumerate(grouping_sets):
-            # PostgreSQL Doc: https://www.postgresql.org/docs/17/functions-aggregate.html#Grouping-Operations
-            # GROUPING ( group_by_expression(s) ) => integer
-            # Returns a bit mask indicating which GROUP BY expressions are not included in the
-            # current grouping set. Bits are assigned with the rightmost argument corresponding to
-            # the least-significant bit; each bit is 0 if the corresponding expression is included
-            # in the grouping criteria of the grouping set generating the current result row, and 1
-            # if it is not included.
 
-            # for GROUPING SET ((a, b), (a), ())
+        # Create a mapping from each unique SQL GROUP BY term to its bitmask value.
+        # The terms are reversed to match the PostgreSQL logic where the bitmask was
+        # calculated from right to left (LSB first).
+        # See PostgreSQL Doc: https://www.postgresql.org/docs/17/functions-aggregate.html#Grouping-Operations
+        mask_sql_mapping = {
+            sql_groupby: 1 << i
+            for i, sql_groupby in enumerate(unique(reversed(groupby_terms.values())))
+        }
+
+        mask_grouping_result_indexes = defaultdict(list)  # To manage "duplicated" groupby
+        for result_index, groupby in enumerate(grouping_sets):
+            # E.g. GROUPING SET ((a, b), (a), ())
             # GROUPING(a, b): a and b included = 0, a included = 1, b included = 2, none included = 3
+            sql_terms = {groupby_terms[groupby_spec] for groupby_spec in groupby}
             groupby_mask = sum(
-                1 << i for i, groupby_spec in enumerate(reversed(all_groupby_specs))
-                if groupby_spec not in groupby_specs  # 0 if included and 1 if not
+                mask for sql_term, mask in mask_sql_mapping.items()
+                # each bit is 0 if the corresponding expression is included in the grouping criteria
+                # of the grouping set generating the current result row, and 1 if it is not included.
+                if sql_term not in sql_terms
             )
-            assert groupby_mask not in mask_grouping_mapping, f"_read_grouping_sets doesn't manage duplicate groupby specs: {grouping_sets!r}"
 
-            mask_grouping_mapping[groupby_mask] = (
-                result[result_index].append,
-                itemgetter_tuple(list(itertools.chain(
-                    (all_groupby_specs.index(groupby_spec) for groupby_spec in groupby_specs),
-                    aggregates_indexes,
-                ))),
-            )
+            mask_grouping_result_indexes[groupby_mask].append(result_index)
+            if groupby_mask not in mask_grouping_mapping:
+                mask_grouping_mapping[groupby_mask] = (
+                    result[result_index].append,
+                    itemgetter_tuple(list(itertools.chain(
+                        (all_groupby_specs.index(groupby_spec) for groupby_spec in groupby),
+                        aggregates_indexes,
+                    ))),
+                )
 
         aggregates_start_index = len(all_groupby_specs) + 1
         # Transpose rows to columns for efficient, column-wise post-processing.
@@ -1838,6 +1845,15 @@ class BaseModel(metaclass=MetaModel):
         # ]
         for (append_method, extractor), *row in zip(dispatch_info, *columns, strict=True):
             append_method(extractor(row))
+
+        # Manage groupbys targetting the same column(s), then having the same results
+        for duplicate_groups_indexes in mask_grouping_result_indexes.values():
+            if len(duplicate_groups_indexes) < 2:
+                continue
+            # The first index's result is the source for all others in this group
+            source_result_group = result[duplicate_groups_indexes[0]]
+            for duplicate_group_index in duplicate_groups_indexes[1:]:
+                result[duplicate_group_index] = source_result_group[:]
 
         return result
 
