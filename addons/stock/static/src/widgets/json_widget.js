@@ -1,7 +1,10 @@
+import { loadBundle } from "@web/core/assets";
+import { cookie } from "@web/core/browser/cookie";
+import { getColor } from "@web/core/colors/colors";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, useEffect, useRef } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 export class JsonPopOver extends Component {
@@ -18,35 +21,13 @@ export const jsonPopOver = {
     supportedTypes: ["char"],
 };
 
+// --------------------------------------------------------------------------
+// Lead Days
+// --------------------------------------------------------------------------
+
 export class PopOverLeadDays extends JsonPopOver {
     static template = "stock.leadDays";
-    setup() {
-        super.setup();
-        onWillStart(async () => {
-            this.displayUOM = await user.hasGroup("uom.group_uom");
-        });
-    }
-
-    get qtyForecast() {
-        return this._formatQty("qty_forecast");
-    }
-    get qtyToOrder() {
-        return this._formatQty("qty_to_order");
-    }
-    get productMaxQty() {
-        return this._formatQty("product_max_qty");
-    }
-    get productMinQty() {
-        return this._formatQty("product_min_qty");
-    }
-
-    _formatQty(field) {
-        return this.displayUOM
-            ? `${this.jsonValue[field]} ${this.jsonValue.product_uom_name}`
-            : this.jsonValue[field];
-    }
 }
-
 
 export const popOverLeadDays = {
     ...jsonPopOver,
@@ -54,13 +35,126 @@ export const popOverLeadDays = {
 };
 registry.category("fields").add("lead_days_widget", popOverLeadDays);
 
-export class ReplenishmentHistoryWidget extends JsonPopOver {
-    static template = "stock.replenishmentHistory";
+// --------------------------------------------------------------------------
+// Forecast Graph
+// --------------------------------------------------------------------------
+
+export class ReplenishmentGraphWidget extends JsonPopOver {
+    static template = "stock.replenishmentGraph";
+    setup() {
+        super.setup();
+        this.chart = null;
+        this.canvasRef = useRef("canvas");
+        onWillStart(async () => {
+            this.displayUOM = await user.hasGroup("uom.group_uom");
+            await loadBundle("web.chartjs_lib");
+        });
+
+        useEffect(() => {
+            this.renderChart();
+            return () => {
+                if (this.chart) {
+                    this.chart.destroy();
+                }
+            };
+        });
+    }
+    get productUomName(){
+        return this.jsonValue["product_uom_name"];
+    }
+    get qtyOnHand(){
+        return this.jsonValue["qty_on_hand"];
+    }
+    get productMaxQty() {
+        return this.jsonValue["product_max_qty"];
+    }
+    get productMinQty() {
+        return this.jsonValue["product_min_qty"];
+    }
+    get dailyDemand() {
+        return this.jsonValue["daily_demand"];
+    }
+    get averageStock() {
+        return this.jsonValue["average_stock"];
+    }
+    get orderingPeriod() {
+        return this.jsonValue["ordering_period"];
+    }
+    get leadTime() {
+        return this.jsonValue["lead_time"];
+    }
+
+    renderChart() {
+        if (this.chart) {
+            this.chart.destroy();
+        }
+        const config = this.getScatterGraphConfig();
+        this.chart = new Chart(this.canvasRef.el, config);
+    }
+
+    getScatterGraphConfig() {
+        const dashLine = (ctx, value) => ctx.p1.raw.x === this.jsonValue['x_axis_vals'].slice(-1)[0] ? value : undefined;
+        const showYTick = (value) => value === this.productMinQty || value === this.productMaxQty ? value : '';
+        const labels = this.jsonValue['x_axis_vals'];
+        const maxLineColor = getColor(1, cookie.get("color_scheme"), "odoo");
+        const minLineColor = getColor(2, cookie.get("color_scheme"), "odoo");
+        const curveLineColor = getColor(3, cookie.get("color_scheme"), "odoo");
+        return {
+            type: "scatter",
+            data: {
+                labels,
+                datasets: [{
+                    type: "line",
+                    data: this.jsonValue["max_line_vals"],
+                    fill: false,
+                    pointStyle: false,
+                    borderColor: maxLineColor,
+                }, {
+                    type: "line",
+                    data: this.jsonValue["min_line_vals"],
+                    fill: false,
+                    pointStyle: false,
+                    borderColor: minLineColor,
+                }, {
+                    type: "line",
+                    data: this.jsonValue["curve_line_vals"],
+                    fill: false,
+                    pointStyle: false,
+                    borderColor: curveLineColor,
+                    segment: {
+                        borderDash: ctx => dashLine(ctx, [6, 6]),
+                    }
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                showLine: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false },
+                },
+                scales: {
+                    y: {
+                        grid: {display: false},
+                        ticks: {
+                            callback: value => showYTick(value),
+                        },
+                        suggestedMax: this.productMaxQty * 1.1,
+                        suggestedMin: this.productMinQty * 0.9,
+                    },
+                    x: {
+                        type: 'category',
+                        grid: {display: false},
+                    },
+                },
+            },
+        }
+    }
 }
 
-export const replenishmentHistoryWidget = {
+export const replenishmentGraphWidget = {
     ...jsonPopOver,
-    component: ReplenishmentHistoryWidget,
+    component: ReplenishmentGraphWidget,
 };
 
-registry.category("fields").add("replenishment_history_widget", replenishmentHistoryWidget);
+registry.category("fields").add("replenishment_graph_widget", replenishmentGraphWidget);
