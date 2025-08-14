@@ -1506,15 +1506,6 @@ class AccountTax(models.Model):
             amounts_to_distribute[i] += amount_to_distribute
         return amounts_to_distribute
 
-    def _round_total_per_tax(self, total_per_tax, company):
-        for (_tax, currency, _is_refund, _is_reverse_charge), tax_amounts in total_per_tax.items():
-            tax_amounts['raw_tax_amount_currency'] = currency.round(tax_amounts['raw_tax_amount_currency'])
-            tax_amounts['raw_tax_amount'] = company.currency_id.round(tax_amounts['raw_tax_amount'])
-            tax_amounts['raw_base_amount_currency'] = currency.round(tax_amounts['raw_base_amount_currency'])
-            tax_amounts['raw_base_amount'] = company.currency_id.round(tax_amounts['raw_base_amount'])
-            tax_amounts['raw_total_amount_currency'] = currency.round(tax_amounts['raw_total_amount_currency'])
-            tax_amounts['raw_total_amount'] = company.currency_id.round(tax_amounts['raw_total_amount'])
-
     @api.model
     def _round_base_lines_tax_details(self, base_lines, company, tax_lines=None):
         """ Round the 'tax_details' added to base_lines with the '_add_accounting_data_to_base_line_tax_details'.
@@ -1676,7 +1667,13 @@ class AccountTax(models.Model):
                     base_amounts['base_lines'].append(base_line)
 
         # Round 'total_per_tax'.
-        self._round_total_per_tax(total_per_tax, company)
+        for (_tax, currency, _is_refund, _is_reverse_charge), tax_amounts in total_per_tax.items():
+            tax_amounts['raw_tax_amount_currency'] = currency.round(tax_amounts['raw_tax_amount_currency'])
+            tax_amounts['raw_tax_amount'] = company.currency_id.round(tax_amounts['raw_tax_amount'])
+            tax_amounts['raw_base_amount_currency'] = currency.round(tax_amounts['raw_base_amount_currency'])
+            tax_amounts['raw_base_amount'] = company.currency_id.round(tax_amounts['raw_base_amount'])
+            tax_amounts['raw_total_amount_currency'] = currency.round(tax_amounts['raw_total_amount_currency'])
+            tax_amounts['raw_total_amount'] = company.currency_id.round(tax_amounts['raw_total_amount'])
 
         # Round 'total_per_base'.
         for (currency, _is_refund), base_amounts in total_per_base.items():
