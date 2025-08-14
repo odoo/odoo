@@ -106,7 +106,7 @@
                     </div>
                     <div class="s_blog_posts_post_cover_hidden h-auto py-2 px-4">
                         <t t-call="website_blog.s_dynamic_snippet_template_author"/>
-                        <p class="s_blog_posts_post_subtitle w-100 mt-2 m-0 lead overflow-hidden" t-field="record.subtitle"/>
+                        <p class="s_blog_posts_post_subtitle o_line_clamp w-100 mt-2 m-0 lead" t-field="record.subtitle"/>
                     </div>
                 </div>
             </t>
@@ -136,7 +136,7 @@
                         <t t-call="website_blog.s_dynamic_snippet_template_date">
                             <t t-set="date_custom_class" t-value="'small'"/>
                         </t>
-                        <p class="s_blog_posts_post_subtitle mt-1 mb-0 lead overflow-hidden" t-field="record.subtitle"/>
+                        <p class="s_blog_posts_post_subtitle o_line_clamp mt-1 mb-0 lead" t-field="record.subtitle"/>
                     </a>
                     <div class="d-flex justify-content-between small">
                         <t t-call="website_blog.s_dynamic_snippet_template_author"/>
@@ -303,7 +303,7 @@
 
 <!-- Blog Post Teaser (optional for Card and List layouts) -->
 <template id="website_blog.s_dynamic_snippet_template_teaser" name="Blog Post Teaser">
-    <p t-if="blog_posts_post_teaser_active" t-attf-class="s_blog_posts_post_teaser overflow-hidden {{ teaser_custom_class }}" t-field="record.teaser"/>
+    <p t-if="blog_posts_post_teaser_active" t-attf-class="s_blog_posts_post_teaser o_line_clamp {{ teaser_custom_class }}" t-field="record.teaser"/>
 </template>
 
 <!-- Blog Post Date (optional for Card, Horizontal and List layouts) -->

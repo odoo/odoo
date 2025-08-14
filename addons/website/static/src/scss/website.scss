@@ -594,6 +594,13 @@ p {
     margin-top: $paragraph-margin-top;
 }
 
+.o_line_clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: var(--lines-clamp, 2);
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
 font[style*='background']:not(.text-gradient),
 font[class*='bg-'] {
     // Not adding any horizontal padding is important as it ensures that several

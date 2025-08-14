@@ -2351,12 +2351,6 @@ $o-offcanvas-horizontal-width: var(--Offcanvas-horizontal-width, #{$o-offcanvas-
     }
 };
 
-@mixin o-line-clamp($lines) {
-    display: -webkit-box;
-    -webkit-line-clamp: $lines;
-    -webkit-box-orient: vertical;
-}
-
 // Replaces 'NULL' string values in a map by the sass null value (this is useful
 // as a "hack" to allow users to define null values in their custom palette as
 // normal null values are immediately removed to act as "removing the user custo

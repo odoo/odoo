@@ -4,15 +4,10 @@
     }
 
     .s_blog_posts_post_teaser {
-        @include o-line-clamp(2);
 
         @include media-breakpoint-up(md) {
-            @include o-line-clamp(4);
+            --lines-clamp: 4;
         }
-    }
-
-    .s_blog_posts_post_subtitle {
-        @include o-line-clamp(2);
     }
 
     &.s_blog_post_list:not(:has(.s_dynamic_snippet_title_aside)){
