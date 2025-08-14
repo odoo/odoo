@@ -66,13 +66,22 @@
                             </button>
                             <t t-set-slot="content">
                                 <t t-foreach="availablePropertyTypes" t-as="option" t-key="option[0]">
-                                    <DropdownItem onSelected.bind="() => this.onPropertyTypeChange(option[0])">
-                                        <div class="d-flex align-items-center">
-                                            <img class="me-2"
-                                                t-attf-src="/web/static/src/views/fields/properties/icons/{{option[0]}}.png"/>
-                                            <span t-out="option[1]"/>
-                                        </div>
-                                    </DropdownItem>
+                                    <t t-if="option[0] === 'monetary' and !this.defaultCurrencyField">
+                                        <DropdownItem closingMode="'none'">
+                                            <div class="d-flex align-items-center text-muted" data-tooltip="Not possible to create monetary field because there is no currency on current model.">
+                                                <img class="me-2" t-attf-src="/web/static/src/views/fields/properties/icons/{{option[0]}}.png"/>
+                                                <span t-out="option[1]"/>
+                                            </div>
+                                        </DropdownItem>
+                                    </t>
+                                    <t t-else="">
+                                        <DropdownItem onSelected.bind="() => this.onPropertyTypeChange(option[0])">
+                                            <div class="d-flex align-items-center">
+                                                <img class="me-2" t-attf-src="/web/static/src/views/fields/properties/icons/{{option[0]}}.png"/>
+                                                <span t-out="option[1]"/>
+                                            </div>
+                                        </DropdownItem>
+                                    </t>
                                 </t>
                             </t>
                         </Dropdown>
@@ -134,6 +143,16 @@
                         </div>
                     </div>
                 </div>
+                <div t-if="state.propertyDefinition.type === 'monetary'" class="o_field_property_definition_currency_field d-contents mb-3 mb-sm-0">
+                    <label t-att-for="getUniqueDomID('currency_field')" class="o_form_label text-900">Currency field</label>
+                    <div>
+                        <select class="o_input" t-att-value="this.state.propertyDefinition.currency_field" t-on-change="(ev) => this.onCurrencyFieldUpdate(ev.target.value)">
+                            <t t-foreach="this.currencyFields" t-as="currencyField" t-key="currencyField.name">
+                                <option t-att-value="currencyField.name" t-out="currencyField.string"/>
+                            </t>
+                        </select>
+                    </div>
+                </div>
                 <div t-if="!['tags', 'selection', 'separator'].includes(state.propertyDefinition.type)
                     and (!['many2one', 'many2many'].includes(state.propertyDefinition.type)
                     || (state.propertyDefinition.comodel and state.propertyDefinition.comodel.length))"
@@ -150,6 +169,7 @@
                         string="state.propertyDefinition.string"
                         value="state.propertyDefinition.default"
                         comodel="state.propertyDefinition.comodel || ''"
+                        currencyField="state.propertyDefinition.currency_field || ''"
                         domain="state.propertyDefinition.domain || '[]'"
                         context="props.context"
                         onChange.bind="onDefaultChange"

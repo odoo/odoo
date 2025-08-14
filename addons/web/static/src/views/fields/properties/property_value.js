@@ -15,13 +15,15 @@ import {
 import { _t } from "@web/core/l10n/translation";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { useService } from "@web/core/utils/hooks";
-import { formatInteger, formatMany2one } from "@web/views/fields/formatters";
+import { formatInteger, formatMany2one, formatMonetary } from "@web/views/fields/formatters";
 import { formatFloat } from "@web/core/utils/numbers";
-import { parseFloat, parseInteger } from "@web/views/fields/parsers";
+import { parseFloat, parseInteger, parseMonetary } from "@web/views/fields/parsers";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 import { PropertyTags } from "./property_tags";
 import { PropertyText } from "./property_text";
 import { imageUrl } from "@web/core/utils/urls";
+import { getCurrency } from "@web/core/currency";
+import { nbsp } from "@web/core/utils/strings";
 
 function extractData(record) {
     let name;
@@ -43,6 +45,7 @@ function extractData(record) {
  * - Datetime & Date
  * - Many2one
  * - Many2many
+ * - Monetary
  * - Tags
  * - ...
  */
@@ -63,6 +66,7 @@ export class PropertyValue extends Component {
         id: { type: String, optional: true },
         type: { type: String, optional: true },
         comodel: { type: String, optional: true },
+        currencyField: { type: String, optional: true },
         domain: { type: String, optional: true },
         string: { type: String, optional: true },
         value: { optional: true },
@@ -77,6 +81,8 @@ export class PropertyValue extends Component {
     };
 
     setup() {
+        this.nbsp = nbsp;
+
         this.orm = useService("orm");
         this.action = useService("action");
 
@@ -104,6 +110,18 @@ export class PropertyValue extends Component {
     /* --------------------------------------------------------
      * Public methods / Getters
      * -------------------------------------------------------- */
+
+    get currency() {
+        if (!isNaN(this.currencyId)) {
+            return getCurrency(this.currencyId) || null;
+        }
+        return null;
+    }
+
+    get currencyId() {
+        const currency = this.props.record.data[this.props.currencyField];
+        return currency && currency.id;
+    }
 
     /**
      * Return the value of the current property,
@@ -198,6 +216,12 @@ export class PropertyValue extends Component {
             return formatInteger(value || 0);
         } else if (this.props.type === "float") {
             return formatFloat(value || 0);
+        } else if (this.props.type === "monetary") {
+            return formatMonetary(value || 0, {
+                digits: this.currency?.digits,
+                currencyId: this.currencyId,
+                noSymbol: !this.props.readonly,
+            });
         } else if (!value) {
             return false;
         } else if (this.props.type === "datetime" && value) {
@@ -276,6 +300,12 @@ export class PropertyValue extends Component {
                     return;
                 }
                 newValue = [...currentValue, [newValue.id, newValue.display_name]];
+            }
+        } else if (this.props.type === "monetary") {
+            try {
+                newValue = parseMonetary(newValue) || 0;
+            } catch {
+                newValue = 0;
             }
         }
 
