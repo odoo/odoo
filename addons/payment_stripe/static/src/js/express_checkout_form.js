@@ -186,7 +186,7 @@ paymentExpressCheckoutForm.include({
                             detail: carrier.description ? carrier.description:"",
                             amount: carrier.minorAmount,
                         })),
-                        ...this._getOrderDetails(availableCarriers[0].minorAmount),
+                        ...this._getOrderDetails(availableCarriers[0].minorAmount, 0),
                     });
                 }
             });
