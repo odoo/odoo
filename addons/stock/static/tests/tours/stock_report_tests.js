@@ -49,6 +49,10 @@ odoo.define('stock.reports.setup.tour', function (require) {
             run: "click",
         },
         {
+            trigger: ".o_menu_item.dropdown-item.o_indent:contains(Warehouse A)",
+            run: () => {},  // wait until Warehouse A is rendered
+        },   
+        {
             trigger: ".o_menu_item.dropdown-item.o_indent:contains(Warehouse A) a",
             run: "click",
         },
@@ -60,6 +64,10 @@ odoo.define('stock.reports.setup.tour', function (require) {
         {
             trigger: ".o_menu_item.dropdown-item:contains(Warehouse) a.o_expand > i",
             run: "click",
+        },
+        {
+            trigger: ".o_menu_item.dropdown-item.o_indent:contains(Warehouse B)",
+            run: () => {},  // wait until Warehouse B is rendered
         },
         {
             trigger: ".o_menu_item.dropdown-item.o_indent:contains(Warehouse B) a",
