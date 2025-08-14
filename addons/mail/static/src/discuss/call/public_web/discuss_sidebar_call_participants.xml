@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="mail.DiscussSidebarCallParticipants">
         <t t-if="sessions.length gt 0">
-            <Dropdown t-if="compact" state="floating" position="'right-start'" manual="true" menuClass="'o-mail-DiscussSidebar-floatingMenu o-discuss-dropdownMenu border-secondary'">
+            <Dropdown t-if="compact" state="floating" position="'right-start'" manual="true" menuClass="'o-mail-DiscussSidebar-floatingMenu ' + store.discussDropdownMenuClass(this)">
                 <t t-call="mail.DiscussSidebarCallParticipants.main"/>
                 <t t-set-slot="content">
                     <div class="p-2" t-ref="floating">
@@ -78,8 +78,8 @@
                     <t t-set="session" t-value="session"/>
                 </t>
                 <t t-else="">
-                    <span t-if="session.is_muted" class="p-1 fa opacity-75" t-att-class="callActionsRegistry.get('mute').icon"/>
-                    <span t-if="session.is_deaf" class="p-1 fa opacity-75" t-att-class="callActionsRegistry.get('deafen').icon"/>
+                    <span t-if="session.is_muted" class="p-1 fa opacity-75" t-att-class="rtc.callActions.find(a => a.id === 'mute').icon"/>
+                    <span t-if="session.is_deaf" class="p-1 fa opacity-75" t-att-class="rtc.callActions.find(a => a.id === 'deafen').icon"/>
                     <span t-if="session.is_screen_sharing_on" class="o-live bg-danger o-text-white rounded">LIVE</span>
                 </t>
             </div>
@@ -89,8 +89,8 @@
 
     <t t-name="mail.DiscussSidebarCallParticipants.participantShortStatus">
         <span t-if="session?.shortStatus" t-att-class="{
-            [`fa ${callActionsRegistry.get('mute').icon} opacity-75`]: session.shortStatus === 'mute',
-            [`fa ${callActionsRegistry.get('deafen').icon} opacity-75`]: session.shortStatus === 'deafen',
+            [`fa ${rtc.callActions.find(a => a.id === 'mute').icon} opacity-75`]: session.shortStatus === 'mute',
+            [`fa ${rtc.callActions.find(a => a.id === 'deafen').icon} opacity-75`]: session.shortStatus === 'deafen',
             'o-live bg-danger o-text-white rounded': session.shortStatus === 'live',
         }"><t t-if="session.shortStatus === 'live'">LIVE</t></span>
     </t>

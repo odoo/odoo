@@ -16,6 +16,7 @@ import { loadBundle, loadJS } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
 import { url } from "@web/core/utils/urls";
 import { isMobileOS } from "@web/core/browser/feature_detection";
+import { CallAction } from "./call_actions";
 
 let sequence = 1;
 const getSequence = () => sequence++;
@@ -319,32 +320,35 @@ export class Rtc extends Record {
 
     callActions = fields.Attr([], {
         compute() {
-            return registry
+            const transformedActions = registry
                 .category("discuss.call/actions")
                 .getEntries()
-                .filter(([key, action]) => action.condition({ rtc: this }))
-                .map(([key, action]) => [key, action.isActive({ rtc: this }), action.isTracked]);
+                .map(([id, definition]) => new CallAction({ owner: this, id, definition }));
+            for (const action of transformedActions) {
+                action.setup();
+            }
+            return transformedActions;
         },
         onUpdate() {
-            for (const [key, isActive, isTracked] of this.callActions) {
-                if (isActive === this.lastActions[key]) {
+            for (const action of this.callActions) {
+                if (action.isActive === this.lastActions[action.id]) {
                     continue;
                 }
-                if (!isTracked) {
+                if (!action.isTracked) {
                     continue;
                 }
-                if (isActive) {
-                    if (!this.actionsStack.includes(key)) {
-                        this.actionsStack.unshift(key);
+                if (action.isActive) {
+                    if (!this.actionsStack.includes(action.id)) {
+                        this.actionsStack.unshift(action.id);
                     }
                 } else {
-                    this.actionsStack.splice(this.actionsStack.indexOf(key), 1);
+                    this.actionsStack.splice(this.actionsStack.indexOf(action.id), 1);
                 }
             }
-
             this.lastSelfCallAction = this.actionsStack[0];
-
-            this.lastActions = Object.fromEntries(this.callActions);
+            this.lastActions = Object.fromEntries(
+                this.callActions.map((action) => [action.id, action.isActive])
+            );
         },
     });
 

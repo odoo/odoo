@@ -3,24 +3,22 @@ import { Component, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 registerComposerAction("voice-start", {
-    condition: (component) =>
-        component.thread?.model === "discuss.channel" &&
-        component.voiceRecorder &&
-        !component.voiceRecorder?.recording &&
-        !component.props.composer.voiceAttachment,
+    condition: ({ composer, owner }) =>
+        composer.targetThread?.model === "discuss.channel" &&
+        owner.voiceRecorder &&
+        !owner.voiceRecorder?.recording &&
+        !composer.voiceAttachment,
     icon: "fa fa-microphone",
-    iconLarge: "fa fa-lg fa-microphone",
     name: _t("Voice Message"),
-    onSelected: (component) => component.voiceRecorder.onClick(),
+    onSelected: ({ owner }) => owner.voiceRecorder.onClick(),
     sequence: 10,
 });
 registerComposerAction("voice-stop", {
-    condition: (component) =>
-        component.thread?.model === "discuss.channel" && component.voiceRecorder?.recording,
+    condition: ({ composer, owner }) =>
+        composer.targetThread?.model === "discuss.channel" && owner.voiceRecorder?.recording,
     icon: "fa fa-circle text-danger o-mail-VoiceRecorder-dot",
-    iconLarge: "fa fa-lg fa-circle text-danger o-mail-VoiceRecorder-dot",
     name: _t("Stop Recording"),
-    onSelected: (component) => component.voiceRecorder.onClick(),
+    onSelected: ({ owner }) => owner.voiceRecorder.onClick(),
     sequence: 10,
 });
 registerComposerAction("voice-recording", {
@@ -38,11 +36,8 @@ registerComposerAction("voice-recording", {
             return _t("Stop Recording");
         }
     },
-    componentProps: (component) => ({
-        composer: component.props.composer,
-        state: component.voiceRecorder,
-    }),
-    condition: (component) =>
-        component.thread?.model === "discuss.channel" && component.voiceRecorder?.recording,
+    componentProps: ({ composer, owner }) => ({ composer, state: owner.voiceRecorder }),
+    condition: ({ composer, owner }) =>
+        composer.targetThread?.model === "discuss.channel" && owner.voiceRecorder?.recording,
     sequenceQuick: 10,
 });

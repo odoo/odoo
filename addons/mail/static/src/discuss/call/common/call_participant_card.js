@@ -1,6 +1,6 @@
 import { CallContextMenu } from "@mail/discuss/call/common/call_context_menu";
 import { CallParticipantVideo } from "@mail/discuss/call/common/call_participant_video";
-import { CallPopover } from "@mail/discuss/call/common/call_popover";
+import { CallDropdown } from "@mail/discuss/call/common/call_dropdown";
 import { CONNECTION_TYPES } from "@mail/discuss/call/common/rtc_service";
 import { useHover } from "@mail/utils/common/hooks";
 import { isEventHandled } from "@web/core/utils/misc";
@@ -23,7 +23,7 @@ export class CallParticipantCard extends Component {
         "isSidebarItem?",
         "compact?",
     ];
-    static components = { CallParticipantVideo, CallContextMenu, CallPopover };
+    static components = { CallParticipantVideo, CallContextMenu, CallDropdown };
     static template = "discuss.CallParticipantCard";
 
     setup() {

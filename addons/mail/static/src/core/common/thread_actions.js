@@ -4,21 +4,21 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
 import { markEventHandled } from "@web/core/utils/misc";
-import { Action, UseActions } from "./action";
+import { Action, UseActions } from "@mail/core/common/action";
+import { MeetingChat } from "@mail/discuss/call/common/meeting_chat";
+import { useService } from "@web/core/utils/hooks";
 
 export const threadActionsRegistry = registry.category("mail.thread/actions");
 
 /** @typedef {import("@odoo/owl").Component} Component */
-
 /** @typedef {import("@mail/core/common/action").ActionDefinition} ActionDefinition */
-
+/** @typedef {import("models").Thread} Thread */
 /**
  * @typedef {Object} ThreadActionSpecificDefinition
  * @property {Component} [actionPanelComponent]
  * @property {(Component) => Object} [actionPanelComponentProps]
  * @property {(Component) => void} [close]
  * @property {boolean|(comp: Component) => boolean} [condition=true]
- * @property {string} [nameActive]
  * @property {string|(comp: Component) => string} [nameClass]
  * @property {(comp: Component) => void} [open]
  * @property {(comp: Component) => string} [panelOuterClass]
@@ -38,92 +38,90 @@ export function registerThreadAction(id, definition) {
 }
 
 registerThreadAction("fold-chat-window", {
-    condition(component) {
-        return component.props.chatWindow && !component.isDiscussSidebarChannelActions;
-    },
+    condition: ({ owner }) => owner.props.chatWindow && !owner.isDiscussSidebarChannelActions,
     icon: "oi oi-fw oi-minus",
-    iconLarge: "oi oi-fw fa-lg oi-minus",
-    name(component) {
-        return !component.props.chatWindow?.isOpen ? _t("Open") : _t("Fold");
-    },
-    open(component) {
-        component.toggleFold();
-    },
-    displayActive(component) {
-        return !component.props.chatWindow?.isOpen;
-    },
+    name: ({ owner }) => (!owner.props.chatWindow?.isOpen ? _t("Open") : _t("Fold")),
+    open: ({ owner }) => owner.toggleFold(),
+    displayActive: ({ owner }) => !owner.props.chatWindow?.isOpen,
     sequence: 99,
     sequenceQuick: 20,
 });
 registerThreadAction("rename-thread", {
-    condition(component) {
-        return (
-            component.thread &&
-            component.props.chatWindow?.isOpen &&
-            (component.thread.is_editable || component.thread.channel_type === "chat") &&
-            !component.isDiscussSidebarChannelActions
-        );
-    },
+    condition: ({ owner, thread }) =>
+        thread &&
+        owner.props.chatWindow?.isOpen &&
+        (thread.is_editable || thread.channel_type === "chat") &&
+        !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-pencil",
-    iconLarge: "fa fa-lg fa-fw fa-pencil",
     name: _t("Rename Thread"),
-    open(component) {
-        component.state.editingName = true;
-    },
+    open: ({ owner }) => (owner.state.editingName = true),
     sequence: 30,
     sequenceGroup: 20,
 });
 registerThreadAction("close", {
-    condition(component) {
-        return component.props.chatWindow && !component.isDiscussSidebarChannelActions;
-    },
+    condition: ({ owner }) => owner.props.chatWindow && !owner.isDiscussSidebarChannelActions,
     icon: "oi fa-fw oi-close",
-    iconLarge: "oi fa-lg fa-fw oi-close",
     name: _t("Close Chat Window (ESC)"),
-    open(component) {
-        component.close();
-    },
+    open: ({ owner }) => owner.close(),
     sequence: 100,
     sequenceQuick: 10,
 });
 registerThreadAction("search-messages", {
     actionPanelComponent: SearchMessagesPanel,
-    condition(component) {
-        return (
-            ["discuss.channel", "mail.box"].includes(component.thread?.model) &&
-            (!component.props.chatWindow || component.props.chatWindow.isOpen) &&
-            !component.isDiscussSidebarChannelActions
-        );
-    },
+    condition: ({ owner, thread }) =>
+        ["discuss.channel", "mail.box"].includes(thread?.model) &&
+        (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
+        !owner.isDiscussSidebarChannelActions,
     panelOuterClass: "o-mail-SearchMessagesPanel bg-inherit",
     icon: "oi oi-fw oi-search",
-    iconLarge: "oi oi-fw fa-lg oi-search",
-    name: _t("Search Messages"),
-    nameActive: _t("Close Search"),
+    name: ({ action }) => (action.isActive ? _t("Close Search") : _t("Search Messages")),
     sequence: 20,
     sequenceGroup: 20,
-    setup() {
+    setup: ({ action }) =>
         useSubEnv({
             searchMenu: {
-                open: () => this.open(),
+                open: () => action.open(),
                 close: () => {
-                    if (this.isActive) {
-                        this.close();
+                    if (action.isActive) {
+                        action.close();
                     }
                 },
             },
-        });
-    },
+        }),
+    toggle: true,
+});
+registerThreadAction("meeting-chat", {
+    actionPanelComponent: MeetingChat,
+    condition: ({ owner }) => owner.env.inMeetingView,
+    icon: "fa fa-fw fa-comments",
+    name: _t("Chat"),
+    panelOuterClass: "bg-100 border border-secondary",
+    sequence: 30,
     toggle: true,
 });
 
-class ThreadAction extends Action {
+export class ThreadAction extends Action {
     /** Determines whether this is a popover linked to this action. */
     popover = null;
+    /** @type {() => Thread} */
+    threadFn;
+
+    /**
+     * @param {Object} param0
+     * @param {Thread|() => Thread} thread
+     */
+    constructor({ thread }) {
+        super(...arguments);
+        this.threadFn = typeof thread === "function" ? thread : () => thread;
+    }
+
+    get params() {
+        return Object.assign(super.params, { thread: this.threadFn() });
+    }
 
     /** Optional component that is used as action panel of this component, i.e. when action is active. */
     get actionPanelComponent() {
-        return this.explicitDefinition.actionPanelComponent;
+        return this.definition.actionPanelComponent;
     }
 
     /** Condition to display the action panel component of this action. */
@@ -133,42 +131,27 @@ class ThreadAction extends Action {
 
     /** Props to pass to the action panel component of this action. */
     get actionPanelComponentProps() {
-        return this.explicitDefinition.actionPanelComponentProps?.(this._component, this);
+        return this.definition.actionPanelComponentProps?.call(this, this.params);
     }
 
     /** Closes this action. */
     close() {
         if (this.toggle) {
-            this._component.threadActions.activeAction =
-                this._component.threadActions.actionStack.pop();
+            this.owner.threadActions.activeAction = this.owner.threadActions.actionStack.pop();
         }
-        this.explicitDefinition.close?.(this._component, this);
-    }
-
-    /** Condition to display this action. */
-    get condition() {
-        return threadActionsInternal.condition(this._component, this.id, this.explicitDefinition);
+        this.definition.close?.call(this, this.params);
     }
 
     /** States whether this action is currently active. */
     get isActive() {
-        return this.id === this._component.threadActions.activeAction?.id;
-    }
-
-    /** @override **/
-    get name() {
-        const res =
-            this.isActive && this.explicitDefinition.nameActive
-                ? this.explicitDefinition.nameActive
-                : this.explicitDefinition.name;
-        return typeof res === "function" ? res(this._component) : res;
+        return this.id === this.owner.threadActions.activeAction?.id;
     }
 
     /** ClassName on name of this action */
     get nameClass() {
-        return typeof this.explicitDefinition.nameClass === "function"
-            ? this.explicitDefinition.nameClass(this._component)
-            : this.explicitDefinition.nameClass;
+        return typeof this.definition.nameClass === "function"
+            ? this.definition.nameClass.call(this, this.params)
+            : this.definition.nameClass;
     }
 
     /**
@@ -181,7 +164,7 @@ class ThreadAction extends Action {
      * */
     onSelected(ev, { keepPrevious } = {}) {
         if (ev) {
-            markEventHandled(ev, "DiscussAction.onSelected");
+            markEventHandled(ev, "ThreadAction.onSelected");
         }
         if (this.toggle && this.isActive) {
             this.close();
@@ -200,54 +183,31 @@ class ThreadAction extends Action {
      * */
     open({ keepPrevious } = {}) {
         if (this.toggle) {
-            if (this._component.threadActions.activeAction) {
+            if (this.owner.threadActions.activeAction) {
                 if (keepPrevious) {
-                    this._component.threadActions.actionStack.push(
-                        this._component.threadActions.activeAction
+                    this.owner.threadActions.actionStack.push(
+                        this.owner.threadActions.activeAction
                     );
                 } else {
-                    this._component.threadActions.activeAction.close();
+                    this.owner.threadActions.activeAction.close();
                 }
             }
-            this._component.threadActions.activeAction = this;
+            this.owner.threadActions.activeAction = this;
         }
-        this.explicitDefinition.open?.(this._component, this);
+        this.definition.open?.call(this, this.params);
     }
 
     get panelOuterClass() {
-        return typeof this.explicitDefinition.panelOuterClass === "function"
-            ? this.explicitDefinition.panelOuterClass(this._component)
-            : this.explicitDefinition.panelOuterClass;
-    }
-
-    get sequenceGroup() {
-        return typeof this.explicitDefinition.sequenceGroup === "function"
-            ? this.explicitDefinition.sequenceGroup(this._component)
-            : this.explicitDefinition.sequenceGroup;
-    }
-
-    get sequenceQuick() {
-        return typeof this.explicitDefinition.sequenceQuick === "function"
-            ? this.explicitDefinition.sequenceQuick(this._component)
-            : this.explicitDefinition.sequenceQuick;
+        return typeof this.definition.panelOuterClass === "function"
+            ? this.definition.panelOuterClass.call(this, this.params)
+            : this.definition.panelOuterClass;
     }
 
     /** Determines whether this action is a one time effect or can be toggled (on or off). */
     get toggle() {
-        return this.explicitDefinition.toggle;
+        return this.definition.toggle;
     }
 }
-
-export const threadActionsInternal = {
-    condition(component, id, action) {
-        if (!action?.condition) {
-            return true;
-        }
-        return typeof action.condition === "function"
-            ? action.condition(component)
-            : action.condition;
-    },
-};
 
 class UseThreadActions extends UseActions {
     ActionClass = ThreadAction;
@@ -255,13 +215,17 @@ class UseThreadActions extends UseActions {
     activeAction = null;
 }
 
-export function useThreadActions() {
+/**
+ * @param {Object} [params0={}]
+ * @param {Thread|() => Thread} thread
+ */
+export function useThreadActions({ thread } = {}) {
     const component = useComponent();
     const transformedActions = threadActionsRegistry
         .getEntries()
-        .map(([id, action]) => new ThreadAction(component, id, action));
+        .map(([id, definition]) => new ThreadAction({ owner: component, id, definition, thread }));
     for (const action of transformedActions) {
         action.setup();
     }
-    return useState(new UseThreadActions(component, transformedActions));
+    return useState(new UseThreadActions(component, transformedActions, useService("mail.store")));
 }

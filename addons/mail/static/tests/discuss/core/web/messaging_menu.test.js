@@ -14,6 +14,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { disableAnimations, mockTouch } from "@odoo/hoot-mock";
 import {
     Command,
+    contains as webContains,
     getService,
     serverState,
     swipeLeft,
@@ -122,9 +123,12 @@ test("deleted message should not show parent message reference and mentions", as
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-MessageInReply", { text: "Parent Message" });
-    await click("[title='Expand']", {
-        parent: [".o-mail-Message:has(.o-mail-Message-bubble.o-orange)", { text: "reply message" }],
-    });
+    await webContains(
+        ".o-mail-Message:has(.o-mail-Message-bubble.o-orange):contains('reply message')"
+    ).hover();
+    await webContains(
+        ".o-mail-Message:has(.o-mail-Message-bubble.o-orange):contains('reply message') [title='Expand']"
+    ).click();
     await click(".o-mail-Message-moreMenu .o-dropdown-item:contains(Delete)");
     await click(".o_dialog button:contains(Delete)");
     await contains(".o-mail-Message:not(:has(.o-mail-Message-bubble.o-orange))", {

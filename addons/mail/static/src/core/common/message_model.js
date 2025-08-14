@@ -493,7 +493,7 @@ export class Message extends Record {
     /** @param {import("models").Thread} thread the thread where the message is shown */
     canReplyTo(thread) {
         return (
-            ["discuss.channel", "mail.box"].includes(thread.model) &&
+            ["discuss.channel", "mail.box"].includes(thread?.model) &&
             this.message_type !== "user_notification"
         );
     }

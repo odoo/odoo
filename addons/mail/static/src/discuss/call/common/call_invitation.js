@@ -1,10 +1,13 @@
-import { Component, onWillUnmount, useRef, useState } from "@odoo/owl";
+import { Component, onWillUnmount, useRef, useState, useSubEnv } from "@odoo/owl";
 
+import { ActionList } from "@mail/core/common/action_list";
 import { useService } from "@web/core/utils/hooks";
+import { useCallActions } from "@mail/discuss/call/common/call_actions";
 
 export class CallInvitation extends Component {
     static props = ["thread"];
     static template = "discuss.CallInvitation";
+    static components = { ActionList };
 
     setup() {
         super.setup();
@@ -12,6 +15,8 @@ export class CallInvitation extends Component {
         this.ui = useService("ui");
         this.state = useState({ videoStream: null });
         this.videoRef = useRef("video");
+        this.callActions = useCallActions({ thread: () => this.props.thread });
+        useSubEnv({ inCallInvitation: true });
         onWillUnmount(() => {
             if (!this.state.videoStream) {
                 return;

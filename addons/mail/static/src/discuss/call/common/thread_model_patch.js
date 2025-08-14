@@ -174,6 +174,12 @@ const ThreadPatch = {
             ? "screen"
             : "camera";
     },
+    open(options) {
+        if (this.store.fullscreenChannel?.notEq(this)) {
+            this.store.rtc.exitFullscreen();
+        }
+        super.open(...arguments);
+    },
     /**
      * @param {import("models").RtcSession} session
      */

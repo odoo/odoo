@@ -372,3 +372,15 @@ export function decorateEmojis(content) {
     }
     return markup(doc.body.innerHTML);
 }
+
+/**
+ * Converts an object of key/value to string, where object represents a attClass with OWL syntax object
+ * and value is evaluation of each key.
+ * Example: "attClassObjectToString({ a: 1, b: 0, c: 1 })" converts to "a c".
+ */
+export function attClassObjectToString(obj) {
+    return Object.entries(obj)
+        .filter(([_, val]) => val)
+        .map(([key, _]) => key)
+        .join(" ");
+}

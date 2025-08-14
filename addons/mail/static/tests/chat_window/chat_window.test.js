@@ -25,6 +25,7 @@ import { mockDate, tick } from "@odoo/hoot-mock";
 import { EventBus } from "@odoo/owl";
 import {
     Command,
+    contains as webContains,
     getService,
     patchWithCleanup,
     preloadBundle,
@@ -794,13 +795,13 @@ test("keyboard navigation ArrowUp/ArrowDown on message action dropdown in chat w
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow .o-mail-Composer-input:focus");
-    await click(".o-mail-Message [title='Expand']");
+    await webContains(".o-mail-Message").hover();
+    await webContains(".o-mail-Message [title='Expand']").click();
     await contains(".o-mail-Message-moreMenu.dropdown-menu");
-    await focus(".o-mail-Message [title='Expand']"); // necessary otherwise focus is in composer input
     triggerHotkey("ArrowDown");
-    await contains(".o-mail-Message-moreMenu :nth-child(1 of .dropdown-item).focus");
+    await contains(".o-mail-Message-moreMenu .dropdown-item:eq(0).focus");
     triggerHotkey("ArrowDown");
-    await contains(".o-mail-Message-moreMenu :nth-child(2 of .dropdown-item).focus");
+    await contains(".o-mail-Message-moreMenu .dropdown-item:eq(1).focus");
 });
 
 test("Close dropdown in chat window with ESCAPE does not also close the chat window", async () => {
@@ -815,9 +816,9 @@ test("Close dropdown in chat window with ESCAPE does not also close the chat win
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    await click(".o-mail-Message [title='Expand']");
+    await webContains(".o-mail-Message").hover();
+    await webContains(".o-mail-Message [title='Expand']").click();
     await contains(".o-mail-Message-moreMenu.dropdown-menu");
-    await focus(".o-mail-Message [title='Expand']"); // necessary otherwise focus is in composer input
     triggerHotkey("Escape");
     await contains(".o-mail-Message-moreMenu.dropdown-menu", { count: 0 });
     await contains(".o-mail-ChatWindow");

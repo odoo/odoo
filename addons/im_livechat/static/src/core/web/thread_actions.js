@@ -5,15 +5,10 @@ import { LivechatChannelInfoList } from "@im_livechat/core/web/livechat_channel_
 
 registerThreadAction("livechat-info", {
     actionPanelComponent: LivechatChannelInfoList,
-    condition(component) {
-        return (
-            component.thread?.channel_type === "livechat" &&
-            !component.isDiscussSidebarChannelActions
-        );
-    },
+    condition: ({ owner, thread }) =>
+        thread?.channel_type === "livechat" && !owner.isDiscussSidebarChannelActions,
     panelOuterClass: "o-livechat-ChannelInfoList bg-inherit",
     icon: "fa fa-fw fa-info",
-    iconLarge: "fa fa-fw fa-lg fa-info",
     name: _t("Information"),
     sequence: 10,
     sequenceGroup: 7,
@@ -21,21 +16,16 @@ registerThreadAction("livechat-info", {
 });
 registerThreadAction("livechat-status", {
     actionPanelComponent: LivechatChannelInfoList,
-    condition(component) {
-        return (
-            component.thread?.channel_type === "livechat" &&
-            !component.thread.livechat_end_dt &&
-            !component.isDiscussContent
-        );
-    },
-    dropdown: {
-        template: "im_livechat.LivechatStatusAction",
-        menuClass: "p-0",
-    },
+    condition: ({ owner, thread }) =>
+        thread?.channel_type === "livechat" && !thread.livechat_end_dt && !owner.isDiscussContent,
+    dropdown: true,
+    dropdownMenuClass: "p-0",
+    dropdownTemplate: "im_livechat.LivechatStatusSelection",
+    dropdownTemplateParams: ({ thread }) => ({ livechatThread: thread }),
     panelOuterClass: "o-livechat-ChannelInfoList bg-inherit",
-    icon: (component) => {
-        const btn = component.store.livechatStatusButtons.find(
-            (btn) => btn.status === component.thread.livechat_status
+    icon: ({ store, thread }) => {
+        const btn = store.livechatStatusButtons.find(
+            (btn) => btn.status === thread.livechat_status
         );
         if (!btn) {
             return undefined;
@@ -45,42 +35,28 @@ registerThreadAction("livechat-status", {
             params: { btn, inThreadActions: true },
         };
     },
-    iconLarge: (component) => {
-        const btn = component.store.livechatStatusButtons.find(
-            (btn) => btn.status === component.thread.livechat_status
-        );
-        if (!btn) {
-            return undefined;
-        }
-        return {
-            template: "im_livechat.LivechatStatusLabel",
-            params: { btn, inThreadActions: true },
-        };
-    },
-    name: (component) => component.thread.livechatStatusLabel,
+    name: ({ thread }) => thread.livechatStatusLabel,
     nameClass: "fst-italic small",
-    sequence: (component) => (component.isDiscussSidebarChannelActions ? 10 : 5),
-    sequenceGroup: (component) => (component.isDiscussSidebarChannelActions ? 5 : 7),
+    sequence: ({ owner }) => (owner.isDiscussSidebarChannelActions ? 10 : 5),
+    sequenceGroup: ({ owner }) => (owner.isDiscussSidebarChannelActions ? 5 : 7),
     toggle: true,
 });
 registerThreadAction("join-livechat-needing-help", {
-    condition: (comp) =>
-        comp.thread?.livechat_status === "need_help" &&
-        !comp.thread?.self_member_id &&
-        !comp.isDiscussSidebarChannelActions,
+    condition: ({ owner, thread }) =>
+        thread?.livechat_status === "need_help" &&
+        !thread?.self_member_id &&
+        !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-sign-in",
-    iconLarge: "fa fa-fw fa-lg fa-sign-in",
     name: _t("Join Chat"),
     nameClass: "text-success",
-    async open(component) {
-        const thread = component.thread;
-        const hasJoined = await component.env.services.orm.call(
+    open: async ({ store, thread }) => {
+        const hasJoined = await store.env.services.orm.call(
             "discuss.channel",
             "livechat_join_channel_needing_help",
             [[thread.id]]
         );
         if (!hasJoined && thread.isDisplayed) {
-            component.env.services.notification.add(
+            store.env.services.notification.add(
                 _t("Someone has already joined this conversation"),
                 { type: "warning" }
             );

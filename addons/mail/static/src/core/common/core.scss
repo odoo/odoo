@@ -55,6 +55,11 @@ $o-discuss-talkingColor: lighten($success, 10%);
 .o-discuss-dropdownMenu {
     --Dropdown_menu-margin-y: 0;
 
+    &.o-simulateDarkTheme {
+        background-color: $gray-800;
+        border-color: $gray-700 !important;
+    }
+
     .o_bottom_sheet_sheet:has(&) {
         background-color: $gray-100;
         box-shadow: unset !important;

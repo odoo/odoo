@@ -7,18 +7,13 @@ import { _t } from "@web/core/l10n/translation";
 
 registerThreadAction("pinned-messages", {
     actionPanelComponent: PinnedMessagesPanel,
-    condition(component) {
-        return (
-            component.thread?.model === "discuss.channel" &&
-            (!component.props.chatWindow || component.props.chatWindow.isOpen) &&
-            !component.isDiscussSidebarChannelActions
-        );
-    },
+    condition: ({ owner, thread }) =>
+        thread?.model === "discuss.channel" &&
+        (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
+        !owner.isDiscussSidebarChannelActions,
     panelOuterClass: "o-discuss-PinnedMessagesPanel bg-inherit",
     icon: "fa fa-fw fa-thumb-tack",
-    iconLarge: "fa fa-fw fa-lg fa-thumb-tack",
-    name: _t("Pinned Messages"),
-    nameActive: _t("Hide Pinned Messages"),
+    name: ({ action }) => (action.isActive ? _t("Hide Pinned Messages") : _t("Pinned Messages")),
     sequence: 20,
     sequenceGroup: 10,
     setup() {

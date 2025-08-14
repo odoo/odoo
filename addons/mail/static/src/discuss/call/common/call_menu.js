@@ -1,8 +1,9 @@
 import { Component } from "@odoo/owl";
 
+import { useCallActions } from "@mail/discuss/call/common/call_actions";
+
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { callActionsRegistry, useCallActions } from "./call_actions";
 
 export class CallMenu extends Component {
     static props = [];
@@ -10,14 +11,15 @@ export class CallMenu extends Component {
     setup() {
         super.setup();
         this.rtc = useService("discuss.rtc");
-        this.callActions = useCallActions();
+        this.callActions = useCallActions({ thread: () => this.thread });
         this.isEnterprise = odoo.info && odoo.info.isEnterprise;
     }
 
     get icon() {
-        return (
-            callActionsRegistry.get(this.rtc.lastSelfCallAction, undefined)?.icon ?? "fa-microphone"
-        );
+        const res = this.rtc.callActions.find(
+            (action) => action.id === this.rtc.lastSelfCallAction
+        )?.icon;
+        return (typeof res === "function" ? res() : res) ?? "fa fa-microphone";
     }
 }
 
