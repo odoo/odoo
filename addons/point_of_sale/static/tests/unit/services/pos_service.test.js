@@ -138,13 +138,21 @@ describe("pos_store.js", () => {
         expect(store.getOrder().lines[0].qty).toBe(4);
     });
 
+    test("changesToOrderNoPrepCateg", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const orderChange = store.changesToOrder(order, new Set([]), false);
+        expect(orderChange.new.length).toBe(0);
+        expect(orderChange.cancelled.length).toBe(0);
+    });
     test("generateReceiptsDataToPrint", async () => {
         const store = await setupPosEnv();
         const pos_categories = store.models["pos.category"].getAll().map((c) => c.id);
         const order = await getFilledOrder(store);
         order.lines[1].setNote('[{"text":"Wait","colorIndex":0}]');
+
         order.lines[0].setCustomerNote("Test Orderline Customer Note");
-        const orderChange = store.changesToOrder(order, store.config.preparationCategories, false);
+        const orderChange = store.changesToOrder(order, new Set([...pos_categories]), false);
 
         const { orderData, changes } = store.generateOrderChange(
             order,
