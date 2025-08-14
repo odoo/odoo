@@ -164,6 +164,7 @@ class TestWebsocketCaryall(WebsocketCase):
         self.assertNotIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
 
     def test_trigger_notification(self):
+<<<<<<< f451b71f3d5877940b5e0903c43bd78d5e95ab76
         websocket = self.websocket_connect()
         self.subscribe(websocket, ['my_channel'], self.env['bus.bus']._bus_last_id())
         self.env['bus.bus']._sendone('my_channel', 'notif_type', 'message')
@@ -180,6 +181,66 @@ class TestWebsocketCaryall(WebsocketCase):
         self.assertEqual(1, len(notifications))
         self.assertEqual(notifications[0]['message']['type'], 'notif_type')
         self.assertEqual(notifications[0]['message']['payload'], 'another_message')
+||||||| 7119080afbdd12d3c191e0bfce53304244e16428
+        original_subscribe = Websocket.subscribe
+        odoo_ws = None
+
+        def patched_subscribe(self, *args):
+            nonlocal odoo_ws
+            odoo_ws = self
+            original_subscribe(self, *args)
+
+        with patch.object(Websocket, 'subscribe', patched_subscribe):
+            websocket = self.websocket_connect()
+            self.env['bus.bus']._sendone('my_channel', 'notif_type', 'message')
+            websocket.send(json.dumps({
+                'event_name': 'subscribe',
+                'data': {'channels': ['my_channel'], 'last': 0}
+            }))
+
+            notifications = json.loads(websocket.recv())
+            self.assertEqual(1, len(notifications))
+            self.assertEqual(notifications[0]['message']['type'], 'notif_type')
+            self.assertEqual(notifications[0]['message']['payload'], 'message')
+
+            self.env['bus.bus']._sendone('my_channel', 'notif_type', 'another_message')
+            odoo_ws.trigger_notification_dispatching()
+
+            notifications = json.loads(websocket.recv())
+            # First notification has been received, we should only receive
+            # the second one.
+            self.assertEqual(1, len(notifications))
+            self.assertEqual(notifications[0]['message']['type'], 'notif_type')
+            self.assertEqual(notifications[0]['message']['payload'], 'another_message')
+=======
+        original_subscribe = Websocket.subscribe
+        odoo_ws = None
+
+        def patched_subscribe(self, *args):
+            nonlocal odoo_ws
+            odoo_ws = self
+            original_subscribe(self, *args)
+
+        with patch.object(Websocket, 'subscribe', patched_subscribe):
+            websocket = self.websocket_connect()
+            bus_last_id = self.env['bus.bus'].sudo().search([], limit=1, order='id desc').id or 0
+            self.env['bus.bus']._sendone('my_channel', 'notif_type', 'message')
+            self.subscribe(websocket, ["my_channel"], bus_last_id)
+            notifications = json.loads(websocket.recv())
+            self.assertEqual(1, len(notifications))
+            self.assertEqual(notifications[0]['message']['type'], 'notif_type')
+            self.assertEqual(notifications[0]['message']['payload'], 'message')
+
+            self.env['bus.bus']._sendone('my_channel', 'notif_type', 'another_message')
+            odoo_ws.trigger_notification_dispatching()
+
+            notifications = json.loads(websocket.recv())
+            # First notification has been received, we should only receive
+            # the second one.
+            self.assertEqual(1, len(notifications))
+            self.assertEqual(notifications[0]['message']['type'], 'notif_type')
+            self.assertEqual(notifications[0]['message']['payload'], 'another_message')
+>>>>>>> 3f7f220a68aa1e4fecdcd170a5bc10e5bd55c54f
 
     def test_subscribe_higher_last_notification_id(self):
         server_last_notification_id = self.env['bus.bus'].sudo().search([], limit=1, order='id desc').id or 0
