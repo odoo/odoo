@@ -63,6 +63,8 @@ class AccountEdiXmlUBLNL(models.AbstractModel):
         # Careful ! [BR-42]-Each Invoice line allowance (BG-27) shall have an Invoice line allowance reason (BT-139)
         # or an Invoice line allowance reason code (BT-140).
         for vals in vals_list:
+            if vals['allowance_charge_reason_code'] == 95:
+                vals['allowance_charge_reason'] = 'Discount'
             if vals.get('allowance_charge_reason'):
                 vals.pop('allowance_charge_reason_code')
         return vals_list
