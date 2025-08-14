@@ -101,14 +101,25 @@ class PosSelfOrderController(http.Controller):
                 original_total = sum(line.combo_line_ids.mapped("combo_item_id").combo_id.mapped("base_price"))
                 remaining_total = lst_price
                 factor = lst_price / original_total if original_total > 0 else 1
+                combos_left_qty = {}
+
+                for pos_order_line in line.combo_line_ids:
+                    combo_id = pos_order_line.combo_item_id.combo_id
+                    if combo_id.id not in combos_left_qty:
+                        combos_left_qty[combo_id.id] = combo_id.qty_free
 
                 for i, pos_order_line in enumerate(line.combo_line_ids):
                     child_product = pos_order_line.product_id
-                    price_unit = float_round(pos_order_line.combo_item_id.combo_id.base_price * factor, precision_digits=sale_price_digits)
-                    remaining_total -= price_unit
+                    combo_id = pos_order_line.combo_item_id.combo_id
+                    if combos_left_qty[combo_id.id] > 0:
+                        price_unit = float_round(pos_order_line.combo_item_id.combo_id.base_price * factor / pos_order_line.combo_item_id.combo_id.qty_free, precision_digits=sale_price_digits)
+                        remaining_total -= price_unit * pos_order_line.qty
+                        combos_left_qty[combo_id.id] -= pos_order_line.qty
+                    else:
+                        price_unit = combo_id.base_price
 
                     if i == len(line.combo_line_ids) - 1:
-                        price_unit += remaining_total
+                        price_unit += float_round(remaining_total / pos_order_line.qty, precision_digits=sale_price_digits)
 
                     selected_attributes = pos_order_line.attribute_value_ids
                     price_extra_child = sum(attr.price_extra for attr in selected_attributes)
