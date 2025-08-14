@@ -444,7 +444,9 @@ class PaymentProvider(models.Model):
 
     def _build_request_url(self, endpoint, *, is_proxy_request=False, version=1, **kwargs):
         if self.code != 'stripe':
-            return super()._build_request_url(endpoint, **kwargs)
+            return super()._build_request_url(
+                endpoint, is_proxy_request=is_proxy_request, version=version, **kwargs
+            )
         if is_proxy_request:
             return url_join(const.PROXY_URL, f'{version}/{endpoint}')
         return url_join('https://api.stripe.com/v1/', endpoint)
@@ -480,7 +482,9 @@ class PaymentProvider(models.Model):
 
     def _parse_response_content(self, response, *, is_proxy_request=False, **kwargs):
         if self.code != 'stripe' or not is_proxy_request:
-            return super()._parse_response_content(response, **kwargs)
+            return super()._parse_response_content(
+                response, is_proxy_request=is_proxy_request, **kwargs
+            )
         return self._parse_proxy_response(response)
 
     def _get_stripe_extra_request_headers(self):
