@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-03 08:43+0000\n"
-"PO-Revision-Date: 2025-08-07 08:40+0000\n"
+"PO-Revision-Date: 2025-08-14 13:55+0000\n"
 "Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
 "odoo-18/crm/sr_Latn/>\n"
@@ -85,7 +85,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "%s's opportunity"
-msgstr ""
+msgstr "%s prilika"
 
 #. module: crm
 #. odoo-javascript
@@ -100,6 +100,8 @@ msgid ""
 "<b>Drag &amp; drop opportunities</b> between columns as you progress in your "
 "sales cycle."
 msgstr ""
+"<b>Prevuci &amp; ispusti prilike</b> između kologa u skladu sa napretkom u "
+"vašem prodajnom ciklusu."
 
 #. module: crm
 #. odoo-javascript
@@ -130,6 +132,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "<i class=\"fa fa-info-circle me-2\" title=\"Assigned Lead Count\"/>"
 msgstr ""
+"<i class=\"fa fa-info-circle me-2\" title=\"Brojač dodeljenih lidova\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -147,6 +150,9 @@ msgid ""
 "title=\"By saving this change, the customer email will also be updated.\" "
 "invisible=\"not partner_email_update\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" title="
+"\"Čuvanjem ove promene, email korisnika će takođe biti ažuriran.\" invisible="
+"\"not partner_email_update\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -155,6 +161,9 @@ msgid ""
 "title=\"By saving this change, the customer phone number will also be "
 "updated.\" invisible=\"not partner_phone_update\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" title="
+"\"Čuvanjem ove promene, broj telefona korisnika će takođe biti ažuriran.\" "
+"invisible=\"not partner_phone_update\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -164,6 +173,10 @@ msgid ""
 "                                    <span class=\"o_stat_text\" "
 "invisible=\"duplicate_lead_count &gt; 1\">Similar Lead</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; 2\">Slični "
+"lidovi</span>\n"
+"                                    <span class=\"o_stat_text\" invisible="
+"\"duplicate_lead_count &gt; 1\">Sličan lid</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
@@ -172,6 +185,9 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"use_leads\">Opportunities</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"not use_leads\">Lidovi</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"use_leads\""
+">Prilike</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
@@ -181,7 +197,7 @@ msgstr "<span class=\"o_stat_text\"> Lidovi</span>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span class=\"oe_grey p-2 text-nowrap\"> at </span>"
-msgstr ""
+msgstr "<span class=\"oe_grey p-2 text-nowrap\"> u </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -191,11 +207,15 @@ msgid ""
 "                                        <span class=\"oe_grey p-2\" "
 "groups=\"!crm.group_use_recurring_revenues\"> at </span>"
 msgstr ""
+"<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + "
+"</span>\n"
+"                                        <span class=\"oe_grey p-2\" groups="
+"\"!crm.group_use_recurring_revenues\"> u </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span class=\"oe_grey p-2\"> %</span>"
-msgstr ""
+msgstr "<span class=\"oe_grey p-2\"> %</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
@@ -210,7 +230,7 @@ msgstr "<span class=\"oe_inline\"> / </span>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "<span class=\"text-bg-danger\">Lost</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-danger\">Izgubljeno</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -218,6 +238,8 @@ msgid ""
 "<span> leads assigned this month\n"
 "                            on a maximum of </span>"
 msgstr ""
+"<span> lidova dodeljenih ovog meseca\n"
+"                            na najviše od </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -227,7 +249,7 @@ msgstr "<span>Očekivani prihodi:</span>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "<span>Merged the Lead/Opportunity</span>"
-msgstr ""
+msgstr "<span>Spojio/la je Lid/Priliku</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -240,6 +262,13 @@ msgid ""
 "                                    specified otherwise.\n"
 "                                </span>"
 msgstr ""
+"<span>Periodično dodelite lidove na osnovu pravila</span><br/>\n"
+"                                <span invisible="
+"\"not crm_use_auto_assignment\">\n"
+"                                    Svi prodajni timovi će koristiti ova "
+"podešavanja kao podrazumevana osim ako\n"
+"                                    nije navedeno drugačije.\n"
+"                                </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -355,6 +384,116 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\""
+"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style="
+"\"padding: 24px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"100%\" style=\"background-color: white; padding: 0; border-"
+"collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Vaš Lid/"
+"Prilija</span><br>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;"
+"\" t-out=\"object.name or ''\">Interesovanje za vaše proizvode</span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src="
+"\"/logo.png?company={{ object.company_id.id }}\" style="
+"\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt="
+"\"object.company_id.name\">\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                    <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
+"0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            Zdravo <t t-out="
+"\"object.partner_id and object.partner_id.name or ''\">Deco "
+"Addict</t>,<br><br>\n"
+"                            Dobro došli u <t t-out="
+"\"object.company_id.name or ''\">Moja Kompanija (San Francisko)</t>.\n"
+"                            Drago mi je da se upoznajemo! Sada kada ste nam "
+"se pridružili, otkrićete šta <t t-out=\"object.company_id.name or ''\">Moja "
+"Kompanija (San Francisko)</t> ima da ponudi. Moje ime je <t t-out="
+"\"object.user_id.name or ''\">Marc Demo</t> i ja ću Vam pomoći da dobijete "
+"najviše od Odoo-a. Možemo li da planiramo kratki demo uskoro?<br>\n"
+"                            Slobodno se obratite u bilo koje vreme!<br><br>\n"
+"                            Srdačno,<br>\n"
+"                            <t t-if=\"object.user_id\">\n"
+"                                <b><t t-out=\"object.user_id.name or ''\""
+">Marc Demo</t></b>\n"
+"                                <br>Email: <t t-out="
+"\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
+"                                <br>Phone: <t t-out="
+"\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                            </t>\n"
+"                            <t t-else=\"\">\n"
+"                                <t t-out=\"object.company_id.name or ''\""
+">Moja Kompanija (San Francisko)</t>\n"
+"                            </t>\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; "
+"font-size:11px;\">\n"
+"            <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\">\n"
+"            <b t-out=\"object.company_id.name or ''\">Moja Kompanija (San "
+"Francisko)</b><br>\n"
+"            <div style=\"color: #999999;\">\n"
+"                <t t-out=\"object.company_id.phone or ''\">+1 "
+"650-123-4567</t>\n"
+"                <t t-if=\"object.company_id.email\">\n"
+"                    | <a t-attf-href="
+"\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none;"
+" color: #999999;\" t-out=\"object.company_id.email or ''\""
+">info@yourcompany.com</a>\n"
+"                </t>\n"
+"                <t t-if=\"object.company_id.website\">\n"
+"                    | <a t-attf-href="
+"\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; "
+"color: #999999;\" t-out=\"object.company_id.website or ''\""
+">http://www.example.com</a>\n"
+"                </t>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    Platformu pokreće <a target=\"_blank\" href="
+"\"https://www.odoo.com?utm_source=db&amp;utm_medium=email\" style="
+"\"color: #875A7B;\">Odoo</a>\n"
+"</td></tr>\n"
+"</table>\n"
+"        "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
@@ -374,18 +513,23 @@ msgid ""
 "Click on the grey area of the progress bar to see all opportunities that "
 "have no next activity."
 msgstr ""
+"Odličan savet za povećanje efikasnosti prodaje je da uvek definišete sledeći "
+"korak za svaku priliku. Da biste upravljali tekućim aktivnostima, kliknite "
+"na bilo koji status trake napretka da biste filtrirali prilike na osnovu "
+"statusa njihovih sledećih aktivnosti. Kliknite na sivu oblast trake napretka "
+"da biste videli sve prilike koje nemaju sledeću aktivnost."
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "A new lead has been created and is not assigned to any team."
-msgstr ""
+msgstr "Novi lid je kreiran i nije dodeljen nijednom timu."
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "A new lead has been created for the team \"%(team_name)s\"."
-msgstr ""
+msgstr "Novi lid je kreiran za tim \"%(team_name)s\"."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -431,7 +575,7 @@ msgstr "Analiza aktivnosti"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users__target_sales_done
 msgid "Activities Done Target"
-msgstr ""
+msgstr "Završene aktivnosti Cilj"
 
 #. module: crm
 #: model:ir.model,name:crm.model_mail_activity
@@ -452,7 +596,7 @@ msgstr "Dekoracija izuzeća aktivnosti"
 #. module: crm
 #: model:ir.ui.menu,name:crm.mail_activity_plan_menu_config_lead
 msgid "Activity Plans"
-msgstr ""
+msgstr "Planovi aktivnosti"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_state
@@ -487,6 +631,9 @@ msgid ""
 "                    (e.g. \"Demo Preparation Process\", "
 "\"Qualification\", ...)"
 msgstr ""
+"Planovi aktivnosti se koriste da bi se lista aktivnosti dodelila u samo "
+"nekoliko klikova\n"
+"                    (npr. \"Proces pripreme Demo-a\", \"Kvalifikacija\", ...)"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -510,6 +657,8 @@ msgid ""
 "Additional filter domain when fetching unassigned leads to allocate to the "
 "team."
 msgstr ""
+"Dodatni domen filtera prilikom preuzimanja nedodeljenih lidova za dodelu "
+"timu."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -535,17 +684,17 @@ msgstr "Bezbednost alias kontakta"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain_id
 msgid "Alias Domain"
-msgstr ""
+msgstr "Alias domen"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain
 msgid "Alias Domain Name"
-msgstr ""
+msgstr "Naziv alias domena"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_full_name
 msgid "Alias Email"
-msgstr ""
+msgstr "Alias Email"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_name
@@ -555,12 +704,12 @@ msgstr "Naziv aliasa"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "Status aliasa"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "Status aliasa procenjen na osnovu poslednje primljene poruke."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_model_id
@@ -571,7 +720,7 @@ msgstr "Model aliasa"
 #. odoo-javascript
 #: code:addons/crm/static/src/js/tours/crm.js:0
 msgid "All set. Let’s <b>Schedule</b> it."
-msgstr ""
+msgstr "Sve je podešeno. Hajde da ga <b>Zakažemo</b> ."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -581,7 +730,7 @@ msgstr "Analiza"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__deduplicate
 msgid "Apply deduplication"
-msgstr ""
+msgstr "Primeni deduplikaciju"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -602,6 +751,10 @@ msgid ""
 "                                        To work with the CRM, you should <a "
 "name=\"%d\" type=\"action\" tabindex=\"-1\">join a team.</a>"
 msgstr ""
+"Kako niste član nijednog prodajnog tima, vama se prikazuje Levak <b>prvog "
+"tima kao podrazumevani.</b>\n"
+"                                        Da radite sa CRM-om, trebalo bi da "
+"se <a name=\"%d\" type=\"action\" tabindex=\"-1\">priključite timu.</a>"
 
 #. module: crm
 #. odoo-python
