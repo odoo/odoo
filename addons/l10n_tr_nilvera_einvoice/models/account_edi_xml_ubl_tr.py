@@ -179,12 +179,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         commercial_partner = partner.commercial_partner_id
 
         party_node = {
-            'cac:PartyIdentification': {
-                'cbc:ID': {
-                    '_text': partner.vat,
-                    'schemeID': 'VKN' if partner.is_company else 'TCKN',
-                }
-            },
+            'cac:PartyIdentification': self._get_party_identification_node_list(partner),
             'cac:PartyName': {
                 'cbc:Name': {'_text': partner.display_name}
             },
@@ -217,6 +212,27 @@ class AccountEdiXmlUblTr(models.AbstractModel):
                 'cbc:FamilyName': {'_text': name_parts[1] if len(name_parts) > 1 else '\u200B'},
             }
         return party_node
+
+    def _get_party_identification_node_list(self, partner):
+        official_categories = partner.category_id._get_l10n_tr_official_categories()
+        return [
+            {
+                'cbc:ID': {
+                    '_text': partner.vat,
+                    'schemeID': 'VKN' if partner.is_company else 'TCKN',
+                },
+            },
+            *(
+                {
+                    'cbc:ID': {
+                        '_text': category.name,
+                        'schemeID': category.parent_id.name,
+                    },
+                }
+                for category in partner.category_id
+                if category.parent_id in official_categories
+            ),
+        ]
 
     def _get_tax_category_node(self, vals):
         # OVERRIDES account.edi.ubl_21
