@@ -32,7 +32,7 @@
                 <i class="fa fa-cog me-1" role="img"/>Theme
             </button>
         </div>
-        <div class="o-tab-content overflow-y-auto overflow-x-hidden flex-grow-1">
+        <div class="o-tab-content overflow-x-hidden flex-grow-1" t-att-class="state.activeTab === 'blocks' ? 'overflow-y-scroll' : 'overflow-y-auto'">
             <t t-if="state.activeTab === 'blocks'">
                 <BlockTab snippetsName="props.snippetsName" />
             </t>

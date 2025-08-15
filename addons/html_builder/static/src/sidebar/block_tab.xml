@@ -34,9 +34,14 @@
         </t>
 
         <div class="o_snippets_container" id="snippet_content">
-            <div class="o_snippets_container_header"><span>Inner Content</span></div>
+            <div class="o_snippets_container_header d-flex  align-items-center justify-content-between">
+                <span>Inner Content</span>
+                <div class="input-group input-group-sm" style="max-width: 150px;">
+                    <input type="text" class="form-control text-white" placeholder="Search..." t-model="state.innerSearch"/>
+                </div>
+            </div>
             <div class="o_snippets_container_body">
-                <t t-foreach="this.snippetModel.snippetInnerContents" t-as="snippet" t-key="snippet.id">
+                <t t-foreach="innerContent" t-as="snippet" t-key="snippet.id">
                     <Snippet snippet="snippet"
                              snippetModel="this.snippetModel"
                              onClickHandler.bind="showSnippetTooltip"
