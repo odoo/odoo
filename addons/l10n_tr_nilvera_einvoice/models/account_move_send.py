@@ -26,6 +26,16 @@ class AccountMoveSend(models.AbstractModel):
     def _get_alerts(self, moves, moves_data):
         alerts = super()._get_alerts(moves, moves_data)
         moves_to_check = moves.filtered(self._is_tr_nilvera_applicable)
+        if tr_companies_missing_required_codes := moves_to_check.company_id.filtered(
+            lambda c: c.country_code == 'TR' and not (c.partner_id.category_id.parent_id and self.env["res.partner.category"]._get_l10n_tr_official_mandatory_categories())
+        ):
+            alerts["tr_companies_missing_required_codes"] = {
+                "message": _("Please ensure that your company contact has either the 'MERSISNO' or 'TICARETSICILNO' tag with a value assigned."),
+                "action_text": _("View Company(s)"),
+                "action": tr_companies_missing_required_codes.partner_id._get_records_action(name=_("Check tags on company(s)")),
+                "level": "danger",
+            }
+
         if tr_partners_missing_address := moves_to_check.filtered(
                 lambda m: 'tr_nilvera' in moves_data[m]['extra_edis'] and (m.partner_id.country_code != 'TR' or not m.partner_id.city or not m.partner_id.state_id or not m.partner_id.street)
         ).partner_id:
@@ -51,10 +61,9 @@ class AccountMoveSend(models.AbstractModel):
             lambda p: p.l10n_tr_nilvera_customer_status == "einvoice" and not p.ref
         ):
             alerts["critical_partner_data_missing"] = {
-                "message": _("The following E-Invoice partner(s) must have the reference field set to the tax office name."),
+                "message": _("The following partner(s) are either not Turkish or are missing one of those fields: city, state and street."),
                 "action_text": _("View Partner(s)"),
-                "action": tr_einvoice_partners_missing_ref._get_records_action(name=_("Check reference on Partner(s)")
-                ),
+                "action": tr_einvoice_partners_missing_ref._get_records_action(name=_("Check reference on Partner(s)")),
                 "level": "danger",
             }
 
