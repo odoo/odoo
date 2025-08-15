@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_config_view_form_inherit_pos_imin" model="ir.ui.view">
+        <field name="name">pos.config.view.form.inherit.pos.imin</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='iface_cashdrawer']/../.." position="attributes">
+                <attribute name="invisible">False</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
