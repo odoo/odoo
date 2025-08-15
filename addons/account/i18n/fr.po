@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-07 18:36+0000\n"
-"PO-Revision-Date: 2025-08-14 01:11+0000\n"
+"PO-Revision-Date: 2025-08-15 01:10+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-17/account/"
 "fr/>\n"
@@ -1017,8 +1017,7 @@ msgstr "<span class=\"o_stat_text\">1 paiement</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span class=\"o_stat_text\">Cash Basis Entries</span>"
-msgstr ""
-"<span class=\"o_stat_text\">Écritures de comptabilité de trésorerie</span>"
+msgstr "<span class=\"o_stat_text\">Pièces comptables de trésorerie</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -1485,11 +1484,10 @@ msgid ""
 "cash\n"
 "                payments on a daily basis."
 msgstr ""
-"Une caisse enregistreuse vous permet de gérer les transactions d'espèce dans "
-"ton journal d'espèce\n"
-"Cette fonctionnalité offre un moyen facile de suivre les paiements en "
-"espèces \n"
-" sur une base quotidienne"
+"Une caisse enregistreuse vous permet de gérer les transactions en espèces "
+"dans le journal correspondant.\n"
+"                Cette fonctionnalité offre un moyen facile de suivre \n"
+"                les paiements en espèces au quotidien."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_defaults
@@ -2110,7 +2108,7 @@ msgstr "Date comptable"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Accounting Entries"
-msgstr "Écritures comptables"
+msgstr "Pièces comptables"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4699,7 +4697,7 @@ msgstr "Créer"
 #. module: account
 #: model:ir.model,name:account.model_account_automatic_entry_wizard
 msgid "Create Automatic Entries"
-msgstr "Créer des écritures automatiques"
+msgstr "Créer les pièces comptables automatiquement"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -6206,8 +6204,9 @@ msgstr "Avoir brouillon"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_show_draft
+#, fuzzy
 msgid "Draft Entries"
-msgstr "Écritures brouillon"
+msgstr "Pièces comptables brouillon"
 
 #. module: account
 #. odoo-python
@@ -6519,7 +6518,7 @@ msgstr "Les écritures ne sont pas du même compte : %s"
 #, python-format
 msgid "Entries can only be created for a single company at a time."
 msgstr ""
-"Les écritures ne peuvent être créées que pour une seule entreprise à la fois."
+"Les écritures ne peuvent être créées que pour une seule société à la fois."
 
 #. module: account
 #. odoo-python
@@ -6539,8 +6538,9 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#, fuzzy
 msgid "Entries to Review"
-msgstr "Écritures à vérifier"
+msgstr "Pièces comptables à vérifier"
 
 #. module: account
 #. odoo-python
@@ -7120,13 +7120,14 @@ msgstr "Forcer la taxe à être gérée comme un prix TTC."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__currency_id
+#, fuzzy
 msgid ""
 "Forces all journal items in this account to have a specific currency (i.e. "
 "bank journals). If no currency is set, entries can use any currency."
 msgstr ""
-"Force toutes les écritures comptables de ce compte à avoir une devise "
-"spécifique (c'est-à-dire les journaux bancaires). Si aucune devise n'est "
-"définie, les entrées peuvent utiliser n'importe quelle devise."
+"Force toutes les écritures comptables de ce compte à utiliser cette devise "
+"spécifique (par ex. les journaux bancaires). Si aucune devise n'est définie, "
+"les entrées peuvent utiliser n'importe quelle devise."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__foreign_currency_id
@@ -7443,8 +7444,9 @@ msgstr "Routage HTTP"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
+#, fuzzy
 msgid "Has Accounting Entries"
-msgstr "Présente des écritures comptables"
+msgstr "Présente des pièces comptables"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_update_fpos
@@ -7750,10 +7752,11 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+#, fuzzy
 msgid "If set, this account is used to automatically balance entries."
 msgstr ""
-"Si défini, ce compte est utilisé pour équilibrer automatiquement les "
-"écritures."
+"Si défini, ce compte est utilisé pour équilibrer automatiquement les pièces "
+"comptables."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__non_trade
@@ -11216,11 +11219,11 @@ msgstr "Partenaires"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-#, python-format
+#, fuzzy, python-format
 msgid "Partners that are used in hashed entries cannot be merged."
 msgstr ""
-"Les partenaires qui sont utilisés dans les écritures hachées ne peuvent pas "
-"être fusionnés."
+"Les partenaires qui sont utilisés dans les pièces comptables hachées ne "
+"peuvent pas être fusionnés."
 
 #. module: account
 #. odoo-python
