@@ -528,7 +528,7 @@ export class FormOptionPlugin extends Plugin {
 
         // Synchronize the possible values with the fields whose visibility
         // depends on the current field
-        const newValuesText = field.records.map((record) => record.id);
+        const newValuesText = field.records ? field.records.map((record) => record.id) : [];
         const inputEls = oldFieldEl.querySelectorAll(".s_website_form_input, option");
         const inputName = oldFieldEl.querySelector(".s_website_form_input")?.name;
         const formEl = oldFieldEl.closest(".s_website_form");
