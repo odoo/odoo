@@ -37,20 +37,17 @@ class Project(models.Model):
                 self.env['account.move.line'].sudo()._query_analytic_accounts(),
             )
         )
-        # account_move_line__move_id is the alias of the joined table account_move in the query
-        # we can use it, because of the "move_id.move_type" clause in the domain of the query, which generates the join
-        # this is faster than a search_read followed by a browse on the move_id to retrieve the move_type of each account.move.line
-        query_string, query_param = query.select('price_subtotal', 'parent_state', 'account_move_line.currency_id', 'account_move_line.analytic_distribution', 'account_move_line__move_id.move_type', 'move_id')
+        query_string, query_param = query.select('balance', 'parent_state', 'account_move_line.company_currency_id', 'account_move_line.analytic_distribution', 'move_id', 'account_move_line.date')
         self._cr.execute(query_string, query_param)
         bills_move_line_read = self._cr.dictfetchall()
         if bills_move_line_read:
             # Get conversion rate from currencies to currency of the current company
-            currency_ids = OrderedSet(bml['currency_id'] for bml in bills_move_line_read)
+            currency_ids = OrderedSet(bml['company_currency_id'] for bml in bills_move_line_read)
             amount_invoiced = amount_to_invoice = 0.0
             move_ids = set()
             for moves_read in bills_move_line_read:
-                price_subtotal = self.env['res.currency'].browse(moves_read['currency_id']).with_prefetch(currency_ids)._convert(
-                    from_amount=moves_read['price_subtotal'], to_currency=self.currency_id,
+                line_balance = self.env['res.currency'].browse(moves_read['company_currency_id']).with_prefetch(currency_ids)._convert(
+                    from_amount=moves_read['balance'], to_currency=self.currency_id, date=moves_read['date']
                 )
                 # an analytic account can appear several time in an analytic distribution with different repartition percentage
                 analytic_contribution = sum(
@@ -59,15 +56,9 @@ class Project(models.Model):
                 ) / 100.
                 move_ids.add(moves_read['move_id'])
                 if moves_read['parent_state'] == 'draft':
-                    if moves_read['move_type'] == 'in_invoice':
-                        amount_to_invoice -= price_subtotal * analytic_contribution
-                    else:  # moves_read['move_type'] == 'in_refund'
-                        amount_to_invoice += price_subtotal * analytic_contribution
+                    amount_to_invoice -= line_balance * analytic_contribution
                 else:  # moves_read['parent_state'] == 'posted'
-                    if moves_read['move_type'] == 'in_invoice':
-                        amount_invoiced -= price_subtotal * analytic_contribution
-                    else:  # moves_read['move_type'] == 'in_refund'
-                        amount_invoiced += price_subtotal * analytic_contribution
+                    amount_invoiced -= line_balance * analytic_contribution
             # don't display the section if the final values are both 0 (bill -> vendor credit)
             if amount_invoiced != 0 or amount_to_invoice != 0:
                 costs = profitability_items['costs']
@@ -139,7 +130,7 @@ class Project(models.Model):
     def _get_domain_aal_with_no_move_line(self):
         """ this method is used in order to overwrite the domain in sale_timesheet module. Since the field 'project_id' is added to the "analytic line" model
         in the hr_timesheet module, we can't add the condition ('project_id', '=', False) here. """
-        return [('account_id', '=', self.analytic_account_id.id), ('move_line_id', '=', False), ('category', '!=', 'manufacturing_order')]
+        return [('auto_account_id', '=', self.analytic_account_id.id), ('move_line_id', '=', False), ('category', '!=', 'manufacturing_order')]
 
     def _get_items_from_aal(self, with_action=True):
         domain = self._get_domain_aal_with_no_move_line()

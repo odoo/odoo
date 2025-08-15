@@ -221,6 +221,7 @@
                             </del>
                         </t>
                         <span class="h6 mb-0" t-if="template_price_vals['price_reduce'] or not website.prevent_zero_price_sale" t-esc="template_price_vals['price_reduce']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                        <span class="h6 mb-0" t-elif="any(ptav.price_extra for ptav in product.attribute_line_ids.product_template_value_ids)">&amp;nbsp;</span>
                         <span class="h6 mb-0" t-else="" t-field="website.prevent_zero_price_sale_text"/>
                         <span itemprop="price" style="display:none;" t-esc="template_price_vals['price_reduce']" />
                         <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
@@ -346,7 +347,7 @@
                                     <t t-set="_classes" t-valuef="d-none me-auto d-lg-inline-block"/>
                                 </t>
 
-                                <div t-if="category" class="d-flex align-items-center d-lg-none me-auto">
+                                <div t-if="category" class="d-flex align-items-center d-lg-none me-auto o_not_editable">
                                     <t t-if="not category.parent_id" t-set="backUrl" t-valuef="/shop"/>
                                     <t t-else="" t-set="backUrl" t-value="keep('/shop/category/' + slug(category.parent_id), category=0)"/>
 
@@ -626,8 +627,7 @@
                         </div>
                     </div>
                 </div>
-                <div t-if="opt_wsale_categories"
-                     class="accordion-item">
+                <div t-if="opt_wsale_categories" class="accordion-item d-lg-none">
                     <h2 id="o_wsale_offcanvas_categories_header" class="accordion-header mb-0">
                         <button class="o_wsale_offcanvas_title accordion-button rounded-0 collapsed"
                                 type="button"
@@ -684,7 +684,7 @@
                                         <div t-if="a.display_type == 'color'" class="pt-1 pb-3">
                                             <t t-call="website_sale.o_wsale_offcanvas_color_attribute"/>
                                         </div>
-                                        <div t-elif="a.display_type in ('radio', 'pills', 'select')"
+                                        <div t-elif="a.display_type in ('radio', 'pills', 'select', 'multi')"
                                              class="list-group list-group-flush">
                                             <div t-foreach="a.value_ids" t-as="v" class="list-group-item border-0 ps-0 pb-0">
                                                 <div class="form-check mb-1">
@@ -1053,7 +1053,9 @@
                             <t t-call="website_sale.shop_product_images"/>
                         </div>
                         <div t-attf-class="col-lg-#{image_cols[1]} mt-md-4" id="product_details">
-                            <t t-set="base_url" t-value="product.get_base_url()"/>
+                            <t t-set="base_url" t-value="website.get_base_url()"/>
+                            <!-- TODO: remove next line in master. Stable fix not to break custos. -->
+                            <t t-if="False" t-set="base_url" t-value="product.get_base_url()"/>
                             <h1 itemprop="name" t-field="product.name">Product Name</h1>
                             <span itemprop="url" style="display:none;" t-esc="base_url + product.website_url"/>
                             <span itemprop="image" style="display:none;" t-esc="base_url + website.image_url(product, 'image_1920')" />
@@ -1075,7 +1077,7 @@
                                 <div class="js_product js_main_product mb-3">
                                     <div>
                                         <t t-call="website_sale.product_price"/>
-                                        <small t-if="combination_info['base_unit_price']"
+                                        <small t-if="'base_unit_price' in combination_info"
                                                class="ms-1 text-muted o_base_unit_price_wrapper d-none" groups="website_sale.group_show_uom_price">
                                             <t t-call='website_sale.base_unit_price'/>
                                         </small>
@@ -1093,6 +1095,7 @@
                                     <div id="o_wsale_cta_wrapper" class="d-flex flex-wrap align-items-center">
                                         <t t-set="hasQuantities" t-value="false"/>
                                         <t t-set="hasBuyNow" t-value="false"/>
+                                        <!-- TODO: remove line below in master -->
                                         <t t-set="ctaSizeBig" t-value="not hasQuantities or not hasBuyNow"/>
 
                                         <div id="add_to_cart_wrap" t-attf-class="{{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-flex'}} align-items-center mb-2 me-auto">
@@ -1297,7 +1300,7 @@
             <attribute name="t-value" remove="false" add="true" separator=" "/>
         </xpath>
         <xpath expr="//a[@id='add_to_cart']" position="after">
-            <a role="button" t-attf-class="btn btn-outline-primary o_we_buy_now ms-1 #{'btn-lg' if ctaSizeBig else ''}" href="#">
+            <a role="button" class="btn btn-outline-primary o_we_buy_now ms-1" href="#">
                 <i class="fa fa-bolt me-2"/>
                 Buy now
             </a>
@@ -1314,7 +1317,12 @@
     </template>
 
     <template id="product_price">
-        <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" t-attf-class="product_price mt-2 mb-3 {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-block'}}">
+        <div
+            itemprop="offers"
+            itemscope="itemscope"
+            itemtype="http://schema.org/Offer"
+            t-attf-class="product_price mt-2 mb-3 {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-block'}}"
+        >
             <h3 class="css_editable_mode_hidden">
                 <span class="oe_price"
                       style="white-space: nowrap;"
@@ -1337,7 +1345,11 @@
                     </bdi>
                 </del>
             </h3>
-            <h3 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="str(website.currency_id.decimal_places)">
+            <h3
+                t-if="editable"
+                class="css_non_editable_mode_hidden decimal_precision"
+                t-att-data-precision="str(website.currency_id.decimal_places)"
+            >
                 <span t-field="product.list_price"
                       t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
                 <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
@@ -1527,19 +1539,35 @@
                  t-attf-class="o_cart_product d-flex align-items-stretch gap-3 #{line.linked_line_id and 'optional_product info'} #{not line_last and 'border-bottom pb-4'} #{line_index &gt; 0 and 'pt-4'}"
                  t-attf-data-product-id="#{line.product_id and line.product_id.id}">
                 <t t-if="line.product_id">
-                    <img t-if="line._is_not_sellable_line() and line.product_id.image_128"
-                         t-att-src="image_data_uri(line.product_id.image_128)"
-                         class="o_image_64_max  img rounded"
-                         t-att-alt="line.name_short"/>
-                    <div t-else=""
-                         t-field="line.product_id.image_128"
-                         t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'o_image_64_max rounded'}"/>
+                    <div style="width: 64px">
+                        <!--
+                            Unsellable lines can have unpublished products, but portal users have no
+                            access to unpublished product images. To ensure product images are
+                            always shown for unsellable lines, we use the raw image data as src
+                            (which doesn't require access, unlike the image URL).
+                        -->
+                        <img
+                            t-if="line._is_not_sellable_line() and line.product_id.image_128"
+                            t-att-src="image_data_uri(line.product_id.image_128)"
+                            class="o_image_64_max img rounded"
+                            t-att-alt="line.name_short"
+                        />
+                        <div
+                            t-else=""
+                            t-field="line.product_id.image_128"
+                            t-options="{
+                                'widget': 'image',
+                                'qweb_img_responsive': False,
+                                'class': 'o_image_64_max rounded',
+                            }"
+                        />
+                    </div>
                     <div class="flex-grow-1">
                         <t t-call="website_sale.cart_line_product_link">
                             <h6 t-field="line.name_short" class="d-inline align-top h6 fw-bold"/>
                         </t>
                         <t t-call="website_sale.cart_line_description_following_lines">
-                            <t t-set="div_class" t-valuef="d-none d-md-block"/>
+                            <t t-set="div_class" t-value="''"/>
                         </t>
                         <div>
                             <a href='#'
@@ -1685,7 +1713,7 @@
                      t-as="product"
                      t-attf-class="d-flex gap-3 #{not product_last and 'border-bottom pb-4'} #{product_index &gt; 0 and 'pt-4'}"
                      t-att-data-publish="product.website_published and 'on' or 'off'">
-                    <div>
+                    <div style="width: 64px">
                         <a t-att-href="product.website_url">
                             <span t-field="product.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'o_image_64_max rounded'}"/>
                         </a>
@@ -1756,7 +1784,7 @@
             - xmlid: The id of the xml templated rendered by the controller.
         -->
         <t t-set="step_specific_values" t-value="website._get_checkout_steps(xmlid)"/>
-        <div t-attf-class="#{_container_classes} d-flex #{_form_send_navigation and 'flex-column flex-lg-row align-items-lg-center' or 'flex-column'} pt-4">
+        <div t-attf-class="#{_container_classes} d-flex #{_form_send_navigation and 'flex-column flex-lg-row align-items-lg-center' or 'flex-column'} mb-5 mb-lg-0 pt-4">
             <t t-if="website_sale_order and website_sale_order.website_order_line">
                 <t t-if="xmlid == 'website_sale.payment'">
                     <div t-if="not errors and not website_sale_order.amount_total"
@@ -2218,7 +2246,11 @@
                                  t-if="website_sale_order and website_sale_order.website_order_line">
                                 <div class="card-body p-0 p-lg-4">
                                     <t t-call="website_sale.total"/>
-                                    <t t-call="payment.express_checkout"/>
+                                    <t
+                                        t-if="website.account_on_checkout != 'mandatory' or
+                                              not website.is_public_user()"
+                                        t-call="payment.express_checkout"
+                                    />
                                     <t t-call="website_sale.navigation_buttons"/>
                                 </div>
                             </div>
@@ -2320,7 +2352,7 @@
                         <!-- This div serves as an anchor for the navigation buttons on the mobile
                              view. -->
                         <div t-if="not show_shorter_cart_summary and show_navigation_button"
-                             class="o_cta_navigation_placeholder d-block d-lg-none order-lg-4"/>
+                             class="o_cta_navigation_placeholder d-block d-none d-lg-none order-lg-4"/>
                     </div>
                 </div>
                 <!-- This is the drag-and-drop area for website building blocs at the end of each
@@ -2355,6 +2387,19 @@
                 <a role="button" class="d-none d-md-inline-block btn btn-primary ms-auto" href="/shop/print" target="_blank" aria-label="Print" title="Print"><i class="fa fa-print me-2"></i>Print</a>
             </div>
             <t t-if="tx_sudo.state == 'done'">
+                <div class="mb-4">
+                    <h5>
+                        <em>
+                            <span>Order</span>
+                            <span t-field="order.name" />
+                            <t t-if="order.state == 'sale'">
+                                <i class="fa fa-check-circle ms-1"/>
+                            </t>
+                        </em>
+                    </h5>
+                </div>
+            </t>
+            <t t-if="tx_sudo.state != 'done'">
                 <div class="mb-4">
                     <h5>
                         <em>
@@ -2688,7 +2733,7 @@
             <t t-else="">Categories:</t>
         </button>
         <t t-foreach="categories" t-as="category">
-            <button class="btn btn-link btn-sm p-0" t-out="category.name"
+            <button class="btn btn-link btn-sm p-0 text-wrap" t-out="category.name"
                 t-attf-onclick="location.href='/shop/category/#{slug(category)}';return false;"/>
         </t>
     </template>

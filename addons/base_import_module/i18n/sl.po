@@ -10,14 +10,16 @@
 # Martin Trigaux, 2023
 # Tadej Lupšina <tadej@hbs.si>, 2023
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2023
+# Wil Odoo, 2024
+# Aleš Pipan, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2024-11-18 09:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Matjaz Mozetic <m.mozetic@matmoz.si>, 2023\n"
+"Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +36,9 @@ msgid ""
 "You may need the Enterprise version to install the data module. Please visit https://www.odoo.com/pricing-plan for more information.\n"
 "If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
 msgstr ""
+"\n"
+"Za namestitev podatkovnega modula boste morda potrebovali različico Enterprise. Za več informacij obiščite https://www.odoo.com/pricing-plan.\n"
+"Če potrebujete teme za spletno mesto, jih lahko prenesete z https://github.com/odoo/design-themes.\n"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
@@ -65,20 +70,21 @@ msgstr "Zaključi"
 #, python-format
 msgid "Connection to %s failed The list of industry modules cannot be fetched"
 msgstr ""
+"Povezava %s ni uspela. Seznama industrijskih modulov ni mogoče pridobiti."
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Connection to %s failed, the module %s cannot be downloaded."
-msgstr ""
+msgstr "Povezava z %s ni uspela, modula %s ni mogoče prenesti."
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/controllers/main.py:0
 #, python-format
 msgid "Could not select database '%s'"
-msgstr ""
+msgstr "Ni bilo mogoče izbrati baze podatkov '%s'"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__create_uid
@@ -89,13 +95,6 @@ msgstr "Ustvaril"
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__create_date
 msgid "Created on"
 msgstr "Ustvarjeno"
-
-#. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid ""
-"Demo data should only be used on test databases. Once they are loaded, they "
-"cannot be entirely removed!"
-msgstr ""
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
@@ -112,6 +111,10 @@ msgid ""
 " %(error_message)s \n"
 "\n"
 msgstr ""
+"Napaka pri uvozu modula '%(module)s'.\n"
+"\n"
+" %(error_message)s \n"
+"\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -152,14 +155,9 @@ msgid "Import Module"
 msgstr "Uvozi modul"
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Import demo data"
-msgstr ""
-
-#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
 msgid "Import demo data of module"
-msgstr ""
+msgstr "Uvozi demo podatke modula"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__imported
@@ -181,12 +179,12 @@ msgstr "Namesti"
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Install an Industry"
-msgstr ""
+msgstr "Namestite industrijo"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Install the application"
-msgstr ""
+msgstr "Namestite aplikacijo"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_uid
@@ -197,6 +195,22 @@ msgstr "Zadnji posodobil"
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_date
 msgid "Last Updated on"
 msgstr "Zadnjič posodobljeno"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Load demo data"
+msgstr "Naložite demo podatke"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"Load demo data to test the industry's features with sample records. Do not "
+"load them if this is your production database."
+msgstr ""
+"Naložite predstavitvene podatke za preizkus funkcij panoge z vzorčnimi "
+"zapisi. Ne nalagajte jih, če je to vaša produkcijska baza podatkov."
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
@@ -211,17 +225,22 @@ msgstr ".ZIP datoteka modula"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__module_type
 msgid "Module Type"
-msgstr ""
+msgstr "Vrsta modula"
+
+#. module: base_import_module
+#: model:ir.model,name:base_import_module.model_base_module_uninstall
+msgid "Module Uninstall"
+msgstr "Odstrani modul"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Module file (.zip)"
-msgstr ""
+msgstr "Datoteka modula (.zip)"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__modules_dependencies
 msgid "Modules Dependencies"
-msgstr ""
+msgstr "Odvisnosti modulov"
 
 #. module: base_import_module
 #. odoo-python
@@ -234,32 +253,34 @@ msgstr "Nobena datoteka ni bila poslana."
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Note: you can only import data modules (.xml files and static assets)"
 msgstr ""
+"Opomba: uvozite lahko samo podatkovne module (.xml datoteke in statična "
+"sredstva)"
 
 #. module: base_import_module
 #: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__official
 msgid "Official Apps"
-msgstr ""
+msgstr "Uradne aplikacije"
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Only administrators can install data modules."
-msgstr ""
+msgstr "Podatkovne module lahko namestijo samo skrbniki."
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/controllers/main.py:0
 #, python-format
 msgid "Only administrators can upload a module"
-msgstr ""
+msgstr "Modul lahko naložijo samo skrbniki"
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Only zip files are supported."
-msgstr ""
+msgstr "Podprte so samo zip datoteke."
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__state
@@ -270,22 +291,8 @@ msgstr "Status"
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
-msgid "Studio customizations require Studio"
-msgstr ""
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
 msgid "Studio customizations require the Odoo Studio app."
-msgstr ""
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
-msgid "The following modules will also be installed:\n"
-msgstr ""
+msgstr "Za prilagoditve Studia je potrebna aplikacija Odoo Studio."
 
 #. module: base_import_module
 #. odoo-python
@@ -295,6 +302,8 @@ msgid ""
 "The installation of the data module would fail as the following dependencies"
 " can't be found in the addons-path:\n"
 msgstr ""
+"Namestitev podatkovnega modula ne bi uspela, ker v poti dodatkov ni mogoče "
+"najti naslednjih odvisnosti:\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -303,13 +312,22 @@ msgstr ""
 msgid ""
 "The list of industry applications cannot be fetched. Please try again later"
 msgstr ""
+"Seznama industrijskih aplikacij ni mogoče pridobiti. Poskusite znova "
+"pozneje."
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "The module %s cannot be downloaded"
-msgstr ""
+msgstr "Modula %s ni mogoče prenesti"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Unknown module dependencies:"
+msgstr "Neznane odvisnosti modulov:"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit

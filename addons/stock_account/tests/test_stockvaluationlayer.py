@@ -7,6 +7,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 from odoo.tests import Form, tagged
 from odoo.tests.common import TransactionCase
+from odoo import Command
 
 
 class TestStockValuationCommon(TransactionCase):
@@ -578,6 +579,23 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 0)
         self.assertEqual(self.product1.value_svl, 0)
 
+    def test_rounding_svl_5(self):
+        self.product1.categ_id.property_cost_method = 'average'
+        self._make_in_move(self.product1, 10, unit_cost=16.83)
+        self._make_in_move(self.product1, 10, unit_cost=20)
+        self.assertEqual(self.product1.standard_price, 18.42)
+
+        self._make_out_move(self.product1, 10)
+        out_move = self._make_out_move(self.product1, 9)
+        self.assertEqual(out_move.stock_valuation_layer_ids[0].value, -165.73)
+
+        self.assertEqual(self.product1.value_svl, 18.42)
+        self.assertEqual(self.product1.quantity_svl, 1)
+
+        self._make_out_move(self.product1, 1)
+        self.assertEqual(self.product1.value_svl, 0)
+        self.assertEqual(self.product1.quantity_svl, 0)
+
     def test_return_delivery_2(self):
         self.product1.write({"standard_price": 1})
         move1 = self._make_out_move(self.product1, 10, create_picking=True, force_assign=True)
@@ -599,6 +617,53 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertAlmostEqual(abs(move3.stock_valuation_layer_ids[0].value), abs(move4.stock_valuation_layer_ids[0].value))
         self.assertAlmostEqual(self.product1.value_svl, 25.33)
         self.assertEqual(self.product1.quantity_svl, 2)
+
+    def test_change_quantity_from_other_company(self):
+        """
+        checks that a move on company A from a user logged in company B creates a svl with correct values (the ones from company A)
+        """
+        # Give user access of company A + B, with default A
+        company_A = self.env.company
+        company_B = self.env['res.company'].create({
+            'name': 'Super Company',
+        })
+        self.env.user.write({'company_ids': [(6, 0, [company_A.id, company_B.id])], 'company_id': company_A.id})
+        warehouse_B = self.env.user.with_company(company_B)._get_default_warehouse_id()
+        if not warehouse_B:
+            warehouse_B = self.env['stock.warehouse'].sudo().create({'name': 'WH', 'code': 'WH-B', 'company_id': company_B.id})
+            self.assertEqual(self.env.user.with_company(company_B)._get_default_warehouse_id(), warehouse_B)
+        warehouse_A = self.env.user.with_company(company_A)._get_default_warehouse_id()
+        # set product1 property cost method also in comp B
+        self.product1.with_company(company_B).product_tmpl_id.categ_id.property_cost_method = 'average'
+        # make both in moves so that the product has a standard price of 100 in comp A and 10 in comp B
+        self.env.user.company_id = company_A
+        move_comp_A = self._make_in_move(self.product1, 1, unit_cost=100)
+        self.assertEqual(self.env['stock.valuation.layer'].search([('stock_move_id', '=', move_comp_A.id)]).value, 100)
+        self.env.user.company_id = company_B
+        move_comp_B = self._make_in_move(self.product1, 1, unit_cost=10, create_picking=True, loc_dest=warehouse_B.lot_stock_id, pick_type=warehouse_B.in_type_id)
+        self.assertEqual(self.env['stock.valuation.layer'].search([('stock_move_id', '=', move_comp_B.id)]).value, 10)
+        # make the cross move
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': warehouse_A.in_type_id.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': warehouse_A.lot_stock_id.id,
+            'move_ids': [Command.create({
+                'name': 'moveC',
+                'product_id': self.product1.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': warehouse_A.lot_stock_id.id,
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1,
+                'picking_type_id': warehouse_A.in_type_id.id,
+                'company_id': company_A.id,
+            })],
+        })
+        cross_move = picking.move_ids[0]
+        picking.action_confirm()
+        picking.action_assign()
+        cross_move.picked = True
+        picking._action_done()
+        self.assertEqual(self.env['stock.valuation.layer'].search([('stock_move_id', '=', cross_move.id)]).value, 100)
 
 
 class TestStockValuationFIFO(TestStockValuationCommon):

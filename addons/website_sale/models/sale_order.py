@@ -57,7 +57,11 @@ class SaleOrder(models.Model):
         super(SaleOrder, self - website_orders)._compute_user_id()
         for order in website_orders:
             if not order.user_id:
-                order.user_id = order.website_id.salesperson_id or order.partner_id.parent_id.user_id.id or order.partner_id.user_id.id
+                order.user_id = (
+                    order.website_id.salesperson_id
+                    or order.partner_id.user_id.id
+                    or order.partner_id.parent_id.user_id.id
+                )
 
     @api.model
     def _get_note_url(self):
@@ -628,6 +632,7 @@ class SaleOrder(models.Model):
         # searching on website_published will also search for available website (_search method on computed field)
         return self.env['delivery.carrier'].sudo().search([
             ('website_published', '=', True),
+            *self.env['delivery.carrier']._check_company_domain(self.company_id),
         ]).filtered(lambda carrier: carrier._is_available_for_order(self))
 
     #=== TOOLING ===#

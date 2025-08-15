@@ -38,7 +38,9 @@
                     }"
                 >
                     <div class="position-relative flex-grow-1">
-                        <textarea class="o-mail-Composer-input form-control bg-view px-3 border-0 rounded-3 shadow-none overflow-auto"
+                        <t t-set="inputClasses" t-value="'form-control px-3 border-0 rounded-3'"/>
+                        <textarea class="o-mail-Composer-input bg-view shadow-none overflow-auto"
+                            t-att-class="inputClasses"
                             t-ref="textarea"
                             style="height:40px;"
                             t-on-keydown="onKeydown"
@@ -56,7 +58,8 @@
                              the textarea properly without flicker.
                         -->
                         <textarea
-                            class="o-mail-Composer-fake position-absolute"
+                            class="o-mail-Composer-fake overflow-hidden position-absolute"
+                            t-att-class="inputClasses"
                             t-model="props.composer.textInputContent"
                             t-ref="fakeTextarea"
                             disabled="1"
@@ -85,7 +88,7 @@
                 </div>
                 <div t-if="extended and !props.composer.message" class="d-flex align-items-center mt-2 gap-2">
                     <t t-call="mail.Composer.sendButton"/>
-                    <span t-if="!isSendButtonDisabled and !props.composer.message" t-out="SEND_KEYBIND_TO_SEND"/>
+                    <span t-if="!isSendButtonDisabled and !props.composer.message and !isMobileOS()" t-out="SEND_KEYBIND_TO_SEND"/>
                 </div>
             </div>
             <div class="o-mail-Composer-footer overflow-auto">
@@ -93,7 +96,7 @@
                     t-if="allowUpload and props.composer.attachments.length > 0"
                     attachments="props.composer.attachments"
                     unlinkAttachment.bind="(...args) => attachmentUploader.unlink(...args)"
-                    imagesHeight="50"/>
+                    imagesHeight="75"/>
                 <Picker t-props="picker"/>
             </div>
         </div>
@@ -103,14 +106,14 @@
 </t>
 
 <t t-name="mail.Composer.sendButton">
-    <button t-if="!compact or ui.isSmall" class="o-mail-Composer-send btn o-last"
-        t-att-class="{'btn-primary': extended, 'rounded-0 rounded-end-3': !extended and !compact, 'btn-link align-self-stretch': !extended, 'border-start-0 ms-2 me-3': env.inDiscussApp}"
+    <button t-if="!compact or hasTouch()" class="o-mail-Composer-send btn o-last"
+        t-att-class="{'btn-primary': extended or (hasTouch() and !isSendButtonDisabled), 'rounded-0 rounded-end-3': !extended and !compact, 'btn-link': !extended and !(hasTouch() and !isSendButtonDisabled), 'align-self-stretch': !extended, 'border-start-0 ms-2 me-3': env.inDiscussApp}"
         t-on-click="sendMessage"
         t-att-disabled="isSendButtonDisabled"
         t-att-aria-label="SEND_TEXT"
     >
         <t t-if="thread and thread.type === 'chatter'" t-out="SEND_TEXT"/>
-        <t t-elif="ui.isSmall"><i class="fa fa-paper-plane-o"/></t>
+        <t t-elif="hasTouch()"><i class="fa fa-paper-plane-o"/></t>
         <t t-else="">Send</t>
     </button>
 </t>
@@ -121,7 +124,7 @@
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
             <t t-esc="partner.name"/>
         </strong>
-        <em t-if="partner.email" class="text-600 text-truncate align-self-center">(<t t-esc="partner.email"/>)</em>
+        <span t-if="partner.email" class="text-600 text-truncate align-self-center">(<t t-esc="partner.email"/>)</span>
     </t>
 
     <t t-name="mail.Composer.suggestionThread">
@@ -134,17 +137,17 @@
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
             <t t-esc="option.label"/>
         </strong>
-        <em class="text-600 text-truncate align-self-center">
+        <span class="text-600 text-truncate align-self-center">
             <t t-esc="option.help"/>
-        </em>
+        </span>
     </t>
 
     <t t-name="mail.Composer.suggestionCannedResponse">
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
             <t t-esc="option.source"/>
         </strong>
-        <em class="text-600 text-truncate align-self-center">
+        <span class="text-600 text-truncate align-self-center">
             <t t-esc="option.label"/>
-        </em>
+        </span>
     </t>
 </templates>

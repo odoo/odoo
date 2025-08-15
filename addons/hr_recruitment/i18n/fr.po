@@ -3,17 +3,17 @@
 # 	* hr_recruitment
 # 
 # Translators:
-# Wil Odoo, 2024
 # Jolien De Paepe, 2024
-# Manon Rondou, 2024
+# Wil Odoo, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-05-07 20:35+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -102,6 +102,11 @@ msgid ""
 msgstr ""
 "<span class=\"badge rounded-pill text-bg-danger float-end me-4\" invisible=\"application_status != 'refused'\">Refusé</span>\n"
 "                            <span class=\"badge rounded-pill text-bg-secondary float-end me-4\" invisible=\"application_status != 'archived'\">Archivé</span>"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+msgid "<span class=\"mx-2\">to</span>"
+msgstr "<span class=\"mx-2\">à</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -263,7 +268,7 @@ msgstr ""
 "                    <h3 style=\"color:#9A6C8E;\"><strong>Votre personne de contact :</strong></h3>\n"
 "                    <p>\n"
 "                        <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br>\n"
-"                        <span>Adresse e-mail : <t t-out=\"object.user_id.e-mail or ''\">admin@yourcompany.example.com</t></span><br>\n"
+"                        <span>Adresse e-mail : <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t></span><br>\n"
 "                        <span>Téléphone : <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t></span>\n"
 "                    </p>\n"
 "                    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\">\n"
@@ -414,7 +419,7 @@ msgstr ""
 "                <t t-if=\"object.user_id\">\n"
 "                    Vous serez bientôt contacté par :<br>\n"
 "                    <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br>\n"
-"                    <span>Adresse e-mail : <t t-out=\"object.user_id.e-mail or ''\">admin@yourcompany.example.com</t></span><br>\n"
+"                    <span>Adresse e-mail : <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t></span><br>\n"
 "                    <span>Téléphone : <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t></span>\n"
 "                    <br><br>\n"
 "                </t>\n"
@@ -518,7 +523,7 @@ msgstr ""
 "                    <t t-if=\"object.user_id\">\n"
 "                        -- <br>\n"
 "                        <strong t-out=\"object.user_id.name or ''\">Marc Demo</strong><br>\n"
-"                        Adresse e-mail : <t t-out=\"object.user_id.e-mail or ''\">mark.brown23@example.com</t><br>\n"
+"                        Adresse e-mail : <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t><br>\n"
 "                        Téléphone : <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "                    </t>\n"
 "                    <t t-else=\"\">\n"
@@ -609,7 +614,7 @@ msgstr ""
 "                    <t t-if=\"object.user_id\">\n"
 "                        -- <br>\n"
 "                        <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br>\n"
-"                        Adresse e-mail : <t t-out=\"object.user_id.e-mail or ''\">admin@yourcompany.example.com</t><br>\n"
+"                        Adresse e-mail : <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t><br>\n"
 "                        Téléphone : <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "                    </t>\n"
 "                    <t t-else=\"\">\n"
@@ -2387,8 +2392,8 @@ msgid ""
 "(parent_model) and task (model))"
 msgstr ""
 "Modèle parent de l'alias. Le modèle possédant la référence de l'alias n'est "
-"pas nécessairement le modèle donné par alias_model_id (exemple : project "
-"(parent_model) et task (model))"
+"pas nécessairement le modèle donné par alias_model_id (exemple : projet "
+"(parent_model) et tâche (model))"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2776,7 +2781,6 @@ msgid "Send Interview Survey"
 msgstr "Envoyer un sondage d'entretien"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.action_hr_applicant_mass_sms
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Send SMS"
 msgstr "Envoyer un SMS"
@@ -3319,8 +3323,3 @@ msgstr "par ex. domain.com"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. sales-manager"
 msgstr "par ex. Directeur-commercial"
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
-msgid "to"
-msgstr "à"

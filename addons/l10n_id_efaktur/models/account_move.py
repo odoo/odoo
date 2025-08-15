@@ -26,15 +26,15 @@ class AccountMove(models.Model):
     l10n_id_attachment_id = fields.Many2one('ir.attachment', readonly=True, copy=False)
     l10n_id_csv_created = fields.Boolean('CSV Created', compute='_compute_csv_created', copy=False)
     l10n_id_kode_transaksi = fields.Selection([
-            ('01', '01 Kepada Pihak yang Bukan Pemungut PPN (Customer Biasa)'),
-            ('02', '02 Kepada Pemungut Bendaharawan (Dinas Kepemerintahan)'),
-            ('03', '03 Kepada Pemungut Selain Bendaharawan (BUMN)'),
-            ('04', '04 DPP Nilai Lain (PPN 1%)'),
-            ('05', '05 Besaran Tertentu'),
-            ('06', '06 Penyerahan Lainnya (Turis Asing)'),
-            ('07', '07 Penyerahan yang PPN-nya Tidak Dipungut (Kawasan Ekonomi Khusus/ Batam)'),
-            ('08', '08 Penyerahan yang PPN-nya Dibebaskan (Impor Barang Tertentu)'),
-            ('09', '09 Penyerahan Aktiva ( Pasal 16D UU PPN )'),
+            ('01', '01 To the Parties that is not VAT Collector (Regular Customers)'),
+            ('02', '02 To the Treasurer'),
+            ('03', '03 To other VAT Collectors other than the Treasurer'),
+            ('04', '04 Other Value of VAT Imposition Base'),
+            ('05', '05 Specified Amount (Article 9A Paragraph (1) VAT Law)'),
+            ('06', '06 to individuals holding foreign passports'),
+            ('07', '07 Deliveries that the VAT is not Collected'),
+            ('08', '08 Deliveries that the VAT is Exempted'),
+            ('09', '09 Deliveries of Assets (Article 16D of VAT Law)'),
         ], string='Kode Transaksi', help='Dua digit pertama nomor pajak',
         readonly=False, copy=False,
         compute="_compute_kode_transaksi", store=True)
@@ -136,7 +136,7 @@ class AccountMove(models.Model):
                 raise ValidationError(_('Could not download E-faktur in draft state'))
 
             if not record.l10n_id_tax_number:
-                if not self.l10n_id_need_kode_transaksi:
+                if not record.l10n_id_need_kode_transaksi:
                     raise ValidationError(_('E-faktur is not available for invoices without any taxes.'))
                 raise ValidationError(_('Connect %(move_number)s with E-faktur to download this report', move_number=record.name))
 

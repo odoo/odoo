@@ -113,13 +113,20 @@ class Collector:
 
     def add(self, entry=None, frame=None):
         """ Add an entry (dict) to this collector. """
-        # todo add entry count limit
         self._entries.append({
             'stack': self._get_stack_trace(frame),
             'exec_context': getattr(self.profiler.init_thread, 'exec_context', ()),
             'start': real_time(),
             **(entry or {}),
         })
+
+    def progress(self, entry=None, frame=None):
+        """ Checks if the limits were met and add to the entries"""
+        if self.profiler.entry_count_limit \
+            and self.profiler.entry_count() >= self.profiler.entry_count_limit:
+            self.profiler.end()
+
+        self.add(entry=entry, frame=frame)
 
     def _get_stack_trace(self, frame=None):
         """ Return the stack trace to be included in a given entry. """
@@ -156,7 +163,7 @@ class SQLCollector(Collector):
         self.profiler.init_thread.query_hooks.remove(self.hook)
 
     def hook(self, cr, query, params, query_start, query_time):
-        self.add({
+        self.progress({
             'query': str(query),
             'full_query': str(cr._format(query, params)),
             'start': query_start,
@@ -192,7 +199,7 @@ class PeriodicCollector(Collector):
                 # is incorrectly attributed to the last frame.
                 self._entries[-1]['stack'].append(('profiling', 0, '⚠ Profiler freezed for %s s' % duration, ''))
                 self.last_frame = None  # skip duplicate detection for the next frame.
-            self.add()
+            self.progress()
             last_time = real_time()
             time.sleep(self.frame_interval)
 
@@ -206,14 +213,14 @@ class PeriodicCollector(Collector):
         init_thread = self.profiler.init_thread
         if not hasattr(init_thread, 'profile_hooks'):
             init_thread.profile_hooks = []
-        init_thread.profile_hooks.append(self.add)
+        init_thread.profile_hooks.append(self.progress)
 
         self.__thread.start()
 
     def stop(self):
         self.active = False
         self.__thread.join()
-        self.profiler.init_thread.profile_hooks.remove(self.add)
+        self.profiler.init_thread.profile_hooks.remove(self.progress)
 
     def add(self, entry=None, frame=None):
         """ Add an entry (dict) to this collector. """
@@ -234,6 +241,8 @@ class SyncCollector(Collector):
     name = 'traces_sync'
 
     def start(self):
+        if sys.gettrace() is not None:
+            _logger.error("Cannot start SyncCollector, settrace already set: %s", sys.gettrace())
         assert not self._processed, "You cannot start SyncCollector after accessing entries."
         sys.settrace(self.hook)  # todo test setprofile, but maybe not multithread safe
 
@@ -247,7 +256,7 @@ class SyncCollector(Collector):
         if event == 'call' and _frame.f_back:
             # we need the parent frame to determine the line number of the call
             entry['parent_frame'] = _format_frame(_frame.f_back)
-        self.add(entry, frame=_frame)
+        self.progress(entry, frame=_frame)
         return self.hook
 
     def _get_stack_trace(self, frame=None):
@@ -528,6 +537,8 @@ class Profiler:
         self.filecache = {}
         self.params = params or {}  # custom parameters usable by collectors
         self.profile_id = None
+        self.entry_count_limit = int(self.params.get("entry_count_limit", 0))   # the limit could be set using a smarter way
+        self.done = False
 
         if db is ...:
             # determine database from current thread
@@ -582,6 +593,12 @@ class Profiler:
         return self
 
     def __exit__(self, *args):
+        self.end()
+
+    def end(self):
+        if self.done:
+            return
+        self.done = True
         try:
             for collector in self.collectors:
                 collector.stop()
@@ -616,6 +633,9 @@ class Profiler:
                 gc.enable()
             if self.params:
                 del self.init_thread.profiler_params
+
+    def _get_cm_proxy(self):
+        return _Nested(self)
 
     def _add_file_lines(self, stack):
         for index, frame in enumerate(stack):
@@ -674,6 +694,20 @@ class Profiler:
             "duration": self.duration,
             "collectors": {collector.name: collector.entries for collector in self.collectors},
         }, indent=4)
+
+
+class _Nested:
+    __slots__ = ("__profiler",)
+
+    def __init__(self, profiler):
+        self.__profiler = profiler
+
+    def __enter__(self):
+        self.__profiler.__enter__()
+        return self
+
+    def __exit__(self, *args):
+        return self.__profiler.__exit__(*args)
 
 
 class Nested:

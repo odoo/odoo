@@ -46,7 +46,7 @@
                 <br />
                 <br />
                 <t t-foreach="changes.new" t-as="change" t-key="change_index">
-                    <div class="multiprint-flex">
+                    <div class="multiprint-flex" t-attf-class="{{change.isPartOfCombo ? 'mx-5' : ''}}">
                         <span class="product-quantity" t-esc="change.quantity"/>
                         <span class="product-name" t-esc="change.name"/>
                     </div>

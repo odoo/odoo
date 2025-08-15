@@ -128,17 +128,31 @@ class AccountMove(models.Model):
     def _get_l10n_es_tbai_sequence_and_number(self):
         """Get the TicketBAI sequence a number values for this invoice."""
         self.ensure_one()
+        if self.is_purchase_document(): # Batuz
+            # Check if we are cancelling or not
+            doc = self.env['account.edi.document'].search([('state', '=', 'to_cancel'),
+                                                           ('edi_format_id.code', '=', 'es_tbai')], limit=1)
+            if doc and self.l10n_es_tbai_post_xml:
+                vals = self._get_l10n_es_tbai_values_from_xml({
+                    'sequence': './/CabeceraFactura/SerieFactura',
+                    'number': './/CabeceraFactura/NumFactura',
+                })
+                if vals['sequence'] and vals['number']:
+                    return vals['sequence'], vals['number']
 
-        sequence = self.sequence_prefix.rstrip('/')
+            number = self.ref
+            sequence = "TEST" if self.company_id.l10n_es_edi_test_env else ""
+        else:
+            sequence = self.sequence_prefix.rstrip('/')
 
-        # NOTE non-decimal characters should not appear in the number
-        seq_length = self._get_sequence_format_param(self.name)[1]['seq_length']
-        number = f"{self.sequence_number:0{seq_length}d}"
+            # NOTE non-decimal characters should not appear in the number
+            seq_length = self._get_sequence_format_param(self.name)[1]['seq_length']
+            number = f"{self.sequence_number:0{seq_length}d}"
 
-        sequence = regex_sub(r"[^0-9A-Za-z.\_\-\/]", "", sequence)  # remove forbidden characters
-        sequence = regex_sub(r"\s+", " ", sequence)  # no more than one consecutive whitespace allowed
-        # NOTE (optional) not recommended to use chars out of ([0123456789ABCDEFGHJKLMNPQRSTUVXYZ.\_\-\/ ])
-        sequence += "TEST" if self.company_id.l10n_es_edi_test_env else ""
+            sequence = regex_sub(r"[^0-9A-Za-z.\_\-\/]", "", sequence)  # remove forbidden characters
+            sequence = regex_sub(r"\s+", " ", sequence)  # no more than one consecutive whitespace allowed
+            # NOTE (optional) not recommended to use chars out of ([0123456789ABCDEFGHJKLMNPQRSTUVXYZ.\_\-\/ ])
+            sequence += "TEST" if self.company_id.l10n_es_edi_test_env else ""
         return sequence, number
 
     def _get_l10n_es_tbai_signature_and_date(self):
@@ -258,3 +272,8 @@ class AccountMove(models.Model):
                                'rec': tax})
         return {'iva_values': iva_values,
                 'amount_total': amount_total}
+
+    def _refunds_origin_required(self):
+        if self.l10n_es_tbai_is_required:
+            return True
+        return super()._refunds_origin_required()

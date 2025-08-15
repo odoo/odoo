@@ -3,16 +3,16 @@
 # 	* bus
 # 
 # Translators:
-# Wil Odoo, 2023
-# Fernanda Alvarez, 2024
+# Wil Odoo, 2025
+# Fernanda Alvarez, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,6 +55,11 @@ msgstr "Creado el"
 #: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
 msgid "Display Name"
 msgstr "Nombre en pantalla"
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_http
+msgid "HTTP Routing"
+msgstr "Enrutamiento HTTP"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__id
@@ -113,9 +118,21 @@ msgstr "En línea"
 #. odoo-javascript
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
 #, python-format
 msgid "Refresh"
 msgstr "Actualizar"
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/bus_service.js:0
+#, python-format
+msgid ""
+"Save your work and refresh to get the latest updates and avoid potential "
+"issues."
+msgstr ""
+"Guarda tu trabajo y actualiza la página para obtener las actualizaciones más"
+" recientes y evitar que ocurran problemas."
 
 #. module: bus
 #. odoo-javascript
@@ -123,6 +140,13 @@ msgstr "Actualizar"
 #, python-format
 msgid "The page appears to be out of date."
 msgstr "Parece que la página no está actualizada."
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/bus_service.js:0
+#, python-format
+msgid "The page is out of date"
+msgstr "La página no está actualizada"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
@@ -148,9 +172,9 @@ msgid ""
 " users it is important to change it immediately for security reasons. I will"
 " keep nagging you about it!"
 msgstr ""
-"Está usando la contraseña predeterminada (admin). Si se expone este sistema "
-"a usuarios no confiables, es importante que la cambie inmediatamente por "
-"motivos de seguridad. Seguiré advirtiéndole al respecto."
+"Estás usando la contraseña predeterminada (admin). Por motivos de seguridad,"
+" es importante que la cambies de inmediato si hay usuarios que no deben "
+"tener acceso al sistema."
 
 #. module: bus
 #: model:ir.model,name:bus.model_ir_websocket

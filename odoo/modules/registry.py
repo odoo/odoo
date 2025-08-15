@@ -87,10 +87,6 @@ class Registry(Mapping):
                 return cls.registries[db_name]
             except KeyError:
                 return cls.new(db_name)
-            finally:
-                # set db tracker - cleaned up at the WSGI dispatching phase in
-                # odoo.http.root
-                threading.current_thread().dbname = db_name
 
     @classmethod
     @locked
@@ -946,7 +942,7 @@ class Registry(Mapping):
         """
         if self.test_cr is not None:
             # in test mode we use a proxy object that uses 'self.test_cr' underneath
-            return TestCursor(self.test_cr, self.test_lock)
+            return TestCursor(self.test_cr, self.test_lock, current_test=odoo.modules.module.current_test)
         return self._db.cursor()
 
 

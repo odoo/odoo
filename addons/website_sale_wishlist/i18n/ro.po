@@ -3,11 +3,11 @@
 # 	* website_sale_wishlist
 # 
 # Translators:
-# Cozmin Candea <office@terrabit.ro>, 2024
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
+# Cozmin Candea <office@terrabit.ro>, 2024
 # Martin Trigaux, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2024
-# Maria Muntean, 2024
+# Lyall Kindmurr, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:10+0000\n"
-"Last-Translator: Maria Muntean, 2024\n"
+"Last-Translator: Lyall Kindmurr, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +30,7 @@ msgid ""
 "            Wishlist"
 msgstr ""
 "<i class=\"fa fa-fw fa-heart\"/>\n"
-"            Listă de dorințe"
+"            Favorite"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
@@ -39,12 +39,19 @@ msgid ""
 "wishlist\"/>Add to wishlist"
 msgstr ""
 "<i class=\"fa fa-heart-o me-2\" role=\"img\" aria-label=\"Add to "
-"wishlist\"/>Adaugă la lista de dorințe"
+"wishlist\"/>Adaugă la favorite"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "<small><i class=\"fa fa-trash-o\"/> Remove</small>"
 msgstr "<small><i class=\"fa fa-trash-o\"/> Elimină</small>"
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+msgid ""
+"<span class=\"fa fa-fw fa-shopping-cart\"/>\n"
+"                                                <span class=\"d-none d-md-inline\">Add</span>"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
@@ -55,11 +62,6 @@ msgstr "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Adaugă la favorit
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__active
 msgid "Active"
 msgstr "Activ"
-
-#. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
-msgid "Add <span class=\"d-none d-md-inline\">to Cart</span>"
-msgstr "Adaugă<span class=\"d-none d-md-inline\"> în Coș</span>"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -74,7 +76,7 @@ msgstr "Adaugă la favorite"
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
 msgid "Add to wishlist"
-msgstr "Adaugă la lista de dorințe"
+msgstr "Adaugă la favorite"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_partner
@@ -94,12 +96,12 @@ msgstr "Creat de"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__create_date
 msgid "Created on"
-msgstr "Creat în"
+msgstr "Creat pe"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__currency_id
 msgid "Default Currency"
-msgstr "Moneda implicită"
+msgstr "Monedă implicită"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__display_name
@@ -129,7 +131,7 @@ msgstr "Ultima actualizare pe"
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "My Wishlist"
-msgstr "Favorite mele"
+msgstr "Favoritele mele"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__partner_id
@@ -149,12 +151,12 @@ msgstr "Prețul produsului când a fost adăugat în lista de favorite"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__pricelist_id
 msgid "Pricelist"
-msgstr "Listă de prețuri"
+msgstr "Listă de preț"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist__pricelist_id
 msgid "Pricelist when added"
-msgstr "Listă de prețuri atunci când este adăugată"
+msgstr "Listă de preț când a fost adăugat"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_product_template
@@ -185,7 +187,7 @@ msgstr "Favorite"
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
 msgid "Show/hide empty wishlist"
-msgstr "Afișați/ascundeți lista de dorințe goală"
+msgstr "Afișați/ascundeți listă favorite goală"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_users

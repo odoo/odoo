@@ -2,6 +2,7 @@
 from odoo import models, fields, api, _
 from odoo.osv import expression
 from odoo.exceptions import UserError, RedirectWarning, ValidationError
+from odoo.tools.misc import formatLang
 from dateutil.relativedelta import relativedelta
 import logging
 _logger = logging.getLogger(__name__)
@@ -113,8 +114,8 @@ class AccountMove(models.Model):
     def _get_l10n_ar_codes_used_for_inv_and_ref(self):
         """ List of document types that can be used as an invoice and refund. This list can be increased once needed
         and demonstrated. As far as we've checked document types of wsfev1 don't allow negative amounts so, for example
-        document 60 and 61 could not be used as refunds. """
-        return ['99', '186', '188', '189']
+        document 61 could not be used as refunds. """
+        return ['99', '186', '188', '189', '60']
 
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
@@ -300,7 +301,22 @@ class AccountMove(models.Model):
             if any(tax.tax_group_id.l10n_ar_vat_afip_code and tax.tax_group_id.l10n_ar_vat_afip_code not in ['0', '1', '2'] for tax in line.tax_ids):
                 vat_taxable |= line
 
-        profits_tax_group = self.env.ref(f'account.{self.company_id.id}_tax_group_percepcion_ganancias')
+        profits_tax_group = self.env['account.chart.template'].with_company(self.company_id).ref(
+            'tax_group_percepcion_ganancias',
+            raise_if_not_found=False,
+        )
+        if not profits_tax_group:
+            raise RedirectWarning(
+                message=_(
+                    "A required tax group could not be found (XML ID: %s).\n"
+                    "Please reload your chart template in order to reinstall the required tax group.\n\n"
+                    "Note: You might have to relink your existing taxes to this new tax group.",
+                    'tax_group_percepcion_ganancias',
+                ),
+                action=self.env.ref('account.action_account_config').id,
+                button_text=_("Accounting Settings"),
+            )
+
         return {'vat_amount': sign * sum(vat_taxes.mapped(amount_field)),
                 # For invoices of letter C should not pass VAT
                 'vat_taxable_amount': sign * sum(vat_taxable.mapped(amount_field)) if self.l10n_latam_document_type_id.l10n_ar_letter != 'C' else self.amount_untaxed,
@@ -357,13 +373,22 @@ class AccountMove(models.Model):
         base_lines = self.line_ids.filtered(lambda x: x.display_type == 'product')
         tax_lines = self.line_ids.filtered(lambda x: x.display_type == 'tax')
 
+        involved_tax_group_ids = []
+        for subtotals in self.tax_totals['groups_by_subtotal'].values():
+            for subtotal in subtotals:
+                involved_tax_group_ids.append(subtotal['tax_group_id'])
+        involved_tax_groups = self.env['account.tax.group'].browse(involved_tax_group_ids)
+        nat_int_tax_groups = involved_tax_groups.filtered(lambda tax_group: tax_group.l10n_ar_tribute_afip_code in ('01', '04'))
+        vat_tax_groups = involved_tax_groups.filtered('l10n_ar_vat_afip_code')
+        both_tax_group_ids = nat_int_tax_groups.ids + vat_tax_groups.ids
+
         # Base lines.
         base_line_vals_list = [x._convert_to_tax_base_line_dict() for x in base_lines]
         if include_vat:
             for vals in base_line_vals_list:
                 vals['taxes'] = vals['taxes']\
                     .flatten_taxes_hierarchy()\
-                    .filtered(lambda tax: not tax.tax_group_id.l10n_ar_vat_afip_code)
+                    .filtered(lambda tax: tax.tax_group_id.id not in both_tax_group_ids)
 
         # Tax lines.
         tax_line_vals_list = [x._convert_to_tax_line_dict() for x in tax_lines]
@@ -371,7 +396,7 @@ class AccountMove(models.Model):
             tax_line_vals_list = [
                 x
                 for x in tax_line_vals_list
-                if not x['tax_repartition_line'].tax_id.tax_group_id.l10n_ar_vat_afip_code
+                if x['tax_repartition_line'].tax_id.tax_group_id.id not in both_tax_group_ids
             ]
 
         tax_totals = self.env['account.tax']._prepare_tax_totals(
@@ -381,10 +406,42 @@ class AccountMove(models.Model):
             is_company_currency_requested=self.currency_id != self.company_id.currency_id,
         )
 
+        temp = self.tax_totals
         if include_vat:
-            temp = self.tax_totals
             tax_totals['amount_total'] = temp['amount_total']
             tax_totals['formatted_amount_total'] = temp['formatted_amount_total']
+
+        # RG 5614/2024: Show ARCA VAT and Other National Internal Taxes
+        if self.l10n_latam_document_type_id.code in ['6', '7', '8']:
+
+            # Prepare the subtotals to show in the report
+            currency_symbol = self.currency_id.symbol
+            detail_info = {
+                'vat_taxes': {'name': _("VAT Content %s", currency_symbol), 'tax_amount': 0.0, 'group': 'vat'},
+                'other_taxes': {'name': _("Other National Ind. Taxes %s", currency_symbol), 'tax_amount': 0.0,
+                                'group': 'other'},
+            }
+
+            for subtotals in temp['groups_by_subtotal'].values():
+                for subtotal in subtotals:
+                    tax_group_id = subtotal['tax_group_id']
+                    if tax_group_id in nat_int_tax_groups.ids:
+                        key = 'other_taxes'
+                    elif tax_group_id in vat_tax_groups.ids:
+                        key = 'vat_taxes'
+                    else:
+                        continue  # If not belongs to the needed groups we ignore them
+
+                    detail_info[key]["tax_amount"] += subtotal['tax_group_amount']
+
+            if detail_info['other_taxes']["tax_amount"] == 0.0:
+                detail_info.pop('other_taxes')
+
+            # Format the amounts to show in the report
+            for _item, values in detail_info.items():
+                values["formatted_amount_tax"] = formatLang(self.env, values["tax_amount"])
+
+            tax_totals["detail_ar_tax"] = list(detail_info.values())
 
         return tax_totals
 

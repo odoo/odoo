@@ -45,8 +45,9 @@
             <Record resModel="props.model.resModel" resId="props.record.id" fields="props.model.fields" activeFields="activeFields" mode="'readonly'" values="props.record.rawRecord" t-slot-scope="slot">
                 <t t-foreach="Object.keys(props.model.popoverFieldNodes)" t-as="fieldId" t-key="fieldId">
                     <t t-set="fieldInfo" t-value="props.model.popoverFieldNodes[fieldId]"/>
+                    <t t-set="fieldType" t-value="props.model.fields[fieldId].type"/>
                     <t t-if="!isInvisible(fieldInfo, slot.record)">
-                        <li class="list-group-item d-flex text-nowrap align-items-center" t-att-class="fieldInfo.attrs.class"  t-att-data-tooltip="getFormattedValue(fieldId, slot.record)">
+                        <li class="list-group-item d-flex text-nowrap align-items-center" t-att-class="fieldInfo.attrs.class"  t-att-data-tooltip="fieldType === 'html' ? '' : getFormattedValue(fieldId, slot.record)">
                             <span class="fw-bold me-2" t-if="!fieldInfo.options.noLabel">
                                 <t t-if="fieldInfo.options.icon">
                                     <i t-attf-class="fa-fw {{fieldInfo.options.icon}} text-400" />
@@ -55,8 +56,8 @@
                                     <t t-esc="fieldInfo.string" />
                                 </t>
                             </span>
-                            <div class="flex-grow-1 role-container text-truncate">
-                                <Field name="fieldInfo.name" class="'w-100'" record="slot.record" fieldInfo="fieldInfo" type="fieldInfo.widget" />
+                            <div class="flex-grow-1 o_cw_popover_field overflow-hidden">
+                                <Field name="fieldInfo.name" record="slot.record" fieldInfo="fieldInfo" type="fieldInfo.widget" />
                             </div>
                         </li>
                     </t>

@@ -26,17 +26,19 @@
 # Kim Asplund <kim.asplund@gmail.com>, 2023
 # Miku Laitinen <miku.laitinen@gmail.com>, 2023
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Martin Trigaux, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
+# Wil Odoo, 2025
+# Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-06-13 00:52+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,6 +74,11 @@ msgstr "%s arvostelut"
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 msgid "&amp; Shipping"
 msgstr "&amp; Toimitus"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products_item
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -249,7 +256,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<i class=\"fw-light fa fa-angle-left me-2\"/>Discard"
-msgstr "<i class=\"fw-light fa fa-angle-left me-2\"/>Hävitä"
+msgstr "<i class=\"fw-light fa fa-angle-left me-2\"/>Peruuta"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
@@ -513,8 +520,8 @@ msgstr ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                   <h1 style=\"color:#A9A9A9;\">OSTOSKORISSASI ON JOTAIN.</h1>\n"
-"                    Haluaisitko täydentää ostoksesi?<br><br>\n"
+"                    <h1 style=\"color:#A9A9A9;\">Ostoksesi saattoivat jäädä kesken.</h1>\n"
+"                    Haluaisitko suorittaa oston loppuun?<br><br>\n"
 "                    <t t-if=\"object.order_line\">\n"
 "                        <t t-foreach=\"object.website_order_line\" t-as=\"line\">\n"
 "                            <hr>\n"
@@ -524,10 +531,10 @@ msgstr ""
 "                                        <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\">\n"
 "                                    </td>\n"
 "                                    <td>\n"
-"                                        <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] Työpöytäyhdistelmä</strong><br><t t-out=\"line.name or ''\">[FURN_7800] Työpöytäyhdistelmä Työpöytäyhdistelmä, musta-ruskea: tuoli + työpöytä + laatikko.</t>\n"
+"                                        <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] Pöytäyhdistelmä</strong><br><t t-out=\"line.name or ''\">[FURN_7800] Pöytäyhdistelmä musta-ruskea: tuoli + pöytä + lipasto.</t>\n"
 "                                    </td>\n"
 "                                    <td width=\"100px\" align=\"right\">\n"
-"                                        <t t-out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-out=\"line.product_uom.name or ''\">Yksiköt</t>\n"
+"                                        <t t-out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-out=\"line.product_uom.name or ''\">Kpl</t>\n"
 "                                    </td>\n"
 "                                </tr>\n"
 "                            </table>\n"
@@ -539,8 +546,8 @@ msgstr ""
 "                            Jatka tilausta\n"
 "                        </a>\n"
 "                    </div>\n"
-"                   <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"></t>\n"
-"                    <div style=\"text-align: center;\"><strong>Kiitos, että asioit <t t-out=\"company.name or ''\">yrityksessäni (San Francisco</t>)!</strong></div>\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"></t>\n"
+"                    <div style=\"text-align: center;\"><strong> <t t-out=\"company.name or ''\">My Company (San Francisco)</t> kiittää asionnistasi</strong></div>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -815,7 +822,7 @@ msgstr "Anonyymi pikakassakumppani tilausta varten %s"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Apartment, suite, etc."
-msgstr "Huoneisto, sviitti jne."
+msgstr "Osoitetarkenne"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -1296,23 +1303,39 @@ msgstr "Laske toimituskustannukset ja lähetä Shiprocketilla"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "Laske toimituskulut ja lähetä DHL:llä"
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Laske toimituskulut ja lähetä DHL:llä<br/>\n"
+"                             <strong>(siirry kohtaan Aloitussivu&gt;Sovellukset asentaaksesi)</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "Laske toimituskulut ja lähetä FedEx:llä"
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Laske toimituskulut ja lähetä FedEx<br/>\n"
+"                             <strong>(siirry kohtaan Aloitussivu&gt;Sovellukset asentaaksesi)</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "Laske toimituskulut ja lähetä UPS:llä"
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Laske toimituskulut ja lähetä UPS:llä<br/>\n"
+"                             <strong>(siirry kohtaan Aloitussivu&gt;Sovellukset asentaaksesi)</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "Laske toimituskulut ja lähetä USPS:llä"
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Laske toimituskulut ja lähetä USPS:llä<br/>\n"
+"                             <strong>(siirry kohtaan Aloitussivu&gt;Sovellukset asentaaksesi)</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1538,13 +1561,8 @@ msgstr "Mukauta sähköpostimalleja"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "DHL Express Connector"
-msgstr "DHL Express Liitin"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "DHL Shipping Methods"
-msgstr "DHL Toimitusmenetelmät"
+msgid "DHL"
+msgstr "DHL"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -1736,6 +1754,11 @@ msgid "Do you wish to clear your cart before adding products to it?"
 msgstr "Haluatko tyhjentää ostoskorisi ennen tuotteiden lisäämistä siihen?"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Documentation"
+msgstr "Dokumentaatio"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "Documents"
 msgstr "Dokumentit"
@@ -1922,11 +1945,6 @@ msgstr "Suositellut"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "FedEx"
 msgstr "FedEx"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "FedEx Shipping Methods"
-msgstr "FedEx Toimitusmenetelmät"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__field_id
@@ -2869,6 +2887,13 @@ msgstr "Maksutapahtumat"
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "Payment is already being processed."
+msgstr "Maksu on jo käsitelty."
+
+#. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Pedal-based opening system"
@@ -3646,7 +3671,7 @@ msgstr "Jaa"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Ship to the same address"
-msgstr "Lähetä samaan osoitteeseen"
+msgstr "Sama toimitusosoite"
 
 #. module: website_sale
 #. odoo-python
@@ -3979,6 +4004,13 @@ msgstr "Summa näytetään yliviivattuna verkkokaupan tuotesivulla"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
+msgid "The cart has already been paid. Please refresh the page."
+msgstr "Tämä ostoskorin sisältö on jo maksettu. Ole hyvä ja päivitä sivu."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
 msgid "The cart has been updated. Please refresh the page."
 msgstr "Ostoskori on päivitetty. Päivitä selain."
 
@@ -4209,11 +4241,6 @@ msgstr "Tuotettasi esittelevän videon URL-osoite."
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "USPS"
 msgstr "USPS"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "USPS Shipping Methods"
-msgstr "USPS Toimitusmenetelmät"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_base_unit
@@ -4574,7 +4601,7 @@ msgstr "Sinulla ei ole laskutustilausta verkkosivustolta"
 #. module: website_sale
 #: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery
 msgid "You left items in your cart!"
-msgstr "Jätit tuotteita ostoskoriin!"
+msgstr "Ostoksesi jäivät kesken"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
@@ -4607,17 +4634,6 @@ msgstr "Sähköpostisi"
 #, python-format
 msgid "Your Name"
 msgstr "Nimesi"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-#, python-format
-msgid ""
-"Your account is not allowed to pay in company %s. Please log out and create "
-"a new account for this website, or contact the website administrator."
-msgstr ""
-"Tililläsi ei ole oikeutta maksaa yritykselle %s. Kirjaudu ulos ja luo uusi "
-"tili tälle verkkosivulle tai ota yhteyttä verkkosivun ylläpitäjään."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

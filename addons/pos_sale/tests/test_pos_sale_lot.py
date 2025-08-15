@@ -98,4 +98,3 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         order = self.env['pos.order'].create_from_ui([pos_order])
         self.assertEqual(self.env['pos.order'].browse(order[0]['id']).picking_ids.move_line_ids.lot_id, lot1)
-        self.assertEqual(sale_order.picking_ids.move_line_ids.lot_id, lot2)

@@ -5,6 +5,7 @@ import base64
 import binascii
 import codecs
 import collections
+import contextlib
 import difflib
 import unicodedata
 
@@ -446,6 +447,7 @@ class Import(models.TransientModel):
             return self._read_xls(options)
 
         import openpyxl.cell.cell as types
+        import openpyxl.styles.numbers as styles  # noqa: PLC0415
         book = load_workbook(io.BytesIO(self.file or b''), data_only=True)
         sheets = options['sheets'] = book.sheetnames
         sheet_name = options['sheet'] = options.get('sheet') or sheets[0]
@@ -466,10 +468,16 @@ class Import(models.TransientModel):
                         values.append(str(int(cell.value)))
                     else:
                         values.append(str(cell.value))
-                elif isinstance(cell.value, datetime.datetime):
-                    values.append(cell.value.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
-                elif isinstance(cell.value, datetime.date):
-                    values.append(cell.value.strftime(DEFAULT_SERVER_DATE_FORMAT))
+                elif cell.is_date:
+                    d_fmt = styles.is_datetime(cell.number_format)
+                    if d_fmt == "datetime":
+                        values.append(cell.value.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+                    elif d_fmt == "date":
+                        values.append(cell.value.strftime(DEFAULT_SERVER_DATE_FORMAT))
+                    else:
+                        raise ValueError(
+                        _("Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with format: %(cell_format)s, as (%(format_type)s) formats are not supported.", row=rowx, col=colx, cell_value=cell.value, cell_format=cell.number_format, format_type=d_fmt)
+                        )
                 else:
                     values.append(str(cell.value))
 
@@ -1050,7 +1058,7 @@ class Import(models.TransientModel):
                 'advanced_mode': advanced_mode,
                 'debug': self.user_has_groups('base.group_no_one'),
                 'batch': batch,
-                'file_length': file_length
+                'file_length': len(rows),
             }
         except Exception as error:
             # Due to lazy generators, UnicodeDecodeError (for
@@ -1353,7 +1361,7 @@ class Import(models.TransientModel):
         :rtype: dict(ids: list(int), messages: list({type, message, record}))
         """
         self.ensure_one()
-        self._cr.execute('SAVEPOINT import')
+        sp = self.env.cr.savepoint(flush=False)
 
         try:
             input_file_data, import_fields = self._convert_import_data(fields, options)
@@ -1382,23 +1390,14 @@ class Import(models.TransientModel):
 
         # If transaction aborted, RELEASE SAVEPOINT is going to raise
         # an InternalError (ROLLBACK should work, maybe). Ignore that.
-        # TODO: to handle multiple errors, create savepoint around
-        #       write and release it in case of write error (after
-        #       adding error to errors array) => can keep on trying to
-        #       import stuff, and rollback at the end if there is any
-        #       error in the results.
-        try:
-            if dryrun:
-                self._cr.execute('ROLLBACK TO SAVEPOINT import')
-                # cancel all changes done to the registry/ormcache
-                # we need to clear the cache in case any created id was added to an ormcache and would be missing afterward
-                self.pool.clear_all_caches()
-                # don't propagate to other workers since it was rollbacked
-                self.pool.reset_changes()
-            else:
-                self._cr.execute('RELEASE SAVEPOINT import')
-        except psycopg2.InternalError:
-            pass
+        with contextlib.suppress(psycopg2.InternalError):
+            sp.close(rollback=dryrun)
+        if dryrun:
+            # cancel all changes done to the registry/ormcache
+            # we need to clear the cache in case any created id was added to an ormcache and would be missing afterward
+            self.pool.clear_all_caches()
+            # don't propagate to other workers since it was rollbacked
+            self.pool.reset_changes()
 
         # Insert/Update mapping columns when import complete successfully
         if import_result['ids'] and options.get('has_headers'):

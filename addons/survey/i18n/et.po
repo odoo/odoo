@@ -16,18 +16,18 @@
 # Leaanika Randmets, 2023
 # JanaAvalah, 2023
 # Mihkel avalah, 2023
-# Siim Raasuke, 2024
-# Anna, 2024
-# Stevin Lilla, 2024
 # Arma Gedonsky <armagedonsky@hot.ee>, 2024
+# Anna, 2024
+# Siim Raasuke, 2025
+# Stevin Lilla, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Arma Gedonsky <armagedonsky@hot.ee>, 2024\n"
+"Last-Translator: Stevin Lilla, 2025\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,7 +85,7 @@ msgstr "% lõpetatud"
 #: code:addons/survey/models/survey_user_input.py:0
 #, python-format
 msgid "%(participant)s just participated in \"%(survey_title)s\"."
-msgstr ""
+msgstr "%(participant)s just osalesid \"%(survey_title)s\"."
 
 #. module: survey
 #. odoo-python
@@ -93,6 +93,13 @@ msgstr ""
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (koopia)"
+
+#. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid "%s Votes"
+msgstr "%s Hääli"
 
 #. module: survey
 #. odoo-python
@@ -360,6 +367,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/> It is currently not possible to "
 "pass this assessment because no question is configured to give any points."
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/>Praegu ei ole võimalik edukalt "
+"läbida seda küsimustikku kuna ükski küsimus ei ole seadistatud punkte andma."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -404,6 +413,11 @@ msgstr "<i class=\"fa fa-print\"/> Prindi"
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-square-o fa-lg me-2\"/>answer"
 msgstr "<i class=\"fa fa-square-o fa-lg me-2\"/>vastus"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
+msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Edit Survey"
+msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Muuda küsitlust"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
@@ -538,17 +552,17 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "<span class=\"text-break text-muted\">Completed</span>"
-msgstr ""
+msgstr "<span class=\"text-break text-muted\">Lõpetatud</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "<span class=\"text-break text-muted\">Registered</span>"
-msgstr ""
+msgstr "<span class=\"text-break text-muted\">Registreeritud</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "<span class=\"text-break text-muted\">Success</span>"
-msgstr ""
+msgstr "<span class=\"text-break text-muted\">Edukalt lõpetatud</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -695,15 +709,6 @@ msgstr ""
 "                                <br/>"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
-msgid ""
-"<span>This is a Test Survey Entry. </span><i class=\"oi oi-fw oi-arrow-"
-"right\"/>Edit Survey"
-msgstr ""
-"<span>See on test küsitluse kirje.</span><i class=\"oi oi-fw oi-arrow-"
-"right\"/>Muuda küsitlust"
-
-#. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "<span>Try It</span>"
 msgstr "<span>Proovi seda</span>"
@@ -800,6 +805,8 @@ msgid ""
 "A scored survey needs at least one question that gives points.\n"
 "Please check answers and their scores."
 msgstr ""
+"Hinnatud küsimustik vajab vähemalt ühte punktidega küsimust.\n"
+"Palun kontrollige vastuseid ja punkte."
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2
@@ -903,6 +910,8 @@ msgid ""
 "After watching this video, will you swear that you are not going to "
 "procrastinate to trim your hedge this year?"
 msgstr ""
+"Kas pärast selle video vaatamist vannute, et te ei kavatse sel aastal oma "
+"heki pügamisega viivitada?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_col3
@@ -945,7 +954,7 @@ msgstr "Luba Roaming"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__allowed_triggering_question_ids
 msgid "Allowed Triggering Questions"
-msgstr ""
+msgstr "Lubatud käivitavad küsimused"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q2_sug2
@@ -965,7 +974,7 @@ msgstr "Mittevastatava küsimuse vastuse punktisumma ei saa olla negatiivne!"
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p3
 msgid "An apple a day keeps the doctor away."
-msgstr ""
+msgstr "Üks õun päevas hoiab arsti eemal"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_leaderboard
@@ -1183,7 +1192,7 @@ msgstr "Mesilased"
 #. module: survey
 #: model:survey.question,question_placeholder:survey.vendor_certification_page_3_question_3
 msgid "Beware of leap years!"
-msgstr ""
+msgstr "Ole teadlik liigaastatest!"
 
 #. module: survey
 #. odoo-python
@@ -1242,7 +1251,7 @@ msgstr "Saab muuta sisu"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p4_q3
 msgid "Can Humans ever directly see a photon?"
-msgstr ""
+msgstr "Kas inimesed saavad kunagi footonit otse näha?"
 
 #. module: survey
 #. odoo-python
@@ -1350,7 +1359,7 @@ msgstr "Valikud"
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_demo_burger_quiz
 msgid "Choose your favourite subject and show how good you are. Ready?"
-msgstr ""
+msgstr "<p>Vali oma lemmikteema ja näita, kui hea sa oled. Oled valmis ?</p>"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_food_preferences_q3
@@ -1418,6 +1427,8 @@ msgid ""
 "Combining roaming and \"Scoring with answers after each page\" is not possible; please update the following surveys:\n"
 "- %(survey_names)s"
 msgstr ""
+"Vabalt sirvitav ja \"vastuste hindamine peale igat lehekülge\" ei ole samaaegselt võimalik; palun uuendage järgnevat küsimustikku:\n"
+"- %(survey_names)s"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_question_form
@@ -1623,7 +1634,7 @@ msgstr "Live seansi loomine"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Create a custom survey from scratch"
-msgstr ""
+msgstr "Loo enda kohandatud küsimustik"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__create_uid
@@ -1833,7 +1844,7 @@ msgstr "Kas me müüme akustilisi Bloc ekraane?"
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2_q3
 msgid "Do you have any other comments, questions, or concerns?"
-msgstr ""
+msgstr "Kas teil on veel kommentaare, küsimusi või muresid?"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_5
@@ -1849,7 +1860,7 @@ msgstr "Koerad"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q1
 msgid "Dogwood is from which family of trees?"
-msgstr ""
+msgstr "Koerupuu kuulub millisesse puude perekonda ?"
 
 #. module: survey
 #: model:survey.question,question_placeholder:survey.survey_demo_quiz_p1_q2
@@ -2035,7 +2046,7 @@ msgstr "Vaba teksti vastus"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q4
 msgid "From which continent is native the Scots pine (pinus sylvestris)?"
-msgstr ""
+msgstr "Milliselt mandrilt on pärit mänd (Pinus sylvestris) ?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q1_sug1
@@ -2123,6 +2134,11 @@ msgstr "Planeeri"
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Group By"
 msgstr "Rühmitamine"
+
+#. module: survey
+#: model:ir.model,name:survey.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP Routing"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__existing_mode
@@ -2289,7 +2305,7 @@ msgstr "Mul pole õrna aimugi, olen koer!"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q3_sug3
 msgid "I've been noticing gravity since I was very young!"
-msgstr ""
+msgstr "Ma olen gravitatsiooni märganud juba väga noorest peale!"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__id
@@ -2464,7 +2480,7 @@ msgstr "Valige allolevast loendist kõik okaspuud."
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q2
 msgid "In which country did the bonsai technique develop?"
-msgstr ""
+msgstr "Millises riigis arenes bonsai tehnika?"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__is_scored_question
@@ -2549,12 +2565,12 @@ msgstr "Kas see kasutaja sisend on osa küsitluseseansist või mitte."
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q3
 msgid "Is the wood of a coniferous hard or soft?"
-msgstr ""
+msgstr "Kas okaspuu puit on kõva või pehme?"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__is_placed_before_trigger
 msgid "Is this question placed before any of its trigger questions?"
-msgstr ""
+msgstr "Kas küsimus on enne seda küsimust käivitavaid küsimusi?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p2_q2_sug4
@@ -3066,7 +3082,7 @@ msgstr "Uus kutse"
 #. module: survey
 #: model:mail.message.subtype,description:survey.mt_survey_survey_user_input_completed
 msgid "New participation completed."
-msgstr ""
+msgstr "Uus osalemine lõpetatud"
 
 #. module: survey
 #. odoo-javascript
@@ -3381,6 +3397,8 @@ msgid ""
 "Oopsie! We could not let you open this survey. Make sure you are using the correct link and are allowed to\n"
 "                        participate or get in touch with its organizer."
 msgstr ""
+"Ups! Me ei saa lasta avada teil seda küsimustikku. Veenduge et teil on õige link ja teil on ligipääs\n"
+"või võtke ühendust küsimustiku korraldajaga."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -3397,7 +3415,7 @@ msgstr "Ava jaotis"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Optional previous answers required"
-msgstr ""
+msgstr "Nõutud on eelnevad valikulised küsimused"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_invite__lang
@@ -3600,6 +3618,8 @@ msgid ""
 "Picking any of these answers will trigger this question.\n"
 "Leave the field empty if the question should always be displayed."
 msgstr ""
+"Nende vastuste valimisel käivitub see küsimus.\n"
+"Jäta väli tühjaks kui küsimus peaks olema alati kuvatud."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_choice
@@ -3637,7 +3657,7 @@ msgstr "Palun sisestage vähemalt üks kehtiv saaja."
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_demo_food_preferences
 msgid "Please give us your preferences for this event's dinner!"
-msgstr ""
+msgstr "Palun jagama oma eelistusi selle ürituse õhtusöögiks!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void_content
@@ -3781,6 +3801,7 @@ msgid ""
 "Questions containing the triggering answer(s) to display the current "
 "question."
 msgstr ""
+"Küsimus, mis sisaldab käivitavat vastust praeguse küsimuse kuvamiseks."
 
 #. module: survey
 #: model:survey.survey,title:survey.survey_demo_quiz
@@ -3830,7 +3851,7 @@ msgstr "Oled valmis muutma oma <b>andmekogumise</b> viisi?"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Ready to test? Pick a sample or create one from scratch..."
-msgstr ""
+msgstr "Valmis testima? Vali näidis või loo uus."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__partner_ids
@@ -4011,7 +4032,7 @@ msgstr "Punktiarvestuse tüüp"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_with_answers_after_page
 msgid "Scoring with answers after each page"
-msgstr ""
+msgstr "Punktiarvestus koos vastustega peale igat lehekülge"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__scoring_type__scoring_with_answers
@@ -4245,11 +4266,14 @@ msgid ""
 "Some general information about you. It will be used internally for "
 "statistics only."
 msgstr ""
+"Mõned üldised andmed teie kohta. Seda kasutatakse ettevõttesiseselt ainult "
+"statistika jaoks."
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p2
 msgid "Some questions about our company. Do you really know us?"
 msgstr ""
+"Mõned küsimused meie ettevõtte kohta. Kui hästi tunnete meie ettevõtet?"
 
 #. module: survey
 #. odoo-python
@@ -4437,7 +4461,7 @@ msgstr "Küsitlus"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_access_error
 msgid "Survey Access Error"
-msgstr ""
+msgstr "Küsimustiku ligipääsu viga"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_response_line_view_tree
@@ -4447,7 +4471,7 @@ msgstr "Küsitlusele vastamise rida"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__survey_first_submitted
 msgid "Survey First Submitted"
-msgstr ""
+msgstr "Küsimustik esmaselt esitatud"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_gamification_badge__survey_ids
@@ -4830,6 +4854,11 @@ msgstr ""
 " kohandada, kuidas soovite!"
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
+msgid "This is a Test Survey Entry."
+msgstr "See on test küsitluse kanne"
+
+#. module: survey
 #. odoo-javascript
 #. odoo-python
 #: code:addons/survey/models/survey_question.py:0
@@ -4874,17 +4903,21 @@ msgid ""
 "This section is about general information about you. Answering them helps "
 "qualifying your answers."
 msgstr ""
+"See osa käsitleb teie kohta üldist teavet. Neile vastamine aitab Teie "
+"vastuseid kvalifitseerida."
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_feedback_p2
 msgid "This section is about our eCommerce experience itself."
-msgstr ""
+msgstr "See osa käsitleb meie e-kaubanduse kogemust."
 
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_demo_quiz
 msgid ""
 "This small quiz will test your knowledge about our Company. Be prepared!"
 msgstr ""
+"See väike viktoriin paneb Teie teadmised meie ettevõtte kohta proovile. Olge"
+" valmis!"
 
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_feedback
@@ -4892,6 +4925,8 @@ msgid ""
 "This survey allows you to give a feedback about your experience with our products.\n"
 "    Filling it helps us improving your experience."
 msgstr ""
+"See küsitlus võimaldab Teil anda tagasisidet meie toodete kohta.\n"
+"    Selle täitmine aitab meil Teie kasutajakogemust täiustada."
 
 #. module: survey
 #. odoo-python
@@ -4907,7 +4942,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired
 msgid "This survey is now closed. Thank you for your interest!"
-msgstr ""
+msgstr "See küsitlus on nüüdseks suletud. Täname teid huvi eest !"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
@@ -5225,11 +5260,13 @@ msgid ""
 "We like to say that the apple doesn't fall far from the tree, so here are "
 "trees."
 msgstr ""
+"Meile meeldib öelda, et õun ei lange puu otsast kaugele, nii et siin on "
+"puud."
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p5
 msgid "We may be interested by your input."
-msgstr ""
+msgstr "Teie panus võib meile huvi pakkuda."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__website_message_ids
@@ -5333,7 +5370,7 @@ msgstr "Mis on teie hüüdnimi?"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p4_q2
 msgid "What is, approximately, the critical mass of plutonium-239?"
-msgstr ""
+msgstr "Mis on plutoonium-239 ligikaudne kriitiline mass?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p3_q1
@@ -5343,7 +5380,7 @@ msgstr "Millal suri Genghis Khan?"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p2_q2
 msgid "When did precisely Marc Demo crop its first apple tree?"
-msgstr ""
+msgstr "Millal täpselt Marc Demo oma esimese õunapuu lõikas?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q6
@@ -5353,7 +5390,7 @@ msgstr "Millal Te neid puuvilju koristate"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p2_q1
 msgid "When is Mitchell Admin born?"
-msgstr ""
+msgstr "Millal Mitchell Admin sündis?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p1_q2
@@ -5402,7 +5439,7 @@ msgstr "Mis on Euroopa kõrgeim vulkaan?"
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2_q1
 msgid "Which of the following words would you use to describe our products?"
-msgstr ""
+msgstr "Milliseid sõnu kasutaksite meie toodete kirjeldamiseks?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q2
@@ -5412,7 +5449,7 @@ msgstr "Millist järgmistest kasutaksite tolmeldamiseks"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p5_q2
 msgid "Which painting/drawing was not made by Pablo Picasso?"
-msgstr ""
+msgstr "Millist maali/joonistst ei teinud Pablo Picasso?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p5_q3
@@ -5427,7 +5464,7 @@ msgstr "Kes sa oled?"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p3_q2
 msgid "Who is the architect of the Great Pyramid of Giza?"
-msgstr ""
+msgstr "Kes on Giza suure püramiidi arhitekt?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p4_q1
@@ -5435,6 +5472,8 @@ msgid ""
 "Who received a Nobel prize in Physics for the discovery of neutrino "
 "oscillations, which shows that neutrinos have mass?"
 msgstr ""
+"Kes sai Nobeli füüsikaauhinna neutriinode võnkumiste avastamise eest, mis "
+"näitab, et neutriinodel on mass?"
 
 #. module: survey
 #. odoo-python
@@ -5463,7 +5502,7 @@ msgstr "Talv"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_food_preferences_q2
 msgid "Would you prefer a veggie meal if possible?"
-msgstr ""
+msgstr "Kas te eelistaksite taimetoitu võimaluse korral?"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -5529,6 +5568,8 @@ msgid ""
 "You cannot delete questions from surveys \"%(survey_names)s\" while live "
 "sessions are in progress."
 msgstr ""
+"Te ei saa kustutada küsimused küsimustikus \"%(survey_names)s\" samal ajal "
+"kui live sessioonid on pooleli."
 
 #. module: survey
 #. odoo-python

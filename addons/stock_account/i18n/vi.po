@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Thi Huong Nguyen, 2024
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,7 +103,7 @@ msgstr "Mẫu sơ đồ tài khoản"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_ids
 msgid "Account Move"
-msgstr "Dịch chuyển tài khoản"
+msgstr "Điều chuyển tài khoản"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -187,12 +187,12 @@ msgstr "Kế toán kho tự động"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
 msgid "Average Cost"
-msgstr "Giá vốn trung bình"
+msgstr "Chi phí trung bình"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__average
 msgid "Average Cost (AVCO)"
-msgstr "Giá vốn trung bình (AVCO)"
+msgstr "Chi phí trung bình (AVCO)"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -217,9 +217,9 @@ msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
 " the product category, or on the location, before processing this operation."
 msgstr ""
-"Không tìm thấy tài khoản nhập tồn kho cho sản phẩm %s. Bạn phải xác định một"
-" tài khoản ở danh mục sản phẩm hoặc ở vị trí lưu kho trước khi xử lý hoạt "
-"động này."
+"Không tìm thấy tài khoản nhập kho cho sản phẩm %s. Bạn phải xác định một tài"
+" khoản ở danh mục sản phẩm hoặc ở vị trí lưu kho trước khi xử lý hoạt động "
+"này."
 
 #. module: stock_account
 #. odoo-python
@@ -284,7 +284,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_template__cost_method
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__cost_method
 msgid "Costing Method"
-msgstr "Phương pháp giá vốn"
+msgstr "Phương pháp tính chi phí"
 
 #. module: stock_account
 #. odoo-python
@@ -292,7 +292,7 @@ msgstr "Phương pháp giá vốn"
 #, python-format
 msgid "Costing method change for product category %s: from %s to %s."
 msgstr ""
-"Thay đổi phương pháp giá vốn cho danh mục sản phẩm %s: từ %s thành %s."
+"Thay đổi phương pháp tính chi phí cho danh mục sản phẩm %s: từ %s thành %s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
@@ -305,7 +305,7 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
-"Các bút toán đối ứng cho tất cả dịch chuyển nhập hàng sẽ được ghi vào tài khoản này, trừ khi có một tài khoản định giá cụ thể\n"
+"Các bút toán đối ứng cho tất cả điều chuyển nhập hàng sẽ được ghi vào tài khoản này, trừ khi có một tài khoản định giá cụ thể\n"
 "                được thiết lập trong vị trí nguồn. Đây là giá trị mặc định cho tất cả sản phẩm trong danh mục này. Nó cũng có thể được thiết lập trực tiếp trên từng sản phẩm."
 
 #. module: stock_account
@@ -393,8 +393,8 @@ msgid ""
 "Due to a change of product category (from %s to %s), the costing method has "
 "changed for product template %s: from %s to %s."
 msgstr ""
-"Do có thay đổi danh mục sản phẩm (từ %s thành %s), nên phương pháp giá vốn "
-"cho mẫu sản phẩm %s đã thay đổi: từ %s thành %s."
+"Do có thay đổi danh mục sản phẩm (từ %s thành %s), nên phương pháp tính chi "
+"phí cho mẫu sản phẩm %s đã thay đổi: từ %s thành %s."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -536,7 +536,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Moved Quantity"
-msgstr "Số lượng đã dịch chuyển"
+msgstr "Số lượng đã điều chuyển"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value
@@ -575,7 +575,7 @@ msgstr "Danh mục sản phẩm"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Dịch chuyển sản phẩm (Dòng dịch chuyển tồn kho)"
+msgstr "Điều chuyển sản phẩm (Dòng điều chuyển tồn kho)"
 
 #. module: stock_account
 #. odoo-python
@@ -655,7 +655,7 @@ msgstr "Giá trị còn lại"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Phiếu lấy hàng trả lại"
+msgstr "Phiếu xuất kho trả hàng"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
@@ -691,7 +691,7 @@ msgid ""
 "        "
 msgstr ""
 "Giá tiêu chuẩn: Sản phẩm được định giá theo giá vốn tiêu chuẩn được xác định cho sản phẩm.\n"
-"        Giá vốn trung bình (AVCO): Sản phẩm được định giá theo chi phí bình quân gia quyền.\n"
+"        Chi phí trung bình (AVCO): Sản phẩm được định giá theo chi phí bình quân gia quyền.\n"
 "        Nhập trước xuất trước (FIFO): Sản phẩm được định giá theo quy tắc những sản phẩm nào nhập vào công ty trước thì cũng sẽ xuất ra trước.\n"
 "        "
 
@@ -717,7 +717,7 @@ msgstr "Sổ nhật ký tồn kho"
 #: model:ir.model.fields,field_description:stock_account.field_account_payment__stock_move_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_move_id
 msgid "Stock Move"
-msgstr "Dịch chuyển tồn kho"
+msgstr "Điều chuyển tồn kho"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -802,8 +802,8 @@ msgid ""
 "The Stock Input and/or Output accounts cannot be the same as the Stock "
 "Valuation account."
 msgstr ""
-"Tài khoản nhập và/hoặc xuất tồn kho không được trùng với tài khoản định giá "
-"tồn kho."
+"Tài khoản nhập và/hoặc xuất kho không được trùng với tài khoản định giá tồn "
+"kho."
 
 #. module: stock_account
 #. odoo-python
@@ -814,7 +814,7 @@ msgid ""
 "The action leads to the creation of a journal entry, for which you don't "
 "have the access rights."
 msgstr ""
-"Hành động này dẫn đến việc tạo một bút toán mà bạn không có quyền truy cập."
+"Tác vụ này dẫn đến việc tạo một bút toán mà bạn không có quyền truy cập."
 
 #. module: stock_account
 #. odoo-python
@@ -831,7 +831,7 @@ msgid ""
 "The move lines are not in a consistent state: some are entering and other "
 "are leaving the company."
 msgstr ""
-"Chi tiết dịch chuyển không nhất quán: một số đang nhập vào và một số khác "
+"Chi tiết điều chuyển không nhất quán: một số đang nhập vào và một số khác "
 "đang xuất ra khỏi công ty."
 
 #. module: stock_account
@@ -855,7 +855,7 @@ msgid ""
 "The move lines are not in a consistent states: they do not share the same "
 "origin or destination company."
 msgstr ""
-"Chi tiết dịch chuyển không nhất quán: chúng không có cùng xuất xứ hoặc công "
+"Chi tiết điều chuyển không nhất quán: chúng không có cùng xuất xứ hoặc công "
 "ty đích."
 
 #. module: stock_account
@@ -867,7 +867,7 @@ msgid ""
 "be use to correct a specific transfer."
 msgstr ""
 "Giá trị của lớp định giá tồn kho không thể là số âm. Chi phí nhập kho có thể"
-" được sử dụng để điều chỉnh một điều chuyển cụ thể."
+" được sử dụng để điều chỉnh một lệnh chuyển hàng cụ thể."
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.inventory_aging_action
@@ -877,7 +877,7 @@ msgid ""
 "There are no valuation layers. Valuation layers are created when there are "
 "product moves that impact the valuation of the stock."
 msgstr ""
-"Không có lớp định giá. Các lớp định giá được tạo ra khi có những dịch chuyển"
+"Không có lớp định giá. Các lớp định giá được tạo ra khi có những điều chuyển"
 " sản phẩm ảnh hưởng đến việc định giá tồn kho."
 
 #. module: stock_account
@@ -909,7 +909,7 @@ msgstr "Tổng giá trị"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
 msgid "Transfer"
-msgstr "Điều chuyển"
+msgstr "Lệnh chuyển hàng"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
@@ -951,10 +951,10 @@ msgid ""
 "internal locations."
 msgstr ""
 "Được sử dụng cho định giá tồn kho theo thời gian thực. Khi được thiết lập "
-"trên một địa điểm ảo (không phải loại nội bộ), tài khoản này sẽ được sử dụng"
-" để giữ giá trị của những sản phẩm được dịch chuyển từ một vị trí nội bộ "
-"sang vị trí này, thay cho Tài khoản xuất kho được thiết lập trên sản phẩm. "
-"Việc này không ảnh hưởng tới vị trí nội bộ."
+"trên một vị trí ảo (không phải loại nội bộ), tài khoản này sẽ được sử dụng "
+"để giữ giá trị của những sản phẩm được điều chuyển từ một vị trí nội bộ sang"
+" vị trí này, thay cho Tài khoản xuất kho được thiết lập trên sản phẩm. Việc "
+"này không ảnh hưởng tới vị trí nội bộ."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
@@ -966,9 +966,9 @@ msgid ""
 "internal locations."
 msgstr ""
 "Được sử dụng cho định giá tồn kho theo thời gian thực. Khi được thiết lập "
-"trên một địa điểm ảo (không phải loại nội bộ), tài khoản này sẽ được sử dụng"
-" để giữ giá trị của những sản phẩm được dịch chuyển ra khỏi vị trí này và "
-"vào một vị trí nội bộ, thay cho Tài khoản xuất kho được thiết lập trên sản "
+"trên một vị trí ảo (không phải loại nội bộ), tài khoản này sẽ được sử dụng "
+"để giữ giá trị của những sản phẩm được điều chuyển ra khỏi vị trí này và vào"
+" một vị trí nội bộ, thay cho Tài khoản xuất kho được thiết lập trên sản "
 "phẩm. Việc này không ảnh hưởng tới vị trí nội bộ."
 
 #. module: stock_account
@@ -1043,7 +1043,7 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
-"Khi thực hiện định giá tồn kho tự động, các hạng mục bút toán đối ứng cho tất cả dịch chuyển tồn kho xuất đi sẽ được ghi sổ trong tài khoản này,\n"
+"Khi thực hiện định giá tồn kho tự động, các hạng mục bút toán đối ứng cho tất cả điều chuyển tồn kho xuất đi sẽ được ghi sổ trong tài khoản này,\n"
 "                trừ khi có một tài khoản định giá cụ thể được thiết lập trên vị trí đích. Đây là giá trị mặc định cho tất cả sản phẩm trong danh mục này.\n"
 "                Tài khoản này cũng có thể được thiết lập trực tiếp trên mỗi sản phẩm."
 
@@ -1054,7 +1054,7 @@ msgid ""
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
 "Khi thực hiện định giá tồn kho tự động, đây là Sổ nhật ký kế toán, trong đó "
-"các bút toán sẽ được tự động ghi sổ khi dịch chuyển tồn kho được xử lý."
+"các bút toán sẽ được tự động ghi sổ khi điều chuyển tồn kho được xử lý."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
@@ -1102,6 +1102,7 @@ msgstr ""
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
+#: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
 "You don't have any output valuation account defined on your product "
@@ -1118,8 +1119,8 @@ msgid ""
 "You don't have any stock input account defined on your product category. You"
 " must define one before processing this operation."
 msgstr ""
-"Bạn chưa xác định bất kỳ tài khoản nhập tồn kho nào trong danh mục sản phẩm."
-" Bạn phải xác định một tài khoản trước khi thực hiện hành động này."
+"Bạn chưa xác định bất kỳ tài khoản nhập kho nào trong danh mục sản phẩm. Bạn"
+" phải xác định một tài khoản trước khi thực hiện hành động này."
 
 #. module: stock_account
 #. odoo-python

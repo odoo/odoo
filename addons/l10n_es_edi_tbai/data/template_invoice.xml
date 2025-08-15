@@ -107,7 +107,7 @@
             </CabeceraFactura>
             <DatosFactura t-if="is_emission">
                 <FechaOperacion t-if="invoice.delivery_date and format_date(invoice.invoice_date) != format_date(invoice.delivery_date)" t-out="format_date(invoice.delivery_date)"/>
-                <DescripcionFactura t-out="invoice.invoice_origin or 'manual'"/>
+                <DescripcionFactura t-out="invoice.invoice_origin and invoice.invoice_origin[:250] or 'manual'"/>
                 <DetallesFactura>
                     <IDDetalleFactura t-foreach="invoice_lines" t-as="line_values">
                         <t t-set="line" t-value="line_values['line']"/>
@@ -168,7 +168,6 @@
                                 <CuotaImpuesto t-out="format_float(detalle['CuotaRepercutida'])"/>
                                 <TipoRecargoEquivalencia t-if="detalle.get('TipoRecargoEquivalencia')" t-out="format_float(detalle['TipoRecargoEquivalencia'])"/>
                                 <CuotaRecargoEquivalencia t-if="detalle.get('CuotaRecargoEquivalencia')" t-out="format_float(detalle['CuotaRecargoEquivalencia'])"/>
-                                <OperacionEnRecargoDeEquivalenciaORegimenSimplificado t-out="'S' if is_simplified else 'N'"/>
                             </DetalleIVA>
                         </DesgloseIVA>
                     </DetalleNoExenta>
@@ -185,7 +184,7 @@
             <NoSujeta t-if="desglose.get('NoSujeta')">
                 <t t-set="no_sujeta" t-value="desglose['NoSujeta']"/>
                 <DetalleNoSujeta>
-                    <Causa>RL</Causa>
+                    <Causa t-out="nosujeto_causa"/>
                     <!-- NOTE: Causa should be 
                         'OT' if 'the' ClaveRegimenIvaOpTrascendencia == 10
                         'RL' if 'some' ClaveRegimenIvaOpTrascendencia == 08

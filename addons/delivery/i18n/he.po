@@ -12,15 +12,16 @@
 # דודי מלכה <Dudimalka6@gmail.com>, 2023
 # yael terner, 2023
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
-# Yihya Hugirat <hugirat@gmail.com>, 2024
+# Yihya Hugirat <hugirat@gmail.com>, 2025
+# or balmas, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2024\n"
+"Last-Translator: or balmas, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,19 +34,19 @@ msgstr ""
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 #, python-format
 msgid "%(carrier)s Error"
-msgstr ""
+msgstr "%(carrier)s שגיאה"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "%(old_name)s (copy)"
-msgstr ""
+msgstr "%(old_name)s (העתק)"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Get rate"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>קבל תעריף "
 
 #. module: delivery
 #. odoo-python
@@ -96,6 +97,8 @@ msgid ""
 "customers on the Sales Order and sales confirmation email.E.g. instructions "
 "for customers to follow."
 msgstr ""
+"תיאור שיטת המשלוח שברצונך לתקשר ללקוחות בהזמנת מכירה ובאימייל אישור המכירה. "
+"לדוגמה, הוראות שעל הלקוחות לעקוב אחריהן."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -128,7 +131,7 @@ msgstr "הוסף משלוח"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Additional margin"
-msgstr ""
+msgstr "רווח נוסף"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__amount
@@ -303,7 +306,7 @@ msgstr "משלוח הוגדר"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_zip_prefix
 msgid "Delivery Zip Prefix"
-msgstr ""
+msgstr "קידומת מיקוד משלוח"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
@@ -317,6 +320,8 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery carriers to restrict\n"
 "            which zips it is available to."
 msgstr ""
+"קידומות מיקוד למשלוח משויכות לשליחים על מנת להגביל \n"
+"                לאילו מיקודים הן זמינות."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -372,7 +377,7 @@ msgstr "שגיאה: שיטת משלוח זו אינה זמינה עבור כתו
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "Error: this delivery method is not available."
-msgstr ""
+msgstr "שגיאה: שיטת משלוח זו אינה זמינה."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
@@ -380,6 +385,8 @@ msgid ""
 "Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
 "Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
+"עלות משוערת: הלקוח יחויב בעלות המשוערת של המשלוח.\n"
+"עלות אמיתית: הלקוח יחויב בעלות האמיתית של המשלוח, עלות המשלוח תעודכן בהזמנה לאחר ביצוע המסירה."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -401,7 +408,7 @@ msgstr "מילוי טופס זה מאפשר לך לסנן שליחים לפי כ
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
 msgid "Fixed Margin"
-msgstr ""
+msgstr "רווח קבוע"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_price
@@ -508,7 +515,7 @@ msgstr "עדכון אחרון ב"
 #: model:delivery.carrier,name:delivery.delivery_local_delivery
 #: model:product.template,name:delivery.product_product_local_delivery_product_template
 msgid "Local Delivery"
-msgstr ""
+msgstr "משלוח מקומי"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
@@ -518,7 +525,7 @@ msgstr "רישות בקשות כדי להקל על ניפוי באגים"
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
 msgid "Manage delivery zip prefixes"
-msgstr ""
+msgstr "נהל קידומות מיקוד למשלוח"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -550,14 +557,14 @@ msgstr "שם"
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "New Providers"
-msgstr ""
+msgstr "ספקים חדשים"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "Not available for current order"
-msgstr ""
+msgstr "לא זמין עבור הזמנה זו."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
@@ -572,7 +579,7 @@ msgstr "הזמנה"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Please select a country before choosing a state or a zip prefix."
-msgstr ""
+msgstr "נא לבחור מדינה לפני בחירת מדינה או קידומת zip."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__name
@@ -582,7 +589,7 @@ msgstr "קידומת"
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_zip_prefix_name_uniq
 msgid "Prefix already exists!"
-msgstr ""
+msgstr "קידומת כבר קיימת !"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
@@ -592,6 +599,8 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
+"קידומות של מיקודים שהמשלוח הזה חל עליהם. שים לב כי ניתן להשתמש בביטויים רגולריים (Regular Expressions) כדי לתמוך במדינות עם אורכי מיקוד משתנים, כלומר, ניתן להוסיף את הסימן '$' בסוף הקידומת כדי להתאים למיקוד מדויק (למשל, '100$' יתאים רק ל-'100' ולא ל-'1000').\n"
+" "
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -716,7 +725,7 @@ msgstr ""
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Standard delivery"
-msgstr ""
+msgstr "משלוח סטנדרטי"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -748,7 +757,7 @@ msgstr "תווית החזרה נוצרת אוטומטית במשלוח."
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_shipping_insurance_is_percentage
 msgid "The shipping insurance must be a percentage between 0 and 100."
-msgstr ""
+msgstr "ביטוח המשלוח חייב להיות אחוז בין 0 ל-100."
 
 #. module: delivery
 #. odoo-python
@@ -764,11 +773,14 @@ msgid ""
 "            according to your settings; on the sales order (based on the\n"
 "            quotation) or the invoice (based on the delivery orders)."
 msgstr ""
+"שיטות אלו מאפשרות לחשב אוטומטית את מחיר המשלוח בהתאם להגדרותיך; בהזמנת \n"
+"המכירה (בהתבסס על הצעת המחיר) \n"
+"או בחשבונית (בהתבסס על הזמנות המשלוח)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__fixed_margin
 msgid "This fixed amount will be added to the shipping price."
-msgstr ""
+msgstr "סכום קבוע זה יתווסף למחיר המשלוח."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
@@ -778,7 +790,7 @@ msgstr "אחוז זה יתווסף למחיר המשלוח."
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__total_weight
 msgid "Total Order Weight"
-msgstr ""
+msgstr "סה\"כ משקל הזמנה"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -824,7 +836,7 @@ msgstr "משקל * נפח"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__weight_uom_name
 msgid "Weight Uom Name"
-msgstr ""
+msgstr "שם יחידת מידה של משקל"
 
 #. module: delivery
 #. odoo-python
@@ -836,6 +848,10 @@ msgid ""
 "The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
 "\n"
 msgstr ""
+"לא ניתן לעדכן את עלויות המשלוח בהזמנה שכבר חויבה!\n"
+"\n"
+"הקוים משלוח הבאים (מוצר, כמות ומחיר שחויבו) כבר עברו עיבוד:\n"
+" \n"
 
 #. module: delivery
 #. odoo-python
@@ -845,16 +861,18 @@ msgid ""
 "You cannot delete the deliveries product category as it is used on the "
 "delivery carriers products."
 msgstr ""
+"אינך יכול למחוק את קטגוריית המוצר של המשלוחים שכן היא בשימוש במוצרי "
+"המובילים."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
 msgid "Zip Prefix"
-msgstr ""
+msgstr "קידומת מיקוד"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_prefix_ids
 msgid "Zip Prefixes"
-msgstr ""
+msgstr "קידומות מיקוד"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form

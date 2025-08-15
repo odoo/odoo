@@ -31,8 +31,10 @@ class ProductTemplate(models.Model):
                 product.purchase_method = default_purchase_method
 
     def _compute_purchased_product_qty(self):
-        for template in self:
-            template.purchased_product_qty = float_round(sum([p.purchased_product_qty for p in template.product_variant_ids]), precision_rounding=template.uom_id.rounding)
+        for template in self.with_context(active_test=False):
+            template.purchased_product_qty = float_round(sum(p.purchased_product_qty for
+                p in template.product_variant_ids), precision_rounding=template.uom_id.rounding
+            )
 
     @api.model
     def get_import_templates(self):
@@ -46,7 +48,10 @@ class ProductTemplate(models.Model):
 
     def action_view_po(self):
         action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_history")
-        action['domain'] = ['&', ('state', 'in', ['purchase', 'done']), ('product_id', 'in', self.product_variant_ids.ids)]
+        action['domain'] = [
+            ('state', 'in', ['purchase', 'done']),
+            ('product_id', 'in', self.with_context(active_test=False).product_variant_ids.ids),
+        ]
         action['display_name'] = _("Purchase History for %s", self.display_name)
         return action
 
@@ -87,6 +92,10 @@ class ProductSupplierinfo(models.Model):
     def _onchange_partner_id(self):
         self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
 
+    def _get_filtered_supplier(self, company_id, product_id, params):
+        if params and 'order_id' in params and params['order_id'].company_id:
+            company_id = params['order_id'].company_id
+        return super()._get_filtered_supplier(company_id, product_id, params)
 
 class ProductPackaging(models.Model):
     _inherit = 'product.packaging'

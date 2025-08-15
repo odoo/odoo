@@ -7,14 +7,15 @@
 # Umur Akın <umura@projetgrup.com>, 2023
 # Halil, 2023
 # Levent Karakaş <levent@mektup.at>, 2023
+# Deniz Guvener_Odoo <degu@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Levent Karakaş <levent@mektup.at>, 2023\n"
+"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +28,7 @@ msgstr ""
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 #, python-format
 msgid "Complete the Stripe onboarding for company %s."
-msgstr ""
+msgstr "Şirket %s için Stripe kurulumunu tamamlayın."
 
 #. module: pos_stripe
 #. odoo-python
@@ -36,20 +37,22 @@ msgstr ""
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 #, python-format
 msgid "Do not have access to fetch token from Stripe"
-msgstr ""
+msgstr "Stripe'dan belirteç alma yetkiniz bulunmamaktadır"
 
 #. module: pos_stripe
 #: model_terms:ir.ui.view,arch_db:pos_stripe.pos_payment_method_view_form_inherit_pos_stripe
 msgid ""
 "Don't forget to complete Stripe connect before using this payment method."
 msgstr ""
+"Bu ödeme yöntemini kullanmadan önce Stripe bağlantısını tamamlamayı "
+"unutmayın."
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 #, python-format
 msgid "Failed to discover: %s"
-msgstr ""
+msgstr "Keşif başarısız: %s"
 
 #. module: pos_stripe
 #. odoo-javascript
@@ -57,14 +60,14 @@ msgstr ""
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 #, python-format
 msgid "Failed to load resource: net::ERR_INTERNET_DISCONNECTED."
-msgstr ""
+msgstr "Kaynak yüklenemedi: net::ERR_INTERNET_DISCONNECTED"
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 #, python-format
 msgid "No available Stripe readers."
-msgstr ""
+msgstr "Kullanılabilir Stripe okuyucusu yok."
 
 #. module: pos_stripe
 #. odoo-javascript
@@ -88,7 +91,7 @@ msgstr "Satış Noktası Oturumu"
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 #, python-format
 msgid "Reader disconnected"
-msgstr ""
+msgstr "Okuyucu bağlantısı kesildi"
 
 #. module: pos_stripe
 #. odoo-python
@@ -102,26 +105,26 @@ msgstr "Stripe"
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 #, python-format
 msgid "Stripe Error"
-msgstr ""
+msgstr "Stripe Hatası"
 
 #. module: pos_stripe
 #: model:ir.model.fields,field_description:pos_stripe.field_pos_payment_method__stripe_serial_number
 msgid "Stripe Serial Number"
-msgstr ""
+msgstr "Stripe Seri Numarası"
 
 #. module: pos_stripe
 #. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 #, python-format
 msgid "Stripe payment provider for company %s is missing"
-msgstr ""
+msgstr "%s şirketi için Stripe ödeme sağlayıcısı eksik."
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 #, python-format
 msgid "Stripe readers %s not listed in your account"
-msgstr ""
+msgstr "Stripe okuyucu %s hesabınızda listelenmemiş."
 
 #. module: pos_stripe
 #. odoo-python
@@ -131,14 +134,6 @@ msgid "Terminal %s is already used on payment method %s."
 msgstr "Terminal %s, ödeme yöntemi %s zaten kullanılmaktadır."
 
 #. module: pos_stripe
-#. odoo-python
-#: code:addons/pos_stripe/models/pos_payment_method.py:0
-#: code:addons/pos_stripe/models/pos_payment_method.py:0
-#, python-format
-msgid "There are some issues between us and Stripe, try again later."
-msgstr ""
-
-#. module: pos_stripe
 #: model:ir.model.fields,help:pos_stripe.field_pos_payment_method__stripe_serial_number
 msgid "[Serial number of the stripe terminal], for example: WSC513105011295"
-msgstr ""
+msgstr " [Stripe terminalinin seri numarası], örneğin: WSC513105011295"

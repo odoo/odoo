@@ -1,30 +1,44 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* snailmail_account
-#
+# 
 # Translators:
-# Bole <bole@dajmi5.com>, 2022
-# Martin Trigaux, 2022
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2022
-#
+# Martin Trigaux, 2024
+# Bole <bole@dajmi5.com>, 2024
+# Carlo Štefanac, 2024
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2024
+# Luka Carević <luka@uvid.hr>, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Vladimir Olujić <olujic.vladimir@storm.hr>, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Luka Carević <luka@uvid.hr>, 2025\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
-"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hr\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: snailmail_account
+#: model_terms:ir.ui.view,arch_db:snailmail_account.account_move_send_inherit_snailmail
+msgid ""
+"<i class=\"fa fa-question-circle\" role=\"img\" aria-label=\"Warning\" "
+"title=\"The address is unknown on the partner\" invisible=\"not "
+"send_by_post_readonly\"/>"
+msgstr ""
+
+#. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.res_config_settings_view_form
-msgid "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\"/>"
-msgstr "<span class=\"fa fa-lg fa-building-o\" title=\"Ove vrijednosti su specifične za tvrtku\"/>"
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Ove vrijednosti su specifične"
+" za tvrtku\"/>"
 
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_account_move_send
@@ -44,7 +58,7 @@ msgstr "Tvrtke"
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_res_config_settings
 msgid "Config Settings"
-msgstr "Postavke"
+msgstr "Konfiguracija postavki"
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_move_send__enable_send_by_post
@@ -54,6 +68,11 @@ msgstr ""
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_account_move
 msgid "Journal Entry"
+msgstr "Temeljnica"
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_move_send__send_by_post_readonly
+msgid "Send By Post Readonly"
 msgstr ""
 
 #. module: snailmail_account
@@ -68,8 +87,15 @@ msgid "Send by Post"
 msgstr "Pošalji poštom"
 
 #. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_move_send__send_by_post_cost
+msgid "Stamps"
+msgstr "Poštanske marke"
+
+#. module: snailmail_account
 #. odoo-python
 #: code:addons/snailmail_account/wizard/account_move_send.py:0
 #, python-format
-msgid "The following customers don't have a valid address: "
+msgid ""
+"The partners on the following invoices have no valid address, so those "
+"invoices will not be sent: %s"
 msgstr ""

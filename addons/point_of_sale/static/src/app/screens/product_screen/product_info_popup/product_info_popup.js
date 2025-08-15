@@ -20,7 +20,7 @@ export class ProductInfoPopup extends AbstractAwaitablePopup {
     }
     searchProduct(productName) {
         this.pos.setSelectedCategoryId(0);
-        this.pos.searchProductWord = productName + ";product_tmpl_id:" + this.props.product.product_tmpl_id;
+        this.pos.searchProductWord = productName;
         this.cancel();
     }
     _hasMarginsCostsAccessRights() {

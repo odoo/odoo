@@ -90,7 +90,7 @@ class TestAr(AccountTestInvoicingCommon):
             'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_IVARI").id,
         })
         cls.partner_cf = cls.env['res.partner'].create({
-            "name": "Consumidor Final Anónimo",
+            "name": "Consumidor Final Anonimo",
             "l10n_latam_identification_type_id": cls.env.ref('l10n_ar.it_Sigd').id,
             "l10n_ar_afip_responsibility_type_id": cls.env.ref("l10n_ar.res_CF").id,
         })
@@ -109,57 +109,57 @@ class TestAr(AccountTestInvoicingCommon):
             'vat': "27320732811",
             'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_RM").id,
         })
-        cls.res_partner_cerrocastor = cls.env['res.partner'].create({
-            "name": "Cerro Castor (Tierra del Fuego)",
+        cls.res_partner_montana_sur = cls.env['res.partner'].create({
+            "name": "Montana Sur",
             "is_company": 1,
-            "city": "Ushuaia",
+            "city": "San Martin de los Andes",
             "state_id": cls.env.ref("base.state_ar_v").id,
             "country_id": cls.env.ref("base.ar").id,
             "street": "Ruta 3 km 26",
-            "email": "info@cerrocastor.com",
-            "phone": "(+00) (11) 4444 5556",
-            "website": "http://www.cerrocastor.com",
+            "email": "contacto@montanasur.com.ar.com",
+            "phone": "(+54) (297) 4876 123",
+            "website": "http://www.montanasur.com.ar/",
             'l10n_latam_identification_type_id': cls.env.ref("l10n_ar.it_cuit").id,
             'vat': "27333333339",
             'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_IVA_LIB").id,
         })
-        cls.res_partner_cmr = cls.env['res.partner'].create({
-            "name": "Concejo Municipal de Rosario (IVA Sujeto Exento)",
+        cls.res_partner_servicios_globales = cls.env['res.partner'].create({
+            "name": "Servicios Globales SRL (IVA Sujeto Exento)",
             "is_company": 1,
             "city": "Rosario",
             "zip": "2000",
             "state_id": cls.env.ref("base.state_ar_s").id,
             "country_id": cls.env.ref("base.ar").id,
-            "street": "Cordoba 501",
-            "email": "info@example.com.ar",
-            "phone": "(+54) (341) 222 3333",
-            "website": "http://www.concejorosario.gov.ar/",
+            "street": "Bv. Oroño 789",
+            "email": "contacto@serviciosglobales.com.ar",
+            "phone": "(+54) (341) 333 4444",
+            "website": "http://www.serviciosglobales.com.ar/",
             'l10n_latam_identification_type_id': cls.env.ref("l10n_ar.it_cuit").id,
             'vat': "30684679372",
             'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_IVAE").id,
         })
-        cls.res_partner_expresso = cls.env['res.partner'].create({
-            "name": "Expresso",
+        cls.res_partner_barcelona_food = cls.env['res.partner'].create({
+            "name": "Barcelona Food",
             "is_company": 1,
             "city": "Barcelona",
             "zip": "11002",
             "country_id": cls.env.ref("base.es").id,
             "street": "La gran avenida 123",
-            "email": "info@expresso.com",
+            "email": "info@barcelonafoods.com",
             "phone": "(+00) (11) 222 3333",
-            "website": "http://www.expresso.com/",
+            "website": "http://www.barcelonafoods.com/",
             'l10n_latam_identification_type_id': cls.env.ref("l10n_latam_base.it_fid").id,
             'vat': "2222333344445555",
             'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_EXT").id,
         })
         cls.partner_mipyme = cls.env['res.partner'].create({
-            "name": "Belgrano Cargas Y Logistica S (Mipyme)",
+            "name": "Trenes Argentinos (Mipyme)",
             "is_company": 1,
             "city": "Buenos Aires",
-            "zip": "1425",
+            "zip": "1524",
             "state_id": cls.env.ref("base.state_ar_c").id,
             "country_id": cls.env.ref("base.ar").id,
-            "street": "Av. Santa Fe 4636",
+            "street": "Santa Cruz 4636",
             "email": "mipyme@example.com",
             "phone": "(123)-456-7890",
             "website": "http://www.mypime-inc.com",
@@ -177,6 +177,37 @@ class TestAr(AccountTestInvoicingCommon):
         cls.tax_no_gravado = cls._search_tax(cls, 'iva_no_gravado')
         cls.tax_perc_iibb = cls._search_tax(cls, 'percepcion_iibb_ba')
         cls.tax_iva_exento = cls._search_tax(cls, 'iva_exento')
+
+        cls.tax_national = cls.env['account.tax'].create({
+            "name": "National Tax",
+            "description": "National Tax",
+            "amount": "4",
+            "amount_type": "percent",
+            "type_tax_use": "sale",
+            "country_id": cls.env.ref("base.ar").id,
+            "company_id": cls.company_ri.id,
+            "tax_group_id": cls.env.ref(f"account.{cls.company_ri.id}_tax_group_national_taxes").id,
+        })
+        cls.tax_internal = cls.env['account.tax'].create({
+            "name": "Internal Tax",
+            "description": "Internal Tax",
+            "amount": "3",
+            "amount_type": "percent",
+            "type_tax_use": "sale",
+            "country_id": cls.env.ref("base.ar").id,
+            "company_id": cls.company_ri.id,
+            "tax_group_id": cls.env.ref(f"account.{cls.company_ri.id}_tax_impuestos_internos").id,
+        })
+        cls.tax_other = cls.env['account.tax'].create({
+            "name": "Other Tax",
+            "description": "Other Tax",
+            "amount": "100",
+            "amount_type": "fixed",
+            "type_tax_use": "sale",
+            "country_id": cls.env.ref("base.ar").id,
+            "company_id": cls.company_ri.id,
+            "tax_group_id": cls.env.ref(f"account.{cls.company_ri.id}_tax_group_otros_impuestos").id,
+        })
 
         cls.tax_21_purchase = cls._search_tax(cls, 'iva_21', type_tax_use='purchase')
         cls.tax_no_gravado_purchase = cls._search_tax(cls, 'iva_no_gravado', type_tax_use='purchase')
@@ -339,8 +370,8 @@ class TestAr(AccountTestInvoicingCommon):
                 ],
             },
             'test_invoice_2': {
-                "ref": "test_invoice_2: Invoice to CMR with vat 21, 27 and 10,5",
-                "partner_id": self.res_partner_cmr,
+                "ref": "test_invoice_2: Invoice to Servicios Globales with vat 21, 27 and 10,5",
+                "partner_id": self.res_partner_servicios_globales,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": "out_invoice",
                 "invoice_date": "2021-03-05",
@@ -371,8 +402,8 @@ class TestAr(AccountTestInvoicingCommon):
                 "invoice_date": "2021-03-01",
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
-                    {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
-                    {'product_id': self.product_iva_exento, 'price_unit': 100.0, 'quantity': 1},
+                    {'product_id': self.product_iva_105, 'price_unit': 642.1234, 'quantity': 5},
+                    {'product_id': self.product_iva_exento, 'price_unit': 100.5678, 'quantity': 1},
                 ],
             },
             'test_invoice_5': {
@@ -392,8 +423,8 @@ class TestAr(AccountTestInvoicingCommon):
                 ],
             },
             'test_invoice_6': {
-                'ref': 'test_invoice_6: Invoice to cerro castor, fiscal position changes taxes to exempt',
-                "partner_id": self.res_partner_cerrocastor,
+                'ref': 'test_invoice_6: Invoice to Montana Sur, fiscal position changes taxes to exempt',
+                "partner_id": self.res_partner_montana_sur,
                 "journal_id": self.sale_expo_journal_ri,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
@@ -410,8 +441,8 @@ class TestAr(AccountTestInvoicingCommon):
                 ],
             },
             'test_invoice_7': {
-                'ref': 'test_invoice_7: Export invoice to expresso, fiscal position changes tax to exempt (type 4 because it have services)',
-                "partner_id": self.res_partner_expresso,
+                'ref': 'test_invoice_7: Export invoice to Barcelona food, fiscal position changes tax to exempt (type 4 because it have services)',
+                "partner_id": self.res_partner_barcelona_food,
                 "journal_id": self.sale_expo_journal_ri,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
@@ -497,8 +528,8 @@ class TestAr(AccountTestInvoicingCommon):
                 ],
             },
             'test_invoice_14': {
-                'ref': 'test_invoice_14: Export invoice to expresso, fiscal position changes tax to exempt (type 1 because only products)',
-                "partner_id": self.res_partner_expresso,
+                'ref': 'test_invoice_14: Export invoice to Barcelona food, fiscal position changes tax to exempt (type 1 because only products)',
+                "partner_id": self.res_partner_barcelona_food,
                 "journal_id": self.sale_expo_journal_ri,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
@@ -510,8 +541,8 @@ class TestAr(AccountTestInvoicingCommon):
                 ],
             },
             'test_invoice_15': {
-                'ref': 'test_invoice_15: Export invoice to expresso, fiscal position changes tax to exempt (type 2 because only service)',
-                "partner_id": self.res_partner_expresso,
+                'ref': 'test_invoice_15: Export invoice to Barcelona food, fiscal position changes tax to exempt (type 2 because only service)',
+                "partner_id": self.res_partner_barcelona_food,
                 "journal_id": self.sale_expo_journal_ri,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
@@ -523,8 +554,8 @@ class TestAr(AccountTestInvoicingCommon):
                 ],
             },
             'test_invoice_16': {
-                'ref': 'test_invoice_16: Export invoice to expresso, fiscal position changes tax to exempt (type 1 because it have products only, used to test refund of expo)',
-                "partner_id": self.res_partner_expresso,
+                'ref': 'test_invoice_16: Export invoice to Barcelona food, fiscal position changes tax to exempt (type 1 because it have products only, used to test refund of expo)',
+                "partner_id": self.res_partner_barcelona_food,
                 "journal_id": self.sale_expo_journal_ri,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
@@ -594,6 +625,24 @@ class TestAr(AccountTestInvoicingCommon):
                         line_form.account_id = self.company_data['default_account_revenue']
             invoice = invoice_form.save()
             self.demo_invoices[key] = invoice
+
+    def _create_invoice_from_dict(self, values, use_current_date=True):
+        if not values.get('invoice_payment_term_id'):
+            values['invoice_payment_term_id'] = self.env.ref("account.account_payment_term_end_following_month")
+        if use_current_date:
+            values.pop('invoice_date', False)
+
+        for key, value in values.items():
+            if key.endswith("_id"):
+                values[key] = value.id
+
+        for line in values['invoice_line_ids']:
+            for key, value in line.items():
+                if key.endswith("_id"):
+                    line[key] = value.id
+
+        values['invoice_line_ids'] = [(0, 0, line_data) for line_data in values['invoice_line_ids']]
+        return self.env['account.move'].with_context(default_move_type=values['move_type']).create(values)
 
     # Helpers
 

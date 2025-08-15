@@ -94,6 +94,8 @@ class AccountMoveLine(models.Model):
             if layer:
                 total_layer_qty_to_invoice = abs(layer.quantity)
                 initial_layer = layer.stock_move_id.origin_returned_move_id.stock_valuation_layer_ids
+                # Filter out revaluation layers (Landed Cost)
+                initial_layer = initial_layer.filtered(lambda svl: not svl.stock_valuation_layer_id)
                 if initial_layer:
                     # `layer` is a return. We will cancel the qty to invoice of the returned layer
                     # /!\ we will cancel the qty not yet invoiced only
@@ -209,7 +211,13 @@ class AccountMoveLine(models.Model):
                     # the returned one, the accounting entries are already compensated, and we don't want to impact
                     # the stock valuation. So, let's fake the layer price unit with the POL one as everything is
                     # already ok
-                    layer_price_unit = po_line._get_gross_price_unit()
+                    layer_price_unit = po_line.currency_id._convert(
+                        po_line._get_gross_price_unit(),
+                        layer.currency_id,
+                        layer.company_id,
+                        layer.create_date.date(),
+                        round=False
+                    )
 
                 aml = self
 
@@ -225,7 +233,10 @@ class AccountMoveLine(models.Model):
             unit_valuation_difference_curr = unit_valuation_difference * self.currency_rate
             unit_valuation_difference_curr = product_uom._compute_price(unit_valuation_difference_curr, self.product_uom_id)
             out_qty_to_invoice = product_uom._compute_quantity(out_qty_to_invoice, self.product_uom_id)
-            if not float_is_zero(unit_valuation_difference_curr * out_qty_to_invoice, precision_rounding=self.currency_id.rounding):
+            if (
+                not self.currency_id.is_zero(unit_valuation_difference_curr * out_qty_to_invoice) and
+                self.product_id.valuation == 'real_time'
+            ):
                 aml_vals_list += self._prepare_pdiff_aml_vals(out_qty_to_invoice, unit_valuation_difference_curr)
 
             # Generate the SVL values for the on hand quantities (and impact the parent layer)

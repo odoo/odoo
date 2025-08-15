@@ -111,6 +111,29 @@ QUnit.test(
     }
 );
 
+QUnit.test(
+    "Cannot open see records when the table is manipulated by other functions",
+    async function (assert) {
+        const { env, model } = await createSpreadsheetWithPivot({
+            arch: /*xml*/ `
+                <pivot>
+                    <field name="foo" type="row"/>
+                    <field name="probability" type="measure"/>
+                </pivot>
+            `,
+        });
+        model.dispatch("CREATE_SHEET", { sheetId: "42" });
+        // ODOO.PIVOT.TABLE(1) would have 2 columns and 7 rows
+        // TRANSPOSE(ODOO.PIVOT.TABLE(1)) has 7 columns and 2 rows
+        setCellContent(model, "A1", "=TRANSPOSE(ODOO.PIVOT.TABLE(1))", "42");
+        // C2 has the value in the grid (because of the TRANSPOSE)
+        // but it's not a cell of the pivot table
+        selectCell(model, "C2", "42");
+        const action = await getActionMenu(cellMenuRegistry, ["pivot_see_records"], env);
+        assert.strictEqual(action.isVisible(env), false);
+    }
+);
+
 QUnit.test("Can see records on ODOO.PIVOT.TABLE cells", async function (assert) {
     const actions = [];
     const fakeActionService = {
@@ -210,6 +233,33 @@ QUnit.test(
         assert.strictEqual(action.isVisible(env), true);
     }
 );
+QUnit.test("See records is not visible if the formula has an weird IF", async function (assert) {
+    let deferred = undefined;
+    const { env, model } = await createSpreadsheetWithPivot({
+        arch: /*xml*/ `
+            <pivot>
+                <field name="probability" type="measure"/>
+            </pivot>
+        `,
+        mockRPC: async function (route, args) {
+            if (deferred && args.method === "read_group" && args.model === "partner") {
+                await deferred;
+            }
+        },
+    });
+    setCellContent(
+        model,
+        "A1",
+        '=if(false, ODOO.PIVOT("1","probability","user_id",2,"partner_id", "#Error"), "test")'
+    );
+    deferred = makeDeferred();
+    model.dispatch("REFRESH_ALL_DATA_SOURCES");
+    const action = cellMenuRegistry.getAll().find((item) => item.id === "pivot_see_records");
+    assert.strictEqual(action.isVisible(env), false);
+    deferred.resolve();
+    await nextTick();
+    assert.strictEqual(action.isVisible(env), false);
+});
 
 QUnit.test("See records is not visible on an empty cell", async function (assert) {
     const { env, model } = await createSpreadsheetWithPivot();

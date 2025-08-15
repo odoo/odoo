@@ -1,21 +1,23 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Turkey - Accounting',
-    'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations.html',
+    'name': 'Türkiye - Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['tr'],
-    'version': '1.2',
+    'version': '1.3',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
-    Turkish charts of accounts
-    ========================================
-        * Defines the default chart of accounts
-        * Defines the default taxes
-        * Defines default tax report
+This is the base module to manage the accounting chart for Türkiye in Odoo
+==========================================================================
 
-    This was done in collaboration with Broadmax Partner in Turkey.
+Türkiye accounting basic charts and localizations
+-------------------------------------------------
+Activates:
+
+- Chart of Accounts
+- Taxes
+- Tax Report
     """,
-    'author': 'Odoo',
+    'author': 'Odoo S.A., Drysharks Consulting and Trading Ltd.',
     'depends': [
         'account',
     ],

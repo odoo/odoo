@@ -5,7 +5,7 @@
 # Translators:
 # Thang Nguyen, 2024
 # Wil Odoo, 2024
-# Thi Huong Nguyen, 2024
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -140,12 +140,12 @@ msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Trở lại chế độ chỉnh s�
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "<i title=\"Remove operator\" class=\"fa fa-fw fa-lg fa-close\"/>"
-msgstr "<i title=\"Xóa người đại diện\" class=\"fa fa-fw fa-lg fa-close\"/>"
+msgstr "<i title=\"Xóa tổng đài viên\" class=\"fa fa-fw fa-lg fa-close\"/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "<span style=\"font-size: 10px;\">Livechat Conversation</span><br/>"
-msgstr "<span style=\"font-size: 10px;\">Cuộc livechat</span><br/>"
+msgstr "<span style=\"font-size: 10px;\">Cuộc trò chuyện trực tiếp</span><br/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -163,8 +163,8 @@ msgid ""
 "<span>Reminder: This step will only be played if no operator is "
 "available.</span>"
 msgstr ""
-"<span>Nhắc nhở: Bước này sẽ chỉ được áp dụng nếu không có người đại "
-"diện.</span>"
+"<span>Nhắc nhở: Bước này sẽ chỉ được áp dụng nếu không có tổng đài "
+"viên.</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
@@ -172,8 +172,8 @@ msgid ""
 "<span>Tip: At least one interaction (Question, Email, ...) is needed before the Bot can perform more complex actions (Forward to an Operator, ...). </span>\n"
 "                    <span>Use Channel Rules if you want the Bot to interact with visitors only when no operator is available.</span>"
 msgstr ""
-"<span>Mẹo: Cần có ít nhất một tương tác (Câu hỏi, Email,...) trước khi Bot có thể thực hiện các hành động phức tạp hơn (Chuyển tiếp cho Người đại diện, ...).</span>\n"
-"                    <span>Hãy sử dụng Quy tắc kênh nếu bạn chỉ muốn Bot tương tác với khách truy cập khi không có người đại diện nào.</span>"
+"<span>Mẹo: Cần có ít nhất một tương tác (Câu hỏi, Email,...) trước khi Bot có thể thực hiện các hành động phức tạp hơn (Chuyển tiếp cho Tổng đài viên, ...).</span>\n"
+"                    <span>Hãy sử dụng Quy tắc kênh nếu bạn chỉ muốn Bot tương tác với khách truy cập khi không có tổng đài viên nào.</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
@@ -183,8 +183,8 @@ msgid ""
 "...).</span>"
 msgstr ""
 "<span>Mẹo: Cần có ít nhất một tương tác (Câu hỏi, Email,...) trước khi Bot "
-"có thể thực hiện các hành động phức tạp hơn (Chuyển tiếp cho Người đại diện,"
-" ...).</span>"
+"có thể thực hiện các hành động phức tạp hơn (Chuyển tiếp cho Tổng đài viên, "
+"...).</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_step_view_form
@@ -193,7 +193,7 @@ msgid ""
 "available.</span>"
 msgstr ""
 "<span>Mẹo: Lên kế hoạch các bước tiếp theo cho Bot trong trường hợp không có"
-" người đại diện.</span>"
+" tổng đài viên.</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
@@ -218,7 +218,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__active
@@ -281,7 +281,7 @@ msgstr "Số lượng tệp đính kèm"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__available_operator_ids
 msgid "Available Operator"
-msgstr "Người đại diện đang rảnh"
+msgstr "Tổng đài viên đang rảnh"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_form
@@ -338,7 +338,7 @@ msgstr "Đánh giá tệ"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__operator_partner_id
 msgid "Bot Operator"
-msgstr "Bot đại diện"
+msgstr "Bot hỗ trợ"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_background_color
@@ -485,7 +485,7 @@ msgstr "Đóng"
 #: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
 #, python-format
 msgid "Close conversation"
-msgstr "Đóng hội thoại"
+msgstr "Đóng cuộc trò chuyện"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__technical_name
@@ -513,14 +513,14 @@ msgstr "Liên hệ"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__channel_id
 msgid "Conversation"
-msgstr "Hội thoại"
+msgstr "Cuộc trò chuyện"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
 #, python-format
 msgid "Conversation ended..."
-msgstr "Cuộc hội thoại đã kết thúc..."
+msgstr "Cuộc trò chuyện đã kết thúc..."
 
 #. module: im_livechat
 #. odoo-python
@@ -616,7 +616,7 @@ msgstr "Days of activity"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_background_color
 msgid "Default background color of the Livechat button"
-msgstr "Màu nền mặc định của nút Livechat"
+msgstr "Màu nền mặc định của nút Trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__header_background_color
@@ -626,12 +626,12 @@ msgstr "Màu nền mặc định của header kênh khi mở"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_text_color
 msgid "Default text color of the Livechat button"
-msgstr "Màu chữ mặc định của nút Livechat"
+msgstr "Màu chữ mặc định của nút Trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_text
 msgid "Default text displayed on the Livechat Support Button"
-msgstr "Chữ mặc định hiển thị trong nút hỗ trợ Livechat"
+msgstr "Chữ mặc định hiển thị trong nút hỗ trợ Trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__title_color
@@ -641,7 +641,7 @@ msgstr "Màu tiêu đề mặc định của kênh khi mở"
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
 msgid "Define a new website live chat channel"
-msgstr "Xác định kênh Livechat mới trên trang web"
+msgstr "Xác định kênh Trò chuyện trực tiếp mới trên trang web"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -726,7 +726,7 @@ msgstr "Thời lượng của phiên (phút)"
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__duration
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator__duration
 msgid "Duration of the conversation (in seconds)"
-msgstr "Thời lượng của cuộc hội thoại (tính bằng giây)"
+msgstr "Thời lượng của cuộc trò chuyện (tính bằng giây)"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__duration
@@ -741,13 +741,13 @@ msgstr "Email"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__chatbot_only_if_no_operator
 msgid "Enable the bot only if there is no operator available"
-msgstr "Chỉ kích hoạt bot nếu không có người đại diện nào rảnh"
+msgstr "Chỉ kích hoạt bot nếu không có tổng đài viên nào rảnh"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__chatbot_only_if_no_operator
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
 msgid "Enabled only if no operator"
-msgstr "Chỉ kích hoạt nếu không có người vận hành"
+msgstr "Chỉ kích hoạt nếu không có tổng đài viên"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -788,13 +788,14 @@ msgid ""
 "Settings and select the Website Live Chat Channel you want to add to your "
 "website."
 msgstr ""
-"Đối với website được dựng bằng Odoo CMS, đi tới Website &gt; Cấu hình &gt; "
-"Cài đặt và chọn kênh Live Chat website bạn muốn thêm vào website."
+"Đối với trang web được dựng bằng Odoo CMS, đi tới Trang web &gt; Cấu hình "
+"&gt; Cài đặt và chọn kênh Trò chuyện trực tiếp trên trang web bạn muốn thêm "
+"vào trang web."
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__forward_operator
 msgid "Forward to Operator"
-msgstr "Chuyển tiếp cho người đại diện"
+msgstr "Chuyển tiếp cho tổng đài viên"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__free_input_single
@@ -835,7 +836,7 @@ msgstr "Có tin nhắn"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__has_access_livechat
 msgid "Has access to Livechat"
-msgstr "Có quyền truy cập Livechat"
+msgstr "Có quyền truy cập Trò chuyện trực tiếp"
 
 #. module: im_livechat
 #. odoo-python
@@ -888,12 +889,12 @@ msgstr "Tôi có thể giúp gì cho bạn?"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "How to use the Website Live Chat widget?"
-msgstr "Cách dùng tiện ích Livechat trên trang web?"
+msgstr "Cách dùng tiện ích Trò chuyện trực tiếp trên trang web?"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_noone_available
 msgid "Hu-ho, it looks like none of our operators are available 🙁"
-msgstr "Ultr! Có vẻ như tất cả người đại diện của chúng tôi đều đang bận. 🙁"
+msgstr "Ultr! Có vẻ như tất cả tổng đài viên của chúng tôi đều đang bận. 🙁"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_just_looking
@@ -977,12 +978,12 @@ msgstr "Is Forward Operator Child"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__is_discuss_sidebar_category_livechat_open
 msgid "Is category livechat open"
-msgstr "Là danh mục livechat mở"
+msgstr "Là danh mục trò chuyện trực tiếp mở"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_active
 msgid "Is livechat ongoing?"
-msgstr "Livechat vẫn đang diễn ra? "
+msgstr "Trò chuyện trực tiếp vẫn đang diễn ra? "
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_anonymous
@@ -1002,17 +1003,17 @@ msgstr "Gia nhập Kênh"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_conversations_value
 msgid "Kpi Livechat Conversations Value"
-msgstr "Kpi Giá trị cuộc trò chuyện Livechat"
+msgstr "Kpi Giá trị cuộc trò chuyện Trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_rating_value
 msgid "Kpi Livechat Rating Value"
-msgstr "Kpi Giá trị đánh giá Livechat"
+msgstr "Kpi Giá trị đánh giá Trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_response_value
 msgid "Kpi Livechat Response Value"
-msgstr "Kpi Giá trị phản hồi Livechat"
+msgstr "Kpi Giá trị phản hồi Trò chuyện trực tiếp"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1063,17 +1064,17 @@ msgstr "Rời Kênh"
 #: model:ir.ui.menu,name:im_livechat.menu_livechat_root
 #: model_terms:ir.ui.view,arch_db:im_livechat.digest_digest_view_form_inherit
 msgid "Live Chat"
-msgstr "Livechat"
+msgstr "Trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__action
 msgid "Live Chat Button"
-msgstr "Nút livechat"
+msgstr "Nút trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_search
 msgid "LiveChat Channel Search"
-msgstr "Tìm kiếm kênh livechat"
+msgstr "Tìm kiếm kênh trò chuyện trực tiếp"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1083,58 +1084,60 @@ msgstr "Tìm kiếm kênh livechat"
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
 #, python-format
 msgid "Livechat"
-msgstr "Livechat"
+msgstr "Trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Livechat Button"
-msgstr "Nút livechat"
+msgstr "Nút trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Livechat Button Color"
-msgstr "Màu nút livechat"
+msgstr "Màu nút trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel
 #: model_terms:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
 msgid "Livechat Channel"
-msgstr "Kênh livechat"
+msgstr "Kênh trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__livechat_channel_count
 msgid "Livechat Channel Count"
-msgstr "Số kênh livechat"
+msgstr "Số kênh trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
 msgid "Livechat Channel Rules"
-msgstr "Quy tắc kênh livechat"
+msgstr "Quy tắc kênh trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__channel_type__livechat
 msgid "Livechat Conversation"
-msgstr "Cuộc livechat"
+msgstr "Cuộc trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.qunit_embed_suite
 msgid "Livechat External Tests"
-msgstr "Kiểm thử bên ngoài livechat"
+msgstr "Kiểm thử bên ngoài trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_lang_ids
 msgid "Livechat Languages"
-msgstr "Ngôn ngữ livechat"
+msgstr "Ngôn ngữ trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_discuss_channel_livechat_operator_id
 msgid "Livechat Operator ID is required for a channel of type livechat."
-msgstr "Cần có ID người đại diện livechat cho kênh thuộc loại livechat."
+msgstr ""
+"Cần có ID tổng đài viên trò chuyện trực tiếp cho kênh thuộc loại trò chuyện "
+"trực tiếp."
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
 msgid "Livechat Support Channel Report"
-msgstr "Báo cáo kênh hỗ trợ livechat"
+msgstr "Báo cáo kênh hỗ trợ trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_action
@@ -1144,14 +1147,14 @@ msgid ""
 "your company livechat session performance. Extract information about the "
 "missed sessions, the audience, the duration of a session, etc."
 msgstr ""
-"Thống kê kênh hỗ trợ livechat cho phép bạn dễ dàng kiểm tra và phân tích "
-"hiệu suất phiên livechat của công ty. Trích xuất thông tin về các phiên bị "
-"nhỡ, đối tượng, thời lượng của một phiên,..."
+"Thống kê kênh hỗ trợ trò chuyện trực tiếp cho phép bạn dễ dàng kiểm tra và "
+"phân tích hiệu suất phiên trò chuyện trực tiếp của công ty. Trích xuất thông"
+" tin về các phiên bị nhỡ, đối tượng, thời lượng của một phiên,..."
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_operator
 msgid "Livechat Support Operator Report"
-msgstr "Báo cáo người đại diện hỗ trợ livechat"
+msgstr "Báo cáo tổng đài viên trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_graph
@@ -1159,29 +1162,30 @@ msgstr "Báo cáo người đại diện hỗ trợ livechat"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_graph
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_pivot
 msgid "Livechat Support Statistics"
-msgstr "Thống kê hỗ trợ Livechat"
+msgstr "Thống kê hỗ trợ Trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_username
 #: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__livechat_username
 msgid "Livechat Username"
-msgstr "Tên người dùng Livechat"
+msgstr "Tên người dùng Trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Livechat Window"
-msgstr "Cửa sổ Livechat"
+msgstr "Cửa sổ Trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__livechat_lang_ids
 msgid "Livechat languages"
-msgstr "Ngôn ngữ livechat"
+msgstr "Ngôn ngữ trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_active
 msgid "Livechat session is active until visitor leaves the conversation."
 msgstr ""
-"Phiên livechat sẽ hoạt động cho tới khi khách truy cập rời cuộc trò chuyện. "
+"Phiên trò chuyện trực tiếp sẽ hoạt động cho tới khi khách truy cập rời cuộc "
+"trò chuyện. "
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__sequence
@@ -1236,7 +1240,7 @@ msgstr "Không có cộng tác viên, vui lòng thử lại sau."
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.rating_rating_action_livechat_report
 msgid "No customer ratings on live chat session yet"
-msgstr "Chưa có đánh giá của khách hàng cho phiên livechat"
+msgstr "Chưa có đánh giá của khách hàng cho phiên trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_time_to_answer_action
@@ -1258,7 +1262,7 @@ msgstr "Văn bản thông báo"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__chatbot_script_count
@@ -1268,7 +1272,7 @@ msgstr "Số lượng chatbot"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__nbr_channel
 msgid "Number of conversation"
-msgstr "Số các cuộc hội thoại"
+msgstr "Số lượng cuộc trò chuyện"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__days_of_activity
@@ -1288,7 +1292,7 @@ msgstr "Số lượng lỗi"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__nbr_message
 msgid "Number of message in the conversation"
-msgstr "Số lượng thông điệp trong hội thoại"
+msgstr "Số lượng tin nhắn trong cuộc trò chuyện"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__message_needaction_counter
@@ -1339,19 +1343,19 @@ msgstr "Đồng hồ tính giờ tự động mở"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Operator"
-msgstr "Người đại diện"
+msgstr "Tổng đài viên"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_report_operator_action
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_operator
 msgid "Operator Analysis"
-msgstr "Phân tích người đại diện"
+msgstr "Phân tích tổng đài viên"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__user_ids
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Operators"
-msgstr "Người đại diện"
+msgstr "Tổng đài viên"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -1492,7 +1496,7 @@ msgstr "Đánh giá"
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.rating_rating_action_livechat
 msgid "Ratings for livechat channel"
-msgstr "Đánh giá kênh livechat"
+msgstr "Đánh giá kênh trò chuyện trực tiếp"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1726,7 +1730,7 @@ msgstr "Loại bước"
 #: code:addons/im_livechat/static/src/core/web/composer_patch.xml:0
 #, python-format
 msgid "Tab to next livechat"
-msgstr "Tab to next livechat"
+msgstr "Tab to next trò chuyện trực tiếp"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__text
@@ -1797,7 +1801,8 @@ msgid ""
 "that the script will end if the link is external to the livechat website)."
 msgstr ""
 "Khách truy cập sẽ được chuyển hướng đến liên kết này khi nhấp vào tùy chọn "
-"(lưu ý rằng kịch bản sẽ kết thúc nếu liên kết nằm ngoài trang web livechat)."
+"(lưu ý rằng kịch bản sẽ kết thúc nếu liên kết nằm ngoài trang web trò chuyện"
+" trực tiếp)."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.rating_rating_action_livechat
@@ -1811,7 +1816,7 @@ msgid ""
 "you to Live Chat sessions."
 msgstr ""
 "Ngoài ngôn ngữ chính của bạn, thì những ngôn ngữ này sẽ được sử dụng để phân"
-" công bạn tham gia các phiên Livechat."
+" công bạn tham gia các phiên Trò chuyện trực tiếp."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
@@ -1837,7 +1842,9 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_res_users_settings__livechat_username
 msgid "This username will be used as your name in the livechat channels."
-msgstr "Tên người dùng này sẽ được sử dụng làm tên bạn trong kênh livechat."
+msgstr ""
+"Tên người dùng này sẽ được sử dụng làm tên bạn trong kênh trò chuyện trực "
+"tiếp."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__time_to_answer
@@ -1882,8 +1889,8 @@ msgid ""
 "URL to a static page where you client can discuss with the operator of the "
 "channel."
 msgstr ""
-"URL đến một trang tĩnh nơi khách hàng có thể thảo luận với người đại diện "
-"của kênh."
+"URL đến một trang tĩnh nơi khách hàng có thể thảo luận với tổng đài viên của"
+" kênh."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__uuid
@@ -1902,8 +1909,8 @@ msgid ""
 " load a canned response, start your sentence with ':' and select the "
 "template."
 msgstr ""
-"Dùng câu trả lời soạn sẵn để xác định mẫu tin nhắn trong ứng dụng livechat. "
-"Để tải câu trả lời soạn sẵn, bắt đầu câu với '.' và chọn mẫu."
+"Dùng câu trả lời soạn sẵn để xác định mẫu tin nhắn trong ứng dụng trò chuyện"
+" trực tiếp. Để tải câu trả lời soạn sẵn, bắt đầu câu với '.' và chọn mẫu."
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_users
@@ -1916,7 +1923,7 @@ msgstr "Người dùng"
 #: model:ir.model.fields,field_description:im_livechat.field_res_partner__user_livechat_username
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__user_livechat_username
 msgid "User Livechat Username"
-msgstr "Tên người dùng livechat của người dùng"
+msgstr "Tên người dùng trò chuyện trực tiếp của người dùng"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_users_settings
@@ -1964,7 +1971,7 @@ msgstr "Trang web"
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
 msgid "Website Live Chat Channels"
-msgstr "Kênh livechat trên trang web"
+msgstr "Kênh trò chuyện trực tiếp trên trang web"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__website_message_ids
@@ -2038,8 +2045,8 @@ msgid ""
 "                visitors to talk in real time with your operators."
 msgstr ""
 "Bạn có thể tạo kênh cho mỗi trang web mà bạn muốn\n"
-"                tích hợp tiện ích livechat trên trang web, cho phép khách\n"
-"                truy cập trang web livechat với người đại diện của bạn."
+"                tích hợp tiện ích trò chuyện trực tiếp trên trang web, cho phép khách\n"
+"                truy cập trang web trò chuyện trực tiếp với tổng đài viên của bạn."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action

@@ -17,17 +17,18 @@
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Kristoffer Grundström <lovaren@gmail.com>, 2023
 # Lasse L, 2024
-# Claes-Johan Dahlin, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# Claes-Johan Dahlin, 2024
+# Cathrine Niklasson, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-07-18 01:16+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2025\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -361,7 +362,7 @@ msgid ""
 "                            Generate \n"
 "                        </span>"
 msgstr ""
-"<span invisible=\"kommer_inte_att_sända_mail\">\n"
+"<span invisible=\"not will_send_mail\">\n"
 "                            Generera och skicka\n"
 "                        <span> </span\n"
 "                        <span osynlig=\"kommer_att_sända_mail\">\n"
@@ -514,7 +515,7 @@ msgstr "En kupong med samma kod hittades."
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_card_card_code_unique
 msgid "A coupon/loyalty card must have a unique code."
-msgstr "En kupong/ett lojalitetskort måste ha en unik kod."
+msgstr "En kupong/ett presentkort måste ha en unik kod."
 
 #. module: loyalty
 #. odoo-python
@@ -554,7 +555,7 @@ msgstr "Aktiv"
 #: model:ir.model.fields,field_description:loyalty.field_res_partner__loyalty_card_count
 #: model:ir.model.fields,field_description:loyalty.field_res_users__loyalty_card_count
 msgid "Active loyalty cards"
-msgstr "Aktiva lojalitetskort"
+msgstr "Aktiva presentkort"
 
 #. module: loyalty
 #. odoo-javascript
@@ -942,7 +943,7 @@ msgstr "Rabatt"
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_discount_loyalty_action
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Discount & Loyalty"
-msgstr "Rabatt & Lojalitet"
+msgstr "Rabatt & Förmån"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_applicability
@@ -1078,6 +1079,13 @@ msgstr "Slutdatum"
 
 #. module: loyalty
 #. odoo-python
+#: code:addons/loyalty/models/loyalty_card.py:0
+#, python-format
+msgid "Expiration date cannot be set on a loyalty card."
+msgstr "Förfallodatum kan inte anges på ett presentkort."
+
+#. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Fidelity Card"
@@ -1192,13 +1200,6 @@ msgstr "Skapa och dela unika kuponger med dina kunder"
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Generate eWallet"
 msgstr "Generera eWallet"
-
-#. module: loyalty
-#. odoo-javascript
-#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
-#, python-format
-msgid "Generate {{props.context.program_item_name}}"
-msgstr ""
 
 #. module: loyalty
 #. odoo-python
@@ -1413,7 +1414,7 @@ msgstr "Logotyp"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Loyalty Card"
-msgstr "Lojalitetskort"
+msgstr "Presentkort"
 
 #. module: loyalty
 #. odoo-python
@@ -1423,7 +1424,7 @@ msgstr "Lojalitetskort"
 #: model_terms:ir.ui.view,arch_db:loyalty.res_partner_form
 #, python-format
 msgid "Loyalty Cards"
-msgstr "Lojalitetskort"
+msgstr "Presentkort"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_mail
@@ -1433,7 +1434,7 @@ msgstr "Kommunikation om lojalitet"
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_card
 msgid "Loyalty Coupon"
-msgstr "Lojalitetskupong"
+msgstr "Presentkort"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_program
@@ -1448,14 +1449,14 @@ msgstr "Lojalitetsbelöning"
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_rule
 msgid "Loyalty Rule"
-msgstr "Lojalitetsregler"
+msgstr "Presentkortsregler"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Loyalty point(s)"
-msgstr "Lojalitetspoäng(ar)"
+msgstr "Presentkortspoäng(er)"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_max_amount
@@ -1609,6 +1610,7 @@ msgid "Portal Visible"
 msgstr "Portal synlig"
 
 #. module: loyalty
+#: model:ir.model,name:loyalty.model_product_pricelist
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__pricelist_ids
 msgid "Pricelist"
 msgstr "Prislista"
@@ -1893,7 +1895,8 @@ msgstr "Slutdatumet ingår i giltighetsperioden för detta program"
 msgid ""
 "The loyalty program's currency must be the same as all it's pricelists ones."
 msgstr ""
-"Lojalitetsprogrammets valuta måste vara densamma som alla dess prislistors."
+"Presentkortsprogrammets valuta måste vara densamma som alla dess "
+"prislistors."
 
 #. module: loyalty
 #. odoo-python
@@ -1912,7 +1915,7 @@ msgstr "De poäng som krävs för en belöning måste vara strikt positiva."
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "The reward description field cannot be empty."
-msgstr ""
+msgstr "Belöningsbeskrivningsfältet får inte vara tomt."
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_product_qty_positive
@@ -1954,6 +1957,15 @@ msgstr ""
 
 #. module: loyalty
 #. odoo-python
+#: code:addons/loyalty/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"This pricelist may not be archived. It is being used for active promotion "
+"programs: %s"
+msgstr ""
+
+#. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/product_product.py:0
 #, python-format
 msgid ""
@@ -1977,6 +1989,13 @@ msgstr "Totalt antal order"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger
 msgid "Trigger"
 msgstr "Utlösare"
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_reward.py:0
+#, python-format
+msgid "Unsupported search operator"
+msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__use_count
@@ -2080,7 +2099,7 @@ msgid ""
 "You cannot delete %(name)s as it is used in 'Coupons & Loyalty'. Please "
 "archive it instead."
 msgstr ""
-"Du kan inte ta bort %(name)s eftersom det används i \"Kuponger & "
+"Du kan inte ta bort %(name)s eftersom det används i \"Värdekort  & "
 "lojalitet\". Vänligen arkivera den istället."
 
 #. module: loyalty
@@ -2150,12 +2169,12 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "item(s) bought"
-msgstr "inköpt(a) vara(n)"
+msgstr "inköpt(a) vara(or)"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "loyalty Reward"
-msgstr "lojalitet Belöning"
+msgstr "värdekortsbelöning"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -2231,15 +2250,13 @@ msgid "usages"
 msgstr "användningsområden"
 
 #. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
+msgid "used)"
+msgstr ""
+
+#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "your order"
 msgstr "din beställning"
-
-#. module: loyalty
-#. odoo-javascript
-#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
-#, python-format
-msgid "{{loyalty_el_title}}"
-msgstr ""

@@ -200,7 +200,7 @@ class AccountMove(models.Model):
                     line_tax_details = tax_details['tax_details_per_record'][line]['tax_details'][tax]
                     price_total = abs(line_tax_details['base_amount_currency']) + abs(line_tax_details['tax_amount_currency'])
                     percentage = tax['tax'].amount
-            price = round(price_total / abs(line.quantity) * 100 / (100 - line.discount), 2) * currency_rate
+            price = round(price_total / abs(line.quantity) * 100 / (100 - line.discount), line.currency_id.decimal_places) * currency_rate
             price = ('%.5f' % price).rstrip('0').rstrip('.')
             uom = line.product_uom_id and line.product_uom_id.name or ''
 

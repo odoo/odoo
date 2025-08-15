@@ -3,16 +3,16 @@
 # 	* sms
 # 
 # Translators:
-# Wil Odoo, 2024
-# Tony Ng, 2024
+# Wil Odoo, 2025
+# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -177,7 +177,12 @@ msgstr "確定要將這些短訊範本重設為原始配置？所有變更及翻
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件數"
+msgstr "附件數目"
+
+#. module: sms
+#: model:ir.model,name:sms.model_base
+msgid "Base"
+msgstr "計稅基數"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_blacklist
@@ -390,7 +395,7 @@ msgstr "編輯夥伴"
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread
 msgid "Email Thread"
-msgstr "電子郵件行程"
+msgstr "電郵對話串"
 
 #. module: sms
 #. odoo-javascript
@@ -429,7 +434,7 @@ msgstr "失敗類型"
 msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
-msgstr "用於存儲已清理電話號碼的欄位。説明加快搜索和比較。"
+msgstr "此欄位用於儲存已清理格式的電話號碼，有助加快資料搜尋及比對。"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__template_fs
@@ -1189,8 +1194,8 @@ msgstr "發送失敗"
 #. odoo-python
 #: code:addons/sms/models/ir_actions_server.py:0
 #, python-format
-msgid "Sending SMS can only be done on a mail.thread or a transient model"
-msgstr "發送短訊只可在mail.thread或瞬態模型上完成"
+msgid "Sending SMS can only be done on a not transient mail.thread model"
+msgstr "傳送短訊只可在非瞬態的 mail.thread 模型上進行"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__pending
@@ -1358,16 +1363,16 @@ msgid ""
 "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
 "- 'Execute Existing Actions': define an action that triggers several other server actions\n"
 msgstr ""
-"伺服器操作類型。可使用以下值：\n"
-"- 更新記錄：更新記錄的值\n"
-"- 創建活動：創建活動（討論）\n"
-"- 發送電子郵件：發佈信息、備註或發送電子郵件（討論）\n"
-"- 發送短信：發送短信，將其記錄在文件中（短信）\n"
-"- 添加/刪除關注者：添加或刪除記錄中的關注者（討論）\n"
-"- 創建記錄：使用新值創建新記錄（討論)\n"
-"- 執行代碼：將執行的 Python 代碼塊\n"
-"- 發送 Webhook 通知：向外部系統發送 POST 請求，也稱為 Webhook\n"
-"- 執行現有操作：定義一個可觸發多個其他服務器操作的操作\n"
+"伺服器操作類型。 可使用以下的值：\n"
+"- 更新記錄：更新某項記錄的值\n"
+"- 建立活動：建立一項活動（聊天應用程式）\n"
+"- 傳送電郵：發佈訊息、備註或傳送電子郵件（聊天應用程式）\n"
+"- 傳送短訊：傳送 SMS 電話短訊，並在文件中建立相關記錄（短訊應用程式）\n"
+"- 加入/移除關注者：將關注者加入記錄中，或從記錄中移除（聊天應用程式）\n"
+"- 建立記錄：使用新的值去建立新記錄\n"
+"- 執行程式碼：將會執行的 Python 程式碼段落\n"
+"- 傳送網絡鈎子通知：向外部系統傳送一個 POST 請求（亦稱為 webhook 網絡鈎子）\n"
+"- 執行現有操作：設定一項操作，用以觸發多項其他伺服器操作\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__uuid

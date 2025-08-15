@@ -95,7 +95,6 @@
                 </script>
                 <base target="_parent"/>
                 <t t-call-assets="mrp_subcontracting.webclient"/>
-                <t t-call="web.conditional_assets_tests"/>
             </t>
             <t t-set="head" t-value="head_subcontracting_portal + (head or '')"/>
             <t t-set="body_classname" t-value="'o_web_client o_subcontracting_portal'"/>

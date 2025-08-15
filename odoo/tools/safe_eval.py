@@ -62,7 +62,7 @@ _UNSAFE_ATTRIBUTES = [
     # Tracebacks
     'tb_frame',
     # Generators
-    'gi_code', 'gi_frame', 'g_yieldfrom'
+    'gi_code', 'gi_frame', 'gi_yieldfrom',
     # Coroutines
     'cr_await', 'cr_code', 'cr_frame',
     # Coroutine generators
@@ -102,6 +102,8 @@ _CONST_OPCODES = set(to_opcodes([
     'RESUME',
     # 3.12 https://docs.python.org/3/whatsnew/3.12.html#cpython-bytecode-changes
     'RETURN_CONST',
+    # 3.13
+    'TO_BOOL',
 ])) - _BLACKLIST
 
 # operations which are both binary and inplace, same order as in doc'
@@ -175,6 +177,12 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'LOAD_FAST_AND_CLEAR', 'LOAD_FAST_CHECK',
     'POP_JUMP_IF_NOT_NONE', 'POP_JUMP_IF_NONE',
     'CALL_INTRINSIC_1',
+    'STORE_SLICE',
+    # 3.13
+    'CALL_KW', 'LOAD_FAST_LOAD_FAST',
+    'STORE_FAST_STORE_FAST', 'STORE_FAST_LOAD_FAST',
+    'CONVERT_VALUE', 'FORMAT_SIMPLE', 'FORMAT_WITH_SPEC',
+    'SET_FUNCTION_ATTRIBUTE',
 ])) - _BLACKLIST
 
 
@@ -381,7 +389,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     if globals_dict is None:
         globals_dict = {}
 
-    globals_dict['__builtins__'] = _BUILTINS
+    globals_dict['__builtins__'] = dict(_BUILTINS)
     if locals_builtins:
         if locals_dict is None:
             locals_dict = {}

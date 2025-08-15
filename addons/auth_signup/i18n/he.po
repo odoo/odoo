@@ -3,7 +3,6 @@
 # 	* auth_signup
 # 
 # Translators:
-# Netta Waizer, 2023
 # Yihya Hugirat <hugirat@gmail.com>, 2023
 # Amit Spilman <amit@laylinetech.com>, 2023
 # Martin Trigaux, 2023
@@ -13,6 +12,8 @@
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2023
 # Orel Nahmany, 2024
 # Ha Ketem <haketem@gmail.com>, 2024
+# Netta Waizer, 2025
+# or balmas, 2025
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ha Ketem <haketem@gmail.com>, 2024\n"
+"Last-Translator: or balmas, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,7 +63,7 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "<span style=\"font-size: 10px;\">Your Account</span><br/>"
-msgstr ""
+msgstr "<span style=\"font-size: 10px;\">החשבון שלך</span><br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -399,7 +400,7 @@ msgstr "חזרה לדף כניסה"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "Browser"
-msgstr ""
+msgstr "דפדפן"
 
 #. module: auth_signup
 #. odoo-python
@@ -416,7 +417,7 @@ msgstr "שנה סיסמה"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "City, Region, Country"
-msgstr ""
+msgstr "עיר,מחוז,מדינה"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -451,6 +452,7 @@ msgid ""
 "Could not contact the mail server, please check your outgoing email server "
 "configuration"
 msgstr ""
+"לא ניתן ליצור קשר עם שרת הדוא\"ל, אנא בדוק את הגדרות שרת הדוא\"ל היוצא שלך."
 
 #. module: auth_signup
 #. odoo-python
@@ -516,13 +518,14 @@ msgid ""
 "If you don't recognize it, you should change your password immediately via "
 "this link:<br/>"
 msgstr ""
+"אם אינך מזהה זאת, עליך לשנות את הסיסמה שלך מיד באמצעות הקישור הבא:<br/>"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "In %(country)s"
-msgstr ""
+msgstr "ב- %(country)s"
 
 #. module: auth_signup
 #. odoo-python
@@ -573,7 +576,7 @@ msgstr "מעולם לא התחבר"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "New Connection to your Account"
-msgstr ""
+msgstr "חיבור חדש לחשבון שלך"
 
 #. module: auth_signup
 #. odoo-python
@@ -608,7 +611,7 @@ msgstr "בהזמנה"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "Otherwise, you can safely ignore this email."
-msgstr ""
+msgstr "אחרת, תוכל להתעלם מדוא\"ל זה."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -789,6 +792,14 @@ msgid "Status"
 msgstr "סטטוס"
 
 #. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/controllers/main.py:0
+#: code:addons/auth_signup/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "פעילות חשודה זוהתה על ידי Google reCaptcha."
+
+#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id
 msgid "Template user for new users created through signup"
 msgstr "תבנית למשתמשים חדשים שנוצרו דרך הרשמה"
@@ -807,7 +818,7 @@ msgstr "הטופס הזה לא מולא כראוי."
 msgid ""
 "There was an error when trying to deliver your Email, please check your "
 "configuration"
-msgstr ""
+msgstr "הייתה שגיאה בעת ניסיון לשלוח את הדוא\"ל שלך, אנא בדוק את ההגדרות שלך."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form

@@ -14,14 +14,19 @@
 # KeyVillage, 2023
 # Martin Trigaux, 2024
 # Boris Stefanov <borkata@gmail.com>, 2024
+# Elena Varbanova, 2024
+# Milena Georgieva, 2024
+# Petko Karamotchev, 2024
+# Martin Dinovski, 2025
+# Veselina Slavkova, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-05-30 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Boris Stefanov <borkata@gmail.com>, 2024\n"
+"Last-Translator: Veselina Slavkova, 2025\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,18 +85,18 @@ msgstr "Активно"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Add Languages"
-msgstr ""
+msgstr "Добавяне на езици"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Add an image to brand your header."
-msgstr ""
+msgstr "Добавете изображение, за да брандирате заглавната част."
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_home_ids
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_home_ids
 msgid "Add images"
-msgstr ""
+msgstr "Добавяне на изображения"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -120,7 +125,7 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
 #, python-format
 msgid "All the items will be removed from the cart."
-msgstr ""
+msgstr "Всички артикули ще бъдат премахнати от количката."
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_alternative_fp_id
@@ -194,6 +199,7 @@ msgstr "Назад"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 #, python-format
 msgid "Cancel"
 msgstr "Отказ"
@@ -209,6 +215,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.js:0
 #, python-format
 msgid "Cancel order"
@@ -257,7 +264,7 @@ msgstr "Затвори"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
 msgid "Close Session"
-msgstr ""
+msgstr "Затворете сесията"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -482,7 +489,7 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP Маршрутизиране"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -570,7 +577,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__kiosk
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_search_view
 msgid "Kiosk"
-msgstr ""
+msgstr "Киоск"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__name
@@ -758,7 +765,7 @@ msgstr "Поръчка"
 #: model:pos_self_order.custom_link,name:pos_self_order.default_custom_link
 #, python-format
 msgid "Order Now"
-msgstr ""
+msgstr "Поръчайте сега"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -787,7 +794,7 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
 #, python-format
 msgid "Out of stock"
-msgstr ""
+msgstr "Изчерпана наличност"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -835,6 +842,13 @@ msgid "Pickup zone"
 msgstr ""
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "Please wait until the price is loaded"
+msgstr ""
+
+#. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_session.py:0
 #, python-format
@@ -859,7 +873,7 @@ msgstr "Поръчки на центъра за продажби"
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "Методи на плащане за точка на продажба (POS)"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_session
@@ -932,7 +946,7 @@ msgstr "Продуктов вариант"
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 #, python-format
 msgid "Product image"
-msgstr ""
+msgstr "Снимка на продукта"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1284,6 +1298,13 @@ msgid "Yes"
 msgstr "Да"
 
 #. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/controllers/orders.py:0
+#, python-format
+msgid "You are not authorized to remove this order"
+msgstr ""
+
+#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 #, python-format
@@ -1310,6 +1331,13 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #, python-format
 msgid "Your Selection"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/controllers/orders.py:0
+#, python-format
+msgid "Your order does not exist or has been removed"
 msgstr ""
 
 #. module: pos_self_order
@@ -1346,13 +1374,6 @@ msgid "empty = all points of sale"
 msgstr ""
 
 #. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
-#, python-format
-msgid "floor"
-msgstr ""
-
-#. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "https://odoo.com"
 msgstr ""
@@ -1360,7 +1381,7 @@ msgstr ""
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "odoo"
-msgstr ""
+msgstr "odoo"
 
 #. module: pos_self_order
 #. odoo-javascript

@@ -20,7 +20,7 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
         })
 
     def test_tour(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'website_form_editor_tour', login='admin', timeout=120)
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'website_form_editor_tour', login='admin', timeout=240)
         self.start_tour('/', 'website_form_editor_tour_submit')
         self.start_tour('/', 'website_form_editor_tour_results', login="admin")
 
@@ -63,6 +63,8 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
         self.assertIn('Test1&#34;&#39;', mail.body_html, 'The single quotes and double quotes characters should be visible on the received mail')
         self.assertIn('Test2`\\', mail.body_html, 'The backtick and backslash characters should be visible on the received mail')
 
+    def test_website_form_nested_forms(self):
+        self.start_tour('/my/account', 'website_form_nested_forms', login='admin')
 
 @tagged('post_install', '-at_install')
 class TestWebsiteForm(TransactionCase):

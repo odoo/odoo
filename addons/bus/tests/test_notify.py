@@ -7,7 +7,7 @@ import threading
 import odoo
 from odoo.tests import TransactionCase
 
-from ..models.bus import json_dump, get_notify_payloads, NOTIFY_PAYLOAD_MAX_LENGTH
+from ..models.bus import json_dump, get_notify_payloads, NOTIFY_PAYLOAD_MAX_LENGTH, ODOO_NOTIFY_FUNCTION
 
 
 class NotifyTests(TransactionCase):
@@ -55,7 +55,11 @@ class NotifyTests(TransactionCase):
 
     def test_postcommit(self):
         """Asserts all ``postcommit`` channels are fetched with a single listen."""
+        if ODOO_NOTIFY_FUNCTION != 'pg_notify':
+            return
         channels = []
+        stop_event = threading.Event()
+        selector_ready_event = threading.Event()
 
         def single_listen():
             nonlocal channels
@@ -66,18 +70,21 @@ class NotifyTests(TransactionCase):
                 cr.commit()
                 conn = cr._cnx
                 sel.register(conn, selectors.EVENT_READ)
-                while sel.select(timeout=5):
-                    conn.poll()
-                    if notify_channels := [
-                        c
-                        for c in json.loads(conn.notifies.pop().payload)
-                        if c[0] == self.env.cr.dbname
-                    ]:
-                        channels = notify_channels
-                        break
+                selector_ready_event.set()
+                while not stop_event.is_set():
+                    if sel.select(timeout=5):
+                        conn.poll()
+                        if notify_channels := [
+                            c
+                            for c in json.loads(conn.notifies.pop().payload)
+                            if c[0] == self.env.cr.dbname
+                        ]:
+                            channels = notify_channels
+                            break
 
         thread = threading.Thread(target=single_listen)
         thread.start()
+        selector_ready_event.wait(timeout=5)
 
         self.env["bus.bus"].search([]).unlink()
         self.env["bus.bus"]._sendone("channel 1", "test 1", {})
@@ -89,8 +96,9 @@ class NotifyTests(TransactionCase):
         self.assertEqual(self.env["bus.bus"].search_count([]), 3)
         self.assertEqual(channels, [])
         self.env.cr.postcommit.run()  # notify
+        thread.join(timeout=5)
+        stop_event.set()
         self.assertEqual(self.env["bus.bus"].search_count([]), 3)
         self.assertEqual(
             channels, [[self.env.cr.dbname, "channel 1"], [self.env.cr.dbname, "channel 2"]]
         )
-        thread.join()

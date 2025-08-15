@@ -23,6 +23,13 @@ export class AccountMoveController extends FormController {
 };
 
 export class AccountMoveFormNotebook extends Notebook {
+    onAnchorClicked(ev) {
+        if (ev.detail.detail.id === "#outstanding") {
+            ev.preventDefault();
+            ev.detail.detail.originalEv.preventDefault();
+        }
+    }
+
     async changeTabTo(page_id) {
         if (this.props.onBeforeTabSwitch) {
             await this.props.onBeforeTabSwitch(page_id);

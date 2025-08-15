@@ -3,16 +3,16 @@
 # 	* stock_delivery
 # 
 # Translators:
-# Wil Odoo, 2023
-# Tony Ng, 2024
+# Wil Odoo, 2025
+# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -171,12 +171,12 @@ msgstr "貨運承運商選擇介面"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_package
 msgid "Delivery Package Selection Wizard"
-msgstr "交貨包裹選擇嚮導"
+msgstr "交貨貨件選擇嚮導"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__delivery_package_type_id
 msgid "Delivery Package Type"
-msgstr "快遞包裹類型"
+msgstr "快遞貨件類型"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.vpicktree_view_tree
@@ -214,6 +214,20 @@ msgstr ""
 "實際費用：客戶將收到實際運費的發票，運費將在發貨後更新到銷售訂單上。"
 
 #. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception occurred with respect to carrier on the transfer"
+msgstr "處理轉運時，承運人發生異常"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception:"
+msgstr "例外："
+
+#. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__hs_code
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__hs_code
 #: model_terms:ir.ui.view,arch_db:stock_delivery.product_template_hs_code
@@ -233,7 +247,7 @@ msgstr "庫存路線"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__invoice_policy
 msgid "Invoicing Policy"
-msgstr "開立應收憑單策略"
+msgstr "發票政策"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__is_return_picking
@@ -251,9 +265,16 @@ msgid "Last Updated on"
 msgstr "最後更新於"
 
 #. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid "Manual actions might be needed."
+msgstr "可能需要手動操作。"
+
+#. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
 msgid "No carrier integration"
-msgstr "無承運商串接"
+msgstr "沒有承運商整合功能"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
@@ -269,7 +290,7 @@ msgstr "貨物原產地"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
 msgid "Package"
-msgstr "包裹"
+msgstr "貨件"
 
 #. module: stock_delivery
 #. odoo-python
@@ -283,13 +304,13 @@ msgstr "包裝詳情"
 #: code:addons/stock_delivery/wizard/choose_delivery_package.py:0
 #, python-format
 msgid "Package too heavy!"
-msgstr "包裹太重！"
+msgstr "貨件太重！"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_quant_package
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__package_ids
 msgid "Packages"
-msgstr "包裹"
+msgstr "貨件"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__picking_id
@@ -310,7 +331,7 @@ msgstr "商品"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "產品移動(移庫明細)"
+msgstr "產品移動（庫存移動資料行）"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__delivery_type
@@ -397,7 +418,7 @@ msgstr "送貨資訊"
 #: model:ir.ui.menu,name:stock_delivery.menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_location_route_view_form_inherit_stock_delivery
 msgid "Shipping Methods"
-msgstr "寄送方式"
+msgstr "運送方式"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__shipping_weight
@@ -415,8 +436,8 @@ msgstr "裝運重量："
 #: model:ir.model.fields,help:stock_delivery.field_product_template__hs_code
 msgid ""
 "Standardized code for international shipping and goods declaration. At the "
-"moment, only used for the FedEx shipping provider."
-msgstr "國際航運和貨物申報的標準化代碼。目前，僅用於聯邦快遞航運供應商。"
+"moment, only used for FedEx and USPS shipping providers."
+msgstr ""
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move
@@ -456,7 +477,7 @@ msgstr ""
 msgid ""
 "The package cannot be created because the total weight of the products in "
 "the picking is 0.0 %s"
-msgstr "無法建立包裹，因為提貨單上產品的重量總計是 0.0 %s"
+msgstr "無法建立貨件，因為提貨單上產品的重量總計是 0.0 %s"
 
 #. module: stock_delivery
 #. odoo-python
@@ -472,7 +493,7 @@ msgstr "當完成運貨後將更新運費."
 msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
-msgstr "您的包裹的重量高於這個包裝類型所授權的最大重量。請選擇另一個包類型。"
+msgstr "您的貨件的重量高於這個包裝類型所授權的最大重量。請選擇另一個包類型。"
 
 #. module: stock_delivery
 #. odoo-python
@@ -492,7 +513,7 @@ msgid ""
 "Total weight of packages and products not in a package. Packages with no "
 "shipping weight specified will default to their products' total weight. This"
 " is the weight used to compute the cost of the shipping."
-msgstr "包裹和不在包裹內的產品的總重量. 未指定運輸重量的包裹將預設為其產品的總重量. 這是用於計算運輸成本的重量."
+msgstr "貨件和不在貨件內的產品的總重量. 未指定運輸重量的貨件將預設為其產品的總重量. 這是用於計算運輸成本的重量."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight_bulk
@@ -569,7 +590,7 @@ msgstr "裝運重量"
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_uom_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr "重量單位計量摘要"
+msgstr "重量計量單位標籤"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
@@ -584,7 +605,7 @@ msgid ""
 "You cannot pack products into the same package when they have different "
 "carriers (i.e. check that all of their transfers have a carrier assigned and"
 " are using the same carrier)."
-msgstr "若產品的承運物流商不同，便不可包裝至同一個包裹中。（即是說，請檢查產品的所有轉移是否已有指定物流商並使用同一物流商。）"
+msgstr "若產品的承運物流商不同，便不可包裝至同一個貨件中。（即是說，請檢查產品的所有轉移是否已有指定物流商並使用同一物流商。）"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form

@@ -6,10 +6,11 @@ Wants=network-online.target
 [Service]
 User=pi
 Group=pi
+Environment="LIBCAMERA_LOG_LEVELS=3"
 ExecStartPre=sudo /bin/mkdir -p /run/odoo
 ExecStartPre=sudo /bin/chown pi:pi /run/odoo
 ExecStartPre=sudo timedatectl set-ntp true
-ExecStart=/usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf
+ExecStart=/usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo.conf
 Restart=on-failure
 RestartSec=5s
 StandardOutput=null

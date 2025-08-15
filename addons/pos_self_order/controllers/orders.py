@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 import re
 import uuid
+from functools import partial
 from datetime import timedelta
-from odoo import http, fields
+from odoo import http, fields, _
 from odoo.http import request
 from odoo.tools import float_round
 from werkzeug.exceptions import NotFound, BadRequest, Unauthorized
+from odoo.exceptions import MissingError
+from odoo.tools import consteq
 
 class PosSelfOrderController(http.Controller):
     @http.route("/pos-self-order/process-new-order/<device_type>/", auth="public", type="json", website=True)
@@ -58,36 +61,26 @@ class PosSelfOrderController(http.Controller):
         posted_order_id = pos_config.env['pos.order'].with_context(from_self=True).create_from_ui([order], draft=True)[0].get('id')
 
         # Process the lines and get their prices computed
-        lines = self._process_lines(lines, pos_config, posted_order_id, is_take_away)
+        processed_lines = self._process_lines(lines, pos_config, posted_order_id, is_take_away)
 
         # Compute the order prices
-        amount_total, amount_untaxed = self._get_order_prices(lines)
+        amount_total, amount_untaxed = self._get_order_prices(processed_lines)
 
         # Update the order with the computed prices and lines
-        order = pos_config.env["pos.order"].browse(posted_order_id)
+        saved_order = pos_config.env["pos.order"].browse(posted_order_id)
+        saved_lines = pos_config.env['pos.order.line'].with_user(pos_config.self_ordering_default_user_id).create(processed_lines)
 
-        classic_lines = []
-        combo_lines = []
-        for line in lines:
-            if line["combo_parent_uuid"]:
-                combo_lines.append(line)
-            else:
-                classic_lines.append(line)
-
-        # combo lines must be created after classic_line, as they need the classic line identifier
-        # use user admin to avoid access rights issues
-        lines = pos_config.env['pos.order.line'].with_user(pos_config.self_ordering_default_user_id).create(classic_lines)
-        lines += pos_config.env['pos.order.line'].with_user(pos_config.self_ordering_default_user_id).create(combo_lines)
-
-        order.write({
-            'lines': lines,
+        saved_order.write({
+            'lines': saved_lines,
             'state': 'paid' if amount_total == 0 else 'draft',
             'amount_tax': amount_total - amount_untaxed,
             'amount_total': amount_total,
         })
 
-        order.send_table_count_notification(order.table_id)
-        return order._export_for_self_order()
+        order['data']['lines'] = lines
+        self._process_combo_items(saved_order, order['data'])
+        saved_order.send_table_count_notification(saved_order.table_id)
+        return saved_order._export_for_self_order()
 
     @http.route('/pos-self-order/get-orders-taxes', auth='public', type='json', website=True)
     def get_order_taxes(self, order, access_token):
@@ -148,8 +141,43 @@ class PosSelfOrderController(http.Controller):
             'table_stand_number': order.get('table_stand_number'),
         })
 
+        self._process_combo_items(pos_order, order)
         pos_order.send_table_count_notification(pos_order.table_id)
         return pos_order._export_for_self_order()
+
+    def _process_combo_items(self, order, order_values):
+        """
+            Here we need to process original order dict to add
+            combo_line_ids and combo_parent_id to the lines
+            and then call the _link_combo_items method to link
+            the combo lines together.
+        """
+        combo_lines = []
+        lines = order_values.get('lines')
+        for line in lines:
+            if line.get('child_lines'):
+                line['combo_line_ids'] = [child_line['uuid'] for child_line in line['child_lines']]
+            elif line.get('combo_parent_uuid'):
+                line['combo_parent_id'] = line.get('combo_parent_uuid')
+
+            if line.get('combo_line_ids') or line.get('combo_parent_id'):
+                combo_lines.append([0, 0, line])
+
+        order_values['lines'] = combo_lines
+        order._link_combo_items(order_values)
+
+    @http.route('/pos-self-order/remove-order', auth='public', type='json', website=True)
+    def remove_order(self, access_token, order_id, order_access_token):
+        pos_config = self._verify_pos_config(access_token)
+        pos_order = pos_config.env['pos.order'].browse(order_id)
+
+        if not pos_order.exists() or not consteq(pos_order.access_token, order_access_token):
+            raise MissingError(_("Your order does not exist or has been removed"))
+
+        if pos_order.state != 'draft':
+            raise Unauthorized(_("You are not authorized to remove this order"))
+
+        pos_order.remove_from_ui([pos_order.id])
 
     @http.route('/pos-self-order/get-orders', auth='public', type='json', website=True)
     def get_orders_by_access_token(self, access_token, order_access_tokens):
@@ -206,6 +234,7 @@ class PosSelfOrderController(http.Controller):
         newLines = []
         pricelist = pos_config.pricelist_id
         sale_price_digits = pos_config.env['decimal.precision'].precision_get('Product Price')
+        process_line = partial(pos_config.env['pos.order.line']._order_line_fields, session_id=pos_config.current_session_id.id)
 
         combo_line_ids = [line['combo_line_id'] for line in lines if line.get('combo_line_id')]
         combo_lines = pos_config.env['pos.combo.line'].search([('id', 'in', combo_line_ids)])
@@ -231,6 +260,7 @@ class PosSelfOrderController(http.Controller):
             children = [l for l in lines if l.get('combo_parent_uuid') == line.get('uuid')]
             pos_combo_lines = combo_lines.browse([child.get('combo_line_id') for child in children])
 
+            newLines.append({})
             if len(children) > 0:
                 original_total = sum(pos_combo_lines.mapped("combo_id.base_price"))
                 remaining_total = lst_price
@@ -278,7 +308,7 @@ class PosSelfOrderController(http.Controller):
             taxes_after_fp = fiscal_pos.map_tax(product.taxes_id) if fiscal_pos else product.taxes_id
             pdetails = taxes_after_fp.compute_all(price_unit_fp, pos_config.currency_id, line_qty, product)
 
-            newLines.append({
+            newLine = {
                 'price_unit': price_unit_fp,
                 'price_subtotal': pdetails.get('total_excluded'),
                 'price_subtotal_incl': pdetails.get('total_included'),
@@ -295,10 +325,12 @@ class PosSelfOrderController(http.Controller):
                 'combo_parent_uuid': line.get('combo_parent_uuid'),
                 'combo_id': line.get('combo_id'),
                 'price_extra': price_extra
-            })
+            }
+            newLines[len(newLines) - 1 - len(children)] = newLine
             appended_uuid.append(line.get('uuid'))
 
-        return newLines
+        sanatized_lines = [process_line([0, 0, line])[2] for line in newLines]
+        return sanatized_lines
 
     def _get_order_prices(self, lines):
         amount_untaxed = sum([line.get('price_subtotal') for line in lines])

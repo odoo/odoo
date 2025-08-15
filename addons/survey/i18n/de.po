@@ -3,16 +3,16 @@
 # 	* survey
 # 
 # Translators:
-# Wil Odoo, 2024
-# Larissa Manderfeld, 2024
+# Wil Odoo, 2025
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,6 +78,13 @@ msgstr "%(participant)s hat gerade an „%(survey_title)s“ teilgenommen."
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (Kopie)"
+
+#. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid "%s Votes"
+msgstr "%s Stimmen"
 
 #. module: survey
 #. odoo-python
@@ -451,6 +458,11 @@ msgid "<i class=\"fa fa-square-o fa-lg me-2\"/>answer"
 msgstr "<i class=\"fa fa-square-o fa-lg me-2\"/>Antwort"
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
+msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Edit Survey"
+msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Umfrage bearbeiten"
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
 msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Avg "
@@ -740,15 +752,6 @@ msgid ""
 msgstr ""
 "<span>Dieses Zertifikat wird verliehen an</span>\n"
 "                                <br/>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
-msgid ""
-"<span>This is a Test Survey Entry. </span><i class=\"oi oi-fw oi-arrow-"
-"right\"/>Edit Survey"
-msgstr ""
-" <span>Dies ist ein Testumfrageeintrag. </span><i class=\"oi oi-fw oi-arrow-"
-"right\"/>Umfrage bearbeiten"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
@@ -1562,7 +1565,7 @@ msgstr ""
 msgid "Congratulations, you are now official vendor of MyCompany"
 msgstr ""
 "Herzlichen Glückwunsch, Sie sind jetzt offizieller Vertriebsmitarbeiter von "
-"MyCompany"
+"MeinUnternehmen"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -2190,6 +2193,11 @@ msgstr "Grafik"
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Group By"
 msgstr "Gruppieren nach"
+
+#. module: survey
+#: model:ir.model,name:survey.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP-Routing"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__existing_mode
@@ -3109,12 +3117,12 @@ msgstr "Frist für meine Aktivitäten"
 #. module: survey
 #: model:gamification.badge,name:survey.vendor_certification_badge
 msgid "MyCompany Vendor"
-msgstr "Lieferant von MyCompany"
+msgstr "Lieferant von MeinUnternehmen"
 
 #. module: survey
 #: model:survey.survey,title:survey.vendor_certification
 msgid "MyCompany Vendor Certification"
-msgstr "Lieferanten-Zertifizierung von MyCompany"
+msgstr "Lieferanten-Zertifizierung von MeinUnternehmen"
 
 #. module: survey
 #. odoo-python
@@ -4931,6 +4939,11 @@ msgstr ""
 "erreichen. Fühlen Sie sich frei, ihn anzupassen, wie Sie möchten!"
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
+msgid "This is a Test Survey Entry."
+msgstr "Dies ist ein Testumfrageeintrag."
+
+#. module: survey
 #. odoo-javascript
 #. odoo-python
 #: code:addons/survey/models/survey_question.py:0
@@ -5769,7 +5782,7 @@ msgstr "Schließen"
 msgid ""
 "e.g.  'Rick Sanchez' <rick_sanchez@example.com>, hictor_vugo@example.com"
 msgstr ""
-"z. B. „Rick Sanchez“ <rick_sanchez@example.com>, hictor_vugo@example.com"
+"z. B. „Rick Sanchez“ <rick_sanchez@beispiel.com>, hictor_vugo@beispiel.com"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form

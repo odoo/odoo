@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes_gs1_nomenclature
-# 
+#
 # Translators:
 # Eugeni Chafer <eugeni@chafer.cat>, 2023
 # Ivan Espinola, 2023
@@ -13,20 +13,29 @@
 # Quim - eccit <quim@eccit.com>, 2023
 # Sandra Franch <sandra.franch@upc.edu>, 2023
 # Martin Trigaux, 2023
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-08-07 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
+#, python-format
+msgid ""
+"A GS1 barcode nomenclature pattern was matched. However, the barcode failed "
+"to be converted to a valid date: '%(error_message)'"
+msgstr ""
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
@@ -191,8 +200,8 @@ msgid ""
 "UoM;        * Numeric Identifier: fixed length barcode following a specific "
 "encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
-"El tipus de contingut GS1 defineix quin tipus de dades processarà el codi de"
-" barres com:       * Data: el codi de barres es convertirà en una data-hora "
+"El tipus de contingut GS1 defineix quin tipus de dades processarà el codi de "
+"barres com:       * Data: el codi de barres es convertirà en una data-hora "
 "d'Odoo;        * Mesura: el valor del codi de barres està relacionat amb un "
 "UoM específic;        * Identificador numèric: codi de barres de longitud "
 "fixa seguint una codificació específica;        * Alfa-Numèric: codi de "
@@ -215,7 +224,8 @@ msgid ""
 "\t- A second one to catch the value."
 msgstr ""
 "El patró de la regla \"%s\"no és vàlid, necessita dos grups:\n"
-"\t- Un primer per a l'identificador de l'aplicació (normalment de 2 a 4 dígits);\n"
+"\t- Un primer per a l'identificador de l'aplicació (normalment de 2 a 4 "
+"dígits);\n"
 "\t- Una segona per a captar el valor."
 
 #. module: barcodes_gs1_nomenclature
@@ -224,12 +234,17 @@ msgstr ""
 #, python-format
 msgid ""
 "There is something wrong with the barcode rule \"%s\" pattern.\n"
-"If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
-"Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
+"If this rule uses decimal, check it can't get sometime else than a digit as "
+"last char for the Application Identifier.\n"
+"Check also the possible matched values can only be digits, otherwise the "
+"value can't be casted as a measure."
 msgstr ""
-"Hi ha alguna cosa que no funciona amb la regla de codi de barres \"%s\" patró.\n"
-"Si aquesta regla utilitza decimal, comprova que no pot obtenir un altre temps que un dígit com a últim char per a l'identificador d'aplicació.\n"
-"Comprova també els possibles valors coincidents només poden ser dígits, en cas contrari el valor no es pot fer com a mesura."
+"Hi ha alguna cosa que no funciona amb la regla de codi de barres \"%s\" "
+"patró.\n"
+"Si aquesta regla utilitza decimal, comprova que no pot obtenir un altre "
+"temps que un dígit com a últim char per a l'identificador d'aplicació.\n"
+"Comprova també els possibles valors coincidents només poden ser dígits, en "
+"cas contrari el valor no es pot fer com a mesura."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature

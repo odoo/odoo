@@ -64,7 +64,7 @@
                 <cbc:BuyerReference t-out="vals.get('buyer_reference')"/>
             </t>
         </xpath>
-        <xpath expr="//*[local-name()='TaxTotal']" position="before">
+        <xpath expr="//*[local-name()='AllowanceCharge']" position="before"> 
             <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
                 <cac:Delivery t-foreach="vals.get('delivery_vals_list', [])" t-as="foreach_vals">
                     <t t-call="{{DeliveryType_template}}">

@@ -3,8 +3,11 @@
 
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
 
+from odoo import fields
 from odoo.tests import Form, tagged
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
+from freezegun import freeze_time
+import time
 
 
 class TestStockValuationLCCommon(TestStockLandedCostsCommon):
@@ -67,7 +70,7 @@ class TestStockValuationLCCommon(TestStockLandedCostsCommon):
         lc.button_validate()
         return lc
 
-    def _make_in_move(self, product, quantity, unit_cost=None, create_picking=False):
+    def _make_in_move(self, product, quantity, unit_cost=None, create_picking=False, product_uom=False):
         """ Helper to create and validate a receipt move.
         """
         unit_cost = unit_cost or product.standard_price
@@ -76,7 +79,7 @@ class TestStockValuationLCCommon(TestStockLandedCostsCommon):
             'product_id': product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
-            'product_uom': self.env.ref('uom.product_uom_unit').id,
+            'product_uom': product_uom.id if product_uom else self.env.ref('uom.product_uom_unit').id,
             'product_uom_qty': quantity,
             'price_unit': unit_cost,
             'picking_type_id': self.company_data['default_warehouse'].in_type_id.id,
@@ -253,6 +256,20 @@ class TestStockValuationLCFIFO(TestStockValuationLCCommon):
         self.assertEqual(self.product1.quantity_svl, 10)
         move2 = self._make_out_move(self.product1, 1)
         self.assertEqual(move2.stock_valuation_layer_ids.value, -115)
+
+    def test_landed_cost_different_uom(self):
+        """
+        Check that the SVL is correctly updated with the landed cost divided by the quantity in the product UOM.
+        """
+        uom_gram = self.env.ref('uom.product_uom_gram')
+        uom_kgm = self.env.ref('uom.product_uom_kgm')
+        # the product uom is in gram but the transfer is in kg
+        self.product1.uom_id = uom_gram
+        move1 = self._make_in_move(self.product1, 1, unit_cost=10, create_picking=True, product_uom=uom_kgm)
+        self.assertEqual(move1.stock_valuation_layer_ids[0].remaining_value, 10000)
+        self.assertEqual(move1.stock_valuation_layer_ids[0].remaining_qty, 1000)
+        self._make_lc(move1, 250)
+        self.assertEqual(move1.stock_valuation_layer_ids[0].remaining_value, 10250)
 
 
 @tagged('-at_install', 'post_install')
@@ -654,3 +671,93 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         lc.button_validate()
 
         self.assertEqual(lc.cost_lines.price_unit, 10)
+
+
+@tagged('-at_install', 'post_install')
+class TestAccountInvoicingWithCOA(TestStockValuationLCCommon):
+    def setUp(self):
+        self.usd = self.env.ref('base.USD')
+        self.eur = self.env.ref('base.EUR')
+        self.env.company.currency_id = self.usd
+        self.env['res.currency.rate'].search([]).unlink()
+
+    def create_rate(self, inv_rate):
+        return self.env['res.currency.rate'].create({
+            'name': time.strftime('%Y-%m-%d'),
+            'inverse_company_rate': inv_rate,
+            'currency_id': self.eur.id,
+            'company_id': self.env.company.id,
+        })
+
+    def _bill(self, po, qty=None, price=None):
+        action = po.action_create_invoice()
+        bill = self.env["account.move"].browse(action["res_id"])
+        bill.invoice_date = fields.Date.today()
+        if qty is not None:
+            bill.invoice_line_ids.quantity = qty
+        if price is not None:
+            bill.invoice_line_ids.price_unit = price
+        bill.action_post()
+        return bill
+
+    def _return(self, picking, qty=None):
+        wizard_form = Form(self.env['stock.return.picking'].with_context(active_ids=picking.ids, active_id=picking.id, active_model='stock.picking'))
+        wizard = wizard_form.save()
+        qty = qty or wizard.product_return_moves.quantity
+        wizard.product_return_moves.quantity = qty
+        action = wizard.create_returns()
+        return_picking = self.env["stock.picking"].browse(action["res_id"])
+        return_picking.move_ids.quantity = qty
+        return_picking.button_validate()
+        return return_picking
+
+    def _purchase_receipt(self, product, qty, price, curr):
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.env['res.partner'].browse(self.supplier_id)
+        po_form.currency_id = curr
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product
+            po_line.product_qty = qty
+            po_line.price_unit = price
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_ids.quantity = qty
+        receipt.button_validate()
+
+        return po, receipt
+
+    def test_fifo_return_twice_and_bill_with_landed_cost_and_multi_currency(self):
+        """This check ensure that the landed cost does not prevent '_generate_price_difference_vals' to compute
+        the correct 'quantity already out' when handling a Return of a Return of a Receipt.
+        An inccorect value of 'quantity already out' would generate COGS lines in the vendor bill.
+        """
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+        self.eur.active = True
+
+        with freeze_time('2025-01-01'):
+            self.create_rate(1.0)
+            po1, _ = self._purchase_receipt(self.product1, 5, 10, self.eur)
+            self._bill(po1)
+
+        with freeze_time('2025-01-02'):
+            self.create_rate(1.5)
+            po2, receipt02 = self._purchase_receipt(self.product1, 10, 10, self.eur)
+            self._make_lc(receipt02.move_ids, 10)
+            receipt_return = self._return(receipt02)
+            self._return(receipt_return)
+
+        with freeze_time('2025-01-03'):
+            self.create_rate(2.0)
+            bill2 = self._bill(po2)
+
+        in_acc_id = self.company_data['default_account_stock_in'].id
+        tax_acc_id = self.company_data['default_account_tax_purchase'].id
+        payable_acc_id = self.company_data['default_account_payable'].id
+        self.assertRecordValues(bill2.line_ids, [
+            {'account_id': in_acc_id, 'balance': 200.0, 'amount_currency': 100},
+            {'account_id': tax_acc_id, 'balance': 30.0, 'amount_currency': 15},
+            {'account_id': payable_acc_id, 'balance': -230.0, 'amount_currency': -115},
+        ])

@@ -14,7 +14,15 @@
                     <!-- Content -->
                     <div class="o_wsale_image_viewer_image position-absolute top-0 bottom-0 start-0 end-0 align-items-center justify-content-center d-flex o_with_img overflow-hidden">
                         <div class="o_wsale_image_viewer_void position-absolute align-items-center justify-content-center d-flex w-100 h-100" t-ref="imageContainer" t-att-style="imageContainerStyle">
-                            <img class="mw-100 mh-100 bg-black transition-base" t-att-src="selectedImage.src" draggable="false" alt="Viewer" t-att-style="imageStyle" t-on-wheel.stop="onWheelImage" t-on-mousedown="onMousedownImage"/>
+                            <img
+                                alt="Viewer"
+                                class="mw-100 mh-100 transition-base"
+                                draggable="false"
+                                t-att-src="selectedImage.src"
+                                t-att-style="imageStyle"
+                                t-on-mousedown="onMousedownImage"
+                                t-on-wheel.stop="onWheelImage"
+                            />
                         </div>
                     </div>
                     <t t-if="images.length > 1">

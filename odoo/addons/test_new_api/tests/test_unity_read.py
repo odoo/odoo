@@ -367,6 +367,30 @@ class TestUnityRead(TransactionCase):
                     ],
             }])
 
+    def test_one2many_with_order_respects_field_context(self):
+        archived = self.env['test_new_api.person'].create({'name': 'Archived', 'active': False})
+        employer = self.env['test_new_api.employer'].create({
+            'name': 'JS Corp',
+            'all_employee_ids': [Command.set([archived.id, self.teacher.id, self.author.id])],
+        })
+        read = employer.web_read({
+            'name': {},
+            'all_employee_ids': {
+                'fields': {'name': {}},
+                'order': 'name DESC',
+            },
+        })
+        self.assertEqual(read, [{
+            'id': employer.id,
+            'name': 'JS Corp',
+            'all_employee_ids':
+                [
+                    {'id': self.author.id, 'name': self.author.name},
+                    {'id': self.teacher.id, 'name': self.teacher.name},
+                    {'id': archived.id, 'name': archived.name},
+                ],
+        }])
+
     def test_read_many2many_gives_ids(self):
         with self.assertQueryCount(1        # 1 query for course
                                    + 1      # 1 query for the lessons

@@ -5,7 +5,7 @@ from markupsafe import Markup
 
 from odoo import fields, models, api, _, Command
 from odoo.exceptions import UserError
-from odoo.tools import float_repr, date_utils
+from odoo.tools import float_repr, date_utils, float_round
 from odoo.tools.xml_utils import cleanup_xml_node, find_xml_value
 
 PHONE_CLEAN_TABLE = str.maketrans({" ": None, "-": None, "(": None, ")": None, "+": None})
@@ -87,6 +87,7 @@ class AccountMove(models.Model):
             and not self.l10n_es_edi_facturae_xml_id \
             and not self.l10n_es_is_simplified \
             and self.is_invoice(include_receipts=True) \
+            and (self.partner_id.is_company or self.partner_id.vat) \
             and self.company_id.country_code == 'ES' \
             and self.company_id.currency_id.name == 'EUR'
 
@@ -218,6 +219,8 @@ class AccountMove(models.Model):
         }
         taxes = []
         taxes_withheld = []
+        invoice_ref = self.ref[:20] if self.ref else False
+        unit_price_decimals = self.env['decimal.precision'].precision_get('Product Price')
         for line in self.invoice_line_ids:
             if line.display_type in {'line_section', 'line_note'}:
                 continue
@@ -251,13 +254,21 @@ class AccountMove(models.Model):
             tax_withheld_output = [self._l10n_es_edi_facturae_convert_computed_tax_to_template(tax) for tax in taxes_withheld_computed]
             totals['total_taxes_withheld'] += sum((abs(tax["tax_amount"]) for tax in taxes_withheld_computed))
 
+            receiver_transaction_reference = (
+                line.sale_line_ids.order_id.client_order_ref[:20]
+                if 'sale_line_ids' in line._fields and line.sale_line_ids.order_id.client_order_ref
+                else invoice_ref
+            )
+
             invoice_line_values.update({
-                'FileReference': self.ref[:20] if self.ref else False,
+                'ReceiverTransactionReference': receiver_transaction_reference,
+                'FileReference': invoice_ref,
+                'ReceiverContractReference': invoice_ref,
                 'FileDate': fields.Date.context_today(self),
                 'ItemDescription': line.name,
                 'Quantity': line.quantity,
                 'UnitOfMeasure': line.product_uom_id.l10n_es_edi_facturae_uom_code,
-                'UnitPriceWithoutTax': line.currency_id.round(price_before_discount / line.quantity if line.quantity else 0.),
+                'UnitPriceWithoutTax': float_round(price_before_discount / line.quantity if line.quantity else 0, precision_digits=unit_price_decimals),
                 'TotalCost': price_before_discount,
                 'DiscountsAndRebates': [{
                     'DiscountReason': '/',
@@ -309,8 +320,13 @@ class AccountMove(models.Model):
         if self.move_type == "entry":
             return False
 
+        operation_date = None
+        if self.delivery_date and self.delivery_date != self.invoice_date:
+            operation_date = self.delivery_date.isoformat()
+
         eur_curr = self.env['res.currency'].search([('name', '=', 'EUR')])
         inv_curr = self.currency_id
+        unit_price_decimals = self.env['decimal.precision'].precision_get('Product Price')
         legal_literals = self.narration.striptags() if self.narration else False
         legal_literals = legal_literals.split(";") if legal_literals else False
 
@@ -333,6 +349,7 @@ class AccountMove(models.Model):
             'is_outstanding': self.move_type.startswith('out_'),
             'float_repr': float_repr,
             'file_currency': inv_curr,
+            'unit_price_decimals': unit_price_decimals,
             'eur': eur_curr,
             'conversion_needed': need_conv,
             'refund_multiplier': -1 if self.move_type.endswith('refund') else 1,
@@ -356,10 +373,11 @@ class AccountMove(models.Model):
             'Invoices': [{
                 'invoice_record': self,
                 'invoice_currency': inv_curr,
-                'InvoiceDocumentType': 'FC',
-                'InvoiceClass': 'OO',
+                'InvoiceDocumentType': 'FA' if self.l10n_es_is_simplified else 'FC',
+                'InvoiceClass': 'OR' if self.move_type in ['out_refund', 'in_refund'] else 'OO',
                 'Corrective': self._l10n_es_edi_facturae_get_corrective_data(),
                 'InvoiceIssueData': {
+                    'OperationDate': operation_date,
                     'ExchangeRateDetails': need_conv,
                     'ExchangeRate': f"{round(conversion_rate, 4):.4f}",
                     'LanguageName': self._context.get('lang', 'en_US').split('_')[0],
@@ -646,3 +664,8 @@ class AccountMove(models.Model):
         code_and_name = re.match(r"(\[(?P<default_code>.*?)\]\s)?(?P<name>.*)", item_description).groupdict()
         product = self.env['product.product']._retrieve_product(**code_and_name)
         return product
+
+    def _generate_pdf_and_send_invoice(self, template, force_synchronous=True, allow_fallback_pdf=True, bypass_download=False, **kwargs):
+        if self.company_id.country_code == "ES" and not self.company_id.l10n_es_edi_facturae_certificate_id:
+            kwargs['l10n_es_edi_facturae_checkbox_xml'] = False
+        return super()._generate_pdf_and_send_invoice(template, force_synchronous, allow_fallback_pdf, bypass_download, **kwargs)

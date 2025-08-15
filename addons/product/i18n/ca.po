@@ -3,35 +3,37 @@
 # 	* product
 # 
 # Translators:
-# martioodo hola, 2023
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2023
 # Mohamed Sallam, 2023
 # Susanna Pujol, 2023
 # Albert Parera, 2023
 # jabiri7, 2023
-# Harcogourmet, 2023
 # Carles Antoli <carlesantoli@hotmail.com>, 2023
 # Ivan Espinola, 2023
 # marcescu, 2023
 # Arnau Ros, 2023
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2023
-# eriiikgt, 2023
 # Óscar Fonseca <tecnico@pyming.com>, 2023
 # Sandra Franch <sandra.franch@upc.edu>, 2023
 # RGB Consulting <odoo@rgbconsulting.com>, 2023
 # Martin Trigaux, 2023
-# Jonatan Gk, 2023
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2023
-# Josep Anton Belchi, 2023
-# Quim - eccit <quim@eccit.com>, 2023
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2023
+# Josep Anton Belchi, 2024
+# Harcogourmet, 2025
+# martioodo hola, 2025
+# Jonatan Gk, 2025
+# eriiikgt, 2025
+# Santiago Payà <santiagopim@gmail.com>, 2025
+# Noemi Pla, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Quim - eccit <quim@eccit.com>, 2023\n"
+"Last-Translator: Noemi Pla, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,6 +50,9 @@ msgid ""
 "\n"
 "Note: products that you don't have access to will not be shown above."
 msgstr ""
+"\n"
+"\n"
+"Nota: els productes als quals no tens accés no es mostraran."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
@@ -63,12 +68,12 @@ msgstr "# Productes"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "$14.00"
-msgstr ""
+msgstr "14,00 €"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "$15.00"
-msgstr ""
+msgstr "15,00 €"
 
 #. module: product
 #. odoo-python
@@ -97,6 +102,7 @@ msgstr "%s %% discount"
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_pricelist.py:0
 #: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
 #, python-format
@@ -129,7 +135,7 @@ msgstr "'Productor- %s' % (object.name)"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "(e.g: product description, ebook, legal notice, ...)."
-msgstr ""
+msgstr "(per exemple: descripció del producte, ebook, avís legal, etc.)."
 
 #. module: product
 #. odoo-python
@@ -164,12 +170,12 @@ msgstr "10"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "10 Units"
-msgstr ""
+msgstr "10 unitats"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "123456789012"
-msgstr ""
+msgstr "123456789012"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
@@ -239,7 +245,7 @@ msgstr "<span class=\"o_stat_text\">Productes relacionats</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "<span class=\"text-bg-danger\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-danger\">Arxivat</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -527,6 +533,8 @@ msgid ""
 "At most %s quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
 msgstr ""
+"A la majoria de les quantitats %s es poden mostrar simultàniament. Elimina "
+"una quantitat seleccionada per afegir altres."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -615,7 +623,7 @@ msgstr ""
 #: code:addons/product/static/src/product_catalog/kanban_controller.js:0
 #, python-format
 msgid "Back to Quotation"
-msgstr ""
+msgstr "Tornar al pressupost"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__barcode
@@ -934,7 +942,7 @@ msgstr "Creeu una nova variant de producte"
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 #, python-format
 msgid "Create a product"
-msgstr ""
+msgstr "Crear un producte"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
@@ -1032,7 +1040,7 @@ msgstr "Precisió decimals"
 #: code:addons/product/models/res_company.py:0
 #, python-format
 msgid "Default %s pricelist"
-msgstr ""
+msgstr "Llista de preus %s per defecte"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price
@@ -1206,12 +1214,12 @@ msgstr "Documents"
 #: model:ir.model.fields,field_description:product.field_product_product__product_document_count
 #: model:ir.model.fields,field_description:product.field_product_template__product_document_count
 msgid "Documents Count"
-msgstr ""
+msgstr "Nombre de documents"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
 msgid "Documents of this variant"
-msgstr ""
+msgstr "Documents d'aquesta variant"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -1223,7 +1231,7 @@ msgstr "Descarregar"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Download examples"
-msgstr ""
+msgstr "Descarregar exemples"
 
 #. module: product
 #: model:product.template,name:product.product_product_27_product_template
@@ -1985,7 +1993,7 @@ msgstr ""
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 #, python-format
 msgid "No products could be found."
-msgstr ""
+msgstr "No s'ha trobat cap producte."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -2072,6 +2080,8 @@ msgid ""
 "On the product %(product)s you cannot associate the value %(value)s with the"
 " attribute %(attribute)s because they do not match."
 msgstr ""
+"En el producte %(product)s no podeu associar el valor %(value)s amb l' "
+"atribut %(attribute)s perquè no coincideixen."
 
 #. module: product
 #. odoo-python
@@ -2081,6 +2091,8 @@ msgid ""
 "On the product %(product)s you cannot transform the attribute "
 "%(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
+"En el producte %(product)s no podeu transformar l' atribut %(attribute_src)s"
+" a l' atribut %(attribute_dest)s."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -2136,7 +2148,7 @@ msgstr "Píndoles"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 #, python-format
 msgid "Please enter a positive whole number."
-msgstr ""
+msgstr "Si us plau, introdueix un nombre positiu sencer"
 
 #. module: product
 #. odoo-python
@@ -2148,6 +2160,10 @@ msgid ""
 "\n"
 "Invalid URL: %s"
 msgstr ""
+"Si us plau, introdueix un URL vàlid.\n"
+"Exemple: https://www.odoo.com\n"
+"\n"
+"URL no vàlid: %s"
 
 #. module: product
 #. odoo-python
@@ -2411,7 +2427,7 @@ msgstr "Categoria del producte"
 #. module: product
 #: model:ir.model,name:product.model_product_document
 msgid "Product Document"
-msgstr ""
+msgstr "Document del producte"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_dymo
@@ -2702,7 +2718,7 @@ msgstr "Quantitats"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Quantities (Price)"
-msgstr ""
+msgstr "Quantitats (preu)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__custom_quantity
@@ -2715,7 +2731,7 @@ msgstr "Quantitat"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 #, python-format
 msgid "Quantity already present (%s)."
-msgstr ""
+msgstr "Quantitat ja present (%s)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
@@ -3044,6 +3060,8 @@ msgid ""
 "The attribute %(attribute)s must have at least one value for the product "
 "%(product)s."
 msgstr ""
+"L'atribut %(attribute)s  ha de tenir almenys un valor per al producte "
+"%(product)s."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -3120,6 +3138,10 @@ msgid ""
 "the sales order. To do so, open the form view of attributes and change the "
 "mode of *Create Variants*."
 msgstr ""
+"El nombre de variants a generar és superior al límit permès. Evita crear "
+"variants per a cada combinació o crea-les sota demanda des de la comanda de "
+"venda. Per fer-ho, obre la vista de formulari d'atributs i canvia el mode de"
+" *Crear variants*."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
@@ -3151,7 +3173,7 @@ msgstr ""
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "The rounding method must be strictly positive."
-msgstr ""
+msgstr "El mètode d'arrodoniment ha de ser positiu."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -3170,6 +3192,8 @@ msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
 msgstr ""
+"El valor %(value)s no està definit per a l' atribut %(attribute)s en el "
+"producte %(product)s."
 
 #. module: product
 #. odoo-python
@@ -3293,7 +3317,7 @@ msgstr "Tipus d'activitat d'excepció registrada."
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "UOM"
-msgstr ""
+msgstr "UdM"
 
 #. module: product
 #. odoo-python
@@ -3332,7 +3356,7 @@ msgstr "Unitat del nom de mesura"
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 #, python-format
 msgid "Unit price:"
-msgstr ""
+msgstr "Preu unitari:"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -3357,7 +3381,7 @@ msgstr "Pujar"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Upload files to your product"
-msgstr ""
+msgstr "Pujar arxius al producte"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -3377,6 +3401,8 @@ msgid ""
 "Use this feature to store any files you would like to share with your "
 "customers"
 msgstr ""
+"Utilitza aquesta funció per emmagatzemar qualsevol arxiu que vulguis "
+"compartir amb els teus clients."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -3426,6 +3452,9 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"El valor del producte (calculat automàticament mitjançant AVCO).\n"
+"        S'utilitza per valorar el producte quan no es coneix el cost de compra (per exemple, en un ajust d'inventari).\n"
+"        S'utilitza per calcular els marges de les comandes de venda."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
@@ -3644,6 +3673,8 @@ msgid ""
 "You are deactivating the pricelist feature. Every active pricelist will be "
 "archived."
 msgstr ""
+"Estàs desactivant la configuració de la llista de preus. S'arxivaran totes "
+"les llistes de preus actives."
 
 #. module: product
 #. odoo-python
@@ -3691,13 +3722,14 @@ msgid ""
 "You can upload an image that will be used as the color of the attribute "
 "value."
 msgstr ""
+"Pots pujar una imatge que s'utilitzarà com el color del valor de l'atribut."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 #, python-format
 msgid "You can't edit this product in the catalog."
-msgstr ""
+msgstr "No és possible editar aquest producte des del catàleg."
 
 #. module: product
 #. odoo-python
@@ -3717,6 +3749,8 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"No podeu canviar el mode de creació de Varites de l' atribut %(attribute)s perquè s'utilitza en els següents productes:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -3726,6 +3760,8 @@ msgid ""
 "You cannot change the attribute of the value %(value)s because it is used on"
 " the following products: %(products)s"
 msgstr ""
+"No és possible canviar l'atribut del valor %(value)s perquè s'utilitza en "
+"els següents productes: %(products)s"
 
 #. module: product
 #. odoo-python
@@ -3735,6 +3771,8 @@ msgid ""
 "You cannot change the product of the value %(value)s set on product "
 "%(product)s."
 msgstr ""
+"No podeu canviar el producte del valor %(value)s establert en el producte "
+"%(product)s."
 
 #. module: product
 #. odoo-python
@@ -3744,6 +3782,8 @@ msgid ""
 "You cannot change the value of the value %(value)s set on product "
 "%(product)s."
 msgstr ""
+"No podeu canviar el valor del valor %(value)s establert en el producte "
+"%(product)s."
 
 #. module: product
 #. odoo-python
@@ -3772,6 +3812,7 @@ msgstr ""
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_category.py:0
+#: code:addons/product/models/product_category.py:0
 #, python-format
 msgid "You cannot delete the %s product category."
 msgstr "No podeu esborrar la categoria de producte %s."
@@ -3784,6 +3825,8 @@ msgid ""
 "You cannot delete the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"No podeu eliminar l' atribut %(attribute)s perquè s'utilitza en els següents productes:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -3794,6 +3837,9 @@ msgid ""
 "%(products)s\n"
 " If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
+"No podeu suprimir el valor %(value)s perquè s'utilitza en els productes següents:\n"
+"%(products)s\n"
+" Si el valor s'ha associat a un producte en el passat, no el podreu suprimir."
 
 #. module: product
 #. odoo-python
@@ -3836,6 +3882,8 @@ msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s"
 " to the product %(product_dest)s."
 msgstr ""
+"No podeu moure l'atribució %(attribute)s del producte %(product_src)s al "
+"producte %(product_dest)s."
 
 #. module: product
 #. odoo-python
@@ -3857,6 +3905,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                            whether it's a storable product, a consumable or a service."
 msgstr ""
+"Has de definir un producte per a tot el que vens o compres,\n"
+"                            sigui un producte emmagatzemable, un consumible o un servei."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action

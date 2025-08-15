@@ -33,6 +33,7 @@ import { uniqueId } from '@web/core/utils/functions';
 // Ensure `@web/views/fields/html/html_field` is loaded first as this module
 // must override the html field in the registry.
 import '@web/views/fields/html/html_field';
+import { Deferred } from "@web/core/utils/concurrency";
 
 let stripHistoryIds;
 
@@ -384,9 +385,15 @@ export class HtmlField extends Component {
         popover.style.left = leftPosition + 'px';
     }
     async commitChanges({ urgent, shouldInline } = {}) {
+        if (this.isCurrentlySaving && !urgent) {
+            await this.isCurrentlySaving;
+        }
         if (this._isDirty() || urgent || (shouldInline && this.props.isInlineStyle)) {
             let savePendingImagesPromise, toInlinePromise;
             if (this.wysiwyg && this.wysiwyg.odooEditor) {
+                if (!urgent) {
+                    this.isCurrentlySaving = new Deferred();
+                }
                 this.wysiwyg.odooEditor.observerUnactive('commitChanges');
                 savePendingImagesPromise = this.wysiwyg.savePendingImages();
                 if (this.props.isInlineStyle) {
@@ -397,6 +404,10 @@ export class HtmlField extends Component {
                     await this.updateValue();
                 }
                 await savePendingImagesPromise;
+                const codeViewEl = this._getCodeViewEl();
+                if (codeViewEl) {
+                    codeViewEl.value = this.wysiwyg.getValue();
+                }
                 if (this.props.isInlineStyle) {
                     await toInlinePromise;
                 }
@@ -404,6 +415,9 @@ export class HtmlField extends Component {
             }
             if (status(this) !== 'destroyed') {
                 await this.updateValue();
+            }
+            if (this.isCurrentlySaving) {
+                this.isCurrentlySaving.resolve();
             }
         }
     }
@@ -680,11 +694,6 @@ export const htmlField = {
         name: "snippets",
         type: "string"
     }, {
-        label: _t("No videos"),
-        name: "noVideos",
-        type: "boolean",
-        default: true
-    }, {
         label: _t("Resizable"),
         name: "resizable",
         type: "boolean",
@@ -745,6 +754,9 @@ export const htmlField = {
 	    if ('style-inline' in options) {
 	        wysiwygOptions.inlineStyle = Boolean(options['style-inline']);
 	    }
+        if ('disableTransform' in options) {
+            wysiwygOptions.disableTransform = Boolean(options['disableTransform']);
+        }
         if ('allowCommandImage' in options) {
             // Set the option only if it is explicitly set in the view so a default
             // can be set elsewhere otherwise.

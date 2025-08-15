@@ -1072,59 +1072,36 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             {'qty_producing': 10.0, 'product_qty': 10.0, 'state': 'to_close'},
         ])
 
-    @freeze_time('2024-01-01')
-    def test_bom_overview_availability(self):
-        # Create routes for components and the main product
-        self.env['product.supplierinfo'].create({
-            'product_tmpl_id': self.finished.product_tmpl_id.id,
+    def test_validate_partial_subcontracting_without_backorder(self):
+        """ Test the validation of a partial subcontracting without creating a backorder."""
+        self.bom.consumption = 'flexible'
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+        receipt = self.env['stock.picking'].create({
             'partner_id': self.subcontractor_partner1.id,
-            'price': 1.0,
-            'delay': 10
+            'location_id': supplier_location.id,
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'move_ids': [Command.create({
+                'name': self.finished.name,
+                'product_id': self.finished.id,
+                'product_uom_qty': 20.0,
+                'location_id': supplier_location.id,
+                'location_dest_id': self.warehouse.lot_stock_id.id,
+            })],
         })
-        self.env['product.supplierinfo'].create({
-            'product_tmpl_id': self.comp1.product_tmpl_id.id,
-            'partner_id': self.subcontractor_partner1.id,
-            'price': 648.0,
-            'delay': 5
-        })
-        self.env['product.supplierinfo'].create({
-            'product_tmpl_id': self.comp2.product_tmpl_id.id,
-            'partner_id': self.subcontractor_partner1.id,
-            'price': 648.0,
-            'delay': 5
-        })
-
-        self.bom.produce_delay = 1
-        self.bom.days_to_prepare_mo = 3
-
-        # Add 4 units of each component to subcontractor's location
-        subcontractor_location = self.env.company.subcontracting_location_id
-        self.env['stock.quant']._update_available_quantity(self.comp1, subcontractor_location, 4)
-        self.env['stock.quant']._update_available_quantity(self.comp2, subcontractor_location, 4)
-
-        # Generate a report for 3 products: all products should be ready for production
-        bom_data = self.env['report.mrp.report_bom_structure']._get_report_data(self.bom.id, 3)
-
-        self.assertTrue(bom_data['lines']['components_available'])
-        for component in bom_data['lines']['components']:
-            self.assertEqual(component['quantity_on_hand'], 4)
-            self.assertEqual(component['availability_state'], 'available')
-        self.assertEqual(bom_data['lines']['earliest_capacity'], 3)
-        self.assertEqual(bom_data['lines']['earliest_date'], '01/11/2024')
-        self.assertTrue('leftover_capacity' not in bom_data['lines']['earliest_date'])
-        self.assertTrue('leftover_date' not in bom_data['lines']['earliest_date'])
-
-        # Generate a report for 5 products: only 4 products should be ready for production
-        bom_data = self.env['report.mrp.report_bom_structure']._get_report_data(self.bom.id, 5)
-
-        self.assertFalse(bom_data['lines']['components_available'])
-        for component in bom_data['lines']['components']:
-            self.assertEqual(component['quantity_on_hand'], 4)
-            self.assertEqual(component['availability_state'], 'estimated')
-        self.assertEqual(bom_data['lines']['earliest_capacity'], 4)
-        self.assertEqual(bom_data['lines']['earliest_date'], '01/11/2024')
-        self.assertEqual(bom_data['lines']['leftover_capacity'], 1)
-        self.assertEqual(bom_data['lines']['leftover_date'], '01/16/2024')
+        receipt.action_confirm()
+        self.assertEqual(receipt.state, 'assigned')
+        receipt.move_ids.quantity = 19.8
+        # Validate picking without backorder
+        backorder_wizard_dict = receipt.button_validate()
+        backorder_wizard_form = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context']))
+        backorder_wizard_form.save().process_cancel_backorder()
+        self.assertEqual(receipt.state, 'done')
+        productions = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)]).sorted('id')
+        self.assertRecordValues(productions, [
+            {'product_qty': 19.8, 'qty_producing': 19.8, 'state': 'done'},
+            {'product_qty': 0.2, 'qty_producing': 0.2, 'state': 'cancel'},
+        ])
 
 
 @tagged('post_install', '-at_install')

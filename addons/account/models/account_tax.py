@@ -830,6 +830,7 @@ class AccountTax(models.Model):
             'division_taxes': [],
             'fixed_amount': 0.0,
         }
+        custom_fixed_amount_after = 0.0
         # Store the tax amounts we compute while searching for the total_excluded
         cached_base_amounts = {}
         cached_tax_amounts = {}
@@ -860,14 +861,18 @@ class AccountTax(models.Model):
                         incl_tax_amounts['fixed_amount'] += tax_amount
                         # Avoid unecessary re-computation
                         cached_tax_amounts[i] = tax_amount
+                        custom_fixed_amount_after += tax_amount
                     # In case of a zero tax, do not store the base amount since the tax amount will
                     # be zero anyway. Group and Python taxes have an amount of zero, so do not take
                     # them into account.
-                    if store_included_tax_total and (
-                        tax.amount or tax.amount_type not in ("percent", "division", "fixed")
+                    if (
+                        store_included_tax_total
+                        and (tax.amount or tax.amount_type not in ("percent", "division", "fixed"))
+                        and i not in cached_tax_amounts
                     ):
-                        total_included_checkpoints[i] = base
+                        total_included_checkpoints[i] = base - custom_fixed_amount_after
                         store_included_tax_total = False
+                        custom_fixed_amount_after = 0.0
                 i -= 1
                 is_base_affected = tax.is_base_affected
 
@@ -1406,7 +1411,7 @@ class AccountTax(models.Model):
         for grouping_key, tax_values in global_tax_details['tax_details'].items():
             if tax_values['currency_id']:
                 currency = self.env['res.currency'].browse(tax_values['currency_id'])
-                tax_amount = currency.round(tax_values['tax_amount'])
+                tax_amount = currency.round(tax_values['tax_amount_currency'])
                 res['totals'][currency]['amount_tax'] += tax_amount
 
             if grouping_key in existing_tax_line_map:

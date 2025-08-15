@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-02 22:43+0000\n"
-"PO-Revision-Date: 2024-08-02 22:43+0000\n"
+"POT-Creation-Date: 2025-02-10 15:04+0000\n"
+"PO-Revision-Date: 2025-02-10 15:04+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,16 +16,20 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_uy
-#: model_terms:res.company,report_footer:l10n_uy.demo_company_uy
+#. odoo-python
+#: code:addons/l10n_uy/models/l10n_latam_document_type.py:0
+#, python-format
 msgid ""
-"+598 94 231 234 info@company.uyexample.com http://www.uyexample.com "
-"218296790015"
+"%(document_number)s is not a valid value for %(document_type)s.\n"
+"The document number must be entered with a maximum of 2 letters for the first part and 7 numbers for the second. The following are examples of valid document numbers:\n"
+"- XX0000001\n"
+" - YY0000123\n"
+" - A0000001"
 msgstr ""
 
 #. module: l10n_uy
 #. odoo-python
 #: code:addons/l10n_uy/models/res_partner.py:0
-#, python-format
 msgid "3:402.010-2 or 93:402.010-1 (CI or NIE)"
 msgstr ""
 
@@ -82,7 +86,6 @@ msgstr ""
 #. module: l10n_uy
 #. odoo-python
 #: code:addons/l10n_uy/models/res_partner.py:0
-#, python-format
 msgid "CI/NIE"
 msgstr ""
 
@@ -219,7 +222,6 @@ msgstr ""
 #. module: l10n_uy
 #. odoo-python
 #: code:addons/l10n_uy/models/template_uy.py:0
-#, python-format
 msgid "Customer Invoices"
 msgstr ""
 
@@ -356,7 +358,6 @@ msgstr ""
 #. module: l10n_uy
 #. odoo-python
 #: code:addons/l10n_uy/models/l10n_latam_document_type.py:0
-#, python-format
 msgid ""
 "Please introduce a valid Document number: 2 letters and 7 digits (XX0000001)"
 msgstr ""
@@ -421,7 +422,6 @@ msgstr ""
 #. module: l10n_uy
 #. odoo-python
 #: code:addons/l10n_uy/models/res_partner.py:0
-#, python-format
 msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid.\n"
 "Note: the expected format is %(expected_format)s"
@@ -430,19 +430,9 @@ msgstr ""
 #. module: l10n_uy
 #. odoo-python
 #: code:addons/l10n_uy/models/res_partner.py:0
-#, python-format
 msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] for %(partner_label)s does not seem to be valid.\n"
 "Note: the expected format is %(expected_format)s"
-msgstr ""
-
-#. module: l10n_uy
-#: model_terms:res.company,company_details:l10n_uy.demo_company_uy
-msgid ""
-"UY Company<br>\n"
-"Calle Falsa 123<br>\n"
-"Montevideo MO 12800<br>\n"
-"Uruguay"
 msgstr ""
 
 #. module: l10n_uy
@@ -459,7 +449,6 @@ msgstr ""
 #. module: l10n_uy
 #. odoo-python
 #: code:addons/l10n_uy/models/template_uy.py:0
-#, python-format
 msgid "Uruguayan Generic Chart of Accounts"
 msgstr ""
 
@@ -498,7 +487,6 @@ msgstr ""
 #. module: l10n_uy
 #. odoo-python
 #: code:addons/l10n_uy/models/template_uy.py:0
-#, python-format
 msgid "Vendor Bills"
 msgstr ""
 
@@ -580,6 +568,5 @@ msgstr ""
 #. module: l10n_uy
 #. odoo-python
 #: code:addons/l10n_uy/models/res_partner.py:0
-#, python-format
 msgid "partner [%s]"
 msgstr ""

@@ -3,15 +3,16 @@
 # 	* pos_mercado_pago
 # 
 # Translators:
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2024-08-17 22:00+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,22 +23,19 @@ msgstr ""
 #. module: pos_mercado_pago
 #: model_terms:ir.ui.view,arch_db:pos_mercado_pago.pos_payment_method_view_form_inherit_pos_mercado_pago
 msgid "1494126963"
-msgstr ""
+msgstr "1494126963"
 
 #. module: pos_mercado_pago
 #: model_terms:ir.ui.view,arch_db:pos_mercado_pago.pos_payment_method_view_form_inherit_pos_mercado_pago
 msgid "APP_USR-..."
-msgstr ""
+msgstr "APP_USR-..."
 
 #. module: pos_mercado_pago
 #. odoo-python
 #: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
-#: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
-#: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
-#: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
 #, python-format
 msgid "Do not have access to fetch token from Mercado Pago"
-msgstr ""
+msgstr "Ei pääsyä noutamaan pääsytunnistetta Mercado Pagosta"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,help:pos_mercado_pago.field_pos_payment_method__mp_id_point_smart
@@ -45,11 +43,13 @@ msgid ""
 "Enter your Point Smart terminal serial number written on the back of your "
 "terminal (after the S/N:)"
 msgstr ""
+"Syötä Point Smart -päätelaitteen sarjanumero, joka on kirjoitettu "
+"päätelaitteen takapuolelle (S/N:n jälkeen)"
 
 #. module: pos_mercado_pago
 #: model_terms:ir.ui.view,arch_db:pos_mercado_pago.pos_payment_method_view_form_inherit_pos_mercado_pago
 msgid "Force PDV"
-msgstr ""
+msgstr "Pakota PDV"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,help:pos_mercado_pago.field_pos_payment_method__mp_bearer_token
@@ -57,6 +57,8 @@ msgid ""
 "Mercado Pago customer production user token: "
 "https://www.mercadopago.com.mx/developers/en/reference"
 msgstr ""
+"Mercado Pagon asiakastuotannon käyttäjätunnus: "
+"https://www.mercadopago.com.mx/developers/en/reference"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,help:pos_mercado_pago.field_pos_payment_method__mp_webhook_secret_key
@@ -64,55 +66,62 @@ msgid ""
 "Mercado Pago production secret key from integration application: "
 "https://www.mercadopago.com.mx/developers/panel/app"
 msgstr ""
+"Mercado Pagon tuotannon salainen avain integraatiosovelluksesta: "
+"https://www.mercadopago.com.mx/developers/panel/app"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,field_description:pos_mercado_pago.field_pos_payment_method__mp_id_point_smart_complet
 msgid "Mp Id Point Smart Complet"
-msgstr ""
+msgstr "Mp Id Point Smart Täydellinen"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
-#: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
 #, python-format
 msgid "Payment has been canceled"
-msgstr ""
+msgstr "Maksu on peruutettu"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
+#, python-format
+msgid "Payment has been processed"
+msgstr "Maksu on käsitelty"
+
+#. module: pos_mercado_pago
+#. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
 #, python-format
-msgid "Payment has been finished"
-msgstr ""
+msgid "Payment has been rejected"
+msgstr "Maksu on hylätty"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
 #, python-format
 msgid "Payment has to be canceled on terminal"
-msgstr ""
+msgstr "Maksu on peruutettava päätelaitteessa"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
 #, python-format
 msgid "Payment not found (canceled/finished on terminal)"
-msgstr ""
+msgstr "Maksua ei löydy (peruttu/päätepäätteellä lopetettu)"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
 #, python-format
 msgid "Payment status could not be confirmed"
-msgstr ""
+msgstr "Maksun tilaa ei voitu vahvistaa"
 
 #. module: pos_mercado_pago
 #. odoo-python
 #: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
 #, python-format
 msgid "Please verify your production user token as it was rejected"
-msgstr ""
+msgstr "Tarkista tuotantokäyttäjätunnuksesi, koska se hylättiin"
 
 #. module: pos_mercado_pago
 #: model:ir.model,name:pos_mercado_pago.model_pos_payment_method
@@ -127,17 +136,17 @@ msgstr "Kassan istunto"
 #. module: pos_mercado_pago
 #: model:ir.model.fields,field_description:pos_mercado_pago.field_pos_payment_method__mp_webhook_secret_key
 msgid "Production secret key"
-msgstr ""
+msgstr "Tuotannon salainen avain"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,field_description:pos_mercado_pago.field_pos_payment_method__mp_bearer_token
 msgid "Production user token"
-msgstr ""
+msgstr "Tuotannon käyttäjän pääsytunniste"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,field_description:pos_mercado_pago.field_pos_payment_method__mp_id_point_smart
 msgid "Terminal S/N"
-msgstr ""
+msgstr "Päätelaitteen S/N"
 
 #. module: pos_mercado_pago
 #. odoo-python
@@ -145,22 +154,23 @@ msgstr ""
 #, python-format
 msgid "The terminal serial number is not registered on Mercado Pago"
 msgstr ""
+"Päätelaitteen sarjanumeroa ei ole rekisteröity Mercado Pago -järjestelmään"
 
 #. module: pos_mercado_pago
 #. odoo-python
 #: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
 #, python-format
 msgid "Unexpected Mercado Pago response: %s"
-msgstr ""
+msgstr "Odottamaton Mercado Pagon vastaus: %s"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
 #, python-format
 msgid "Unknown payment status"
-msgstr ""
+msgstr "Tuntematon maksutilanne"
 
 #. module: pos_mercado_pago
 #: model_terms:ir.ui.view,arch_db:pos_mercado_pago.pos_payment_method_view_form_inherit_pos_mercado_pago
 msgid "c2f3662..."
-msgstr ""
+msgstr "c2f3662..."

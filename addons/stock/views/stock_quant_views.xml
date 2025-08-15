@@ -160,7 +160,7 @@
         <field name="model">stock.quant</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
-            <tree>
+            <tree export_xlsx="0">
                 <field name="product_id" column_invisible="context.get('single_product', False)"/>
                 <field name="location_id" column_invisible="context.get('hide_location', False)"/>
                 <field name="lot_id" groups="stock.group_production_lot"
@@ -186,6 +186,7 @@
                 <attribute name="js_class">inventory_report_list</attribute>
                 <attribute name="create">0</attribute>
                 <attribute name="delete">0</attribute>
+                <attribute name="export_xlsx">1</attribute>
             </xpath>
             <xpath expr="//field[@name='product_id']" position="before">
                 <header>
@@ -418,7 +419,7 @@ in this location. That leads to a negative stock.
                             class="btn-primary ms-1"
                             display="always"/>
                     <button name="stock.action_stock_inventory_adjustement_name" groups="stock.group_stock_manager" type="action" string="Apply"/>
-                    <button name="action_reset" type="object" string="Clear"/>
+                    <button name="action_reset" type="object" string="Clear" groups="stock.group_stock_manager"/>
                     <button name="stock.action_stock_request_count" groups="stock.group_stock_manager" type="action" string="Request a Count"/>
                     <button name="action_stock_quant_relocate" string="Relocate" type="object" groups="stock.group_stock_manager" invisible="context.get('hide_location', False)" context="{'action_ref': 'stock.action_view_inventory_tree'}"/>
                 </header>

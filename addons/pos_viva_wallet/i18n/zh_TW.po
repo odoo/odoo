@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_viva_wallet
-# 
+# * pos_viva_wallet
+#
 # Translators:
-# Wil Odoo, 2024
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2024
-# Tony Ng, 2024
-# 
+# Tony Ng, 2025
+# Wil Odoo, 2025
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
-"PO-Revision-Date: 2024-02-07 08:49+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
+"PO-Revision-Date: 2025-08-15 01:10+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-17/pos_viva_wallet/zh_Hant/>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_api_key
@@ -75,16 +77,8 @@ msgstr "Viva Wallet錢包提供的資訊:%s"
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 #, python-format
-msgid "Not receive Bearer Token"
-msgstr "未收到持有人權杖"
-
-#. module: pos_viva_wallet
-#. odoo-python
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-#, python-format
-msgid "Only 'group_pos_user' are allowed to fetch token from Viva Wallet"
-msgstr "只限 group_pos_user 可從 Viva Wallet 獲取權杖"
+msgid "Only 'group_pos_user' are allowed to cancel a Viva Wallet payment"
+msgstr "只限 group_pos_user 可取消 Viva Wallet 付款"
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -94,6 +88,22 @@ msgid "Only 'group_pos_user' are allowed to get latest transaction status"
 msgstr "只限 group_pos_user 可獲取最新交易狀態"
 
 #. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Only 'group_pos_user' are allowed to get the payment status from Viva Wallet"
+msgstr "只限 group_pos_user 可從 Viva Wallet 取得付款狀態"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Only 'group_pos_user' are allowed to send a Viva Wallet payment request"
+msgstr "只限 group_pos_user 可傳送 Viva Wallet 付款請求"
+
+#. module: pos_viva_wallet
 #: model:ir.model,name:pos_viva_wallet.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
 msgstr "POS付款條件"
@@ -101,7 +111,7 @@ msgstr "POS付款條件"
 #. module: pos_viva_wallet
 #: model:ir.model,name:pos_viva_wallet.model_pos_session
 msgid "Point of Sale Session"
-msgstr "POS營業點"
+msgstr "POS 操作時段"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_test_mode
@@ -132,6 +142,15 @@ msgstr "我們與 Viva Wallet 之間出現一些問題，請稍後再試。%s"
 #, python-format
 msgid "There are some issues between us and Viva Wallet, try again later.%s)"
 msgstr "我們與 Viva Wallet 之間出現一些問題，請稍後再試。%s)"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Unable to retrieve Viva Wallet Bearer Token: Please verify that the Client "
+"ID and Client Secret are correct"
+msgstr "未能取得 Viva Wallet 持有人權杖。請檢查客戶端識別碼、客戶端秘密密鑰是否正確。"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_api_key
@@ -199,11 +218,11 @@ msgstr "[Viva Wallet錢包終端點的終端識別碼]，如:16002169"
 #: code:addons/pos_viva_wallet/controllers/main.py:0
 #, python-format
 msgid "received a message for a pos payment provider not registered."
-msgstr "收到一個有關未註冊pos付款服務商的訊息。"
+msgstr "收到一個有關未註冊 POS 付款服務商的訊息。"
 
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/controllers/main.py:0
 #, python-format
 msgid "received a message for a terminal not registered in Odoo: %s"
-msgstr "收到一個有關未在 Odoo 中註冊的終端機的訊息:%s"
+msgstr "收到一個有關未在 Odoo 中註冊的終端機的訊息：%s"

@@ -135,7 +135,7 @@ class PaymentPortal(portal.CustomerPortal):
             'partner_is_different': partner_is_different,
         }
         payment_form_values = {
-            'show_tokenize_input_mapping': PaymentPortal._compute_show_tokenize_input_mapping(
+            'show_tokenize_input_mapping': self._compute_show_tokenize_input_mapping(
                 providers_sudo, **kwargs
             ),
         }

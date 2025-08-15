@@ -29,7 +29,7 @@ def make_efactura_request(session, company, endpoint, method, params, data=None)
                'Authorization': f'Bearer {company.l10n_ro_edi_access_token}'}
 
     try:
-        response = session.request(method=method, url=url, params=params, data=data, headers=headers, timeout=10)
+        response = session.request(method=method, url=url, params=params, data=data, headers=headers, timeout=60)
     except requests.HTTPError as e:
         return {'error': str(e)}
     if response.status_code == 204:
@@ -37,6 +37,8 @@ def make_efactura_request(session, company, endpoint, method, params, data=None)
     if response.status_code == 400:
         error_json = response.json()
         return {'error': error_json['message']}
+    if response.status_code == 401:
+        return {'error': _('Access token is unauthorized.')}
     if response.status_code == 403:
         return {'error': _('Access token is forbidden.')}
     if response.status_code == 500:
@@ -53,19 +55,22 @@ class L10nRoEdiDocument(models.Model):
     invoice_id = fields.Many2one(comodel_name='account.move', required=True)
     state = fields.Selection(
         selection=[
-            ('invoice_sending', 'Sending'),
+            ('invoice_sending', 'Sent'),
             ('invoice_sending_failed', 'Error'),
-            ('invoice_sent', 'Sent'),
+            ('invoice_sent', 'Validated'),
         ],
         string='E-Factura Status',
         required=True,
+        help="""Sent -> Successfully sent to the SPV, waiting for validation.
+                Validated -> Sent & validated by the SPV.
+                Error -> Sending error or validation error from the SPV.""",
     )
     datetime = fields.Datetime(default=fields.Datetime.now, required=True)
     attachment_id = fields.Many2one(comodel_name='ir.attachment')
     message = fields.Char()
-    key_loading = fields.Char()         # To be used to fetch the status of previously sent XML
-    key_signature = fields.Char()       # Received from a successful response: to be saved for government purposes
-    key_certificate = fields.Char()     # Received from a successful response: to be saved for government purposes
+    key_loading = fields.Char(string="E-Factura Index")  # To be used to fetch the status of previously sent XML
+    key_signature = fields.Char()    # Received from a successful response: to be saved for government purposes
+    key_certificate = fields.Char()  # Received from a successful response: to be saved for government purposes
 
     @api.model
     def _request_ciusro_send_invoice(self, company, xml_data, move_type='out_invoice'):
@@ -81,7 +86,7 @@ class L10nRoEdiDocument(models.Model):
         result = make_efactura_request(
             session=requests,
             company=company,
-            endpoint='upload',
+            endpoint='upload' if self.env.context.get('is_b2b') else 'uploadb2c',  # TODO: change the context value into a method parameter in master 
             method='POST',
             params={'standard': 'UBL' if move_type == 'out_invoice' else 'CN',
                     'cif': company.vat.replace('RO', '')},
@@ -131,12 +136,12 @@ class L10nRoEdiDocument(models.Model):
 
         state_status = root.get('stare')
         if state_status in ('nok', 'ok'):
-            return {'key_download': root.get('id_descarcare')}
+            return {'key_download': root.get('id_descarcare'), 'state_status': state_status}
         else:
             return {}
 
     @api.model
-    def _request_ciusro_download_answer(self, company, key_download, session):
+    def _request_ciusro_download_answer(self, company, key_download, session, status=None):
         """
         This method makes a "Download Answer" (GET/descarcare) request to the Romanian SPV. It then processes the
         response by opening the received zip file and returns either:
@@ -147,7 +152,7 @@ class L10nRoEdiDocument(models.Model):
         :param company: ``res.company`` object
         :param key_download: Content of `key_download` received from `_request_ciusro_send_invoice`
         :param session: ``requests.Session()`` object
-        :return: {'error': <str>} | {'attachment_raw': <str>, 'key_signature': <str>, 'key_certificate': <str>}
+        :return: {'attachment_raw': <str>, 'key_signature': <str>, 'key_certificate': <str>, 'error': <str>}
         """
         result = make_efactura_request(
             session=session,
@@ -161,12 +166,18 @@ class L10nRoEdiDocument(models.Model):
 
         # E-Factura gives download response in ZIP format
         zip_ref = zipfile.ZipFile(io.BytesIO(result['content']))
-        signature_file = next(file for file in zip_ref.namelist() if 'semnatura' in file)
+        # The ZIP will contain two files, one with the original invoice or with the identified errors (as the case may be)
+        # and the other with the electronic signature (containing 'semnatura').
+        # If there is an error (status == 'nok') we want to provide the file with the errors.
+        if status == 'nok':
+            signature_file = next(file for file in zip_ref.namelist() if 'semnatura' not in file)
+        else:
+            signature_file = next(file for file in zip_ref.namelist() if 'semnatura' in file)
         xml_bytes = zip_ref.open(signature_file)
         root = etree.parse(xml_bytes)
-        error_element = root.find('.//ns:Error', namespaces=NS_HEADER)
-        if error_element is not None:
-            return {'error': error_element.get('errorMessage')}
+        error_elements = root.findall('.//ns:Error', namespaces=NS_HEADER)
+        if error_elements:
+            error_message = ('\n\n').join(error.get('errorMessage') for error in error_elements)
 
         # Pretty-print the XML content of the signature file to be saved as attachment
         attachment_raw = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8')
@@ -174,6 +185,7 @@ class L10nRoEdiDocument(models.Model):
             'attachment_raw': attachment_raw,
             'key_signature': root.findtext('.//ns:SignatureValue', namespaces=NS_SIGNATURE),
             'key_certificate': root.findtext('.//ns:X509Certificate', namespaces=NS_SIGNATURE),
+            'error': error_message if error_elements else False,
         }
 
     def action_l10n_ro_edi_fetch_status(self):

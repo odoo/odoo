@@ -76,11 +76,18 @@ class ProductTemplate(models.Model):
     @api.onchange('type', 'service_type', 'service_policy')
     def _onchange_service_fields(self):
         for record in self:
+            default_uom_id = self.env['ir.default']._get_model_defaults('product.template').get('uom_id')
+            default_uom = self.env['uom.uom'].browse(default_uom_id)
             if record.type == 'service' and record.service_type == 'timesheet' and \
                not (record._origin.service_policy and record.service_policy == record._origin.service_policy):
-                record.uom_id = self.env.ref('uom.product_uom_hour')
+                if default_uom and default_uom.category_id == self.env.ref('uom.uom_categ_wtime'):
+                    record.uom_id = default_uom
+                else:
+                    record.uom_id = self.env.ref('uom.product_uom_hour')
             elif record._origin.uom_id:
                 record.uom_id = record._origin.uom_id
+            elif default_uom:
+                record.uom_id = default_uom
             else:
                 record.uom_id = self._get_default_uom_id()
             record.uom_po_id = record.uom_id
@@ -119,12 +126,17 @@ class ProductTemplate(models.Model):
             raise ValidationError(_('The %s product is required by the Timesheets app and cannot be archived nor deleted.', time_product.name))
 
     def write(self, vals):
-        # timesheet product can't be archived
+        # timesheet product can't be archived or linked to a company
         test_mode = getattr(threading.current_thread(), 'testing', False) or self.env.registry.in_test_mode()
         if not test_mode and 'active' in vals and not vals['active']:
             time_product = self.env.ref('sale_timesheet.time_product')
             if time_product.product_tmpl_id in self:
                 raise ValidationError(_('The %s product is required by the Timesheets app and cannot be archived nor deleted.', time_product.name))
+        # TODO: avoid duplicate code by joining both conditions in master
+        if not test_mode and 'company_id' in vals and vals['company_id']:
+            time_product = self.env.ref('sale_timesheet.time_product')
+            if time_product.product_tmpl_id in self:
+                raise ValidationError(_('The %s product is required by the Timesheets app and cannot be linked to a company.', time_product.name))
         return super(ProductTemplate, self).write(vals)
 
 
@@ -143,11 +155,18 @@ class ProductProduct(models.Model):
     @api.onchange('type', 'service_type', 'service_policy')
     def _onchange_service_fields(self):
         for record in self:
+            default_uom_id = self.env['ir.default']._get_model_defaults('product.product').get('uom_id')
+            default_uom = self.env['uom.uom'].browse(default_uom_id)
             if record.type == 'service' and record.service_type == 'timesheet' and \
                not (record._origin.service_policy and record.service_policy == record._origin.service_policy):
-                record.uom_id = self.env.ref('uom.product_uom_hour')
+                if default_uom and default_uom.category_id == self.env.ref('uom.uom_categ_wtime'):
+                    record.uom_id = default_uom
+                else:
+                    record.uom_id = self.env.ref('uom.product_uom_hour')
             elif record._origin.uom_id:
                 record.uom_id = record._origin.uom_id
+            elif default_uom:
+                record.uom_id = default_uom
             else:
                 record.uom_id = self._get_default_uom_id()
             record.uom_po_id = record.uom_id

@@ -34,6 +34,7 @@ class SaleOrderCancel(models.TransientModel):
     display_invoice_alert = fields.Boolean(
         string="Invoice Alert",
         compute='_compute_display_invoice_alert',
+        compute_sudo=True,
     )
 
     @api.depends('order_id')

@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Marianna Ciofani, 2025
+# Sergio Zanchetta <primes2h@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,6 +54,17 @@ msgstr "Tutti i siti web"
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_program__ecommerce_ok
 msgid "Available on Website"
 msgstr "Disponibile sul sito web"
+
+#. module: website_sale_loyalty
+#. odoo-python
+#: code:addons/website_sale_loyalty/controllers/main.py:0
+#, python-format
+msgid ""
+"Cannot process payment: applied reward was changed or has expired.\n"
+"Please refresh the page and try again."
+msgstr ""
+"Impossibile elaborare il pagamento: la ricompensa applicata è stata modificata o è scaduta.\n"
+"Ricarica la pagina e prova di nuovo."
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
@@ -112,7 +125,7 @@ msgstr "Sconto:"
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.cart_discount
 msgid "Discounted amount"
-msgstr "Importo scontato "
+msgstr "Importo scontato"
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__display_name
@@ -137,7 +150,7 @@ msgstr "Genera uno short link"
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.sale_coupon_result
 msgid "Gift card or discount code..."
-msgstr "Buono regalo o codice sconto..."
+msgstr "Carta regalo o codice sconto..."
 
 #. module: website_sale_loyalty
 #: model:ir.ui.menu,name:website_sale_loyalty.menu_gift_ewallet_type_config
@@ -202,7 +215,7 @@ msgstr "Programma"
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__program_website_id
 msgid "Program Website"
-msgstr "Programma Sito Web"
+msgstr "Sito web programma"
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__promo_code
@@ -284,7 +297,7 @@ msgstr "Il seguente codice promozionale è stato applicato al tuo ordine:"
 #: code:addons/website_sale_loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "The promo code must be unique."
-msgstr "Il codice promozionale deve essere unico."
+msgstr "Il codice promozionale deve essere univoco."
 
 #. module: website_sale_loyalty
 #. odoo-python

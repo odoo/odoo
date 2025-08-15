@@ -16,14 +16,15 @@
 # Halil, 2023
 # Ediz Duman <neps1192@gmail.com>, 2024
 # Sinem Cil, 2024
+# Deniz Guvener_Odoo <degu@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Sinem Cil, 2024\n"
+"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,7 +72,7 @@ msgstr "Daha iyi bir küresel indirim zaten uygulanmaktadır."
 #: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
 #, python-format
 msgid "A reward could not be loaded"
-msgstr ""
+msgstr "Bir ödül yüklenemedi"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__promo_barcode
@@ -240,6 +241,8 @@ msgid ""
 "Gift Card: %s\n"
 "Balance: %s"
 msgstr ""
+"Hediye Kartı: %s\n"
+"Bakiye: %s"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_config__gift_card_settings
@@ -359,7 +362,7 @@ msgstr "Bu kuponla ödül talep edilemez."
 #: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
 #, python-format
 msgid "No valid eWallet found"
-msgstr ""
+msgstr "Geçerli bir eCüzdan bulunamadı"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -427,6 +430,13 @@ msgstr "Satış Noktası"
 #, python-format
 msgid "Points"
 msgstr "Puanlar"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.xml:0
+#, python-format
+msgid "Points Balance"
+msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__points_cost
@@ -569,14 +579,14 @@ msgstr "Bu promosyon kodu programı zaten etkinleştirildi."
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "That promo code program is expired."
-msgstr ""
+msgstr "Bu promosyon kodu programının süresi doldu"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "That promo code program is not yet valid."
-msgstr ""
+msgstr "Bu promosyon kodu programı henüz geçerli değil."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -619,6 +629,8 @@ msgid ""
 "The reward \"%s\" contain an error in its domain, your domain must be "
 "compatible with the PoS client"
 msgstr ""
+"\"%s\" ödülünde alanla ilgili bir hata var, alanınızın Satış Noktası "
+"istemcisiyle uyumlu olması gerekir"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_id
@@ -706,7 +718,7 @@ msgstr "Bu kupon mevcut fiyat listesinde yoktur."
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "This coupon is not yet valid (%s)."
-msgstr ""
+msgstr "Bu kupon henüz geçerli değil (%s)."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -827,6 +839,7 @@ msgstr ""
 msgid ""
 "You either have not created an eWallet or all your eWallets have expired."
 msgstr ""
+"Ya bir e-Cüzdan oluşturmadınız ya da tüm e-Cüzdanlarınızın süresi doldu."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -875,4 +888,4 @@ msgstr "bitiş süresi yok"
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "the gift cards"
-msgstr ""
+msgstr "hediye kartları"

@@ -12,7 +12,8 @@
 # Triine Aavik <triine@avalah.ee>, 2023
 # Birgit Vijar, 2024
 # Stevin Lilla, 2024
-# Anna, 2024
+# Tairi Tiimann, 2024
+# Anna, 2025
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anna, 2024\n"
+"Last-Translator: Anna, 2025\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -732,7 +733,7 @@ msgstr "Marc Demo"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Multiple accounts found for this login"
-msgstr ""
+msgstr "Selle sisselogimise jaoks leiti mitu kontot"
 
 #. module: auth_signup
 #. odoo-python
@@ -765,7 +766,7 @@ msgstr "Uus ühendus teie kasutajaga"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "No account found for this login"
-msgstr ""
+msgstr "Selle kasutajanimega kontot ei leitud"
 
 #. module: auth_signup
 #. odoo-python
@@ -954,7 +955,7 @@ msgstr "Sisselogimise märgis '%s' ei ole kehtiv."
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: invalid template user"
-msgstr ""
+msgstr "Registreerimine: vigane kasutaja mall"
 
 #. module: auth_signup
 #. odoo-python
@@ -971,11 +972,20 @@ msgstr ""
 #, python-format
 msgid "Signup: no name or partner given for new user"
 msgstr ""
+"Registreerimine: uue kasutaja jaoks ei ole nime ega partnerit määratud"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
 msgid "Status"
 msgstr "Olek"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/controllers/main.py:0
+#: code:addons/auth_signup/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "Google reCaptcha tuvastas kahtlase tegevuse."
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id

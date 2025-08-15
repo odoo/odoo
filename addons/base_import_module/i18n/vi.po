@@ -3,16 +3,16 @@
 # 	* base_import_module
 # 
 # Translators:
-# Wil Odoo, 2023
-# Thi Huong Nguyen, 2024
+# Wil Odoo, 2024
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2024-11-18 09:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +31,7 @@ msgid ""
 msgstr ""
 "\n"
 "Bạn có thể cần phiên bản Enterprise để cài đặt phân hệ dữ liệu. Vui lòng truy cập https://www.odoo.com/pricing-plan để biết thêm thông tin.\n"
-"Nếu bạn cần chủ đề Trang web, bạn có thể tải xuống từ https://github.com/odoo/design-themes.\n"
+"Nếu bạn cần giao diện Trang web, bạn có thể tải xuống từ https://github.com/odoo/design-themes.\n"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
@@ -89,15 +89,6 @@ msgstr "Được tạo bởi"
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__create_date
 msgid "Created on"
 msgstr "Được tạo vào"
-
-#. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid ""
-"Demo data should only be used on test databases. Once they are loaded, they "
-"cannot be entirely removed!"
-msgstr ""
-"Dữ liệu demo chỉ nên được sử dụng trên cơ sở dữ liệu kiểm thử!. Một khi "
-"chúng được tải, bạn sẽ không thể xoá chúng hoàn toàn."
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
@@ -158,11 +149,6 @@ msgid "Import Module"
 msgstr "Import Phân hệ"
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Import demo data"
-msgstr "Nhập dữ liệu demo"
-
-#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
 msgid "Import demo data of module"
 msgstr "Nhập dữ liệu demo của phân hệ"
@@ -205,6 +191,22 @@ msgid "Last Updated on"
 msgstr "Cập nhật lần cuối vào"
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Load demo data"
+msgstr "Nạp dữ liệu mô phỏng"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"Load demo data to test the industry's features with sample records. Do not "
+"load them if this is your production database."
+msgstr ""
+"Tải dữ liệu demo để kiểm thử các tính năng của ngành bằng những bản ghi mẫu."
+" Không tải chúng nếu đây là cơ sở dữ liệu production của bạn."
+
+#. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
 msgid "Module"
 msgstr "Phân hệ"
@@ -218,6 +220,11 @@ msgstr "Tập tin .ZIP của mô đun"
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__module_type
 msgid "Module Type"
 msgstr "Loại phân hệ"
+
+#. module: base_import_module
+#: model:ir.model,name:base_import_module.model_base_module_uninstall
+msgid "Module Uninstall"
+msgstr "Gỡ cài đặt phân hệ"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -276,22 +283,8 @@ msgstr "Trạng thái"
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
-msgid "Studio customizations require Studio"
-msgstr "Tùy chỉnh studio yêu cầu phân hệ studio"
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
 msgid "Studio customizations require the Odoo Studio app."
 msgstr "Tùy chỉnh studio yêu cầu ứng dụng studio"
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
-msgid "The following modules will also be installed:\n"
-msgstr "Các phân hệ sau cũng sẽ được cài đặt:\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -318,6 +311,13 @@ msgstr "Không thể tìm nạp danh sách các ứng dụng ngành. Vui lòng t
 #, python-format
 msgid "The module %s cannot be downloaded"
 msgstr "Không thể tải xuống phân hệ %s"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Unknown module dependencies:"
+msgstr "Phụ thuộc của phân hệ không xác định:"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit

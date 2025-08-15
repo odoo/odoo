@@ -7,21 +7,22 @@
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # Anita Kosobucka, 2023
 # Bartłomiej Chojnacki, 2024
-# Wil Odoo, 2024
 # Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2024
 # Baptiste bve, 2024
 # Damian Ratus, 2024
 # Paweł Wodyński <pw@myodoo.pl>, 2024
 # Janusz Harkot <jh@trilab.pl>, 2024
 # Andrzej Gerasimuk, 2024
+# Wil Odoo, 2025
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-06-13 00:53+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Andrzej Gerasimuk, 2024\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1175,15 +1176,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"Umożliwia udostępnianie dokumentu klientom w ramach sprzedaży..\n"
-"Pozostaw to pole puste, jeśli nie chcesz udostępniać tego dokumentu klientowi sprzedaży.\n"
-"Oferta: dokument zostanie wysłany i będzie dostępny dla klientów w dowolnym momencie.\n"
-"np. ta opcja może być przydatna do udostępniania plików z opisami produktów.\n"
-"Potwierdzone zamówienie: dokument zostanie wysłany i będzie dostępny dla klientów.\n"
-"np. ta opcja może być przydatna do udostępniania instrukcji obsługi lub treści cyfrowych zakupionych w sklepie internetowym. \n"
-"Wewnątrz cytatu: Dokument zostanie włączony do pliku pdf cytatu między stronami nagłówka a tabelą cytatu. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1579,8 +1574,10 @@ msgstr "Uzupełnij dane Twojej firmy"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "Oblicz koszty wysyłki i prześlij kurierem DHL"
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1589,8 +1586,10 @@ msgstr "Oblicz koszty wysyłki i prześlij kurierem Easypost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "Oblicz koszty wysyłki i prześlij kurierem FedEx"
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1604,13 +1603,17 @@ msgstr "Oblicz koszty wysyłki i wyślij za pomocą Shiprocket"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "Oblicz koszty wysyłki i prześlij kurierem UPS"
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "Oblicz koszty wysyłki i prześlij kurierem USPS"
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1898,6 +1901,11 @@ msgid "Customize your quotes and orders."
 msgstr "Dostosuj ofertę i zamówienia"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "DHL Connector"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
 msgstr "Łącznik DHL Express"
@@ -2139,6 +2147,11 @@ msgid "Display Type"
 msgstr "Typ wyświetlania"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Konto dystrybucji analitycznej"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Documentation"
 msgstr "Dokumentacja"
@@ -2317,6 +2330,7 @@ msgstr "Dodatkowa pozycja z %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "FedEx Connector"
 msgstr "Łącznik FedEx"
 
@@ -4235,7 +4249,6 @@ msgstr "Zamówienia sprzedaży"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4686,6 +4699,11 @@ msgid "Sum of Untaxed Total"
 msgstr "Suma całkowita bez podatku"
 
 #. module: sale
+#: model:ir.model,name:sale.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "Parametr systemu"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
 #: model:ir.ui.menu,name:sale.menu_tag_config
 msgid "Tags"
@@ -4889,12 +4907,12 @@ msgstr "Następujące zamówienia nie są w stanie wymagającym potwierdzenia: %
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Następujące produkty nie mogą być zastrzeżone dla firmy %sz powodu wcześniejszego użycia w ofertach lub zamówieniach sprzedaży dla innej firmy.\n"
-"%s Możesz zarchiwizować te produkty i odtworzyć je z ograniczeniem firmowym lub pozostawić je jako produkt współdzielony."
+"Następujące produkty nie mogą być zastrzeżone dla firmy %(company)sz powodu wcześniejszego użycia w ofertach lub zamówieniach sprzedaży dla innej firmy.\n"
+"%(used_products)s Możesz zarchiwizować te produkty i odtworzyć je z ograniczeniem firmowym lub pozostawić je jako produkt współdzielony."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -5035,6 +5053,19 @@ msgid "There are existing"
 msgstr "Istnieją"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
+"Wygląda na to, że nie ma jeszcze żadnego przecenionego produktu "
+"skonfigurowanego dla tej firmy. Możesz usunąć zniżkę według pozycji, lub "
+"poprosić administratora o przydzielenie zniżki po raz pierwszy."
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "This default value is applied to any new product created. This can be "
@@ -5063,7 +5094,7 @@ msgid ""
 msgstr ""
 "Jest to data dostawy obiecana klientowi. Jeśli zostanie ustawiona, "
 "zamówienie dostawy zostanie zaplanowane na podstawie tej daty, a nie czasu "
-"realizacji sygnału produktu."
+"realizacji leadu produktu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
@@ -5276,11 +5307,13 @@ msgstr "Wpisz, aby znaleźć produkt..."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "UPS Connector"
 msgstr "Łącznik UPS"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_usps
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "USPS Connector"
 msgstr "Łącznik USPS"
 
@@ -5419,14 +5452,6 @@ msgstr "Wyświetl szczegóły"
 
 #. module: sale
 #. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-#, python-format
-msgid "View Order"
-msgstr "Zobacz zamówienie"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
@@ -5579,6 +5604,13 @@ msgstr ""
 "obecną pozycję i utwórz nową, właściwego typu."
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_line.py:0
+#, python-format
+msgid "You cannot modify the product of this order line."
+msgstr "Nie możesz modyfikować produktu tego wiersza zamówienia."
+
+#. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
 msgid ""
 "You cannot set a negative number for the default quotation validity. Leave "
@@ -5597,6 +5629,7 @@ msgstr ""
 "niezależnie od tego, czy jest to produkt do przechowywania, materiał eksploatacyjny czy usługa."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Twoje zamówienia"

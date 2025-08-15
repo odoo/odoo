@@ -4,17 +4,17 @@
 # 
 # Translators:
 # JH CHOI <hwangtog@gmail.com>, 2023
-# Sarah Park, 2024
 # Daye Jeong, 2024
 # Wil Odoo, 2024
+# Sarah Park, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-05-09 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -933,7 +933,7 @@ msgstr "이 모든 아이콘은 상업적 사용으로도 완전 무료입니다
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__ab_testing_enabled
 msgid "Allow A/B Testing"
-msgstr "A/B 테스트를 허용"
+msgstr "A/B 테스트 허용"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription_optout__is_feedback
@@ -1049,6 +1049,22 @@ msgstr "원본 메일링 목록 보관"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Archived"
 msgstr "보관됨"
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid "Are you sure you want to unsubscribe from our mailing list?"
+msgstr "메일링 리스트 구독을 정말로 취소할까요?"
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid ""
+"Are you sure you want to unsubscribe from the mailing list "
+"\"%(unsubscribed_lists)s\"?"
+msgstr "\"%(unsubscribed_lists)s\" 메일링 리스트 구독을 정말로 취소할까요?"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1840,7 +1856,7 @@ msgstr "디자인 옵션"
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_mailing_action_mail
 msgid "Design a striking email, define recipients and track its results."
-msgstr "주목을 끌만한 이메일을 작성하고, 받는 사람을 지정하고, 결과를 추적하세요."
+msgstr "차별화된 이메일 관리를 통해 적합한 대상자에게 발송한 후 추적해 보세요."
 
 #. module: mass_mailing
 #. odoo-python
@@ -3043,6 +3059,13 @@ msgid "Manage Mass Mailing Campaigns"
 msgstr "일괄 메일 캠페인 관리"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid "Manage Subscriptions"
+msgstr "구독 관리"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Manage mass mailing campaigns"
 msgstr "일괄 메일 발송 캠페인 관리"
@@ -3154,7 +3177,7 @@ msgstr "미디어 제목"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Medium"
-msgstr "중간"
+msgstr "매체"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -3582,7 +3605,7 @@ msgstr "가장 좋은 버전이 확인되면 다른 수신자에게도 가장 �
 msgid ""
 "Once you send these emails, they'll be making a grand entrance in all the "
 "inboxes, creating quite the buzz!"
-msgstr "해당 이메일을 전송하게 되면 받은편지함마다 멋지게 등장하여 큰 화제를 불러일으킬 것입니다!"
+msgstr "이메일을 전송합니다. 수신자를 대상으로 모든 내용이 빠짐없이 입력되었는지 확인하세요!"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
@@ -4266,6 +4289,11 @@ msgid "Send test"
 msgstr "테스트 보내기"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "Send to all"
+msgstr "모두에게 전송"
+
+#. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__state__sending
 msgid "Sending"
 msgstr "전송중"
@@ -4503,6 +4531,13 @@ msgstr "구독"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
 msgid "Successfully Unsubscribed"
 msgstr "성공적으로 구독 취소되었습니다."
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid "Successfully unsubscribed!"
+msgstr "구독이 완료되었습니다!"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__tag_ids
@@ -4888,9 +4923,12 @@ msgid "Unknown error"
 msgstr "알 수 없는 오류"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social_left
 #: model_terms:ir.ui.view,arch_db:mass_mailing.theme_basic_template
+#, python-format
 msgid "Unsubscribe"
 msgstr "구독 취소"
 
@@ -5270,7 +5308,7 @@ msgstr "예. \"VIP 고객\""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "e.g. Check it out before it's too late!"
-msgstr "예. 늦기 전에 꼭 확인하세요!"
+msgstr "예: 꼭 확인해 보세요!"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
@@ -5286,7 +5324,7 @@ msgstr "예: 홍길동"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "e.g. New Sale on all T-shirts"
-msgstr "예. 모든 티셔츠 신규 세일"
+msgstr "예: 티셔츠 전제품 세일 안내"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form

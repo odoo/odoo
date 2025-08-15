@@ -64,7 +64,7 @@ def on_message(ws, messages):
             else:
                 # likely intended as IoT share the same channel
                 _logger.debug("message ignored due to different iot mac: %s", iot_mac)
-        elif message_type != 'print_confirmation':  # intended to be ignored
+        elif message_type not in ['print_confirmation', 'bundle_changed']:  # intended to be ignored
             _logger.warning("message type not supported: %s", message_type)
 
 
@@ -95,6 +95,7 @@ class WebsocketClient(Thread):
 
     def run(self):
         self.ws = websocket.WebSocketApp(self.url,
+            header={"User-Agent": "OdooIoTBox/1.0"},
             on_open=self.on_open, on_message=on_message,
             on_error=on_error, on_close=on_close)
 

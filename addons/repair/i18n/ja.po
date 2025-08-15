@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
-# Junko Augias, 2024
 # Wil Odoo, 2024
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,8 +28,13 @@ msgstr "('修理オーダ - %s' % (object.name))"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "(<i>Recycle</i>)"
+msgstr "(<i>リサイクル</i>)"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "(<i>Remove</i>)"
-msgstr "(<i>削除</i>)"
+msgstr "(<i>取り外す</i>)"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__state
@@ -40,8 +45,8 @@ msgid ""
 "* The 'Repaired' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
-"* '新規' ステータスは、ユーザが未確認の新規修理オーダをエンコードする場合に使用されます。\n"
-"* '確認済' ステータスはユーザが修理オーダを確認した際に使用されます。\n"
+"* '新規' ステータスは、ユーザが未確定の新規修理オーダをエンコードする場合に使用されます。\n"
+"* '確認済' ステータスはユーザが修理オーダを確定した際に使用されます。\n"
 "* '修理中' ステータスは修理が進行中の際に使用されます。\n"
 "* '修理済' ステータスは修理が完了した際に使用されます。\n"
 "* '取消済' ステータスはユーザが修理オーダを取消した際に使用されます。"
@@ -156,7 +161,7 @@ msgstr "追加"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add internal notes."
-msgstr "内部注記を追加"
+msgstr "内部メモを追加"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_dest_id
@@ -199,18 +204,18 @@ msgstr "添付数"
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__parts_availability_state__available
 #, python-format
 msgid "Available"
-msgstr "処理可能"
+msgstr "利用可能"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Cancel Repair"
-msgstr "修理取消"
+msgstr "修理をキャンセル"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__cancel
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Cancelled"
-msgstr "取消済"
+msgstr "キャンセル済"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_uom_category_id
@@ -220,7 +225,7 @@ msgstr "カテゴリー"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Check availability"
-msgstr "利用可能確認"
+msgstr "在庫を確認"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__partner_id
@@ -254,7 +259,7 @@ msgstr "設定"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Confirm Repair"
-msgstr "修理確認"
+msgstr "修理を確定"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__confirmed
@@ -331,7 +336,7 @@ msgstr "デフォルトリサイクル移動ロケーション"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_remove_location_dest_id
 msgid "Default Remove Destination Location"
-msgstr "デフォルト廃棄移動先ロケーション"
+msgstr "デフォルト払出先ロケーション"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -687,7 +692,7 @@ msgstr "修理中修理オーダ数"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__count_repair_ready
 msgid "Number of Repair Orders to Process"
-msgstr "処理予定修理オーダ数"
+msgstr "処理待ちの修理オーダ数"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error_counter
@@ -812,7 +817,7 @@ msgstr "プロダクトバリアント"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_id
 msgid "Product to Repair"
-msgstr "修理プロダクト"
+msgstr "修理対象プロダクト"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__lot_id
@@ -860,7 +865,7 @@ msgstr "リサイクル部品移動先ロケーション"
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__stock_move__repair_line_type__remove
 msgid "Remove"
-msgstr "削除"
+msgstr "取り外す"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__parts_location_id
@@ -1073,7 +1078,7 @@ msgstr "販売オーダ明細"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__schedule_date
 msgid "Scheduled Date"
-msgstr "計画日"
+msgstr "予定日"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -1092,7 +1097,7 @@ msgstr "修理付番"
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Serial number is required for product to repair : %s"
-msgstr "シリアル番号は、修理するプロダクトに必要です: %s"
+msgstr "修理対象プロダクトにはシリアル番号が必要です: %s"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1202,12 +1207,12 @@ msgstr "このオペレーションタイプで修理オーダを作成した場
 msgid ""
 "This is the default remove destination location when you create a repair "
 "order with this operation type."
-msgstr "このオペレーションタイプで修理オーダを作成した場合のデフォルトの廃棄移動先ロケーションです。"
+msgstr "このオペレーションタイプで修理オーダを作成した際に使用される、デフォルトの払出先ロケーションです。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
 msgid "This is the location where the product to repair is located."
-msgstr "修理予定プロダクトのあるロケーションです。"
+msgstr "修理対象プロダクトのあるロケーションです。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__parts_location_id
@@ -1223,7 +1228,7 @@ msgstr "修理済プロダクトがあるロケーションです。"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
 msgid "To Process"
-msgstr "未処理"
+msgstr "処理待ち"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -1358,7 +1363,7 @@ msgstr "負の数量を入力することはできません。"
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You cannot cancel a Repair Order that's already been completed"
-msgstr "すでに完了済の修理オーダを取り消すことはできません。"
+msgstr "すでに完了した修理オーダはキャンセルできません。"
 
 #. module: repair
 #. odoo-python

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="hr_attendance.EmployeeBadge">
-    <div class="o_hr_attendance_user_badge o_attendance_background d-flex align-items-end justify-content-center flex-grow-1 pt-5 pt-md-4 bg-odoo">
+    <div t-if="employeeAvatar" class="o_attendance_background d-flex align-items-end justify-content-center flex-grow-1 pt-5 pt-md-4 bg-odoo">
         <img class="o_hr_attendance_employee_badge img rounded-circle" t-attf-src="data:image/png;base64,{{employeeAvatar}}" height="80"/>
     </div>
 </t>
@@ -14,7 +14,7 @@
         <t t-call="hr_attendance.EmployeeBadge">
             <t t-set="employeeAvatar" t-value="this.props.employeeData.employee_avatar"/>
         </t>
-        <button t-on-click="() => this.props.onClickBack()" class="o_hr_attendance_back_button o_hr_attendance_back_button_md btn btn-secondary d-none d-md-inline-flex align-items-center position-absolute top-0 start-0 rounded-circle">
+        <button t-on-click="() => this.props.onClickBack()" class="o_hr_attendance_back_button o_hr_attendance_back_button_md btn btn-secondary d-none d-md-inline-flex align-items-center position-absolute top-0 start-0 rounded-circle m-5">
             <i class="oi fa-2x fa-fw oi-chevron-left me-1" role="img" aria-label="Go back" title="Go back"/>
         </button>
 

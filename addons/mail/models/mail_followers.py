@@ -519,5 +519,7 @@ GROUP BY fol.id%s%s""" % (
             'display_name': follower.display_name,
             'email': follower.email,
             'is_active': follower.is_active,
-            'partner': follower.partner_id.mail_partner_format()[follower.partner_id],
+            # sudo: res.partner - can read partners of found followers, in particular allows
+            # by-passing multi-company ACL for portal partners
+            'partner': follower.partner_id.sudo().mail_partner_format()[follower.partner_id],
         } for follower in self]

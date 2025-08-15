@@ -13,7 +13,7 @@ import { useService } from "@web/core/utils/hooks";
  * @see NameAndSignature for the input fields, adds a submit
  * button, and handles the RPC to save the result.
  */
-class SignatureForm extends Component {
+export class SignatureForm extends Component {
     static template = "portal.SignatureForm"
     static components = { NameAndSignature }
 
@@ -26,7 +26,11 @@ class SignatureForm extends Component {
             error: false,
             success: false,
         });
-        this.signature = useState({ name: this.props.defaultName });
+        this.signature = useState({
+            name: this.props.defaultName,
+            getSignatureImage: () => "",
+            resetSignature: () => {},
+        });
         this.nameAndSignatureProps = {
             signature: this.signature,
             fontColor: this.props.fontColor || "black",
@@ -45,8 +49,13 @@ class SignatureForm extends Component {
         onMounted(() => {
             this.rootRef.el.closest('.modal').addEventListener('shown.bs.modal', () => {
                 this.signature.resetSignature();
+                this.toggleSignatureFormVisibility();
             });
         });
+    }
+
+    toggleSignatureFormVisibility() {
+        this.rootRef.el.classList.toggle('d-none', document.querySelector('.editor_enable'));
     }
 
     get sendLabel() {

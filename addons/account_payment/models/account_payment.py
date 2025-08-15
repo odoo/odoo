@@ -111,12 +111,12 @@ class AccountPayment(models.Model):
             self.payment_token_id = False
             return
 
-        self.payment_token_id = self.env['payment.token'].search([
+        self.payment_token_id = self.env['payment.token'].sudo().search([
             *self.env['payment.token']._check_company_domain(self.company_id),
             ('partner_id', '=', self.partner_id.id),
             ('provider_id.capture_manually', '=', False),
             ('provider_id', '=', self.payment_method_line_id.payment_provider_id.id),
-         ], limit=1)
+         ], limit=1)  # In sudo mode to read the provider fields.
 
     #=== ACTION METHODS ===#
 
@@ -199,6 +199,12 @@ class AccountPayment(models.Model):
 
     def _prepare_payment_transaction_vals(self, **extra_create_values):
         self.ensure_one()
+        if self._context.get('active_model', '') == 'account.move':
+            invoice_ids = self._context.get('active_ids', [])
+        elif self._context.get('active_model', '') == 'account.move.line':
+            invoice_ids = self.env['account.move'].search([('line_ids', '=', self._context.get('active_ids'))]).ids
+        else:
+            invoice_ids = []
         return {
             'provider_id': self.payment_token_id.provider_id.id,
             'payment_method_id': self.payment_token_id.payment_method_id.id,
@@ -211,9 +217,7 @@ class AccountPayment(models.Model):
             'token_id': self.payment_token_id.id,
             'operation': 'offline',
             'payment_id': self.id,
-            **({'invoice_ids': [Command.set(self._context.get('active_ids', []))]}
-                if self._context.get('active_model') == 'account.move'
-                else {}),
+            'invoice_ids': [Command.set(invoice_ids)],
             **extra_create_values,
         }
 

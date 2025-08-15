@@ -20,7 +20,11 @@ registry.category("web_tour.tours").add("test_dblclick_event_from_calendar", {
             trigger: ".o_back_button",
         },
         {
-            content: "Access recurrence",
+            content: "Move to next week",
+            trigger: ".o_calendar_button_next"
+        },
+        {
+            content: "Access occurrence",
             trigger: 'a[data-event-id="2"]',
             run: "dblclick",
         },
@@ -34,7 +38,7 @@ registry.category("web_tour.tours").add("test_dblclick_event_from_calendar", {
             trigger: ".o_back_button",
         },
         {
-            trigger: 'a[data-event-id="1"]',
+            trigger: 'a[data-event-id="2"]',
             isCheck: true,
         }
     ],
@@ -44,14 +48,26 @@ registry.category("web_tour.tours").add("test_drag_and_drop_event_in_calendar", 
     test: true,
     steps: () => [
         {
-            content: "Move event to Wednesday 1.15 PM",
-            trigger: 'a[data-event-id="1"]',
-            run: 'drag_and_drop_native tr[data-time="13:30:00"] td.fc-widget-content:not(.fc-time)',
+            content: "Open calendar display selector",
+            trigger: ".scale_button_selection",
         },
         {
-            content: "Move recurrence to Wednesday 2.45 PM (nothing should happen)",
+            content: "Select monthly display",
+            trigger: ".o_scale_button_month",
+        },
+        {
+            trigger: '.fc-dayGridMonth-view',
+            isCheck: true,
+        },
+        {
+            content: "Move event to 15th of the month",
+            trigger: 'a[data-event-id="1"]',
+            run: 'drag_and_drop_native .fc-day.fc-widget-content[data-date$="15"]',
+        },
+        {
+            content: "Move occurrence to 20th of the month (nothing should happen)",
             trigger: 'a[data-event-id="2"]',
-            run: 'drag_and_drop_native tr[data-time="15:00:00"] td.fc-widget-content:not(.fc-time)',
+            run: 'drag_and_drop_native .fc-day.fc-widget-content[data-date$="20"]',
         },
     ],
 });

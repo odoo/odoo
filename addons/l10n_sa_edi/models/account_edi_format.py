@@ -1,4 +1,6 @@
-import json
+import logging
+
+from markupsafe import Markup
 from hashlib import sha256
 from base64 import b64decode, b64encode
 from lxml import etree
@@ -10,6 +12,8 @@ from cryptography.hazmat.primitives.asymmetric.ec import ECDSA
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.backends import default_backend
 from cryptography.x509 import load_der_x509_certificate
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountEdiFormat(models.Model):
@@ -162,21 +166,25 @@ class AccountEdiFormat(models.Model):
         """
         clearance_data = invoice.journal_id._l10n_sa_api_clearance(invoice, signed_xml.decode(), PCSID_data)
         if clearance_data.get('json_errors'):
-            errors = [json.loads(j).get('validationResults', {}) for j in clearance_data['json_errors']]
+            error = clearance_data['json_errors']
             error_msg = ''
+            status_code = error.get('status_code')
+            if status_code:
+                error_msg = Markup("<b>[%s] </b>") % status_code
+
             is_warning = True
-            for error in errors:
-                validation_results = error.get('validationResults', {})
-                for err in validation_results.get('warningMessages', []):
-                    error_msg += '\n - %s | %s' % (err['code'], err['message'])
-                for err in validation_results.get('errorMessages', []):
-                    is_warning = False
-                    error_msg += '\n - %s | %s' % (err['code'], err['message'])
+            validation_results = error.get('validationResults', {})
+            for err in validation_results.get('warningMessages', []):
+                error_msg += Markup('<b>%s</b> : %s <br/>') % (err['code'], err['message'])
+            for err in validation_results.get('errorMessages', []):
+                is_warning = False
+                error_msg += Markup('<b>%s</b> : %s <br/>') % (err['code'], err['message'])
             return {
                 'error': error_msg,
                 'rejected': not is_warning,
                 'response': signed_xml.decode(),
-                'blocking_level': 'warning' if is_warning else 'error'
+                'blocking_level': 'warning' if is_warning else 'error',
+                'status_code': status_code,
             }
         if not clearance_data.get('error'):
             return self._l10n_sa_assert_clearance_status(invoice, clearance_data)
@@ -411,7 +419,7 @@ class AccountEdiFormat(models.Model):
         if invoice.commercial_partner_id == invoice.company_id.partner_id.commercial_partner_id:
             errors.append(_("- You cannot post invoices where the Seller is the Buyer"))
 
-        if not all(line.tax_ids for line in invoice.invoice_line_ids.filtered(lambda line: line.display_type == 'product')):
+        if not all(line.tax_ids for line in invoice.invoice_line_ids.filtered(lambda line: line.display_type == 'product' and line._check_edi_line_tax_required())):
             errors.append(_("- Invoice lines should have at least one Tax applied."))
 
         if not journal._l10n_sa_ready_to_submit_einvoices():
@@ -475,3 +483,37 @@ class AccountEdiFormat(models.Model):
             'post': self._l10n_sa_post_zatca_edi,
             'edi_content': self._l10n_sa_get_invoice_content_edi,
         }
+
+    def _prepare_invoice_report(self, pdf_writer, edi_document):
+        """
+        Prepare invoice report to be printed.
+        :param pdf_writer: The pdf writer with the invoice pdf content loaded.
+        :param edi_document: The edi document to be added to the pdf file.
+        """
+        self.ensure_one()
+        super()._prepare_invoice_report(pdf_writer, edi_document)
+        if self.code != 'sa_zatca' or edi_document.move_id.country_code != 'SA':
+            return
+
+        attachment = edi_document.sudo().attachment_id
+        if not attachment or not attachment.datas:
+            _logger.warning(f"No attachment found for invoice {edi_document.move_id.name}")
+            return
+
+        xml_content = attachment.raw
+        file_name = attachment.name
+
+        pdf_writer.addAttachment(file_name, xml_content, subtype='text/xml')
+        if not pdf_writer.is_pdfa:
+            try:
+                pdf_writer.convert_to_pdfa()
+            except Exception as e:
+                _logger.exception("Error while converting to PDF/A: %s", e)
+            content = self.env['ir.qweb']._render(
+                'account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata',
+                {
+                    'title': edi_document.move_id.name,
+                    'date': fields.Date.context_today(self),
+                },
+            )
+            pdf_writer.add_file_metadata(content.encode())

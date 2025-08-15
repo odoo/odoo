@@ -97,3 +97,25 @@ class TestEquipment(TransactionCase):
         maintenance_request.with_context(default_stage_id=maintenance_stages[1].id).stage_id = done_maintenance_stage
         new_maintenance = self.env['maintenance.request'].search([('name', '=', 'Test forever maintenance'), ('stage_id', '=', maintenance_stages[0].id)])
         self.assertTrue(new_maintenance)
+
+    def test_update_multiple_maintenance_request_record(self):
+        """
+        Test that multiple records of the model 'maintenance.request' can be written simultaneously.
+        """
+        maintenance_requests = self.env['maintenance.request'].create([
+            {
+                'name': 'm_1',
+                'maintenance_type': 'preventive',
+                'kanban_state': 'normal',
+            },
+            {
+                'name': 'm_2',
+                'maintenance_type': 'preventive',
+                'kanban_state': 'normal',
+            },
+        ])
+        maintenance_requests.write({'kanban_state': 'blocked', 'stage_id': self.ref('maintenance.stage_0')})
+        self.assertRecordValues(maintenance_requests, [
+            {'kanban_state': 'blocked', 'stage_id': self.ref('maintenance.stage_0')},
+            {'kanban_state': 'blocked', 'stage_id': self.ref('maintenance.stage_0')},
+        ])

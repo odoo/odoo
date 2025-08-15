@@ -144,11 +144,42 @@ class TestUi(HttpCaseWithUserDemo):
         self.start_tour("/", 'website_sale_tour_2', login="admin")
 
     def test_05_google_analytics_tracking(self):
-        if not odoo.tests.loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
+        # Data for google_analytics_view_item
+        attribute = self.env['product.attribute'].create({
+            'name': 'Color',
+            'sequence': 10,
+            'display_type': 'color',
+            'value_ids': [
+                Command.create({
+                    'name': 'Red',
+                }),
+                Command.create({
+                    'name': 'Pink',
+                }),
+            ]
+        })
+        self.env['product.template'].create({
+            'name': 'Colored T-Shirt',
+            'standard_price': 500,
+            'list_price': 750,
+            'detailed_type': 'consu',
+            'website_published': True,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attribute.id,
+                    'value_ids': attribute.value_ids,
+                })
+            ]
+        })
         self.env['website'].browse(1).write({'google_analytics_key': 'G-XXXXXXXXXXX'})
         self.start_tour("/shop", 'google_analytics_view_item')
+        # Data for google_analytics_add_to_cart
+        self.env['product.template'].create({
+            'name': 'Basic Shirt',
+            'standard_price': 500,
+            'detailed_type': 'consu',
+            'website_published': True
+        })
         self.start_tour("/shop", 'google_analytics_add_to_cart')
 
     def test_update_same_address_billing_shipping_edit(self):

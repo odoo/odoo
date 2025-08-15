@@ -7,9 +7,8 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <setting id="eu_service" position="inside">
-                <field name="l10n_eu_oss_eu_country" invisible="1"/>
                 <div class="content-group" invisible="not module_l10n_eu_oss">
-                    <div class="mt8" invisible="not l10n_eu_oss_eu_country">
+                    <div class="mt8">
                         <button type="object" name="refresh_eu_tax_mapping" icon="fa-refresh" string="Refresh tax mapping" class="btn-link"/>
                     </div>
                 </div>

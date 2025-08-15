@@ -6,17 +6,17 @@
 # Martin Trigaux, 2023
 # Iran Villalobos López, 2023
 # Lucia Pacheco, 2023
-# Fernanda Alvarez, 2024
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Wil Odoo, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Fernanda Alvarez, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-05-30 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -199,6 +199,7 @@ msgstr "Regresar"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 #, python-format
 msgid "Cancel"
 msgstr "Cancelar"
@@ -214,6 +215,7 @@ msgstr "Cancelar orden"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.js:0
 #, python-format
 msgid "Cancel order"
@@ -617,8 +619,7 @@ msgstr "Última actualización el"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Let your customers order using their mobile or a kiosk."
-msgstr ""
-"Permita que sus clientes hagan sus pedidos desde su celular o en un quiosco"
+msgstr "Permita que sus clientes ordenen desde su celular o un quiosco"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__light
@@ -808,7 +809,7 @@ msgstr "No se han encontrado pedidos en el servidor"
 #: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
 #, python-format
 msgid "Out of stock"
-msgstr " Sin existencias"
+msgstr "Agotado"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -858,6 +859,13 @@ msgid "Pickup zone"
 msgstr "Zona de recolección"
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "Please wait until the price is loaded"
+msgstr "Espere hasta que cargue el precio"
+
+#. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_session.py:0
 #, python-format
@@ -882,7 +890,7 @@ msgstr "Órdenes del punto de venta"
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr "Métodos de pago del punto de venta "
+msgstr "Métodos de pago del punto de venta"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_session
@@ -1313,6 +1321,13 @@ msgid "Yes"
 msgstr "Sí"
 
 #. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/controllers/orders.py:0
+#, python-format
+msgid "You are not authorized to remove this order"
+msgstr "No tiene autorización para eliminar esta orden."
+
+#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 #, python-format
@@ -1332,7 +1347,7 @@ msgstr "No tiene los permisos necesarios para realizar esta acción"
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 #, python-format
 msgid "Your Order"
-msgstr "Su orden"
+msgstr "Tu orden"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1340,6 +1355,13 @@ msgstr "Su orden"
 #, python-format
 msgid "Your Selection"
 msgstr "Su selección"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/controllers/orders.py:0
+#, python-format
+msgid "Your order does not exist or has been removed"
+msgstr "Su orden no existe o ha sido eliminada."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1373,13 +1395,6 @@ msgstr "El estado de su orden cambió"
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "empty = all points of sale"
 msgstr "vacío = todos los puntos de venta"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
-#, python-format
-msgid "floor"
-msgstr "piso "
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree

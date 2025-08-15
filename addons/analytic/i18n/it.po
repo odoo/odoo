@@ -3,16 +3,17 @@
 # 	* analytic
 # 
 # Translators:
-# Marianna Ciofani, 2023
-# Wil Odoo, 2024
+# Marianna Ciofani, 2025
+# Wil Odoo, 2025
+# Sergio Zanchetta <primes2h@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +36,7 @@ msgstr "<span class=\"o_stat_text\">Conti analitici</span>"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "<span class=\"o_stat_text\">Gross Margin</span>"
-msgstr "<span class=\"o_stat_text\">Margine Lordo</span>"
+msgstr "<span class=\"o_stat_text\">Margine lordo</span>"
 
 #. module: analytic
 #. odoo-python
@@ -86,7 +87,7 @@ msgstr "Aggiungi una Riga"
 #: model_terms:ir.actions.act_window,help:analytic.action_account_analytic_account_form
 #: model_terms:ir.actions.act_window,help:analytic.action_analytic_account_form
 msgid "Add a new analytic account"
-msgstr "Aggiunge un nuovo conto analitico"
+msgstr "Aggiungi un nuovo conto analitico"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_administratif
@@ -158,23 +159,23 @@ msgstr "Distribuzione analitica"
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
 #, python-format
 msgid "Analytic Distribution Model"
-msgstr "Modello di distribuzione analitico"
+msgstr "Modello di ripartizione analitica"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_distribution_model
 msgid "Analytic Distribution Models"
-msgstr "Modelli di distribuzione analitici"
+msgstr "Modelli di ripartizione analitica"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution_search
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution_search
 msgid "Analytic Distribution Search"
-msgstr "Ricerca distribuzione analitica"
+msgstr "Ricerca ripartizione analitica"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Item"
-msgstr "Elemento analitico"
+msgstr "Movimento analitico"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
@@ -207,7 +208,7 @@ msgstr "Piano analitico"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr "Applicabilità del piano analitico"
+msgstr "Applicabilità piano analitico"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_plan_action
@@ -301,7 +302,7 @@ msgstr "Categoria"
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
 msgid "Chart of Analytic Accounts"
-msgstr "Piano dei conti analitico"
+msgstr "Piano dei conti analitici"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_count
@@ -311,7 +312,7 @@ msgstr "Numero di piani figli"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_ids
 msgid "Childrens"
-msgstr "Figli"
+msgstr "Secondari"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_plan_action
@@ -369,9 +370,9 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Conversioni tra diverse unità di misura sono permesse solo se appartengono "
-"alla stessa categoria. La conversione sarà effettuata utilizzando i rapporti"
-" di conversione delle unità di misura."
+"Le conversioni tra unità di misura possono avvenire solo se appartengono "
+"alla stessa categoria. La conversione verrà effettuata in base alle "
+"proporzioni."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -380,8 +381,8 @@ msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
 msgstr ""
-"I costi verranno creati in modo automatico con la registrazione di\n"
-"                fatture fornitore, note spese o fogli ore."
+"I costi vengono generati in modo automatico con la registrazione di\n"
+"                fatture fornitore, spese oppure fogli ore."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_uid
@@ -483,6 +484,12 @@ msgid "Display Name"
 msgstr "Nome visualizzato"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Distribuzione conto analitico"
+
+#. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 msgid "Distribution to apply"
 msgstr "Distribuzione da applicare"
@@ -552,9 +559,9 @@ msgid ""
 "                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
-"In Odoo, gli ordini di vendita e i progetti sono implementati usando\n"
-"                conti analitici. È possibile tenere traccia dei costi e dei ricavi\n"
-"                per analizzare facilmente i margini."
+"In Odoo, gli ordini di vendita e i progetti vengono implementati usando\n"
+"                i conti analitici. Per analizzare facilmente i margini è possibile\n"
+"                tenere traccia dei costi e dei ricavi."
 
 #. module: analytic
 #: model:account.analytic.plan,name:analytic.analytic_plan_internal
@@ -680,7 +687,7 @@ msgstr "Numero di messaggi con errore di consegna"
 #: code:addons/analytic/models/analytic_mixin.py:0
 #, python-format
 msgid "One or more lines require a 100% analytic distribution."
-msgstr "Una o più righe richiedono una distribuzione analitica al 100%·"
+msgstr "Una o più righe richiedono una ripartizione analitica al 100%·"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_internal
@@ -718,7 +725,7 @@ msgstr "Principale"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__parent_path
 msgid "Parent Path"
-msgstr "Percorso padre"
+msgstr "Percorso primario"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__partner_id
@@ -741,7 +748,7 @@ msgstr "Percentuale"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__plan_id
 msgid "Plan"
-msgstr "Pianificazione"
+msgstr "Piano"
 
 #. module: analytic
 #. odoo-javascript
@@ -785,10 +792,10 @@ msgid ""
 "                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
-"I ricavi saranno creati in modo automatico con la creazione di fatture cliente.\n"
-"                Le fatture cliente possono essere create in base agli ordini di vendita\n"
-"                (fatturazione a prezzo fisso), ai fogli ore (in base al lavoro fatto) o alle\n"
-"                spese (es. rifatturazione delle spese di viaggio)."
+"I ricavi vengono generati in modo automatico con la creazione di fatture\n"
+"                cliente. Le fatture cliente possono essere create in base agli ordini di vendita\n"
+"                (fatturazione a prezzo fisso), ai fogli ore (in base al lavoro effettuato)\n"
+"                oppure alle spese (es. rifatturazione delle spese di viaggio)."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__root_id
@@ -815,7 +822,14 @@ msgstr "Seagate P2"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
-msgstr "Ricerca registraioni analitiche"
+msgstr "Ricerca righe analitiche"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+#, python-format
+msgid "See them"
+msgstr "Scoprili"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__company_id
@@ -892,7 +906,7 @@ msgstr "Unità di misura"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
 msgid "UoM Category"
-msgstr "Categoria unità di misura"
+msgstr "Categoria UdM"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
@@ -909,11 +923,29 @@ msgstr "Vista"
 #: code:addons/analytic/models/analytic_account.py:0
 #, python-format
 msgid ""
+"Whoa there! Making this change would wipe out your current data. Let's avoid"
+" that, shall we?"
+msgstr ""
+"Ei tu! Se effettui questa modifica i tuoi dati attuali verranno cancellati. "
+"Non sarebbe il caso di evitarlo?"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+#, python-format
+msgid ""
 "You can't set a different company on your analytic account since there are "
 "some analytic items linked to it."
 msgstr ""
 "Non è possibile configurare un'azienda diversa nel tuo conto analitico "
 "perché ci sono alcuni elementi analitici legati ad essa."
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_plan.py:0
+#, python-format
+msgid "You cannot add a parent to the base plan '%s'"
+msgstr "Impossibile aggiungere al piano base '%s' un padre"
 
 #. module: analytic
 #. odoo-python
@@ -930,4 +962,4 @@ msgstr ""
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
-msgstr "es. progetto XYZ"
+msgstr "es. Progetto XYZ"

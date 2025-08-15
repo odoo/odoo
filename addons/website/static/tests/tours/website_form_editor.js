@@ -140,6 +140,39 @@
             trigger: '#oe_snippets .oe_snippet:has(.s_website_form) .oe_snippet_thumbnail',
             run: 'drag_and_drop_native iframe #wrap',
         }, {
+            content: "Check if the form snippet is dropped",
+            trigger: "iframe .s_website_form_field",
+            run: () => null,
+        },
+        // Check if fields in two form snippet have unique IDs
+        {
+            content: "Drop another form snippet",
+            trigger: "#oe_snippets .oe_snippet:has(.s_website_form) .oe_snippet_thumbnail:not(.o_we_already_dragging)",
+            run: "drag_and_drop_native iframe #wrapwrap",
+        },
+        {
+            content: "Check if there are two form snippets on the page",
+            trigger: "iframe .s_website_form:nth-of-type(2) .s_website_form_field",
+            run: () => null,
+        }, {
+            content: "Check that the first field of both the form snippets have different IDs",
+            trigger: "iframe .s_website_form:nth-of-type(1) input[name='name']",
+            run: function() {
+                const firstFieldForm1El = this.$anchor[0];
+                const firstFieldForm2El = firstFieldForm1El.ownerDocument.querySelector(
+                    ".s_website_form:nth-of-type(2) input[name='name']"
+                );
+                if (firstFieldForm1El.id === firstFieldForm2El.id) {
+                    console.error("The first fields of two different form snippet have the same ID");
+                }
+            },
+        }, {
+            content: "Click on the second form",
+            trigger: "iframe .s_website_form:nth-of-type(2)",
+        }, {
+            content: "Remove the second snippet",
+            trigger: "iframe .oe_overlay.oe_active .oe_snippet_remove"
+        }, {
             content: "Select form by clicking on an input field",
             extra_trigger: 'iframe .s_website_form_field',
             trigger: 'iframe section.s_website_form input',
@@ -295,6 +328,25 @@
                         ":has(.checkbox:has(label:contains('Wiko Stairway')):has(input[type='checkbox'][required]))",
             run: function () {},
         },
+        // Check conditional visibility for the relational fields
+        ...selectButtonByData("data-set-visibility='conditional'"),
+        ...selectButtonByData("data-set-visibility-dependency='recipient_ids'"),
+        ...selectButtonByText("Is not equal to"),
+        ...selectButtonByText("Mitchell Admin"),
+        ...wTourUtils.clickOnSave(),
+        {
+            content: "Check 'products' field is visible.",
+            trigger: `iframe .s_website_form:has(${triggerFieldByLabel("Products")}:visible)`,
+            isCheck: true,
+        }, {
+            content: "choose the option 'Mitchell Admin' of partner.",
+            trigger: "iframe .checkbox:has(label:contains('Mitchell Admin')) input[type='checkbox']",
+        }, {
+            content: "Check 'products' field is not visible.",
+            trigger: "iframe .s_website_form" +`:has(${triggerFieldByLabel("Products")}:not(:visible))`,
+            isCheck: true,
+        },
+        ...wTourUtils.clickOnEditAndWaitEditMode(),
 
         ...addCustomField('selection', 'radio', 'Service', true),
         {
@@ -347,29 +399,55 @@
             trigger: 'we-list table input:eq(0)',
             run: 'text Germany',
         }, {
+            content: "Check that the label has been changed on the snippet",
+            trigger: "iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
+                ":has(.s_website_form_select_item:contains('Germany'))",
+            run: function () {},
+        }, {
             content: "Change Option 2 Label",
             trigger: 'we-list table input:eq(1)',
             run: 'text Belgium',
+        }, {
+            content: "Check that the label has been changed on the snippet",
+            trigger: "iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
+                ":has(.s_website_form_select_item:contains('Belgium'))",
+            run: function () {},
         }, {
             content: "Change first Option 3 label",
             trigger: 'we-list table input:eq(2)',
             run: 'text France',
         }, {
+            content: "Check that the label has been changed on the snippet",
+            trigger: "iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
+                ":has(.s_website_form_select_item:contains('France'))",
+            run: function () {},
+        }, {
             content: "Click on Add new Checkbox",
             trigger: 'we-list we-button.o_we_list_add_optional',
         }, {
             content: "Change last Option label",
-            trigger: 'we-list table input:eq(3)',
+            trigger: "we-list table input:eq(3)[name='Item']",
             run: 'text Canada',
+        }, {
+            content: "Check that the label has been changed on the snippet",
+            trigger: "iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
+                ":has(.s_website_form_select_item:contains('Canada'))",
+            run: function () {},
         }, {
             content: "Remove Germany Option",
             trigger: '.o_we_select_remove_option:eq(0)',
+        }, {
+            content: "Check that the Germany option was removed",
+            trigger: "iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
+                ":has(label:contains('State'))" +
+                ":not(:has(.s_website_form_select_item:contains('Germany')))",
+            run: function () {},
         }, {
             content: "Click on Add new Checkbox",
             trigger: 'we-list we-button.o_we_list_add_optional',
         }, {
             content: "Change last option label with a number",
-            trigger: 'we-list table input:eq(3)',
+            trigger: "we-list table input:eq(3)[name='Item']",
             run: 'text 44 - UK',
         }, {
             content: "Check that the input value is the full option value",
@@ -564,7 +642,63 @@
             trigger: `iframe .s_website_form:has(${triggerFieldByLabel("field A")}:visible)`,
             isCheck: true,
         },
+
         ...wTourUtils.clickOnEditAndWaitEditMode(),
+        ...addCustomField("char", "text", "Philippe of Belgium", false),
+        {
+            content: "Select the 'Subject' field",
+            trigger: 'iframe .s_website_form_field.s_website_form_model_required:has(label:contains("Subject"))',
+        },
+        ...selectButtonByText(CONDITIONALVISIBILITY),
+        ...selectButtonByData('data-set-visibility-dependency="Philippe of Belgium"'),
+        ...selectButtonByData('data-select-data-attribute="set"'),
+        {
+            content: "Set a default value to the 'Subject' field",
+            trigger: 'we-input[data-attribute-name="value"] input',
+            run: 'text Default Subject',
+        },
+        {
+            content: "Select the 'Your Message' field",
+            trigger: 'iframe .s_website_form_field.s_website_form_required:has(label:contains("Your Message"))',
+        },
+        ...selectButtonByText(CONDITIONALVISIBILITY),
+        ...selectButtonByData('data-set-visibility-dependency="Philippe of Belgium"'),
+        ...selectButtonByData('data-select-data-attribute="set"'),
+
+        ...wTourUtils.clickOnSave(),
+        // Ensure that a field required for a model is not disabled when
+        // conditionally hidden.
+        {
+            content: "Check that the 'Subject' field is not disabled",
+            trigger: `iframe .s_website_form:has(.s_website_form_model_required ` +
+                `.s_website_form_input[value="Default Subject"]:not([disabled]):not(:visible))`,
+            run: () => null, // it's a check
+        },
+        // Ensure that a required field (but not for a model) is disabled when
+        // conditionally hidden.
+        {
+            content: "Check that the 'Your Message' field is disabled",
+            trigger: `iframe .s_website_form:has(.s_website_form_required ` +
+                `.s_website_form_input[name="body_html"][required][disabled]:not(:visible))`,
+            run: () => null, // it's a check
+        },
+
+        ...wTourUtils.clickOnEditAndWaitEditMode(),
+        {
+            content: "Select the 'Subject' field",
+            trigger: 'iframe .s_website_form_field.s_website_form_model_required:has(label:contains("Subject"))',
+        },
+        ...selectButtonByData("data-set-visibility='visible'"),
+        {
+            content: "Empty the default value of the 'Subject' field",
+            trigger: 'we-input[data-attribute-name="value"] input',
+            run: "remove_text",
+        },
+        {
+            content: "Select the 'Your Message' field",
+            trigger: 'iframe .s_website_form_field.s_website_form_required:has(label:contains("Your Message"))',
+        },
+        ...selectButtonByData("data-set-visibility='visible'"),
         {
             content: 'Click on the submit button',
             trigger: 'iframe .s_website_form_send',
@@ -878,6 +1012,23 @@
             run: "click",
         },
         ...wTourUtils.clickOnSave(),
+    ]);
+
+    wTourUtils.registerWebsitePreviewTour("website_form_nested_forms", {
+        test: true,
+        url: "/my/account",
+        edition: true,
+    },
+    () => [
+        {
+            ...wTourUtils.dragNDrop({ id: "s_website_form", name: "Form" }),
+            run: "drag_and_drop_native iframe #wrap .o_portal_details",
+        },
+        {
+            content: "Check the form was not dropped into another form",
+            trigger: "iframe form:not(:has([data-snippet='s_website_form']))",
+            isCheck: true,
+        },
     ]);
 
     wTourUtils.registerWebsitePreviewTour("website_form_special_characters", {

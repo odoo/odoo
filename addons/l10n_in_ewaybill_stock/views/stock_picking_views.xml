@@ -6,10 +6,14 @@
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header/field[@name='state']" position="before">
-                <button string="Create e-Waybill"
+                <button string="Create e-Waybill / Challan"
                         type="object"
                         name="action_l10n_in_ewaybill_create"
-                        invisible="country_code != 'IN' or l10n_in_ewaybill_id or state != 'done'"
+                        invisible="
+                            country_code != 'IN'
+                            or l10n_in_ewaybill_id
+                            or (picking_type_code == 'incoming' and state not in ('done', 'assigned'))
+                            or (picking_type_code != 'incoming' and state != 'done')"
                         data-hotkey="e"
                         groups="stock.group_stock_manager"/>
             </xpath>
@@ -22,7 +26,7 @@
                         invisible="not l10n_in_ewaybill_id"
                         groups="stock.group_stock_manager">
                         <div class="o_stat_info">
-                            <span class="o_stat_text">e-Waybill</span>
+                            <span class="o_stat_text">e-Waybill / Challan</span>
                         </div>
                 </button>
             </xpath>

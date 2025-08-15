@@ -187,7 +187,10 @@ class OdooBaseChecker(BaseChecker):
                 elif isinstance(n.parent, astroid.Module):
                     return True
                 else:
-                    assigned_node += [self._is_constexpr(n.parent.value, args_allowed=args_allowed)]
+                    if isinstance(n.parent, astroid.Comprehension):
+                        assigned_node += [self._is_constexpr(n.parent.iter, args_allowed=args_allowed)]
+                    else:
+                        assigned_node += [self._is_constexpr(n.parent.value, args_allowed=args_allowed)]
             if assigned_node and all(assigned_node):
                 return True
             return self._is_asserted(node)

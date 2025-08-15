@@ -10,19 +10,20 @@
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Cozmin Candea <office@terrabit.ro>, 2024
 # Martin Trigaux, 2024
-# Dorin Hongu <dhongu@gmail.com>, 2024
-# Larisa_nexterp, 2024
 # Betty Keresztesi, 2024
-# Corina Calin, 2024
-# Lyall Kindmurr, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2025
+# Corina Calin, 2025
+# Lyall Kindmurr, 2025
+# Wil Odoo, 2025
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-06-13 00:53+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Lyall Kindmurr, 2024\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,7 +70,7 @@ msgstr "%(line_description)s (Anulat)"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (Draft)"
-msgstr "%(line_description)s (Schiță)"
+msgstr "%(line_description)s (Ciornă)"
 
 #. module: sale
 #. odoo-python
@@ -235,7 +236,7 @@ msgstr ""
 "            </t>\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Mulțumesc pentru incredere!\n"
+"        Mulțumim pentru încredere!\n"
 "        <br>\n"
 "        Nu ezitați să ne contactați dacă aveți întrebări.\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
@@ -711,7 +712,7 @@ msgstr ""
 "        Dragă <t t-out=\"object.partner_id.name or ''\">utilizator</t>,\n"
 "        <br><br>\n"
 "        Vâ informăm că\n"
-"        <t t-out=\"doc_name or ''\">cotația</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
+"        <t t-out=\"doc_name or ''\">oferta</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
 "        <t t-if=\"object.origin\">\n"
 "            (cu referința: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "        </t>\n"
@@ -732,7 +733,7 @@ msgstr "<i class=\"fa fa-comment\"/>Contactați-ne pentru a obține o ofertă no
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Feedback"
-msgstr "<i class=\"fa fa-comment\"/>Trimiteți un feedback"
+msgstr "<i class=\"fa fa-comment\"/>Trimiteți feedback"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -764,12 +765,12 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Expirat"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Waiting Payment"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"/>În așteptarea plății"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Așteaptă Plată"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 msgid "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
-msgstr "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
+msgstr "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Oferte\" role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -782,8 +783,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
 "title=\"Sales orders\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
-"title=\"Sales orders\"/>"
+"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Comenzi de vânzare\" "
+"title=\"Comenzi de vânzare\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -820,7 +821,7 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
 "                            <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
-"<span class=\"d-none d-md-inline\">Nr comandă vânzare</span>\n"
+"<span class=\"d-none d-md-inline\">Nr comandă de vânzare</span>\n"
 "<span class=\"d-block d-md-none\">Ref.</span>"
 
 #. module: sale
@@ -848,7 +849,7 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span invisible=\"advance_payment_method != 'percentage'\" class=\"oe_inline\">% </span>\n"
-"                        <span invisible=\"not display_invoice_amount_warning\" class=\"oe_inline text-danger\" title=\"The Down Payment is greater than the amount remaining to be invoiced.\">\n"
+"                        <span invisible=\"not display_invoice_amount_warning\" class=\"oe_inline text-danger\" title=\"Avansul este mai mare decât suma rămasă de facturat.\">\n"
 "                            <i class=\"fa fa-warning\"/>\n"
 "                        </span>"
 
@@ -873,7 +874,7 @@ msgid ""
 msgstr ""
 "<span>Sunteți sigur ca doriți să anulați această comandă? <br/></span>\n"
 "                        <span id=\"display_invoice_alert\" invisible=\"not display_invoice_alert\">\n"
-"                            Facturile în ciornă pentru această comandă vor fi anulate. <br/>\n"
+"                            Facturile ciornă pentru această comandă vor fi anulate. <br/>\n"
 "                        </span>"
 
 #. module: sale
@@ -952,7 +953,7 @@ msgstr "<strong>Semnătură</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<strong>Tax excl.: </strong>"
-msgstr "<strong>Fără taxe.</strong>"
+msgstr "<strong>Fără taxe.:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -962,7 +963,7 @@ msgstr "<strong>Taxe incluse.:</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>Thank You!</strong><br/>"
-msgstr "<strong>Mulțumesc!</strong><br/>"
+msgstr "<strong>Mulțumim!</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -977,19 +978,19 @@ msgstr "<strong>Această ofertă a fost anulată.</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference:</strong><br/>"
-msgstr "<strong>Referință:</strong><br/>"
+msgstr "<strong>Referința dvs.:</strong><br/>"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
 msgid "A confirmed sales order requires a confirmation date."
-msgstr "O comandă confirmată de vânzare necesită o dată de confirmare."
+msgstr "O comandă de vânzare confirmată necesită o dată de confirmare."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "A note, whose content usually applies to the section or product above."
 msgstr ""
-"O notă, al cărei conținut se aplică de obicei secțiunii sau produsului de "
-"mai sus."
+"O notă, a cărei conținut se aplică de obicei secțiunii sau produsului de mai"
+" sus."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1003,7 +1004,7 @@ msgid ""
 "invoicing,according to their invoicing policy (based on ordered or delivered"
 " quantity)."
 msgstr ""
-"O factură standard este emisă cu toate liniile de comandă gata pentru "
+"O factură standard este emisă cu toate liniile de comandă pregătite pentru "
 "facturare, în funcție de politica lor de facturare (bazată pe cantitatea "
 "comandată sau livrată)."
 
@@ -1050,12 +1051,12 @@ msgstr "Acceptă și semnează oferta"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Pay"
-msgstr "Acceptați și plătiți"
+msgstr "Acceptați &amp; Plătiți"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Sign"
-msgstr "Acceptați și semnați"
+msgstr "Acceptați &amp; Semnați"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
@@ -1177,15 +1178,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"Vă permite să partajați documentul cu clienții dvs. în cadrul unei vânzări.\n"
-"Lăsați necompletat dacă nu doriți să partajați acest document cu clientul.\n"
-"Cotație: documentul va fi trimis clienților și accesibil acestora în orice moment.\n"
-"de exemplu: această opțiune poate fi utilă pentru a partaja fișierele cu descrierea produsului.\n"
-"Comandă confirmată: documentul va fi trimis si accesibil clientilor.\n"
-"de exemplu: această opțiune poate fi utilă pentru a partaja manualul de utilizare sau conținutul digital cumpărat de pe e-commerce.\n"
-"Citat intern: Documentul va fi inclus in pdf-ul cotației intre antetul paginilor și tabelul de cotație. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1582,8 +1577,12 @@ msgstr "Completați datele companiei dvs."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "Calculați costurile de transport și expediați cu DHL"
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Calculați costurile de transport și expediați cu DHL<br/>\n"
+"                                    <strong>(vă rugăm să mergeți la Acasă&gt;Aplicații pentru instalare)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1592,8 +1591,12 @@ msgstr "Calculați costurile de transport și expediați cu Easypost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "Calculați costurile de transport și expediați cu FedEx"
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Calculați costurile de transport și expediați cu FedEx<br/>\n"
+"                                    <strong>(vă rugăm să mergeți la Acasă&gt;Aplicații pentru instalare)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1607,13 +1610,21 @@ msgstr "Calculați costurile de transport și expediați cu Shiprocket"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "Calculați costurile de transport și expediați cu UPS"
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Calculați costurile de transport și expediați cu UPS<br/>\n"
+"                                    <strong>(vă rugăm să mergeți la Acasă&gt;Aplicații pentru instalare)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "Calculați costurile de transport și expediați cu USPS"
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Calculați costurile de transport și expediați cu USPS<br/>\n"
+"                                    <strong>(vă rugăm să mergeți la Acasă&gt;Aplicații pentru instalare)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1772,7 +1783,7 @@ msgstr "Creat de"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__create_date
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__create_date
 msgid "Created on"
-msgstr "Creat în"
+msgstr "Creat pe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__create_date
@@ -1900,6 +1911,11 @@ msgstr "Clienți"
 #, python-format
 msgid "Customize your quotes and orders."
 msgstr "Personalizați-vă ofertele și comenzile."
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "DHL Connector"
+msgstr "Conector DHL"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
@@ -2142,6 +2158,11 @@ msgid "Display Type"
 msgstr "Tipul de afișare"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Cont analitic de distribuție"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Documentation"
 msgstr "Documentație"
@@ -2320,6 +2341,7 @@ msgstr "Linie extra cu %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "FedEx Connector"
 msgstr "Conector FedEx"
 
@@ -2563,7 +2585,7 @@ msgstr "În Comanda"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Incl. tax)"
-msgstr "Incl. impozit)"
+msgstr "Incl. TVA)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_account_id
@@ -4235,7 +4257,7 @@ msgstr "Linii de comandă de vânzare legate de o comandă de vânzare a mea"
 #: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
 #, python-format
 msgid "Sales Order(s)"
-msgstr "Comandă (enzi) de vânzare "
+msgstr "Comenzi de vânzare "
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
@@ -4245,7 +4267,6 @@ msgstr "Comandă (enzi) de vânzare "
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4697,6 +4718,11 @@ msgid "Sum of Untaxed Total"
 msgstr "Suma totală fără taxe"
 
 #. module: sale
+#: model:ir.model,name:sale.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "Parametru de sistem"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
 #: model:ir.ui.menu,name:sale.menu_tag_config
 msgid "Tags"
@@ -4897,12 +4923,12 @@ msgstr "Următoarele comenzi nu sunt într-o stare care necesită confirmare: %s
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Următoarele produse nu pot fi restricționate la companie%s deoarece au fost deja utilizate în oferte sau comenzi de vânzare în altă companie:\n"
-"%s\n"
+"Următoarele produse nu pot fi restricționate la companie%(company)s deoarece au fost deja utilizate în oferte sau comenzi de vânzare în altă companie:\n"
+"%(used_products)s\n"
 "Puteți arhiva aceste produse și le puteți recrea cu restricția companiei dvs. sau le puteți lăsa ca produs comun."
 
 #. module: sale
@@ -5043,6 +5069,19 @@ msgstr "În prezent nu există comenzi pentru contul dvs."
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
 msgstr "Există"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
+"Nu pare să existe niciun produs de discount configurat pentru această "
+"companie. Puteți folosi o reducere pe linie sau puteți cere unui "
+"administrator să acorde discountul prima dată."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5294,11 +5333,13 @@ msgstr "Tastați pentru a căuta un produs..."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "UPS Connector"
 msgstr "Conector UPS"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_usps
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "USPS Connector"
 msgstr "Conector USPS"
 
@@ -5437,14 +5478,6 @@ msgstr "Vizualizare detalii"
 
 #. module: sale
 #. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-#, python-format
-msgid "View Order"
-msgstr "Vizualizare comandă"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
@@ -5596,6 +5629,13 @@ msgstr ""
 "trebui să ștergeți linia curentă și să creați o nouă linie corespunzătoare."
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_line.py:0
+#, python-format
+msgid "You cannot modify the product of this order line."
+msgstr "Nu puteți modifica produsul acestei linii de comandă."
+
+#. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
 msgid ""
 "You cannot set a negative number for the default quotation validity. Leave "
@@ -5614,6 +5654,7 @@ msgstr ""
 "indiferent dacă este un produs stocabil, un consumabil sau un serviciu."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Comenzile dvs."

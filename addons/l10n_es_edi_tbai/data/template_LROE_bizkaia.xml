@@ -125,9 +125,15 @@
                                 <CompraBienesCorrientesGastosBienesInversion t-out="tax['code']"/>
                                 <InversionSujetoPasivo t-out="'N' if tax['rec'].l10n_es_type != 'sujeto_isp' else 'S'"/>
                                 <BaseImponible t-out="format_float(tax['base'])"/>
+                            <t t-if="tax['rec'].l10n_es_type == 'sujeto_agricultura'">
+                                <PorcentajeCompensacionREAGYP t-out="tax['rec'].amount"/>
+                                <ImporteCompensacionREAGYP t-out="format_float(tax['tax'])"/>
+                            </t>
+                            <t t-else="">
                                 <TipoImpositivo t-out="tax['rec'].amount"/>
                                 <CuotaIVASoportada t-out="format_float(tax['tax'])"/>
-                                <CuotaIVADeducible t-out="format_float(tax['tax'])"/>
+                                <CuotaIVADeducible t-out="format_float(tax['tax']) if tax['rec'].l10n_es_type != 'no_deducible' else '0.00'"/>
+                            </t>
                             </DetalleIVA>
                         </IVA>
                     </t>

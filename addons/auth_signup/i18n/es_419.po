@@ -3,9 +3,9 @@
 # 	* auth_signup
 # 
 # Translators:
-# Wil Odoo, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
-# Fernanda Alvarez, 2024
+# Wil Odoo, 2025
+# Fernanda Alvarez, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -88,7 +88,7 @@ msgid ""
 "                                    Platform:</span>"
 msgstr ""
 "<span style=\"font-weight: bold;\">\n"
-"                                    Platforma:</span>"
+"                                    Plataforma:</span>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -185,13 +185,13 @@ msgstr ""
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
 "                        Apreciable <t t-out=\"object.name or ''\">Mitchell Admin</t>,<br> <br>\n"
-"                        Agregó a los siguientes usuarios a su base de datos, pero no se han registrado aún:\n"
+"                        Agregó a los siguientes usuarios a su base de datos, pero aún no se han registrado:\n"
 "                        <ul>\n"
 "                            <t t-foreach=\"invited_users\" t-as=\"invited_user\">\n"
 "                                <li t-out=\"invited_user or ''\">demo@ejemplo.com</li>\n"
 "                            </t>\n"
 "                        </ul>\n"
-"                        Haga un seguimiento para que puedan acceder a su base de datos y empezar a trabajar con usted.\n"
+"                        Comuníquese con ellos para que puedan acceder a su base de datos y comiencen a trabajar con usted.\n"
 "                        <br><br>\n"
 "                        ¡Que tenga un excelente día!<br>\n"
 "                        --<br>El equipo de <t t-out=\"object.company_id.name or ''\">SuEmpresa</t>\n"
@@ -699,7 +699,7 @@ msgid ""
 "If you don't recognize it, you should change your password immediately via "
 "this link:<br/>"
 msgstr ""
-"Si no lo reconoce, debe cambiar su contraseña ahora mismo a través de este "
+"Si no la reconoce, cambie su contraseña ahora mismo a través de este "
 "enlace:<br/>"
 
 #. module: auth_signup
@@ -819,8 +819,8 @@ msgstr "Se restableció la contraseña"
 #, python-format
 msgid "Password reset instructions sent to your email"
 msgstr ""
-"Las instrucciones para restablecer la contraseña se enviaron a su correo "
-"electrónico"
+"Enviamos las instrucciones para restablecer la contraseña a su correo "
+"electrónico."
 
 #. module: auth_signup
 #. odoo-python
@@ -979,6 +979,14 @@ msgid "Status"
 msgstr "Estado"
 
 #. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/controllers/main.py:0
+#: code:addons/auth_signup/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "Google reCAPTCHA detectó actividad sospechosa."
+
+#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id
 msgid "Template user for new users created through signup"
 msgstr ""
@@ -1039,12 +1047,12 @@ msgstr "No puede realizar esta acción en un usuario archivado."
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr "Su correo electrónico"
+msgstr "Tu correo"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "Your Name"
-msgstr "Su nombre"
+msgstr "Tu nombre"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email

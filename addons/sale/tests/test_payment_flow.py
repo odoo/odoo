@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest.mock import ANY, patch
+from unittest.mock import patch
 
 from odoo.exceptions import AccessError
 from odoo.tests import JsonRpcException, tagged
@@ -26,6 +26,10 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
 
     def test_11_so_payment_link(self):
         # test customized /payment/pay route with sale_order_id param
+        sol1, sol2 = self.sale_order.order_line
+        sol1.write({'product_uom_qty': 1, 'price_unit': 100})
+        sol2.write({'product_uom_qty': 1, 'price_unit': 186.9})
+        self.assertEqual(self.sale_order.amount_total, self.currency.round(286.9))
         self.amount = self.sale_order.amount_total
         route_values = self._prepare_pay_values()
         route_values['sale_order_id'] = self.sale_order.id
@@ -35,11 +39,12 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
             '._compute_show_tokenize_input_mapping'
         ) as patched:
             tx_context = self._get_portal_pay_context(**route_values)
-            patched.assert_called_once_with(ANY, sale_order_id=ANY)
+            patched.assert_called_once()
+            self.assertIn('sale_order_id', patched.call_args[1])
 
         self.assertEqual(tx_context['currency_id'], self.sale_order.currency_id.id)
         self.assertEqual(tx_context['partner_id'], self.sale_order.partner_invoice_id.id)
-        self.assertEqual(tx_context['amount'], self.sale_order.amount_total)
+        self.assertAlmostEqual(tx_context['amount'], self.sale_order.amount_total)
 
         # /my/orders/<id>/transaction/
         tx_route_values = {
@@ -59,7 +64,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         tx_sudo = self._get_tx(processing_values['reference'])
 
         self.assertEqual(tx_sudo.sale_order_ids, self.sale_order)
-        self.assertEqual(tx_sudo.amount, self.amount)
+        self.assertAlmostEqual(tx_sudo.amount, self.amount)
         self.assertEqual(tx_sudo.partner_id, self.sale_order.partner_invoice_id)
         self.assertEqual(tx_sudo.company_id, self.sale_order.company_id)
         self.assertEqual(tx_sudo.currency_id, self.sale_order.currency_id)

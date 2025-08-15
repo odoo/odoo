@@ -46,12 +46,17 @@ registry.category("web_tour.tours").add("PaymentScreenTour", {
             PaymentScreen.remainingIs("42.8"),
             PaymentScreen.changeIs("0.0"),
             PaymentScreen.validateButtonIsHighlighted(false),
-            PaymentScreen.pressNumpad("+50"),
-            PaymentScreen.fillPaymentLineAmountMobile("Cash", "60"),
-            PaymentScreen.remainingIs("0.0"),
-            PaymentScreen.changeIs("7.2"),
+            PaymentScreen.pressNumpad("5"),
+            PaymentScreen.fillPaymentLineAmountMobile("Cash", "105"),
+            PaymentScreen.remainingIs("0.00"),
+            PaymentScreen.changeIs("52.2"),
             PaymentScreen.validateButtonIsHighlighted(true),
-            PaymentScreen.clickPaymentlineDelButton("Cash", "60.0"),
+            PaymentScreen.pressNumpad("+50"),
+            PaymentScreen.fillPaymentLineAmountMobile("Cash", "155"),
+            PaymentScreen.remainingIs("0.0"),
+            PaymentScreen.changeIs("102.2"),
+            PaymentScreen.validateButtonIsHighlighted(true),
+            PaymentScreen.clickPaymentlineDelButton("Cash", "155.0"),
 
             // Multiple paymentlines
             PaymentScreen.clickPaymentMethod("Cash"),
@@ -290,13 +295,29 @@ registry.category("web_tour.tours").add("CashRoundingPayment", {
             PaymentScreen.totalIs("1.90"),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.pressNumpad("1 ."),
-            PaymentScreen.pressNumpad("2 4"),
-            PaymentScreen.fillPaymentLineAmountMobile("Cash", "1.24"),
-            PaymentScreen.selectedPaymentlineHas("Cash", "1.24"),
+            PaymentScreen.pressNumpad("9 4"),
+            PaymentScreen.fillPaymentLineAmountMobile("Cash", "1.94"),
+            PaymentScreen.selectedPaymentlineHas("Cash", "1.94"),
+            PaymentScreen.clickValidate(),
             ErrorPopup.isShown(),
-            ErrorPopup.messageBodyContains(
-                // Verify the value displayed are as expected
-                "The rounding precision is 0.10 so you should set 1.20 or 1.30 as payment amount instead of 1.24."
-            ),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PaymentScreenInvoiceOrder", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.addOrderline("Product Test", "1"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Partner Test 1"),
+            ProductScreen.clickPayButton(),
+
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.receiptIsThere(),
         ].flat(),
 });

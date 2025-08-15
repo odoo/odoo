@@ -1,4 +1,4 @@
-from odoo import tools, fields
+from odoo import tools, fields, Command
 from odoo.tests.common import tagged
 from odoo.addons.l10n_hu_edi.tests.common import L10nHuEdiTestCommon
 
@@ -15,9 +15,29 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
         with freeze_time('2024-02-01'):
             super().setUpClass(chart_template_ref=chart_template_ref)
 
+            cls.company_data['company'].write({
+                'bank_ids': [Command.create({
+                    'acc_number': 'HU0123456789',
+                })]
+            })
+            cls.partner_company.write({
+                'bank_ids': [Command.create({
+                    'acc_number': 'HU6666666666',
+                })]
+            })
+            cls.bank_company = cls.env['res.partner.bank'].create({
+                'acc_number': 'HU7357735773',
+                'partner_id': cls.company_data['company'].partner_id.id,
+            })
+            cls.bank_partner = cls.env['res.partner.bank'].create({
+                'acc_number': 'HU9487189480',
+                'partner_id': cls.partner_company.id,
+            })
+
     def test_invoice_and_credit_note(self):
         with freeze_time('2024-02-01'):
             invoice = self.create_invoice_simple()
+            invoice.partner_bank_id = self.bank_company
             invoice.action_post()
             invoice._l10n_hu_edi_set_chain_index()
             invoice_xml = invoice._l10n_hu_edi_generate_xml()
@@ -32,6 +52,7 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
             invoice.write({'l10n_hu_edi_state': 'confirmed'})
 
             credit_note = self.create_reversal(invoice)
+            credit_note.partner_bank_id = self.bank_partner
             credit_note.action_post()
             credit_note._l10n_hu_edi_set_chain_index()
             credit_note_xml = credit_note._l10n_hu_edi_generate_xml()
@@ -102,6 +123,7 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
     def test_tax_audit_export(self):
         with freeze_time('2024-02-01'):
             invoice = self.create_invoice_simple()
+            invoice.partner_bank_id = self.bank_company
             invoice.action_post()
 
             tax_audit_export = self.env['l10n_hu_edi.tax_audit_export'].create({
@@ -118,6 +140,30 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
                         invoice_xml = invoice_file.read()
 
             with tools.file_open('l10n_hu_edi/tests/invoice_xmls/invoice_simple.xml', 'rb') as expected_xml_file:
+                self.assertXmlTreeEqual(
+                    self.get_xml_tree_from_string(invoice_xml),
+                    self.get_xml_tree_from_string(expected_xml_file.read()),
+                )
+
+    def test_invoice_simple_deduction(self):
+        with freeze_time('2024-02-01'):
+            invoice = self.create_invoice_simple_discount()
+            invoice.action_post()
+            invoice_xml = invoice._l10n_hu_edi_generate_xml()
+
+            with tools.file_open('l10n_hu_edi/tests/invoice_xmls/invoice_simple_discount.xml', 'rb') as expected_xml_file:
+                self.assertXmlTreeEqual(
+                    self.get_xml_tree_from_string(invoice_xml),
+                    self.get_xml_tree_from_string(expected_xml_file.read()),
+                )
+
+    def test_invoice_tax_price_include(self):
+        with freeze_time('2024-02-01'):
+            invoice = self.create_invoice_tax_price_include()
+            invoice.action_post()
+            invoice_xml = invoice._l10n_hu_edi_generate_xml()
+
+            with tools.file_open('l10n_hu_edi/tests/invoice_xmls/invoice_tax_price_include.xml', 'rb') as expected_xml_file:
                 self.assertXmlTreeEqual(
                     self.get_xml_tree_from_string(invoice_xml),
                     self.get_xml_tree_from_string(expected_xml_file.read()),

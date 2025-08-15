@@ -3,17 +3,17 @@
 # 	* sms
 # 
 # Translators:
-# Wil Odoo, 2023
-# Sarah Park, 2023
 # Daye Jeong, 2024
+# Sarah Park, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +58,7 @@ msgstr "선택한 SMS 문자 메시지 %s개 중 %s개를 성공적으로 다시
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 #, python-format
 msgid ", fits in"
-msgstr ""
+msgstr ","
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -179,6 +179,11 @@ msgstr "이 SMS 서식을 원래의 구성으로 초기화하시겠습니까? �
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_attachment_count
 msgid "Attachment Count"
 msgstr "첨부 파일 수"
+
+#. module: sms
+#: model:ir.model,name:sms.model_base
+msgid "Base"
+msgstr "기준액"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_blacklist
@@ -1196,8 +1201,8 @@ msgstr "전송 실패"
 #. odoo-python
 #: code:addons/sms/models/ir_actions_server.py:0
 #, python-format
-msgid "Sending SMS can only be done on a mail.thread or a transient model"
-msgstr "mail.thread 또는 transient model에서만 SMS를 전송할 수 있습니다."
+msgid "Sending SMS can only be done on a not transient mail.thread model"
+msgstr "SMS 전송은 임시 메일 스레드 모델이 아닌 경우에만 가능합니다."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__pending

@@ -261,6 +261,12 @@ class TestChannelInternals(MailCommon):
         message_format3 = channels[1].message_post(body='Body3', parent_id=message.id + 100)
         self.assertFalse(message_format3['parent_id'], "should not allow non-existing parent")
 
+    def test_channel_message_post_with_voice_attachment(self):
+        """ Test 'voice' info being supported to create voice metadata. """
+        channel = self.env['discuss.channel'].create({'name': 'channel_1'})
+        channel.message_post(attachments=[('audio', b'OggS\x00\x02', {'voice': True})])
+        self.assertTrue(channel.message_ids.attachment_ids.voice_ids, "message's attachment should have voice metadata")
+
     @mute_logger('odoo.models.unlink')
     def test_channel_unsubscribe_auto(self):
         """ Archiving / deleting a user should automatically unsubscribe related

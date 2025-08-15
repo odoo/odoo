@@ -1,3 +1,5 @@
+from odoo.fields import Command
+
 def setup_pos_combo_items(self):
     tax10 = self.env["account.tax"].create(
         {
@@ -167,6 +169,37 @@ def setup_pos_combo_items(self):
         }
     )
 
+    combo_product_9 = self.env["product.product"].create(
+        {
+            "name": "Combo Product 9",
+            "type": "product",
+            "available_in_pos": True,
+            "list_price": 50,
+            "taxes_id": [(6, 0, [tax20in.id])],
+        }
+    )
+
+    chair_color_attribute = self.env['product.attribute'].create({
+        'name': 'Color',
+        'display_type': 'color',
+        'create_variant': 'no_variant',
+    })
+    chair_color_red = self.env['product.attribute.value'].create({
+        'name': 'Red',
+        'attribute_id': chair_color_attribute.id,
+        'html_color': '#ff0000',
+    })
+    chair_color_blue = self.env['product.attribute.value'].create({
+        'name': 'Blue',
+        'attribute_id': chair_color_attribute.id,
+        'html_color': '#0000ff',
+    })
+    self.env['product.template.attribute.line'].create({
+        'product_tmpl_id': combo_product_9.product_tmpl_id.id,
+        'attribute_id': chair_color_attribute.id,
+        'value_ids': [(6, 0, [chair_color_red.id, chair_color_blue.id])]
+    })
+
     product_6_combo_line = self.env["pos.combo.line"].create(
         {
             "product_id": combo_product_6.id,
@@ -188,6 +221,13 @@ def setup_pos_combo_items(self):
         }
     )
 
+    product_9_combo_line = self.env["pos.combo.line"].create(
+        {
+            "product_id": combo_product_9.id,
+            "combo_price": 5,
+        }
+    )
+
     self.chairs_combo = self.env["pos.combo"].create(
         {
             "name": "Chairs Combo",
@@ -199,6 +239,7 @@ def setup_pos_combo_items(self):
                         product_6_combo_line.id,
                         product_7_combo_line.id,
                         product_8_combo_line.id,
+                        product_9_combo_line.id,
                     ],
                 )
             ],
@@ -218,5 +259,50 @@ def setup_pos_combo_items(self):
             "combo_ids": [
                 (6, 0, [self.desks_combo.id, self.chairs_combo.id, self.desk_accessories_combo.id])
             ],
+        }
+    )
+
+    #Create Combo with custom attribute
+    custom_attribute = self.env['product.attribute'].create({
+        'name': 'Custom Attribute',
+        'display_type': 'radio',
+        'create_variant': 'no_variant',
+        'value_ids': [
+                Command.create({'name': 'Custom Value', 'is_custom': True}),
+        ]
+    })
+
+    self.product_tmpl_with_custom_attr = self.env["product.template"].create(
+        {
+            "name": "Custom Attr Product",
+            "available_in_pos": True,
+            "attribute_line_ids": [
+                Command.create({
+                    'attribute_id': custom_attribute.id,
+                    'value_ids': [Command.set(custom_attribute.value_ids.ids)],
+                })
+            ],
+        }
+    )
+
+    custom_combo_line = self.env["pos.combo.line"].create(
+        {
+            "product_id": self.product_tmpl_with_custom_attr.product_variant_id.id,
+            "combo_price": 100,
+        }
+    )
+
+    custom_combo = self.env["pos.combo"].create({
+        "name": "Attr Combo",
+        "combo_line_ids": custom_combo_line.ids,
+    })
+
+    self.combo_product_with_custom_attr = self.env["product.product"].create(
+        {
+            "available_in_pos": True,
+            "list_price": 40,
+            "name": "Custom Attr Combo",
+            "type": "combo",
+            "combo_ids": custom_combo.ids,
         }
     )

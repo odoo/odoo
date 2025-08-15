@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Thi Huong Nguyen, 2024
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -137,7 +137,7 @@ msgid ""
 msgstr ""
 "<div>\n"
 "    <strong>Nhắc nhở</strong><br>\n"
-"    Bạn chưa cập nhật tiến trình cho mục tiêu <t t-out=\"object.definition_id.name or ''\"></t> (hiện đã đạt được <t t-out=\"object.completeness or ''\"></t>%) trong ít nhất <t t-out=\"object.remind_update_delay or ''\"></t> ngày. Đừng quên tiếp tục nhé.\n"
+"    Bạn chưa cập nhật tiến độ cho mục tiêu <t t-out=\"object.definition_id.name or ''\"></t> (hiện đã đạt được <t t-out=\"object.completeness or ''\"></t>%) trong ít nhất <t t-out=\"object.remind_update_delay or ''\"></t> ngày. Đừng quên tiếp tục nhé.\n"
 "    <br><br>\n"
 "    Cảm ơn bạn!\n"
 "    <t t-if=\"object.challenge_id.manager_id.signature\">\n"
@@ -582,7 +582,7 @@ msgstr ""
 "                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" bgcolor=\"#fff\" style=\"background-color:#fff;\">\n"
 "                    <tr><td style=\"padding: 15px;\">\n"
 "                        <t t-if=\"object.visibility_mode == 'personal'\">\n"
-"                            <span style=\"color:#666666;font-size:13px;\">Đây là tiến trình của bạn trong thử thách này <strong t-out=\"object.name or ''\"></strong>.</span>\n"
+"                            <span style=\"color:#666666;font-size:13px;\">Đây là tiến độ của bạn trong thử thách này <strong t-out=\"object.name or ''\"></strong>.</span>\n"
 "                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:20px;\">\n"
 "                                <tr>\n"
 "                                    <td align=\"center\">\n"
@@ -596,7 +596,7 @@ msgstr ""
 "                                        <th align=\"left\" style=\"padding-bottom: 0px;width:40%;text-align:left;\">Mục tiêu</th>\n"
 "                                        <th style=\"width:20%;text-align:right;\" align=\"left\">Chỉ tiêu</th>\n"
 "                                        <th style=\"width:20%;text-align:right;\" align=\"right\">Hiện tại</th>\n"
-"                                        <th style=\"width:20%;text-align:right;\" align=\"right\">Mức độ hoàn thành</th>\n"
+"                                        <th style=\"width:20%;text-align:right;\" align=\"right\">Tiến độ hoàn thành</th>\n"
 "                                    </tr>\n"
 "                                    <tr>\n"
 "                                        <td colspan=\"5\" style=\"height:1px;background-color:#9A6C8E;\"></td>\n"
@@ -715,7 +715,7 @@ msgstr ""
 "                                                                (<t t-out=\"company.currency_id.symbol or ''\"></t>)\n"
 "                                                            </t>\n"
 "                                                        </th>\n"
-"                                                        <th style=\"width:30%;text-align:right;\">Mức độ hoàn thành</th>\n"
+"                                                        <th style=\"width:30%;text-align:right;\">Tiến độ hoàn thành</th>\n"
 "                                                    </tr>\n"
 "                                                    <tr>\n"
 "                                                        <td colspan=\"5\" style=\"height:1px;background-color:#9A6C8E;\"></td>\n"
@@ -810,13 +810,13 @@ msgstr "Danh sách người dùng được chọn"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__action_id
 msgid "Action"
-msgstr "Hành động"
+msgstr "Tác vụ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_needaction
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__active
@@ -888,7 +888,7 @@ msgstr "Tự động: thực thi một lệnh python cụ thể"
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__count
 msgid "Automatic: number of records"
-msgstr "Tự động: số lượng tập dữ liệu"
+msgstr "Tự động: số lượng bản ghi"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__sum
@@ -950,7 +950,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_mode
 msgid "Batch Mode"
-msgstr "Chế độ hàng loạt"
+msgstr "Chế độ theo lô"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_idea
@@ -1274,7 +1274,7 @@ msgstr "Hiển thị"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_distinctive_field
 msgid "Distinctive field for batch user"
-msgstr "Trường đặc biệt cho người dùng hàng loạt"
+msgstr "Trường đặc biệt cho người dùng theo lô"
 
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_doctor
@@ -1288,10 +1288,10 @@ msgid ""
 "[('state', '=', 'done')]. The expression can contain reference to 'user' "
 "which is a browse record of the current user if not in batch mode."
 msgstr ""
-"Tên miền để lọc tập dữ liệu. Quy tắc chung, không phụ thuộc vào người dùng, "
-"ví dụ: [('trạng thái', '=', 'xong')]. Biểu thức có thể chứa tham chiếu đến "
-"'người dùng' là tập dữ liệu duyệt của người dùng hiện tại nếu không ở chế độ"
-" hàng loạt."
+"Tên miền để lọc bản ghi. Quy tắc chung, không phụ thuộc vào người dùng, ví "
+"dụ: [('trạng thái', '=', 'xong')]. Biểu thức có thể chứa tham chiếu đến "
+"'người dùng' là bản ghi duyệt của người dùng hiện tại nếu không ở chế độ "
+"theo lô."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__done
@@ -1326,7 +1326,7 @@ msgstr "Đánh giá biểu thức theo đợt thay vì một lần cho mỗi ng�
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_user_expression
 msgid "Evaluated expression for batch mode"
-msgstr "Biểu thức đánh giá cho chế độ hàng loạt"
+msgstr "Biểu thức đánh giá cho chế độ theo lô"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__everyone
@@ -1712,8 +1712,8 @@ msgid ""
 "In batch mode, the domain is evaluated globally. If enabled, do not use "
 "keyword 'user' in above filter domain."
 msgstr ""
-"Trong chế độ hàng loạt, điều kiện được đánh giá trên toàn hệ thống. Nếu được"
-" bật, không sử dụng từ khóa 'người dùng' trong miền bộ lọc ở trên."
+"Trong chế độ theo lô, điều kiện được đánh giá trên toàn hệ thống. Nếu được "
+"bật, không sử dụng từ khóa 'người dùng' trong miền bộ lọc ở trên."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_distinctive_field
@@ -1721,7 +1721,7 @@ msgid ""
 "In batch mode, this indicates which field distinguishes one user from the "
 "other, e.g. user_id, partner_id..."
 msgstr ""
-"Trong chế độ hàng loạt, đây là yếu tố chỉ ra trường nào phân biệt các người "
+"Trong chế độ theo lô, đây là yếu tố chỉ ra trường nào phân biệt các người "
 "dùng, ví dụ: user_id, partner_id, v.v."
 
 #. module: gamification
@@ -2054,7 +2054,7 @@ msgstr "Tin nhắn thông báo"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_needaction_counter
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_has_error_counter
@@ -2322,7 +2322,7 @@ msgstr "Người phụ trách"
 #: code:addons/gamification/models/gamification_challenge.py:0
 #, python-format
 msgid "Retrieving progress for personal challenge without user information"
-msgstr "Lấy tiến trình cho thử thách cá nhân mà không có thông tin người dùng"
+msgstr "Lấy tiến độ cho thử thách cá nhân mà không có thông tin người dùng"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -2599,7 +2599,7 @@ msgstr "Lý do kiểm tra"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__action_id
 msgid "The action that will be called to update the goal value."
-msgstr "Hành động sẽ được gọi để cập nhật giá trị mục tiêu."
+msgstr "Tác vụ sẽ được gọi để cập nhật giá trị mục tiêu."
 
 #. module: gamification
 #. odoo-python
@@ -2658,7 +2658,7 @@ msgid ""
 "res_id for action."
 msgstr ""
 "Trường tên trên hồ sơ người dùng (res.users) có chứa giá trị cho res_id cho "
-"hành động."
+"tác vụ."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__condition__higher
@@ -2793,7 +2793,7 @@ msgid ""
 "user.id, user.partner_id.id..."
 msgstr ""
 "Giá trị để so sánh với trường đặc biệt. Biểu thức có thể chứa tham chiếu đến"
-" 'người dùng' là tập dữ liệu duyệt của người dùng hiện tại, ví dụ: user.id, "
+" 'người dùng' là bản ghi duyệt của người dùng hiện tại, ví dụ: user.id, "
 "user.partner_id.id ..."
 
 #. module: gamification

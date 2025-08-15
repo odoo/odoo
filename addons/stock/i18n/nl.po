@@ -6,17 +6,17 @@
 # Martin Trigaux, 2024
 # Jolien De Paepe, 2024
 # Larissa Manderfeld, 2024
-# Manon Rondou, 2024
 # Wil Odoo, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-06-13 00:52+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,8 +80,8 @@ msgstr ""
 " * Wachten: de overdracht wacht op de beschikbaarheid van sommige producten.\n"
 "(a) Het verzendbeleid is \"Zo snel mogelijk\": er kan geen product worden gereserveerd.\n"
 "(b) Het verzendbeleid is \"Wanneer alle producten gereed zijn\": niet alle producten kunnen worden gereserveerd.\n"
-" * Gereed: de overdracht kan worden verwerkt.\n"
-"(a) Het verzendbeleid is \"Zo snel mogelijk\": er is tenminste één product gereserveerd.\n"
+" * Beschikbaar: de overdracht kan worden verwerkt.\n"
+"(a) Het verzendbeleid is \"Zo snel mogelijk\": er is ten minste één product gereserveerd.\n"
 "(b) Het verzendbeleid is \"Wanneer alle producten gereed zijn\": alle producten zijn gereserveerd.\n"
 " * Gereed: de overdracht is verwerkt.\n"
 " * Geannuleerd: de overdracht is geannuleerd."
@@ -391,11 +391,6 @@ msgstr "4 x 7 met prijs"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "54326786758"
 msgstr "54326786758"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
-msgstr "98"
 
 #. module: stock
 #. odoo-python
@@ -1647,6 +1642,17 @@ msgstr "Producthoeveelheid aanpassen"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+"Je kunt het partij/serienummer niet wijzigen voor boekingsregels met "
+"verschillende producten."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_lot.py:0
@@ -1823,6 +1829,15 @@ msgstr "Bereken verzendkosten en verstuur met DHL"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Bereken verzendkosten en verzend met DHL<br/>\n"
+"                                    <strong>(ga naar Start > Apps om te installeren)</strong>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
 msgstr "Bereken verzendkosten en verzend met Easypost"
 
@@ -1830,6 +1845,15 @@ msgstr "Bereken verzendkosten en verzend met Easypost"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
 msgstr "Bereken verzendkosten en verstuur met FedEx"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Bereken verzendkosten en verzend met FedEx<br/>\n"
+"                                    <strong>(ga naar Start > Apps om te installeren)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1848,8 +1872,26 @@ msgstr "Verzendkosten berekenen en verzenden met UPS"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Bereken verzendkosten en verzend met UPS<br/>\n"
+"                                    <strong>(ga naar Start > Apps om te installeren)</strong>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
 msgstr "Bereken verzendkosten en verstuur met USPS"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Bereken verzendkosten en verzend met USPS<br/>\n"
+"                                    <strong>(ga naar Start > Apps om te installeren)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2339,6 +2381,11 @@ msgid "DEMO_UOM"
 msgstr "DEMO_UOM"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "DHL Connector"
+msgstr "DHL Connector"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
 msgstr "DHL Express connector"
@@ -2652,7 +2699,7 @@ msgstr "Afleveradres"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery
 msgid "Delivery Methods"
-msgstr "Verzendwijzes"
+msgstr "Verzendmethoden"
 
 #. module: stock
 #. odoo-python
@@ -3019,6 +3066,7 @@ msgid "Do you confirm you want to scrap"
 msgstr "Bevestig je dat je wilt afkeuren"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Documentation"
 msgstr "Documentatie"
@@ -3251,6 +3299,7 @@ msgstr "Februari"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "FedEx Connector"
 msgstr "FedEx connector"
 
@@ -4048,13 +4097,6 @@ msgid "Immediate Transfer"
 msgstr "Directe overdracht"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-#, python-format
-msgid "Import"
-msgstr "Importeren"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 #, python-format
@@ -4315,7 +4357,7 @@ msgstr "Waarschuwing voorraadaanpassing"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Inventory Adjustments"
-msgstr "Voorraadaanpassingen"
+msgstr "Aanpassingen voorraad"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -6468,11 +6510,11 @@ msgstr "Aanwezigheid is afhankelijk van het type bewerking."
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
-"Druk op de knop AANMAKEN om de hoeveelheid voor elk product in de voorraad "
-"te definiëren of importeer ze vanuit een spreadsheet in Favorieten"
+"Klik op \"Nieuw\" om een producthoeveelheid in je voorraad in te voeren of "
+"importeer hoeveelheden via het menu Acties"
 
 #. module: stock
 #. odoo-javascript
@@ -7247,7 +7289,7 @@ msgstr "Beoordelingen"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Ready"
-msgstr "Gereed"
+msgstr "Beschikbaar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
@@ -7262,7 +7304,7 @@ msgstr "Reden"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__message
 msgid "Reason for relocation"
-msgstr "Reden van verhuizing"
+msgstr "Reden van verplaatsing"
 
 #. module: stock
 #. odoo-javascript
@@ -8681,7 +8723,7 @@ msgstr "Voorraadhoeveelheid geschiedenis"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quant_relocate
 msgid "Stock Quantity Relocation"
-msgstr "Voorraadhoeveelheid Verhuizing"
+msgstr "Verplaatsing van voorraadaantal"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_quantity
@@ -8925,6 +8967,24 @@ msgstr ""
 "De waarde 'Handmatige bewerking' zorgt voor een aanvullende verplaatsing na "
 "de huidige. Met 'Automatisch - geen stap toegevoegd' wordt de locatie in de "
 "oorspronkelijke verplaatsing vervangen."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr "Partij/serienummer (%s) is gekoppeld aan een ander product."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"The Picking Operations report has been deleted so you cannot print at this "
+"time unless the report is restored."
+msgstr ""
+"Het rapport 'Pickbewerkingen' is verwijderd. Je kunt op dit moment dus niet "
+"afdrukken, tenzij het rapport wordt hersteld."
 
 #. module: stock
 #. odoo-python
@@ -9867,11 +9927,13 @@ msgstr "Type van de geregistreerde uitzonderingsactiviteit."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "UPS Connector"
 msgstr "UPS connector"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "USPS Connector"
 msgstr "USPS connector"
 
@@ -9939,7 +10001,7 @@ msgstr "Naam maateenheid"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "Units"
-msgstr "Stuks"
+msgstr "Stuk(s)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10905,6 +10967,13 @@ msgstr ""
 "Via deze weergave kun je hoeveelheden van verschillende transfers niet "
 "rechtstreeks in hetzelfde pakket verpakken. Probeer ze toe te voegen aan een"
 " batchpicking en verpak ze daar."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "You cannot duplicate stock quants."
+msgstr "Je kunt hoeveelheden voorraad niet kopiëren."
 
 #. module: stock
 #. odoo-python

@@ -58,7 +58,7 @@ class ir_cron(models.Model):
     cron_name = fields.Char('Name', compute='_compute_cron_name', store=True)
     user_id = fields.Many2one('res.users', string='Scheduler User', default=lambda self: self.env.user, required=True)
     active = fields.Boolean(default=True)
-    interval_number = fields.Integer(default=1, help="Repeat every x.")
+    interval_number = fields.Integer(default=1, group_operator=None, help="Repeat every x.")
     interval_type = fields.Selection([('minutes', 'Minutes'),
                                       ('hours', 'Hours'),
                                       ('days', 'Days'),
@@ -68,7 +68,7 @@ class ir_cron(models.Model):
     doall = fields.Boolean(string='Repeat Missed', help="Specify if missed occurrences should be executed when the server restarts.")
     nextcall = fields.Datetime(string='Next Execution Date', required=True, default=fields.Datetime.now, help="Next planned execution date for this job.")
     lastcall = fields.Datetime(string='Last Execution Date', help="Previous time the cron ran successfully, provided to the job through the context on the `lastcall` key")
-    priority = fields.Integer(default=5, help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
+    priority = fields.Integer(default=5, group_operator=None, help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
 
     @api.depends('ir_actions_server_id.name')
     def _compute_cron_name(self):
@@ -90,9 +90,9 @@ class ir_cron(models.Model):
             self = self.with_context(default_state='code')
         return super(ir_cron, self).default_get(fields_list)
 
-    @api.onchange('active', 'interval_number')
+    @api.onchange('active', 'interval_number', 'interval_type')
     def _onchange_interval_number(self):
-        if self.active and self.interval_number <= 0:
+        if self.active and (self.interval_number <= 0 or not self.interval_type):
             self.active = False
             return {'warning': {
                 'title': _("Scheduled action disabled"),
@@ -552,4 +552,8 @@ class ir_cron_trigger(models.Model):
 
     @api.autovacuum
     def _gc_cron_triggers(self):
-        self.search([('call_at', '<', datetime.now() + relativedelta(weeks=-1))]).unlink()
+        domain = [('call_at', '<', datetime.now() + relativedelta(weeks=-1))]
+        records = self.search(domain, limit=models.GC_UNLINK_LIMIT)
+        if len(records) >= models.GC_UNLINK_LIMIT:
+            self.env.ref('base.autovacuum_job')._trigger()
+        return records.unlink()

@@ -15,7 +15,7 @@
                     <page name="zatca_einvoicing" string="ZATCA" invisible="country_code != 'SA' or type != 'sale'">
                         <group>
                             <group>
-                                <field name="l10n_sa_serial_number"/>
+                                <field name="l10n_sa_serial_number" readonly="1" groups="base.group_no_one"/>
                             </group>
                         </group>
                         <p groups="base.group_system">
@@ -23,11 +23,6 @@
                                 In order to be able to submit Invoices to ZATCA, the following steps need to be completed:
                             </b>
                             <ol class="mt-2 mb-4">
-                                <li>
-                                    Set a Serial Number for your device
-                                    <i class="fa fa-check text-success ms-1"
-                                       invisible="not l10n_sa_serial_number"/>
-                                </li>
                                 <li>
                                     Request a Compliance Certificate (CCSID)
                                     <i class="fa fa-check text-success ms-1" groups="base.group_system"

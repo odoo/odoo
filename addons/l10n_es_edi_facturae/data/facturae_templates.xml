@@ -104,13 +104,15 @@
         <!-- Sub-template used for every instance of InvoiceLineType -->
         <template id="invoice_line_type">
             <InvoiceLine>
+                <ReceiverContractReference t-out="line.get('ReceiverContractReference')"/>
+                <ReceiverTransactionReference t-out="line.get('ReceiverTransactionReference')"/>
                 <FileReference t-out="line.get('FileReference')"/>
                 <FileDate t-out="line.get('FileDate')"/>
                 <SequenceNumber t-out="line.get('SequenceNumber')"/>
                 <ItemDescription t-out="line['ItemDescription']"/>
                 <Quantity t-out="line['Quantity']"/>
                 <UnitOfMeasure t-out="line.get('UnitOfMeasure')"/>
-                <UnitPriceWithoutTax t-out="float_repr(refund_multiplier*line['UnitPriceWithoutTax'], file_currency.decimal_places)"/>
+                <UnitPriceWithoutTax t-out="float_repr(refund_multiplier*line['UnitPriceWithoutTax'], unit_price_decimals)"/>
                 <TotalCost t-out="float_repr(refund_multiplier*line['TotalCost'], file_currency.decimal_places)"/>
                 <DiscountsAndRebates t-if="line.get('DiscountsAndRebates')">
                     <t t-foreach="line['DiscountsAndRebates']" t-as="discount">

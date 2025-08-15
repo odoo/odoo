@@ -1,5 +1,7 @@
 
 .o_hr_attendance_kiosk_mode {
+    overflow-y: auto;
+
     @include media-breakpoint-down(md) {
         width: 100%;
         .o_search_panel {
@@ -19,10 +21,6 @@
 .o_hr_attendance_kiosk_mode {
     @include media-breakpoint-up(md) {
         min-width: map-get($grid-breakpoints, 'md') * .6;
-
-        .o_hr_attendance_user_badge {
-            @include o-position-absolute(auto, $border-width * -1, 100%, $border-width * -1); // Compensate card's border
-        }
     }
 
     .o_hr_attendance_back_button_md {

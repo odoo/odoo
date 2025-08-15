@@ -120,3 +120,6 @@ class SaleOrderLine(models.Model):
         res = super(SaleOrderLine, self | related_lines).unlink()
         coupons_to_unlink.sudo().unlink()
         return res
+
+    def _sellable_lines_domain(self):
+        return super()._sellable_lines_domain() + [('reward_id', '=', False)]

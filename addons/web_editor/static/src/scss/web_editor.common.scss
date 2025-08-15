@@ -91,6 +91,10 @@
     @include print-variable('h6-font-size', $h6-font-size);
     @include print-variable('font-size-base', $font-size-base);
     @include print-variable('small-font-size', $small-font-size);
+    @include print-variable('small-twelve-font-size', $small-twelve-font-size);
+    @include print-variable('small-ten-font-size', $small-ten-font-size);
+    @include print-variable('small-eight-font-size', $small-eight-font-size);
+    @include print-variable('lead-font-size', $lead-font-size);
 }
 
 html, body {
@@ -137,6 +141,7 @@ html, body {
     // use table-bordered...)
     table.table.table-bordered {
         table-layout: fixed;
+        overflow-wrap: break-word;
         td {
             min-width: 20px;
         }
@@ -302,6 +307,15 @@ img.ms-auto, img.mx-auto {
 .o_small-fs {
     @include font-size($small-font-size);
 }
+.o_small_twelve-fs {
+    @include font-size($o-small-twelve-font-size);
+}
+.o_small_ten-fs {
+    @include font-size($o-small-ten-font-size);
+}
+.o_small_eight-fs {
+    @include font-size($o-small-eight-font-size);
+}
 
 div.media_iframe_video {
     margin: 0 auto;
@@ -313,9 +327,8 @@ div.media_iframe_video {
     iframe {
         width: 100%;
         height: 100%;
-        @include o-position-absolute($top: 0);
+        @include o-position-absolute($top: 0, $left: 0, $right: 0);
         margin: 0 auto;
-        margin-left: -50%;
     }
     &.padding-small iframe {
         padding: 4px;
@@ -556,6 +569,19 @@ blockquote {
     border-left: 5px solid;
     border-color: map-get($grays, '300');
     font-style: italic;
+}
+
+pre {    
+    padding: map-get($spacers, 2) map-get($spacers, 3);
+    border: $border-width solid $border-color;
+    border-radius: $border-radius;
+    background-color: $gray-100;
+    color: $gray-900;
+    white-space: pre-wrap;
+
+    p {
+        margin-bottom: 0px;
+    }
 }
 
 // Extend bootstrap to create background and text utilities for some colors
@@ -816,6 +842,9 @@ section, .oe_img_bg, [data-oe-shape-data] {
     &.o_bg_img_center {
         background-position: center;
     }
+    &.o_bg_img_origin_border_box {
+        background-origin: border-box;
+    }
 }
 
 // Gradient
@@ -841,6 +870,27 @@ section, .oe_img_bg, [data-oe-shape-data] {
     // are not rendered (invisible) when inside a gradient.
     .fa {
         display: inherit;
+    }
+
+    %o-text-gradient-decoration {
+        background-size: 100% 0.1em;
+        background-repeat: repeat-x;
+        background-image: inherit !important;
+        text-decoration-color: transparent !important;
+        color: transparent;
+        caret-color: black;
+    }
+    * {
+        background-size: 0px;
+        background-image: inherit !important;
+    }
+    s:not(font[style*="-webkit-text-fill-color"] s) {
+        @extend %o-text-gradient-decoration;
+        background-position: 0 50%;
+    }
+    u:not(font[style*="-webkit-text-fill-color"] u) {
+        @extend %o-text-gradient-decoration;
+        background-position: 0 95%;
     }
 }
 

@@ -162,15 +162,15 @@
                                 </div>
                                 <div class="me-2 align-items-center" t-if="['confirm', 'validate1'].includes(record.state.raw_value)">
                                     <button t-if="record.state.raw_value === 'confirm'" name="action_approve" type="object" class="btn btn-link btn-sm ps-0"
-                                        groups="hr_holidays.group_hr_holidays_user">
+                                        groups="hr_holidays.group_hr_holidays_responsible">
                                         <i class="fa fa-thumbs-up"/> Approve
                                     </button>
                                     <button t-if="record.state.raw_value === 'validate1'" name="action_validate" type="object" class="btn btn-link btn-sm ps-0"
-                                        groups="hr_holidays.group_hr_holidays_manager">
+                                        groups="hr_holidays.group_hr_holidays_responsible">
                                         <i class="fa fa-check"/> Validate
                                     </button>
                                     <button t-if="['confirm', 'validate1'].includes(record.state.raw_value)" name="action_refuse" type="object" class="btn btn-link btn-sm ps-0"
-                                        groups="hr_holidays.group_hr_holidays_user">
+                                        groups="hr_holidays.group_hr_holidays_responsible">
                                         <i class="fa fa-times"/> Refuse
                                     </button>
                                 </div>
@@ -195,7 +195,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('o_leave_kanban_info')]" position='before'>
                 <div class="col-3">
-                    <img t-att-src="kanban_image('hr.employee', 'avatar_128', record.employee_id.raw_value)"
+                    <img t-att-src="kanban_image('hr.employee.public', 'avatar_128', record.employee_id.raw_value)"
                         t-att-title="record.employee_id.value"
                         t-att-alt="record.employee_id.value"
                         class="o_image_64_cover float-start mr4"/>
@@ -287,13 +287,11 @@
                                         ('requires_allocation', '=', 'no'),
                                         '&amp;',
                                             ('has_valid_allocation', '=', True),
-                                            '&amp;',
-                                                ('max_leaves', '>', '0'),
-                                                '|',
-                                                    ('allows_negative', '=', True),
-                                                    '&amp;',
-                                                        ('virtual_remaining_leaves', '&gt;', 0),
-                                                        ('allows_negative', '=', False),
+                                            '|',
+                                                ('allows_negative', '=', True),
+                                                '&amp;',
+                                                    ('virtual_remaining_leaves', '&gt;', 0),
+                                                    ('allows_negative', '=', False),
                                 ]"
                                 context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to}"
                                 options="{'no_create': True, 'no_open': True, 'request_type': 'leave'}"
@@ -533,11 +531,11 @@
                 <button string="Validate" name="action_validate" type="object"
                     icon="fa-check"
                     invisible="state != 'validate1'"
-                    groups="hr_holidays.group_hr_holidays_user"/>
+                    groups="hr_holidays.group_hr_holidays_responsible"/>
                 <button string="Refuse" name="action_refuse" type="object"
                     icon="fa-times"
                     invisible="state not in ('confirm', 'validate1')"
-                    groups="hr_holidays.group_hr_holidays_user"/>
+                    groups="hr_holidays.group_hr_holidays_responsible"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>
@@ -719,10 +717,14 @@
             'search_default_waiting_for_me_manager': 2,
             'hide_employee_name': 1,
             'holiday_status_display_name': False}</field>
-        <field name="domain">['|', ('employee_id.company_id', 'in', allowed_company_ids),
+        <field name="domain">['|', '|', '|', '|', ('employee_id.company_id', 'in', allowed_company_ids),
                                     '&amp;', ('multi_employee', '=', True),
                                     '&amp;', ('state', 'in', ['draft', 'confirm', 'validate1']),
-                                    ('employee_ids.company_id', 'in', allowed_company_ids)]</field>
+                                    ('employee_ids.company_id', 'in', allowed_company_ids),
+                                    '&amp;', ('holiday_type', '=', 'company'),
+                                    ('mode_company_id', 'in', allowed_company_ids),
+                                    ('holiday_type', '=', 'department'),
+                                    ('holiday_type', '=', 'category')]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Meet the time off dashboard.

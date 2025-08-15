@@ -9,18 +9,20 @@
 # Claudia Baisan, 2024
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Martin Trigaux, 2024
-# Dorin Hongu <dhongu@gmail.com>, 2024
 # Flavia0320, 2024
 # Betty Keresztesi, 2024
 # Corina Calin, 2024
+# Lyall Kindmurr, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2025
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Corina Calin, 2024\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,14 +60,14 @@ msgstr "%(event_name)s (Vândut)"
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "%(event_name)s - Registration #%(registration_id)s"
-msgstr ""
+msgstr "%(event_name)s - Înregistrare #%(registration_id)s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "%(event_name)s - Registration for %(attendee_name)s"
-msgstr ""
+msgstr "%(event_name)s - Înregistrare pentru %(attendee_name)s"
 
 #. module: event
 #. odoo-python
@@ -91,12 +93,12 @@ msgstr "%s (copie)"
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_attendee_list
 msgid "'Attendee List - %s' % (object.name)"
-msgstr ""
+msgstr "'Lista participanților - %s' % (object.name)"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_attendee_list
 msgid "'Attendee List'"
-msgstr ""
+msgstr "'Lista participanților'"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_badge
@@ -104,11 +106,13 @@ msgid ""
 "'Badge - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), "
 "(object.name or '').replace('/',''))"
 msgstr ""
+"'Insignă - %s - %s' % ((object.event_id.name or "
+"'Eveniment').replace('/',''), (object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_badge
 msgid "'Badge - %s' % (object.name or 'Event').replace('/','')"
-msgstr ""
+msgstr "'Insignă - %s' % (object.name or 'Eveniment').replace('/','')"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
@@ -127,7 +131,7 @@ msgstr "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "+123456789"
-msgstr ""
+msgstr "+123456789"
 
 #. module: event
 #. odoo-python
@@ -155,7 +159,7 @@ msgstr "10-14"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
 msgid "1000 Brussels"
-msgstr ""
+msgstr "1000 Bruxelles"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_3
@@ -170,7 +174,7 @@ msgstr "18+"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__four_per_sheet
 msgid "4 per sheet"
-msgstr ""
+msgstr "4 pe coală"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_1
@@ -243,6 +247,8 @@ msgid ""
 "<br/>\n"
 "                                        <span class=\"text-muted\">Air your tracks online through a Youtube integration</span>"
 msgstr ""
+"<br/>\n"
+"                                        <span class=\"text-muted\">Transmiteți-vă sesiunile online prin integrare Youtube</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -250,6 +256,8 @@ msgid ""
 "<br/>\n"
 "                                        <span class=\"text-muted\">Share a quiz to your attendees once a track is over</span>"
 msgstr ""
+"<br/>\n"
+"                                        <span class=\"text-muted\">Trimiteți un test participanților după finalizarea unei sesiuni</span>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -270,7 +278,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<i class=\"fa fa-building\" title=\"Attendee Company\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-building\" title=\"Compania participantului\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -307,7 +315,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-group mt-1 me-2 text-center\" title=\"Attendees\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-group mt-1 me-2 text-center\" title=\"Participanți\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -330,12 +338,12 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-map-marker mt-1 me-2 text-center ps-1\" title=\"Location\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-map-marker mt-1 me-2 text-center ps-1\" title=\"Locație\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<i class=\"fa fa-ticket\" title=\"Ticket type\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ticket\" title=\"Tip bilet\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -362,11 +370,13 @@ msgid ""
 "<span class=\"badge text-bg-secondary o_wevent_badge float-"
 "end\">SPEAKER</span>"
 msgstr ""
+"<span class=\"badge text-bg-secondary o_wevent_badge float-"
+"end\">SPEAKER</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_badge_card
 msgid "<span class=\"o_event_badge_font_faded\">My Placeholder Company</span>"
-msgstr ""
+msgstr "<span class=\"o_event_badge_font_faded\">Compania Exemplu</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -375,6 +385,9 @@ msgid ""
 "                                    Registration\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Înregistrare\n"
+"                                </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -1081,7 +1094,7 @@ msgstr "O descriere a biletului pe care doriți să îl comunicați clienților.
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a4_french_fold
 msgid "A4 foldable"
-msgstr ""
+msgstr "A4 pliabil"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a6
@@ -1188,6 +1201,8 @@ msgid ""
 "All the communication emails sent to attendees will be translated in this "
 "language."
 msgstr ""
+"Toate emailurile de comunicare trimise participanților vor fi traduse în "
+"această limbă."
 
 #. module: event
 #: model:event.event,name:event.event_6
@@ -1297,7 +1312,7 @@ msgstr "Participant"
 #: model:ir.actions.report,name:event.action_report_event_event_attendee_list
 #: model:ir.actions.report,name:event.action_report_event_registration_attendee_list
 msgid "Attendee List"
-msgstr ""
+msgstr "Listă participanți"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__name
@@ -1307,7 +1322,7 @@ msgstr "Nume Participant"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Attendee list"
-msgstr ""
+msgstr "Listă participanți"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_registration_from_event
@@ -1336,17 +1351,17 @@ msgstr "Etichetă"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
 msgid "Badge Background"
-msgstr ""
+msgstr "Fundal insignă"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_format
 msgid "Badge Dimension"
-msgstr ""
+msgstr "Dimensiune insignă"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_badge
 msgid "Badge Example"
-msgstr ""
+msgstr "Exemplu insignă"
 
 #. module: event
 #. odoo-python
@@ -1677,7 +1692,7 @@ msgstr "Creat de"
 #: model:ir.model.fields,field_description:event.field_event_type_mail__create_date
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__create_date
 msgid "Created on"
-msgstr "Creat în"
+msgstr "Creat pe"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_1
@@ -1773,6 +1788,11 @@ msgid "Display Sponsors and Exhibitors on your event pages"
 msgstr "Afișați sponsorii și expozanții pe paginile evenimentului"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__date_tz
+msgid "Display Timezone"
+msgstr "Afișează fusul orar"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
 msgid "Display order"
 msgstr "Afișare comandă"
@@ -1805,12 +1825,14 @@ msgstr "Șabloane de e-mail"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Enable barcode scanning"
-msgstr ""
+msgstr "Activează scanarea codurilor de bare"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_config_settings__use_event_barcode
 msgid "Enable or Disable Event Barcode functionality."
 msgstr ""
+"Activează sau dezactivează funcționalitatea codurilor de bare pentru "
+"evenimente."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_end
@@ -1945,6 +1967,18 @@ msgid ""
 "  - or the responsible of the event,\n"
 "  - or the last writer of the template.\n"
 msgstr ""
+"Planificator eveniment pentru:\n"
+"  - Eveniment: %(event_name)s (%(event_id)s)\n"
+"  - Programat: %(date)s\n"
+"  - Șablon: %(template_name)s (%(template_id)s)\n"
+"\n"
+"Eroare la execuție:\n"
+"  - %(error)s\n"
+"\n"
+"Primiți acest email deoarece sunteți:\n"
+"  - organizatorul evenimentului,\n"
+"  - sau responsabilul evenimentului,\n"
+"  - sau ultimul care a modificat șablonul.\n"
 
 #. module: event
 #: model:ir.model,name:event.model_event_stage
@@ -2013,6 +2047,9 @@ msgid ""
 "                usually based on the types of events you organize (e.g. \"Workshop\",\n"
 "                \"Roadshow\", \"Online Webinar\", etc)."
 msgstr ""
+"Șabloanele de eveniment combină configurații pe care le folosiți frecvent și"
+" sunt de obicei bazate pe tipurile de evenimente pe care le organizați (ex: "
+"\"Workshop\", \"Roadshow\", \"Webinar online\" etc)."
 
 #. module: event
 #: model:ir.model,name:event.model_event_event_ticket
@@ -2066,8 +2103,6 @@ msgid "Event: Reminder"
 msgstr "Eveniment: Memento"
 
 #. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_barcode.js:0
 #: model:ir.actions.act_window,name:event.action_event_view
 #: model:ir.ui.menu,name:event.event_main_menu
 #: model:ir.ui.menu,name:event.menu_event_event
@@ -2076,7 +2111,6 @@ msgstr "Eveniment: Memento"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
-#, python-format
 msgid "Events"
 msgstr "Evenimente"
 
@@ -2198,7 +2232,7 @@ msgstr "Disponibil"
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_0
 msgid "Free entrance, no food!"
-msgstr ""
+msgstr "Intrare gratuită, fără mâncare!"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_new
@@ -2264,17 +2298,17 @@ msgstr "Google Maps"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__google_maps_static_api_key
 msgid "Google Maps API key"
-msgstr ""
+msgstr "Cheie API Google Maps"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__google_maps_static_api_secret
 msgid "Google Maps API secret"
-msgstr ""
+msgstr "Secret API Google Maps"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__use_google_maps_static_api
 msgid "Google Maps static API"
-msgstr ""
+msgstr "API static Google Maps"
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -2330,7 +2364,7 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_3
 msgid "Here it is, the 12th edition of our Live Musical Festival!"
-msgstr ""
+msgstr "Iată, ediția a 12-a a Festivalului nostru de Muzică Live!"
 
 #. module: event
 #: model:event.event,name:event.event_5
@@ -2409,6 +2443,8 @@ msgid ""
 "If you don't know anything about Hockey, this is a great introduction to this wonderful sport as you will will be able to see some training process and also have some time\n"
 "                to chat with experienced players and trainers once the tournament is over!"
 msgstr ""
+"Dacă nu știi nimic despre hochei, aceasta este o introducere excelentă în acest sport minunat, deoarece vei putea vedea procesul de antrenament și vei avea timp\n"
+"să discuți cu jucători și antrenori experimentați după terminarea turneului!"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__now
@@ -2435,9 +2471,17 @@ msgid "In Progress"
 msgstr "În desfășurare"
 
 #. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_tz
+msgid ""
+"Indicates the timezone in which the event dates/times will be displayed on "
+"the website."
+msgstr ""
+"Indică fusul orar în care datele/orele evenimentului vor fi afișate pe site."
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Insert dynamic Google Maps in your email templates"
-msgstr ""
+msgstr "Inserează Google Maps dinamic în șabloanele tale de email"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -2462,7 +2506,7 @@ msgstr "Eveniment Nevalid / Alegere Bilet"
 #: code:addons/event/static/src/client_action/event_barcode.js:0
 #, python-format
 msgid "Invalid ticket"
-msgstr ""
+msgstr "Bilet invalid"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sale_available
@@ -2510,7 +2554,7 @@ msgstr "John DOE"
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "Join us for the greatest ballon race of all times!"
-msgstr ""
+msgstr "Alătură-te celei mai mari curse de baloane din toate timpurile!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_4
@@ -2680,7 +2724,7 @@ msgstr "Mail Trimis"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage & publish a schedule with tracks"
-msgstr ""
+msgstr "Gestionează și publică un program cu sesiuni"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
@@ -2872,7 +2916,7 @@ msgstr "Numărul de Înregistrări"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_taken
 msgid "Number of Taken Seats"
-msgstr ""
+msgstr "Număr locuri ocupate"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error_counter
@@ -2900,7 +2944,7 @@ msgstr "Obiective"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "Odoo Community Days"
-msgstr ""
+msgstr "Zilele Comunității Odoo"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -3049,7 +3093,7 @@ msgstr ""
 #: code:addons/event/models/res_config_settings.py:0
 #, python-format
 msgid "Please enter a valid base64 secret"
-msgstr ""
+msgstr "Vă rugăm să introduceți un secret base64 valid"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3200,7 +3244,7 @@ msgstr "Mailuri Înregistrare"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__registration_properties_definition
 msgid "Registration Properties"
-msgstr ""
+msgstr "Proprietăți înregistrare"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__start_sale_datetime
@@ -3285,12 +3329,12 @@ msgstr "Utilizator responsabil"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_responsive_html_ticket
 msgid "Responsive Html Full Page Ticket"
-msgstr ""
+msgstr "Bilet pagină întreagă HTML Responsiv"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
 msgid "Rue de la Paix 123"
-msgstr ""
+msgstr "Strada Păcii 123"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__running
@@ -3343,6 +3387,8 @@ msgstr "Oră planificată"
 #: model_terms:event.event,description:event.event_5
 msgid "Seasoned Hockey Fans and curious people, this tournament is for you!"
 msgstr ""
+"Fani experimentați ai hocheiului și persoane curioase, acest turneu este "
+"pentru voi!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3502,13 +3548,13 @@ msgstr "Dată începere vânzare"
 #: model:ir.model.fields,field_description:event.field_res_partner__static_map_url
 #: model:ir.model.fields,field_description:event.field_res_users__static_map_url
 msgid "Static Map Url"
-msgstr ""
+msgstr "URL hartă statică"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_partner__static_map_url_is_valid
 #: model:ir.model.fields,field_description:event.field_res_users__static_map_url_is_valid
 msgid "Static Map Url Is Valid"
-msgstr ""
+msgstr "URL hartă statică valid"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__state
@@ -3557,7 +3603,7 @@ msgstr "Luat"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_taken
 msgid "Taken Seats"
-msgstr ""
+msgstr "Locuri ocupate"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -3654,8 +3700,8 @@ msgid ""
 "The following tickets cannot be deleted while they have one or more registrations linked to them:\n"
 "- %s"
 msgstr ""
-"Următoarele bilete nu pot fi șterse în timp ce au o sau mai multe "
-"înregistrărilegate de ele:\n"
+"Următoarele bilete nu pot fi șterse în timp ce au o sau mai multe înregistrărilegate de ele:\n"
+"%s"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_booked
@@ -3673,6 +3719,7 @@ msgstr "Înregistrarea trebuie plătită"
 #: model_terms:event.event,description:event.event_1
 msgid "The safety of our attendees and our aeronauts comes first!"
 msgstr ""
+"Siguranța participanților și a aeronauților noștri este pe primul loc!"
 
 #. module: event
 #. odoo-python
@@ -3742,6 +3789,8 @@ msgid ""
 "This is the perfect place for spending a nice day with your family, we "
 "guarantee you will be leaving with beautiful everlasting memories!"
 msgstr ""
+"Este locul perfect pentru a petrece o zi frumoasă cu familia ta, garantăm că"
+" vei pleca cu amintiri de neuitat!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -3808,7 +3857,7 @@ msgstr "Tip tichet"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Ticket type"
-msgstr ""
+msgstr "Tip bilet"
 
 #. module: event
 #. odoo-javascript
@@ -3839,7 +3888,6 @@ msgid "Tickets can be printed or scanned directly from your phone."
 msgstr "Tichetele pot fi tipărite sau scanate direct de pe telefonul dvs."
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
 msgstr "Fus orar"
@@ -3920,6 +3968,10 @@ msgid ""
 "Attended: registrations for which the attendee attended the event\n"
 "Cancelled: registrations cancelled manually"
 msgstr ""
+"Neconfirmat: înregistrări în stare de așteptare ce necesită acțiune (caz specific, adesea la starea vânzărilor)\n"
+"Înregistrat: înregistrări rezervate unui client\n"
+"Participat: înregistrări de evenimente la care clientul a participat\n"
+"Anulat: înregistrări anulate manual"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
@@ -3939,7 +3991,7 @@ msgstr "Înțelegeți diversele module;"
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_unit
 msgid "Unit"
-msgstr "buc"
+msgstr "Unitate"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -3954,12 +4006,12 @@ msgstr "Viitoare/În execuție"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__use_barcode
 msgid "Use Barcode"
-msgstr ""
+msgstr "Folosește cod de bare"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__use_event_barcode
 msgid "Use Event Barcode"
-msgstr ""
+msgstr "Folosește cod de bare pentru eveniment"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
@@ -4093,6 +4145,16 @@ msgid "What's new?"
 msgstr "Ce este nou?"
 
 #. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_begin
+#: model:ir.model.fields,help:event.field_event_registration__event_begin_date
+msgid ""
+"When the event is scheduled to take place (expressed in your local timezone "
+"on the form view)."
+msgstr ""
+"Când evenimentul este programat să aibă loc (exprimat în fusul orar local în"
+" vizualizarea formularului)."
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
 msgid "Whether event has begun"
 msgstr "Dacă evenimentul a început"
@@ -4143,22 +4205,22 @@ msgstr "Înregistrarea ta la {{ object.event_id.name }}"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_tag_category_view_form
 msgid "e.g. \"12-16 years old\""
-msgstr ""
+msgstr "ex: \"12-16 ani\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_tag_category_view_form
 msgid "e.g. \"Age Category\""
-msgstr ""
+msgstr "ex: \"Categorie de vârstă\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "e.g. \"Azure Interior\""
-msgstr ""
+msgstr "ex: \"Azure Interior\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "e.g. \"Promoting\""
-msgstr ""
+msgstr "ex: \"Promovare\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
@@ -4204,7 +4266,7 @@ msgstr "events@yourcompany.com"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "https://www.example.com"
-msgstr ""
+msgstr "https://www.example.com"
 
 #. module: event
 #. odoo-python
@@ -4258,7 +4320,7 @@ msgstr "sau"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "organizer@email.com"
-msgstr ""
+msgstr "organizator@email.com"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_started
@@ -4297,4 +4359,4 @@ msgstr "mâine"
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.get_date_range_str() }}"
-msgstr ""
+msgstr "{{ object.event_id.name }}: {{ object.get_date_range_str() }}"

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
 from freezegun import freeze_time
 
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
@@ -27,11 +28,13 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         })
         return company_data
 
-    def _create_purchase(self, product, date, quantity=1.0, set_tax=False, price_unit=66.0):
+    def _create_purchase(self, product, date, quantity=1.0, set_tax=False, price_unit=66.0, currency=False):
+        if not currency:
+            currency = self.currency_data['currency']
         with freeze_time(date):
             rslt = self.env['purchase.order'].create({
                 'partner_id': self.partner_a.id,
-                'currency_id': self.currency_data['currency'].id,
+                'currency_id': currency.id,
                 'order_line': [
                     (0, 0, {
                         'name': product.name,
@@ -514,3 +517,242 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
 
         picking2 = purchase_order2.picking_ids[0]
         self.assertEqual(picking2.state, 'done')
+
+    def test_currency_exchange_journal_items1(self):
+        """ Do symmetric rounding between receipt valuation journal items and bill journal items.
+        """
+        self.env.company.currency_id = self.env.ref('base.IQD').id
+        product = self.test_product_delivery
+        product.standard_price = 500
+        self.stock_account_product_categ.property_cost_method = 'average'
+        self.env['res.currency.rate'].create({
+            'name': fields.Date.today(),
+            'company_rate': .00756,
+            'currency_id': self.env.ref('base.USD').id,
+            'company_id': self.env.company.id,
+        })
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'currency_id': self.env.ref('base.USD').id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': 13,
+                'discount': 1,
+            })],
+        })
+        purchase_order.button_confirm()
+        receipt = purchase_order.picking_ids
+        receipt.button_validate()
+        pre_bill_remaining_value = purchase_order.picking_ids.move_ids.stock_valuation_layer_ids.remaining_value
+        purchase_order.action_create_invoice()
+        purchase_order.invoice_ids.invoice_date = fields.Date.today()
+        purchase_order.invoice_ids.action_post()
+        post_bill_remaining_value = purchase_order.picking_ids.move_ids.stock_valuation_layer_ids.remaining_value
+        self.assertEqual(post_bill_remaining_value, pre_bill_remaining_value)
+        stock_input_account, stock_valuation_account, tax_paid_account, accounts_payable_account = (
+            self.company_data['default_account_stock_in'],
+            self.company_data['default_account_stock_valuation'],
+            self.company_data['default_account_tax_purchase'],
+            self.company_data['default_account_payable'],
+        )
+        amls = self.env['account.move.line'].search([], order='id asc')
+        self.assertRecordValues(
+            amls,
+            [
+                {'account_id': stock_input_account.id,        'debit':    0.000,   'credit': 6435.000},
+                {'account_id': stock_valuation_account.id,    'debit': 6435.000,   'credit':    0.000},
+                {'account_id': stock_input_account.id,        'debit': 6435.000,   'credit':    0.000},
+                {'account_id': tax_paid_account.id,           'debit':  965.581,   'credit':    0.000},
+                {'account_id': accounts_payable_account.id,   'debit':    0.000,   'credit': 7400.581},
+            ]
+        )
+
+    def test_currency_exchange_journal_items2(self):
+        """ ^^^ With billing before reception"""
+        self.env.company.currency_id = self.env.ref('base.IQD').id
+        product = self.test_product_order
+        product.write({'purchase_method': 'purchase', 'standard_price': 500})
+        self.env['res.currency.rate'].create({
+            'name': fields.Date.today(),
+            'company_rate': .00756,
+            'currency_id': self.env.ref('base.USD').id,
+            'company_id': self.env.company.id,
+        })
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'currency_id': self.env.ref('base.USD').id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': 13,
+                'discount': 1,
+            })],
+        })
+        purchase_order.button_confirm()
+        purchase_order.action_create_invoice()
+        purchase_order.invoice_ids.invoice_date = fields.Date.today()
+        purchase_order.invoice_ids.action_post()
+        receipt = purchase_order.picking_ids
+        receipt.button_validate()
+        stock_input_account, stock_valuation_account, tax_paid_account, accounts_payable_account = (
+            self.company_data['default_account_stock_in'],
+            self.company_data['default_account_stock_valuation'],
+            self.company_data['default_account_tax_purchase'],
+            self.company_data['default_account_payable'],
+        )
+        amls = self.env['account.move.line'].search([], order='id asc')
+        self.assertRecordValues(
+            amls,
+            [
+                {'account_id': stock_input_account.id,        'debit': 6435.000,   'credit':    0.000},
+                {'account_id': tax_paid_account.id,           'debit':  965.581,   'credit':    0.000},
+                {'account_id': accounts_payable_account.id,   'debit':    0.000,   'credit': 7400.581},
+                {'account_id': stock_input_account.id,        'debit':    0.000,   'credit': 6435.000},
+                {'account_id': stock_valuation_account.id,    'debit': 6435.000,   'credit':    0.000},
+            ]
+        )
+
+    def test_manual_cost_adjustment_journal_items_quantity(self):
+        """ The quantity field of `account.move.line` should be permitted to be zero, e.g., in the
+        case of modifying an automatically valuated product's cost.
+        """
+        self.stock_account_product_categ.property_cost_method = 'average'
+        self.product_a.write({
+            'categ_id': self.stock_account_product_categ.id,
+            'detailed_type': 'product',
+        })
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_uom_qty': 5,
+                'price_unit': 4,
+            })],
+        })
+        purchase_order.button_confirm()
+        purchase_order.picking_ids.move_line_ids.quantity = 5
+        purchase_order.picking_ids.button_validate()
+        with Form(self.product_a) as product_form:
+            product_form.standard_price = 3
+
+        cost_change_journal_items = self.env['account.move.line'].search([
+            ('product_id', '=', self.product_a.id),
+            '|', ('debit', '=', 5), ('credit', '=', 5),
+        ])
+        self.assertEqual(cost_change_journal_items.mapped('quantity'), [0, 0])
+
+    @freeze_time('2025-01-07')
+    def test_exchange_rate_backdated_bill(self):
+        """ Having a purchase order in some foreign currency:
+        Changing the invoice date on the bill for that order after having received the product
+        should not affect the journal entries created after the user clicks the `Post` button on
+        the bill- specifically:
+        (A) In the case where that date is in the future (relative to the actual User time) and
+        (B) The date has an associated currency rate which differs from the one used at reception
+        """
+        self.env.ref('base.EUR').active = True
+        product = self.test_product_order
+        self.env['res.currency.rate'].create([{
+            'name': name,
+            'rate': rate,
+            'currency_id': self.env.ref('base.EUR').id,
+            'company_id': self.env.company.id,
+        } for (name, rate) in [('2025-01-06', 0.8), ('2025-01-07', 0.7), ('2025-01-08', 0.8)]])
+        for date in ('2025-01-07', '2025-01-06', '2025-01-08'):
+            purchase_order = self._create_purchase(product, '2025-01-07', quantity=1, price_unit=10, currency=self.env.ref('base.EUR'))
+            receipt = purchase_order.picking_ids
+            receipt.move_ids.quantity = 1
+            receipt.button_validate()
+            purchase_order.action_create_invoice()
+            bill = purchase_order.invoice_ids
+            with Form(bill) as bill_form:
+                bill_form.invoice_date = date
+            bill.action_post()
+
+        # Prior to the commit introducing this test, we would have entries in the following journals:
+        #   | Inventory Valuation | Vendor Bills | Exchange Difference |
+        # Post commit, we should see no entries in the Exchange Difference journal
+        stock_journal_id, bills_journal_id, exchg_journal_id = (
+            product.categ_id.property_stock_journal.id,
+            self.company_data['default_journal_purchase'].id,
+            self.env.company.currency_exchange_journal_id.id,
+        )
+        relevant_amls = self.env['account.move.line'].search([
+            ('journal_id', 'in', (stock_journal_id, bills_journal_id, exchg_journal_id)),
+        ], order='id asc')
+        self.assertEqual(len(relevant_amls), 16)
+        self.assertEqual(self.env['account.journal'].browse(exchg_journal_id).entries_count, 0)
+        self.assertRecordValues(
+            relevant_amls,
+            [
+                # Control (no reconciliation needed)
+                {'journal_id': stock_journal_id,    'balance': -14.29},
+                {'journal_id': stock_journal_id,    'balance':  14.29},
+                {'journal_id': bills_journal_id,    'balance':  14.29},
+                {'journal_id': bills_journal_id,    'balance': -14.29},
+                # back-dated bill
+                {'journal_id': stock_journal_id,    'balance': -14.29},
+                {'journal_id': stock_journal_id,    'balance':  14.29},
+                {'journal_id': bills_journal_id,    'balance':  12.50},
+                {'journal_id': bills_journal_id,    'balance': -12.50},
+                {'journal_id': stock_journal_id,    'balance':   1.79},
+                {'journal_id': stock_journal_id,    'balance':  -1.79},
+                # forward-dated bill
+                {'journal_id': stock_journal_id,    'balance': -14.29},
+                {'journal_id': stock_journal_id,    'balance':  14.29},
+                {'journal_id': bills_journal_id,    'balance':  12.50},
+                {'journal_id': bills_journal_id,    'balance': -12.50},
+                {'journal_id': stock_journal_id,    'balance':   1.79},
+                {'journal_id': stock_journal_id,    'balance':  -1.79},
+            ],
+        )
+
+    def test_exchange_rate_difference_post_bill_prior_to_reception(self):
+        """ Billing/invoicing before validating a reception for some product that is valuated which
+        has incurred some (foreign) currency exchange difference in the time between those two
+        actions should result in that difference appearing under the 'Stock Valuation' account
+
+        (as opposed to the regular exchange account)
+        """
+        avco_prod = self.test_product_order
+        avco_prod.purchase_method = 'purchase'
+        tomorrow = fields.Date.today() + timedelta(days=1)
+        self.env.ref('base.EUR').active = True
+        self.env['res.currency.rate'].create([
+            {'name': fields.Date.today(), 'currency_id': self.ref('base.EUR'), 'rate': 0.9},
+            {'name': tomorrow, 'currency_id': self.ref('base.EUR'), 'rate': 0.8},
+        ])
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'currency_id': self.ref('base.EUR'),
+            'order_line': [Command.create({
+                'product_id': avco_prod.id,
+                'product_qty': 10,
+            })],
+        })
+        purchase_order.button_confirm()
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids
+        bill.invoice_date = fields.Date.today()
+        bill.action_post()
+        with (freeze_time(tomorrow)):
+            receipt = purchase_order.picking_ids
+            receipt.button_validate()
+
+            cd = self.company_data
+            stock_input_account, tax_purchase_account, account_payable_account, stock_valuation_account = (
+                cd['default_account_stock_in'],
+                cd['default_account_tax_purchase'],
+                cd['default_account_payable'],
+                cd['default_account_stock_valuation'],
+            )
+            self.assertRecordValues(
+                self.env['account.move.line'].search([], order='id asc'),
+                [
+                    {'account_id': stock_input_account.id,       'debit': 420.00,   'credit':   0.00},
+                    {'account_id': tax_purchase_account.id,      'debit':  63.00,   'credit':   0.00},
+                    {'account_id': account_payable_account.id,   'debit':   0.00,   'credit': 483.00},
+                    {'account_id': stock_input_account.id,       'debit':   0.00,   'credit': 420.00},
+                    {'account_id': stock_valuation_account.id,   'debit': 420.00,   'credit':   0.00},
+                ]
+            )

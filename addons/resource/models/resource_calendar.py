@@ -20,6 +20,7 @@ from odoo.tools.float_utils import float_round
 
 from odoo.tools import date_utils, float_utils
 from .utils import Intervals, float_to_time, make_aware, datetime_to_string, string_to_datetime
+from odoo.addons.hr_work_entry_contract.models.hr_work_intervals import WorkIntervals
 
 
 class ResourceCalendar(models.Model):
@@ -53,6 +54,8 @@ class ResourceCalendar(models.Model):
                         'hour_from': attendance.hour_from,
                         'hour_to': attendance.hour_to,
                         'day_period': attendance.day_period,
+                        'date_from': attendance.date_from,
+                        'date_to': attendance.date_to,
                     })
                     for attendance in company_attendance_ids
                 ]
@@ -213,7 +216,7 @@ class ResourceCalendar(models.Model):
             ]
 
             self.two_weeks_calendar = True
-            default_attendance = self.default_get('attendance_ids')['attendance_ids']
+            default_attendance = self.default_get(['attendance_ids'])['attendance_ids']
             for idx, att in enumerate(default_attendance):
                 att[2]["week_type"] = '0'
                 att[2]["sequence"] = idx + 1
@@ -225,7 +228,7 @@ class ResourceCalendar(models.Model):
         else:
             self.two_weeks_calendar = False
             self.attendance_ids.unlink()
-            self.attendance_ids = self.default_get('attendance_ids')['attendance_ids']
+            self.attendance_ids = self.default_get(['attendance_ids'])['attendance_ids']
 
     @api.onchange('attendance_ids')
     def _onchange_attendance_ids(self):
@@ -358,12 +361,12 @@ class ResourceCalendar(models.Model):
         result_per_resource_id = dict()
         for tz, resources in resources_per_tz.items():
             res = result_per_tz[tz]
-            res_intervals = Intervals(res)
+            res_intervals = WorkIntervals(res)
             for resource in resources:
                 if resource in per_resource_result:
                     resource_specific_result = [(max(bounds_per_tz[tz][0], tz.localize(val[0])), min(bounds_per_tz[tz][1], tz.localize(val[1])), val[2])
                         for val in per_resource_result[resource]]
-                    result_per_resource_id[resource.id] = Intervals(itertools.chain(res, resource_specific_result))
+                    result_per_resource_id[resource.id] = WorkIntervals(itertools.chain(res, resource_specific_result))
                 else:
                     result_per_resource_id[resource.id] = res_intervals
         return result_per_resource_id

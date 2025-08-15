@@ -1,124 +1,113 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_transfer
-#
+# 	* payment_custom
+# 
+# Translators:
+# Jumshud Sultanov <cumshud@gmail.com>, 2024
+# erpgo translator <jumshud@erpgo.az>, 2024
+# Nurlan Farajov <coolinuxoid@gmail.com>, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:22+0000\n"
-"Language-Team: Azerbaijani (https://www.transifex.com/odoo/teams/41243/az/)\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Nurlan Farajov <coolinuxoid@gmail.com>, 2025\n"
+"Language-Team: Azerbaijani (https://app.transifex.com/odoo/teams/41243/az/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: az\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:83
-#, python-format
-msgid "; multiple order found"
-msgstr ""
-
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:81
-#, python-format
-msgid "; no order found"
-msgstr ""
-
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:41
-#, python-format
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
 msgid ""
-"<div>\n"
-"<h3>Please use the following transfer details</h3>\n"
-"<h4>%(bank_title)s</h4>\n"
-"%(bank_accounts)s\n"
-"<h4>Communication</h4>\n"
-"<p>Please use the order name as communication reference.</p>\n"
-"</div>"
+"<small class=\"text-center text-wrap lh-sm\">Scan me in your banking "
+"app</small>"
 msgstr ""
 
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Adyen"
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
+msgid "<strong class=\"mt-auto\">Communication: </strong>"
 msgstr ""
 
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Authorize.Net"
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__code
+msgid "Code"
+msgstr "Kod"
+
+#. module: payment_custom
+#: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__code__custom
+msgid "Custom"
+msgstr "Xüsusi"
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__custom_mode
+msgid "Custom Mode"
 msgstr ""
 
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:39
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__qr_code
+msgid "Enable QR Codes"
+msgstr ""
+
+#. module: payment_custom
+#: model:ir.model.fields,help:payment_custom.field_payment_provider__qr_code
+msgid "Enable the use of QR-codes when paying by wire transfer."
+msgstr ""
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
+msgid "Finalize your payment"
+msgstr ""
+
+#. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_transaction.py:0
 #, python-format
-msgid "Bank Account"
+msgid "No transaction found matching reference %s."
 msgstr ""
 
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:39
-#, python-format
-msgid "Bank Accounts"
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
+msgid "OR"
+msgstr "və yaxud"
+
+#. module: payment_custom
+#: model:ir.model.constraint,message:payment_custom.constraint_payment_provider_custom_providers_setup
+msgid "Only custom providers should have a custom mode."
 msgstr ""
 
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Buckaroo"
-msgstr ""
+#. module: payment_custom
+#: model:ir.model,name:payment_custom.model_payment_provider
+msgid "Payment Provider"
+msgstr "Ödəniş Provayderi"
 
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Manual Configuration"
-msgstr ""
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Ogone"
-msgstr ""
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "PayUmoney"
-msgstr ""
-
-#. module: payment_transfer
-#: model:ir.model,name:payment_transfer.model_payment_acquirer
-msgid "Payment Acquirer"
-msgstr ""
-
-#. module: payment_transfer
-#: model:ir.model,name:payment_transfer.model_payment_transaction
+#. module: payment_custom
+#: model:ir.model,name:payment_custom.model_payment_transaction
 msgid "Payment Transaction"
+msgstr "Ödəniş əməliyyatı"
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.payment_provider_form
+msgid "Reload Pending Message"
 msgstr ""
 
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Paypal"
-msgstr ""
-
-#. module: payment_transfer
-#: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__provider
-msgid "Provider"
-msgstr ""
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Sips"
-msgstr ""
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Stripe"
-msgstr ""
-
-#. module: payment_transfer
-#: selection:payment.acquirer,provider:0
-msgid "Wire Transfer"
-msgstr ""
-
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:79
+#. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_transaction.py:0
 #, python-format
-msgid "received data for reference %s"
+msgid "The customer has selected %(provider_name)s to make the payment."
+msgstr ""
+
+#. module: payment_custom
+#: model:ir.model.fields,help:payment_custom.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr ""
+
+#. module: payment_custom
+#: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__custom_mode__wire_transfer
+msgid "Wire Transfer"
 msgstr ""

@@ -3,17 +3,17 @@
 # 	* website_event
 # 
 # Translators:
-# Sarah Park, 2024
-# Wil Odoo, 2024
 # Daye Jeong, 2024
+# Wil Odoo, 2024
+# Sarah Park, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-05-22 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
+"Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -565,6 +565,13 @@ msgid "End -"
 msgstr "종료 -"
 
 #. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/js/website_event.js:0
+#, python-format
+msgid "Error"
+msgstr "오류"
+
+#. module: website_event
 #: model:ir.model,name:website_event.model_event_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__event_id
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__event_id
@@ -1068,7 +1075,7 @@ msgstr "사진"
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_search
 #: model_terms:ir.ui.view,arch_db:website_event.event_pages_kanban_view
 msgid "Published"
-msgstr "게시 됨"
+msgstr "게시 완료"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question_answer__question_id
@@ -1354,6 +1361,13 @@ msgid "Suggested answer"
 msgstr "제안된 답변"
 
 #. module: website_event
+#. odoo-python
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "구글 reCaptcha에서 의심스러운 활동이 감지되었습니다."
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Template badge"
 msgstr "서식 배지"
@@ -1461,6 +1475,13 @@ msgstr "상단 표시줄 필터"
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_view_form
 msgid "Type"
 msgstr "유형"
+
+#. module: website_event
+#. odoo-python
+#: code:addons/website_event/models/website_visitor.py:0
+#, python-format
+msgid "Unsupported 'Not In' operation on visitors registrations"
+msgstr "방문자 등록 시 지원되지 않는 '접속 안 함' 작업"
 
 #. module: website_event
 #. odoo-python

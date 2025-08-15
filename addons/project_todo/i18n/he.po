@@ -7,13 +7,15 @@
 # david danilov, 2023
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2023
 # דודי מלכה <Dudimalka6@gmail.com>, 2023
-# hed shefer <hed@laylinetech.com>, 2023
+# Hed Shefer <hed@laylinetech.com>, 2023
 # שהאב חוסיין <shhab89@gmail.com>, 2023
 # Yihya Hugirat <hugirat@gmail.com>, 2023
 # ExcaliberX <excaliberx@gmail.com>, 2023
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
 # Martin Trigaux, 2023
 # yael terner, 2024
+# or balmas, 2025
+# Yoram Lavi, 2025
 # 
 msgid ""
 msgstr ""
@@ -21,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: yael terner, 2024\n"
+"Last-Translator: Yoram Lavi, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,6 +37,8 @@ msgid ""
 "&amp;#128075; <br/>\n"
 "    Welcome to the To-do app!"
 msgstr ""
+"&amp;#128075; <br/>\n"
+"   ברוך הבא לאפליקציית המשימות!"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -57,6 +61,10 @@ msgid ""
 "                    (/<span style=\"font-style: italic;\">separator</span>)\n"
 "                </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"                   הוסף מפריד\n"
+"                    (/<span style=\"font-style: italic;\"> מפריד</span>)\n"
+"                </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -67,6 +75,11 @@ msgid ""
 "                    to convert a text into a title\n"
 "                </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"                    השתמש\n"
+"                    /<span style=\"font-style: italic;\">   כותרת ראשית </span>\n"
+"                  להמיר טקסט לכותרת\n"
+"                </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -160,6 +173,8 @@ msgstr ""
 msgid ""
 "<span style=\"font-size: 14px;\">Check this box to indicate it's done</span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">סמן את התיבה הזו כדי לציין שהמשימה "
+"הושלמה.</span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -180,11 +195,14 @@ msgid ""
 "    <br/>\n"
 "    <span style=\"font-size: 14px;\">Ready to give it a spin?</span>"
 msgstr ""
+"<span style=\"font-size: 14px;\"> מטלה פרטית זו מיועדת להתנסות איתה.</span>\n"
+"    <br/>\n"
+"    <span style=\"font-size: 14px;\">מוכן לנסות?</span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
 msgid "<span style=\"font-size: 14px;\">Try the following</span>"
-msgstr ""
+msgstr "<span style=\"font-size: 14px;\">נסה את הבא"
 
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_type__category
@@ -216,12 +234,12 @@ msgstr "הוסף מטלה"
 #: code:addons/project_todo/static/src/web/activity/activity_menu_patch.js:0
 #, python-format
 msgid "Add a To-Do"
-msgstr ""
+msgstr "הוסף מטלה"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.mail_activity_todo_create_popup
 msgid "Add details about your to-do..."
-msgstr ""
+msgstr "הוסף פרטים למטלה..."
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_form
@@ -243,12 +261,12 @@ msgstr "מוקצה"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
 msgid "By assigned tags"
-msgstr ""
+msgstr "על ידי תווית שהקציאת "
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
 msgid "By personal stages"
-msgstr ""
+msgstr "על ידי שלבים שהגדרת "
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_conversion_form
@@ -282,7 +300,7 @@ msgstr ""
 #. module: project_todo
 #: model:ir.model,name:project_todo.model_mail_activity_todo_create
 msgid "Create activity and todo at the same time"
-msgstr ""
+msgstr "ניתן ליצור פעילות ומטלה באותו זמן "
 
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__create_uid
@@ -328,7 +346,7 @@ msgstr "קבץ לפי"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
 msgid "Hey"
-msgstr ""
+msgstr "שלום"
 
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__id
@@ -341,6 +359,8 @@ msgid ""
 "Keep your work organized by using memos and to-do lists.\n"
 "                Your to-do items are private by default, but you can choose to share them with others by adding them as assignees."
 msgstr ""
+"שמור על סדר בעבודה שלך באמצעות תזכירים ורשימות משימות.\n"
+"           ברירת המחדל היא שהמטלות שלך פרטיות, אך תוכל לשתף אותן עם אחרים על ידי הוספתם כנמענים."
 
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__write_uid
@@ -378,7 +398,7 @@ msgstr "הערה"
 #. module: project_todo
 #: model:res.groups,name:project_todo.group_onboarding_todo
 msgid "Onboarding todo already generated for those users"
-msgstr ""
+msgstr "משימות ההדרכה כבר נוצרו עבור משתמשים אלו"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -394,7 +414,7 @@ msgstr "תזכורת"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.mail_activity_todo_create_popup
 msgid "Reminder to..."
-msgstr ""
+msgstr "הזכר ל..."
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_conversion_form
@@ -463,38 +483,38 @@ msgstr "מטלות"
 #: code:addons/project_todo/static/src/components/todo_editable_breadcrumb_name/todo_editable_breadcrumb_name.js:0
 #, python-format
 msgid "Untitled to-do"
-msgstr ""
+msgstr "מטלה ללא כותרת"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
 msgid "Using the editor"
-msgstr ""
+msgstr "השתמש בעורך"
 
 #. module: project_todo
 #. odoo-python
 #: code:addons/project_todo/models/project_task.py:0
 #, python-format
 msgid "Welcome %s!"
-msgstr ""
+msgstr "ברוך הבא%s!"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
 msgid "Who has access to what?"
-msgstr ""
+msgstr "למי יש גישה ולמה?"
 
 #. module: project_todo
 #. odoo-python
 #: code:addons/project_todo/wizard/mail_activity_todo_create.py:0
 #, python-format
 msgid "Your to-do has been successfully added to your pipeline."
-msgstr ""
+msgstr "המטלה שלך נוספה בהצלחה לצבר"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_quick_create_form
 msgid "e.g. Send Invitations"
-msgstr ""
+msgstr "לדוגמה: משלוח הזמנות"
 
 #. module: project_todo
 #: model:ir.actions.server,name:project_todo.project_task_preload_action_todo
 msgid "menu load To-dos"
-msgstr ""
+msgstr "תפריט טעינת מטלות"

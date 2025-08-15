@@ -16,9 +16,9 @@
 # Eneli Õigus <enelioigus@gmail.com>, 2023
 # Katrin Kampura, 2023
 # Kärt Villako, 2024
-# Birgit Vijar, 2024
-# Anna, 2024
 # Andre Roomet <andreroomet@gmail.com>, 2024
+# Anna, 2024
+# Birgit Vijar, 2024
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Andre Roomet <andreroomet@gmail.com>, 2024\n"
+"Last-Translator: Birgit Vijar, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,6 +68,7 @@ msgstr "EDI tühistamine on taotletud."
 #, python-format
 msgid "A request for cancellation of the EDI has been called off."
 msgstr ""
+"Elektroonilise andmevahetuse (EDI) tühistamise taotlus on katkestatud."
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_move_send
@@ -80,6 +81,8 @@ msgid ""
 "Are you sure you want to cancel this invoice without waiting for the EDI "
 "document to be canceled?"
 msgstr ""
+"Kas olete kindel, et soovite selle arve tühistada ilma EDI dokumendi "
+"tühistamist ootamata?"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_attachment
@@ -100,11 +103,15 @@ msgid ""
 "  * Warning: there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
 "  * Error: there is an error that blocks the current Electronic Invoicing operation."
 msgstr ""
+"Blokeerib dokumendi praeguse toimingu sõltuvalt vea tõsidusest:\n"
+"  * Teave: dokument ei ole blokeeritud ja kõik töötab nagu peab..\n"
+"  * Hoiatus: esineb viga, mis ei takista praegust elektroonilise arveldamise toimingut õnnestumast.\n"
+"  * Viga: esineb viga, mis blokeerib praeguse elektroonilise arveldamise toimingu.."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Call off EDI Cancellation"
-msgstr ""
+msgstr "EDI tühistamise katkestamine"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__cancelled
@@ -120,6 +127,8 @@ msgid ""
 "Cannot deactivate (%s) on this journal because not all documents are "
 "synchronized"
 msgstr ""
+"Ei saa deaktiveerida (%s) sellel andmikul, sest kõik dokumendid ei ole "
+"sünkroniseeritud"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__code
@@ -167,12 +176,12 @@ msgstr "EDI kuju"
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_journal__compatible_edi_ids
 msgid "EDI format that support moves in this journal"
-msgstr ""
+msgstr "EDI formaat, mis toetab andmikku"
 
 #. module: account_edi
 #: model:ir.actions.server,name:account_edi.ir_cron_edi_network_ir_actions_server
 msgid "EDI: Perform web services operations"
-msgstr ""
+msgstr "EDI: Teosta veebiteenuste toimingud"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_blocking_level
@@ -198,7 +207,7 @@ msgstr "Edi dokument"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_count
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_error_count
 msgid "Edi Error Count"
-msgstr ""
+msgstr "Edi vigade arv"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_message
@@ -217,21 +226,21 @@ msgstr "Edi formaat"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_abandon_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_show_abandon_cancel_button
 msgid "Edi Show Abandon Cancel Button"
-msgstr ""
+msgstr "Edi kuva tühistamise nuppu"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_show_cancel_button
 msgid "Edi Show Cancel Button"
-msgstr ""
+msgstr "Edi kuva tühistamise nuppu"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_force_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_force_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_show_force_cancel_button
 msgid "Edi Show Force Cancel Button"
-msgstr ""
+msgstr "Edi kuva tühistamise nuppu"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_web_services_to_process
@@ -243,7 +252,7 @@ msgstr "Edi Veebiteenused töötlemiseks"
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_edi_document
 msgid "Electronic Document for an account.move"
-msgstr ""
+msgstr "Elektrooniline dokument account.move"
 
 #. module: account_edi
 #: model:ir.actions.act_window,name:account_edi.action_open_edi_documents
@@ -274,7 +283,7 @@ msgstr "Viga"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Force Cancel"
-msgstr ""
+msgstr "Sundtühistus"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_name
@@ -286,7 +295,7 @@ msgstr "Formaadi nimetus"
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_error_count
 #: model:ir.model.fields,help:account_edi.field_account_payment__edi_error_count
 msgid "How many EDIs are in error for this move?"
-msgstr ""
+msgstr "Kui mitmed EDI on vigased?"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__id
@@ -349,7 +358,7 @@ msgstr "Nimi"
 #. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_document_unique_edi_document_by_move_by_format
 msgid "Only one edi document by move by format"
-msgstr ""
+msgstr "Ainult üks EDI dokument kande kohta formaadi järgi"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -369,7 +378,7 @@ msgstr "Tegevusest teatamine"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Request EDI Cancellation"
-msgstr ""
+msgstr "Taotle EDI tühistamist"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -397,7 +406,7 @@ msgstr "Staatus"
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_state
 #: model:ir.model.fields,help:account_edi.field_account_payment__edi_state
 msgid "The aggregated state of all the EDIs with web-service of this move"
-msgstr ""
+msgstr "Kõikide EDI koondstaatus koos veebiteenusega"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__attachment_id
@@ -405,6 +414,8 @@ msgid ""
 "The file generated by edi_format_id when the invoice is posted (and this "
 "document is processed)."
 msgstr ""
+"Fail, mis loodi edi_format_id poolt kui arve kinnitati (ja see dokumend on "
+"töödeldud)."
 
 #. module: account_edi
 #. odoo-python
@@ -413,6 +424,8 @@ msgstr ""
 msgid ""
 "The following documents have already been sent and cannot be resequenced: %s"
 msgstr ""
+"Järgmised dokumendid on juba välja saadetud ja neid ei ole võimalik uuesti "
+"järjestada: %s"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -424,7 +437,7 @@ msgstr "Arve saadetakse peagi"
 msgid ""
 "The text of the last error that happened during Electronic Invoice "
 "operation."
-msgstr ""
+msgstr "Viimase elektroonilise arve toimingu käigus tekkinud vea teade."
 
 #. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_format_unique_code
@@ -436,7 +449,7 @@ msgstr "See kood juba eksisteerib"
 #: code:addons/account_edi/models/account_edi_document.py:0
 #, python-format
 msgid "This document is being sent by another process already. "
-msgstr ""
+msgstr "See dokument saadetakse teise protsessi käigus. "
 
 #. module: account_edi
 #. odoo-python
@@ -445,7 +458,7 @@ msgstr ""
 msgid ""
 "This invoice was canceled while the EDIs %s still had a pending cancellation"
 " request."
-msgstr ""
+msgstr "Arve tühistati kui EDI-l%s oli endiselt tühistamise taotlus ootel. "
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel
@@ -474,6 +487,9 @@ msgid ""
 " has already been sent. Please use the 'Request EDI Cancellation' button "
 "instead."
 msgstr ""
+"Andmiku kannet ei saa muuta, %s sest elektrooniline dokument on juba "
+"saadetud. Palun kasuta selle asemel 'Taotle EDI tühistamist' nuppu selle "
+"asemel."
 
 #. module: account_edi
 #. odoo-python
@@ -482,6 +498,8 @@ msgstr ""
 msgid ""
 "You can't unlink an attachment being an EDI document sent to the government."
 msgstr ""
+"EDI dokumendil, mis on saadetud avaliku sektori üksustele ei saa manust "
+"lahti ühendada."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit

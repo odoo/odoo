@@ -15,7 +15,7 @@
         ]"/>
     </record>
 
-    <!-- Invoice to CMR with vat 21, 27 and 10,5 -->
+    <!-- Invoice to Servicios Globales with vat 21, 27 and 10,5 -->
     <record id="demo_invoice_2" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
         <field name="partner_id" ref="res_partner_cmr"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
@@ -50,8 +50,8 @@
         <field name="move_type">out_invoice</field>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
         <field name="invoice_line_ids" eval="[
-            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.0, 'quantity': 5}),
-            (0, 0, {'product_id': ref('product_product_exento'), 'price_unit': 100.0, 'quantity': 1}),
+            (0, 0, {'product_id': ref('product.product_product_27'), 'price_unit': 642.1234, 'quantity': 5}),
+            (0, 0, {'product_id': ref('product_product_exento'), 'price_unit': 100.5678, 'quantity': 1}),
         ]"/>
     </record>
 
@@ -72,7 +72,7 @@
         ]"/>
     </record>
 
-    <!-- Invoice to cerro castor, fiscal position changes taxes to exempt -->
+    <!-- Invoice to Montana Sur fiscal position changes taxes to exempt -->
     <record id="demo_invoice_6" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
         <field name="partner_id" ref="res_partner_cerrocastor"/>
         <field name="journal_id" ref="l10n_ar.sale_expo_journal_ri"/>
@@ -91,7 +91,7 @@
         ]"/>
     </record>
 
-    <!-- Export invoice to expresso, fiscal position changes tax to exempt (type 4 because it have services) -->
+    <!-- Export invoice to Barcelona food, fiscal position changes tax to exempt (type 4 because it have services) -->
     <record id="demo_invoice_7" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
         <field name="partner_id" ref="res_partner_expresso"/>
         <field name="journal_id" ref="l10n_ar.sale_expo_journal_ri"/>
@@ -188,7 +188,7 @@
         ]"/>
     </record>
 
-    <!-- Export invoice to expresso, fiscal position changes tax to exempt (type 1 because only products) -->
+    <!-- Export invoice to Barcelona food, fiscal position changes tax to exempt (type 1 because only products) -->
     <record id="demo_invoice_14" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
         <field name="partner_id" ref="res_partner_expresso"/>
         <field name="journal_id" ref="l10n_ar.sale_expo_journal_ri"/>
@@ -202,7 +202,7 @@
         ]"/>
     </record>
 
-    <!-- Export invoice to expresso, fiscal position changes tax to exempt (type 2 because only service) -->
+    <!-- Export invoice to Barcelona food, fiscal position changes tax to exempt (type 2 because only service) -->
     <record id="demo_invoice_15" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
         <field name="partner_id" ref="res_partner_expresso"/>
         <field name="journal_id" ref="l10n_ar.sale_expo_journal_ri"/>
@@ -216,7 +216,7 @@
         ]"/>
     </record>
 
-    <!-- Export invoice to expresso, fiscal position changes tax to exempt (type 1 because it have products only, used to test refund of expo) -->
+    <!-- Export invoice to Barcelona food, fiscal position changes tax to exempt (type 1 because it have products only, used to test refund of expo) -->
     <record id="demo_invoice_16" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
         <field name="partner_id" ref="res_partner_expresso"/>
         <field name="journal_id" ref="l10n_ar.sale_expo_journal_ri"/>

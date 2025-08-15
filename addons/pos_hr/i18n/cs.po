@@ -6,6 +6,7 @@
 # Jakub Smolka, 2023
 # Wil Odoo, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +26,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Advanced rights"
-msgstr ""
+msgstr "Pokročilé oprávnění"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
@@ -36,7 +37,7 @@ msgstr "Všichni zaměstnanci"
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Basic rights"
-msgstr ""
+msgstr "Základní oprávnění"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
@@ -70,31 +71,33 @@ msgstr "Zaměstnanec"
 #: code:addons/pos_hr/models/hr_employee.py:0
 #, python-format
 msgid "Employee: %s - PoS Config(s): %s \n"
-msgstr ""
+msgstr "Zaměstnanec: %s - PoS Konfigurace: %s \n"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__basic_employee_ids
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_basic_employee_ids
 msgid "Employees with basic access"
-msgstr ""
+msgstr "Zaměstnanci s základním přístupem"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__advanced_employee_ids
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_advanced_employee_ids
 msgid "Employees with manager access"
-msgstr ""
+msgstr "Zaměstnanci s přístupem správce"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
 #: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
 msgid "If left empty, all employees can log in to PoS"
-msgstr ""
+msgstr "Pokud zůstane prázdné, mohou se do PoS přihlásit všichni zaměstnanci."
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__advanced_employee_ids
 #: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_advanced_employee_ids
 msgid "If left empty, only Odoo users have extended rights in PoS"
 msgstr ""
+"Pokud zůstane prázdné, rozšířená oprávnění v pokladním systému budou mít "
+"pouze uživatelé Odoo."
 
 #. module: pos_hr
 #. odoo-javascript
@@ -122,7 +125,7 @@ msgstr ""
 #: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 #, python-format
 msgid "No Cashiers"
-msgstr ""
+msgstr "Žádní pokladní "
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
@@ -134,7 +137,7 @@ msgstr ""
 #: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 #, python-format
 msgid "Password?"
-msgstr ""
+msgstr "Heslo?"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_order__employee_id
@@ -201,6 +204,8 @@ msgid ""
 "You cannot delete an employee that may be used in an active PoS session, "
 "close the session(s) first: \n"
 msgstr ""
+"Zaměstnance nelze smazat, protože může být používán v aktivní pokladní "
+"relaci. Nejprve uzavřete tuto relaci (relace): \n"
 
 #. module: pos_hr
 #. odoo-javascript

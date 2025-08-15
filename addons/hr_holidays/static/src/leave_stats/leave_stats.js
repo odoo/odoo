@@ -16,15 +16,15 @@ export class LeaveStatsComponent extends Component {
         this.state = useState({
             leaves: [],
             departmentLeaves: [],
+            department: this.props.record.data.department_id,
+            employee: this.props.record.data.employee_id,
         });
 
         this.date = this.props.record.data.date_from || DateTime.now();
-        this.department = this.props.record.data.department_id;
-        this.employee = this.props.record.data.employee_id;
 
         onWillStart(async () => {
-            await this.loadLeaves(this.date, this.employee);
-            await this.loadDepartmentLeaves(this.date, this.department, this.employee);
+            await this.loadLeaves(this.date, this.state.employee);
+            await this.loadDepartmentLeaves(this.date, this.state.department, this.state.employee);
         });
 
         useRecordObserver(async (record) => {
@@ -34,7 +34,7 @@ export class LeaveStatsComponent extends Component {
             const department = record.data.department_id;
 
             const proms = [];
-            if (dateChanged || (employee && (this.employee && this.employee[0]) !== employee[0])) {
+            if (dateChanged || (employee && (this.state.employee && this.state.employee[0]) !== employee[0])) {
                 proms.push(this.loadLeaves(dateFrom, employee));
             }
 
@@ -47,8 +47,8 @@ export class LeaveStatsComponent extends Component {
             await Promise.all(proms);
 
             this.date = dateFrom;
-            this.employee = employee;
-            this.department = department;
+            this.state.employee = employee;
+            this.state.department = department;
         });
     }
 

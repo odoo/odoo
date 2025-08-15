@@ -6,6 +6,7 @@ from collections import namedtuple
 
 from ast import literal_eval
 from collections import defaultdict
+from markupsafe import escape
 from psycopg2 import Error
 
 from odoo import _, api, fields, models, SUPERUSER_ID
@@ -114,7 +115,8 @@ class StockQuant(models.Model):
     inventory_quantity_set = fields.Boolean(store=True, compute='_compute_inventory_quantity_set', readonly=False, default=False)
     is_outdated = fields.Boolean('Quantity has been moved since last count', compute='_compute_is_outdated', search='_search_is_outdated')
     user_id = fields.Many2one(
-        'res.users', 'Assigned To', help="User assigned to do product count.")
+        'res.users', 'Assigned To', help="User assigned to do product count.",
+        domain=lambda self: [('groups_id', 'in', self.env.ref('stock.group_stock_user').id)])
 
     @api.depends('quantity', 'reserved_quantity')
     def _compute_available_quantity(self):
@@ -231,7 +233,7 @@ class StockQuant(models.Model):
                 continue
             quant.inventory_quantity = quant.inventory_quantity_auto_apply
             quant_to_inventory |= quant
-        quant_to_inventory.action_apply_inventory()
+        quant_to_inventory.with_context({'set_inventory_quantity_auto_apply': True}).action_apply_inventory()
 
     def _search_on_hand(self, operator, value):
         """Handle the "on_hand" filter, indirectly calling `_get_domain_locations`."""
@@ -247,6 +249,10 @@ class StockQuant(models.Model):
 
     def copy(self, default=None):
         raise UserError(_('You cannot duplicate stock quants.'))
+
+    @api.model
+    def name_create(self, name):
+        return False
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -409,7 +415,8 @@ class StockQuant(models.Model):
     def action_view_inventory(self):
         """ Similar to _get_quants_action except specific for inventory adjustments (i.e. inventory counts). """
         self = self._set_view_context()
-        self._quant_tasks()
+        if not self.env['ir.config_parameter'].sudo().get_param('stock.skip_quant_tasks'):
+            self._quant_tasks()
 
         ctx = dict(self.env.context or {})
         ctx['no_at_date'] = True
@@ -426,11 +433,12 @@ class StockQuant(models.Model):
             'help': """
                 <p class="o_view_nocontent_smiling_face">
                     {}
-                </p><p>
-                    {} <span class="fa fa-long-arrow-right"/> {}</p>
-                """.format(_('Your stock is currently empty'),
-                           _('Press the CREATE button to define quantity for each product in your stock or import them from a spreadsheet throughout Favorites'),
-                           _('Import')),
+                </p>
+                <p>
+                    {} <span class="fa fa-cog"/>
+                </p>
+                """.format(escape(_('Your stock is currently empty')),
+                           escape(_('Press the "New" button to define the quantity for a product in your stock or import quantities from a spreadsheet via the Actions menu'))),
         }
         return action
 
@@ -449,28 +457,29 @@ class StockQuant(models.Model):
         ctx = dict(self.env.context or {})
         ctx['default_quant_ids'] = self.ids
         quants_outdated = self.filtered(lambda quant: quant.is_outdated)
-        if quants_outdated:
-            ctx['default_quant_to_fix_ids'] = quants_outdated.ids
-            return {
-                'name': _('Conflict in Inventory Adjustment'),
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-                'views': [(False, 'form')],
-                'res_model': 'stock.inventory.conflict',
-                'target': 'new',
-                'context': ctx,
-            }
-        if products_tracked_without_lot:
-            ctx['default_product_ids'] = products_tracked_without_lot
-            return {
-                'name': _('Tracked Products in Inventory Adjustment'),
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-                'views': [(False, 'form')],
-                'res_model': 'stock.track.confirmation',
-                'target': 'new',
-                'context': ctx,
-            }
+        if not self.env.context.get('set_inventory_quantity_auto_apply'):
+            if quants_outdated:
+                ctx['default_quant_to_fix_ids'] = quants_outdated.ids
+                return {
+                    'name': _('Conflict in Inventory Adjustment'),
+                    'type': 'ir.actions.act_window',
+                    'view_mode': 'form',
+                    'views': [(False, 'form')],
+                    'res_model': 'stock.inventory.conflict',
+                    'target': 'new',
+                    'context': ctx,
+                }
+            if products_tracked_without_lot:
+                ctx['default_product_ids'] = products_tracked_without_lot
+                return {
+                    'name': _('Tracked Products in Inventory Adjustment'),
+                    'type': 'ir.actions.act_window',
+                    'view_mode': 'form',
+                    'views': [(False, 'form')],
+                    'res_model': 'stock.track.confirmation',
+                    'target': 'new',
+                    'context': ctx,
+                }
         self._apply_inventory()
         self.inventory_quantity_set = False
 
@@ -636,7 +645,7 @@ class StockQuant(models.Model):
     def check_lot_id(self):
         for quant in self:
             if quant.lot_id.product_id and quant.lot_id.product_id != quant.product_id:
-                raise ValidationError(_('The Lot/Serial number (%s) is linked to another product.', quant.location_id.name))
+                raise ValidationError(_('The Lot/Serial number (%s) is linked to another product.', quant.lot_id.name))
 
     @api.model
     def _get_removal_strategy(self, product_id, location_id):
@@ -1061,8 +1070,7 @@ class StockQuant(models.Model):
         date_by_location = {loc: loc._get_next_inventory_date() for loc in self.mapped('location_id')}
         for quant in self:
             quant.inventory_date = date_by_location[quant.location_id]
-        self.write({'inventory_quantity': 0, 'user_id': False})
-        self.write({'inventory_diff_quantity': 0})
+        self.action_clear_inventory_quantity()
 
     @api.model
     def _update_available_quantity(self, product_id, location_id, quantity=False, reserved_quantity=False, lot_id=None, package_id=None, owner_id=None, in_date=None):
@@ -1479,10 +1487,11 @@ class QuantPackage(models.Model):
         for package in self:
             package.location_id = False
             package.company_id = False
-            if package.quant_ids:
-                package.location_id = package.quant_ids[0].location_id
-                if all(q.company_id == package.quant_ids[0].company_id for q in package.quant_ids):
-                    package.company_id = package.quant_ids[0].company_id
+            quants = package.quant_ids.filtered(lambda q: float_compare(q.quantity, 0, precision_rounding=q.product_uom_id.rounding) > 0)
+            if quants:
+                package.location_id = quants[0].location_id
+                if all(q.company_id == quants[0].company_id for q in package.quant_ids):
+                    package.company_id = quants[0].company_id
 
     @api.depends('quant_ids.owner_id')
     def _compute_owner_id(self):

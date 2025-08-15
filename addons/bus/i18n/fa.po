@@ -3,22 +3,19 @@
 # 	* bus
 # 
 # Translators:
-# F Hariri <fhari1234@gmail.com>, 2023
-# Yousef Shadmanesh <y.shadmanesh@gmail.com>, 2023
 # Hanna Kheradroosta, 2023
 # Hamid Darabi, 2023
-# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2023
-# Hamed Mohammadi <hamed@dehongi.com>, 2023
 # Martin Trigaux, 2023
-# Mohammad Tahmasebi <hit.tah75@gmail.com>, 2023
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
+# Hamed Mohammadi <hamed@dehongi.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Mohammad Tahmasebi <hit.tah75@gmail.com>, 2023\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +26,7 @@ msgstr ""
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
 msgid "Away"
-msgstr "دور از کار"
+msgstr "دور"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__channel
@@ -39,7 +36,7 @@ msgstr "کانال"
 #. module: bus
 #: model:ir.model,name:bus.model_bus_bus
 msgid "Communication Bus"
-msgstr ""
+msgstr "ارتباطات Bus"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_partner
@@ -54,13 +51,18 @@ msgstr "ایجاد شده توسط"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
 msgid "Created on"
-msgstr "ایجادشده در"
+msgstr "ایجاد شده در"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
 #: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
 msgid "Display Name"
-msgstr "نام نمایش داده شده"
+msgstr "نام نمایشی"
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_http
+msgid "HTTP Routing"
+msgstr "مسیریابی HTTP"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__id
@@ -73,7 +75,7 @@ msgstr "شناسه"
 #: model:ir.model.fields,field_description:bus.field_res_partner__im_status
 #: model:ir.model.fields,field_description:bus.field_res_users__im_status
 msgid "IM Status"
-msgstr "وضعیت پیام رسانی"
+msgstr "وضعیت IM"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__last_poll
@@ -88,12 +90,12 @@ msgstr "آخرین حضور"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_uid
 msgid "Last Updated by"
-msgstr "آخرین بروز رسانی توسط"
+msgstr "آخرین به‌روزرسانی توسط"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_date
 msgid "Last Updated on"
-msgstr "آخرین بروز رسانی در"
+msgstr "آخرین به‌روزرسانی در"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__message
@@ -103,7 +105,7 @@ msgstr "پیام"
 #. module: bus
 #: model:ir.model,name:bus.model_ir_model
 msgid "Models"
-msgstr "مدل ها"
+msgstr "مدل‌ها"
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__offline
@@ -119,16 +121,33 @@ msgstr "آنلاین"
 #. odoo-javascript
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
 #, python-format
 msgid "Refresh"
-msgstr "تازه سازی"
+msgstr "به روزرسانی"
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/bus_service.js:0
+#, python-format
+msgid ""
+"Save your work and refresh to get the latest updates and avoid potential "
+"issues."
+msgstr ""
 
 #. module: bus
 #. odoo-javascript
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 #, python-format
 msgid "The page appears to be out of date."
-msgstr "صفحه به نظر می‌رسد قدیمی است."
+msgstr "به نظر می‌رسد این صفحه قدیمی شده است."
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/bus_service.js:0
+#, python-format
+msgid "The page is out of date"
+msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
@@ -154,11 +173,11 @@ msgid ""
 " users it is important to change it immediately for security reasons. I will"
 " keep nagging you about it!"
 msgstr ""
-"پسورد شما هنوز همان پسوورد دیفالت (admin) است! اگر این سیستم در دسترس افراد "
-"غیر معتمد است، آن را به سرعت تغییر دهید. من در این مورد دوباره هشدار خواهم "
-"داد."
+"رمز عبور شما پیش‌فرض است (admin)! اگر این سیستم در معرض کاربران غیرمعتبر "
+"قرار دارد، مهم است که به‌طور فوری آن را به دلایل امنیتی تغییر دهید. من مدام "
+"شما را در این مورد یادآوری خواهم کرد!"
 
 #. module: bus
 #: model:ir.model,name:bus.model_ir_websocket
 msgid "websocket message handling"
-msgstr ""
+msgstr "مدیریت پیام وب‌سوکت"

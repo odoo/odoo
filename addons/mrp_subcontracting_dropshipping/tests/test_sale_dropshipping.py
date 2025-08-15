@@ -290,3 +290,108 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
         sale_order.picking_ids[1].button_validate()
 
         self.assertEqual(sale_order.order_line.qty_delivered, 1.0)
+
+    def test_kit_dropshipped_change_qty_SO(self):
+        # Create BoM
+        product_a, product_b, final_product = self.env['product.product'].create([{
+            'name': p_name,
+            'type': 'product',
+            'seller_ids': [(0, 0, {
+                'partner_id': self.supplier.id,
+            })],
+        } for p_name in ['Comp 1', 'Comp 2', 'Final Product']])
+        product_a.route_ids = self.env.ref('stock_dropshipping.route_drop_shipping')
+        product_b.route_ids = self.env.ref('stock_dropshipping.route_drop_shipping')
+        self.env['mrp.bom'].create({
+            'product_id': final_product.id,
+            'product_tmpl_id': final_product.product_tmpl_id.id,
+            'product_qty': 1,
+            'consumption': 'flexible',
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_a.id, 'product_qty': 1}),
+                (0, 0, {'product_id': product_b.id, 'product_qty': 1}),
+            ]
+        })
+
+        # Create sale order
+        partner = self.env['res.partner'].create({'name': 'Testing Man'})
+        so = self.env['sale.order'].create({
+            'partner_id': partner.id,
+        })
+        sol = self.env['sale.order.line'].create({
+            'name': "Order line",
+            'product_id': final_product.id,
+            'order_id': so.id,
+            'product_uom_qty': 25,
+        })
+        so.action_confirm()
+
+        user_admin = self.env['res.users'].search([('login', '=', 'admin')])
+        sol.with_user(user_admin).write({'product_uom_qty': 10})
+        self.assertEqual(sol.purchase_line_ids.mapped('product_uom_qty'), [10, 10])
+
+    def test_dropship_standard_perpetual_anglosaxon_ordered_return_internal_aml(self):
+        """
+        test that, with sbc installed, the return to an internal location of a dropshipped move
+        (perpetual and anglosaxon) creates the correct account move (debitting stock valuation)
+        """
+        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
+        self.env.company.anglo_saxon_accounting = True
+
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'type': 'product',
+            'standard_price': 10,
+            'route_ids': [(6, 0, [self.dropship_route.id])],
+            'seller_ids': [(0, 0, {'partner_id': self.supplier.id})],
+        })
+        product.product_tmpl_id.categ_id.property_cost_method = 'standard'
+        product.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        product.product_tmpl_id.invoice_policy = 'order'
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'picking_policy': 'direct',
+            'order_line': [
+                (0, 0, {'name': product.name, 'product_id': product.id, 'product_uom_qty': 1}),
+            ],
+        })
+        sale_order.action_confirm()
+        self.env['purchase.order'].search([], order='id desc', limit=1).button_confirm()
+        self.assertEqual(sale_order.order_line.qty_delivered, 0.0)
+        picking = sale_order.picking_ids
+        picking.button_validate()
+
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=sale_order.picking_ids.ids, active_id=sale_order.picking_ids.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking_form.location_id = self.subcontractor_partner1.property_stock_subcontractor
+        stock_return_picking = stock_return_picking_form.save()
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick.move_ids[0].move_line_ids[0].quantity = 1.0
+        return_pick.move_ids[0].picked = True
+        return_pick._action_done()
+        self.assertEqual(return_pick.move_ids._is_dropshipped_returned(), True)
+
+        stock_valuation_account = product.categ_id.property_stock_valuation_account_id
+        stock_interim_delivered = product.categ_id.property_stock_account_output_categ_id
+        stock_interim_received = product.categ_id.property_stock_account_input_categ_id
+        original_move_in_svl_amls = picking.move_ids.stock_valuation_layer_ids.filtered(lambda svl: svl.value >= 0).account_move_id.line_ids.sorted('debit')
+        original_move_out_svl_amls = picking.move_ids.stock_valuation_layer_ids.filtered(lambda svl: svl.value < 0).account_move_id.line_ids.sorted('debit')
+        return_move_amls = return_pick.move_ids.stock_valuation_layer_ids.account_move_id.line_ids.sorted('debit')
+
+        self.assertRecordValues(original_move_in_svl_amls, [
+            {'credit': 10, 'debit': 0, 'account_id': stock_interim_received.id},
+            {'credit': 0, 'debit': 10, 'account_id': stock_valuation_account.id},
+        ])
+        self.assertRecordValues(original_move_out_svl_amls, [
+            {'credit': 10, 'debit': 0, 'account_id': stock_valuation_account.id},
+            {'credit': 0, 'debit': 10, 'account_id': stock_interim_delivered.id},
+        ])
+        # it's a return to an internal location so it should even out the amls of the outgoing svl of the original move
+        self.assertRecordValues(return_move_amls, [
+            {'credit': 10, 'debit': 0, 'account_id': stock_interim_delivered.id},
+            {'credit': 0, 'debit': 10, 'account_id': stock_valuation_account.id},
+        ])

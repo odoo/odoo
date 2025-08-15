@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Paweł Wodyński <pw@myodoo.pl>, 2023
-# Wil Odoo, 2023
+# Wil Odoo, 2024
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2024-11-18 09:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,13 +61,15 @@ msgstr "Zamknij"
 #, python-format
 msgid "Connection to %s failed The list of industry modules cannot be fetched"
 msgstr ""
+"Połączenie z %s nie powiodło się. Lista modułów przemysłu nie może zostać "
+"pobrana."
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Connection to %s failed, the module %s cannot be downloaded."
-msgstr ""
+msgstr "Połączenie z %s nie powiodło się, moduł %s nie może zostać pobrany."
 
 #. module: base_import_module
 #. odoo-python
@@ -86,13 +89,6 @@ msgid "Created on"
 msgstr "Data utworzenia"
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid ""
-"Demo data should only be used on test databases. Once they are loaded, they "
-"cannot be entirely removed!"
-msgstr ""
-
-#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
 msgid "Display Name"
 msgstr "Nazwa wyświetlana"
@@ -107,6 +103,10 @@ msgid ""
 " %(error_message)s \n"
 "\n"
 msgstr ""
+"Błąd podczas importu moduł '%(module)s'.\n"
+"\n"
+" %(error_message)s \n"
+"\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -147,14 +147,9 @@ msgid "Import Module"
 msgstr "Importuj moduł"
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Import demo data"
-msgstr ""
-
-#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
 msgid "Import demo data of module"
-msgstr ""
+msgstr "Importuj dane demo modułu"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__imported
@@ -176,12 +171,12 @@ msgstr "Instaluj"
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Install an Industry"
-msgstr ""
+msgstr "Zainstaluj moduł przemysłu"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Install the application"
-msgstr ""
+msgstr "Zainstaluj aplikację"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_uid
@@ -192,6 +187,22 @@ msgstr "Ostatnio aktualizowane przez"
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_date
 msgid "Last Updated on"
 msgstr "Data ostatniej aktualizacji"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Load demo data"
+msgstr "Wczytaj dane demonstracyjne"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"Load demo data to test the industry's features with sample records. Do not "
+"load them if this is your production database."
+msgstr ""
+"Załaduj dane demo, aby przetestować funkcje przemysłu z przykładowymi "
+"danymi. Nie ładuj ich, jeśli to jest Twoja produkcyjna baza danych."
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
@@ -206,7 +217,12 @@ msgstr "Plik .ZIP modułu"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__module_type
 msgid "Module Type"
-msgstr ""
+msgstr "Typ modułu"
+
+#. module: base_import_module
+#: model:ir.model,name:base_import_module.model_base_module_uninstall
+msgid "Module Uninstall"
+msgstr "Odinstalowanie modułu"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -216,7 +232,7 @@ msgstr "Plik modułu (.zip)"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__modules_dependencies
 msgid "Modules Dependencies"
-msgstr ""
+msgstr "Zależności modułu"
 
 #. module: base_import_module
 #. odoo-python
@@ -235,14 +251,14 @@ msgstr ""
 #. module: base_import_module
 #: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__official
 msgid "Official Apps"
-msgstr ""
+msgstr "Oficjalne aplikacje"
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Only administrators can install data modules."
-msgstr ""
+msgstr "Tylko administratorzy mogą instalować moduły danych."
 
 #. module: base_import_module
 #. odoo-python
@@ -267,22 +283,8 @@ msgstr "Status"
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
-msgid "Studio customizations require Studio"
-msgstr "Dostosowania w Studio wymagają Studio"
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
 msgid "Studio customizations require the Odoo Studio app."
 msgstr "Dostosowywanie przy użyciu Odoo Studio wymaga aplikacji Odoo Studio."
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
-msgid "The following modules will also be installed:\n"
-msgstr ""
 
 #. module: base_import_module
 #. odoo-python
@@ -306,6 +308,13 @@ msgstr ""
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "The module %s cannot be downloaded"
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Unknown module dependencies:"
 msgstr ""
 
 #. module: base_import_module

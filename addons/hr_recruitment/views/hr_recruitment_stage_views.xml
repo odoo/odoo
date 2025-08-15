@@ -64,7 +64,7 @@
                         <group>
                             <field name="name"/>
                             <field name="sequence" groups="base.group_no_one"/>
-                            <field name="template_id" domain= "[('model_id.model', '=', 'hr.applicant')]"/>
+                            <field name="template_id" domain= "[('model_id.model', '=', 'hr.applicant')]" options="{'no_quick_create': True}"/>
                         </group>
                         <group name="stage_details">
                             <field name="fold"/>

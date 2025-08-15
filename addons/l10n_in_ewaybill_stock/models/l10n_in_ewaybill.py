@@ -30,6 +30,7 @@ class Ewaybill(models.Model):
 
     state = fields.Selection(string='Status', selection=[
         ('pending', 'Pending'),
+        ('challan', 'Challan'),
         ('generated', 'Generated'),
         ('cancel', 'Cancelled'),
     ], required=True, readonly=True, copy=False, tracking=True, default='pending')
@@ -181,7 +182,7 @@ class Ewaybill(models.Model):
     def _compute_fiscal_position(self):
         for ewaybill in self.filtered(lambda ewb: ewb.state == 'pending'):
             ewaybill.fiscal_position_id = (
-                self.env['account.fiscal.position']._get_fiscal_position(
+                self.env['account.fiscal.position'].with_company(ewaybill.company_id)._get_fiscal_position(
                     ewaybill.picking_type_code == 'incoming'
                     and ewaybill.partner_bill_from_id
                     or ewaybill.partner_bill_to_id
@@ -205,7 +206,11 @@ class Ewaybill(models.Model):
     @api.depends('name', 'state')
     def _compute_display_name(self):
         for ewaybill in self:
-            ewaybill.display_name = ewaybill.state == 'pending' and _('Pending') or ewaybill.name
+            ewaybill.display_name = (
+                (ewaybill.state == 'pending' and _('Pending'))
+                or (ewaybill.state == 'challan' and _('Challan'))
+                or ewaybill.name
+            )
 
     @api.depends('mode')
     def _compute_vehicle_type(self):
@@ -240,13 +245,47 @@ class Ewaybill(models.Model):
         }
 
     def reset_to_pending(self):
-        if self.state != 'cancel':
-            raise UserError(_("Only Cancelled E-waybill can be resent."))
+        self.ensure_one()
+        if self.state not in ('cancel', 'challan'):
+            raise UserError(_("Only Delivery Challan and Cancelled E-waybill can be reset to pending."))
         self.write({
+            'name': False,
             'state': 'pending',
             'cancel_reason': False,
             'cancel_remarks': False,
         })
+
+    def action_set_to_challan(self):
+        self.ensure_one()
+        if self.state != 'pending':
+            raise UserError(_("The challan can only be generated in the Pending state."))
+        self.write({
+            'state': 'challan',
+        })
+
+    def action_print(self):
+        self.ensure_one()
+        if self.state in ['pending', 'cancel']:
+            raise UserError(_("Please generate the E-Waybill or mark the document as a Challan to print it."))
+
+        doc_label = _("Challan") if self.state == 'challan' else _("E-Waybill")
+        body = _("%s has been generated", doc_label)
+        filename = "%s - %s.pdf" % (doc_label, self.document_number)
+        pdf_content = self.env['ir.actions.report']._render_qweb_pdf(
+            'l10n_in_ewaybill_stock.action_report_ewaybill', res_ids=[self.id])[0]
+        attachment = self.env['ir.attachment'].create({
+            'name': filename,
+            'type': 'binary',
+            'datas': base64.b64encode(pdf_content),
+            'res_model': 'l10n.in.ewaybill',
+            'res_id': self.id,
+            'mimetype': 'application/pdf',
+        })
+        self.message_post(body=body, attachment_ids=[attachment.id])
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/web/content/{attachment.id}?download=true',
+        }
 
     def _is_overseas(self):
         self.ensure_one()
@@ -267,7 +306,7 @@ class Ewaybill(models.Model):
 
     def _check_transporter(self):
         error_message = []
-        if self.transporter_id and not self.transporter_id.vat:
+        if self.transporter_id and not self.transporter_id.vat and (self.mode != "1" or not self.vehicle_no):
             error_message.append(_("- Transporter %s does not have a GST Number", self.transporter_id.name))
         if self.mode == "4" and self.vehicle_no and self.vehicle_type == "R":
             error_message.append(_("- Vehicle type can not be regular when the transportation mode is ship"))
@@ -379,22 +418,23 @@ class Ewaybill(models.Model):
         cancel_json = {
             "ewbNo": int(self.name),
             "cancelRsnCode": int(self.cancel_reason),
-            "CnlRem": self.cancel_remarks,
+            "cancelRmrk": self.cancel_remarks,
         }
         ewb_api = EWayBillApi(self.company_id)
         self._lock_ewaybill()
         try:
-            ewb_api._ewaybill_cancel(cancel_json)
+            response = ewb_api._ewaybill_cancel(cancel_json)
         except EWayBillError as error:
             self._handle_error(error)
             return False
+        self._handle_internal_warning_if_present(response)  # In case of error 312
         self._write_successfully_response({'state': 'cancel'})
         self._cr.commit()
 
     def _l10n_in_ewaybill_stock_handle_zero_distance_alert_if_present(self, response):
         if self.distance == 0 and (alert := response.get('data').get('alert')):
-            pattern = r", Distance between these two pincodes is \d+, "
-            if re.fullmatch(pattern, alert) and (dist := int(re.search(r'\d+', alert).group())) > 0:
+            pattern = r"Distance between these two pincodes is (\d+)"
+            if (match := re.search(pattern, alert)) and (dist := int(match.group(1))) > 0:
                 self.distance = dist
 
     def _generate_ewaybill_direct(self):
@@ -489,31 +529,31 @@ class Ewaybill(models.Model):
             "hsnCode": AccountEDI._l10n_in_edi_extract_digits(product.l10n_in_hsn_code),
             "productDesc": product.name,
             "quantity": line.quantity,
-            "qtyUnit": product.uom_id.l10n_in_code and product.uom_id.l10n_in_code.split("-")[
+            "qtyUnit": line.product_uom.l10n_in_code and line.product_uom.l10n_in_code.split("-")[
                 0] or "OTH",
             "taxableAmount": AccountEDI._l10n_in_round_value(tax_details['total_excluded']),
         }
+        gst_types = ('sgst', 'cgst', 'igst')
+        gst_tax_rates = {}
         for tax in tax_details.get('taxes'):
-            gst_types = ['sgst', 'cgst', 'igst']
-            gst_tax_rates = {}
             for gst_type in gst_types:
                 if tax_rate := tax.get(f'{gst_type}_rate'):
                     gst_tax_rates.update({
                         f"{gst_type}Rate": AccountEDI._l10n_in_round_value(tax_rate)
                     })
-            line_details.update(
-                gst_tax_rates
-                or dict.fromkeys(
-                    [f"{gst_type}Rate" for gst_type in gst_types],
-                    0
-                )
-            )
             if cess_rate := tax.get("cess_rate"):
                 line_details.update({"cessRate": AccountEDI._l10n_in_round_value(cess_rate)})
             if cess_non_advol := tax.get("cess_non_advol_amount"):
                 line_details.update({
                     "cessNonadvol": AccountEDI._l10n_in_round_value(cess_non_advol)
                 })
+        line_details.update(
+            gst_tax_rates
+            or dict.fromkeys(
+                [f"{gst_type}Rate" for gst_type in gst_types],
+                0
+            )
+        )
         return line_details
 
     def _prepare_ewaybill_base_json_payload(self):
@@ -553,7 +593,7 @@ class Ewaybill(models.Model):
                 ),
                 "transDistance": str(self.distance),
                 "docNo": self.document_number,
-                "docDate": self.document_date.strftime("%d/%m/%Y"),
+                "docDate": (self.document_date or fields.Datetime.now()).strftime("%d/%m/%Y"),
                 # bill details
                 **prepare_details(
                     key_paired_function={

@@ -54,6 +54,32 @@
                                     </record>
                                 </field>
                             </record>
+                            <record id="mod_303_casilla_165" model="account.report.line">
+                                <field name="name">[165] Base taxable 2%</field>
+                                <field name="code">aeat_mod_303_165</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="mod_303_casilla_165_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">mod303[165]</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_303_casilla_167" model="account.report.line">
+                                <field name="name">[167] Contributions 2%</field>
+                                <field name="code">aeat_mod_303_167</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="mod_303_casilla_167_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">mod303[167]</field>
+                                    </record>
+                                </field>
+                            </record>
                             <record id="mod_303_casilla_01" model="account.report.line">
                                 <field name="name">[01] Base taxable 4%</field>
                                 <field name="code">aeat_mod_303_01</field>
@@ -175,18 +201,18 @@
                                             </record>
                                         </field>
                                     </record>
-                                </field>
-                            </record>
-                            <record id="mod_303_casilla_11" model="account.report.line">
-                                <field name="name">[11] Contributions</field>
-                                <field name="code">aeat_mod_303_11</field>
-                                <field name="groupby">account_id</field>
-                                <field name="foldable" eval="True"/>
-                                <field name="expression_ids">
-                                    <record id="mod_303_casilla_11_balance" model="account.report.expression">
-                                        <field name="label">balance</field>
-                                        <field name="engine">tax_tags</field>
-                                        <field name="formula">mod303[11]</field>
+                                    <record id="mod_303_casilla_11" model="account.report.line">
+                                        <field name="name">[11] Contributions</field>
+                                        <field name="code">aeat_mod_303_11</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="mod_303_casilla_11_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod303[11]</field>
+                                            </record>
+                                        </field>
                                     </record>
                                 </field>
                             </record>
@@ -291,8 +317,34 @@
                                             </record>
                                         </field>
                                     </record>
+                                    <record id="mod_303_casilla_168" model="account.report.line">
+                                        <field name="name">[168] Base taxable 0.26%</field>
+                                        <field name="code">aeat_mod_303_168</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="mod_303_casilla_168_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod303[168]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_303_casilla_170" model="account.report.line">
+                                        <field name="name">[170] Contribution 0.26%</field>
+                                        <field name="code">aeat_mod_303_170</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="mod_303_casilla_170_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod303[170]</field>
+                                            </record>
+                                        </field>
+                                    </record>
                                     <record id="mod_303_casilla_16" model="account.report.line">
-                                        <field name="name">[16] Base taxable 0%, 0.5%, 0.62%</field>
+                                        <field name="name">[16] Base taxable 1%</field>
                                         <field name="code">aeat_mod_303_16</field>
                                         <field name="groupby">account_id</field>
                                         <field name="foldable" eval="True"/>
@@ -305,7 +357,7 @@
                                         </field>
                                     </record>
                                     <record id="mod_303_casilla_18" model="account.report.line">
-                                        <field name="name">[18] Contribution 0%, 0.5%, 0.62%</field>
+                                        <field name="name">[18] Contribution 1%</field>
                                         <field name="code">aeat_mod_303_18</field>
                                         <field name="groupby">account_id</field>
                                         <field name="foldable" eval="True"/>
@@ -357,7 +409,7 @@
                                         </field>
                                     </record>
                                     <record id="mod_303_casilla_24" model="account.report.line">
-                                        <field name="name">[24] Contributinos 5.2%</field>
+                                        <field name="name">[24] Contributions 5.2%</field>
                                         <field name="code">aeat_mod_303_24</field>
                                         <field name="groupby">account_id</field>
                                         <field name="foldable" eval="True"/>
@@ -406,7 +458,7 @@
                             <record id="mod_303_casilla_27" model="account.report.line">
                                 <field name="name">[27] Total accrual contributions</field>
                                 <field name="code">aeat_mod_303_27</field>
-                                <field name="aggregation_formula">aeat_mod_303_152.balance + aeat_mod_303_03.balance + aeat_mod_303_155.balance + aeat_mod_303_06.balance + aeat_mod_303_09.balance + aeat_mod_303_11.balance + aeat_mod_303_13.balance + aeat_mod_303_15.balance + aeat_mod_303_158.balance + aeat_mod_303_18.balance + aeat_mod_303_21.balance + aeat_mod_303_24.balance + aeat_mod_303_26.balance</field>
+                                <field name="aggregation_formula">aeat_mod_303_152.balance + aeat_mod_303_167.balance + aeat_mod_303_03.balance + aeat_mod_303_155.balance + aeat_mod_303_06.balance + aeat_mod_303_09.balance + aeat_mod_303_11.balance + aeat_mod_303_13.balance + aeat_mod_303_15.balance + aeat_mod_303_158.balance + aeat_mod_303_170.balance + aeat_mod_303_18.balance + aeat_mod_303_21.balance + aeat_mod_303_24.balance + aeat_mod_303_26.balance</field>
                             </record>
                         </field>
                     </record>
@@ -851,10 +903,22 @@
                             </record>
                         </field>
                     </record>
+                    <record id="mod_303_casilla_108" model="account.report.line">
+                        <field name="name">[108] Exclusively for certain cases of corrective self-assessment due to a discrepancy in administrative criteria that should not be included in other boxes. Other adjustments</field>
+                        <field name="code">aeat_mod_303_108</field>
+                        <field name="expression_ids">
+                            <record id="mod_303_casilla_108_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
                     <record id="mod_303_casilla_69" model="account.report.line">
                         <field name="name">[69] Result of self-liquidation</field>
                         <field name="code">aeat_mod_303_69</field>
-                        <field name="aggregation_formula">aeat_mod_303_66.balance + aeat_mod_303_77.balance - aeat_mod_303_78.balance + aeat_mod_303_68.balance</field>
+                        <field name="aggregation_formula">aeat_mod_303_66.balance + aeat_mod_303_77.balance - aeat_mod_303_78.balance + aeat_mod_303_68.balance + aeat_mod_303_108.balance</field>
                     </record>
                     <record id="mod_303_casilla_70" model="account.report.line">
                         <field name="name">[70] Results to be paid from previous self-assessments or administrative liquidations corresponding to the year and period of self-assessment</field>
@@ -958,6 +1022,25 @@
                         <field name="code">aeat_mod_303_110</field>
                         <field name="expression_ids">
                             <record id="mod_303_casilla_110_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="mod_303_title_20" model="account.report.line">
+                <field name="name">Rectification</field>
+                <field name="code">aeat_mod_303_title_20</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="mod_303_casilla_111" model="account.report.line">
+                        <field name="name">[111] Rectification - Amount</field>
+                        <field name="code">aeat_mod_303_111</field>
+                        <field name="expression_ids">
+                            <record id="mod_303_casilla_111_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>

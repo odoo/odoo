@@ -69,9 +69,15 @@ class ReportSaleDetails(models.AbstractModel):
 
         total = 0.0
         products_sold = {}
-        taxes = {}
+        taxes = {
+            'base_amount': 0.0,
+            'taxes': {},
+        }
         refund_done = {}
-        refund_taxes = {}
+        refund_taxes = {
+            'base_amount': 0.0,
+            'taxes': {},
+        }
         for order in orders:
             if user_currency != order.pricelist_id.currency_id:
                 total += order.pricelist_id.currency_id._convert(
@@ -88,6 +94,8 @@ class ReportSaleDetails(models.AbstractModel):
 
         taxes_info = self._get_taxes_info(taxes)
         refund_taxes_info = self._get_taxes_info(refund_taxes)
+        taxes = taxes['taxes']
+        refund_taxes = refund_taxes['taxes']
 
         payment_ids = self.env["pos.payment"].search([('pos_order_id', 'in', orders.ids)]).ids
         if payment_ids:
@@ -330,9 +338,10 @@ class ReportSaleDetails(models.AbstractModel):
     def _get_products_and_taxes_dict(self, line, products, taxes, currency):
         key2 = (line.product_id, line.price_unit, line.discount)
         key1 = line.product_id.product_tmpl_id.pos_categ_ids[0].name if len(line.product_id.product_tmpl_id.pos_categ_ids) else _('Not Categorized')
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         products.setdefault(key1, {})
         products[key1].setdefault(key2, [0.0, 0.0, 0.0])
-        products[key1][key2][0] += line.qty
+        products[key1][key2][0] = round(products[key1][key2][0] + line.qty, precision)
         products[key1][key2][1] += self._get_product_total_amount(line)
         products[key1][key2][2] += line.price_subtotal
 
@@ -340,16 +349,17 @@ class ReportSaleDetails(models.AbstractModel):
             line_taxes = line.tax_ids_after_fiscal_position.sudo().compute_all(line.price_unit * (1-(line.discount or 0.0)/100.0), currency, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
             base_amounts = {}
             for tax in line_taxes['taxes']:
-                taxes.setdefault(tax['id'], {'name': tax['name'], 'tax_amount':0.0, 'base_amount':0.0})
-                taxes[tax['id']]['tax_amount'] += tax['amount']
+                taxes['taxes'].setdefault(tax['id'], {'name': tax['name'], 'tax_amount': 0.0, 'base_amount': 0.0})
+                taxes['taxes'][tax['id']]['tax_amount'] += tax['amount']
                 base_amounts[tax['id']] = tax['base']
 
             for tax_id, base_amount in base_amounts.items():
-                taxes[tax_id]['base_amount'] += base_amount
+                taxes['taxes'][tax_id]['base_amount'] += base_amount
         else:
-            taxes.setdefault(0, {'name': _('No Taxes'), 'tax_amount':0.0, 'base_amount':0.0})
-            taxes[0]['base_amount'] += line.price_subtotal_incl
+            taxes['taxes'].setdefault(0, {'name': _('No Taxes'), 'tax_amount': 0.0, 'base_amount': 0.0})
+            taxes['taxes'][0]['base_amount'] += line.price_subtotal_incl
 
+        taxes['base_amount'] += line.price_subtotal
         return products, taxes
 
     def _get_total_and_qty_per_category(self, categories):
@@ -387,8 +397,7 @@ class ReportSaleDetails(models.AbstractModel):
 
     def _get_taxes_info(self, taxes):
         total_tax_amount = 0
-        total_base_amount = 0
-        for tax in taxes.values():
+        total_base_amount = taxes['base_amount']
+        for tax in taxes['taxes'].values():
             total_tax_amount += tax['tax_amount']
-            total_base_amount += tax['base_amount']
         return {'tax_amount': total_tax_amount, 'base_amount': total_base_amount}

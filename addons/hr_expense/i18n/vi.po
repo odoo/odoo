@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_expense
-# 
+#
 # Translators:
-# Wil Odoo, 2024
-# Thi Huong Nguyen, 2024
-# 
+# Wil Odoo, 2025
+# Thi Huong Nguyen, 2025
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-08-07 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_expense
@@ -51,8 +51,7 @@ msgstr "%(date_from)s - %(date_to)s"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
-msgid ""
-"%(user)s confirms this expense is not a duplicate with similar expense."
+msgid "%(user)s confirms this expense is not a duplicate with similar expense."
 msgstr ""
 "%(user)s xác nhận chi phí này không phải bản trùng lặp của chi phí tương tự."
 
@@ -75,7 +74,7 @@ msgstr "%s: Đây là chi phí của chính bạn"
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 #, python-format
 msgid "%s: Your are not a Manager or HR Officer"
-msgstr "%s: Bạn không phải là Quản lý hay Nhân viên nhân sự"
+msgstr "%s: Bạn không phải là Quản lý hay Chuyên viên nhân sự"
 
 #. module: hr_expense
 #: model:ir.actions.report,print_report_name:hr_expense.action_report_hr_expense_sheet
@@ -102,11 +101,13 @@ msgstr "2023-08-11"
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
 "<span class=\"d-inline-block\">\n"
-"                                        <i class=\"text-muted\">Use this reference as a subject prefix when submitting by email.</i>\n"
+"                                        <i class=\"text-muted\">Use this "
+"reference as a subject prefix when submitting by email.</i>\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"d-inline-block\">\n"
-"                                        <i class=\"text-muted\">Sử dụng mã tham chiếu này làm phần mở đầu tiêu đề khi gửi qua email.</i>\n"
+"                                        <i class=\"text-muted\">Sử dụng mã "
+"tham chiếu này làm phần mở đầu tiêu đề khi gửi qua email.</i>\n"
 "                                    </span>"
 
 #. module: hr_expense
@@ -166,7 +167,7 @@ msgstr "Ngày hạch toán"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_needaction
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_ids
@@ -216,7 +217,7 @@ msgstr "Tất cả người phê duyệt"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_all
 msgid "All Expense Reports"
-msgstr "Tất cả Kê khai chi tiêu"
+msgstr "Tất cả Kê khai chi phí"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all
@@ -227,7 +228,8 @@ msgstr "Tất cả báo cáo"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 #, python-format
-msgid "All expenses in an expense report must have the same \"paid by\" criteria."
+msgid ""
+"All expenses in an expense report must have the same \"paid by\" criteria."
 msgstr ""
 "Mọi khoản chi phí trong báo cáo chi phí phải có cùng tiêu chí \"thanh toán "
 "bởi\"."
@@ -425,7 +427,7 @@ msgstr "Có thể Reset"
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__can_be_expensed
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_template_search_view_inherit_hr_expense
 msgid "Can be Expensed"
-msgstr "Có thể là Chi tiêu/Chi phí"
+msgstr "Có thể là Chi phí/Chi phí"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -523,7 +525,7 @@ msgstr "Tạo báo cáo"
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
 msgid "Create a new expense report"
-msgstr "Tạo báo cáo chi tiêu/chi phí mới"
+msgstr "Tạo báo cáo chi phí/chi phí mới"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -594,7 +596,7 @@ msgstr "Thân gửi"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_prefix
 msgid "Default Alias Name for Expenses"
-msgstr "Tên Bí danh Mặc định cho Chi tiêu"
+msgstr "Tên Bí danh Mặc định cho Chi phí"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -658,15 +660,21 @@ msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Tài khoản phân tích phân phối"
+
+#. module: hr_expense
 #: model_terms:digest.tip,tip_description:hr_expense.digest_tip_hr_expense_0
 msgid ""
 "Do not keep your expense tickets in your pockets any longer. Just snap a "
 "picture of your receipt and let Odoo digitalizes it for you. The OCR and "
 "Artificial Intelligence will fill the data automatically."
 msgstr ""
-"Đừng giữ vé chi tiêu trong túi của bạn nữa. Chỉ cần chụp ảnh biên nhận của "
-"bạn và để Odoo số hóa nó cho bạn. OCR và Trí tuệ nhân tạo sẽ tự động điền dữ"
-" liệu."
+"Đừng giữ vé chi phí trong túi của bạn nữa. Chỉ cần chụp ảnh biên nhận của "
+"bạn và để Odoo số hóa nó cho bạn. OCR và Trí tuệ nhân tạo sẽ tự động điền dữ "
+"liệu."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_move_form_inherit_expense
@@ -676,8 +684,7 @@ msgid ""
 "again."
 msgstr ""
 "Bạn có thực sự muốn lập hóa đơn cho chính công ty của mình không? Hãy xóa "
-"\"Tên công ty\" khỏi đối tác để sửa cấu hình. Hủy hóa đơn này và bắt đầu "
-"lại."
+"\"Tên công ty\" khỏi đối tác để sửa cấu hình. Hủy hóa đơn này và bắt đầu lại."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__business_domain
@@ -744,8 +751,7 @@ msgstr "Chi phí nhân viên"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid ""
-"Enable users to choose default category for automatically generated "
-"expenses."
+"Enable users to choose default category for automatically generated expenses."
 msgstr ""
 "Cho phép người dùng chọn danh mục mặc định cho các chi phí được tạo tự động."
 
@@ -754,8 +760,7 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid ""
-"Enter a name then choose a category and configure the amount of your "
-"expense."
+"Enter a name then choose a category and configure the amount of your expense."
 msgstr ""
 "Nhập tên, sau đó chọn danh mục và định cấu hình số tiền chi phí của bạn."
 
@@ -811,12 +816,12 @@ msgstr "Số hóa chi phí (OCR)"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__journal_id
 msgid "Expense Journal"
-msgstr "Sổ nhật ký Chi tiêu"
+msgstr "Sổ nhật ký Chi phí"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__expense_line_ids
 msgid "Expense Lines"
-msgstr "Các dòng Chi tiêu"
+msgstr "Các dòng Chi phí"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__is_editable
@@ -849,7 +854,7 @@ msgstr "Hình ảnh báo cáo chi phí"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__name
 msgid "Expense Report Summary"
-msgstr "Tổng hợp Kê khai chi tiêu"
+msgstr "Tổng hợp Kê khai chi phí"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_report
@@ -857,17 +862,17 @@ msgstr "Tổng hợp Kê khai chi tiêu"
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Expense Reports"
-msgstr "Kê khai chi tiêu"
+msgstr "Kê khai chi phí"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_filtered
 msgid "Expense Reports Analysis"
-msgstr "Phân tích Kê khai chi tiêu"
+msgstr "Phân tích Kê khai chi phí"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_to_approve
 msgid "Expense Reports to Approve"
-msgstr "Kê khai chi tiêu chờ Duyệt"
+msgstr "Kê khai chi phí chờ Duyệt"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__expense_sheet_id
@@ -917,17 +922,17 @@ msgstr "Lý do từ chối khoản chi"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense report approved"
-msgstr "Kê khai chi tiêu được duyệt"
+msgstr "Kê khai chi phí được duyệt"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
 msgid "Expense report paid"
-msgstr "Kê khai chi tiêu được thanh toán"
+msgstr "Kê khai chi phí được thanh toán"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense report refused"
-msgstr "Kê khai chi tiêu bị từ chối"
+msgstr "Kê khai chi phí bị từ chối"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_reset
@@ -971,18 +976,18 @@ msgstr "Chi phí"
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_graph
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_pivot
 msgid "Expenses Analysis"
-msgstr "Phân tích Chi tiêu"
+msgstr "Phân tích Chi phí"
 
 #. module: hr_expense
 #: model:ir.actions.report,name:hr_expense.action_report_hr_expense_sheet
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Expenses Report"
-msgstr "Kê khai chi tiêu"
+msgstr "Kê khai chi phí"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__expense_sheets_to_approve_count
 msgid "Expenses Reports to Approve"
-msgstr "Kê khai chi tiêu chờ Duyệt"
+msgstr "Kê khai chi phí chờ Duyệt"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1003,7 +1008,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Expenses of Your Team Member"
-msgstr "Chi tiêu của Thành viên của đội"
+msgstr "Chi phí của Thành viên của đội"
 
 #. module: hr_expense
 #. odoo-python
@@ -1118,6 +1123,11 @@ msgid "Hotel, plane ticket, taxi, etc."
 msgstr "Khách sạn, vé máy bay, taxi, v.v."
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
+msgid "Hr Expense Alias Domain"
+msgstr "Miền bí danh chi phí HR"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__id
@@ -1209,7 +1219,6 @@ msgstr "Sản phẩm có chi phí khác 0 được chọn"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "It all begins here - let's go!"
 msgstr "Tất cả bắt đầu từ đây - đi nào!"
@@ -1288,7 +1297,7 @@ msgstr "Hoạt động chậm trễ"
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_use_mailgateway
 msgid "Let your employees record expenses by email"
 msgstr ""
-"Cho phép nhân viên của bạn ghi nhận các khoản chi phí/chi tiêu qua email"
+"Cho phép nhân viên của bạn ghi nhận các khoản chi phí/chi phí qua email"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1330,12 +1339,11 @@ msgid ""
 "Managers can approve the report here, then an accountant can post the "
 "accounting entries."
 msgstr ""
-"Người quản lý có thể phê duyệt báo cáo ở đây, sau đó kế toán viên có thể vào"
-" sổ các bút toán."
+"Người quản lý có thể phê duyệt báo cáo ở đây, sau đó kế toán viên có thể vào "
+"sổ các bút toán."
 
 #. module: hr_expense
 #. odoo-javascript
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Managers can inspect all expenses from here."
@@ -1377,7 +1385,7 @@ msgstr "Mitchell Admin"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__my_activity_date_deadline
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Hạn chót hoạt động của tôi"
+msgstr "Thời hạn hoạt động của tôi"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_all
@@ -1385,7 +1393,7 @@ msgstr "Hạn chót hoạt động của tôi"
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses_all
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "My Expenses"
-msgstr "Chi tiêu của tôi"
+msgstr "Chi phí của tôi"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_all
@@ -1429,7 +1437,7 @@ msgstr "Sự kiện trên lịch cho hoạt động tiếp theo"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Hạn chót cho hoạt động tiếp theo"
+msgstr "Thời hạn cho hoạt động tiếp theo"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_summary
@@ -1494,7 +1502,7 @@ msgstr "Ghi chú..."
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_needaction_counter
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__nb_attachment
@@ -1549,7 +1557,7 @@ msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
 msgstr ""
-"Một khi bạn đã Kê khai chi tiêu, hãy trình nó cho người quản lý của bạn để "
+"Một khi bạn đã Kê khai chi phí, hãy trình nó cho người quản lý của bạn để "
 "được phê duyệt."
 
 #. module: hr_expense
@@ -1569,7 +1577,7 @@ msgstr ""
 #, python-format
 msgid "Only HR Officers or the concerned employee can reset to draft."
 msgstr ""
-"Chỉ nhân viên nhân sự hoặc nhân viên có liên quan mới có thể thiết lập về "
+"Chỉ chuyên viên nhân sự hoặc nhân viên có liên quan mới có thể đặt lại thành "
 "bản nháp."
 
 #. module: hr_expense
@@ -1632,8 +1640,8 @@ msgstr "Thanh toán được tạo cho: %s"
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Payment method allowed for expenses paid by company."
 msgstr ""
-"Phương thức thanh toán được phép dành cho các khoản chi phí mà công ty thanh"
-" toán."
+"Phương thức thanh toán được phép dành cho các khoản chi phí mà công ty thanh "
+"toán."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1657,6 +1665,14 @@ msgstr "Thanh toán"
 #: model_terms:product.template,description:hr_expense.expense_product_communication_product_template
 msgid "Phone bills, postage, etc."
 msgstr "Hóa đơn điện thoại, bưu phí, v.v."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid ""
+"Please specify an expense journal in order to generate accounting entries."
+msgstr "Vui lòng chỉ định một sổ nhật ký chi phí để tạo các bút toán kế toán."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1784,7 +1800,7 @@ msgstr "Bị từ chối"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Refused Expenses"
-msgstr "Chi tiêu bị Từ chối"
+msgstr "Chi phí bị Từ chối"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1813,7 +1829,7 @@ msgstr "Hoàn trả trong phiếu lương"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_ir_actions_report
 msgid "Report Action"
-msgstr "Hành động báo cáo"
+msgstr "Tác vụ báo cáo"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__company_currency_id
@@ -1873,10 +1889,12 @@ msgstr "Quét mã QR này để tải ứng dụng Odoo:"
 #: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
+"If empty, the approval is done by an Administrator or Approver (determined "
+"in settings/users)."
 msgstr ""
 "Chọn người dùng chịu trách nhiệm phê duyệt \"Chi phí\" của nhân viên này.\n"
-"Nếu trống, phê duyệt được thực hiện bởi Quản trị viên hoặc Người phê duyệt (được xác định trong cài đặt/người dùng)."
+"Nếu trống, phê duyệt được thực hiện bởi Quản trị viên hoặc Người phê duyệt "
+"(được xác định trong cài đặt/người dùng)."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__selectable_payment_method_line_ids
@@ -1893,10 +1911,10 @@ msgid ""
 "subject to set it on the expense too."
 msgstr ""
 "Gửi email tới bí danh email này cùng với hóa đơn trong tệp đính kèm để tạo "
-"chi phí chỉ bằng một lần bấm. Nếu từ đầu tiên trong tiêu đề thư có chứa tham"
-" chiếu nội bộ của danh mục hoặc tên danh mục, danh mục tương ứng sẽ tự động "
-"được đặt. Gõ khoản tiền chi phí trong tiêu đề thư để nhập thông tin đó trong"
-" chi phí."
+"chi phí chỉ bằng một lần bấm. Nếu từ đầu tiên trong tiêu đề thư có chứa tham "
+"chiếu nội bộ của danh mục hoặc tên danh mục, danh mục tương ứng sẽ tự động "
+"được đặt. Gõ khoản tiền chi phí trong tiêu đề thư để nhập thông tin đó trong "
+"chi phí."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
@@ -1925,14 +1943,13 @@ msgstr "Tờ"
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__show_commercial_partner_warning
 #: model:ir.model.fields,field_description:hr_expense.field_account_payment__show_commercial_partner_warning
 msgid "Show Commercial Partner Warning"
-msgstr ""
+msgstr "Hiện cảnh báo đối tác thương mại"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Show all records which has next action date is before today"
-msgstr ""
-"Hiển thị tất cả tập dữ liệu có ngày xử lý tiếp theo trước ngày hôm nay"
+msgstr "Hiển thị tất cả bản ghi có ngày xử lý tiếp theo trước ngày hôm nay"
 
 #. module: hr_expense
 #. odoo-python
@@ -1947,13 +1964,6 @@ msgid ""
 "Snap pictures of your receipts and let Odoo<br> automatically create "
 "expenses for you."
 msgstr "Chụp ảnh biên lai của bạn và để Odoo<br> tự động tạo chi phí cho bạn."
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Specify expense journal to generate accounting entries."
-msgstr "Chỉ định sổ nhật ký chi phí để tạo các bút toán."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
@@ -2088,15 +2098,23 @@ msgstr "Thuế"
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_team_approver
 msgid "Team Approver"
-msgstr "Người phê duyệt nhóm"
+msgstr "Người phê duyệt của bộ phận"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
-msgid ""
-"The company's default journal used when an employee expense is created."
+msgid "The company's default journal used when an employee expense is created."
 msgstr ""
 "Nhật ký mặc định của công ty được sử dụng khi chi phí nhân viên được tạo."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"The current user has no related employee, or the related employee does not "
+"belong to this company."
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -2109,8 +2127,8 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid ""
-"The first word of the email subject did not correspond to any category code."
-" You'll have to set the category manually on the expense."
+"The first word of the email subject did not correspond to any category code. "
+"You'll have to set the category manually on the expense."
 msgstr ""
 "Từ đầu tiên trong tiêu đề email không tương ứng với bất kỳ mã danh mục nào. "
 "Bạn sẽ phải đặt danh mục thủ công trong chi phí."
@@ -2163,8 +2181,8 @@ msgid ""
 "The work email of some employees is missing. Please add it on the employee "
 "form"
 msgstr ""
-"Email công việc của một số nhân viên bị thiếu. Vui lòng thêm email vào hồ sơ"
-" nhân viên."
+"Email công việc của một số nhân viên bị thiếu. Vui lòng thêm email vào hồ sơ "
+"nhân viên."
 
 #. module: hr_expense
 #. odoo-python
@@ -2175,9 +2193,9 @@ msgid ""
 "category cost will change expense amounts. Make sure it is what you want to "
 "do."
 msgstr ""
-"Có các khoản chi phí chưa được gửi liên quan đến danh mục này. Việc cập nhật"
-" chi phí danh mục sẽ thay đổi số tiền chi phí, nên hãy chắc chắn rằng đây là"
-" điều bạn muốn làm."
+"Có các khoản chi phí chưa được gửi liên quan đến danh mục này. Việc cập nhật "
+"chi phí danh mục sẽ thay đổi số tiền chi phí, nên hãy chắc chắn rằng đây là "
+"điều bạn muốn làm."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2188,11 +2206,9 @@ msgstr "Vậy là xong - quản lý chi phí một cách ngắn gọn!"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
-msgid ""
-"This note will be shown to users when they select this expense product."
+msgid "This note will be shown to users when they select this expense product."
 msgstr ""
-"Ghi chú này sẽ được hiển thị cho người dùng khi họ chọn sản phẩm chi phí "
-"này."
+"Ghi chú này sẽ được hiển thị cho người dùng khi họ chọn sản phẩm chi phí này."
 
 #. module: hr_expense
 #: model:digest.tip,name:hr_expense.digest_tip_hr_expense_0
@@ -2247,7 +2263,7 @@ msgstr "Tổng thuế"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount_currency
 msgid "Total Untaxed Amount In Currency"
-msgstr "Tổng số tiền chưa tính thuế bằng tiền tệ"
+msgstr "Tổng tiền trước thuế theo loại tiền tệ"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__total_amount_currency_original
@@ -2268,7 +2284,7 @@ msgstr "Du lịch & Chỗ ở"
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_exception_decoration
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Loại hoạt động ngoại lệ trong tập dữ liệu."
+msgstr "Loại hoạt động ngoại lệ trong bản ghi."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__price_unit
@@ -2336,7 +2352,6 @@ msgstr "Xem Kê khai"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Wasting time recording your receipts? Let’s try a better way."
 msgstr ""
@@ -2358,13 +2373,14 @@ msgstr "Lịch sử trao đổi qua trang web"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
-"When the cost of an expense product is different than 0, then the user"
-"                                         using this product won't be able to"
-" change the amount of the expense,                                         "
-"only the quantity. Use a cost different than 0 for expense categories funded"
-" by                                         the company at fixed cost like "
-"allowances for mileage, per diem, accommodation"
-"                                         or meal."
+"When the cost of an expense product is different than 0, then the "
+"user                                         using this product won't be "
+"able to change the amount of the "
+"expense,                                         only the quantity. Use a "
+"cost different than 0 for expense categories funded "
+"by                                         the company at fixed cost like "
+"allowances for mileage, per diem, "
+"accommodation                                         or meal."
 msgstr ""
 "Khi số tiền của một sản phẩm chi phí khác 0 thì người dùng sử dụng sản phẩm "
 "này sẽ không thể thay đổi khoản tiền chi phí mà chỉ có thể thay đổi số "
@@ -2392,7 +2408,6 @@ msgstr "Bạn không được phép chỉnh sửa báo cáo chi phí này."
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
-#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not authorized to edit this expense."
 msgstr "Bạn không được phép chỉnh sửa chi phí này."
@@ -2415,8 +2430,7 @@ msgstr "Bây giờ bạn có thể gửi nó cho người quản lý từ liên 
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr ""
-"Bạn chỉ có thể tạo các bút toán kế toán cho các khoản chi tiêu đã được "
-"duyệt."
+"Bạn chỉ có thể tạo các bút toán kế toán cho các khoản chi phí đã được duyệt."
 
 #. module: hr_expense
 #. odoo-python
@@ -2470,11 +2484,11 @@ msgstr ""
 #: code:addons/hr_expense/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot delete only some entries linked to an expense report. All entries"
-" must be deleted at the same time."
+"You cannot delete only some entries linked to an expense report. All entries "
+"must be deleted at the same time."
 msgstr ""
-"Bạn không thể chỉ xóa một số bút toán được liên kết với một báo cáo chi phí,"
-" mà phải xoá tất cả bút toán cùng một lúc."
+"Bạn không thể chỉ xóa một số bút toán được liên kết với một báo cáo chi phí, "
+"mà phải xoá tất cả bút toán cùng một lúc."
 
 #. module: hr_expense
 #. odoo-python
@@ -2515,8 +2529,8 @@ msgstr ""
 #, python-format
 msgid "You cannot report expenses for different companies in the same report."
 msgstr ""
-"Bạn không thể báo cáo chi phí của những công ty khác nhau trong cùng một báo"
-" cáo."
+"Bạn không thể báo cáo chi phí của những công ty khác nhau trong cùng một báo "
+"cáo."
 
 #. module: hr_expense
 #. odoo-python
@@ -2524,8 +2538,8 @@ msgstr ""
 #, python-format
 msgid "You cannot report expenses for different employees in the same report."
 msgstr ""
-"Bạn không thể báo cáo chi phí cho các nhân viên khác nhau trong cùng một báo"
-" cáo."
+"Bạn không thể báo cáo chi phí cho các nhân viên khác nhau trong cùng một báo "
+"cáo."
 
 #. module: hr_expense
 #. odoo-python
@@ -2540,6 +2554,23 @@ msgstr "Bạn không thể báo cáo các chi phí mà không có số tiền!"
 #, python-format
 msgid "You cannot report twice the same line!"
 msgstr "Bạn không thể báo cáo hai lần trên cùng một dòng!"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid ""
+"You don't have the rights to bypass the validation process of this expense "
+"report."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"You don't have the rights to bypass the validation process of this expense."
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -2560,8 +2591,8 @@ msgstr "Bạn cần thêm phương thức thanh toán thủ công trên nhật k
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid ""
-"You need to have at least one category that can be expensed in your database"
-" to proceed!"
+"You need to have at least one category that can be expensed in your database "
+"to proceed!"
 msgstr ""
 "Bạn cần có ít nhất một danh mục có thể tạo chi phí trong cơ sở dữ liệu để "
 "tiếp tục!"

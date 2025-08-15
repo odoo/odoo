@@ -29,7 +29,7 @@ MOUNT_POINT="${__dir}/root_mount"
 OVERWRITE_FILES_BEFORE_INIT_DIR="${__dir}/overwrite_before_init"
 OVERWRITE_FILES_AFTER_INIT_DIR="${__dir}/overwrite_after_init"
 VERSION=17.0
-VERSION_IOTBOX=24.08
+VERSION_IOTBOX=24.10
 
 
 # ask user for the branch/version
@@ -149,22 +149,14 @@ sudo systemctl reload NetworkManager
 chroot "${MOUNT_POINT}" /bin/bash -c "/etc/init_posbox_image.sh"
 
 # copy iotbox version
-mkdir -pv "${MOUNT_POINT}"/var/odoo
-echo "${VERSION_IOTBOX}" | tee "${MOUNT_POINT}"/var/odoo/iotbox_version "${MOUNT_POINT}"/home/pi/iotbox_version
+mkdir -pv "${MOUNT_POINT}"/var/odoo/
+echo "${VERSION_IOTBOX}" > "${MOUNT_POINT}"/var/odoo/iotbox_version
 
 # get rid of the git clone
 rm -rf "${CLONE_DIR}"
 # and the ngrok usr/bin
 rm -rf "${OVERWRITE_FILES_BEFORE_INIT_DIR}/usr"
 cp -a "${OVERWRITE_FILES_AFTER_INIT_DIR}"/* "${MOUNT_POINT}"
-
-find "${MOUNT_POINT}"/ -type f -name "*.iotpatch"|while read iotpatch; do
-    DIR=$(dirname "${iotpatch}")
-    BASE=$(basename "${iotpatch%.iotpatch}")
-    find "${DIR}" -type f -name "${BASE}" ! -name "*.iotpatch"|while read file; do
-        patch -f --verbose "${file}" < "${iotpatch}"
-    done
-done
 
 # cleanup
 umount -fv "${MOUNT_POINT}"/boot/

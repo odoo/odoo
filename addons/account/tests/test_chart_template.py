@@ -22,7 +22,7 @@ def test_get_data(self, template_code):
     return {
         'template_data': {
             'code_digits': 6,
-            'currency_id': 'base.EUR',
+            'currency_id': self.env.ref('base.EUR').id,
             'property_account_income_categ_id': 'test_account_income_template',
             'property_account_expense_categ_id': 'test_account_expense_template',
             'property_account_receivable_id': 'test_account_receivable_template',
@@ -331,7 +331,28 @@ class TestChartTemplate(TransactionCase):
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
             self.env['account.chart.template'].try_loading('test', company=self.company_1, install_demo=False)
 
-        updated_tax = self.env['account.tax'].search([('company_id', '=', self.company_1.id), ('name', '=', 'Tax 1')])
+        updated_tax = self.env['account.tax'].search([('company_id', '=', self.company_1.id), ('name', 'like', '%Tax 1')])
+        # Check that tax was not recreated
+        self.assertEqual(len(updated_tax), 1)
+        # Check that tags have been updated
+        self.assertEqual(updated_tax.invoice_repartition_line_ids.tag_ids.name, 'tax_tag_name_1 [DUP]')
+
+    def test_update_taxes_update_rounding(self):
+        """
+        When a tax is close enough to an existing tax but has a minor rounding error,
+        we still want to update that tax with the new values.
+        """
+        def local_get_data(self, template_code):
+            data = test_get_data(self, template_code)
+            data['account.account.tag']['account.account_tax_tag_1']['name'] += ' [DUP]'
+            # We compare up to the precision of the field, which is 4 decimals
+            data['account.tax']['test_tax_1_template']['amount'] += 0.00001
+            return data
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=self.company_1, install_demo=False)
+
+        updated_tax = self.env['account.tax'].search([('company_id', '=', self.company_1.id), ('name', 'like', '%Tax 1')])
         # Check that tax was not recreated
         self.assertEqual(len(updated_tax), 1)
         # Check that tags have been updated
@@ -580,6 +601,20 @@ class TestChartTemplate(TransactionCase):
 
             # silently ignore if the field doesn't exist (yet)
             self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
+
+    def test_branch(self):
+        # Test the auto-installation of a chart template (including demo data) on a branch
+        # Create a new main company, because install_demo doesn't do anything when reloading data
+        company = self.env['res.company'].create([{'name': 'Test Company'}])
+        branch = self.env['res.company'].create([{
+            'name': 'Test Branch',
+            'parent_id': company.id,
+        }])
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=company, install_demo=True)
+        self.assertEqual(company.chart_template, 'test')
+        self.assertEqual(branch.chart_template, 'test')
 
     def test_change_coa(self):
         def _get_chart_template_mapping(self, get_all=False):

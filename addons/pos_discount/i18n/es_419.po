@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Fernanda Alvarez, 2024
+# Fernanda Alvarez, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,13 +28,13 @@ msgid ""
 "A discount product is needed to use the Global Discount feature. Go to Point"
 " of Sale > Configuration > Settings to set it."
 msgstr ""
-"La función de descuento global necesita un producto de descuento. Para "
-"configurarlo, vaya a Punto de venta > Configuración > Ajustes."
+"La función de descuento global necesita un producto de descuento. Ve a Punto"
+" de venta > Configuración > Ajustes para configurarlo."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__iface_discount
 msgid "Allow the cashier to give discounts on the whole order."
-msgstr "Permita que el cajero ofrezca descuentos para toda la orden."
+msgstr "Permite que el cajero aplique descuentos en toda la orden."
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_res_config_settings
@@ -66,14 +66,14 @@ msgstr "Porcentaje de descuento"
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_product_id
 #: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
 msgid "Discount Product"
-msgstr "Producto con descuento"
+msgstr "Producto de descuento"
 
 #. module: pos_discount
 #. odoo-javascript
 #: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
 #, python-format
 msgid "No discount product found"
-msgstr "No se encontró ningún producto con descuento"
+msgstr "No se encontró ningún producto de descuento"
 
 #. module: pos_discount
 #. odoo-javascript
@@ -114,7 +114,8 @@ msgstr "Impuesto: %s"
 #: model:ir.model.fields,help:pos_discount.field_res_config_settings__pos_discount_pc
 msgid "The default discount percentage when clicking on the Discount button"
 msgstr ""
-"El porcentaje automático de descuento al hacer clic en el botón de descuento"
+"El porcentaje predeterminado de descuento al hacer clic en el botón de "
+"descuento"
 
 #. module: pos_discount
 #. odoo-javascript
@@ -124,10 +125,11 @@ msgid ""
 "The discount product seems misconfigured. Make sure it is flagged as 'Can be"
 " Sold' and 'Available in Point of Sale'."
 msgstr ""
-"El producto de descuento parece estar mal configurado. Asegúrese de que está"
-" marcado como 'Se puede vender' y 'Disponible en el punto de venta'."
+"Parece que el producto de descuento está mal configurado. Revisa que las "
+"opciones \"Se puede vender\" y \"Disponible en el punto de venta\" están "
+"seleccionadas."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
 msgid "The product used to apply the discount on the ticket."
-msgstr "El producto usado para aplicar el descuento en el ticket."
+msgstr "El producto usado para aplicar el descuento en el recibo."

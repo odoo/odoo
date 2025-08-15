@@ -8,14 +8,15 @@
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
 # Martin Trigaux, 2023
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
+# Deniz Guvener_Odoo <degu@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-02-03 15:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023\n"
+"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,7 +67,7 @@ msgstr "Oluşturulma"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields.selection,name:account_edi_proxy_client.selection__account_edi_proxy_client_user__edi_mode__demo
 msgid "Demo mode"
-msgstr ""
+msgstr "Demo modu"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__display_name
@@ -76,17 +77,17 @@ msgstr "Görünüm Adı"
 #. module: account_edi_proxy_client
 #: model:ir.actions.act_window,name:account_edi_proxy_client.action_tree_account_edi_proxy_client_user
 msgid "EDI Proxy User"
-msgstr ""
+msgstr "EDI Vekil Kullanıcısı"
 
 #. module: account_edi_proxy_client
 #: model:ir.ui.menu,name:account_edi_proxy_client.menu_account_proxy_client_user
 msgid "EDI Proxy Users"
-msgstr ""
+msgstr "EDI Vekil Kullanıcıları"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_mode
 msgid "EDI operating mode"
-msgstr ""
+msgstr "EDI Çalışma Modu"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_identification
@@ -102,6 +103,19 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__id_client
 msgid "Id Client"
 msgstr "Tanımlayıcı İstemcisi"
+
+#. module: account_edi_proxy_client
+#. odoo-python
+#: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
+#, python-format
+msgid ""
+"Invalid signature for request. This might be due to another connection to odoo Access Point server. It can occur if you have duplicated your database. \n"
+"\n"
+"If you are not sure how to fix this, please contact our support."
+msgstr ""
+"İstek için geçersiz imza. Bu durum, başka bir bağlantının Odoo Erişim Noktası sunucusuna yapılmış olması nedeniyle oluşabilir. \n"
+"\n"
+"Veri tabanınızı çoğalttıysanız da meydana gelebilir. Nasıl çözeceğinizden emin değilseniz lütfen destek ekibimizle iletişime geçin."
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__write_uid
@@ -126,12 +140,12 @@ msgstr ""
 #. module: account_edi_proxy_client
 #: model:ir.model.fields.selection,name:account_edi_proxy_client.selection__account_edi_proxy_client_user__edi_mode__prod
 msgid "Production mode"
-msgstr ""
+msgstr "Canlı Mod"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__proxy_type
 msgid "Proxy Type"
-msgstr ""
+msgstr "Vekil Türü"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__refresh_token
@@ -152,6 +166,7 @@ msgstr "Kullanıcının tüm verilerini şifrelemek için anahtar"
 #: model:ir.model.fields,help:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_identification
 msgid "The unique id that identifies this user, typically the vat"
 msgstr ""
+"Bu kullanıcıyı tanımlayan benzersiz kimlik, genellikle vergi numarasıdır"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -186,12 +201,12 @@ msgstr "Bu hizmetin iletişim kurmaya çalıştığı URL yok. URL %r idi"
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_active_company_proxy
 msgid "This company has an active user already created for this EDI type"
-msgstr ""
+msgstr "Bu şirket için bu EDI türünde zaten aktif bir kullanıcı oluşturulmuş."
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_active_edi_identification
 msgid "This edi identification is already assigned to an active user"
-msgstr ""
+msgstr "Bu EDI tanımlayıcısı zaten aktif bir kullanıcıya atanmış durumda"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_id_client

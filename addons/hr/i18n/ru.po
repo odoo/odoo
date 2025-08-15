@@ -18,16 +18,18 @@
 # Alena Vlasova, 2023
 # Martin Trigaux, 2023
 # Сергей Шебанин <sergey@shebanin.ru>, 2023
-# Wil Odoo, 2024
 # Nadia Martynova, 2024
+# Wil Odoo, 2025
+# Ilya Rozhkov, 2025
+# Anastasiia Koroleva, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Nadia Martynova, 2024\n"
+"Last-Translator: Anastasiia Koroleva, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,11 +92,6 @@ msgstr "1 Телефонный звонок"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "12 days / year, including <br>6 of your choice."
 msgstr "12 дней в году, включая <br>6 по вашему выбору."
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "12345678901"
-msgstr "12345678901"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -569,6 +566,11 @@ msgid "Available"
 msgstr "Доступно"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.mail_activity_plan_view_form
+msgid "Available for all Departments"
+msgstr "Доступно для всех отделов"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_1920
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_1920
 msgid "Avatar"
@@ -629,6 +631,11 @@ msgstr "ID бейджа"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
 msgid "Bank Account Number"
 msgstr "Номер банковского счета"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Банковские Счета"
 
 #. module: hr
 #: model:ir.model,name:hr.model_base
@@ -729,14 +736,14 @@ msgstr "Город"
 #: model:ir.model.fields,field_description:hr.field_res_users__coach_id
 #: model:ir.model.fields.selection,name:hr.selection__mail_activity_plan_template__responsible_type__coach
 msgid "Coach"
-msgstr "Тренер"
+msgstr "Куратор"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 #, python-format
 msgid "Coach of employee %s is not set."
-msgstr "Тренер сотрудника %s не установлен."
+msgstr "Куратор сотрудника %s не установлен."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__code
@@ -1556,7 +1563,7 @@ msgstr "Статус присутствия HR"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "HR Settings"
-msgstr "Кадровые данные"
+msgstr "Настройки HR"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__has_message
@@ -1952,11 +1959,6 @@ msgstr "Руководитель"
 #, python-format
 msgid "Manager of employee %s is not set."
 msgstr "Менеджер сотрудника %s не установлен."
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Marc Demo"
-msgstr "Марк Демо"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
@@ -2445,9 +2447,9 @@ msgid ""
 "Plan activities %(template_names)s cannot use coach, manager or employee "
 "responsible as it is used only for employee plans."
 msgstr ""
-"В параметре Plan activities %(template_names)s не могут использоваться "
-"значения coach, manager или employee responsible, так как он используется "
-"только для планов сотрудников."
+"Действие %(template_names)s не может использовать куратора, руководителя или"
+" сотрудника в качестве ответственного, так как оно предназначено только для "
+"планов сотрудников."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
@@ -2810,8 +2812,8 @@ msgid ""
 "Select the \"Employee\" who is the coach of this employee.\n"
 "The \"Coach\" has no specific rights or responsibilities by default."
 msgstr ""
-"Выберите \"Сотрудника\", который является тренером этого сотрудника.\n"
-"По умолчанию \"Тренер\" не имеет особых прав и обязанностей."
+"Выберите «Сотрудника», который является куратором этого сотрудника. \n"
+"У «Куратора» по умолчанию нет специальных прав или обязанностей."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__sequence
@@ -2824,8 +2826,8 @@ msgstr "Последовательность"
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Set default company schedule to manage your employees working time"
 msgstr ""
-"Установите расписание компании по умолчанию для управления рабочим временем "
-"ваших сотрудников"
+"Установите расписание компании по умолчанию, чтобы управлять рабочим "
+"временем ваших сотрудников"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
@@ -2869,16 +2871,11 @@ msgid "Social Security Number"
 msgstr "Номер социального страхования"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Software Developer"
-msgstr "Разработчик"
-
-#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee_base.py:0
 #, python-format
 msgid "Some employee already have a work contact"
-msgstr ""
+msgstr "У некоторых сотрудников уже есть рабочий контакт"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3110,7 +3107,7 @@ msgstr ""
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 #, python-format
 msgid "The user of %s's coach is not set."
-msgstr "Пользователь тренера %s не установлен."
+msgstr "Пользователь, являющийся куратором %s, не указан."
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user
@@ -3418,7 +3415,7 @@ msgstr "Рабочая электронная почта"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Information"
-msgstr "Информация о работе"
+msgstr "Рабочая информация"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_work_location
@@ -3444,7 +3441,7 @@ msgstr "Рабочие места"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__mobile_phone
 #: model:ir.model.fields,field_description:hr.field_res_users__mobile_phone
 msgid "Work Mobile"
-msgstr "Рабочий мобильный телефон"
+msgstr "Мобильный"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -3480,7 +3477,7 @@ msgstr "Разрешение на работу Запланированная д
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_phone
 #: model:ir.model.fields,field_description:hr.field_res_users__work_phone
 msgid "Work Phone"
-msgstr "Рабочий телефон"
+msgstr "Рабочий"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_calendar_id
@@ -3569,9 +3566,9 @@ msgid ""
 "\n"
 "The job is located in Grand-Rosière (1367), Belgium (between Louvain-La-Neuve and Namur)."
 msgstr ""
-"Вы будете принимать участие в консалтинговых услугах, которые мы предоставляем нашим партнерам и клиентам: проектирование, анализ, разработка, тестирование, управление проектами, поддержка/коучинг. Вы будете работать автономно, а также координировать и контролировать небольшие распределенные команды разработчиков в некоторых проектах. По желанию вы будете проводить тренинги по Odoo для партнеров и клиентов (8-10 человек/сеанс). Вы будете подчиняться руководителю отдела профессиональных услуг и тесно сотрудничать со всеми разработчиками и консультантами.\n"
+"Вы будете участвовать в консалтинговых услугах, которые мы предоставляем нашим партнёрам и клиентам: проектирование, анализ, разработка, тестирование, управление проектами, поддержка/коучинг. Вы будете работать самостоятельно, а также координировать и руководить небольшими распределёнными командами разработчиков по отдельным проектам. По желанию вы можете проводить обучающие сессии по Odoo для партнёров и клиентов (8–10 человек за сеанс). Вы будете подчиняться руководителю отдела профессиональных услуг и тесно взаимодействовать со всеми разработчиками и консультантами.\n"
 "\n"
-"Работа находится в Гранд-Розьер (1367), Бельгия (между Лувен-Ла-Нев и Намюром)."
+"Работа находится в Гран-Розьере (1367), Бельгия (между Лувен-ла-Нев и Намюр)."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile

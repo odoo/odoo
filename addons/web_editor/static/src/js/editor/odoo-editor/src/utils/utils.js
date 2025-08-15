@@ -69,7 +69,7 @@ export const PROTECTED_BLOCK_TAG = ['TR','TD','TABLE','TBODY','UL','OL','LI'];
  * override of the font-size.
  */
 export const FONT_SIZE_CLASSES = ["display-1-fs", "display-2-fs", "display-3-fs", "display-4-fs", "h1-fs",
-    "h2-fs", "h3-fs", "h4-fs", "h5-fs", "h6-fs", "base-fs", "o_small-fs", "small"];
+    "h2-fs", "h3-fs", "h4-fs", "h5-fs", "h6-fs", "base-fs", "o_small-fs", "small", "o_small_twelve-fs", "o_small_ten-fs", "o_small_eight-fs"];
 
 /**
  * Array of all the classes used by the editor to change the text style.
@@ -80,7 +80,8 @@ export const FONT_SIZE_CLASSES = ["display-1-fs", "display-2-fs", "display-3-fs"
  */
 export const TEXT_STYLE_CLASSES = ["display-1", "display-2", "display-3", "display-4", "lead", "o_small", "small"];
 
-export const ZERO_WIDTH_CHARS = ['\u200b', '\ufeff'];
+const ZWNBSP_CHAR = '\ufeff';
+export const ZERO_WIDTH_CHARS = ['\u200b', ZWNBSP_CHAR];
 export const ZERO_WIDTH_CHARS_REGEX = new RegExp(`[${ZERO_WIDTH_CHARS.join('')}]`, 'g');
 
 //------------------------------------------------------------------------------
@@ -896,12 +897,7 @@ export function getSelectedNodes(editable) {
  */
 export function getDeepRange(editable, { range, sel, splitText, select, correctTripleClick } = {}) {
     sel = sel || editable.parentElement && editable.ownerDocument.getSelection();
-    if (
-        sel &&
-        sel.isCollapsed &&
-        sel.anchorNode &&
-        (sel.anchorNode.nodeName === "BR" || (sel.anchorNode.nodeType === Node.TEXT_NODE && sel.anchorNode.textContent === ''))
-    ) {
+    if (sel && sel.isCollapsed && sel.anchorNode && sel.anchorNode.nodeName === "BR") {
         setSelection(sel.anchorNode.parentElement, childNodeIndex(sel.anchorNode));
     }
     range = range ? range.cloneRange() : sel && sel.rangeCount && sel.getRangeAt(0).cloneRange();
@@ -951,11 +947,14 @@ export function getDeepRange(editable, { range, sel, splitText, select, correctT
     // at the last position of the previous node instead.
     const endLeaf = firstLeaf(end);
     const beforeEnd = endLeaf.previousSibling;
+    const isInsideColumn = closestElement(end, '.o_text_columns')
     if (
         correctTripleClick &&
         !endOffset &&
         (start !== end || startOffset !== endOffset) &&
-        (!beforeEnd || (beforeEnd.nodeType === Node.TEXT_NODE && !isVisibleTextNode(beforeEnd) && !isZWS(beforeEnd)))
+        (!beforeEnd || (beforeEnd.nodeType === Node.TEXT_NODE && !isVisibleTextNode(beforeEnd) && !isZWS(beforeEnd))) &&
+        !closestElement(endLeaf, 'table') &&
+        !isInsideColumn
     ) {
         const previous = previousLeaf(endLeaf, editable, true);
         if (previous && closestElement(previous).isContentEditable) {
@@ -989,6 +988,7 @@ export function getDeepRange(editable, { range, sel, splitText, select, correctT
 
 export function getAdjacentCharacter(editable, side) {
     let { focusNode, focusOffset } = editable.ownerDocument.getSelection();
+    [focusNode, focusOffset] = getDeepestPosition(focusNode, focusOffset);
     const originalBlock = closestBlock(focusNode);
     let adjacentCharacter;
     while (!adjacentCharacter && focusNode) {
@@ -1012,7 +1012,7 @@ export function getAdjacentCharacter(editable, side) {
     return closestBlock(focusNode) === originalBlock ? adjacentCharacter : undefined;
 }
 
-function isZwnbsp(node) {
+export function isZwnbsp(node) {
     return node.nodeType === Node.TEXT_NODE && node.textContent === '\ufeff';
 }
 
@@ -1039,14 +1039,14 @@ export function getDeepestPosition(node, offset) {
         } else if (
             direction &&
             next.nextSibling &&
-            closestBlock(node).contains(next.nextSibling)
+            closestBlock(node)?.contains(next.nextSibling)
         ) {
             // Invalid node: skip to next sibling (without crossing blocks).
             next = next.nextSibling;
         } else {
             // Invalid node: skip to previous sibling (without crossing blocks).
             direction = DIRECTIONS.LEFT;
-            next = closestBlock(node).contains(next.previousSibling) && next.previousSibling;
+            next = closestBlock(node)?.contains(next.previousSibling) && next.previousSibling;
         }
         // Avoid too-deep ranges inside self-closing elements like [BR, 0].
         next = !isSelfClosingElement(next) && next;
@@ -1205,12 +1205,20 @@ const removeStyle = (node, styleName, item) => {
 };
 const getOrCreateSpan = (node, ancestors) => {
     const span = ancestors.find((element) => element.tagName === 'SPAN' && element.isConnected);
+    const lastInlineAncestor = ancestors.findLast((element) => !isBlock(element) && element.isConnected);
     if (span) {
         return span;
     } else {
         const span = document.createElement('span');
-        node.after(span);
-        span.append(node);
+        // Apply font span above current inline top ancestor so that 
+        // the font style applies to the other style tags as well.
+        if (lastInlineAncestor) {
+            lastInlineAncestor.after(span);
+            span.append(lastInlineAncestor);
+        } else {
+            node.after(span);
+            span.append(node);
+        }
         return span;
     }
 }
@@ -1272,31 +1280,32 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
         getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
     }
 
-    // Get selected nodes within td to handle non-p elements like h1, h2...
-    // Targeting <br> to ensure span stays inside its corresponding block node.
-    const selectedNodesInTds = [...editor.editable.querySelectorAll('.o_selected_td')]
-        .map(node => closestElement(node).querySelector('br'));
-    const selectedNodes = getSelectedNodes(editor.editable)
-        .filter(n => n.nodeType === Node.TEXT_NODE && closestElement(n).isContentEditable && (isVisibleTextNode(n) || isZWS(n)));
-    const selectedTextNodes = selectedNodes.length ? selectedNodes : selectedNodesInTds;
+    const selectedNodes = getSelectedNodes(editor.editable).filter(
+        (n) =>
+            ((n.nodeType === Node.TEXT_NODE &&
+                (isVisibleTextNode(n) || isZWS(n) || (/^\n+$/.test(n.nodeValue) && !applyStyle))) ||
+                n.nodeName === "BR") &&
+            closestElement(n).isContentEditable
+    );
 
     const selectedFieldNodes = new Set(getSelectedNodes(editor.editable)
             .map(n =>closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
             .filter(Boolean));
 
     const formatSpec = formatsSpecs[formatName];
-    for (const selectedTextNode of selectedTextNodes) {
+    for (const node of selectedNodes) {
         const inlineAncestors = [];
-        let currentNode = selectedTextNode;
-        let parentNode = selectedTextNode.parentElement;
+        let currentNode = node;
+        let parentNode = node.parentElement;
 
         // Remove the format on all inline ancestors until a block or an element
-        // with a class that is not related to font size (in case the formatting
-        // comes from the class).
+        // with a class that is not related to font size or color (in case the
+        // formatting comes from the class).
         while (
             parentNode && !isBlock(parentNode) &&
             !isUnbreakable(parentNode) && !isUnbreakable(currentNode) &&
-            (parentNode.classList.length === 0 ||
+            (parentNode.nodeName === "FONT" ||
+                parentNode.classList.length === 0 ||
                 [...parentNode.classList].every(cls => FONT_SIZE_CLASSES.includes(cls)))
         ) {
             const isUselessZws = parentNode.tagName === 'SPAN' &&
@@ -1316,23 +1325,26 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
 
             parentNode = currentNode.parentElement;
         }
-
-        const firstBlockOrClassHasFormat = formatSpec.isFormatted(parentNode, formatProps);
+        const isFormatted =
+            formatName === "setFontSizeClassName" && !formatProps
+                ? hasAnyFontSizeClass
+                : formatSpec.isFormatted;
+        const firstBlockOrClassHasFormat = isFormatted(parentNode, formatProps);
         if (firstBlockOrClassHasFormat && !applyStyle) {
-            formatSpec.addNeutralStyle && formatSpec.addNeutralStyle(getOrCreateSpan(selectedTextNode, inlineAncestors));
+            formatSpec.addNeutralStyle && formatSpec.addNeutralStyle(getOrCreateSpan(node, inlineAncestors));
         } else if (!firstBlockOrClassHasFormat && applyStyle) {
             const tag = formatSpec.tagName && document.createElement(formatSpec.tagName);
             if (tag) {
-                selectedTextNode.after(tag);
-                tag.append(selectedTextNode);
+                node.after(tag);
+                tag.append(node);
 
-                if (!formatSpec.isFormatted(tag, formatProps)) {
-                    tag.after(selectedTextNode);
+                if (!isFormatted(tag, formatProps)) {
+                    tag.after(node);
                     tag.remove();
-                    formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
+                    formatSpec.addStyle(getOrCreateSpan(node, inlineAncestors), formatProps);
                 }
             } else if (formatName !== 'fontSize' || formatProps.size !== undefined) {
-                formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
+                formatSpec.addStyle(getOrCreateSpan(node, inlineAncestors), formatProps);
             }
         }
     }
@@ -1349,8 +1361,8 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
         const siblings = [...zws.parentElement.childNodes];
         if (
             !isBlock(zws.parentElement) &&
-            selectedTextNodes.includes(siblings[0]) &&
-            selectedTextNodes.includes(siblings[siblings.length - 1])
+            selectedNodes.includes(siblings[0]) &&
+            selectedNodes.includes(siblings[siblings.length - 1])
         ) {
             zws.parentElement.setAttribute('data-oe-zws-empty-inline', '');
         } else {
@@ -1360,12 +1372,11 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
             span.append(zws);
         }
     }
-
-    if (selectedTextNodes[0] && selectedTextNodes[0].textContent === '\u200B') {
-        setSelection(selectedTextNodes[0], 0);
-    } else if (selectedTextNodes.length) {
-        const firstNode = selectedTextNodes[0];
-        const lastNode = selectedTextNodes[selectedTextNodes.length - 1];
+    if (selectedNodes.length === 1 && selectedNodes[0].textContent === '\u200B') {
+        setSelection(selectedNodes[0], 0);
+    } else if (selectedNodes.length) {
+        const firstNode = selectedNodes[0];
+        const lastNode = selectedNodes[selectedNodes.length - 1];
         if (direction === DIRECTIONS.RIGHT) {
             setSelection(firstNode, 0, lastNode, lastNode.length, false);
         } else {
@@ -1374,7 +1385,7 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
     }
 }
 export const isLinkEligibleForZwnbsp = (editable, link) => {
-    return link.isContentEditable && editable.contains(link) && !(
+    return link.parentElement.isContentEditable && link.isContentEditable && editable.contains(link) && !(
         [link, ...link.querySelectorAll('*')].some(el => el.nodeName === 'IMG' || isBlock(el)) ||
         link.matches('nav a, a.nav-link')
     );
@@ -1619,6 +1630,17 @@ export function hasClass(node, props) {
     const element = closestElement(node);
     return element.classList.contains(props.className);
 }
+
+/**
+ * Return true if the given node has any font-size class.
+ *
+ * @param {Node} node A node to check for font-size classes.
+ * @returns {boolean}
+ */
+export function hasAnyFontSizeClass(node) {
+    return FONT_SIZE_CLASSES.find((cls) => node?.classList?.contains(cls));
+}
+
 /**
  * Return true if the given node appears in a different direction than that of
  * the editable ('ltr' or 'rtl').
@@ -1644,9 +1666,14 @@ export function hasClass(node, props) {
  * @returns {boolean}
  */
 export function isSelectionFormat(editable, format) {
-    const selectedNodes = getTraversedNodes(editable)
-        .filter(n => n.nodeType === Node.TEXT_NODE);
-    const isFormatted = formatsSpecs[format].isFormatted;
+    const selectedNodes = getTraversedNodes(editable).filter(
+        (n) =>
+            n.nodeType === Node.TEXT_NODE &&
+            n.nodeValue.replaceAll(ZWNBSP_CHAR, "").length &&
+            (!/^\n+$/.test(n.nodeValue) || !isBlock(closestElement(n)))
+    );
+    const isFormatted =
+        format === "setFontSizeClassName" ? hasAnyFontSizeClass : formatsSpecs[format].isFormatted;
     return selectedNodes.length && selectedNodes.every(n => isFormatted(n, editable));
 }
 
@@ -1672,19 +1699,20 @@ export function isUnbreakable(node) {
                 node.getAttribute('t-out') ||
                 node.getAttribute('t-raw')) ||
                 node.getAttribute('t-field')) ||
-        node.classList.contains('oe_unbreakable')
+        node.matches(".oe_unbreakable, a.btn, a[role='tab'], a[role='button'], li.nav-item")
     );
 }
 
 export function isUnremovable(node) {
     return (
-        (node.nodeType !== Node.ELEMENT_NODE && node.nodeType !== Node.TEXT_NODE) ||
+        (node.nodeType !== Node.COMMENT_NODE && node.nodeType !== Node.ELEMENT_NODE && node.nodeType !== Node.TEXT_NODE) ||
         node.oid === 'root' ||
         (node.nodeType === Node.ELEMENT_NODE &&
             (node.classList.contains('o_editable') || node.getAttribute('t-set') || node.getAttribute('t-call'))) ||
         (node.classList && node.classList.contains('oe_unremovable')) ||
         (node.nodeName === 'SPAN' && node.parentElement && node.parentElement.getAttribute('data-oe-type') === 'monetary') ||
-        (node.ownerDocument && node.ownerDocument.defaultWindow && !ancestors(node).find(ancestor => ancestor.oid === 'root')) // Node is in DOM but not in editable.
+        (node.ownerDocument && node.ownerDocument.defaultWindow && !ancestors(node).find(ancestor => ancestor.oid === 'root')) || // Node is in DOM but not in editable.
+        (node.dataset && node.dataset.bsToggle === 'tab')
     );
 }
 
@@ -1849,7 +1877,7 @@ export const paragraphRelatedElements = [
  * @returns {boolean}
  */
 export function allowsParagraphRelatedElements(node) {
-    return isBlock(node) && !paragraphRelatedElements.includes(node.nodeName);
+    return isBlock(node) && !['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'].includes(node.nodeName);
 }
 
 /**
@@ -1948,6 +1976,20 @@ export function isVisible(node) {
 export function hasVisibleContent(node) {
     return [...(node?.childNodes || [])].some(n => isVisible(n));
 }
+
+/**
+ * Returns whether an element is a button
+ *
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function isButton(node) {
+    if (!node || node.nodeType !== Node.ELEMENT_NODE) {
+        return false;
+    }
+    return node.nodeName === "BUTTON" || node.classList.contains("btn");
+}
+
 const visibleCharRegex = /[^\s\u200b]|[\u00A0\u0009]$/; // contains at least a char that is always visible (TODO: 0009 shouldn't be included)
 export function isVisibleTextNode(testedNode) {
     if (!testedNode || !testedNode.length || testedNode.nodeType !== Node.TEXT_NODE) {
@@ -2044,6 +2086,7 @@ export function commonParentGet(node1, node2, root = undefined) {
 }
 
 export function getListMode(pnode) {
+    if (!["UL", "OL"].includes(pnode.tagName)) return;
     if (pnode.tagName == 'OL') return 'OL';
     return pnode.classList.contains('o_checklist') ? 'CL' : 'UL';
 }
@@ -2067,6 +2110,57 @@ export function insertListAfter(afterNode, mode, content = []) {
         }),
     );
     return list;
+}
+
+export function toggleList(node, mode, offset = 0) {
+    let pnode = node.closest('ul, ol');
+    if (!pnode) return;
+    const listMode = getListMode(pnode) + mode;
+    if (['OLCL', 'ULCL'].includes(listMode)) {
+        pnode.classList.add('o_checklist');
+        for (let li = pnode.firstElementChild; li !== null; li = li.nextElementSibling) {
+            if (li.style.listStyle !== 'none') {
+                li.style.listStyle = null;
+                if (!li.style.all) li.removeAttribute('style');
+            }
+        }
+        pnode = setTagName(pnode, 'UL');
+    } else if (['CLOL', 'CLUL'].includes(listMode)) {
+        toggleClass(pnode, 'o_checklist');
+        pnode = setTagName(pnode, mode);
+    } else if (['OLUL', 'ULOL'].includes(listMode)) {
+        pnode = setTagName(pnode, mode);
+    } else {
+        // toggle => remove list
+        let currNode = node;
+        while (currNode) {
+            currNode = currNode.oShiftTab(offset);
+        }
+        return;
+    }
+    return pnode;
+}
+
+/**
+ * Converts a list element and its nested elements to the specified list mode.
+ *
+ * @param {HTMLUListElement|HTMLOListElement|HTMLLIElement} node - HTML element
+ * representing a list or list item.
+ * @param {string} toMode - Target list mode
+ * @returns {HTMLUListElement|HTMLOListElement|HTMLLIElement} node - Modified
+ * list element after conversion.
+ */
+export function convertList(node, toMode) {
+    if (!["UL", "OL", "LI"].includes(node.nodeName)) return;
+    const listMode = getListMode(node);
+    if (listMode && toMode !== listMode) {
+        node = toggleList(node, toMode);
+    }
+    for (const child of node.childNodes) {
+        convertList(child, toMode);
+    }
+
+    return node;
 }
 
 export function toggleClass(node, className) {
@@ -2155,7 +2249,7 @@ export function isColorGradient(value) {
  */
 export function getFontSizeDisplayValue(sel, getCSSVariableValue, convertNumericToUnit) {
     const tagNameRelatedToFontSize = ["h1", "h2", "h3", "h4", "h5", "h6"];
-    const styleClassesRelatedToFontSize = ["display-1", "display-2", "display-3", "display-4"];
+    const styleClassesRelatedToFontSize = ["display-1", "display-2", "display-3", "display-4", "lead"];
     const closestStartContainerEl = closestElement(sel.getRangeAt(0).startContainer);
     const closestFontSizedEl = closestStartContainerEl.closest(`
         [style*='font-size'],
@@ -2190,11 +2284,7 @@ export function getFontSizeDisplayValue(sel, getCSSVariableValue, convertNumeric
         }
         remValue = parseFloat(getCSSVariableValue(`${fsName}-font-size`));
     }
-    // It's default font size (no font size class / style).
-    if (remValue === undefined) {
-        remValue = parseFloat(getCSSVariableValue("font-size-base"));
-    }
-    const pxValue = convertNumericToUnit(remValue, "rem", "px");
+    const pxValue = remValue && convertNumericToUnit(remValue, "rem", "px");
     return pxValue || parseFloat(getComputedStyle(closestStartContainerEl).fontSize);
 }
 
@@ -2387,7 +2477,7 @@ export function fillEmpty(el) {
         blockEl.appendChild(br);
         fillers.br = br;
     }
-    if (!isTangible(el) && !el.hasAttribute("data-oe-zws-empty-inline") && !el.hasChildNodes()) {
+    if (!isTangible(el) && !el.hasAttribute("data-oe-zws-empty-inline") && isEmptyBlock(el)) {
         // As soon as there is actual content in the node, the zero-width space
         // is removed by the sanitize function.
         const zws = document.createTextNode('\u200B');
@@ -3156,11 +3246,12 @@ export function getRangePosition(el, document, options = {}) {
         offset.left = marginLeft;
     }
 
-    if (options.parentContextRect) {
-        offset.left += options.parentContextRect.left;
-        offset.top += options.parentContextRect.top;
+    if (options.getContextFromParentRect) {
+        const parentContextRect = options.getContextFromParentRect();
+        offset.left += parentContextRect.left;
+        offset.top += parentContextRect.top;
         if (isRtl) {
-            offset.right += options.parentContextRect.left;
+            offset.right += parentContextRect.left;
         }
     }
 
@@ -3193,38 +3284,41 @@ export const isNotEditableNode = node =>
     node.getAttribute('contenteditable') &&
     node.getAttribute('contenteditable').toLowerCase() === 'false';
 
+export const isRoot = node => node.oid === "root";
+
 export const leftLeafFirstPath = createDOMPathGenerator(DIRECTIONS.LEFT);
 export const leftLeafOnlyNotBlockPath = createDOMPathGenerator(DIRECTIONS.LEFT, {
     leafOnly: true,
     stopTraverseFunction: isBlock,
-    stopFunction: isBlock,
+    stopFunction: node => isBlock(node) || isRoot(node),
 });
 export const leftLeafOnlyInScopeNotBlockEditablePath = createDOMPathGenerator(DIRECTIONS.LEFT, {
     leafOnly: true,
     inScope: true,
     stopTraverseFunction: node => isNotEditableNode(node) || isBlock(node),
-    stopFunction: node => isNotEditableNode(node) || isBlock(node),
+    stopFunction: node => isNotEditableNode(node) || isBlock(node) || isRoot(node),
 });
 
 export const rightLeafOnlyNotBlockPath = createDOMPathGenerator(DIRECTIONS.RIGHT, {
     leafOnly: true,
     stopTraverseFunction: isBlock,
-    stopFunction: isBlock,
+    stopFunction: node => isBlock(node) || isRoot(node),
 });
 
 export const rightLeafOnlyPathNotBlockNotEditablePath = createDOMPathGenerator(DIRECTIONS.RIGHT, {
     leafOnly: true,
+    stopFunction: node => isRoot(node),
 });
 export const rightLeafOnlyInScopeNotBlockEditablePath = createDOMPathGenerator(DIRECTIONS.RIGHT, {
     leafOnly: true,
     inScope: true,
     stopTraverseFunction: node => isNotEditableNode(node) || isBlock(node),
-    stopFunction: node => isNotEditableNode(node) || isBlock(node),
+    stopFunction: node => isNotEditableNode(node) || isBlock(node) || isRoot(node),
 });
 export const rightLeafOnlyNotBlockNotEditablePath = createDOMPathGenerator(DIRECTIONS.RIGHT, {
     leafOnly: true,
     stopTraverseFunction: node => isNotEditableNode(node) || isBlock(node),
-    stopFunction: node => isBlock(node) && !isNotEditableNode(node),
+    stopFunction: node => isBlock(node) && !isNotEditableNode(node) || isRoot(node),
 });
 //------------------------------------------------------------------------------
 // Miscelaneous
@@ -3249,5 +3343,29 @@ export function isMacOS() {
 export function cleanZWS(node) {
     [node, ...descendants(node)]
         .filter(node => node.nodeType === Node.TEXT_NODE && node.nodeValue.includes('\u200B'))
-        .forEach(node => node.nodeValue = node.nodeValue.replace(/\u200B/g, ''));
+        .forEach((node) => {
+            node.nodeValue = node.nodeValue.replace(/\u200B/g, "");
+
+            // If a node becomes empty after removing ZWS, remove it.
+            if (node.nodeValue === "") {
+                node.remove();
+            }
+        });
+}
+
+/**
+ * Properly close common XML-like self-closing elements to avoid HTML parsing
+ * issues.
+ *
+ * @param {string} content
+ * @returns {string}
+ */
+export function fixInvalidHTML(content) {
+    if (!content) {
+        return content;
+    }
+    // TODO: improve the regex to support nodes with data-attributes containing
+    // `/` and `>` characters.
+    const regex = /<\s*(a|strong|t)[^<]*?\/\s*>/g;
+    return content.replace(regex, (match, g0) => match.replace(/\/\s*>/, `></${g0}>`));
 }

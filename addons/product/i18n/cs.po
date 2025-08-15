@@ -7,18 +7,21 @@
 # Ivana Bartonkova, 2023
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2023
 # Wil Odoo, 2023
-# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # Jakub Smolka, 2023
 # Tomáš Píšek, 2023
 # Katerina Horylova, 2024
+# Tereza Mokrá, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2025
+# Jiří Podhorecký <jirka.p@volny.cz>, 2025
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Katerina Horylova, 2024\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,12 +53,12 @@ msgstr "Počet produktů"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "$14.00"
-msgstr ""
+msgstr "$14.00"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "$15.00"
-msgstr ""
+msgstr "$15.00"
 
 #. module: product
 #. odoo-python
@@ -84,6 +87,7 @@ msgstr "%s %% sleva"
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_pricelist.py:0
 #: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
 #, python-format
@@ -156,7 +160,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "123456789012"
-msgstr ""
+msgstr "123456789012"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
@@ -513,6 +517,8 @@ msgid ""
 "At most %s quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
 msgstr ""
+"Lze zobrazit maximálně množství %s současně. Odeberte vybrané množství a "
+"přidejte další."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -594,14 +600,14 @@ msgstr "Dostupnost"
 #: code:addons/product/static/src/product_catalog/kanban_controller.js:0
 #, python-format
 msgid "Back to Order"
-msgstr ""
+msgstr "Zpět k objednávce"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_controller.js:0
 #, python-format
 msgid "Back to Quotation"
-msgstr ""
+msgstr "Zpět na nabídku"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__barcode
@@ -814,7 +820,7 @@ msgstr "Konfigurovat"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Configure tags"
-msgstr ""
+msgstr "Konfigurace štítků"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
@@ -919,7 +925,7 @@ msgstr "Vytvořit novou variantu produktu"
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 #, python-format
 msgid "Create a product"
-msgstr ""
+msgstr "Vytvořit produkt"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
@@ -1017,7 +1023,7 @@ msgstr "Desetinná přesnost"
 #: code:addons/product/models/res_company.py:0
 #, python-format
 msgid "Default %s pricelist"
-msgstr ""
+msgstr "Výchozí ceník %s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price
@@ -1966,7 +1972,7 @@ msgstr ""
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 #, python-format
 msgid "No products could be found."
-msgstr ""
+msgstr "Nebyly nalezeny žádné produkty."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -2053,6 +2059,8 @@ msgid ""
 "On the product %(product)s you cannot associate the value %(value)s with the"
 " attribute %(attribute)s because they do not match."
 msgstr ""
+"Na produktu %(product)s nemůžete přiřadit hodnotu %(value)s k atributu "
+"%(attribute)s, protože se neshodují."
 
 #. module: product
 #. odoo-python
@@ -2062,6 +2070,8 @@ msgid ""
 "On the product %(product)s you cannot transform the attribute "
 "%(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
+"Na produktu %(product)s nemůžete atribut %(attribute_src)s převést na "
+"atribut %(attribute_dest)s."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -2690,7 +2700,7 @@ msgstr "Množství"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 #, python-format
 msgid "Quantity already present (%s)."
-msgstr ""
+msgstr "Množství již existuje (%s)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
@@ -3017,6 +3027,8 @@ msgid ""
 "The attribute %(attribute)s must have at least one value for the product "
 "%(product)s."
 msgstr ""
+"Atribut %(attribute)s musí mít pro produkt %(product)s alespoň jednu "
+"hodnotu."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -3136,6 +3148,8 @@ msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
 msgstr ""
+"Hodnota %(value)s není definována pro atribut %(attribute)s na produktu "
+"%(product)s."
 
 #. module: product
 #. odoo-python
@@ -3259,7 +3273,7 @@ msgstr "Typ výjimečné aktivity na záznamu."
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "UOM"
-msgstr ""
+msgstr "MJ"
 
 #. module: product
 #. odoo-python
@@ -3531,7 +3545,7 @@ msgstr "Virtuální interiérový design"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__voice_ids
 msgid "Voice"
-msgstr ""
+msgstr "Zvuk"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__volume
@@ -3663,7 +3677,7 @@ msgstr ""
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 #, python-format
 msgid "You can't edit this product in the catalog."
-msgstr ""
+msgstr "Tento produkt nelze v katalogu upravit."
 
 #. module: product
 #. odoo-python
@@ -3681,6 +3695,8 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"Režim vytváření variant atributu %(attribute)s nemůžete měnit, protože se "
+"používá v následujících produktech: %(products)s"
 
 #. module: product
 #. odoo-python
@@ -3699,6 +3715,8 @@ msgid ""
 "You cannot change the product of the value %(value)s set on product "
 "%(product)s."
 msgstr ""
+"Produkt nelze změnit na hodnotu %(value)s nastavenou na produktu "
+"%(product)s."
 
 #. module: product
 #. odoo-python
@@ -3708,6 +3726,8 @@ msgid ""
 "You cannot change the value of the value %(value)s set on product "
 "%(product)s."
 msgstr ""
+"Hodnotu nelze změnit na hodnotu %(value)s nastavenou na produktu "
+"%(product)s."
 
 #. module: product
 #. odoo-python
@@ -3736,6 +3756,7 @@ msgstr ""
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_category.py:0
+#: code:addons/product/models/product_category.py:0
 #, python-format
 msgid "You cannot delete the %s product category."
 msgstr "Nemůžete smazat %s kategorii produktu"
@@ -3748,6 +3769,8 @@ msgid ""
 "You cannot delete the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"Nemůžete smazat atribut %(attribute)s, protože se používá v následujících produktech:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -3758,6 +3781,9 @@ msgid ""
 "%(products)s\n"
 " If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
+"Nemůžete smazat atribut %(value)s, protože se používá v následujících produktech:\n"
+"%(products)s\n"
+" Pokud byla hodnota v minulosti přidružena k produktu, nebudete ji moci smazat."
 
 #. module: product
 #. odoo-python
@@ -3799,6 +3825,8 @@ msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s"
 " to the product %(product_dest)s."
 msgstr ""
+"Tento atribut %(attribute)s nelze přesunout z produktu %(product_src)s k "
+"produktu %(product_dest)s."
 
 #. module: product
 #. odoo-python

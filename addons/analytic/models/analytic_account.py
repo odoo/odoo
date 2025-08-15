@@ -4,8 +4,8 @@
 from collections import defaultdict
 import itertools
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
-from odoo.tools import groupby
+from odoo.exceptions import UserError, RedirectWarning
+from odoo.tools import groupby, SQL
 
 
 class AccountAnalyticAccount(models.Model):
@@ -14,6 +14,7 @@ class AccountAnalyticAccount(models.Model):
     _description = 'Analytic Account'
     _order = 'plan_id, name asc'
     _check_company_auto = True
+    _check_company_domain = models.check_company_domain_parent_of
     _rec_names_search = ['name', 'code']
 
     name = fields.Char(
@@ -173,3 +174,43 @@ class AccountAnalyticAccount(models.Model):
                 account.debit = -data_debit.get(account.id, 0.0)
                 account.credit = data_credit.get(account.id, 0.0)
                 account.balance = account.credit - account.debit
+
+    def _update_accounts_in_analytic_lines(self, new_fname, current_fname, accounts):
+        if current_fname != new_fname:
+            domain = [
+                (new_fname, 'not in', accounts.ids + [False]),
+                (current_fname, 'in', accounts.ids),
+            ]
+            if self.env['account.analytic.line'].sudo().search_count(domain, limit=1):
+                list_view = self.env.ref('analytic.view_account_analytic_line_tree', raise_if_not_found=False)
+                raise RedirectWarning(
+                    message=_("Whoa there! Making this change would wipe out your current data. Let's avoid that, shall we?"),
+                    action={
+                        'res_model': 'account.analytic.line',
+                        'type': 'ir.actions.act_window',
+                        'domain': domain,
+                        'target': 'new',
+                        'views': [(list_view and list_view.id, 'list')]
+                    },
+                    button_text=_("See them"),
+                )
+            self.env.cr.execute(SQL(
+                """
+                UPDATE account_analytic_line
+                   SET %(new_fname)s = %(current_fname)s,
+                       %(current_fname)s = NULL
+                 WHERE %(current_fname)s = ANY(%(account_ids)s)
+                """,
+                new_fname=SQL.identifier(new_fname),
+                current_fname=SQL.identifier(current_fname),
+                account_ids=accounts.ids,
+            ))
+            self.env['account.analytic.line'].invalidate_model()
+
+    def write(self, vals):
+        if vals.get('plan_id'):
+            new_fname = self.env['account.analytic.plan'].browse(vals['plan_id'])._column_name()
+            for plan, accounts in self.grouped('plan_id').items():
+                current_fname = plan._column_name()
+                self._update_accounts_in_analytic_lines(new_fname, current_fname, accounts)
+        return super().write(vals)

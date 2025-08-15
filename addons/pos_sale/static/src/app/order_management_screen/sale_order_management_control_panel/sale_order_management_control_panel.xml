@@ -22,20 +22,19 @@
                     </button>
                 </div> 
             </div>
-            <div t-if="showPageControls" class="item item d-flex align-items-center ms-3 gap-2">
+            <div class="item item d-flex align-items-center ms-3 gap-2">
                 <div class="page-controls input-group">
-                    <button class="previous btn btn-lg btn-secondary" t-on-click="() => this.props.onPrevPage">
+                    <button class="previous btn btn-lg btn-secondary" t-on-click="() => this.props.onPrevPage()">
                         <i class="oi oi-chevron-left" role="img" aria-label="Previous Order List" title="Previous Order List"></i>
                     </button>
-                    <button class="next btn btn-lg btn-secondary" t-on-click="() => this.props.onNextPage">
+                    <button class="next btn btn-lg btn-secondary" t-on-click="() => this.props.onNextPage()">
                         <i class="oi oi-chevron-right" role="img" aria-label="Next Order List" title="Next Order List"></i>
                     </button>
                 </div>
                 <div class="page">
-                    <span><t t-esc="pageNumber" /></span>
+                    <span><t t-esc="state.paginationString" /></span>
                 </div>
             </div>
-            <div t-else="" class="item"></div>
         </div>
     </t>
 

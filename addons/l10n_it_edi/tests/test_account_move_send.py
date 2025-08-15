@@ -85,3 +85,46 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
         self.assertTrue(invoice2.invoice_pdf_report_id)
         self.assertTrue(invoice2.l10n_it_edi_attachment_id)
         self.assertFalse(invoice2.is_being_sent)
+
+    def test_invoice_with_cig_or_cup_or_both(self):
+            
+            self.italian_partner_a.write({'l10n_it_pa_index': '1234567'})
+            
+            invoice_valid = self.init_invoice(self.italian_partner_a)
+            invoice_cig_only = self.init_invoice(self.italian_partner_a)
+            invoice_cup_only = self.init_invoice(self.italian_partner_a)
+            invoice_cig_cup = self.init_invoice(self.italian_partner_a)
+
+            invoice_valid.write({
+                'l10n_it_cig': '1234567',
+                'l10n_it_cup': '7654321',
+                'l10n_it_origin_document_type': 'purchase_order'
+            }) 
+            
+            invoice_cig_only.write({
+                'l10n_it_cig': '1234567',
+                'l10n_it_cup': False,
+                'l10n_it_origin_document_type': False
+            }) 
+            
+            invoice_cup_only.write({
+                'l10n_it_cig': False,
+                'l10n_it_cup': '7654321',
+                'l10n_it_origin_document_type': False
+            })
+            
+            invoice_cig_cup.write({
+                'l10n_it_cig': '1234567',
+                'l10n_it_cup': '7654321',
+                'l10n_it_origin_document_type': False
+            }) 
+
+            valid = invoice_valid._l10n_it_edi_base_export_check()
+            cig = invoice_cig_only._l10n_it_edi_base_export_check()
+            cup = invoice_cup_only._l10n_it_edi_base_export_check()
+            cig_cup = invoice_cig_cup._l10n_it_edi_base_export_check()
+
+            self.assertNotIn('move_missing_origin_document_field', valid)
+            self.assertIn('move_missing_origin_document_field', cig)
+            self.assertIn('move_missing_origin_document_field', cup)
+            self.assertIn('move_missing_origin_document_field', cig_cup)

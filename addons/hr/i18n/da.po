@@ -10,14 +10,16 @@
 # lhmflexerp <lhm@flexerp.dk>, 2024
 # Sammi Iversen <sammi@vkdata.dk>, 2024
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
+# Wil Odoo, 2025
+# Kira Petersen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
+"Last-Translator: Kira Petersen, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,7 +48,7 @@ msgstr "&amp;nbsp;"
 #. module: hr
 #: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
 msgid "'Badge - %s' % (object.name).replace('/', '')"
-msgstr ""
+msgstr "'Badge - %s' % (object.name).replace('/', '')"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -57,7 +59,7 @@ msgstr ""
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "1 Onsite Interview"
-msgstr ""
+msgstr "1 Interview på stedet"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -68,7 +70,7 @@ msgstr ""
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "1 Phone Call"
-msgstr ""
+msgstr "1 Telefonopkald"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -82,11 +84,6 @@ msgid "12 days / year, including <br>6 of your choice."
 msgstr "12 dage / år, inklusiv <br>6 du vælger."
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "12345678901"
-msgstr "12345678901"
-
-#. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
 #: model_terms:hr.job,job_details:hr.job_consultant
 #: model_terms:hr.job,job_details:hr.job_cto
@@ -95,7 +92,7 @@ msgstr "12345678901"
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "2 open days"
-msgstr ""
+msgstr "2 dage åbent hus"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -106,7 +103,7 @@ msgstr ""
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "4 Days after Interview"
-msgstr ""
+msgstr "4 dage efter interview"
 
 #. module: hr
 #. odoo-python
@@ -171,6 +168,8 @@ msgid ""
 "<span class=\"o_form_label o_hr_form_label cursor-default\">Close "
 "Activities</span>"
 msgstr ""
+"<span class=\"o_form_label o_hr_form_label cursor-default\">Luk "
+"aktiviteter</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -178,6 +177,8 @@ msgid ""
 "<span class=\"o_form_label o_hr_form_label cursor-default\">Detailed "
 "Reason</span>"
 msgstr ""
+"<span class=\"o_form_label o_hr_form_label cursor-default\">Detaljeret "
+"årsag</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -340,12 +341,12 @@ msgstr "Aktivitet af"
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity_plan_template
 msgid "Activity plan template"
-msgstr ""
+msgstr "Aktivitetsplanskabelon"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity_schedule
 msgid "Activity schedule plan Wizard"
-msgstr ""
+msgstr "Assistent til aktivitetsplanlægning"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
@@ -373,6 +374,8 @@ msgid ""
 "Additional Information: \n"
 " %(description)s"
 msgstr ""
+"Yderligere information: \n"
+" %(description)s"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
@@ -441,7 +444,7 @@ msgstr "Tillad at medarbejdere opdateret deres egne data."
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Application Settings"
-msgstr ""
+msgstr "Appinstillinger"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -512,7 +515,7 @@ msgstr "Tilstedeværelse"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Attendance/Point of Sale"
-msgstr ""
+msgstr "Tilstedeværelse/POS"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__mail_alias__alias_contact__employees
@@ -544,6 +547,11 @@ msgstr "Autonomi"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "Available"
 msgstr "Til rådighed"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.mail_activity_plan_view_form
+msgid "Available for all Departments"
+msgstr "Tilgængelig for alle afdelinger"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_1920
@@ -606,6 +614,11 @@ msgstr "ID skilt"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
 msgid "Bank Account Number"
 msgstr "Bankkontonummer"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Bankkonti"
 
 #. module: hr
 #: model:ir.model,name:hr.model_base
@@ -829,7 +842,7 @@ msgstr "Kontrakt typer"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__contractor
 msgid "Contractor"
-msgstr ""
+msgstr "Entreprenør"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__country_id
@@ -881,12 +894,12 @@ msgstr "Opret en ny afdeling"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
 msgid "Create a new employment type"
-msgstr ""
+msgstr "Opret en ny medarbejdertype"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
 msgid "Create a new work location"
-msgstr ""
+msgstr "Opret et nyt arbejdssted"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1006,7 +1019,7 @@ msgstr "Afdelingsnavn"
 #: code:addons/hr/static/src/components/department_chart/department_chart.xml:0
 #, python-format
 msgid "Department Organization"
-msgstr ""
+msgstr "Afdelingsorganisation"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_department_kanban_action
@@ -1060,7 +1073,7 @@ msgstr "Direkte underordnede"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_employee
 msgid "Directory"
-msgstr ""
+msgstr "Kartotek"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -1215,7 +1228,7 @@ msgstr "Billede af ansat"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_lang
 msgid "Employee Lang"
-msgstr ""
+msgstr "Medarbejders sprog"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__name
@@ -1226,7 +1239,7 @@ msgstr "Medarbejder navn"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__employee_properties_definition
 msgid "Employee Properties"
-msgstr ""
+msgstr "Medarbejderegenskaber"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
@@ -1280,7 +1293,7 @@ msgstr "Medarbejders navn"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_resource_calendar_id
 msgid "Employee's Working Hours"
-msgstr ""
+msgstr "Medarbejders arbejdstimer"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.act_employee_from_department
@@ -1309,7 +1322,7 @@ msgstr "Medarbejdere"
 #: model:ir.model.fields,field_description:hr.field_res_partner__employees_count
 #: model:ir.model.fields,field_description:hr.field_res_users__employees_count
 msgid "Employees Count"
-msgstr ""
+msgstr "Antal medarbejdere"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
@@ -1374,7 +1387,7 @@ msgstr "Erfaren udvikler"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Family Status"
-msgstr ""
+msgstr "Familiestatus"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__female
@@ -1419,11 +1432,13 @@ msgid ""
 "For %(channels)s, channel_type should be 'channel' to have the department "
 "auto-subscription."
 msgstr ""
+"For %(channels)s skal channel_type være 'kanal', så afdelingen automatisk "
+"abonnerer på kanalen."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__freelance
 msgid "Freelancer"
-msgstr ""
+msgstr "Freelancer"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1439,7 +1454,7 @@ msgstr "Der sørges for frugt, kaffe, og <br>snacks."
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_full_time
 msgid "Full-Time"
-msgstr ""
+msgstr "Fuldtid"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1460,7 +1475,7 @@ msgstr "Generer"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "Give more details about the reason of archiving the employee."
-msgstr ""
+msgstr "Angiv flere oplysninger om årsagen til at arkivere medarbejderen."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1504,14 +1519,14 @@ msgstr "HR afdelinger"
 #. module: hr
 #: model:ir.actions.server,name:hr.ir_cron_data_check_work_permit_validity_ir_actions_server
 msgid "HR Employee: check work permit validity"
-msgstr ""
+msgstr "HR-medarbejder: Kontrollér arbejdstilladelsens gyldighed"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/hr_presence_status/hr_presence_status.js:0
 #, python-format
 msgid "HR Presence Status"
-msgstr ""
+msgstr "HR-tilstedeværelsestilstand"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1645,6 +1660,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_employee__private_car_plate
 msgid "If you have more than one car, just separate the plates by a space."
 msgstr ""
+"Hvis du har mere end én bil, adskiller du nummerpladerne med et mellemrum."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
@@ -1686,7 +1702,7 @@ msgstr "Importskabelon for medarbejdere"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_interim
 msgid "Interim"
-msgstr ""
+msgstr "Interim"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
@@ -1703,7 +1719,7 @@ msgstr "Er Leder"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__is_system
 msgid "Is System"
-msgstr ""
+msgstr "Er system"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1851,12 +1867,12 @@ msgstr "Adresse"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__location_number
 msgid "Location Number"
-msgstr ""
+msgstr "Lokationsnummer"
 
 #. module: hr
 #: model:hr.department,name:hr.dep_rd_ltp
 msgid "Long Term Projects"
-msgstr ""
+msgstr "Langvarige projekter"
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_hrm
@@ -1906,11 +1922,6 @@ msgid "Manager of employee %s is not set."
 msgstr "Leder for medarbejder %s er ikke angivet."
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Marc Demo"
-msgstr "Marc Demo"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
 #: model:ir.model.fields,field_description:hr.field_res_users__marital
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1935,7 +1946,7 @@ msgstr "Kandidat"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__master_department_id
 msgid "Master Department"
-msgstr ""
+msgstr "Hovedafdeling"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1953,7 +1964,7 @@ msgstr "Mestre demoer af vores software"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__member_of_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__member_of_department
 msgid "Member of department"
-msgstr ""
+msgstr "Afdelingsmedlem"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__member_ids
@@ -2041,7 +2052,7 @@ msgstr "Forhandle og kontrakt"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_graph
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_pivot
 msgid "New Employees Over Time"
-msgstr ""
+msgstr "Nye medarbejderes overarbejde"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__newly_hired
@@ -2086,7 +2097,7 @@ msgstr "Godt at have"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
 msgid "No Tags found ! Let's create one"
-msgstr ""
+msgstr "Ingen nøgleord fundet! Opret ét"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2205,12 +2216,12 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__office
 msgid "Office"
-msgstr ""
+msgstr "Kontor"
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
 msgid "Officer: Manage all employees"
-msgstr ""
+msgstr "Sagsbehandler: Administrér alle medarbejdere"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.mail_activity_plan_action
@@ -2223,7 +2234,7 @@ msgstr ""
 #: code:addons/hr/static/src/core/web/thread_actions.js:0
 #, python-format
 msgid "Open Profile"
-msgstr ""
+msgstr "Åben profil"
 
 #. module: hr
 #. odoo-python
@@ -2269,6 +2280,9 @@ msgid ""
 " enabled in Configuration) and to change the cashier in the Point of Sale "
 "application."
 msgstr ""
+"PIN-kode, der bruges til at logge ind og ud af kiosk-tilstand i "
+"Tilstedeværelsesappen (hvis aktiveret i konfigurationen) og til at skifte "
+"kasserer i POS-appen."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
@@ -2283,7 +2297,7 @@ msgstr "Overordnet sti"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_part_time
 msgid "Part-Time"
-msgstr ""
+msgstr "Deltid"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_partner_id
@@ -2338,7 +2352,7 @@ msgstr "Fordele"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_permanent
 msgid "Permanent"
-msgstr ""
+msgstr "Permanent"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2356,7 +2370,7 @@ msgstr "Personlig udvikling"
 #: code:addons/hr/models/res_users.py:0
 #, python-format
 msgid "Personal information update."
-msgstr ""
+msgstr "Opdatering af personlige oplysninger."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2392,6 +2406,8 @@ msgid ""
 "Plan activities %(template_names)s cannot use coach, manager or employee "
 "responsible as it is used only for employee plans."
 msgstr ""
+"Aktivitetsplanen %(plan_names)s kan ikke have en coach, manager eller "
+"medarbejder som ansvarlig, da den kun er beregnet til medarbejderplaner."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
@@ -2401,7 +2417,7 @@ msgstr "Planer"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__plans_count
 msgid "Plans Count"
-msgstr ""
+msgstr "Antal planer"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2475,13 +2491,13 @@ msgstr "Privatadresse"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_car_plate
 msgid "Private Car Plate"
-msgstr ""
+msgstr "Privat nummerplade"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_city
 #: model:ir.model.fields,field_description:hr.field_res_users__private_city
 msgid "Private City"
-msgstr ""
+msgstr "Privat by"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2492,7 +2508,7 @@ msgstr "Privat kontakt"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_country_id
 #: model:ir.model.fields,field_description:hr.field_res_users__private_country_id
 msgid "Private Country"
-msgstr ""
+msgstr "Privat land"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_email
@@ -2516,30 +2532,30 @@ msgstr "Privat telefonnummer"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_state_id
 #: model:ir.model.fields,field_description:hr.field_res_users__private_state_id
 msgid "Private State"
-msgstr ""
+msgstr "Privat stat"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_street
 #: model:ir.model.fields,field_description:hr.field_res_users__private_street
 msgid "Private Street"
-msgstr ""
+msgstr "Privat gade"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_street2
 #: model:ir.model.fields,field_description:hr.field_res_users__private_street2
 msgid "Private Street2"
-msgstr ""
+msgstr "Privat gade2"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_zip
 #: model:ir.model.fields,field_description:hr.field_res_users__private_zip
 msgid "Private Zip"
-msgstr ""
+msgstr "Privat postnummer"
 
 #. module: hr
 #: model:hr.department,name:hr.dep_ps
 msgid "Professional Services"
-msgstr ""
+msgstr "Professionelle ydelser"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__employee_properties
@@ -2565,7 +2581,7 @@ msgstr "Kvalificer kundebehovene"
 #. module: hr
 #: model:hr.department,name:hr.dep_rd_be
 msgid "R&D USA"
-msgstr ""
+msgstr "FoU USA"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__rating_ids
@@ -2620,7 +2636,7 @@ msgstr "Registrer afgang"
 #: code:addons/hr/models/res_partner.py:0 code:addons/hr/models/res_users.py:0
 #, python-format
 msgid "Related Employees"
-msgstr ""
+msgstr "Relaterede medarbejdere"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2635,7 +2651,7 @@ msgstr "Relateret medarbejder"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_res_partner__employee_ids
 msgid "Related employees based on their private address"
-msgstr ""
+msgstr "Medarbejderrelationer baseret på fælles privatadresse"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_id
@@ -2646,7 +2662,7 @@ msgstr "Brugernavn for ressourcen til styring af brugeradgang."
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_homeworking
 msgid "Remote Work"
-msgstr ""
+msgstr "Fjernarbejde"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.hr_menu_hr_reports
@@ -2662,7 +2678,7 @@ msgstr "Krav"
 #. module: hr
 #: model:hr.department,name:hr.dep_rd
 msgid "Research & Development"
-msgstr ""
+msgstr "Forskning og udvikling"
 
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_resigned
@@ -2743,7 +2759,7 @@ msgstr "Skole"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_seasonal
 msgid "Seasonal"
-msgstr ""
+msgstr "Sæsonbestemt"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__coach_id
@@ -2782,14 +2798,14 @@ msgstr "Opsætning"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__show_hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__show_hr_icon_display
 msgid "Show Hr Icon Display"
-msgstr ""
+msgstr "Vis HR-ikon"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/department_chart/department_chart.xml:0
 #, python-format
 msgid "Show employees"
-msgstr ""
+msgstr "Vis medarbejdere"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__single
@@ -2813,16 +2829,11 @@ msgid "Social Security Number"
 msgstr "CPR nummer"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Software Developer"
-msgstr ""
-
-#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee_base.py:0
 #, python-format
 msgid "Some employee already have a work contact"
-msgstr ""
+msgstr "Nogle medarbejdere har allerede en ansættelseskontrakt."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2943,16 +2954,18 @@ msgstr "Teknisk ekspertise"
 #: model:ir.model.fields,field_description:hr.field_res_users__create_employee_id
 msgid "Technical field, bind user to this employee on create"
 msgstr ""
+"Teknisk felt til automatisk tilknytning af bruger ved oprettelse af "
+"medarbejder"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__create_employee
 msgid "Technical field, whether to create an employee"
-msgstr ""
+msgstr "Teknisk felt, der angiver, om en medarbejder skal oprettes"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_temporary
 msgid "Temporary"
-msgstr ""
+msgstr "Midlertidig"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
@@ -2993,7 +3006,7 @@ msgstr "PIN skal være en sekvens af cifre."
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 #, python-format
 msgid "The employee %s should be linked to a user."
-msgstr ""
+msgstr "Medarbejderen %s skal være knyttet til en bruger."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__employee_type
@@ -3008,7 +3021,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_no_of_recruitment_positive
 msgid "The expected number of new employees must be positive."
-msgstr ""
+msgstr "Det forventede antal nye medarbejdere skal være større end nul."
 
 #. module: hr
 #. odoo-python
@@ -3024,14 +3037,14 @@ msgstr ""
 #: code:addons/hr/models/res_users.py:0
 #, python-format
 msgid "The following fields were modified by %s"
-msgstr ""
+msgstr "Følgende felter er redigeret af %s"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 #, python-format
 msgid "The manager of %s should be linked to a user."
-msgstr ""
+msgstr "Lederen af %s skal være knyttet til en bruger."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_name_company_uniq
@@ -3043,7 +3056,7 @@ msgstr "Stillingsnavnet skal være unikt pr. afdeling i firmaet!"
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 #, python-format
 msgid "The user of %s's coach is not set."
-msgstr ""
+msgstr "Brugeren af %ss coach er ikke angivet."
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user
@@ -3066,13 +3079,14 @@ msgstr ""
 #, python-format
 msgid "The work permit of %(employee)s expires at %(date)s."
 msgstr ""
+"Arbejdstilladelsen for medarbejderen %(employee)s udløber den %(date)s."
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "This employee already has an user."
-msgstr ""
+msgstr "Denne medarbejder har allerede en bruger."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
@@ -3090,7 +3104,7 @@ msgstr ""
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 #, python-format
 msgid "Those responsible types are limited to Employee plans."
-msgstr ""
+msgstr "Disse ansvarstyper er begrænset til medarbejderplaner."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
@@ -3115,6 +3129,9 @@ msgid ""
 " leaves, ...), you should create another employee in the new company "
 "instead."
 msgstr ""
+"For at undgå problemer med flere virksomheder (såsom tab af adgang til "
+"tidligere kontrakter, ferie m.m.) anbefales det at oprette en ny medarbejder"
+" i den nye virksomhed."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_to_define
@@ -3177,7 +3194,7 @@ msgstr "Ulæste beskeder"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
 msgid "Use tags to categorize your Employees."
-msgstr ""
+msgstr "Brug nøgleord til at kategorisere dine medarbejdere."
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
@@ -3197,7 +3214,7 @@ msgstr "Brugers partner"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "Vacancies:"
-msgstr ""
+msgstr "Ledige stillinger:"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_ip_list
@@ -3227,7 +3244,7 @@ msgstr "Se profil"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
 msgid "Visa Expiration Date"
-msgstr ""
+msgstr "Udløbsdato for visum"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
@@ -3285,6 +3302,8 @@ msgid ""
 "Whether the employee is a member of the active user's department or one of "
 "it's child department."
 msgstr ""
+"Om medarbejderen er medlem af den aktive brugers afdeling eller en af dens "
+"underafdelinger. "
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__widower
@@ -3326,7 +3345,7 @@ msgstr "Arbejdsadresse"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_contact_id
 #: model:ir.model.fields,field_description:hr.field_res_users__work_contact_id
 msgid "Work Contact"
-msgstr ""
+msgstr "Ansættelseskontrakt"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_email
@@ -3384,7 +3403,7 @@ msgstr "Arbejdstilladelse"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_expiration_date
 msgid "Work Permit Expiration Date"
-msgstr ""
+msgstr "Udløbsdato for arbejdstilladelse"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__permit_no
@@ -3395,7 +3414,7 @@ msgstr "Nr. på arbejdstilladelse"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_scheduled_activity
 msgid "Work Permit Scheduled Activity"
-msgstr ""
+msgstr "Arbejdstilladelse til planlagt aktivitet"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_phone
@@ -3445,7 +3464,7 @@ msgstr "Du kan ikke lave rekursive afdelinger."
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "You do not have access to this document."
-msgstr ""
+msgstr "Du har ikke adgang til dette dokument."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_trainee
@@ -3463,6 +3482,17 @@ msgid ""
 "contributing to the set up of a new politic,\n"
 "being involved into satisfaction surveys in order to have a better knowledge of how the support given is seen by the customers."
 msgstr ""
+"Du vil deltage i opdateringen af vores tutorial- og salgsstøtteværktøjer i forbindelse med lanceringen af nye versioner af Odoo. Hver ny version af softwaren indeholder væsentlige forbedringer inden for funktionalitet, brugervenlighed og konfigurationsmuligheder.\n"
+"For at kunne bidrage til denne opdatering bliver du fortrolig med eksisterende materialer (bøger, kursusbilag, Odoo-præsentationer og kommercielle værktøjer).\n"
+"Du vil sikre, at disse materialer tilpasses den nye version og\n"
+"foreslå forbedringer, der også dækker nye funktioner og områder i softwaren.\n"
+"Du bliver en del af teamet for implementeringshjælp. Teamet består af 3 medarbejdere, der støtter under softwareimplementeringen. Din rolle vil blandt andet bestå i at\n"
+"afholde webinarer, der demonstrerer softwarens forskellige funktionaliteter,\n"
+"samt yde support besvare kundernes spørgsmål.\n"
+"Derudover vil du støtte supportchefen i udviklingen af vores supportydelser. Det indebærer\n"
+"deltagelse i behandlingen af nye supportsager,\n"
+"medvirken til at implementere nye supportpolitikker og\n"
+"bidrag til gennemførelse og opfølgning på kundetilfredshedsundersøgelser med henblik på at styrke forståelsen af kundernes oplevelse af den leverede support."
 
 #. module: hr
 #. odoo-python
@@ -3478,6 +3508,9 @@ msgid ""
 "\n"
 "The job is located in Grand-Rosière (1367), Belgium (between Louvain-La-Neuve and Namur)."
 msgstr ""
+"Du bliver en del af de konsulenttjenester, vi tilbyder vores partnere og kunder, herunder design, analyse, udvikling, test, projektledelse samt support og coaching. Du kommer både til at arbejde selvstændigt og til at koordinere og følge op på mindre, distribuerede udviklingsteams i forbindelse med udvalgte projekter. Der vil også være mulighed for at undervise i Odoo i form af kurser for partnere og kunder (8-10 deltagere pr. session). Du refererer til lederen af professionelle tjenester og samarbejder tæt med både udviklere og konsulenter.\n"
+"\n"
+"Stillingen er baseret i Grand-Rosière (1367), Belgien – mellem Louvain-La-Neuve og Namur."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -3490,7 +3523,7 @@ msgstr "Post nr."
 #: code:addons/hr/models/mail_alias.py:0
 #, python-format
 msgid "addresses linked to registered employees"
-msgstr ""
+msgstr "adresser knyttet til registrerede medarbejdere"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
@@ -3517,4 +3550,4 @@ msgstr "begrænset til medarbejdere"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
-msgstr ""
+msgstr "work_permit_name"

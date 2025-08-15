@@ -40,6 +40,15 @@ class TestCompanyLeave(TransactionCase):
             'tz': "Europe/Brussels",
         })
 
+        cls.paid_time_off_hours = cls.env['hr.leave.type'].create({
+            'name': 'Paid Time Off in Hours',
+            'request_unit': 'hour',
+            'leave_validation_type': 'no_validation',
+            'company_id': cls.company.id,
+            'time_type': 'other',
+            'requires_allocation': 'yes',
+        })
+
     def test_leave_whole_company_01(self):
         # TEST CASE 1: Leaves taken in days. Take a 3 days leave
         # Add a company leave on the second day.
@@ -293,10 +302,47 @@ class TestCompanyLeave(TransactionCase):
         })
         company_leave._compute_date_from_to()
 
-        with self.assertQueryCount(__system__=1855):  # 770 community
+        with self.assertQueryCount(__system__=1856):  # 770 community
             # Original query count: 1987
             # Without tracking/activity context keys: 5154
             company_leave.action_validate()
 
         leaves = self.env['hr.leave'].search([('holiday_status_id', '=', self.bank_holiday.id)])
         self.assertEqual(len(leaves), 102)
+
+    def test_leave_whole_company_08(self):
+        """
+            Check leaves given in hours for a company,
+            Making sure no leaves are given for 0 Hours / Week employee(i.e. Contractors billed for hours).
+        """
+        employee_0_test_10, employee_1_test_10, employee_2_test_10 = self.env['hr.employee'].create([{
+            'name': 'My Employee 0',
+            'company_id': self.company.id,
+            'tz': "Europe/Brussels",
+        },{
+            'name': 'My Employee 1',
+            'company_id': self.company.id,
+            'tz': "Europe/Brussels",
+        },{
+            'name': 'My Employee 2',
+            'company_id': self.company.id,
+            'tz': "Europe/Brussels",
+        }])
+        zero_hours_working_schedule = self.env['resource.calendar'].create({
+            'name': 'Standard - Hours/Week',
+            'attendance_ids': [],
+            'hours_per_day': 0,
+            'tz': "Europe/Brussels",
+        })
+        employee_0_test_10.resource_calendar_id = zero_hours_working_schedule
+        self.env['hr.leave.allocation'].create({
+            'name': 'Holiday (8 Hours)',
+            'holiday_status_id': self.paid_time_off_hours.id,
+            'holiday_type': 'company',
+            'mode_company_id': self.company.id,
+            'number_of_days': 1,
+        })
+        employee_leaves = self.env['hr.leave.allocation'].search([
+            ('name', '=', 'Holiday (8 Hours)'),
+            ('employee_id', 'in', [employee_0_test_10.id, employee_1_test_10.id, employee_2_test_10.id])])
+        self.assertEqual(len(employee_leaves), 2)

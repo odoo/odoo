@@ -5,6 +5,7 @@ from odoo.exceptions import UserError
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
+from odoo.tools.misc import unquote
 
 TIMESHEET_INVOICE_TYPES = [
     ('billable_time', 'Billed on Timesheets'),
@@ -21,18 +22,25 @@ TIMESHEET_INVOICE_TYPES = [
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
+    def _domain_so_line(self):
+        domain = expression.AND([
+            self.env['sale.order.line']._sellable_lines_domain(),
+            [
+                ('qty_delivered_method', 'in', ['analytic', 'timesheet']),
+                ('is_service', '=', True),
+                ('is_expense', '=', False),
+                ('state', '=', 'sale'),
+                ('order_partner_id.commercial_partner_id', '=', unquote('commercial_partner_id')),
+            ],
+        ])
+        return str(domain)
+
     timesheet_invoice_type = fields.Selection(TIMESHEET_INVOICE_TYPES, string="Billable Type",
             compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', compute="_compute_commercial_partner")
     timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet", index='btree_not_null')
     so_line = fields.Many2one(compute="_compute_so_line", store=True, readonly=False,
-        domain="""[
-            ('qty_delivered_method', 'in', ['analytic', 'timesheet']),
-            ('order_partner_id.commercial_partner_id', '=', commercial_partner_id),
-            ('is_service', '=', True),
-            ('is_expense', '=', False),
-            ('state', '=', 'sale')
-        ]""",
+        domain=_domain_so_line,
         help="Sales order item to which the time spent will be added in order to be invoiced to your customer. Remove the sales order item for the timesheet entry to be non-billable.")
     # we needed to store it only in order to be able to groupby in the portal
     order_id = fields.Many2one(related='so_line.order_id', store=True, readonly=True, index=True)
@@ -55,7 +63,7 @@ class AccountAnalyticLine(models.Model):
     @api.depends('project_id.partner_id.commercial_partner_id', 'task_id.partner_id.commercial_partner_id')
     def _compute_commercial_partner(self):
         for timesheet in self:
-            timesheet.commercial_partner_id = timesheet.task_id.partner_id.commercial_partner_id or timesheet.project_id.partner_id.commercial_partner_id
+            timesheet.commercial_partner_id = timesheet.task_id.sudo().partner_id.commercial_partner_id or timesheet.project_id.sudo().partner_id.commercial_partner_id
 
     @api.depends('so_line.product_id', 'project_id.billing_type', 'amount')
     def _compute_timesheet_invoice_type(self):
@@ -101,7 +109,7 @@ class AccountAnalyticLine(models.Model):
 
     def _is_not_billed(self):
         self.ensure_one()
-        return not self.timesheet_invoice_id or self.timesheet_invoice_id.state == 'cancel'
+        return not self.timesheet_invoice_id or (self.timesheet_invoice_id.state == 'cancel' and self.timesheet_invoice_id.payment_state != 'invoicing_legacy')
 
     def _check_timesheet_can_be_billed(self):
         return self.so_line in self.project_id.mapped('sale_line_employee_ids.sale_line_id') | self.task_id.sale_line_id | self.project_id.sale_line_id
@@ -109,7 +117,7 @@ class AccountAnalyticLine(models.Model):
     def _check_can_write(self, values):
         # prevent to update invoiced timesheets if one line is of type delivery
         if self.sudo().filtered(lambda aal: aal.so_line.product_id.invoice_policy == "delivery") and self.filtered(lambda t: t.timesheet_invoice_id and t.timesheet_invoice_id.state != 'cancel'):
-            if any(field_name in values for field_name in ['unit_amount', 'employee_id', 'project_id', 'task_id', 'so_line', 'amount', 'date']):
+            if any(field_name in values for field_name in ['unit_amount', 'employee_id', 'project_id', 'task_id', 'so_line', 'date']):
                 raise UserError(_('You cannot modify timesheets that are already invoiced.'))
         return super()._check_can_write(values)
 

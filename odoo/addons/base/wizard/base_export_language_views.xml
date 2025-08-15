@@ -13,7 +13,7 @@
                         <field name="format"/>
                         <field name="export_type"/>
                         <field name="modules" widget="many2many_tags" options="{'no_create': True}" invisible="export_type == 'model'"/>
-                        <field name="model_id" options="{'no_create': True}" invisible="export_type == 'module'"/>
+                        <field name="model_id" options="{'no_create': True}" invisible="export_type == 'module'" required="export_type == 'model'"/>
                         <field name="model_name" invisible="1"/>
                         <field name="domain" widget="domain" options="{'model': 'model_name'}" invisible="export_type == 'module'"/>
                     </group>

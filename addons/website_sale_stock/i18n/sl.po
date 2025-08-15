@@ -10,7 +10,8 @@
 # Grega Vavtar <grega@hbs.si>, 2023
 # Ethan Vincent, 2024
 # Lancelot Semal, 2024
-# Gregor Flajs, 2024
+# Gregor Flajs, 2025
+# Aleš Pipan, 2025
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Gregor Flajs, 2024\n"
+"Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -88,7 +89,7 @@ msgstr ""
 #: code:addons/website_sale_stock/controllers/main.py:0
 #, python-format
 msgid "Invalid Email"
-msgstr ""
+msgstr "Neveljaven e-poštni naslov"
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -112,7 +113,7 @@ msgstr "Samo"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "Order Now"
-msgstr ""
+msgstr "Naroči zdaj"
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -198,7 +199,7 @@ msgstr ""
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "The following product is now available."
-msgstr ""
+msgstr "Naslednji izdelek je zdaj na voljo."
 
 #. module: website_sale_stock
 #. odoo-python
@@ -279,8 +280,16 @@ msgstr ""
 
 #. module: website_sale_stock
 #. odoo-python
-#: code:addons/website_sale_stock/models/sale_order.py:0
 #: code:addons/website_sale_stock/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
+"available"
+msgstr ""
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
 msgstr ""

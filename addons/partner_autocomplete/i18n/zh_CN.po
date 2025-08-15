@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Chloe Wang, 2023
+# Chloe Wang, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Chloe Wang, 2023\n"
+"Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,13 +37,6 @@ msgstr "购买更多信用"
 #: model:ir.model,name:partner_autocomplete.model_res_company
 msgid "Companies"
 msgstr "公司"
-
-#. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_company.py:0
-#, python-format
-msgid "Company auto-completed by Odoo Partner Autocomplete Service"
-msgstr "公司由Odoo合作伙伴自动完成的服务"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__partner_gid
@@ -154,19 +147,11 @@ msgid "Partner Autocomplete: Sync with remote DB"
 msgstr "合作伙伴自动完成： 与远程数据库同步"
 
 #. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_partner.py:0
-#, python-format
-msgid "Partner created by Odoo Partner Autocomplete Service"
-msgstr "Odoo合作伙伴自动完成服务并创建伙伴"
-
-#. module: partner_autocomplete
 #. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
-#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #, python-format
-msgid "Placeholder"
-msgstr "占位符"
+msgid "Search Worldwide 🌎"
+msgstr "全球搜索🌎"
 
 #. module: partner_autocomplete
 #. odoo-javascript
@@ -189,3 +174,10 @@ msgstr "设置您的帐户令牌"
 #, python-format
 msgid "Test mode"
 msgstr "测试模式"
+
+#. module: partner_autocomplete
+#. odoo-python
+#: code:addons/partner_autocomplete/models/res_partner.py:0
+#, python-format
+msgid "Unable to enrich company (no credit was consumed)."
+msgstr "无法丰富公司信息（未消耗任何信用点）。"

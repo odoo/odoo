@@ -15,14 +15,16 @@
 # Grega Vavtar <grega@hbs.si>, 2024
 # Martin Trigaux, 2024
 # Katja Deržič, 2024
+# Wil Odoo, 2024
+# Aleš Pipan, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-05-22 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Katja Deržič, 2024\n"
+"Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +35,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_count
 msgid "# Registrations"
-msgstr ""
+msgstr "# Registracije"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -299,7 +301,7 @@ msgstr "Odgovor"
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_answer_view_pivot
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_answer_view_tree
 msgid "Answer Breakdown"
-msgstr ""
+msgstr "Razčlenitev odgovorov"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__answer_ids
@@ -311,7 +313,7 @@ msgstr "Odgovori"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__once_per_order
 msgid "Ask once per order"
-msgstr ""
+msgstr "Vprašajte enkrat na naročilo"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
@@ -321,16 +323,20 @@ msgid ""
 "founded TinyERP. This was the first phase of OpenERP which would later "
 "became Odoo, the most installed open-source business software worldwide."
 msgstr ""
+"Pri komaj 13 letih je Janez Novak že začel razvijati svoje prve poslovne "
+"aplikacije za stranke. Po obvladovanju gradbeništva je ustanovil TinyERP. To"
+" je bila prva faza OpenERP, ki je kasneje postal Odoo, najpogosteje "
+"nameščena odprtokodna poslovna programska oprema na svetu."
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_registration__registration_answer_ids
 msgid "Attendee Answers"
-msgstr ""
+msgstr "Odgovori udeležencev"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_registration__registration_answer_choice_ids
 msgid "Attendee Selection Answers"
-msgstr ""
+msgstr "Odgovori za izbor udeležencev"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -389,7 +395,7 @@ msgstr "Zaključi"
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.action_event_registration_report
 msgid "Come back once you have registrations to overview answers."
-msgstr ""
+msgstr "Vrnite se, ko boste imeli prijave, da pregledate odgovore."
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_2_answer_1
@@ -403,7 +409,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
 #, python-format
 msgid "Community"
-msgstr ""
+msgstr "Skupnost"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__community_menu
@@ -527,7 +533,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Download Tickets <i class=\"ms-1 fa fa-download\"/>"
-msgstr ""
+msgstr "Prenesi vstopnice <i class=\"ms-1 fa fa-download\"/>"
 
 #. module: website_event
 #. odoo-python
@@ -541,6 +547,13 @@ msgstr "E-pošta"
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "End -"
 msgstr "Zaključek -"
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/js/website_event.js:0
+#, python-format
+msgid "Error"
+msgstr "Napaka"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -588,12 +601,12 @@ msgstr ""
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_question
 msgid "Event Question"
-msgstr ""
+msgstr "Vprašanje o dogodku"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_question_answer
 msgid "Event Question Answer"
-msgstr ""
+msgstr "Odgovor na vprašanje o dogodku"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_registration
@@ -603,12 +616,12 @@ msgstr "Registracija dogodka"
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_registration_answer
 msgid "Event Registration Answer"
-msgstr ""
+msgstr "Odgovor na prijavo na dogodek"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_ids
 msgid "Event Registrations"
-msgstr ""
+msgstr "Prijave na dogodke"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
@@ -730,19 +743,19 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__general_question_ids
 msgid "General Questions"
-msgstr ""
+msgstr "Splošna vprašanja"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Google"
-msgstr ""
+msgstr "Google"
 
 #. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
 msgid "Great Reno Ballon Race"
-msgstr ""
+msgstr "Velika dirka balonov v Renu"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
@@ -754,7 +767,7 @@ msgstr "Mreža"
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
 msgid "Hockey Tournament"
-msgstr ""
+msgstr "Hokejski turnir"
 
 #. module: website_event
 #: model:event.question,title:website_event.event_7_question_1
@@ -784,6 +797,9 @@ msgid ""
 "propagated to every attendees.If not it will be asked for every attendee of "
 "a reservation."
 msgstr ""
+"Če je vrednost Resnična, bo to vprašanje zastavljeno samo enkrat in njegova "
+"vrednost bo posredovana vsem udeležencem. Če ni, bo zastavljeno vsem "
+"udeležencem rezervacije."
 
 #. module: website_event
 #. odoo-python
@@ -862,7 +878,7 @@ msgstr "Seznam"
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
 msgid "Live Music Festival"
-msgstr ""
+msgstr "Festival žive glasbe"
 
 #. module: website_event
 #. odoo-python
@@ -896,7 +912,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
 msgid "Mandatory"
-msgstr ""
+msgstr "Obvezno"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__is_mandatory_answer
@@ -952,7 +968,7 @@ msgstr "Prihodnji dogodki"
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.action_event_registration_report
 msgid "No Answers yet!"
-msgstr ""
+msgstr "Še ni odgovorov!"
 
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.website_event_menu_action
@@ -988,7 +1004,7 @@ msgstr "Ne objavljeno"
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
 msgid "Once per Order"
-msgstr ""
+msgstr "Enkrat na naročilo"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_location
@@ -1000,7 +1016,7 @@ msgstr ""
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
 msgid "OpenWood Collection Online Reveal"
-msgstr ""
+msgstr "Spletna predstavitev zbirke OpenWood"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -1022,7 +1038,7 @@ msgstr ""
 #: code:addons/website_event/models/event_event.py:0
 #, python-format
 msgid "Past Events"
-msgstr ""
+msgstr "Pretekli dogodki"
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_0_answer_2
@@ -1041,7 +1057,7 @@ msgstr "Telefon"
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_photos
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Photos"
-msgstr ""
+msgstr "Fotografije"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_search
@@ -1061,14 +1077,14 @@ msgstr "Vprašanje"
 #: model:ir.model.fields,field_description:website_event.field_event_question__question_type
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__question_type
 msgid "Question Type"
-msgstr ""
+msgstr "Vrsta vprašanja"
 
 #. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/event_question.py:0
 #, python-format
 msgid "Question cannot be linked to both an Event and an Event Type."
-msgstr ""
+msgstr "Vprašanja ni mogoče povezati z dogodkom in vrsto dogodka hkrati."
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__question_ids
@@ -1239,7 +1255,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_answer_view_tree
 msgid "Selected answer"
-msgstr ""
+msgstr "Izbrani odgovor"
 
 #. module: website_event
 #: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__simple_choice
@@ -1295,7 +1311,7 @@ msgstr "Iskani dogodek žal ni več na voljo."
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__specific_question_ids
 msgid "Specific Questions"
-msgstr ""
+msgstr "Specifična vprašanja"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -1333,6 +1349,13 @@ msgid "Suggested answer"
 msgstr "Predlagani odgovor"
 
 #. module: website_event
+#. odoo-python
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "Google reCaptcha je zaznal sumljivo dejavnost."
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Template badge"
 msgstr ""
@@ -1340,7 +1363,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__text_box
 msgid "Text Input"
-msgstr ""
+msgstr "Vnos besedila"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__value_text_box
@@ -1364,7 +1387,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.constraint,message:website_event.constraint_event_registration_answer_value_check
 msgid "There must be a suggested value or a text value."
-msgstr ""
+msgstr "Obstajati mora predlagana vrednost ali besedilna vrednost."
 
 #. module: website_event
 #. odoo-python
@@ -1443,12 +1466,19 @@ msgstr "Tip"
 
 #. module: website_event
 #. odoo-python
+#: code:addons/website_event/models/website_visitor.py:0
+#, python-format
+msgid "Unsupported 'Not In' operation on visitors registrations"
+msgstr ""
+
+#. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #: model:website.snippet.filter,name:website_event.website_snippet_filter_event_list
 #: model_terms:ir.ui.view,arch_db:website_event.event_time
 #, python-format
 msgid "Upcoming Events"
-msgstr ""
+msgstr "Prihajajoči dogodki"
 
 #. module: website_event
 #. odoo-javascript
@@ -1615,6 +1645,7 @@ msgstr ""
 msgid ""
 "You cannot change the question type of a question that already has answers!"
 msgstr ""
+"Vrste vprašanja, na katero že obstajajo odgovori, ne morete spremeniti!"
 
 #. module: website_event
 #. odoo-python
@@ -1623,6 +1654,7 @@ msgstr ""
 msgid ""
 "You cannot delete a question that has already been answered by attendees."
 msgstr ""
+"Vprašanja, na katerega so udeleženci že odgovorili, ne morete izbrisati."
 
 #. module: website_event
 #. odoo-python
@@ -1630,7 +1662,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete an answer that has already been selected by attendees."
-msgstr ""
+msgstr "Odgovora, ki so ga udeleženci že izbrali, ne morete izbrisati."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
@@ -1646,7 +1678,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_question_view_form
 msgid "e.g. \"Do you have any diet restrictions?\""
-msgstr ""
+msgstr "npr. \"Ali imate kakšne prehranske omejitve?\""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full

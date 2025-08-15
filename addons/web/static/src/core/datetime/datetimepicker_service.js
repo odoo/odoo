@@ -42,6 +42,8 @@ const formatters = {
     datetime: formatDateTime,
 };
 
+const listenedElements = new WeakSet();
+
 const parsers = {
     date: parseDate,
     datetime: parseDateTime,
@@ -430,16 +432,6 @@ export const datetimePickerService = {
                 let restoreTargetMargin = null;
                 let shouldFocus = false;
 
-                /**
-                 * @param {HTMLElement} el
-                 * @param {string} type
-                 * @param {(ev: Event) => any} listener
-                 */
-                const addListener = (el, type, listener) => {
-                    el.addEventListener(type, listener);
-                    return () => el.removeEventListener(type, listener);
-                };
-
                 return {
                     state: pickerProps,
                     open: openPicker,
@@ -451,39 +443,36 @@ export const datetimePickerService = {
                     },
                     enable() {
                         let editableInputs = 0;
-                        const cleanups = [];
                         for (const [el, value] of zip(
                             getInputs(),
                             ensureArray(pickerProps.value),
                             true
                         )) {
                             updateInput(el, value);
-                            if (el && !el.disabled && !el.readOnly) {
-                                cleanups.push(addListener(el, "change", onInputChange));
-                                cleanups.push(addListener(el, "click", onInputClick));
-                                cleanups.push(addListener(el, "focus", onInputFocus));
-                                cleanups.push(addListener(el, "keydown", onInputKeydown));
+                            if (el && !el.disabled && !el.readOnly && !listenedElements.has(el)) {
+                                listenedElements.add(el);
+                                el.addEventListener("change", onInputChange);
+                                el.addEventListener("click", onInputClick);
+                                el.addEventListener("focus", onInputFocus);
+                                el.addEventListener("keydown", onInputKeydown);
                                 editableInputs++;
                             }
                         }
                         const calendarIconGroupEl = getInput(0)?.parentElement.querySelector(
                             ".input-group-text .fa-calendar"
                         )?.parentElement;
-                        if (calendarIconGroupEl) {
+                        if (calendarIconGroupEl && !listenedElements.has(calendarIconGroupEl)) {
+                            listenedElements.add(calendarIconGroupEl);
                             // TODO: Remove this line and the `pe-none` class
                             // from templates in master
                             calendarIconGroupEl.classList.remove("pe-none");
                             calendarIconGroupEl.classList.add("cursor-pointer");
-                            cleanups.push(
-                                addListener(calendarIconGroupEl, "click", () => {
-                                    openPicker(0);
-                                })
-                            );
+                            calendarIconGroupEl.addEventListener("click", () => openPicker(0));
                         }
                         if (!editableInputs && popover.isOpen) {
                             saveAndClose();
                         }
-                        return () => cleanups.forEach((cleanup) => cleanup());
+                        return () => {};
                     },
                     get isOpen() {
                         return popover.isOpen;

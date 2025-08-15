@@ -1,33 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_expense
-# 
+#
 # Translators:
 # Claudia Baisan, 2024
 # Cozmin Candea <office@terrabit.ro>, 2024
 # Hongu Cosmin <cosmin513@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
-# Dorin Hongu <dhongu@gmail.com>, 2024
-# Larisa_nexterp, 2024
 # Corina Calin, 2024
 # Maria Muntean, 2024
 # Betty Keresztesi, 2024
 # Wil Odoo, 2024
-# 
+# Lyall Kindmurr, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2025
+# Larisa_nexterp, 2025
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-08-07 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -60,8 +62,7 @@ msgstr "%(date_from)s - %(date_to)s"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
-msgid ""
-"%(user)s confirms this expense is not a duplicate with similar expense."
+msgid "%(user)s confirms this expense is not a duplicate with similar expense."
 msgstr ""
 "%(user)s confirmă că această cheltuială nu este o cheltuială duplicată."
 
@@ -111,11 +112,14 @@ msgstr "2023-08-11"
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
 "<span class=\"d-inline-block\">\n"
-"                                        <i class=\"text-muted\">Use this reference as a subject prefix when submitting by email.</i>\n"
+"                                        <i class=\"text-muted\">Use this "
+"reference as a subject prefix when submitting by email.</i>\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"d-inline-block\">\n"
-"                                        <i class=\"text-muted\">Utilizați această referință ca prefix al subiectului atunci când trimiteți prin e-mail.</i>\n"
+"                                        <i class=\"text-muted\">Utilizați "
+"această referință ca prefix al subiectului atunci când trimiteți prin e-mail."
+"</i>\n"
 "                                    </span>"
 
 #. module: hr_expense
@@ -236,7 +240,8 @@ msgstr "Toate rapoartele"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 #, python-format
-msgid "All expenses in an expense report must have the same \"paid by\" criteria."
+msgid ""
+"All expenses in an expense report must have the same \"paid by\" criteria."
 msgstr ""
 "Toate cheltuielile dintr-un raport de cheltuieli trebuie să aibă același "
 "criteriu \"plătit de\"."
@@ -413,8 +418,8 @@ msgid ""
 "Both price-included and price-excluded taxes will behave as price-included "
 "taxes for expenses."
 msgstr ""
-"Atât taxele incluse în preț, cât și cele excluse din preț se vor comporta ca"
-" taxe incluse în preț pentru cheltuieli."
+"Atât taxele incluse în preț, cât și cele excluse din preț se vor comporta ca "
+"taxe incluse în preț pentru cheltuieli."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -573,7 +578,7 @@ msgstr "Creat de"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__create_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__create_date
 msgid "Created on"
-msgstr "Creat în"
+msgstr "Creat pe"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -670,14 +675,20 @@ msgid "Display Name"
 msgstr "Nume afișat"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Cont analitic de distribuție"
+
+#. module: hr_expense
 #: model_terms:digest.tip,tip_description:hr_expense.digest_tip_hr_expense_0
 msgid ""
 "Do not keep your expense tickets in your pockets any longer. Just snap a "
 "picture of your receipt and let Odoo digitalizes it for you. The OCR and "
 "Artificial Intelligence will fill the data automatically."
 msgstr ""
-"Nu mai păstrați biletele de cheltuieli în buzunare. Faceți doar o fotografie"
-" a chitanței dvs. și lăsați-o Odoo să o digitalizeze pentru dvs. OCR și "
+"Nu mai păstrați biletele de cheltuieli în buzunare. Faceți doar o fotografie "
+"a chitanței dvs. și lăsați-o Odoo să o digitalizeze pentru dvs. OCR și "
 "Inteligența artificială vor completa datele automat."
 
 #. module: hr_expense
@@ -687,6 +698,9 @@ msgid ""
 "from the partner to fix the configuration. Cancel this invoice and start "
 "again."
 msgstr ""
+"Chiar doriți să facturați propria companie? Eliminați „Numele companiei” din "
+"partener pentru a corecta configurația. Anulați această factură și începeți "
+"din nou."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__business_domain
@@ -753,8 +767,7 @@ msgstr "Cheltuielile angajaților"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid ""
-"Enable users to choose default category for automatically generated "
-"expenses."
+"Enable users to choose default category for automatically generated expenses."
 msgstr ""
 "Permiteți utilizatorilor să aleagă categoria implicită pentru cheltuielile "
 "generate automat."
@@ -764,8 +777,7 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid ""
-"Enter a name then choose a category and configure the amount of your "
-"expense."
+"Enter a name then choose a category and configure the amount of your expense."
 msgstr ""
 "Introduceți un nume, apoi alegeți o categorie și configurați valoarea "
 "cheltuielilor dvs."
@@ -910,8 +922,7 @@ msgstr "Validare cheltuieli duplicate"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Expense categories can be reinvoiced to your customers."
-msgstr ""
-"Categoriile de cheltuieli pot fi refacturate clienților dumneavoastră."
+msgstr "Categoriile de cheltuieli pot fi refacturate clienților dumneavoastră."
 
 #. module: hr_expense
 #. odoo-python
@@ -1009,8 +1020,8 @@ msgid ""
 "Expenses from which the report has been submitted to the approver and is "
 "waiting for approval."
 msgstr ""
-"Cheltuieli pentru care raportul a fost transmis către aprobare și se află în"
-" așteptarea aprobării."
+"Cheltuieli pentru care raportul a fost transmis către aprobare și se află în "
+"așteptarea aprobării."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1129,6 +1140,11 @@ msgid "Hotel, plane ticket, taxi, etc."
 msgstr "Hotel, bilet de avion, taxi, etc."
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
+msgid "Hr Expense Alias Domain"
+msgstr "Domeniu alias cheltuieli HR"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__id
@@ -1219,7 +1235,6 @@ msgstr "Este selectat produsul cu cost diferit de zero"
 
 #. module: hr_expense
 #. odoo-javascript
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "It all begins here - let's go!"
@@ -1345,7 +1360,6 @@ msgstr ""
 
 #. module: hr_expense
 #. odoo-javascript
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Managers can inspect all expenses from here."
@@ -1544,7 +1558,7 @@ msgstr "Numărul de mesaje cu eroare de livrare"
 #: code:addons/hr_expense/static/src/components/expense_dashboard.xml:0
 #, python-format
 msgid "Numbers computed from your personal expenses."
-msgstr ""
+msgstr "Numere calculate din cheltuielile personale."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
@@ -1662,6 +1676,16 @@ msgstr "Plăți"
 #: model_terms:product.template,description:hr_expense.expense_product_communication_product_template
 msgid "Phone bills, postage, etc."
 msgstr "Facturi de telefon, taxe poștale etc."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid ""
+"Please specify an expense journal in order to generate accounting entries."
+msgstr ""
+"Vă rugăm să specificați un jurnal de cheltuieli pentru a genera note "
+"contabile."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1879,10 +1903,13 @@ msgstr "Scanați acest cod QR pentru a obține aplicația Odoo:"
 #: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
+"If empty, the approval is done by an Administrator or Approver (determined "
+"in settings/users)."
 msgstr ""
-"Selectați utilizatorul responsabil pentru aprobarea „Cheltuielilor” acestui angajat.\n"
-" Dacă este goală, aprobarea se face de către un administrator sau un aprobator (stabilit în setări / utilizatori)."
+"Selectați utilizatorul responsabil pentru aprobarea „Cheltuielilor” acestui "
+"angajat.\n"
+" Dacă este goală, aprobarea se face de către un administrator sau un "
+"aprobator (stabilit în setări / utilizatori)."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__selectable_payment_method_line_ids
@@ -1898,8 +1925,8 @@ msgid ""
 "category will automatically be set. Type the expense amount in the mail "
 "subject to set it on the expense too."
 msgstr ""
-"Trimiteți un e-mail la acest alias de e-mail cu chitanța în atașament pentru"
-" a crea o cheltuială cu un singur clic. Dacă primul cuvânt din subiectul "
+"Trimiteți un e-mail la acest alias de e-mail cu chitanța în atașament pentru "
+"a crea o cheltuială cu un singur clic. Dacă primul cuvânt din subiectul "
 "mesajului conține referința internă a categoriei sau numele categoriei, "
 "categoria corespunzătoare va fi setată automat. Introduceți valoarea "
 "cheltuielii în subiectul e-mailului pentru a o seta și pe cheltuială."
@@ -1931,14 +1958,13 @@ msgstr "Foaie"
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__show_commercial_partner_warning
 #: model:ir.model.fields,field_description:hr_expense.field_account_payment__show_commercial_partner_warning
 msgid "Show Commercial Partner Warning"
-msgstr ""
+msgstr "Afișează avertisment partener comercial"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Show all records which has next action date is before today"
-msgstr ""
-"Afișați toate înregistrările care au data următoarei acțiuni în trecut"
+msgstr "Afișați toate înregistrările care au data următoarei acțiuni în trecut"
 
 #. module: hr_expense
 #. odoo-python
@@ -1955,14 +1981,6 @@ msgid ""
 msgstr ""
 "Faceți fotografii cu chitanțele dvs. și lăsați Odoo<br> să creeze automat "
 "cheltuielile pentru dvs."
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Specify expense journal to generate accounting entries."
-msgstr ""
-"Specificați jurnalul de cheltuieli pentru a genera înregistrări contabile."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
@@ -2062,7 +2080,7 @@ msgstr "Taxă"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Tax 15%"
-msgstr "Impozit 15%"
+msgstr "TVA 15%"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_amount
@@ -2102,11 +2120,19 @@ msgstr "Aprobator de echipă"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
-msgid ""
-"The company's default journal used when an employee expense is created."
+msgid "The company's default journal used when an employee expense is created."
 msgstr ""
-"Jurnalul implicit al companiei utilizat atunci când este creată o cheltuială"
-" cu un angajat."
+"Jurnalul implicit al companiei utilizat atunci când este creată o cheltuială "
+"cu un angajat."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"The current user has no related employee, or the related employee does not "
+"belong to this company."
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -2119,8 +2145,8 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid ""
-"The first word of the email subject did not correspond to any category code."
-" You'll have to set the category manually on the expense."
+"The first word of the email subject did not correspond to any category code. "
+"You'll have to set the category manually on the expense."
 msgstr ""
 "Primul cuvânt din subiectul e-mailului nu corespunde niciunui cod de "
 "categorie. Va trebui să setați manual categoria pe cheltuială."
@@ -2197,8 +2223,7 @@ msgstr "Gata - gestionarea cheltuielilor pe scurt!"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
-msgid ""
-"This note will be shown to users when they select this expense product."
+msgid "This note will be shown to users when they select this expense product."
 msgstr ""
 "Această notă va fi afișată utilizatorilor atunci când selectează acest "
 "produs de cheltuieli."
@@ -2207,8 +2232,7 @@ msgstr ""
 #: model:digest.tip,name:hr_expense.digest_tip_hr_expense_0
 #: model_terms:digest.tip,tip_description:hr_expense.digest_tip_hr_expense_0
 msgid "Tip: Snap pictures of your receipts with the remote app"
-msgstr ""
-"Sfat: Faceți fotografii cu chitanțele dvs. cu aplicația de la distanță"
+msgstr "Sfat: Faceți fotografii cu chitanțele dvs. cu aplicația de la distanță"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__draft
@@ -2346,11 +2370,9 @@ msgstr "Vizualizează raportul"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Wasting time recording your receipts? Let’s try a better way."
-msgstr ""
-"Pierdeți timp înregistrându-vă chitanțele? Să încercăm un mod mai bun."
+msgstr "Pierdeți timp înregistrându-vă chitanțele? Să încercăm un mod mai bun."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__website_message_ids
@@ -2367,17 +2389,18 @@ msgstr "Istoric comunicare website"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
-"When the cost of an expense product is different than 0, then the user"
-"                                         using this product won't be able to"
-" change the amount of the expense,                                         "
-"only the quantity. Use a cost different than 0 for expense categories funded"
-" by                                         the company at fixed cost like "
-"allowances for mileage, per diem, accommodation"
-"                                         or meal."
+"When the cost of an expense product is different than 0, then the "
+"user                                         using this product won't be "
+"able to change the amount of the "
+"expense,                                         only the quantity. Use a "
+"cost different than 0 for expense categories funded "
+"by                                         the company at fixed cost like "
+"allowances for mileage, per diem, "
+"accommodation                                         or meal."
 msgstr ""
-"Atunci când costul unui produs de cheltuieli este diferit de 0, utilizatorul"
-" care utilizează acest produs nu va putea modifica valoarea cheltuielilor, "
-"ci doar cantitatea. Utilizați un cost diferit de 0 pentru categoriile de "
+"Atunci când costul unui produs de cheltuieli este diferit de 0, utilizatorul "
+"care utilizează acest produs nu va putea modifica valoarea cheltuielilor, ci "
+"doar cantitatea. Utilizați un cost diferit de 0 pentru categoriile de "
 "cheltuieli finanțate de societate la un cost fix, cum ar fi indemnizațiile "
 "pentru kilometraj, diurnă, cazare sau masă."
 
@@ -2401,7 +2424,6 @@ msgstr "Nu sunteți autorizat să editați acest raport de cheltuieli."
 
 #. module: hr_expense
 #. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not authorized to edit this expense."
@@ -2480,8 +2502,8 @@ msgstr ""
 #: code:addons/hr_expense/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot delete only some entries linked to an expense report. All entries"
-" must be deleted at the same time."
+"You cannot delete only some entries linked to an expense report. All entries "
+"must be deleted at the same time."
 msgstr ""
 "Nu puteți șterge doar unele intrări asociate unui raport de cheltuieli. "
 "Toate intrările trebuie șterse în același timp."
@@ -2551,6 +2573,26 @@ msgstr "Nu puteți raporta de două ori aceeași linie!"
 
 #. module: hr_expense
 #. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid ""
+"You don't have the rights to bypass the validation process of this expense "
+"report."
+msgstr ""
+"Nu aveți drepturi să ocoliți procesul de validare al acestui raport de "
+"cheltuieli."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"You don't have the rights to bypass the validation process of this expense."
+msgstr ""
+"Nu aveți drepturi să ocoliți procesul de validare al acestei cheltuieli."
+
+#. module: hr_expense
+#. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You have no expense to report"
@@ -2568,8 +2610,8 @@ msgstr "Trebuie să adăugați o metodă de plată manuală pe jurnal (%s)"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid ""
-"You need to have at least one category that can be expensed in your database"
-" to proceed!"
+"You need to have at least one category that can be expensed in your database "
+"to proceed!"
 msgstr ""
 "Pentru a continua, trebuie să aveți cel puțin o categorie care poate fi "
 "trecută pe cheltuieli în baza dvs. de date!"

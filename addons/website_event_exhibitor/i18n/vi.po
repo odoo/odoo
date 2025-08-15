@@ -5,15 +5,15 @@
 # Translators:
 # Martin Trigaux, 2023
 # Wil Odoo, 2023
-# Thi Huong Nguyen, 2024
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-02-10 10:35+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -116,7 +116,7 @@ msgstr "Về chúng tôi"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__active
@@ -262,7 +262,7 @@ msgstr "Lá cờ Tổ quốc"
 #: model_terms:ir.actions.act_window,help:website_event_exhibitor.event_sponsor_action
 #: model_terms:ir.actions.act_window,help:website_event_exhibitor.event_sponsor_action_from_event
 msgid "Create a Sponsor / Exhibitor"
-msgstr "Tạo một nhà tài trợ/ nhà triển lãm"
+msgstr "Tạo một nhà tài trợ/ đơn vị triển lãm"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.actions.act_window,help:website_event_exhibitor.event_sponsor_type_action
@@ -352,7 +352,7 @@ msgstr ""
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
 msgid "Display in footer"
-msgstr "Hiển thị ở chân trang"
+msgstr "Hiển thị ở footer"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__partner_email
@@ -413,7 +413,7 @@ msgstr "Event Template"
 #. module: website_event_exhibitor
 #: model:ir.model.fields.selection,name:website_event_exhibitor.selection__event_sponsor__exhibitor_type__exhibitor
 msgid "Exhibitor"
-msgstr "Nhà triển lãm"
+msgstr "Đơn vị triển lãm"
 
 #. module: website_event_exhibitor
 #. odoo-python
@@ -422,18 +422,18 @@ msgstr "Nhà triển lãm"
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_topbar
 #, python-format
 msgid "Exhibitors"
-msgstr "Nhà triển lãm"
+msgstr "Đơn vị triển lãm"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_type_view_form
 msgid "Exhibitors Menu Item"
-msgstr "Mục menu nhà triển lãm "
+msgstr "Mục menu đơn vị triển lãm "
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_event__exhibitor_menu_ids
 #: model:ir.model.fields.selection,name:website_event_exhibitor.selection__website_event_menu__menu_type__exhibitor
 msgid "Exhibitors Menus"
-msgstr "Menu nhà triển lãm"
+msgstr "Menu đơn vị triển lãm"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_topbar
@@ -529,6 +529,13 @@ msgstr "Hình ảnh 256"
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__website_image_url
 msgid "Image URL"
 msgstr "URL Hình ảnh"
+
+#. module: website_event_exhibitor
+#: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__event_date_tz
+msgid ""
+"Indicates the timezone in which the event dates/times will be displayed on "
+"the website."
+msgstr "Chỉ ra múi giờ mà ngày/giờ sự kiện sẽ được hiển thị trên trang web."
 
 #. module: website_event_exhibitor
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_1
@@ -695,7 +702,7 @@ msgstr "Thêm thông tin"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Hạn chót hoạt động của tôi"
+msgstr "Thời hạn hoạt động của tôi"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__partner_name
@@ -710,7 +717,7 @@ msgstr "Sự kiện theo lịch cho hoạt động tiếp theo"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Hạn chót cho hoạt động tiếp theo"
+msgstr "Thời hạn cho hoạt động tiếp theo"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__activity_summary
@@ -730,12 +737,12 @@ msgstr "Không ruy-băng"
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_main
 msgid "No exhibitor found."
-msgstr "Không tìm thấy nhà triển lãm. "
+msgstr "Không tìm thấy đơn vị triển lãm. "
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__message_has_error_counter
@@ -761,7 +768,7 @@ msgstr "Trực tuyến"
 #. module: website_event_exhibitor
 #: model:ir.model.fields.selection,name:website_event_exhibitor.selection__event_sponsor__exhibitor_type__online
 msgid "Online Exhibitor"
-msgstr "Nhà triển lãm online"
+msgstr "Đơn vị triển lãm online"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
@@ -824,7 +831,7 @@ msgstr "Điện thoại"
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_search
 msgid "Published"
-msgstr "Đã công bố"
+msgstr "Đã đăng"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.actions.act_window,help:website_event_exhibitor.event_sponsor_type_action
@@ -891,7 +898,7 @@ msgstr "Trình tự"
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_event__exhibitor_menu
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_type__exhibitor_menu
 msgid "Showcase Exhibitors"
-msgstr "Hiển thị nhà triển lãm"
+msgstr "Hiển thị đơn vị triển lãm"
 
 #. module: website_event_exhibitor
 #: model:event.sponsor.type,name:website_event_exhibitor.event_sponsor_type2
@@ -978,7 +985,7 @@ msgid ""
 "    Exhibitors have a dedicated page a with chat room for people to connect with them."
 msgstr ""
 "Nhà tài trợ được quảng cáo trên trang sự kiện.<br>\n"
-"   Nhà triển lãm có một trang riêng cùng với phòng chat để mọi người có thể kết nối với họ. "
+"   Đơn vị triển lãm có một trang riêng cùng với phòng chat để mọi người có thể kết nối với họ. "
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.snippet_options
@@ -1034,7 +1041,7 @@ msgstr "Bộ lọc thanh trên"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Loại hoạt động ngoại lệ trong tập dữ liệu."
+msgstr "Loại hoạt động ngoại lệ trong bản ghi."
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_thumb_details

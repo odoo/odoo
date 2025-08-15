@@ -3,16 +3,17 @@
 # 	* analytic
 # 
 # Translators:
-# Jolien De Paepe, 2024
-# Wil Odoo, 2024
+# Jolien De Paepe, 2023
+# Manon Rondou, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -148,7 +149,7 @@ msgstr "Nombre de comptes analytiques"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "Distribution analytique"
+msgstr "Répartition analytique"
 
 #. module: analytic
 #. odoo-javascript
@@ -158,18 +159,18 @@ msgstr "Distribution analytique"
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
 #, python-format
 msgid "Analytic Distribution Model"
-msgstr "Modèle de distribution analytique "
+msgstr "Modèle de répartition analytique "
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_distribution_model
 msgid "Analytic Distribution Models"
-msgstr "Modèles de distribution analytique "
+msgstr "Modèles de répartition analytique "
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution_search
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution_search
 msgid "Analytic Distribution Search"
-msgstr "Recherche de distribution analytique"
+msgstr "Recherche de répartition analytique"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
@@ -381,7 +382,7 @@ msgid ""
 "                invoices, expenses or timesheets."
 msgstr ""
 "Les coûts seront générés automatiquement quand vous enregistrerez des "
-"factures fournisseurs, des notes de frais ou des feuilles de temps."
+"factures fournisseurs, des dépenses ou des feuilles de temps."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_uid
@@ -481,6 +482,12 @@ msgstr "Désactiver l'enregistrement"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__display_name
 msgid "Display Name"
 msgstr "Nom d'affichage"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Compte analytique de répartition"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
@@ -681,7 +688,7 @@ msgstr "Nombre de messages avec des erreurs d'envoi"
 #, python-format
 msgid "One or more lines require a 100% analytic distribution."
 msgstr ""
-"Une ou plusieurs lignes nécessitent une distribution analytique à 100 %."
+"Une ou plusieurs lignes nécessitent une répartition analytique à 100 %."
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_internal
@@ -806,7 +813,7 @@ msgstr "Plan de base"
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #, python-format
 msgid "Save as new analytic distribution model"
-msgstr "Enregistrer comme nouveau modèle de distribution analytique"
+msgstr "Enregistrer comme nouveau modèle de répartition analytique"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_seagate_p2
@@ -819,13 +826,20 @@ msgid "Search Analytic Lines"
 msgstr "Chercher des lignes analytiques"
 
 #. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+#, python-format
+msgid "See them"
+msgstr "Les afficher"
+
+#. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__company_id
 msgid ""
 "Select a company for which the analytic distribution will be used (e.g. "
 "create new customer invoice or Sales order if we select this company, it "
 "will automatically take this as an analytic account)"
 msgstr ""
-"Sélectionnez une société pour laquelle la distribution analytique sera "
+"Sélectionnez une société pour laquelle la répartition analytique sera "
 "utilisée (par exemple, pour créer une nouvelle facture client ou une "
 "nouvelle commande client, si nous sélectionnons cette société, elle sera "
 "automatiquement considérée comme un compte analytique)."
@@ -837,7 +851,7 @@ msgid ""
 "(e.g. create new customer invoice or Sales order if we select this partner, "
 "it will automatically take this as an analytic account)"
 msgstr ""
-"Sélectionnez une catégorie de partenaires pour laquelle la distribution "
+"Sélectionnez une catégorie de partenaires pour laquelle la répartition "
 "analytique sera utilisée (par exemple, pour créer une nouvelle facture "
 "client ou une nouvelle commande client, si nous sélectionnons ce partenaire,"
 " il sera automatiquement considéré comme un compte analytique)."
@@ -849,7 +863,7 @@ msgid ""
 "create new customer invoice or Sales order if we select this partner, it "
 "will automatically take this as an analytic account)"
 msgstr ""
-"Sélectionnez un partenaire pour lequel la distribution analytique sera "
+"Sélectionnez un partenaire pour lequel la répartition analytique sera "
 "utilisée (par exemple, pour créer une nouvelle facture client ou une "
 "nouvelle commande client, si nous sélectionnons ce partenaire, il sera "
 "automatiquement considéré comme un compte analytique)."
@@ -910,11 +924,29 @@ msgstr "Vue"
 #: code:addons/analytic/models/analytic_account.py:0
 #, python-format
 msgid ""
+"Whoa there! Making this change would wipe out your current data. Let's avoid"
+" that, shall we?"
+msgstr ""
+"Attention ! Cette modification entraînerait l'effacement de vos données "
+"actuelles. Faisons en sorte d'éviter cela !"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+#, python-format
+msgid ""
 "You can't set a different company on your analytic account since there are "
 "some analytic items linked to it."
 msgstr ""
 "Vous ne pouvez pas définir une société différente sur votre compte "
 "analytique car certaines écritures analytiques y sont liées."
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_plan.py:0
+#, python-format
+msgid "You cannot add a parent to the base plan '%s'"
+msgstr "Vous ne pouvez pas ajouter un parent au plan de base '%s'"
 
 #. module: analytic
 #. odoo-python

@@ -53,18 +53,18 @@ class AccountMove(models.Model):
             # To avoid repetition in the address block.
             if different_partner_count <= 1:
                 continue
-            elif different_partner_count == 3:
-                data.extend([(_("Shipping Address:"), delivery_partner), (_("Invoicing Address:"), invoice_partner)])
-                continue
-            elif commercial_partner == invoice_partner:
+
+            if delivery_partner and delivery_partner != commercial_partner:
                 data.append((_("Shipping Address:"), delivery_partner))
-                continue
-            elif commercial_partner == delivery_partner:
-                data.append((_("Invoicing Address:"), invoice_partner))
-                continue
-            elif invoice_partner == delivery_partner:
-                data.append((_("Invoicing and Shipping Address:"), invoice_partner))
-                continue
+            if invoice_partner and invoice_partner != commercial_partner:
+                data.append((
+                    _("Beneficiary:"),
+                    commercial_partner,
+                    # if the invoice address is different from the company address,
+                    # the main address block will be the invoice address, and the
+                    # vat number will only be shown in the beneficiary address block.
+                    {'show_tax_id': True},
+                ))
 
     def check_field_access_rights(self, operation, field_names):
         field_names = super().check_field_access_rights(operation, field_names)

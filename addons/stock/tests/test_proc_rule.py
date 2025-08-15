@@ -3,6 +3,7 @@
 
 from datetime import date, datetime, timedelta
 
+from odoo import Command
 from odoo.tests.common import Form, TransactionCase
 from odoo.tools import mute_logger
 from odoo.exceptions import UserError
@@ -131,6 +132,59 @@ class TestProcRule(TransactionCase):
             ('move_dest_ids', 'in', [pick_output.move_ids[0].id])
         ])
         self.assertEqual(len(moves.ids), 1, "It should have created a picking from Stock to Output with the original picking as destination")
+
+    def test_get_rule_respects_sequence_order(self):
+        """Test that _get_rule selects the rule associated with the route of the lowest sequence."""
+
+        # Create a warehouse and a product
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        product = self.env['product.product'].create({'name': 'Test Product', 'type': 'product'})
+
+        # Create routes with different sequences to simulate prioritization.
+        route_low_priority = self.env['stock.route'].create({'name': 'Route 1', 'sequence': 10})
+        rule_low_priority = self.env['stock.rule'].create({
+            'name': 'Rule for Route 1',
+            'route_id': route_low_priority.id,
+            'action': 'pull',
+            'location_src_id': warehouse.lot_stock_id.id,
+            'location_dest_id': warehouse.lot_stock_id.id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'sequence': 20,
+        })
+
+        # Create a second route with higher priority (lower sequence).
+        route_high_priority = self.env['stock.route'].create({'name': 'Route 2', 'sequence': 5})
+        rule_high_priority = self.env['stock.rule'].create({
+            'name': 'Rule for Route 2',
+            'route_id': route_high_priority.id,
+            'action': 'pull',
+            'location_src_id': warehouse.lot_stock_id.id,
+            'location_dest_id': warehouse.lot_stock_id.id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'sequence': 20,
+        })
+
+        # Assign both routes to the product. This order is set so that the method
+        # will be forced to sort the routes by their sequence.
+        product.write({'route_ids': [(4, route_low_priority.id), (4, route_high_priority.id)]})
+
+        # Create a procurement group for testing rule selection.
+        procurement_group = self.env['procurement.group'].create({'name': 'Test Procurement Group'})
+
+        # Call the _get_rule method to simulate rule selection.
+        rule = procurement_group._get_rule(
+            product_id=product,
+            location_id=warehouse.lot_stock_id,
+            values={
+                'warehouse_id': warehouse,
+                'route_ids': product.route_ids,
+            }
+        )
+
+        # Assert that the selected rule corresponds to the route with the lowest sequence.
+        self.assertEqual(rule, rule_high_priority,
+                         "The rule associated with the route having the lowest sequence "
+                         "(high_priority) should be selected.")
 
     def test_propagate_deadline_move(self):
         deadline = datetime.now()
@@ -468,6 +522,75 @@ class TestProcRule(TransactionCase):
         # Verify the location and the qty
         self.assertRecordValues(replenishments, [
             {'location_id': replenish_loc.id, 'qty_to_order': 3},
+        ])
+
+    def test_orderpoint_replenishment_view_3(self):
+        """
+        Create a selectable on product route and a product without routes. Verify that the orderpoint created
+        to replenish that product did not set the new route by default.
+        """
+        stock_location = self.env.ref('stock.stock_location_stock')
+        interdimensional_protal = self.env['stock.location'].create({
+            'name': 'Interdimensional portal',
+            'usage': 'internal',
+            'location_id': stock_location.location_id.id,
+        })
+        lovely_route = self.env['stock.route'].create({
+            'name': 'Lovely Route',
+            'product_selectable': True,
+            'product_categ_selectable': True,
+            'sequence': 1,
+            'rule_ids': [Command.create({
+                'name': 'Interdimensional portal -> Stock',
+                'action': 'pull',
+                'picking_type_id': self.ref('stock.picking_type_internal'),
+                'location_src_id': interdimensional_protal.id,
+                'location_dest_id': stock_location.id,
+            })],
+        })
+        lovely_category = self.env['product.category'].create({
+            'name': 'Lovely Category',
+            'route_ids': [Command.set(lovely_route.ids)]
+        })
+        products = self.env['product.product'].create([
+            {
+                'name': 'Lovely product',
+                'type': 'product',
+                'route_ids': [Command.set([])],
+            },
+            {
+                'name': 'Lovely product with route',
+                'type': 'product',
+                'route_ids': [Command.set(lovely_route.ids)],
+            },
+            {
+                'name': 'Lovely product with categ route',
+                'type': 'product',
+                'route_ids': [Command.set([])],
+                'categ_id': lovely_category.id,
+            },
+        ])
+        moves = self.env['stock.move'].create([
+            {
+                'name': 'Create a demand move',
+                'location_id': stock_location.id,
+                'location_dest_id': self.partner.property_stock_customer.id,
+                'product_id': product.id,
+                'product_uom': product.uom_id.id,
+                'product_uom_qty': 1,
+            } for product in products
+        ])
+        moves._action_confirm()
+        # activate action of opening the replenishment view
+        self.env.flush_all()
+        self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
+        replenishments = self.env['stock.warehouse.orderpoint'].search([
+            ('product_id', 'in', products.ids),
+        ])
+        self.assertRecordValues(replenishments.sorted(lambda r: r.product_id.id), [
+            {'product_id': products[0].id, 'location_id': stock_location.id, 'route_id': False},
+            {'product_id': products[1].id, 'location_id': stock_location.id, 'route_id': lovely_route.id},
+            {'product_id': products[2].id, 'location_id': stock_location.id, 'route_id': lovely_route.id},
         ])
 
     def test_orderpoint_compute_warehouse_location(self):

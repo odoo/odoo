@@ -3,6 +3,7 @@
 from odoo.tests import tagged
 from odoo.tests.common import Form, TransactionCase
 from odoo import Command
+from odoo.exceptions import RedirectWarning
 
 
 @tagged('post_install', '-at_install')
@@ -32,10 +33,11 @@ class TestAnalyticAccount(TransactionCase):
         cls.company_data = cls.env['res.company'].create({
             'name': 'company_data',
         })
-        cls.env.user.company_ids |= cls.company_data
+        cls.company_b_branch = cls.env['res.company'].create({'name': "B Branch", 'parent_id': cls.company_data.id})
+        cls.env.user.company_ids |= cls.company_data + cls.company_b_branch
 
         user.write({
-            'company_ids': [(6, 0, cls.company_data.ids)],
+            'company_ids': [(6, 0, [cls.company_data.id, cls.company_b_branch.id])],
             'company_id': cls.company_data.id,
         })
         cls.analytic_plan_offset = len(cls.env['account.analytic.plan'].get_relevant_plans())
@@ -68,6 +70,14 @@ class TestAnalyticAccount(TransactionCase):
             'partner_id': cls.partner_b.id,
             'analytic_distribution': {cls.analytic_account_2.id: 100}
         })
+
+        """ Removes access rights linked to timesheet and project as these add
+        record rules blocking analytic flows; account overrides it"""
+        if 'account.account' not in cls.env:
+            core_group_ids = cls.env.ref("hr_timesheet.group_hr_timesheet_user", raise_if_not_found=False) or cls.env['res.groups']
+            problematic_group_ids = cls.env.user.groups_id.filtered(lambda g: (g | g.trans_implied_ids) & core_group_ids)
+            if problematic_group_ids:
+                cls.env.user.groups_id -= problematic_group_ids
 
     def test_get_plans_without_options(self):
         """ Test that the plans with the good appliability are returned without if no options are given """
@@ -211,3 +221,131 @@ class TestAnalyticAccount(TransactionCase):
             with self.subTest(plan=plan.name, expected_count=expected_value):
                 with Form(plan) as plan_form:
                     self.assertEqual(plan_form.record.all_account_count, expected_value)
+
+    def test_analytic_account_branches(self):
+        """
+        Test that an analytic account defined in a parent company is accessible in its branches (children)
+        """
+        # timesheet adds a rule to forcer a project_id; account overrides it
+        timesheet_user = self.env.ref('hr_timesheet.group_hr_timesheet_user', raise_if_not_found=False)
+        account_user = self.env.ref('account.analytic.model_account_analytic_line', raise_if_not_found=False)
+        if timesheet_user and not account_user:
+            self.skipTest("`hr_timesheet` overrides analytic rights. Without `account` the test would crash")
+
+        self.analytic_account_1.company_id = self.company_data
+        self.env['account.analytic.line'].create({
+            'name': 'company specific account',
+            'account_id': self.analytic_account_1.id,
+            'amount': 100,
+            'company_id': self.company_b_branch.id,
+        })
+
+    def test_change_plan(self):
+        """Changing the plan of an account updates columns of the analytic lines."""
+        plan_1_col = self.analytic_plan_1._column_name()
+        plan_2_col = self.analytic_plan_2._column_name()
+        self.assertNotEqual(plan_1_col, plan_2_col)
+        line = self.env['account.analytic.line'].create({
+            'name': 'test',
+            plan_1_col: self.analytic_account_1.id,
+        })
+        self.analytic_account_1.plan_id = self.analytic_plan_2
+        self.assertRecordValues(line, [{
+            plan_1_col: False,
+            plan_2_col: self.analytic_account_1.id,
+        }])
+
+    def test_change_plan_conflict(self):
+        """Don't allow changing the plan if some lines already have values set for that plan."""
+        plan_1_col = self.analytic_plan_1._column_name()
+        plan_2_col = self.analytic_plan_2._column_name()
+        self.assertNotEqual(plan_1_col, plan_2_col)
+        self.env['account.analytic.line'].create({
+            'name': 'test',
+            plan_1_col: self.analytic_account_1.id,
+            plan_2_col: self.analytic_account_2.id,
+        })
+        with self.assertRaisesRegex(RedirectWarning, "wipe out your current data"):
+            self.analytic_account_1.plan_id = self.analytic_plan_2
+
+    def test_change_plan_no_conflict(self):
+        """Exception for the previous test if it was already the correct value that is set."""
+        plan_1_col = self.analytic_plan_1._column_name()
+        plan_2_col = self.analytic_plan_2._column_name()
+        self.assertNotEqual(plan_1_col, plan_2_col)
+        line = self.env['account.analytic.line'].create({
+            'name': 'test',
+            plan_1_col: self.analytic_account_1.id,
+            plan_2_col: self.analytic_account_1.id,
+        })
+        self.analytic_account_1.plan_id = self.analytic_plan_2
+        self.assertRecordValues(line, [{
+            plan_1_col: False,
+            plan_2_col: self.analytic_account_1.id,
+        }])
+
+    def test_change_parent_plan(self):
+        """Changing the parent of a plan updates account columns of the analytic lines."""
+        plan_1_col = self.analytic_plan_1._column_name()
+        plan_2_col = self.analytic_plan_2._column_name()
+        line = self.env['account.analytic.line'].create({
+            'name': 'test',
+            plan_1_col: self.analytic_account_1.id,
+        })
+
+        # Setting a parent plan should lead to the line having analytic_account_1 under Plan 2
+        self.analytic_plan_1.parent_id = self.analytic_plan_2
+        self.assertRecordValues(line, [{
+            plan_2_col: self.analytic_account_1.id,
+        }])
+        # plan_1_col should no longer be a field of the analytic line
+        self.assertNotIn(plan_1_col, line)
+
+        # Removing the parent plan should fully reverse the analytic line
+        self.analytic_plan_1.parent_id = False
+        self.assertRecordValues(line, [{
+            plan_1_col: self.analytic_account_1.id,
+            plan_2_col: False,
+        }])
+
+    def test_change_parent_plan_conflict(self):
+        """
+        Test case where changing the parent plan leads to more than one account under the same
+        plan in an analytic line.
+        """
+        plan_1_col = self.analytic_plan_1._column_name()
+        plan_2_col = self.analytic_plan_2._column_name()
+        self.env['account.analytic.line'].create({
+            'name': 'test',
+            plan_1_col: self.analytic_account_1.id,
+            plan_2_col: self.analytic_account_3.id,
+        })
+        with self.assertRaisesRegex(RedirectWarning, "Making this change would wipe out"):
+            self.analytic_plan_1.parent_id = self.analytic_plan_2
+
+    def test_change_parent_plan_with_intermediate(self):
+        """All the accounts are updated even if not direct members of the plan changed."""
+        plan_1_col = self.analytic_plan_1._column_name()
+        plan_2_col = self.analytic_plan_2._column_name()
+        intermediate_plan = self.env['account.analytic.plan'].create({
+            'name': 'Mid level',
+            'parent_id': self.analytic_plan_1.id,
+        })
+        self.analytic_account_1.plan_id = intermediate_plan
+        line = self.env['account.analytic.line'].create({
+            'name': 'test',
+            plan_1_col: self.analytic_account_1.id,
+        })
+
+        # Setting a parent plan should lead to the line having analytic_account_1 under Plan 2
+        self.analytic_plan_1.parent_id = self.analytic_plan_2
+        self.assertRecordValues(line, [{
+            plan_2_col: self.analytic_account_1.id,
+        }])
+
+        # Removing the parent plan should fully reverse the analytic line
+        self.analytic_plan_1.parent_id = False
+        self.assertRecordValues(line, [{
+            plan_1_col: self.analytic_account_1.id,
+            plan_2_col: False,
+        }])

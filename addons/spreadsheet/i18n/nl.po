@@ -3,19 +3,18 @@
 # 	* spreadsheet
 # 
 # Translators:
+# Wil Odoo, 2023
 # Jolien De Paepe, 2024
-# Martin Trigaux, 2024
-# Manon Rondou, 2024
-# Wil Odoo, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-05-09 20:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -187,8 +186,8 @@ msgid ""
 "A boolean indicating whether to use A1 style notation (TRUE) or R1C1 style "
 "notation (FALSE)."
 msgstr ""
-"Een boolean dat bepaalt of het verwijzingstype A1 (WAAR) of het "
-"verwijzingstype R1C1 (ONWAAR) gebruikt wordt."
+"Een boolean dat bepaalt of het verwijzingstype A1 (TRUE) of het "
+"verwijzingstype R1C1 (FALSE) gebruikt wordt."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -745,7 +744,7 @@ msgstr "Extra waarden voor het gemiddelde."
 msgid ""
 "Additional values to be returned if their corresponding conditions are TRUE."
 msgstr ""
-"Extra waarden om te retourneren indien de overeenkomstige voorwaarden WAAR "
+"Extra waarden om te retourneren indien de overeenkomstige voorwaarden TRUE "
 "zijn."
 
 #. module: spreadsheet
@@ -852,8 +851,8 @@ msgid ""
 " be coerced to a logical value."
 msgstr ""
 "Een expressie of verwijzing naar een cel die een expressie bevat die een "
-"logische waarde vertegenwoordigd, d.w.z. WAAR of ONWAAR, of een expressie "
-"die kan worden afgedwongen tot een logische waarde."
+"logische waarde vertegenwoordigd, d.w.z. TRUE of FALSE, of een expressie die"
+" kan worden afgedwongen tot een logische waarde."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -864,7 +863,7 @@ msgid ""
 "represents some logical value, i.e. TRUE or FALSE."
 msgstr ""
 "Een expressie of verwijzing naar een cel die een expressie bevat die een "
-"logische waarde vertegenwoordigt, d.w.z. WAAR of ONWAAR."
+"logische waarde vertegenwoordigt, d.w.z. TRUE of FALSE."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1586,13 +1585,6 @@ msgstr "Celwaarden"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "CellIsRule"
-msgstr ""
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Center"
@@ -1776,13 +1768,6 @@ msgstr "Kleur bij waardestijging"
 #, python-format
 msgid "Color scale"
 msgstr "Kleurschaal"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "ColorScaleRule"
-msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2005,6 +1990,13 @@ msgstr "Converteert een opgegeven tekenreeks naar kleine letters."
 #, python-format
 msgid "Converts a specified string to uppercase."
 msgstr "Converteert een opgegeven tekenreeks naar hoofdletters."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Converts a string to a numeric value."
+msgstr "Zet een string om naar een numerieke waarde."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3492,8 +3484,8 @@ msgid ""
 "if TRUE or forces b to be 1 and only calculates the m values if FALSE."
 msgstr ""
 "Uitgaande van een algemene exponentiële vorm van y = b*m^x, wordt b berekend"
-" indien WAAR of wordt de waarde 1 afgedwongen voor b en worden de waarden "
-"voor m alleen berekend indien ONWAAR."
+" indien TRUE of wordt de waarde 1 afgedwongen voor b en worden de waarden "
+"voor m alleen berekend indien FALSE."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3505,9 +3497,9 @@ msgid ""
 "forces the curve fit to pass through the origin."
 msgstr ""
 "Uitgaande van een algemene lineaire vorm van y = m*x+b, wordt b berekend "
-"indien WAAR of wordt voor b de waarde 0 afgedwongen en worden de waarden "
-"voor m alleen berekend indien ONWAAR, i.e. de kromme loopt gedwongen door de"
-" oorsprong."
+"indien TRUE of wordt voor b de waarde 0 afgedwongen en worden de waarden "
+"voor m alleen berekend indien FALSE, i.e. de kromme loopt gedwongen door de "
+"oorsprong."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3702,13 +3694,6 @@ msgstr "ISO-weeknummer van het jaar."
 #, python-format
 msgid "Icon set"
 msgstr "Pictogrammenset"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "IconSetRule"
-msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4315,7 +4300,7 @@ msgstr "Juni"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Key value"
-msgstr "Sleutel waarde"
+msgstr "Sleutelwaarde"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5350,7 +5335,7 @@ msgstr "Percentage"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Percentage change from key value"
-msgstr "Percentage verandering van sleutelwaarde"
+msgstr "Percentagewijziging van sleutelwaarde"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6042,7 +6027,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Search in formulas"
-msgstr "Zoeken in formules"
+msgstr "Zoek in formules"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6551,8 +6536,8 @@ msgid ""
 "TRUE or FALSE indicating whether to sort sort_column in ascending order. "
 "FALSE sorts in descending order."
 msgstr ""
-"WAAR of ONWAAR die aangeeft of sort_column in oplopende volgorde moet worden"
-" gesorteerd. ONWAAR sorteert in aflopende volgorde."
+"TRUE of FALSE die aangeeft of sort_column in oplopende volgorde moet worden "
+"gesorteerd. FALSE sorteert in aflopende volgorde."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6998,6 +6983,27 @@ msgstr "De matrix die zal worden getransformeerd."
 #, python-format
 msgid "The base (%s) must be between 2 and 36 inclusive."
 msgstr "De basis (%s) moet tussen 2 en 36 liggen."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base (%s) must be strictly positive."
+msgstr "De basis (%s) moet strikt positief zijn."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base must be different from 1."
+msgstr "De basis moet verschillend zijn van 1."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base of the logarithm."
+msgstr "De basis van de logaritme."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8239,6 +8245,13 @@ msgstr "De logaritme van een getal, grondtal e (getal van euler)."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "The logarithm of a number, for a given base."
+msgstr "De logaritme van een getal, voor een gegeven basis."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "The low end of the random range."
 msgstr "Het lage eind van het willekeurig bereik."
 
@@ -8304,7 +8317,7 @@ msgid ""
 "TRUE."
 msgstr ""
 "Het maximum (%s) en het minimum (%s) moeten gehele getallen zijn als "
-"whole_number WAAR is."
+"whole_number TRUE is."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8926,7 +8939,7 @@ msgid ""
 "evaluates to TRUE will be included in the filtered set."
 msgstr ""
 "Het patroon of de test die moet worden toegepast op criteria_range1, zodat "
-"elke cel die op WAAR uitkomt, wordt opgenomen in het gefilterde set."
+"elke cel die op TRUE uitkomt, wordt opgenomen in het gefilterde set."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9475,7 +9488,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The returned value if condition1 is TRUE."
-msgstr "De geretourneerde waarde indien condition1 WAAR is."
+msgstr "De geretourneerde waarde indien condition1 TRUE is."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10090,6 +10103,7 @@ msgstr "De waarde (%s) moet positief of null zijn."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value (%s) must be strictly positive."
 msgstr "De waarde (%s) moet strikt positief zijn."
@@ -10185,6 +10199,13 @@ msgstr "De waarde waarvoor de arctangens moet worden berekend."
 #, python-format
 msgid "The value for which to calculate the logarithm, base e."
 msgstr "De waarde waarvoor het logaritme moet worden berekend, basis e."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The value for which to calculate the logarithm."
+msgstr "De waarde waarvoor de logaritme berekend moet worden."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10441,7 +10462,7 @@ msgstr ""
 #, python-format
 msgid "The value the function returns if logical_expression is TRUE."
 msgstr ""
-"De waarde die de functie retourneert indien logical_expression WAAR is."
+"De waarde die de functie retourneert indien logical_expression TRUE is."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10485,7 +10506,7 @@ msgstr "De af te kappen waarde."
 #, python-format
 msgid "The value to be verified as a logical TRUE or FALSE."
 msgstr ""
-"De waarde die moet worden gecontroleerd als een logische WAAR of ONWAAR."
+"De waarde die moet worden gecontroleerd als een logische TRUE of FALSE."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11604,7 +11625,7 @@ msgid ""
 "        consecutive delimiters as one (if TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
 "Of lege berichten wel of niet uit de splitsingsresultaten moeten worden verwijderd. Het standaardgedrag is om \n"
-"        opeenvolgende scheidingstekens als één (indien WAAR). Indien ONWAAR, worden lege celwaarden toegevoegd tussen opeenvolgende scheidingstekens."
+"        opeenvolgende scheidingstekens als één (indien TRUE). Indien FALSE, worden lege celwaarden toegevoegd tussen opeenvolgende scheidingstekens."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11812,7 +11833,7 @@ msgstr "Jaar gespecificeerd door een bepaalde datum."
 #: code:addons/spreadsheet/static/src/helpers/constants.js:0
 #, python-format
 msgid "Year to Date"
-msgstr "Year to Date"
+msgstr "Jaar tot nu toe"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11951,27 +11972,10 @@ msgstr "en waarde of formule"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "arrow"
-msgstr "pijl"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "as headers"
 msgstr "als kopteksten"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "bottom"
-msgstr "onder"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11982,54 +11986,10 @@ msgstr "standaard:"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "difference"
-msgstr "verschil"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/global_filters/components/filter_date_value/filter_date_value.xml:0
-#, python-format
-msgid "empty"
-msgstr "leeg"
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "exact date"
 msgstr "exacte datum"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "false"
-msgstr "onwaar"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "formula"
-msgstr "formule"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "ge"
-msgstr "ge"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "gt"
-msgstr "gt"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12057,17 +12017,6 @@ msgstr "in het afgelopen jaar"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "left"
-msgstr "links"
-
-#. module: spreadsheet
-#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "lookup_range should be either a single row or single column."
@@ -12086,26 +12035,6 @@ msgstr "matchMode moet een waarde zijn in [-1, 0, 1]."
 #, python-format
 msgid "more rows at the bottom"
 msgstr "meer rijen onderaan"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "none"
-msgstr "geen"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "number"
-msgstr "nummer"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12138,34 +12067,6 @@ msgstr "een jaar gelede"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "percentage"
-msgstr "percentage"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "percentile"
-msgstr "percentiel"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "plainText"
-msgstr ""
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "repeatable"
 msgstr "herhaalbaar"
@@ -12176,17 +12077,6 @@ msgstr "herhaalbaar"
 #, python-format
 msgid "return_range should have the same dimensions as lookup_range."
 msgstr "return_rangs moet dezelfde afmetingen hebben als lookup_range."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "right"
-msgstr "rechts"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12204,10 +12094,10 @@ msgstr "start_date (%s) moet op of voor end_date (%s) liggen."
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "text"
-msgstr "tekst"
+msgid "the string to be converted"
+msgstr "de string die moet worden omgezet"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12226,29 +12116,6 @@ msgstr "vandaag"
 #, python-format
 msgid "tomorrow"
 msgstr "morgen"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "top"
-msgstr "top"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "true"
-msgstr "waar"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid "value"
-msgstr "waarde"
 
 #. module: spreadsheet
 #. odoo-javascript

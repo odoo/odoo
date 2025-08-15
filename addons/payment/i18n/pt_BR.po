@@ -6,15 +6,15 @@
 # grazziano <grazziano.do+transifex@gmail.com>, 2023
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
 # Wil Odoo, 2024
-# Maitê Dietze, 2024
+# Maitê Dietze, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Maitê Dietze, 2024\n"
+"Last-Translator: Maitê Dietze, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,7 +91,7 @@ msgid ""
 "                                            Enable Payment Methods"
 msgstr ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
-"                                            Habilitar métodos de pagamento"
+"                                            Habilitar formas de pagamento"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -111,7 +111,7 @@ msgstr "<span class=\"o_stat_text text-success\">Publicado</span>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "<span class=\"o_stat_text\">Saved Payment Methods</span>"
-msgstr "<span class=\"o_stat_text\">Métodos de pagamento salvos</span>"
+msgstr "<span class=\"o_stat_text\">Formas de pagamento salvas</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -302,7 +302,7 @@ msgstr "Permitir checkout expresso"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_tokenization
 msgid "Allow Saving Payment Methods"
-msgstr "Permitir salvar métodos de pagamento"
+msgstr "Permitir salvar formas de pagamento"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
@@ -1334,7 +1334,7 @@ msgstr "Pendente"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__pending_msg
 msgid "Pending Message"
-msgstr "Mensagem pendente"
+msgstr "Mensagem de pendência"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_phone
@@ -1956,7 +1956,7 @@ msgstr "Ainda não há tokens criados."
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "There is nothing to be paid."
-msgstr "Não há nada a ser pago."
+msgstr "Não há nada a pagar."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -2196,6 +2196,13 @@ msgid ""
 msgstr ""
 "Não é possível alterar a empresa de um provedor de pagamento com transações "
 "existentes."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_method.py:0
+#, python-format
+msgid "You cannot delete the default payment method."
+msgstr "You cannot delete the default payment method."
 
 #. module: payment
 #. odoo-python

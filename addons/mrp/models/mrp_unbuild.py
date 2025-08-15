@@ -132,7 +132,7 @@ class MrpUnbuild(models.Model):
         return {
             'move_id': finished_move.id,
             'lot_id': self.lot_id.id,
-            'quantity': self.product_qty,
+            'quantity': finished_move.product_uom_qty,
             'product_id': finished_move.product_id.id,
             'product_uom_id': finished_move.product_uom.id,
             'location_id': finished_move.location_id.id,
@@ -183,7 +183,7 @@ class MrpUnbuild(models.Model):
         # TODO: Will fail if user do more than one unbuild with lot on the same MO. Need to check what other unbuild has aready took
         qty_already_used = defaultdict(float)
         for move in produce_moves | consume_moves:
-            if move.has_tracking != 'none':
+            if move._need_precise_unbuild():
                 original_move = move in produce_moves and self.mo_id.move_raw_ids or self.mo_id.move_finished_ids
                 original_move = original_move.filtered(lambda m: m.product_id == move.product_id)
                 needed_quantity = move.product_uom_qty
@@ -195,6 +195,8 @@ class MrpUnbuild(models.Model):
                     taken_quantity = min(needed_quantity, move_line.quantity - qty_already_used[move_line])
                     if taken_quantity:
                         move_line_vals = self._prepare_move_line_vals(move, move_line, taken_quantity)
+                        if move_line.owner_id:
+                            move_line_vals['owner_id'] = move_line.owner_id.id
                         self.env['stock.move.line'].create(move_line_vals)
                         needed_quantity -= taken_quantity
                         qty_already_used[move_line] += taken_quantity

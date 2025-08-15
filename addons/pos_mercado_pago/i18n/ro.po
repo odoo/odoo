@@ -4,14 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Lyall Kindmurr, 2024
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2024-08-17 22:00+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,22 +24,19 @@ msgstr ""
 #. module: pos_mercado_pago
 #: model_terms:ir.ui.view,arch_db:pos_mercado_pago.pos_payment_method_view_form_inherit_pos_mercado_pago
 msgid "1494126963"
-msgstr ""
+msgstr "1494126963"
 
 #. module: pos_mercado_pago
 #: model_terms:ir.ui.view,arch_db:pos_mercado_pago.pos_payment_method_view_form_inherit_pos_mercado_pago
 msgid "APP_USR-..."
-msgstr ""
+msgstr "APP_USR-..."
 
 #. module: pos_mercado_pago
 #. odoo-python
 #: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
-#: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
-#: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
-#: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
 #, python-format
 msgid "Do not have access to fetch token from Mercado Pago"
-msgstr ""
+msgstr "Nu aveți acces pentru a prelua tokenul de la Mercado Pago"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,help:pos_mercado_pago.field_pos_payment_method__mp_id_point_smart
@@ -45,11 +44,13 @@ msgid ""
 "Enter your Point Smart terminal serial number written on the back of your "
 "terminal (after the S/N:)"
 msgstr ""
+"Introduceți numărul de serie al terminalului Point Smart scris pe spatele "
+"terminalului (după S/N:)"
 
 #. module: pos_mercado_pago
 #: model_terms:ir.ui.view,arch_db:pos_mercado_pago.pos_payment_method_view_form_inherit_pos_mercado_pago
 msgid "Force PDV"
-msgstr ""
+msgstr "Forțează PDV"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,help:pos_mercado_pago.field_pos_payment_method__mp_bearer_token
@@ -57,6 +58,8 @@ msgid ""
 "Mercado Pago customer production user token: "
 "https://www.mercadopago.com.mx/developers/en/reference"
 msgstr ""
+"Token de utilizator producție pentru clientul Mercado Pago: "
+"https://www.mercadopago.com.mx/developers/en/reference"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,help:pos_mercado_pago.field_pos_payment_method__mp_webhook_secret_key
@@ -64,48 +67,55 @@ msgid ""
 "Mercado Pago production secret key from integration application: "
 "https://www.mercadopago.com.mx/developers/panel/app"
 msgstr ""
+"Cheia secretă de producție Mercado Pago din aplicația de integrare: "
+"https://www.mercadopago.com.mx/developers/panel/app"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,field_description:pos_mercado_pago.field_pos_payment_method__mp_id_point_smart_complet
 msgid "Mp Id Point Smart Complet"
-msgstr ""
+msgstr "Mp Id Point Smart Complet"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
-#: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
 #, python-format
 msgid "Payment has been canceled"
-msgstr ""
+msgstr "Plata a fost anulată"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
+#, python-format
+msgid "Payment has been processed"
+msgstr "Plata a fost procesată"
+
+#. module: pos_mercado_pago
+#. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
 #, python-format
-msgid "Payment has been finished"
-msgstr ""
+msgid "Payment has been rejected"
+msgstr "Plata a fost respinsă"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
 #, python-format
 msgid "Payment has to be canceled on terminal"
-msgstr ""
+msgstr "Plata trebuie anulată pe terminal"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
 #, python-format
 msgid "Payment not found (canceled/finished on terminal)"
-msgstr ""
+msgstr "Plata nu a fost găsită (anulată/finalizată pe terminal)"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
 #, python-format
 msgid "Payment status could not be confirmed"
-msgstr ""
+msgstr "Starea de plată nu a putut fi confirmată"
 
 #. module: pos_mercado_pago
 #. odoo-python
@@ -113,6 +123,8 @@ msgstr ""
 #, python-format
 msgid "Please verify your production user token as it was rejected"
 msgstr ""
+"Tokenul de utilizator producție a fost respins. Vă rugăm să verificați "
+"tokenul."
 
 #. module: pos_mercado_pago
 #: model:ir.model,name:pos_mercado_pago.model_pos_payment_method
@@ -127,40 +139,40 @@ msgstr "Sesiune Punct de vânzare"
 #. module: pos_mercado_pago
 #: model:ir.model.fields,field_description:pos_mercado_pago.field_pos_payment_method__mp_webhook_secret_key
 msgid "Production secret key"
-msgstr ""
+msgstr "Cheia secretă producție"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,field_description:pos_mercado_pago.field_pos_payment_method__mp_bearer_token
 msgid "Production user token"
-msgstr ""
+msgstr "Token de utilizator producție"
 
 #. module: pos_mercado_pago
 #: model:ir.model.fields,field_description:pos_mercado_pago.field_pos_payment_method__mp_id_point_smart
 msgid "Terminal S/N"
-msgstr ""
+msgstr "S/N Terminal"
 
 #. module: pos_mercado_pago
 #. odoo-python
 #: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
 #, python-format
 msgid "The terminal serial number is not registered on Mercado Pago"
-msgstr ""
+msgstr "Numărul de serial al terminalului nu este înregistrat de Mercado Pago"
 
 #. module: pos_mercado_pago
 #. odoo-python
 #: code:addons/pos_mercado_pago/models/pos_payment_method.py:0
 #, python-format
 msgid "Unexpected Mercado Pago response: %s"
-msgstr ""
+msgstr "Eroare Mercado Pago: %s"
 
 #. module: pos_mercado_pago
 #. odoo-javascript
 #: code:addons/pos_mercado_pago/static/src/app/payment_mercado_pago.js:0
 #, python-format
 msgid "Unknown payment status"
-msgstr ""
+msgstr "Stare plată nerecunoscută"
 
 #. module: pos_mercado_pago
 #: model_terms:ir.ui.view,arch_db:pos_mercado_pago.pos_payment_method_view_form_inherit_pos_mercado_pago
 msgid "c2f3662..."
-msgstr ""
+msgstr "c2f3662..."

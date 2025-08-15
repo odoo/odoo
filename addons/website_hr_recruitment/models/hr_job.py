@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api
+from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools import mute_logger
 from odoo.tools.translate import html_translate
@@ -24,6 +24,17 @@ class Job(models.Model):
     def _get_default_website_description(self):
         return self.env['ir.qweb']._render("website_hr_recruitment.default_website_description", raise_if_not_found=False)
 
+    def _get_default_job_details(self):
+        return _("""
+            <span class="text-muted small">Time to Answer</span>
+            <h6>2 open days</h6>
+            <span class="text-muted small">Process</span>
+            <h6>1 Phone Call</h6>
+            <h6>1 Onsite Interview</h6>
+            <span class="text-muted small">Days to get an Offer</span>
+            <h6>4 Days after Interview</h6>
+        """)
+
     description = fields.Html(
         'Job Description', translate=html_translate,
         default=_get_default_description, prefetch=False,
@@ -40,15 +51,7 @@ class Job(models.Model):
         translate=True,
         help="Complementary information that will appear on the job submission page",
         sanitize_attributes=False,
-        default="""
-            <span class="text-muted small">Time to Answer</span>
-            <h6>2 open days</h6>
-            <span class="text-muted small">Process</span>
-            <h6>1 Phone Call</h6>
-            <h6>1 Onsite Interview</h6>
-            <span class="text-muted small">Days to get an Offer</span>
-            <h6>4 Days after Interview</h6>
-        """)
+        default=_get_default_job_details)
     published_date = fields.Date(compute='_compute_published_date', store=True)
 
     @api.depends('website_published')

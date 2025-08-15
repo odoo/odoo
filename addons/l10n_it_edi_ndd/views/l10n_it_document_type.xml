@@ -6,10 +6,30 @@
         <field name="name">Document Type Tree</field>
         <field name="model">l10n_it.document.type</field>
         <field name="arch" type="xml">
-            <tree string="Document Type">
+            <tree string="Document Type" duplicate="0">
                 <field name="code"/>
                 <field name="name"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="l10n_it_document_type_form" model="ir.ui.view">
+        <field name="name">l10n_it.document.type.form</field>
+        <field name="model">l10n_it.document.type</field>
+        <field name="arch" type="xml">
+            <form string="Document Type" duplicate="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="type"/>
+                        </group>
+                        <group>
+                            <field name="code"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
         </field>
     </record>
 

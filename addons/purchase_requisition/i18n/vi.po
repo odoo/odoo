@@ -3,16 +3,16 @@
 # 	* purchase_requisition
 # 
 # Translators:
-# Thi Huong Nguyen, 2024
-# Wil Odoo, 2024
+# Wil Odoo, 2025
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,7 +53,7 @@ msgstr "2023-09-15"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "<strong>Agreement Deadline:</strong><br/>"
-msgstr "<strong>Hạn chót hợp đồng:</strong><br/>"
+msgstr "<strong>Thời hạn hợp đồng:</strong><br/>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
@@ -88,7 +88,7 @@ msgstr "<strong>Mã tham chiếu</strong>"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "<strong>Scheduled Date</strong>"
-msgstr "<strong>Ngày theo kế hoạch</strong>"
+msgstr "<strong>Ngày đã lên lịch</strong>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
@@ -108,7 +108,7 @@ msgstr "<strong>Nhà cung cấp </strong>"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__active
@@ -144,7 +144,7 @@ msgstr "Hợp đồng"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__date_end
 msgid "Agreement Deadline"
-msgstr "Hạn chót hợp đồng"
+msgstr "Thời hạn hợp đồng"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__exclusive
@@ -361,7 +361,7 @@ msgid ""
 "                            By comparing product lines you can also decide to order some products from one vendor and others from another vendor."
 msgstr ""
 "Tạo một thông báo mời thầu bằng cách thêm yêu cầu báo giá dự trù cho các nhà cung cấp khác nhau.\n"
-"                            Sau đó chọn nhà cung cấp có sự kết hợp hoàn hảo nhất giữa thời gian giao hàng, tỷ lệ giao hàng đúng hạn và/hoặc tổng tiền.\n"
+"                            Sau đó chọn nhà cung cấp có sự kết hợp hoàn hảo nhất giữa thời gian hoàn thành, tỷ lệ giao hàng đúng hạn và/hoặc tổng tiền.\n"
 "                            Bằng cách so sánh chi tiết sản phẩm, bạn cũng có thể quyết định đặt mua một số sản phẩm từ nhà cung cấp này và những sản phẩm khác từ nhà cung cấp khác."
 
 #. module: purchase_requisition
@@ -437,9 +437,14 @@ msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Tài khoản phân tích phân phối"
+
+#. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__none
 msgid "Do not create RfQ lines automatically"
-msgstr "Không tự động tạo chi tiết YCBG"
+msgstr "Không tự động tạo chi tiết RFQ"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -601,7 +606,7 @@ msgstr "Chi tiết"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid "Link to Existing RfQ"
-msgstr "Liên kết với YCBG hiện có"
+msgstr "Liên kết với RFQ hiện có"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
@@ -616,7 +621,7 @@ msgstr "Tin nhắn"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Hạn chót hoạt động của tôi"
+msgstr "Thời hạn hoạt động của tôi"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -646,7 +651,7 @@ msgstr "Sự kiện theo lịch cho hoạt động tiếp theo"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Hạn chót cho hoạt động tiếp theo"
+msgstr "Thời hạn cho hoạt động tiếp theo"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_summary
@@ -668,7 +673,7 @@ msgstr "Không có thông tin nào để xoá"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__order_count
@@ -860,7 +865,7 @@ msgstr "Số lượng"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "RFQs/Orders"
-msgstr "YCBG/Đơn hàng"
+msgstr "RFQ/Đơn hàng"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__rating_ids
@@ -914,7 +919,7 @@ msgstr "Lỗi gửi SMS"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__schedule_date
 msgid "Scheduled Date"
-msgstr "Ngày theo kế hoạch"
+msgstr "Ngày đã lên lịch"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -924,7 +929,7 @@ msgstr "Tìm kiếm hợp đồng mua hàng"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__multiple
 msgid "Select multiple RFQ (non-exclusive)"
-msgstr "Chọn nhiều YCBG (không phải duy nhất)"
+msgstr "Chọn nhiều RFQ (không phải duy nhất)"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__exclusive
@@ -938,9 +943,9 @@ msgid ""
 "\n"
 "                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
-"Chỉ chọn một YCBG (duy nhất): khi một đơn mua hàng được xác nhận, hủy đơn mua hàng còn lại.\n"
+"Chỉ chọn một RFQ (duy nhất): khi một đơn mua hàng được xác nhận, hủy đơn mua hàng còn lại.\n"
 "\n"
-"                    Chọn nhiều YCBG (không phải duy nhất): cho phép nhiều đơn mua hàng. Khi xác nhận một đơn mua hàng, các đơn mua hàng còn lại sẽ không bị huỷ"
+"                    Chọn nhiều RFQ (không phải duy nhất): cho phép nhiều đơn mua hàng. Khi xác nhận một đơn mua hàng, các đơn mua hàng còn lại sẽ không bị huỷ"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
@@ -963,8 +968,7 @@ msgstr "Đặt số lượng theo cách thủ công"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Show all records which has next action date is before today"
-msgstr ""
-"Hiển thị tất cả tập dữ liệu có ngày xử lý tiếp theo trước ngày hôm nay"
+msgstr "Hiển thị tất cả bản ghi có ngày xử lý tiếp theo trước ngày hôm nay"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -981,7 +985,7 @@ msgid ""
 "Some quantities were not cleared because their status is not a RFQ status."
 msgstr ""
 "Một số số lượng chưa bị xoá vì trạng thái của chúng không phải là trạng thái"
-" YCBG."
+" RFQ."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__origin
@@ -1114,7 +1118,7 @@ msgstr "Tổng"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Loại hoạt động ngoại lệ trong tập dữ liệu."
+msgstr "Loại hoạt động ngoại lệ trong bản ghi."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document

@@ -7,7 +7,7 @@ from freezegun import freeze_time
 
 from odoo import Command
 from odoo.tests import common
-
+from odoo.exceptions import UserError
 
 class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
@@ -444,9 +444,9 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         holiday.sudo().action_validate()
         self.assertEqual(len(holiday.timesheet_ids), 5)
 
-        # create overlapping global time off
-        global_leave_start_datetime = hr_leave_start_datetime + timedelta(days=2)
-        global_leave_end_datetime = global_leave_start_datetime + timedelta(hours=9)
+        # create overlapping global time off, with some margin over working day to account for different timezones
+        global_leave_start_datetime = hr_leave_start_datetime + timedelta(days=2, hours=-3)
+        global_leave_end_datetime = global_leave_start_datetime + timedelta(hours=12)
 
         global_time_off = self.env['resource.calendar.leaves'].create({
             'name': 'Public Holiday',
@@ -509,3 +509,40 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
         self.assertTrue(global_time_off.timesheet_ids.filtered(lambda r: r.employee_id == test_user.employee_id))
         self.assertTrue(gto_without_calendar.timesheet_ids.filtered(lambda r: r.employee_id == test_user.employee_id))
+
+        # create a new leave at same dates
+        holiday3 = HrLeave.with_user(test_user).create({
+            'name': 'Leave 3',
+            'employee_id': test_user.employee_id.id,
+            'holiday_status_id': hr_leave_type_with_ts.id,
+            'request_date_from': hr_leave_start_datetime,
+            'request_date_to': hr_leave_end_datetime,
+        })
+        holiday3.sudo().action_validate()
+
+        self.assertEqual(len(holiday3.timesheet_ids), 3)
+        global_time_off.unlink()
+        self.assertEqual(len(holiday3.timesheet_ids), 4)
+        gto_without_calendar.calendar_id = self.part_time_calendar
+        self.assertFalse(gto_without_calendar.timesheet_ids.filtered(lambda r: r.employee_id == test_user.employee_id))
+        self.assertEqual(len(holiday3.timesheet_ids), 5)
+        self.assertEqual(sum(holiday3.timesheet_ids.mapped('unit_amount')), 40)
+
+    def test_unlink_timesheet_with_global_time_off(self):
+        leave_start = datetime(2025, 1, 1, 7, 0)
+        leave_end = datetime(2025, 1, 1, 18, 0)
+
+        global_time_off = self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'calendar_id': self.test_company.resource_calendar_id.id,
+            'date_from': leave_start,
+            'date_to': leave_end,
+        })
+
+        timesheet = self.env['account.analytic.line'].search([
+            ('global_leave_id', '=', global_time_off.id),
+            ('employee_id', '=', self.full_time_employee.id)
+        ])
+
+        with self.assertRaises(UserError):
+            timesheet.unlink()

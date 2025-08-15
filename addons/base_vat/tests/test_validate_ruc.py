@@ -118,13 +118,35 @@ class TestStructure(TransactionCase):
         test_partner = self.env["res.partner"].create({"name": "UY Company", "country_id": self.env.ref("base.uy").id})
         # Set a valid Number
         test_partner.write({"vat": "215521750017"})
+        test_partner.write({"vat": "220018800014"})
         test_partner.write({"vat": "21-55217500-17"})
         test_partner.write({"vat": "21 55217500 17"})
         test_partner.write({"vat": "UY215521750017"})
 
         # Test invalid VAT (should raise a ValidationError)
-        with self.assertRaisesRegex(ValidationError, "The VAT number.*does not seem to be valid."):
-            test_partner.write({"vat": "215521750018"})
+        msg = "The VAT number.*does not seem to be valid"
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.vat = "215521750018"
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.vat = "21.55217500.17"
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.vat = "2155 ABC 21750017"
+
+    def test_vat_vn(self):
+        test_partner = self.env['res.partner'].create({'name': "DuongDepTrai", 'country_id': self.env.ref('base.vn').id})
+        # Valid vn vat
+        test_partner.vat = "000012345679"  # individual
+        test_partner.vat = "0123457890"  # enterprise
+        test_partner.vat = "0123457890-111"  # branch
+
+        # Test invalid VAT (should raise a ValidationError)
+        msg = "The VAT number.*does not seem to be valid"
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.write({'vat': '00001234567912'})
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.write({'vat': '10123457890'})
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.write({'vat': '0123457890-11134'})
 
 
 @tagged('-standard', 'external')

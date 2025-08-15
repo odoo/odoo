@@ -19,7 +19,7 @@ class LoyaltyCard(models.Model):
         return super()._get_default_template()
 
     def _get_mail_partner(self):
-        return super()._get_mail_partner() or self.source_pos_order_id.partner_id
+        return super()._get_mail_partner() or self.sudo().source_pos_order_id.partner_id
 
     def _get_signature(self):
         return self.source_pos_order_id.user_id.signature or super()._get_signature()

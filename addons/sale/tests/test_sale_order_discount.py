@@ -44,7 +44,7 @@ class TestSaleOrderDiscount(SaleCommon):
         self.wizard.action_apply_discount()
 
         discount_line = self.sale_order.order_line[-1]
-        self.assertAlmostEqual(discount_line.price_unit, -amount_before_discount*0.5)
+        self.assertAlmostEqual(discount_line.price_unit, -amount_before_discount * 0.5)
         self.assertFalse(discount_line.tax_id)
         self.assertEqual(discount_line.product_uom_qty, 1.0)
 
@@ -56,7 +56,7 @@ class TestSaleOrderDiscount(SaleCommon):
 
         discount_line = self.sale_order.order_line - solines
         discount_line.ensure_one()
-        self.assertAlmostEqual(discount_line.price_unit, -amount_before_discount*0.5)
+        self.assertAlmostEqual(discount_line.price_unit, -amount_before_discount * 0.5)
         self.assertEqual(discount_line.tax_id, dumb_tax)
         self.assertEqual(discount_line.product_uom_qty, 1.0)
 
@@ -107,3 +107,54 @@ class TestSaleOrderDiscount(SaleCommon):
     def test_percent_discount_above_100(self):
         with self.assertRaises(ValidationError):
             self.wizard.write({'discount_percentage': 1.1, 'discount_type': 'sol_discount'})
+
+    def test_discount_translation(self):
+        self.env['res.lang']._activate_lang('es_AR')
+        self.wizard.write({
+            'discount_percentage': 0.1,
+            'discount_type': 'so_discount',
+        })
+        self.wizard.sale_order_id.partner_id.lang = 'es_AR'
+        self.wizard.action_apply_discount()
+        discount_line = self.sale_order.order_line[-1]
+        self.assertEqual(discount_line.name, "Descuento: 10.00%")
+
+    def test_discount_translation_tax_groups(self):
+        self.env['res.lang']._activate_lang('es_AR')
+        self.wizard.write({
+            'discount_percentage': 0.1,
+            'discount_type': 'so_discount',
+        })
+        self.wizard.sale_order_id.partner_id.lang = 'es_AR'
+        tax1, tax2 = self.env['account.tax'].create([{
+            'name': f"{percentage}% VAT",
+            'amount_type': 'percent',
+            'amount': percentage,
+        } for percentage in (10, 20)])
+        self.wizard.sale_order_id.order_line[0].tax_id = tax1
+        self.wizard.sale_order_id.order_line[1].tax_id = tax2
+        self.wizard.action_apply_discount()
+        self.assertEqual(
+            self.sale_order.order_line[-2].name,
+            "Descuento: 10.00%- En los productos con los siguientes impuestos 10% VAT",
+        )
+        self.assertEqual(
+            self.sale_order.order_line[-1].name,
+            "Descuento: 10.00%- En los productos con los siguientes impuestos 20% VAT",
+        )
+
+    def test_line_and_global_discount(self):
+        solines = self.sale_order.order_line
+        amount_before_discount = self.sale_order.amount_untaxed
+        self.assertEqual(len(solines), 2)
+
+        solines.discount = 10
+        self.assertEqual(self.sale_order.amount_untaxed, amount_before_discount * 0.9)
+        amount_with_line_discount = self.sale_order.amount_untaxed
+
+        self.wizard.write({
+            'discount_percentage': 0.1,  # 10%
+            'discount_type': 'so_discount',
+        })
+        self.wizard.action_apply_discount()
+        self.assertEqual(self.sale_order.amount_untaxed, amount_with_line_discount * 0.9)

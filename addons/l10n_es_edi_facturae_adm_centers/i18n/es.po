@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* l10n_es_edi_facturae
+# 	* l10n_es_edi_facturae_adm_centers
 #
 msgid ""
 msgstr ""
@@ -21,16 +21,15 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_es_edi_facturae_adm_centers.field_res_partner__type
 #: model:ir.model.fields,help:l10n_es_edi_facturae_adm_centers.field_res_users__type
 msgid ""
-"- Contact: Use this to organize the contact details of employees of a given "
-"company (e.g. CEO, CFO, ...).\n"
-"- Invoice Address: Preferred address for all invoices. Selected by default "
-"when you invoice an order that belongs to this company.\n"
-"- Delivery Address: Preferred address for all deliveries. Selected by "
-"default when you deliver an order that belongs to this company.\n"
-"- Private: Private addresses are only visible by authorized users and "
-"contain sensitive data (employee home addresses, ...).\n"
+"- Contact: Use this to organize the contact details of employees of a given company (e.g. CEO, CFO, ...).\n"
+"- Invoice Address: Preferred address for all invoices. Selected by default when you invoice an order that belongs to this company.\n"
+"- Delivery Address: Preferred address for all deliveries. Selected by default when you deliver an order that belongs to this company.\n"
 "- Other: Other address for the company (e.g. subsidiary, ...)"
 msgstr ""
+"- Contacto: Utilice esto para organizar los detalles de contacto de los empleados de una empresa específica (p. ej. director ejecutivo, director financiero, etc.).\n"
+"- Dirección de facturación: La dirección preferida para todas las facturas. Se selecciona por defecto cuando factura un pedido que pertenece a esta empresa.\n"
+"- Dirección de entrega: La dirección preferida para todas las entregas. Se selecciona por defecto cuando entrega un pedido que pertenece a esta empresa.\n"
+"- Otro: Otras direcciones para la empresa (p. ej. subsidiaria ...)"
 
 #. module: l10n_es_edi_facturae_adm_centers
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae_adm_centers.view_partner_form_inherit_l10n_es_edi_facturae
@@ -38,19 +37,19 @@ msgid ""
 "<span>Administrative Center for Spain Public Administrations. Used in "
 "Spanish electronic invoices.</span>"
 msgstr ""
-"<span>Centro Administrativo de Administraciones Públicas de España. "
+"<span>Centro Administrativo de las Administraciones Públicas de España. "
 "Utilizado en facturas electrónicas españolas.</span>"
 
 #. module: l10n_es_edi_facturae_adm_centers
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae_adm_centers.field_res_partner__type
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae_adm_centers.field_res_users__type
 msgid "Address Type"
-msgstr ""
+msgstr "Tipo de dirección"
 
 #. module: l10n_es_edi_facturae_adm_centers
 #: model:ir.model,name:l10n_es_edi_facturae_adm_centers.model_l10n_es_edi_facturae_adm_centers_ac_role_type
 msgid "Administrative Center Role Type"
-msgstr ""
+msgstr "Tipo del rol del centro administrativo"
 
 #. module: l10n_es_edi_facturae_adm_centers
 #: model:l10n_es_edi_facturae_adm_centers.ac_role_type,name:l10n_es_edi_facturae_adm_centers.ac_role_type_04
@@ -73,16 +72,17 @@ msgid ""
 "positions) Spain is '84' + Company code (5 positions) + the remaining "
 "positions. The last one is the product + check digit."
 msgstr ""
-"Punto Lógico Operacional. Código identificativo de la Empresa. Código de "
-"barras de 13 posiciones estándar. Valores registrados por AECOC. Recoge el "
-"código de País (2p) España es ’84’ + Empresa (5p) + los restantes - el "
-"último es el producto + dígito de control."
+"Código identificativo de la empresa. Código de barras de 13 posiciones "
+"estándar. Los códigos están registrados por la AECOC en España. Recoge el "
+"código de país (2 posiciones) (España es ’84’) + el código de la empresa (5 "
+"posiciones) + los restantes. El último es el producto + el dígito de "
+"control."
 
 #. module: l10n_es_edi_facturae_adm_centers
 #: model:ir.model.fields,help:l10n_es_edi_facturae_adm_centers.field_res_partner__l10n_es_edi_facturae_ac_center_code
 #: model:ir.model.fields,help:l10n_es_edi_facturae_adm_centers.field_res_users__l10n_es_edi_facturae_ac_center_code
 msgid "Code of the issuing department."
-msgstr "Número del Departamento Emisor."
+msgstr "Número del departamento emisor."
 
 #. module: l10n_es_edi_facturae_adm_centers
 #: model:l10n_es_edi_facturae_adm_centers.ac_role_type,name:l10n_es_edi_facturae_adm_centers.ac_role_type_08
@@ -97,22 +97,22 @@ msgstr "Cobrador"
 #. module: l10n_es_edi_facturae_adm_centers
 #: model:ir.model,name:l10n_es_edi_facturae_adm_centers.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Contacto"
 
 #. module: l10n_es_edi_facturae_adm_centers
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae_adm_centers.field_l10n_es_edi_facturae_adm_centers_ac_role_type__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #. module: l10n_es_edi_facturae_adm_centers
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae_adm_centers.field_l10n_es_edi_facturae_adm_centers_ac_role_type__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creado el"
 
 #. module: l10n_es_edi_facturae_adm_centers
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae_adm_centers.field_l10n_es_edi_facturae_adm_centers_ac_role_type__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nombre mostrado"
 
 #. module: l10n_es_edi_facturae_adm_centers
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae_adm_centers.selection__res_partner__type__facturae_ac
@@ -127,7 +127,7 @@ msgstr "Fiscal"
 #. module: l10n_es_edi_facturae_adm_centers
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae_adm_centers.field_l10n_es_edi_facturae_adm_centers_ac_role_type__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: l10n_es_edi_facturae_adm_centers
 #: model:ir.model.fields,help:l10n_es_edi_facturae_adm_centers.field_res_partner__l10n_es_edi_facturae_ac_physical_gln
@@ -135,14 +135,15 @@ msgstr ""
 msgid ""
 "Identification of the connection point to the VAN EDI (Global Location "
 "Number). Barcode of 13 standard positions. Codes are registered in Spain by "
-"AECOC. The code is made up of the country code (2 positions) Spain is '84' + "
-"Company code (5 positions) + the remaining positions. The last one is the "
+"AECOC. The code is made up of the country code (2 positions) Spain is '84' +"
+" Company code (5 positions) + the remaining positions. The last one is the "
 "product + check digit."
 msgstr ""
-"GLN Físico. Identificación del punto de conexión a la VAN EDI (Global "
-"Location Number). Código de barras de 13 posiciones estándar. Valores "
-"registrados por AECOC. Recoge el código de País (2p) España es ’84’ + "
-"Empresa (5p) + los restantes - el último es el producto + dígito de control."
+"Identificación del punto de conexión a la VAN EDI (Global Location Number). "
+"Código de barras de 13 posiciones estándar. Los códigos están registrados "
+"por la AECOC en España. Recoge el código de país (2 posiciones) (España es "
+"’84’) + el código de la empresa (5 posiciones) + los restantes. El último es"
+" el producto + el dígito de control."
 
 #. module: l10n_es_edi_facturae_adm_centers
 #: model:l10n_es_edi_facturae_adm_centers.ac_role_type,name:l10n_es_edi_facturae_adm_centers.ac_role_type_09
@@ -153,49 +154,36 @@ msgstr "Emisor"
 #: model:ir.model.fields,help:l10n_es_edi_facturae_adm_centers.field_res_partner__l10n_es_edi_facturae_ac_role_type_ids
 #: model:ir.model.fields,help:l10n_es_edi_facturae_adm_centers.field_res_users__l10n_es_edi_facturae_ac_role_type_ids
 msgid ""
-"It indicates the role played by the Operational Point defined as a Workplace/"
-"Department.\n"
+"It indicates the role played by the Operational Point defined as a Workplace/Department.\n"
 "These functions are:\n"
-"- Receiver: Workplace associated to the recipient's tax identification "
-"number where the invoice will be received.\n"
-"- Payer: Workplace associated to the recipient's tax identification number "
-"responsible for paying the invoice.\n"
-"- Buyer: Workplace associated to the recipient's tax identification number "
-"who issued the purchase order.\n"
-"- Collector: Workplace associated to  the issuer's tax identification number "
-"responsible for handling the collection.\n"
-"- Fiscal: Workplace associated to the recipient's tax identification number, "
-"where an Operational Point mailbox is shared by different client companies "
-"with different tax identification numbers and it is necessary to "
-"differentiate between where the message is received (shared letterbox) and "
-"the workplace where it must be stored (recipient company)."
+"- Receiver: Workplace associated to the recipient's tax identification number where the invoice will be received.\n"
+"- Payer: Workplace associated to the recipient's tax identification number responsible for paying the invoice.\n"
+"- Buyer: Workplace associated to the recipient's tax identification number who issued the purchase order.\n"
+"- Collector: Workplace associated to  the issuer's tax identification number responsible for handling the collection.\n"
+"- Fiscal: Workplace associated to the recipient's tax identification number, where an Operational Point mailbox is shared by different client companies with different tax identification numbers and it is necessary to differentiate between where the message is received (shared letterbox) and the workplace where it must be stored (recipient company)."
 msgstr ""
-"Indica la función de un Punto Operacional (P.O.) definido como Centro/"
-"Departamento.\n"
+"Indica la función de un Punto Operacional (P.O.) definido como Centro/Departamento.\n"
 "Estas funciones son:\n"
 "- Receptor: Centro del NIF receptor destinatario de la factura..\n"
 "- Pagador: Centro del NIF receptor responsable de pagar la factura.\n"
 "- Comprador: Centro del NIF receptor que emitió el pedido.\n"
 "- Cobrador: Centro del NIF emisor responsable de gestionar el cobro.\n"
-"- Fiscal: Centro del NIF receptor de las facturas, cuando un P.O. buzón es "
-"compartido por varias empresas clientes con diferentes NIF.s y es necesario "
-"diferenciar el receptor del mensaje (buzón común) del lugar donde debe "
-"depositarse (empresa destinataria)."
+"- Fiscal: Centro del NIF receptor de las facturas, cuando un P.O. buzón es compartido por varias empresas clientes con diferentes NIF y es necesario diferenciar el receptor del mensaje (buzón común) del lugar donde debe depositarse (empresa destinataria)."
 
 #. module: l10n_es_edi_facturae_adm_centers
 #: model:ir.model,name:l10n_es_edi_facturae_adm_centers.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "Asiento contable"
 
 #. module: l10n_es_edi_facturae_adm_centers
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae_adm_centers.field_l10n_es_edi_facturae_adm_centers_ac_role_type__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última actualización por"
 
 #. module: l10n_es_edi_facturae_adm_centers
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae_adm_centers.field_l10n_es_edi_facturae_adm_centers_ac_role_type__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última actualización el"
 
 #. module: l10n_es_edi_facturae_adm_centers
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae_adm_centers.field_res_partner__l10n_es_edi_facturae_ac_logical_operational_point

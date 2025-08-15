@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mrp_account
-# 
+#
 # Translators:
-# Wil Odoo, 2023
-# Thi Huong Nguyen, 2024
-# 
+# Thi Huong Nguyen, 2025
+# Wil Odoo, 2025
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-08-07 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mrp_account
@@ -29,6 +29,13 @@ msgstr "$1000"
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "$5000"
 msgstr "$5000"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/stock_move.py:0
+#, python-format
+msgid "%s - Unbuild Cost Difference"
+msgstr ""
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -138,7 +145,7 @@ msgstr "Độ chính xác phân tích"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_bom
 msgid "Bill of Material"
-msgstr "Định mức nguyên liệu"
+msgstr "Danh mục vật tư"
 
 #. module: mrp_account
 #. odoo-python
@@ -146,17 +153,17 @@ msgstr "Định mức nguyên liệu"
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
 #, python-format
 msgid "Bills of Materials"
-msgstr "Định mức nguyên liệu"
+msgstr "Danh mục vật tư"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_count
 msgid "BoM Count"
-msgstr "Số ĐMNL"
+msgstr "Số BoM"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
 msgid "Bom"
-msgstr "ĐMNL"
+msgstr "BoM"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__category
@@ -170,7 +177,7 @@ msgstr "Danh mục"
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
 msgid "Compute Price from BoM"
-msgstr "Tính giá từ ĐMNL"
+msgstr "Tính giá từ BoM"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
@@ -180,13 +187,20 @@ msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
 msgstr ""
-"Tính toán giá của sản phẩm bằng cách sử dụng sản phẩm và hoạt động của định "
-"mức nguyên liệu liên quan, chỉ áp dụng cho sản phẩm được sản xuất. "
+"Tính toán giá của sản phẩm bằng cách sử dụng sản phẩm và hoạt động của danh "
+"mục vật tư liên quan, chỉ áp dụng cho sản phẩm được sản xuất. "
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_ids
 msgid "Costs Hour Account"
 msgstr "Tài khoản giờ chi phí"
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Tài khoản phân tích phân phối"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_applicability__business_domain
@@ -211,7 +225,7 @@ msgstr "Laptop"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_report_mrp_report_mo_overview
 msgid "MO Overview Report"
-msgstr "Báo cáo tổng quan ĐMNL"
+msgstr "Báo cáo tổng quan MO"
 
 #. module: mrp_account
 #: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_applicability__business_domain__manufacturing_order
@@ -235,7 +249,7 @@ msgstr "Số lệnh sản xuất"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__mo_analytic_account_line_ids
 msgid "Mo Analytic Account Line"
-msgstr "Dòng tài khoản phân tích LSX"
+msgstr "Dòng tài khoản phân tích MO"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
@@ -280,7 +294,7 @@ msgstr "Hiển thị định giá"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_stock_move
 msgid "Stock Move"
-msgstr "Dịch chuyển tồn kho"
+msgstr "Điều chuyển tồn kho"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_stock_rule
@@ -290,11 +304,15 @@ msgstr "Quy tắc tồn kho"
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
 msgid ""
-"This account will be used as a valuation counterpart for both components and final products for manufacturing orders.\n"
-"                If there are any workcenter/employee costs, this value will remain on the account once the production is completed."
+"This account will be used as a valuation counterpart for both components and "
+"final products for manufacturing orders.\n"
+"                If there are any workcenter/employee costs, this value will "
+"remain on the account once the production is completed."
 msgstr ""
-"Tài khoản này sẽ được sử dụng làm tài khoản đối ứng định giá cho cả nguyên liệu và thành phẩm của các lệnh sản xuất.\n"
-"Nếu có bất kỳ chi phí khu vực sản xuất/nhân viên nào, giá trị này sẽ vẫn còn trên tài khoản sau khi quá trình sản xuất hoàn tất."
+"Tài khoản này sẽ được sử dụng làm tài khoản đối ứng định giá cho cả thành "
+"phần và thành phẩm của các lệnh sản xuất.\n"
+"Nếu có bất kỳ chi phí khu vực sản xuất/nhân viên nào, giá trị này sẽ vẫn còn "
+"trên tài khoản sau khi quá trình sản xuất hoàn tất."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -355,3 +373,6 @@ msgstr "Khu vực sản xuất"
 #, python-format
 msgid "[WC] %s"
 msgstr "[Khu vực sản xuất] %s"
+
+#~ msgid "Stock Valuation Layer"
+#~ msgstr "Lớp định giá tồn kho"

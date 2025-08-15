@@ -217,7 +217,7 @@ class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
         self.assertEqual(len(gift_card_program.coupon_ids), 2, 'There should be two coupons, one with points, one without')
         self.assertEqual(len(gift_card_program.coupon_ids.filtered('points')), 1, 'There should be two coupons, one with points, one without')
 
-    def test_02_admin_shop_ewallet_tour(self):
+    def test_03_admin_shop_ewallet_tour(self):
         public_category = self.env['product.public.category'].create({'name': 'Public Category'})
         self.env['product.product'].create({
             'name': 'TEST - Small Drawer',
@@ -230,23 +230,23 @@ class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
         })
         # Disable any other program
         self.env['loyalty.program'].search([]).write({'active': False})
-        ewallet_program = self.env['loyalty.program'].create({
-            'name': 'ewallet - test',
+        ewallet_programs = self.env['loyalty.program'].create([{
+            'name': f"ewallet - test - {ecommerce_ok=}",
             'applies_on': 'future',
             'trigger': 'auto',
             'program_type': 'ewallet',
+            'ecommerce_ok': ecommerce_ok,
             'reward_ids': [Command.create({
                 'reward_type': 'discount',
                 'discount_mode': 'per_point',
                 'discount': 1,
             })],
-        })
-        ewallet_program.currency_id = self.env.ref('base.USD')
-        self.env['loyalty.card'].create({
+        } for ecommerce_ok in (True, False)])
+        self.env['loyalty.card'].create([{
             'partner_id': self.env.ref('base.partner_admin').id,
-            'program_id': ewallet_program.id,
+            'program_id': program_id,
             'points': 1000,
-        })
+        } for program_id in ewallet_programs.ids])
         self.start_tour('/', 'shop_sale_ewallet', login='admin')
 
 
@@ -397,10 +397,7 @@ class TestWebsiteSaleCoupon(HttpCase):
             lambda l: l.coupon_id and l.coupon_id.id == self.coupon.id
         )
 
-        kwargs = {
-            'line_id': None, 'product_id': coupon_line.product_id.id, 'add_qty': None, 'set_qty': 0
-        }
-        order._cart_update(**kwargs)
+        order._cart_update(coupon_line.product_id.id, add_qty=None)
 
         msg = "The coupon should've been removed from the order"
         self.assertEqual(len(order.applied_coupon_ids), 0, msg=msg)
@@ -532,8 +529,8 @@ class TestWebsiteSaleCoupon(HttpCase):
             lambda line: line.coupon_id and line.coupon_id.id == self.coupon.id
         )
         order._cart_update(
-            line_id=None,
             product_id=coupon_line.product_id.id,
+            line_id=None,
             add_qty=None,
             set_qty=0,
         )
@@ -541,3 +538,50 @@ class TestWebsiteSaleCoupon(HttpCase):
         msg = "All coupon lines should have been removed from the order."
         self.assertEqual(len(order.applied_coupon_ids), 0, msg=msg)
         self.assertEqual(len(order.order_line), 4, msg=msg)
+
+    def test_confirm_points_as_public_user(self):
+        test_product = self.env['product.product'].create({
+            'name': "Test Product",
+            'list_price': 100,
+            'sale_ok': True,
+        })
+        test_partner = self.env['res.partner'].create({
+            'name': 'Test Partner'
+        })
+
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': "Loyalty Program",
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'rule_ids': [Command.create({
+                'reward_point_mode': 'unit',
+                'reward_point_amount': 1,
+                'product_ids': [test_product.id],
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 1.5,
+                'discount_mode': 'per_point',
+                'discount_applicability': 'order',
+                'required_points': 3,
+            })],
+        })
+
+        order = self.env['sale.order'].create({
+            'partner_id': test_partner.id,
+            'order_line': [Command.create({
+                'product_id': test_product.id,
+                'product_uom_qty': 1,
+            })]
+        })
+
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': test_partner.id,
+            'points': 0,
+        })
+        public_user = self.env.ref('base.public_user')
+        order.action_quotation_send()
+        order.with_context(access_token=order.access_token, user=public_user).action_confirm()
+        self.assertEqual(loyalty_card.points, 1)

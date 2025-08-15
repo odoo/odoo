@@ -11,14 +11,16 @@
 # İlknur Püskül <ilknurpuskull@gmail.com>, 2024
 # Murat Kaplan <muratk@projetgrup.com>, 2024
 # Ediz Duman <neps1192@gmail.com>, 2024
+# Melih Melik Sonmez, 2025
+# Deniz Guvener_Odoo <degu@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-12-23 23:00+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2024\n"
+"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +44,7 @@ msgstr ""
 #. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
 msgid "Activate Audit Trail"
-msgstr ""
+msgstr "Denetim İzini Etkinleştir"
 
 #. module: account_audit_trail
 #: model:ir.actions.act_window,name:account_audit_trail.action_account_audit_trail_report
@@ -51,7 +53,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account_audit_trail.account_audit_trail_menu
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
 msgid "Audit Trail"
-msgstr ""
+msgstr "Denetim İzi"
 
 #. module: account_audit_trail
 #: model:ir.model,name:account_audit_trail.model_account_bank_statement_line
@@ -63,7 +65,7 @@ msgstr "Banka Hesap Ekstresi Kalemi"
 #: code:addons/account_audit_trail/models/res_config_settings.py:0
 #, python-format
 msgid "Can't disable audit trail when there are existing records."
-msgstr ""
+msgstr "Mevcut kayıtlar varken denetim geçmişini devre dışı bırakamazsınız."
 
 #. module: account_audit_trail
 #. odoo-python
@@ -86,7 +88,7 @@ msgstr "Şirket"
 #: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_company_id
 #: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_company_id
 msgid "Company "
-msgstr ""
+msgstr "Firma"
 
 #. module: account_audit_trail
 #: model:ir.model,name:account_audit_trail.model_res_config_settings
@@ -96,7 +98,7 @@ msgstr "Yapılandırma Ayarları"
 #. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
 msgid "Create Only"
-msgstr ""
+msgstr "Sadece Oluştur"
 
 #. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
@@ -201,6 +203,8 @@ msgid ""
 "To keep the audit trail, you can not delete journal entries once they have been posted.\n"
 "Instead, you can cancel the journal entry."
 msgstr ""
+"Denetim izini korumak için, bir yevmiye kaydı bir kez gönderildikten sonra silinemez.\n"
+"Bunun yerine, yevmiye kaydını iptal edebilirsiniz."
 
 #. module: account_audit_trail
 #: model_terms:ir.actions.act_window,help:account_audit_trail.action_account_audit_trail_report
@@ -211,19 +215,18 @@ msgstr ""
 #. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
 msgid "Update Only"
-msgstr ""
+msgstr "Sadece Güncelle"
 
 #. module: account_audit_trail
 #. odoo-python
 #: code:addons/account_audit_trail/models/mail_message.py:0
 #, python-format
 msgid "Updated"
-msgstr ""
+msgstr "Güncellenmiş"
 
 #. module: account_audit_trail
 #. odoo-python
 #: code:addons/account_audit_trail/models/mail_message.py:0
 #, python-format
-msgid ""
-"You cannot remove parts of the audit trail. Archive the record instead."
-msgstr ""
+msgid "You cannot remove parts of the audit trail."
+msgstr "Denetim izi öğeleri silinemez."

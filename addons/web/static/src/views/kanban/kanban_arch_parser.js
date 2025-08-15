@@ -158,7 +158,8 @@ export class KanbanArchParser {
         const colorField = (colorEl && colorEl.getAttribute("data-field")) || "color";
 
         if (!defaultOrder.length && handleField) {
-            defaultOrder = stringToOrderBy(handleField);
+            const handleFieldSort = `${handleField}, id`;
+            defaultOrder = stringToOrderBy(handleFieldSort);
         }
 
         return {

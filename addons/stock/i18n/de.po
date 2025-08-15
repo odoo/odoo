@@ -3,16 +3,16 @@
 # 	* stock
 # 
 # Translators:
-# Larissa Manderfeld, 2024
 # Wil Odoo, 2024
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-06-13 00:52+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -386,11 +386,6 @@ msgstr "4 x 7 mit Preis"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "54326786758"
 msgstr "54326786758"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
-msgstr "98"
 
 #. module: stock
 #. odoo-python
@@ -1289,7 +1284,7 @@ msgstr "August"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__trigger__auto
 msgid "Auto"
-msgstr "Auto"
+msgstr "Automatisch"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_delivery_slip
@@ -1647,6 +1642,17 @@ msgstr "Produktmenge ändern"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+"Es ist nicht erlaubt, die Los-/Seriennummer für Buchungszeilen mit "
+"unterschiedlichen Produkten zu ändern."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_lot.py:0
@@ -1824,6 +1830,15 @@ msgstr "Versandkosten für DHL berechnen und versenden"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Berechnen Sie die Versandkosten und versenden Sie mit DHL<br/>\n"
+"                                    <strong>(gehen Sie zur Installation zu Start&gt;Apps)</strong>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
 msgstr "Versandkosten für Easypost berechnen und versenden"
 
@@ -1831,6 +1846,15 @@ msgstr "Versandkosten für Easypost berechnen und versenden"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
 msgstr "Versandkosten für FedEx berechnen und versenden"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Berechnen Sie die Versandkosten und versenden Sie mit FedEx<br/>\n"
+"                                    <strong>(gehen Sie zur Installation zu Start&gt;Apps)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1849,8 +1873,26 @@ msgstr "Versandkosten für UPS berechnen und versenden"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Berechnen Sie die Versandkosten und versenden Sie mit UPS<br/>\n"
+"                                    <strong>(gehen Sie zur Installation zu Start&gt;Apps)</strong>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
 msgstr "Versandkosten für USPS berechnen und versenden"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Berechnen Sie die Versandkosten und versenden Sie mit USPS<br/>\n"
+"                                    <strong>(gehen Sie zur Installation zu Start&gt;Apps)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2341,6 +2383,11 @@ msgstr "DEMO_SOURCE_DISPLAY_NAME"
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_UOM"
 msgstr "DEMO_UOM"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "DHL Connector"
+msgstr "DHL-Konnektor"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
@@ -3028,6 +3075,7 @@ msgid "Do you confirm you want to scrap"
 msgstr "Bestätigen Sie, dass Sie einen Ausschuss von"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Documentation"
 msgstr "Dokumentation"
@@ -3265,6 +3313,7 @@ msgstr "Februar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "FedEx Connector"
 msgstr "FedEx-Konnektor"
 
@@ -4066,13 +4115,6 @@ msgid "Immediate Transfer"
 msgstr "Sofortiger Transfer"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-#, python-format
-msgid "Import"
-msgstr "Importieren"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 #, python-format
@@ -4188,7 +4230,7 @@ msgstr "Eingangslager"
 #: code:addons/stock/models/res_company.py:0
 #, python-format
 msgid "Inter-warehouse transit"
-msgstr "Transit zwischen Lagerhäusern"
+msgstr "Lagerübergreifender Transit"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.int_picking
@@ -4767,7 +4809,7 @@ msgstr "Vorlaufzeiten"
 #. module: stock
 #: model:product.removal,name:stock.removal_least_packages
 msgid "Least Packages"
-msgstr "Wenige Pakete"
+msgstr "Pakete mit wenigsten Produkten"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_request_count__set_count__empty
@@ -5688,7 +5730,7 @@ msgstr "Anzahl der Aktionen"
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial_count
 #, python-format
 msgid "Number of SN"
-msgstr "Anzahl der SN"
+msgstr "Anzahl Seriennummern"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_has_error_counter
@@ -6493,12 +6535,12 @@ msgstr "Anwesenheit hängt von der Art des Vorgangs ab."
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
-"Drücken Sie auf die Schaltfläche ERSTELLEN, um die Mengen für jedes Produkt "
-"in Ihrem Lager zu definieren oder importieren Sie sie über Favoriten aus "
-"einer Tabellenkalkulation"
+"Drücken Sie auf die Schaltfläche „Neu“, um die Mengen für ein Produkt in "
+"Ihrem Lager zu definieren oder importieren Sie Mengen über eine "
+"Tabellenkalkulation über das Aktionsmenü."
 
 #. module: stock
 #. odoo-javascript
@@ -8958,6 +9000,24 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr "Die Los-/Seriennummer (%s) ist mit einem anderen Proukt verknüpft-"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"The Picking Operations report has been deleted so you cannot print at this "
+"time unless the report is restored."
+msgstr ""
+"Der Bericht über Kommissioniervorgänge wurde gelöscht, sodass Sie derzeit "
+"nicht drucken können, es sei denn, der Bericht wird wiederhergestellt."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
 msgid ""
 "The Serial Number (%s) is already used in these location(s): %s.\n"
 "\n"
@@ -9909,11 +9969,13 @@ msgstr "Typ der Ausnahmeaktivität im Datensatz."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "UPS Connector"
 msgstr "UPS-Konnektor"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "USPS Connector"
 msgstr "USPS-Konnektor"
 
@@ -10953,6 +11015,13 @@ msgstr ""
 "Sie können über diese Ansicht nicht direkt Mengen aus unterschiedlichen "
 "Transfers im selben Paket verpacken. Fügen Sie sie zu einer "
 "Stapelkommissionierung hinzu und verpacken Sie sie dort."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "You cannot duplicate stock quants."
+msgstr "Sie können Bestandsquanten nicht duplizieren."
 
 #. module: stock
 #. odoo-python

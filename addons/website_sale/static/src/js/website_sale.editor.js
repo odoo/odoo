@@ -6,6 +6,8 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { _t } from "@web/core/l10n/translation";
 import "@website/js/editor/snippets.options";
 import { renderToElement } from "@web/core/utils/render";
+import { useChildSubEnv } from "@odoo/owl";
+import weUtils from '@web_editor/js/common/utils';
 
 options.registry.WebsiteSaleGridLayout = options.Class.extend({
     init() {
@@ -448,6 +450,10 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
 
 // Small override of the MediaDialog to retrieve the attachment ids instead of img elements
 class AttachmentMediaDialog extends MediaDialog {
+    setup() {
+        super.setup();
+        useChildSubEnv({ addFieldImage: true });
+    }
     /**
      * @override
      */
@@ -609,13 +615,20 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         // This method is widely adapted from onFileUploaded in ImageField.
         // Upon change, make sure to verify whether the same change needs
         // to be applied on both sides.
+        if (await weUtils.isImageCorsProtected(imageEl)) {
+            // The image is CORS protected; do not transform it into webp
+            return;
+        }
         // Generate alternate sizes and format for reports.
         const imgEl = document.createElement("img");
         imgEl.src = imageEl.src;
         await new Promise(resolve => imgEl.addEventListener("load", resolve));
         const originalSize = Math.max(imgEl.width, imgEl.height);
         const smallerSizes = [1024, 512, 256, 128].filter(size => size < originalSize);
-        const webpName = attachment.name.replace(/\.(jpe?g|png)$/i, ".webp");
+        const extension = attachment.name.match(/\.(jpe?|pn)g$/i)?.[0] ?? ".jpeg";
+        const webpName = attachment.name.replace(extension, ".webp");
+        const format = extension.substr(1).toLowerCase().replace(/^jpg$/, 'jpeg');
+        const mimetype = `image/${format}`;
         let referenceId = undefined;
         for (const size of [originalSize, ...smallerSizes]) {
             const ratio = size / originalSize;
@@ -623,7 +636,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             canvas.width = imgEl.width * ratio;
             canvas.height = imgEl.height * ratio;
             const ctx = canvas.getContext("2d");
-            ctx.fillStyle = "rgb(255, 255, 255)";
+            ctx.fillStyle = 'transparent';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(imgEl, 0, 0, imgEl.width, imgEl.height, 0, 0, canvas.width, canvas.height);
             const [resizedId] = await this.orm.call("ir.attachment", "create_unique", [[{
@@ -642,12 +655,12 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             }
             referenceId = referenceId || resizedId; // Keep track of original.
             await this.orm.call("ir.attachment", "create_unique", [[{
-                name: webpName.replace(/\.webp$/, ".jpg"),
-                description: "format: jpeg",
-                datas: canvas.toDataURL("image/jpeg", 0.75).split(",")[1],
+                name: attachment.name,
+                description: `format: ${format}`,
+                datas: canvas.toDataURL(mimetype, 0.75).split(",")[1],
                 res_id: resizedId,
                 res_model: "ir.attachment",
-                mimetype: "image/jpeg",
+                mimetype: mimetype,
             }]]);
         }
     },

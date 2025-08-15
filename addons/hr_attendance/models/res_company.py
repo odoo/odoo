@@ -37,7 +37,7 @@ class ResCompany(models.Model):
     @api.depends("attendance_kiosk_key")
     def _compute_attendance_kiosk_url(self):
         for company in self:
-            company.attendance_kiosk_url = url_join(company.get_base_url(), '/hr_attendance/%s' % company.attendance_kiosk_key)
+            company.attendance_kiosk_url = url_join(self.env['res.company'].get_base_url(), '/hr_attendance/%s' % company.attendance_kiosk_key)
 
     # ---------------------------------------------------------
     # ORM Overrides

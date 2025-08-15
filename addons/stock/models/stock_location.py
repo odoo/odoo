@@ -451,6 +451,10 @@ class Location(models.Model):
 
         return result
 
+    def _child_of(self, other_location):
+        self.ensure_one()
+        return self.parent_path.startswith(other_location.parent_path)
+
 
 class StockRoute(models.Model):
     _name = 'stock.route'
@@ -507,7 +511,7 @@ class StockRoute(models.Model):
 
     def toggle_active(self):
         for route in self:
-            route.with_context(active_test=False).rule_ids.filtered(lambda ru: ru.active == route.active).toggle_active()
+            route.with_context(active_test=False).rule_ids.sudo().filtered(lambda ru: ru.location_dest_id.active and ru.active == route.active).toggle_active()
         super().toggle_active()
 
     @api.constrains('company_id')

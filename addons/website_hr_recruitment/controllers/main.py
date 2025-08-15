@@ -8,6 +8,7 @@ from odoo import http, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.osv.expression import AND
 from odoo.http import request
+from odoo.tools import escape_psql
 from odoo.tools.misc import groupby
 
 
@@ -286,7 +287,7 @@ class WebsiteHrRecruitment(http.Controller):
     @http.route('/website_hr_recruitment/check_recent_application', type='json', auth="public", website=True)
     def check_recent_application(self, email, job_id):
         date_limit = datetime.now() - timedelta(days=90)
-        domain = [('email_from', '=ilike', email),
+        domain = [('email_from', '=ilike', escape_psql(email)),
                   ('create_date', '>=', date_limit),
                   ('job_id.website_id', 'in', [http.request.website.id, False])]
         recent_applications = http.request.env['hr.applicant'].sudo().search(domain)

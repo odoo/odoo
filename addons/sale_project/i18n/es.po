@@ -3,18 +3,18 @@
 # 	* sale_project
 # 
 # Translators:
-# Wil Odoo, 2023
 # Carolina Fernández, 2024
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
-# Larissa Manderfeld, 2024
+# Wil Odoo, 2025
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-06-06 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -153,6 +153,20 @@ msgstr "Cancelada"
 #: model:ir.model,name:sale_project.model_res_config_settings
 msgid "Config Settings"
 msgstr "Ajustes de configuración"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project.py:0
+#, python-format
+msgid "Cost of Goods Sold"
+msgstr "Coste de bienes vendidos"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project.py:0
+#, python-format
+msgid "Cost of Goods Sold Items"
+msgstr "Coste de bienes vendidos"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
@@ -509,13 +523,6 @@ msgstr ""
 
 #. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/sale_order.py:0
-#, python-format
-msgid "Operation not supported"
-msgstr "Operación no admitida"
-
-#. module: sale_project
-#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Other Services"
@@ -529,6 +536,13 @@ msgid ""
 msgstr ""
 "Porcentaje de la cantidad del pedido que se entregará automáticamente una "
 "vez que se alcance el hito."
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project.py:0
+#, python-format
+msgid "Portal Sale Order"
+msgstr "Pedido de venta en el portal"
 
 #. module: sale_project
 #. odoo-python
@@ -684,7 +698,7 @@ msgid ""
 "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
 "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
 msgstr ""
-"Línea del pedido de venta en el que agregará el tiempo dedicado para ser facturado al cliente.\n"
+"Línea del pedido de venta en el que añadirá el tiempo dedicado para ser facturado al cliente.\n"
 "Por defecto, se seleccionará la línea del pedido de venta establecida en el proyecto. Si no hay una establecida, se utilizará la última línea del pedido de venta prepagada que tenga tiempo restante.\n"
 "Elimine el dato para hacer que esta tarea sea no facturable. También puede cambiar o eliminar individualmente el dato de cada parte de horas."
 

@@ -118,10 +118,12 @@ class TestTracking(MailCommon):
                 'id': message_1.tracking_value_ids.id,
                 'newValue': {
                     'currencyId': False,
+                    'floatPrecision': None,
                     'value': new_user.display_name,
                 },
                 'oldValue': {
                     'currencyId': False,
+                    'floatPrecision': None,
                     'value': original_user.display_name,
                 },
             })
@@ -534,6 +536,7 @@ class TestTrackingInternals(MailCommon):
             'date_field': today,
             'datetime_field': now,
             'float_field': 3.22,
+            'float_field_with_digits': 3.00001,
             'html_field': '<p>Html Value</p>',
             'integer_field': 42,
             'many2one_field_id': self.test_partner.id,
@@ -545,22 +548,30 @@ class TestTrackingInternals(MailCommon):
         new_message = test_record.message_ids - messages
         self.assertEqual(len(new_message), 1,
                          'Should have generated a tracking value')
-        self.assertTracking(
-            new_message,
-            [
-                ('boolean_field', 'boolean', 0, 1),
-                ('char_field', 'char', False, 'char_value'),
-                ('date_field', 'date', False, today_dt),
-                ('datetime_field', 'datetime', False, now),
-                ('float_field', 'float', 0, 3.22),
-                ('integer_field', 'integer', 0, 42),
-                ('many2one_field_id', 'many2one', self.env['res.partner'], self.test_partner),
-                ('monetary_field', 'monetary', False, (42.42, self.env.ref('base.USD'))),
-                ('selection_field', 'selection', '', 'FIRST'),
-                ('text_field', 'text', False, 'text_value'),
-            ],
-            strict=True
-        )
+        tracking_value_list = [
+            ('boolean_field', 'boolean', 0, 1),
+            ('char_field', 'char', False, 'char_value'),
+            ('date_field', 'date', False, today_dt),
+            ('datetime_field', 'datetime', False, now),
+            ('float_field', 'float', 0, 3.22),
+            ('float_field_with_digits', 'float', 0, 3.00001),
+            ('integer_field', 'integer', 0, 42),
+            ('many2one_field_id', 'many2one', self.env['res.partner'], self.test_partner),
+            ('monetary_field', 'monetary', False, (42.42, self.env.ref('base.USD'))),
+            ('selection_field', 'selection', '', 'FIRST'),
+            ('text_field', 'text', False, 'text_value'),
+        ]
+        self.assertTracking(new_message, tracking_value_list, strict=True)
+        # check formatting for all field types
+        formatted_values_all = new_message.message_format()[0]['trackingValues']
+        for (field_name, field_type, _, _), formatted_vals in zip(tracking_value_list, formatted_values_all):
+            currency = self.env.ref('base.USD').id if field_type == 'monetary' else False
+            precision = None if field_name != 'float_field_with_digits' else (10, 8)
+            with self.subTest(field_name=field_name):
+                self.assertEqual(formatted_vals['oldValue']['currencyId'], currency)
+                self.assertEqual(formatted_vals['newValue']['currencyId'], currency)
+                self.assertEqual(formatted_vals['oldValue']['floatPrecision'], precision)
+                self.assertEqual(formatted_vals['newValue']['floatPrecision'], precision)
 
     @users('employee')
     def test_mail_track_compute(self):
@@ -696,10 +707,12 @@ class TestTrackingInternals(MailCommon):
             'fieldType': 'char',
             'newValue': {
                 'currencyId': False,
+                'floatPrecision': None,
                 'value': 'X',
             },
             'oldValue': {
                 'currencyId': False,
+                'floatPrecision': None,
                 'value': False,
             },
         }]
@@ -807,22 +820,22 @@ class TestTrackingInternals(MailCommon):
                     'id': trackings[0].id,
                     'fieldName': 'secret',
                     'fieldType': 'char',
-                    'newValue': {'currencyId': False, 'value': 'secret'},
-                    'oldValue': {'currencyId': False, 'value': False}
+                    'newValue': {'currencyId': False, 'floatPrecision': None, 'value': 'secret'},
+                    'oldValue': {'currencyId': False, 'floatPrecision': None, 'value': False}
                 }, {
                     'changedField': 'Old integer',
                     'id': trackings[2].id,
                     'fieldName': 'Removed',
                     'fieldType': 'integer',
-                    'newValue': {'currencyId': False, 'value': 35},
-                    'oldValue': {'currencyId': False, 'value': 30}
+                    'newValue': {'currencyId': False, 'floatPrecision': None, 'value': 35},
+                    'oldValue': {'currencyId': False, 'floatPrecision': None, 'value': 30}
                 }, {
                     'changedField': 'Unknown',
                     'id': trackings[1].id,
                     'fieldName': 'unknown',
                     'fieldType': 'char',
-                    'newValue': {'currencyId': False, 'value': False},
-                    'oldValue': {'currencyId': False, 'value': False}
+                    'newValue': {'currencyId': False, 'floatPrecision': None, 'value': False},
+                    'oldValue': {'currencyId': False, 'floatPrecision': None, 'value': False}
                 }
             ]
         )
@@ -889,6 +902,31 @@ class TestTrackingInternals(MailCommon):
             ordered_fnames,
             'Track: formatted order is correctly based on field sequence definition'
         )
+
+    @users('employee')
+    def test_unlinked_model(self):
+        """ Fields from obsolete models with tracking values can be unlinked without error. """
+        record = self.record.with_env(self.env)
+        record.write({'email_from': 'new_value'})  # create a tracking value
+        self.flush_tracking()
+        self.assertTracking(
+            record.message_ids[0],
+            [('email_from', 'char', False, 'new_value')],
+            strict=True,
+        )
+
+        fields_to_remove = self.env['ir.model.fields'].sudo().search([
+            ('model', '=', 'mail.test.ticket'),
+        ])
+
+        # Simulate a registry without the model, which is what we have if we
+        # update a module with the model code removed
+        model = self.env.registry.models.pop('mail.test.ticket')
+        try:
+            fields_to_remove.with_context(_force_unlink=True).unlink()
+        finally:
+            # Restore model to prevent registry errors after test
+            self.env.registry.models['mail.test.ticket'] = model
 
     @users('employee')
     def test_unlinked_field(self):
@@ -959,10 +997,12 @@ class TestTrackingInternals(MailCommon):
                     'fieldType': field_info[1],
                     'newValue': {
                         'currencyId': False,
+                        'floatPrecision': None,
                         'value': values[1],
                     },
                     'oldValue': {
                         'currencyId': False,
+                        'floatPrecision': None,
                         'value': values[0],
                     },
                 }
@@ -990,10 +1030,12 @@ class TestTrackingInternals(MailCommon):
                     'fieldType': field_info[1],
                     'newValue': {
                         'currencyId': False,
+                        'floatPrecision': None,
                         'value': values[1],
                     },
                     'oldValue': {
                         'currencyId': False,
+                        'floatPrecision': None,
                         'value': values[0],
                     },
                 }

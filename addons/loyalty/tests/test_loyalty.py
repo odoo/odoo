@@ -3,7 +3,7 @@
 
 from psycopg2 import IntegrityError
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.tests import tagged, TransactionCase, Form
 from odoo.tools import mute_logger
@@ -20,7 +20,11 @@ class TestLoyalty(TransactionCase):
             'name': 'Test Program',
             'reward_ids': [(0, 0, {})],
         })
-
+        cls.product = cls.env['product.product'].with_context(default_taxes_id=False).create({
+            'name': "Test Product",
+            'detailed_type': 'consu',
+            'list_price': 20.0,
+        })
 
     def test_discount_product_unlink(self):
         # Test that we can not unlink dicount line product id
@@ -138,14 +142,19 @@ class TestLoyalty(TransactionCase):
         after_archived_reward_ids = self.program.reward_ids
         self.assertEqual(before_archived_reward_ids, after_archived_reward_ids)
 
+    def test_prevent_archive_pricelist_linked_to_program(self):
+        self.program.pricelist_ids = demo_pricelist = self.env['product.pricelist'].create({
+            'name': "Demo"
+        })
+        with self.assertRaises(UserError):
+            demo_pricelist.action_archive()
+        self.program.action_archive()
+        demo_pricelist.action_archive()
+
     def test_prevent_archiving_product_linked_to_active_loyalty_reward(self):
         self.program.program_type = 'promotion'
         self.program.flush_recordset()
-        product = self.env['product.product'].with_context(default_taxes_id=False).create({
-            'name': 'Test Product',
-            'detailed_type': 'consu',
-            'list_price': 20.0,
-        })
+        product = self.product
         reward = self.env['loyalty.reward'].create({
             'program_id': self.program.id,
             'discount_line_product_id': product.id,
@@ -158,18 +167,27 @@ class TestLoyalty(TransactionCase):
         self.program.action_archive()
         product.action_archive()
 
+    def test_prevent_archiving_product_used_for_discount_reward(self):
+        self.program.program_type = 'promotion'
+        self.program.write({
+            'reward_ids': [Command.create({
+                'discount': 50.0,
+                'discount_applicability': 'specific',
+                'discount_product_ids': self.product.ids,
+            })],
+        })
+        with self.assertRaises(ValidationError):
+            self.product.action_archive()
+        self.program.action_archive()
+        self.product.action_archive()
+
     def test_prevent_archiving_product_when_archiving_program(self):
         """
         Test prevent archiving a product when archiving a "Buy X Get Y" program.
         We just have to archive the free product that has been created while creating
         the program itself not the product we already had before.
         """
-        product = self.env['product.product'].with_context(default_taxes_id=False).create({
-            'name': 'Test Product',
-            'detailed_type': 'consu',
-            'list_price': 20.0,
-        })
-
+        product = self.product
         loyalty_program = self.env['loyalty.program'].create({
             'name': 'Test Program',
             'program_type': 'buy_x_get_y',
@@ -184,3 +202,32 @@ class TestLoyalty(TransactionCase):
         loyalty_program.action_archive()
         # Make sure that the main product didn't get archived
         self.assertTrue(product.active)
+
+    def test_card_description_on_tag_change(self):
+        product_tag = self.env['product.tag'].create({'name': 'Multiple Products'})
+        product1 = self.product
+        product1.product_tag_ids = product_tag
+        self.env['product.product'].create({
+            'name': 'Test Product 2',
+            'detailed_type': 'consu',
+            'list_price': 30.0,
+            'product_tag_ids': product_tag,
+        })
+        reward = self.env['loyalty.reward'].create({
+            'program_id': self.program.id,
+            'reward_type': 'product',
+            'reward_product_id': product1.id,
+        })
+        reward_description_single_product = reward.description
+        reward.reward_product_tag_id = product_tag
+        reward_description_product_tag = reward.description
+        self.assertNotEqual(
+            reward_description_single_product,
+            reward_description_product_tag,
+            "Reward description should be changed after adding a tag"
+        )
+        self.assertEqual(
+            reward_description_product_tag,
+            "Free Product - [Test Product, Test Product 2]",
+            "Reward description for reward with tag should be 'Free Product - [Test Product, Test Product 2]'"
+        )

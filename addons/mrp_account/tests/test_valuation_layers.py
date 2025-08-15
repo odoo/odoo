@@ -3,6 +3,7 @@
 
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
 
+from odoo.fields import Command
 from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockValuationCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import TestStockValuationBase
 from odoo.tests import Form
@@ -149,6 +150,31 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
         unbuild_form.mo_id = mo
         unbuild_form.save().action_unbuild()
         self.assertEqual(self.component.value_svl, 30)
+
+    def test_fifo_produce_deliver_return_unbuild(self):
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.component.write({
+            'type': 'consu',
+            'standard_price': 10.0,
+        })
+
+        mo = self._make_mo(self.bom, 1)
+        self._produce(mo)
+        mo.button_mark_done()
+
+        out_move = self._make_out_move(self.product1, 1.0, create_picking=True)
+        self._make_return(out_move, 1.0)
+
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.mo_id = mo
+        unbuild_form.save().action_unbuild()
+
+        self.assertRecordValues(self.product1.stock_valuation_layer_ids, [
+            {'value': 10.0, 'quantity': 1.0, 'remaining_value': 0.0, 'remaining_qty': 0.0},
+            {'value': -10.0, 'quantity': -1.0, 'remaining_value': 0.0, 'remaining_qty': 0.0},
+            {'value': 10.0, 'quantity': 1.0, 'remaining_value': 0.0, 'remaining_qty': 0.0},
+            {'value': -10.0, 'quantity': -1.0, 'remaining_value': 0.0, 'remaining_qty': 0.0},
+        ])
 
     def test_fifo_avco_1(self):
         self.component.product_tmpl_id.categ_id.property_cost_method = 'fifo'
@@ -387,6 +413,44 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
         ])
         self.assertEqual(self.component.qty_available, 1)
         self.assertEqual(self.component.value_svl, 1424)
+
+    def test_average_cost_unbuild_with_byproducts(self):
+        """ Ensures that an unbuild for a manufacturing order using avg cost products won't copy
+            the value of the main product for every byproduct line, regardless of their real value.
+        """
+        byproduct = self.env['product.product'].create({
+            'name': 'byproduct',
+            'type': 'product',
+        })
+        (self.product1 | byproduct).categ_id.property_cost_method = 'average'
+        self.component.standard_price = 100
+
+        self.bom.write({'byproduct_ids': [
+            Command.create({'product_id': byproduct.id, 'product_qty': 1, 'cost_share': 20}),
+        ]})
+
+        self._make_in_move(self.component, 1)
+        production = self._make_mo(self.bom, 1)
+        self._produce(production)
+        production.button_mark_done()
+
+        self.assertRecordValues(production.move_finished_ids.stock_valuation_layer_ids, [
+            {'product_id': self.product1.id, 'value': 80},
+            {'product_id': byproduct.id, 'value': 20},
+        ])
+
+        action = production.button_unbuild()
+        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard.product_qty = 1
+        unbuild = wizard.save()
+        unbuild.action_validate()
+
+        unbuild_svls = self.env['stock.valuation.layer'].search([('reference', '=', unbuild.name)])
+        self.assertRecordValues(unbuild_svls, [
+            {'product_id': self.product1.id, 'value': -80},
+            {'product_id': byproduct.id, 'value': -20},
+            {'product_id': self.component.id, 'value': 100}
+        ])
 
 
 @tagged("post_install", "-at_install")

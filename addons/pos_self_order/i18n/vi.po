@@ -3,16 +3,16 @@
 # 	* pos_self_order
 # 
 # Translators:
-# Thi Huong Nguyen, 2024
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-05-30 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,7 +69,7 @@ msgid ""
 "when no session is open."
 msgstr ""
 "Quyền truy cập của người dùng này sẽ được sử dụng khi truy cập trang web tự "
-"gọi đồ lúc không có phiên nào đang mở."
+"phục vụ lúc không có phiên nào đang mở."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__active
@@ -167,13 +167,13 @@ msgstr "Ngôn ngữ có sẵn"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
 msgid "Available in Self"
-msgstr "Có sẵn trong tự gọi đồ"
+msgstr "Có sẵn trong tự phục vụ"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_available
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_available
 msgid "Available in Self Order"
-msgstr "Có sẵn trong Tự gọi đồ"
+msgstr "Có sẵn trong tự phục vụ"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -194,6 +194,7 @@ msgstr "Quay lại"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 #, python-format
 msgid "Cancel"
 msgstr "Hủy"
@@ -209,6 +210,7 @@ msgstr "Huỷ đơn hàng"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.js:0
 #, python-format
 msgid "Cancel order"
@@ -224,7 +226,7 @@ msgstr "Chọn chế độ ki-ốt"
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_mode
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_mode
 msgid "Choose the self ordering mode"
-msgstr "Chọn chế độ tự gọi đồ"
+msgstr "Chọn chế độ tự phục vụ"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_pay_after
@@ -337,7 +339,7 @@ msgid ""
 "order screen"
 msgstr ""
 "Các liên kết tùy chỉnh mà nhà hàng có thể cấu hình để hiển thị chúng trên "
-"màn hình tự gọi đồ"
+"màn hình tự phục vụ"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -347,7 +349,7 @@ msgstr "Tùy chỉnh đầu trang"
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__danger
 msgid "Danger"
-msgstr "Nguy hiểm"
+msgstr "Cảnh báo"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__dark
@@ -417,7 +419,7 @@ msgid ""
 "                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:."
 msgstr ""
 "Mỗi bàn trong sơ đồ tầng của bạn được gán một mã QR duy nhất theo cách bạn cấu hình. Vì lý do bảo mật,\n"
-"                     cả tên điểm bán hàng và tên bàn đều được mã hóa trong URL được tạo, như trong ví dụ dưới đây:"
+"                     cả tên POS và tên bàn đều được mã hóa trong URL được tạo, như trong ví dụ dưới đây:"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -499,7 +501,7 @@ msgid ""
 "Please add them before using the Self Order"
 msgstr ""
 "Có vẻ như bạn quên tạo sản phẩm hoặc thêm chúng vào pos_config. Vui lòng "
-"thêm chúng trước khi sử dụng Tự gọi đồ"
+"thêm chúng trước khi sử dụng Tự phục vụ"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -532,7 +534,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:pos_self_order.field_product_product__self_order_available
 #: model:ir.model.fields,help:pos_self_order.field_product_template__self_order_available
 msgid "If this product is available in the Self Order screens"
-msgstr "Nếu sản phẩm này có sẵn trong màn hình Tự gọi đồ"
+msgstr "Nếu sản phẩm này có sẵn trong màn hình Tự phục vụ"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -549,7 +551,7 @@ msgstr ""
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_home_ids
 msgid "Image to display on the self order screen"
-msgstr "Hình ảnh hiển thị trên màn hình tự gọi đồ"
+msgstr "Hình ảnh hiển thị trên màn hình tự phục vụ"
 
 #. module: pos_self_order
 #. odoo-python
@@ -558,7 +560,7 @@ msgstr "Hình ảnh hiển thị trên màn hình tự gọi đồ"
 #, python-format
 msgid ""
 "In Self-Order mode, you must have at least one table to generate QR codes"
-msgstr "Ở chế độ Tự gọi đồ, bạn phải có ít nhất một bàn để tạo mã QR"
+msgstr "Ở chế độ Tự phục vụ, bạn phải có ít nhất một bàn để tạo mã QR"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__inactive
@@ -573,7 +575,7 @@ msgstr "Thông tin"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_form_view
 msgid "Information about your product for Self Order and Kiosk"
-msgstr "Thông tin về sản phẩm của bạn dành cho chế độ Tự gọi đồ và Ki-ốt"
+msgstr "Thông tin về sản phẩm của bạn dành cho chế độ Tự phục vụ và Ki-ốt"
 
 #. module: pos_self_order
 #: model:ir.actions.act_window,name:pos_self_order.action_pos_self_order_search_view
@@ -659,7 +661,7 @@ msgstr "Menu trên điện thoại"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Mobile self-order & Kiosk"
-msgstr "Ki-ốt & tự gọi đồ trên điện thoại"
+msgstr "Ki-ốt & tự phục vụ trên điện thoại"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -693,7 +695,7 @@ msgstr "GHI CHÚ"
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand_name
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand_name
 msgid "Name of the image to display on the self order screen"
-msgstr "Tên của hình ảnh hiển thị trên màn hình tự gọi đồ"
+msgstr "Tên của hình ảnh hiển thị trên màn hình tự phục vụ"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -731,7 +733,7 @@ msgstr "Không khả dụng"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
 msgid "Not available in Self"
-msgstr "Không có sẵn trong tự gọi đồ"
+msgstr "Không có sẵn trong tự phục vụ"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -851,6 +853,13 @@ msgid "Pickup zone"
 msgstr "Khu vực nhận đồ"
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "Please wait until the price is loaded"
+msgstr "Vui lòng đợi cho đến khi giá được tải"
+
+#. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_session.py:0
 #, python-format
@@ -860,22 +869,22 @@ msgstr "Đơn hàng POS theo phiên"
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "Cấu hình điểm bán hàng"
+msgstr "Cấu hình POS"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr "Chi tiết đơn hàng điểm bán hàng"
+msgstr "Chi tiết đơn hàng POS"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Đơn hàng điểm bán hàng"
+msgstr "Đơn hàng POS"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr "Phương thức thanh toán điểm bán hàng"
+msgstr "Phương thức thanh toán POS"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_session
@@ -885,12 +894,12 @@ msgstr "Phiên POS"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "Point of sale:"
-msgstr "Điểm bán hàng:"
+msgstr "POS:"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
 msgid "Points of Sale"
-msgstr "Điểm bán hàng"
+msgstr "POS"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__link_html
@@ -922,7 +931,7 @@ msgstr "Sản phẩm"
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__description_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_form_view
 msgid "Product Description for Self Order"
-msgstr "Mô tả sản phẩm cho Tự gọi đồ"
+msgstr "Mô tả sản phẩm cho Tự phục vụ"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1042,9 +1051,8 @@ msgid ""
 "to display it for all points of sale. You have to select among the points of"
 " sale that have the 'QR Code Menu' feature enabled."
 msgstr ""
-"Chọn điểm bán hàng mà bạn muốn hiển thị liên kết này. Để trống để hiển thị "
-"trên tất cả điểm bán hàng. Bạn phải chọn trong số các điểm bán hàng có bật "
-"tính năng 'Menu mã QR'."
+"Chọn POS mà bạn muốn hiển thị liên kết này. Để trống để hiển thị trên tất cả"
+" POS. Bạn phải chọn trong số các POS có bật tính năng 'Menu mã QR'."
 
 #. module: pos_self_order
 #. odoo-python
@@ -1058,46 +1066,46 @@ msgstr "Ki-ốt tự gọi đồ"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand
 msgid "Self Order Kiosk Image Brand"
-msgstr "Thương hiệu hình ảnh ki-ốt tự gọi đồ"
+msgstr "Thương hiệu hình ảnh ki-ốt tự phục vụ"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand_name
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand_name
 msgid "Self Order Kiosk Image Brand Name"
-msgstr "Tên thương hiệu hình ảnh ki-ốt tự gọi đồ"
+msgstr "Tên thương hiệu hình ảnh ki-ốt tự phục vụ"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "Self Order:"
-msgstr "Đơn tự gọi đồ:"
+msgstr "Đơn tự phục vụ:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Self Ordering"
-msgstr "Tự gọi đồ"
+msgstr "Tự phục vụ"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
 msgid "Self Ordering Enabled"
-msgstr "Tự gọi đồ đã được bật"
+msgstr "Tự phục vụ đã được bật"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_mode
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_mode
 msgid "Self Ordering Mode"
-msgstr "Chế độ tự gọi đồ"
+msgstr "Chế độ tự phục vụ"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_url
 msgid "Self Ordering Url"
-msgstr "URL tự gọi đồ"
+msgstr "URL tự phục vụ"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
 #, python-format
 msgid "Self-ordering availability:"
-msgstr "Tình trạng còn hàng trong tự gọi đồ:"
+msgstr "Tình trạng còn hàng trong tự phục vụ:"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__sequence
@@ -1227,7 +1235,7 @@ msgstr "Cảm ơn bạn!"
 #: code:addons/pos_self_order/models/pos_config.py:0
 #, python-format
 msgid "The Self-Order default user must be a POS user"
-msgstr "Người dùng mặc định cho Tự gọi đồ phải là người dùng POS"
+msgstr "Người dùng mặc định cho Tự phục vụ phải là người dùng POS"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1303,6 +1311,13 @@ msgid "Yes"
 msgstr "Có"
 
 #. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/controllers/orders.py:0
+#, python-format
+msgid "You are not authorized to remove this order"
+msgstr ""
+
+#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 #, python-format
@@ -1330,6 +1345,13 @@ msgstr "Đơn hàng của bạn"
 #, python-format
 msgid "Your Selection"
 msgstr "Lựa chọn của bạn"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/controllers/orders.py:0
+#, python-format
+msgid "Your order does not exist or has been removed"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1363,13 +1385,6 @@ msgstr "Trạng thái đơn hàng của bạn đã được thay đổi"
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "empty = all points of sale"
 msgstr "trống = tất cả POS"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
-#, python-format
-msgid "floor"
-msgstr "sàn"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree

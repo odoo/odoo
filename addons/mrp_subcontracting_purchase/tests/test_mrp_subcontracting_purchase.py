@@ -3,7 +3,9 @@
 
 import logging
 
+from datetime import datetime, timedelta
 from freezegun import freeze_time
+from json import loads
 
 from odoo import Command
 from odoo.exceptions import UserError
@@ -42,6 +44,60 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
                 'product_qty': 1,
             })],
         })
+
+    @freeze_time('2024-01-01')
+    def test_bom_overview_availability(self):
+        # Create routes for components and the main product
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': self.finished.product_tmpl_id.id,
+            'partner_id': self.subcontractor_partner1.id,
+            'price': 1.0,
+            'delay': 10
+        })
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': self.comp1.product_tmpl_id.id,
+            'partner_id': self.subcontractor_partner1.id,
+            'price': 648.0,
+            'delay': 5
+        })
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': self.comp2.product_tmpl_id.id,
+            'partner_id': self.subcontractor_partner1.id,
+            'price': 648.0,
+            'delay': 5
+        })
+
+        self.bom.produce_delay = 1
+        self.bom.days_to_prepare_mo = 3
+
+        # Add 4 units of each component to subcontractor's location
+        subcontractor_location = self.env.company.subcontracting_location_id
+        self.env['stock.quant']._update_available_quantity(self.comp1, subcontractor_location, 4)
+        self.env['stock.quant']._update_available_quantity(self.comp2, subcontractor_location, 4)
+
+        # Generate a report for 3 products: all products should be ready for production
+        bom_data = self.env['report.mrp.report_bom_structure']._get_report_data(self.bom.id, 3)
+
+        self.assertTrue(bom_data['lines']['components_available'])
+        for component in bom_data['lines']['components']:
+            self.assertEqual(component['quantity_on_hand'], 4)
+            self.assertEqual(component['availability_state'], 'available')
+        self.assertEqual(bom_data['lines']['earliest_capacity'], 3)
+        self.assertEqual(bom_data['lines']['earliest_date'], '01/11/2024')
+        self.assertTrue('leftover_capacity' not in bom_data['lines']['earliest_date'])
+        self.assertTrue('leftover_date' not in bom_data['lines']['earliest_date'])
+
+        # Generate a report for 5 products: only 4 products should be ready for production
+        bom_data = self.env['report.mrp.report_bom_structure']._get_report_data(self.bom.id, 5)
+
+        self.assertFalse(bom_data['lines']['components_available'])
+        for component in bom_data['lines']['components']:
+            self.assertEqual(component['quantity_on_hand'], 4)
+            self.assertEqual(component['availability_state'], 'estimated')
+        self.assertEqual(bom_data['lines']['earliest_capacity'], 4)
+        self.assertEqual(bom_data['lines']['earliest_date'], '01/11/2024')
+        self.assertEqual(bom_data['lines']['leftover_capacity'], 1)
+        self.assertEqual(bom_data['lines']['leftover_date'], '01/16/2024')
 
     def test_count_smart_buttons(self):
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
@@ -310,14 +366,13 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         """Test that the price difference is correctly computed when a subcontracted
         product is resupplied.
         """
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
+        self.env.company.anglo_saxon_accounting = True
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
         (self.comp1 + self.comp2).write({'route_ids': [(6, None, [resupply_sub_on_order_route.id])]})
         product_category_all = self.env.ref('product.product_category_all')
         product_category_all.property_cost_method = 'standard'
         product_category_all.property_valuation = 'real_time'
+        self._setup_category_stock_journals()
 
         stock_price_diff_acc_id = self.env['account.account'].create({
             'name': 'default_account_stock_price_diff',
@@ -902,3 +957,76 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         return_picking = self.env['stock.picking'].browse(return_picking_id)
         return_picking.button_validate()
         self.assertEqual(return_picking.state, 'done')
+
+    def test_global_visibility_days_affect_lead_time(self):
+        """ Don't count global visibility days more than once, make sure a PO generated from
+        replenishment/orderpoint has a sensible planned reception date.
+        """
+        wh = self.env.user._get_default_warehouse_id()
+        self.env['ir.config_parameter'].sudo().set_param('stock.visibility_days', '365')
+        self.finished2.seller_ids = [Command.create({
+            'partner_id': self.subcontractor_partner1.id,
+            'delay': 0,
+        })]
+        final_product = self.finished2
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({'product_id': final_product.id})
+        out_picking = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': wh.lot_stock_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'move_ids': [Command.create({
+                'name': 'TGVDALT out move',
+                'product_id': final_product.id,
+                'product_uom_qty': 2,
+                'location_id': wh.lot_stock_id.id,
+                'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            })],
+        })
+        out_picking.action_assign()
+        r = orderpoint.action_stock_replenishment_info()
+        repl_info = self.env[r['res_model']].browse(r['res_id'])
+        lead_days_date = datetime.strptime(
+            loads(repl_info.json_lead_days)['lead_days_date'],'%m/%d/%Y').date()
+        self.assertEqual(lead_days_date, Date.today() + timedelta(days=365))
+
+        orderpoint.action_replenish()
+        purchase_order = self.env['purchase.order'].search([
+            ('order_line', 'any', [
+                ('product_id', '=', self.finished2.id),
+            ]),
+        ], limit=1)
+        self.assertEqual(purchase_order.date_planned.date(), Date.today())
+
+    @freeze_time('2000-05-01')
+    def test_mrp_subcontract_modify_date(self):
+        """ Ensure consistent results when modifying date fields of a weakly-linked reception and
+        manufacturing order. Additionally, modifying `date_start` directly on an MO has a
+        well-defined result.
+        """
+        self.bom_finished2.produce_delay = 35
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({
+                'name': self.finished2.name,
+                'product_id': self.finished2.id,
+                'product_uom_qty': 10,
+                'product_uom': self.finished2.uom_id.id,
+                'price_unit': 1,
+            })],
+        })
+        po.button_confirm()
+        mo = po.picking_ids.move_ids.move_orig_ids.production_id
+        original_mo_start_date = mo.date_start
+        with Form(po.picking_ids[0]) as receipt_form:
+            receipt_form.scheduled_date = '2000-06-01'
+        self.assertEqual(mo.date_start, datetime(year=2000, month=6, day=1) - timedelta(days=self.bom_finished2.produce_delay))
+        with Form(po.picking_ids[0]) as receipt_form:
+            receipt_form.scheduled_date = '2000-05-01'
+        self.assertEqual(mo.date_start, original_mo_start_date)
+
+        with Form(mo) as production_form:
+            production_form.date_start = '2000-03-20'
+        self.assertEqual(mo.date_start.date(), Date.to_date('2000-03-20'))
+        with Form(mo) as production_form:
+            production_form.date_start = original_mo_start_date
+        self.assertEqual(mo.date_start, original_mo_start_date)

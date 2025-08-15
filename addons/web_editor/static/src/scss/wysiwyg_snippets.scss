@@ -392,6 +392,7 @@
                 &.o_snippet_install {
                     .btn.o_install_btn {
                         @include o-position-absolute($top: 10px);
+                        @include text-truncate();
                     }
 
                     &:not(:hover) .btn.o_install_btn {
@@ -555,6 +556,10 @@
                     background: $o-we-dropdown-item-bg-hover;
                     color: $o-we-dropdown-item-hover-color;
                 }
+                &.active {
+                    background: $o-we-dropdown-item-active-bg;
+                    color: $o-we-dropdown-item-active-color;
+                }
             }
 
             .o_we_font_size_badge {
@@ -600,7 +605,11 @@
                     &.o_long_title {
                         width: fit-content !important;
                         padding-right: 10px !important;
+                        flex: 1 1 auto;
                     }
+                }
+                we-button .o_switch {
+                    min-width: fit-content;
                 }
                 .highlighted-text {
                     color: white;
@@ -725,6 +734,8 @@
                     justify-content: space-between;
 
                     span {
+                        overflow: hidden;
+                        text-overflow: ellipsis;
                         color: white;
 
                         pre, blockquote {
@@ -1419,6 +1430,9 @@
                 &::placeholder {
                     color: $o-we-sidebar-content-field-control-item-color;
                 }
+                &.datetimepicker-input.text-primary {
+                    color: inherit !important;
+                }
             }
             span {
                 flex: 0 0 auto;
@@ -1837,6 +1851,15 @@
             .o_we_so_color_palette.o_we_user_value_widget + .o_we_user_value_widget:not(.o_we_so_color_palette) {
                 margin-left: $o-we-sidebar-content-field-multi-spacing * 4 !important;
             }
+
+            // For layout having button-group + we-select, to avoid the long
+            // text to overflow the row.
+            &:has(div > we-button-group + we-select.o_grid) {
+                we-button-group we-selection-items {
+                    display: grid !important;
+                    grid-template-columns: auto auto;
+                }
+            }
         }
 
         %o-we-inline {
@@ -2002,7 +2025,11 @@
             // does not make a scrollbar appear for no reason
             flex: 1 1 auto;
 
-            &::after {
+            // The backdrop is not added for "o_we_select_pager". This is
+            // because it covers the entire panel, making it unnecessary.
+            // Additionally, using the backdrop with an "o_we_select_pager"
+            // causes a CSS bug on Safari.
+            &:not(:has(.o_we_select_pager.o_we_widget_opened))::after {
                 content: "";
                 // We use a "sticky" position because it ensures that the
                 // backdrop covers the entire "customize panel" element, even

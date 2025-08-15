@@ -1,26 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_expense
-# 
+#
 # Translators:
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2024
 # 湘子 南 <1360857908@qq.com>, 2024
-# Jeffery CHEN <jeffery9@gmail.com>, 2024
 # Chloe Wang, 2024
-# Wil Odoo, 2024
-# 
+# Raymond Yu <cl_yu@hotmail.com>, 2025
+# Jeffery CHEN <jeffery9@gmail.com>, 2025
+# Wil Odoo, 2025
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-08-07 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Last-Translator: Wil Odoo, 2025\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_expense
@@ -54,8 +56,7 @@ msgstr "%(date_from)s - %(date_to)s"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
-msgid ""
-"%(user)s confirms this expense is not a duplicate with similar expense."
+msgid "%(user)s confirms this expense is not a duplicate with similar expense."
 msgstr "%(user)s确认该费用与类似费用不重复。"
 
 #. module: hr_expense
@@ -103,11 +104,13 @@ msgstr "2023-08-11"
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
 "<span class=\"d-inline-block\">\n"
-"                                        <i class=\"text-muted\">Use this reference as a subject prefix when submitting by email.</i>\n"
+"                                        <i class=\"text-muted\">Use this "
+"reference as a subject prefix when submitting by email.</i>\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"d-inline-block\">\n"
-"                                        <i class=\"text-muted\">通过电子邮件提交时，请将此参考资料作为主题前缀。</i>\n"
+"                                        <i class=\"text-muted\">通过电子邮件"
+"提交时，请将此参考资料作为主题前缀。</i>\n"
 "                                    </span>"
 
 #. module: hr_expense
@@ -228,7 +231,8 @@ msgstr "全部报告"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 #, python-format
-msgid "All expenses in an expense report must have the same \"paid by\" criteria."
+msgid ""
+"All expenses in an expense report must have the same \"paid by\" criteria."
 msgstr "费用报告中的所有费用都必须有相同的 \"支付方 \"标准。"
 
 #. module: hr_expense
@@ -258,7 +262,7 @@ msgstr "预期费用账户"
 #: code:addons/hr_expense/static/src/views/expense_form_view.js:0
 #, python-format
 msgid "An expense of same category, amount and date already exists."
-msgstr "已经存在一个相同类别、金额和日期的支出。"
+msgstr "已经存在一个相同类别、金额和日期的费用。"
 
 #. module: hr_expense
 #. odoo-python
@@ -480,7 +484,7 @@ msgstr "公司"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Company"
-msgstr "公司"
+msgstr "公司（备用金）"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_res_config_settings
@@ -530,7 +534,9 @@ msgstr "创建报表以向经理提交一项或多项费用。"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Create expenses from incoming emails"
-msgstr "邮件报销：意思是往指定邮箱里发送规定格式的邮件进行报销。系统会把该指定邮箱中所收到指定格式的邮件，按该格式自动生成符合系统格式的费用报销单"
+msgstr ""
+"邮件报销：意思是往指定邮箱里发送规定格式的邮件进行报销。系统会把该指定邮箱中"
+"所收到指定格式的邮件，按该格式自动生成符合系统格式的费用报销单"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
@@ -600,13 +606,13 @@ msgstr "默认类别"
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_product_id
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_product_id
 msgid "Default Expense Category"
-msgstr "默认支出类别"
+msgstr "默认费用类别"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_journal_id
 msgid "Default Expense Journal"
-msgstr "默认支出日记帐"
+msgstr "默认费用日记帐"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -652,12 +658,20 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "分析分布账户"
+
+#. module: hr_expense
 #: model_terms:digest.tip,tip_description:hr_expense.digest_tip_hr_expense_0
 msgid ""
 "Do not keep your expense tickets in your pockets any longer. Just snap a "
 "picture of your receipt and let Odoo digitalizes it for you. The OCR and "
 "Artificial Intelligence will fill the data automatically."
-msgstr "不要再把报销费用发票放在口袋里啦亲。只要拍张图片，让 ERP 系统为您收据数字化。OCR和人工智能将自动识别发票数据并录入数据到系统里啦."
+msgstr ""
+"不要再把报销费用发票放在口袋里啦亲。只要拍张图片，让 ERP 系统为您收据数字化。"
+"OCR和人工智能将自动识别发票数据并录入数据到系统里啦."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_move_form_inherit_expense
@@ -665,7 +679,9 @@ msgid ""
 "Do you really want to invoice your own company? Remove the \"Company Name\" "
 "from the partner to fix the configuration. Cancel this invoice and start "
 "again."
-msgstr "您真的想向自己的公司开发票吗？请从合作伙伴中移除 “公司名称” 以修复配置。取消该发票，然后重新开始。"
+msgstr ""
+"您真的想向自己的公司开发票吗？请从合作伙伴中移除 “公司名称” 以修复配置。取消"
+"该发票，然后重新开始。"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__business_domain
@@ -716,7 +732,7 @@ msgstr "员工"
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__own_account
 msgid "Employee (to reimburse)"
-msgstr "报销"
+msgstr "员工（报销）"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -732,8 +748,7 @@ msgstr "员工费用"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid ""
-"Enable users to choose default category for automatically generated "
-"expenses."
+"Enable users to choose default category for automatically generated expenses."
 msgstr "允许用户为自动生成的费用选择默认类别。"
 
 #. module: hr_expense
@@ -741,8 +756,7 @@ msgstr "允许用户为自动生成的费用选择默认类别。"
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid ""
-"Enter a name then choose a category and configure the amount of your "
-"expense."
+"Enter a name then choose a category and configure the amount of your expense."
 msgstr "输入名称，然后选择类别并配置费用金额。"
 
 #. module: hr_expense
@@ -769,7 +783,7 @@ msgstr "费用批准"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_approve_duplicate
 msgid "Expense Approve Duplicate"
-msgstr "支出批准重复"
+msgstr "费用批准重复"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_employee_tree_inherit_expense
@@ -807,7 +821,7 @@ msgstr "费用行"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__is_editable
 msgid "Expense Lines Are Editable By Current User"
-msgstr "当前用户可编辑支出项目"
+msgstr "当前用户可编辑费用项目"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__expense_manager_id
@@ -1099,6 +1113,11 @@ msgid "Hotel, plane ticket, taxi, etc."
 msgstr "酒店、机票、出租车等"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
+msgid "Hr Expense Alias Domain"
+msgstr "HR费用别名域"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__id
@@ -1189,7 +1208,6 @@ msgstr "是否选择非零成本的产品"
 
 #. module: hr_expense
 #. odoo-javascript
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "It all begins here - let's go!"
@@ -1314,7 +1332,6 @@ msgstr "经理可以在此处审核报表，然后会计师可以过帐会计分
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Managers can inspect all expenses from here."
 msgstr "经理可以从这里检查所有费用。"
@@ -1395,7 +1412,7 @@ msgstr "新的费用报告，支付 %(paid_by)s"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "New Expense Reports"
-msgstr "新支出报表"
+msgstr "新费用报告"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
@@ -1510,7 +1527,7 @@ msgstr "发送错误的消息的数量"
 #: code:addons/hr_expense/static/src/components/expense_dashboard.xml:0
 #, python-format
 msgid "Numbers computed from your personal expenses."
-msgstr "根据您的个人开支，计算得出的数字。"
+msgstr "根据您的个人报销，计算得出的数字。"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
@@ -1533,7 +1550,7 @@ msgstr "当您生成了您的费用申请，发送给您的经理，他会验证
 msgid ""
 "Once your <b>Expense Report</b> is ready, you can submit it to your manager "
 "and wait for approval."
-msgstr "支出 <b>报表</b> 准备就绪后，您可以将其提交给经理并等待批准。"
+msgstr "费用 <b>报表</b> 准备就绪后，您可以将其提交给经理并等待批准。"
 
 #. module: hr_expense
 #. odoo-python
@@ -1625,6 +1642,14 @@ msgid "Phone bills, postage, etc."
 msgstr "电话费、邮费等"
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid ""
+"Please specify an expense journal in order to generate accounting entries."
+msgstr "请指定费用日记账以生成会计分录。"
+
+#. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/list.xml:0
 #, python-format
@@ -1707,7 +1732,9 @@ msgid ""
 "Ready? You can save it manually or discard modifications from here. You "
 "don't <em>need to save</em> - Odoo will save eveyrthing for you when you "
 "navigate."
-msgstr "准备？您可以手动保存它或从此处丢弃修改。您不需要 <em>保存</em> - ERP 将在您导航时为您保存."
+msgstr ""
+"准备？您可以手动保存它或从此处丢弃修改。您不需要 <em>保存</em> - ERP 将在您导"
+"航时为您保存."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__reason
@@ -1837,7 +1864,8 @@ msgstr "扫一扫二维码获取Odoo手机app:"
 #: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
+"If empty, the approval is done by an Administrator or Approver (determined "
+"in settings/users)."
 msgstr ""
 "选择负责批准此员工“费用”的用户.\n"
 "如果为空，则审批由管理员或审批者完成（可在“设置/用户”中确定）。"
@@ -1856,7 +1884,9 @@ msgid ""
 "category will automatically be set. Type the expense amount in the mail "
 "subject to set it on the expense too."
 msgstr ""
-"向这个电子邮件别名发送电子邮件，并将收据作为附件，一键生成费用。如果邮件主题的第一个词包含类别的内部参考或类别名称，相应的类别将被自动设置。在邮件主题中输入费用金额，也可将其设置在费用上。"
+"向这个电子邮件别名发送电子邮件，并将收据作为附件，一键生成费用。如果邮件主题"
+"的第一个词包含类别的内部参考或类别名称，相应的类别将被自动设置。在邮件主题中"
+"输入费用金额，也可将其设置在费用上。"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
@@ -1885,7 +1915,7 @@ msgstr "表格"
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__show_commercial_partner_warning
 #: model:ir.model.fields,field_description:hr_expense.field_account_payment__show_commercial_partner_warning
 msgid "Show Commercial Partner Warning"
-msgstr ""
+msgstr "显示商务合作伙伴警告"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1906,13 +1936,6 @@ msgid ""
 "Snap pictures of your receipts and let Odoo<br> automatically create "
 "expenses for you."
 msgstr "拍发票为图片让 ERP <br> 自动帮您创建费用接收录入系统。"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Specify expense journal to generate accounting entries."
-msgstr "指定支出日记账以生成会计分录。"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
@@ -2052,9 +2075,17 @@ msgstr "团队审批者"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
+msgid "The company's default journal used when an employee expense is created."
+msgstr "创建员工费用时使用的公司默认日记帐。"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
 msgid ""
-"The company's default journal used when an employee expense is created."
-msgstr "创建员工支出时使用的公司默认日记帐。"
+"The current user has no related employee, or the related employee does not "
+"belong to this company."
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -2066,8 +2097,8 @@ msgstr "当前账号没有关联员工。请创建一个。"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid ""
-"The first word of the email subject did not correspond to any category code."
-" You'll have to set the category manually on the expense."
+"The first word of the email subject did not correspond to any category code. "
+"You'll have to set the category manually on the expense."
 msgstr "邮件主题的第一个词没有对应任何类别代码。您必须在费用上手动设置类别。"
 
 #. module: hr_expense
@@ -2076,7 +2107,9 @@ msgid ""
 "The following approved expenses have similar employee, amount and category "
 "than some expenses of this report. Please verify this report does not "
 "contain duplicates."
-msgstr "以下批准的费用与本报告的一些费用有类似的雇员、金额和类别。请核实该报告不包含重复的内容。"
+msgstr ""
+"以下批准的费用与本报告的一些费用有类似的雇员、金额和类别。请核实该报告不包含"
+"重复的内容。"
 
 #. module: hr_expense
 #: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
@@ -2122,7 +2155,8 @@ msgid ""
 "There are unsubmitted expenses linked to this category. Updating the "
 "category cost will change expense amounts. Make sure it is what you want to "
 "do."
-msgstr "该类别有未提交的费用。更新类别成本将改变支出金额。请确保您想进行此操作。"
+msgstr ""
+"该类别有未提交的费用。更新类别成本将改变费用金额。请确保您想进行此操作。"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2133,8 +2167,7 @@ msgstr "你去吧 - 简而言之，费用管理！"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
-msgid ""
-"This note will be shown to users when they select this expense product."
+msgid "This note will be shown to users when they select this expense product."
 msgstr "当用户选择此费用产品时，将向用户显示此注释。"
 
 #. module: hr_expense
@@ -2279,7 +2312,6 @@ msgstr "查看报告"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Wasting time recording your receipts? Let’s try a better way."
 msgstr "浪费了记录收据的时间？让我们尝试一个更好的方法。"
@@ -2299,17 +2331,18 @@ msgstr "网站沟通记录"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
-"When the cost of an expense product is different than 0, then the user"
-"                                         using this product won't be able to"
-" change the amount of the expense,                                         "
-"only the quantity. Use a cost different than 0 for expense categories funded"
-" by                                         the company at fixed cost like "
-"allowances for mileage, per diem, accommodation"
-"                                         or meal."
+"When the cost of an expense product is different than 0, then the "
+"user                                         using this product won't be "
+"able to change the amount of the "
+"expense,                                         only the quantity. Use a "
+"cost different than 0 for expense categories funded "
+"by                                         the company at fixed cost like "
+"allowances for mileage, per diem, "
+"accommodation                                         or meal."
 msgstr ""
-"当费用产品的成本与 0 "
-"不同时，使用该产品的用户将无法更改费用的金额，只能更改数量。对于公司以固定成本资助的支出类别，如里程、每日津贴、住宿或膳食津贴，应使用不同于 0 "
-"的成本。"
+"当费用产品的成本与 0 不同时，使用该产品的用户将无法更改费用的金额，只能更改数"
+"量。对于公司以固定成本资助的费用类别，如里程、每日津贴、住宿或膳食津贴，应使"
+"用不同于 0 的成本。"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2331,7 +2364,6 @@ msgstr "您无权编辑这份费用报告。"
 
 #. module: hr_expense
 #. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not authorized to edit this expense."
@@ -2379,7 +2411,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 #, python-format
 msgid "You cannot cancel an expense sheet linked to a journal entry"
-msgstr ""
+msgstr "你不能取消已关联到日记帐分录的费用费用表"
 
 #. module: hr_expense
 #. odoo-python
@@ -2407,8 +2439,8 @@ msgstr "您不能删除费用中使用的解析账户。"
 #: code:addons/hr_expense/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot delete only some entries linked to an expense report. All entries"
-" must be deleted at the same time."
+"You cannot delete only some entries linked to an expense report. All entries "
+"must be deleted at the same time."
 msgstr "您不能只删除与费用报告相关联的部分条目。必须同时删除所有条目。"
 
 #. module: hr_expense
@@ -2445,7 +2477,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report expenses for different companies in the same report."
-msgstr "您不能在同一份报告中报告不同公司的支出。"
+msgstr "您不能在同一份报告中报告不同公司的费用。"
 
 #. module: hr_expense
 #. odoo-python
@@ -2470,6 +2502,23 @@ msgstr "同一行您不能报告两次！"
 
 #. module: hr_expense
 #. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid ""
+"You don't have the rights to bypass the validation process of this expense "
+"report."
+msgstr "您无权绕过该费用报告的验证程序。"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"You don't have the rights to bypass the validation process of this expense."
+msgstr "您无权绕过该费用的验证程序。"
+
+#. module: hr_expense
+#. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You have no expense to report"
@@ -2487,8 +2536,8 @@ msgstr "您需要在日记账上添加手动付款方式 (%s)"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid ""
-"You need to have at least one category that can be expensed in your database"
-" to proceed!"
+"You need to have at least one category that can be expensed in your database "
+"to proceed!"
 msgstr "您需要在您的数据库中至少有一个可以计入费用的类别，才能继续进行!"
 
 #. module: hr_expense

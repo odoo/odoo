@@ -41,11 +41,11 @@ class RequestUID(object):
 
 
 class ModelConverter(werkzeug.routing.BaseConverter):
+    regex = r'[0-9]+'
 
     def __init__(self, url_map, model=False):
-        super(ModelConverter, self).__init__(url_map)
+        super().__init__(url_map)
         self.model = model
-        self.regex = r'([0-9]+)'
 
     def to_python(self, value):
         _uid = RequestUID(value=value, converter=self)
@@ -57,12 +57,11 @@ class ModelConverter(werkzeug.routing.BaseConverter):
 
 
 class ModelsConverter(werkzeug.routing.BaseConverter):
+    regex = r'[0-9,]+'
 
     def __init__(self, url_map, model=False):
-        super(ModelsConverter, self).__init__(url_map)
+        super().__init__(url_map)
         self.model = model
-        # TODO add support for slug in the form [A-Za-z0-9-] bla-bla-89 -> id 89
-        self.regex = r'([0-9,]+)'
 
     def to_python(self, value):
         _uid = RequestUID(value=value, converter=self)
@@ -213,7 +212,7 @@ class IrHttp(models.AbstractModel):
                 if handle_error := rule.endpoint.routing.get('handle_params_access_error'):
                     if response := handle_error(e):
                         werkzeug.exceptions.abort(response)
-                if isinstance(e, odoo.exceptions.MissingError):
+                if request.env.user.is_public or isinstance(e, odoo.exceptions.MissingError):
                     raise werkzeug.exceptions.NotFound() from e
                 raise
 
@@ -255,8 +254,6 @@ class IrHttp(models.AbstractModel):
         _logger.info("Generating routing map for key %s", str(key))
         registry = Registry(threading.current_thread().dbname)
         installed = registry._init_modules.union(odoo.conf.server_wide_modules)
-        if tools.config['test_enable'] and odoo.modules.module.current_test:
-            installed.add(odoo.modules.module.current_test)
         mods = sorted(installed)
         # Note : when routing map is generated, we put it on the class `cls`
         # to make it available for all instance. Since `env` create an new instance
@@ -266,7 +263,7 @@ class IrHttp(models.AbstractModel):
         for url, endpoint in self._generate_routing_rules(mods, converters=self._get_converters()):
             routing = submap(endpoint.routing, ROUTING_KEYS)
             if routing['methods'] is not None and 'OPTIONS' not in routing['methods']:
-                routing['methods'] = routing['methods'] + ['OPTIONS']
+                routing['methods'] = [*routing['methods'], 'OPTIONS']
             rule = FasterRule(url, endpoint=endpoint, **routing)
             rule.merge_slashes = False
             routing_map.add(rule)
@@ -324,4 +321,8 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _is_allowed_cookie(cls, cookie_type):
+        return True
+
+    @api.model
+    def _verify_request_recaptcha_token(self, action):
         return True

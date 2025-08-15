@@ -22,13 +22,13 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, AccessError, UserError
 from odoo.http import request
 from odoo.modules.module import get_resource_from_path
+from odoo.service.model import get_public_method
 from odoo.tools import config, ConstantMapping, get_diff, pycompat, apply_inheritance_specs, locate_node, str2bool
 from odoo.tools import safe_eval, lazy, lazy_property, frozendict
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.misc import file_path
 from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
 from odoo.tools.view_validation import valid_view, get_domain_value_names, get_expression_field_names, get_dict_asts
-from odoo.models import check_method_name
 from odoo.osv.expression import expression
 
 _logger = logging.getLogger(__name__)
@@ -295,11 +295,13 @@ actual arch.
             arch = False
             if mode == 'soft':
                 arch = view.arch_prev
+                write_dict = {'arch_db': arch}
             elif mode == 'hard' and view.arch_fs:
                 arch = view.with_context(read_arch_from_file=True, lang=None).arch
+                write_dict = {'arch_db': arch, 'arch_prev': False, 'arch_updated': False}
             if arch:
                 # Don't save current arch in previous since we reset, this arch is probably broken
-                view.with_context(no_save_prev=True, lang=None).write({'arch_db': arch})
+                view.with_context(no_save_prev=True, lang=None).write(write_dict)
 
     @api.depends('write_date')
     def _compute_model_data_id(self):
@@ -376,7 +378,7 @@ actual arch.
                 err = ValidationError(_(
                     "Error while parsing or validating view:\n\n%(error)s",
                     error=tools.ustr(e),
-                    view=self.key or self.id,
+                    view=view.key or view.id,
                 )).with_traceback(e.__traceback__)
                 err.context = getattr(e, 'context', None)
                 raise err from None
@@ -426,7 +428,7 @@ actual arch.
 
         return True
 
-    @api.constrains('type', 'groups_id', 'inherit_id')
+    @api.constrains('groups_id', 'inherit_id', 'mode')
     def _check_groups(self):
         for view in self:
             if (view.groups_id and
@@ -1499,8 +1501,8 @@ actual arch.
                     )
                     self._raise_view_error(msg, node)
                 try:
-                    check_method_name(name)
-                except AccessError:
+                    get_public_method(name_manager.model, name)
+                except (AttributeError, AccessError):
                     msg = _(
                         "%(method)s on %(model)s is private and cannot be called from a button",
                         method=name, model=name_manager.model._name,
@@ -1984,6 +1986,12 @@ actual arch.
 
         node_path = e.get('data-oe-xpath')
         if node_path is None:
+            # Handle special case for jump points defined by the magic template
+            # <t>$0</t>. No branding is allowed in this case since it points to
+            # a generic template.
+            if e.get('data-oe-no-branding'):
+                e.attrib.pop('data-oe-no-branding')
+                return
             node_path = "%s/%s[%d]" % (parent_xpath, e.tag, index_map[e.tag])
         if branding:
             if e.get('t-field'):
@@ -2289,6 +2297,8 @@ class Model(models.AbstractModel):
         right_group = E.group()
         for fname, field in self._fields.items():
             if field.automatic:
+                continue
+            elif field.type == "binary" and not isinstance(field, fields.Image) and not field.store:
                 continue
             elif field.type in ('one2many', 'many2many', 'text', 'html'):
                 # append to sheet left and right group if needed

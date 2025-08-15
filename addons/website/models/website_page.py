@@ -7,6 +7,7 @@ import re
 from odoo.addons.http_routing.models.ir_http import slugify
 from odoo.addons.website.tools import text_from_html
 from odoo import api, fields, models
+from odoo.exceptions import AccessError
 from odoo.osv import expression
 from odoo.tools import escape_psql
 from odoo.tools.translate import _
@@ -91,6 +92,16 @@ class Page(models.Model):
     def _compute_website_url(self):
         for page in self:
             page.website_url = page.url
+
+    @api.depends_context('uid')
+    def _compute_can_publish(self):
+        # Note: this `if`'s purpose it to optimize the way this is computed for
+        # multiple records.
+        if self.env.user.has_group('website.group_website_designer'):
+            for record in self:
+                record.can_publish = True
+        else:
+            super()._compute_can_publish()
 
     def _get_most_specific_pages(self):
         ''' Returns the most specific pages in self. '''
@@ -216,7 +227,17 @@ class Page(models.Model):
         domain = [website.website_domain()]
         if not self.env.user.has_group('website.group_website_designer'):
             # Rule must be reinforced because of sudo.
-            domain.append([('website_published', '=', True)])
+            domain.append([
+                ('website_published', '=', True),
+                ('website_indexed', '=', True),
+            ])
+            # Prevent accessing unaccessible pages
+            domain.append([('visibility', '!=', 'password')])
+            if website.is_public_user():
+                domain.append([('visibility', '!=', 'connected')])
+            domain.append(expression.OR([
+                [('groups_id', '=', False)], [('groups_id', 'in', self.env.user.groups_id.ids)]
+            ]))
 
         search_fields = ['name', 'url']
         fetch_fields = ['id', 'name', 'url']
@@ -251,7 +272,7 @@ class Page(models.Model):
         )
         results = most_specific_pages.filtered_domain(domain)  # already sudo
 
-        if with_description and search:
+        if with_description and search and most_specific_pages:
             # Perform search in translations
             # TODO Remove when domains will support xml_translate fields
             query = sql.SQL("""
@@ -288,13 +309,21 @@ class Page(models.Model):
                 )
 
         def filter_page(search, page, all_pages):
-            # Search might have matched words in the xml tags and parameters therefore we make
-            # sure the terms actually appear inside the text.
-            text = '%s %s %s' % (page.name, page.url, text_from_html(page.arch))
-            pattern = '|'.join([re.escape(search_term) for search_term in search.split()])
-            return re.findall('(%s)' % pattern, text, flags=re.I) if pattern else False
-        if search and with_description:
-            results = results.filtered(lambda result: filter_page(search, result, results))
+            # Exclude pages that do not pass ACL.
+            try:
+                plain_page = page.sudo(False)
+                plain_page.check_access_rule('read')
+                plain_page.view_id.check_access_rule('read')
+            except AccessError:
+                return False
+            if search and with_description:
+                # Search might have matched words in the xml tags and parameters therefore we make
+                # sure the terms actually appear inside the text.
+                text = '%s %s %s' % (page.name, page.url, text_from_html(page.arch))
+                pattern = '|'.join([re.escape(search_term) for search_term in search.split()])
+                return re.findall('(%s)' % pattern, text, flags=re.I) if pattern else False
+            return True
+        results = results.filtered(lambda result: filter_page(search, result, results))
         return results[:limit], len(results)
 
     def action_page_debug_view(self):

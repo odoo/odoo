@@ -9,6 +9,7 @@ from lxml import etree
 from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 from cryptography.hazmat.backends import default_backend
 from cryptography.x509 import load_der_x509_certificate
+from odoo.exceptions import UserError
 
 
 class AccountMove(models.Model):
@@ -102,7 +103,7 @@ class AccountMove(models.Model):
             prehash_content = etree.tostring(root)
             invoice_hash = edi_format._l10n_sa_generate_invoice_xml_hash(prehash_content, 'digest')
 
-            amount_total = float(xpath_ns('//cbc:TaxInclusiveAmount'))
+            amount_total = float(xpath_ns('//cbc:PayableAmount'))
             amount_tax = float(xpath_ns('//cac:TaxTotal/cbc:TaxAmount'))
             x509_certificate = load_der_x509_certificate(b64decode(x509_cert), default_backend())
             seller_name_enc = self._l10n_sa_get_qr_code_encoding(1, journal_id.company_id.display_name.encode())
@@ -146,6 +147,13 @@ class AccountMove(models.Model):
             if move.l10n_sa_chain_index:
                 move.show_reset_to_draft_button = False
 
+    def _l10n_sa_reset_confirmation_datetime(self):
+        """ OVERRIDE: we want rejected phase 2 invoices to keep the original confirmation datetime"""
+        for move in self.filtered(lambda m: m.country_code == 'SA'):
+            zatca_doc = move.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'sa_zatca')
+            if not zatca_doc or zatca_doc[0].blocking_level != 'error':  # Error is the rejection case
+                move.l10n_sa_confirmation_datetime = False
+
     def _l10n_sa_generate_unsigned_data(self):
         """
             Generate UUID and digital signature to be used during both Signing and QR code generation.
@@ -174,8 +182,21 @@ class AccountMove(models.Model):
             xml_content)
         bootstrap_cls, title, content = ("success", _("Invoice Successfully Submitted to ZATCA"),
                                          "" if (not error or not response_data) else response_data)
+        attachment = False
         if error:
+            xml_filename = self.env['account.edi.xml.ubl_21.zatca']._export_invoice_filename(self)
+            xml_filename = xml_filename[:-4] + '-rejected.xml'
+            attachment = self.env['ir.attachment'].create({
+                'raw': xml_content,
+                'name': xml_filename,
+                'description': 'Rejected ZATCA Document not to be deleted - ثيقة ZATCA المرفوضة لا يجوز حذفها',
+                'res_id': self.id,
+                'res_model': self._name,
+                'type': 'binary',
+                'mimetype': 'application/xml',
+            })
             bootstrap_cls, title = ("danger", _("Invoice was rejected by ZATCA"))
+            error_msg = response_data['error']
             content = Markup("""
                 <p class='mb-0'>
                     %s
@@ -184,8 +205,9 @@ class AccountMove(models.Model):
                 <p class='mb-0'>
                     %s
                 </p>
-            """) % (_('The invoice was rejected by ZATCA. Please, check the response below:'), response_data)
+            """) % (_('The invoice was rejected by ZATCA. Please, check the response below:'), error_msg)
         if response_data and response_data.get('validationResults', {}).get('warningMessages'):
+            status_code = response_data.get('status_code')
             bootstrap_cls, title = ("warning", _("Invoice was Accepted by ZATCA (with Warnings)"))
             content = Markup("""
                 <p class='mb-0'>
@@ -193,14 +215,36 @@ class AccountMove(models.Model):
                 </p>
                 <hr>
                 <p class='mb-0'>
-                    %s
+                    <b>%s</b>%s
                 </p>
-            """) % (_('The invoice was accepted by ZATCA, but returned warnings. Please, check the response below:'), "<br/>".join([Markup("<b>%s</b> : %s") % (m['code'], m['message']) for m in response_data['validationResults']['warningMessages']]))
-        self.message_post(body=Markup("""
-            <div role='alert' class='alert alert-%s'>
-                <h4 class='alert-heading'>%s</h4>%s
-            </div>
-        """) % (bootstrap_cls, title, content))
+            """) % (_('The invoice was accepted by ZATCA, but returned warnings. Please, check the response below:'),
+                    f"[{status_code}] " if status_code else "",
+                    Markup("<br/>").join([Markup("<b>%s</b> : %s") % (m['code'], m['message']) for m in response_data['validationResults']['warningMessages']]))
+        self.with_context(no_new_invoice=True).message_post(body=Markup("""
+                <div role='alert' class='alert alert-%s'>
+                    <h4 class='alert-heading'>%s</h4>%s
+                </div>
+            """) % (bootstrap_cls, title, content),
+            attachment_ids=attachment and [attachment.id] or []
+        )
+
+    def _is_l10n_sa_eligibile_invoice(self):
+        self.ensure_one()
+        return self.is_invoice() and self.l10n_sa_confirmation_datetime and self.country_code == 'SA'
+
+    def _get_report_base_filename(self):
+        """
+            Generate the name of the invoice PDF file according to ZATCA business rules:
+            Seller Vat Number (BT-31), Date (BT-2), Time (KSA-25), Invoice Number (BT-1)
+        """
+        if self._is_l10n_sa_eligibile_invoice():
+            return self.with_context(l10n_sa_file_format=False).env['account.edi.xml.ubl_21.zatca']._export_invoice_filename(self)
+        return super()._get_report_base_filename()
+
+    def _get_invoice_report_filename(self, extension='pdf'):
+        if self._is_l10n_sa_eligibile_invoice():
+            return self.with_context(l10n_sa_file_format=extension).env['account.edi.xml.ubl_21.zatca']._export_invoice_filename(self)
+        return super()._get_invoice_report_filename(extension)
 
     def _l10n_sa_is_in_chain(self):
         """
@@ -209,6 +253,28 @@ class AccountMove(models.Model):
         """
         zatca_doc_ids = self.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'sa_zatca')
         return len(zatca_doc_ids) > 0 and not any(zatca_doc_ids.filtered(lambda d: d.state == 'to_send'))
+
+    def _get_tax_lines_to_aggregate(self):
+        """
+        If the final invoice has downpayment lines, we skip the tax correction, as we need to recalculate tax amounts
+        without taking into account those lines
+        """
+        if self.country_code == 'SA' and not self._is_downpayment() and self.line_ids._get_downpayment_lines():
+            return self.env['account.move.line']
+        return super()._get_tax_lines_to_aggregate()
+
+    def _get_l10n_sa_totals(self):
+        self.ensure_one()
+        invoice_vals = self.env['account.edi.xml.ubl_21.zatca']._export_invoice_vals(self)
+        return {
+            'total_amount': invoice_vals['vals']['monetary_total_vals']['tax_inclusive_amount'],
+            'total_tax': invoice_vals['vals']['tax_total_vals'][-1]['tax_amount'],
+        }
+
+    def action_post(self):
+        if self.filtered(lambda move: move.country_code == "SA" and move.move_type in ('out_invoice', 'out_refund') and move.company_id != move.journal_id.company_id):
+            raise UserError(_("Please make sure that the invoice company matches the journal company on all invoices you wish to confirm"))
+        return super().action_post()
 
 
 class AccountMoveLine(models.Model):

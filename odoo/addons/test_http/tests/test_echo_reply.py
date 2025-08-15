@@ -91,9 +91,13 @@ class TestHttpEchoReplyJsonNoDB(TestHttpBase):
 
 @tagged('post_install', '-at_install')
 class TestHttpEchoReplyHttpWithDB(TestHttpBase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.jackoneill = new_test_user(cls.env, 'jackoneill', context={'lang': 'en_US'})
+
     def setUp(self):
         super().setUp()
-        self.jackoneill = new_test_user(self.env, 'jackoneill', context={'lang': 'en_US'})
         self.authenticate('jackoneill', 'jackoneill')
 
     def test_echohttp0_get_qs_db(self):

@@ -94,13 +94,13 @@ class TestPoSProductsWithTax(TestPoSCommon):
             'journal_entries_after_closing': {
                 'session_journal_entry': {
                     'line_ids': [
-                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 0, 'credit': 24.89, 'reconciled': False},
-                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 0, 'credit': 51.82, 'reconciled': False},
-                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 110, 'reconciled': False},
-                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 272.73, 'reconciled': False},
-                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 245.45, 'reconciled': False},
-                        {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 230.25, 'credit': 0, 'reconciled': True},
-                        {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 474.64, 'credit': 0, 'reconciled': True},
+                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 0, 'credit': 24.89, 'reconciled': False, 'display_type': 'tax'},
+                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 0, 'credit': 51.82, 'reconciled': False, 'display_type': 'tax'},
+                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 110, 'reconciled': False, 'display_type': 'product'},
+                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 272.73, 'reconciled': False, 'display_type': 'product'},
+                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 245.45, 'reconciled': False, 'display_type': 'product'},
+                        {'account_id': self.bank_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 230.25, 'credit': 0, 'reconciled': True, 'display_type': 'product'},
+                        {'account_id': self.cash_pm1.receivable_account_id.id, 'partner_id': False, 'debit': 474.64, 'credit': 0, 'reconciled': True, 'display_type': 'product'},
                     ],
                 },
                 'cash_statement': [
@@ -681,6 +681,14 @@ class TestPoSProductsWithTax(TestPoSCommon):
             next(iter(filter(lambda p: p['id'] == product_no_tax.id, pos_data['product.product'])))['taxes_id'],
             []
         )
+
+        def get_taxes_name_popup(product):
+            return [tax['name'] for tax in product.get_product_info_pos(product_all_taxes.lst_price, 1, xx_config.id)['all_prices']['tax_details']]
+
+        self.assertEqual(get_taxes_name_popup(product_all_taxes), ["Tax XX"])
+        self.assertEqual(get_taxes_name_popup(product_no_xx_tax), ["Tax X"])
+        self.assertEqual(get_taxes_name_popup(product_no_branch_tax), ["Tax A", "Tax B"])
+        self.assertEqual(get_taxes_name_popup(product_no_tax), [])
 
     def test_combo_product_variant_error(self):
         """This tests make sure that product containing variants cannot change type to combo"""

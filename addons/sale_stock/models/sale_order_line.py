@@ -195,13 +195,17 @@ class SaleOrderLine(models.Model):
         if 'product_uom_qty' in values:
             lines = self.filtered(lambda r: r.state == 'sale' and not r.is_expense)
 
-        if 'product_packaging_id' in values:
-            self.move_ids.filtered(
-                lambda m: m.state not in ['cancel', 'done']
-            ).product_packaging_id = values['product_packaging_id']
+        old_packaging = {sol: sol.product_packaging_id for sol in self}
 
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         res = super(SaleOrderLine, self).write(values)
+
+        for sol in self:
+            if sol.product_packaging_id != old_packaging[sol]:
+                sol.move_ids.filtered(
+                    lambda m: m.state not in ['cancel', 'done']
+                ).product_packaging_id = sol.product_packaging_id
+
         if lines:
             lines._action_launch_stock_rule(previous_product_uom_qty)
         return res
@@ -263,8 +267,8 @@ class SaleOrderLine(models.Model):
         return qty
 
     def _get_outgoing_incoming_moves(self):
-        outgoing_moves = self.env['stock.move']
-        incoming_moves = self.env['stock.move']
+        outgoing_moves_ids = set()
+        incoming_moves_ids = set()
 
         moves = self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped and self.product_id == r.product_id)
         if self._context.get('accrual_entry_date'):
@@ -273,11 +277,11 @@ class SaleOrderLine(models.Model):
         for move in moves:
             if move.location_dest_id.usage == "customer":
                 if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
-                    outgoing_moves |= move
-            elif move.location_dest_id.usage != "customer" and move.to_refund:
-                incoming_moves |= move
+                    outgoing_moves_ids.add(move.id)
+            elif move.location_id.usage == "customer" and move.to_refund:
+                incoming_moves_ids.add(move.id)
 
-        return outgoing_moves, incoming_moves
+        return self.env['stock.move'].browse(outgoing_moves_ids), self.env['stock.move'].browse(incoming_moves_ids)
 
     def _get_procurement_group(self):
         return self.order_id.procurement_group_id

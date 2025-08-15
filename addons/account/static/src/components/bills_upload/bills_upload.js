@@ -35,17 +35,25 @@ export class AccountFileUploader extends Component {
             mimetype: file.type,
             datas: file.data,
         };
-        const [att_id] = await this.orm.create("ir.attachment", [att_data], {
-            context: { ...this.extraContext, ...this.env.searchModel.context },
-        });
+        // clean the context to ensure the `create` call doesn't fail from unknown `default_*` context
+        const cleanContext = Object.fromEntries(Object.entries(this.env.searchModel.context).filter(([key]) => !key.startsWith('default_')));
+        const [att_id] = await this.orm.create("ir.attachment", [att_data], {context: cleanContext});
         this.attachmentIdsToProcess.push(att_id);
     }
 
     async onUploadComplete() {
-        const action = await this.orm.call("account.journal", "create_document_from_attachment", ["", this.attachmentIdsToProcess], {
-            context: { ...this.extraContext, ...this.env.searchModel.context },
-        });
-        this.attachmentIdsToProcess = [];
+        let action;
+        try {
+            action = await this.orm.call(
+                "account.journal",
+                "create_document_from_attachment",
+                ["", this.attachmentIdsToProcess],
+                { context: { ...this.extraContext, ...this.env.searchModel.context } },
+            );
+        } finally {
+            // ensures attachments are cleared on success as well as on error
+            this.attachmentIdsToProcess = [];
+        }
         if (action.context && action.context.notifications) {
             for (let [file, msg] of Object.entries(action.context.notifications)) {
                 this.notification.add(

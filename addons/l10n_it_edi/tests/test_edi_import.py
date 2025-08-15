@@ -6,7 +6,7 @@ from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import fields, sql_db, tools, Command
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
 
@@ -111,6 +111,33 @@ class TestItEdiImport(TestItEdi):
 
         invoices = self.env['account.move'].with_company(self.company).search([('name', '=', 'BILL/2019/01/0001')])
         self.assertEqual(len(invoices), 1)
+
+    def test_receive_wrongly_signed_vendor_bill(self):
+        """
+            Some of the invoices (i.e. those from Servizio Elettrico Nazionale, the
+            ex-monopoly-of-energy company) have custom signatures that rely on an old
+            OpenSSL implementation that breaks the current one that sees them as malformed,
+            so we cannot read those files. Also, we couldn't find an alternative way to use
+            OpenSSL to just get the same result without getting the error.
+
+            A new fallback method has been added that reads the ASN1 file structure and
+            takes the encoded pkcs7-data tag content out of it, regardless of the
+            signature.
+
+            Being a non-optimized pure Python implementation, it takes about 2x the time
+            than the regular method, so it's better used as a fallback. We didn't use an
+            existing library not to further pollute the dependencies space.
+
+            task-3502910
+        """
+        with freeze_time('2019-01-01'):
+            self._assert_import_invoice('IT09633951000_NpFwF.xml.p7m', [{
+                'name': 'BILL/2023/09/0001',
+                'ref': '333333333333333',
+                'invoice_date': fields.Date.from_string('2023-09-08'),
+                'amount_untaxed': 57.54,
+                'amount_tax': 3.95,
+            }])
 
     def test_cron_receives_bill_from_another_company(self):
         """ Ensure that when from one of your company, you bill the other, the
@@ -264,3 +291,9 @@ class TestItEdiImport(TestItEdi):
                 }
             ],
         }], applied_xml)
+
+    def test_invoice_user_can_compute_is_self_invoice(self):
+        """Ensure that a user having only group_account_invoice can compute field l10n_it_edi_is_self_invoice"""
+        user = new_test_user(self.env, login='jag', groups='account.group_account_invoice')
+        move = self.env['account.move'].create({'move_type': 'in_invoice'})
+        move.with_user(user).read(['l10n_it_edi_is_self_invoice'])  # should not raise

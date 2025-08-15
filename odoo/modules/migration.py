@@ -217,27 +217,26 @@ class MigrationManager(object):
         versions = _get_migration_versions(pkg, stage)
         for version in versions:
             if compare(version):
-                strfmt = {'addon': pkg.name,
-                          'stage': stage,
-                          'version': stageformat[stage] % version,
-                          }
-
                 for pyfile in _get_migration_files(pkg, version, stage):
-                    name, ext = os.path.splitext(os.path.basename(pyfile))
-                    if ext.lower() != '.py':
-                        continue
-                    mod = None
-                    try:
-                        mod = load_script(pyfile, name)
-                        _logger.info('module %(addon)s: Running migration %(version)s %(name)s' % dict(strfmt, name=mod.__name__))
-                        migrate = mod.migrate
-                    except ImportError:
-                        _logger.exception('module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % dict(strfmt, file=pyfile))
-                        raise
-                    except AttributeError:
-                        _logger.error('module %(addon)s: Each %(stage)s-migration file must have a "migrate(cr, installed_version)" function' % strfmt)
-                    else:
-                        migrate(self.cr, installed_version)
-                    finally:
-                        if mod:
-                            del mod
+                    exec_script(self.cr, installed_version, pyfile, pkg.name, stage, stageformat[stage] % version)
+
+def exec_script(cr, installed_version, pyfile, addon, stage, version=None):
+    version = version or installed_version
+    name, ext = os.path.splitext(os.path.basename(pyfile))
+    if ext.lower() != '.py':
+        return
+    mod = None
+    try:
+        mod = load_script(pyfile, name)
+        _logger.info('module %(addon)s: Running migration %(version)s %(name)s' % dict(locals(), name=mod.__name__))
+        migrate = mod.migrate
+    except ImportError:
+        _logger.exception('module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % dict(locals(), file=pyfile))
+        raise
+    except AttributeError:
+        _logger.error('module %(addon)s: Each %(stage)s-migration file must have a "migrate(cr, installed_version)" function' % locals())
+    else:
+        migrate(cr, installed_version)
+    finally:
+        if mod:
+            del mod

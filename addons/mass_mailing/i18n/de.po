@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Larissa Manderfeld, 2024
 # Wil Odoo, 2024
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-05-09 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,9 +42,9 @@ msgid ""
 "\"Rick Sanchez\" <rick_sanchez@example.com>\n"
 "victor_hugo@example.com"
 msgstr ""
-"„Damien Roberts“ <d.roberts@example.com>\n"
-"„Rick Sanchez“ <rick_sanchez@example.com>\n"
-"victor_hugo@example.com"
+"„Damien Roberts“ <d.roberts@beispiel.com>\n"
+"„Rick Sanchez“ <rick_sanchez@beispiel.com>\n"
+"victor_hugo@beispiel.com"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_filter_count
@@ -178,7 +178,7 @@ msgstr "800 px"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_blockquote
 msgid "<b>John DOE</b> • CEO of MyCompany"
-msgstr "<b>Lieschen Müller</b> • CEO von MyCompany"
+msgstr "<b>Lieschen Müller</b> • CEO von MeinUnternehmen"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
@@ -1076,6 +1076,25 @@ msgstr "Archiviert"
 
 #. module: mass_mailing
 #. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid "Are you sure you want to unsubscribe from our mailing list?"
+msgstr ""
+"Sind Sie sicher, dass Sie sich von unserer Mailingliste abmelden möchten?"
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid ""
+"Are you sure you want to unsubscribe from the mailing list "
+"\"%(unsubscribed_lists)s\"?"
+msgstr ""
+"Sind Sie sicher, dass Sie sich von unsere Mailingliste "
+"„%(unsubscribed_lists)s“ abmelden möchten?"
+
+#. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing_list.py:0
 #, python-format
 msgid ""
@@ -1595,7 +1614,7 @@ msgstr "Spalten"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
 msgid "Come Back"
-msgstr "Zurückkommen"
+msgstr "Rückgängig machen"
 
 #. module: mass_mailing
 #. odoo-python
@@ -3120,6 +3139,13 @@ msgid "Manage Mass Mailing Campaigns"
 msgstr "Massenmailingkampagne verwalten"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid "Manage Subscriptions"
+msgstr "Abonnements verwalten"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Manage mass mailing campaigns"
 msgstr "Verwalten Sie Massenmailingkampagnen"
@@ -3860,8 +3886,7 @@ msgstr "Einfacher Text"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
 #, python-format
 msgid "Please let us know why you updated your subscription."
-msgstr ""
-"Bitte teilen Sie uns mit, warum Sie Ihr Abonnement aktualisiert haben."
+msgstr "Bitte teilen Sie uns mit, warum Sie sich abgemeldet haben."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -4369,6 +4394,11 @@ msgid "Send test"
 msgstr "Test versenden"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid "Send to all"
+msgstr "An alle senden"
+
+#. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__state__sending
 msgid "Sending"
 msgstr "Im Versand"
@@ -4609,6 +4639,13 @@ msgstr "Abonnements"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
 msgid "Successfully Unsubscribed"
+msgstr "Erfolgreich abgemeldet"
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid "Successfully unsubscribed!"
 msgstr "Erfolgreich abgemeldet"
 
 #. module: mass_mailing
@@ -5032,9 +5069,12 @@ msgid "Unknown error"
 msgstr "Unbekannter Fehler"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social_left
 #: model_terms:ir.ui.view,arch_db:mass_mailing.theme_basic_template
+#, python-format
 msgid "Unsubscribe"
 msgstr "Abmelden"
 
@@ -5274,7 +5314,7 @@ msgid ""
 "Write or paste email addresses in the field below.\n"
 "                    Each line will be imported as a mailing list contact."
 msgstr ""
-"Schreiben oder kopieren Sie E-Mail-Adressen in das untenstehende Feld.\n"
+"Schreiben oder kopieren Sie E-Mail-Adressen in das unten stehende Feld.\n"
 "                    Jede Zeile wird als Kontakt der Mailingliste importiert."
 
 #. module: mass_mailing
@@ -5424,7 +5464,8 @@ msgstr "Ihre E-Mail befindet sich derzeit"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
 msgid "Your email is currently <strong>in our block list</strong>."
 msgstr ""
-"Ihre E-Mail befindet sich aktuell <strong>auf unserer Sperrliste</strong>."
+"Ihre E-Mail-Adresse befindet sich <strong>auf unserer Mailing-"
+"Sperrliste</strong>."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -5460,8 +5501,8 @@ msgid ""
 "email1@example.com\n"
 "email2@example.com"
 msgstr ""
-"email1@example.com\n"
-"email2@example.com"
+"email1@beispiel.com\n"
+"email2@beispiel.com"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description

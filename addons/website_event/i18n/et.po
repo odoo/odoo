@@ -16,6 +16,7 @@
 # Leaanika Randmets, 2023
 # Triine Aavik <triine@avalah.ee>, 2024
 # Martin Trigaux, 2024
+# Tairi Tiimann, 2024
 # Anna, 2024
 # Stevin Lilla, 2024
 # 
@@ -413,7 +414,7 @@ msgstr "Tühista"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Card design"
-msgstr ""
+msgstr "Kaardi kujundus"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
@@ -578,6 +579,13 @@ msgstr "E-post"
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "End -"
 msgstr "Lõpp -"
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/js/website_event.js:0
+#, python-format
+msgid "Error"
+msgstr "Viga"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -1110,7 +1118,7 @@ msgstr "Küsimuste tüüp"
 #: code:addons/website_event/models/event_question.py:0
 #, python-format
 msgid "Question cannot be linked to both an Event and an Event Type."
-msgstr ""
+msgstr "Küsimust ei saa siduda korraga nii sündmuse kui ka sündmuse tüübiga."
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__question_ids
@@ -1375,9 +1383,16 @@ msgid "Suggested answer"
 msgstr "Soovituslik vastus"
 
 #. module: website_event
+#. odoo-python
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "Google reCaptcha tuvastas kahtlase tegevuse."
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Template badge"
-msgstr ""
+msgstr "Malli märk"
 
 #. module: website_event
 #: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__text_box

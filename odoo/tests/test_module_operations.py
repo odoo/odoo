@@ -3,6 +3,7 @@ import argparse
 import logging.config
 import os
 import sys
+import threading
 import time
 
 sys.path.append(os.path.abspath(os.path.join(__file__,'../../../')))
@@ -199,12 +200,13 @@ def test_standalone(args):
             except Exception:
                 _logger.error("Standalone script %s failed", func.__name__, exc_info=True)
 
-    _logger.info("%d standalone scripts executed in %.2fs" % (len(funcs), time.time() - start_time))
+    _logger.info("%d standalone scripts executed in %.2fs", len(funcs), time.time() - start_time)
 
 
 if __name__ == '__main__':
     args = parse_args()
 
+    config['db_name'] = threading.current_thread().dbname = args.database
     # handle paths option
     if args.addons_path:
         odoo.tools.config['addons_path'] = ','.join([args.addons_path, odoo.tools.config['addons_path']])

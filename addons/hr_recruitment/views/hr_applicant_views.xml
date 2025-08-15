@@ -232,7 +232,7 @@
                 <field name="refuse_reason_id"/>
                 <field name="application_status"/>
                 <field name="date_closed"/>
-                <field name="attachment_ids" filter_domain="[('attachment_ids.index_content', 'ilike', self)]" string="Resume's content"/>
+                <field name="attachment_ids" filter_domain="[('attachment_ids', 'any', [('index_content', 'ilike', self), ('res_model', '=', 'hr.applicant')])]" string="Resume's content"/>
                 <filter string="My Applications" name="my_applications" domain="[('user_id', '=', uid)]"/>
                 <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                 <separator/>
@@ -437,20 +437,6 @@
                 so that you can easily search through their content.
             </p>
         </field>
-    </record>
-
-    <record id="action_hr_applicant_mass_sms" model="ir.actions.act_window">
-        <field name="name">Send SMS</field>
-        <field name="res_model">sms.composer</field>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
-        <field name="context">{
-            'default_composition_mode': 'mass',
-            'default_mass_keep_log': True,
-            'default_res_ids': active_ids,
-        }</field>
-        <field name="binding_model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="binding_view_types">tree</field>
     </record>
 
     <record model="ir.actions.act_window" id="action_hr_applicant_new">

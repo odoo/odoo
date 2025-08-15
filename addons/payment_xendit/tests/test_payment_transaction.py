@@ -2,10 +2,13 @@
 
 from unittest.mock import patch
 
+from werkzeug.urls import url_encode
+
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
+from odoo.addons.payment_xendit.controllers.main import XenditController
 from odoo.addons.payment_xendit.tests.common import XenditCommon
 
 
@@ -15,9 +18,20 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
     def test_no_item_missing_from_invoice_request_payload(self):
         """ Test that the invoice request values are conform to the transaction fields. """
         self.maxDiff = 10000  # Allow comparing large dicts.
+        self.reference = 'tx1'
         tx = self._create_transaction(flow='redirect')
-        request_payload = tx._xendit_prepare_invoice_request_payload()
-        return_url = self._build_url('/payment/status')
+        return_url = self._build_url(XenditController._return_url)
+        access_token = self._generate_test_access_token(tx.reference, tx.amount)
+        success_url_params = url_encode({
+            'tx_ref': tx.reference,
+            'access_token': access_token,
+            'success': 'true',
+        })
+
+        with patch(
+            'odoo.addons.payment.utils.generate_access_token', new=self._generate_test_access_token
+        ):
+            request_payload = tx._xendit_prepare_invoice_request_payload()
         self.assertDictEqual(request_payload, {
             'external_id': tx.reference,
             'amount': tx.amount,
@@ -33,7 +47,7 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
                     'street_line1': tx.partner_address,
                 }],
             },
-            'success_redirect_url': return_url,
+            'success_redirect_url': f'{return_url}?{success_url_params}',
             'failure_redirect_url': return_url,
             'payment_methods': [self.payment_method_code.upper()],
             'currency': tx.currency_id.name,

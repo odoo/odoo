@@ -31,6 +31,7 @@ import { onRendered } from "@odoo/owl";
 import { patchWithCleanup } from "../helpers/utils";
 import { Domain } from "@web/core/domain";
 import { SampleServer } from "@web/model/sample_server";
+import { GraphModel } from "@web/views/graph/graph_model";
 
 const serviceRegistry = registry.category("services");
 
@@ -4533,5 +4534,235 @@ QUnit.module("Views", (hooks) => {
 
         checkLabels(assert, graph, ["xphone / None", "xphone / red", "xpad / None"]);
         checkLegend(assert, graph, ["xphone / None", "xphone / red", "xpad / None"]);
+    });
+
+    QUnit.test("missing property field definition is fetched", async function (assert) {
+        Object.assign(serverData.models.foo.fields, {
+            properties: {
+                string: "Properties",
+                type: "properties",
+                definition_record: "parent_id",
+                definition_record_field: "properties_definition",
+                name: "properties",
+            },
+            parent_id: {
+                string: "Parent",
+                type: "many2one",
+                relation: "foo",
+                name: "parent_id",
+            },
+            properties_definition: {
+                string: "Properties",
+                type: "properties_definition",
+            },
+        });
+        const graph = await makeView({
+            type: "graph",
+            resModel: "foo",
+            serverData,
+            arch: `<graph/>`,
+            irFilters: [
+                {
+                    user_id: [2, "Mitchell Admin"],
+                    name: "My Filter",
+                    id: 5,
+                    context: `{"group_by": ['properties.my_char']}`,
+                    sort: "[]",
+                    domain: "[]",
+                    is_default: true,
+                    model_id: "foo",
+                    action_id: false,
+                },
+            ],
+            mockRPC(_, { method, kwargs }) {
+                if (method === "web_read_group" && kwargs.groupby?.includes("properties.my_char")) {
+                    assert.step(JSON.stringify(kwargs.groupby));
+                    return {
+                        groups: [
+                            {
+                                "properties.my_char": false,
+                                __domain: [["properties.my_char", "=", false]],
+                                __count: 2,
+                            },
+                            {
+                                "properties.my_char": "aaa",
+                                __domain: [["properties.my_char", "=", "aaa"]],
+                                __count: 1,
+                            },
+                        ],
+                        length: 2,
+                    };
+                } else if (method === "get_property_definition") {
+                    return {
+                        name: "my_char",
+                        type: "char",
+                    };
+                }
+            },
+        });
+        assert.verifySteps([`["properties.my_char"]`]);
+        checkLabels(assert, graph, ["None", "aaa"]);
+        checkDatasets(
+            assert,
+            graph,
+            ["data", "label"],
+            [
+                {
+                    data: [2, 1],
+                    label: "Count",
+                },
+            ]
+        );
+    });
+
+    QUnit.test("missing deleted property field definition is created", async function (assert) {
+        Object.assign(serverData.models.foo.fields, {
+            properties: {
+                string: "Properties",
+                type: "properties",
+                definition_record: "parent_id",
+                definition_record_field: "properties_definition",
+                name: "properties",
+            },
+            parent_id: {
+                string: "Parent",
+                type: "many2one",
+                relation: "foo",
+                name: "parent_id",
+            },
+            properties_definition: {
+                string: "Properties",
+                type: "properties_definition",
+            },
+        });
+        const graph = await makeView({
+            type: "graph",
+            resModel: "foo",
+            serverData,
+            arch: `<graph/>`,
+            irFilters: [
+                {
+                    user_id: [2, "Mitchell Admin"],
+                    name: "My Filter",
+                    id: 5,
+                    context: `{"group_by": ['properties.my_char']}`,
+                    sort: "[]",
+                    domain: "[]",
+                    is_default: true,
+                    model_id: "foo",
+                    action_id: false,
+                },
+            ],
+            mockRPC(_, { method, kwargs }) {
+                if (method === "web_read_group" && kwargs.groupby?.includes("properties.my_char")) {
+                    assert.step(JSON.stringify(kwargs.groupby));
+                    return {
+                        groups: [
+                            {
+                                "properties.my_char": false,
+                                __domain: [["properties.my_char", "=", false]],
+                                __count: 2,
+                            },
+                            {
+                                "properties.my_char": "aaa",
+                                __domain: [["properties.my_char", "=", "aaa"]],
+                                __count: 1,
+                            },
+                        ],
+                        length: 2,
+                    };
+                } else if (method === "get_property_definition") {
+                    return {};
+                }
+            },
+        });
+        assert.verifySteps([`["properties.my_char"]`]);
+        checkLabels(assert, graph, ["None", "aaa"]);
+        checkDatasets(
+            assert,
+            graph,
+            ["data", "label"],
+            [
+                {
+                    data: [2, 1],
+                    label: "Count",
+                },
+            ]
+        );
+    });
+
+    QUnit.test("limit dataset amount", async function (assert) {
+        serverData.models.project = {
+            fields: {
+                id: { type: "integer" },
+                name: { type: "char" },
+            },
+            records: [],
+        };
+        serverData.models.stage = {
+            fields: {
+                id: { type: "integer" },
+                name: { type: "char" },
+            },
+            records: [],
+        };
+        serverData.models.task = {
+            fields: {
+                id: { type: "integer" },
+                name: { type: "char" },
+                project_id: {
+                    type: "many2one",
+                    relation: "project",
+                    sortable: true,
+                    string: "Project",
+                },
+                stage_id: { type: "many2one", relation: "stage", sortable: true, string: "Stage" },
+            },
+            records: [],
+        };
+        for (let i = 1; i <= 600; i++) {
+            serverData.models.project.records.push({
+                id: i,
+                name: `Project ${i}`,
+            });
+            serverData.models.stage.records.push({
+                id: i,
+                name: `Stage ${i}`,
+            });
+            serverData.models.task.records.push({
+                id: i,
+                project_id: i,
+                stage_id: i,
+                name: `Task ${i}`,
+            });
+        }
+
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "task",
+            arch: `
+                <graph>
+                    <field name="project_id"/>
+                    <field name="stage_id"/>
+                </graph>
+            `,
+        });
+
+        assert.strictEqual(graph.model.data.exceeds, true);
+        assert.strictEqual(graph.model.data.datasets.length, 80);
+        assert.strictEqual(graph.model.data.labels.length, 80);
+        assert.containsN(target, `.o_graph_alert`, 1);
+
+        patchWithCleanup(GraphModel.prototype, {
+            notify() {
+                assert.step("rerender");
+            },
+        });
+        await click(target, `.o_graph_load_all_btn`);
+        assert.verifySteps(["rerender"]);
+        assert.strictEqual(graph.model.data.exceeds, false);
+        assert.strictEqual(graph.model.data.datasets.length, 600);
+        assert.strictEqual(graph.model.data.labels.length, 600);
     });
 });

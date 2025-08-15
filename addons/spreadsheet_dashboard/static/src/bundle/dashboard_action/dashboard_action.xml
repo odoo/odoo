@@ -4,14 +4,17 @@
         <ControlPanel display="controlPanelDisplay">
             <t t-set-slot="layout-actions">
                 <t t-set="status" t-value="state.activeDashboard and state.activeDashboard.status"/>
-                <FilterValue
-                    t-if="status === Status.Loaded"
-                    filter="filter"
-                    model="state.activeDashboard.model"
-                    t-as="filter"
+                <div t-if="status === Status.Loaded"
+                    class="o_filter_value_container"
                     t-foreach="filters"
-                    t-key="filter.id"
-                />
+                    t-key="activeDashboardId + '_' + filter.id"
+                    t-as="filter">
+                    <FilterValue
+                        filter="filter"
+                        model="state.activeDashboard.model"
+                        showTitle="true"
+                    />
+                </div>
             </t>
             <t t-set-slot="control-panel-navigation-additional">
                 <SpreadsheetShareButton t-key="activeDashboardId" model="state.activeDashboard?.model" onSpreadsheetShared.bind="shareSpreadsheet"/>
@@ -37,6 +40,7 @@
                                 t-on-click="() => this.openDashboard(dashboard.id)"
                                 t-esc="dashboard.displayName"
                                 t-att-data-name="dashboard.displayName"
+                                t-att-title="dashboard.displayName"
                                 class="o_search_panel_category_value list-group-item cursor-pointer border-0"
                                 t-att-class="{'active': dashboard.id === state.activeDashboard.id}"/>
                         </ul>

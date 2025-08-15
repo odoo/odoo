@@ -3,16 +3,16 @@
 # 	* google_calendar
 # 
 # Translators:
-# Wil Odoo, 2023
-# Thi Huong Nguyen, 2024
+# Thi Huong Nguyen, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-05-30 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,9 +83,9 @@ msgid ""
 "secret on the Google APIs plateform or try to stop and restart your calendar"
 " synchronisation."
 msgstr ""
-"Đã xảy ra lỗi khi tạo mã token. Mã xác thực của bạn có thể không hợp lệ hoặc"
-" đã quá hạn [%s]. Bạn nên kiểm tra mã Client ID và secret trong nền tảng "
-"Google API hoặc thử dừng và khởi động lại đồng bộ hóa lịch. "
+"Đã xảy ra lỗi khi tạo mã token. Mã uỷ quyền của bạn có thể không hợp lệ hoặc"
+" đã quá hạn [%s]. Bạn nên kiểm tra mã ID và mã bí mật của máy khách trong "
+"nền tảng Google API hoặc thử dừng và khởi động lại đồng bộ hóa lịch. "
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
@@ -111,12 +111,12 @@ msgstr "Hủy"
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client ID"
-msgstr "Client ID"
+msgstr "ID máy khách"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client Secret"
-msgstr "Mật khẩu khách"
+msgstr "Mã bí mật của máy khách"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_client_id
@@ -200,6 +200,11 @@ msgstr "Tên hiển thị"
 #, python-format
 msgid "Email"
 msgstr "Email"
+
+#. module: google_calendar
+#: model:ir.model,name:google_calendar.model_calendar_alarm_manager
+msgid "Event Alarm Manager"
+msgstr "Quản lý cảnh báo sự kiện"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_recurrence

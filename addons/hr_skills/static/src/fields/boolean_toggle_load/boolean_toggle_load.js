@@ -6,6 +6,7 @@ import { ListBooleanToggleField, listBooleanToggleField } from "@web/views/field
 export class ListBooleanToggleLoadField extends ListBooleanToggleField {
     async onChange(value) {
         await super.onChange(value);
+        await this.props.record.model.root.save();
         return this.env.model.load();
     }
 }

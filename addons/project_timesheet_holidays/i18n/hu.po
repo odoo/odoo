@@ -3,20 +3,20 @@
 # 	* project_timesheet_holidays
 # 
 # Translators:
-# gezza <geza.nagy@oregional.hu>, 2023
 # Zsolt Godó <zsolttokio@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Ákos Nagy <akos.nagy@oregional.hu>, 2023
 # Tamás Dombos, 2023
 # Tamás Németh <ntomasz81@gmail.com>, 2023
+# gezza <geza.nagy@oregional.hu>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2023\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,6 +44,9 @@ msgid ""
 "the time off %s. If you don't want a timesheet, you should leave the "
 "internal project and task empty."
 msgstr ""
+"Belső projekt és feladat is szükséges időkimutatás generáláshoz a következő "
+"szabadság kapcsán: %s. Ha nem szeretne időkimutatást, akkor hagyja üresen a "
+"belső projekt és a feladat mezőket."
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
@@ -63,12 +66,12 @@ msgstr "Munkavállaló"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
 msgid "Generate Timesheets"
-msgstr ""
+msgstr "Időkimutatások generálása"
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
 msgid "Generate timesheets when validating time off requests of this type"
-msgstr ""
+msgstr "Generáljon időkimutatást ezen típusú szabadságkérések jóváhagyásakor."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__global_leave_id
@@ -81,6 +84,8 @@ msgid ""
 "If checked, when validating a time off, timesheet will be generated in the "
 "Vacation Project of the company."
 msgstr ""
+"Ha be van jelölve, akkor szabadságok jóváhagyásakor időkimutatás generálódik"
+" a vállalati Szabadság projektbe."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -116,7 +121,7 @@ msgstr "Projekt"
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr ""
+msgstr "Erőforrás szabadság részletek"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_project_task
@@ -133,6 +138,8 @@ msgid ""
 "off requests. You can specify another project on each time off type "
 "individually."
 msgstr ""
+"Alapértelmezett projekt a szabadság kéréseken keresztül történő időkimutatás"
+" generálásokhoz. Az egyes szabadság típusoknál megadható másik projekt is."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
@@ -140,6 +147,9 @@ msgid ""
 "The default task used when automatically generating timesheets via time off "
 "requests. You can specify another task on each time off type individually."
 msgstr ""
+"Alapértelmezett feladat szabadság kérésekből történő időkimutatások "
+"automatikus generálásához. Megadható másik feladat is az egyes szabadság "
+"típusoknál."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -157,7 +167,7 @@ msgstr "Szabadság"
 #: code:addons/project_timesheet_holidays/models/resource_calendar_leaves.py:0
 #, python-format
 msgid "Time Off (%s/%s)"
-msgstr ""
+msgstr "Szabadság (%s/%s)"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__holiday_id
@@ -168,7 +178,7 @@ msgstr "Szabadság kérelem"
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid "Time Off Task"
-msgstr ""
+msgstr "Szabadság feladat"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
@@ -178,7 +188,7 @@ msgstr "Szabadság típus"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
 msgid "Time Off Types Count"
-msgstr ""
+msgstr "Szabadság típusok száma"
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
@@ -190,7 +200,7 @@ msgstr "Munkaidő-nyilvántartások"
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 #, python-format
 msgid "View Time Off"
-msgstr ""
+msgstr "Szabadság megtekintése"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -200,6 +210,9 @@ msgid ""
 "You cannot create timesheets for a task that is linked to a time off type. "
 "Please use the Time Off application to request new time off instead."
 msgstr ""
+"Nem lehet létrehozni olyan időkimutatásokat, melyek szabadság kéréshez "
+"kapcsolt feladathoz kapcsolódnak. Kérjük, használja a Szabadság alkalmazást "
+"a kérés létrehozásához."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -214,10 +227,20 @@ msgstr ""
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 #, python-format
+msgid "You cannot delete timesheets that are linked to global time off."
+msgstr "Nem törölhetőek globális szabadsághoz kapcsolt időkimutatások"
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+#, python-format
 msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
 msgstr ""
+"Nem lehet törölni olyan időkimutatásokat, melyek szabadság kéréshez "
+"kapcsolódnak. Kérjük, használja a Szabadság alkalmazást a kérés "
+"visszavonásáshoz."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -227,3 +250,6 @@ msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
 msgstr ""
+"Nem lehet módosítani olyan időkimutatásokat, melyek szabadság kéréshez "
+"kapcsolódnak. Kérjük, használja a Szabadság alkalmazást a kérés "
+"módosításához."

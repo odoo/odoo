@@ -11,7 +11,6 @@
 # 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2023
 # Robin Chatfield <robin.chatfield@gmail.com>, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
 # Frida E, 2023
 # Victor Ekström, 2023
@@ -23,15 +22,18 @@
 # Simon S, 2023
 # Martin Trigaux, 2023
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
+# Wil Odoo, 2025
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2025
+# Claes-Johan Dahlin, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
+"Last-Translator: Claes-Johan Dahlin, 2025\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -94,11 +96,6 @@ msgstr "1 Telefonsamtal"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "12 days / year, including <br>6 of your choice."
 msgstr "12 dagar / år, inklusive <br>6 av ditt val."
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "12345678901"
-msgstr "12345678901"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -573,6 +570,11 @@ msgid "Available"
 msgstr "Tillgänglig"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.mail_activity_plan_view_form
+msgid "Available for all Departments"
+msgstr "Tillgänglig för alla avdelningar"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_1920
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_1920
 msgid "Avatar"
@@ -633,6 +635,11 @@ msgstr "ID-bricka"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
 msgid "Bank Account Number"
 msgstr "Bankkontonummer"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Bankkonton"
 
 #. module: hr
 #: model:ir.model,name:hr.model_base
@@ -841,7 +848,7 @@ msgstr "Kontaktnamn"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_phone
 #: model:ir.model.fields,field_description:hr.field_res_users__emergency_phone
 msgid "Contact Phone"
-msgstr "%(activity)s, tilldelad till %(name)s, förfaller den %(deadline)s"
+msgstr "Telefon till Kontakt"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_contract_type
@@ -988,7 +995,7 @@ msgstr "Födelsedatum"
 #: code:addons/hr/models/hr_departure_reason.py:0
 #, python-format
 msgid "Default departure reasons cannot be deleted."
-msgstr "Standardavhållande skäl kan inte raderas."
+msgstr "Standardorsaker till avslut kan inte tas bort."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_ceo
@@ -1069,7 +1076,7 @@ msgstr "Avgångsdatum"
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_reason_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_reason_id
 msgid "Departure Reason"
-msgstr "Anledning för avgång"
+msgstr "Skäl till avslutad tjänst"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_departure_reason_action
@@ -1957,11 +1964,6 @@ msgid "Manager of employee %s is not set."
 msgstr "Chef för anställd %s saknas."
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Marc Demo"
-msgstr "Marc Demo"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
 #: model:ir.model.fields,field_description:hr.field_res_users__marital
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2726,7 +2728,7 @@ msgstr "Forskning och utveckling"
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_resigned
 msgid "Resigned"
-msgstr "Avgått"
+msgstr "Egen uppsägning"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_id
@@ -2871,16 +2873,11 @@ msgid "Social Security Number"
 msgstr "Personnummer"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Software Developer"
-msgstr "Programvaruutvecklare"
-
-#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee_base.py:0
 #, python-format
 msgid "Some employee already have a work contact"
-msgstr ""
+msgstr "Vissa medarbetare har redan en arbetskontakt"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo

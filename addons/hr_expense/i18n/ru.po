@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_expense
-# 
+#
 # Translators:
 # alenafairy, 2023
 # Диляра Дельтаева <dilya.kz93@gmail.com>, 2023
@@ -18,21 +18,25 @@
 # Martin Trigaux, 2024
 # Collex100, 2024
 # Nadia Martynova, 2024
-# Wil Odoo, 2024
-# 
+# Wil Odoo, 2025
+# Ilya Rozhkov, 2025
+# Anastasiia Koroleva, 2025
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-08-07 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Anastasiia Koroleva, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -65,8 +69,7 @@ msgstr "%(date_from)s - %(date_to)s"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
-msgid ""
-"%(user)s confirms this expense is not a duplicate with similar expense."
+msgid "%(user)s confirms this expense is not a duplicate with similar expense."
 msgstr ""
 "%(user)s подтверждает, что данный расход не дублирует аналогичный расход."
 
@@ -116,11 +119,13 @@ msgstr "2023-08-11"
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
 "<span class=\"d-inline-block\">\n"
-"                                        <i class=\"text-muted\">Use this reference as a subject prefix when submitting by email.</i>\n"
+"                                        <i class=\"text-muted\">Use this "
+"reference as a subject prefix when submitting by email.</i>\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"d-inline-block\">\n"
-"                                        <i class=\"text-muted\">Используйте эту ссылку в качестве префикса темы при отправке по электронной почте.</i>\n"
+"                                        <i class=\"text-muted\">Используйте "
+"эту ссылку в качестве префикса темы при отправке по электронной почте.</i>\n"
 "                                    </span>"
 
 #. module: hr_expense
@@ -241,7 +246,8 @@ msgstr "Все отчеты"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 #, python-format
-msgid "All expenses in an expense report must have the same \"paid by\" criteria."
+msgid ""
+"All expenses in an expense report must have the same \"paid by\" criteria."
 msgstr ""
 "Все расходы в отчете о расходах должны иметь одинаковые критерии \"оплачено "
 "кем\"."
@@ -516,9 +522,9 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Пересчет между единицами измерения может произойти только в том случае, если"
-" они принадлежат к одной и той же категории. Пересчет будет осуществляться "
-"на основе коэффициентов."
+"Пересчет между единицами измерения может произойти только в том случае, если "
+"они принадлежат к одной и той же категории. Пересчет будет осуществляться на "
+"основе коэффициентов."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_kanban_view
@@ -675,14 +681,20 @@ msgid "Display Name"
 msgstr "Отображаемое имя"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Аналитический счет распределения"
+
+#. module: hr_expense
 #: model_terms:digest.tip,tip_description:hr_expense.digest_tip_hr_expense_0
 msgid ""
 "Do not keep your expense tickets in your pockets any longer. Just snap a "
 "picture of your receipt and let Odoo digitalizes it for you. The OCR and "
 "Artificial Intelligence will fill the data automatically."
 msgstr ""
-"Больше не храните расходные квитанции в карманах. Просто сфотографируйте чек"
-" и позвольте Odoo оцифровать его для вас. OCR и искусственный интеллект "
+"Больше не храните расходные квитанции в карманах. Просто сфотографируйте чек "
+"и позвольте Odoo оцифровать его для вас. OCR и искусственный интеллект "
 "заполнят данные автоматически."
 
 #. module: hr_expense
@@ -692,6 +704,9 @@ msgid ""
 "from the partner to fix the configuration. Cancel this invoice and start "
 "again."
 msgstr ""
+"Вы действительно хотите выставить счет своей компании? Чтобы исправить "
+"настройки, удалите «Название компании» из профиля партнера. Отмените этот "
+"счет и создайте новый."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__business_domain
@@ -758,8 +773,7 @@ msgstr "Расходы сотрудников"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid ""
-"Enable users to choose default category for automatically generated "
-"expenses."
+"Enable users to choose default category for automatically generated expenses."
 msgstr ""
 "Разрешите пользователям выбирать категорию по умолчанию для автоматически "
 "создаваемых расходов."
@@ -769,10 +783,8 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid ""
-"Enter a name then choose a category and configure the amount of your "
-"expense."
-msgstr ""
-"Введите название, затем выберите категорию и настройте сумму расходов."
+"Enter a name then choose a category and configure the amount of your expense."
+msgstr "Введите название, затем выберите категорию и настройте сумму расходов."
 
 #. module: hr_expense
 #: model:account.journal,name:hr_expense.hr_expense_account_journal
@@ -1133,6 +1145,11 @@ msgid "Hotel, plane ticket, taxi, etc."
 msgstr "Отель, билет на самолет, такси и т.д."
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
+msgid "Hr Expense Alias Domain"
+msgstr "Домен псевдонима для расходов"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__id
@@ -1224,7 +1241,6 @@ msgstr "Выбран ли продукт с ненулевой стоимост�
 
 #. module: hr_expense
 #. odoo-javascript
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "It all begins here - let's go!"
@@ -1351,7 +1367,6 @@ msgstr ""
 
 #. module: hr_expense
 #. odoo-javascript
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Managers can inspect all expenses from here."
@@ -1550,7 +1565,7 @@ msgstr "Количество недоставленных сообщений"
 #: code:addons/hr_expense/static/src/components/expense_dashboard.xml:0
 #, python-format
 msgid "Numbers computed from your personal expenses."
-msgstr ""
+msgstr "Данные, рассчитанные на основе ваших личных расходов."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
@@ -1669,6 +1684,14 @@ msgstr "Платежи"
 #: model_terms:product.template,description:hr_expense.expense_product_communication_product_template
 msgid "Phone bills, postage, etc."
 msgstr "Телефонные счета, почтовые расходы и т.д."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid ""
+"Please specify an expense journal in order to generate accounting entries."
+msgstr "Укажите журнал учета расходов для формирования бухгалтерских проводок."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1879,17 +1902,20 @@ msgstr "Сканировать"
 #: code:addons/hr_expense/static/src/components/qrcode_action.xml:0
 #, python-format
 msgid "Scan this QR code to get the Odoo app:"
-msgstr ""
+msgstr "Сканируйте этот QR-код, чтобы установить приложение Odoo:"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
 #: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
+"If empty, the approval is done by an Administrator or Approver (determined "
+"in settings/users)."
 msgstr ""
-"Выберите пользователя, ответственного за утверждение \"Расходов\" данного сотрудника.\n"
-"Если пусто, то утверждение производится Администратором или Утвердителем (определяется в настройках/пользователи)."
+"Выберите пользователя, ответственного за утверждение \"Расходов\" данного "
+"сотрудника.\n"
+"Если пусто, то утверждение производится Администратором или Утвердителем "
+"(определяется в настройках/пользователи)."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__selectable_payment_method_line_ids
@@ -1907,8 +1933,8 @@ msgid ""
 msgstr ""
 "Отправьте письмо на этот псевдоним электронной почты с квитанцией во "
 "вложении, чтобы создать расход в один клик. Если первое слово темы письма "
-"содержит внутреннюю ссылку категории или название категории, соответствующая"
-" категория будет установлена автоматически. Введите сумму расхода в тему "
+"содержит внутреннюю ссылку категории или название категории, соответствующая "
+"категория будет установлена автоматически. Введите сумму расхода в тему "
 "письма, чтобы установить ее и в расход."
 
 #. module: hr_expense
@@ -1938,7 +1964,7 @@ msgstr "Таблица"
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__show_commercial_partner_warning
 #: model:ir.model.fields,field_description:hr_expense.field_account_payment__show_commercial_partner_warning
 msgid "Show Commercial Partner Warning"
-msgstr ""
+msgstr "Показать предупреждение для коммерческого партнера"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1963,13 +1989,6 @@ msgid ""
 msgstr ""
 "Сфотографируйте свои квитанции и позвольте Odoo<br> автоматически создавать "
 "для вас расходы."
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Specify expense journal to generate accounting entries."
-msgstr "Укажите журнал расходов для создания бухгалтерских проводок."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
@@ -2109,11 +2128,18 @@ msgstr "Ответственный за одобрение команды"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
-msgid ""
-"The company's default journal used when an employee expense is created."
+msgid "The company's default journal used when an employee expense is created."
 msgstr ""
-"Журнал по умолчанию, используемый компанией при создании расходов "
-"сотрудника."
+"Журнал по умолчанию, используемый компанией при создании расходов сотрудника."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"The current user has no related employee, or the related employee does not "
+"belong to this company."
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -2126,8 +2152,8 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid ""
-"The first word of the email subject did not correspond to any category code."
-" You'll have to set the category manually on the expense."
+"The first word of the email subject did not correspond to any category code. "
+"You'll have to set the category manually on the expense."
 msgstr ""
 "Первое слово темы письма не соответствует коду категории. Вам придется "
 "вручную задать категорию в расходах."
@@ -2203,8 +2229,7 @@ msgstr "Вот так - управление расходами в двух сл
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
-msgid ""
-"This note will be shown to users when they select this expense product."
+msgid "This note will be shown to users when they select this expense product."
 msgstr ""
 "Это примечание будет показано пользователям при выборе данного расходного "
 "продукта."
@@ -2306,7 +2331,7 @@ msgstr "Сумма, не облагаемая налогом"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_category_id
 msgid "UoM Category"
-msgstr "Категория UoM"
+msgstr "Категория ЕИ"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2351,7 +2376,6 @@ msgstr "Посмотреть отчет"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Wasting time recording your receipts? Let’s try a better way."
 msgstr "Тратите время на запись квитанций? Давайте попробуем лучший способ."
@@ -2371,19 +2395,20 @@ msgstr "История общений с сайта"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
-"When the cost of an expense product is different than 0, then the user"
-"                                         using this product won't be able to"
-" change the amount of the expense,                                         "
-"only the quantity. Use a cost different than 0 for expense categories funded"
-" by                                         the company at fixed cost like "
-"allowances for mileage, per diem, accommodation"
-"                                         or meal."
+"When the cost of an expense product is different than 0, then the "
+"user                                         using this product won't be "
+"able to change the amount of the "
+"expense,                                         only the quantity. Use a "
+"cost different than 0 for expense categories funded "
+"by                                         the company at fixed cost like "
+"allowances for mileage, per diem, "
+"accommodation                                         or meal."
 msgstr ""
 "Если стоимость расходного продукта отлична от 0, то пользователь, "
 "использующий этот продукт, не сможет изменить сумму расхода, только "
 "количество. Используйте стоимость, отличную от 0, для категорий расходов, "
-"финансируемых компанией по фиксированной стоимости, например, для пособий на"
-" пробег, суточные, проживание или питание."
+"финансируемых компанией по фиксированной стоимости, например, для пособий на "
+"пробег, суточные, проживание или питание."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2405,7 +2430,6 @@ msgstr "Вы не имеете права редактировать этот о
 
 #. module: hr_expense
 #. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not authorized to edit this expense."
@@ -2454,6 +2478,7 @@ msgstr ""
 #, python-format
 msgid "You cannot cancel an expense sheet linked to a journal entry"
 msgstr ""
+"Отмена отчета о расходах, связанного с бухгалтерской проводкой, невозможна"
 
 #. module: hr_expense
 #. odoo-python
@@ -2483,8 +2508,8 @@ msgstr ""
 #: code:addons/hr_expense/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot delete only some entries linked to an expense report. All entries"
-" must be deleted at the same time."
+"You cannot delete only some entries linked to an expense report. All entries "
+"must be deleted at the same time."
 msgstr ""
 "Вы не можете удалить только некоторые записи, связанные с отчетом о "
 "расходах. Все записи должны быть удалены одновременно."
@@ -2552,6 +2577,23 @@ msgstr "Вы не можете сообщить дважды одну и ту ж
 
 #. module: hr_expense
 #. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid ""
+"You don't have the rights to bypass the validation process of this expense "
+"report."
+msgstr "У вас нет прав на обход процесса проверки этого отчета о расходах."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"You don't have the rights to bypass the validation process of this expense."
+msgstr "У вас нет прав на обход процесса проверки этого расхода."
+
+#. module: hr_expense
+#. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You have no expense to report"
@@ -2569,8 +2611,8 @@ msgstr "Вам необходимо добавить ручной способ �
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid ""
-"You need to have at least one category that can be expensed in your database"
-" to proceed!"
+"You need to have at least one category that can be expensed in your database "
+"to proceed!"
 msgstr ""
 "Чтобы продолжить, в вашей базе данных должна быть хотя бы одна категория, "
 "которая может быть отнесена на расходы!"

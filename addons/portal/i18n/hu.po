@@ -8,21 +8,21 @@
 # Ákos Nagy <akos.nagy@oregional.hu>, 2023
 # sixsix six, 2023
 # Csaba Tóth <i3rendszerhaz@gmail.com>, 2023
-# gezza <geza.nagy@oregional.hu>, 2023
-# 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2023
 # Martin Trigaux, 2023
 # krnkris, 2023
 # Tamás Németh <ntomasz81@gmail.com>, 2023
 # Gergő Kertész <gergo.kertesz@maxflow.hu>, 2023
 # Tamás Dombos, 2024
+# 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2025
+# gezza <geza.nagy@oregional.hu>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:29+0000\n"
+"POT-Creation-Date: 2025-05-09 20:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tamás Dombos, 2024\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,14 +33,14 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "\" to validate your action."
-msgstr ""
+msgstr "\" az akció jóváhagyásához."
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "%s days overdue"
-msgstr ""
+msgstr "%s nap késés"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -53,6 +53,8 @@ msgid ""
 "2. Confirm you want to delete your account by\n"
 "                                        copying down your login ("
 msgstr ""
+"2. Erősítse meg,  hogy törölni szeretné a fiókját\n"
+"                                        a bejelentkezési név bemásolásával ("
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -116,6 +118,10 @@ msgid ""
 "                <br/>Please contact us directly for that operation.\n"
 "            </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                A vállalat nevét, adószámát és országát nem lehet megváltoztatni, ha már dokumentumok kerültek kiállításra a fiókhoz.\n"
+"                <br/>Kérjük, vegye fel a kapcsolatot velünk ehhez a művelethez.\n"
+"            </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -123,11 +129,13 @@ msgid ""
 "<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
 msgid "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -232,14 +240,14 @@ msgstr ""
 #. module: portal
 #: model:ir.model,name:portal.model_res_users_apikeys_description
 msgid "API Key Description"
-msgstr ""
+msgstr "API kulcs leírás"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal_security.js:0
 #, python-format
 msgid "API Key Ready"
-msgstr ""
+msgstr "API kulcs elkészült"
 
 #. module: portal
 #. odoo-javascript
@@ -345,6 +353,8 @@ msgid ""
 "Changing the country is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Az ország megváltoztatása nem lehetséges, ha már dokumentumok kerültek "
+"kiállításra a fiókhoz. Kérjük, vegyek fel velünk a kapcsolatot a művelethez."
 
 #. module: portal
 #. odoo-javascript
@@ -480,7 +490,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__portal_allow_api_keys
 msgid "Customer API Keys"
-msgstr ""
+msgstr "Ügyfél API kulcsok"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -490,7 +500,7 @@ msgstr "Ügyfélportál webcíme"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.res_config_settings_view_form
 msgid "Customers can generate API Keys"
-msgstr ""
+msgstr "Az ügyfelek generálhatnak API kulcsot"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -522,7 +532,7 @@ msgstr "Részletek"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Developer API Keys"
-msgstr ""
+msgstr "Fejlesztői API kulcsok"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -556,7 +566,7 @@ msgstr "Megjelenített név"
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due in %s days"
-msgstr ""
+msgstr "Esedékes %s napon belül."
 
 #. module: portal
 #. odoo-javascript
@@ -702,7 +712,7 @@ msgstr "Meghívó szövege"
 #. module: portal
 #: model:mail.template,description:portal.mail_template_data_portal_welcome
 msgid "Invitation email to contacts to create a user account"
-msgstr ""
+msgstr "Meghívó email kapcsolatok számára felhasználói fiók létrehozásához"
 
 #. module: portal
 #. odoo-python
@@ -710,7 +720,7 @@ msgstr ""
 #: code:addons/portal/wizard/portal_share.py:0
 #, python-format
 msgid "Invitation to access %s"
-msgstr ""
+msgstr "Meghívó hozzáféréshez: %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_internal
@@ -732,13 +742,6 @@ msgid ""
 msgstr ""
 "Nagyon fontos, hogy a leírás érthető\n"
 "                és teljes legyen,"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-#, python-format
-msgid "Key Description"
-msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
@@ -799,6 +802,8 @@ msgid ""
 "Model %(model_name)s does not support token signature, as it does not have "
 "%(field_name)s field."
 msgstr ""
+"%(model_name)s nevű modell nem támogatja a token aláírást, mivel nem "
+"rendelkezik ezzel a mezővel: %(field_name)s."
 
 #. module: portal
 #. odoo-python
@@ -1036,7 +1041,6 @@ msgstr "Biztonság"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal_security.js:0
-#: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Security Control"
 msgstr "Biztonsági ellenőrzés"
@@ -1211,6 +1215,8 @@ msgid ""
 "The template \"Portal: new user\" not found for sending email to the portal "
 "user."
 msgstr ""
+"A \"Portál: új felhasználó\" sablon nem található a portálfelhasználó "
+"számára küldendő emailhez."
 
 #. module: portal
 #. odoo-javascript
@@ -1429,7 +1435,7 @@ msgstr "Önnek kell lennie"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "You should enter \""
-msgstr ""
+msgstr "Meg kell adnia: \""
 
 #. module: portal
 #. odoo-python
@@ -1513,13 +1519,6 @@ msgstr "odoo"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "password"
 msgstr "jelszó"
-
-#. module: portal
-#. odoo-javascript
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-#, python-format
-msgid "revoke"
-msgstr ""
 
 #. module: portal
 #. odoo-javascript

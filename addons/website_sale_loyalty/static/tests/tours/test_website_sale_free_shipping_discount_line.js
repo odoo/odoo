@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import wsTourUtils from '@website_sale/js/tours/tour_utils';
+import wsTourUtils from "@website_sale/js/tours/tour_utils";
 
-registry.category("web_tour.tours").add('check_shipping_discount', {
+registry.category("web_tour.tours").add("check_shipping_discount", {
     test: true,
-    url: '/shop?search=Plumbus',
+    url: "/shop?search=Plumbus",
     steps: () => [
         {
             content: "select Plumbus",
@@ -20,21 +20,18 @@ registry.category("web_tour.tours").add('check_shipping_discount', {
             content: "click on 'Add to Cart' button",
             trigger: '#product_detail form[action^="/shop/cart/update"] #add_to_cart',
         },
-        wsTourUtils.goToCart({quantity: 3}),
+        wsTourUtils.goToCart({ quantity: 3 }),
+        wsTourUtils.goToCheckout(),
         {
-            content: "go to checkout",
-            trigger: 'a[href="/shop/checkout?express=1"]',
+            content: "select delivery1",
+            trigger: "li label:contains(delivery1)",
         },
         {
-            content: "select delivery with rule",
-            trigger: 'li label:contains("delivery with rule")',
-        },
-        {
-            trigger: ".accordion-button"
+            trigger: ".accordion-button",
         },
         {
             content: "check if delivery price is correct'",
-            trigger: 'label:contains("delivery with rule") + span.o_wsale_delivery_badge_price:contains(100.00)',
+            trigger: "label:contains(delivery1) + span[name=price]:contains(100.00)",
             isCheck: true,
         },
         {
@@ -43,8 +40,44 @@ registry.category("web_tour.tours").add('check_shipping_discount', {
             isCheck: true,
         },
         {
-            content: "check if delivery price is correct'",
+            content: "check if shipping discount is correct",
             trigger: "[data-reward-type='shipping'] .oe_currency_value:contains('-﻿75.00')",
+            isCheck: true,
+        },
+        {
+            content: "enter eWallet code",
+            trigger: "form[name=coupon_code] input",
+            run: "text infinite-money-glitch",
+        },
+        {
+            trigger: "form[name=coupon_code] .a-submit",
+        },
+        {
+            content: "wait for accordion to collapse, then reopen",
+            trigger: ".accordion-button.collapsed",
+        },
+        {
+            content: "check eWallet discount",
+            trigger: "[data-reward-type=discount] .oe_currency_value:contains(325.00)",
+            isCheck: true,
+        },
+        {
+            content: "select delivery2",
+            trigger: "li label:contains(delivery2)",
+        },
+        {
+            content: "check for eWallet update after shipping cost change",
+            trigger: "[data-reward-type=discount] .oe_currency_value:contains(300.00)",
+            isCheck: true,
+        },
+        {
+            content: "check if new delivery price is correct'",
+            trigger: "label:contains(delivery2) + span[name=price]:contains(10.00)",
+            isCheck: true,
+        },
+        {
+            content: "check if new shipping discount is correct'",
+            trigger: "[data-reward-type=shipping] .oe_currency_value:contains(-﻿10.00)",
             isCheck: true,
         },
     ],

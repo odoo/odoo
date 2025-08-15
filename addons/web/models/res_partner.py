@@ -5,6 +5,7 @@ import logging
 from base64 import b64decode
 
 from odoo import models
+from odoo.tools.facade import Proxy, ProxyAttr, ProxyFunc
 
 _logger = logging.getLogger(__name__)
 
@@ -13,6 +14,30 @@ try:
 except ImportError:
     _logger.warning("`vobject` Python module not found, vcard file generation disabled. Consider installing this module if you want to generate vcard files")
     vobject = None
+
+
+if vobject is not None:
+
+    class VBaseProxy(Proxy):
+        _wrapped__ = vobject.base.VBase
+
+        encoding_param = ProxyAttr()
+        type_param = ProxyAttr()
+        value = ProxyAttr(None)
+
+    class VCardContentsProxy(Proxy):
+        _wrapped__ = dict
+
+        __delitem__ = ProxyFunc()
+        __contains__ = ProxyFunc()
+        get = ProxyFunc(lambda lines: [VBaseProxy(line) for line in lines])
+
+    class VComponentProxy(Proxy):
+        _wrapped__ = vobject.base.Component
+
+        add = ProxyFunc(VBaseProxy)
+        contents = ProxyAttr(VCardContentsProxy)
+        serialize = ProxyFunc()
 
 
 class ResPartner(models.Model):
@@ -27,12 +52,12 @@ class ResPartner(models.Model):
         vcard = vobject.vCard()
         # Name
         n = vcard.add('n')
-        n.value = vobject.vcard.Name(family=self.name)
+        n.value = vobject.vcard.Name(family=self.name or self.complete_name or '')
         if self.title:
             n.value.prefix = self.title.name
         # Formatted Name
         fn = vcard.add('fn')
-        fn.value = self.name
+        fn.value = self.name or self.complete_name or ''
         # Address
         adr = vcard.add('adr')
         adr.value = vobject.vcard.Address(street=self.street or '', city=self.city or '', code=self.zip or '')
@@ -70,7 +95,7 @@ class ResPartner(models.Model):
         photo.value = b64decode(self.avatar_512)
         photo.encoding_param = 'B'
         photo.type_param = 'JPG'
-        return vcard
+        return VComponentProxy(vcard)
 
     def _get_vcard_file(self):
         vcard = self._build_vcard()

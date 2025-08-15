@@ -37,6 +37,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_expense_account_id': 'account_common_678',
                 'account_sale_tax_id': 'account_tax_template_s_iva21b',
                 'account_purchase_tax_id': 'account_tax_template_p_iva21_bc',
+                'deferred_expense_account_id': 'account_common_480',
+                'deferred_revenue_account_id': 'account_common_485',
             },
         }
 

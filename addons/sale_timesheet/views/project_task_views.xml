@@ -133,13 +133,13 @@
                         column_invisible="not parent.allow_billable"
                         readonly="readonly_timesheet"
                         context="{'with_remaining_hours': True, 'with_price_unit': True}" options="{'no_create': True, 'no_open': True}"
-                        domain="[('is_service', '=', True), ('order_partner_id', 'child_of', parent.partner_id), ('is_expense', '=', False), ('state', '=', 'sale')]"
+                        domain="[('is_service', '=', True), ('order_partner_id.commercial_partner_id.id', 'parent_of', parent.partner_id), ('is_expense', '=', False), ('state', '=', 'sale')]"
                         optional="hide"/>
                     <field name="so_line" widget="so_line_field" groups="sales_team.group_sale_salesman"
                         column_invisible="not parent.allow_billable"
                         readonly="readonly_timesheet"
                         context="{'with_remaining_hours': True, 'with_price_unit': True}" options="{'no_create': True, 'no_open': True}"
-                        domain="[('is_service', '=', True), ('order_partner_id', 'child_of', parent.partner_id), ('is_expense', '=', False), ('state', '=', 'sale')]"
+                        domain="[('is_service', '=', True), ('order_partner_id.commercial_partner_id.id', 'parent_of', parent.partner_id), ('is_expense', '=', False), ('state', '=', 'sale')]"
                         optional="hide"/>
                 </xpath>
                 <xpath expr="//field[@name='remaining_hours']" position="after">
@@ -174,7 +174,7 @@
                         'with_remaining_hours': True,
                         'form_view_ref': 'sale_project.sale_order_line_view_form_editable',
                         'default_partner_id': partner_id,
-                        'default_company_id': company_id,
+                        'company_id': company_id,
                     }</attribute>
                 </xpath>
             </field>

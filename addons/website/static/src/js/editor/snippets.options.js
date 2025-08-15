@@ -10,7 +10,6 @@ import { NavbarLinkPopoverWidget } from "@website/js/widgets/link_popover_widget
 import wUtils from "@website/js/utils";
 import {
     applyModifications,
-    isImageCorsProtected,
     isImageSupportedForStyle,
     loadImageInfo,
 } from "@web_editor/js/editor/image_processing";
@@ -200,7 +199,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
 
         const fontsToLoad = [];
         for (const font of this.googleFonts) {
-            const fontURL = `https://fonts.googleapis.com/css?family=${encodeURIComponent(font).replace(/%20/g, '+')}`;
+            const fontURL = `https://fonts.googleapis.com/css?family=${encodeURIComponent(font).replace(/%20/g, '+')}:300,300i,400,400i,700,700i`;
             fontsToLoad.push(fontURL);
         }
         for (const font of this.googleLocalFonts) {
@@ -789,6 +788,11 @@ options.Class.include({
                 await this._customizeWebsiteData(widgetValue, params, true);
                 break;
             case 'variable':
+                // Color values (e.g. "header-text-color") must be saved as
+                // string. TODO: Color values should be added to the color map.
+                if (params.colorNames?.includes(widgetValue)) {
+                    widgetValue =`'${widgetValue}'`;
+                }
                 await this._customizeWebsiteVariable(widgetValue, params);
                 break;
             case "variables":
@@ -1757,6 +1761,9 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
         // Handle the sliding manually.
         this.__onControlClick = throttleForAnimation(this._onControlClick.bind(this));
         this.$controls.on("click.carousel_option", this.__onControlClick);
+        for (const controlEl of this.$controls) {
+            controlEl.addEventListener("keydown", this._onControlKeyDown);
+        }
 
         return this._super.apply(this, arguments);
     },
@@ -1767,6 +1774,9 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
         this._super.apply(this, arguments);
         this.$bsTarget.off('.carousel_option');
         this.$controls.off(".carousel_option");
+        for (const controlEl of this.$controls) {
+            controlEl.removeEventListener("keydown", this._onControlKeyDown);
+        }
     },
     /**
      * @override
@@ -1930,6 +1940,20 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
             this.options.wysiwyg.odooEditor.historyUnpauseSteps();
             this.options.wysiwyg.odooEditor.historyStep();
         }});
+    },
+    /**
+     * Since carousel controls are disabled in edit mode because slides are
+     * handled manually, we disable the left and right keydown events to prevent
+     * sliding this way.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onControlKeyDown(ev) {
+        if (["ArrowLeft", "ArrowRight"].includes(ev.code)) {
+            ev.preventDefault();
+            ev.stopPropagation();
+        }
     },
     /**
      * @override
@@ -2687,7 +2711,9 @@ options.registry.DeviceVisibility = options.Class.extend({
      * @override
      */
     async onTargetHide() {
+        this.options.wysiwyg.odooEditor.observerUnactive("onTargetHide");
         this.$target[0].classList.remove('o_snippet_override_invisible');
+        this.options.wysiwyg.odooEditor.observerActive("onTargetHide");
     },
     /**
      * @override
@@ -2698,7 +2724,9 @@ options.registry.DeviceVisibility = options.Class.extend({
         if ((this.$target[0].classList.contains('o_snippet_mobile_invisible')
                 || this.$target[0].classList.contains('o_snippet_desktop_invisible')
             ) && isMobilePreview === isMobileHidden) {
+            this.options.wysiwyg.odooEditor.observerUnactive("onTargetShow");
             this.$target[0].classList.add('o_snippet_override_invisible');
+            this.options.wysiwyg.odooEditor.observerActive("onTargetShow");
         }
     },
     /**
@@ -3774,7 +3802,7 @@ options.registry.WebsiteAnimate = options.Class.extend({
                     const imageToolsOpt = hoverEffectWidget.getParent();
                     return (
                         imageToolsOpt._canHaveHoverEffect() && imageToolsOpt._isImageSupportedForShapes()
-                        && !await isImageCorsProtected(this.$target[0])
+                        && !await weUtils.isImageCorsProtected(this.$target[0])
                     );
                 }
                 return false;

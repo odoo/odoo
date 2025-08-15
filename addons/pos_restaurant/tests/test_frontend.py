@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+from odoo import Command
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_pos_combo_items
 from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -9,7 +10,7 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
+class TestFrontendCommon(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
@@ -251,6 +252,9 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
         })
         cls.pos_admin.partner_id.email = 'pos_admin@test.com'
 
+
+class TestFrontend(TestFrontendCommon):
+
     def test_01_pos_restaurant(self):
 
         self.pos_config.with_user(self.pos_admin).open_ui()
@@ -323,3 +327,19 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
         self.env.company.point_of_sale_use_ticket_qr_code = True
         self.pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'BillScreenTour', login="pos_admin")
+
+    def test_combo_preparation_receipt(self):
+        setup_pos_combo_items(self)
+        self.env['product.product'].search([('name', 'ilike', 'Combo')]).write({'pos_categ_ids': [(Command.set(self.env['pos.category'].search([], limit=1).ids))]})
+        self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+            'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+        })
+        self.pos_config.write({
+            'is_order_printer': True,
+            'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
+        })
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.pos_config.id}", 'ComboPreparationReceiptTour', login="pos_admin")

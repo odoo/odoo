@@ -51,7 +51,13 @@ class BarcodeNomenclature(models.Model):
             date = datetime.datetime.strptime(str(year) + gs1_date[2:4], '%Y%m')
             date = date.replace(day=calendar.monthrange(year, int(gs1_date[2:4]))[1])
         else:
-            date = datetime.datetime.strptime(str(year) + gs1_date[2:], '%Y%m%d')
+            try:
+                date = datetime.datetime.strptime(str(year) + gs1_date[2:], '%Y%m%d')
+            except ValueError as e:
+                raise ValidationError(_(
+                    "A GS1 barcode nomenclature pattern was matched. However, the barcode failed to be converted to a valid date: '%(error_message)'",
+                    error_message=e
+                ))
         return date.date()
 
     def parse_gs1_rule_pattern(self, match, rule):
@@ -98,9 +104,9 @@ class BarcodeNomenclature(models.Model):
         if self.gs1_separator_fnc1:
             separator_group = "(?:%s)?" % self.gs1_separator_fnc1
         # zxing-library patch, removing GS1 identifiers
-        for identifier in [']C1', ']e0', ']d2', ']Q3', ']J1']:
+        for identifier in [']C1', ']e0', ']d2', ']Q3', ']J1', FNC1_CHAR]:
             if barcode.startswith(identifier):
-                barcode = barcode.replace(identifier, '')
+                barcode = barcode.replace(identifier, '', 1)
                 break
         results = []
         gs1_rules = self.rule_ids.filtered(lambda r: r.encoding == 'gs1-128')

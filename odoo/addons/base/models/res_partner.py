@@ -46,6 +46,15 @@ class FormatAddressMixin(models.AbstractModel):
     _name = "format.address.mixin"
     _description = 'Address Format'
 
+    def _extract_fields_from_address(self, address_line):
+        """
+        Extract keys from the address line.
+        For example, if the address line is "zip: %(zip)s, city: %(city)s.",
+        this method will return ['zip', 'city'].
+        """
+        address_fields = ['%(' + field + ')s' for field in ADDRESS_FIELDS + ('state_code', 'state_name')]
+        return sorted([field[2:-2] for field in address_fields if field in address_line], key=address_line.index)
+
     def _view_get_address(self, arch):
         # consider the country of the user, not the country of the partner we want to display
         address_view_id = self.env.company.country_id.address_view_id.sudo()
@@ -62,16 +71,20 @@ class FormatAddressMixin(models.AbstractModel):
                         self.env['ir.ui.view'].postprocess_and_fields(sub_arch, model=self._name)
                     except ValueError:
                         return arch
+                new_address_node = sub_arch.find('.//div[@class="o_address_format"]')
+                if new_address_node is not None:
+                    sub_arch = new_address_node
                 address_node.getparent().replace(address_node, sub_arch)
         elif address_format and not self._context.get('no_address_format'):
             # For the zip, city and state fields we need to move them around in order to follow the country address format.
             # The purpose of this is to help the user by following a format he is used to.
-            city_line = [line.split(' ') for line in address_format.split('\n') if 'city' in line]
+            city_line = [self._extract_fields_from_address(line) for line in address_format.split('\n') if 'city' in line]
             if city_line:
-                field_order = [field.replace('%(', '').replace(')s', '') for field in city_line[0]]
+                field_order = city_line[0]
                 for address_node in arch.xpath("//div[hasclass('o_address_format')]"):
-                    concerned_fields = {'zip', 'city', 'state_id'} - {field_order[0]}
-                    current_field = address_node.find(f".//field[@name='{field_order[0]}']")
+                    first_field = field_order[0] if field_order[0] not in ('state_code', 'state_name') else 'state_id'
+                    concerned_fields = {'zip', 'city', 'state_id'} - {first_field}
+                    current_field = address_node.find(f".//field[@name='{first_field}']")
                     # First loop into the fields displayed in the address_format, and order them.
                     for field in field_order[1:]:
                         if field in ('state_code', 'state_name'):
@@ -598,6 +611,13 @@ class Partner(models.Model):
         extended by inheriting classes. """
         return ['vat', 'company_registry', 'industry_id']
 
+    @api.model
+    def _company_dependent_commercial_fields(self):
+        return [
+            fname for fname in self._commercial_fields()
+            if self._fields[fname].company_dependent
+        ]
+
     def _commercial_sync_from_company(self):
         """ Handle sync of commercial fields when a new parent commercial entity is set,
         as if they were related fields """
@@ -605,7 +625,29 @@ class Partner(models.Model):
         if commercial_partner != self:
             sync_vals = commercial_partner._update_fields_values(self._commercial_fields())
             self.write(sync_vals)
+            self._company_dependent_commercial_sync()
             self._commercial_sync_to_children()
+
+    def _company_dependent_commercial_sync(self):
+        company_dependent_commercial_field_ids = [
+            self.env['ir.model.fields']._get(self._name, fname).id
+            for fname in self._company_dependent_commercial_fields()
+        ]
+        if company_dependent_commercial_field_ids:
+            parent_properties = self.env['ir.property'].search([
+                ('fields_id', 'in', company_dependent_commercial_field_ids),
+                ('res_id', '=', f'res.partner,{self.commercial_partner_id.id}'),
+                # value was already assigned for current company
+                ('company_id', '!=', self.env.company.id),
+            ])
+            # prevent duplicate keys by removing existing properties from the partner
+            self.env['ir.property'].search([
+                ('fields_id', 'in', company_dependent_commercial_field_ids),
+                ('res_id', '=', f'res.partner,{self.id}'),
+                ('company_id', '!=', self.env.company.id),
+            ]).unlink()
+            for prop in parent_properties:
+                prop.copy({'res_id': f'res.partner,{self.id}'})
 
     def _commercial_sync_to_children(self):
         """ Handle sync of commercial fields to descendants """

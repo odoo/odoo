@@ -461,3 +461,30 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
                     message_from=expected_msg_from,
                     mail_server=expected_mail_server,
                 )
+
+    def test_eml_attachment_encoding(self):
+        """Test that message/rfc822 attachments are encoded using 7bit, 8bit, or binary encoding."""
+        IrMailServer = self.env['ir.mail_server']
+
+        # Create a sample .eml file content
+        eml_content = b"From: user@example.com\nTo: user2@example.com\nSubject: Test Email\n\nThis is a test email."
+        attachments = [('test.eml', eml_content, 'message/rfc822')]
+
+        # Build the email with the .eml attachment
+        message = IrMailServer.build_email(
+            email_from='john.doe@from.example.com',
+            email_to='destinataire@to.example.com',
+            subject='Subject with .eml attachment',
+            body='This email contains a .eml attachment.',
+            attachments=attachments,
+        )
+
+        # Verify that the attachment is correctly encoded
+        acceptable_encodings = {'7bit', '8bit', 'binary'}
+        for part in message.iter_attachments():
+            if part.get_content_type() == 'message/rfc822':
+                self.assertIn(
+                    part.get('Content-Transfer-Encoding'),
+                    acceptable_encodings,
+                    "The message/rfc822 attachment should be encoded using 7bit, 8bit, or binary encoding.",
+                )

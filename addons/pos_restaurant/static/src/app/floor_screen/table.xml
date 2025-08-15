@@ -12,7 +12,7 @@
                     class="badge d-flex align-items-center justify-content-center position-absolute rounded-pill" 
                     t-attf-class="{{ orderCount === 0 or pos.isEditMode ? 'd-none' : ''}}"
                     t-att-style="badgeStyle"
-                    t-esc="orderCount"/>
+                    t-esc="this.env.utils.formatProductQty(orderCount, false)"/>
             </div>
             <span class="table-seats position-absolute bottom-0 start-50 translate-middle-x mb-1 px-2 py-1 rounded text-bg-dark bg-opacity-25 fs-4">
                 <div class="cover" t-att-style="`width: ${Math.ceil(fill * 100)}%`" />

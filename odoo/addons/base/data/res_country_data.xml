@@ -413,6 +413,7 @@
             <field eval="593" name="phone_code" />
             <field name="vat_label">RUC</field>
             <field name='zip_required'>0</field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s\n%(country_name)s'" />
         </record>
         <record id="ee" model="res.country">
             <field name="name">Estonia</field>
@@ -1007,13 +1008,14 @@
             <field name="currency_id" ref="MXN" />
             <field eval="52" name="phone_code" />
             <field name="vat_label">RFC</field>
-            <field eval="'%(street)s %(street2)s\n%(zip)s %(city)s, %(state_code)s\n%(country_name)s'"  name="address_format" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s, %(state_code)s\n%(country_name)s'"  name="address_format" />
         </record>
         <record id="my" model="res.country">
             <field name="name">Malaysia</field>
             <field name="code">my</field>
             <field name="currency_id" ref="MYR" />
             <field eval="60" name="phone_code" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'"  name="address_format" />
         </record>
         <record id="mz" model="res.country">
             <field name="name">Mozambique</field>
@@ -1429,7 +1431,7 @@
             <field eval="670" name="phone_code" />
         </record>
         <record id="tr" model="res.country">
-            <field name="name">Turkey</field>
+            <field name="name">Türkiye</field>
             <field name="code">tr</field>
             <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="TRY" />

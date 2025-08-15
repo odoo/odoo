@@ -330,6 +330,7 @@ class AccountPartialReconcile(models.Model):
             'tax_ids': [Command.set(tax_ids.ids)],
             'tax_tag_ids': [Command.set(all_tags.ids)],
             'analytic_distribution': base_line.analytic_distribution,
+            'display_type': base_line.display_type,
         }
 
     @api.model
@@ -350,6 +351,7 @@ class AccountPartialReconcile(models.Model):
             'currency_id': cb_base_line_vals['currency_id'],
             'partner_id': cb_base_line_vals['partner_id'],
             'analytic_distribution': cb_base_line_vals['analytic_distribution'],
+            'display_type': cb_base_line_vals['display_type'],
         }
 
     @api.model
@@ -380,6 +382,7 @@ class AccountPartialReconcile(models.Model):
             'currency_id': tax_line.currency_id.id,
             'partner_id': tax_line.partner_id.id,
             'analytic_distribution': tax_line.analytic_distribution,
+            'display_type': tax_line.display_type,
             # No need to set tax_tag_invert as on the base line; it will be computed from the repartition line
         }
 
@@ -402,6 +405,7 @@ class AccountPartialReconcile(models.Model):
             'currency_id': cb_tax_line_vals['currency_id'],
             'partner_id': cb_tax_line_vals['partner_id'],
             'analytic_distribution': cb_tax_line_vals['analytic_distribution'],
+            'display_type': cb_tax_line_vals['display_type'],
         }
 
     @api.model

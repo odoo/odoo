@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2023
+# Martin Trigaux, 2023
 # Vasiliy Korobatov <korobatov@gmail.com>, 2023
 # Alena Vlasova, 2023
-# Martin Trigaux, 2023
 # Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
@@ -40,15 +40,6 @@ msgstr "Купить больше кредитов"
 #: model:ir.model,name:partner_autocomplete.model_res_company
 msgid "Companies"
 msgstr "Компании"
-
-#. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_company.py:0
-#, python-format
-msgid "Company auto-completed by Odoo Partner Autocomplete Service"
-msgstr ""
-"Компания автоматически заполняется партнерской службой автозаполнения "
-"Flectra"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__partner_gid
@@ -159,19 +150,11 @@ msgid "Partner Autocomplete: Sync with remote DB"
 msgstr "Автозаполнение партнера: Синхронизация с удаленной базой данных"
 
 #. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_partner.py:0
-#, python-format
-msgid "Partner created by Odoo Partner Autocomplete Service"
-msgstr "Партнер, созданный службой автозаполнения Odoo Partner"
-
-#. module: partner_autocomplete
 #. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
-#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #, python-format
-msgid "Placeholder"
-msgstr "Заполнитель"
+msgid "Search Worldwide 🌎"
+msgstr ""
 
 #. module: partner_autocomplete
 #. odoo-javascript
@@ -194,3 +177,10 @@ msgstr "Установите токен своей учетной записи"
 #, python-format
 msgid "Test mode"
 msgstr "Тестовый режим"
+
+#. module: partner_autocomplete
+#. odoo-python
+#: code:addons/partner_autocomplete/models/res_partner.py:0
+#, python-format
+msgid "Unable to enrich company (no credit was consumed)."
+msgstr ""

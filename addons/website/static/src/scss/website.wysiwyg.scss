@@ -1,17 +1,4 @@
 
-@each $font-name, $font-config in $o-theme-font-configs {
-    $url: map-get($font-config, 'url');
-    @if $url {
-        @import url("https://fonts.googleapis.com/css?family=#{unquote($url)}&display=swap");
-    } @else {
-        $name: map-get($font-config, 'name');
-        $attachment: map-get($font-config, 'attachment');
-        @if $attachment {
-            @import url("/web/content/#{$attachment}/google-font-#{unquote($name)}");
-        }
-    }
-}
-
 #oe_snippets {
     top: 0;
     .oe-toolbar {
@@ -65,6 +52,7 @@ html[data-edit_translations="1"] {
         z-index: 100;
         background-color: $o-we-accent;
         font-size: 0px;
+        pointer-events: none;
         content: "."; // Content is mandatory.
     }
     &.d-md-none::before, &.d-lg-none::before {

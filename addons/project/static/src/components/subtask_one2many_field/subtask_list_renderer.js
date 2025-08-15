@@ -12,8 +12,8 @@ export class SubtaskListRenderer extends ListRenderer {
         super.setup();
         this.dialog = useService("dialog");
         useEffect(
-            () => this.focusName(this.props.list.editedRecord),
-            () => [this.props.list.editedRecord]
+            (editedRecord) => this.focusName(editedRecord),
+            () => [this.editedRecord]
         );
     }
 

@@ -525,6 +525,7 @@ class TestStockLot(TestStockCommon):
         the latter should be applied on the SML
         """
         exp_date = fields.Datetime.today() + relativedelta(days=15)
+        sml_exp_date = fields.Datetime.today() + relativedelta(days=10)
 
         lot = self.env['stock.lot'].create({
             'name': 'Lot 1',
@@ -533,16 +534,26 @@ class TestStockLot(TestStockCommon):
             'company_id': self.env.company.id,
         })
 
+        move = self.env['stock.move'].create({
+            'name': 'move_test',
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'product_id': self.apple_product.id,
+            'product_uom': self.apple_product.uom_id.id,
+        })
         sml = self.env['stock.move.line'].create({
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
             'product_id': self.apple_product.id,
             'quantity': 3,
             'product_uom_id': self.apple_product.uom_id.id,
-            'lot_id': lot.id,
+            'expiration_date': fields.Datetime.to_string(sml_exp_date),
             'company_id': self.env.company.id,
+            'move_id': move.id,
         })
+        self.assertEqual(sml.expiration_date, sml_exp_date)
 
+        sml.lot_id = lot
         self.assertEqual(sml.expiration_date, exp_date)
 
     def test_apply_same_date_on_expiry_fields(self):
@@ -674,3 +685,78 @@ class TestStockLot(TestStockCommon):
         delivery.action_confirm()
 
         self.assertAlmostEqual(delivery.move_line_ids[0].expiration_date, expiration_date, delta=delta)
+
+    def test_assign_lot_expiry_alert_to_default_user(self):
+        """ Test lot expiry alert is assigned to the default user of the activity type """
+
+        # User A will be the Default User on the activity type
+        default_user, responsible_user = self.env['res.users'].create([
+            {
+                'name': 'User A (Default)',
+                'login': 'user_a_test',
+            },
+            {
+                'name': 'User B (Responsible)',
+                'login': 'user_b_test',
+            }
+        ])
+
+        activity_type = self.env.ref('product_expiry.mail_activity_type_alert_date_reached')
+        activity_type.default_user_id = default_user.id
+
+        product = self.ProductObj.create({
+            'name': 'Product AAA',
+            'type': 'product',
+            'tracking': 'lot',
+            'company_id': self.env.company.id,
+            'responsible_id': responsible_user.id,
+        })
+
+        # create a new lot with with alert date in the past
+        lot = self.LotObj.create({
+            'name': 'Lot 1 ProductAAA',
+            'product_id': product.id,
+            'alert_date': fields.Date.to_string(datetime.today() - relativedelta(days=15)),
+            'company_id': self.env.company.id,
+        })
+
+        picking_in = self.PickingObj.create({
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'state': 'draft',
+        })
+
+        qty = 33
+
+        move = self.MoveObj.create({
+            'name': product.name,
+            'product_id': product.id,
+            'product_uom_qty': qty,
+            'product_uom': product.uom_id.id,
+            'picking_id': picking_in.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+
+        picking_in.action_confirm()
+        # Replace pack operation of incoming shipments.
+        picking_in.action_assign()
+        move.move_line_ids.quantity = qty
+        move.move_line_ids.lot_id = lot.id
+
+        # Transfer Incoming Shipment.
+        move.picked = True
+        picking_in._action_done()
+
+        # run scheduled tasks
+        self.env['stock.lot']._alert_date_exceeded()
+
+        # check a new activity has been created for correct user
+        mail_activity = self.env['mail.activity'].search([
+            ('activity_type_id', '=', activity_type.id),
+            ('res_model_id', '=', self.env.ref('stock.model_stock_lot').id),
+            ('res_id', '=', lot.id)
+        ])
+        self.assertEqual(len(mail_activity), 1, 'No activity created or more than one activity created when there should be one')
+        self.assertEqual(mail_activity.user_id, default_user, "Activity was not assigned to the Default User.")

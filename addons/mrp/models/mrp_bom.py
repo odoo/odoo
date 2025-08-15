@@ -189,7 +189,7 @@ class MrpBom(models.Model):
             if sum(bom.byproduct_ids.mapped('cost_share')) > 100:
                 raise ValidationError(_("The total cost share for a BoM's by-products cannot exceed 100."))
 
-    @api.onchange('bom_line_ids', 'product_qty')
+    @api.onchange('bom_line_ids', 'product_qty', 'product_id', 'product_tmpl_id')
     def onchange_bom_structure(self):
         if self.type == 'phantom' and self._origin and self.env['stock.move'].search([('bom_line_id', 'in', self._origin.bom_line_ids.ids)], limit=1):
             return {
@@ -248,7 +248,7 @@ class MrpBom(models.Model):
         relevant_fields = ['bom_line_ids', 'byproduct_ids', 'product_tmpl_id', 'product_id', 'product_qty']
         if any(field_name in vals for field_name in relevant_fields):
             self._set_outdated_bom_in_productions()
-        if 'sequence' in vals and self and self[-1].id == self._prefetch_ids[-1]:
+        if 'sequence' in vals and self and self[-1].id == list(self._prefetch_ids)[-1]:
             self.browse(self._prefetch_ids)._check_bom_cycle()
         return res
 
@@ -261,6 +261,9 @@ class MrpBom(models.Model):
             for bom_line in res.bom_line_ids:
                 if bom_line.operation_id:
                     bom_line.operation_id = operations_mapping[bom_line.operation_id]
+            for byproduct in res.byproduct_ids:
+                if byproduct.operation_id:
+                    byproduct.operation_id = operations_mapping[byproduct.operation_id]
             for operation in self.operation_ids:
                 if operation.blocked_by_operation_ids:
                     copied_operation = operations_mapping[operation]
@@ -402,7 +405,9 @@ class MrpBom(models.Model):
                 product_ids.clear()
             bom = product_boms.get(current_line.product_id)
             if bom:
-                converted_line_quantity = current_line.product_uom_id._compute_quantity(line_quantity / bom.product_qty, bom.product_uom_id)
+                converted_line_quantity = current_line.product_uom_id._compute_quantity(
+                    line_quantity / bom.product_qty, bom.product_uom_id, round=False
+                )
                 bom_lines += [(line, current_line.product_id, converted_line_quantity, current_line) for line in bom.bom_line_ids]
                 for bom_line in bom.bom_line_ids:
                     if not bom_line.product_id in product_boms:

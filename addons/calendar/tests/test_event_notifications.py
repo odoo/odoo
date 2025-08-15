@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
@@ -350,22 +349,28 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
             return self.env['calendar.event'].search(self.env['res.users']._systray_get_calendar_event_domain())
 
         self.env.user.tz = 'Europe/Brussels' # UTC +1 15th November 2023
-        event = self.env['calendar.event'].create({
+        events = self.env['calendar.event'].create([{
             'name': "Meeting",
             'start': datetime(2023, 11, 15, 18, 0), # 19:00
             'stop': datetime(2023, 11, 15, 19, 0),  # 20:00
-        }).with_context(mail_notrack=True)
+        },
+        {
+            'name': "Tomorrow meeting",
+            'start': datetime(2023, 11, 15, 23, 0),  # 00:00 next day
+            'stop': datetime(2023, 11, 16, 0, 0),  # 01:00 next day
+        }
+        ]).with_context(mail_notrack=True)
         with freeze_time('2023-11-15 17:30:00'):    # 18:30 before event
-            self.assertEqual(search_event(), event)
+            self.assertEqual(search_event(), events[0])
         with freeze_time('2023-11-15 18:00:00'):    # 19:00 during event
-            self.assertEqual(search_event(), event)
+            self.assertEqual(search_event(), events[0])
         with freeze_time('2023-11-15 18:30:00'):    # 19:30 during event
-            self.assertEqual(search_event(), event)
+            self.assertEqual(search_event(), events[0])
         with freeze_time('2023-11-15 19:00:00'):    # 20:00 during event
-            self.assertEqual(search_event(), event)
+            self.assertEqual(search_event(), events[0])
         with freeze_time('2023-11-15 19:30:00'):    # 20:30 after event
             self.assertEqual(len(search_event()), 0)
-        event.unlink()
+        events.unlink()
 
         self.env.user.tz = 'America/Lima' # UTC -5 15th November 2023
         event = self.env['calendar.event'].create({
@@ -393,3 +398,139 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         with freeze_time('2023-11-15 19:00:00'):    # 14:00 the day before event
             self.assertEqual(len(search_event()), 0)
         event.unlink()
+
+        self.env.user.tz = 'Asia/Manila'  # UTC +8 15th November 2023
+        events = self.env['calendar.event'].create([{
+            'name': "Very early meeting",
+            'start': datetime(2023, 11, 14, 16, 30),  # 0:30
+            'stop': datetime(2023, 11, 14, 17, 0),  # 1:00
+        },
+        {
+            'name': "Meeting on 2 days",
+            'start': datetime(2023, 11, 15, 15, 30),  # 23:30
+            'stop': datetime(2023, 11, 15, 16, 30),  # 0:30 next day
+        },
+        {
+            'name': "Early meeting tomorrow",
+            'start': datetime(2023, 11, 15, 23, 0),  # 00:00 next day
+            'stop': datetime(2023, 11, 16, 0, 0),  # 01:00 next day
+        },
+        {
+            'name': "All day meeting",
+            'allday': True,
+            'start': "2023-11-15",
+        }
+        ]).with_context(mail_notrack=True)
+        with freeze_time('2023-11-15 16:00:00'):
+            self.assertEqual(len(search_event()), 3)
+        events.unlink()
+
+    def test_recurring_meeting_reminder_notification(self):
+        alarm = self.env['calendar.alarm'].create({
+            'name': 'Alarm',
+            'alarm_type': 'notification',
+            'interval': 'minutes',
+            'duration': 30,
+        })
+
+        self.event._apply_recurrence_values({
+            'interval': 2,
+            'rrule_type': 'weekly',
+            'tue': True,
+            'count': 2,
+        })
+
+        now = fields.Datetime.now()
+        with patch.object(fields.Datetime, 'now', lambda: now):
+            with self.assertBus([(self.env.cr.dbname, 'res.partner', self.partner.id)], [
+                {
+                    "type": "calendar.alarm",
+                    "payload": [{
+                        "alarm_id": alarm.id,
+                        "event_id": self.event.id,
+                        "title": "Doom's day",
+                        "message": self.event.display_time,
+                        "timer": 20 * 60,
+                        "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
+                    }],
+                },
+            ]):
+                self.event.with_context(no_mail_to_attendees=True).write({
+                    'start': now + relativedelta(minutes=50),
+                    'stop': now + relativedelta(minutes=55),
+                    'partner_ids': [(4, self.partner.id)],
+                    'alarm_ids': [(4, alarm.id)]
+                })
+
+    def test_get_next_potential_limit_alarm(self):
+        """
+            Test that the next potential limit alarm is correctly computed for notification alarms.
+        """
+        now = fields.Datetime.now()
+        start = now - relativedelta(days=1)
+        while start.weekday() > 4:
+            start -= relativedelta(days=1)
+        stop = start + relativedelta(hours=1)
+        next_month = now + relativedelta(days=30)
+        weekday_flags = ['mon', 'tue', 'wed', 'thu', 'fri']
+        weekday_flag = weekday_flags[start.weekday()]
+        weekday_dict = {flag: False for flag in weekday_flags}
+        weekday_dict[weekday_flag] = True
+
+        partner = self.user.partner_id
+        # until_date event first alarm
+        alarm = self.env['calendar.alarm'].create({
+            'name': 'Alarm',
+            'alarm_type': 'notification',
+            'interval': 'minutes',
+            'duration': 15,
+        })
+
+        event_vals = {
+            'start': start,
+            'stop': stop,
+            'name': 'Weekly Sales Meeting',
+            'alarm_ids': [[6, 0, [alarm.id]]],
+            'partner_ids': [(4, self.partner.id)],
+        }
+        self.event.write(event_vals)
+        self.event._apply_recurrence_values({
+            'interval': 1,
+            'rrule_type': 'weekly',
+            'end_type': 'end_date',
+            'until': next_month.date().isoformat(),
+            **weekday_dict,
+        })
+        events = self.env['calendar.event'].search([('name', '=', 'Weekly Sales Meeting')])
+        self.env.flush_all()
+        result = self.env['calendar.alarm_manager']._get_next_potential_limit_alarm('notification', partners=partner)
+        for alarm_data in result.values():
+            first_alarm = alarm_data.get('first_alarm')
+            self.assertLess(now, first_alarm)
+        events.unlink()
+
+        # count event last alarm
+        recurrence_count = 5
+        start = now - relativedelta(days=1)
+        stop = start + relativedelta(hours=1)
+        event_vals = {
+            'start': start,
+            'stop': stop,
+            'name': 'Daily Sales Meeting',
+            'alarm_ids': [[6, 0, [alarm.id]]],
+            'partner_ids': [(4, self.partner.id)],
+        }
+        self.event = self.env['calendar.event'].create(event_vals)
+        self.event._apply_recurrence_values({
+            'interval': 1,
+            'rrule_type': 'daily',
+            'end_type': 'count',
+            'count': recurrence_count
+        })
+        self.env.flush_all()
+        result = self.env['calendar.alarm_manager']._get_next_potential_limit_alarm('notification', partners=partner)
+        expected_alarms = sorted([stop + relativedelta(days=offset) - relativedelta(minutes=15) for offset in range(1, recurrence_count)])
+        actual_alarms = sorted([data.get('last_alarm') for data in result.values()])
+
+        for expected, actual in zip(expected_alarms, actual_alarms):
+            self.assertEqual(actual, expected)

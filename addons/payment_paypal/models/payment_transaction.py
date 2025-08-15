@@ -41,6 +41,20 @@ class PaymentTransaction(models.Model):
             'return_access_tkn': payment_utils.generate_access_token(self.reference),
         }
         partner_first_name, partner_last_name = payment_utils.split_partner_name(self.partner_name)
+        if (
+            self.partner_address
+            and self.partner_city
+            and self.partner_country_id
+            and (self.partner_zip or not self.partner_country_id.zip_required)
+            and (self.partner_state_id or not self.partner_country_id.state_required)
+        ):
+            # Ensure given address cannot be altered.
+            no_shipping = '0'
+            address_override = '1'
+        else:
+            # Do not prompt for a delivery address.
+            no_shipping = '1'
+            address_override = '0'
         return {
             'address1': self.partner_address,
             'amount': self.amount,
@@ -55,7 +69,8 @@ class PaymentTransaction(models.Model):
             'item_number': self.reference,
             'last_name': partner_last_name,
             'lc': self.partner_lang,
-            'no_shipping': '1',  # Do not prompt for a delivery address.
+            'no_shipping': no_shipping,
+            'address_override': address_override,
             'notify_url': urls.url_join(base_url, PaypalController._webhook_url),
             'return_url': urls.url_join(base_url, PaypalController._return_url),
             'state': self.partner_state_id.name,

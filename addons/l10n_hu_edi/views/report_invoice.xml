@@ -28,7 +28,7 @@
                         <li t-if="o.partner_id.commercial_partner_id.country_id and o.partner_id.commercial_partner_id.country_id.code!='HU'">
                             EU Tax ID: <span t-out="'HU%s' % o.company_id.vat[:8]"/>
                         </li>
-                        <li t-if="'out' in o.move_type and o.partner_bank_id">Bank Account: <span t-field="o.partner_bank_id.acc_number"/></li>
+                        <li t-if="o.move_type in ['out_invoice', 'out_receipt'] and o.partner_bank_id">Bank Account: <span t-field="o.partner_bank_id.acc_number"/></li>
                         <li t-if="o.company_id.l10n_hu_tax_regime=='ie'">The issuer of the invoice is <u>Exempt from VAT</u>.</li>
                         <li t-if="o.company_id.l10n_hu_tax_regime=='ca'">The issuer of the invoice is <u>Cash accounting</u>.</li>
                         <li t-if="o.company_id.l10n_hu_tax_regime=='sb'">The issuer of the invoice is <u>Small taxpayer</u>.</li>
@@ -57,6 +57,7 @@
         </xpath>
         <xpath expr="//div[@name='address_same_as_shipping']//span[@t-field='o.partner_id.vat']/.." position="after">
             <div t-if="o.partner_id.l10n_hu_group_vat">Group Member Tax ID: <span t-field="o.partner_id.l10n_hu_group_vat"/></div>
+            <div t-if="o.move_type == 'out_refund' and o.partner_bank_id">Bank Account: <span t-field="o.partner_bank_id.acc_number"/></div>
         </xpath>
         <xpath expr="//div[@name='no_shipping']//address" position="before">
             <strong>Customer:</strong>
@@ -96,8 +97,7 @@
         <xpath expr="//td[@name='account_invoice_line_name']/span" position="after">
             <div t-if="line.product_id.l10n_hu_product_code_type and line.product_id.l10n_hu_product_code">
                 <span t-if="line.product_id.l10n_hu_product_code_type == 'OTHER'">Other Product Code</span>
-                <span t-else="else" t-out="line.product_id.l10n_hu_product_code_type"/>
-                :
+                <span t-else="else" t-out="line.product_id.l10n_hu_product_code_type"/>:
                 <span t-out="line.product_id.l10n_hu_product_code"/>
             </div>
         </xpath>

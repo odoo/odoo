@@ -83,7 +83,7 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     content: "Check that we have to enter enhanced security mode and input password",
     extra_trigger: 'div:contains("enter your password")',
     trigger: '[name=password] input',
-    run: 'text demo',
+    run: 'text test_user',
 }, {
     content: "Confirm",
     trigger: "button:contains(Confirm Password)",
@@ -127,11 +127,11 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
 }, {
     content: "input login",
     trigger: 'input#login',
-    run: 'text demo',
+    run: 'text test_user',
 }, {
     content: 'input password',
     trigger: 'input#password',
-    run: 'text demo',
+    run: 'text test_user',
 }, {
     content: "click da button",
     trigger: 'button:contains("Log in")',
@@ -167,11 +167,11 @@ registry.category("web_tour.tours").add('totp_login_device', {
 }, {
     content: "input login",
     trigger: 'input#login',
-    run: 'text demo',
+    run: 'text test_user',
 }, {
     content: 'input password',
     trigger: 'input#password',
-    run: 'text demo',
+    run: 'text test_user',
 }, {
     content: "click da button",
     trigger: 'button:contains("Log in")',
@@ -202,11 +202,11 @@ registry.category("web_tour.tours").add('totp_login_device', {
 }, {
     content: "input login again",
     trigger: 'input#login',
-    run: 'text demo',
+    run: 'text test_user',
 }, {
     content: 'input password again',
     trigger: 'input#password',
-    run: 'text demo',
+    run: 'text test_user',
 }, {
     content: "click da button again",
     trigger: 'button:contains("Log in")',
@@ -226,7 +226,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
     content: "Check that we have to enter enhanced security mode and input password",
     extra_trigger: 'div:contains("enter your password")',
     trigger: '[name=password] input',
-    run: 'text demo',
+    run: 'text test_user',
 }, {
     content: "Confirm",
     trigger: "button:contains(Confirm Password)",
@@ -248,11 +248,11 @@ registry.category("web_tour.tours").add('totp_login_disabled', {
 }, {
     content: "input login",
     trigger: 'input#login',
-    run: 'text demo',
+    run: 'text test_user',
 }, {
     content: 'input password',
     trigger: 'input#password',
-    run: 'text demo',
+    run: 'text test_user',
 }, {
     content: "click da button",
     trigger: 'button:contains("Log in")',
@@ -300,8 +300,8 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
         }
     }
 }, {
-    content: "Find Demo User",
-    trigger: 'td.o_data_cell:contains("demo")',
+    content: "Find test_user User",
+    trigger: 'td.o_data_cell:contains("test_user")',
     run(helpers) {
         const $titles = this.$anchor.closest('table').find('tr:first th');
         for (let i=0; i<$titles.length; ++i) {
@@ -327,12 +327,18 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
     trigger: "button:contains(Confirm Password)",
 }, {
     content: "open the user's form",
-    trigger: "td.o_data_cell:contains(demo)",
+    trigger: "td.o_data_cell:contains(test_user)",
 }, {
     content: "go to Account security Tab",
     trigger: "a.nav-link:contains(Account Security)",
-}, ...closeProfileDialog({
-    content: "check that demo user has been de-totp'd",
-    totp_state: false,
-}),
+}, {
+    content: "check 2FA button",
+    trigger: 'body',
+    run: () => {
+        const button = document.querySelector('button[name=action_totp_enable_wizard]').disabled
+        if (!button) {
+            console.error("2FA button should be disabled.");
+        }
+    },
+}
 ]})

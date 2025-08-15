@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Michael Hofer, 2023
-# Larissa Manderfeld, 2024
-# Wil Odoo, 2024
+# Wil Odoo, 2025
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-05-07 20:35+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -104,6 +104,11 @@ msgid ""
 msgstr ""
 "<span class=\"badge rounded-pill text-bg-danger float-end me-4\" invisible=\"application_status != 'refused'\">Abgelehnt</span>\n"
 "                            <span class=\"badge rounded-pill text-bg-secondary float-end me-4\" invisible=\"application_status != 'archived'\">Archiviert</span>"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+msgid "<span class=\"mx-2\">to</span>"
+msgstr "<span class=\"mx-2\">bis</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -252,7 +257,7 @@ msgstr ""
 "                Hallo,\n"
 "                <br><br>\n"
 "                hiermit bestätigen wir den Erhalt Ihrer Bewerbung für die Stelle\n"
-"                „<a t-att-href=\"hasattr(object.job_id, 'website_url') and object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-out=\"object.job_id.name or ''\">Erfahrener Entwickler</strong></a>“ bei <strong t-out=\"object.company_id.name or ''\">YourCompany</strong>.\n"
+"                „<a t-att-href=\"hasattr(object.job_id, 'website_url') and object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-out=\"object.job_id.name or ''\">Erfahrener Entwickler</strong></a>“ bei <strong t-out=\"object.company_id.name or ''\">IhrUnternehmen</strong>.\n"
 "                <br><br>\n"
 "                Wir melden uns in Kürze bei Ihnen.\n"
 "\n"
@@ -265,7 +270,7 @@ msgstr ""
 "                    <h3 style=\"color:#9A6C8E;\"><strong>Ihr Ansprechpartner:</strong></h3>\n"
 "                    <p>\n"
 "                        <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br>\n"
-"                        <span>E-Mail: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t></span><br>\n"
+"                        <span>E-Mail: <t t-out=\"object.user_id.email or ''\">admin@ihrunternehmen.beispiel.com</t></span><br>\n"
 "                        <span>Telefon: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t></span>\n"
 "                    </p>\n"
 "                    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\">\n"
@@ -416,7 +421,7 @@ msgstr ""
 "                <t t-if=\"object.user_id\">\n"
 "                    Sie werden bald kontaktiert von:<br>\n"
 "                    <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br>\n"
-"                    <span>E-Mail: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t></span><br>\n"
+"                    <span>E-Mail: <t t-out=\"object.user_id.email or ''\">admin@ihrunternehmen.beispiel.com</t></span><br>\n"
 "                    <span>Telefon: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t></span>\n"
 "                    <br><br>\n"
 "                </t>\n"
@@ -520,12 +525,12 @@ msgstr ""
 "                    <t t-if=\"object.user_id\">\n"
 "                        -- <br>\n"
 "                        <strong t-out=\"object.user_id.name or ''\">Marc Demo</strong><br>\n"
-"                        E-Mail: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t><br>\n"
+"                        E-Mail: <t t-out=\"object.user_id.email or ''\">mark.brown23@beispiel.com</t><br>\n"
 "                        Telefon: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "                    </t>\n"
 "                    <t t-else=\"\">\n"
 "                        -- <br>\n"
-"                        <t t-out=\"object.company_id.name or ''\">YourCompany</t><br>\n"
+"                        <t t-out=\"object.company_id.name or ''\">IhrUnternehmen</t><br>\n"
 "                        Die Personalabteilung<br>\n"
 "                    </t>\n"
 "                </div>\n"
@@ -588,7 +593,7 @@ msgstr ""
 "            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
 "                Hallo,<br><br>\n"
 "                vielen Dank für Ihr Interesse, dem\n"
-"                <b><t t-out=\"object.company_id.name or ''\">YourCompany</t></b> Team beizutreten.  Obowohl\n"
+"                <b><t t-out=\"object.company_id.name or ''\">IhrUnternehmen</t></b> Team beizutreten.  Obowohl\n"
 "                Ihr Lebenslauf sehr interessant ist, hat sich unsere Personalabteilung\n"
 "                dazu entschieden, Sie <b>nicht in die engere Auswahl</b> für die Stelle zu nehmen.\n"
 "                <br><br>\n"
@@ -608,12 +613,12 @@ msgstr ""
 "                    <t t-if=\"object.user_id\">\n"
 "                        -- <br>\n"
 "                        <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br>\n"
-"                        E-Mail: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t><br>\n"
+"                        E-Mail: <t t-out=\"object.user_id.email or ''\">admin@ihrunternehmen.beispiel.com</t><br>\n"
 "                        Telefon: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "                    </t>\n"
 "                    <t t-else=\"\">\n"
 "                        -- <br>\n"
-"                        <t t-out=\"object.company_id.name or ''\">YourCompany</t><br>\n"
+"                        <t t-out=\"object.company_id.name or ''\">IhrUnternehmen</t><br>\n"
 "                        Die Personalabteilung\n"
 "                    </t>\n"
 "                </div>\n"
@@ -1379,7 +1384,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_6
 msgid "Duplicate"
-msgstr "Duplizieren"
+msgstr "Duplikat"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_from
@@ -1419,7 +1424,7 @@ msgstr "E-Mail-CC"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr "E-Mail-Domain z. B. 'example.com' in 'odoo@example.com'"
+msgstr "E-Mail-Domain z. B. 'beispiel.com' in 'odoo@beispiel.com'"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2656,7 +2661,7 @@ msgstr "Anforderungen"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Reserve"
-msgstr "Reservieren"
+msgstr "Reserve"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -2790,7 +2795,6 @@ msgid "Send Interview Survey"
 msgstr "Bewerbungsumfrage versenden"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.action_hr_applicant_mass_sms
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Send SMS"
 msgstr "SMS versenden"
@@ -3051,7 +3055,7 @@ msgid ""
 "<jobs@example.odoo.com>"
 msgstr ""
 "Die Bezeichnung des E-Mail-Alias, z. B. „Jobs“, falls Sie E-Mails für "
-"<jobs@example.odoo.com> erhalten möchten"
+"<jobs@beispiel.odoo.com> erhalten möchten"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_normalized
@@ -3207,7 +3211,7 @@ msgstr "Benutzer-E-Mail"
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__2
 msgid "Very Good"
-msgstr "Sehr Gut"
+msgstr "Sehr gut"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
@@ -3328,8 +3332,3 @@ msgstr "z. B. domain.com"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. sales-manager"
 msgstr "z. B. Verkaufsleiter"
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
-msgid "to"
-msgstr "an"

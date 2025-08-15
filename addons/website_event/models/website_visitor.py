@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.osv import expression
 
 
@@ -63,7 +63,7 @@ class WebsiteVisitor(models.Model):
         'in', [1, 2])] should return visitors having a registration on events 1, 2 as
         well as their children for notification purpose. """
         if operator == "not in":
-            raise NotImplementedError("Unsupported 'Not In' operation on visitors registrations")
+            raise NotImplementedError(_("Unsupported 'Not In' operation on visitors registrations"))
 
         all_registrations = self.env['event.registration'].sudo().search([
             ('event_id', operator, operand)

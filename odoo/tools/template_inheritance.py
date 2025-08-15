@@ -150,7 +150,14 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                 if mode == "outer":
                     for loc in spec.xpath(".//*[text()='$0']"):
                         loc.text = ''
-                        loc.append(copy.deepcopy(node))
+                        copied_node = copy.deepcopy(node)
+                        # TODO: Remove 'inherit_branding' logic if possible;
+                        # currently needed to track node removal for branding
+                        # distribution. Avoid marking root nodes to prevent
+                        # sibling branding issues.
+                        if inherit_branding:
+                            copied_node.set('data-oe-no-branding', '1')
+                        loc.append(copied_node)
                     if node.getparent() is None:
                         spec_content = None
                         comment = None

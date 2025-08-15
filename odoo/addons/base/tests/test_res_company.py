@@ -64,3 +64,7 @@ class TestCompany(TransactionCase):
         with self.assertRaises(UserError):
             parent_company.unlink()
         self.assertTrue(parent_company.exists())
+
+    def test_create_branch_with_default_parent_id(self):
+        branch = self.env['res.company'].with_context(default_parent_id=self.env.company.id).create({'name': 'Branch Company'})
+        self.assertFalse(branch.partner_id.parent_id)

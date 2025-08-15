@@ -5,7 +5,9 @@
             <t t-set="line" t-value="line_vals['line']"/>
             <t  xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
                 xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
-                xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100">
+                xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
+                xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
                 <ram:IncludedSupplyChainTradeLineItem>
                     <!-- Line number. -->
@@ -56,7 +58,7 @@
                     <ram:SpecifiedLineTradeDelivery>
                         <ram:BilledQuantity
                                 t-att-unitCode="line_vals.get('unece_uom_code')"
-                                t-out="line.quantity"/> <!-- /!\ The quantity is the line.quantity since we keep the unece_uom_code! -->
+                                t-out="line_vals.get('quantity')"/>
                     </ram:SpecifiedLineTradeDelivery>
 
                     <ram:SpecifiedLineTradeSettlement>
@@ -68,6 +70,16 @@
                                 <ram:RateApplicablePercent t-out="tax_detail_vals['amount']"/>
                             </ram:ApplicableTradeTax>
                         </t>
+
+                        <!-- Billing Period -->
+                        <ram:BillingSpecifiedPeriod t-if="line_vals.get('billing_start') and line_vals.get('billing_end')"> 
+                            <ram:StartDateTime>
+                                <udt:DateTimeString format="102" t-out="format_date(line_vals['billing_start'])"/>
+                            </ram:StartDateTime>
+                            <ram:EndDateTime>
+                                <udt:DateTimeString format="102" t-out="format_date(line_vals['billing_end'])"/>
+                            </ram:EndDateTime>
+                        </ram:BillingSpecifiedPeriod>
 
                         <!-- Allowance/Charge on the line -->
                         <t t-foreach="line_vals.get('allowance_charge_vals_list')" t-as="allowance_charge_vals">
@@ -94,7 +106,9 @@
         <template id="account_invoice_partner_facturx_export_22">
             <t  xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
                 xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
-                xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100">
+                xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
+                xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                 <!-- Contact. -->
                 <ram:Name t-out="partner.display_name"/>
                 <ram:SpecifiedLegalOrganization t-if="specified_legal_organization_val">
@@ -108,7 +122,7 @@
                         <ram:CompleteNumber t-out="partner.phone or partner.mobile"/>
                     </ram:TelephoneUniversalCommunication>
                     <ram:EmailURIUniversalCommunication t-if="partner.email">
-                        <ram:URIID schemeID='SMTP' t-out="partner.email"/>
+                        <ram:URIID t-out="partner.email"/>
                     </ram:EmailURIUniversalCommunication>
                 </ram:DefinedTradeContact>
 
@@ -120,7 +134,9 @@
         <template id="account_invoice_address_facturx_export_22">
             <t  xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
                 xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
-                xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100">
+                xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
+                xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                 <!-- Address. -->
                 <ram:PostalTradeAddress>
                     <ram:PostcodeCode t-out="partner.zip"/>
@@ -137,7 +153,9 @@
             <rsm:CrossIndustryInvoice
                 xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
                 xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
-                xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100">
+                xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
+                xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                 <!-- Factur-x level:
                     * minimum or basicwl:   urn:factur-x.eu:1p0...
                     * basic:                urn:cen.eu:en16931:2017:compliant:factur-x.eu:1p0:basic
@@ -236,13 +254,13 @@
 
                         <!-- Bank account. -->
                         <ram:SpecifiedTradeSettlementPaymentMeans t-if="record.partner_bank_id.sanitized_acc_number">
-                            <ram:TypeCode>42</ram:TypeCode>
+                            <ram:TypeCode t-out="payment_means_code"/>
                             <ram:PayeePartyCreditorFinancialAccount>
                                 <ram:IBANID
-                                    t-if="record.partner_bank_id.sanitized_acc_number == 'iban'"
+                                    t-if="record.partner_bank_id.acc_type == 'iban'"
                                     t-out="record.partner_bank_id.sanitized_acc_number"/>
                                 <ram:ProprietaryID
-                                    t-if="record.partner_bank_id.sanitized_acc_number != 'iban'"
+                                    t-if="record.partner_bank_id.acc_type != 'iban'"
                                     t-out="record.partner_bank_id.sanitized_acc_number"/>
                             </ram:PayeePartyCreditorFinancialAccount>
                         </ram:SpecifiedTradeSettlementPaymentMeans>

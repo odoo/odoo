@@ -55,14 +55,27 @@
 
     .o_cp_top_right {
         display: flex;
-        justify-content: flex-end;
         align-items: flex-start;
         flex: 4;
+        row-gap: 8px;
         min-width: 0;
     }
 
     .o_control_panel_actions {
         gap: map-get($spacers, 2);
+        max-height: 200px;
+        overflow: auto;
+        flex-wrap: wrap;
+        justify-content: start !important;
+        align-items: start !important;
+        order: 1 !important;
+
+        .o_filter_value_container {
+            width: 235px;
+            max-height: 150px;
+            overflow: hidden auto;
+            padding-right: 18px;
+        }
 
         .o-filter-value {
             min-height: 25px;

@@ -17,9 +17,7 @@ try:
     import schedule
 except ImportError:
     schedule = None
-    # For now, it is intended to not be installed on the iot-box as it uses native Unix cron system
-    if platform.system() == 'Windows':
-        _logger.warning('Could not import library schedule')
+    _logger.warning('Could not import library schedule')
 
 try:
     from dbus.mainloop.glib import DBusGMainLoop
@@ -39,7 +37,7 @@ class Manager(Thread):
         """
         server = helpers.get_odoo_server_url()
         if server:
-            subject = helpers.read_file_first_line('odoo-subject.conf')
+            subject = helpers.get_conf('subject')
             if subject:
                 domain = helpers.get_ip().replace('.', '-') + subject.strip('*')
             else:
@@ -87,7 +85,7 @@ class Manager(Thread):
             except json.decoder.JSONDecodeError:
                 _logger.exception('Could not load JSON data: Received data is not in valid JSON format\ncontent:\n%s', resp.data)
             except Exception:
-                _logger.exception('Could not reach configured server')
+                _logger.exception('Could not reach configured server to send all IoT devices')
         else:
             _logger.info('Ignoring sending the devices to the database: no associated database')
 
@@ -95,6 +93,7 @@ class Manager(Thread):
         """
         Thread that will load interfaces and drivers and contact the odoo server with the updates
         """
+        helpers.migrate_old_config_files_to_new_config_file()
         server_url = helpers.get_odoo_server_url()
 
         helpers.start_nginx_server()
@@ -120,8 +119,8 @@ class Manager(Thread):
                 i = interface()
                 i.daemon = True
                 i.start()
-            except Exception as e:
-                _logger.error("Error in %s: %s", str(interface), e)
+            except Exception:
+                _logger.exception("Interface %s could not be started", str(interface))
 
         # Set scheduled actions
         schedule and schedule.every().day.at("00:00").do(helpers.get_certificate_status)
@@ -141,7 +140,7 @@ class Manager(Thread):
                 schedule and schedule.run_pending()
             except Exception:
                 # No matter what goes wrong, the Manager loop needs to keep running
-                _logger.error(format_exc())
+                _logger.exception("Manager loop unexpected error")
 
 # Must be started from main thread
 if DBusGMainLoop:

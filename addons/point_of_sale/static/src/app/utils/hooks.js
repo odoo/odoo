@@ -5,7 +5,7 @@ import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_erro
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { ErrorTracebackPopup } from "@point_of_sale/app/errors/popups/error_traceback_popup";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
-import { useEnv, onMounted, onPatched, useComponent, useRef } from "@odoo/owl";
+import { useState, useEnv, onMounted, onPatched, useComponent, useRef } from "@odoo/owl";
 
 /**
  * Introduce error handlers in the component.
@@ -85,5 +85,62 @@ export function useAsyncLockedMethod(method) {
         } finally {
             called = false;
         }
+    };
+}
+
+/**
+ * Wrapper for an async function that exposes the status of the function call.
+ *
+ * Sample use case:
+ * ```js
+ * {
+ *   // inside in a component
+ *   this.doPrint = useTrackedAsync(() => this.printReceipt())
+ *   this.doPrint.status === 'idle'
+ *   this.doPrint.call() // triggers the given async function
+ *   this.doPrint.status === 'loading'
+ *   ['success', 'error].includes(this.doPrint.status) && this.doPrint.result
+ * }
+ * ```
+ * @param {(...args: any[]) => Promise<any>} asyncFn
+ */
+export function useTrackedAsync(asyncFn) {
+    /**
+     * @type {{
+     *  status: 'idle' | 'loading' | 'error' | 'success',
+     * result: any,
+     * lastArgs: any[]
+     * }}
+     */
+    const state = useState({
+        status: "idle",
+        result: null,
+        lastArgs: null,
+    });
+
+    const lockedCall = useAsyncLockedMethod(async (...args) => {
+        state.status = "loading";
+        state.result = null;
+        state.lastArgs = args;
+        try {
+            const result = await asyncFn(...args);
+            state.status = "success";
+            state.result = result;
+        } catch (error) {
+            state.status = "error";
+            state.result = error;
+        }
+    });
+    return {
+        get status() {
+            return state.status;
+        },
+        get result() {
+            return state.result;
+        },
+        get lastArgs() {
+            return state.lastArgs;
+        },
+        call: lockedCall,
     };
 }

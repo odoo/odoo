@@ -7,6 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { Record } from "@mail/core/common/record";
 import { assignDefined, compareDatetime } from "@mail/utils/common/misc";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 let nextId = 1;
 
@@ -189,6 +190,9 @@ patch(ThreadService.prototype, {
     },
     /** @override */
     open(thread, replaceNewMessageChatWindow, options) {
+        if (thread.model === "discuss.channel" && !thread.selfMember) {
+            this.store.env.services["bus_service"].addChannel(thread.busChannel);
+        }
         if (!this.store.discuss.isActive && !this.ui.isSmall) {
             this._openChatWindow(thread, replaceNewMessageChatWindow, options);
             return;
@@ -229,7 +233,11 @@ patch(ThreadService.prototype, {
         }
         super.unpin(...arguments);
     },
-    _openChatWindow(thread, replaceNewMessageChatWindow, { autofocus = true, openMessagingMenuOnClose } = {}) {
+    _openChatWindow(
+        thread,
+        replaceNewMessageChatWindow,
+        { autofocus = true, openMessagingMenuOnClose } = {}
+    ) {
         const chatWindow = this.store.ChatWindow.insert(
             assignDefined(
                 {
@@ -242,7 +250,7 @@ patch(ThreadService.prototype, {
                 }
             )
         );
-        if (autofocus) {
+        if (autofocus && !isMobileOS()) {
             chatWindow.autofocus++;
         }
         if (thread) {

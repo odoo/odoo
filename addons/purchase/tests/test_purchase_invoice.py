@@ -819,6 +819,28 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
             else:
                 self.assertFalse(line.purchase_line_id in po.order_line)
 
+    def test_subset_not_match_non_invoice_lines(self):
+        """Test that a purchase line with a line of 0 as unit price won't match
+        with a non-invoice-lines (not an invoice_line_ids)
+        """
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        product_order_zero_price = self.env['product.product'].create({
+            'name': "A zero price product",
+            'standard_price': 0.0,
+            'list_price': 0.0,
+            'type': 'consu',
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+            'purchase_method': 'purchase',
+            'default_code': 'PROD_ORDER',
+            'taxes_id': False,
+        })
+        po = self.init_purchase(confirm=True, products=[product_order_zero_price])
+        invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
+        invoice._find_and_set_purchase_orders(
+            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
+
+        self.assertFalse(invoice.id in po.invoice_ids.ids)
 
     def test_po_match_from_ocr(self):
         po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
@@ -987,7 +1009,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
                         move_form.ref = '111' if w_bill_ref == 'w_bill_ref' else ''
                         move_form.payment_reference = '222' if w_payment_reference == 'w_payment_reference' else ''
                         move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-purchase_order.id).exists()
-                        payment_reference = move_form._values['payment_reference']
+                        payment_reference = move_form._values['payment_reference'] or ''
                         self.assertEqual(payment_reference, expected_value, "The payment reference should be %s" % expected_value)
 
     def test_invoice_user_id_on_bill(self):

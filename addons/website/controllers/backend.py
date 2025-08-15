@@ -36,6 +36,10 @@ class WebsiteBackend(http.Controller):
 
     @http.route('/website/iframefallback', type="http", auth='user', website=True)
     def get_iframe_fallback(self):
+        # TODO adapt in master (done like this as a fix in stable)
+        view = request.env.ref('website.iframefallback').with_context(no_cow=True).sudo()
+        if '"website.assets_wysiwyg"' in view.arch:
+            view.arch = view.arch.replace('"website.assets_wysiwyg"', '"website.assets_wysiwyg_inside"')
         return request.render('website.iframefallback')
 
     @http.route('/website/check_new_content_access_rights', type="json", auth='user')

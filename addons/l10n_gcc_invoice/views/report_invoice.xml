@@ -57,7 +57,7 @@
                                 فاتورة ملغاة
                             </span>
                             <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">
-                                إشعار خصم
+                                إشعار دائن
                             </span>
                             <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">
                                 إشعار خصم المسودة
@@ -66,7 +66,7 @@
                                 إشعار خصم ملغاة
                             </span>
                             <span t-elif="o.move_type == 'in_refund'">
-                                إشعار خصم المورد
+                                إشعار مدين
                             </span>
                             <span t-elif="o.move_type == 'in_invoice'">
                                 فاتورة المورد
@@ -280,9 +280,15 @@
                                         <span t-field="line.quantity"/>
                                         <span t-field="line.product_uom_id" groups="uom.group_uom"/>
                                     </td>
-                                    <td name="account_invoice_line_name">
-                                        <t t-set="line_name" t-value="line.name or line.with_context(lang=o.partner_id.lang).product_id.display_name"/>
-                                        <span t-out="line_name" t-options="{'widget': 'text'}" t-att-dir="o.env['res.lang']._lang_get_direction(o.partner_id.lang)"/>
+                                    <td name="account_invoice_line_name" class="text-end">
+                                        <t t-if="line.product_id">
+                                            <t t-set="english_name" t-value="line.with_context(lang='en_US').product_id.display_name"/>
+                                            <t t-set="arabic_name" t-value="line.with_context(lang='ar_001').product_id.display_name"/>
+
+                                            <span t-out="arabic_name + '\n'" t-if="arabic_name not in line.name" t-options="{'widget': 'text'}" dir="rtl"/>
+                                            <span t-out="english_name + '\n'" t-if="(english_name != arabic_name) and (english_name not in line.name)" t-options="{'widget': 'text'}"/>
+                                        </t>
+                                        <span t-out="line.name" t-options="{'widget': 'text'}" t-att-dir="o.env['res.lang']._lang_get_direction(o.partner_id.lang)"/>
                                     </td>
 
                                 </t>
@@ -465,7 +471,7 @@
 
                 <p name="payment_communication" t-if="0"></p>
                 <div class="row" t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication">
-                    <div class="col-2 offset-6">
+                    <div class="col-2">
                         <strong>Payment Reference:</strong>
                     </div>
                     <div class="col-2">
@@ -478,32 +484,63 @@
 
                 <p t-if="o.invoice_payment_term_id" name="payment_term">
                     <div class="row">
-                        <div class="col-6 text-start">
-                            <span t-if="o.invoice_payment_term_id.note != o_sec.invoice_payment_term_id.note" t-out="o.invoice_payment_term_id.note"/>
+                        <div class="col-3 text-start">
+                            <span t-out="o.invoice_payment_term_id.note"/>
                         </div>
-                        <div class="col-6 text-end">
-                            <span dir="rtl" t-out="o_sec.invoice_payment_term_id.note"/>
+                        <div class="col-3 text-end">
+                            <span t-if="o.invoice_payment_term_id.note != o_sec.invoice_payment_term_id.note" dir="rtl" t-out="o_sec.invoice_payment_term_id.note"/>
                         </div>
-
                     </div>
+                    <t t-if="o.invoice_payment_term_id.display_on_invoice and o.payment_term_details">
+                        <div t-if='o.show_payment_term_details' id="total_payment_term_details_table" class="row">
+                            <div t-attf-class="#{'col-10 offset-2' if report_type != 'html' else 'col-sm-10 col-md-9 offset-sm-2 offset-md-3'}">
+                                <t t-if="o._is_eligible_for_early_payment_discount(o.currency_id,o.invoice_date)">
+                                    <div class="text-end">
+                                        <span dir="rtl" style="white-space: normal;">
+                                            <span t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                                                    t-out="o.invoice_payment_term_id._get_amount_due_after_discount(o.amount_total, o.amount_tax)">30.00</span> مستحق إذا تم الدفع قبل
+                                            <span t-out="o.invoice_payment_term_id._get_last_discount_date_formatted(o.invoice_date)">2024-01-01</span>
+                                        </span>
+                                        <br/>
+                                        <span t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                                                t-out="o.invoice_payment_term_id._get_amount_due_after_discount(o.amount_total, o.amount_tax)">30.00</span> due if paid before
+                                        <span t-out="o.invoice_payment_term_id._get_last_discount_date_formatted(o.invoice_date)">2024-01-01</span>
+                                    </div>
+                                </t>
+                                <t t-if="len(o.payment_term_details) > 1" t-foreach="o.payment_term_details" t-as="term">
+                                    <div dir="rtl" class="text-end" style="white-space: normal;">
+                                        <span t-out="term_index + 1">1</span> - قسط
+                                        <t t-options='{"widget": "monetary", "display_currency": o.currency_id}' t-out="term.get('amount')">31.05</t> مستحق في
+                                        <t t-out="term.get('date')">2024-01-01</t>
+                                    </div>
+                                    <div class="text-end">
+                                        <span t-out="term_index + 1">1</span> - Installment of
+                                        <t t-options='{"widget": "monetary", "display_currency": o.currency_id}' t-out="term.get('amount')" class="text-end">31.05</t>
+                                        <span> due on </span>
+                                        <t t-out="term.get('date')" class="text-start">2024-01-01</t>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
                 </p>
                 <p t-if="o.narration" name="comment">
                     <div class="row">
                         <div class="col-6 text-start">
-                            <span t-if="o.narration != o_sec.narration" t-out="o.narration"/>
+                            <span t-out="o.narration"/>
                         </div>
                         <div class="col-6 text-end">
-                            <span dir="rtl" t-out="o_sec.narration"/>
+                            <span t-if="o.narration != o_sec.narration" dir="rtl" t-out="o_sec.narration"/>
                         </div>
                     </div>
                 </p>
                 <p t-if="o.fiscal_position_id.note" name="note">
                     <div class="row">
                         <div class="col-6 text-start">
-                            <span t-if="o.fiscal_position_id.note != o_sec.fiscal_position_id.note" t-out="o.fiscal_position_id.note"/>
+                            <span t-out="o.fiscal_position_id.note"/>
                         </div>
                         <div class="col-6 text-end">
-                            <span dir="rtl" t-out="o_sec.fiscal_position_id.note"/>
+                            <span t-if="o.fiscal_position_id.note != o_sec.fiscal_position_id.note" dir="rtl" t-out="o_sec.fiscal_position_id.note"/>
                         </div>
                     </div>
                 </p>

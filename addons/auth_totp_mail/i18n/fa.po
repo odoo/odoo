@@ -45,9 +45,10 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
-"        <t t-out=\"user.name  or ''\"></t> requested you activate two-اعتبارسنجی دو عاملی برای محافظت از حساب شما.<br><br>\n"
-"        اعتبارسنجی دو عاملی (2FA) یک سیستم اعتبارسنجی دو مرحله‌ای است.\n"
-"        مرحله‌ی اول با رمز عبور شما و مرحله‌ی دوم با کدی که از یک برنامه‌ی تلفن همراه دریافت می‌کنید انجام می‌شود\n"
+"        <t t-out=\"user.name  or ''\"></t> از شما خواسته شده است که احراز هویت دو مرحله‌ای را برای محافظت از حساب خود فعال کنید.<br><br>\n"
+"     احراز هویت دو مرحله‌ای (\"2FA\") سیستمی برای تأیید هویت دو مرحله‌ای است.\n"
+"         مرحله اول با استفاده از رمز عبور شما انجام می‌شود و مرحله دوم با کدی که از یک اپلیکیشن موبایل مخصوص دریافت می‌کنید.\n"
+"         اپلیکیشن‌های محبوب شامل Authy، Google Authenticator یا Microsoft Authenticator هستند.\n"
 "        <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
 "            <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
 "                اعتبارسنجی دو عاملی من را فعال کند\n"
@@ -60,14 +61,15 @@ msgstr ""
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_setting_update
 msgid "<span>Consider</span>"
-msgstr "<span>در نظر بگیرید</span>"
+msgstr "<span>در نظر گرفتن</span>"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/auth_totp_device.py:0
 #, python-format
 msgid "A trusted device has just been added to your account: %(device_name)s"
-msgstr "یک دستگاه قابل اعتماد به حساب شما اضافه شده است: %(device_name)s"
+msgstr ""
+"یک دستگاه مورد اعتماد به تازگی به حساب شما افزوده شده است: %(device_name)s"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -75,7 +77,8 @@ msgstr "یک دستگاه قابل اعتماد به حساب شما اضافه 
 #, python-format
 msgid ""
 "A trusted device has just been removed from your account: %(device_names)s"
-msgstr "یک دستگاه قابل اعتماد از حساب شما خذف شده است: %(device_names)s"
+msgstr ""
+"یک دستگاه مورد اعتماد به تازگی از حساب شما حذف شده است: %(device_names)s"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -87,12 +90,12 @@ msgstr "امنیت حساب"
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_auth_totp_device
 msgid "Authentication Device"
-msgstr "دستگاه اعتبارسنجی"
+msgstr "دستگاه احراز هویت"
 
 #. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_invite
 msgid "Invitation to activate two-factor authentication on your Odoo account"
-msgstr "دعوت برای فعال‌سازی اعتبارسنجی دو عاملی در حساب اودووی شما"
+msgstr "دعوت‌نامه برای فعال‌سازی احراز هویت دو مرحله‌ای در حساب Odoo شما"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -102,13 +105,13 @@ msgid ""
 "Invitation to use two-factor authentication sent for the following user(s): "
 "%s"
 msgstr ""
-"دعوت‌نامه‌ی ارسال شده برای کاربر(ها) به منظور استفاده از اعتبارسنجی دو "
-"عاملی: %s"
+"دعوت‌نامه برای استفاده از احراز هویت دو مرحله‌ای برای کاربر(ان) زیر ارسال "
+"شد: %s"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.view_users_form
 msgid "Invite to use 2FA"
-msgstr "دعوت‌ برای استفاده از اعتبارسنجی 2 عاملی"
+msgstr "دعوت‌ برای استفاده از احراز هویت دو مرحله‌ای"
 
 #. module: auth_totp_mail
 #: model:ir.actions.server,name:auth_totp_mail.action_invite_totp
@@ -123,54 +126,54 @@ msgstr "نام"
 #. module: auth_totp_mail
 #: model:ir.actions.server,name:auth_totp_mail.action_activate_two_factor_authentication
 msgid "Open two-factor authentication configuration"
-msgstr "باز کردن پیکربندی اعتبارسنجی دو عاملی"
+msgstr "تنظیمات احراز هویت دو مرحله‌ای را باز کنید."
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 #, python-format
 msgid "Security Update: 2FA Activated"
-msgstr "به روزرسانی امنیتی: اعتبارسنجی 2 عاملی فعال شد"
+msgstr "به روزرسانی امنیتی: احراز هویت دو مرحله‌ای فعال شد"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 #, python-format
 msgid "Security Update: 2FA Deactivated"
-msgstr "به روزرسانی امنیتی: اعتبارسنجی 2 عاملی فعال شد"
+msgstr "به روزرسانی امنیتی: احراز هویت دو مرحله‌ای غیرفعال شد"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/auth_totp_device.py:0
 #, python-format
 msgid "Security Update: Device Added"
-msgstr "به روزرسانی امنیتی: دستگاه افزوده شد"
+msgstr "به‌روز رسانی امنیتی: دستگاه افزوده شد"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/auth_totp_device.py:0
 #, python-format
 msgid "Security Update: Device Removed"
-msgstr "به روزرسانی امنیتی: دستگاه حذف شد"
+msgstr "به‌روز رسانی امنیتی: دستگاه حذف شد"
 
 #. module: auth_totp_mail
 #: model:mail.template,name:auth_totp_mail.mail_template_totp_invite
 msgid "Settings: 2Fa Invitation"
-msgstr "تنظیمات: دعوت‌نامه برای اعتبارسنجی  2 عاملی"
+msgstr "تنظیمات: دعوت‌نامه برای احراز هویت دو مرحله‌ای"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication has been activated on your account"
-msgstr "اعتبارسنجی 2 عاملی در حساب شما فعال شده است"
+msgstr "احراز هویت دو مرحله‌ای در حساب شما فعال شده است."
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication has been deactivated on your account"
-msgstr "اعتبارسنجی دو عاملی در حساب شما فعال شده است"
+msgstr "احراز هویت دو مرحله‌ای در حساب شما غیرفعال شده است."
 
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_users

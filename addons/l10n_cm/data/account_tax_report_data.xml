@@ -340,6 +340,7 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">CM_CREDIT.tax - CM_REIMBURSEMENT.tax</field>
                                 <field name="subformula">if_above(XAF(0))</field>
+                                <field name="carryover_target" eval="False"/>
                             </record>
                             <record id="account_tax_report_line_cm_vat_credit_to_report_carryover" model="account.report.expression">
                                 <field name="label">_carryover_tax</field>

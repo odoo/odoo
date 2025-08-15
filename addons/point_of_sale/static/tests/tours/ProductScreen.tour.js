@@ -146,9 +146,17 @@ registry.category("web_tour.tours").add("FiscalPositionNoTax", {
             ProductScreen.clickHomeCategory(),
             ProductScreen.clickDisplayedProduct("Test Product"),
             ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.clickProductInfo("Test Product"),
+            ProductScreen.priceOnProductInfoIs("100.00"),
+            ProductScreen.productInfoTaxesAre(["Tax 15%: $ 13.04"]),
+            ProductScreen.clickCloseProductInfo(),
             ProductScreen.changeFiscalPosition("No Tax"),
             ProductScreen.noDiscountApplied("100.00"),
             ProductScreen.totalAmountIs("86.96"),
+            ProductScreen.clickProductInfo("Test Product"),
+            ProductScreen.priceOnProductInfoIs("86.96"),
+            ProductScreen.productInfoTaxesAre([]),
+            ProductScreen.clickCloseProductInfo(),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.remainingIs("0.00"),
@@ -166,6 +174,17 @@ registry.category("web_tour.tours").add("CashClosingDetails", {
             ProductScreen.enterOpeningAmount("90"),
             ProductScreen.confirmOpeningPopup(),
             ProductScreen.checkSecondCashClosingDetailsLineAmount("10.00", "-"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("CashClosingDecimals", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            ProductScreen.enterOpeningAmount("558.49"),
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.checkSecondCashClosingDetailsLineAmount("1.91", "-"),
         ].flat(),
 });
 
@@ -214,6 +233,27 @@ registry.category("web_tour.tours").add("MultiProductOptionsTour", {
             ProductConfiguratorPopup.isOptionShown("Value 1"),
             ProductConfiguratorPopup.isOptionShown("Value 2"),
 
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_add_multiple_serials_at_once", {
+    test: true,
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.enterLotNumbers(["SN001", "SN002", "SN003"]),
+            ProductScreen.selectedOrderlineHas("Product A", "3.0"),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            [
+                {
+                    trigger: ".fa-trash-o",
+                    run: "click",
+                },
+            ],
+            ProductScreen.enterLotNumbers(["SN005", "SN006"]),
+            ProductScreen.selectedOrderlineHas("Product A", "4.0"),
             Chrome.endTour(),
         ].flat(),
 });

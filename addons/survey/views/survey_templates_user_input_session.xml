@@ -107,14 +107,14 @@
                     </div>
                 </div>
             </div>
-            <div class="o_container_small px-4 pb-3 pt96 d-flex flex-column o_survey_session_manage_container">
-                <div class="o_survey_session_description_done d-none">
+            <div class="px-sm-4 pb-3 pt96 d-flex flex-column o_survey_session_manage_container">
+                <div class="o_survey_session_description_done d-none o_container_small">
                     <h1 class="fs-2">Thank you!</h1>
                     <div t-field="survey.description_done"/>
                 </div>
                 <a role="button"
                     class="o_survey_session_navigation o_survey_session_navigation_next p-2">
-                    <span class="o_survey_session_navigation_next_label me-2 fw-bold"/>
+                    <span class="o_survey_session_navigation_next_label me-2 fw-bold d-none d-md-inline"/>
                     <i class="fw-bold oi oi-chevron-right"/>
                 </a>
                 <a role="button"
@@ -153,17 +153,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="o_survey_session_leaderboard w-100 flex-column flex-grow-1" style="display: none;">
+                <div class="o_survey_session_leaderboard w-100 flex-column flex-grow-1 min-vw-75" style="display: none; max-height: 80vh;">
                     <!--Set question to false to avoid background miss match when no question are displayed.-->
                     <t t-set="question" t-value="False"/>
-                    <div class="d-flex">
-                        <h1 class="o_survey_session_leaderboard_title flex-grow-1">
+                    <div class="d-flex flex-wrap">
+                        <h1 class="o_survey_session_leaderboard_title flex-grow-1 me-4 ms-1">
                             <span t-if="is_last_question">Final Leaderboard</span>
                             <span t-else="">Leaderboard</span>
                         </h1>
-                        <div t-att-class="'o_survey_leaderboard_buttons fw-bold %s' % 'd-none' if not is_last_question else ''">
-                            <a href="#" role="button" class="o_survey_session_close btn btn-primary me-4"><i class="fa fa-close"/> Close</a>
-                            <a href="#" role="button" class="o_survey_session_close btn btn-primary" t-att-data-show-results="True"><i class="fa fa-bar-chart"/> Results</a>
+                        <div t-att-class="'o_survey_leaderboard_buttons fw-bold %s' % 'd-none' if not is_last_question else 'ms-2'">
+                            <a href="#" role="button" class="o_survey_session_close btn btn-primary mt-1"><i class="fa fa-close"/> Close</a>
+                            <a href="#" role="button" class="o_survey_session_close btn btn-primary mt-1" t-att-data-show-results="True"><i class="fa fa-bar-chart"/> Results</a>
                         </div>
                     </div>
                     <div class="justify-content-center d-flex flex-column flex-grow-1 mt-5 mb-5 pb-5 o_survey_session_leaderboard_container"/>
@@ -191,8 +191,8 @@
                     </div>
                     <!-- We keep "18rem" of space to display the points / nickname.
                     Then, the length of the bar is a percentage of the attendee's score compared to the max_score. -->
-                    <t t-set="width_ratio" t-value="round(round(score['scoring_total']) / round(max_score), 3)"/>
-                    <t t-set="width_ratio_question" t-value="str(round(round(score.get('question_score', 0)) / round(score.get('max_question_score', 1)), 3))"/>
+                    <t t-set="width_ratio" t-value="round(round(score['scoring_total'], 3) / round(max_score, 3), 3)"/>
+                    <t t-set="width_ratio_question" t-value="str(round(round(score.get('question_score', 0), 3) / round(score.get('max_question_score', 1), 3), 3))"/>
                     <div class="o_survey_session_leaderboard_bar ms-2 align-top d-inline-block text-end fw-bold"
                         t-att-style="'width: calc(calc(%s - 18rem) * %s)' % ('100%', width_ratio)"
                         t-att-data-width-ratio="width_ratio">

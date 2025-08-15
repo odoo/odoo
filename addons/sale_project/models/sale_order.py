@@ -6,8 +6,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError
-from odoo.tools.safe_eval import safe_eval
-from odoo.osv.expression import AND
+from odoo.osv.expression import AND, NEGATIVE_TERM_OPERATORS, TERM_OPERATORS_NEGATION, ANY_IN
 
 
 class SaleOrder(models.Model):
@@ -19,7 +18,7 @@ class SaleOrder(models.Model):
     visible_project = fields.Boolean('Display project', compute='_compute_visible_project', readonly=True)
     project_id = fields.Many2one('project.project', 'Project',
         help='Select a non billable project on which tasks can be created.')
-    project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_user", help="Projects used in this sales order.")
+    project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_user,project.group_project_milestone", help="Projects used in this sales order.")
     project_count = fields.Integer(string='Number of Projects', compute='_compute_project_ids', groups='project.group_project_user')
     milestone_count = fields.Integer(compute='_compute_milestone_count')
     is_product_milestone = fields.Boolean(compute='_compute_is_product_milestone')
@@ -54,26 +53,23 @@ class SaleOrder(models.Model):
             order.show_create_project_button = is_project_manager and order.id in show_button_ids and not order.project_count and order.order_line.product_template_id.filtered(lambda x: x.service_policy in ['delivered_timesheet', 'delivered_milestones'])
 
     def _search_tasks_ids(self, operator, value):
-        is_name_search = operator in ['=', '!=', 'like', '=like', 'ilike', '=ilike'] and isinstance(value, str)
-        is_id_eq_search = operator in ['=', '!='] and isinstance(value, int)
-        is_id_in_search = operator in ['in', 'not in'] and isinstance(value, list) and all(isinstance(item, int) for item in value)
-        if not (is_name_search or is_id_eq_search or is_id_in_search):
-            raise NotImplementedError(_('Operation not supported'))
-
-        if is_name_search:
-            tasks_ids = self.env['project.task']._name_search(value, operator=operator, limit=None)
-        elif is_id_eq_search:
-            tasks_ids = value if operator == '=' else self.env['project.task']._search([('id', '!=', value)], order='id')
-        else:  # is_id_in_search
-            tasks_ids = self.env['project.task']._search([('id', operator, value)], order='id')
-
-        tasks = self.env['project.task'].browse(tasks_ids)
-        return [('id', 'in', tasks.sale_order_id.ids)]
+        if operator in NEGATIVE_TERM_OPERATORS:
+            positive_operator = TERM_OPERATORS_NEGATION[operator]
+        else:
+            positive_operator = operator
+        if operator in ANY_IN:
+            new_operator = ANY_IN[operator]
+            task_domain = AND([value, [('sale_order_id', '!=', False)]])
+        else:
+            new_operator = 'in' if positive_operator == operator else 'not in'
+            task_domain = [('display_name' if isinstance(value, str) else 'id', positive_operator, value), ('sale_order_id', '!=', False)]
+        query = self.env['project.task']._search(task_domain)
+        return [('id', new_operator, query.subselect('sale_order_id'))]
 
     @api.depends('order_line.product_id.project_id')
     def _compute_tasks_ids(self):
         tasks_per_so = self.env['project.task']._read_group(
-            domain=['&', ('project_id', '!=', False), '|', ('sale_line_id', 'in', self.order_line.ids), ('sale_order_id', 'in', self.ids)],
+            domain=self._tasks_ids_domain(),
             groupby=['sale_order_id'],
             aggregates=['id:recordset', '__count']
         )
@@ -171,8 +167,11 @@ class SaleOrder(models.Model):
             'default_project_id': default_project_id,
             'default_user_ids': [self.env.uid],
         }
-        action['domain'] = AND([ast.literal_eval(action['domain']), [('id', 'in', self.tasks_ids.ids)]])
+        action['domain'] = AND([ast.literal_eval(action['domain']), self._tasks_ids_domain()])
         return action
+
+    def _tasks_ids_domain(self):
+        return ['&', ('project_id', '!=', False), '|', ('sale_line_id', 'in', self.order_line.ids), ('sale_order_id', 'in', self.ids)]
 
     def action_create_project(self):
         self.ensure_one()
@@ -201,7 +200,7 @@ class SaleOrder(models.Model):
             return {'type': 'ir.actions.act_window_close'}
 
         sorted_line = self.order_line.sorted('sequence')
-        default_sale_line = next(sol for sol in sorted_line if sol.product_id.detailed_type == 'service')
+        default_sale_line = next((sol for sol in sorted_line if sol.product_id.detailed_type == 'service'), None)
         action = {
             'type': 'ir.actions.act_window',
             'name': _('Projects'),
@@ -212,7 +211,7 @@ class SaleOrder(models.Model):
             'context': {
                 **self._context,
                 'default_partner_id': self.partner_id.id,
-                'default_sale_line_id': default_sale_line.id,
+                'default_sale_line_id': default_sale_line.id if default_sale_line else False,
                 'default_allow_billable': 1,
             }
         }

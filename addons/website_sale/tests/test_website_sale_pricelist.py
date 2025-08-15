@@ -3,10 +3,12 @@
 
 import logging
 
+from datetime import datetime, timedelta
+from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo.fields import Command
-from odoo.tests import tagged, TransactionCase, loaded_demo_data
+from odoo.tests import tagged, TransactionCase
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.website.tools import MockRequest
@@ -345,6 +347,51 @@ class TestWebsitePriceList(TransactionCase):
             pricelist, self.env['account.fiscal.position'])[product_template.id]['price_reduce']
         self.assertEqual(price, 18, msg)
 
+    def test_pricelist_item_validity_period(self):
+        """ Test that if a cart was created before a validity period,
+            the correct prices will still apply.
+        """
+        today = datetime.today()
+        tomorrow = today + timedelta(days=1)
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Pricelist with validity period',
+            'item_ids': [Command.create({
+                    'compute_price': 'formula',
+                    'base': 'list_price',
+                    'price_discount': 20,
+                    'date_start': tomorrow,
+            })]
+        })
+        product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'list_price': 100,
+            'taxes_id': False,
+        })
+        current_website = self.env['website'].get_current_website()
+        current_website.pricelist_id = pricelist
+        with freeze_time(today) as frozen_time:
+            so = self.env['sale.order'].create({
+                'partner_id': self.env.user.partner_id.id,
+                'pricelist_id': pricelist.id,
+                'order_line': [(0, 0, {
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_uom_qty': 1,
+                    'product_uom': product.uom_id.id,
+                    'price_unit': product.list_price,
+                    'tax_id': False,
+                })],
+                'website_id': current_website.id,
+            })
+            sol = so.order_line
+            self.assertEqual(sol.price_total, 100.0)
+
+            frozen_time.move_to(tomorrow + timedelta(seconds=10))
+            with MockRequest(self.env, website=current_website, sale_order_id=so.id):
+                so._cart_update(product_id=product.id, line_id=sol.id, set_qty=2)
+            self.assertEqual(sol.price_unit, 80.0, 'Reduction should be applied')
+            self.assertEqual(sol.price_total, 160)
+
 def simulate_frontend_context(self, website_id=1):
     # Mock this method will be enough to simulate frontend context in most methods
     def get_request_website():
@@ -515,6 +562,31 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
             pls = self.website.get_pricelist_available(show_visible=True)
         self.assertEqual(pls, pls_to_return + current_pl, "Only pricelists for BE, accessible en website and selectable should be returned. It should also return the applied promo pl")
 
+    def test_get_pricelist_available_geoip5(self):
+        """Remove country group from certain pricelists, and check that pricelists
+        with country group get prioritized when geoip is available."""
+        exclude = self.backend_pl + self.generic_pl_code + self.w1_pl_select + self.w1_pl_code
+        exclude.country_group_ids = False
+        self.website1_be_pl -= exclude
+
+        with patch(
+            'odoo.addons.website_sale.models.website.Website._get_geoip_country_code',
+            return_value=self.BE.code,
+        ):
+            pls = self.website.get_pricelist_available()
+
+        for pl in pls:
+            self.assertIn(
+                self.BE,
+                pl.country_group_ids.country_ids,
+                "Pricelists without country groups should get excluded",
+            )
+        self.assertEqual(
+            pls,
+            self.website1_be_pl,
+            "Only pricelists for BE and accessible on website should be returned",
+        )
+
 
 @tagged('post_install', '-at_install')
 class TestWebsitePriceListHttp(HttpCaseWithUserPortal):
@@ -656,30 +728,24 @@ class TestWebsiteSaleSession(HttpCaseWithUserPortal):
             The objective is to verify that the pricelist
             changes correctly according to the user.
         """
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
         website = self.env.ref('website.default_website')
         test_user = self.env['res.users'].create({
             'name': 'Toto',
             'login': 'toto',
             'password': 'long_enough_password',
         })
-        user_pricelist, _ = self.env['product.pricelist'].create([
-            {
-                'name': 'User Pricelist',
-                'website_id': website.id,
-                'code': 'User_pricelist',
-                'selectable': True,
-                'sequence': 40, # Be sure not to use it by default
-            },
-            {
-                'name': 'Other Pricelist',
-                'website_id': website.id,
-                'code': 'Other_pricelist',
-                'selectable': True,
-                'sequence': 30,
-            }
-        ])
+        # We need at least two selectable pricelists to display the dropdown
+        self.env['product.pricelist'].create([{
+            'name': 'Public Pricelist 1',
+            'selectable': True
+        }, {
+            'name': 'Public Pricelist 2',
+            'selectable': True
+        }])
+        user_pricelist = self.env['product.pricelist'].create({
+            'name': 'User Pricelist',
+            'website_id': website.id,
+            'code': 'User_pricelist',
+        })
         test_user.partner_id.property_product_pricelist = user_pricelist
         self.start_tour("/shop", 'website_sale.website_sale_shop_pricelist_tour', login="")

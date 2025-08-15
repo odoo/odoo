@@ -22,18 +22,14 @@
                         <Tipo t-out="format_alphanumeric(line_dict['discount_type'])"/>
                         <Percentuale t-out="format_numbers(abs(line.discount))"/>
                     </ScontoMaggiorazione>
-                    <ScontoMaggiorazione t-if="line_dict['discount_amount'] != 0">
-                        <Tipo t-out="'SC'"/>
-                        <Importo t-out="format_numbers(abs(line_dict['discount_amount']))"/>
-                    </ScontoMaggiorazione>
-                    <PrezzoTotale t-out="format_monetary(line_dict['subtotal_price'], currency)"/>
+                    <PrezzoTotale t-out="format_monetary(line_dict['subtotal_price_eur'], currency)"/>
                     <AliquotaIVA t-if="vat_tax.amount_type == 'percent'" t-out="format_numbers(vat_tax.amount)"/>
                     <AliquotaIVA t-elif="vat_tax.amount_type != 'percent'" t-out="'0.00'"/>
                     <Natura t-if="vat_tax.l10n_it_exempt_reason" t-out="vat_tax.l10n_it_exempt_reason"/>
                     <AltriDatiGestionali t-if="conversion_rate">
                         <TipoDato t-translation="off">DIVISA</TipoDato>
                         <RiferimentoTesto t-out="format_alphanumeric(record.currency_id.name)"/>
-                        <RiferimentoNumero t-out="'%.06f' % line.price_subtotal"/>
+                        <RiferimentoNumero t-out="'%.06f' % line_dict['subtotal_price']"/>
                     </AltriDatiGestionali>
                     <AltriDatiGestionali t-if="conversion_rate">
                         <TipoDato t-translation="off">CAMBIO</TipoDato>
@@ -136,7 +132,7 @@
             <DatiGeneraliDocumento>
                 <TipoDocumento t-out="document_type"/>
                 <Divisa t-out="currency.name"/>
-                <Data t-out="format_date(record.invoice_date)"/>
+                <Data t-out="format_date(record.date if is_self_invoice else record.invoice_date)"/>
                 <Numero t-out="format_alphanumeric(record.name, -20)"/>
                 <DatiBollo t-if="record.l10n_it_stamp_duty">
                     <BolloVirtuale t-translation="off">SI</BolloVirtuale>
@@ -156,13 +152,21 @@
             <DatiConvenzione t-if="origin_document_type == 'agreement'">
                 <t t-call="l10n_it_edi.account_invoice_FatturaPA_origin_document"/>
             </DatiConvenzione>
-            <DatiFattureCollegate t-if="record.reversed_entry_id">
-                <IdDocumento t-out="format_alphanumeric(record.reversed_entry_id.name, -20)"/>
-                <Data t-out="format_date(record.reversed_entry_id.invoice_date)"/>
-            </DatiFattureCollegate>
+            <t t-if="reconciled_moves">
+                <DatiFattureCollegate t-foreach="reconciled_moves" t-as="reconciled_move">
+                    <IdDocumento t-out="format_alphanumeric(reconciled_move.name, -20)"/>
+                    <Data t-out="format_date(reconciled_move.date if reconciled_move.l10n_it_edi_is_self_invoice else reconciled_move.invoice_date)"/>
+                </DatiFattureCollegate>
+            </t>
+            <t t-elif="record.reversed_entry_id">
+                <DatiFattureCollegate>
+                    <IdDocumento t-out="format_alphanumeric(record.reversed_entry_id.name, -20)"/>
+                    <Data t-out="format_date(record.reversed_entry_id.date if record.reversed_entry_id.l10n_it_edi_is_self_invoice else record.reversed_entry_id.invoice_date)"/>
+                </DatiFattureCollegate>
+            </t>
             <DatiFattureCollegate t-foreach="downpayment_moves" t-as="downpayment_move">
                 <IdDocumento t-out="format_alphanumeric(downpayment_move.name, -20)"/>
-                <Data t-out="format_date(downpayment_move.invoice_date)"/>
+                <Data t-out="format_date(downpayment_move.date if downpayment_move.l10n_it_edi_is_self_invoice else downpayment_move.invoice_date)"/>
             </DatiFattureCollegate>
             <DatiDDT t-if="record.l10n_it_ddt_id">
                 <NumeroDDT t-out="format_alphanumeric(record.l10n_it_ddt_id.name, -20)"/>

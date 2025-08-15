@@ -6,15 +6,15 @@
 # Wil Odoo, 2023
 # Iran Villalobos López, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
-# Fernanda Alvarez, 2024
+# Fernanda Alvarez, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -493,7 +493,7 @@ msgstr "Capturar "
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
 msgid "Capture Amount Manually"
-msgstr "Capturar el importe de manera manual"
+msgstr "Capturar el importe de forma manual"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -663,7 +663,7 @@ msgstr "Tarjetas de crédito y débito (por Stripe)"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__available_currency_ids
 msgid "Currencies"
-msgstr "Divisas"
+msgstr "Monedas"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__currency_id
@@ -671,7 +671,7 @@ msgstr "Divisas"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__main_currency_id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__currency_id
 msgid "Currency"
-msgstr "Divisa"
+msgstr "Moneda"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__manual
@@ -698,7 +698,7 @@ msgstr "Demostración"
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__disabled
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Disabled"
-msgstr "Deshabilitado"
+msgstr "Desactivado"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__display_name
@@ -1492,25 +1492,24 @@ msgstr "Guardar"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Select countries. Leave empty to allow any."
-msgstr "Seleccionar países. Déjelo en blanco para permitir cualquiera."
+msgstr "Seleccione los países. Deje el campo vacío para permitir cualquiera."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Select countries. Leave empty to make available everywhere."
 msgstr ""
-"Seleccione sus países, deje el campo vacío para usarlo desde cualquier "
-"parte."
+"Seleccione los países. Deje el campo vacío para que esté disponible en todas"
+" partes."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Select currencies. Leave empty not to restrict any."
-msgstr ""
-"Seleccione las divisas. Deje el campo vacío para no restringir ninguna. "
+msgstr "Seleccione las monedas. Deje el campo vacío para no restringirlas."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Select currencies. Leave empty to allow any."
-msgstr "Seleccionar divisas. Déjelo en blanco para permitir cualquiera."
+msgstr "Seleccione las monedas. Deje el campo vacío para permitir cualquiera."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
@@ -1717,7 +1716,7 @@ msgid ""
 "The currencies available with this payment provider. Leave empty not to "
 "restrict any."
 msgstr ""
-"Las divisas disponibles con este proveedor de pago. Deje el campo vacío si "
+"Las monedas disponibles con este proveedor de pago. Deje el campo vacío si "
 "no quiere restringir ninguna."
 
 #. module: payment
@@ -2193,6 +2192,13 @@ msgid ""
 msgstr ""
 "No puede comprar la empresa de un proveedor de pago con transacciones "
 "existentes."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_method.py:0
+#, python-format
+msgid "You cannot delete the default payment method."
+msgstr "No puede eliminar el método de pago predeterminado."
 
 #. module: payment
 #. odoo-python

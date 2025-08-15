@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Jolien De Paepe, 2024
-# Wil Odoo, 2024
 # Sarah Bellefroid, 2024
-# Manon Rondou, 2024
+# Wil Odoo, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-06-13 00:53+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +30,7 @@ msgstr "Données récupérées"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
 msgid "# Sale Orders"
-msgstr "# Bons de commande"
+msgstr "# Commandes clients"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -40,7 +40,7 @@ msgstr "# de lignes"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
-msgstr "# de bons de commande"
+msgstr "# de commandes clients"
 
 #. module: sale
 #. odoo-python
@@ -770,8 +770,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
 "title=\"Sales orders\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Bon de commande\" "
-"title=\"Bon de commande\"/>"
+"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Commandes clients\" "
+"title=\"Commandes clients\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -808,7 +808,7 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
 "                            <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
-"<span class=\"d-none d-md-inline\">Bon de commande #</span>\n"
+"<span class=\"d-none d-md-inline\">Commande client #</span>\n"
 "                            <span class=\"d-block d-md-none\">Réf.</span>"
 
 #. module: sale
@@ -969,7 +969,7 @@ msgstr "<strong>Votre référence :</strong><br/>"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
 msgid "A confirmed sales order requires a confirmation date."
-msgstr "Un bon de commande confirmé nécessite une date de confirmation."
+msgstr "Une commande client confirmée nécessite une date de confirmation."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1060,7 +1060,7 @@ msgid ""
 msgstr ""
 "Selon la confirmation du produit, la quantité livrée peut être calculée automatiquement par mécanisme :\n"
 " - Manuel : la quantité est définie manuellement sur la ligne\n"
-"- Analytique à partir des notes de frais : la quantité est la somme des notes de frais comptabilisées\n"
+"- Analytique à partir des dépenses : la quantité est la somme des dépenses comptabilisées\n"
 "- Feuille de temps : la quantité est la somme des heures enregistrées sur les tâches liées à cette commande\n"
 "- Mouvements de stock : la quantité provient des transferts confirmés\n"
 
@@ -1164,15 +1164,17 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"Vous permet de partager le document avec vos clients dans le cadre d'une vente. \n"
-"Laissez ce champ vide si vous ne voulez pas partager ce document avec vos clients.\n"
-"Devis : le document sera envoyé aux clients et est accessible par eux à tout moment. \n"
-"Par exemple, cette option peut être utile pour partager des fichiers de description de produits. \n"
-"Commande confirmée : le document sera envoyé aux clients et est accessible par eux.\n"
-"Par exemple, cette option peut être utile pour partager des manuels d'utilisation ou des contenus numériques achetés dans le cadre d'un eCommerce.\n"
-"Dans le devis : Le document sera inclus dans le PDF du devis entre les pages d'en-tête et le tableau du devis."
+"Vous permet de partager le document avec vos clients dans le cadre d'une vente.\n"
+"Laissez-le vide si vous ne souhaitez pas partager ce document avec le client de vente.\n"
+"Devis : le document sera envoyé et accessible par les clients à tout moment.\n"
+"Par exemple, cette option peut être utile pour partager des fichiers de description de produit.\n"
+"Commande confirmée : le document sera envoyé et accessible aux clients.\n"
+"Par exemple, cette option peut être utile pour partager un manuel utilisateur ou du contenu numérique acheté sur l'eCommerce.\n"
+"Dans le devis : le document sera inclus dans le PDF du devis\n"
+"et de la commande client entre les pages de l'en-tête et le tableau du devis."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1234,17 +1236,17 @@ msgstr "Compte analytique"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "Distribution Analytique"
+msgstr "Répartition Analytique"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution_search
 msgid "Analytic Distribution Search"
-msgstr "Recherche de distribution analytique"
+msgstr "Recherche de répartition analytique"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
 msgid "Analytic From Expenses"
-msgstr "Analytique des notes de frais"
+msgstr "Analytique des dépenses"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
@@ -1570,8 +1572,12 @@ msgstr "Complétez les données de votre entreprise"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "Calculer les frais d'expédition et expédier avec DHL"
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Calculer les frais de livraison et expédier avec DHL<br/>\n"
+"                                    <strong>(allez dans Accueil > Applications pour l’installer)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1580,8 +1586,12 @@ msgstr "Calculer les frais d'expédition et expédier avec Easypost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "Calculer les frais d'expédition et expédier avec FedEx"
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Calculer les frais de livraison et expédier avec FedEx<br/>\n"
+"                                    <strong>(allez dans Accueil > Applications pour l’installer)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1595,13 +1605,21 @@ msgstr "Calculer les frais d'expédition et expédier avec Shiprocket"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "Calculer les frais d'expédition et expédier avec UPS"
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Calculer les frais de livraison et expédier avec UPS<br/>\n"
+"                                    <strong>(allez dans Accueil > Applications pour l’installer)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "Calculer les frais d'expédition et expédier avec USPS"
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Calculer les frais de livraison et expédier avec USPS<br/>\n"
+"                                    <strong>(allez dans Accueil > Applications pour l’installer)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1893,6 +1911,11 @@ msgid "Customize your quotes and orders."
 msgstr "Personnalisez vos devis et commandes."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "DHL Connector"
+msgstr "Connecteur DHL"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
 msgstr "Connecteur DHL Express"
@@ -2135,6 +2158,11 @@ msgid "Display Type"
 msgstr "Type d'affichage"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Compte analytique de répartition"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Documentation"
 msgstr "Documentation"
@@ -2229,9 +2257,9 @@ msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
 msgstr ""
-"Les acomptes sont effectués lors de la création de factures à partir d'un "
-"bon de commande. Ils ne sont pas copiés lors de la duplication d'un bon de "
-"commande."
+"Les acomptes sont effectués lors de la création de factures à partir d'une "
+"commande client. Ils ne sont pas copiés lors de la duplication d'une "
+"commande client."
 
 #. module: sale
 #. odoo-python
@@ -2314,6 +2342,7 @@ msgstr "Ligne supplémentaire avec %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "FedEx Connector"
 msgstr "Connecteur FedEx"
 
@@ -2515,7 +2544,7 @@ msgid ""
 "If set, the SO will invoice in this journal; otherwise the sales journal "
 "with the lowest sequence is used."
 msgstr ""
-"Si défini, le bon de commande sera facturé dans ce journal ; sinon, le "
+"Si défini, la commande client sera facturée dans ce journal ; sinon, le "
 "journal des ventes avec la séquence la plus basse est utilisé."
 
 #. module: sale
@@ -2531,7 +2560,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_product_packaging__sales
 msgid "If true, the packaging can be used for sales orders"
 msgstr ""
-"Si vrai, le conditionnement peut être utilisé pour les bons de commande"
+"Si vrai, le conditionnement peut être utilisé pour les commandes clients"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
@@ -2781,14 +2810,14 @@ msgstr "Est un acompte"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_expense
 msgid "Is expense"
-msgstr "Est une note de frais"
+msgstr "Est une dépense"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_expense
 msgid ""
 "Is true if the sales order line comes from an expense or a vendor bills"
 msgstr ""
-"Est vrai si la ligne de commande vient d'une note de frais ou d'une facture "
+"Est vrai si la ligne de commande vient d'une dépense ou d'une facture "
 "fournisseur"
 
 #. module: sale
@@ -2989,7 +3018,7 @@ msgstr "Erreur d'envoi du message"
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn_msg
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_warn_msg
 msgid "Message for Sales Order"
-msgstr "Message sur les bons de commande"
+msgstr "Message sur les commandes clients"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn_msg
@@ -3206,7 +3235,7 @@ msgid ""
 "Once a sales order is confirmed, you can't remove one of its lines (we need to track if something gets invoiced or delivered).\n"
 "                Set the quantity to 0 instead."
 msgstr ""
-"Une fois un bon de commande confirmé, vous ne pouvez pas supprimer l'une de ses lignes (nous devons savoir si quelque chose a été facturé ou livré).\n"
+"Une fois une commande client confirmée, vous ne pouvez pas supprimer l'une de ses lignes (nous devons savoir si quelque chose a été facturé ou livré).\n"
 "Définissez plutôt la quantité sur 0."
 
 #. module: sale
@@ -3219,7 +3248,7 @@ msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales "
 "order.<br> You will be able to create an invoice and collect the payment."
 msgstr ""
-"Une fois le devis confirmé par le client, il devient un bon de commande. "
+"Une fois le devis confirmé par le client, il devient une commande client. "
 "<br>Vous pourrez créer une facture et encaisser le paiement."
 
 #. module: sale
@@ -3228,8 +3257,8 @@ msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
 msgstr ""
-"Une fois le devis confirmé, il devient un bon de commande. <br> Vous pourrez"
-" créer une facture et encaisser le paiement."
+"Une fois le devis confirmé, il devient une commande client. <br> Vous "
+"pourrez créer une facture et encaisser le paiement."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
@@ -3451,7 +3480,7 @@ msgstr "Devis en PDF"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "PDF Quote builder"
-msgstr "Constructeur de devis en PDF"
+msgstr "Générateur de devis PDF"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__paypal_pdt_token
@@ -3789,7 +3818,7 @@ msgstr "Qté à facturer"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quantities to invoice from sales orders"
-msgstr "Quantités à facturer depuis les bons de commande"
+msgstr "Quantités à facturer depuis les commandes clients"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_qty
@@ -3953,7 +3982,7 @@ msgstr "Référence"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request"
-msgstr "Référence du document qui a généré cette demande de bon de commande"
+msgstr "Référence du document qui a généré cette demande de commande client"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_payment_register
@@ -4071,7 +4100,7 @@ msgstr "Commande client"
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_order_count
 msgid "Sale Order Count"
-msgstr "Nombre de bons de commande"
+msgstr "Nombre de commandes clients"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_plan_action_sale_order
@@ -4086,12 +4115,12 @@ msgstr "Avertissements sur les commandes"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
 msgid "Sale Orders"
-msgstr "Bons de commande"
+msgstr "Commandes clients"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_orders_count
 msgid "Sale Orders Count"
-msgstr "Nombre de bons de commande"
+msgstr "Nombre de commandes clients"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_provider_onboarding_wizard
@@ -4116,7 +4145,7 @@ msgstr "Configuration du mode de paiement sélectionné dans Ventes"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_order_ids
 msgid "Sale orders to cancel"
-msgstr "Bons de commande à annuler"
+msgstr "Commandes clients à annuler"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_packaging__sales
@@ -4183,7 +4212,7 @@ msgstr "Rapport d'analyse des ventes"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Sales Order"
-msgstr "Bon de commande"
+msgstr "Commande client"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_cancel
@@ -4200,7 +4229,7 @@ msgstr "Commande de vente confirmée"
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__so_line
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_view_form_readonly
 msgid "Sales Order Item"
-msgstr "Article du bon de commande"
+msgstr "Article de la commande client"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -4233,7 +4262,7 @@ msgstr "Lignes de commande liées à une de mes commandes"
 #: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
 #, python-format
 msgid "Sales Order(s)"
-msgstr "Bon(s) de commande"
+msgstr "Commande(s) client(s)"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
@@ -4243,7 +4272,6 @@ msgstr "Bon(s) de commande"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4252,7 +4280,7 @@ msgstr "Bon(s) de commande"
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_order_graph
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_order_pivot
 msgid "Sales Orders"
-msgstr "Bons de commande"
+msgstr "Commandes clients"
 
 #. module: sale
 #: model:ir.model,name:sale.model_crm_team
@@ -4606,7 +4634,7 @@ msgid ""
 "Some confirmed sale orders are selected. Their related documents might be\n"
 "                        affected by the cancellation."
 msgstr ""
-"Certains bons de commande confirmés sont sélectionnés. Leurs documents connexes peuvent être\n"
+"Certaines commandes clients confirmées sont sélectionnées. Leurs documents connexes peuvent être\n"
 "impactés par l'annulation."
 
 #. module: sale
@@ -4695,6 +4723,11 @@ msgid "Sum of Untaxed Total"
 msgstr "Somme des totaux hors taxes"
 
 #. module: sale
+#: model:ir.model,name:sale.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "Paramètres système"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
 #: model:ir.ui.menu,name:sale.menu_tag_config
 msgid "Tags"
@@ -4766,7 +4799,7 @@ msgid ""
 "Team %(team_name)s has %(sale_order_count)s active sale orders. Consider "
 "canceling them or archiving the team instead."
 msgstr ""
-"L'équipe %(team_name)s a %(sale_order_count)s bons de commande actifs. "
+"L'équipe %(team_name)s a %(sale_order_count)s commandes clients actives. "
 "Envisagez de les annuler ou d'archiver l'équipe à la place."
 
 #. module: sale
@@ -4827,9 +4860,9 @@ msgid ""
 "The Sales Order %(order)s linked to the Analytic Account %(account)s is "
 "cancelled. You cannot register an expense on a cancelled Sales Order."
 msgstr ""
-"Le bon de commande %(order)s lié au compte analytique %(account)s est "
-"annulé. Vous ne pouvez pas enregistrer une note de frais sur un bon de "
-"commande annulé."
+"La commande client %(order)s liée au compte analytique %(account)s est "
+"annulée. Vous ne pouvez pas enregistrer une dépense sur une commande client "
+"annulée."
 
 #. module: sale
 #. odoo-python
@@ -4840,10 +4873,10 @@ msgid ""
 "currently locked. You cannot register an expense on a locked Sales Order. "
 "Please create a new SO linked to this Analytic Account."
 msgstr ""
-"Le bon de commande %(order)s lié au compte analytique %(account)s est "
-"verrouillé en ce moment. Vous ne pouvez pas enregistrer une note de frais "
-"sur un bon de commande verrouillé. Veuillez créer une nouveau bon de "
-"commande lié à ce compte analytique."
+"La commande client %(order)s liée au compte analytique %(account)s est "
+"verrouillée en ce moment. Vous ne pouvez pas enregistrer une dépense sur une"
+" commande client verrouillée. Veuillez créer une nouvelle  commande client "
+"liée à ce compte analytique."
 
 #. module: sale
 #. odoo-python
@@ -4853,8 +4886,8 @@ msgid ""
 "The Sales Order %(order)s linked to the Analytic Account %(account)s must be"
 " validated before registering expenses."
 msgstr ""
-"Le bon de commande %(order)s lié au compte analytique %(account)s doit être "
-"validé avant d'enregistrer des notes de frais."
+"La commande client %(order)s liée au compte analytique %(account)s doit être"
+" validée avant d'enregistrer des dépenses."
 
 #. module: sale
 #. odoo-python
@@ -4866,7 +4899,8 @@ msgstr "Le jeton d'accès n'est pas valide."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_to_invoice
 msgid "The amount to invoice = Sale Order Total - Confirmed Down Payments."
-msgstr "Le montant à facture = Total du bon de commande - Acomptes confirmés"
+msgstr ""
+"Le montant à facturer = Total de la commande client - Acomptes confirmés"
 
 #. module: sale
 #. odoo-python
@@ -4896,12 +4930,12 @@ msgstr "Les commandes suivantes ne sont pas en état d'être confirmées : %s"
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Les produits suivants ne peuvent pas être limités à la société %s car ils ont déjà été utilisés dans des devis ou des commandes client dans une autre société :\n"
-"%s\n"
+"Les produits suivants ne peuvent pas être limités à la société %(company)s car ils ont déjà été utilisés dans des devis ou des commandes client dans une autre société :\n"
+"%(used_products)s\n"
 "Vous pouvez archiver ces produits et les recréer avec la restriction de votre société à la place, ou les laisser en tant que produit partagé."
 
 #. module: sale
@@ -4928,8 +4962,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "The new invoice will deduct draft invoices linked to this sale order."
 msgstr ""
-"La nouvelle facture déduira les factures en brouillon liées à ce bon de "
-"commande."
+"La nouvelle facture déduira les factures en brouillon liées à cette commande"
+" client."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4954,7 +4988,7 @@ msgstr "La quantité commandée a été mise à jour"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
 msgid "The payment communication of this sale order."
-msgstr "La communication de paiement de ce bon de commande."
+msgstr "La communication de paiement de cette commande client."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -5045,6 +5079,19 @@ msgid "There are existing"
 msgstr "Il y a des"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
+"Il ne semble pas encore y avoir de produit de réduction configuré pour cette"
+" entreprise. Il est possible d'utiliser une remise par ligne ou de demander "
+"à un administrateur d'accorder la remise la première fois."
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "This default value is applied to any new product created. This can be "
@@ -5126,7 +5173,7 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
-"Ce rapport analyse vos devis et bons de commande. Il vérifie les revenus "
+"Ce rapport analyse vos devis et commandes clients. Il vérifie les revenus "
 "liés aux ventes et les classifie selon différents critères (vendeur, "
 "partenaire, produit, etc.). Vous pouvez utiliser ce rapport pour analyser "
 "vos ventes qui ne sont pas encore facturées. Si vous souhaitez analyser "
@@ -5158,7 +5205,7 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"Ce rapport effectue des analyses sur vos bons de commande. Analysez vos "
+"Ce rapport effectue des analyses sur vos commandes clients. Analysez vos "
 "revenus de ventes et triez-les selon divers critères (vendeur, partenaire, "
 "produit, etc.) Utilisez ce rapport pour effectuer des analyses sur des "
 "ventes qui ne sont pas encore facturées. Si vous voulez analyser la rotation"
@@ -5294,11 +5341,13 @@ msgstr "Tapez pour trouver un produit..."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "UPS Connector"
 msgstr "Connecteur UPS"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_usps
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "USPS Connector"
 msgstr "Connecteur USPS"
 
@@ -5422,8 +5471,8 @@ msgid ""
 "Validated expenses and vendor bills can be re-invoiced to a customer at its "
 "cost or sales price."
 msgstr ""
-"Les notes de frais et les factures fournisseurs validées peuvent être "
-"refacturées à un client à leur coût ou à leur prix de vente."
+"Les dépenses et les factures fournisseurs validées peuvent être refacturées "
+"à un client à leur coût ou à leur prix de vente."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5437,14 +5486,6 @@ msgstr "Voir les détails"
 
 #. module: sale
 #. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-#, python-format
-msgid "View Order"
-msgstr "Voir la commande"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
@@ -5538,8 +5579,8 @@ msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
-"Vous ne pouvez pas supprimer un devis envoyé ou un bon de commande confirmé."
-" Vous devez l'annuler au préalable."
+"Vous ne pouvez pas supprimer un devis envoyé ou une commande client "
+"confirmée. Vous devez l'annuler au préalable."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -5557,9 +5598,9 @@ msgid ""
 " communication will be given to the customer when they choose the payment "
 "method."
 msgstr ""
-"Vous pouvez définir le type de communication qui apparaîtra sur les bons de "
-"commande. La communication sera donnée au client quand il choisira le mode "
-"de paiement."
+"Vous pouvez définir le type de communication qui apparaîtra sur les "
+"commandes clients. La communication sera donnée au client quand il choisira "
+"le mode de paiement."
 
 #. module: sale
 #. odoo-python
@@ -5588,7 +5629,7 @@ msgid ""
 "orders."
 msgstr ""
 "Vous ne pouvez pas modifier le type de produit car il est déjà utilisé dans "
-"les bons de commande."
+"les commandes clients."
 
 #. module: sale
 #. odoo-python
@@ -5598,8 +5639,15 @@ msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
-"Vous ne pouvez pas changer le status de cette ligne de commande. Nous vous "
+"Vous ne pouvez pas changer le statut de cette ligne de commande. Nous vous "
 "invitons à supprimer cette ligne et à en créer une nouvelle."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_line.py:0
+#, python-format
+msgid "You cannot modify the product of this order line."
+msgstr "Vous ne pouvez pas modifier le produit de cette ligne de commande."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
@@ -5621,6 +5669,7 @@ msgstr ""
 "                que ce soit un produit stockable, consommable ou un service."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Vos commandes"
@@ -5692,14 +5741,14 @@ msgstr "jours"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "for this Sale Order."
-msgstr "pour ce bon de commande."
+msgstr "pour cette commande client."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "sale order"
-msgstr "bon de commande"
+msgstr "commande client"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -5713,7 +5762,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "units"
-msgstr "unités"
+msgstr "unité(s)"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation

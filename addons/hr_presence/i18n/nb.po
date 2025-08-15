@@ -3,17 +3,17 @@
 # 	* hr_presence
 # 
 # Translators:
-# Marius Stedjan <marius@stedjan.com>, 2024
 # Martin Trigaux, 2024
-# Rune Restad, 2024
+# Rune Restad, 2025
+# Marius Stedjan <marius@stedjan.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-05-22 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Rune Restad, 2024\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2025\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,7 +49,7 @@ msgstr "Fraværende"
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_hr_employee_base
 msgid "Basic Employee"
-msgstr ""
+msgstr "Vanlig ansatt"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_company
@@ -71,7 +71,7 @@ msgstr ""
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__create_uid
 msgid "Create Uid"
-msgstr ""
+msgstr "Opprett Uid"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
@@ -174,6 +174,13 @@ msgid "SMS"
 msgstr "SMS"
 
 #. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+#, python-format
+msgid "Send SMS Text Message"
+msgstr "Send SMS"
+
+#. module: hr_presence
 #: model:mail.template,description:hr_presence.mail_template_presence
 msgid ""
 "Sent manually in presence module when an employee wasn't working despite not"
@@ -238,4 +245,4 @@ msgstr ""
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_ir_websocket
 msgid "websocket message handling"
-msgstr ""
+msgstr "Håndtering av WebSocket-meldinger"

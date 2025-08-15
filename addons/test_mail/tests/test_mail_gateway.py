@@ -11,13 +11,15 @@ from unittest.mock import DEFAULT
 from unittest.mock import patch
 
 from odoo import exceptions
+from odoo.addons.mail.models.mail_message import Message
 from odoo.addons.mail.models.mail_thread import MailThread
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.data import test_mail_data
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE, THAI_EMAIL_WINDOWS_874
-from odoo.addons.test_mail.models.test_mail_models import MailTestGateway
+from odoo.addons.test_mail.models.test_mail_models import MailTestGateway, MailTestGatewayGroups, MailTestTicket
 from odoo.sql_db import Cursor
 from odoo.tests import tagged, RecordCapturer
+from odoo.tests.common import Form
 from odoo.tools import email_split_and_format, formataddr, mute_logger
 
 
@@ -107,7 +109,11 @@ class TestEmailParsing(MailCommon):
 
     def test_message_parse_eml(self):
         # Test that the parsing of mail with embedded emails as eml(msg) which generates empty attachments, can be processed.
-        mail = self.format(test_mail_data.MAIL_EML_ATTACHMENT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', to=f'generic@{self.alias_domain}')
+        mail = self.format(test_mail_data.MAIL_EML_ATTACHMENT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', to=f'generic@{self.alias_domain}',
+                           msg_id='<cb7eaf62-58dc-2017-148c-305d0c78892f@odoo.com>',
+                           references='<f3b9f8f8-28fa-2543-cab2-7aa68f679ebb@odoo.com>',
+                           subject='Re: test attac',
+                           )
         self.env['mail.thread'].message_parse(self.from_string(mail))
 
     def test_message_parse_eml_bounce_headers(self):
@@ -159,22 +165,21 @@ class TestEmailParsing(MailCommon):
 
 
 @tagged('mail_gateway')
-class TestMailgateway(MailCommon):
+class MailGatewayCommon(MailCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestMailgateway, cls).setUpClass()
-
+        super().setUpClass()
         cls.mail_test_gateway_model = cls.env['ir.model']._get('mail.test.gateway')
         cls.mail_test_gateway_company_model = cls.env['ir.model']._get('mail.test.gateway.company')
         cls.email_from = '"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>'
 
-        cls.test_record = cls.env['mail.test.gateway'].with_context(cls._test_context).create({
+        cls.test_record = cls.env['mail.test.gateway'].with_context(mail_create_nolog=True).create({
             'name': 'Test',
             'email_from': 'ignasse@example.com',
-        }).with_context({})
+        })
 
-        cls.partner_1 = cls.env['res.partner'].with_context(cls._test_context).create({
+        cls.partner_1 = cls.env['res.partner'].create({
             'name': 'Valid Lelitre',
             'email': 'valid.lelitre@agrolait.com',
         })
@@ -199,6 +204,23 @@ class TestMailgateway(MailCommon):
         # Set a first message on public group to test update and hierarchy
         cls.fake_email = cls._create_gateway_message(cls.test_record, '123456')
 
+    def _reinject(self, force_msg_id=False, debug_log=False):
+        """ Tool to automatically 'inject' an outgoing mail into the gateway.
+        Content changes.
+
+        :param str force_msg_id: allow to change the msg_id to simulate stupid
+            email providers that change message IDs;
+        """
+        self.assertEqual(len(self._mails), 1)
+        mail = self._mails[0]
+        extra = f'References: {mail["references"]}'
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            self.format_and_process(
+                MAIL_TEMPLATE, mail['email_from'], ','.join(mail['email_to']),
+                msg_id=force_msg_id or mail['message_id'], extra=extra,
+                debug_log=debug_log,
+            )
+
     @classmethod
     def _create_gateway_message(cls, record, msg_id_prefix, **values):
         msg_values = {
@@ -214,6 +236,14 @@ class TestMailgateway(MailCommon):
         }
         msg_values.update(**values)
         return cls.env['mail.message'].create(msg_values)
+
+
+@tagged('mail_gateway')
+class TestMailgateway(MailGatewayCommon):
+
+    def test_assert_initial_values(self):
+        """ Just some basics checks to ensure tests coherency """
+        self.assertEqual(len(self.test_record.message_ids), 1)
 
     # --------------------------------------------------
     # Base low-level tests
@@ -792,7 +822,7 @@ class TestMailgateway(MailCommon):
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models.unlink')
     def test_message_process_create_uid_email_follower(self):
         self.alias.write({
-            'alias_parent_model_id': self.mail_test_gateway_model.id,
+            'alias_parent_model_id': self.env['ir.model']._get_id(self.test_record._name),
             'alias_parent_thread_id': self.test_record.id,
         })
         follower_user = mail_new_test_user(self.env, login='better', groups='base.group_user', name='Ernest Follower', email=self.user_employee.email)
@@ -1805,103 +1835,6 @@ class TestMailgateway(MailCommon):
         self.assertEqual(str(capture.records.message_ids.body), '<pre>ร่างกาย</pre>\n')
 
     # --------------------------------------------------
-    # Emails loop detection
-    # --------------------------------------------------
-
-    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail.models.mail_mail')
-    @patch.object(Cursor, 'now', lambda *args, **kwargs: datetime(2022, 1, 1, 10, 0, 0))
-    def test_routing_loop_alias(self):
-        """Test the limit on the number of record we can create by alias."""
-        self.env['ir.config_parameter'].sudo().set_param('mail.gateway.loop.minutes', 30)
-        self.env['ir.config_parameter'].sudo().set_param('mail.gateway.loop.threshold', 5)
-
-        self.env['mail.gateway.allowed'].create([
-            {'email': 'Bob@EXAMPLE.com'},
-            {'email': '"Alice From Example" <alice@EXAMPLE.com>'},
-            {'email': '"Eve From Example" <eve@EXAMPLE.com>'},
-        ])
-
-        alias = self.env['mail.alias'].create({
-            'alias_domain_id': self.mail_alias_domain.id,
-            'alias_name': 'test',
-            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
-            'alias_contact': 'everyone',
-        })
-
-        # Send an email 2 hours ago, should not have an impact on more recent emails
-        with patch.object(Cursor, 'now', lambda *args, **kwargs: datetime(2022, 1, 1, 8, 0, 0)):
-            self.format_and_process(
-                MAIL_TEMPLATE,
-                self.email_from,
-                f'{self.alias.alias_name}@{self.alias_domain}',
-                subject='Test alias loop old',
-                target_model=alias.alias_model_id.model,
-            )
-
-        for i in range(5):
-            self.format_and_process(
-                MAIL_TEMPLATE,
-                self.email_from,
-                f'{self.alias.alias_name}@{self.alias_domain}',
-                subject=f'Test alias loop {i}',
-                target_model=alias.alias_model_id.model,
-            )
-
-        records = self.env['mail.test.gateway'].search([('name', 'ilike', 'Test alias loop %')])
-        self.assertEqual(len(records), 6, 'Should have created 6 <mail.test.gateway>')
-        self.assertEqual(set(records.mapped('email_from')), set([self.email_from]),
-            msg='Should have automatically filled the email field')
-
-        self.assertEqual(set(records.mapped('email_from')), {self.email_from})
-
-        for email_from in (self.email_from, self.email_from.upper()):
-            with self.mock_mail_gateway():
-                self.format_and_process(
-                    MAIL_TEMPLATE,
-                    email_from,
-                    f'{self.alias.alias_name}@{self.alias_domain}',
-                    subject='Test alias loop X',
-                    target_model=alias.alias_model_id.model,
-                    return_path=email_from,
-                )
-
-            new_record = self.env['mail.test.gateway'].search([('name', '=', 'Test alias loop X')])
-            self.assertFalse(
-                new_record,
-                msg='The loop should have been detected and the record should not have been created')
-
-            self.assertSentEmail(f'"MAILER-DAEMON" <{self.alias_bounce}@{self.alias_domain}>', [email_from])
-            self.assertIn('-loop-detection-bounce-email@', self._mails[0]['references'],
-                msg='The "bounce email" tag must be in the reference')
-
-        # The reply to the bounce email must be ignored
-        with self.mock_mail_gateway():
-            self.format_and_process(
-                MAIL_TEMPLATE,
-                self.email_from,
-                f'{self.alias.alias_name}@{self.alias_domain}',
-                subject='Test alias loop X',
-                target_model=alias.alias_model_id.model,
-                return_path=self.email_from,
-                extra='References: <test-1337-loop-detection-bounce-email@odoo.com>',
-            )
-
-        self.assertNotSentEmail()
-
-        # Email address in the whitelist should not have the restriction
-        for i in range(10):
-            self.format_and_process(
-                MAIL_TEMPLATE,
-                'alice@example.com',
-                f'{self.alias.alias_name}@{self.alias_domain}',
-                subject=f'Whitelist test alias loop {i}',
-                target_model=alias.alias_model_id.model,
-            )
-
-        records = self.env['mail.test.gateway'].search([('name', 'ilike', 'Whitelist test alias loop %')])
-        self.assertEqual(len(records), 10, msg='Email whitelisted should not have the restriction')
-
-    # --------------------------------------------------
     # Corner cases / Bugs during message process
     # --------------------------------------------------
 
@@ -1924,13 +1857,35 @@ class TestMailgateway(MailCommon):
         self.assertIn("Chauss������e de Bruxelles", record.message_ids.attachment_ids.raw.decode())
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
-    def test_message_process_file_omitted_charset(self):
+    def test_message_process_file_omitted_charset_xml(self):
         """ For incoming email containing an xml attachment with omitted charset and containing an UTF8 payload we
         should parse the attachment using UTF-8.
         """
-        record = self.format_and_process(test_mail_data.MAIL_MULTIPART_OMITTED_CHARSET, self.email_from, f'groups@{self.alias_domain}')
+        record = self.format_and_process(test_mail_data.MAIL_MULTIPART_OMITTED_CHARSET_XML, self.email_from, f'groups@{self.alias_domain}')
         self.assertEqual(record.message_ids.attachment_ids.name, 'bis3.xml')
         self.assertEqual("<Invoice>Chaussée de Bruxelles</Invoice>", record.message_ids.attachment_ids.raw.decode())
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_process_file_omitted_charset_csv(self):
+        """ For incoming email containing a csv attachment with omitted charset and containing an UTF8 payload we
+        should parse the attachment using UTF-8.
+        """
+        record = self.format_and_process(test_mail_data.MAIL_MULTIPART_OMITTED_CHARSET_CSV, self.email_from, f'groups@{self.alias_domain}')
+        self.assertEqual(record.message_ids.attachment_ids.name, 'bis3.csv')
+        self.assertEqual("\ufeffAuftraggeber;LieferadresseStraße;", record.message_ids.attachment_ids.raw.decode())
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_process_file_omitted_charset_txt(self):
+        """ For incoming email containing a txt attachment with omitted charset and containing an UTF8 payload we
+        should parse the attachment using UTF-8.
+        """
+        test_string = ("Äpfel und Birnen sind Früchte, die im Herbst geerntet werden. In der Nähe des Flusses steht ein großes, "
+            "altes Schloss. Über den Dächern sieht man oft Vögel fliegen. Müller und Schröder sind typische deutsche Nachnamen. "
+            "Die Straße, in der ich wohne, heißt „Bachstraße“ und ist sehr ruhig. Überall im Wald wachsen Bäume mit kräftigen Ästen. "
+            "Können wir uns über die Pläne für das nächste Wochenende unterhalten?")
+        record = self.format_and_process(test_mail_data.MAIL_MULTIPART_OMITTED_CHARSET_TXT, self.email_from, f'groups@{self.alias_domain}')
+        self.assertEqual(record.message_ids.attachment_ids.name, 'bis3.txt')
+        self.assertEqual(test_string, record.message_ids.attachment_ids.raw.decode())
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_route_reply_model_none(self):
@@ -1966,6 +1921,572 @@ class TestMailgateway(MailCommon):
         self.assertEqual(record._name, 'mail.test.gateway')
         self.assertEqual(record.message_ids.subject, message.message_id)
         self.assertFalse(record.message_ids.parent_id)
+
+
+@tagged('mail_gateway', 'mail_loop')
+class TestMailGatewayLoops(MailGatewayCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['ir.config_parameter'].sudo().set_param('mail.gateway.loop.minutes', 30)
+        cls.env['ir.config_parameter'].sudo().set_param('mail.gateway.loop.threshold', 5)
+
+        cls.env['mail.gateway.allowed'].create([
+            {'email': 'Bob@EXAMPLE.com'},
+            {'email': '"Alice From Example" <alice@EXAMPLE.com>'},
+            {'email': '"Eve From Example" <eve@EXAMPLE.com>'},
+        ])
+
+        cls.alias_ticket = cls.env['mail.alias'].create({
+            'alias_contact': 'everyone',
+            'alias_domain_id': cls.mail_alias_domain.id,
+            'alias_model_id': cls.env['ir.model']._get_id('mail.test.ticket'),
+            'alias_name': 'test.ticket',
+        })
+        cls.alias_other = cls.env['mail.alias'].create({
+            'alias_contact': 'everyone',
+            'alias_domain_id': cls.mail_alias_domain.id,
+            'alias_model_id': cls.env['ir.model']._get_id('mail.test.gateway'),
+            'alias_name': 'test.gateway',
+        })
+
+        # recipients
+        cls.customer_email = "customer@test.example.com"
+        cls.alias_partner, cls.other_partner = cls.env['res.partner'].create([
+            {
+                'email': f'"Stupid Idea" <{cls.alias_other.alias_name}@{cls.alias_other.alias_domain}>',
+                'name': 'Stupid Idea',
+            }, {
+                'email': '"Other Customer" <other.customer@test.example.com>',
+                'name': 'Other Customer',
+            }
+        ])
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    @patch.object(Cursor, 'now', lambda *args, **kwargs: datetime(2022, 1, 1, 10, 0, 0))
+    def test_routing_loop_alias_create(self):
+        """Test the limit on the number of record we can create by alias."""
+        # Send an email 2 hours ago, should not have an impact on more recent emails
+        with patch.object(Cursor, 'now', lambda *args, **kwargs: datetime(2022, 1, 1, 8, 0, 0)):
+            self.format_and_process(
+                MAIL_TEMPLATE,
+                self.email_from,
+                f'{self.alias_ticket.alias_name}@{self.alias_domain}',
+                subject='Test alias loop old',
+                target_model=self.alias_ticket.alias_model_id.model,
+            )
+
+        for i in range(5):
+            self.format_and_process(
+                MAIL_TEMPLATE,
+                self.email_from,
+                f'{self.alias_ticket.alias_name}@{self.alias_domain}',
+                subject=f'Test alias loop {i}',
+                target_model=self.alias_ticket.alias_model_id.model,
+            )
+
+        records = self.env['mail.test.ticket'].search([('name', 'ilike', 'Test alias loop %')])
+        self.assertEqual(len(records), 6, 'Should have created 6 <mail.test.gateway>')
+        self.assertEqual(set(records.mapped('email_from')), {self.email_from},
+            msg='Should have automatically filled the email field')
+
+        for email_from, exp_to in [
+            (self.email_from, formataddr(("Sylvie Lelitre", "test.sylvie.lelitre@agrolait.com"))),
+            (self.email_from.upper(), formataddr(("SYLVIE LELITRE", "test.sylvie.lelitre@agrolait.com"))),
+        ]:
+            with self.mock_mail_gateway():
+                self.format_and_process(
+                    MAIL_TEMPLATE,
+                    email_from,
+                    f'{self.alias_ticket.alias_name}@{self.alias_domain}',
+                    subject='Test alias loop X',
+                    target_model=self.alias_ticket.alias_model_id.model,
+                    return_path=email_from,
+                )
+
+            new_record = self.env['mail.test.ticket'].search([('name', '=', 'Test alias loop X')])
+            self.assertFalse(
+                new_record,
+                msg='The loop should have been detected and the record should not have been created')
+
+            self.assertSentEmail(f'"MAILER-DAEMON" <{self.alias_bounce}@{self.alias_domain}>', [exp_to])
+            bounce_references = self._mails[0]['references']
+            self.assertIn('-loop-detection-bounce-email@', bounce_references,
+                msg='The "bounce email" tag must be in the reference')
+
+        # The reply to the bounce email must be ignored
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                MAIL_TEMPLATE,
+                'alice@example.com',  # whitelisted from, should be taken into account
+                f'{self.alias_ticket.alias_name}@{self.alias_domain}',
+                subject='Test alias loop X',
+                target_model=self.alias_ticket.alias_model_id.model,
+                return_path=self.email_from,
+                extra=f'References: {bounce_references}',
+            )
+        self.assertNotSentEmail()
+
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                MAIL_TEMPLATE,
+                'alice@example.com',  # whitelisted from, should be taken into account
+                f'{self.alias_ticket.alias_name}@{self.alias_domain}',
+                subject='Test alias loop X',
+                target_model=self.alias_ticket.alias_model_id.model,
+                return_path=self.email_from,
+                extra=f'In-Reply-To: {bounce_references}',
+            )
+        self.assertNotSentEmail()
+
+        # Email address in the whitelist should not have the restriction
+        for i in range(10):
+            self.format_and_process(
+                MAIL_TEMPLATE,
+                'alice@example.com',
+                f'{self.alias_ticket.alias_name}@{self.alias_domain}',
+                subject=f'Whitelist test alias loop {i}',
+                target_model=self.alias_ticket.alias_model_id.model,
+            )
+        records = self.env['mail.test.ticket'].search([('name', 'ilike', 'Whitelist test alias loop %')])
+        self.assertEqual(len(records), 10, msg='Email whitelisted should not have the restriction')
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_routing_loop_alias_mix(self):
+        """ Test loop detection in case of multiples routes, just be sure all
+        routes are checked and models checked once. """
+        # create 2 update-records aliases and 1 new-record alias on same model
+        test_updates = self.env['mail.test.gateway.groups'].create([
+            {
+                'alias_name': 'test.update1',
+                'name': 'Update1',
+            }, {
+                'alias_name': 'test.update2',
+                'name': 'Update2',
+            },
+        ])
+        alias_gateway_group, alias_ticket_other = self.env['mail.alias'].create([
+            {
+                'alias_contact': 'everyone',
+                'alias_model_id': self.env['ir.model']._get_id('mail.test.gateway.groups'),
+                'alias_name': 'test.new',
+            }, {
+                'alias_contact': 'everyone',
+                'alias_model_id': self.env['ir.model']._get_id('mail.test.ticket'),
+                'alias_name': 'test.ticket.other',
+            }
+        ])
+
+        _original_ticket_sc = MailTestTicket.search_count
+        _original_groups_sc = MailTestGatewayGroups.search_count
+        _original_rgr = Message._read_group
+        with self.mock_mail_gateway(), \
+             patch.object(MailTestTicket, 'search_count', autospec=True, side_effect=_original_ticket_sc) as mock_ticket_sc, \
+             patch.object(MailTestGatewayGroups, 'search_count', autospec=True, side_effect=_original_groups_sc) as mock_groups_sc, \
+             patch.object(Message, '_read_group', autospec=True, side_effect=_original_rgr) as mock_msg_rgr:
+            self.format_and_process(
+                MAIL_TEMPLATE,
+                self.other_partner.email_formatted,
+                f'"Super Help" <{self.alias_ticket.alias_name}@{self.alias_ticket.alias_domain}>,'
+                f'{test_updates[0].alias_id.display_name}, {test_updates[1].alias_id.display_name}, '
+                f'{alias_gateway_group.display_name}, {alias_ticket_other.display_name}',
+                subject='Valid Inquiry',
+                return_path=self.other_partner.email_formatted,
+                target_model='mail.test.ticket',
+            )
+        self.assertEqual(mock_ticket_sc.call_count, 1, 'Two alias creating tickets but one check anyway')
+        self.assertEqual(mock_groups_sc.call_count, 1, 'One alias creating groups')
+        self.assertEqual(mock_msg_rgr.call_count, 1, 'Only one model updating records, one call even if two aliases')
+        self.assertEqual(
+            len(self.env['mail.test.ticket'].search([('name', '=', 'Valid Inquiry')])),
+            2, 'One by creating alias, as no loop was detected'
+        )
+
+        # create 'looping' history by pre-creating messages on a thread -> should block future incoming emails
+        self.env['mail.message'].create([
+            {
+                'author_id': self.other_partner.id,
+                'model': test_updates[0]._name,
+                'res_id': test_updates[0].id,
+            } for x in range(4)  # 4 + 1 posted before = 5 aka threshold
+        ])
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                MAIL_TEMPLATE,
+                self.other_partner.email_formatted,
+                f'"Super Help" <{self.alias_ticket.alias_name}@{self.alias_ticket.alias_domain}>,'
+                f'{test_updates[0].alias_id.display_name}, {test_updates[1].alias_id.display_name}, '
+                f'{alias_gateway_group.display_name}, {alias_ticket_other.display_name}',
+                subject='Looping Inquiry',
+                return_path=self.other_partner.email_formatted,
+                target_model='mail.test.ticket',
+            )
+        self.assertFalse(
+            self.env['mail.test.ticket'].search([('name', '=', 'Looping Inquiry')]),
+            'Even if other routes are ok, one looping route is sufficient to block the incoming email'
+        )
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_routing_loop_auto_notif(self):
+        """ Test Odoo servers talking to each other """
+        with self.mock_mail_gateway():
+            record = self.format_and_process(
+                MAIL_TEMPLATE,
+                self.other_partner.email_formatted,
+                f'"Super Help" <{self.alias_ticket.alias_name}@{self.alias_ticket.alias_domain}>',
+                subject='Inquiry',
+                return_path=self.other_partner.email_formatted,
+                target_model='mail.test.ticket',
+            )
+        self.assertTrue(record)
+        self.assertEqual(record.message_partner_ids, self.other_partner)
+
+        for incoming_count in range(6):  # threshold + 1
+            with self.mock_mail_gateway():
+                record.with_user(self.user_employee).message_post(
+                    body='Automatic answer',
+                    message_type='auto_comment',
+                    subtype_xmlid='mail.mt_comment',
+                )
+            capture_messages = self.gateway_mail_reply_last_email(MAIL_TEMPLATE)
+            msg = capture_messages.records
+            self.assertTrue(msg)
+            # first messages are accepted -> post a message on record
+            if incoming_count < 4:  # which makes 5 accepted messages
+                self.assertIn(msg, record.message_ids)
+            # other attempts triggers only a bounce
+            else:
+                self.assertFalse(msg.model)
+                self.assertFalse(msg.res_id)
+                self.assertIn('loop-detection-bounce-email', msg.mail_ids.references,
+                              'Should be a msg linked to a bounce email with right header')
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_routing_loop_follower_alias(self):
+        """ Use case: managing follower that are aliases. """
+        with self.mock_mail_gateway():
+            record = self.format_and_process(
+                MAIL_TEMPLATE,
+                f'"Annoying Customer" <{self.customer_email}>',
+                f'"Super Help" <{self.alias_ticket.alias_name}@{self.alias_ticket.alias_domain}>',
+                cc=f'{self.alias_partner.email_normalized}, {self.other_partner.email_normalized}',
+                subject='Inquiry',
+                return_path=self.customer_email,
+                target_model='mail.test.ticket',
+            )
+        self.assertEqual(record.name, 'Inquiry')
+        self.assertFalse(record.message_partner_ids, 'Inquiry')
+        self.assertNotSentEmail()
+        self.assertEqual(record.message_ids.partner_ids, self.other_partner,
+                         'MailGateway: recipients = alias should not be linked to message')
+
+        # for some stupid reason, people add an alias as follower
+        with self.mock_mail_gateway():
+            _message = record.with_user(self.user_employee).message_post(
+                body='Answer',
+                partner_ids=self.alias_partner.ids,
+            )
+        self.assertSentEmail(self.user_employee.email_formatted, [self.alias_partner.email_formatted])
+
+        # simulate this email coming back to the same Odoo server -> msg_id is
+        # a duplicate, hence rejected
+        with RecordCapturer(self.env['mail.test.ticket'], []) as capture_ticket, \
+             RecordCapturer(self.env['mail.test.gateway'], []) as capture_gateway:
+            self._reinject()
+        self.assertFalse(capture_ticket.records)
+        self.assertFalse(capture_gateway.records)
+        self.assertNotSentEmail()
+        self.assertFalse(bool(self._new_msgs))
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_routing_loop_forward_catchall(self):
+        """ Use case: broad email forward to catchall. Example: customer sends an
+        email to catchall. It bounces: to=customer, return-path=bounce. Autoreply
+        replies to bounce: to=bounce. It is forwarded to catchall. It bounces,
+        and hop we have a loop. """
+        customer_email = "customer@test.example.com"
+
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                MAIL_TEMPLATE,
+                f'"Annoying Customer" <{customer_email}>',
+                f'"No Reply" <{self.alias_catchall}@{self.alias_domain}>, Unroutable <unroutable@{self.alias_domain}>',
+                subject='Should Bounce (initial)',
+                return_path=customer_email,
+            )
+        self.assertSentEmail(
+            f'"MAILER-DAEMON" <{self.alias_bounce}@{self.alias_domain}>',
+            [customer_email],
+            subject='Re: Should Bounce (initial)')
+        original_mail = self._mails
+
+        # auto-reply: write to bounce = no more bounce
+        self.gateway_mail_reply_last_email(MAIL_TEMPLATE, force_to=f'{self.alias_bounce}@{self.alias_domain}')
+        self.assertNotSentEmail()
+
+        # auto-reply but forwarded to catchall -> should not bounce again
+        self._mails = original_mail  # just to revert state prior to auto reply
+        self.gateway_mail_reply_last_email(MAIL_TEMPLATE, force_to=f'{self.alias_catchall}@{self.alias_domain}')
+        # TDE FIXME: this should not bounce again
+        # self.assertNotSentEmail()
+        self.assertSentEmail(
+            f'"MAILER-DAEMON" <{self.alias_bounce}@{self.alias_domain}>',
+            [customer_email],
+            subject=f'Re: Re: Re: Should Bounce (initial)')
+
+
+@tagged('mail_gateway', 'mail_loop', 'mail_reply')
+class TestMailGatewayReplies(MailGatewayCommon):
+    """ Check routing of replies, using headers, references, ... """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.user_employee.notification_type = "email"
+
+        cls.test_records, _partners = cls._create_records_for_batch('mail.test.gateway', 5)
+        for idx, rec in enumerate(cls.test_records):
+            rec.email_from = f'test.gateway.{idx}@test.example.com'
+
+    def test_routing_reply_incoming_email(self):
+        """ Test routing after receiving starting email on a thread: references
+        should include it as it is the "common ancestor" to discussions """
+        with self.mock_mail_gateway():
+            gateway_record = self.format_and_process(
+                MAIL_TEMPLATE, self.email_from, self.alias.display_name,
+                subject='Gateway Creation',
+            )
+        self.assertEqual(len(gateway_record.message_ids), 1)
+        gateway_record._message_log(body='Some log')
+        with self.mock_mail_gateway():
+            gateway_record.with_user(self.user_employee).message_post(
+                body='Odoo Reply',
+                message_type='comment',
+                partner_ids=self.partner_1.ids,
+                subtype_id=self.env.ref('mail.mt_comment').id,
+            )
+        reply, log, email = gateway_record.message_ids
+        self.assertMailNotifications(
+            reply,
+            [{
+                'content': 'Odoo Reply',
+                'email_values': {
+                    'message_id': reply.message_id,
+                    'references': f'{email.message_id} {log.message_id} {reply.message_id}',  # should contain reference to OdooExternal message, logs to fill up history
+                },
+                'fields_values': {
+                    'notified_partner_ids': self.partner_1,
+                    'parent_id': email,  # log serves as thread ancestor
+                },
+                'notif': [
+                    {'partner': self.partner_1, 'type': 'email',},
+                ],
+            }],
+        )
+
+    def test_routing_reply_internal_messages(self):
+        """ Test routing notably between two Odoos when internal messages
+        are involved. We don't know which message is the ancestor one and
+        we should ensure some shared message IDs are present in references
+        to help thread formation.
+
+        Action                  Odoo1                   Odoo2
+        RFQ-like                                        creation log
+                                                        initial_msg
+        Odoo2 replies           creation log
+                                reply                   reply
+        -some internal work-                            user_notification
+        Odoo1 replies           reply_2                 reply_2 (incoming email)
+        -some internal work-                            log
+        Odoo2 replies           reply_3                 reply_3 (outgoing email)
+
+        Purpose: have references from Odoo2 containing message IDs to try to
+        correclty route thread.
+        """
+        gateway_record = self.env['mail.test.gateway'].create({
+            'name': 'Created through Form',
+        })
+        gateway_record.message_subscribe(partner_ids=self.partner_admin.ids)
+        self.assertEqual(gateway_record.message_partner_ids, self.partner_admin)
+        gateway_record.message_post(
+            author_id=self.env.ref('base.partner_root').id,
+            body='OdooExternal Inquiry',
+            email_from=self.partner_1.email_normalized,
+            message_type='comment',
+            subtype_id=self.env.ref('mail.mt_comment').id,
+        )
+        self.assertEqual(gateway_record.message_partner_ids, self.partner_admin)
+        log, odooext_msg = gateway_record.message_ids[1], gateway_record.message_ids[0]
+        self.assertEqual(odooext_msg.parent_id, log, 'Log serves as thread ancestor')
+
+        # Odoo2 reply
+        with self.mock_mail_gateway():
+            gateway_record.with_user(self.user_employee).message_post(
+                body='Odoo Reply',
+                message_type='comment',
+                partner_ids=self.partner_1.ids,
+                subtype_id=self.env.ref('mail.mt_comment').id,
+            )
+        self.assertEqual(gateway_record.message_partner_ids, self.partner_admin + self.partner_employee)
+        reply = gateway_record.message_ids[0]
+        self.assertMailNotifications(
+            reply,
+            [{
+                'content': 'Odoo Reply',
+                'email_values': {
+                    'message_id': reply.message_id,
+                    'references': f'{log.message_id} {odooext_msg.message_id} {reply.message_id}',  # should contain reference to OdooExternal message
+                },
+                'fields_values': {
+                    'notified_partner_ids': self.partner_1 + self.partner_admin,
+                    'parent_id': log,  # log serves as thread ancestor
+                },
+                'notif': [
+                    {'partner': self.partner_1, 'type': 'email',},
+                    {'partner': self.partner_admin, 'type': 'inbox',},
+                ],
+            }],
+        )
+
+        _user_notif = gateway_record.message_notify(
+            body='User Notification',
+            partner_ids=self.partner_employee.ids,
+            subtype_id=self.env.ref('mail.mt_comment').id,
+        )
+
+        # coming from Odoo1: their reply as an incoming email
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                MAIL_TEMPLATE, self.email_from, reply.reply_to,
+                subject='Gateway Creation',
+                extra=f'References: {reply.message_id} <msg1@odoo1>',
+                debug_log=True,
+            )
+        reply_2 = gateway_record.message_ids[0]
+        self.assertMailNotifications(
+            reply_2,
+            [{
+                'content': 'Please call me',
+                'email_values': {
+                    'email_from': self.email_from,
+                    'message_id': reply_2.message_id,
+                    'references': f'{log.message_id} {odooext_msg.message_id} {reply.message_id} {reply_2.message_id}',  # should contain reference to OdooExternal message
+                },
+                'fields_values': {
+                    'author_id': self.env['res.partner'],
+                    'notified_partner_ids': self.partner_employee + self.partner_admin,
+                    'parent_id': log,  # log serves as thread ancestor
+                },
+                'message_type': 'email',
+                'notif': [
+                    {'partner': self.partner_employee, 'type': 'email',},
+                    {'partner': self.partner_admin, 'type': 'inbox',},
+                ],
+            }],
+        )
+
+        _other_log = gateway_record._message_log(
+            body='Internal log',
+        )
+
+        with self.mock_mail_gateway():
+            gateway_record.with_user(self.user_employee).message_post(
+                body='Odoo Reply 2',
+                message_type='comment',
+                partner_ids=self.partner_1.ids,
+                subtype_id=self.env.ref('mail.mt_comment').id,
+            )
+        self.assertEqual(gateway_record.message_partner_ids, self.partner_admin + self.partner_employee)
+        reply_3 = gateway_record.message_ids[0]
+        self.assertMailNotifications(
+            reply_3,
+            [{
+                'content': 'Odoo Reply 2',
+                'email_values': {
+                    'message_id': reply_3.message_id,
+                    'references': f'{odooext_msg.message_id} {reply.message_id} {reply_2.message_id} {reply_3.message_id}',  # should contain reference to OdooExternal message
+                },
+                'fields_values': {
+                    'notified_partner_ids': self.partner_1 + self.partner_admin,
+                    'parent_id': log,  # log serves as thread ancestor
+                },
+                'notif': [
+                    {'partner': self.partner_1, 'type': 'email',},
+                    {'partner': self.partner_admin, 'type': 'inbox',},
+                ],
+            }],
+        )
+
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread')
+    def test_routing_reply_mailing_references(self):
+        """ Test mass mailing emails when providers rewrite messageID: references
+        should allow to find the original message. """
+        # send mailing on records using composer, in both reply and force new modes
+        for reply_to_mode, auto_delete_keep_log in [
+            ('new', True),
+            ('update', True),
+            ('new', False),  # reference is lost, but reply alias should be ok
+            ('update', False),  # reference is lost, hence considered as a reply to catchall, is going to crash (FIXME ?)
+        ]:
+            with self.subTest(reply_to_mode=reply_to_mode, auto_delete_keep_log=auto_delete_keep_log):
+                composer_form = Form(self.env['mail.compose.message'].with_context({
+                    'active_ids': self.test_records.ids,
+                    'default_auto_delete': True,
+                    'default_auto_delete_keep_log': auto_delete_keep_log,
+                    'default_composition_mode': 'mass_mail',
+                    'default_email_from': self.user_employee.email_formatted,
+                    'default_model': self.test_records._name,
+                    'default_subject': 'Coucou Hibou',
+                }))
+                composer_form.body = f'<p>Hello <t t-out="object.name"/></p>'
+                composer_form.reply_to_mode = reply_to_mode
+                if reply_to_mode == 'new':
+                    composer_form.reply_to = self.alias.display_name
+                composer = composer_form.save()
+                with self.mock_mail_gateway(mail_unlink_sent=True):
+                    mails, _msg = composer._action_send_mail()
+                self.assertFalse(mails.exists())
+
+                # check reply using references
+                # TDE TODO: update tooling
+                outgoing_message_ids = [outgoing['message_id'] for outgoing in self._mails]
+                self.assertEqual(len(set(outgoing_message_ids)), len(self.test_records),
+                                'All message IDs should be different')
+                for record in self.test_records:
+                    outgoing = self._find_sent_email(self.user_employee.email_formatted, [record.email_from])
+                    # for some reason, provider rewrites message_id, then customer replies
+                    outgoing['message_id'] = f'<ILikeToRewriteMessageIDFor{record.id}-{record._name}@zboing>'
+                    extra = f'In-Reply-To:{outgoing["message_id"]}\nReferences:{outgoing["message_id"]} {outgoing["references"]}\n'
+                    with RecordCapturer(self.env['mail.message'], []) as capture_messages:
+                        gateway_record = self.format_and_process(
+                            MAIL_TEMPLATE, outgoing['email_to'][0], outgoing['reply_to'],
+                            extra=extra,
+                            subject=f'Re: {outgoing["subject"]} - from {outgoing["email_to"][0]} ({reply_to_mode} {auto_delete_keep_log})',
+                            debug_log=False,
+                        )
+                    new_message = capture_messages.records
+                    # as outgoing mail is unlinked with its mail.message -> cannot find parent -> bounce
+                    if reply_to_mode == 'update' and not auto_delete_keep_log:
+                        self.assertFalse(new_message)
+                        self.assertFalse(gateway_record)
+                        continue
+                    self.assertTrue(new_message)
+                    if reply_to_mode == 'update':
+                        self.assertFalse(gateway_record, 'No record created based on subject, as it replies to the thread')
+                        self.assertMessageFields(new_message, {
+                            'email_from': record.email_from,
+                            'model': record._name,
+                            'res_id': record.id,
+                        })
+                    else:
+                        self.assertNotEqual(gateway_record, record)
+                        self.assertMessageFields(new_message, {
+                            'email_from': record.email_from,
+                            'model': gateway_record._name,
+                            'res_id': gateway_record.id,
+                        })
 
 
 @tagged('mail_gateway', 'mail_thread')

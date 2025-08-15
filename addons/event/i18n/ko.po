@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Daye Jeong, 2023
-# Sarah Park, 2024
+# Daye Jeong, 2025
+# Sarah Park, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Sarah Park, 2024\n"
+"Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2408,6 +2408,11 @@ msgid "Display Sponsors and Exhibitors on your event pages"
 msgstr "행사 페이지에 후원사 및 전시업체 표시"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__date_tz
+msgid "Display Timezone"
+msgstr "시간대 표시"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
 msgid "Display order"
 msgstr "표시 순서"
@@ -2711,8 +2716,6 @@ msgid "Event: Reminder"
 msgstr "행사 : 미리 알림"
 
 #. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_barcode.js:0
 #: model:ir.actions.act_window,name:event.action_event_view
 #: model:ir.ui.menu,name:event.event_main_menu
 #: model:ir.ui.menu,name:event.menu_event_event
@@ -2721,7 +2724,6 @@ msgstr "행사 : 미리 알림"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
-#, python-format
 msgid "Events"
 msgstr "행사"
 
@@ -3064,6 +3066,13 @@ msgstr "티켓 관련 중요 안내 사항"
 #, python-format
 msgid "In Progress"
 msgstr "진행 중"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_tz
+msgid ""
+"Indicates the timezone in which the event dates/times will be displayed on "
+"the website."
+msgstr "행사 날짜/시간이 웹사이트에 표시될 시간대를 나타냅니다."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3936,7 +3945,7 @@ msgstr "예정 일자"
 msgid ""
 "Schedule and organize your events: handle registrations, send automated "
 "confirmation emails, sell tickets, etc."
-msgstr "행사를 계획하고 준비합니다. 등록 처리나 자동 확인 이메일 발송, 티켓 판매 등을 준비합니다."
+msgstr "모든 행사 준비 사항을 여기에서 계획하세요. 행사 등록이나 안내 이메일 자동 발송, 티켓 판매 등을 지정해 보세요."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__scheduled
@@ -4422,7 +4431,6 @@ msgid "Tickets can be printed or scanned directly from your phone."
 msgstr "휴대폰에서 직접 티켓을 인쇄하거나 스캔할 수 있습니다."
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
 msgstr "시간대"
@@ -4667,6 +4675,14 @@ msgstr "환영합니다"
 #: model_terms:event.event,description:event.event_0
 msgid "What's new?"
 msgstr "새로운 소식"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_begin
+#: model:ir.model.fields,help:event.field_event_registration__event_begin_date
+msgid ""
+"When the event is scheduled to take place (expressed in your local timezone "
+"on the form view)."
+msgstr "행사가 예약되면, 양식 보기에 현지 시간대로 표시됩니다."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing

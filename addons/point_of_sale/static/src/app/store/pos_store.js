@@ -13,7 +13,7 @@ import { Reactive } from "@web/core/utils/reactive";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { memoize } from "@web/core/utils/functions";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
-import { ConnectionLostError } from "@web/core/network/rpc_service";
+import { ConnectionLostError, RPCError } from "@web/core/network/rpc_service";
 import { _t } from "@web/core/l10n/translation";
 import { CashOpeningPopup } from "@point_of_sale/app/store/cash_opening_popup/cash_opening_popup";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
@@ -22,6 +22,7 @@ import { renderToString } from "@web/core/utils/render";
 import { batched } from "@web/core/utils/timing";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { EditListPopup } from "./select_lot_popup/select_lot_popup";
+import { unique } from "@web/core/utils/arrays";
 
 /* Returns an array containing all elements of the given
  * array corresponding to the rule function {agg} and without duplicates
@@ -173,6 +174,8 @@ export class PosStore extends Reactive {
         // FIXME POSREF: the hardwareProxy needs the pos and the pos needs the hardwareProxy. Maybe
         // the hardware proxy should just be part of the pos service?
         this.hardwareProxy.pos = this;
+
+        this.syncingOrders = new Set();
         await this.load_server_data();
         if (this.config.use_proxy) {
             await this.connectToProxy();
@@ -705,13 +708,7 @@ export class PosStore extends Reactive {
         if (!missingProductIds.size) {
             return;
         }
-        const products = await this.orm.call(
-            "pos.session",
-            "get_pos_ui_product_product_by_params",
-            [odoo.pos_session_id, { domain: [["id", "in", [...missingProductIds]]] }]
-        );
-        await this._loadMissingPricelistItems(products);
-        this._loadProductProduct(products);
+        await this._addProducts([...missingProductIds], false);
     }
     async _loadMissingPricelistItems(products) {
         if (!products.length) {
@@ -962,6 +959,50 @@ export class PosStore extends Reactive {
     sortOrders() {
         this.orders.sort((a, b) => (a.name > b.name ? 1 : -1));
     }
+    /**
+     * This method generates mapping of tax names into corresponding names and amounts,
+     * for a single product according to a fiscal position.
+     * Note: a tax can be removed (mapped to null).
+     * @param {number[]} taxIds - Original tax IDs.
+     * @param {number} priceWithoutTax - Product price without tax.
+     * @param {object} fpos - Fiscal position.
+     * @returns {object} - Mapping ex. {"Tax 15%": { new_name: "Tax 30%", new_amount: 300.00 } }
+     */
+    _getFiscalPositionTaxNameMapping(taxIds, priceWithoutTax, fpos) {
+        if (!fpos) {
+            throw new Error("Fiscal position not passed in the args!")
+        }
+
+        const taxMapping = {};
+        for (const taxId of taxIds) {
+            const tax = this.taxes_by_id[taxId];
+            if (!tax) {
+                continue;
+            }
+            const taxMaps = Object.values(fpos.fiscal_position_taxes_by_id).filter(
+                (fposTax) => fposTax.tax_src_id[0] === tax.id
+            );
+            if (taxMaps.length) {
+                for (const taxMap of taxMaps) {
+                    if (taxMap.tax_dest_id) {
+                        const mappedTax = this.taxes_by_id[taxMap.tax_dest_id[0]];
+                        if (mappedTax) {
+                            const computedTax = this.compute_all([mappedTax],priceWithoutTax,1,this.currency.rounding);
+                            taxMapping[tax.name] = {
+                                new_name: mappedTax.name,
+                                new_amount: computedTax.total_included - computedTax.total_excluded
+                            };
+                        }
+                    } else {
+                        taxMapping[tax.name] = null  // Fiscal position removes this tax
+                    }
+                }
+            }
+        }
+        return taxMapping;
+    }
+
+
     async getProductInfo(product, quantity) {
         const order = this.get_order();
         // check back-end method `get_product_info_pos` to see what it returns
@@ -974,6 +1015,28 @@ export class PosStore extends Reactive {
         ]);
 
         const priceWithoutTax = productInfo["all_prices"]["price_without_tax"];
+
+        // Update price and taxes according to fiscal postions
+        if (order.fiscal_position) {
+            const taxMapping = this._getFiscalPositionTaxNameMapping(
+                product.taxes_id,
+                priceWithoutTax,
+                order.fiscal_position,
+            );
+            productInfo.all_prices.tax_details = productInfo.all_prices.tax_details
+                .filter(tax => taxMapping[tax.name] !== null)
+                .map(tax => {
+                    if (taxMapping[tax.name]) {
+                        return {
+                            name: taxMapping[tax.name].new_name,
+                            amount: taxMapping[tax.name].new_amount
+                        };
+                    }
+                    return tax;
+            });
+            productInfo.all_prices.price_with_tax = product.get_display_price({iface_tax_included:"total"})
+        }
+
         const margin = priceWithoutTax - product.standard_price;
         const orderPriceWithoutTax = order.get_total_without_tax();
         const orderCost = order.get_total_cost();
@@ -1174,11 +1237,41 @@ export class PosStore extends Reactive {
                     this.db.save_unpaid_order(reactiveOrder);
                 }
                 this.set_synch("connected");
+                throw error;
+            }
+            if (error instanceof RPCError) {
+                await this._flush_orders_retry(orders, options);
             }
             throw error;
         } finally {
             this._after_flush_orders(orders);
         }
+    }
+    // Attempts to send the orders to the server one by one if an RPC error is encountered.
+    async _flush_orders_retry(orders, options) {
+        let lastError;
+        let serverIds = [];
+
+        for (let order of orders) {
+            try {
+                let server_ids = await this._save_to_server([order], options);
+                this.validated_orders_name_server_id_map[server_ids[0].pos_reference] = server_ids[0].id;
+                serverIds.push(server_ids[0]);
+            } catch (error) {
+                lastError = error;
+            }
+        }
+
+        if (serverIds.length === orders.length) {
+            this.set_synch('connected');
+            return serverIds;
+        }
+        if (lastError instanceof ConnectionLostError) {
+            this.set_synch('disconnected');
+        } else {
+            this.set_synch('error');
+        }
+        throw lastError;
     }
     /**
      * Hook method after _flush_orders resolved or rejected.
@@ -1239,15 +1332,26 @@ export class PosStore extends Reactive {
         if (!orders || !orders.length) {
             return Promise.resolve([]);
         }
-        this.set_synch("connecting", orders.length);
+
+        // Filter out orders that are already being synced
+        const ordersToSync = orders.filter(order => !this.syncingOrders.has(order.id));
+
+        if (!ordersToSync.length) {
+            return Promise.resolve([]);
+        }
+
+        // Add these order IDs to the syncing set
+        ordersToSync.forEach(order => this.syncingOrders.add(order.id));
+
+        this.set_synch("connecting", ordersToSync.length);
         options = options || {};
 
         // Keep the order ids that are about to be sent to the
         // backend. In between create_from_ui and the success callback
         // new orders may have been added to it.
-        var order_ids_to_sync = orders.map((o) => o.id);
+        const order_ids_to_sync = ordersToSync.map((o) => o.id);
 
-        for (const order of orders) {
+        for (const order of ordersToSync) {
             order.to_invoice = options.to_invoice || false;
         }
         // we try to send the order. silent prevents a spinner if it takes too long. (unless we are sending an invoice,
@@ -1260,9 +1364,9 @@ export class PosStore extends Reactive {
             const serverIds = await orm.call(
                 "pos.order",
                 "create_from_ui",
-                [orders, options.draft || false],
+                [ordersToSync, options.draft || false],
                 {
-                    context: this._getCreateOrderContext(orders, options),
+                    context: this._getCreateOrderContext(ordersToSync, options),
                 }
             );
 
@@ -1284,7 +1388,7 @@ export class PosStore extends Reactive {
             this.set_synch("connected");
             return serverIds;
         } catch (error) {
-            console.warn("Failed to send orders:", orders);
+            console.warn("Failed to send orders:", ordersToSync);
             if (error.code === 200) {
                 // Business Logic Error, not a connection problem
                 // Hide error if already shown before ...
@@ -1296,6 +1400,8 @@ export class PosStore extends Reactive {
             }
             this.set_synch("disconnected");
             throw error;
+        } finally {
+            order_ids_to_sync.forEach(order_id => this.syncingOrders.delete(order_id));
         }
     }
 
@@ -1752,14 +1858,60 @@ export class PosStore extends Reactive {
      */
     async _addProducts(ids, setAvailable = true) {
         if (setAvailable) {
-            await this.orm.write("product.product", ids, { available_in_pos: true });
+            try {
+                await this.orm.write("product.product", ids, { available_in_pos: true });
+            } catch (error) {
+                const ignoreError =
+                    error instanceof RPCError &&
+                    error.exceptionName === "odoo.exceptions.AccessError";
+                if (!ignoreError) {
+                    throw error;
+                }
+            }
         }
-        const product = await this.orm.call("pos.session", "get_pos_ui_product_product_by_params", [
+        const products = await this._loadProductByIds(ids);
+        const missingProductIds = await this._loadMissingPosCombos(products);
+        if (missingProductIds && missingProductIds.length) {
+            products.push(...(await this._loadProductByIds(missingProductIds)));
+        }
+        await this._loadMissingPricelistItems(products);
+        this._loadProductProduct(products);
+    }
+    async _loadProductByIds(productIds) {
+        return await this.orm.call("pos.session", "get_pos_ui_product_product_by_params", [
             odoo.pos_session_id,
-            { domain: [["id", "in", ids]] },
+            { domain: [["id", "in", productIds]] },
         ]);
-        await this._loadMissingPricelistItems(product);
-        this._loadProductProduct(product);
+    }
+    async _loadMissingPosCombos(products) {
+        const missingComboIds = unique(
+            products
+                .flatMap((product) => product.combo_ids)
+                .filter((id) => !this.db.combo_by_id[id]),
+        );
+        if (!missingComboIds.length) {
+            return;
+        }
+        const combos = await this.orm.call("pos.combo", "search_read", [], {
+            fields: ["id", "name", "combo_line_ids", "base_price"],
+            domain: [["id", "in", missingComboIds]],
+        });
+        this.db.add_combos(combos);
+        const comboLines = await this.orm.call("pos.combo.line", "search_read", [], {
+            fields: ["id", "product_id", "combo_price", "combo_id"],
+            domain: [["combo_id", "in", missingComboIds]],
+        });
+        this.db.add_combo_lines(comboLines);
+        const missingProductIds = unique(
+            comboLines
+                .map((comboLine) => comboLine.product_id[0])
+                .filter(
+                    (id) =>
+                        !this.db.get_product_by_id(id) &&
+                        !products.map((product) => product.id).includes(id),
+                ),
+        );
+        return missingProductIds;
     }
     isOpenOrderShareable() {
         return this.config.trusted_config_ids.length > 0;
@@ -1922,6 +2074,9 @@ export class PosStore extends Reactive {
 
         // Add the product after having the extra information.
         await this.addProductFromUi(product, options);
+        if (product.tracking == "serial") {
+            this.selectedOrder?.selected_orderline?.set_quantity_by_lot();
+        }
         this.numberBuffer.reset();
     }
 
@@ -2043,6 +2198,10 @@ export class PosStore extends Reactive {
         this.searchProductWord = "";
         const { start_category, iface_start_categ_id } = this.config;
         this.selectedCategoryId = (start_category && iface_start_categ_id?.[0]) || 0;
+    }
+
+    getPhoneSearchFields() {
+        return ["phone", "mobile"];
     }
 }
 

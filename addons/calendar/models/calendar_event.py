@@ -104,7 +104,7 @@ class Meeting(models.Model):
         partners = self.env.user.partner_id
         active_id = self._context.get('active_id')
         if self._context.get('active_model') == 'res.partner' and active_id and active_id not in partners.ids:
-                partners |= self.env['res.partner'].browse(active_id)
+            partners |= self.env['res.partner'].browse(active_id)
         return partners
 
     @api.model
@@ -289,11 +289,14 @@ class Meeting(models.Model):
     def _compute_user_can_edit(self):
         for event in self:
             # By default, only current attendees and the organizer can edit the event.
-            editor_candidates = event.partner_ids.user_ids + event.user_id
+            editor_candidates = set(event.partner_ids.user_ids + event.user_id)
             # Right before saving the event, old partners must be able to save changes.
             if event._origin:
-                editor_candidates += event._origin.partner_ids.user_ids
-            event.user_can_edit = self.env.user.id in editor_candidates.ids
+                editor_candidates |= set(event._origin.partner_ids.user_ids)
+            # Non-private events must be editable by uninvited administrators.
+            if self.env.user.has_group('base.group_system') and event.privacy != 'private':
+                editor_candidates.add(self.env.user)
+            event.user_can_edit = self.env.user in editor_candidates
 
     @api.depends('attendee_ids')
     def _compute_invalid_email_partner_ids(self):
@@ -398,16 +401,24 @@ class Meeting(models.Model):
                 # because fullcalendar just drops times for full day events.
                 # i.e. Christmas is on 25/12 for everyone
                 # even if people don't celebrate it simultaneously
-                enddate = fields.Datetime.from_string(meeting.stop_date)
+                enddate = fields.Datetime.from_string(meeting.stop_date or meeting.stop)
                 enddate = enddate.replace(hour=18)
 
-                startdate = fields.Datetime.from_string(meeting.start_date)
+                startdate = fields.Datetime.from_string(meeting.start_date or meeting.start)
                 startdate = startdate.replace(hour=8)  # Set 8 AM
 
-                meeting.write({
-                    'start': startdate.replace(tzinfo=None),
-                    'stop': enddate.replace(tzinfo=None)
-                })
+                if meeting.start_date and meeting.stop_date:
+                    # If start_date or stop_date is set, use start_date and stop_date;
+                    # otherwise, use start and stop.
+                    meeting.write({
+                        'start': startdate.replace(tzinfo=None),
+                        'stop': enddate.replace(tzinfo=None)
+                    })
+                else:
+                    meeting.write({
+                        'start_date': startdate.replace(tzinfo=None),
+                        'stop_date': enddate.replace(tzinfo=None)
+                    })
 
     @api.constrains('start', 'stop', 'start_date', 'stop_date')
     def _check_closing_date(self):
@@ -430,6 +441,12 @@ class Meeting(models.Model):
                       end_datetime=meeting.stop
                     )
                 )
+
+    def _check_organizer_validation_conditions(self, vals_list):
+        """ Method for check in the microsoft_calendar module that needs to be
+            overridden in appointment.
+        """
+        return [True] * len(vals_list)
 
     @api.depends('recurrence_id', 'recurrency')
     def _compute_rrule_type_ui(self):
@@ -518,37 +535,74 @@ class Meeting(models.Model):
     def create(self, vals_list):
         # Prevent sending update notification when _inverse_dates is called
         self = self.with_context(is_calendar_event_new=True)
-        defaults = self.default_get(['activity_ids', 'res_model_id', 'res_id', 'user_id', 'res_model', 'partner_ids'])
+        defaults = self.default_get([
+            'activity_ids', 'allday', 'description', 'name', 'partner_ids',
+            'res_model_id', 'res_id', 'start', 'user_id',
+        ])
 
         vals_list = [  # Else bug with quick_create when we are filter on an other user
-            dict(vals, user_id=defaults.get('user_id', self.env.user.id)) if not 'user_id' in vals else vals
-            for vals in vals_list
+            {
+                **vals,
+                'activity_ids': vals.get('activity_ids', defaults.get('activity_ids')),
+                'allday': vals.get('allday', defaults.get('allday')),
+                'description': vals.get('description', defaults.get('description')),
+                'name': vals.get('name', defaults.get('name')),
+                # when res_id is not defined or vals['res_id'] == 0, fallback on default
+                'res_id': vals.get('res_id') or defaults.get('res_id'),
+                'res_model': vals.get('res_model', defaults.get('res_model')),
+                'res_model_id': vals.get('res_model_id', defaults.get('res_model_id')),
+                'start': vals.get('start', defaults.get('start')),
+                'user_id': vals.get('user_id', defaults.get('user_id', self.env.user.id)),
+             } for vals in vals_list
         ]
-        meeting_activity_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
+        meeting_activity_types = self.env['mail.activity.type'].search([('category', '=', 'meeting')])
         # get list of models ids and filter out None values directly
-        model_ids = list(filter(None, {values.get('res_model_id', defaults.get('res_model_id')) for values in vals_list}))
-        model_name = defaults.get('res_model')
-        valid_activity_model_ids = model_name and self.env[model_name].sudo().browse(model_ids).filtered(lambda m: 'activity_ids' in m).ids or []
-        if meeting_activity_type and not defaults.get('activity_ids'):
+        model_ids = list(filter(None, {values['res_model_id'] for values in vals_list}))
+        all_models = self.env['ir.model'].sudo().browse(model_ids)
+
+        # if user is creating an event for an activity that already has one, create a second activity
+        existing_event, existing_type = self.browse(), self.env['mail.activity.type']
+        orig_activity_ids = self.env['mail.activity'].browse(self._context.get('orig_activity_ids', []))
+        if len(orig_activity_ids) == 1:
+            existing_event = orig_activity_ids.calendar_event_id
+            if existing_event and orig_activity_ids.activity_type_id.category == 'meeting':
+                existing_type = orig_activity_ids.activity_type_id
+
+        if meeting_activity_types:
             for values in vals_list:
                 # created from calendar: try to create an activity on the related record
-                if values.get('activity_ids'):
+                if values['activity_ids'] and not existing_event:
                     continue
-                res_model_id = values.get('res_model_id', defaults.get('res_model_id'))
-                res_id = values.get('res_id', defaults.get('res_id'))
-                user_id = values.get('user_id', defaults.get('user_id'))
-                if not res_model_id or not res_id:
+                res_model = all_models.filtered(lambda m: m.id == values['res_model_id'])
+                res_id = values['res_id']
+                if not res_model or not res_id or not res_model.is_mail_activity:
                     continue
-                if res_model_id not in valid_activity_model_ids:
+
+                meeting_activity_type = self.env['mail.activity.type']
+                if existing_type and existing_type.res_model in {False, res_model.model}:
+                    meeting_activity_type = existing_type
+                if not meeting_activity_type:
+                    meeting_activity_type = meeting_activity_types.filtered(
+                        lambda act: act.res_model in {False, res_model.model}
+                    )
+                if not meeting_activity_type:
                     continue
+
                 activity_vals = {
-                    'res_model_id': res_model_id,
+                    'res_model_id': values['res_model_id'],
                     'res_id': res_id,
-                    'activity_type_id': meeting_activity_type.id,
+                    'activity_type_id': meeting_activity_type[0].id,
                 }
-                if user_id:
-                    activity_vals['user_id'] = user_id
+                if values['description']:
+                    activity_vals['note'] = values['description']
+                if values['name']:
+                    activity_vals['summary'] = values['name']
+                if values['start']:
+                    activity_vals['date_deadline'] = self._get_activity_deadline_from_start(fields.Datetime.from_string(values['start']), values['allday'])
+                if values['user_id']:
+                    activity_vals['user_id'] = values['user_id']
                 values['activity_ids'] = [(0, 0, activity_vals)]
+
         self._set_videocall_location(vals_list)
 
         # Add commands to create attendees from partners (if present) if no attendee command
@@ -579,7 +633,15 @@ class Meeting(models.Model):
 
         events.filtered(lambda event: event.start > fields.Datetime.now()).attendee_ids._send_invitation_emails()
 
-        events._sync_activities(fields={f for vals in vals_list for f in vals.keys()})
+        # update activities based on calendar event data, unless already prepared
+        # above manually. Heuristic: a new command (0, 0, vals) is considered as
+        # complete
+        to_sync_activities = self.browse()
+        for event, event_values in zip(events, vals_list):
+            if any(command[0] != 0 for command in event_values.get('activity_ids') or []):
+                to_sync_activities += event
+        to_sync_activities._sync_activities(fields={f for vals in vals_list for f in vals})
+
         if not self.env.context.get('dont_notify'):
             alarm_events = self.env['calendar.event']
             for event, values in zip(events, vals_list):
@@ -988,19 +1050,23 @@ class Meeting(models.Model):
                 if 'description' in fields:
                     activity_values['note'] = event.description
                 if 'start' in fields:
-                    # self.start is a datetime UTC *only when the event is not allday*
-                    # activty.date_deadline is a date (No TZ, but should represent the day in which the user's TZ is)
-                    # See 72254129dbaeae58d0a2055cba4e4a82cde495b7 for the same issue, but elsewhere
-                    deadline = event.start
-                    user_tz = self.env.context.get('tz')
-                    if user_tz and not event.allday:
-                        deadline = pytz.utc.localize(deadline)
-                        deadline = deadline.astimezone(pytz.timezone(user_tz))
-                    activity_values['date_deadline'] = deadline.date()
+                    activity_values['date_deadline'] = self._get_activity_deadline_from_start(event.start, event.allday)
                 if 'user_id' in fields:
                     activity_values['user_id'] = event.user_id.id
                 if activity_values.keys():
                     event.activity_ids.write(activity_values)
+
+    @api.model
+    def _get_activity_deadline_from_start(self, start, allday):
+        # self.start is a datetime UTC *only when the event is not allday*
+        # activty.date_deadline is a date (No TZ, but should represent the day in which the user's TZ is)
+        # See 72254129dbaeae58d0a2055cba4e4a82cde495b7 for the same issue, but elsewhere
+        deadline = start
+        user_tz = self.env.context.get('tz')
+        if user_tz and not allday:
+            deadline = pytz.utc.localize(deadline)
+            deadline = deadline.astimezone(pytz.timezone(user_tz))
+        return deadline.date()
 
     # ------------------------------------------------------------
     # ALARMS

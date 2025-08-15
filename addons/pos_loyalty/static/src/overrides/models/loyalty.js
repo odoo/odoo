@@ -164,9 +164,10 @@ patch(Order.prototype, {
                     continue;
                 }
                 const newId = nextId--;
-                delete this.oldCouponMapping[pe.coupon_id];
+                this.oldCouponMapping[pe.coupon_id] = newId;
                 pe.coupon_id = newId;
                 this.couponPointChanges[newId] = pe;
+                delete this.couponPointChanges[key];
             }
         }
         super.init_from_JSON(...arguments);
@@ -362,7 +363,6 @@ patch(Order.prototype, {
             return this._updateLoyaltyPrograms().then(async () => {
                 // Try auto claiming rewards
                 const claimableRewards = this.getClaimableRewards(false, false, true);
-                let changed = false;
                 for (const { coupon_id, reward } of claimableRewards) {
                     if (
                         reward.program_id.rewards.length === 1 &&
@@ -371,14 +371,10 @@ patch(Order.prototype, {
                             (reward.reward_type == "product" && !reward.multi_product))
                     ) {
                         this._applyReward(reward, coupon_id);
-                        changed = true;
                     }
                 }
-                // Rewards may impact the number of points gained
-                if (changed) {
-                    await this._updateLoyaltyPrograms();
-                }
                 this._updateRewardLines();
+                await this._updateLoyaltyPrograms();
             });
         });
     },
@@ -490,6 +486,11 @@ patch(Order.prototype, {
             ) {
                 continue;
             }
+
+            //If there is only one possible reward we try to claim the most possible out of it
+            if (claimedReward.reward.reward_product_ids?.length === 1) {
+                delete claimedReward.args["quantity"];
+            }
             this._applyReward(claimedReward.reward, claimedReward.coupon_id, claimedReward.args);
         }
     },
@@ -532,7 +533,7 @@ patch(Order.prototype, {
             for (let idx = 0; idx < Math.min(pointsAdded.length, oldChanges.length); idx++) {
                 Object.assign(oldChanges[idx], pointsAdded[idx]);
             }
-            if (pointsAdded.length < oldChanges.length) {
+            if (pointsAdded.length < oldChanges.length || !this._programIsApplicable(program)) {
                 const removedIds = oldChanges.map((pe) => pe.coupon_id);
                 this.couponPointChanges = Object.fromEntries(
                     Object.entries(this.couponPointChanges).filter(([k, pe]) => {
@@ -627,9 +628,7 @@ patch(Order.prototype, {
             for (const line of rewardLines) {
                 const reward = this.pos.reward_by_id[line.reward_id];
                 if (this._validForPointsCorrection(reward, line, rule)) {
-                    if (rule.reward_point_mode === "order") {
-                        res += rule.reward_point_amount;
-                    } else if (rule.reward_point_mode === "money") {
+                    if (rule.reward_point_mode === "money") {
                         res -= roundPrecision(
                             rule.reward_point_amount * line.get_price_with_tax(),
                             0.01
@@ -653,6 +652,11 @@ patch(Order.prototype, {
     _validForPointsCorrection(reward, line, rule) {
         // Check if the reward type is free product
         if (reward.reward_type !== "product") {
+            return false;
+        }
+        
+        // Check if the rule's reward point mode is order then not valid for correction
+        if (rule.reward_point_mode === 'order') {
             return false;
         }
 
@@ -741,6 +745,10 @@ patch(Order.prototype, {
         }
         return true;
     },
+    isLineValidForLoyaltyPoints(line) {
+        // This method should be overriden in other modules
+        return true;
+    },
     /**
      * Computes how much points each program gives.
      *
@@ -749,7 +757,7 @@ patch(Order.prototype, {
      */
     pointsForPrograms(programs) {
         pointsForProgramsCountedRules = {};
-        const orderLines = this.get_orderlines();
+        const orderLines = this.get_orderlines().filter((line) => !line.refunded_orderline_id && !line.comboParent);
         const linesPerRule = {};
         for (const line of orderLines) {
             const reward = line.reward_id ? this.pos.reward_by_id[line.reward_id] : undefined;
@@ -757,6 +765,9 @@ patch(Order.prototype, {
             const rewardProgram = reward && reward.program_id;
             // Skip lines for automatic discounts.
             if (isDiscount && rewardProgram.trigger === "auto") {
+                continue;
+            }
+            if (!this.isLineValidForLoyaltyPoints(line)) {
                 continue;
             }
             for (const program of programs) {
@@ -788,11 +799,11 @@ patch(Order.prototype, {
                 }
                 const linesForRule = linesPerRule[rule.id] ? linesPerRule[rule.id] : [];
                 const amountWithTax = linesForRule.reduce(
-                    (sum, line) => sum + line.get_price_with_tax(),
+                    (sum, line) => sum + (line.comboLines ? line.getComboTotalPrice() : line.get_price_with_tax()),
                     0
                 );
                 const amountWithoutTax = linesForRule.reduce(
-                    (sum, line) => sum + line.get_price_without_tax(),
+                    (sum, line) => sum + (line.comboLines ? line.getComboTotalPriceWithoutTax() : line.get_price_without_tax()),
                     0
                 );
                 const amountCheck =
@@ -831,7 +842,7 @@ patch(Order.prototype, {
                             qtyPerProduct[line.reward_product_id || line.get_product().id] =
                                 lineQty;
                         }
-                        orderedProductPaid += line.get_price_with_tax();
+                        orderedProductPaid += line.comboLines ? line.getComboTotalPrice() : line.get_price_with_tax();
                         if (!line.is_reward_line) {
                             totalProductQty += lineQty;
                         }
@@ -1007,6 +1018,10 @@ patch(Order.prototype, {
                 if (points < reward.required_points) {
                     continue;
                 }
+                // Skip if the reward program is of type 'coupons' and there is already an reward orderline linked to the current reward to avoid multiple reward apply
+                if ((reward.program_id.program_type === 'coupons' && this.orderlines.find(((rewardline) => rewardline.reward_id === reward.id)))) {
+                    continue;
+                }
                 if (auto && this.disabledRewards.has(reward.id)) {
                     continue;
                 }
@@ -1113,7 +1128,9 @@ patch(Order.prototype, {
             if (!line.get_quantity()) {
                 continue;
             }
-            const taxKey = line.get_taxes().map((t) => t.id);
+            const taxKey = ['ewallet', 'gift_card'].includes(reward.program_id.program_type)
+                ? line.get_taxes().map((t) => t.id)
+                : line.get_taxes().filter((t) => t.amount_type !== 'fixed').map((t) => t.id);
             discountable += line.get_price_with_tax();
             if (!discountablePerTax[taxKey]) {
                 discountablePerTax[taxKey] = 0;
@@ -1126,19 +1143,12 @@ patch(Order.prototype, {
      * @returns the order's cheapest line
      */
     _getCheapestLine() {
-        let cheapestLine;
-        for (const line of this.get_orderlines().filter((line) => !line.comboLines)) {
-            if (line.reward_id || !line.get_quantity()) {
-                continue;
-            }
-            if (!cheapestLine || cheapestLine.price > line.price) {
-                cheapestLine = line;
-            }
-        }
-        return cheapestLine;
+        const filtered_lines = this.get_orderlines().filter((line) => !line.comboParent && !line.reward_id && line.get_quantity);
+        return filtered_lines.toSorted((lineA, lineB) => 
+            lineA.getComboTotalPrice() - lineB.getComboTotalPrice()
+       )[0]
     },
     /**
-     * @param {loyalty.reward} reward
      * @returns the discountable and discountable per tax for this discount on cheapest reward.
      */
     _getDiscountableOnCheapest(reward) {
@@ -1148,8 +1158,8 @@ patch(Order.prototype, {
         }
         const taxKey = cheapestLine.get_taxes().map((t) => t.id);
         return {
-            discountable: cheapestLine.price,
-            discountablePerTax: Object.fromEntries([[taxKey, cheapestLine.price]]),
+            discountable: cheapestLine.getComboTotalPriceWithoutTax(),
+            discountablePerTax: Object.fromEntries([[taxKey, cheapestLine.getComboTotalPriceWithoutTax()]]),
         };
     },
     /**
@@ -1183,20 +1193,31 @@ patch(Order.prototype, {
         const linesToDiscount = [];
         const discountLinesPerReward = {};
         const orderLines = this.get_orderlines();
+        const orderProducts = orderLines.map((line) => line.product.id);
         const remainingAmountPerLine = {};
         for (const line of orderLines) {
             if (!line.get_quantity() || !line.price) {
                 continue;
             }
+            const product_id = line.comboParent?.product.id || line.get_product().id;
             remainingAmountPerLine[line.cid] = line.get_price_with_tax();
             if (
-                applicableProducts.has(line.get_product().id) ||
+                applicableProducts.has(product_id) ||
                 (line.reward_product_id && applicableProducts.has(line.reward_product_id))
             ) {
                 linesToDiscount.push(line);
             } else if (line.reward_id) {
                 const lineReward = this.pos.reward_by_id[line.reward_id];
-                if (lineReward.id === reward.id) {
+                if (lineReward.id === reward.id ||
+                    (
+                        orderProducts.some(product =>
+                            lineReward.all_discount_product_ids.has(product) &&
+                            applicableProducts.has(product)
+                        ) &&
+                        lineReward.reward_type === 'discount' &&
+                        lineReward.discount_mode != 'percent'
+                    )
+                ) {
                     linesToDiscount.push(line);
                 }
                 if (!discountLinesPerReward[line.reward_identifier_code]) {
@@ -1222,7 +1243,6 @@ patch(Order.prototype, {
             if (!discountedLines.length) {
                 continue;
             }
-            const commonLines = linesToDiscount.filter((line) => discountedLines.includes(line));
             if (lineReward.discount_mode === "percent") {
                 const discount = lineReward.discount / 100;
                 for (const line of discountedLines) {
@@ -1235,26 +1255,6 @@ patch(Order.prototype, {
                         remainingAmountPerLine[line.cid] *= 1 - discount;
                     }
                 }
-            } else {
-                const nonCommonLines = discountedLines.filter(
-                    (line) => !linesToDiscount.includes(line)
-                );
-                const discountedAmounts = lines.reduce((map, line) => {
-                    map[line.get_taxes().map((t) => t.id)];
-                    return map;
-                }, {});
-                const process = (line) => {
-                    const key = line.get_taxes().map((t) => t.id);
-                    if (!discountedAmounts[key] || line.reward_id) {
-                        return;
-                    }
-                    const remaining = remainingAmountPerLine[line.cid];
-                    const consumed = Math.min(remaining, discountedAmounts[key]);
-                    discountedAmounts[key] -= consumed;
-                    remainingAmountPerLine[line.cid] -= consumed;
-                };
-                nonCommonLines.forEach(process);
-                commonLines.forEach(process);
             }
         }
 
@@ -1502,10 +1502,9 @@ patch(Order.prototype, {
                 // Compute the correction points once even if there are multiple reward lines.
                 // This is because _getPointsCorrection is taking into account all the lines already.
                 const claimedPoints = line ? this._getPointsCorrection(reward.program_id) : 0;
-                return Math.floor(
-                    ((remainingPoints - claimedPoints) / reward.required_points) *
-                        reward.reward_product_qty
-                );
+                return Math.floor((remainingPoints - claimedPoints) / reward.required_points) > 0
+                ? reward.reward_product_qty
+                : 0;
             } else {
                 return Math.floor(
                     (remainingPoints / reward.required_points) * reward.reward_product_qty
@@ -1542,9 +1541,15 @@ patch(Order.prototype, {
                   Math.ceil(unclaimedQty / reward.reward_product_qty),
                   Math.floor(points / reward.required_points)
               );
-        const cost = reward.clear_wallet ? points : claimable_count * reward.required_points;
+        const cost = reward.clear_wallet
+            ? points
+            : Math.min(claimable_count * reward.required_points, args["cost"] || Infinity);
         // In case the reward is the product multiple times, give it as many times as possible
-        const freeQuantity = Math.min(unclaimedQty, reward.reward_product_qty * claimable_count);
+        const freeQuantity = Math.min(
+            unclaimedQty,
+            reward.reward_product_qty * claimable_count,
+            args["quantity"] || Infinity
+        );
         return [
             {
                 product: reward.discount_line_product_id,
@@ -1553,12 +1558,12 @@ patch(Order.prototype, {
                     this.pos.currency.decimal_places
                 ),
                 tax_ids: product.taxes_id,
-                quantity: args["quantity"] || freeQuantity,
+                quantity: freeQuantity,
                 reward_id: reward.id,
                 is_reward_line: true,
                 reward_product_id: product.id,
                 coupon_id: args["coupon_id"],
-                points_cost: args["cost"] || cost,
+                points_cost: cost,
                 reward_identifier_code: _newRandomRewardCode(),
                 merge: false,
             },

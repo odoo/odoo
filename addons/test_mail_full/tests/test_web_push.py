@@ -8,6 +8,7 @@ import odoo
 from odoo.tools.misc import mute_logger
 from odoo.addons.mail.models.partner_devices import InvalidVapidError
 from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.mail.web_push import ENCRYPTION_BLOCK_OVERHEAD, ENCRYPTION_HEADER_SIZE
 from odoo.addons.sms.tests.common import SMSCommon
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
 from odoo.tests import tagged
@@ -50,6 +51,8 @@ class TestWebPushNotification(SMSCommon):
             'channel_type': 'chat',
             'name': 'Direct Message',
         })
+
+        cls.group_chat_channel = channel.with_user(cls.user_email).create_group(partners_to=(cls.user_email + cls.user_inbox).partner_id.ids)
 
         cls.group_channel = cls.env['discuss.channel'].channel_create(name='Channel', group_id=None)
         cls.group_channel.add_members((cls.user_email + cls.user_inbox).partner_id.ids)
@@ -170,6 +173,35 @@ class TestWebPushNotification(SMSCommon):
         self._assert_notification_count_for_cron(0)
         push_to_end_point.assert_called_once()
         self.assertEqual(push_to_end_point.call_args.kwargs['device']['endpoint'], 'https://test.odoo.com/webpush/user2')
+
+        # Reset the mock counter
+        push_to_end_point.reset_mock()
+
+        # Test Group Chat (partner as author)
+        self.group_chat_channel.add_members(guest_ids=[self.guest.id])
+        self.group_chat_channel.with_user(self.user_email).message_post(
+            body='Test', message_type='comment', subtype_xmlid='mail.mt_comment')
+
+        self._assert_notification_count_for_cron(0)
+        push_to_end_point.assert_called_once()
+        payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
+        self.assertIn(self.user_email.name, payload_value['title'])
+        self.assertIn(self.user_inbox.name, payload_value['title'])
+        self.assertIn(self.guest.name, payload_value['title'])
+        self.assertNotIn("False", payload_value['title'])
+
+        # Reset the mock counter
+        push_to_end_point.reset_mock()
+
+        # Test Group Chat (guest as author)
+        self.group_chat_channel.with_user(self.env.ref('base.public_user')).with_context(guest=self.guest).message_post(
+            body='Test', message_type='comment', subtype_xmlid='mail.mt_comment')
+
+        self._assert_notification_count_for_cron(0)
+        self.assertEqual(push_to_end_point.call_count, 2)  # the 2 partners
+        payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
+        self.assertIn(self.guest.name, payload_value['title'])
+        self.assertNotIn("False", payload_value['title'])
 
         # Reset the mock counter
         push_to_end_point.reset_mock()
@@ -301,7 +333,7 @@ class TestWebPushNotification(SMSCommon):
         self.assertIn('t=', post.call_args.kwargs['headers']['Authorization'])
         self.assertIn('k=', post.call_args.kwargs['headers']['Authorization'])
         self.assertEqual('aes128gcm', post.call_args.kwargs['headers']['Content-Encoding'])
-        self.assertEqual('0', post.call_args.kwargs['headers']['TTL'])
+        self.assertEqual('60', post.call_args.kwargs['headers']['TTL'])
         self.assertIn('data', post.call_args.kwargs)
         self.assertIn('timeout', post.call_args.kwargs)
 
@@ -342,3 +374,148 @@ class TestWebPushNotification(SMSCommon):
                 partner_id=self.user_email.partner_id.id,
                 vapid_public_key=self.vapid_public_key,
             )
+
+    @patch.object(
+        odoo.addons.mail.models.mail_thread.Session, 'post', return_value=SimpleNamespace(status_code=201, text='Ok')
+    )
+    @patch.object(
+        odoo.addons.mail.models.mail_thread, 'push_to_end_point',
+        wraps=odoo.addons.mail.web_push.push_to_end_point,
+    )
+    def test_push_notifications_truncate_payload(self, thread_push_mock, session_post_mock):
+        """Ensure that when we send large bodies with various character types,
+        the final encrypted data (post-encryption) never exceeds 4096 bytes.
+
+        This test checks the behavior for the current size limits and encryption overhead.
+        See below test for a more illustrative example.
+        See MailThread._truncate_payload for a more thorough explanation.
+
+        Test scenarios include:
+        - ASCII characters (X)
+        - UTF-8 characters (Ø), at various offsets
+        """
+        # compute the size of an empty notification with these parameters
+        # this could change based on the id of record_simple for example
+        # but is otherwise constant for any notification sent with the same parameters
+        self.record_simple.with_user(self.user_email).message_notify(
+            partner_ids=self.user_inbox.partner_id.ids,
+            body='',
+            subject='Test Payload',
+            record_name=self.record_simple._name,
+        )
+        base_payload_size = len(thread_push_mock.call_args.kwargs['payload'].encode())
+        effective_payload_size_limit = self.env['mail.thread']._truncate_payload_get_max_payload_length()
+        # this is just a sanity check that the value makes sense, feel free to update as needed
+        self.assertEqual(effective_payload_size_limit, 3993, "Payload limit should come out to 3990.")
+        body_size_limit = effective_payload_size_limit - base_payload_size
+        encryption_overhead = ENCRYPTION_HEADER_SIZE + ENCRYPTION_BLOCK_OVERHEAD
+
+        test_cases = [
+            # (description, body)
+            ('empty string', '', 0, 0),
+            ('1-byte ASCII characters (below limit)', 'X' * (body_size_limit - 1), body_size_limit - 1, body_size_limit - 1),
+            ('1-byte ASCII characters (at limit)', 'X' * body_size_limit, body_size_limit, body_size_limit),
+            ('1-byte ASCII characters (past limit)', 'X' * (body_size_limit + 1), body_size_limit, body_size_limit),
+            ('1-byte ASCII characters (way past limit)', 'X' * 5000, body_size_limit, body_size_limit),
+        ] + [  # \u00d8 check that it can be cut anywhere by offsetting the string by 1 byte each time
+            (
+                f'2-bytes UTF-8 characters (near limit + {offset}-byte offset)',
+                ('+' * offset) + ('Ø' * (body_size_limit // 6)),
+                offset + ((body_size_limit - offset) // 6),  # length truncated to nearest full character (\u00f8)
+                offset * 1 + ((body_size_limit - offset) // 6) * 6,
+            )
+            for offset in range(0, 8)
+        ]
+
+        for description, body, expected_body_length, expected_body_size in test_cases:
+            with self.subTest(description):
+                self.record_simple.with_user(self.user_email).message_notify(
+                    partner_ids=self.user_inbox.partner_id.ids,
+                    body=body,
+                    subject='Test Payload',
+                    record_name=self.record_simple._name,
+                )
+
+                encrypted_payload = session_post_mock.call_args.kwargs['data']
+                payload_before_encryption = thread_push_mock.call_args.kwargs['payload']
+                self.assertLessEqual(
+                    len(encrypted_payload), 4096, 'Final encrypted payload should not exceed 4096 bytes'
+                )
+                self.assertEqual(
+                    len(json.loads(payload_before_encryption)['options']['body']), expected_body_length
+                )
+                self.assertEqual(
+                    len(encrypted_payload),
+                    base_payload_size + expected_body_size + encryption_overhead,
+                    'Encrypted size should be exactly the base payload size + body size + encryption overhead.'
+                )
+
+    @patch.object(
+        odoo.addons.mail.models.mail_thread.Session, 'post', return_value=SimpleNamespace(status_code=201, text='Ok')
+    )
+    @patch.object(
+        odoo.addons.mail.models.mail_thread, 'push_to_end_point',
+        wraps=odoo.addons.mail.web_push.push_to_end_point,
+    )
+    @patch.object(
+        odoo.addons.mail.web_push, '_encrypt_payload',
+        wraps=odoo.addons.mail.web_push._encrypt_payload,
+    )
+    def test_push_notifications_truncate_payload_mocked_size_limit(self, web_push_encrypt_payload_mock, thread_push_mock, session_post_mock):
+        """Illustrative test for text contents truncation.
+
+        We want to ensure we truncate utf-8 values properly based on maximum payload size.
+        Here max payload size is mocked, so that we can test on the same body each time to ease reading.
+
+        See MailThread._truncate_payload for a more thorough explanation.
+        """
+        self.record_simple.with_user(self.user_email).message_notify(
+            partner_ids=self.user_inbox.partner_id.ids,
+            body="",
+            subject='Test Payload',
+            record_name=self.record_simple._name,
+        )
+        base_payload = thread_push_mock.call_args.kwargs['payload'].encode()
+        base_payload_size = len(base_payload)
+        encryption_overhead = ENCRYPTION_HEADER_SIZE + ENCRYPTION_BLOCK_OVERHEAD
+
+        body = "BØDY"
+        body_json = json.dumps(body)[1:-1]
+        for size_limit, expected_body in [
+            (base_payload_size + len(body_json), "BØDY"),
+            (base_payload_size + len(body_json) - 1, "BØD"),
+            (base_payload_size + len(body_json) - 2, "BØ"),
+        ] + [  # truncating anywhere in \u00d8 (Ø) should truncate to the nearest full character (B)
+            (base_payload_size + len(body_json) - n, "B")
+            for n in range(3, 9)
+        ] + [
+            (base_payload_size + len(body_json) - 9, ""),
+            (base_payload_size + len(body_json) - 10, ""),  # should still work even if it would still be too big after truncate
+        ]:
+            with self.subTest(size_limit=size_limit), patch.object(
+                odoo.addons.mail.models.mail_thread.MailThread, '_truncate_payload_get_max_payload_length',
+                return_value=size_limit,
+            ):
+                self.record_simple.with_user(self.user_email).message_notify(
+                    partner_ids=self.user_inbox.partner_id.ids,
+                    body=body,
+                    subject='Test Payload',
+                    record_name=self.record_simple._name,
+                )
+                payload_at_push = thread_push_mock.call_args.kwargs['payload']
+                payload_before_encrypt = web_push_encrypt_payload_mock.call_args.args[0]
+                encrypted_payload = session_post_mock.call_args.kwargs['data']
+                self.assertEqual(payload_before_encrypt.decode(), payload_at_push, "Payload should not change between encryption and push call.")
+                self.assertEqual(len(payload_before_encrypt), len(payload_at_push), "Encoded body should be same size as decoded.")
+                self.assertEqual(
+                    len(encrypted_payload), len(payload_before_encrypt) + encryption_overhead,
+                    'Final encrypted payload should just be the size of the unencrypted payload + the size of encryption overhead.'
+                )
+                self.assertEqual(
+                    json.loads(payload_at_push)['options']['body'], expected_body
+                )
+                if not expected_body:
+                    self.assertEqual(
+                        payload_before_encrypt, base_payload,
+                        "Only the contents of the body should be truncated, not the rest of the payload."
+                    )

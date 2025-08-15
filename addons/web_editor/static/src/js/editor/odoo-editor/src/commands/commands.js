@@ -56,6 +56,8 @@ import {
     paragraphRelatedElements,
     lastLeaf,
     firstLeaf,
+    convertList,
+    hasAnyFontSizeClass,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/;
@@ -162,6 +164,7 @@ export const editorCommands = {
         }
         const range = selection.getRangeAt(0);
         const block = closestBlock(selection.anchorNode);
+        const isInList = closestElement(selection.anchorNode, 'LI');
         const isSelectionAtStart = firstLeaf(block) === selection.anchorNode && selection.anchorOffset === 0;
         const isSelectionAtEnd = lastLeaf(block) === selection.focusNode && selection.focusOffset === nodeSize(selection.focusNode);
         if (range.startContainer.nodeType === Node.TEXT_NODE) {
@@ -182,9 +185,21 @@ export const editorCommands = {
 
         // In case the html inserted starts with a list and will be inserted within
         // a list, unwrap the list elements from the list.
-        if (closestElement(selection.anchorNode, 'UL, OL') &&
-            (container.firstChild.nodeName === 'UL' || container.firstChild.nodeName === 'OL')) {
-            container.replaceChildren(...container.firstChild.childNodes);
+        const isList = node => ['UL', 'OL'].includes(node.nodeName);
+        const hasSingleChild = container.childNodes.length === 1;
+        if (
+            closestElement(selection.anchorNode, 'UL, OL') &&
+            isList(container.firstChild)
+        ) {
+            unwrapContents(container.firstChild);
+        }
+        // Similarly if the html inserted ends with a list.
+        if (
+            closestElement(selection.focusNode, 'UL, OL') &&
+            isList(container.lastChild) &&
+            !hasSingleChild
+        ) {
+            unwrapContents(container.lastChild);
         }
 
         startNode = startNode || editor.document.getSelection().anchorNode;
@@ -193,7 +208,7 @@ export const editorCommands = {
             block.textContent !== "" && node.textContent !== "" &&
             (
                 block.nodeName === node.nodeName ||
-                ['BLOCKQUOTE', 'PRE', 'DIV'].includes(block.nodeName)
+                block.nodeName === 'DIV'
             ) && selection.anchorNode.oid !== 'root'
         );
 
@@ -221,11 +236,25 @@ export const editorCommands = {
         } else if (container.childElementCount > 1) {
             // Grab the content of the first child block and isolate it.
             if (shouldUnwrap(container.firstChild) && !isSelectionAtStart) {
+                // Unwrap the deepest nested first <li> element in the
+                // container to extract and paste the text content of the list.
+                if (container.firstChild.nodeName === 'LI') {
+                    const deepestBlock = closestBlock(firstLeaf(container.firstChild));
+                    splitAroundUntil(deepestBlock, container.firstChild);
+                    container.firstElementChild.replaceChildren(...deepestBlock.childNodes);
+                }
                 containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
                 container.firstElementChild.remove();
             }
             // Grab the content of the last child block and isolate it.
             if (shouldUnwrap(container.lastChild) && !isSelectionAtEnd) {
+                // Unwrap the deepest nested last <li> element in the container
+                // to extract and paste the text content of the list.
+                if (container.lastChild.nodeName === 'LI') {
+                    const deepestBlock = closestBlock(lastLeaf(container.lastChild));
+                    splitAroundUntil(deepestBlock, container.lastChild);
+                    container.lastElementChild.replaceChildren(...deepestBlock.childNodes);
+                }
                 containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
                 container.lastElementChild.remove();
             }
@@ -249,6 +278,9 @@ export const editorCommands = {
         // element if it's a block then we insert the content in the right places.
         let currentNode = startNode;
         let lastChildNode = false;
+        const currentList = currentNode && closestElement(currentNode, 'UL, OL');
+        const mode = currentList && getListMode(currentList);
+
         const _insertAt = (reference, nodes, insertBefore) => {
             for (const child of (insertBefore ? nodes.reverse() : nodes)) {
                 reference[insertBefore ? 'before' : 'after'](child);
@@ -279,7 +311,7 @@ export const editorCommands = {
                 // If we arrive here, the o_enter index should always be 0.
                 const parent = currentNode.nextSibling.parentElement;
                 const index = [...parent.childNodes].indexOf(currentNode.nextSibling);
-                currentNode.nextSibling.parentElement.oEnter(index);
+                parent.oEnter(index);
             }
         }
 
@@ -320,6 +352,11 @@ export const editorCommands = {
                     currentNode[currentNode.textContent ? 'after' : 'before'](br);
                 }
             }
+            // Ensure that all adjacent paragraph elements are converted to
+            // <li> when inserting in a list.
+            if (isInList && paragraphRelatedElements.includes(nodeToInsert.nodeName)) {
+                setTagName(nodeToInsert, "LI");
+            }
             // Contenteditable false property changes to true after the node is
             // inserted into DOM.
             const isNodeToInsertContentEditable = nodeToInsert.isContentEditable;
@@ -329,27 +366,32 @@ export const editorCommands = {
             } else {
                 currentNode.after(nodeToInsert);
             }
+            let convertedList;
             if (
-                ['BLOCKQUOTE', 'PRE'].includes(block.nodeName) &&
-                paragraphRelatedElements.includes(nodeToInsert.nodeName)
+                currentList &&
+                (
+                    (nodeToInsert.nodeName === 'LI' && nodeToInsert.classList.contains('oe-nested')) ||
+                    isList(nodeToInsert)
+                )
             ) {
-                nodeToInsert = setTagName(nodeToInsert, block.nodeName);
+                convertedList = convertList(nodeToInsert, mode);
             }
             if (currentNode.tagName !== 'BR' && isShrunkBlock(currentNode)) {
                 currentNode.remove();
             }
             // If the first child of editable is contenteditable false element
-            // a chromium bug prevents selecting the container. Prepend a
-            // zero-width space so it's no longer the first child.
+            // a chromium bug prevents selecting the container.
+            // Add a paragraph above it so it's no longer the first child.
             if (
                 !isNodeToInsertContentEditable &&
                 editor.editable.firstChild === nodeToInsert &&
                 nodeToInsert.nodeName === 'DIV'
             ) {
-                const zws = document.createTextNode('\u200B');
-                nodeToInsert.before(zws);
+                const p = document.createElement("p");
+                p.append(document.createElement("br"));
+                nodeToInsert.before(p);
             }
-            currentNode = nodeToInsert;
+            currentNode = convertedList || nodeToInsert;
         }
 
         currentNode = lastChildNode || currentNode;
@@ -371,9 +413,20 @@ export const editorCommands = {
             currentNode = currentNode.nextSibling;
             lastPosition = getDeepestPosition(...rightPos(currentNode));
         } else {
-            lastPosition = [...paragraphRelatedElements, 'LI'].includes(currentNode.nodeName)
+            lastPosition = [...paragraphRelatedElements, 'LI', 'UL', 'OL'].includes(currentNode.nodeName)
                 ? rightPos(lastLeaf(currentNode))
                 : rightPos(currentNode);
+        }
+        if (
+            lastPosition[0].nodeName === "A" &&
+            (lastPosition[1] === nodeSize(lastPosition[0]) || lastPosition[1] === 0) &&
+            isLinkEligibleForZwnbsp(editor.editable, lastPosition[0])
+        ) {
+            // In case the currentNode is different than A but the lastposition is A
+            // we need to pad the link with zws and adjust the selection accordingly
+            padLinkWithZws(editor.editable, lastPosition[0]);
+            currentNode = lastPosition[0].nextSibling;
+            lastPosition = getDeepestPosition(...rightPos(currentNode));
         }
         if (!editor.options.allowInlineAtRoot && lastPosition[0] === editor.editable) {
             // Correct the position if it happens to be in the editable root.
@@ -398,7 +451,13 @@ export const editorCommands = {
     // Change tags
     setTag(editor, tagName, extraClass = "") {
         const range = getDeepRange(editor.editable, { correctTripleClick: true });
-        const selectedBlocks = [...new Set(getTraversedNodes(editor.editable, range).map(closestBlock))];
+        const selectedBlocks = [
+            ...new Set(
+                getTraversedNodes(editor.editable, range)
+                    .map(closestBlock)
+                    .filter((block) => block.isContentEditable)
+            ),
+        ];
         const deepestSelectedBlocks = selectedBlocks.filter(block => (
             !descendants(block).some(descendant => selectedBlocks.includes(descendant)) &&
             block.isContentEditable
@@ -446,10 +505,10 @@ export const editorCommands = {
         }
         const isContextBlock = container => ['TD', 'DIV', 'LI'].includes(container.nodeName);
         if (!startContainer.isConnected || isContextBlock(startContainer)) {
-            startContainer = startContainerChild.parentNode;
+            startContainer = startContainerChild?.parentNode || startContainer;
         }
         if (!endContainer.isConnected || isContextBlock(endContainer)) {
-            endContainer = endContainerChild.parentNode;
+            endContainer = endContainerChild?.parentNode || endContainer;
         }
         const newRange = new Range();
         newRange.setStart(startContainer, startOffset);
@@ -465,7 +524,7 @@ export const editorCommands = {
     underline: editor => formatSelection(editor, 'underline'),
     strikeThrough: editor => formatSelection(editor, 'strikeThrough'),
     setFontSize: (editor, size) => formatSelection(editor, 'fontSize', {applyStyle: true, formatProps: {size}}),
-    setFontSizeClassName: (editor, className) => formatSelection(editor, 'setFontSizeClassName', {formatProps: {className}}),
+    setFontSizeClassName: (editor, className) => formatSelection(editor, 'setFontSizeClassName', {applyStyle: true, formatProps: {className}}),
     switchDirection: editor => {
         getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
         const selection = editor.document.getSelection();
@@ -510,6 +569,7 @@ export const editorCommands = {
         // created in the middle of the process, which we prevent here.
         editor.historyPauseSteps();
         editor.document.execCommand('removeFormat');
+        let hasFontSizeClass;
         for (const node of getTraversedNodes(editor.editable)) {
             if (node.nodeType === Node.ELEMENT_NODE && node.hasAttribute('color')) {
                 node.removeAttribute('color');
@@ -517,6 +577,16 @@ export const editorCommands = {
             const element = closestElement(node);
             element.style.removeProperty('color');
             element.style.removeProperty('background');
+            element.style.removeProperty('-webkit-text-fill-color');
+            if (!hasFontSizeClass && closestElement(node, hasAnyFontSizeClass)) {
+                hasFontSizeClass = true;
+            }
+        }
+        if (hasFontSizeClass) {
+            // Calling `document.execCommand` will not remove font-size
+            // if font-size is applied through a css class. To remove
+            // those styles, font-size classes should be removed.
+            formatSelection(editor, 'setFontSizeClassName', { applyStyle: false });
         }
         textAlignStyles.forEach((textAlign, block) => {
             block.style.setProperty('text-align', textAlign);
@@ -625,12 +695,15 @@ export const editorCommands = {
             !descendants(block).some(descendant => selectedBlocks.includes(descendant))
         ));
         for (const node of deepestSelectedBlocks) {
-            if (node.nodeType === Node.TEXT_NODE && isWhitespace(node) && closestElement(node).isContentEditable) {
+            let nodeToToggle = closestBlock(node);
+            if (
+                ![...paragraphRelatedElements, 'LI'].includes(nodeToToggle.nodeName) &&
+                node.nodeType === Node.TEXT_NODE && isWhitespace(node) && closestElement(node).isContentEditable
+            ) {
                 node.remove();
             } else {
                 // Ensure nav-item lists are excluded from toggling
                 const isNavItemList = node => node.nodeName === 'LI' && node.classList.contains('nav-item');
-                let nodeToToggle = closestBlock(node);
                 nodeToToggle = isNavItemList(nodeToToggle) ? node : nodeToToggle;
                 if (!['OL', 'UL'].includes(nodeToToggle.tagName) && (nodeToToggle.isContentEditable || nodeToToggle.nodeType === Node.TEXT_NODE)) {
                     const closestLi = closestElement(nodeToToggle, 'li');
@@ -696,9 +769,19 @@ export const editorCommands = {
         if (isEmptyBlock(range.endContainer)) {
             selectionNodes.push(range.endContainer, ...descendants(range.endContainer));
         }
-        const selectedNodes = mode === "backgroundColor"
+        let selectedNodes = mode === "backgroundColor"
             ? selectionNodes.filter(node => !closestElement(node, 'table.o_selected_table'))
             : selectionNodes;
+        const findTopMostDecoration = (current) => {
+            const decoration = closestElement(current.parentNode, "s, u");
+            return decoration?.textContent === current.textContent
+                ? findTopMostDecoration(decoration)
+                : current;
+        };
+        selectedNodes = selectedNodes.map((node) => {
+            return findTopMostDecoration(node);
+        });
+
         const selectedFieldNodes = new Set(getSelectedNodes(editor.editable)
                 .map(n => closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
                 .filter(Boolean));
@@ -707,11 +790,40 @@ export const editorCommands = {
             return selectedNodes.flatMap(node => {
                 let font = closestElement(node, 'font') || closestElement(node, 'span');
                 const children = font && descendants(font);
-                if (font && (font.nodeName === 'FONT' || (font.nodeName === 'SPAN' && font.style[mode]))) {
+                const hasInlineGradient = font && isColorGradient(font.style["background-image"]);
+                if (
+                    font &&
+                    (font.nodeName === "FONT" || (font.nodeName === "SPAN" && font.style[mode])) &&
+                    (isColorGradient(color) || color === "" || !hasInlineGradient)
+                ) {
                     // Partially selected <font>: split it.
                     const selectedChildren = children.filter(child => selectedNodes.includes(child));
                     if (selectedChildren.length) {
-                        font = splitAroundUntil(selectedChildren, font);
+                        const closestGradientEl = closestElement(node, 'font[style*="background-image"], span[style*="background-image"]');
+                        const isGradientBeingUpdated = closestGradientEl && isColorGradient(color);
+                        const splitnode = isGradientBeingUpdated ? closestGradientEl : font;
+                        font = splitAroundUntil(selectedChildren, splitnode);
+                        if (isGradientBeingUpdated) {
+                            const classRegex = mode === 'color' ?  TEXT_CLASSES_REGEX : BG_CLASSES_REGEX;
+                            // When updating a gradient, remove color applied to
+                            // its descendants.This ensures the gradient remains
+                            // visible without being overwritten by a descendant's color.
+                            for (const node of descendants(font)) {
+                                if (
+                                    node.nodeType === Node.ELEMENT_NODE &&
+                                    (node.style[mode] || classRegex.test(node.className))
+                                ) {
+                                    colorElement(node, "", mode);
+                                    node.style.webkitTextFillColor = "";
+                                }
+                            }
+                        } else if (
+                            mode === "color" &&
+                            (font.style.webkitTextFillColor ||
+                                closestGradientEl && closestGradientEl.classList.contains("text-gradient"))
+                        ) {
+                            font.style.webkitTextFillColor = color;
+                        }
                     } else {
                         font = [];
                     }
@@ -742,8 +854,12 @@ export const editorCommands = {
                         font = previous;
                     } else {
                         // No <font> found: insert a new one.
+                        const isTextGradient = hasInlineGradient && font.classList.contains("text-gradient");
                         font = document.createElement('font');
                         node.after(font);
+                        if (isTextGradient && mode === "color") {
+                            font.style.webkitTextFillColor = color;
+                        }
                     }
                     if (node.textContent) {
                         font.appendChild(node);

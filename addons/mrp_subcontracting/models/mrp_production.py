@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
 from collections import defaultdict
 from odoo import fields, models, _, api
 from odoo.exceptions import UserError, ValidationError, AccessError
@@ -49,6 +50,19 @@ class MrpProduction(models.Model):
             unauthorized_fields = set(vals.keys()) - set(self._get_writeable_fields_portal_user())
             if unauthorized_fields:
                 raise AccessError(_("You cannot write on fields %s in mrp.production.", ', '.join(unauthorized_fields)))
+
+        if 'date_start' in vals and self.env.context.get('from_subcontract'):
+            date_start = fields.Datetime.to_datetime(vals['date_start'])
+            date_start_map = {
+                prod: date_start - timedelta(days=prod.bom_id.produce_delay)
+                if prod.bom_id else date_start
+                for prod in self
+            }
+            res = True
+            for production in self:
+                res &= super(MrpProduction, production).write({**vals, 'date_start': date_start_map[production]})
+            return res
+
         return super().write(vals)
 
     def action_merge(self):

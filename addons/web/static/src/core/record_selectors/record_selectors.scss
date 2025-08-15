@@ -6,4 +6,16 @@
             }
         }
     }
+
+    .o_record_autocomplete_with_caret {
+        display: flex;
+        min-width: 100%;
+
+        &:hover, &:focus-within {
+            &::after {
+                @include o-caret-down;
+                align-self: center;
+            }
+        }
+    }
 }

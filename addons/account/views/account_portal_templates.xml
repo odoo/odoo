@@ -50,11 +50,11 @@
         <t t-if="invoices" t-call="portal.portal_table">
             <thead>
                 <tr class="active">
-                    <th>Invoice #</th>
-                    <th>Invoice Date</th>
-                    <th class='d-none d-md-table-cell'>Due Date</th>
-                    <th>Status</th>
-                    <th class="text-end">Amount Due</th>
+                    <th name="invoice_number">Invoice #</th>
+                    <th name="invoice_date">Invoice Date</th>
+                    <th name="due_date" class='d-none d-md-table-cell'>Due Date</th>
+                    <th name="status">Status</th>
+                    <th name="amount_due" class="text-end">Amount Due</th>
                 </tr>
             </thead>
             <tbody>
@@ -113,9 +113,26 @@
                 <t t-call="portal.portal_record_sidebar">
                     <t t-set="classes" t-value="'col-lg-3 col-xl-4 d-print-none me-lg-auto'"/>
                     <t t-set="title">
-                        <h2>
+                        <h2 t-if="0">
                             <span t-if="invoice.amount_residual > 0" t-field="invoice.amount_residual"/>
                             <span t-else="1" t-field="invoice.amount_total"/>
+                        </h2>
+                        <t t-set="early_payment" t-value="installment_state == 'epd'"/>
+                        <div t-if="early_payment" class="alert alert-info w-100 text-center" role="alert">
+                            <span t-esc="epd_discount_msg"/>
+                        </div>
+                        <h2 t-if="amount">
+                            <t t-if="early_payment">
+                                <span t-esc="next_amount_to_pay" t-attf-class="ms-1 h5" style="text-decoration: line-through; color: grey;" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                                <span t-esc="amount_due"
+                                      t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                            </t>
+                            <t t-else="1">
+                                <span t-esc="amount" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                            </t>
+                        </h2>
+                        <h2 t-else="1">
+                            <span t-esc="invoice.amount_total" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
                         </h2>
                         <div class="small" t-if="invoice.payment_state not in ('paid', 'in_payment', 'reversed') and invoice.move_type == 'out_invoice'"><i class="fa fa-clock-o"/><span class="o_portal_sidebar_timeago ml4" t-att-datetime="invoice.invoice_date_due"/></div>
                     </t>

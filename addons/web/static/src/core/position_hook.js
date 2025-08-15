@@ -325,7 +325,7 @@ export function usePosition(refName, getTarget, options = {}) {
 
     let executingUpdate = false;
     const batchedUpdate = async () => {
-        if (!executingUpdate) {
+        if (!executingUpdate && ref.el) {
             executingUpdate = true;
             update();
             await Promise.resolve();

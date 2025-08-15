@@ -8,28 +8,30 @@
 # Harcogourmet, 2023
 # marcescu, 2023
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2023
-# Ivan Espinola, 2023
 # RGB Consulting <odoo@rgbconsulting.com>, 2023
 # Pere Martínez, 2023
 # CristianCruzParra, 2023
 # Sandra Franch <sandra.franch@upc.edu>, 2023
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2023
-# Quim - eccit <quim@eccit.com>, 2023
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2023
 # jabiri7, 2023
 # Arnau Ros, 2023
 # Martin Trigaux, 2023
-# Josep Anton Belchi, 2023
-# Estudi TIC, 2024
-# Santiago Payà <santiagopim@gmail.com>, 2024
+# EstudiTIC - estuditic.com <odoo@estuditic.com>, 2024
 # Óscar Fonseca <tecnico@pyming.com>, 2024
+# Josep Anton Belchi, 2024
+# Ivan Espinola, 2025
+# Wil Odoo, 2025
+# Noemi Pla, 2025
+# Santiago Payà <santiagopim@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Óscar Fonseca <tecnico@pyming.com>, 2024\n"
+"Last-Translator: Santiago Payà <santiagopim@gmail.com>, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +49,7 @@ msgstr "#{timesheet.employee_id.name}"
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid "%(effective)s %(uom_name)s"
-msgstr ""
+msgstr "%(effective)s %(uom_name)s"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -107,12 +109,12 @@ msgstr "(incl."
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "1 day"
-msgstr ""
+msgstr "1 dia"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "2 hours"
-msgstr ""
+msgstr "2 hores"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -332,7 +334,7 @@ msgstr "Fulls d'hores associats"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "Audrey Peterson"
-msgstr ""
+msgstr "Audrey Peterson"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
@@ -610,7 +612,12 @@ msgstr "Hores"
 #. module: hr_timesheet
 #: model:ir.model.fields.selection,name:hr_timesheet.selection__res_config_settings__timesheet_encode_method__hours
 msgid "Hours / Minutes"
-msgstr ""
+msgstr "Hores/minuts"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
+msgid "Hours By Task (Including Subtasks)"
+msgstr "Hores per tasca (incloent-hi les subtasques)"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__effective_hours
@@ -875,8 +882,8 @@ msgid ""
 "Record your timesheets in an instant by pressing Shift + the corresponding "
 "hotkey to add 15min to your projects."
 msgstr ""
-"Enregistreu els fulls de treball en un instant tot prement Maj. + la tecla "
-"ràpida corresponent per afegir 15min als projectes. "
+"Enregistri els fulls d'hores en un instant mitjançant el botó Shift. + la "
+"drecera corresponent per afegir 15 minuts als projectes."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -921,7 +928,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_home_timesheet
 msgid "Review all timesheets related to your projects"
-msgstr ""
+msgstr "Reviseu tots els fulls d'hores relacionats amb els vostres projectes"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1351,7 +1358,7 @@ msgstr ""
 #: code:addons/hr_timesheet/wizard/hr_employee_delete_wizard.py:0
 #, python-format
 msgid "Timesheets of %(name)s"
-msgstr ""
+msgstr "Fulls d'hores de %(name)s"
 
 #. module: hr_timesheet
 #: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
@@ -1385,7 +1392,6 @@ msgstr "Dies totals"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
-#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
@@ -1451,6 +1457,14 @@ msgid ""
 "\n"
 "        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Utilitza aquestes paraules clau al títol per crear noves tasques:\n"
+"\n"
+"        30 h Assigna 30 hores a la tasca\n"
+"        #etiquetes Afegeix etiquetes a la tasca\n"
+"        @usuari Assigna la tasca a un usuari\n"
+"        ! Marca la tasca com a prioritària\n"
+"\n"
+"        Assegura't d'utilitzar el forma i l'ordre correctes. Exemple: millorar la pantalla de configuració 5 h #funcionalitat #v16 @Mitchell !"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
@@ -1471,7 +1485,7 @@ msgstr "Usuari: només fulls d'hores propis"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
 msgid "View Details"
-msgstr ""
+msgstr "Mostra detalls"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_uom_uom__timesheet_widget

@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Thi Huong Nguyen, 2024
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-06-13 00:52+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +32,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Điều chuyển %s: Bạn cần cung cấp số lô/sê-ri cho sản phẩm %s."
+"Lệnh chuyển hàng %s: Bạn cần cung cấp số lô/sê-ri cho sản phẩm %s."
 
 #. module: stock
 #. odoo-python
@@ -72,16 +72,16 @@ msgid ""
 " * Done: The transfer has been processed.\n"
 " * Cancelled: The transfer has been cancelled."
 msgstr ""
-" * Nháp: Điều chuyển chưa được xác nhận. Không áp dụng dự trữ.\n"
-" * Đợi hoạt động khác: Điều chuyển này đang đợi hoạt động khác hoàn thành mới có thể thực hiện được.\n"
-" * Đang đợi: Điều chuyển này đang chờ đủ tình trạng còn hàng của một số sản phẩm.\n"
+" * Nháp: Lệnh chuyển hàng chưa được xác nhận. Không áp dụng dự trữ.\n"
+" * Đợi hoạt động khác: Lệnh chuyển hàng này đang đợi hoạt động khác hoàn thành mới có thể thực hiện được.\n"
+" * Đang đợi: Lệnh chuyển hàng này đang chờ đủ tình trạng còn hàng của một số sản phẩm.\n"
 "(a) Chính sách vận chuyển là \"Càng nhanh càng tốt\": không sản phẩm nào có thể dự trữ.\n"
 "(b) Chính sách vận chuyển là \"Khi tất cả sản phẩm đều sẵn sàng\": không phải tất cả sản phẩm đều có thể dự trữ.\n"
-" * Sẵn sàng: Điều chuyển đã sẵn sàng để xử lý.\n"
+" * Sẵn sàng: Lệnh chuyển hàng đã sẵn sàng để xử lý.\n"
 "(a) Chính sách vận chuyển là \"Càng nhanh càng tốt\": ít nhất một sản phẩm đã được dự trữ.\n"
 "(b) Chính sách vận chuyển là \"Khi tất cả sản phẩm đều sẵn sàng\": tất cả sản phẩm đã được dự trữ.\n"
-" * Hoàn tất: Điều chuyển đã được xử lý xong.\n"
-" * Đã hủy: Điều chuyển đã bị hủy."
+" * Hoàn tất: Lệnh chuyển hàng đã được xử lý xong.\n"
+" * Đã hủy: Lệnh chuyển hàng đã bị hủy."
 
 #. module: stock
 #. odoo-python
@@ -247,11 +247,11 @@ msgid ""
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
-"* Mới: Dịch chuyển tồn kho đã được tạo nhưng chưa được xác nhận.\n"
-"* Chờ dịch chuyển khác: Dịch chuyển tồn kho liên kết cần được hoàn tất trước dịch chuyển này.\n"
-"* Chờ hàng: Dịch chuyển tồn kho đã được xác nhận nhưng không thể dự trữ sản phẩm.\n"
-"* Có hàng: Sản phẩm của dịch chuyển chuyển tồn kho đã được dự trữ.\n"
-"* Hoàn tất: Sản phẩm đã được điều chuyển và điều chuyển này đã được xác nhận."
+"* Mới: Điều chuyển tồn kho đã được tạo nhưng chưa được xác nhận.\n"
+"* Chờ điều chuyển khác: Điều chuyển tồn kho liên kết cần được hoàn tất trước điều chuyển này.\n"
+"* Chờ hàng: Điều chuyển tồn kho đã được xác nhận nhưng không thể dự trữ sản phẩm.\n"
+"* Có hàng: Sản phẩm của điều chuyển chuyển tồn kho đã được dự trữ.\n"
+"* Hoàn tất: Sản phẩm đã được chuyển đi và lệnh chuyển hàng này đã được xác nhận."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -273,7 +273,7 @@ msgstr ""
 "* Vị trí nội bộ: Vị trí thực trong kho của bạn\n"
 "* Vị trí khách hàng: Vị trí ảo đại diện cho vị trí đích của các sản phẩm được gửi tới khách hàng của bạn\n"
 "* Thất thoát tồn kho: Vị trí ảo đóng vai trò là đối ứng cho các hoạt động tồn kho được sử dụng để điều chỉnh lượng hàng tồn kho (Tồn kho thực)\n"
-"* Sản xuất: Vị trí đối ứng ảo cho hoạt động sản xuất: vị trí này tiêu thụ các nguyên liệu và sản xuất thành phẩm\n"
+"* Sản xuất: Vị trí đối ứng ảo cho hoạt động sản xuất: vị trí này tiêu thụ các thành phần và sản xuất thành phẩm\n"
 "* Vị trí trung chuyển: Vị trí đối ứng được sử dụng trong hoạt động giữa các công ty hoặc giữa các kho hàng"
 
 #. module: stock
@@ -385,11 +385,6 @@ msgstr "4 x 7 kèm giá"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "54326786758"
 msgstr "54326786758"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
-msgstr "98"
 
 #. module: stock
 #. odoo-python
@@ -671,7 +666,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Available Quantity</strong>"
-msgstr "<strong>Số lượng còn hàng</strong>"
+msgstr "<strong>Số lượng có sẵn</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -782,7 +777,7 @@ msgstr "<strong>Địa chỉ người nhận</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Scheduled Date:</strong>"
-msgstr "<strong>Ngày theo kế hoạch:</strong>"
+msgstr "<strong>Ngày đã lên lịch:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -947,7 +942,7 @@ msgstr "Thêm danh mục lưu kho mới"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid ""
 "Add an internal note that will be printed on the Picking Operations sheet"
-msgstr "Thêm một ghi chú nội bộ sẽ được in trên phiếu Hoạt động lấy hàng"
+msgstr "Thêm một ghi chú nội bộ sẽ được in trên phiếu Hoạt động xuất kho"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_adv_location
@@ -984,7 +979,7 @@ msgstr "Thêm dòng: %s"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Add quality checks to your transfer operations"
-msgstr "Thêm kiểm tra chất lượng vào hoạt động điều chuyển của bạn"
+msgstr "Thêm kiểm tra chất lượng vào hoạt động lệnh chuyển hàng của bạn"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1020,7 +1015,7 @@ msgstr "Quản trị viên"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Advanced Scheduling"
-msgstr "Lập lịch trình nâng cao"
+msgstr "Lên lịch nâng cao"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__procure_method__make_to_order
@@ -1035,7 +1030,7 @@ msgstr "Tất cả"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_action_picking_type
 msgid "All Transfers"
-msgstr "Tất cả điều chuyển"
+msgstr "Tất cả lệnh chuyển hàng"
 
 #. module: stock
 #. odoo-javascript
@@ -1203,7 +1198,7 @@ msgstr "Đã lưu trữ"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Are you sure you want to cancel this transfer?"
-msgstr "Bạn có chắc chắn muốn huỷ điều chuyển này không?"
+msgstr "Bạn có chắc chắn muốn huỷ lệnh chuyển hàng này không?"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -1234,7 +1229,7 @@ msgstr "Chỉ định tất cả"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
 msgid "Assign Owner"
-msgstr "Chỉ định người phụ trách"
+msgstr "Chỉ định bên sở hữu"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_assign_serial_numbers
@@ -1365,14 +1360,14 @@ msgstr "Sản phẩm còn hàng"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Available Quantity"
-msgstr "Số lượng hiện có"
+msgstr "Số lượng có sẵn"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Available quantity should be set to zero before changing type"
-msgstr "Số lượng hiện có phải được đặt là 0 trước khi thay đổi loại"
+msgstr "Số lượng có sẵn phải được đặt là 0 trước khi thay đổi loại"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
@@ -1388,28 +1383,28 @@ msgstr "Đơn hàng trậm trễ"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation
 msgid "Backorder Confirmation"
-msgstr "Xác nhận đơn hàng chậm trễ"
+msgstr "Xác nhận đơn hàng tách kiện"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation_line
 msgid "Backorder Confirmation Line"
-msgstr "Dòng xác nhận đơn hàng chậm trễ"
+msgstr "Dòng xác nhận đơn hàng tách kiện"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__backorder_confirmation_line_ids
 msgid "Backorder Confirmation Lines"
-msgstr "Chi tiết xác nhận đơn hàng chậm trễ"
+msgstr "Chi tiết xác nhận đơn hàng tách kiện"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Backorder creation"
-msgstr "Tạo đơn hàng chậm trễ"
+msgstr "Tạo đơn hàng tách kiện"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_backorder
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Backorders"
-msgstr "Đơn hàng chậm trễ"
+msgstr "Đơn hàng tách kiện"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__barcode
@@ -1427,7 +1422,7 @@ msgstr "Demo mã vạch"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_wms_barcode_nomenclature_all
 msgid "Barcode Nomenclatures"
-msgstr "Quy tắc đặt tên mã vạch"
+msgstr "Danh pháp mã vạch"
 
 #. module: stock
 #: model:ir.model,name:stock.model_barcode_rule
@@ -1447,12 +1442,12 @@ msgstr "Mã vạch là EAN hợp lệ"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
 msgid "Batch Transfers"
-msgstr "Điều chuyển hàng loạt"
+msgstr "Lệnh chuyển hàng theo lô"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__reservation_method__by_date
 msgid "Before scheduled date"
-msgstr "Trước ngày theo kế hoạch"
+msgstr "Trước ngày đã lên lịch"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -1638,6 +1633,17 @@ msgstr "Thay đổi số lượng sản phẩm"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+"Không được phép thay đổi số lô/sê-ri cho các dòng điều chuyển có sản phẩm "
+"khác nhau."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_lot.py:0
@@ -1649,15 +1655,15 @@ msgid ""
 "Changing the company of this record is forbidden at this point, you should "
 "rather archive it and create a new one."
 msgstr ""
-"Việc thay đổi công ty trong tập dữ liệu này hiện bị cấm, bạn nên lưu trữ và "
-"tạo một công ty mới."
+"Việc thay đổi công ty trong bản ghi này hiện bị cấm, bạn nên lưu trữ và tạo "
+"một công ty mới."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Changing the operation type of this record is forbidden at this point."
-msgstr "Việc thay đổi loại hoạt động của tập dữ liệu này hiện bị cấm."
+msgstr "Việc thay đổi loại hoạt động của bản ghi này hiện bị cấm."
 
 #. module: stock
 #. odoo-python
@@ -1685,8 +1691,7 @@ msgstr "Kiểm tra sự tồn tại của hoạt động đóng gói theo hoạt
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__return_location
 msgid "Check this box to allow using this location as a return location."
-msgstr ""
-"Đánh dấu ô này để cho phép sử dụng địa điểm này làm địa điểm trả hàng."
+msgstr "Đánh dấu ô này để cho phép sử dụng vị trí này làm vị trí trả hàng."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__scrap_location
@@ -1810,6 +1815,13 @@ msgstr "Tính toán phí giao hàng và giao bằng DHL"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
 msgstr "Tính toán phí giao hàng và giao bằng Easypost"
 
@@ -1817,6 +1829,13 @@ msgstr "Tính toán phí giao hàng và giao bằng Easypost"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
 msgstr "Tính toán phí giao hàng và giao bằng FedEx"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1835,8 +1854,22 @@ msgstr "Tính toán phí giao hàng và giao bằng UPS"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
 msgstr "Tính toán phí giao hàng và giao bằng USPS"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1971,32 +2004,32 @@ msgstr "Số lượng"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking
 msgid "Count Picking"
-msgstr "Lấy hàng theo số lượng"
+msgstr "Số phiếu xuất kho"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_backorders
 msgid "Count Picking Backorders"
-msgstr "Lấy hàng theo số lượng Đơn hàng chậm trễ"
+msgstr "Số phiếu xuất kho trong đơn hàng tách kiện"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_draft
 msgid "Count Picking Draft"
-msgstr "Lấy hàng theo số lượng Nháp"
+msgstr "Số phiếu xuất kho nháp"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_late
 msgid "Count Picking Late"
-msgstr "Lấy hàng theo số lượng Trễ"
+msgstr "Số phiếu xuất kho trễ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_ready
 msgid "Count Picking Ready"
-msgstr "Lấy hàng theo số lượng Sẵn sàng"
+msgstr "Số phiếu xuất kho sẵn sàng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_waiting
 msgid "Count Picking Waiting"
-msgstr "Lấy hàng theo số lượng Đang chờ"
+msgstr "Số phiếu xuất kho đang chờ"
 
 #. module: stock
 #. odoo-javascript
@@ -2021,14 +2054,14 @@ msgstr "Vị trí đối ứng"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__create_backorder
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Create Backorder"
-msgstr "Tạo đơn hàng chậm trễ"
+msgstr "Tạo đơn hàng tách kiện"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Create Backorder?"
-msgstr "Tạo đơn hàng chậm trễ?"
+msgstr "Tạo đơn hàng tách kiện?"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -2054,8 +2087,8 @@ msgid ""
 "                            products later. Do not create a backorder if you will not\n"
 "                            process the remaining products."
 msgstr ""
-"Tạo đơn hàng chậm trễ nếu bạn dự kiến sẽ xử lý các sản phẩm\n"
-"                          còn lại sau. Không tạo đơn hàng chậm trễ nếu bạn không\n"
+"Tạo đơn hàng tách kiện nếu bạn dự kiến sẽ xử lý các sản phẩm\n"
+"                          còn lại sau. Không tạo đơn hàng tách kiện nếu bạn không\n"
 "                          xử lý các sản phẩm còn lại. "
 
 #. module: stock
@@ -2262,7 +2295,7 @@ msgstr "Khách hàng"
 #: model:ir.model.fields,field_description:stock.field_product_product__sale_delay
 #: model:ir.model.fields,field_description:stock.field_product_template__sale_delay
 msgid "Customer Lead Time"
-msgstr "Thời gian giao hàng"
+msgstr "Thời gian hoàn thành"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__property_stock_customer
@@ -2287,7 +2320,7 @@ msgstr "Bàn điều chỉnh được"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "Cyclic Counting"
-msgstr "Đếm theo chu kỳ"
+msgstr "Kiểm kho theo chu kỳ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
@@ -2325,6 +2358,11 @@ msgid "DEMO_UOM"
 msgstr "DEMO_UOM"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "DHL Connector"
+msgstr "Liên kết DHL"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
 msgstr "Kết nối DHL Express"
@@ -2359,7 +2397,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__date
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Date Scheduled"
-msgstr "Ngày theo kế hoạch"
+msgstr "Ngày đã lên lịch"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__date_planned
@@ -2369,7 +2407,7 @@ msgstr "Ngày mà hoạt động bổ sung hàng sẽ diễn ra."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__date_done
 msgid "Date at which the transfer has been processed or cancelled."
-msgstr "Ngày mà điều chuyển đã được xử lý hoặc hủy bỏ."
+msgstr "Ngày mà lệnh chuyển hàng đã được xử lý hoặc hủy bỏ."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__next_inventory_date
@@ -2380,7 +2418,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date_done
 msgid "Date of Transfer"
-msgstr "Ngày điều chuyển"
+msgstr "Ngày lệnh chuyển hàng"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__last_inventory_date
@@ -2432,7 +2470,7 @@ msgstr "Ngày đã gắn sao"
 #: model:ir.model.fields,field_description:stock.field_stock_move__date_deadline
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date_deadline
 msgid "Deadline"
-msgstr "Hạn chót"
+msgstr "Thời hạn"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -2444,7 +2482,7 @@ msgstr "Vượt quá thời hạn hoặc/và theo kế hoạch"
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "Deadline updated due to delay on %s"
-msgstr "Hạn chót đã được cập nhật do chậm trễ đối với %s"
+msgstr "Thời hạn đã được cập nhật do chậm trễ đối với %s"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__12
@@ -2558,7 +2596,7 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
-"Xác định phương pháp mặc định được sử dụng để đề xuất nơi chính xác (kệ) để lấy sản phẩm từ đâu, lô hàng nào,... cho địa điểm này. Phương pháp này có thể được thực hiện ở cấp độ danh mục sản phẩm và dự phòng được thực hiện trên các vị trí chính nếu không có vị trí nào được thiết lập ở đây.\n"
+"Xác định phương pháp mặc định được sử dụng để đề xuất nơi chính xác (kệ) để lấy sản phẩm từ đâu, lô hàng nào,... cho vị trí này. Phương pháp này có thể được thực hiện ở cấp độ danh mục sản phẩm và dự phòng được thực hiện trên các vị trí chính nếu không có vị trí nào được thiết lập ở đây.\n"
 "\n"
 "FIFO: sản phẩm/lô hàng nhập kho trước sẽ được xuất kho trước.\n"
 "LIFO: sản phẩm/lô được nhập kho sau cùng sẽ được xuất kho trước.\n"
@@ -2651,7 +2689,7 @@ msgstr "Phương thức giao hàng"
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
 msgid "Delivery Orders"
-msgstr "Phiếu xuất kho"
+msgstr "Lệnh giao hàng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__delivery_route_id
@@ -2676,20 +2714,20 @@ msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
 msgstr ""
-"Thời gian giao hàng, tính theo ngày. Đây là số ngày đã hẹn với khách hàng và"
-" là khoảng thời gian từ khi xác nhận đơn bán hàng đến ngày giao hàng."
+"Thời gian hoàn thành, tính theo ngày. Đây là số ngày đã hẹn với khách hàng "
+"và là khoảng thời gian từ khi xác nhận đơn bán hàng đến ngày giao hàng."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__delivery_count
 msgid "Delivery order count"
-msgstr "Số phiếu xuất kho"
+msgstr "Số lệnh giao hàng"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Delivery orders of %s"
-msgstr "Phiếu xuất kho của %s"
+msgstr "Lệnh giao hàng của %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom_qty
@@ -2751,12 +2789,12 @@ msgstr "Mô tả"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Delivery Orders"
-msgstr "Mô tả phiếu xuất kho"
+msgstr "Mô tả lệnh giao hàng"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Internal Transfers"
-msgstr "Mô tả phiếu điều chuyển nội bộ"
+msgstr "Mô tả lệnh chuyển hàng nội bộ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -2766,19 +2804,19 @@ msgstr "Mô tả phiếu nhập kho"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__description_picking
 msgid "Description of Picking"
-msgstr "Mô tả phiếu lấy hàng"
+msgstr "Mô tả phiếu xuất kho"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__description_pickingout
 #: model:ir.model.fields,field_description:stock.field_product_template__description_pickingout
 msgid "Description on Delivery Orders"
-msgstr "Mô tả trên phiếu xuất kho"
+msgstr "Mô tả trên lệnh giao hàng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__description_picking
 #: model:ir.model.fields,field_description:stock.field_product_template__description_picking
 msgid "Description on Picking"
-msgstr "Mô tả trên phiếu lấy hàng"
+msgstr "Mô tả trên phiếu xuất kho"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__description_pickingin
@@ -2790,12 +2828,12 @@ msgstr "Mô tả trên phiếu nhập kho"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Description on transfer"
-msgstr "Mô tả điều chuyển"
+msgstr "Mô tả lệnh chuyển hàng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__description_picking
 msgid "Description picking"
-msgstr "Mô tả phiếu lấy hàng"
+msgstr "Mô tả phiếu xuất kho"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_location_id
@@ -3008,6 +3046,7 @@ msgid "Do you confirm you want to scrap"
 msgstr "Bạn có xác nhận muốn loại bỏ"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Documentation"
 msgstr "Tài liệu"
@@ -3115,12 +3154,12 @@ msgstr "Email xác nhận"
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_move_email_validation
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_move_email_validation
 msgid "Email Confirmation picking"
-msgstr "Email xác nhận phiếu lấy hàng"
+msgstr "Email xác nhận phiếu xuất kho"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_mail_confirmation_template_id
 msgid "Email Template confirmation picking"
-msgstr "Mẫu email xác nhận phiếu lấy hàng"
+msgstr "Mẫu email xác nhận phiếu xuất kho"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__stock_mail_confirmation_template_id
@@ -3137,9 +3176,9 @@ msgid ""
 msgstr ""
 "Tận hưởng trải nghiệm tốc độ xử lý nhanh chóng với ứng dụng mã vạch. Ứng "
 "dụng này hoạt động nhanh như chớp ngay cả khi không có kết nối internet ổn "
-"định. Mọi quy trình đều được hỗ trợ: điều chỉnh tồn kho, lấy hàng hàng loạt,"
-" dịch chuyển lô hoặc pallet, kiểm tra hàng tồn kho thấp,... Đi đến menu "
-"\"Ứng dụng\" để kích hoạt phân hệ mã vạch."
+"định. Mọi quy trình đều được hỗ trợ: điều chỉnh tồn kho, lấy hàng theo lô, "
+"dịch chuyển lô hoặc pallet, kiểm tra hàng tồn kho thấp,... Đi đến menu \"Ứng"
+" dụng\" để kích hoạt phân hệ mã vạch."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__tracking
@@ -3171,7 +3210,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "Exception(s) occurred on the picking"
-msgstr "(Các) ngoại lệ đã xảy ra trong phiếu lấy hàng: "
+msgstr "(Các) ngoại lệ đã xảy ra trong phiếu xuất kho: "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -3239,6 +3278,7 @@ msgstr "Tháng 2"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "FedEx Connector"
 msgstr "Kết nối FedEx"
 
@@ -3383,7 +3423,7 @@ msgstr "Ngày dự báo dự kiến"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Forecasted Inventory"
-msgstr "Hàng tồn kho dự báo"
+msgstr "Tồn kho được dự báo"
 
 #. module: stock
 #. odoo-python
@@ -3414,7 +3454,7 @@ msgstr "Báo cáo dự báo"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__forecast
 msgid "Forecasted Stock"
-msgstr "Tồn kho dự báo"
+msgstr "Tồn kho được dự báo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__forecast_weight
@@ -3484,7 +3524,7 @@ msgstr "Từ người phụ trách"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__complete_name
 msgid "Full Location Name"
-msgstr "Tên địa điểm đầy đủ"
+msgstr "Tên vị trí đầy đủ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -3574,7 +3614,7 @@ msgstr "Cung cấp trình tự của dòng này khi hiển thị kho hàng."
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Global Visibility Days"
-msgstr "Ngày khả năng hiển thị chung"
+msgstr "Ngày dự báo nhu cầu chung"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -3601,8 +3641,8 @@ msgstr "Nhóm theo..."
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_picking_wave
 msgid "Group your move operations in wave transfer to process them together"
 msgstr ""
-"Nhóm các hoạt động dịch chuyển của bạn trong điều chuyển theo đợt để xử lý "
-"chúng cùng nhau"
+"Nhóm các hoạt động dịch chuyển của bạn trong lệnh chuyển hàng theo đợt để xử"
+" lý chúng cùng nhau"
 
 #. module: stock
 #. odoo-javascript
@@ -3699,8 +3739,8 @@ msgstr "Lịch sử"
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_method
 msgid "How products in transfers of this operation type should be reserved."
 msgstr ""
-"Các sản phẩm đang điều chuyển của loại hoạt động này nên được dự trữ như thế"
-" nào."
+"Các sản phẩm đang lệnh chuyển hàng của loại hoạt động này nên được dự trữ "
+"như thế nào."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__id
@@ -3866,7 +3906,7 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the delivery slip "
 "of a picking when it is validated."
 msgstr ""
-"Nếu đánh dấu ô này, Odoo sẽ tự động in phiếu giao hàng của phiếu lấy hàng "
+"Nếu đánh dấu ô này, Odoo sẽ tự động in phiếu giao hàng của phiếu xuất kho "
 "khi nó được xác thực."
 
 #. module: stock
@@ -3875,7 +3915,7 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the lot/SN labels "
 "of a picking when it is validated."
 msgstr ""
-"Nếu đánh dấu ô này, Odoo sẽ tự động in nhãn số lô/sê-ri của phiếu lấy hàng "
+"Nếu đánh dấu ô này, Odoo sẽ tự động in nhãn số lô/sê-ri của phiếu xuất kho "
 "khi nó được xác thực."
 
 #. module: stock
@@ -3894,7 +3934,7 @@ msgid ""
 "their contents of a picking when it is validated."
 msgstr ""
 "Nếu đánh dấu ô này, Odoo sẽ tự động in các kiện hàng và thành phần của chúng"
-" trong phiếu lấy hàng khi nó được xác thực."
+" trong phiếu xuất kho khi nó được xác thực."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_product_labels
@@ -3902,7 +3942,7 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the product labels"
 " of a picking when it is validated."
 msgstr ""
-"Nếu đánh dấu ô này, Odoo sẽ tự động in nhãn sản phẩm của phiếu lấy hàng khi "
+"Nếu đánh dấu ô này, Odoo sẽ tự động in nhãn sản phẩm của phiếu xuất kho khi "
 "nó được xác thực."
 
 #. module: stock
@@ -3911,8 +3951,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the reception "
 "report labels of a picking when it is validated."
 msgstr ""
-"Nếu đánh dấu ô này, Odoo sẽ tự động in nhãn báo cáo nhập kho của phiếu lấy "
-"hàng khi nó được xác thực."
+"Nếu đánh dấu ô này, Odoo sẽ tự động in nhãn báo cáo nhập kho của phiếu xuất "
+"kho khi nó được xác thực."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report
@@ -3920,7 +3960,7 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the reception "
 "report of a picking when it is validated and has assigned moves."
 msgstr ""
-"Nếu đánh dấu ô này, Odoo sẽ tự động in báo cáo nhập kho của phiếu lấy hàng "
+"Nếu đánh dấu ô này, Odoo sẽ tự động in báo cáo nhập kho của phiếu xuất kho "
 "khi nó được xác thực và có dịch chuyển đã chỉ định."
 
 #. module: stock
@@ -3929,7 +3969,7 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the return slip of"
 " a picking when it is validated."
 msgstr ""
-"Nếu đánh dấu ô này, Odoo sẽ tự động in phiếu trả hàng của phiếu lấy hàng khi"
+"Nếu đánh dấu ô này, Odoo sẽ tự động in phiếu trả hàng của phiếu xuất kho khi"
 " nó được xác thực."
 
 #. module: stock
@@ -3955,8 +3995,8 @@ msgid ""
 " operations. If not, the picking lines will represent an aggregate of "
 "detailed stock operations."
 msgstr ""
-"Nếu chọn ô này, chi tiết phiếu lấy hàng sẽ đại diện cho hoạt động tồn kho "
-"chi tiết. Nếu không, chi tiết phiếu lấy hàng sẽ đại diện cho toàn bộ hoạt "
+"Nếu chọn ô này, chi tiết phiếu xuất kho sẽ đại diện cho hoạt động tồn kho "
+"chi tiết. Nếu không, chi tiết phiếu xuất kho sẽ đại diện cho toàn bộ hoạt "
 "động tồn kho."
 
 #. module: stock
@@ -3989,8 +4029,8 @@ msgid ""
 "If this picking was created as a return of another picking, this field links"
 " to the original picking."
 msgstr ""
-"Nếu phiếu lấy hàng này được tạo dưới dạng phiếu trả hàng của một phiếu lấy "
-"hàng khác, thì trường này sẽ liên kết với phiếu lấy hàng ban đầu."
+"Nếu phiếu xuất kho này được tạo dưới dạng phiếu trả hàng của một phiếu xuất "
+"kho khác, thì trường này sẽ liên kết với phiếu xuất kho ban đầu."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__backorder_id
@@ -4017,14 +4057,7 @@ msgstr "Nếu bỏ chọn, bạn sẽ được phép ẩn quy tắc mà không c
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__backorder_confirmation_id
 msgid "Immediate Transfer"
-msgstr "Điều chuyển ngay"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-#, python-format
-msgid "Import"
-msgstr "Nhập"
+msgstr "Lệnh chuyển hàng ngay"
 
 #. module: stock
 #. odoo-javascript
@@ -4091,7 +4124,7 @@ msgstr "Ngày hàng về"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Incoming Draft Transfer"
-msgstr "Điều chuyển nhập hàng nháp"
+msgstr "Lệnh chuyển hàng vào nháp"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__incoming_move_line_ids
@@ -4135,7 +4168,7 @@ msgstr "Đầu vào"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_input_stock_loc_id
 msgid "Input Location"
-msgstr "Vị trí đầu vào"
+msgstr "Vị trí nhập kho"
 
 #. module: stock
 #. odoo-python
@@ -4171,7 +4204,7 @@ msgstr "Mã tham chiếu nội bộ"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__internal
 msgid "Internal Transfer"
-msgstr "Điều chuyển nội bộ"
+msgstr "Lệnh chuyển hàng nội bộ"
 
 #. module: stock
 #. odoo-python
@@ -4180,7 +4213,7 @@ msgstr "Điều chuyển nội bộ"
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
 msgid "Internal Transfers"
-msgstr "Điều chuyển nội bộ"
+msgstr "Lệnh chuyển hàng nội bộ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__internal_transit_location_id
@@ -4210,8 +4243,8 @@ msgstr ""
 msgid ""
 "Internal transfers allow you to move products from one location to another."
 msgstr ""
-"Điều chuyển nội bộ cho phép bạn chuyển sản phẩm từ vị trí này sang vị trí "
-"khác."
+"Lệnh chuyển hàng nội bộ cho phép bạn chuyển sản phẩm từ vị trí này sang vị "
+"trí khác."
 
 #. module: stock
 #. odoo-python
@@ -4401,7 +4434,7 @@ msgstr "Đã ký"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__return_location
 msgid "Is a Return Location?"
-msgstr "Là một địa điểm trả hàng?"
+msgstr "Là một vị trí trả hàng?"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__scrap_location
@@ -4421,7 +4454,7 @@ msgstr "Bị trễ"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__has_deadline_issue
 msgid "Is late or will be late depending on the deadline and scheduled date"
-msgstr "Bị trễ hoặc sẽ trễ tùy thuộc vào hạn chót và ngày theo kế hoạch"
+msgstr "Bị trễ hoặc sẽ trễ tùy thuộc vào thời hạn và ngày đã lên lịch"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
@@ -4686,7 +4719,7 @@ msgstr "Hoạt động chậm trễ"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
 msgid "Late Transfers"
-msgstr "Điều chuyển chậm trễ"
+msgstr "Lệnh chuyển hàng chậm trễ"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__products_availability
@@ -4702,19 +4735,19 @@ msgstr "Lead Days Date"
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__lead_time
 #: model:ir.model.fields,field_description:stock.field_stock_rule__delay
 msgid "Lead Time"
-msgstr "Thời gian giao hàng"
+msgstr "Thời gian hoàn thành"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Lead Times"
-msgstr "Thời gian nhập kho"
+msgstr "Thời gian hoàn thành"
 
 #. module: stock
 #: model:product.removal,name:stock.removal_least_packages
 msgid "Least Packages"
-msgstr "Kiện hàng tối thiểu"
+msgstr "Kiện có ít hàng nhất"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_request_count__set_count__empty
@@ -5121,14 +5154,14 @@ msgid ""
 "Maximum number of days before scheduled date that priority picking products "
 "should be reserved."
 msgstr ""
-"Số ngày tối đa trước ngày theo kế hoạch mà sản phẩm ưu tiên cần được dự trữ."
+"Số ngày tối đa trước ngày đã lên lịch mà sản phẩm ưu tiên cần được dự trữ."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_days_before
 msgid ""
 "Maximum number of days before scheduled date that products should be "
 "reserved."
-msgstr "Số ngày tối đa trước ngày theo kế hoạch mà sản phẩm cần được dự trữ."
+msgstr "Số ngày tối đa trước ngày đã lên lịch mà sản phẩm cần được dự trữ."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__max_weight
@@ -5256,7 +5289,7 @@ msgid ""
 msgstr ""
 "Những dịch chuyển dược tạo thông qua điểm đặt hàng này sẽ được đưa vào trong"
 " nhóm cung ứng. Nếu không, các dịch chuyển được tạo ra bởi quy tắc tồn kho "
-"sẽ được nhóm lại thành một phiếu lấy hàng lớn. "
+"sẽ được nhóm lại thành một phiếu xuất kho lớn. "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_adv_location
@@ -5282,7 +5315,7 @@ msgstr "Nhiều quy tắc về sức chứa cho một sản phẩm."
 #: model:ir.model.fields,field_description:stock.field_stock_lot__my_activity_date_deadline
 #: model:ir.model.fields,field_description:stock.field_stock_picking__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Hạn chót hoạt động của tôi"
+msgstr "Thời hạn hoạt động của tôi"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -5310,7 +5343,7 @@ msgstr "Phiếu kiểm đếm của tôi"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "My Transfers"
-msgstr "Điều chuyển của tôi"
+msgstr "Lệnh chuyển hàng của tôi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_removal__name
@@ -5384,7 +5417,7 @@ msgstr "Số lượng mới hiện có"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_form
 msgid "New Transfer"
-msgstr "Điều chuyển mới"
+msgstr "Lệnh chuyển hàng mới"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_calendar_event_id
@@ -5396,7 +5429,7 @@ msgstr "Sự kiện trên lịch cho hoạt động tiếp theo"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_date_deadline
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Hạn chót cho hoạt động tiếp theo"
+msgstr "Thời hạn cho hoạt động tiếp theo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_summary
@@ -5423,19 +5456,19 @@ msgstr "Ngày tiếp theo nên đếm số lượng hiện có."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "Next transfer(s) impacted:"
-msgstr "(Các) điều chuyển tiếp theo bị ảnh hưởng:"
+msgstr "(Các) lệnh chuyển hàng tiếp theo bị ảnh hưởng:"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/report/report_stock_reception.py:0
 #, python-format
 msgid "No %s selected or a delivery order selected"
-msgstr "Không có %s được chọn hoặc một phiếu xuất kho đã được chọn"
+msgstr "Không có %s được chọn hoặc một lệnh giao hàng đã được chọn"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "No Backorder"
-msgstr "Không có đơn hàng chậm trễ"
+msgstr "Không có đơn hàng tách kiện"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__no-message
@@ -5470,7 +5503,9 @@ msgstr "Không tìm thấy giao hàng nào. Hãy tạo một hoạt động mớ
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_internal
 msgid "No internal transfer found. Let's create one!"
-msgstr "Không tìm thấy điều chuyển nội bộ nào. Hãy tạo một điều chuyển mới!"
+msgstr ""
+"Không tìm thấy lệnh chuyển hàng nội bộ nào. Hãy tạo một lệnh chuyển hàng "
+"mới!"
 
 #. module: stock
 #. odoo-python
@@ -5489,7 +5524,7 @@ msgstr "Không có hoạt động liên quan đến lô này."
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_get_picking_type_operations
 msgid "No operations found. Let's create a transfer!"
-msgstr "Không tìm thấy hoạt động nào. Hãy tạo một điều chuyển!"
+msgstr "Không tìm thấy hoạt động nào. Hãy tạo một lệnh chuyển hàng!"
 
 #. module: stock
 #. odoo-python
@@ -5567,7 +5602,8 @@ msgstr "Không có tồn kho để hiển thị"
 #: model_terms:ir.actions.act_window,help:stock.action_picking_type_list
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "No transfer found. Let's create one!"
-msgstr "Không tìm thấy điều chuyển hàng nào. Hãy tạo một điều chuyển mới!"
+msgstr ""
+"Không tìm thấy lệnh chuyển hàng nào. Hãy tạo một lệnh chuyển hàng mới!"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__0
@@ -5715,8 +5751,8 @@ msgid ""
 "On hand quantity which hasn't been reserved on a transfer, in the default "
 "unit of measure of the product"
 msgstr ""
-"Số lượng hiện có chưa được dự trữ trong một điều chuyển, theo đơn vị đo "
-"lường mặc định của sản phẩm"
+"Số lượng hiện có chưa được dự trữ trong một lệnh chuyển hàng, theo đơn vị đo"
+" lường mặc định của sản phẩm"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -5967,7 +6003,7 @@ msgstr "Xuất hàng"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Outgoing Draft Transfer"
-msgstr "Điều chuyển xuất hàng nháp"
+msgstr "Lệnh chuyển hàng ra nháp"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__outgoing_move_line_ids
@@ -5989,7 +6025,7 @@ msgstr "Đầu ra"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_output_stock_loc_id
 msgid "Output Location"
-msgstr "Vị trí đầu ra"
+msgstr "Vị trí xuất kho"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.stock_picking_type_menu
@@ -6150,7 +6186,7 @@ msgstr "Mã kiện hàng"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Package Transfers"
-msgstr "Điều chuyển kiện hàng"
+msgstr "Lệnh chuyển hàng kiện hàng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_packaging__package_type_id
@@ -6161,7 +6197,7 @@ msgstr "Điều chuyển kiện hàng"
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "Package Type"
-msgstr "Kiểu đóng gói"
+msgstr "Loại kiện hàng"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -6171,7 +6207,7 @@ msgstr "Demo loại kiện hàng"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Package Type:"
-msgstr "Kiểu đóng gói:"
+msgstr "Loại kiện hàng:"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_type_view
@@ -6212,7 +6248,7 @@ msgid ""
 "Packages are usually created via transfers (during pack operation) and can contain different products.\n"
 "                Once created, the whole package can be moved at once, or products can be unpacked and moved as single units again."
 msgstr ""
-"Kiện hàng thường được tạo thông qua điều chuyển hàng (trong hoạt động đóng gói) và có thể chứa các sản phẩm khác nhau.\n"
+"Kiện hàng thường được tạo thông qua lệnh chuyển hàng hàng (trong hoạt động đóng gói) và có thể chứa các sản phẩm khác nhau.\n"
 "                Sau khi được tạo, cả kiện hàng có thể được dịch chuyển cùng lúc hoặc huỷ đóng gói để dịch chuyển từng sản phẩm riêng biệt."
 
 #. module: stock
@@ -6338,7 +6374,7 @@ msgstr "Đã lấy hàng"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__picking_id
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Picking"
-msgstr "Phiếu lấy hàng"
+msgstr "Phiếu xuất kho"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -6431,11 +6467,11 @@ msgstr "Sự hiện diện phụ thuộc vào loại hoạt động."
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
-"Nhấn nút TẠO để xác định số lượng cho từng sản phẩm trong tồn kho của bạn "
-"hoặc nhập chúng từ bảng tính trong phần Yêu thích"
+"Nhấn nút \"Mới\" để xác định số lượng cho sản phẩm trong tồn kho của bạn "
+"hoặc nhập số lượng từ bảng tính thông qua menu Tác vụ"
 
 #. module: stock
 #. odoo-javascript
@@ -6515,12 +6551,12 @@ msgstr "Xử lý các hoạt động nhanh hơn với mã vạch"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process operations in wave transfers"
-msgstr "Xử lý hoạt động trong điều chuyển theo đợt"
+msgstr "Xử lý hoạt động trong lệnh chuyển hàng theo đợt"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process transfers in batch per worker"
-msgstr "Xử lý điều chuyển hàng loạt theo từng nhân viên"
+msgstr "Xử lý lệnh chuyển hàng theo lô theo từng nhân viên"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_procurement
@@ -6789,12 +6825,12 @@ msgstr "Sản xuất"
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_production
 #: model:ir.model.fields,field_description:stock.field_product_template__property_stock_production
 msgid "Production Location"
-msgstr "Địa điểm sản xuất"
+msgstr "Vị trí sản xuất"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Production Locations"
-msgstr "Địa điểm sản xuất"
+msgstr "Vị trí sản xuất"
 
 #. module: stock
 #. odoo-python
@@ -6823,7 +6859,8 @@ msgid ""
 "Products will be reserved first for the transfers with the highest "
 "priorities."
 msgstr ""
-"Sản phẩm sẽ được dự trữ cho điều chuyển có mức độ ưu tiên cao nhất đầu tiên."
+"Sản phẩm sẽ được dự trữ cho lệnh chuyển hàng có mức độ ưu tiên cao nhất đầu "
+"tiên."
 
 #. module: stock
 #. odoo-python
@@ -7066,7 +7103,7 @@ msgstr "Số lượng được dự trữ"
 #: code:addons/stock/wizard/stock_replenishment_info.py:0
 #, python-format
 msgid "Quantity available too low"
-msgstr "Số lượng hiện có quá thấp"
+msgstr "Số lượng có sẵn quá thấp"
 
 #. module: stock
 #. odoo-python
@@ -7378,7 +7415,7 @@ msgstr "Chuyển vị trí tồn kho của bạn"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Remaining parts of picking partially processed"
-msgstr "Phần còn lại của phiếu lấy hàng đã được xử lý một phần"
+msgstr "Phần còn lại của phiếu xuất kho đã được xử lý một phần"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_removal
@@ -7541,7 +7578,7 @@ msgstr "Yêu cầu nhà cung cấp giao hàng tới khách hàng của bạn"
 #: model:res.groups,name:stock.group_stock_sign_delivery
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Require a signature on your delivery orders"
-msgstr "Yêu cầu chữ ký trên phiếu xuất kho của bạn"
+msgstr "Yêu cầu chữ ký trên lệnh giao hàng của bạn"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_method
@@ -7587,7 +7624,7 @@ msgstr "Dự trữ một phần kiện hàng"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Reserve before scheduled date"
-msgstr "Dự trữ trước ngày theo kế hoạch"
+msgstr "Dự trữ trước ngày đã lên lịch"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_level__state__assigned
@@ -7650,12 +7687,12 @@ msgstr "Trả hàng"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__location_id
 msgid "Return Location"
-msgstr "Địa điểm trả hàng"
+msgstr "Vị trí trả hàng"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Phiếu lấy hàng trả lại"
+msgstr "Phiếu xuất kho trả hàng"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_line
@@ -7716,13 +7753,13 @@ msgid ""
 "Reusable boxes are used for batch picking and emptied afterwards to be reused. In the barcode application, scanning a reusable box will add the products in this box.\n"
 "        Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer."
 msgstr ""
-"Hộp có thể tái sử dụng được dùng trong lấy hàng hàng loạt và bỏ hàng ra sau đó để tái sử dụng. Trong ứng dụng mã vạch, việc quét hộp có thể tái sử dụng sẽ thêm các sản phẩm có trong hộp này.\n"
-"        Hộp dùng một lần không được tái sử dụng, khi quét hộp dùng một lần trong ứng dụng mã vạch, các sản phẩm chứa trong đó sẽ được thêm vào điều chuyển."
+"Hộp có thể tái sử dụng được dùng trong lấy hàng theo lô và bỏ hàng ra sau đó để tái sử dụng. Trong ứng dụng mã vạch, việc quét hộp có thể tái sử dụng sẽ thêm các sản phẩm có trong hộp này.\n"
+"        Hộp dùng một lần không được tái sử dụng, khi quét hộp dùng một lần trong ứng dụng mã vạch, các sản phẩm chứa trong đó sẽ được thêm vào lệnh chuyển hàng."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
 msgid "Reverse Transfer"
-msgstr "Đảo lại điều chuyển"
+msgstr "Đảo lại lệnh chuyển hàng"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_revert_inventory_adjustment
@@ -7891,19 +7928,19 @@ msgstr "Lịch sử bán hàng"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Scheduled Date"
-msgstr "Ngày theo kế hoạch"
+msgstr "Ngày đã lên lịch"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date
 msgid "Scheduled date until move is done, then date of actual move processing"
 msgstr ""
-"Ngày theo kế hoạch cho đến khi dịch chuyển hoàn tất, sau đó là ngày xử lý "
-"dịch chuyển thực tế"
+"Ngày đã lên lịch cho đến khi dịch chuyển hoàn tất, sau đó là ngày xử lý dịch"
+" chuyển thực tế"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Scheduled or processing date"
-msgstr "Ngày theo kế hoạch hoặc ngày xử lý"
+msgstr "Ngày đã lên lịch hoặc ngày xử lý"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__scheduled_date
@@ -7923,7 +7960,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view2
 msgid "Scrap"
-msgstr "Phế phẩm"
+msgstr "Loại bỏ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__scrap_location_id
@@ -7934,7 +7971,7 @@ msgstr "Vị trí phế phẩm"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_scrap
 msgid "Scrap Orders"
-msgstr "Đơn hàng phế phẩm"
+msgstr "Lệnh loại bỏ"
 
 #. module: stock
 #. odoo-python
@@ -7971,7 +8008,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Scraps"
-msgstr "Phế phẩm"
+msgstr "Loại bỏ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_filter
@@ -8015,12 +8052,12 @@ msgstr "Bán và mua sản phẩm theo đơn vị tính khác nhau"
 msgid ""
 "Send an automatic confirmation SMS Text Message when Delivery Orders are "
 "done"
-msgstr "Tự động gửi một tin nhắn văn bản xác nhận khi Phiếu xuất kho hoàn tất"
+msgstr "Tự động gửi một tin nhắn văn bản xác nhận khi Lệnh giao hàng hoàn tất"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Send an automatic confirmation email when Delivery Orders are done"
-msgstr "Tự động gửi một email xác nhận khi Phiếu xuất kho hoàn tất"
+msgstr "Tự động gửi một email xác nhận khi Lệnh giao hàng hoàn tất"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_lead_mass_mail
@@ -8217,7 +8254,7 @@ msgid ""
 "location if you subcontract the manufacturing operations."
 msgstr ""
 "Thiết lập một vị trí nếu bạn sản xuất tại một vị trí cố định. Đây có thể là "
-"một vị trí đối tác nếu bạn thuê thầu phụ cho các hoạt động sản xuất."
+"một vị trí đối tác nếu bạn thuê gia công cho các hoạt động sản xuất."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_config_settings
@@ -8359,13 +8396,12 @@ msgstr "Hiển thị nút thiết lập SL"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__show_transfers
 msgid "Show Transfers"
-msgstr "Hiển thị điều chuyển"
+msgstr "Hiển thị lệnh chuyển hàng"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Show all records which has next action date is before today"
-msgstr ""
-"Hiển thị tất cả tập dữ liệu có ngày xử lý tiếp theo trước ngày hôm nay"
+msgstr "Hiển thị tất cả bản ghi có ngày xử lý tiếp theo trước ngày hôm nay"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_lots_m2o
@@ -8402,7 +8438,7 @@ msgstr "Đã ký"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "Size"
-msgstr "Quy mô"
+msgstr "Kích thước"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -8876,6 +8912,24 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr "Số lô/sê-ri (%s) này đã liên kết với một sản phẩm khác."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"The Picking Operations report has been deleted so you cannot print at this "
+"time unless the report is restored."
+msgstr ""
+"Báo cáo Hoạt động lấy hàng đã bị xóa, vì vậy bạn không thể in vào lúc này "
+"trừ khi báo cáo được khôi phục."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
 msgid ""
 "The Serial Number (%s) is already used in these location(s): %s.\n"
 "\n"
@@ -8890,7 +8944,7 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "The backorder %s has been created."
-msgstr "Đơn hàng chậm trễ %s đã được tạo."
+msgstr "Đơn hàng tách kiện %s đã được tạo."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
@@ -8931,7 +8985,7 @@ msgstr "Công ty được tự động thiết lập từ tùy chọn người d
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "The deadline has been automatically updated due to a delay on %s."
-msgstr "Hạn chót đã được cập nhật tự động do chậm trễ đối với %s."
+msgstr "Thời hạn đã được cập nhật tự động do chậm trễ đối với %s."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__delay
@@ -8939,8 +8993,8 @@ msgid ""
 "The expected date of the created transfer will be computed based on this "
 "lead time."
 msgstr ""
-"Ngày dự kiến của điều chuyển hàng đã tạo sẽ được tính dựa trên thời gian "
-"giao hàng này."
+"Ngày dự kiến của lệnh chuyển hàng hàng đã tạo sẽ được tính dựa trên thời "
+"gian hoàn thành này."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__sequence
@@ -8952,7 +9006,7 @@ msgstr "Vị trí đầu tiên trong trình tự là mặc định."
 #: code:addons/stock/wizard/product_replenish.py:0
 #, python-format
 msgid "The following replenishment order have been generated"
-msgstr "Đơn đặt hàng bổ sung sau đây đã được tạo"
+msgstr "Đơn bổ sung hàng sau đây đã được tạo"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
@@ -8964,14 +9018,14 @@ msgstr "Số lượng dự báo của"
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "The forecasted stock on the"
-msgstr "Tồn kho dự kiến vào"
+msgstr "Tồn kho được dự báo vào"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "The inter-warehouse transfers have been generated"
-msgstr "Phiếu điều chuyển liên kho đã được tạo"
+msgstr "Phiếu lệnh chuyển hàng liên kho đã được tạo"
 
 #. module: stock
 #. odoo-python
@@ -9226,7 +9280,7 @@ msgid ""
 "routes put another location. If it is empty, it will check for the customer "
 "location on the partner. "
 msgstr ""
-"Đây là vị trí đích mặc định khi bạn tạo thủ công một phiếu lấy hàng với loại"
+"Đây là vị trí đích mặc định khi bạn tạo thủ công một phiếu xuất kho với loại"
 " hoạt động này. Tuy nhiên, có thể thay đổi nó hoặc các tuyến cung ứng có một"
 " vị trí khác. Nếu trống, vị trí khách hàng theo đối tác sẽ được lựa chọn."
 
@@ -9236,7 +9290,7 @@ msgid ""
 "This is the default location for returns created from a picking with this "
 "operation type."
 msgstr ""
-"Đây là vị trí mặc định cho các phiếu trả hàng được tạo từ một phiếu lấy hàng"
+"Đây là vị trí mặc định cho các phiếu trả hàng được tạo từ một phiếu xuất kho"
 " với loại hoạt động này."
 
 #. module: stock
@@ -9247,7 +9301,7 @@ msgid ""
 "put another location. If it is empty, it will check for the supplier "
 "location on the partner. "
 msgstr ""
-"Đây là vị trí nguồn mặc định khi bạn tạo thủ công một phiếu lấy hàng với "
+"Đây là vị trí nguồn mặc định khi bạn tạo thủ công một phiếu xuất kho với "
 "loại hoạt động này. Tuy nhiên, có thể thay đổi nó hoặc các tuyến cung ứng có"
 " một vị trí khác. Nếu trống, vị trí nhà cung cấp theo đối tác sẽ được lựa "
 "chọn."
@@ -9265,9 +9319,9 @@ msgid ""
 "moves affects the product reservation, and should be done with care."
 msgstr ""
 "Đây là số lượng sản phẩm được lên kế hoạch dịch chuyển. Việc giảm số lượng "
-"này sẽ không tạo ra một đơn hàng chậm trễ. Tuy nhiên, việc thay đổi số lượng"
-" này trên những dịch chuyển đã chỉ định sẽ ảnh hưởng đến dự trữ sản phẩm và "
-"cần được thực hiện cẩn thận."
+"này sẽ không tạo ra một đơn hàng tách kiện. Tuy nhiên, việc thay đổi số "
+"lượng này trên những dịch chuyển đã chỉ định sẽ ảnh hưởng đến dự trữ sản "
+"phẩm và cần được thực hiện cẩn thận."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__child_internal_location_ids
@@ -9325,7 +9379,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "This note is added to delivery orders."
-msgstr "Ghi chú này sẽ hiển thị trên các phiếu xuất kho."
+msgstr "Ghi chú này sẽ hiển thị trên các lệnh giao hàng."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -9333,7 +9387,7 @@ msgid ""
 "This note is added to internal transfer orders (e.g. where to pick the "
 "product in the warehouse)."
 msgstr ""
-"Ghi chú này sẽ được thêm vào phiếu điều chuyển nội bộ (vd: nơi lấy sản phẩm "
+"Ghi chú này sẽ được thêm vào lệnh chuyển hàng nội bộ (vd: nơi lấy sản phẩm "
 "trong kho hàng)."
 
 #. module: stock
@@ -9353,7 +9407,7 @@ msgid ""
 "returned picking in order to avoid logistic rules to be applied again (which"
 " would create duplicated operations)"
 msgstr ""
-"Phiếu lấy hàng này có vẻ như được xâu chuỗi với một hoạt động khác. Sau này,"
+"Phiếu xuất kho này có vẻ như được xâu chuỗi với một hoạt động khác. Sau này,"
 " nếu bạn nhận được hàng hoá mà bạn hiện đang trả lại, hãy đảm bảo <b>đảo "
 "lại</b> phiếu trả hàng để tránh các quy tắc logistics được áp dụng lại (điều"
 " này sẽ tạo ra các hoạt động trùng lặp)"
@@ -9405,7 +9459,7 @@ msgstr "Số lượng này được hiện thị theo Đơn vị tính mặc đ�
 #: code:addons/stock/static/src/views/list/inventory_report_list_model.js:0
 #, python-format
 msgid "This record already exists."
-msgstr "Tập dữ liệu đã tồn tại."
+msgstr "Bản ghi đã tồn tại."
 
 #. module: stock
 #. odoo-python
@@ -9503,7 +9557,7 @@ msgstr "Cần áp dụng"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__to_backorder
 msgid "To Backorder"
-msgstr "Cần lập đơn hàng chậm trễ"
+msgstr "Cần lập đơn hàng tách kiện"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -9516,7 +9570,7 @@ msgstr "Cần kiểm đếm"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "To Do"
-msgstr "Cần làm"
+msgstr "Việc cần làm"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -9683,12 +9737,12 @@ msgstr "Dòng theo dõi"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Transfer"
-msgstr "Điều chuyển"
+msgstr "Lệnh chuyển hàng"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Transfer to"
-msgstr "Điều chuyển tới"
+msgstr "Lệnh chuyển hàng tới"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_all
@@ -9699,14 +9753,14 @@ msgstr "Điều chuyển tới"
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Transfers"
-msgstr "Điều chuyển"
+msgstr "Lệnh chuyển hàng"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Transfers %s: Please add some items to move."
-msgstr "Điều chuyển %s: Vui lòng thêm một số sản phẩm để dịch chuyển."
+msgstr "Lệnh chuyển hàng %s: Vui lòng thêm một số sản phẩm để dịch chuyển."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_get_picking_type_operations
@@ -9720,20 +9774,21 @@ msgstr "Điều chuyển %s: Vui lòng thêm một số sản phẩm để dịc
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "Transfers allow you to move products from one location to another."
 msgstr ""
-"Điều chuyển cho phép bạn chuyển sản phẩm từ vị trí này sang vị trí khác."
+"Lệnh chuyển hàng cho phép bạn chuyển sản phẩm từ vị trí này sang vị trí "
+"khác."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
 msgid "Transfers for Groups"
-msgstr "Điều chuyển cho nhóm"
+msgstr "Lệnh chuyển hàng cho nhóm"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid ""
 "Transfers that are late on scheduled time or one of pickings will be late"
 msgstr ""
-"Các điều chuyển hàng bị trễ so với thời gian theo kế hoạch hoặc một trong "
-"các phiếu lấy hàng sẽ bị trễ"
+"Các lệnh chuyển hàng hàng bị trễ so với thời gian theo kế hoạch hoặc một "
+"trong các phiếu xuất kho sẽ bị trễ"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__transit
@@ -9772,7 +9827,7 @@ msgstr "Kích hoạt thủ công"
 #: code:addons/stock/static/src/stock_forecasted/stock_forecasted.js:0
 #, python-format
 msgid "Try to add some incoming or outgoing transfers."
-msgstr "Cố gắng thêm một số điều chuyển nhập hàng hoặc xuất hàng."
+msgstr "Cố gắng thêm một số lệnh chuyển hàng vào hoặc ra."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type
@@ -9800,15 +9855,17 @@ msgstr "Loại hoạt động"
 #: model:ir.model.fields,help:stock.field_stock_lot__activity_exception_decoration
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Loại hoạt động ngoại lệ trong tập dữ liệu."
+msgstr "Loại hoạt động ngoại lệ trong bản ghi."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "UPS Connector"
 msgstr "Kết nối UPS"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "USPS Connector"
 msgstr "Kết nối USPS"
 
@@ -9993,8 +10050,8 @@ msgid ""
 "Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and "
 "serial numbers."
 msgstr ""
-"Sử dụng ma trận dữ liệu phép đặt tên GS1 bất cứ khi nào mã vạch được in cho "
-"lô và số sê-ri."
+"Sử dụng ma trận dữ liệu danh pháp GS1 bất cứ khi nào mã vạch được in cho lô "
+"và số sê-ri."
 
 #. module: stock
 #: model:res.groups,name:stock.group_reception_report
@@ -10091,7 +10148,7 @@ msgstr "View Diagram"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__view_location_id
 msgid "View Location"
-msgstr "Địa điểm chỉ xem"
+msgstr "Vị trí chỉ xem"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10101,7 +10158,7 @@ msgstr "Xem và phân bổ số lượng đã nhận."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__visibility_days
 msgid "Visibility Days"
-msgstr "Ngày khả năng hiển thị"
+msgstr "Ngày dự báo nhu cầu"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -10154,7 +10211,7 @@ msgstr "Chờ dịch chuyển"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_waiting
 msgid "Waiting Transfers"
-msgstr "Chờ điều chuyển"
+msgstr "Chờ lệnh chuyển hàng"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
@@ -10195,7 +10252,7 @@ msgstr "Miền kho hàng"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
 msgid "Warehouse Location"
-msgstr "Địa điểm kho hàng"
+msgstr "Vị trí kho hàng"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
@@ -10281,7 +10338,7 @@ msgstr "Thông báo cảnh báo"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "Warning on the Picking"
-msgstr "Cảnh báo ở phiếu lấy hàng"
+msgstr "Cảnh báo ở phiếu xuất kho"
 
 #. module: stock
 #. odoo-python
@@ -10304,7 +10361,7 @@ msgstr "Cảnh báo tồn kho"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_picking_wave
 msgid "Wave Transfers"
-msgstr "Điều chuyển theo đợt"
+msgstr "Lệnh chuyển hàng theo đợt"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__website_message_ids
@@ -10328,7 +10385,7 @@ msgstr "Khối lượng"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__base_weight
 msgid "Weight of the package type"
-msgstr "Khối lượng của loại bao bì"
+msgstr "Khối lượng của loại kiện hàng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__weight_uom_name
@@ -10417,8 +10474,8 @@ msgid ""
 "When the picking is not done this allows changing the initial demand. When "
 "the picking is done this allows changing the done quantities."
 msgstr ""
-"Khi phiếu lấy hàng chưa hoàn tất, thì có thể thay đổi nhu cầu ban đầu. Khi "
-"phiếu lấy hàng đã hoàn tất, thì có thể thay đổi số lượng đã hoàn tất."
+"Khi phiếu xuất kho chưa hoàn tất, thì có thể thay đổi nhu cầu ban đầu. Khi "
+"phiếu xuất kho đã hoàn tất, thì có thể thay đổi số lượng đã hoàn tất."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_min_qty
@@ -10462,9 +10519,9 @@ msgid ""
 " * Always: a backorder is automatically created for the remaining products\n"
 " * Never: remaining products are cancelled"
 msgstr ""
-"Khi xác nhận một điều chuyển:\n"
-"* Hỏi: người dùng được chọn nếu họ muốn tạo đơn hàng chậm trễ cho các sản phẩm còn lại\n"
-"* Luôn luôn: đơn hàng chậm trễ được tạo tự động cho các sản phẩm còn lại\n"
+"Khi xác nhận một lệnh chuyển hàng:\n"
+"* Hỏi: người dùng được chọn nếu họ muốn tạo đơn hàng tách kiện cho các sản phẩm còn lại\n"
+"* Luôn luôn: đơn hàng tách kiện được tạo tự động cho các sản phẩm còn lại\n"
 "* Không bao giờ: các sản phẩm còn lại sẽ bị hủy"
 
 #. module: stock
@@ -10472,20 +10529,19 @@ msgstr ""
 msgid ""
 "When validating the transfer, the products will be assigned to this owner."
 msgstr ""
-"Khi xác nhận điều chuyển hàng, sản phẩm sẽ được giao cho người phụ trách "
-"này."
+"Khi xác nhận lệnh chuyển hàng, sản phẩm sẽ được giao cho bên sở hữu này."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__owner_id
 msgid ""
 "When validating the transfer, the products will be taken from this owner."
 msgstr ""
-"Khi xác nhận điều chuyển hàng, sản phẩm sẽ được lấy từ người phụ trách này."
+"Khi xác nhận lệnh chuyển hàng, sản phẩm sẽ được lấy từ bên sở hữu này."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__additional
 msgid "Whether the move was added after the picking's confirmation"
-msgstr "Liệu dịch chuyển đã được thêm vào sau khi xác nhận phiếu lấy hàng"
+msgstr "Liệu dịch chuyển đã được thêm vào sau khi xác nhận phiếu xuất kho"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__width
@@ -10637,7 +10693,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You can not delete moves linked to another operation"
-msgstr "Bạn không thể xoá các dịch chuyển được liên kết với hoạt động khác"
+msgstr "Bạn không thể xoá các điều chuyển được liên kết với hoạt động khác"
 
 #. module: stock
 #. odoo-python
@@ -10647,7 +10703,7 @@ msgid ""
 "You can not delete product moves if the picking is done. You can only "
 "correct the done quantities."
 msgstr ""
-"Bạn không thể xóa dịch chuyển sản phẩm nếu phiếu lấy hàng đã hoàn tất. Bạn "
+"Bạn không thể xóa dịch chuyển sản phẩm nếu phiếu xuất kho đã hoàn tất. Bạn "
 "chỉ có thể sửa số lượng đã hoàn tất."
 
 #. module: stock
@@ -10757,8 +10813,8 @@ msgstr ""
 #, python-format
 msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
 msgstr ""
-"Bạn không thể thay đổi ngày theo kế hoạch trong phiếu dịch chuyển đã hoàn "
-"tất hoặc bị hủy."
+"Bạn không thể thay đổi ngày đã lên lịch trong phiếu dịch chuyển đã hoàn tất "
+"hoặc bị hủy."
 
 #. module: stock
 #. odoo-python
@@ -10822,9 +10878,16 @@ msgid ""
 "package through this view. Try adding them to a batch picking and pack it "
 "there."
 msgstr ""
-"Bạn không thể trực tiếp đóng gói hàng hoá từ các điều chuyển khác nhau vào "
-"cùng một kiện hàng thông qua chế độ xem này. Hãy thử thêm chúng vào một loạt"
-" lấy hàng và đóng gói tại đó."
+"Bạn không thể trực tiếp đóng gói hàng hoá từ các lệnh chuyển hàng khác nhau "
+"vào cùng một kiện hàng thông qua chế độ xem này. Hãy thử thêm chúng vào một "
+"lô lấy hàng và đóng gói tại đó."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "You cannot duplicate stock quants."
+msgstr "Bạn không thể sao chép quant tồn kho."
 
 #. module: stock
 #. odoo-python
@@ -10841,8 +10904,8 @@ msgid ""
 "You cannot move the same package content more than once in the same transfer"
 " or split the same package into two location."
 msgstr ""
-"Bạn không thể dịch chuyển cùng một kiện hàng nhiều lần trong cùng một điều "
-"chuyển hàng hoặc tách một kiện hàng sang hai vị trí khác nhau."
+"Bạn không thể dịch chuyển cùng một kiện hàng nhiều lần trong cùng một lệnh "
+"chuyển hàng hàng hoặc tách một kiện hàng sang hai vị trí khác nhau."
 
 #. module: stock
 #. odoo-python
@@ -10852,8 +10915,6 @@ msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types."
 msgstr ""
-"Bạn không thể đóng gói các sản phẩm vào cùng một kiện hàng khi chúng được "
-"chuyển đến từ các điều chuyển khác nhau với các loại hoạt động khác nhau."
 
 #. module: stock
 #. odoo-python
@@ -10945,8 +11006,8 @@ msgid ""
 "You cannot validate a transfer if no quantities are reserved. To force the "
 "transfer, encode quantities."
 msgstr ""
-"Bạn không thể xác nhận một điều chuyển nếu không có số lượng được dự trữ. Để"
-" tiếp tục, hãy nhập số lượng."
+"Bạn không thể xác nhận một lệnh chuyển hàng nếu không có số lượng được dự "
+"trữ. Để tiếp tục, hãy nhập số lượng."
 
 #. module: stock
 #. odoo-python
@@ -10956,8 +11017,8 @@ msgid ""
 "You can’t validate an empty transfer. Please add some products to move "
 "before proceeding."
 msgstr ""
-"Bạn không thể xác thực một điều chuyển trống. Vui lòng thêm một số sản phẩm "
-"để dịch chuyển trước khi tiếp tục."
+"Bạn không thể xác thực một lệnh chuyển hàng trống. Vui lòng thêm một số sản "
+"phẩm để dịch chuyển trước khi tiếp tục."
 
 #. module: stock
 #. odoo-python
@@ -11012,21 +11073,21 @@ msgstr ""
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "You may only return Done pickings."
-msgstr "Bạn chỉ có thể trả lại hàng có phiếu lấy hàng Hoàn tất."
+msgstr "Bạn chỉ có thể trả lại hàng có phiếu xuất kho Hoàn tất."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "You may only return one picking at a time."
-msgstr "Mỗi lần, bạn chỉ có thể trả lại một phiếu lấy hàng."
+msgstr "Mỗi lần, bạn chỉ có thể trả lại một phiếu xuất kho."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You might want to update the locations of this transfer's operations"
-msgstr "Có thể bạn cần cập nhật vị trí của các hoạt động điều chuyển này"
+msgstr "Có thể bạn cần cập nhật vị trí của các hoạt động lệnh chuyển hàng này"
 
 #. module: stock
 #. odoo-python
@@ -11096,8 +11157,8 @@ msgid ""
 "You tried to create a record that already exists. The existing record was "
 "modified instead."
 msgstr ""
-"Bạn đã cố tạo một tập dữ liệu đã tồn tại. Thay vào đó, bạn nên điều chỉnh "
-"tập dữ liệu hiện có."
+"Bạn đã cố tạo một bản ghi đã tồn tại. Thay vào đó, bạn nên điều chỉnh bản "
+"ghi hiện có."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
@@ -11357,5 +11418,5 @@ msgstr "đơn vị"
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Phiếu xuất kho (Mã {{ object.name or 'không có'"
+"{{ object.company_id.name }} Lệnh giao hàng (Mã {{ object.name or 'không có'"
 " }})"

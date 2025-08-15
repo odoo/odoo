@@ -9,7 +9,7 @@ import wUtils from "@website/js/utils";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 import { Component, onMounted, useRef, useState } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
-import { switchTextHighlight } from "@website/js/text_processing";
+import { applyTextHighlight, switchTextHighlight } from "@website/js/text_processing";
 
 const getDeepRange = OdooEditorLib.getDeepRange;
 const getTraversedNodes = OdooEditorLib.getTraversedNodes;
@@ -213,11 +213,42 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         if (HighlightOptionEl) {
             HighlightOptionEl.dataset.textSelector = HighlightOptionEl.dataset.selector;
         }
-        
+
         // TODO remove in master: see snippets.xml
         $html.find('we-checkbox[data-dependencies="!footer_copyright_opt"]')[0]?.remove();
         $html.find('[data-name="header_language_selector_none_opt"]')[0]?.remove();
         $html.find('we-select[data-dependencies="!header_language_selector_none_opt"]')[0]?.removeAttribute("data-dependencies");
+
+        // TODO remove in master: changing the `data-apply-to` attribute of the
+        // grid spacing option so it is not applied on inner rows.
+        const $gridSpacingOptions = $html.find('[data-css-property="row-gap"], [data-css-property="column-gap"]');
+        $gridSpacingOptions.attr("data-apply-to", ".row.o_grid_mode");
+
+        // TODO remove in master and adapt XML.
+        const contentAdditionEl = $html.find("#so_content_addition")[0];
+        if (contentAdditionEl) {
+            // Necessary to be able to drop "inner blocks" next to an image link.
+            contentAdditionEl.dataset.dropNear += ", div:not(.o_grid_item_image) > a";
+            // TODO remove in master
+            // The class is added again here even though it has already been
+            // added by the "searchbar_input_snippet_options" template. We are
+            // doing it again because it was mistakenly translated into Dutch.
+            contentAdditionEl.dataset.selector += ", .s_searchbar_input";
+            contentAdditionEl.dataset.dropNear += ", .s_searchbar_input";
+        }
+        // TODO remove in master
+        const snippetSaveOptionEl = $html.find("[data-js='SnippetSave']")[0];
+        if (snippetSaveOptionEl) {
+            snippetSaveOptionEl.dataset.selector += ", .s_searchbar_input";
+        }
+        // TODO remove in 18.0
+        const navTabsStyleEl = $html.find(`[data-js="NavTabsStyle"]`)[0];
+        if (navTabsStyleEl) {
+            const divEl = document.createElement("div");
+            divEl.setAttribute("data-js", "TabsNavItems");
+            divEl.setAttribute("data-selector", ".nav-item");
+            navTabsStyleEl.append(divEl);
+        }
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
@@ -273,8 +304,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                 onMounted(() => this.props.onMounted(this.modalRef));
             }
             onClickSave() {
-                this.props.confirm(this.modalRef, this.state.apiKey);
-                this.props.close();
+                this.props.confirm(this.modalRef, this.state.apiKey, this.props.close);
             }
         };
 
@@ -286,7 +316,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                         applyError.call($(modalRef.el), apiKeyValidation.message);
                     }
                 },
-                confirm: async (modalRef, valueAPIKey) => {
+                confirm: async (modalRef, valueAPIKey, close = undefined) => {
                     if (!valueAPIKey) {
                         applyError.call($(modalRef.el), _t("Enter an API Key"));
                         return;
@@ -297,7 +327,11 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                     if (res.isValid) {
                         await this.orm.write("website", [websiteId], {google_maps_api_key: valueAPIKey});
                         invalidated = true;
-                        return true;
+                        if (close) {
+                            close();
+                        } else {
+                            resolve(true);
+                        }
                     } else {
                         applyError.call($(modalRef.el), res.message);
                     }
@@ -521,6 +555,19 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
             selectedTextEl.classList.add(...optionClassList);
             let $snippet = null;
             try {
+                const commonAncestor = range.commonAncestorContainer;
+                const ancestorElement =
+                    commonAncestor.nodeType === 1 ? commonAncestor : commonAncestor.parentElement;
+                const backgroundColorParentEl = ancestorElement.closest(
+                    'font[style*="background-color"], font[style*="background-image"], font[class^="bg-"]'
+                );
+                if (backgroundColorParentEl?.textContent === commonAncestor.textContent) {
+                    // As long as we handle the same text content, we extend the
+                    // existing range to the `<font/>` boundaries to keep the
+                    // background color applied correctly.
+                    range.setStartBefore(backgroundColorParentEl);
+                    range.setEndAfter(backgroundColorParentEl);
+                }
                 range.surroundContents(selectedTextEl);
                 $snippet = $(selectedTextEl);
             } catch {
@@ -594,6 +641,16 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      */
     _allowParentsEditors($snippet) {
         return this._super(...arguments) && !$snippet[0].classList.contains("s_popup");
+    },
+    /**
+     * @override
+     */
+    _updateDroppedSnippet($target) {
+        // Build the highlighted text content for the snippets.
+        for (const textEl of $target[0]?.querySelectorAll(".o_text_highlight") || []) {
+            applyTextHighlight(textEl);
+        }
+        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------

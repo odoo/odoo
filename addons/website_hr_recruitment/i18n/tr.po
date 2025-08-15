@@ -17,6 +17,7 @@
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2024
 # Ediz Duman <neps1192@gmail.com>, 2024
 # Martin Trigaux, 2024
+# Deniz Guvener_Odoo <degu@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -24,13 +25,38 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-04 09:08+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/hr_job.py:0
+#, python-format
+msgid ""
+"\n"
+"            <span class=\"text-muted small\">Time to Answer</span>\n"
+"            <h6>2 open days</h6>\n"
+"            <span class=\"text-muted small\">Process</span>\n"
+"            <h6>1 Phone Call</h6>\n"
+"            <h6>1 Onsite Interview</h6>\n"
+"            <span class=\"text-muted small\">Days to get an Offer</span>\n"
+"            <h6>4 Days after Interview</h6>\n"
+"        "
+msgstr ""
+"\n"
+"            <span class=\"text-muted small\">Yanıtlama Süresi</span>\n"
+"            <h6>2 açık gün</h6>\n"
+"            <span class=\"text-muted small\">Süreç</span>\n"
+"            <h6>1 Telefon</h6>\n"
+"            <h6>1 Yerinde Mülakat</h6>\n"
+"            <span class=\"text-muted small\">Teklif almak için beklenecek Gün sayısı</span>\n"
+"            <h6>Mülakattan sonra 4 Gün</h6>\n"
+"        "
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -47,7 +73,7 @@ msgstr "'. ' için sonuçlar gösteriliyor"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
 msgid "+1 (650) 555-0187"
-msgstr ""
+msgstr "+1 (650) 555-0187"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -71,7 +97,7 @@ msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.detail
 msgid "<i class=\"fa fa-long-arrow-left text-primary me-2\"/>All Jobs"
-msgstr ""
+msgstr "<i class=\"fa fa-long-arrow-left text-primary me-2\"/>Tüm İşler"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -79,11 +105,13 @@ msgid ""
 "<i class=\"fa fa-suitcase fa-fw\" title=\"Employment type\" role=\"img\" "
 "aria-label=\"Employment type\"/>"
 msgstr ""
+"<i class=\"fa fa-suitcase fa-fw\" title=\"İstihdam türü\" role=\"img\" aria-"
+"label=\"Employment type\"/>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "<i class=\"oi oi-arrow-left\"/> Job Description"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-left\"/> İş Tanımı"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -93,7 +121,7 @@ msgstr "<small><b>OKU</b></small>"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
 msgid "<span class=\"fst-italic\">No address specified</span>"
-msgstr ""
+msgstr "<span class=\"fst-italic\">Adres belirtilmedi</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
@@ -101,11 +129,13 @@ msgid ""
 "<span class=\"h5 fw-light\">In the meantime,</span><br/>\n"
 "                                            <span class=\"h3 mt8 mb32 fw-bold\">Take a look around our website:</span>"
 msgstr ""
+"<span class=\"h5 fw-light\">Bu sırada</span><br/>\n"
+"                                            <span class=\"h3 mt8 mb32 fw-bold\">Web sitemize göz atabilirsiniz:</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "<span class=\"navbar-brand h5 my-0 me-sm-auto\">Our Job Offers</span>"
-msgstr ""
+msgstr "<span class=\"navbar-brand h5 my-0 me-sm-auto\">İş Tekliflerimiz</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -190,6 +220,8 @@ msgid ""
 "<span class=\"text-muted small\">Provide either a resume file or a linkedin "
 "profile</span>"
 msgstr ""
+"<span class=\"text-muted small\">Bir özgeçmiş dosyası ya da LinkedIn profili"
+" paylaşın</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -239,7 +271,7 @@ msgstr "Tüm Ofisler"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_employment_type
 msgid "All Types"
-msgstr ""
+msgstr "Tüm Türler"
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_hr_applicant
@@ -332,6 +364,8 @@ msgid ""
 "Create new job pages from the <strong>+ <i>New</i></strong> top-right "
 "button."
 msgstr ""
+"Sağ üstteki <strong>+ <i>Yeni</i></strong> düğmesini kullanarak yeni iş "
+"ilanı sayfaları oluşturun."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -450,6 +484,13 @@ msgid ""
 "                                                feedback</strong> or if you don't get news from me\n"
 "                                                quickly enough."
 msgstr ""
+"Genellikle <strong>başvurulara üç gün içinde yanıt veririm</strong>.\n"
+"                                                <br/><br/>\n"
+"                                                Sonraki adım ya bir telefon görüşmesi ya da ofisimizde yüz yüze bir görüşme.\n"
+"                                                <br/><br/>\n"
+"                                                <strong>Daha hızlı geri bildirim\n"
+"                                                isterseniz</strong>veya benden yeterince hızlı dönüş almazsanız\n"
+"                                                dilediğiniz zaman benimle iletişime geçebilirsiniz."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -459,7 +500,7 @@ msgstr "Kendimi şanslı hissediyorum"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "Insert a Job Description..."
-msgstr ""
+msgstr "Pozisyon Açıklaması Girin..."
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__is_published
@@ -497,7 +538,7 @@ msgstr "İş Ünvanı"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "Job not found"
-msgstr ""
+msgstr "İş bulunamadı"
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -554,7 +595,7 @@ msgstr "Olması Güzel"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
 msgid "No address specified"
-msgstr ""
+msgstr "Adres belirtilmedi"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -675,6 +716,7 @@ msgid "Real responsibilities and challenges in a fast evolving company"
 msgstr "Hızla gelişen bir şirkette gerçek sorumluluklar ve meydan okumalar"
 
 #. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_countries
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
 msgid "Remote"
@@ -721,7 +763,7 @@ msgstr ""
 #: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
 #, python-format
 msgid "Short Introduction"
-msgstr ""
+msgstr "Kısa Tanıtım"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
@@ -758,7 +800,7 @@ msgstr "Web sitesi aracılığıyla belgeye erişmek için tam URL."
 #: code:addons/website_hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "The job offer has been closed."
-msgstr ""
+msgstr "İş ilanı kapatıldı."
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -773,6 +815,8 @@ msgid ""
 "There are currently no open job opportunities,<br class=\"mb-2\"/>\n"
 "                                            but feel free to <span class=\"fw-bold\">contact us</span> for a spontaneous application."
 msgstr ""
+"Şu anda açık iş pozisyonumuz yok,<br class=\"mb-2\"/>\n"
+"                                            ancak bize doğrudan başvurmak isterseniz<span class=\"fw-bold\">bizimle iletişime geçmekten</span> çekinmeyin."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -787,7 +831,7 @@ msgstr "Twitter"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_employment_type
 msgid "Unspecified type"
-msgstr ""
+msgstr "Belirtilmemiş tür"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__url
@@ -892,7 +936,7 @@ msgstr ""
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 msgid "Your <b>contact</b> information is:"
-msgstr ""
+msgstr "<b>İletişim</b> bilgileriniz:"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -914,6 +958,8 @@ msgid ""
 "Your application has been posted successfully,<br class=\"mb-2\"/>\n"
 "                                    We usually respond within 3 days..."
 msgstr ""
+"Başvurunuz başarıyla gönderildi,<br class=\"mb-2\"/>\n"
+"                                    Genellikle 3 gün içinde yanıt veriyoruz..."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -929,6 +975,11 @@ msgstr "örneğin https://www.linkedin.com/in/fpodoo/"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
 msgid "info@yourcompany.example.com"
 msgstr "info@yourcompany.example.com"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+msgid "open position"
+msgstr "açık pozisyon"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index

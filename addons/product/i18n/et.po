@@ -21,11 +21,11 @@
 # Martin Trigaux, 2023
 # Triine Aavik <triine@avalah.ee>, 2023
 # JanaAvalah, 2023
-# Katrin Kampura, 2023
 # Mihkel avalah, 2023
 # Anna, 2024
-# Siim Raasuke, 2024
 # Stevin Lilla, 2024
+# Katrin Kampura, 2024
+# Siim Raasuke, 2025
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Stevin Lilla, 2024\n"
+"Last-Translator: Siim Raasuke, 2025\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,6 +50,9 @@ msgid ""
 "\n"
 "Note: products that you don't have access to will not be shown above."
 msgstr ""
+"\n"
+"\n"
+"Märkus: tooteid, millele sul pole ligipääsu, eespool ei kuvata."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
@@ -101,6 +104,7 @@ msgstr "%s %% allahindlus"
 #. odoo-python
 #: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
+#: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (koopia)"
@@ -280,6 +284,8 @@ msgid ""
 "<strong>Save</strong> this page and come back\n"
 "                                here to set up the feature."
 msgstr ""
+"<strong>Salvesta</strong> see leht ja tule tagasi,\n"
+"                                et seadistada funktsionaalsust."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -533,6 +539,8 @@ msgid ""
 "At most %s quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
 msgstr ""
+"Korraga saab kuvada kõige rohkem %s kogust. Eemalda valitud kogus, et lisada"
+" teisi."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -660,6 +668,10 @@ msgid ""
 "Cost Price: The base price will be the cost price.\n"
 "Other Pricelist: Computation of the base price based on another Pricelist."
 msgstr ""
+"Arvutamise baashind.\n"
+"Müügihind: baashinnaks on müügihind.\n"
+"Kulu: baashinnaks on kulu.\n"
+"Muu hinnakiri : baashinna arvutamine teise hinnakirja alusel."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
@@ -1215,7 +1227,7 @@ msgstr "Dokumentide arv"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
 msgid "Documents of this variant"
-msgstr ""
+msgstr "Selle variatsiooni dokumendid"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -1905,7 +1917,7 @@ msgstr "Mitu valikut"
 #: model:ir.model.constraint,message:product.constraint_product_attribute_check_multi_checkbox_no_variant
 msgid ""
 "Multi-checkbox display type is not compatible with the creation of variants"
-msgstr ""
+msgstr "Mitme valikuga kuva tüüp ei ole sobilik variatsioonide loomisele."
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__basic
@@ -2075,6 +2087,8 @@ msgid ""
 "On the product %(product)s you cannot associate the value %(value)s with the"
 " attribute %(attribute)s because they do not match."
 msgstr ""
+"Tootel %(product)s ei saa väärtust %(value)s siduda atribuudiga "
+"%(attribute)s, sest need ei kattu."
 
 #. module: product
 #. odoo-python
@@ -2084,6 +2098,8 @@ msgid ""
 "On the product %(product)s you cannot transform the attribute "
 "%(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
+"Toote %(product)s atribuuti %(attribute_src)s ei saa muuta atrbuudiks "
+"%(attribute_dest)s."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -2938,6 +2954,8 @@ msgid ""
 "Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
 msgstr ""
+"Määra fikseeritud summa, mida allahindlusega arvutatud summale lisada või "
+"lahutada (kui see on negatiivne)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -3042,6 +3060,7 @@ msgid ""
 "The attribute %(attribute)s must have at least one value for the product "
 "%(product)s."
 msgstr ""
+"Toote %(product)s atribuudil%(attribute)s peab olema vähemalt üks väärtus."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -3114,6 +3133,10 @@ msgid ""
 "the sales order. To do so, open the form view of attributes and change the "
 "mode of *Create Variants*."
 msgstr ""
+"Variatsioonide arv on üle lubatud piiri. Kas ära loo iga kombinatsiooni "
+"kohta variatsiooni või loo need vastavalt müügitellimuselt tulevale "
+"nõudlusele. Selleks ava atribuudi vormivaade ja muuda variatsioonide loomise"
+" viisi."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
@@ -3142,7 +3165,7 @@ msgstr ""
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "The rounding method must be strictly positive."
-msgstr ""
+msgstr "Ümardamise meetod peab olema positiivne."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -3161,6 +3184,8 @@ msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
 msgstr ""
+"Väärtus %(value)s ei ole defineeritud toote %(product)satribuudile "
+"%(attribute)s."
 
 #. module: product
 #. odoo-python
@@ -3346,7 +3371,7 @@ msgstr "Üleslaadimine"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Upload files to your product"
-msgstr ""
+msgstr "Lisa oma tootele faile"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -3366,6 +3391,8 @@ msgid ""
 "Use this feature to store any files you would like to share with your "
 "customers"
 msgstr ""
+"Kasuta seda funktsionaalsust, et talletada faile, mida soovid oma kliendiga "
+"jagada."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -3415,6 +3442,9 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"Toote väärtus (AVCO puhul arvutatakse automaatselt).\n"
+"Kasutatakse toote väärtuse määramiseks, kui ostuhind ei ole teada (nt. laoseisu korrigeerimisel).\n"
+"Kasutatakse müügitellimuse marginaali arvutamisel."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
@@ -3707,6 +3737,8 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"Atribuudil %(attribute)s ei saa variatsiooni loomise viisi muuta, sest see on kasutusel järgneva(te)l too(de)tel:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -3716,6 +3748,8 @@ msgid ""
 "You cannot change the attribute of the value %(value)s because it is used on"
 " the following products: %(products)s"
 msgstr ""
+"Väärtuse %(value)satribuuti ei saa muuta, sest seda kasutatakse järgnevatel "
+"toodetel: %(products)s"
 
 #. module: product
 #. odoo-python
@@ -3724,7 +3758,7 @@ msgstr ""
 msgid ""
 "You cannot change the product of the value %(value)s set on product "
 "%(product)s."
-msgstr ""
+msgstr "Väärtuse %(value)s toodet ei saa muuta tootel %(product)s."
 
 #. module: product
 #. odoo-python
@@ -3733,7 +3767,7 @@ msgstr ""
 msgid ""
 "You cannot change the value of the value %(value)s set on product "
 "%(product)s."
-msgstr ""
+msgstr "Toote %(product)s väärtust%(value)s ei saa muuta."
 
 #. module: product
 #. odoo-python
@@ -3830,6 +3864,8 @@ msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s"
 " to the product %(product_dest)s."
 msgstr ""
+"Atribuuti%(attribute)s ei saa liigutada tootelt%(product_src)s "
+"tootele%(product_dest)s."
 
 #. module: product
 #. odoo-python

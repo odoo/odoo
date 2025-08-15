@@ -221,6 +221,8 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 $(el).empty();
             }
         }
+        // The jquery instance inside the iframe needs to be aware of the wysiwyg.
+        this.websiteService.contentWindow.$('#wrapwrap').data('wysiwyg', this);
         await super.startEdition();
 
         // Overriding the `filterMutationRecords` function so it can be used to
@@ -306,8 +308,6 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         if (this.props.beforeEditorActive) {
             await this.props.beforeEditorActive(this.$editable);
         }
-        // The jquery instance inside the iframe needs to be aware of the wysiwyg.
-        this.websiteService.contentWindow.$('#wrapwrap').data('wysiwyg', this);
         // grep: RESTART_WIDGETS_EDIT_MODE
         await new Promise((resolve, reject) => this._websiteRootEvent('widgets_start_request', {
             editableMode: true,
@@ -327,6 +327,12 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         // observer) as the widgets might trigger DOM mutations.
         this._setObserver();
         this.odooEditor.observerActive();
+    }
+    _getBannerCommands() {
+        return [];
+    }
+    _getBannerCategory() {
+        return [];
     }
     /**
      * Stop the widgets and save the content.
@@ -355,6 +361,11 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         if (this.props.editableElements) {
             return this.props.editableElements();
         }
+        for (const coverPartEl of $wrapwrap[0].querySelectorAll(".o_record_cover_component")) {
+            // Exclude cover properties from the o_dirty system, they are
+            // handled by _saveCoverProperties.
+            coverPartEl.dataset.oeReadonly = 1;
+        }
         return $wrapwrap.find('[data-oe-model]')
             .not('.o_not_editable')
             .filter(function () {
@@ -365,7 +376,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             .not('[data-oe-readonly]')
             .not('img[data-oe-field="arch"], br[data-oe-field="arch"], input[data-oe-field="arch"]')
             .not('.oe_snippet_editor')
-            .not('hr, br, input, textarea')
+            .not('hr, br, input, textarea, owl-component')
             .not('[data-oe-sanitize-prevent-edition]')
             .add('.o_editable');
     }
@@ -535,7 +546,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 // Mark any savable element dirty if any tracked mutation occurs
                 // inside of it.
                 $savable.not('.o_dirty').each(function () {
-                    if (!this.hasAttribute('data-oe-readonly')) {
+                    if (this.tagName !== 'OWL-COMPONENT' && !this.hasAttribute('data-oe-readonly')) {
                         this.classList.add('o_dirty');
                     }
                 });
@@ -602,7 +613,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
     _getContentEditableAreas() {
         const $savableZones = $(this.websiteService.pageDocument).find(this.savableSelector);
         const $editableSavableZones = $savableZones
-            .not('input, [data-oe-readonly], ' +
+            .not('input, [data-oe-readonly], owl-component, ' +
                  '[data-oe-type="monetary"], [data-oe-many2one-id], [data-oe-field="arch"]:empty')
             .filter((_, el) => {
                 // The whole record cover is considered editable by the editor,
@@ -784,6 +795,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 priority: 100,
                 description: _t('Insert an alert snippet'),
                 fontawesome: 'fa-info',
+                keywords: ["banner", "info", "success", "warning", "danger"],
                 isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_alert"]');
@@ -984,7 +996,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         this.__savedCovers[resModel].push(resID);
 
         const imageEl = el.querySelector('.o_record_cover_image');
-        let cssBgImage = imageEl.style.backgroundImage;
+        let cssBgImage = getComputedStyle(imageEl)["backgroundImage"];
         if (imageEl.classList.contains("o_b64_image_to_save")) {
             imageEl.classList.remove("o_b64_image_to_save");
             const groups = cssBgImage.match(/url\("data:(?<mimetype>.*);base64,(?<imageData>.*)"\)/)?.groups;

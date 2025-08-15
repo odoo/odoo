@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes_gs1_nomenclature
-# 
+#
 # Translators:
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2023
 # Umur Akın <umura@projetgrup.com>, 2023
@@ -13,20 +13,29 @@
 # Kaan Özdemir, 2023
 # Murat Kaplan <muratk@projetgrup.com>, 2023
 # Levent Karakaş <levent@mektup.at>, 2023
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-08-07 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Levent Karakaş <levent@mektup.at>, 2023\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
+#, python-format
+msgid ""
+"A GS1 barcode nomenclature pattern was matched. However, the barcode failed "
+"to be converted to a valid date: '%(error_message)'"
+msgstr ""
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
@@ -191,9 +200,9 @@ msgid ""
 "UoM;        * Numeric Identifier: fixed length barcode following a specific "
 "encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
-"GS1 içerik türü, kuralın barkodu ne tür verileri işleyeceğini tanımlar:"
-"       * Tarih: barkod bir Odoo tarih saatine dönüştürülür;       * Ölçü: "
-"barkodun değeri belirli bir ölçü birimiyle ilgilidir;       * Sayısal "
+"GS1 içerik türü, kuralın barkodu ne tür verileri işleyeceğini "
+"tanımlar:       * Tarih: barkod bir Odoo tarih saatine dönüştürülür;       * "
+"Ölçü: barkodun değeri belirli bir ölçü birimiyle ilgilidir;       * Sayısal "
 "Tanımlayıcı: belirli bir kodlamayı izleyen sabit uzunluklu barkod;       * "
 "Alfa-Sayısal Ad: değişken uzunluklu barkod."
 
@@ -223,12 +232,16 @@ msgstr ""
 #, python-format
 msgid ""
 "There is something wrong with the barcode rule \"%s\" pattern.\n"
-"If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
-"Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
+"If this rule uses decimal, check it can't get sometime else than a digit as "
+"last char for the Application Identifier.\n"
+"Check also the possible matched values can only be digits, otherwise the "
+"value can't be casted as a measure."
 msgstr ""
 "Barkod kuralı \"%s\" deseninde bir sorun var.\n"
-"Bu kural ondalık sayı kullanıyorsa, Uygulama Tanımlayıcısı için son karakter olarak bir rakamdan başka bir zaman alamadığını kontrol edin.\n"
-"Ayrıca olası eşleşen değerlerin yalnızca rakam olabileceğini kontrol edin, aksi takdirde değer bir ölçü olarak kullanılamaz."
+"Bu kural ondalık sayı kullanıyorsa, Uygulama Tanımlayıcısı için son karakter "
+"olarak bir rakamdan başka bir zaman alamadığını kontrol edin.\n"
+"Ayrıca olası eşleşen değerlerin yalnızca rakam olabileceğini kontrol edin, "
+"aksi takdirde değer bir ölçü olarak kullanılamaz."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature

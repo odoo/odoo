@@ -60,7 +60,7 @@
             <field name="inherit_id" ref="account.view_account_invoice_filter" />
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='journal_id']" position="after">
-                    <field name="l10n_ke_cu_invoice_number" string="Kenya CU Invoice Number" filter_domain="[('l10n_ke_cu_invoice_number', 'ilike', self')]" />
+                    <field name="l10n_ke_cu_invoice_number" string="Kenya CU Invoice Number" operator="ilike" />
                 </xpath>
                 <xpath expr="//filter[@name='cancel']" position="after">
                     <separator/>

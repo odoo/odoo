@@ -279,13 +279,39 @@
         const rootNode = el.getRootNode();
         return rootNode instanceof ShadowRoot && el.ownerDocument.contains(rootNode.host);
     }
+    /**
+     * Determine whether the given element is contained in a specific root documnet:
+     * either directly or with a shadow root in between or in an iframe.
+     */
+    function isAttachedToDocument(element, documentElement) {
+        let current = element;
+        const shadowRoot = documentElement.defaultView.ShadowRoot;
+        while (current) {
+            if (current === documentElement) {
+                return true;
+            }
+            if (current.parentNode) {
+                current = current.parentNode;
+            }
+            else if (current instanceof shadowRoot && current.host) {
+                current = current.host;
+            }
+            else {
+                return false;
+            }
+        }
+        return false;
+    }
     function validateTarget(target) {
         // Get the document and HTMLElement corresponding to the target to allow mounting in iframes
         const document = target && target.ownerDocument;
         if (document) {
+            if (!document.defaultView) {
+                throw new OwlError("Cannot mount a component: the target document is not attached to a window (defaultView is missing)");
+            }
             const HTMLElement = document.defaultView.HTMLElement;
             if (target instanceof HTMLElement || target instanceof ShadowRoot) {
-                if (!document.body.contains(target instanceof HTMLElement ? target : target.host)) {
+                if (!isAttachedToDocument(target, document)) {
                     throw new OwlError("Cannot mount a component on a detached dom node");
                 }
                 return;
@@ -322,12 +348,40 @@
      */
     class Markup extends String {
     }
-    /*
-     * Marks a value as safe, that is, a value that can be injected as HTML directly.
-     * It should be used to wrap the value passed to a t-out directive to allow a raw rendering.
-     */
-    function markup(value) {
-        return new Markup(value);
+    function htmlEscape(str) {
+        if (str instanceof Markup) {
+            return str;
+        }
+        if (str === undefined) {
+            return markup("");
+        }
+        if (typeof str === "number") {
+            return markup(String(str));
+        }
+        [
+            ["&", "&amp;"],
+            ["<", "&lt;"],
+            [">", "&gt;"],
+            ["'", "&#x27;"],
+            ['"', "&quot;"],
+            ["`", "&#x60;"],
+        ].forEach((pairs) => {
+            str = String(str).replace(new RegExp(pairs[0], "g"), pairs[1]);
+        });
+        return markup(str);
+    }
+    function markup(valueOrStrings, ...placeholders) {
+        if (!Array.isArray(valueOrStrings)) {
+            return new Markup(valueOrStrings);
+        }
+        const strings = valueOrStrings;
+        let acc = "";
+        let i = 0;
+        for (; i < placeholders.length; ++i) {
+            acc += strings[i] + htmlEscape(placeholders[i]);
+        }
+        acc += strings[i];
+        return new Markup(acc);
     }
 
     function createEventHandler(rawEvent) {
@@ -1628,6 +1682,13 @@
                 fibersInError.delete(current);
                 fibersInError.delete(root);
                 current.appliedToDom = false;
+                if (current instanceof RootFiber) {
+                    // it is possible that this fiber is a fiber that crashed while being
+                    // mounted, so the mounted list is possibly corrupted. We restore it to
+                    // its normal initial state (which is empty list or a list with a mount
+                    // fiber.
+                    current.mounted = current instanceof MountFiber ? [current] : [];
+                }
             }
             return current;
         }
@@ -1744,6 +1805,7 @@
             const node = this.node;
             this.locked = true;
             let current = undefined;
+            let mountedFibers = this.mounted;
             try {
                 // Step 1: calling all willPatch lifecycle hooks
                 for (current of this.willPatch) {
@@ -1763,7 +1825,6 @@
                 node._patch();
                 this.locked = false;
                 // Step 4: calling all mounted lifecycle hooks
-                let mountedFibers = this.mounted;
                 while ((current = mountedFibers.pop())) {
                     current = current;
                     if (current.appliedToDom) {
@@ -1784,6 +1845,15 @@
                 }
             }
             catch (e) {
+                // if mountedFibers is not empty, this means that a crash occured while
+                // calling the mounted hooks of some component. So, there may still be
+                // some component that have been mounted, but for which the mounted hooks
+                // have not been called. Here, we remove the willUnmount hooks for these
+                // specific component to prevent a worse situation (willUnmount being
+                // called even though mounted has not been called)
+                for (let fiber of mountedFibers) {
+                    fiber.node.willUnmount = [];
+                }
                 this.locked = false;
                 node.app.handleError({ fiber: current || this, error: e });
             }
@@ -2273,6 +2343,12 @@
     }
 
     let currentNode = null;
+    function saveCurrent() {
+        let n = currentNode;
+        return () => {
+            currentNode = n;
+        };
+    }
     function getCurrent() {
         if (!currentNode) {
             throw new OwlError("No active component (a hook function should only be called in 'setup')");
@@ -2601,42 +2677,47 @@
     }
 
     const TIMEOUT = Symbol("timeout");
+    const HOOK_TIMEOUT = {
+        onWillStart: 3000,
+        onWillUpdateProps: 3000,
+    };
     function wrapError(fn, hookName) {
-        const error = new OwlError(`The following error occurred in ${hookName}: `);
-        const timeoutError = new OwlError(`${hookName}'s promise hasn't resolved after 3 seconds`);
+        const error = new OwlError();
+        const timeoutError = new OwlError();
         const node = getCurrent();
         return (...args) => {
             const onError = (cause) => {
                 error.cause = cause;
-                if (cause instanceof Error) {
-                    error.message += `"${cause.message}"`;
-                }
-                else {
-                    error.message = `Something that is not an Error was thrown in ${hookName} (see this Error's "cause" property)`;
-                }
+                error.message =
+                    cause instanceof Error
+                        ? `The following error occurred in ${hookName}: "${cause.message}"`
+                        : `Something that is not an Error was thrown in ${hookName} (see this Error's "cause" property)`;
                 throw error;
             };
+            let result;
             try {
-                const result = fn(...args);
-                if (result instanceof Promise) {
-                    if (hookName === "onWillStart" || hookName === "onWillUpdateProps") {
-                        const fiber = node.fiber;
-                        Promise.race([
-                            result.catch(() => { }),
-                            new Promise((resolve) => setTimeout(() => resolve(TIMEOUT), 3000)),
-                        ]).then((res) => {
-                            if (res === TIMEOUT && node.fiber === fiber && node.status <= 2) {
-                                console.log(timeoutError);
-                            }
-                        });
-                    }
-                    return result.catch(onError);
-                }
-                return result;
+                result = fn(...args);
             }
             catch (cause) {
                 onError(cause);
             }
+            if (!(result instanceof Promise)) {
+                return result;
+            }
+            const timeout = HOOK_TIMEOUT[hookName];
+            if (timeout) {
+                const fiber = node.fiber;
+                Promise.race([
+                    result.catch(() => { }),
+                    new Promise((resolve) => setTimeout(() => resolve(TIMEOUT), timeout)),
+                ]).then((res) => {
+                    if (res === TIMEOUT && node.fiber === fiber && node.status <= 2) {
+                        timeoutError.message = `${hookName}'s promise hasn't resolved after ${timeout / 1000} seconds`;
+                        console.log(timeoutError);
+                    }
+                });
+            }
+            return result.catch(onError);
         };
     }
     // -----------------------------------------------------------------------------
@@ -3219,6 +3300,9 @@
                 }
             }
             this.getRawTemplate = config.getTemplate;
+            this.customDirectives = config.customDirectives || {};
+            this.runtimeUtils = { ...helpers, __globals__: config.globalValues || {} };
+            this.hasGlobalValues = Boolean(config.globalValues && Object.keys(config.globalValues).length);
         }
         static registerTemplate(name, fn) {
             globalTemplates[name] = fn;
@@ -3275,7 +3359,7 @@
                 this.templates[name] = function (context, parent) {
                     return templates[name].call(this, context, parent);
                 };
-                const template = templateFn(this, bdom, helpers);
+                const template = templateFn(this, bdom, this.runtimeUtils);
                 this.templates[name] = template;
             }
             return this.templates[name];
@@ -3326,7 +3410,7 @@
     //------------------------------------------------------------------------------
     // Misc types, constants and helpers
     //------------------------------------------------------------------------------
-    const RESERVED_WORDS = "true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,eval,void,Math,RegExp,Array,Object,Date".split(",");
+    const RESERVED_WORDS = "true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,eval,void,Math,RegExp,Array,Object,Date,__globals__".split(",");
     const WORD_REPLACEMENT = Object.assign(Object.create(null), {
         and: "&&",
         or: "||",
@@ -3711,6 +3795,7 @@
             index: 0,
             forceNewBlock: true,
             translate: parentCtx.translate,
+            translationCtx: parentCtx.translationCtx,
             tKeyExpr: null,
             nameSpace: parentCtx.nameSpace,
             tModelSelectedExpr: parentCtx.tModelSelectedExpr,
@@ -3768,7 +3853,16 @@
             return key;
         }
     }
-    const TRANSLATABLE_ATTRS = ["label", "title", "placeholder", "alt"];
+    const TRANSLATABLE_ATTRS = [
+        "alt",
+        "aria-label",
+        "aria-placeholder",
+        "aria-roledescription",
+        "aria-valuetext",
+        "label",
+        "placeholder",
+        "title",
+    ];
     const translationRE = /^(\s*)([\s\S]+?)(\s*)$/;
     class CodeGenerator {
         constructor(ast, options) {
@@ -3798,6 +3892,9 @@
             this.dev = options.dev || false;
             this.ast = ast;
             this.templateName = options.name;
+            if (options.hasGlobalValues) {
+                this.helpers.add("__globals__");
+            }
         }
         generateCode() {
             const ast = this.ast;
@@ -3810,6 +3907,7 @@
                 forceNewBlock: false,
                 isLast: true,
                 translate: true,
+                translationCtx: "",
                 tKeyExpr: null,
             });
             // define blocks and utility functions
@@ -3947,9 +4045,9 @@
             })
                 .join("");
         }
-        translate(str) {
+        translate(str, translationCtx) {
             const match = translationRE.exec(str);
-            return match[1] + this.translateFn(match[2]) + match[3];
+            return match[1] + this.translateFn(match[2], translationCtx) + match[3];
         }
         /**
          * @returns the newly created block name, if any
@@ -3990,7 +4088,9 @@
                     return this.compileTSlot(ast, ctx);
                 case 16 /* TTranslation */:
                     return this.compileTTranslation(ast, ctx);
-                case 17 /* TPortal */:
+                case 17 /* TTranslationContext */:
+                    return this.compileTTranslationContext(ast, ctx);
+                case 18 /* TPortal */:
                     return this.compileTPortal(ast, ctx);
             }
         }
@@ -4028,7 +4128,7 @@
             let { block, forceNewBlock } = ctx;
             let value = ast.value;
             if (value && ctx.translate !== false) {
-                value = this.translate(value);
+                value = this.translate(value, ctx.translationCtx);
             }
             if (!ctx.inPreTag) {
                 value = value.replace(whitespaceRE, " ");
@@ -4063,6 +4163,7 @@
             return `[${modifiersCode}${this.captureExpression(handler)}, ctx]`;
         }
         compileTDomNode(ast, ctx) {
+            var _a;
             let { block, forceNewBlock } = ctx;
             const isNewBlock = !block || forceNewBlock || ast.dynamicTag !== null || ast.ns;
             let codeIdx = this.target.code.length;
@@ -4118,7 +4219,8 @@
                     }
                 }
                 else if (this.translatableAttributes.includes(key)) {
-                    attrs[key] = this.translateFn(ast.attrs[key]);
+                    const attrTranslationCtx = ((_a = ast.attrsTranslationCtx) === null || _a === void 0 ? void 0 : _a[key]) || ctx.translationCtx;
+                    attrs[key] = this.translateFn(ast.attrs[key], attrTranslationCtx);
                 }
                 else {
                     expr = `"${ast.attrs[key]}"`;
@@ -4562,7 +4664,7 @@
             else {
                 let value;
                 if (ast.defaultValue) {
-                    const defaultValue = toStringExpression(ctx.translate ? this.translate(ast.defaultValue) : ast.defaultValue);
+                    const defaultValue = toStringExpression(ctx.translate ? this.translate(ast.defaultValue, ctx.translationCtx) : ast.defaultValue);
                     if (ast.value) {
                         value = `withDefault(${expr}, ${defaultValue})`;
                     }
@@ -4596,9 +4698,10 @@
          * "some-prop"       "state"          "'some-prop': ctx['state']"
          * "onClick.bind"    "onClick"        "onClick: bind(ctx, ctx['onClick'])"
          */
-        formatProp(name, value) {
+        formatProp(name, value, attrsTranslationCtx, translationCtx) {
             if (name.endsWith(".translate")) {
-                value = toStringExpression(this.translateFn(value));
+                const attrTranslationCtx = (attrsTranslationCtx === null || attrsTranslationCtx === void 0 ? void 0 : attrsTranslationCtx[name]) || translationCtx;
+                value = toStringExpression(this.translateFn(value, attrTranslationCtx));
             }
             else {
                 value = this.captureExpression(value);
@@ -4614,14 +4717,14 @@
                     case "translate":
                         break;
                     default:
-                        throw new OwlError("Invalid prop suffix");
+                        throw new OwlError(`Invalid prop suffix: ${suffix}`);
                 }
             }
             name = /^[a-z_]+$/i.test(name) ? name : `'${name}'`;
             return `${name}: ${value || undefined}`;
         }
-        formatPropObject(obj) {
-            return Object.entries(obj).map(([k, v]) => this.formatProp(k, v));
+        formatPropObject(obj, attrsTranslationCtx, translationCtx) {
+            return Object.entries(obj).map(([k, v]) => this.formatProp(k, v, attrsTranslationCtx, translationCtx));
         }
         getPropString(props, dynProps) {
             let propString = `{${props.join(",")}}`;
@@ -4634,7 +4737,9 @@
             let { block } = ctx;
             // props
             const hasSlotsProp = "slots" in (ast.props || {});
-            const props = ast.props ? this.formatPropObject(ast.props) : [];
+            const props = ast.props
+                ? this.formatPropObject(ast.props, ast.propsTranslationCtx, ctx.translationCtx)
+                : [];
             // slots
             let slotDef = "";
             if (ast.slots) {
@@ -4657,7 +4762,7 @@
                         params.push(`__scope: "${scope}"`);
                     }
                     if (ast.slots[slotName].attrs) {
-                        params.push(...this.formatPropObject(ast.slots[slotName].attrs));
+                        params.push(...this.formatPropObject(ast.slots[slotName].attrs, ast.slots[slotName].attrsTranslationCtx, ctx.translationCtx));
                     }
                     const slotInfo = `{${params.join(", ")}}`;
                     slotStr.push(`'${slotName}': ${slotInfo}`);
@@ -4762,15 +4867,16 @@
                 isMultiple = isMultiple || this.slotNames.has(ast.name);
                 this.slotNames.add(ast.name);
             }
-            const dynProps = ast.attrs ? ast.attrs["t-props"] : null;
-            if (ast.attrs) {
-                delete ast.attrs["t-props"];
-            }
+            const attrs = { ...ast.attrs };
+            const dynProps = attrs["t-props"];
+            delete attrs["t-props"];
             let key = this.target.loopLevel ? `key${this.target.loopLevel}` : "key";
             if (isMultiple) {
                 key = this.generateComponentKey(key);
             }
-            const props = ast.attrs ? this.formatPropObject(ast.attrs) : [];
+            const props = ast.attrs
+                ? this.formatPropObject(attrs, ast.attrsTranslationCtx, ctx.translationCtx)
+                : [];
             const scope = this.getPropString(props, dynProps);
             if (ast.defaultContent) {
                 const name = this.compileInNewTarget("defaultContent", ast.defaultContent, ctx);
@@ -4800,6 +4906,12 @@
         compileTTranslation(ast, ctx) {
             if (ast.content) {
                 return this.compileAST(ast.content, Object.assign({}, ctx, { translate: false }));
+            }
+            return null;
+        }
+        compileTTranslationContext(ast, ctx) {
+            if (ast.content) {
+                return this.compileAST(ast.content, Object.assign({}, ctx, { translationCtx: ast.translationCtx }));
             }
             return null;
         }
@@ -4836,38 +4948,43 @@
     // Parser
     // -----------------------------------------------------------------------------
     const cache = new WeakMap();
-    function parse(xml) {
+    function parse(xml, customDir) {
+        const ctx = {
+            inPreTag: false,
+            customDirectives: customDir,
+        };
         if (typeof xml === "string") {
             const elem = parseXML(`<t>${xml}</t>`).firstChild;
-            return _parse(elem);
+            return _parse(elem, ctx);
         }
         let ast = cache.get(xml);
         if (!ast) {
             // we clone here the xml to prevent modifying it in place
-            ast = _parse(xml.cloneNode(true));
+            ast = _parse(xml.cloneNode(true), ctx);
             cache.set(xml, ast);
         }
         return ast;
     }
-    function _parse(xml) {
+    function _parse(xml, ctx) {
         normalizeXML(xml);
-        const ctx = { inPreTag: false };
         return parseNode(xml, ctx) || { type: 0 /* Text */, value: "" };
     }
     function parseNode(node, ctx) {
         if (!(node instanceof Element)) {
             return parseTextCommentNode(node, ctx);
         }
-        return (parseTDebugLog(node, ctx) ||
+        return (parseTCustom(node, ctx) ||
+            parseTDebugLog(node, ctx) ||
             parseTForEach(node, ctx) ||
             parseTIf(node, ctx) ||
             parseTPortal(node, ctx) ||
             parseTCall(node, ctx) ||
             parseTCallBlock(node) ||
+            parseTTranslation(node, ctx) ||
+            parseTTranslationContext(node, ctx) ||
             parseTEscNode(node, ctx) ||
             parseTOutNode(node, ctx) ||
             parseTKey(node, ctx) ||
-            parseTTranslation(node, ctx) ||
             parseTSlot(node, ctx) ||
             parseComponent(node, ctx) ||
             parseDOMNode(node, ctx) ||
@@ -4897,6 +5014,35 @@
         }
         else if (node.nodeType === Node.COMMENT_NODE) {
             return { type: 1 /* Comment */, value: node.textContent || "" };
+        }
+        return null;
+    }
+    function parseTCustom(node, ctx) {
+        if (!ctx.customDirectives) {
+            return null;
+        }
+        const nodeAttrsNames = node.getAttributeNames();
+        for (let attr of nodeAttrsNames) {
+            if (attr === "t-custom" || attr === "t-custom-") {
+                throw new OwlError("Missing custom directive name with t-custom directive");
+            }
+            if (attr.startsWith("t-custom-")) {
+                const directiveName = attr.split(".")[0].slice(9);
+                const customDirective = ctx.customDirectives[directiveName];
+                if (!customDirective) {
+                    throw new OwlError(`Custom directive "${directiveName}" is not defined`);
+                }
+                const value = node.getAttribute(attr);
+                const modifiers = attr.split(".").slice(1);
+                node.removeAttribute(attr);
+                try {
+                    customDirective(node, value, modifiers);
+                }
+                catch (error) {
+                    throw new OwlError(`Custom directive "${directiveName}" throw the following error: ${error}`);
+                }
+                return parseNode(node, ctx);
+            }
         }
         return null;
     }
@@ -4947,6 +5093,7 @@
         node.removeAttribute("t-ref");
         const nodeAttrsNames = node.getAttributeNames();
         let attrs = null;
+        let attrsTranslationCtx = null;
         let on = null;
         let model = null;
         for (let attr of nodeAttrsNames) {
@@ -5007,6 +5154,11 @@
             else if (attr === "xmlns") {
                 ns = value;
             }
+            else if (attr.startsWith("t-translation-context-")) {
+                const attrName = attr.slice(22);
+                attrsTranslationCtx = attrsTranslationCtx || {};
+                attrsTranslationCtx[attrName] = value;
+            }
             else if (attr !== "t-name") {
                 if (attr.startsWith("t-") && !attr.startsWith("t-att")) {
                     throw new OwlError(`Unknown QWeb directive: '${attr}'`);
@@ -5028,6 +5180,7 @@
             tag: tagName,
             dynamicTag,
             attrs,
+            attrsTranslationCtx,
             on,
             ref,
             content: children,
@@ -5168,7 +5321,15 @@
             if (ast && ast.type === 11 /* TComponent */) {
                 return {
                     ...ast,
-                    slots: { default: { content: tcall, scope: null, on: null, attrs: null } },
+                    slots: {
+                        default: {
+                            content: tcall,
+                            scope: null,
+                            on: null,
+                            attrs: null,
+                            attrsTranslationCtx: null,
+                        },
+                    },
                 };
             }
         }
@@ -5283,9 +5444,15 @@
         node.removeAttribute("t-slot-scope");
         let on = null;
         let props = null;
+        let propsTranslationCtx = null;
         for (let name of node.getAttributeNames()) {
             const value = node.getAttribute(name);
-            if (name.startsWith("t-")) {
+            if (name.startsWith("t-translation-context-")) {
+                const attrName = name.slice(22);
+                propsTranslationCtx = propsTranslationCtx || {};
+                propsTranslationCtx[attrName] = value;
+            }
+            else if (name.startsWith("t-")) {
                 if (name.startsWith("t-on-")) {
                     on = on || {};
                     on[name.slice(5)] = value;
@@ -5329,12 +5496,18 @@
                 const slotAst = parseNode(slotNode, ctx);
                 let on = null;
                 let attrs = null;
+                let attrsTranslationCtx = null;
                 let scope = null;
                 for (let attributeName of slotNode.getAttributeNames()) {
                     const value = slotNode.getAttribute(attributeName);
                     if (attributeName === "t-slot-scope") {
                         scope = value;
                         continue;
+                    }
+                    else if (attributeName.startsWith("t-translation-context-")) {
+                        const attrName = attributeName.slice(22);
+                        attrsTranslationCtx = attrsTranslationCtx || {};
+                        attrsTranslationCtx[attrName] = value;
                     }
                     else if (attributeName.startsWith("t-on-")) {
                         on = on || {};
@@ -5346,17 +5519,32 @@
                     }
                 }
                 slots = slots || {};
-                slots[name] = { content: slotAst, on, attrs, scope };
+                slots[name] = { content: slotAst, on, attrs, attrsTranslationCtx, scope };
             }
             // default slot
             const defaultContent = parseChildNodes(clone, ctx);
             slots = slots || {};
             // t-set-slot="default" has priority over content
             if (defaultContent && !slots.default) {
-                slots.default = { content: defaultContent, on, attrs: null, scope: defaultSlotScope };
+                slots.default = {
+                    content: defaultContent,
+                    on,
+                    attrs: null,
+                    attrsTranslationCtx: null,
+                    scope: defaultSlotScope,
+                };
             }
         }
-        return { type: 11 /* TComponent */, name, isDynamic, dynamicProps, props, slots, on };
+        return {
+            type: 11 /* TComponent */,
+            name,
+            isDynamic,
+            dynamicProps,
+            props,
+            propsTranslationCtx,
+            slots,
+            on,
+        };
     }
     // -----------------------------------------------------------------------------
     // Slots
@@ -5368,12 +5556,18 @@
         const name = node.getAttribute("t-slot");
         node.removeAttribute("t-slot");
         let attrs = null;
+        let attrsTranslationCtx = null;
         let on = null;
         for (let attributeName of node.getAttributeNames()) {
             const value = node.getAttribute(attributeName);
             if (attributeName.startsWith("t-on-")) {
                 on = on || {};
                 on[attributeName.slice(5)] = value;
+            }
+            else if (attributeName.startsWith("t-translation-context-")) {
+                const attrName = attributeName.slice(22);
+                attrsTranslationCtx = attrsTranslationCtx || {};
+                attrsTranslationCtx[attrName] = value;
             }
             else {
                 attrs = attrs || {};
@@ -5384,10 +5578,14 @@
             type: 14 /* TSlot */,
             name,
             attrs,
+            attrsTranslationCtx,
             on,
             defaultContent: parseChildNodes(node, ctx),
         };
     }
+    // -----------------------------------------------------------------------------
+    // Translation
+    // -----------------------------------------------------------------------------
     function parseTTranslation(node, ctx) {
         if (node.getAttribute("t-translation") !== "off") {
             return null;
@@ -5396,6 +5594,21 @@
         return {
             type: 16 /* TTranslation */,
             content: parseNode(node, ctx),
+        };
+    }
+    // -----------------------------------------------------------------------------
+    // Translation Context
+    // -----------------------------------------------------------------------------
+    function parseTTranslationContext(node, ctx) {
+        const translationCtx = node.getAttribute("t-translation-context");
+        if (!translationCtx) {
+            return null;
+        }
+        node.removeAttribute("t-translation-context");
+        return {
+            type: 17 /* TTranslationContext */,
+            content: parseNode(node, ctx),
+            translationCtx,
         };
     }
     // -----------------------------------------------------------------------------
@@ -5415,7 +5628,7 @@
             };
         }
         return {
-            type: 17 /* TPortal */,
+            type: 18 /* TPortal */,
             target,
             content,
         };
@@ -5531,9 +5744,11 @@
         normalizeTEscTOut(el);
     }
 
-    function compile(template, options = {}) {
+    function compile(template, options = {
+        hasGlobalValues: false,
+    }) {
         // parsing
-        const ast = parse(template);
+        const ast = parse(template, options.customDirectives);
         // some work
         const hasSafeContext = template instanceof Node
             ? !(template instanceof Element) || template.querySelector("[t-set], [t-call]") === null
@@ -5555,7 +5770,7 @@
     }
 
     // do not modify manually. This file is generated by the release script.
-    const version = "2.3.1";
+    const version = "2.8.0";
 
     // -----------------------------------------------------------------------------
     //  Scheduler
@@ -5566,6 +5781,7 @@
             this.frame = 0;
             this.delayedRenders = [];
             this.cancelledNodes = new Set();
+            this.processing = false;
             this.requestAnimationFrame = Scheduler.requestAnimationFrame;
         }
         addFiber(fiber) {
@@ -5596,6 +5812,10 @@
             }
         }
         processTasks() {
+            if (this.processing) {
+                return;
+            }
+            this.processing = true;
             this.frame = 0;
             for (let node of this.cancelledNodes) {
                 node._destroy();
@@ -5609,6 +5829,7 @@
                     this.tasks.delete(task);
                 }
             }
+            this.processing = false;
         }
         processFiber(fiber) {
             if (fiber.root !== fiber) {
@@ -5628,7 +5849,14 @@
                 if (!hasError) {
                     fiber.complete();
                 }
-                this.tasks.delete(fiber);
+                // at this point, the fiber should have been applied to the DOM, so we can
+                // remove it from the task list. If it is not the case, it means that there
+                // was an error and an error handler triggered a new rendering that recycled
+                // the fiber, so in that case, we actually want to keep the fiber around,
+                // otherwise it will just be ignored.
+                if (fiber.appliedToDom) {
+                    this.tasks.delete(fiber);
+                }
             }
         }
     }
@@ -5637,19 +5865,13 @@
     Scheduler.requestAnimationFrame = window.requestAnimationFrame.bind(window);
 
     let hasBeenLogged = false;
-    const DEV_MSG = () => {
-        const hash = window.owl ? window.owl.__info__.hash : "master";
-        return `Owl is running in 'dev' mode.
-
-This is not suitable for production use.
-See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration for more information.`;
-    };
     const apps = new Set();
     window.__OWL_DEVTOOLS__ || (window.__OWL_DEVTOOLS__ = { apps, Fiber, RootFiber, toRaw, reactive });
     class App extends TemplateSet {
         constructor(Root, config = {}) {
             super(config);
             this.scheduler = new Scheduler();
+            this.subRoots = new Set();
             this.root = null;
             this.name = config.name || "";
             this.Root = Root;
@@ -5659,7 +5881,7 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
             }
             this.warnIfNoStaticProps = config.warnIfNoStaticProps || false;
             if (this.dev && !config.test && !hasBeenLogged) {
-                console.info(DEV_MSG());
+                console.info(`Owl is running in 'dev' mode.`);
                 hasBeenLogged = true;
             }
             const env = config.env || {};
@@ -5668,14 +5890,44 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
             this.props = config.props || {};
         }
         mount(target, options) {
-            App.validateTarget(target);
-            if (this.dev) {
-                validateProps(this.Root, this.props, { __owl__: { app: this } });
+            const root = this.createRoot(this.Root, { props: this.props });
+            this.root = root.node;
+            this.subRoots.delete(root.node);
+            return root.mount(target, options);
+        }
+        createRoot(Root, config = {}) {
+            const props = config.props || {};
+            // hack to make sure the sub root get the sub env if necessary. for owl 3,
+            // would be nice to rethink the initialization process to make sure that
+            // we can create a ComponentNode and give it explicitely the env, instead
+            // of looking it up in the app
+            const env = this.env;
+            if (config.env) {
+                this.env = config.env;
             }
-            const node = this.makeNode(this.Root, this.props);
-            const prom = this.mountNode(node, target, options);
-            this.root = node;
-            return prom;
+            const restore = saveCurrent();
+            const node = this.makeNode(Root, props);
+            restore();
+            if (config.env) {
+                this.env = env;
+            }
+            this.subRoots.add(node);
+            return {
+                node,
+                mount: (target, options) => {
+                    App.validateTarget(target);
+                    if (this.dev) {
+                        validateProps(Root, props, { __owl__: { app: this } });
+                    }
+                    const prom = this.mountNode(node, target, options);
+                    return prom;
+                },
+                destroy: () => {
+                    this.subRoots.delete(node);
+                    node.destroy();
+                    this.scheduler.processTasks();
+                },
+            };
         }
         makeNode(Component, props) {
             return new ComponentNode(Component, props, this, null, null);
@@ -5707,6 +5959,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
         }
         destroy() {
             if (this.root) {
+                for (let subroot of this.subRoots) {
+                    subroot.destroy();
+                }
                 this.root.destroy();
                 this.scheduler.processTasks();
             }
@@ -5978,6 +6233,8 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
             dev: this.dev,
             translateFn: this.translateFn,
             translatableAttributes: this.translatableAttributes,
+            customDirectives: this.customDirectives,
+            hasGlobalValues: this.hasGlobalValues,
         });
     };
 
@@ -5988,6 +6245,7 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     exports.__info__ = __info__;
     exports.batched = batched;
     exports.blockDom = blockDom;
+    exports.htmlEscape = htmlEscape;
     exports.loadFile = loadFile;
     exports.markRaw = markRaw;
     exports.markup = markup;
@@ -6021,8 +6279,8 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.date = '2024-08-14T14:25:23.038Z';
-    __info__.hash = '9c2d957';
+    __info__.date = '2025-06-30T12:46:06.424Z';
+    __info__.hash = 'b620502';
     __info__.url = 'https://github.com/odoo/owl';
 
 

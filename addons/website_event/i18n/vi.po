@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Thi Huong Nguyen, 2024
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-05-22 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -331,7 +331,7 @@ msgstr "Câu trả lời"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__once_per_order
 msgid "Ask once per order"
-msgstr "Hỏi một lần cho mỗi lần đặt chỗ"
+msgstr "Hỏi một lần cho mỗi đơn hàng"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
@@ -462,7 +462,7 @@ msgstr "Xác nhận Đăng ký"
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_7_question_0_answer_0
 msgid "Consumers"
-msgstr "Người tiêu thụ"
+msgstr "Người tiêu dùng"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_location
@@ -567,6 +567,13 @@ msgid "End -"
 msgstr "Kết thúc -"
 
 #. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/js/website_event.js:0
+#, python-format
+msgid "Error"
+msgstr "Lỗi"
+
+#. module: website_event
 #: model:ir.model,name:website_event.model_event_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__event_id
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__event_id
@@ -587,7 +594,7 @@ msgstr "Ngày sự kiện"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.template_location
 msgid "Event Location"
-msgstr "Địa điểm Sự kiện"
+msgstr "Vị trí Sự kiện"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__menu_id
@@ -1076,7 +1083,7 @@ msgstr "Ảnh"
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_search
 #: model_terms:ir.ui.view,arch_db:website_event.event_pages_kanban_view
 msgid "Published"
-msgstr "Đã công bố"
+msgstr "Đã đăng"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question_answer__question_id
@@ -1362,9 +1369,16 @@ msgid "Suggested answer"
 msgstr "Câu trả lời được gợi ý"
 
 #. module: website_event
+#. odoo-python
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "Google reCaptcha phát hiện hoạt động đáng ngờ. "
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Template badge"
-msgstr "Huy hiệu mẫu"
+msgstr "Thẻ mẫu"
 
 #. module: website_event
 #: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__text_box
@@ -1469,6 +1483,13 @@ msgstr "Bộ lọc thanh trên"
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_view_form
 msgid "Type"
 msgstr "Loại"
+
+#. module: website_event
+#. odoo-python
+#: code:addons/website_event/models/website_visitor.py:0
+#, python-format
+msgid "Unsupported 'Not In' operation on visitors registrations"
+msgstr ""
 
 #. module: website_event
 #. odoo-python

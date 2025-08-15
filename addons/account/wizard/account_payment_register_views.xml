@@ -33,7 +33,7 @@
                     <field name="untrusted_bank_ids" invisible="1"/>
 
                     <div role="alert" class="alert alert-info" invisible="not hide_writeoff_section">
-                        <p><b>Early Payment Discount of <field name="payment_difference"/> has been applied.</b></p>
+                        <p class="m-0"><b>Early Payment Discount of <field name="payment_difference"/> has been applied.</b></p>
                     </div>
                     <div role="alert" class="alert alert-warning" invisible="untrusted_payments_count == 0">
                         <span class="fw-bold"><field name="untrusted_payments_count" class="oe_inline"/> out of <field name="total_payments_amount" class="oe_inline"/> payments will be skipped due to <button class="oe_link p-0 align-baseline" type="object" name="action_open_untrusted_bank_accounts">untrusted bank accounts</button>.</span>

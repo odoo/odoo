@@ -29,9 +29,13 @@ class GoogleTranslateController(Controller):
                 translation = request.env["mail.message.translation"].sudo().create(vals)
             except requests.exceptions.HTTPError as err:
                 return {"error": err.response.json()["error"]["message"]}
+        try:
+            lang_name = babel.Locale(translation.source_lang).get_display_name(request.env.user.lang)
+        except babel.UnknownLocaleError:
+            lang_name = translation.source_lang
         return {
             "body": translation.body,
-            "lang_name": babel.Locale(translation.source_lang).get_display_name(request.env.user.lang),
+            "lang_name": lang_name,
         }
 
     def _detect_source_lang(self, message):

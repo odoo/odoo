@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import BaseUsersCommon
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.sale.tests.common import SaleCommon
 
 
 @tagged('post_install', '-at_install')
-class TestAccessRights(BaseUsersCommon, SaleCommon):
+class TestAccessRights(BaseUsersCommon, SaleCommon, MailCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -90,6 +92,22 @@ class TestAccessRights(BaseUsersCommon, SaleCommon):
 
         # Salesperson can confirm the SO
         so_as_salesperson.action_confirm()
+
+        # Salesperson can't confirm the related move
+        move_as_salesperson = so_as_salesperson._create_invoices().with_user(self.sale_user2)
+        with self.assertRaises(AccessError):
+            move_as_salesperson.action_post()
+
+        move_as_salesperson.sudo().action_post()
+
+        composer = self.env['account.move.send']\
+            .with_user(self.sale_user2)\
+            .with_context(active_model='account.move', active_ids=move_as_salesperson.ids)\
+            .create({})
+
+        # Salesperson can send & print
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            composer.action_send_and_print()
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
     def test_access_portal_user(self):

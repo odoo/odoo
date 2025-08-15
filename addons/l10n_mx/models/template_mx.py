@@ -34,8 +34,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'income_currency_exchange_account_id': 'cuenta702_01',
                 'expense_currency_exchange_account_id': 'cuenta701_01',
                 'deferred_expense_account_id': 'cuenta173_01',
-                'account_journal_early_pay_discount_loss_account_id': 'cuenta9993',
-                'account_journal_early_pay_discount_gain_account_id': 'cuenta9994',
+                'account_journal_early_pay_discount_loss_account_id': 'cuenta402_01',
+                'account_journal_early_pay_discount_gain_account_id': 'cuenta503_01',
                 'tax_cash_basis_journal_id': 'cbmx',
                 'account_sale_tax_id': 'tax12',
                 'account_purchase_tax_id': 'tax14',
@@ -53,3 +53,18 @@ class AccountChartTemplate(models.AbstractModel):
                 'show_on_dashboard': True,
             }
         }
+        
+    def _get_accounts_data_values(self, company, template_data):
+        accounts_data = super()._get_accounts_data_values(company, template_data)
+        if company.account_fiscal_country_id.code == 'MX':
+            accounts_data.update({
+                'default_cash_difference_income_account_id' : {
+                    'name': _('Other Income'),
+                    'code': '403.01.01'
+                },
+                'default_cash_difference_expense_account_id': {
+                    'name': 'Cash Difference Loss',
+                    'code': '601.84.02',
+                }
+            })
+        return accounts_data

@@ -131,7 +131,8 @@ class StockLandedCost(models.Model):
                 linked_layer = line.move_id.stock_valuation_layer_ids[:1]
 
                 # Prorate the value at what's still in stock
-                cost_to_add = (remaining_qty / line.move_id.quantity) * line.additional_landed_cost
+                move_qty = line.move_id.product_uom._compute_quantity(line.move_id.quantity, line.move_id.product_id.uom_id)
+                cost_to_add = (remaining_qty / move_qty) * line.additional_landed_cost
                 if not cost.company_id.currency_id.is_zero(cost_to_add):
                     valuation_layer = self.env['stock.valuation.layer'].create({
                         'value': cost_to_add,
@@ -266,15 +267,16 @@ class StockLandedCost(models.Model):
                             value = (line.price_unit / total_line)
 
                         if rounding:
-                            value = tools.float_round(value, precision_rounding=rounding, rounding_method='UP')
-                            fnc = min if line.price_unit > 0 else max
-                            value = fnc(value, line.price_unit - value_split)
+                            value = tools.float_round(value, precision_rounding=rounding, rounding_method='HALF-UP')
                             value_split += value
 
                         if valuation.id not in towrite_dict:
                             towrite_dict[valuation.id] = value
                         else:
                             towrite_dict[valuation.id] += value
+                rounding_diff = cost.currency_id.round(line.price_unit - value_split)
+                if not cost.currency_id.is_zero(rounding_diff):
+                    towrite_dict[max(towrite_dict.keys())] += rounding_diff
         for key, value in towrite_dict.items():
             AdjustementLines.browse(key).write({'additional_landed_cost': value})
         return True
@@ -299,16 +301,15 @@ class StockLandedCost(models.Model):
     def _check_sum(self):
         """ Check if each cost line its valuation lines sum to the correct amount
         and if the overall total amount is correct also """
-        prec_digits = self.env.company.currency_id.decimal_places
         for landed_cost in self:
             total_amount = sum(landed_cost.valuation_adjustment_lines.mapped('additional_landed_cost'))
-            if not tools.float_is_zero(total_amount - landed_cost.amount_total, precision_digits=prec_digits):
+            if not landed_cost.currency_id.is_zero(total_amount - landed_cost.amount_total):
                 return False
 
             val_to_cost_lines = defaultdict(lambda: 0.0)
             for val_line in landed_cost.valuation_adjustment_lines:
                 val_to_cost_lines[val_line.cost_line_id] += val_line.additional_landed_cost
-            if any(not tools.float_is_zero(cost_line.price_unit - val_amount, precision_digits=prec_digits)
+            if any(not landed_cost.currency_id.is_zero(cost_line.price_unit - val_amount)
                    for cost_line, val_amount in val_to_cost_lines.items()):
                 return False
         return True

@@ -30,6 +30,13 @@ class TestStockEwaybill(AccountTestInvoicingCommon):
             'country_id': cls.env.ref('base.in').id,
             'zip': '431122'
         })
+        cls.partner_b.write({
+            'vat': False,
+            'l10n_in_gst_treatment': 'unregistered',
+            'state_id': cls.env.ref("base.state_in_mh").id,
+            'country_id': cls.env.ref('base.in').id,
+            'zip': '431122'
+        })
 
     def _create_stock_picking(self):
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)])
@@ -185,16 +192,126 @@ class TestStockEwaybill(AccountTestInvoicingCommon):
             'transportation_doc_no': 123456789,
             'transportation_doc_date': '2024-04-26'
         })
-        expected_distance = 118
-        response = {
-            'status_cd': '1',
-            'status_desc': 'EWAYBILL request succeeds',
-            'data': {
-                'ewayBillNo': 123456789012,
-                'ewayBillDate': '26/02/2024 12:09:43 PM',
-                'validUpto': '27/02/2024 12:09:43 PM',
-                "alert": ", Distance between these two pincodes is 118, "
+
+        # Sub-test: Extract `Distance` when multiple alerts in response
+        with self.subTest(scenario="Extract distance when multiple alerts in response"):
+            expected_distance = 118
+            response = {
+                'status_cd': '1',
+                'status_desc': 'EWAYBILL request succeeds',
+                'data': {
+                    'ewayBillNo': 123456789012,
+                    'ewayBillDate': '26/02/2024 12:09:43 PM',
+                    'validUpto': '27/02/2024 12:09:43 PM',
+                    'alert': ', Distance between these two pincodes is 118, '
+                }
             }
+            ewaybill._l10n_in_ewaybill_stock_handle_zero_distance_alert_if_present(response)
+            self.assertEqual(ewaybill.distance, expected_distance)
+
+        # Sub-test: Extract `Distance` when single alert in response
+        with self.subTest(scenario="Extract distance when single alert in response"):
+            ewaybill.distance = 0
+            expected_distance = 222
+            response = {
+                'status_cd': '1',
+                'status_desc': 'EWAYBILL request succeeds',
+                'data': {
+                    'ewayBillNo': 987654321012,
+                    'ewayBillDate': '08/04/2025 11:04:04 AM',
+                    'validUpto': '09/04/2025 11:04:04 AM',
+                    'alert': 'Distance between these two pincodes is 222'
+                }
+            }
+            ewaybill._l10n_in_ewaybill_stock_handle_zero_distance_alert_if_present(response)
+            self.assertEqual(ewaybill.distance, expected_distance)
+
+    @freeze_time('2025-05-22')
+    def test_ewaybill_stock_transporter_with_vehicle_no(self):
+        """
+        Ewaybill Transporter GST validation when Vehicle Number is present
+        and mode of transportation is by road
+        """
+        delivery_picking = self._create_stock_picking()
+        transportation_detail = self.env['l10n.in.ewaybill'].create({
+            'type_id': self.env.ref('l10n_in_ewaybill_stock.type_delivery_challan_sub_others').id,
+            'picking_id': delivery_picking.id,
+            'type_description': 'Other reasons',
+            'transporter_id': self.partner_b.id,
+            'transportation_doc_date': '2025-05-22',
+            'mode': '1',
+            'distance': 0,
+            'vehicle_no': 'GJ11AA1001',
+            'vehicle_type': 'R',
+        })
+        expected_json = {
+            'supplyType': 'O',
+            'subSupplyType': '8',
+            'docType': 'CHL',
+            'transactionType': 1,
+            'transDistance': '0',
+            'docNo': 'compa/OUT/00004',
+            'docDate': '22/05/2025',
+            'fromGstin': 'URP',
+            'toGstin': '27DJMPM8965E1ZE',
+            'fromTrdName': 'company_1_data',
+            'toTrdName': 'partner_a',
+            'fromStateCode': 24,
+            'toStateCode': 27,
+            'fromAddr1': '',
+            'toAddr1': '',
+            'fromAddr2': '',
+            'toAddr2': '',
+            'fromPlace': '',
+            'toPlace': '',
+            'fromPincode': 380004,
+            'toPincode': 431122,
+            'actToStateCode': 27,
+            'actFromStateCode': 24,
+            'subSupplyDesc': 'Other reasons',
+            'transporterName': 'partner_b',
+            'transMode': '1',
+            'transDocDate': '22/05/2025',
+            'vehicleNo': 'GJ11AA1001',
+            'vehicleType': 'R',
+            'itemList': [{
+                'productName': 'product_a',
+                'hsnCode': '01111',
+                'productDesc': 'product_a',
+                'quantity': 5.0,
+                'qtyUnit': 'UNT',
+                'taxableAmount': 2500.0,
+                'igstRate': 5.0
+            }],
+            'totalValue': 2500.0,
+            'cgstValue': 0.0,
+            'sgstValue': 0.0,
+            'igstValue': 125.0,
+            'cessValue': 0.0,
+            'cessNonAdvolValue': 0.0,
+            'otherValue': 0.0,
+            'totInvValue': 2625.0
         }
-        ewaybill._l10n_in_ewaybill_stock_handle_zero_distance_alert_if_present(response)
-        self.assertEqual(ewaybill.distance, expected_distance)
+        self.assertEqual(transportation_detail._check_transporter(), [])
+        self.assertDictEqual(transportation_detail._ewaybill_generate_direct_json(), expected_json)
+
+    @freeze_time('2025-05-22')
+    def test_ewaybill_stock_transporter_without_vehicle_no(self):
+        """
+        Ewaybill Transporter GST validation when Vehicle Number is not present
+        but have transportation document no and mode of transportation is by road
+        """
+        delivery_picking = self._create_stock_picking()
+        transportation_detail = self.env['l10n.in.ewaybill'].create({
+            'type_id': self.env.ref('l10n_in_ewaybill_stock.type_delivery_challan_sub_others').id,
+            'type_description': 'Other reasons',
+            'picking_id': delivery_picking.id,
+            'transporter_id': self.partner_b.id,
+            'transportation_doc_date': '2025-05-22',
+            'transportation_doc_no': '123456789',
+            'mode': '1',
+            'distance': 0,
+            'vehicle_type': 'R',
+        })
+        expected_msg = _('- Transporter %s does not have a GST Number', self.partner_b.name)
+        self.assertEqual(transportation_detail._check_transporter(), [expected_msg])

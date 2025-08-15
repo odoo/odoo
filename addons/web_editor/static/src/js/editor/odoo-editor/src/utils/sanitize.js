@@ -24,6 +24,7 @@ import {
     getTraversedNodes,
     ZERO_WIDTH_CHARS_REGEX,
     isVisible,
+    cleanZWS,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -96,6 +97,10 @@ export function areSimilarElements(node, node2) {
 * @returns {String|null}
 */
 export function deduceURLfromText(text, link) {
+    // Skip modifying the href for Bootstrap tabs.
+    if (link && link.getAttribute("role") === "tab") {
+        return;
+    }
    const label = text.replace(ZERO_WIDTH_CHARS_REGEX, '').trim();
    // Check first for e-mail.
    let match = label.match(EMAIL_REGEX);
@@ -118,7 +123,11 @@ export function deduceURLfromText(text, link) {
    // Check for telephone url.
    match = label.match(PHONE_REGEX);
    if (match) {
-       return match[1] ? match[0] : 'tel://' + match[0];
+        if (match[1]) {
+            return match[0].replace(/\s+/g, "");
+        } else if (link?.href.startsWith("tel:")) {
+            return ("tel:" + match[0]).replace(/\s+/g, "");
+        }
    }
    return null;
 }
@@ -144,6 +153,20 @@ function sanitizeNode(node, root) {
         node.setAttribute('contenteditable', 'false');
     }
 
+    // Ensure zws and data-oe-zws-empty-inline flag is removed if content other
+    // than zws is present in the node.
+    if (
+        node.nodeType === Node.ELEMENT_NODE &&
+        node.hasAttribute("data-oe-zws-empty-inline") &&
+        node.textContent !== "\u200B"
+    ) {
+        const restoreCursor =
+            shouldPreserveCursor(node, root) && preserveCursor(root.ownerDocument);
+        cleanZWS(node);
+        delete node.dataset.oeZwsEmptyInline;
+        restoreCursor && restoreCursor();
+    }
+
     // Remove empty class/style attributes.
     for (const attributeName of ['class', 'style']) {
         if (node.nodeType === Node.ELEMENT_NODE && node.hasAttribute(attributeName) && !node.getAttribute(attributeName)) {
@@ -156,6 +179,7 @@ function sanitizeNode(node, root) {
         && !node.hasAttributes()
         && !hasPseudoElementContent(node, "::before")
         && !hasPseudoElementContent(node, "::after")
+        && !node.querySelector(".oe_currency_value")
     ) {
         // Unwrap the contents of SPAN and FONT elements without attributes.
         getDeepRange(root, { select: true });
@@ -221,10 +245,32 @@ function sanitizeNode(node, root) {
         node = parent; // The node has been removed, update the reference.
     } else if (node.nodeName === 'LI' && !node.closest('ul, ol')) {
         // Transform <li> into <p> if they are not in a <ul> / <ol>.
-        const paragraph = document.createElement('p');
-        paragraph.replaceChildren(...node.childNodes);
-        node.replaceWith(paragraph);
-        node = paragraph; // The node has been removed, update the reference.
+        if (node.children.length && [...node.children].every(isBlock)) {
+            // Unwrap <li> if each of its children is a block element.
+            const restoreCursor =
+                shouldPreserveCursor(node, root) && preserveCursor(root.ownerDocument);
+            const nodeToReplace = node.firstElementChild;
+            unwrapContents(node);
+            restoreCursor && restoreCursor(new Map([[node, nodeToReplace]]));
+            node = nodeToReplace;
+        } else {
+            // Otherwise, wrap its content in a new <p> element.
+            const paragraph = document.createElement("p");
+            paragraph.replaceChildren(...node.childNodes);
+            node.replaceWith(paragraph);
+            node = paragraph; // The node has been removed, update the reference.
+        }
+    } else if (
+        ['UL', 'OL'].includes(node.nodeName) &&
+        ['UL', 'OL'].includes(node.parentNode.nodeName)
+    ) {
+        const restoreCursor = shouldPreserveCursor(node, root) && preserveCursor(root.ownerDocument);
+        const li = document.createElement('li');
+        node.parentNode.insertBefore(li, node);
+        li.appendChild(node);
+        li.classList.add('oe-nested');
+        node = li;
+        restoreCursor && restoreCursor();
     } else if (isFontAwesome(node) && node.textContent !== '\u200B') {
         // Ensure a zero width space is present inside the FA element.
         node.textContent = '\u200B';
@@ -236,6 +282,7 @@ function sanitizeNode(node, root) {
         }
         if (isEditorTab(tabPreviousSibling)) {
             node.style.width = '40px';
+            node.style.tabSize = '40px';
         } else {
             const editable = closestElement(node, '.odoo-editor-editable');
             if (editable?.firstElementChild) {
@@ -247,6 +294,7 @@ function sanitizeNode(node, root) {
                 if (nodeRect.width && referenceRect.width) {
                     const width = (nodeRect.left - referenceRect.left) % 40;
                     node.style.width = (40 - width) + 'px';
+                    node.style.tabSize = (40 - width) + 'px';
                 }
             }
         }

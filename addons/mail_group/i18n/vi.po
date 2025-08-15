@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Thi Huong Nguyen, 2024
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,7 +45,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                Xin chào,<br><br>\n"
-"                Bạn đã yêu cầu được đăng ký vào danh sách gửi thư này <strong t-out=\"object.name or ''\"></strong>.\n"
+"                Bạn đã yêu cầu được đăng ký vào danh sách liên hệ này <strong t-out=\"object.name or ''\"></strong>.\n"
 "                <br><br>\n"
 "                Để xác nhận, hãy truy cập liên kết sau: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
 "                <br><br>\n"
@@ -68,7 +68,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                Xin chào,<br><br>\n"
-"                Bạn đã yêu cầu huỷ đăng ký khỏi danh sách gửi thư này <strong t-out=\"object.name or ''\"></strong>.\n"
+"                Bạn đã yêu cầu huỷ đăng ký khỏi danh sách liên hệ này <strong t-out=\"object.name or ''\"></strong>.\n"
 "                <br><br>\n"
 "                Để xác nhận, hãy truy cập liên kết sau: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>.\n"
 "                <br><br>\n"
@@ -88,7 +88,7 @@ msgid ""
 msgstr ""
 "<div>\n"
 "                <p>Xin chào <t t-out=\"object.partner_id.name or ''\"></t>,</p>\n"
-"                <p>Vui lòng tham khảo quy định về <t t-out=\"object.mail_group_id.name\"></t> danh sách gửi thư</p> dưới đây.\n"
+"                <p>Vui lòng tham khảo quy định về <t t-out=\"object.mail_group_id.name\"></t> danh sách liên hệ</p> dưới đây.\n"
 "                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
 "            </div>\n"
 "        "
@@ -203,7 +203,7 @@ msgid ""
 "<span>No Mail Group yet.</span>\n"
 "                    <br/>"
 msgstr ""
-"<span>\\bChưa có nhóm gửi thư.</span>\n"
+"<span>\\bChưa có nhóm liên hệ.</span>\n"
 "                    <br/>"
 
 #. module: mail_group
@@ -212,8 +212,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Một từ điển Python sẽ được đánh giá để cung cấp giá trị mặc định khi tạo tập"
-" dữ liệu mới cho bí danh này. "
+"Một từ điển Python sẽ được đánh giá để cung cấp giá trị mặc định khi tạo bản"
+" ghi mới cho bí danh này. "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -230,7 +230,7 @@ msgstr "Được chấp thuận"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__action
 msgid "Action"
-msgstr "Hành động"
+msgstr "Tác vụ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__active
@@ -442,7 +442,7 @@ msgstr "Nội dung"
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
 msgid "Create a Mail Group"
-msgstr "Tạo nhóm thư"
+msgstr "Tạo nhóm liên hệ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -595,7 +595,8 @@ msgstr "Tên Nhóm"
 #, python-format
 msgid "Group message can only be linked to mail group. Current model is %s."
 msgstr ""
-"Tin nhắn nhóm chỉ có thể được liên kết với nhóm thư. Mô hình hiện tại là %s."
+"Tin nhắn nhóm chỉ có thể được liên kết với nhóm liên hệ. Mô hình hiện tại là"
+" %s."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines_msg
@@ -628,8 +629,7 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"ID của tập dữ liệu chính chứa bí danh (ví dụ: dự án chứa bí danh tạo nhiệm "
-"vụ)"
+"ID của bản ghi chính chứa bí danh (ví dụ: dự án chứa bí danh tạo nhiệm vụ)"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_bounced_content
@@ -731,34 +731,34 @@ msgstr "Phát hiện gửi đến dựa trên phần cục bộ"
 #: model:ir.model,name:mail_group.model_mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Mail Group"
-msgstr "Nhóm gửi thư"
+msgstr "Nhóm liên hệ"
 
 #. module: mail_group
 #: model:res.groups,name:mail_group.group_mail_group_manager
 msgid "Mail Group Administrator"
-msgstr "Quản trị nhóm thư"
+msgstr "Quản trị nhóm liên hệ"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_subscribe
 msgid "Mail Group: Mailing List Subscription"
-msgstr "Nhóm thư: Đăng ký danh sách gửi thư"
+msgstr "Nhóm liên hệ: Đăng ký danh sách liên hệ"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_unsubscribe
 msgid "Mail Group: Mailing List Unsubscription"
-msgstr "Nhóm thư: Huỷ đăng ký danh sách gửi thư"
+msgstr "Nhóm liên hệ: Huỷ đăng ký danh sách liên hệ"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_guidelines
 msgid "Mail Group: Send Guidelines"
-msgstr "Nhóm thư: Gửi hướng dẫn"
+msgstr "Nhóm liên hệ: Gửi hướng dẫn"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_action
 #: model:ir.ui.menu,name:mail_group.mail_group_menu
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 msgid "Mail Groups"
-msgstr "Nhóm thư"
+msgstr "Nhóm liên hệ"
 
 #. module: mail_group
 #: model:ir.actions.server,name:mail_group.ir_cron_mail_notify_group_moderators_ir_actions_server
@@ -773,22 +773,22 @@ msgstr "Mail Message"
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_member
 msgid "Mailing List Member"
-msgstr "Thành viên danh sách gửi thư"
+msgstr "Thành viên danh sách liên hệ"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_message
 msgid "Mailing List Message"
-msgstr "Tin nhắn danh sách gửi thư"
+msgstr "Tin nhắn danh sách liên hệ"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_moderation
 msgid "Mailing List black/white list"
-msgstr "Danh sách đen/trắng gửi thư"
+msgstr "Danh sách đen/trắng"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.portal_breadcrumbs_group
 msgid "Mailing Lists"
-msgstr "Danh sách Mail"
+msgstr "Danh sách liên hệ"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
@@ -796,12 +796,12 @@ msgid ""
 "Mailing groups are communities that like to discuss a specific topic "
 "together."
 msgstr ""
-"Nhóm gửi thư là các cộng đồng có cùng sở thích thảo luận một chủ để cụ thể."
+"Nhóm liên hệ là các cộng đồng có cùng sở thích thảo luận một chủ để cụ thể."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
 msgid "Mailing-List:"
-msgstr "Danh sách gửi thư:"
+msgstr "Danh sách liên hệ:"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
@@ -1027,7 +1027,7 @@ msgstr ""
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "Only members can send email to the mailing list."
-msgstr "Chỉ thành viên mới có thể gửi email tới danh sách gửi thư."
+msgstr "Chỉ thành viên mới có thể gửi email tới danh sách liên hệ."
 
 #. module: mail_group
 #. odoo-python
@@ -1035,7 +1035,7 @@ msgstr "Chỉ thành viên mới có thể gửi email tới danh sách gửi th
 #, python-format
 msgid "Only selected groups of users can send email to the mailing list."
 msgstr ""
-"Chỉ nhóm người dùng được chọn mới có thể gửi email tới danh sách gửi thư."
+"Chỉ nhóm người dùng được chọn mới có thể gửi email tới danh sách liên hệ."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
@@ -1044,9 +1044,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"ID tùy chọn của một luồng (tập dữ liệu) tập hợp tất cả tin nhắn nhận được, "
-"thậm chí nếu đó là tin nhắn không có phản hồi. Nếu cài đặt, điều này sẽ tắt "
-"hoàn toàn việc tạo các tập dữ liệu mới. "
+"ID tùy chọn của một luồng (bản ghi) tập hợp tất cả tin nhắn nhận được, thậm "
+"chí nếu đó là tin nhắn không có phản hồi. Nếu cài đặt, điều này sẽ tắt hoàn "
+"toàn việc tạo các bản ghi mới. "
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_parent_id
@@ -1061,7 +1061,7 @@ msgstr "Mô hình chính"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "ID luồng tập dữ liệu chính"
+msgstr "ID luồng bản ghi chính"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_model_id
@@ -1145,7 +1145,7 @@ msgstr "Tính riêng tư"
 #. module: mail_group
 #: model:mail.group,name:mail_group.mail_group_2
 msgid "Public Mailing List"
-msgstr "Danh sách gửi thư công cộng"
+msgstr "Danh sách liên hệ công cộng"
 
 #. module: mail_group
 #. odoo-python
@@ -1157,7 +1157,7 @@ msgstr "Phản hồi: %s"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "ID luồng tập dữ liệu"
+msgstr "ID luồng bản ghi"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
@@ -1212,7 +1212,7 @@ msgstr "Tìm kiếm tin nhắn nhóm"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_member_view_search
 msgid "Search Mail Group Member"
-msgstr "Tìm kiếm thành viên nhóm thư"
+msgstr "Tìm kiếm thành viên nhóm liên hệ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
@@ -1269,12 +1269,12 @@ msgstr "Gửi hướng dẫn cho người đăng ký mới"
 #: model:mail.template,description:mail_group.mail_template_guidelines
 msgid "Sent to people who subscribed to a mailing group with group guidelines"
 msgstr ""
-"Gửi tới những người đã đăng ký vào nhóm gửi thư theo các nguyên tắc của nhóm"
+"Gửi tới những người đã đăng ký vào nhóm liên hệ theo các nguyên tắc của nhóm"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_unsubscribe
 msgid "Sent to people who unsubscribed from a mailing group"
-msgstr "Gửi tới những người đã hủy đăng ký khỏi nhóm gửi thư"
+msgstr "Gửi tới những người đã hủy đăng ký khỏi nhóm liên hệ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderation_status
@@ -1306,7 +1306,7 @@ msgstr "Đăng ký nhận tin"
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_subscribe
 msgid "Subscription confirmation to a mailing group"
-msgstr "Xác nhận đăng ký vào một nhóm gửi thư"
+msgstr "Xác nhận đăng ký vào một nhóm liên hệ"
 
 #. module: mail_group
 #. odoo-python
@@ -1372,8 +1372,8 @@ msgid ""
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
 "Mô hình (Loại tài liệu Odoo) mà bí danh này tương tác. Mọi email đến mà "
-"không phải là email trả lời một tập dữ liệu hiện có sẽ tạo ra một tập dữ "
-"liệu mới trong mô hình này. (ví dụ: Nhiệm vụ dự án) "
+"không phải là email trả lời một bản ghi hiện có sẽ tạo ra một bản ghi mới "
+"trong mô hình này. (ví dụ: Nhiệm vụ dự án) "
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_name
@@ -1441,7 +1441,7 @@ msgstr "Những tin nhắn đó không thể được kiểm duyệt: %s."
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "To Review"
-msgstr "Để xem xét"
+msgstr "Cần xem xét"
 
 #. module: mail_group
 #. odoo-javascript

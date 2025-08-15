@@ -166,34 +166,3 @@ class TestPeppolParticipant(TransactionCase):
             settings.button_create_peppol_proxy_user()
             self.assertEqual(self.env.company.account_peppol_proxy_state, 'not_verified')
             self.assertFalse(settings.account_peppol_migration_key) # the key should be reset once we've used it
-
-    def test_migrate_away_participant(self):
-        # a participant should be able to request a migration key
-        settings = self.env['res.config.settings'].create(self._get_participant_vals())
-        self.assertFalse(settings.account_peppol_migration_key)
-        settings.button_create_peppol_proxy_user()
-        settings.account_peppol_proxy_state = 'active'
-        settings.button_migrate_peppol_registration()
-        self.assertEqual(self.env.company.account_peppol_proxy_state, 'active')
-        self.assertEqual(settings.account_peppol_migration_key, 'test_key')
-
-    def test_reset_participant(self):
-        # once a participant has migrated away, they should be reset
-        settings = self.env['res.config.settings'].create(self._get_participant_vals())
-        settings.button_create_peppol_proxy_user()
-        settings.account_peppol_proxy_state = 'active'
-        settings.button_migrate_peppol_registration()
-
-        with self._set_context({'migrated_away': True}):
-            try:
-                settings.button_update_peppol_user_data()
-            except UserError:
-                settings = self.env['res.config.settings'].create({})
-                self.assertRecordValues(settings, [{
-                        'account_peppol_migration_key': False,
-                        'account_peppol_proxy_state': 'not_registered',
-                    }],
-                )
-                self.assertFalse(self.env.company.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol'))
-            else:
-                raise ValidationError('A UserError should be raised.')

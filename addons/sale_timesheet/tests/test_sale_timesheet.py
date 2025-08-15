@@ -8,7 +8,7 @@ from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
 from odoo.addons.hr_timesheet.tests.test_timesheet import TestCommonTimesheet
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
-from odoo.tests import tagged
+from odoo.tests import tagged, new_test_user
 from odoo.tests.common import Form
 
 @tagged('-at_install', 'post_install')
@@ -20,6 +20,45 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         For that, we check the task/project created, the invoiced amounts, the delivered
         quantities changes,  ...
     """
+
+    def test_compute_commercial_partner(self):
+        """Ensure user without project access can compute commercial partner without AccessError.
+            Steps:
+                1. Create a commercial partner and a sub-partner.
+                2. Create a project assigned to the sub-partner and a task under that project. Link both to a timesheet.
+                3. Create a restricted user with no access to the Project module but with Timesheet Administrator access.
+                4. Compute the commercial partner as the restricted user and verify it's derived from the project partner.
+                5. Set the task partner, recompute, and verify the commercial partner updates accordingly.
+        """
+        commercial_partner = self.env['res.partner'].create({'name': 'Commercial Partner', 'is_company': True})
+        sub_partner = self.env['res.partner'].create({'name': 'Sub Partner', 'parent_id': commercial_partner.id})
+        project = self.env['project.project'].create({
+            'name': 'Test Project',
+            'partner_id': sub_partner.id,
+            'privacy_visibility': 'followers',
+            'task_ids': [Command.create({'name': 'Test Task'})]
+        })
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Test Timesheet',
+            'project_id': project.id,
+            'task_id': project.task_ids[0].id,
+            'employee_id': self.employee_user.id,
+        })
+        timesheet_manager_no_project_user = new_test_user(self.env, login='no_project_user', groups='hr_timesheet.group_timesheet_manager')
+
+        timesheet.with_user(timesheet_manager_no_project_user)._compute_commercial_partner()
+        self.assertEqual(
+            timesheet.commercial_partner_id,
+            commercial_partner,
+            "The commercial partner should match the partner linked to the project."
+        )
+        project.task_ids[0].partner_id = sub_partner.id
+        timesheet.with_user(timesheet_manager_no_project_user)._compute_commercial_partner()
+        self.assertEqual(
+            timesheet.commercial_partner_id,
+            commercial_partner,
+            "The commercial partner should match the partner linked to the task."
+        )
 
     def test_timesheet_order(self):
         """ Test timesheet invoicing with 'invoice on order' timetracked products

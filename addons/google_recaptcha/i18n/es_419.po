@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
-# Fernanda Alvarez, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
+# Fernanda Alvarez, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,8 +32,8 @@ msgid ""
 "By default, should be one of 0.1, 0.3, 0.7, 0.9.\n"
 "1.0 is very likely a good interaction, 0.0 is very likely a bot"
 msgstr ""
-"De forma predeterminada debería ser 0.1, 0.3, 0.7, 0.9. \n"
-"1.0 muy probablemente es una buena interacción, 0.0 muy probablemente es un bot."
+"Debería ser 0.1, 0.3, 0.7 o 0.9 de forma predeterminada. \n"
+"Con 1.0 es probable que se trate de una buena interacción y con 0.0 es muy probable que sea un bot."
 
 #. module: google_recaptcha
 #: model:ir.model,name:google_recaptcha.model_res_config_settings
@@ -63,6 +63,15 @@ msgstr "No se estableció ninguna clave de sitio de reCAPTCHA."
 #, python-format
 msgid "Privacy Policy"
 msgstr "Política de privacidad"
+
+#. module: google_recaptcha
+#: model_terms:ir.ui.view,arch_db:google_recaptcha.res_config_settings_view_form
+msgid ""
+"Protect your forms from spam and abuse. If no keys are provided, no checks "
+"will be done."
+msgstr ""
+"Proteja sus formularios de spam o abuso. No se realizará ninguna "
+"comprobación si no proporciona las claves."
 
 #. module: google_recaptcha
 #. odoo-javascript
@@ -121,7 +130,7 @@ msgstr "La solicitud no es válida o tiene un formato incorrecto."
 #: code:addons/google_recaptcha/models/ir_http.py:0
 #, python-format
 msgid "Your request has timed out, please retry."
-msgstr "Se agotó el tiempo de espera de su solicitud. Vuelva a intentarlo."
+msgstr "Se agotó el tiempo de espera de la solicitud. Vuelve a intentarlo."
 
 #. module: google_recaptcha
 #. odoo-javascript

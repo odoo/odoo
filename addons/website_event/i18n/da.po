@@ -6,17 +6,19 @@
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2023
 # Mads Søndergaard, 2023
 # Ejner Sønniksen <ejner@vkdata.dk>, 2024
-# Martin Trigaux, 2024
 # lhmflexerp <lhm@flexerp.dk>, 2024
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
+# Martin Trigaux, 2024
+# Sammi Iversen <sammi@vkdata.dk>, 2025
+# Kira Petersen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-05-22 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
+"Last-Translator: Kira Petersen, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -332,7 +334,7 @@ msgstr "Svar"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__once_per_order
 msgid "Ask once per order"
-msgstr ""
+msgstr "Spørg én gang pr. ordre"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
@@ -355,7 +357,7 @@ msgstr "Deltager Svar"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_registration__registration_answer_choice_ids
 msgid "Attendee Selection Answers"
-msgstr ""
+msgstr "Deltagernes svar"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -414,7 +416,7 @@ msgstr "Luk"
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.action_event_registration_report
 msgid "Come back once you have registrations to overview answers."
-msgstr ""
+msgstr "Svarene vises, når du har modtaget tilmeldinger."
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_2_answer_1
@@ -552,7 +554,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Download Tickets <i class=\"ms-1 fa fa-download\"/>"
-msgstr ""
+msgstr "Download billetter <i class=\"ms-1 fa fa-download\"/>"
 
 #. module: website_event
 #. odoo-python
@@ -566,6 +568,13 @@ msgstr "E-mail"
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "End -"
 msgstr "Slut -"
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/js/website_event.js:0
+#, python-format
+msgid "Error"
+msgstr "Fejl"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -926,7 +935,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
 msgid "Mandatory"
-msgstr ""
+msgstr "Obligatorisk"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__is_mandatory_answer
@@ -982,7 +991,7 @@ msgstr "Kommende arrangementer"
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.action_event_registration_report
 msgid "No Answers yet!"
-msgstr ""
+msgstr "Endnu ingen svar!"
 
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.website_event_menu_action
@@ -1018,7 +1027,7 @@ msgstr "Ikke udgivet"
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
 msgid "Once per Order"
-msgstr ""
+msgstr "Én gang pr. ordre"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_location
@@ -1099,6 +1108,7 @@ msgstr "Spørgsmålstype"
 #, python-format
 msgid "Question cannot be linked to both an Event and an Event Type."
 msgstr ""
+"Spørgsmål kan knyttes til både et arrangement eller en arrangementstype."
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__question_ids
@@ -1363,6 +1373,13 @@ msgid "Suggested answer"
 msgstr "Foreslåede svar"
 
 #. module: website_event
+#. odoo-python
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "Mistænkelig aktivitet registreret af Google reCaptcha"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Template badge"
 msgstr ""
@@ -1470,6 +1487,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_view_form
 msgid "Type"
 msgstr "Type"
+
+#. module: website_event
+#. odoo-python
+#: code:addons/website_event/models/website_visitor.py:0
+#, python-format
+msgid "Unsupported 'Not In' operation on visitors registrations"
+msgstr "Ikke understøttet 'Ikke i'-handling ved registrering af besøgende"
 
 #. module: website_event
 #. odoo-python
@@ -1657,6 +1681,7 @@ msgstr ""
 msgid ""
 "You cannot delete a question that has already been answered by attendees."
 msgstr ""
+"Du kan ikke slette et spørgsmål, der allerede er besvaret af deltagere."
 
 #. module: website_event
 #. odoo-python
@@ -1664,7 +1689,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete an answer that has already been selected by attendees."
-msgstr ""
+msgstr "Du kan ikke slette et svar, der allerede er valgt af deltagere."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
@@ -1680,7 +1705,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_question_view_form
 msgid "e.g. \"Do you have any diet restrictions?\""
-msgstr ""
+msgstr "f.eks. \"Har du nogen kostrestriktioner?\""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full

@@ -42,7 +42,7 @@ class L10nPEWebsiteSale(WebsiteSale):
                     and values["city_id"] != "" \
                     and request.env["res.city"].browse(int(values["city_id"]))
             to_include = {
-                "identification": kw.get("l10n_latam_identification_type_id"),
+                "identification": kw.get("l10n_latam_identification_type_id") or request.env.ref('l10n_pe.it_DNI').id,
                 "identification_types": request.env["l10n_latam.identification.type"].sudo().search(
                     ["|", ("country_id", "=", False), ("country_id.code", "=", "PE")]
                 ),

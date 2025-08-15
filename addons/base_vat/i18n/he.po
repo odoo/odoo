@@ -8,7 +8,7 @@
 # Yihya Hugirat <hugirat@gmail.com>, 2023
 # דודי מלכה <Dudimalka6@gmail.com>, 2023
 # MichaelHadar, 2023
-# hed shefer <hed@laylinetech.com>, 2023
+# Hed Shefer <hed@laylinetech.com>, 2023
 # yael terner, 2024
 # Ha Ketem <haketem@gmail.com>, 2024
 # 
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Ha Ketem <haketem@gmail.com>, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
@@ -39,8 +39,22 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
+msgid "17291716060 (NIN) or 1729171602 (VKN)"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
 msgid "1792060346001 or 1792060346"
 msgstr "1792060346001 או 1792060346"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "3101012009"
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -61,21 +75,21 @@ msgstr "49-098-576 או 49098576"
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "AR200-5536168-2 or 20055361682"
-msgstr ""
+msgstr "AR200-5536168-2 או 20055361682"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
-msgstr ""
+msgstr "CHE-123.456.788 TVA או CHE-123.456.788 MWST או CHE-123.456.788 IVA"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "CO213123432-1 or CO213.123.432-1"
-msgstr ""
+msgstr "CO213123432-1 או CO213.123.432-1"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -106,19 +120,27 @@ msgstr "איש קשר"
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "DE123456788 or 12/345/67890"
-msgstr ""
+msgstr "DE123456788 או 12/345/67890"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "DO1-01-85004-3 or 101850043"
-msgstr ""
+msgstr "DO1-01-85004-3 או 101850043"
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,help:base_vat.field_res_users__vies_valid
 msgid "European VAT numbers are automatically checked on the VIES database."
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"
 msgstr ""
 
 #. module: base_vat
@@ -131,14 +153,14 @@ msgstr "סוג תנועה"
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "GB123456782 or XI123456782"
-msgstr ""
+msgstr "GB123456782 או XI123456782"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "HU12345676 or 12345678-1-11 or 8071592153"
-msgstr ""
+msgstr "HU12345676 או 12345678-1-11 או 8071592153"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -158,19 +180,12 @@ msgstr ""
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "MXGODE561231GR8 or GODE561231GR8"
-msgstr ""
+msgstr "MXGODE561231GR8 או GODE561231GR8"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__perform_vies_validation
 #: model:ir.model.fields,field_description:base_vat.field_res_users__perform_vies_validation
 msgid "Perform Vies Validation"
-msgstr ""
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-#, python-format
-msgid "TR1234567890 (VERGINO) or TR17291716060 (TCKIMLIKNO)"
 msgstr ""
 
 #. module: base_vat
@@ -186,6 +201,8 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"ה%(vat_label)s מספר [%(wrong_vat)s] נראה שגוי. \n"
+"הערה: הפורמט הצפוי הנו %(expected_format)s"
 
 #. module: base_vat
 #. odoo-python
@@ -195,6 +212,8 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"ה%(vat_label)s שמספרו [%(wrong_vat)s] עבור %(record_label)s שגוי. \n"
+"הערה: הפורמט הצפוי הנו %(expected_format)s"
 
 #. module: base_vat
 #. odoo-python
@@ -259,7 +278,7 @@ msgstr ""
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
-msgstr ""
+msgstr "XXXXXXXXX [9 ספרות] וזה צריך להתאריך לאלגוריתם Luhn checksum"
 
 #. module: base_vat
 #. odoo-python

@@ -113,6 +113,8 @@ class AccountMove(models.Model):
             if not move.is_sale_document(include_receipts=True) or not move.company_id.anglo_saxon_accounting:
                 continue
 
+            anglo_saxon_price_ctx = move._get_anglo_saxon_price_ctx()
+
             for line in move.invoice_line_ids:
 
                 # Filter out lines being not eligible for COGS.
@@ -128,7 +130,7 @@ class AccountMove(models.Model):
 
                 # Compute accounting fields.
                 sign = -1 if move.move_type == 'out_refund' else 1
-                price_unit = line._stock_account_get_anglo_saxon_price_unit()
+                price_unit = line.with_context(anglo_saxon_price_ctx)._stock_account_get_anglo_saxon_price_unit()
                 amount_currency = sign * line.quantity * price_unit
 
                 if move.currency_id.is_zero(amount_currency) or float_is_zero(price_unit, precision_digits=price_unit_prec):
@@ -167,6 +169,12 @@ class AccountMove(models.Model):
                     'cogs_origin_id': line.id,
                 })
         return lines_vals_list
+
+    def _get_anglo_saxon_price_ctx(self):
+        """ To be overriden in modules overriding _stock_account_get_anglo_saxon_price_unit
+        to optimize computations that only depend on account.move and not account.move.line
+        """
+        return self.env.context
 
     def _stock_account_get_last_step_stock_moves(self):
         """ To be overridden for customer invoices and vendor bills in order to
@@ -221,8 +229,12 @@ class AccountMove(models.Model):
                     )
                     invoice_aml = product_account_moves.filtered(lambda aml: aml not in correction_amls and aml.move_id == move)
                     stock_aml = product_account_moves - correction_amls - invoice_aml
-                    # Reconcile.
-                    if correction_amls:
+
+                    # Reconcile:
+                    # In case there is a move with correcting lines that has not been posted
+                    # (e.g., it's dated for some time in the future) we should defer any
+                    # reconciliation with exchange difference.
+                    if correction_amls or 'draft' in move.line_ids.sudo().stock_valuation_layer_ids.account_move_id.mapped('state'):
                         if sum(correction_amls.mapped('balance')) > 0 or all(aml.is_same_currency for aml in correction_amls):
                             no_exchange_reconcile_plan += [product_account_moves]
                         else:
@@ -233,6 +245,7 @@ class AccountMove(models.Model):
                     else:
                         reconcile_plan += [product_account_moves]
         self.env['account.move.line']._reconcile_plan(reconcile_plan)
+        no_exchange_reconcile_plan = [amls.filtered(lambda aml: not aml.reconciled) for amls in no_exchange_reconcile_plan]
         self.env['account.move.line'].with_context(no_exchange_difference=True)._reconcile_plan(no_exchange_reconcile_plan)
 
     def _get_invoiced_lot_values(self):
@@ -257,9 +270,8 @@ class AccountMoveLine(models.Model):
             and line.move_id.is_purchase_document()
         ))
         for line in input_lines:
-            line = line.with_company(line.move_id.journal_id.company_id)
             fiscal_position = line.move_id.fiscal_position_id
-            accounts = line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
+            accounts = line.with_company(line.company_id).product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
             if accounts['stock_input']:
                 line.account_id = accounts['stock_input']
 
@@ -271,7 +283,14 @@ class AccountMoveLine(models.Model):
         if float_is_zero(self.quantity, precision_rounding=self.product_uom_id.rounding):
             return self.price_unit
 
-        price_unit = self.price_subtotal / self.quantity
+        if self.discount != 100:
+            if not any(t.price_include for t in self.tax_ids) and self.discount:
+                price_unit = self.price_unit * (1 - self.discount / 100)
+            else:
+                price_unit = self.price_subtotal / self.quantity
+        else:
+            price_unit = 0
+
         return -price_unit if self.move_id.move_type == 'in_refund' else price_unit
 
     def _get_stock_valuation_layers(self, move):
@@ -302,3 +321,19 @@ class AccountMoveLine(models.Model):
     @api.onchange('product_id')
     def _inverse_product_id(self):
         super(AccountMoveLine, self.filtered(lambda l: l.display_type != 'cogs'))._inverse_product_id()
+
+    def _get_exchange_journal(self, company):
+        if (
+            self and self.move_id.sudo().stock_valuation_layer_ids and
+            self.product_id.categ_id.property_valuation == 'real_time'
+        ):
+            return self.product_id.categ_id.property_stock_journal
+        return super()._get_exchange_journal(company)
+
+    def _get_exchange_account(self, company, amount):
+        if (
+            self and self.move_id.sudo().stock_valuation_layer_ids and
+            self.product_id.categ_id.property_valuation == 'real_time'
+        ):
+            return self.product_id.categ_id.property_stock_valuation_account_id
+        return super()._get_exchange_account(company, amount)

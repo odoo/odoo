@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, _
+from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import UBL_NAMESPACES
 
 from stdnum.no import mva
 
@@ -59,15 +60,6 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             vals.pop('registration_name', None)
             vals.pop('registration_address_vals', None)
 
-            # Some extra european countries use Bis 3 but do not prepend their VAT with the country code (i.e.
-            # Australia). Allow them to use Bis 3 without raising BR-CO-09.
-            if (
-                partner.country_id
-                and partner.country_id not in self.env.ref('base.europe').country_ids
-                and not partner.vat[:2].isalpha()
-            ):
-                vals['company_id'] = partner.country_id.code + partner.vat
-
         # sources:
         #  https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_applying_foretaksregisteret
         #  https://docs.peppol.eu/poacc/billing/3.0/bis/#national_rules (NO-R-002 (warning))
@@ -86,9 +78,13 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         for vals in vals_list:
             vals.pop('registration_address_vals', None)
             if partner.country_code == 'NL':
+                # For NL, VAT can be used as a Peppol endpoint, but KVK/OIN has to be used as PartyLegalEntity/CompanyID
+                # To implement a workaround on stable, company_registry field is used without recording whether
+                # the number is a KVK or OIN, and the length of the number (8 = KVK, 9 = OIN) is used to determine the type
+                nl_id = partner.company_registry if partner.peppol_eas not in ('0106', '0190') else partner.peppol_endpoint
                 vals.update({
-                    'company_id': partner.peppol_endpoint,
-                    'company_id_attrs': {'schemeID': partner.peppol_eas},
+                    'company_id': nl_id,
+                    'company_id_attrs': {'schemeID': '0190' if nl_id and len(nl_id) == 20 else '0106'},
                 })
             if partner.country_id.code == "LU":
                 if 'l10n_lu_peppol_identifier' in partner._fields and partner.l10n_lu_peppol_identifier:
@@ -200,7 +196,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         vals_list = super()._get_tax_category_list(invoice, taxes)
 
         for vals in vals_list:
-            vals.pop('name')
+            vals.pop('name', None)
 
         return vals_list
 
@@ -221,6 +217,8 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         line_item_vals = super()._get_invoice_line_item_vals(line, taxes_vals)
 
         for val in line_item_vals['classified_tax_category_vals']:
+            # [UBL-CR-600] A UBL invoice should not include the InvoiceLine Item ClassifiedTaxCategory TaxExemptionReasonCode
+            val.pop('tax_exemption_reason_code', None)
             # [UBL-CR-601] TaxExemptionReason must not appear in InvoiceLine Item ClassifiedTaxCategory
             # [BR-E-10] TaxExemptionReason must only appear in TaxTotal TaxSubtotal TaxCategory
             val.pop('tax_exemption_reason', None)
@@ -358,6 +356,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 constraints.update({f'cen_en16931_{role}_vat_country_code': _(
                     "The VAT of the %s should be prefixed with its country code.", role)})
 
+        if invoice.partner_shipping_id:
+            # [BR-57]-Each Deliver to address (BG-15) shall contain a Deliver to country code (BT-80).
+            constraints['cen_en16931_delivery_address'] = self._check_required_fields(invoice.partner_shipping_id, 'country_id')
         return constraints
 
     def _invoice_constraints_peppol_en16931_ubl(self, invoice, vals):
@@ -392,9 +393,12 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 # [NL-R-003] For suppliers in the Netherlands, the legal entity identifier MUST be either a
                 # KVK or OIN number (schemeID 0106 or 0190)
                 'nl_r_003': _(
-                    "%s should have a KVK or OIN number: the Peppol e-address (EAS) should be '0106' or '0190'.",
+                    "%s should have a KVK or OIN number set in Company ID field or as Peppol e-address (EAS code 0106 or 0190).",
                     vals['supplier'].display_name
-                ) if vals['supplier'].peppol_eas not in ('0106', '0190') else '',
+                ) if (
+                    not vals['supplier'].peppol_eas in ('0106', '0190') and
+                    (not vals['supplier'].company_registry or len(vals['supplier'].company_registry) not in (8, 9))
+                ) else '',
 
                 # [NL-R-007] For suppliers in the Netherlands, the supplier MUST provide a means of payment
                 # (cac:PaymentMeans) if the payment is from customer to supplier
@@ -413,9 +417,12 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                     # [NL-R-005] For suppliers in the Netherlands, if the customer is in the Netherlands,
                     # the customer’s legal entity identifier MUST be either a KVK or OIN number (schemeID 0106 or 0190)
                     'nl_r_005': _(
-                        "%s should have a KVK or OIN number: the Peppol e-address (EAS) should be '0106' or '0190'.",
+                        "%s should have a KVK or OIN number set in Company ID field or as Peppol e-address (EAS code 0106 or 0190).",
                         vals['customer'].display_name
-                    ) if vals['customer'].commercial_partner_id.peppol_eas not in ('0106', '0190') else '',
+                    ) if (
+                        not vals['customer'].commercial_partner_id.peppol_eas in ('0106', '0190') and
+                        (not vals['customer'].commercial_partner_id.company_registry or len(vals['customer'].commercial_partner_id.company_registry) not in (8, 9))
+                    ) else '',
                 })
 
         if vals['supplier'].country_id.code == 'NO':
@@ -433,8 +440,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
     def _import_retrieve_partner_vals(self, tree, role):
         # EXTENDS account.edi.xml.ubl_20
         partner_vals = super()._import_retrieve_partner_vals(tree, role)
-        nsmap = {k: v for k, v in tree.nsmap.items() if k is not None}
-        endpoint_node = tree.find(f'.//cac:Accounting{role}Party/cac:Party/cbc:EndpointID', nsmap)
+        endpoint_node = tree.find(f'.//cac:Accounting{role}Party/cac:Party/cbc:EndpointID', UBL_NAMESPACES)
         if endpoint_node is not None:
             peppol_eas = endpoint_node.attrib.get('schemeID')
             peppol_endpoint = endpoint_node.text

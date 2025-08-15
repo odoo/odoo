@@ -16,6 +16,9 @@ class TestEdiTbaiWebServices(TestEsEdiTbaiCommon):
     def setUpClass(cls, chart_template_ref='es_full', edi_format_ref='l10n_es_edi_tbai.edi_es_tbai'):
         super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
 
+        # Operations tested here should be available to a billing user
+        cls.env.user.groups_id = cls.env.ref("account.group_account_invoice")
+
         # Invoice name are tracked by the web-services so this constant tries to get a new unique invoice name at each
         # execution.
         cls.today = datetime.now()
@@ -59,3 +62,30 @@ class TestEdiTbaiWebServices(TestEsEdiTbaiCommon):
         generated_files = self._process_documents_web_services(self.moves, {'es_tbai'})
         self.assertTrue(generated_files)
         self.assertRecordValues(self.out_invoice, [{'edi_state': 'sent'}])
+
+    def test_edi_cancellation(self):
+        self._set_tax_agency("gipuzkoa")
+        # Post the invoices
+        self.moves.action_process_edi_web_services(with_commit=False)
+        generated_files = self._process_documents_web_services(self.moves, {"es_tbai"})
+        self.assertTrue(generated_files)
+        self.assertRecordValues(
+            self.moves,
+            [
+                {"edi_state": "sent", "state": "posted"},
+                {"edi_state": False, "state": "posted"},
+            ],
+        )
+        # Cancel the invoices
+        self.moves.invalidate_recordset(["l10n_es_tbai_post_xml"])
+        self.moves.button_cancel_posted_moves()
+        self.moves.action_process_edi_web_services(with_commit=False)
+        generated_files = self._process_documents_web_services(self.moves, {"es_tbai"})
+        # self.assertTrue(generated_files)
+        self.assertRecordValues(
+            self.moves,
+            [
+                {"edi_state": "cancelled", "state": "cancel"},
+                {"edi_state": False, "state": "cancel"},
+            ],
+        )

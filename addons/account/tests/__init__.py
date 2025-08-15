@@ -18,6 +18,7 @@ from . import test_account_move_partner_count
 from . import test_account_move_rounding
 from . import test_account_invoice_report
 from . import test_account_move_line_tax_details
+from . import test_account_journal_dashboard_common
 from . import test_account_journal_dashboard
 from . import test_chart_template
 from . import test_company_branch
@@ -35,6 +36,7 @@ from . import test_account_incoming_supplier_invoice
 from . import test_payment_term
 from . import test_account_payment_items
 from . import test_account_payment_register
+from . import test_account_report
 from . import test_tour
 from . import test_early_payment_discount
 from . import test_ir_actions_report
@@ -45,3 +47,4 @@ from . import test_setup_wizard
 from . import test_structured_reference
 from . import test_product
 from . import test_mail_tracking_value
+from . import test_account_move_attachment

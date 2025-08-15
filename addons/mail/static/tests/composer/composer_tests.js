@@ -4,7 +4,6 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Composer } from "@mail/core/common/composer";
 import { Command } from "@mail/../tests/helpers/command";
-import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import {
@@ -280,18 +279,6 @@ QUnit.test('send button on discuss.channel should have "Send" as label', async (
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await contains(".o-mail-Composer-send:disabled", { text: "Send" });
-});
-
-QUnit.test("Show send button in mobile", async () => {
-    const pyEnv = await startServer();
-    patchUiSize({ size: SIZES.SM });
-    pyEnv["discuss.channel"].create({ name: "minecraft-wii-u" });
-    const { openDiscuss } = await start();
-    openDiscuss();
-    await click("button", { text: "Channel" });
-    await click(".o-mail-NotificationItem", { text: "minecraft-wii-u" });
-    await contains(".o-mail-Composer button[aria-label='Send']");
-    await contains(".o-mail-Composer button[aria-label='Send'] i.fa-paper-plane-o");
 });
 
 QUnit.test(

@@ -5,16 +5,17 @@
 # Translators:
 # Vacaru Adrian <adrian.vacaru@gmail.com>, 2024
 # sharkutz <sharkutz4life@yahoo.com>, 2024
-# Lyall Kindmurr, 2024
 # Cozmin Candea <office@terrabit.ro>, 2024
 # Hongu Cosmin <cosmin513@gmail.com>, 2024
 # Emanuel Bruda, 2024
 # Claudia Baisan, 2024
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
-# Dorin Hongu <dhongu@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Ioan Lucian Muntean <imuntean@information-systems.ro>, 2024
 # Maria Muntean, 2024
+# Lyall Kindmurr, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2025
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Maria Muntean, 2024\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -503,6 +504,9 @@ msgid ""
 "['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
 "'weekly')\">Repeat on</span>"
 msgstr ""
+"<span class=\"fw-bold text-nowrap\" invisible=\"rrule_type_ui not in "
+"['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
+"'weekly')\">Repetă în</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -525,7 +529,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "<span invisible=\"allday\" style=\"white-space: pre;\"> or </span>"
-msgstr ""
+msgstr "<span invisible=\"allday\" style=\"white-space: pre;\"> sau </span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -803,7 +807,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_popover_delete_wizard
 msgid "Calendar Popover Delete Wizard"
-msgstr ""
+msgstr "Expert ștergere popover calendar"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_provider_config
@@ -966,7 +970,7 @@ msgstr "Creat de"
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__create_date
 msgid "Created on"
-msgstr "Creat în"
+msgstr "Creat pe"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__current_attendee
@@ -1229,28 +1233,28 @@ msgstr "Oră eveniment"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Days"
-msgstr ""
+msgstr "La fiecare %(interval)s zile"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Days for %(count)s events"
-msgstr ""
+msgstr "La fiecare %(interval)s zile pentru %(count)s evenimente"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Days until %(until)s"
-msgstr ""
+msgstr "La fiecare %(interval)s zile până la %(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Months day %(day)s"
-msgstr ""
+msgstr "La fiecare %(interval)s luni, ziua %(day)s"
 
 #. module: calendar
 #. odoo-python
@@ -1258,20 +1262,21 @@ msgstr ""
 #, python-format
 msgid "Every %(interval)s Months day %(day)s for %(count)s events"
 msgstr ""
+"La fiecare %(interval)s luni, ziua %(day)s pentru %(count)s evenimente"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Months day %(day)s until %(until)s"
-msgstr ""
+msgstr "La fiecare %(interval)s luni, ziua %(day)s până la %(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Months on the %(position)s %(weekday)s"
-msgstr ""
+msgstr "La fiecare %(interval)s luni, în %(position)s %(weekday)s"
 
 #. module: calendar
 #. odoo-python
@@ -1281,6 +1286,8 @@ msgid ""
 "Every %(interval)s Months on the %(position)s %(weekday)s for %(count)s "
 "events"
 msgstr ""
+"La fiecare %(interval)s luni, în %(position)s %(weekday)s pentru %(count)s "
+"evenimente"
 
 #. module: calendar
 #. odoo-python
@@ -1289,13 +1296,14 @@ msgstr ""
 msgid ""
 "Every %(interval)s Months on the %(position)s %(weekday)s until %(until)s"
 msgstr ""
+"La fiecare %(interval)s luni, în %(position)s %(weekday)s până la %(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Weeks on %(days)s"
-msgstr ""
+msgstr "La fiecare %(interval)s săptămâni în %(days)s"
 
 #. module: calendar
 #. odoo-python
@@ -1303,34 +1311,35 @@ msgstr ""
 #, python-format
 msgid "Every %(interval)s Weeks on %(days)s for %(count)s events"
 msgstr ""
+"La fiecare %(interval)s săptămâni în %(days)s pentru %(count)s evenimente"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Weeks on %(days)s until %(until)s"
-msgstr ""
+msgstr "La fiecare %(interval)s săptămâni în %(days)s până la %(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Years"
-msgstr ""
+msgstr "La fiecare %(interval)s ani"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Years for %(count)s events"
-msgstr ""
+msgstr "La fiecare %(interval)s ani pentru %(count)s evenimente"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Years until %(until)s"
-msgstr ""
+msgstr "La fiecare %(interval)s ani până la %(until)s"
 
 #. module: calendar
 #. odoo-python
@@ -1483,6 +1492,8 @@ msgid ""
 "If the time is shown as 'busy', this event will be visible to other people with either the full         information or simply 'busy' written depending on its privacy. Use this option to let other people know         that you are unavailable during that period of time. \n"
 " If the event is shown as 'free', other users know         that you are available during that period of time."
 msgstr ""
+"Dacă timpul este afișat ca 'ocupat', acest eveniment va fi vizibil pentru alte persoane fie cu toate informațiile, fie doar cu mențiunea 'ocupat', în funcție de confidențialitate. Folosiți această opțiune pentru a anunța că nu sunteți disponibil în acea perioadă.\n"
+"Dacă evenimentul este afișat ca 'liber', ceilalți utilizatori știu că sunteți disponibil în acea perioadă."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__interval
@@ -2096,6 +2107,8 @@ msgid ""
 "Scheduling an activity using the calendar is not possible on more than one "
 "record."
 msgstr ""
+"Programarea unei activități folosind calendarul nu este posibilă pe mai "
+"multe înregistrări."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -2147,7 +2160,7 @@ msgstr "Setări"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__should_show_status
 msgid "Should Show Status"
-msgstr ""
+msgstr "Ar trebui să arate starea"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
@@ -2258,7 +2271,7 @@ msgstr "Tentativă"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tentative_count
 msgid "Tentative Count"
-msgstr ""
+msgstr "Număr tentative"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2407,7 +2420,7 @@ msgstr "Nesigur(ă)"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__interval
 msgid "Unit"
-msgstr "buc"
+msgstr "Unitate"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__until
@@ -2532,7 +2545,7 @@ msgstr "Trebuie să alegeți cel puțin o zi în săptămână"
 #: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_renderer.xml:0
 #, python-format
 msgid "You're alone in this meeting"
-msgstr ""
+msgstr "Ești singur(ă) la această întâlnire"
 
 #. module: calendar
 #. odoo-javascript
@@ -2585,7 +2598,7 @@ msgstr "nu,"
 #: code:addons/calendar/static/src/views/fields/many2many_attendee.xml:0
 #, python-format
 msgid "props.placeholder"
-msgstr ""
+msgstr "placeholder"
 
 #. module: calendar
 #. odoo-javascript

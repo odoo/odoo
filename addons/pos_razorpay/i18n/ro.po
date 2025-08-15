@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2024-08-17 22:00+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,14 +28,14 @@ msgstr "Tot"
 #. module: pos_razorpay
 #: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__bharatqr
 msgid "BHARATQR"
-msgstr ""
+msgstr "BHARATQR"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/razorpay_pos_request.py:0
 #, python-format
 msgid "Cannot decode Razorpay POS response"
-msgstr ""
+msgstr "Nu se poate decoda răspunsul POS Razorpay"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -54,6 +55,8 @@ msgid ""
 "Choose allow payment mode: \n"
 " All/Card/UPI or QR"
 msgstr ""
+"Alegeți modul de plată permis: \n"
+" Toate/Card/UPI sau QR"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -72,6 +75,8 @@ msgid ""
 "Device Serial No \n"
 " ex: 7000012300"
 msgstr ""
+"Număr de serie al dispozitivului \n"
+" ex: 7000012300"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -81,6 +86,8 @@ msgid ""
 "Payment has been queued. You may choose to wait for the payment to initiate "
 "on terminal or proceed to cancel this transaction"
 msgstr ""
+"Plata a fost pusă în coadă. Puteți alege să așteptați inițierea plății pe "
+"terminal sau să anulați această tranzacție"
 
 #. module: pos_razorpay
 #: model:ir.model,name:pos_razorpay.model_pos_order
@@ -100,7 +107,7 @@ msgstr "Plăți Punct de Vânzare"
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_api_key
 msgid "Razorpay API Key"
-msgstr ""
+msgstr "Cheie API Razorpay"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_authcode
@@ -110,7 +117,7 @@ msgstr ""
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_allowed_payment_modes
 msgid "Razorpay Allowed Payment Modes"
-msgstr ""
+msgstr "Moduri de plată permise Razorpay"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_card_owner_name
@@ -125,14 +132,14 @@ msgstr ""
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_tid
 msgid "Razorpay Device Serial No"
-msgstr ""
+msgstr "Număr de serie dispozitiv Razorpay"
 
 #. module: pos_razorpay
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
 #, python-format
 msgid "Razorpay Error"
-msgstr ""
+msgstr "Eroare Razorpay"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_issuer_card_no
@@ -157,6 +164,8 @@ msgid ""
 "Razorpay POS payment cancel request expected errorCode not found in the "
 "response"
 msgstr ""
+"Solicitarea de anulare a plății POS Razorpay aștepta errorCode, dar nu a "
+"fost găsit în răspuns"
 
 #. module: pos_razorpay
 #. odoo-python
@@ -165,6 +174,8 @@ msgstr ""
 msgid ""
 "Razorpay POS payment request expected errorCode not found in the response"
 msgstr ""
+"Solicitarea de plată POS Razorpay aștepta errorCode, dar nu a fost găsit în "
+"răspuns"
 
 #. module: pos_razorpay
 #. odoo-python
@@ -174,20 +185,22 @@ msgid ""
 "Razorpay POS payment status request expected errorCode not found in the "
 "response"
 msgstr ""
+"Solicitarea de status plată POS Razorpay aștepta errorCode, dar nu a fost "
+"găsit în răspuns"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
 #, python-format
 msgid "Razorpay POS transaction canceled successfully"
-msgstr ""
+msgstr "Tranzacția POS Razorpay a fost anulată cu succes"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
 #, python-format
 msgid "Razorpay POS transaction failed"
-msgstr ""
+msgstr "Tranzacția POS Razorpay a eșuat"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_payment_method
@@ -197,17 +210,17 @@ msgstr ""
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_reverse_ref_no
 msgid "Razorpay Reverse Reference No."
-msgstr ""
+msgstr "Număr de referință inversă Razorpay"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_test_mode
 msgid "Razorpay Test Mode"
-msgstr ""
+msgstr "Mod de testare Razorpay"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_username
 msgid "Razorpay Username"
-msgstr ""
+msgstr "Nume utilizator Razorpay"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -228,17 +241,17 @@ msgstr "Acest terminal de plată este valabil numai pentru moneda INR"
 #: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
 #, python-format
 msgid "Transaction failed due to inactivity"
-msgstr ""
+msgstr "Tranzacția a eșuat din cauza inactivității"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_test_mode
 msgid "Turn it on when in Test Mode"
-msgstr ""
+msgstr "Porniți-l când este în modul de testare"
 
 #. module: pos_razorpay
 #: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__upi
 msgid "UPI"
-msgstr ""
+msgstr "UPI"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_api_key
@@ -246,6 +259,8 @@ msgid ""
 "Used when connecting to Razorpay: "
 "https://razorpay.com/docs/payments/dashboard/account-settings/api-keys/"
 msgstr ""
+"Folosit la conectarea la Razorpay: "
+"https://razorpay.com/docs/payments/dashboard/account-settings/api-keys/"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_username
@@ -253,3 +268,5 @@ msgid ""
 "Username(Device Login) \n"
 " ex: 1234500121"
 msgstr ""
+"Nume utilizator (autentificare dispozitiv) \n"
+" ex: 1234500121"

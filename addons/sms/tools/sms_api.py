@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _
+from odoo import _, exceptions
 from odoo.addons.iap.tools import iap_tools
 
 
@@ -12,6 +12,9 @@ class SmsApi:
         self.env = env
 
     def _contact_iap(self, local_endpoint, params, timeout=15):
+        if not self.env.registry.ready:  # Don't reach IAP servers during module installation
+            raise exceptions.AccessError("Unavailable during module installation.")
+
         account = self.env['iap.account'].get('sms')
         params['account_token'] = account.account_token
         endpoint = self.env['ir.config_parameter'].sudo().get_param('sms.endpoint', self.DEFAULT_ENDPOINT)
@@ -56,7 +59,7 @@ class SmsApi:
         We prefer a dict instead of a message-per-error-state based method so that we only call
         config parameters getters once and avoid extra RPC calls."""
         buy_credits_url = self.env['iap.account'].sudo().get_credits_url(service_name='sms')
-        buy_credits = f'<a href="{buy_credits_url}" target="_blank">%s</a>' % _('Buy credits.')
+        buy_credits = '<a href="{}" target="_blank">{}</a>'.format(buy_credits_url, _("Buy credits."))
 
         sms_endpoint = self.env['ir.config_parameter'].sudo().get_param('sms.endpoint', self.DEFAULT_ENDPOINT)
         sms_account_token = self.env['iap.account'].sudo().get('sms').account_token

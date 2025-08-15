@@ -10,6 +10,9 @@
         <field name="interval_number">10</field>
         <field name="interval_type">minutes</field>
         <field name="numbercall">-1</field>
+        <field name="active" eval="False"/>
     </record>
+
+    <function model="payment.provider" name="_toggle_post_processing_cron"/>
 
 </odoo>

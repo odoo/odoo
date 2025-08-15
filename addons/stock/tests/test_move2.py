@@ -2520,6 +2520,122 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(picking.move_ids.quantity, 6.0)
         self.assertTrue(sml.picked)
 
+    def test_unreservation_on_qty_decrease(self):
+        """
+        Check that the move_lines are unreserved backwards on qty
+        decrease to respect lifo/fifo/... removal strategies
+        """
+        tracked_product = self.env['product.product'].create({
+            'name': "Lovely Product",
+            'type': 'product',
+            'tracking': 'lot',
+        })
+        # Use the removal strategy by alphabetical order of locations
+        closest_strategy = self.env['product.removal'].search([('method', '=', 'closest')])
+        tracked_product.categ_id.removal_strategy_id = closest_strategy
+        lot_count = 5
+        lots = self.env['stock.lot'].create([
+            {
+                'product_id': tracked_product.id,
+                'name': f'LOT00{1 + i}'
+            }
+            for i in range(lot_count)
+        ])
+        locations = self.env['stock.location'].create([
+            {
+                'name': f'Shell {lot_count - i}',
+                'usage': 'internal',
+                'location_id': self.stock_location,
+            }
+            for i in range(lot_count)
+        ])
+        for i in range(lot_count):
+            self.env['stock.quant']._update_available_quantity(tracked_product, locations[i], 10.0, lot_id=lots[i])
+        delivery = self.env['stock.picking'].create({
+            'name': 'Lovely Delivery',
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'picking_type_id': self.picking_type_out,
+            'move_ids': [
+                Command.create({
+                    'name': 'Lovely Move',
+                    'product_id': tracked_product.id,
+                    'product_uom_qty': 50,
+                    'location_id': self.stock_location,
+                    'location_dest_id': self.customer_location,
+                    'product_uom': tracked_product.uom_id.id,
+                })
+            ]
+        })
+        delivery.picking_type_id.reservation_method = 'at_confirm'
+        delivery.action_confirm()
+        self.assertEqual(delivery.move_line_ids.mapped(lambda sml: (sml.location_id.name, sml.lot_id.name, sml.quantity)), [
+            ('Shell 1', 'LOT005', 10.0),
+            ('Shell 2', 'LOT004', 10.0),
+            ('Shell 3', 'LOT003', 10.0),
+            ('Shell 4', 'LOT002', 10.0),
+            ('Shell 5', 'LOT001', 10.0),
+        ])
+        # Decrease the quantity to 45 units
+        with Form(delivery) as delivery_form:
+            with delivery_form.move_ids_without_package.edit(0) as move:
+                move.quantity = 45
+        self.assertEqual(delivery.move_line_ids.mapped(lambda sml: (sml.location_id.name, sml.lot_id.name, sml.quantity)), [
+            ('Shell 1', 'LOT005', 10.0),
+            ('Shell 2', 'LOT004', 10.0),
+            ('Shell 3', 'LOT003', 10.0),
+            ('Shell 4', 'LOT002', 10.0),
+            ('Shell 5', 'LOT001', 5.0),
+        ])
+        # Decrease the quantity to 25 units
+        with Form(delivery) as delivery_form:
+            with delivery_form.move_ids_without_package.edit(0) as move:
+                move.quantity = 25
+        self.assertEqual(delivery.move_line_ids.mapped(lambda sml: (sml.location_id.name, sml.lot_id.name, sml.quantity)), [
+            ('Shell 1', 'LOT005', 10.0),
+            ('Shell 2', 'LOT004', 10.0),
+            ('Shell 3', 'LOT003', 5.0),
+        ])
+        # Decrease the quantity to 12 units
+        with Form(delivery) as delivery_form:
+            with delivery_form.move_ids_without_package.edit(0) as move:
+                move.quantity = 12
+        self.assertEqual(delivery.move_line_ids.mapped(lambda sml: (sml.location_id.name, sml.lot_id.name, sml.quantity)), [
+            ('Shell 1', 'LOT005', 10.0),
+            ('Shell 2', 'LOT004', 2.0),
+        ])
+
+    def test_validate_picking_twice(self):
+        """
+        Check that validating an already validated picking bypasses the call.
+        """
+        picking = self.env['stock.picking'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'picking_type_id': self.picking_type_out,
+            'move_ids': [
+                Command.create({
+                    'name': 'Lovely Move',
+                    'product_id': self.productA.id,
+                    'product_uom_qty': 50,
+                    'location_id': self.stock_location,
+                    'location_dest_id': self.customer_location,
+                    'product_uom': self.productA.uom_id.id,
+                }),
+            ],
+        })
+        picking.button_validate()
+        self.assertEqual(picking.state, 'done')
+        self.assertRecordValues(picking.move_ids, [
+            {'quantity': 50.0, 'state': 'done'}
+        ])
+        picking.button_validate()
+        self.assertEqual(picking.state, 'done')
+        self.assertRecordValues(picking.move_ids, [
+            {'quantity': 50.0, 'state': 'done'}
+        ])
+
+
 class TestStockUOM(TestStockCommon):
     @classmethod
     def setUpClass(cls):

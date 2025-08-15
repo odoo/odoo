@@ -78,10 +78,14 @@ $-editor-messages-margin-x: 2%;
         cursor: text!important;
     }
     /* Summernote not Support for placeholder text https://github.com/summernote/summernote/issues/581 */
-    &[placeholder]:empty:not(:focus):before {
-        content: attr(placeholder);
-        opacity: 0.3;
-        pointer-events: none;
+    &[placeholder]:not(:focus) {
+        &:empty:before,
+        &:has(br:only-child):before,
+        &[data-oe-zws-empty-inline]:before {
+            content: attr(placeholder);
+            opacity: 0.3;
+            pointer-events: none;
+        }
     }
 
     // This style block is about the "editor message" which highlights the areas
@@ -299,5 +303,36 @@ body.editor_enable {
     // backdrop by clicking on it in edit mode.
     .offcanvas-backdrop {
         user-select: none;
+    }
+}
+// edit link popover
+$o-we-popover-bg: white;
+body.editor_enable {
+    .o_edit_menu_popover {
+        background-color: $o-we-popover-bg;
+        font-family: $o-we-font-family;
+
+        a {
+            color: $o-brand-primary;
+
+            &.text-muted {
+                color: rgba(0, 0, 0, 0.65) !important;
+            }
+        }
+        i:not(.js_edit_menu > i) {
+            color: rgba(0, 0, 0, 0.9);
+        }
+        &.bs-popover-top > .popover-arrow::after {
+            border-top-color: $o-we-popover-bg;
+        }
+        &.bs-popover-end > .popover-arrow::after {
+            border-right-color: $o-we-popover-bg;
+        }
+        &.bs-popover-bottom > .popover-arrow::after {
+            border-bottom-color: $o-we-popover-bg;
+        }
+        &.bs-popover-start > .popover-arrow::after {
+            border-left-color: $o-we-popover-bg;
+        }
     }
 }

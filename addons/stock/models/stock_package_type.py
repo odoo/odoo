@@ -7,6 +7,7 @@ from odoo import models, fields, _
 class PackageType(models.Model):
     _name = 'stock.package.type'
     _description = "Stock package type"
+    _order = "sequence, id"
 
     def _get_default_length_uom(self):
         return self.env['product.template']._get_length_uom_name_from_ir_config_parameter()

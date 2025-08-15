@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.tests import tagged, common, Form
 from odoo.tools import float_compare, float_is_zero
 
@@ -490,6 +490,26 @@ class TestRepair(common.TransactionCase):
         ], limit=1)
         self.assertEqual(repair.move_ids[0].location_dest_id, location_dest_id)
 
+    def test_no_recompute_location_when_change_user_after_confirm(self):
+        user1 = self.env['res.users'].create({
+            'name': 'A User',
+            'login': 'a_user',
+            'email': 'a@user.com',
+        })
+        repair_order = self._create_simple_repair_order()
+        repair_order.location_id = self.stock_location_14
+        repair_order.recycle_location_id = self.stock_location_14
+        repair_order.action_validate()
+        repair_order.user_id = user1
+        self.assertEqual(repair_order.location_id, self.stock_location_14)
+        self.assertEqual(repair_order.recycle_location_id, self.stock_location_14)
+        repair_order.action_repair_start()
+        repair_order.action_repair_end()
+        with Form(repair_order) as ro_form:
+            ro_form.user_id = user1
+        self.assertEqual(repair_order.location_id, self.stock_location_14)
+        self.assertEqual(repair_order.recycle_location_id, self.stock_location_14)
+
     def test_purchase_price_so_create_from_repair(self):
         """
         Test that the purchase price is correctly set on the SO line,
@@ -613,6 +633,23 @@ class TestRepair(common.TransactionCase):
         repair_order.action_repair_end()
         self.assertEqual(repair_order.state, 'done')
 
+    def test_sn_with_no_tracked_product(self):
+        """
+        Check that the lot_id field is cleared after updating the product in the repair order.
+        """
+        self.env.ref('base.group_user').implied_ids += (
+            self.env.ref('stock.group_production_lot')
+        )
+        sn_1 = self.env['stock.lot'].create({'name': 'sn_1', 'product_id': self.product_storable_serial.id})
+        ro_form = Form(self.env['repair.order'])
+        ro_form.product_id = self.product_storable_serial
+        ro_form.lot_id = sn_1
+        repair_order = ro_form.save()
+        ro_form = Form(repair_order)
+        ro_form.product_id = self.product_storable_no
+        repair_order = ro_form.save()
+        self.assertFalse(repair_order.lot_id)
+
     def test_repair_multi_unit_order_with_serial_tracking(self):
         """
         Test that a sale order with a single order line with quantity > 1 for a product that creates a repair order and
@@ -699,3 +736,146 @@ class TestRepair(common.TransactionCase):
         self.assertEqual(len(res), 1, "The invoice should have one line")
         self.assertEqual(res[0]['product_name'], self.product_storable_serial.display_name, "The product name should be the same")
         self.assertEqual(res[0]['lot_name'], quant.lot_id.name, "The lot name should be the same")
+
+    def test_trigger_orderpoint_from_repair(self):
+        """
+        Test that the order point triggered by the repair order creates a move linked to a picking.
+        """
+        self.assertFalse(self.env['stock.move'].search([('product_id', '=', self.product_storable_no.id)]))
+        route = self.env['stock.route'].create({
+            'name': 'new route',
+            'rule_ids': [(0, False, {
+                'name': 'rule_test',
+                'location_src_id': self.stock_warehouse.lot_stock_id.id,
+                'location_dest_id': self.stock_location_14.id,
+                'company_id': self.env.company.id,
+                'action': 'pull',
+                'picking_type_id': self.env.ref('stock.picking_type_in').id,
+                'procure_method': 'make_to_stock'
+            })],
+        })
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Cake RR',
+            'product_id': self.product_storable_no,
+            'route_id': route.id,
+            'location_id': self.stock_location_14.id,
+            'product_id': self.product_storable_no.id,
+            'product_min_qty': 0,
+            'product_max_qty': 1,
+            'trigger': 'auto'
+        })
+        # The product to be repaired should be storable and out of stock
+        # to trigger the wizard indicating that the product has an insufficient quantity.
+        self.product_product_3.type = 'product'
+        repair_order = self.env['repair.order'].create({
+            'product_id': self.product_product_3.id,
+            'product_uom': self.product_product_3.uom_id.id,
+            'partner_id': self.res_partner_12.id,
+            'location_id': self.stock_location_14.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.product_storable_no.id,
+                    'product_uom_qty': 1.0,
+                    'state': 'draft',
+                    'repair_line_type': 'add',
+                })
+            ],
+        })
+        validate_action = repair_order.action_validate()
+        self.assertEqual(validate_action.get("res_model"), "stock.warn.insufficient.qty.repair")
+        warn_qty_wizard = Form(
+            self.env['stock.warn.insufficient.qty.repair']
+            .with_context(**validate_action['context'])
+            ).save()
+        warn_qty_wizard.action_done()
+        self.assertEqual(repair_order.state, "confirmed", 'Repair order should be in "Confirmed" state.')
+        move = self.env['stock.move'].search([
+            ('product_id', '=', self.product_storable_no.id),
+            ('location_dest_id', '=', self.stock_location_14.id,)
+        ])
+        self.assertTrue(move.picking_id)
+        self.assertFalse(move.repair_id)
+        self.assertEqual(move.location_id, self.stock_warehouse.lot_stock_id)
+        self.assertEqual(move.location_dest_id, self.stock_location_14)
+
+    def test_open_and_create_repair_from_lot(self):
+        """
+        Test that the repair order can be opened from the lot and that it is created correctly.
+        """
+        sn_1 = self.env['stock.lot'].create({'name': 'sn_1', 'product_id': self.product_storable_serial.id})
+        action = sn_1.action_lot_open_repairs()
+        context = action.get('context')
+        tracked_product_repair_line = self.env['product.product'].create({
+            'name': 'Test Product',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        tracked_product_sn = self.env['stock.lot'].create({'name': 'tracked_product_sn1', 'product_id': tracked_product_repair_line.id})
+        repair_order = self.env['repair.order'].with_context(context).create({
+            'product_id': self.product_storable_serial.id,
+            'product_uom': self.product_storable_serial.uom_id.id,
+            'location_id': self.stock_warehouse.lot_stock_id.id,
+            'lot_id': sn_1.id,
+            'picking_type_id': self.stock_warehouse.repair_type_id.id,
+        })
+        repair_order.with_context(context).move_ids = [Command.create({
+            'product_id': tracked_product_repair_line.id,
+            'product_uom_qty': 1.0,
+            'repair_line_type': 'add',
+            'lot_ids': [(4, tracked_product_sn.id)],
+            'quantity': 1.0,
+        })]
+        self.assertEqual(repair_order.lot_id, sn_1)
+
+    def test_copy_repair_product_with_different_groups(self):
+        """
+            This test checks if the product can be copied with users that don't have access on the Inventory app
+        """
+        product_templ = self.env['product.template'].create({
+            'name': "Repair Consumable",
+            'type': 'consu',
+            'create_repair': True,
+        })
+        mitchell_user = self.env['res.users'].create({
+            'name': "Mitchell not Admin",
+            'login': "m_user",
+            'email': "m@user.com",
+            'groups_id': [Command.set(self.env.ref('sales_team.group_sale_manager').ids)],
+        })
+        product_templ.invalidate_recordset(['create_repair'])
+        with self.assertRaises(AccessError):
+            product_templ.with_user(mitchell_user).create_repair
+        copied_without_access = product_templ.with_user(mitchell_user).copy()
+        mitchell_user.write({
+            'groups_id': [Command.link(self.env.ref('stock.group_stock_user').id)]
+        })
+        self.assertFalse(copied_without_access.create_repair)
+        copied_with_access = product_templ.copy().with_user(mitchell_user)
+        self.assertTrue(copied_with_access.create_repair)
+
+    def test_delivered_qty_of_generated_so(self):
+        """
+        Test that checks that `qty_delivered` of the generated SOL is correctly set when the repair is done.
+        """
+        repair_order = self.env['repair.order'].create({
+            'product_id': self.product_storable_order_repair.id,
+            'product_uom': self.product_storable_order_repair.uom_id.id,
+            'partner_id': self.res_partner_1.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.product_consu_order_repair.id,
+                    'product_uom_qty': 1.0,
+                    'state': 'draft',
+                    'repair_line_type': 'add',
+                })
+            ],
+        })
+        repair_order.action_validate()
+        repair_order.action_repair_start()
+        repair_order.action_repair_end()
+        self.assertEqual(repair_order.state, 'done')
+        self.assertEqual(repair_order.move_ids.quantity, 1.0)
+        repair_order.action_create_sale_order()
+        sale_order = repair_order.sale_order_id
+        sale_order.action_confirm()
+        self.assertEqual(sale_order.order_line.qty_delivered, 1.0)

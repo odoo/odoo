@@ -114,3 +114,5 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
             # version is also broken
             self.fix_it('/test_page_view')
         self.fix_it('/test_page_view', 'hard')
+        # hard reset should set arch_updated to false
+        self.assertFalse(self.test_page_view.arch_updated)

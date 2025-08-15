@@ -106,6 +106,16 @@
         <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
     </record>
 
+    <record id="account_analytic_line_rule_readonly_user" model="ir.rule">
+        <field name="name">account.analytic.line.readonly.user</field>
+        <field name="model_id" ref="analytic.model_account_analytic_line"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('account.group_account_readonly'))]"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
     <record id="base.default_user" model="res.users">
         <field name="groups_id" eval="[(4,ref('account.group_account_manager'))]"/>
     </record>

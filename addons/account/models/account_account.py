@@ -459,7 +459,13 @@ class AccountAccount(models.Model):
     @api.depends('account_type')
     def _compute_reconcile(self):
         for account in self:
-            account.reconcile = account.account_type in ('asset_receivable', 'liability_payable')
+            if account.internal_group in ('income', 'expense', 'equity'):
+                account.reconcile = False
+            elif account.account_type in ('asset_receivable', 'liability_payable'):
+                account.reconcile = True
+            elif account.account_type in ('asset_cash', 'liability_credit_card', 'off_balance'):
+                account.reconcile = False
+            # For other asset/liability accounts, don't do any change to account.reconcile.
 
     def _set_opening_debit(self):
         for record in self:
@@ -512,7 +518,7 @@ class AccountAccount(models.Model):
         return super(AccountAccount, contextual_self).default_get(default_fields)
 
     @api.model
-    def _get_most_frequent_accounts_for_partner(self, company_id, partner_id, move_type, filter_never_user_accounts=False, limit=None):
+    def _get_most_frequent_accounts_for_partner(self, company_id, partner_id, move_type, filter_never_user_accounts=False, limit=None, journal_id=None):
         """
         Returns the accounts ordered from most frequent to least frequent for a given partner
         and filtered according to the move type
@@ -521,6 +527,7 @@ class AccountAccount(models.Model):
         :param move_type: the type of the move to know which type of accounts to retrieve
         :param filter_never_user_accounts: True if we should filter out accounts never used for the partner
         :param limit: the maximum number of accounts to retrieve
+        :param journal_id: only return accounts allowed on this journal id
         :returns: List of account ids, ordered by frequency (from most to least frequent)
         """
         domain = [
@@ -529,6 +536,8 @@ class AccountAccount(models.Model):
             ('account_id.deprecated', '=', False),
             ('date', '>=', fields.Date.add(fields.Date.today(), days=-365 * 2)),
         ]
+        if journal_id:
+            domain += ['|', ('account_id.allowed_journal_ids', '=', journal_id), ('account_id.allowed_journal_ids', '=', False)]
         if move_type in self.env['account.move'].get_inbound_types(include_receipts=True):
             domain.append(('account_id.internal_group', '=', 'income'))
         elif move_type in self.env['account.move'].get_outbound_types(include_receipts=True):
@@ -551,8 +560,8 @@ class AccountAccount(models.Model):
         return [r[0] for r in self._cr.fetchall()]
 
     @api.model
-    def _get_most_frequent_account_for_partner(self, company_id, partner_id, move_type=None):
-        most_frequent_account = self._get_most_frequent_accounts_for_partner(company_id, partner_id, move_type, filter_never_user_accounts=True, limit=1)
+    def _get_most_frequent_account_for_partner(self, company_id, partner_id, move_type=None, journal_id=None):
+        most_frequent_account = self._get_most_frequent_accounts_for_partner(company_id, partner_id, move_type, filter_never_user_accounts=True, limit=1, journal_id=journal_id)
         return most_frequent_account[0] if most_frequent_account else False
 
     @api.model
@@ -561,9 +570,13 @@ class AccountAccount(models.Model):
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        if not name and self._context.get('partner_id') and self._context.get('move_type'):
-            return self._order_accounts_by_frequency_for_partner(
-                            self.env.company.id, self._context.get('partner_id'), self._context.get('move_type'))
+        if (
+            not name
+            and (partner := self._context.get('partner_id'))
+            and (move_type := self._context.get('move_type'))
+            and (ordered_accounts := self._order_accounts_by_frequency_for_partner(self.env.company.id, partner, move_type))
+        ):
+            return ordered_accounts
         domain = domain or []
         if name:
             if operator in ('=', '!='):
@@ -644,6 +657,8 @@ class AccountAccount(models.Model):
         for company, company_accounts in accounts_per_company.items():
             company._update_opening_move({account: data[account.id] for account in company_accounts})
 
+        self.env.flush_all()
+
     def _toggle_reconcile_to_true(self):
         '''Toggle the `reconcile´ boolean from False -> True
 
@@ -651,6 +666,7 @@ class AccountAccount(models.Model):
         '''
         if not self.ids:
             return None
+        self.env['account.move.line'].invalidate_model(['amount_residual', 'amount_residual_currency', 'reconciled'])
         query = """
             UPDATE account_move_line SET
                 reconciled = CASE WHEN debit = 0 AND credit = 0 AND amount_currency = 0
@@ -660,7 +676,6 @@ class AccountAccount(models.Model):
             WHERE full_reconcile_id IS NULL and account_id IN %s
         """
         self.env.cr.execute(query, [tuple(self.ids)])
-        self.env['account.move.line'].invalidate_model(['amount_residual', 'amount_residual_currency', 'reconciled'])
 
     def _toggle_reconcile_to_false(self):
         '''Toggle the `reconcile´ boolean from True -> False
@@ -679,6 +694,8 @@ class AccountAccount(models.Model):
         if partial_lines_count > 0:
             raise UserError(_('You cannot switch an account to prevent the reconciliation '
                               'if some partial reconciliations are still pending.'))
+
+        self.env['account.move.line'].invalidate_model(['amount_residual', 'amount_residual_currency'])
         query = """
             UPDATE account_move_line
                 SET amount_residual = 0, amount_residual_currency = 0
@@ -720,6 +737,9 @@ class AccountAccount(models.Model):
             for account in self:
                 if self.env['account.move.line'].search_count([('account_id', '=', account.id), ('currency_id', 'not in', (False, vals['currency_id']))]):
                     raise UserError(_('You cannot set a currency on this account as it already has some journal entries having a different foreign currency.'))
+
+        if vals.get('deprecated') and self.env["account.tax.repartition.line"].search_count([('account_id', 'in', self.ids)], limit=1):
+            raise UserError(_("You cannot deprecate an account that is used in a tax distribution."))
 
         return super(AccountAccount, self).write(vals)
 
@@ -792,7 +812,7 @@ class AccountGroup(models.Model):
     name = fields.Char(required=True, translate=True)
     code_prefix_start = fields.Char(compute='_compute_code_prefix_start', readonly=False, store=True, precompute=True)
     code_prefix_end = fields.Char(compute='_compute_code_prefix_end', readonly=False, store=True, precompute=True)
-    company_id = fields.Many2one('res.company', required=True, readonly=True, default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', required=True, readonly=True, default=lambda self: self.env.company.root_id)
 
     _sql_constraints = [
         (
@@ -902,40 +922,41 @@ class AccountGroup(models.Model):
         self.env['account.account'].flush_model(['code'])
 
         if company:
-            company_ids = company.root_id.ids
+            root_companies = company.root_id
         elif account_ids:
-            company_ids = account_ids.company_id.root_id.ids
-            account_ids = account_ids.ids
+            root_companies = account_ids.company_id.root_id
         else:
-            company_ids = []
-            for company in self.company_id:
-                company_ids.extend(company._accessible_branches().ids)
-            account_ids = []
-        if not company_ids and not account_ids:
-            return
-        account_where_clause = SQL('account.company_id IN %s', tuple(company_ids))
-        if account_ids:
-            account_where_clause = SQL('%s AND account.id IN %s', account_where_clause, tuple(account_ids))
+            root_companies = self.company_id
 
-        self._cr.execute(SQL("""
+        account_domain = [('company_id', 'child_of', root_companies.ids)]
+        if account_ids:
+            account_domain.append(('id', 'in', account_ids.ids))
+
+        account_query = self.env['account.account']._where_calc(account_domain)
+
+        self._cr.execute(SQL(
+            """
             WITH relation AS (
-                 SELECT DISTINCT ON (account.id)
-                        account.id AS account_id,
+                 SELECT DISTINCT ON (account_account.id)
+                        account_account.id AS account_id,
                         agroup.id AS group_id
-                   FROM account_account account
-                   JOIN res_company account_company ON account_company.id = account.company_id
+                   FROM %(from_clause)s
+                   JOIN res_company account_company ON account_company.id = account_account.company_id
               LEFT JOIN account_group agroup
-                     ON agroup.code_prefix_start <= LEFT(account.code, char_length(agroup.code_prefix_start))
-                    AND agroup.code_prefix_end >= LEFT(account.code, char_length(agroup.code_prefix_end))
+                     ON agroup.code_prefix_start <= LEFT(account_account.code, char_length(agroup.code_prefix_start))
+                    AND agroup.code_prefix_end >= LEFT(account_account.code, char_length(agroup.code_prefix_end))
                     AND agroup.company_id = split_part(account_company.parent_path, '/', 1)::int
-                  WHERE %s
-               ORDER BY account.id, char_length(agroup.code_prefix_start) DESC, agroup.id
+                  WHERE %(where_clause)s
+               ORDER BY account_account.id, char_length(agroup.code_prefix_start) DESC, agroup.id
             )
             UPDATE account_account
                SET group_id = rel.group_id
               FROM relation rel
              WHERE account_account.id = rel.account_id
-        """, account_where_clause))
+            """,
+            from_clause=account_query.from_clause,
+            where_clause=account_query.where_clause,
+        ))
         self.env['account.account'].invalidate_model(['group_id'], flush=False)
 
     def _adapt_parent_account_group(self, company=None):
@@ -959,7 +980,7 @@ class AccountGroup(models.Model):
                        child.id AS child_id,
                        parent.id AS parent_id
                   FROM account_group parent
-                  JOIN account_group child
+            RIGHT JOIN account_group child
                     ON char_length(parent.code_prefix_start) < char_length(child.code_prefix_start)
                    AND parent.code_prefix_start <= LEFT(child.code_prefix_start, char_length(parent.code_prefix_start))
                    AND parent.code_prefix_end >= LEFT(child.code_prefix_end, char_length(parent.code_prefix_end))

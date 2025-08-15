@@ -4,6 +4,7 @@ import {
     click,
     clickDiscard,
     clickSave,
+    drag,
     dragAndDrop,
     editInput,
     editSelect,
@@ -144,6 +145,10 @@ function getLocalStorageFold() {
         "fake.model,1337":
             JSON.parse(window.localStorage.getItem("properties.fold,fake.model,1337")) || [],
     };
+}
+
+function getPropertyHandleElement(propertyName) {
+    return target.querySelector(`*[property-name='${propertyName}'] .oi-draggable`);
 }
 
 QUnit.module("Fields", (hooks) => {
@@ -2078,6 +2083,41 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("properties: discard changes", async function (assert) {
+        async function mockRPC(route, { method, model, kwargs }) {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
+                return true;
+            }
+        }
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+            <form>
+                <field name="company_id"/>
+                <field name="properties" widget="properties"/>
+            </form>`,
+            mockRPC,
+            actionMenus: {},
+        });
+        assert.strictEqual(
+            target.querySelector(".o_property_field:first-child input").value,
+            "char value",
+        );
+        await editInput(target, ".o_property_field:first-child input", "char updated");
+        assert.strictEqual(
+            target.querySelector(".o_property_field:first-child input").value,
+            "char updated",
+        );
+        await clickDiscard(target);
+        assert.strictEqual(
+            target.querySelector(".o_property_field:first-child input").value,
+            "char value",
+        );
+    });
+
     // ---------------------------------------------------
     // Test the properties groups
     // ---------------------------------------------------
@@ -2729,5 +2769,86 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_property_field .o_property_field_value input").value,
             "0"
         );
+    });
+
+    QUnit.test(
+        "properties: moving single property to 2nd group in auto split mode",
+        async function (assert) {
+            await makePropertiesGroupView([false]);
+
+            const { moveTo, drop } = await drag(getPropertyHandleElement("property_1"));
+
+            const secondGroup = target.querySelector(".o_property_group:last-of-type");
+            await moveTo(secondGroup, "bottom");
+            await drop(target, "bottom-right");
+
+            assert.deepEqual(getGroups(), [
+                [["GROUP 1", "property_gen_2"]],
+                [
+                    ["GROUP 2", "property_gen_3"],
+                    ["Property 1", "property_1"],
+                ],
+            ]);
+        }
+    );
+
+    QUnit.test("properties: moving single property to 1st group", async function (assert) {
+        await makePropertiesGroupView([true, true, false]);
+
+        await dragAndDrop(
+            getPropertyHandleElement("property_3"),
+            getPropertyHandleElement("property_1")
+        );
+
+        assert.deepEqual(getGroups(), [
+            [
+                ["SEPARATOR 1", "property_1"],
+                ["Property 3", "property_3"],
+            ],
+            [["SEPARATOR 2", "property_2"]],
+        ]);
+    });
+
+    QUnit.test("properties: split, moving property from 2nd group to 1st", async function (assert) {
+        await makePropertiesGroupView([true, false, false]);
+
+        await dragAndDrop(
+            getPropertyHandleElement("property_3"),
+            getPropertyHandleElement("property_2"),
+            "top"
+        );
+
+        assert.deepEqual(getGroups(), [
+            [
+                ["SEPARATOR 1", "property_1"],
+                ["Property 3", "property_3"],
+                ["Property 2", "property_2"],
+            ],
+            [["GROUP 2", "property_gen_2"]],
+        ]);
+    });
+
+    QUnit.test("properties: split, moving property from 1st group to 2nd", async function (assert) {
+        await makePropertiesGroupView([true, false, false, false, false, false]);
+
+        await dragAndDrop(
+            getPropertyHandleElement("property_3"),
+            getPropertyHandleElement("property_6"),
+            "top"
+        );
+
+        assert.deepEqual(getGroups(), [
+            [
+                ["SEPARATOR 1", "property_1"],
+                ["Property 2", "property_2"],
+                ["Property 4", "property_4"],
+            ],
+            [
+                ["GROUP 2", "property_gen_2"],
+                ["Property 5", "property_5"],
+                ["Property 3", "property_3"],
+                ["Property 6", "property_6"],
+            ],
+        ]);
     });
 });

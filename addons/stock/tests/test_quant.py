@@ -1171,6 +1171,23 @@ class StockQuant(TransactionCase):
                 'lot_id': lot_a.id,
             })
 
+    def test_set_on_hand_quantity_tracked_product(self):
+        """
+        Checks that you can update the on hand quantity of a tracked product
+        on a quant without a set lot.
+        """
+        quant_without_lot = self.env['stock.quant'].create({
+            'product_id': self.product_lot.id,
+            'location_id': self.stock_location.id,
+            'lot_id': False,
+        })
+        quant_without_lot.with_context({'inventory_mode': True}).inventory_quantity_auto_apply = 10.0
+        self.assertRecordValues(quant_without_lot, [{
+            'product_id': self.product_lot.id,
+            'quantity': 10.0,
+            'lot_id': False,
+        }])
+
 
 class StockQuantRemovalStrategy(TransactionCase):
     def setUp(self):

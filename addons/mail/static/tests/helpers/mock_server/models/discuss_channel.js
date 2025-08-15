@@ -98,7 +98,12 @@ patch(MockServer.prototype, {
         if (args.model === "discuss.channel" && args.method === "add_members") {
             const ids = args.args[0];
             const partner_ids = args.args[1] || args.kwargs.partner_ids;
-            return this._mockDiscussChannelAddMembers(ids, partner_ids, args.kwargs.context);
+            return this._mockDiscussChannelAddMembers(
+                ids,
+                partner_ids,
+                args.kwargs.invite_to_rtc_call,
+                args.kwargs.context
+            );
         }
         if (args.model === "discuss.channel" && args.method === "channel_pin") {
             const ids = args.args[0];
@@ -284,9 +289,10 @@ patch(MockServer.prototype, {
      *
      * @private
      * @param {integer[]} ids
+     * @param {boolean} invite_to_rtc_call
      * @param {integer[]} partner_ids
      */
-    _mockDiscussChannelAddMembers(ids, partner_ids, context = {}) {
+    _mockDiscussChannelAddMembers(ids, partner_ids, invite_to_rtc_call, context = {}) {
         const [channel] = this.getRecords("discuss.channel", [["id", "in", ids]]);
         const partners = this.getRecords("res.partner", [["id", "in", partner_ids]]);
         for (const partner of partners) {
@@ -326,7 +332,7 @@ patch(MockServer.prototype, {
                 ["channel_id", "=", channel.id],
             ]) > 0;
         if (isSelfMember) {
-            this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
+            const data = {
                 Thread: {
                     id: channel.id,
                     channelMembers: [
@@ -342,7 +348,18 @@ patch(MockServer.prototype, {
                     ]),
                     model: "discuss.channel",
                 },
-            });
+            };
+            if (invite_to_rtc_call) {
+                data.Thread.invitedMembers = [
+                    [
+                        "ADD",
+                        this._mockDiscussChannelMember_DiscussChannelMemberFormat(
+                            insertedChannelMembers
+                        ),
+                    ],
+                ];
+            }
+            this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", data);
         }
     },
     /**
@@ -511,7 +528,8 @@ patch(MockServer.prototype, {
                 fold_state: foldState,
                 is_minimized: foldState !== "closed",
             };
-            this.pyEnv["discuss.channel.member"].write([memberOfCurrentUser.id], vals);
+            memberOfCurrentUser &&
+                this.pyEnv["discuss.channel.member"].write([memberOfCurrentUser.id], vals);
             this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "discuss.Thread/fold_state", {
                 foldStateCount: state_count,
                 id: channel.id,

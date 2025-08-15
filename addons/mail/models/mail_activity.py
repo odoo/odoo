@@ -201,7 +201,7 @@ class MailActivity(models.Model):
             # Date.context_today is correct because date_deadline is a Date and is meant to be
             # expressed in user TZ
             base = force_base_date
-        elif activity_type.delay_from == 'previous_activity' and 'activity_previous_deadline' in self.env.context:
+        elif activity_type.delay_from == 'previous_activity' and self.env.context.get('activity_previous_deadline'):
             base = fields.Date.from_string(self.env.context.get('activity_previous_deadline'))
         else:
             base = fields.Date.context_today(self)
@@ -343,11 +343,9 @@ class MailActivity(models.Model):
 
         # subscribe (batch by model and user to speedup)
         for model, activity_data in activities._classify_by_model().items():
-            per_user = dict()
+            per_user = defaultdict(list)
             for activity in activity_data['activities'].filtered(lambda act: act.user_id):
-                if activity.user_id not in per_user:
-                    per_user[activity.user_id] = [activity.res_id]
-                else:
+                if activity.res_id not in per_user[activity.user_id]:
                     per_user[activity.user_id].append(activity.res_id)
             for user, res_ids in per_user.items():
                 pids = user.partner_id.ids if user.partner_id in readable_user_partners else user.sudo().partner_id.ids

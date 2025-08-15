@@ -56,7 +56,7 @@ class Project(models.Model):
     warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate', compute_sudo=True)
     partner_id = fields.Many2one(
         compute='_compute_partner_id', store=True, readonly=False)
-    allocated_hours = fields.Float(copy=False)
+    allocated_hours = fields.Float()
     billing_type = fields.Selection(
         compute="_compute_billing_type",
         selection=[
@@ -173,7 +173,7 @@ class Project(models.Model):
 
         (self - projects).warning_employee_rate = False
 
-    @api.depends('sale_line_employee_ids.sale_line_id', 'sale_line_id')
+    @api.depends('sale_line_id')
     def _compute_partner_id(self):
         billable_projects = self.filtered('allow_billable')
         for project in billable_projects:
@@ -227,13 +227,24 @@ class Project(models.Model):
         return res
 
     def _update_timesheets_sale_line_id(self):
-        for project in self.filtered(lambda p: p.allow_billable and p.allow_timesheets):
-            timesheet_ids = project.mapped('timesheet_ids').filtered(lambda t: not t.is_so_line_edited and t._is_updatable_timesheet())
-            if not timesheet_ids:
+        timesheetable_and_billable_projects = self.filtered(lambda p: p.allow_billable and p.allow_timesheets)
+        if not timesheetable_and_billable_projects:
+            return
+        timesheets_per_project = self.env['account.analytic.line']._read_group(
+            [
+                ('project_id', 'in', timesheetable_and_billable_projects.ids),
+                '|', ('task_id', '=', False), ('task_id.sale_line_id', '!=', False),
+                ('is_so_line_edited', '=', False),
+            ],
+            ['project_id'],
+            ['id:recordset'],
+        )
+        for project, timesheets in timesheets_per_project:
+            timesheets_to_update = timesheets.filtered(lambda t: t._is_updatable_timesheet())
+            if not timesheets_to_update:
                 continue
-            for employee_id in project.sale_line_employee_ids.filtered(lambda l: l.project_id == project).employee_id:
-                sale_line_id = project.sale_line_employee_ids.filtered(lambda l: l.project_id == project and l.employee_id == employee_id).sale_line_id
-                timesheet_ids.filtered(lambda t: t.employee_id == employee_id).sudo().so_line = sale_line_id
+            for employee_mapping in project.sale_line_employee_ids:
+                timesheets_to_update.filtered(lambda t: t.employee_id == employee_mapping.employee_id).sudo().so_line = employee_mapping.sale_line_id
 
     def action_view_timesheet(self):
         self.ensure_one()
@@ -417,7 +428,7 @@ class Project(models.Model):
             return profitability_items
         aa_line_read_group = self.env['account.analytic.line'].sudo()._read_group(
             self.sudo()._get_profitability_aal_domain(),
-            ['timesheet_invoice_type', 'timesheet_invoice_id', 'currency_id'],
+            ['timesheet_invoice_type', 'timesheet_invoice_id', 'currency_id', 'category'],
             ['amount:sum', 'id:array_agg'],
         )
         can_see_timesheets = with_action and len(self) == 1 and self.user_has_groups('hr_timesheet.group_hr_timesheet_approver')
@@ -426,7 +437,9 @@ class Project(models.Model):
         total_revenues = {'invoiced': 0.0, 'to_invoice': 0.0}
         total_costs = {'billed': 0.0, 'to_bill': 0.0}
         convert_company = self.company_id or self.env.company
-        for timesheet_invoice_type, dummy, currency, amount, ids in aa_line_read_group:
+        for timesheet_invoice_type, dummy, currency, category, amount, ids in aa_line_read_group:
+            if category == 'vendor_bill':
+                continue  # This is done to prevent expense duplication with product re-invoice policies
             amount = currency._convert(amount, self.currency_id, convert_company)
             invoice_type = timesheet_invoice_type
             cost = costs_dict.setdefault(invoice_type, {'billed': 0.0, 'to_bill': 0.0})
@@ -537,7 +550,7 @@ class ProjectTask(models.Model):
                 return related_project.sale_line_employee_ids.sale_line_id.order_partner_id[:1]
         return res
 
-    sale_order_id = fields.Many2one(domain="['|', '|', ('partner_id', '=', partner_id), ('partner_id', 'child_of', commercial_partner_id), ('partner_id', 'parent_of', partner_id)]")
+    sale_order_id = fields.Many2one(domain="['|', '|', ('partner_id', '=', partner_id), ('partner_id.commercial_partner_id.id', 'parent_of', partner_id), ('partner_id', 'parent_of', partner_id)]")
     so_analytic_account_id = fields.Many2one(related='sale_order_id.analytic_account_id', string='Sale Order Analytic Account')
     pricing_type = fields.Selection(related="project_id.pricing_type")
     is_project_map_empty = fields.Boolean("Is Project map empty", compute='_compute_is_project_map_empty')

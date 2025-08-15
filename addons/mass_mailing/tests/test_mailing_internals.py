@@ -123,10 +123,12 @@ class TestMassMailValues(MassMailCommon):
                                 <div style="color: red; background-image:url(data:image/jpg;base64,{BASE_64_STRING}15); display: block;"/>
                                 <div style="color: red; background-image: url(data:image/jpg;base64,{BASE_64_STRING}16); background: url('data:image/jpg;base64,{BASE_64_STRING}17'); display: block;"/>
                             <![endif]-->
+                            <img src="data:image/png;base64,{BASE_64_STRING}0">
                         </body></html>
                     """,
                 })
-        self.assertEqual(len(attachments), 18)
+        self.assertEqual(len(attachments), 19)
+        self.assertEqual(attachments[0]['id'], attachments[18]['id'])
         self.assertEqual(str(mailing.body_html), f"""
                         <html><body>
                             <img src="/web/image/{attachments[0]['id']}?access_token={attachments[0]['token']}">
@@ -149,6 +151,7 @@ class TestMassMailValues(MassMailCommon):
                                 <div style="color: red; background-image:url(/web/image/{attachments[15]['id']}?access_token={attachments[15]['token']}); display: block;"/>
                                 <div style="color: red; background-image: url(/web/image/{attachments[16]['id']}?access_token={attachments[16]['token']}); background: url('/web/image/{attachments[17]['id']}?access_token={attachments[17]['token']}'); display: block;"/>
                             <![endif]-->
+                            <img src="/web/image/{attachments[18]['id']}?access_token={attachments[18]['token']}">
                         </body></html>
         """.strip())
 
@@ -421,6 +424,80 @@ class TestMassMailValues(MassMailCommon):
             activity.write({'res_id': 0})
             self.env.flush_all()
 
+    def test_mailing_editor_created_attachments(self):
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'TestMailing',
+            'subject': 'Test',
+            'mailing_type': 'mail',
+            'body_html': '<p>Hello</p>',
+            'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+        })
+        blob_b64 = base64.b64encode(b'blob1')
+
+        # Created when uploading an image
+        original_svg_attachment = self.env['ir.attachment'].create({
+            "name": "test SVG",
+            "mimetype": "image/svg+xml",
+            "datas": blob_b64,
+            "public": True,
+            "res_model": "mailing.mailing",
+            "res_id": mailing.id,
+        })
+
+        # Created when saving the mass_mailing
+        png_duplicate_of_svg_attachment = self.env['ir.attachment'].create({
+            "name": "test SVG duplicate",
+            "mimetype": "image/png",
+            "datas": blob_b64,
+            "public": True,
+            "res_model": "mailing.mailing",
+            "res_id": mailing.id,
+            "original_id": original_svg_attachment.id
+        })
+
+        # Created by uploading new image
+        original_png_attachment = self.env['ir.attachment'].create({
+            "name": "test PNG",
+            "mimetype": "image/png",
+            "datas": blob_b64,
+            "public": True,
+            "res_model": "mailing.mailing",
+            "res_id": mailing.id,
+        })
+
+        # Created by modify_image in editor controller
+        self.env['ir.attachment'].create({
+            "name": "test PNG duplicate",
+            "mimetype": "image/png",
+            "datas": blob_b64,
+            "public": True,
+            "res_model": "mailing.mailing",
+            "res_id": mailing.id,
+            "original_id": original_png_attachment.id
+        })
+
+        mail_thread_attachments = mailing._get_mail_thread_data_attachments()
+        self.assertSetEqual(set(mail_thread_attachments.ids), {png_duplicate_of_svg_attachment.id, original_png_attachment.id})
+
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_process_mailing_queue_without_html_body(self):
+        """ Test mailing with past schedule date and without any html body """
+        mailing = self.env['mailing.mailing'].create({
+                'name': 'mailing',
+                'subject': 'some subject',
+                'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+                'preview': "Check it out before its too late",
+                'body_html': False,
+                'schedule_date': datetime(2023, 2, 17, 11, 0),
+            })
+        mailing.action_put_in_queue()
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            mailing._process_mass_mailing_queue()
+
+        self.assertFalse(mailing.body_html)
+        self.assertEqual(mailing.mailing_model_name, 'res.partner')
+
 
 @tagged("mass_mailing", "utm")
 class TestMassMailUTM(MassMailCommon):
@@ -476,6 +553,23 @@ class TestMassMailUTM(MassMailCommon):
         mailing_0.subject = 'First subject'
         self.assertEqual(mailing_0.name, 'First subject (Mass Mailing created on 2022-01-02)',
             msg='The name should be back to first one')
+
+    def test_mailing_create_with_context(self):
+        """ Test that the default_name provided via context is ignored to prevent constraint violations."""
+        mailing_1, mailing_2 = self.env["mailing.mailing"].create([
+            {
+                "subject": "First subject",
+                "name": "Mailing",
+            },
+            {
+                "subject": "Second subject",
+                "name": "Mailing",
+            },
+        ])
+        self.assertEqual(mailing_1.name, "Mailing")
+        self.assertEqual(mailing_2.name, "Mailing [2]")
+        mailing_3 = self.env["mailing.mailing"].with_context({"default_name": "Mailing"}).create({"subject": "Third subject"})
+        self.assertEqual(mailing_3.name, "Mailing [3]")
 
 
 @tagged('mass_mailing')

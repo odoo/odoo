@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import math
@@ -6,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
-from odoo.tools import float_compare
+from odoo.tools import float_compare, format_duration
 
 
 class SaleOrder(models.Model):
@@ -97,6 +96,7 @@ class SaleOrder(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         return self.order_line.filtered(lambda sol:
             sol.is_service
+            and sol.invoice_status != "invoiced"
             and not sol.has_displayed_warning_upsell  # we don't want to display many times the warning each time we timesheet on the SOL
             and sol.product_id.service_policy == 'ordered_prepaid'
             and float_compare(
@@ -142,12 +142,19 @@ class SaleOrder(models.Model):
 
         return action
 
+    def _reset_has_displayed_warning_upsell_order_lines(self):
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        for line in self.order_line:
+            if line.has_displayed_warning_upsell and line.product_uom and float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision) == 0:
+                line.has_displayed_warning_upsell = False
+
     def _create_invoices(self, grouped=False, final=False, date=None):
         """Link timesheets to the created invoices. Date interval is injected in the
         context in sale_make_invoice_advance_inv wizard.
         """
         moves = super()._create_invoices(grouped=grouped, final=final, date=date)
         moves._link_timesheets_to_invoice(self.env.context.get("timesheet_start_date"), self.env.context.get("timesheet_end_date"))
+        self._reset_has_displayed_warning_upsell_order_lines()
         return moves
 
 
@@ -181,19 +188,7 @@ class SaleOrderLine(models.Model):
                 if line.remaining_hours_available:
                     remaining_time = ''
                     if is_hour:
-                        hours, minutes = divmod(abs(line.remaining_hours) * 60, 60)
-                        round_minutes = minutes / 30
-                        minutes = math.ceil(round_minutes) if line.remaining_hours >= 0 else math.floor(round_minutes)
-                        if minutes > 1:
-                            minutes = 0
-                            hours += 1
-                        else:
-                            minutes = minutes * 30
-                        remaining_time = ' ({sign}{hours:02.0f}:{minutes:02.0f} {remaining})'.format(
-                            sign='-' if line.remaining_hours < 0 else '',
-                            hours=hours,
-                            minutes=minutes,
-                            remaining=unit_label)
+                        remaining_time = f' ({format_duration(line.remaining_hours)} {unit_label})'
                     elif is_day:
                         remaining_days = company.project_time_mode_id._compute_quantity(line.remaining_hours, encoding_uom, round=False)
                         remaining_time = ' ({qty:.02f} {unit})'.format(

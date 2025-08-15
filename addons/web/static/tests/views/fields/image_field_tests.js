@@ -7,9 +7,12 @@ import {
     triggerEvent,
     clickSave,
     editInput,
+    patchDate,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { pagerNext } from "@web/../tests/search/helpers";
+
+const { DateTime } = luxon;
 
 const MY_IMAGE =
     "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -21,7 +24,7 @@ let target;
 
 function getUnique(target) {
     const src = target.dataset.src;
-    return new URL(src).searchParams.get("unique");
+    return new URL(src, window.location).searchParams.get("unique");
 }
 
 QUnit.module("Fields", (hooks) => {
@@ -702,10 +705,9 @@ QUnit.module("Fields", (hooks) => {
             </form>`,
         });
 
-        const list = new DataTransfer();
-        list.items.add(new File([imageData], "fake_file.png", { type: "png" }));
-
         async function setFiles() {
+            const list = new DataTransfer();
+            list.items.add(new File([imageData], "fake_file.png", { type: "png" }));
             const fileInput = target.querySelector("input[type=file]");
             fileInput.files = list.files;
             fileInput.dispatchEvent(new Event("change"));
@@ -858,6 +860,102 @@ QUnit.module("Fields", (hooks) => {
                 getUnique(target.querySelector(".o_field_image img")),
                 "1659688620000"
             );
+        }
+    );
+
+    QUnit.test(
+        "url should not use the record last updated date when the field is related",
+        async function (assert) {
+            serverData.models.partner.fields.related = {
+                name: "Binary",
+                type: "binary",
+                related: "user.image",
+            };
+
+            serverData.models.partner.fields.user = {
+                name: "User",
+                type: "many2one",
+                relation: "user",
+                default: 1,
+            };
+
+            serverData.models.user = {
+                fields: {
+                    image: {
+                        name: "Image",
+                        type: "binary",
+                    },
+                },
+                records: [
+                    {
+                        id: 1,
+                        image: "3 kb",
+                    },
+                ],
+            };
+
+            serverData.models.partner.records[0].write_date = "2017-02-08 10:00:00";
+
+            patchDate(2017, 1, 6, 11, 0, 0);
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                <form>
+                    <field name="foo" />
+                    <field name="user"/>
+                    <field name="related" widget="image"/>
+                </form>`,
+                async mockRPC(route, { args }, performRpc) {
+                    if (
+                        route === "/web/dataset/call_kw/partner/web_read" ||
+                        route === "/web/dataset/call_kw/partner/web_save"
+                    ) {
+                        const res = await performRpc(...arguments);
+                        // The mockRPC doesn't implement related fields
+                        res[0].related = "3 kb";
+                        return res;
+                    }
+                },
+            });
+
+            const initialUnique = Number(getUnique(target.querySelector(".o_field_image img")));
+            assert.ok(
+                DateTime.fromMillis(initialUnique).hasSame(DateTime.fromISO("2017-02-06"), "days")
+            );
+
+            await editInput(target, ".o_field_widget[name='foo'] input", "grrr");
+
+            // the unique should be the same
+            assert.strictEqual(
+                initialUnique,
+                Number(getUnique(target.querySelector(".o_field_image img")))
+            );
+
+            patchDate(2017, 1, 9, 11, 0, 0);
+            await editInput(
+                target,
+                "input[type=file]",
+                new File(
+                    [Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)))],
+                    "fake_file.png",
+                    { type: "png" }
+                )
+            );
+            assert.strictEqual(
+                target.querySelector(".o_field_image img").dataset.src,
+                `data:image/png;base64,${MY_IMAGE}`
+            );
+
+            patchDate(2017, 1, 9, 12, 0, 0);
+
+            await clickSave(target);
+
+            const unique = Number(getUnique(target.querySelector(".o_field_image img")));
+            assert.ok(DateTime.fromMillis(unique).hasSame(DateTime.fromISO("2017-02-09"), "days"));
         }
     );
 });

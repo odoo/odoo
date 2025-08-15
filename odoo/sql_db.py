@@ -276,6 +276,9 @@ class Cursor(BaseCursor):
 
         self.cache = {}
         self._now = None
+        if os.getenv('ODOO_FAKETIME_TEST_MODE') and self.dbname in tools.config['db_name'].split(','):
+            self.execute("SET search_path = public, pg_catalog;")
+            self.commit()  # ensure that the search_path remains after a rollback
 
     def __build_dict(self, row):
         return {d.name: row[i] for i, d in enumerate(self._obj.description)}
@@ -527,7 +530,11 @@ class TestCursor(BaseCursor):
         +------------------------+---------------------------------------------------+
     """
     _cursors_stack = []
-    def __init__(self, cursor, lock):
+
+    def __init__(self, cursor, lock, current_test=None):
+        assert isinstance(cursor, BaseCursor)
+        self.current_test = current_test
+        self._check('__init__')
         super().__init__()
         self._now = None
         self._closed = False
@@ -540,6 +547,10 @@ class TestCursor(BaseCursor):
         # savepoint at its last commit, the savepoint is created lazily
         self._savepoint = self._cursor.savepoint(flush=False)
 
+    def _check(self, operation):
+        if self.current_test:
+            self.current_test.check_test_cursor(operation)
+
     def execute(self, *args, **kwargs):
         if not self._savepoint:
             self._savepoint = self._cursor.savepoint(flush=False)
@@ -548,19 +559,20 @@ class TestCursor(BaseCursor):
 
     def close(self):
         if not self._closed:
-            self.rollback()
-            self._closed = True
-            if self._savepoint:
-                self._savepoint.close(rollback=False)
-
-            tos = self._cursors_stack.pop()
-            if tos is not self:
-                _logger.warning("Found different un-closed cursor when trying to close %s: %s", self, tos)
-
-            self._lock.release()
+            try:
+                self.rollback()
+                if self._savepoint:
+                    self._savepoint.close(rollback=False)
+            finally:
+                self._closed = True
+                tos = self._cursors_stack.pop()
+                if tos is not self:
+                    _logger.warning("Found different un-closed cursor when trying to close %s: %s", self, tos)
+                self._lock.release()
 
     def commit(self):
         """ Perform an SQL `COMMIT` """
+        self._check('commit')
         self.flush()
         if self._savepoint:
             self._savepoint.close(rollback=False)
@@ -572,6 +584,7 @@ class TestCursor(BaseCursor):
 
     def rollback(self):
         """ Perform an SQL `ROLLBACK` """
+        self._check('rollback')
         self.clear()
         self.postcommit.clear()
         self.prerollback.run()
@@ -580,6 +593,7 @@ class TestCursor(BaseCursor):
         self.postrollback.run()
 
     def __getattr__(self, name):
+        self._check(name)
         return getattr(self._cursor, name)
 
     def now(self):
@@ -715,8 +729,9 @@ class ConnectionPool(object):
                 cnx.close()
                 last = self._connections.pop(i)[0]
                 count += 1
-        _logger.info('%r: Closed %d connections %s', self, count,
-                    (dsn and last and 'to %r' % last.dsn) or '')
+        if count:
+            _logger.info('%r: Closed %d connections %s', self, count,
+                        (dsn and last and 'to %r' % last.dsn) or '')
 
     def _dsn_equals(self, dsn1, dsn2):
         alias_keys = {'dbname': 'database'}

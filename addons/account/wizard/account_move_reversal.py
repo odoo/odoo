@@ -87,13 +87,16 @@ class AccountMoveReversal(models.TransientModel):
             record.currency_id = len(move_ids.currency_id) == 1 and move_ids.currency_id or False
             record.move_type = move_ids.move_type if len(move_ids) == 1 else (any(move.move_type in ('in_invoice', 'out_invoice') for move in move_ids) and 'some_invoice' or False)
 
+    def _get_ref_string(self, move):
+        return (_('Reversal of: %(move_name)s, %(reason)s', move_name=move.name, reason=self.reason)
+            if self.reason
+            else _('Reversal of: %s', move.name))
+
     def _prepare_default_reversal(self, move):
         reverse_date = self.date
         mixed_payment_term = move.invoice_payment_term_id.id if move.invoice_payment_term_id.early_pay_discount_computation == 'mixed' else None
         return {
-            'ref': _('Reversal of: %(move_name)s, %(reason)s', move_name=move.name, reason=self.reason)
-                   if self.reason
-                   else _('Reversal of: %s', move.name),
+            'ref': self.with_context(lang=move.partner_id.lang or self.env.lang)._get_ref_string(move),
             'date': reverse_date,
             'invoice_date_due': reverse_date,
             'invoice_date': move.is_invoice(include_receipts=True) and (self.date or move.date) or False,
@@ -148,7 +151,7 @@ class AccountMoveReversal(models.TransientModel):
             if is_modify:
                 moves_vals_list = []
                 for move in moves.with_context(include_business_fields=True):
-                    data = move.copy_data({'date': self.date})[0]
+                    data = move.copy_data(self._modify_default_reverse_values(move))[0]
                     data['line_ids'] = [line for line in data['line_ids'] if line[2]['display_type'] in ('product', 'line_section', 'line_note')]
                     moves_vals_list.append(data)
                 new_moves = self.env['account.move'].create(moves_vals_list)
@@ -183,3 +186,8 @@ class AccountMoveReversal(models.TransientModel):
 
     def modify_moves(self):
         return self.reverse_moves(is_modify=True)
+
+    def _modify_default_reverse_values(self, origin_move):
+        return {
+            'date': self.date
+        }

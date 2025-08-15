@@ -3,8 +3,9 @@
 # 	* sale_stock
 # 
 # Translators:
-# Marianna Ciofani, 2024
 # Wil Odoo, 2024
+# Marianna Ciofani, 2025
+# Sergio Zanchetta <primes2h@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -112,7 +113,7 @@ msgstr ""
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "All planned operations included"
-msgstr "Tutte le operazioni pianificate incluse"
+msgstr "Incluse tutte le operazioni pianificate"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
@@ -158,7 +159,7 @@ msgstr "Aziende"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
 msgid "Completion date of the first delivery order."
-msgstr "Data di completamento del primo buono di consegna."
+msgstr "Data di completamento del primo ordine di consegna."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
@@ -188,7 +189,7 @@ msgstr "Consegna"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_delivery_alert
 msgid "Delivery Alert"
-msgstr "Avviso di Consegna"
+msgstr "Avviso di consegna"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
@@ -216,7 +217,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
 msgid "Display Qty Widget"
-msgstr "Widget Viaualizzazione Qta"
+msgstr "Widget visualizza q.tà"
 
 #. module: sale_stock
 #. odoo-python
@@ -225,7 +226,7 @@ msgstr "Widget Viaualizzazione Qta"
 msgid ""
 "Do not forget to change the partner on the following delivery orders: %s"
 msgstr ""
-"Non dimenticare di cambiare il contatto nei seguenti ordini di consegna: %s"
+"Non dimenticarsi di cambiare il partner nei seguenti ordini di consegna: %s"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -299,7 +300,7 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
-"Se i prodotti vengono consegnati tutti in una volta, il buono di consegna "
+"Se i prodotti vengono consegnati tutti in una volta, l'ordine di consegna "
 "viene programmato in base al tempo di risposta prodotto più lungo. In caso "
 "contrario, in base al più breve."
 
@@ -316,7 +317,7 @@ msgstr "Termine di resa"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm_location
 msgid "Incoterm Location"
-msgstr "Ubicazione Incoterm"
+msgstr "Ubicazione termine di resa"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -395,7 +396,7 @@ msgid ""
 "with unexpected delays in the supply chain."
 msgstr ""
 "Margine di errore per date promesse ai clienti. Per superare ritardi "
-"imprevisti nella catena di distribuzione, la consegna dei prodotti viene "
+"imprevisti nella catena di fornitura, la consegna dei prodotti viene "
 "programmata con alcuni giorni di anticipo sull'attuale data promessa."
 
 #. module: sale_stock
@@ -408,9 +409,9 @@ msgid ""
 " date, to cope with unexpected delays in the supply chain."
 msgstr ""
 "Margine di errore per date promesse ai clienti. Per superare ritardi "
-"imprevisti nella catena di distribuzione, l'approvvigionamento e la consegna"
-" dei prodotti vengono programmate con alcuni giorni di anticipo sull'attuale"
-" data promessa."
+"imprevisti nella catena di fornitura, l'approvvigionamento e la consegna dei"
+" prodotti vengono programmate con alcuni giorni di anticipo sull'attuale "
+"data promessa."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
@@ -439,7 +440,7 @@ msgstr "Non consegnato"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Not enough future availability"
-msgstr "Disponibiltà futura insufficiente"
+msgstr "Disponibilità futura non sufficiente"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
@@ -455,7 +456,7 @@ msgstr ""
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "On"
-msgstr "Attiva"
+msgstr "Il"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__partial
@@ -491,7 +492,7 @@ msgstr "Q.tà disponibile oggi"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
 msgid "Qty To Deliver"
-msgstr "Quantità da consegnare"
+msgstr "Q.tà da consegnare"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -510,7 +511,7 @@ msgstr "CREA RESO"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Remaining demand available at"
-msgstr "Domanda rimanente disponibile su"
+msgstr "Richiesta residua disponibile il"
 
 #. module: sale_stock
 #. odoo-python
@@ -590,7 +591,7 @@ msgstr "Ordini di vendita"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company__security_lead
 msgid "Sales Safety Days"
-msgstr "Giorni di Sicurezza per la Vendita"
+msgstr "Giorni di sicurezza per vendite"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -673,7 +674,7 @@ msgstr "Resoconto regola di giacenza"
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 #, python-format
 msgid "The delivery"
-msgstr "La consegna"
+msgstr "La consegna di"
 
 #. module: sale_stock
 #. odoo-python
@@ -684,9 +685,9 @@ msgid ""
 "                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
 "                        You should probably update the partner on this document."
 msgstr ""
-"L'indirizzo di consegna è stato cambiato sull'ordine di vendita<br/>\n"
-"Da <strong>\"%s\"</strong> a <strong>\"%s\"</strong>,\n"
-"Probabilmente dovresti aggiornare il partner su questo documento."
+"L'indirizzo di consegna dell'ordine di vendita è stato cambiato<br/>\n"
+"                        da <strong>\"%s\"</strong> a <strong>\"%s\"</strong>,\n"
+"                        È probabile che sia necessario aggiornare il partner nel documento."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -772,7 +773,7 @@ msgstr "Avvio della spedizione"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "cancelled"
-msgstr "annullato"
+msgstr "annullati"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -800,4 +801,4 @@ msgstr "elaborati al posto di"
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 #, python-format
 msgid "will be late."
-msgstr "sarà in ritardo"
+msgstr "è in ritardo."

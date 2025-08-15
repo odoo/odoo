@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
-from odoo.tests import tagged, Form
+from odoo.tests import tagged, Form, users
 from odoo import fields, Command
 
 from dateutil.relativedelta import relativedelta
+from itertools import product
+from unittest.mock import patch
 
 
 @tagged('post_install', '-at_install')
@@ -156,6 +158,25 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'invoice_line_ids': [Command.create({'product_id': cls.product_a.id, 'price_unit': 10.0, 'tax_ids': []})],
         })
         (cls.in_refund_1 + cls.in_refund_2).action_post()
+
+        cls.branch = cls.setup_company_data("Branch", parent_id=cls.env.company.id)['company']
+        cls.user_branch = cls.env['res.users'].create({
+            'name': 'Branch User',
+            'login': 'user_branch',
+            'groups_id': [
+                Command.link(cls.env.ref('base.group_user').id),
+                Command.link(cls.env.ref('account.group_account_user').id),
+                Command.link(cls.env.ref('account.group_account_manager').id),
+            ],
+            'company_id': cls.branch.id,
+            'company_ids': [Command.set(cls.branch.ids)],
+        })
+
+    @classmethod
+    def get_wizard_available_journals(cls, wizard):
+        return wizard.available_journal_ids.filtered_domain([
+            *cls.env['account.journal']._check_company_domain(wizard.company_id),
+        ])
 
     def test_register_payment_single_batch_grouped_keep_open_lower_amount(self):
         ''' Pay 800.0 with 'open' as payment difference handling on two customer invoices (1000 + 2000). '''
@@ -799,6 +820,21 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             self.env['account.payment.register']\
                 .with_context(active_model='account.move', active_ids=self.out_invoice_2.ids)\
                 .create({})
+
+    def test_register_payment_doesnt_send_email(self):
+        ''' When registering a payment manually with a payment register,
+        we shouldn't sent email notification automatically.
+        '''
+        self.env['ir.config_parameter'].set_param('sale.automatic_invoice', True)
+        payment_register = self.env['account.payment.register']\
+                               .with_context(active_model='account.move', active_ids=self.out_invoice_2.ids)\
+                               .create({})
+        with patch(
+            'odoo.addons.sale.models.payment_transaction.PaymentTransaction'
+            '._send_invoice'
+        ) as patched:
+            payment_register._create_payments()
+            patched.assert_not_called()
 
     def test_register_payment_multi_currency_rounding_issue_positive_delta(self):
         ''' When registering a payment using a different currency than the invoice one, the invoice must be fully paid
@@ -1509,3 +1545,206 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })
 
         self.assertEqual(wizard.amount, 39.50)
+
+    def test_payment_with_branch(self):
+        """
+        Test register payment with branches when different receivable accounts are used in each branch with combinations of invoices and selected companies
+        """
+        def test_register_payment_flow(cases):
+            for group_payment, case in product((False, True), cases):
+                invoices, selected_companies, expected_companies, expected_pmnt_comp, should_raise = case.values()
+                with self.subTest(invoices=invoices.mapped('name'), selected_companies=selected_companies.mapped('name')):
+                    wizard = self.env['account.payment.register'].with_context(allowed_company_ids=selected_companies.ids, active_model='account.move', active_ids=invoices.ids).create({'group_payment': group_payment})
+                    available_journals = self.get_wizard_available_journals(wizard)
+                    self.assertEqual(available_journals.company_id, expected_companies)
+                    if should_raise:
+                        with self.assertRaisesRegex(UserError, 'Incompatible companies on records:'):
+                            wizard._create_payments()
+                    else:
+                        payments = wizard._create_payments()
+                        self.assertEqual(payments.company_id, expected_pmnt_comp)
+                        invoices.line_ids.filtered(lambda l: l.display_type == 'payment_term').remove_move_reconcile()
+
+        # create a new branch
+        self.setup_company_data("New Branch", parent_id=self.env.company.id)
+        branches = self.env.company.child_ids
+        self.user_branch.company_ids = branches
+
+        # PART 1: Basic cases
+        # create invoices on branches
+        branch_invoices = self.env['account.move']
+        for branch in branches:
+            self.env["account.journal"].create({
+                'code': 'TEST',
+                'company_id': branch.id,
+                'name': f'{branch.name} journal',
+                'type': 'bank',
+            })
+            branch_invoices |= self.init_invoice('out_invoice', products=self.product_a, company=branch)
+
+        parent_invoice = self.init_invoice('out_invoice', products=self.product_a)
+        other_company_invoice = self.init_invoice('out_invoice', products=self.product_a, company=self.company_data_2['company'])
+        (branch_invoices | parent_invoice | other_company_invoice).action_post()
+
+        # test first branches invoices with branch user
+        with self.with_user('user_branch'):
+            with self.assertRaisesRegex(UserError, 'branches without access to parent company.'):
+                self.env['account.payment.register'].with_context(allowed_company_ids=branches.ids, active_model='account.move', active_ids=branch_invoices.ids).create({})
+
+        # test also with two differents companies
+        with (self.assertRaisesRegex(UserError, 'for entries belonging to different companies.')):
+            for group_payment in [False, True]:
+                self.env['account.payment.register'].with_context(
+                    allowed_company_ids=(self.env.company + self.company_data_2['company']).ids,
+                    active_model='account.move',
+                    active_ids=(parent_invoice + other_company_invoice).ids
+                ).create({'group_payment': group_payment})
+
+        cases = [
+            {
+                'invoices': branch_invoices[0] + parent_invoice,
+                'selected_companies': (self.branch + self.env.company),
+                'expected_companies': self.env.company,
+                'expected_pmnt_comp': self.env.company,
+                'should_raise': False,
+            },
+            {
+                'invoices': branch_invoices,
+                'selected_companies': branches,
+                'expected_companies': self.env.company,
+                'expected_pmnt_comp': self.env.company,
+                'should_raise': False,
+            },
+            {
+                'invoices': branch_invoices + parent_invoice,
+                'selected_companies': self.env.company._accessible_branches(),
+                'expected_companies': self.env.company,
+                'expected_pmnt_comp': self.env.company,
+                'should_raise': False,
+            },
+            {
+                'invoices': branch_invoices[0],
+                'selected_companies': self.branch,
+                'expected_companies': (self.env.company + self.branch),
+                'expected_pmnt_comp': self.branch,
+                'should_raise': False,
+            },
+            {
+                'invoices': branch_invoices,
+                'selected_companies': self.env.company._accessible_branches(),
+                'expected_companies': self.env.company,
+                'expected_pmnt_comp': self.env.company,
+                'should_raise': False,
+            },
+        ]
+
+        test_register_payment_flow(cases)
+
+        # PART 2: Test the same cases with different receivable accounts for each branch
+        # An error should be raised as the receivable account doesn't belong to the wizard's company, except for the case where we register payment only for one branch
+        branch_invoices.button_draft()
+        for branch in branches:
+            receivable_account = self.company_data['default_account_receivable'].with_company(branch).copy({'company_id': branch.id})
+            branch_invoice = branch_invoices.filtered(lambda inv: inv.company_id == branch)
+            # To mock the situation where the partner has his own receivable account depending on the branch
+            branch_invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term').account_id = receivable_account
+        branch_invoices.action_post()
+        new_cases = [
+            {
+                'invoices': branch_invoices[0] + parent_invoice,
+                'expected_pmnt_comp': False,
+                'should_raise': True,
+            },
+            {
+                'invoices': branch_invoices,
+                'expected_pmnt_comp': False,
+                'should_raise': True,
+            },
+            {
+                'invoices': branch_invoices + parent_invoice,
+                'expected_pmnt_comp': False,
+                'should_raise': True,
+            },
+            {
+                'invoices': branch_invoices[0],
+                'expected_pmnt_comp': self.branch,
+                'should_raise': False,
+            },
+            {
+                'invoices': branch_invoices,
+                'expected_pmnt_comp': False,
+                'should_raise': True,
+            },
+        ]
+        cases = [{**case, **new_case} for case, new_case in zip(cases, new_cases)]
+
+        test_register_payment_flow(cases)
+
+    def test_epd_and_cash_rounding(self):
+        cash_rounding = self.env['account.cash.rounding'].create({
+            'name': 'add_invoice_line',
+            'rounding': 0.05,
+            'strategy': 'add_invoice_line',
+            'profit_account_id': self.company_data['default_account_revenue'].copy().id,
+            'loss_account_id': self.company_data['default_account_expense'].copy().id,
+            'rounding_method': 'UP',
+        })
+        payment_term = self.env.ref('account.account_payment_term_30days_early_discount')
+        tax = self.env['account.tax'].create({
+            'name': "21",
+            'amount_type': 'percent',
+            'amount': 21.0,
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2024-01-01',
+            'invoice_payment_term_id': payment_term.id,
+            'invoice_cash_rounding_id': cash_rounding.id,
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 11,
+                'tax_ids': [Command.set(tax.ids)],
+            })]
+        })
+        invoice.action_post()
+
+        self.assertRecordValues(invoice, [{'amount_total': 13.35}])
+
+        self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({'payment_date': '2024-01-01'})\
+            ._create_payments()
+        self.assertRecordValues(invoice, [{'amount_residual': 0.0}])
+
+    @users('user_branch')
+    def test_branch_user_register_payment(self):
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'invoice_date': '2024-05-01',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'name': 'line',
+                'price_unit': 1000,
+                'quantity': 1,
+            })]
+        })
+        bill.action_post()
+
+        wizard = self.env['account.payment.register'].with_context(allowed_company_ids=self.env.company.ids, active_model='account.move', active_ids=bill.ids).create({
+            'amount': bill.amount_total,
+            'currency_id': bill.currency_id.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        })
+        self.env.company.parent_ids.invalidate_recordset()
+        payment = wizard._create_payments()
+        self.assertTrue(payment)
+
+    def test_communication_wizard(self):
+        """
+        Tests that changing the payment reference updates the payment wizard's communication accordingly.
+        """
+        self.out_invoice_1.payment_reference = "test"
+        ctx = {'active_model': 'account.move', 'active_ids': self.out_invoice_1.ids}
+        wizard = self.env['account.payment.register'].with_context(**ctx).create({})
+        self.assertEqual(wizard.communication, "test")

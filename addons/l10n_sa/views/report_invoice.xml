@@ -1,33 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <template id="arabic_english_invoice" inherit_id="l10n_gcc_invoice.arabic_english_invoice">
         <xpath expr="//div[@name='due_date']" position="after">
             <div class="row" t-if="o.delivery_date" name="delivery_date">
                 <div class="col-6"></div>
                 <div class="col-2">
-                    <strong style="white-space:nowrap">Delivery Date:
+                    <strong style="white-space:nowrap">Supply Date:
                     </strong>
                 </div>
                 <div class="col-2">
-                    <span t-field="o.delivery_date"/>
+                    <span t-out="o.delivery_date.strftime('%Y-%m-%d')"/>
                 </div>
                 <div class="col-2 text-end">
                     <strong style="white-space:nowrap">:
-                        تاريخ التوصيل
+                        تاريخ التوريد
                     </strong>
                 </div>
             </div>
         </xpath>
         <xpath expr="//t[@t-set='address']" position="after">
             <t t-set="information_block">
-                <p>
-                    <img t-if="o.l10n_sa_qr_code_str"
-                         style="display:block;"
-                         t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', quote_plus(o.l10n_sa_qr_code_str), 200, 200)"/>
-                </p>
+                <div class="row">
+                    <p class="col-6 me-3">
+                        <img t-if="o.l10n_sa_qr_code_str"
+                            style="display:block;"
+                            t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', quote_plus(o.l10n_sa_qr_code_str), 200, 200)"/>
+                    </p>
+                    <div class="col-6" t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)" groups="account.group_delivery_invoice_address" name="shipping_address_block">
+                        <strong>Shipping Address:</strong>
+                        <div t-field="o.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                    </div>
+                </div>
             </t>
         </xpath>
+        <xpath expr="//th[@name='th_total']//span[2]" position="attributes">
+            <attribute name="class">d-none</attribute>
+        </xpath>
+        <xpath expr="//th[@name='th_total']//span[2]" position="after">
+            <span>
+                Subtotal<br/>(inclusive of VAT)
+            </span>
+        </xpath>
+        <xpath expr="//th[@name='th_total']//span" position="attributes">
+            <attribute name="class">d-none</attribute>
+        </xpath>
+        <xpath expr="//th[@name='th_total']//span" position="after">
+            <span>
+                المجموع شامل ضريبة القيمة المضافة
+            </span>
+        </xpath>
+        <xpath expr="//th[@name='th_subtotal']//span[2]" position="attributes">
+            <attribute name="class">d-none</attribute>
+        </xpath>
+        <xpath expr="//th[@name='th_subtotal']//span[2]" position="after">
+            <span>
+                Subtotal<br/>(exclusive of VAT)
+            </span>
+        </xpath>
+        <xpath expr="//th[@name='th_subtotal']//span" position="attributes">
+            <attribute name="class">d-none</attribute>
+        </xpath>
+        <xpath expr="//th[@name='th_subtotal']//span" position="after">
+            <span>
+                المجموع الفرعي بدون الضريبة
+            </span>
+        </xpath>
+        <xpath expr="//th[@name='th_taxes']//span" position="attributes">
+            <attribute name="class">d-none</attribute>
+        </xpath>
+        <xpath expr="//th[@name='th_taxes']//span" position="after">
+            <span>
+                نسبة الضريبة
+            </span>
+        </xpath>
+        <xpath expr="//tr" position="attributes">
+            <attribute name="style">font-size: 14px;</attribute>
+        </xpath>
+        <xpath expr="//span[@t-field='line.l10n_gcc_invoice_tax_amount']" position="attributes">
+            <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
+        </xpath>
+        <xpath expr="//span[@t-field='line.price_unit']" position="attributes">
+            <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('clearfix')]//strong" position="attributes">
+            <attribute name="class">d-none</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('clearfix')]//strong" position="after">
+            <strong>
+                Invoice Taxable Amount
+                /<br/>
+                المبلغ الخاضع للضريبة غير شامل ضريبة القيمة المضافة
+            </strong>
+        </xpath>
+        <xpath expr="//tr[hasclass('o_total')]//strong" position="attributes">
+            <attribute name="class">d-none</attribute>
+        </xpath>
+        <xpath expr="//tr[hasclass('o_total')]//strong" position="after">
+            <strong>
+                Invoice Total (inclusive of VAT)
+                /
+                إجمالي قيمة الفاتورة شامل ضريبة القيمة المضافة
+            </strong>
+        </xpath>
+        <xpath expr="//span[@t-field='o.invoice_date']" position="attributes">
+            <attribute name="t-field"></attribute>
+            <attribute name="t-out">o.invoice_date.strftime('%Y-%m-%d')</attribute>
+        </xpath>
+        <xpath expr="//span[@t-field='o.invoice_date_due']" position="attributes">
+            <attribute name="t-field"></attribute>
+            <attribute name="t-out">o.invoice_date_due.strftime('%Y-%m-%d')</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('clearfix')]" position="attributes">
+            <attribute name="class">clearfix pt-2 pb-2</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('page')]">
+            <t t-set="additional_footer_text" t-value="o.get_l10n_sa_confirmation_datetime_sa_tz()"/> <!-- This is to show the issue date on the footer of all layouts. -->
+        </xpath>
     </template>
-
 </odoo>

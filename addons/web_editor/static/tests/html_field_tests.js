@@ -27,6 +27,49 @@ async function iframeReady(iframe) {
     await nextTick(); // ensure document is loaded
 }
 
+
+const pasteImage = async (editor, base64ImageData) => {
+    // Create image file.
+    const binaryImageData = atob(base64ImageData);
+    const uint8Array = new Uint8Array(binaryImageData.length);
+    for (let i = 0; i < binaryImageData.length; i++) {
+        uint8Array[i] = binaryImageData.charCodeAt(i);
+    }
+    const file = new File([uint8Array], "test_image.png", { type: 'image/png' });
+
+    // Create a promise to get the created img elements
+    const pasteImagePromise = makeDeferred();
+    const observer = new MutationObserver(mutations => {
+        mutations
+            .filter(mutation => mutation.type === 'childList')
+            .forEach(mutation => {
+                mutation.addedNodes.forEach(node => {
+                    if (node instanceof HTMLElement) {
+                        pasteImagePromise.resolve(node);
+                    }
+                });
+            });
+    });
+    observer.observe(editor.editable, { subtree: true, childList: true });
+
+    // Simulate paste.
+    editor._onPaste({
+        preventDefault() { },
+        clipboardData: {
+            getData() { },
+            items: [{
+                kind: 'file',
+                type: 'image/png',
+                getAsFile: () => file,
+            }],
+        },
+    });
+
+    const img = await pasteImagePromise;
+    observer.disconnect();
+    return img;
+}
+
 QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
     let serverData;
     let target;
@@ -682,49 +725,6 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
             }
         };
 
-        const pasteImage = async (editor) => {
-            // Create image file.
-            const base64ImageData = "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII"
-            const binaryImageData = atob(base64ImageData);
-            const uint8Array = new Uint8Array(binaryImageData.length);
-            for (let i = 0; i < binaryImageData.length; i++) {
-                uint8Array[i] = binaryImageData.charCodeAt(i);
-            }
-            const file = new File([uint8Array], "test_image.png", { type: 'image/png' });
-
-            // Create a promise to get the created img elements
-            const pasteImagePromise = makeDeferred();
-            const observer = new MutationObserver(mutations => {
-                mutations
-                    .filter(mutation => mutation.type === 'childList')
-                    .forEach(mutation => {
-                        mutation.addedNodes.forEach(node => {
-                            if (node instanceof HTMLElement) {
-                                pasteImagePromise.resolve(node);
-                            }
-                        });
-                    });
-            });
-            observer.observe(editor.editable, { subtree: true, childList: true });
-
-            // Simulate paste.
-            editor._onPaste({
-                preventDefault() {},
-                clipboardData: {
-                    getData() {},
-                    items: [{
-                        kind: 'file',
-                        type: 'image/png',
-                        getAsFile: () => file,
-                    }],
-                },
-            });
-
-            const img = await pasteImagePromise;
-            observer.disconnect();
-            return img;
-        }
-
         await makeView({
             type: "form",
             resId: 1,
@@ -744,7 +744,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         Wysiwyg.setRange(paragraph);
 
         // Paste image.
-        const img = await pasteImage(editor);
+        const img = await pasteImage(editor, "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII");
         // Test environment replaces 'src' by 'data-src'.
         assert.ok(/^data:image\/png;base64,/.test(img.dataset['src']));
         assert.ok(img.classList.contains('o_b64_image_to_save'));
@@ -755,6 +755,72 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         await htmlField.commitChanges();
         assert.equal(img.dataset['src'], '/test_image_url.png?access_token=1234');
         assert.ok(!img.classList.contains('o_b64_image_to_save'));
+    });
+
+    QUnit.test("Pasted/dropped images are saved and content not transfered to next record", async (assert) => {
+        serverData.models.partner.records = [
+            { id: 1, txt: "<p class='image_target'>first</p>" },
+            { id: 2, txt: "<p>second</p>" },
+        ];
+
+        // Patch to get a promise to get the htmlField component instance when
+        // the wysiwyg is instancied.
+        const htmlFieldPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await super.startWysiwyg(...arguments);
+                await nextTick();
+                htmlFieldPromise.resolve(this);
+            }
+        });
+
+        const mockRPC = async function (route, args) {
+            if (route === '/web_editor/attachment/add_data') {
+                return {
+                    image_src: '/test_image_url.png',
+                    access_token: '1234',
+                    public: false,
+                }
+            }
+            if (route.includes("web_save")){
+                // reading next record
+                return [{ id: 2, txt: "<p>second</p>" }];
+            }
+        };
+
+        await makeView({
+            type: "form",
+            resId: 1,
+            resIds: [1, 2],
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+            mockRPC: mockRPC,
+        });
+        // Let the htmlField be mounted and recover the Component instance.
+        const htmlField = await htmlFieldPromise;
+        const editor = htmlField.wysiwyg.odooEditor;
+
+        const paragraph = editor.editable.querySelector(".image_target");
+        Wysiwyg.setRange(paragraph);
+
+        // Paste image.
+        const img = await pasteImage(editor, "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII");
+        // Restore 'src' attribute so that SavePendingImages can do its job.
+        img.src = img.dataset['src'];
+
+        const blurEvent = new Event('blur', {
+            bubbles: true,
+            cancelable: true
+        });
+        target.querySelector(".odoo-editor-editable").dispatchEvent(blurEvent);
+
+        await click(target.querySelector(".o_pager_next"));
+        await nextTick();
+        assert.containsOnce(target, ".odoo-editor-editable p:contains('second')");
     });
 
     QUnit.module('Odoo fields synchronisation');
@@ -1102,6 +1168,200 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         assert.strictEqual(htmlField.wysiwyg.getValue(), '<p>abc</p>', 'the value should be sanitized by the wysiwyg');
         assert.strictEqual(htmlField._isDirty(), false, 'should not be dirty as the content has not changed');
 
+    });
+
+    QUnit.module("Image transform");
+
+    QUnit.test("Image transform should reset after click twice", async (assert) => {
+        assert.expect(8);
+
+        const isElementRotated = (element) => {
+            // Get the computed style of the element
+            const style = window.getComputedStyle(element);
+
+            // Get the transform property value
+            const transform = style.transform || style.mozTransform;
+
+            // If transform is 'none', the element is not rotated
+            if (transform === "none") {
+                return false;
+            }
+
+            // The matrix values will be in the form of matrix(a, b, c, d, e, f)
+            // For rotation, a and d will reflect the cosine of the angle, and b and c the sine.
+            const values = transform.split("(")[1].split(")")[0].split(",");
+
+            const a = parseFloat(values[0]);
+            const b = parseFloat(values[1]);
+
+            // Calculate the angle of rotation in degrees
+            const angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
+
+            // If the angle is not 0, the element is rotated
+            return angle !== 0;
+        };
+
+        serverData.models.partner.records.push({
+            id: 1,
+            txt: `<p class="content"><br></p>`,
+        });
+        let htmlField;
+        const wysiwygPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await super.startWysiwyg(...arguments);
+                htmlField = this;
+                wysiwygPromise.resolve();
+            },
+            // To prevent saving when calling onWillUnmount
+            async commitChanges() {},
+        });
+
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+        });
+        await wysiwygPromise;
+        const editor = htmlField.wysiwyg.odooEditor;
+
+        const paragraph = editor.editable.querySelector(".content");
+        setSelection(paragraph, 0, paragraph, 0);
+        await nextTick();
+
+        // Paste image.
+        const img = await pasteImage(editor, "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII");
+        // p.childnodes = [text, img]
+        setSelection(paragraph, 1, paragraph, 2);
+        await nextTick();
+
+        // we need to trigger a mousup event manually so the wysiwyg run `_updateEditorUI`
+        let mouseUpEvent = new MouseEvent("mouseup", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+        });
+        img.dispatchEvent(mouseUpEvent);
+
+        assert.ok(
+            document.querySelector('div#toolbar[style*="visibility: visible"]'),
+            "Toolbar should be visible"
+        );
+        assert.ok(document.querySelector("div#image-transform"), "Image toolbar is shown");
+
+        setSelection(paragraph, 0, paragraph, 0);
+        await nextTick();
+
+        assert.ok(
+            document.querySelector('div#toolbar[style*="visibility: hidden"]'),
+            "Toolbar should be hidden"
+        );
+
+        img.setAttribute(
+            "style",
+            "transform: rotate(20deg) translateX(-0.5%) translateY(1%); animation-play-state: paused; transition: none;"
+        );
+
+        // setSelection(paragraph, 1, paragraph, 2);
+        // await nextTick();
+        mouseUpEvent = new MouseEvent("mouseup", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+        });
+        img.dispatchEvent(mouseUpEvent);
+        await nextTick();
+
+        assert.ok(
+            document.querySelector('div#toolbar[style*="visibility: visible"]'),
+            "Toolbar should be visible"
+        );
+        assert.ok(document.querySelector("div#image-transform"), "Image toolbar is shown");
+        document.querySelector("div#image-transform").click();
+        await nextTick();
+        assert.ok(
+            document.querySelector("div.transfo-container"),
+            "Transform div should be visible around the image"
+        );
+        assert.ok(
+            document.querySelector('div#toolbar[style*="visibility: visible"]'),
+            "Toolbar should stay visible"
+        );
+        // click second time
+        // simply using click on the element doesn't trigger the mousedown event
+        const mouseDownEvent = new MouseEvent("mousedown", {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+        });
+        document.querySelector("div#image-transform").dispatchEvent(mouseDownEvent);
+        await nextTick();
+        const isRotated = isElementRotated(img);
+        assert.notOk(isRotated, "The image should not be rotated");
+    });
+
+    QUnit.module("Image Delete");
+
+    QUnit.test("Image should delete without making any element", async (assert) => {
+        assert.expect(3);
+        serverData.models.partner.records.push({
+            id: 1,
+            txt: `<p class="content"><br></p><p class="content"><img></p>`,
+        });
+        let htmlField;
+        const wysiwygPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await super.startWysiwyg(...arguments);
+                htmlField = this;
+                wysiwygPromise.resolve();
+            },
+            // To prevent saving when calling onWillUnmount
+            async commitChanges() { },
+        });
+
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+        });
+        await wysiwygPromise;
+        const editor = htmlField.wysiwyg.odooEditor;
+        const paragraph = editor.editable.querySelectorAll(".content")[1];
+        setSelection(paragraph, 0, paragraph, 0);
+        await nextTick();
+
+        const img = editor.editable.querySelector("img");
+        setSelection(paragraph, 1, paragraph, 2);
+        await nextTick();
+
+        // Trigger mouseup manually to run `_updateEditorUI`.
+        const mouseUpEvent = new MouseEvent("mouseup", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+        });
+        img.dispatchEvent(mouseUpEvent);
+        await nextTick();
+        document.querySelector("#image-delete").click();
+        await nextTick();
+        assert.equal(
+            editor.editable.innerHTML,
+            '<p class="content"><br></p><p class="content oe-hint oe-command-temporary-hint" placeholder="Type &quot;/&quot; for commands"></p>'
+        );
+        const selection = document.getSelection();
+        assert.equal(selection.anchorNode, paragraph);
+        assert.equal(selection.anchorOffset, 0);
     });
 });
 

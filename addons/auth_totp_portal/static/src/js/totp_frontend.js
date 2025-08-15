@@ -228,6 +228,12 @@ publicWidget.registry.RevokeTrustedDeviceButton = publicWidget.Widget.extend({
         click: '_onClick'
     },
 
+    init() {
+        this._super(...arguments);
+        this.orm = this.bindService("orm");
+        this.dialog = this.bindService("dialog");
+    },
+
     async _onClick(e){
         e.preventDefault();
         await handleCheckIdentity(

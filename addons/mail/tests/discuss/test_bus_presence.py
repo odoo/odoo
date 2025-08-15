@@ -16,7 +16,6 @@ from odoo.addons.mail.tests.common import MailCommon
 @tagged("post_install", "-at_install")
 class TestBusPresence(WebsocketCase, MailCommon):
     def _receive_presence(self, sender, recipient):
-        self._reset_bus()
         sent_from_user = isinstance(sender, self.env.registry["res.users"])
         receive_to_user = isinstance(recipient, self.env.registry["res.users"])
         if receive_to_user:
@@ -25,7 +24,7 @@ class TestBusPresence(WebsocketCase, MailCommon):
         else:
             self.authenticate(None, None)
             auth_cookie = f"{recipient._cookie_name}={recipient._format_auth_cookie()};"
-        websocket = self.websocket_connect(cookie=auth_cookie, timeout=1)
+        websocket = self.websocket_connect(cookie=auth_cookie)
         sender_bus_target = sender.partner_id if sent_from_user else sender
         self.subscribe(
             websocket,
@@ -38,15 +37,23 @@ class TestBusPresence(WebsocketCase, MailCommon):
         self.trigger_notification_dispatching([(sender_bus_target, "presence")])
         notifications = json.loads(websocket.recv())
         self._close_websockets()
-        bus_record = self.env["bus.bus"].search([("id", "=", int(notifications[0]["id"]))])
+        presence_notification = next(
+            (
+                notification
+                for notification in notifications
+                if notification["message"]["type"] == "bus.bus/im_status_updated"
+            ),
+            None,
+        )
+        bus_record = self.env["bus.bus"].search([("id", "=", presence_notification["id"])])
         self.assertEqual(
             bus_record.channel,
             json_dump(channel_with_db(self.env.cr.dbname, (sender_bus_target, "presence"))),
         )
-        self.assertEqual(notifications[0]["message"]["type"], "bus.bus/im_status_updated")
-        self.assertEqual(notifications[0]["message"]["payload"]["im_status"], "online")
+        self.assertEqual(presence_notification["message"]["payload"]["im_status"], "online")
+        self.assertEqual(presence_notification["message"]["payload"]["presence_status"], "online")
         self.assertEqual(
-            notifications[0]["message"]["payload"]["partner_id" if sent_from_user else "guest_id"],
+            presence_notification["message"]["payload"]["partner_id" if sent_from_user else "guest_id"],
             sender_bus_target.id,
         )
 

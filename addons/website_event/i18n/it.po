@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Marianna Ciofani, 2024
+# Marianna Ciofani, 2025
+# Sergio Zanchetta <primes2h@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-05-22 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Marianna Ciofani, 2024\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,8 +73,8 @@ msgid ""
 "<em>Write here a quote from one of your attendees. It gives confidence in "
 "your events.</em>"
 msgstr ""
-"<em>Scrivi qui una citazione di uno dei tuoi partecipanti. Questo dà fiducia"
-" ai tuoi eventi.</em>"
+"<em>Scrivi qui le parole provenienti da un partecipante, dà fiducia negli "
+"eventi.</em>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
@@ -94,7 +95,7 @@ msgstr "<i class=\"fa fa-calendar me-2\"/>Aggiungi al calendario"
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "<i class=\"fa fa-check me-2\"/>Registered"
-msgstr "<i class=\"fa fa-check me-2\"/>Registrato"
+msgstr "<i class=\"fa fa-check me-2\"/>Registrati"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.navbar
@@ -130,13 +131,13 @@ msgid ""
 "<i class=\"fa fa-gear me-1\" role=\"img\" aria-label=\"Configure\" "
 "title=\"Configure event tickets\"/><em>Configure Tickets</em>"
 msgstr ""
-"<i class=\"fa fa-gear me-1\" role=\"img\" aria-label=\"Configure\" "
-"title=\"Configure event tickets\"/><em>Configura biglietti</em>"
+"<i class=\"fa fa-gear me-1\" role=\"img\" aria-label=\"Configura\" "
+"title=\"Configura biglietti evento\"/><em>Configura biglietti</em>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 msgid "<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"Github\"/>"
-msgstr "<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"GitHub\"/>"
+msgstr "<i class=\"fa fa-github text-github\" aria-label=\"GitHub\" title=\"GitHub\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_pages_kanban_view
@@ -184,7 +185,7 @@ msgid ""
 "<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" "
 "title=\"Youtube\"/>"
 msgstr ""
-"<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" "
+"<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"YouTube\" "
 "title=\"YouTube\"/>"
 
 #. module: website_event
@@ -256,7 +257,8 @@ msgstr "<span>Eventi online</span>"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "<strong> You ordered more tickets than available seats</strong>"
-msgstr "<strong>Hai ordinato più biglietti che posti disponibili</strong>"
+msgstr ""
+"<strong>Sono stati ordinati più biglietti dei posti disponibili</strong>"
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_2_answer_2
@@ -266,7 +268,7 @@ msgstr "Da un amico"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_photos
 msgid "A past event"
-msgstr "Un evento passato"
+msgstr "Un evento precedente"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
@@ -570,6 +572,13 @@ msgid "End -"
 msgstr "Fine -"
 
 #. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/js/website_event.js:0
+#, python-format
+msgid "Error"
+msgstr "Errore"
+
+#. module: website_event
 #: model:ir.model,name:website_event.model_event_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__event_id
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__event_id
@@ -580,7 +589,7 @@ msgstr "Evento"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__community_menu_ids
 msgid "Event Community Menus"
-msgstr "Menù evento per community"
+msgstr "Menù evento per Community"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
@@ -656,7 +665,7 @@ msgstr "Categoria etichetta evento"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_options_template
 msgid "Event Tags"
-msgstr "Tag evento"
+msgstr "Etichette evento"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_type
@@ -752,7 +761,7 @@ msgstr "Seguici"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.layout
 msgid "Following content will appear on all events."
-msgstr "Il seguente contenuto apparirà su tutti gli eventi."
+msgstr "Il seguente contenuto comparirà su tutti gli eventi."
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__general_question_ids
@@ -847,7 +856,7 @@ msgstr "È in corso"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_participating
 msgid "Is Participating"
-msgstr "Partecipa"
+msgstr "Sta partecipando"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_published
@@ -1011,7 +1020,7 @@ msgstr "Nessuna registrazione collegata a questo visitatore."
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "No results found for '"
-msgstr "Nessun risultato trovato per '"
+msgstr "Nessun risultato trovato per \""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_pages_kanban_view
@@ -1044,7 +1053,7 @@ msgstr "Organizzatore"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_photos
 msgid "Our Trainings"
-msgstr "I nostri corsi"
+msgstr "La nostra formazione"
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_2_answer_0
@@ -1129,7 +1138,7 @@ msgstr "Pubblicità radiofonica"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Ref:"
-msgstr "Ref:"
+msgstr "Rif.:"
 
 #. module: website_event
 #. odoo-javascript
@@ -1215,7 +1224,7 @@ msgstr "Rimanente prima dell'inizio"
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__start_remaining
 msgid "Remaining time before event starts (minutes)"
-msgstr "Tempo rimanente prima dell'inizio dell'evento (minuti)"
+msgstr "Tempo rimanente prima che l'evento inizi (minuti)"
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_7_question_0_answer_2
@@ -1340,7 +1349,7 @@ msgstr "Inizio -"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__start_today
 msgid "Start Today"
-msgstr "Comincia oggi"
+msgstr "Inizia oggi"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_add
@@ -1366,6 +1375,13 @@ msgstr "Sottomenu (specifico)"
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__value_answer_id
 msgid "Suggested answer"
 msgstr "Risposta indicata"
+
+#. module: website_event
+#. odoo-python
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "Il reCAPTCHA Google ha rilevato un'attività sospetta."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
@@ -1479,6 +1495,14 @@ msgstr "Tipologia"
 
 #. module: website_event
 #. odoo-python
+#: code:addons/website_event/models/website_visitor.py:0
+#, python-format
+msgid "Unsupported 'Not In' operation on visitors registrations"
+msgstr ""
+"Operazione 'Non in' non supportata per le registrazioni dei visitatori"
+
+#. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #: model:website.snippet.filter,name:website_event.website_snippet_filter_event_list
 #: model_terms:ir.ui.view,arch_db:website_event.event_time
@@ -1499,8 +1523,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_about_us
 msgid "Use this paragraph to write a short text about your events or company."
 msgstr ""
-"Utilizza questo paragrafo per scrivere un breve testo sui tuoi eventi o "
-"sulla tua azienda."
+"Utilizza questo paragrafo per scrivere un breve testo riguardante gli eventi"
+" o l'azienda."
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_website_event_menu__view_id
@@ -1685,7 +1709,7 @@ msgstr "disponibile/i)"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_add
 msgid "e.g. \"Conference for Architects\""
-msgstr "ad es. \"Conferenza per architetti\""
+msgstr "es. \"Conferenza per architetti\""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form

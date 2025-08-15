@@ -222,7 +222,15 @@ class Website(Home):
         # Don't use `request.website.domain` here, the template is in charge of
         # detecting if the current URL is the domain one and add a `Disallow: /`
         # if it's not the case to prevent the crawler to continue.
-        return request.render('website.robots', {'url_root': request.httprequest.url_root}, mimetype='text/plain')
+        allowed_routes = self._get_allowed_robots_routes()
+        content = request.env['ir.ui.view']._render_template('website.robots',
+            {'url_root': request.httprequest.url_root})
+
+        if allowed_routes:
+            content += '\nUser-agent: *'
+            content += '\n' + '\n'.join(f"Allow: {route}" for route in allowed_routes)
+
+        return request.make_response(content, headers=[('Content-Type', 'text/plain')])
 
     @http.route('/sitemap.xml', type='http', auth="public", website=True, multilang=False, sitemap=False)
     def sitemap_xml_index(self, **kwargs):
@@ -405,8 +413,11 @@ class Website(Home):
 
     @http.route('/website/snippet/options_filters', type='json', auth='user', website=True)
     def get_dynamic_snippet_filters(self, model_name=None, search_domain=None):
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
+            raise werkzeug.exceptions.NotFound()
         domain = request.website.website_domain()
         if search_domain:
+            assert all(leaf[0] in request.env['website.snippet.filter']._fields for leaf in search_domain)
             domain = expression.AND([domain, search_domain])
         if model_name:
             domain = expression.AND([
@@ -709,6 +720,10 @@ class Website(Home):
                 result.append(group)
         return result
 
+    @http.route('/website/save_xml', type='json', auth='user', website=True)
+    def save_xml(self, view_id, arch):
+        request.env['ir.ui.view'].browse(view_id).with_context(lang=request.website.default_lang_id.code).arch = arch
+
     @http.route("/website/get_switchable_related_views", type="json", auth="user", website=True)
     def get_switchable_related_views(self, key):
         views = request.env["ir.ui.view"].get_related_views(key, bundles=False).filtered(lambda v: v.customize_show)
@@ -742,7 +757,38 @@ class Website(Home):
 
     @http.route(['/website/seo_suggest'], type='json', auth="user", website=True)
     def seo_suggest(self, keywords=None, lang=None):
-        language = lang.split("_")
+        """
+        Suggests search keywords based on a given input using Google's
+        autocomplete API.
+
+        This method takes in a `keywords` string and an optional `lang`
+        parameter that defines the language and geographical region for
+        tailoring search suggestions. It sends a request to Google's
+        autocomplete service and returns the search suggestions in JSON format.
+
+        :param str keywords: the keyword string for which suggestions
+            are needed.
+        :param str lang: a string representing the language and geographical
+            location, formatted as:
+            - `language_territory@modifier`, where:
+                - `language`: 2-letter ISO language code (e.g., "en" for
+                  English).
+                - `territory`: Optional, 2-letter country code (e.g., "US" for
+                  United States).
+                - `modifier`: Optional, generally script variant (e.g.,
+                  "latin").
+            If `lang` is not provided or does not match the expected format, the
+            default language is set to English (`en`) and the territory to the
+            United States (`US`).
+
+        :returns: JSON list of strings
+            A list of suggested keywords returned by Google's autocomplete
+            service. If no suggestions are found or if there's an error (e.g.,
+            connection issues), an empty list is returned.
+        """
+        pattern = r'^([a-zA-Z]+)(?:_(\w+))?(?:@(\w+))?$'
+        match = re.match(pattern, lang)
+        language = [match.group(1), match.group(2) or ''] if match else ['en', 'US']
         url = "http://google.com/complete/search"
         try:
             req = requests.get(url, params={

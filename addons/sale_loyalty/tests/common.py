@@ -12,8 +12,8 @@ from odoo.addons.sale.tests.test_sale_product_attribute_value_config import Test
 class TestSaleCouponCommon(TestSaleProductAttributeValueCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestSaleCouponCommon, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
         # set currency to not rely on demo data and avoid possible race condition
         cls.currency_ratio = 1.0
 

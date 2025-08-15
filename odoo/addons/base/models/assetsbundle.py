@@ -717,16 +717,18 @@ css_error_message {
             self.css_errors.append(msg)
             return ''
 
-        result = rtlcss.communicate(input=source.encode('utf-8'))
-        if rtlcss.returncode:
-            cmd_output = ''.join(misc.ustr(result))
-            if not cmd_output:
+        stdout, stderr = rtlcss.communicate(input=source.encode('utf-8'))
+        if rtlcss.returncode or (source and not stdout):
+            cmd_output = ''.join(misc.ustr(stderr))
+            if not cmd_output and rtlcss.returncode:
                 cmd_output = "Process exited with return code %d\n" % rtlcss.returncode
+            elif not cmd_output:
+                cmd_output = "rtlcss: error processing payload\n"
             error = self.get_rtlcss_error(cmd_output, source=source)
             _logger.warning(error)
             self.css_errors.append(error)
             return ''
-        rtlcss_result = result[0].strip().decode('utf8')
+        rtlcss_result = stdout.strip().decode('utf8')
         return rtlcss_result
 
     def get_preprocessor_error(self, stderr, source=None):
@@ -1066,6 +1068,14 @@ class ScssStylesheetAsset(PreprocessedCSS):
         if libsass is None:
             return super().compile(source)
 
+        def scss_importer(path, *args):
+            *parent_path, file = os.path.split(path)
+            try:
+                parent_path = file_path(os.path.join(*parent_path))
+            except FileNotFoundError:
+                parent_path = file_path(os.path.join(self.bootstrap_path, *parent_path))
+            return [(os.path.join(parent_path, file),)]
+
         try:
             profiler.force_hook()
             return libsass.compile(
@@ -1073,6 +1083,7 @@ class ScssStylesheetAsset(PreprocessedCSS):
                 include_paths=[
                     self.bootstrap_path,
                 ],
+                importers=[(0, scss_importer)],
                 output_style=self.output_style,
                 precision=self.precision,
             )

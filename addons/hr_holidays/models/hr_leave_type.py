@@ -9,6 +9,7 @@ from collections import defaultdict
 from datetime import date, datetime, time
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 from odoo.tools import format_date, frozendict
 from odoo.tools.translate import _
 from odoo.tools.float_utils import float_round
@@ -157,7 +158,6 @@ class HolidaysType(models.Model):
             if holiday_type.requires_allocation == 'yes':
                 allocations = self.env['hr.leave.allocation'].search([
                     ('holiday_status_id', '=', holiday_type.id),
-                    ('allocation_type', '=', 'accrual'),
                     ('employee_id', '=', employee_id),
                     ('date_from', '<=', date_from),
                     '|',
@@ -167,11 +167,21 @@ class HolidaysType(models.Model):
                 allowed_excess = holiday_type.max_allowed_negative if holiday_type.allows_negative else 0
                 allocations = allocations.filtered(lambda alloc:
                     alloc.allocation_type == 'accrual'
-                    or (alloc.max_leaves > 0 and alloc.virtual_remaining_leaves > -allowed_excess)
+                    or (alloc.max_leaves > 0 and (alloc.max_leaves - alloc.leaves_taken) > -allowed_excess)
                 )
                 holiday_type.has_valid_allocation = bool(allocations)
             else:
                 holiday_type.has_valid_allocation = True
+
+    def _load_records_write(self, values):
+        if 'requires_allocation' in values and self.requires_allocation == values['requires_allocation']:
+            values.pop('requires_allocation')
+        return super()._load_records_write(values)
+
+    @api.constrains('requires_allocation')
+    def check_allocation_requirement_edit_validity(self):
+        if self.env['hr.leave'].search_count([('holiday_status_id', 'in', self.ids)], limit=1):
+            raise UserError(_("The allocation requirement of a time off type cannot be changed once leaves of that type have been taken. You should create a new time off type instead."))
 
     def _search_max_leaves(self, operator, value):
         value = float(value)
@@ -343,6 +353,7 @@ class HolidaysType(models.Model):
             ('holiday_status_id', 'in', self.ids),
         ]
         action['context'] = {
+            'employee_id': False,
             'default_holiday_type': 'department',
             'default_holiday_status_id': self.ids[0],
             'search_default_approved_state': 1,

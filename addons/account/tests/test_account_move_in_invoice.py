@@ -2437,7 +2437,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             ('out_receipt', 1000.0, [('out_refund', 1000.0)], 'reversed'),
             ('out_receipt', 1000.0, [('out_refund', 500.0), ('out_refund', 500.0)], 'reversed'),
             ('out_receipt', 1000.0, [('reverse', 1000.0)], 'reversed'),
-            ('out_refund', 1000.0, [('reverse', -1000.0)], 'reversed'),
+            ('out_refund', 1000.0, [('reverse', -1000.0)], 'paid'),
+            ('out_refund', 1000.0, [('entry', 1000.0)], 'reversed'),
             ('in_invoice', 1000.0, [('in_refund', 1000.0)], 'reversed'),
             ('in_invoice', 1000.0, [('in_refund', 500.0), ('in_refund', 500.0)], 'reversed'),
             ('in_invoice', 1000.0, [('in_refund', 500.0), ('entry', 500.0)], 'reversed'),
@@ -2445,7 +2446,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             ('in_receipt', 1000.0, [('in_refund', 1000.0)], 'reversed'),
             ('in_receipt', 1000.0, [('in_refund', 500.0), ('in_refund', 500.0)], 'reversed'),
             ('in_receipt', 1000.0, [('reverse', 1000.0)], 'reversed'),
-            ('in_refund', 1000.0, [('reverse', 1000.0)], 'reversed'),
+            ('in_refund', 1000.0, [('reverse', 1000.0)], 'paid'),
+            ('in_refund', 1000.0, [('entry', -1000.0)], 'reversed'),
             ('entry', 1000.0, [('entry', -1000.0)], 'not_paid'),
             ('entry', 1000.0, [('reverse', 1000.0)], 'not_paid'),
 
@@ -2546,7 +2548,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(payment_term_line.name, 'test')
         with Form(self.invoice) as move_form:
             move_form.payment_reference = False
-        self.assertEqual(payment_term_line.name, '', 'Payment term line was not changed')
+        self.assertEqual(payment_term_line.name, False, 'Payment term line was not changed')
 
     def test_taxes_onchange_product_uom_and_price_unit(self):
         """
@@ -2718,3 +2720,48 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         bill = self.init_invoice(move_type='in_invoice', products=[product])
         bill_uom = bill.invoice_line_ids[0].product_uom_id
         self.assertEqual(bill_uom, uom_kgm)
+
+    def test_manual_label_change_on_payment_term_line(self):
+        """
+        Ensure label of the payment term line can be changed manually
+        """
+        payment_term_line = self.invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term')
+        index = self.invoice.line_ids.ids.index(payment_term_line.id)
+        with Form(self.invoice) as move_form:
+            with move_form.line_ids.edit(index) as line_form:
+                line_form.name = 'XYZ'
+        move_form.save()
+        self.invoice.action_post()
+        self.assertEqual(payment_term_line.name, 'XYZ', 'Manual name of payment term line should be kept')
+
+    def test_duplicate_invoice_with_separate_discount_acccount(self):
+        """When a separate discount account, make sure that discount lines don't have a tax_id set
+        So, when creating a credit note from the invoice, data are coherent (=same amount)"""
+        sale_tax = self.company_data['default_tax_sale']
+        self.env.company.account_discount_expense_allocation_id = self.company_data['default_account_expense'].id
+        great_account = self.company_data['default_account_revenue'].copy()
+        great_account.tax_ids = [Command.set(sale_tax.ids)]
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'quantity': 1,
+                'price_unit': 100.00,
+                'tax_ids': sale_tax.ids,
+                'discount': 10,
+                'account_id': great_account.id,
+            })]
+        })
+        invoice.action_post()
+        self.assertFalse(invoice.line_ids.filtered(lambda l: l.display_type == 'discount').tax_ids)
+
+        credit_note_wizard = self.env['account.move.reversal'] \
+            .with_context({'active_ids': [invoice.id], 'active_id': invoice.id, 'active_model': 'account.move'}) \
+            .create({
+                'reason': 'reason test create',
+                'journal_id': invoice.journal_id.id,
+        })
+        action = credit_note_wizard.reverse_moves()
+        credit_note = self.env['account.move'].browse(action['res_id'])
+        self.assertEqual(credit_note.amount_total, invoice.amount_total)

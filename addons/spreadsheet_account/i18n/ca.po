@@ -7,6 +7,7 @@
 # jabiri7, 2023
 # marcescu, 2023
 # Cristian Cruz, 2023
+# Noemi Pla, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-08 07:29+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Cristian Cruz, 2023\n"
+"Last-Translator: Noemi Pla, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,8 +83,8 @@ msgstr "Elements de diari per al prefix del compte %s"
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
-msgid "Returns the account ids of a given group."
-msgstr "Retorna els identificadors de compte d'un grup determinat."
+msgid "Returns the account codes of a given group."
+msgstr "Torna els codis de compte d'un grup determinat"
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -117,14 +118,7 @@ msgstr "Veure registres"
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "Set to TRUE to include unposted entries."
-msgstr ""
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-#, python-format
-msgid "The account type (income, expense, asset_current,...)."
-msgstr ""
+msgstr "Establir com TRUE per incloure els assentaments no publicats"
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -138,7 +132,7 @@ msgstr "No s'ha pogut trobar l'exercici fiscal de l'empresa."
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "The company to target (Advanced)."
-msgstr ""
+msgstr "L'empresa a la qual es vol aplicar (avançat)"
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -146,7 +140,7 @@ msgstr ""
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "The company."
-msgstr ""
+msgstr "L'empresa."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -156,27 +150,36 @@ msgid ""
 "The date range. Supported formats are \"21/12/2022\", \"Q1/2022\", "
 "\"12/2022\", and \"2022\"."
 msgstr ""
+"L'interval de dates. Els formats compatibles són \"21/12/2022\", "
+"\"Q1/2022\", \"12/2022\" i \"2022\"."
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "The day from which to extract the fiscal year end."
-msgstr ""
+msgstr "El dia a partir del qual es calcula el final de l'exercici fiscal."
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "The day from which to extract the fiscal year start."
-msgstr ""
+msgstr "El dia a partir del qual es calcula l'inici de l'exercici fiscal."
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "The prefix of the accounts."
-msgstr ""
+msgstr "El prefix dels comptes"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+#, python-format
+msgid "The technical account type (possible values are: %s)."
+msgstr "El tipus de copte tècnic (valors possibles: %s)."
 
 #. module: spreadsheet_account
 #. odoo-javascript

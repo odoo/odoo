@@ -4,6 +4,7 @@ from collections import defaultdict
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools import float_repr
 
 
 class SaleOrderDiscount(models.TransientModel):
@@ -68,9 +69,21 @@ class SaleOrderDiscount(models.TransientModel):
         self.ensure_one()
         discount_product = self.company_id.sale_discount_product_id
         if not discount_product:
-            self.company_id.sale_discount_product_id = self.env['product.product'].create(
-                self._prepare_discount_product_values()
-            )
+            if (
+                self.env['product.product'].check_access_rights('create', raise_exception=False)
+                and self.company_id.check_access_rights('write', raise_exception=False)
+                and self.company_id._filter_access_rules_python('write')
+                and self.company_id.check_field_access_rights('write', ['sale_discount_product_id'])
+            ):
+                self.company_id.sale_discount_product_id = self.env['product.product'].create(
+                    self._prepare_discount_product_values()
+                )
+            else:
+                raise ValidationError(_(
+                    "There does not seem to be any discount product configured for this company yet."
+                    " You can either use a per-line discount, or ask an administrator to grant the"
+                    " discount the first time."
+                ))
             discount_product = self.company_id.sale_discount_product_id
         return discount_product
 
@@ -92,9 +105,11 @@ class SaleOrderDiscount(models.TransientModel):
             for line in self.sale_order_id.order_line:
                 if not line.product_uom_qty or not line.price_unit:
                     continue
+                discounted_price = line.price_unit * (1 - (line.discount or 0.0)/100)
+                total_price_per_tax_groups[line.tax_id] += (discounted_price * line.product_uom_qty)
 
-                total_price_per_tax_groups[line.tax_id] += line.price_subtotal
-
+            discount_dp = self.env['decimal.precision'].precision_get('Discount')
+            context = {'lang': self.sale_order_id._get_lang()}  # noqa: F841
             if not total_price_per_tax_groups:
                 # No valid lines on which the discount can be applied
                 return
@@ -109,24 +124,25 @@ class SaleOrderDiscount(models.TransientModel):
                         taxes=taxes,
                         description=_(
                             "Discount: %(percent)s%%",
-                            percent=self.discount_percentage*100
+                            percent=float_repr(self.discount_percentage * 100, discount_dp),
                         ),
                     ),
                 }]
             else:
-                vals_list = [
-                    self._prepare_discount_line_values(
+                vals_list = []
+                for taxes, subtotal in total_price_per_tax_groups.items():
+                    discount_line_value = self._prepare_discount_line_values(
                         product=discount_product,
                         amount=subtotal * self.discount_percentage,
                         taxes=taxes,
                         description=_(
                             "Discount: %(percent)s%%"
                             "- On products with the following taxes %(taxes)s",
-                            percent=self.discount_percentage*100,
-                            taxes=", ".join(taxes.mapped('name'))
+                            percent=float_repr(self.discount_percentage * 100, discount_dp),
+                            taxes=", ".join(taxes.mapped('name')),
                         ),
-                    ) for taxes, subtotal in total_price_per_tax_groups.items()
-                ]
+                    )
+                    vals_list.append(discount_line_value)
         return self.env['sale.order.line'].create(vals_list)
 
     def action_apply_discount(self):

@@ -1,26 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_expense
-# 
+#
 # Translators:
 # Jolien De Paepe, 2024
 # Larissa Manderfeld, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
-# Manon Rondou, 2024
-# Wil Odoo, 2024
-# 
+# Manon Rondou, 2025
+# Wil Odoo, 2025
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-08-07 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_expense
@@ -54,8 +54,7 @@ msgstr "%(date_from)s - %(date_to)s"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
-msgid ""
-"%(user)s confirms this expense is not a duplicate with similar expense."
+msgid "%(user)s confirms this expense is not a duplicate with similar expense."
 msgstr ""
 "%(user)s bevestigt dat deze declaratie geen duplicaat is met vergelijkbare "
 "declaraties."
@@ -106,11 +105,13 @@ msgstr "11-08-2023"
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
 "<span class=\"d-inline-block\">\n"
-"                                        <i class=\"text-muted\">Use this reference as a subject prefix when submitting by email.</i>\n"
+"                                        <i class=\"text-muted\">Use this "
+"reference as a subject prefix when submitting by email.</i>\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"d-inline-block\">\n"
-"                                        <i class=\"text-muted\">Gebruik deze referentie als onderwerp voor de e-mail.</i>\n"
+"                                        <i class=\"text-muted\">Gebruik deze "
+"referentie als onderwerp voor de e-mail.</i>\n"
 "                                    </span>"
 
 #. module: hr_expense
@@ -164,7 +165,7 @@ msgstr "Boekhouding"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__accounting_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__accounting_date
 msgid "Accounting Date"
-msgstr "Boekhouddatum"
+msgstr "Boekingsdatum"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_needaction
@@ -231,10 +232,11 @@ msgstr "Alle rapportages"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 #, python-format
-msgid "All expenses in an expense report must have the same \"paid by\" criteria."
+msgid ""
+"All expenses in an expense report must have the same \"paid by\" criteria."
 msgstr ""
-"Alle onkosten in een onkostendeclaratie moeten hetzelfde criterium \"betaald"
-" door\" hebben."
+"Alle onkosten in een onkostendeclaratie moeten hetzelfde criterium \"betaald "
+"door\" hebben."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -666,6 +668,12 @@ msgid "Display Name"
 msgstr "Schermnaam"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Distributie analytisch rekening"
+
+#. module: hr_expense
 #: model_terms:digest.tip,tip_description:hr_expense.digest_tip_hr_expense_0
 msgid ""
 "Do not keep your expense tickets in your pockets any longer. Just snap a "
@@ -683,9 +691,9 @@ msgid ""
 "from the partner to fix the configuration. Cancel this invoice and start "
 "again."
 msgstr ""
-"Wens je echt je eigen bedrijf te factureren? Verwijder de “Bedrijfsnaam” van"
-" de partner om de configuratie te herstellen. Annuleer deze factuur en begin"
-" opnieuw."
+"Wens je echt je eigen bedrijf te factureren? Verwijder de “Bedrijfsnaam” van "
+"de partner om de configuratie te herstellen. Annuleer deze factuur en begin "
+"opnieuw."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__business_domain
@@ -752,8 +760,7 @@ msgstr "Declaraties van werknemer"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid ""
-"Enable users to choose default category for automatically generated "
-"expenses."
+"Enable users to choose default category for automatically generated expenses."
 msgstr ""
 "Gebruikers toelaten een standaard categorie te kiezen voor automatisch "
 "gegenereerde declaraties."
@@ -763,8 +770,7 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid ""
-"Enter a name then choose a category and configure the amount of your "
-"expense."
+"Enter a name then choose a category and configure the amount of your expense."
 msgstr ""
 "Voer een naam in, kies een categorie en configureer het bedrag van je "
 "declaratie."
@@ -821,7 +827,7 @@ msgstr "Declaratie digitalisering (OCR)"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__journal_id
 msgid "Expense Journal"
-msgstr "Declaratiesdagboek"
+msgstr "Kostendagboek"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__expense_line_ids
@@ -1008,8 +1014,8 @@ msgid ""
 "Expenses from which the report has been submitted to the approver and is "
 "waiting for approval."
 msgstr ""
-"Onkosten waarvoor de declaratie moet worden voorgelegd aan de goedkeurder en"
-" wacht op goedkeuring. "
+"Onkosten waarvoor de declaratie moet worden voorgelegd aan de goedkeurder en "
+"wacht op goedkeuring. "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1090,7 +1096,7 @@ msgstr "Algemene informatie"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Generate Expenses"
-msgstr "Declaratie genereren"
+msgstr "Genereer onkosten"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.expense_product_gift_product_template
@@ -1128,6 +1134,11 @@ msgstr "Heeft bericht"
 #: model_terms:product.template,description:hr_expense.expense_product_travel_accommodation_product_template
 msgid "Hotel, plane ticket, taxi, etc."
 msgstr "Hotel, vliegticket, taxi, etc."
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
+msgid "Hr Expense Alias Domain"
+msgstr "Aliasdomein HR-onkosten"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__id
@@ -1220,7 +1231,6 @@ msgstr "Is een product met niet-nulkosten geselecteerd"
 
 #. module: hr_expense
 #. odoo-javascript
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "It all begins here - let's go!"
@@ -1346,7 +1356,6 @@ msgstr ""
 
 #. module: hr_expense
 #. odoo-javascript
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Managers can inspect all expenses from here."
@@ -1664,6 +1673,14 @@ msgid "Phone bills, postage, etc."
 msgstr "Telefoonrekeningen, portokosten, etc."
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid ""
+"Please specify an expense journal in order to generate accounting entries."
+msgstr "Specificeer een kostendagboek om boekingen te genereren."
+
+#. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/list.xml:0
 #, python-format
@@ -1879,10 +1896,13 @@ msgstr "Scan deze QR-code om de Odoo-app te krijgen:"
 #: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
+"If empty, the approval is done by an Administrator or Approver (determined "
+"in settings/users)."
 msgstr ""
-"Selecteer de gebruiker die verantwoordelijk is voor het goedkeuren van \"declaraties\" van deze werknemer.\n"
-"Indien leeg, wordt de goedkeuring gedaan door een Beheerder of Goedkeurder (bepaald in instellingen / gebruikers)."
+"Selecteer de gebruiker die verantwoordelijk is voor het goedkeuren van "
+"\"declaraties\" van deze werknemer.\n"
+"Indien leeg, wordt de goedkeuring gedaan door een Beheerder of Goedkeurder "
+"(bepaald in instellingen / gebruikers)."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__selectable_payment_method_line_ids
@@ -1898,12 +1918,11 @@ msgid ""
 "category will automatically be set. Type the expense amount in the mail "
 "subject to set it on the expense too."
 msgstr ""
-"Stuur een e-mail naar deze e-mailalias met het kassabon in bijlage om met "
-"één klik een declaratie te maken. Als het eerste woord van het "
-"e-mailonderwerp de interne referentie van de categorie of de categorienaam "
-"bevat, wordt automatisch de bijbehorende categorie ingesteld. Typ het "
-"declaratiebedrag in het e-mailonderwerp om het ook op de declaratie in te "
-"stellen."
+"Stuur een e-mail naar deze e-mailalias met de kassabon in bijlage om met één "
+"klik een onkostennota te maken. Als het eerste woord van het e-mailonderwerp "
+"de interne referentie van de categorie of de categorienaam bevat, wordt "
+"automatisch de bijbehorende categorie ingesteld. Typ het declaratiebedrag in "
+"het e-mailonderwerp om het ook op de declaratie in te stellen."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
@@ -1932,7 +1951,7 @@ msgstr "Formulier"
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__show_commercial_partner_warning
 #: model:ir.model.fields,field_description:hr_expense.field_account_payment__show_commercial_partner_warning
 msgid "Show Commercial Partner Warning"
-msgstr ""
+msgstr "Waarschuwing commerciële partner tonen"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1955,13 +1974,6 @@ msgid ""
 msgstr ""
 "Maak foto's van je bonnen en laat Odoo<br> automatisch een declaratie voor "
 "je aanmaken."
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Specify expense journal to generate accounting entries."
-msgstr "Geef een declaratiedagboek op om boekingen te genereren."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
@@ -2101,11 +2113,19 @@ msgstr "Goedkeurder team"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
-msgid ""
-"The company's default journal used when an employee expense is created."
+msgid "The company's default journal used when an employee expense is created."
 msgstr ""
 "Het standaarddagboek van het bedrijf dat wordt gebruikt wanneer een "
 "personeelskosten wordt gemaakt."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"The current user has no related employee, or the related employee does not "
+"belong to this company."
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -2118,8 +2138,8 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid ""
-"The first word of the email subject did not correspond to any category code."
-" You'll have to set the category manually on the expense."
+"The first word of the email subject did not correspond to any category code. "
+"You'll have to set the category manually on the expense."
 msgstr ""
 "Het eerste woord van het onderwerp van de e-mail kwam niet overeen met een "
 "categoriecode. Je moet de categorie handmatig instellen op de declaratie."
@@ -2196,8 +2216,7 @@ msgstr "Daar ga je - declaratiebeheer in een notendop!"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
-msgid ""
-"This note will be shown to users when they select this expense product."
+msgid "This note will be shown to users when they select this expense product."
 msgstr ""
 "Deze notitie wordt aan gebruikers getoond wanneer ze dit declaratieproduct "
 "selecteren."
@@ -2345,7 +2364,6 @@ msgstr "Bekijk rapport"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Wasting time recording your receipts? Let’s try a better way."
 msgstr ""
@@ -2367,13 +2385,14 @@ msgstr "Website communicatie geschiedenis"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
-"When the cost of an expense product is different than 0, then the user"
-"                                         using this product won't be able to"
-" change the amount of the expense,                                         "
-"only the quantity. Use a cost different than 0 for expense categories funded"
-" by                                         the company at fixed cost like "
-"allowances for mileage, per diem, accommodation"
-"                                         or meal."
+"When the cost of an expense product is different than 0, then the "
+"user                                         using this product won't be "
+"able to change the amount of the "
+"expense,                                         only the quantity. Use a "
+"cost different than 0 for expense categories funded "
+"by                                         the company at fixed cost like "
+"allowances for mileage, per diem, "
+"accommodation                                         or meal."
 msgstr ""
 "Als de kosten van een onkostenproduct anders zijn dan 0, dan kan de "
 "gebruiker die dit product gebruikt het bedrag van de declaratie niet "
@@ -2402,7 +2421,6 @@ msgstr "Je bent niet gemachtigd om deze onkostendeclaratie te bewerken."
 
 #. module: hr_expense
 #. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not authorized to edit this expense."
@@ -2451,8 +2469,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 #, python-format
 msgid "You cannot cancel an expense sheet linked to a journal entry"
-msgstr ""
-"Een declaratie die aan een boeking is gekoppeld, kun je niet annuleren"
+msgstr "Een declaratie die aan een boeking is gekoppeld, kun je niet annuleren"
 
 #. module: hr_expense
 #. odoo-python
@@ -2483,8 +2500,8 @@ msgstr ""
 #: code:addons/hr_expense/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot delete only some entries linked to an expense report. All entries"
-" must be deleted at the same time."
+"You cannot delete only some entries linked to an expense report. All entries "
+"must be deleted at the same time."
 msgstr ""
 "Je kan niet slechts bepaalde boekingen gekoppeld aan een declaratie "
 "verwijderen. Alle boekingen moeten tegelijkertijd worden verwijderd."
@@ -2508,8 +2525,8 @@ msgid ""
 "You cannot do this modification since the payment is linked to an expense "
 "report."
 msgstr ""
-"Je kan deze wijziging niet doorvoeren omdat de betaling gekoppeld is aan een"
-" onkostendeclaratie."
+"Je kan deze wijziging niet doorvoeren omdat de betaling gekoppeld is aan een "
+"onkostendeclaratie."
 
 #. module: hr_expense
 #. odoo-python
@@ -2556,6 +2573,23 @@ msgstr "Je kunt dezelfde regel niet twee keer rapporteren!"
 
 #. module: hr_expense
 #. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid ""
+"You don't have the rights to bypass the validation process of this expense "
+"report."
+msgstr "Je kunt het validatieproces van deze onkostendeclaratie niet omzeilen."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"You don't have the rights to bypass the validation process of this expense."
+msgstr "Je kunt het validatieproces van deze kosten niet omzeilen."
+
+#. module: hr_expense
+#. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You have no expense to report"
@@ -2566,16 +2600,15 @@ msgstr "Je hebt geen declaraties in te dienen"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You need to add a manual payment method on the journal (%s)"
-msgstr ""
-"Je moet een handmatige betalingsmethode toevoegen aan het dagboek (%s)"
+msgstr "Je moet een handmatige betalingsmethode toevoegen aan het dagboek (%s)"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid ""
-"You need to have at least one category that can be expensed in your database"
-" to proceed!"
+"You need to have at least one category that can be expensed in your database "
+"to proceed!"
 msgstr ""
 "Je moet minstens één categorie hebben die in je database kan worden "
 "opgenomen om door te gaan!"

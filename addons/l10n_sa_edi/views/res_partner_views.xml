@@ -7,10 +7,10 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <field name="vat" position="before">
+                <xpath expr="//div[hasclass('o_address_format')]"  position="after">
                     <field name="l10n_sa_additional_identification_scheme" invisible="country_code != 'SA'"/>
                     <field name="l10n_sa_additional_identification_number" invisible="country_code != 'SA' or l10n_sa_additional_identification_scheme == 'TIN'"/>
-                </field>
+                </xpath>
             </field>
         </record>
 

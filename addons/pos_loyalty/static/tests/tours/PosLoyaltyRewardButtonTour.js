@@ -168,7 +168,14 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountTour", {
             PosLoyalty.clickRewardButton(),
             SelectionPopup.clickItem("$ 10 per order on specific products"),
             PosLoyalty.hasRewardLine("$ 10 per order on specific products", "-10.00", "1.00"),
-            PosLoyalty.orderTotalIs("60.00"),
+            PosLoyalty.orderTotalIs("70.00"),
+            PosLoyalty.clickRewardButton(),
+            SelectionPopup.clickItem("$ 10 per order on specific products"),
+            PosLoyalty.orderTotalIs('60.00'),
+            PosLoyalty.clickRewardButton(),
+            SelectionPopup.clickItem("$ 30 per order on specific products"),
+            PosLoyalty.hasRewardLine('$ 30 per order on specific products', '-30.00', '1.00'),
+            PosLoyalty.orderTotalIs('30.00'),
         ].flat(),
 });
 
@@ -238,5 +245,17 @@ registry.category("web_tour.tours").add("PosLoyaltyRewardProductTag", {
             SelectionPopup.clickItem("product_b"),
             PosLoyalty.hasRewardLine("Free Product", "-10", "2.00"),
             PosLoyalty.isRewardButtonHighlighted(false),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_loyalty_on_order_with_fixed_tax", {
+    test: true,
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            PosLoyalty.enterCode("563412"),
+            PosLoyalty.hasRewardLine("10% on your order", "-1.50"),
         ].flat(),
 });

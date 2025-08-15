@@ -464,10 +464,12 @@ class PaymentTransaction(models.Model):
 
         # Complete generic processing values with provider-specific values.
         processing_values.update(self._get_specific_processing_values(processing_values))
+        secret_keys = self._get_specific_secret_keys()
+        logged_values = {k: v for k, v in processing_values.items() if k not in secret_keys}
         _logger.info(
             "generic and provider-specific processing values for transaction with reference "
             "%(ref)s:\n%(values)s",
-            {'ref': self.reference, 'values': pprint.pformat(processing_values)},
+            {'ref': self.reference, 'values': pprint.pformat(logged_values)},
         )
 
         # Render the html form for the redirect flow if available.
@@ -513,6 +515,14 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         return dict()
+
+    def _get_specific_secret_keys(self):
+        """ Return dict keys of provider-specific values that should be hidden when logged.
+
+        :return: The provider-specific secret keys
+        :rtype: dict_keys
+        """
+        return dict().keys()
 
     def _get_mandate_values(self):
         """ Return a dict of module-specific values used to create a mandate.

@@ -14,7 +14,7 @@ from odoo.addons.point_of_sale.tests.common import archive_products
 import odoo.tests
 
 
-@odoo.tests.tagged('post_install', '-at_install')
+@odoo.tests.tagged('post_install', '-at_install', 'is_tour')
 class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
 
     @classmethod

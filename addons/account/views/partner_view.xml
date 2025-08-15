@@ -127,6 +127,24 @@
             </field>
         </record>
 
+        <record id="res_partner_action_supplier_bills" model="ir.actions.act_window">
+            <field name="name">Vendor Bills</field>
+            <field name="res_model">account.move</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="domain">[('move_type','in',('in_invoice', 'in_refund'))]</field>
+            <field name="context">{'search_default_partner_id': active_id, 'default_move_type': 'in_invoice', 'default_partner_id': active_id}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Record a new vendor bill
+                </p><p>
+                Vendors bills can be pre-generated based on purchase
+                orders or receipts. This allows you to control bills
+                you receive from your vendor according to the draft
+                document in Odoo.
+            </p>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="partner_view_buttons">
             <field name="name">partner.view.buttons</field>
             <field name="model">res.partner</field>
@@ -144,6 +162,16 @@
                             </span>
                             <span class="o_stat_text">Invoiced</span>
                         </div>
+                    </button>
+                    <button
+                        class="oe_stat_button"
+                        type="action"
+                        name="%(account.res_partner_action_supplier_bills)d"
+                        groups="account.group_account_invoice"
+                        icon="fa-pencil-square-o" help="Vendor Bills"
+                        invisible="supplier_invoice_count == 0"
+                    >
+                        <field string="Vendor Bills" name="supplier_invoice_count" widget="statinfo"/>
                     </button>
                 </div>
 
@@ -222,7 +250,7 @@
                                 <label for="use_partner_credit_limit"/>
                                 <div class="o_row">
                                     <field name="use_partner_credit_limit"/>
-                                    <field name="credit_limit" class="oe_inline" invisible="not use_partner_credit_limit"/>
+                                    <field name="credit_limit" class="oe_inline" widget="monetary" options="{'currency_field': 'currency_id'}"  invisible="not use_partner_credit_limit"/>
                                 </div>
                             </group>
                         </group>

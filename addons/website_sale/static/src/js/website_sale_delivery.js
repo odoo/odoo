@@ -37,9 +37,9 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
                 this._disablePayButton();
             } else {
                 this.forceClickCarrier = true;
+                await this._getCurrentLocation();
                 carrierChecked[0].click();
             }
-            await this._getCurrentLocation();
         }
 
         await this.carriers.forEach(async (carrierInput) => {
@@ -73,6 +73,8 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
                 orderLoc.querySelector(".o_order_location_address").innerText = data[deliveryType + '_access_point']
                 orderLoc.parentElement.classList.remove("d-none");
                 showLoc.classList.add("d-none");
+                // Prevent force clicking a carrier since it is already set.
+                this.forceClickCarrier = false;
                 break;
             } else {
                 orderLoc.parentElement.classList.add("d-none");
@@ -140,6 +142,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
     _handleCarrierUpdateResult: async function (carrierInput) {
         const result = await this.rpc('/shop/update_carrier', {
             'carrier_id': carrierInput.value,
+            'no_reset_access_point_address': this.forceClickCarrier,
         })
         this.result = result;
         this._handleCarrierUpdateResultBadge(result);
@@ -366,6 +369,17 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             return;
         }
         this.forceClickCarrier = false;
+
+        // Clear order locations on carrier change.
+        const orderLocs = document.querySelectorAll('.o_order_location');
+        orderLocs.forEach(loc => {
+            loc.querySelector('.o_order_location_name').textContent = '';
+            loc.querySelector('.o_order_location_address').textContent = '';
+            const divDNone = loc.parentElement;
+            if (!divDNone.classList.contains('d-none')) {
+                divDNone.classList.add('d-none');
+            }
+        });
 
         this._disablePayButton();
         this._showLoading(radio);

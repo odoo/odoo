@@ -66,6 +66,17 @@ class AccountTestInvoicingCommon(TransactionCase):
             'company_id': cls.company_data['company'].id,
         })
 
+        cls.simple_accountman = cls.env['res.users'].create({
+            'name': 'simple accountman',
+            'login': 'simple_accountman',
+            'password': 'simple_accountman',
+            'groups_id': [
+                # from instantiate_accountman() without "default" superuser groups
+                Command.link(cls.env.ref('account.group_account_manager').id),
+                Command.link(cls.env.ref('account.group_account_user').id),
+            ],
+        })
+
         cls.currency_data = cls.setup_multi_currency_data()
 
         # ==== Taxes ====
@@ -288,21 +299,25 @@ class AccountTestInvoicingCommon(TransactionCase):
             'currency_subunit_label': 'Silver',
             **default_values,
         })
-        rate1 = cls.env['res.currency.rate'].create({
+        rates = cls.env['res.currency.rate'].create([{
+            'name': '1900-01-01',
+            'rate': 1,
+            'currency_id': foreign_currency.id,
+            'company_id': cls.env.company.id,
+        }, {
             'name': '2016-01-01',
             'rate': rate2016,
             'currency_id': foreign_currency.id,
             'company_id': cls.env.company.id,
-        })
-        rate2 = cls.env['res.currency.rate'].create({
+        }, {
             'name': '2017-01-01',
             'rate': rate2017,
             'currency_id': foreign_currency.id,
             'company_id': cls.env.company.id,
-        })
+        }])
         return {
             'currency': foreign_currency,
-            'rates': rate1 + rate2,
+            'rates': rates,
         }
 
     @classmethod

@@ -3,9 +3,10 @@
 # 	* auth_signup
 # 
 # Translators:
-# Wil Odoo, 2023
 # Jolien De Paepe, 2023
+# Walid Sahli, 2024
 # Manon Rondou, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -332,7 +333,7 @@ msgstr ""
 "                        </div>\n"
 "                        <t t-set=\"website_url\" t-value=\"object.get_base_url()\"></t>\n"
 "                        Votre domaine Odoo est : <b><a t-att-href=\"website_url\" t-out=\"website_url or ''\">http://yourcompany.odoo.com</a></b><br>\n"
-"                        Votre adresse e-mail de connexion est : <b><a t-attf-href=\"/web/login?login={{ object.e-mail }}\" target=\"_blank\" t-out=\"object.e-mail or ''\">mark.brown23@example.com</a></b><br><br>\n"
+"                        Votre adresse e-mail de connexion est : <b><a t-attf-href=\"/web/login?login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or ''\">mark.brown23@example.com</a></b><br><br>\n"
 "                        Vous n'avez jamais entendu parler d'Odoo ? C'est un logiciel professionnel tout-en-un apprécié par plus de 7 millions d'utilisateurs. Il améliorera considérablement votre expérience au travail et augmentera votre productivité.\n"
 "                        <br><br>\n"
 "                        Jetez un coup d’œil à notre <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo Tour</a> pour découvrir l'outil.\n"
@@ -356,8 +357,8 @@ msgstr ""
 "                </td></tr>\n"
 "                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
 "                    <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
-"                    <t t-if=\"object.company_id.e-mail\">\n"
-"                        | <a t-att-href=\"'mailto:%s' % object.company_id.e-mail\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.e-mail or ''\">info@yourcompany.com</a>\n"
+"                    <t t-if=\"object.company_id.email\">\n"
+"                        | <a t-att-href=\"'mailto:%s' % object.company_id.email\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
 "                    </t>\n"
 "                    <t t-if=\"object.company_id.website\">\n"
 "                        | <a t-att-href=\"'%s' % object.company_id.website\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
@@ -494,10 +495,10 @@ msgstr ""
 "                    <div>\n"
 "                        Cher <t t-out=\"object.name or ''\">Marc Demo</t>,<br><br>\n"
 "                        Votre compte a été créé avec succès !<br>\n"
-"                        Votre identifiant est <strong><t t-out=\"object.e-mail or ''\">mark.brown23@example.com</t></strong><br>\n"
+"                        Votre identifiant est <strong><t t-out=\"object.email or ''\">mark.brown23@example.com</t></strong><br>\n"
 "                        Pour accéder à votre compte, vous pouvez utiliser le lien suivant :\n"
 "                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"                            <a t-attf-href=\"/web/login?auth_login={{object.e-mail}}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                            <a t-attf-href=\"/web/login?auth_login={{object.email}}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                                Aller à Mon compte\n"
 "                            </a>\n"
 "                        </div>\n"
@@ -523,8 +524,8 @@ msgstr ""
 "                </td></tr>\n"
 "                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
 "                    <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
-"                    <t t-if=\"object.company_id.e-mail\">\n"
-"                        | <a t-attf-href=\"'mailto:%s' % {{ object.company_id.e-mail }}\" style=\"text-decoration:none; color: #454748;\"><t t-out=\"object.company_id.e-mail or ''\">info@yourcompany.com</t></a>\n"
+"                    <t t-if=\"object.company_id.email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none; color: #454748;\"><t t-out=\"object.company_id.email or ''\">info@yourcompany.com</t></a>\n"
 "                    </t>\n"
 "                    <t t-if=\"object.company_id.website\">\n"
 "                        | <a t-attf-href=\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; color: #454748;\">\n"
@@ -977,6 +978,14 @@ msgstr "Inscription: pas de nom ni de partenaire pour le nouvel utilisateur"
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
 msgid "Status"
 msgstr "Statut"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/controllers/main.py:0
+#: code:addons/auth_signup/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "Activité suspecte détectée par Google reCaptcha."
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id

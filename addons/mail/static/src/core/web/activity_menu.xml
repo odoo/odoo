@@ -20,14 +20,14 @@
                             <div class="flex-grow-1 overflow-hidden">
                                 <div class="d-flex px-2" name="activityTitle" t-out="group.name"/>
                                 <div t-if="group.type === 'activity'" class="d-flex">
-                                    <span t-attf-class="#{group.overdue_count ? '' : 'text-muted'} py-0 px-2 text-truncate" t-on-click.stop="() => this.openActivityGroup(group, 'overdue')">
+                                    <span t-attf-class="#{group.overdue_count ? 'btn btn-link' : 'text-muted'} py-0 px-2 text-truncate" t-on-click.stop="() => this.openActivityGroup(group, 'overdue')">
                                         <t t-out="group.overdue_count"/> Late
                                     </span>
-                                    <span t-attf-class="#{group.today_count ? '' : 'text-muted'} py-0 px-2 text-truncate" t-on-click.stop="() => this.openActivityGroup(group, 'today')">
+                                    <span t-attf-class="#{group.today_count ? 'btn btn-link' : 'text-muted'} py-0 px-2 text-truncate" t-on-click.stop="() => this.openActivityGroup(group, 'today')">
                                         <t t-out="group.today_count"/> Today
                                     </span>
                                     <span class="flex-grow-1"/>
-                                    <span t-attf-class="#{group.planned_count ? '' : 'text-muted'} py-0 px-2 text-truncate" t-on-click.stop="() => this.openActivityGroup(group, 'upcoming_all')">
+                                    <span t-attf-class="#{group.planned_count ? 'btn btn-link' : 'text-muted'} py-0 px-2 text-truncate" t-on-click.stop="() => this.openActivityGroup(group, 'upcoming_all')">
                                         <t t-out="group.planned_count"/> Future
                                     </span>
                                 </div>

@@ -101,6 +101,7 @@ PaymentForm.include({
                     _t("Payment processing failed"),
                     _t("Some information is missing to process your payment.")
                 );
+                this._enableButton();
                 return;
             }
         }

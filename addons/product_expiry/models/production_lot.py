@@ -78,10 +78,16 @@ class StockLot(models.Model):
             ('location_id.usage', '=', 'internal')])
         alert_lots = lot_stock_quants.mapped('lot_id')
 
+        alert_activity_xml_id = "product_expiry.mail_activity_type_alert_date_reached"
+        alert_activity = self.env.ref(alert_activity_xml_id, raise_if_not_found=False)
+        alert_activity_default_user_id = alert_activity.default_user_id.id if alert_activity else None
         for lot in alert_lots:
+            user_id = alert_activity_default_user_id or \
+                      lot.product_id.with_company(lot.company_id).responsible_id.id or \
+                      lot.product_id.responsible_id.id or SUPERUSER_ID
             lot.activity_schedule(
-                'product_expiry.mail_activity_type_alert_date_reached',
-                user_id=lot.product_id.with_company(lot.company_id).responsible_id.id or lot.product_id.responsible_id.id or SUPERUSER_ID,
+                alert_activity_xml_id,
+                user_id=user_id,
                 note=_("The alert date has been reached for this lot/serial number")
             )
         alert_lots.write({

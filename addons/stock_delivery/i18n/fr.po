@@ -3,17 +3,17 @@
 # 	* stock_delivery
 # 
 # Translators:
-# Wil Odoo, 2023
 # Jolien De Paepe, 2023
-# Manon Rondou, 2024
+# Wil Odoo, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -214,7 +214,21 @@ msgid ""
 "Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
 "Coût estimé : le client se verra facturer le coût estimé de l'expédition. \n"
-"Coût réel : le client se verra facturer le coût réel de l'expédition, le coût de l'expédition sera mis à jour sur le bon de commande après la livraison."
+"Coût réel : le client se verra facturer le coût réel de l'expédition, le coût de l'expédition sera mis à jour sur la commande client après la livraison."
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception occurred with respect to carrier on the transfer"
+msgstr "Une exception est survenue concernant le transporteur du transfert."
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception:"
+msgstr "Exception :"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__hs_code
@@ -252,6 +266,13 @@ msgstr "Mis à jour par"
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__write_date
 msgid "Last Updated on"
 msgstr "Mis à jour le"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid "Manual actions might be needed."
+msgstr "Des actions manuelles peuvent être nécessaires."
 
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
@@ -359,7 +380,7 @@ msgstr "Prix de vente"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_sale_order
 msgid "Sales Order"
-msgstr "Bon de commande"
+msgstr "Commande client"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_sale_order_line
@@ -420,11 +441,11 @@ msgstr "Poids d'expédition :"
 #: model:ir.model.fields,help:stock_delivery.field_product_template__hs_code
 msgid ""
 "Standardized code for international shipping and goods declaration. At the "
-"moment, only used for the FedEx shipping provider."
+"moment, only used for FedEx and USPS shipping providers."
 msgstr ""
-"Code normalisé pour l'expédition internationale et la déclaration de "
-"marchandises. Pour le moment, uniquement utilisé pour le fournisseur "
-"d’expédition FedEx."
+"Code standardisé pour l'expédition internationale et la déclaration de "
+"marchandises. Actuellement utilisé uniquement pour les transporteurs FedEx "
+"et USPS."
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move

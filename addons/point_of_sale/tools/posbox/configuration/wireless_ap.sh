@@ -1,12 +1,24 @@
 #!/usr/bin/env bash
 
+function get_conf () {
+    KEY="${1}"
+    CONF_FILE="${2}"
+    # These commands seek for keys on the configuration file,
+    # for each key found, trim spaces and store the corresponding value
+
+    touch "$CONF_FILE"  # create the file if it does not exist
+    awk -v key="$KEY" -F= '$1 ~ "^" key "[[:space:]]*" {gsub(/^[[:space:]]+|[[:space:]]+$/, "", $2); print $2}' "$CONF_FILE"
+}
+
 FORCE_HOST_AP="${1}"
-WIFI_NETWORK_FILE="/home/pi/wifi_network.txt"
+CONF_FILE="/home/pi/odoo.conf"
 COUNTER=0
+ESSID=$(get_conf "wifi_ssid" "${CONF_FILE}")
+PASSWORD=$(get_conf "wifi_password" "${CONF_FILE}")
 
 # we need to wait to receive an ip address from the dhcp before enable the access point.
-# only if only if no configuration file for the wifi networks is recorded
-if ! [ -f "${WIFI_NETWORK_FILE}" ] && [ -z "${FORCE_HOST_AP}" ] ; then
+# only if no configuration file for the wifi networks is recorded
+if ! [ "${ESSID}" ] && [ "${PASSWORD}" ] && [ -z "${FORCE_HOST_AP}" ] ; then
 	while [ "$(hostname -I)" = '' ] && [ "$COUNTER" -le 10 ]; do sleep 2;((COUNTER++)); done
 fi
 
@@ -37,7 +49,7 @@ sleep 5
 if [ -z "${WIRED_IP}" ] ; then
 	logger -t posbox_wireless_ap "No wired IP"
 
-	if [ -f "${WIFI_NETWORK_FILE}" ] && [ -z "${FORCE_HOST_AP}" ] ; then
+	if [ "${ESSID}" ] && [ "${PASSWORD}" ] && [ -z "${FORCE_HOST_AP}" ] ; then
 		logger -t posbox_wireless_ap "Loading persistently saved setting"
 		/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/connect_to_wifi.sh &
 	else
@@ -65,5 +77,6 @@ else
 	killall nginx
 	service nginx restart
 	service dnsmasq stop
+	ip addr del 10.11.12.1/24 dev wlan0 # remove the static ip
 	service odoo restart # As this file is executed on boot, this line is responsible for restarting odoo service on reboot
 fi

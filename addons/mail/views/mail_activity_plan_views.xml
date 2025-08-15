@@ -41,8 +41,11 @@
                                 <field name="name" placeholder="e.g. Onboarding"/>
                             </h1>
                         </div>
-                        <group name="group_plan_fields">
-                            <field name="company_id" groups="base.group_multi_company"/>
+                        <group>
+                            <group name="group_plan_fields">
+                                <field name="company_id" groups="base.group_multi_company"
+                                    placeholder="Available for all Companies"/>
+                            </group>
                         </group>
                         <notebook>
                             <page string="Activities To Generate">

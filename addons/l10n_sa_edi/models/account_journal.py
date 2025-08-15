@@ -88,7 +88,7 @@ class AccountJournal(models.Model):
                                                 readonly=True, copy=False)
 
     l10n_sa_serial_number = fields.Char("Serial Number", copy=False,
-                                        help="The serial number of the Taxpayer solution unit. Provided by ZATCA")
+                                        help="Unique Serial Number automatically filled when the journal is onboarded")
 
     l10n_sa_latest_submission_hash = fields.Char("Latest Submission Hash", copy=False,
                                                  help="Hash of the latest submitted invoice to be used as the Previous Invoice Hash (KSA-13)")
@@ -102,6 +102,32 @@ class AccountJournal(models.Model):
         """
         self.ensure_one()
         return self.sudo().l10n_sa_production_csid_json
+
+    def _l10n_sa_api_onboard_sanity_checks(self):
+        """
+            Perform a sanity check to validate that the journal is ready to be onboarded
+        """
+
+        # If the invoice wasn't sent to ZATCA because of a timeout, it will retain its existing chain index
+        # Make sure there are no opened invoices with the journal's existing sequence
+        move_ids = self.env['account.move'].search(
+            [
+                ('journal_id', '=', self.id),
+                ('l10n_sa_chain_index', '!=', 0)
+            ]
+        )
+        stuck_moves = [move for move in move_ids if not move._l10n_sa_is_in_chain()]
+        if stuck_moves:
+            raise UserError(_("Oops! The journal is stuck. Please submit the pending invoices to ZATCA and try again."))
+
+    def _l10n_sa_edi_set_csr_fields(self):
+        '''
+            Sets default values for CSR generation fields in Odoo, if their values do not exist
+        '''
+        self.ensure_one()
+        # Avoid unnecessary write calls
+        if self.l10n_sa_serial_number != str(self.id):
+            self.l10n_sa_serial_number = self.id
 
     # ====== CSR Generation =======
 
@@ -117,19 +143,20 @@ class AccountJournal(models.Model):
         self.ensure_one()
 
         company_id = self.company_id
+        parent_company_id = self.company_id.parent_id
         version_info = service.common.exp_version()
         builder = x509.CertificateSigningRequestBuilder()
         subject_names = (
             # Country Name
             (NameOID.COUNTRY_NAME, company_id.country_id.code),
             # Organization Unit Name
-            (NameOID.ORGANIZATIONAL_UNIT_NAME, (company_id.vat or '')[:10]),
+            (NameOID.ORGANIZATIONAL_UNIT_NAME, company_id.name if parent_company_id else company_id.vat[:10]),
             # Organization Name
-            (NameOID.ORGANIZATION_NAME, company_id.name),
-            # Subject Common Name
-            (NameOID.COMMON_NAME, company_id.name),
+            (NameOID.ORGANIZATION_NAME, parent_company_id.name if parent_company_id else company_id.name),
+            # Subject Common Name (Short Code - Journal Name - Company Name)
+            (NameOID.COMMON_NAME, "%s-%s-%s" % (self.code, self.name, company_id.name)),
             # Organization Identifier
-            (ObjectIdentifier('2.5.4.97'), company_id.vat),
+            (ObjectIdentifier('2.5.4.97'), parent_company_id.vat if parent_company_id else company_id.vat),
             # State/Province Name
             (NameOID.STATE_OR_PROVINCE_NAME, company_id.state_id.name),
             # Locality Name
@@ -219,6 +246,11 @@ class AccountJournal(models.Model):
                 3.  Get the Production CSID
         """
         self.ensure_one()
+        # we want to perform sanity checks to ensure that the journal is ready to be onboarded
+        # If the check fails, we do not want to revoke the existing PCSID because the user might still need it to post hanging invoices
+        self._l10n_sa_api_onboard_sanity_checks()
+        self._l10n_sa_edi_set_csr_fields()
+
         try:
             # If the company does not have a private key, we generate it.
             # The private key is used to generate the CSR but also to sign the invoices
@@ -233,6 +265,8 @@ class AccountJournal(models.Model):
             self._l10n_sa_get_production_CSID()
             # Once all three steps are completed, we set the errors field to False
             self.l10n_sa_csr_errors = False
+            # Regenerate a new chain sequence
+            self._l10n_sa_edi_icv_onboarding()
         except (RequestException, HTTPError, UserError) as e:
             # In case of an exception returned from ZATCA (not timeout), we will need to regenerate the CSR
             # As the same CSR cannot be used twice for the same CCSID request
@@ -244,8 +278,9 @@ class AccountJournal(models.Model):
             Request a Compliance Cryptographic Stamp Identifier (CCSID) from ZATCA
         """
         CCSID_data = self._l10n_sa_api_get_compliance_CSID(otp)
-        if CCSID_data.get('error'):
-            raise UserError(_("Could not obtain Compliance CSID: %s", CCSID_data['error']))
+        if CCSID_data.get('errors') or CCSID_data.get('error'):
+            raise UserError(_("Could not obtain Compliance CSID: %s",
+                              CCSID_data['errors'][0]['message'] if CCSID_data.get('errors') else CCSID_data['error']))
         self.sudo().write({
             'l10n_sa_compliance_csid_json': json.dumps(CCSID_data),
             'l10n_sa_production_csid_json': False,
@@ -375,16 +410,32 @@ class AccountJournal(models.Model):
         return etree.tostring(root)
 
     # ====== Index Chain & Previous Invoice Calculation =======
+    def _l10n_sa_edi_icv_onboarding(self):
+        """
+            Onboarding method to create or reset ICV sequence for the journal
+        """
+        self.ensure_one()
+        if self.l10n_sa_chain_sequence_id:
+            self.l10n_sa_chain_sequence_id.number_next = 1
+            message = _("Journal re-onboarded with ZATCA successfully")
+        else:
+            self.l10n_sa_chain_sequence_id = self._l10n_sa_edi_create_new_chain()
+            message = _("Journal onboarded with ZATCA successfully")
+        self.message_post(body=message)
+
+    def _l10n_sa_edi_create_new_chain(self):
+        self.ensure_one()
+        return self.env['ir.sequence'].create({
+            'name': f'ZATCA account move sequence for Journal {self.name} (id: {self.id})',
+            'code': f'l10n_sa_edi.account.move.{self.id}',
+            'implementation': 'no_gap',
+            'company_id': self.company_id.id,
+        })
 
     def _l10n_sa_edi_get_next_chain_index(self):
         self.ensure_one()
         if not self.l10n_sa_chain_sequence_id:
-            self.l10n_sa_chain_sequence_id = self.env['ir.sequence'].create({
-                'name': f'ZATCA account move sequence for Journal {self.name} (id: {self.id})',
-                'code': f'l10n_sa_edi.account.move.{self.id}',
-                'implementation': 'no_gap',
-                'company_id': self.company_id.id,
-            })
+            self.l10n_sa_chain_sequence_id = self._l10n_sa_edi_create_new_chain()
         return self.l10n_sa_chain_sequence_id.next_by_id()
 
     def _l10n_sa_get_last_posted_invoice(self):
@@ -552,25 +603,37 @@ class AccountJournal(models.Model):
         """
             Helper function to make api calls to the ZATCA API Endpoint
         """
-        api_url = ZATCA_API_URLS[self.env.company.l10n_sa_api_mode]
+        api_url = ZATCA_API_URLS[self.company_id.l10n_sa_api_mode]
         request_url = urljoin(api_url, request_url)
+        status_code = False
         try:
             request_response = requests.request(method, request_url, data=request_data.get('body'),
                                                 headers={
                                                     **self._l10n_sa_api_headers(),
                                                     **request_data.get('header')
-                                                }, timeout=(30, 30))
+                                                }, timeout=30)
             request_response.raise_for_status()
         except (ValueError, HTTPError) as ex:
-            # In the case of an explicit error from ZATCA, i.e we got a response but the code of the response is not 2xx
-            return {
-                'error': _("Server returned an unexpected error: ") + (request_response.text or str(ex)),
-                'blocking_level': 'error'
-            }
+            # The 400 case means that it is rejected by ZATCA, but we need to update the hash as done for accepted.
+            # In the 401+ cases, it is like the server is overloaded e.g. and we still need to resend later.  We do not
+            # erase the index chain (excepted) because for ZATCA, one ICV (index chain) needs to correspond to one invoice.
+            status_code = ex.response.status_code
+            if status_code != 400:
+                return {
+                    'error': (Markup("<b>[%s]</b>") % status_code) + _("Server returned an unexpected error: %(error)s",
+                               error=(request_response.text or str(ex))),
+                    'blocking_level': 'warning',
+                    'status_code': status_code,
+                    'excepted': True,
+                }
         except RequestException as ex:
             # Usually only happens if a Timeout occurs. In this case we're not sure if the invoice was accepted or
             # rejected, or if it even made it to ZATCA
             return {'error': str(ex), 'blocking_level': 'warning', 'excepted': True}
+
+        if request_response.status_code == '303':
+            return {'error': _('Clearance and reporting seem to have been mixed up. '),
+                    'blocking_level': 'warning', 'excepted': True}
 
         try:
             response_data = request_response.json()
@@ -579,17 +642,22 @@ class AccountJournal(models.Model):
                 'error': _("JSON response from ZATCA could not be decoded"),
                 'blocking_level': 'error'
             }
+        response_data['status_code'] = request_response.status_code
 
-        if not request_response.ok and (response_data.get('errors') or response_data.get('warnings')):
-            if isinstance(response_data, dict) and response_data.get('errors'):
+        val_res = response_data.get('validationResults', {})
+        if not request_response.ok and (val_res.get('errorMessages') or val_res.get('warningMessages')):
+            error = "" if not status_code else Markup("<b>[%s]</b>") % (status_code)
+            if isinstance(response_data, dict) and val_res.get('errorMessages'):
+                error += _("Invoice submission to ZATCA returned errors")
                 return {
-                    'error': _("Invoice submission to ZATCA returned errors"),
-                    'json_errors': response_data['errors'],
+                    'error': error,
+                    'json_errors': response_data,
                     'blocking_level': 'error',
                 }
+            error += request_response.reason
             return {
-                'error': request_response.reason,
-                'blocking_level': 'error'
+                'error': error,
+                'blocking_level': 'error',
             }
         return response_data
 

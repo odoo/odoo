@@ -87,6 +87,8 @@ class Attendee(models.Model):
             partners -= self.env.user.partner_id
             mapped_followers[partners] |= event
         for partners, events in mapped_followers.items():
+            if not partners:
+                continue
             events.message_subscribe(partner_ids=partners.ids)
 
     def _unsubscribe_partner(self):
@@ -117,25 +119,13 @@ class Attendee(models.Model):
         # get ics file for all meetings
         ics_files = self.mapped('event_id')._get_ics_file()
 
-        # If the mail template has attachments, prepare copies for each attendee (to be added to each attendee's mail)
-        if mail_template.attachment_ids:
-
-            # Setting res_model to ensure attachments are linked to the msg (otherwise only internal users are allowed link attachments)
-            attachments_values = [a.copy_data({'res_id': 0, 'res_model': 'mail.compose.message'})[0] for a in mail_template.attachment_ids]
-            attachments_values *= len(self)
-            attendee_attachment_ids = self.env['ir.attachment'].create(attachments_values).ids
-
-            # Map attendees to their respective attachments
-            template_attachment_count = len(mail_template.attachment_ids)
-            attendee_id_attachment_id_map = dict(zip(self.ids, split_every(template_attachment_count, attendee_attachment_ids, list)))
-
         for attendee in self:
             if attendee.email and attendee._should_notify_attendee():
                 event_id = attendee.event_id.id
                 ics_file = ics_files.get(event_id)
 
-                # Add template attachments copies to the attendee's email, if available
-                attachment_ids = attendee_id_attachment_id_map[attendee.id] if mail_template.attachment_ids else []
+                # Copy and add template attachments copies to the attendee's email, if available
+                attachment_ids = [a.copy({'res_id': 0, 'res_model': 'mail.compose.message'}).id for a in mail_template.attachment_ids]
 
                 if ics_file:
                     context = {

@@ -35,7 +35,7 @@
         <div id="portal_client_category" position="inside">
             <t t-call="portal.portal_docs_entry">
                 <t t-set="icon" t-value="'/sale/static/src/img/bag.svg'"/>
-                <t t-set="title">Sales Orders</t>
+                <t t-set="title">Your Orders</t>
                 <t t-set="url" t-value="'/my/orders'"/>
                 <t t-set="text">Follow, view or pay your orders</t>
                 <t t-set="placeholder_count" t-value="'order_count'"/>
@@ -227,7 +227,7 @@
                                     </p>
                                     <t t-call="portal.signature_form">
                                         <t t-set="call_url" t-value="sale_order.get_portal_url(suffix='/accept')"/>
-                                        <t t-set="default_name" t-value="sale_order.partner_id.name"/>
+                                        <t t-set="default_name" t-value="sale_order.partner_id.name or sale_order.partner_id.commercial_partner_id.name"/>
                                     </t>
                                 </main>
                             </form>
@@ -443,7 +443,7 @@
                                 <th t-else="" class="ps-0 pb-0">Date:</th>
                                 <td class="w-100 pb-0 text-wrap"><span t-field="sale_order.date_order" t-options='{"widget": "date"}'/></td>
                             </tr>
-                            <tr t-if="sale_order.validity_date">
+                            <tr t-if="sale_order.validity_date and sale_order.state in ['draft', 'sent']">
                                 <th class="ps-0 pb-0">Expiration Date:</th>
                                 <td class="w-100 pb-0 text-wrap"><span t-field="sale_order.validity_date" t-options='{"widget": "date"}'/></td>
                             </tr>

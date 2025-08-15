@@ -11,6 +11,7 @@ import traceback
 from xml.etree import ElementTree as ET
 import zipfile
 
+from datetime import datetime
 from psycopg2 import sql
 from pytz import country_timezones
 from functools import wraps
@@ -96,6 +97,30 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
     except Exception as e:
         _logger.exception('CREATE DATABASE failed:')
 
+
+def _check_faketime_mode(db_name):
+    if os.getenv('ODOO_FAKETIME_TEST_MODE') and db_name in odoo.tools.config['db_name'].split(','):
+        try:
+            db = odoo.sql_db.db_connect(db_name)
+            with db.cursor() as cursor:
+                cursor.execute("SELECT (pg_catalog.now() AT TIME ZONE 'UTC');")
+                server_now = cursor.fetchone()[0]
+                time_offset = (datetime.now() - server_now).total_seconds()
+
+                cursor.execute("""
+                    CREATE OR REPLACE FUNCTION public.now()
+                        RETURNS timestamp with time zone AS $$
+                            SELECT pg_catalog.now() +  %s * interval '1 second';
+                        $$ LANGUAGE sql;
+                """, (int(time_offset), ))
+                cursor.execute("SELECT (now() AT TIME ZONE 'UTC');")
+                new_now = cursor.fetchone()[0]
+                _logger.info("Faketime mode, new cursor now is %s", new_now)
+                cursor.commit()
+        except psycopg2.Error as e:
+            _logger.warning("Unable to set fakedtimed NOW() : %s", e)
+
+
 def _create_empty_database(name):
     db = odoo.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
@@ -103,6 +128,7 @@ def _create_empty_database(name):
         cr.execute("SELECT datname FROM pg_database WHERE datname = %s",
                    (name,), log_exceptions=False)
         if cr.fetchall():
+            _check_faketime_mode(name)
             raise DatabaseExists("database %r already exists!" % (name,))
         else:
             # database-altering operations cannot be executed inside a transaction
@@ -132,6 +158,7 @@ def _create_empty_database(name):
                 cr.execute("ALTER FUNCTION unaccent(text) IMMUTABLE")
     except psycopg2.Error as e:
         _logger.warning("Unable to create PostgreSQL extensions : %s", e)
+    _check_faketime_mode(name)
 
     # restore legacy behaviour on pg15+
     try:

@@ -31,6 +31,13 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
         $('.o_matrix_input').val(1);
     }
 }, {
+    trigger: '.o_matrix_input_table',
+    run: function () {
+        // left first cell at 0 to ensure the variant is not created
+        $('.o_matrix_input')[0].value = 0;
+        $('.o_matrix_input')[8].value = 0;
+    }
+}, {
     trigger: 'button:contains("Confirm")',
     run: 'click'
 }, {
@@ -47,7 +54,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     trigger: '.o_matrix_input_table',
     run: function () {
         // update some of the matrix values.
-        $('.o_matrix_input').slice(8, 16).val(4);
+        $('.o_matrix_input').slice(9, 16).val(4);
     } // set the qty to 4 for half of the matrix products.
 }, {
     trigger: 'button:contains("Confirm")',
