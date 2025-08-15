@@ -303,7 +303,7 @@ registry.category("web_tour.tours").add("PosOrderNoPoints", {
         [
             Chrome.startPoS(),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner 2"),
+            ProductScreen.clickCustomer("AAA Test Partner 2"),
             ProductScreen.addOrderline("Desk Organizer", "3"),
             PosLoyalty.isPointsDisplayed(false),
             PosLoyalty.finalizeOrder("Cash", "15.3"),
@@ -374,7 +374,7 @@ registry.category("web_tour.tours").add("test_max_usage_partner_with_point", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner 2"),
+            ProductScreen.clickCustomer("AAA Test Partner 2"),
             ProductScreen.addOrderline("Desk Organizer", "3"),
             PosLoyalty.claimReward("100% on your order"),
             PosLoyalty.finalizeOrder("Cash", "0"),
