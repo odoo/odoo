@@ -20,6 +20,14 @@ class StockMove(models.Model):
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_move_id')
     analytic_account_line_ids = fields.Many2many('account.analytic.line', copy=False)
 
+    def _compute_reference(self):
+        super()._compute_reference()
+        for move in self:
+            if not move.inventory_name:
+                force_period_date = self.env.context.get('force_period_date', False)
+                if force_period_date:
+                    move.reference += _(' [Accounted on %s]', force_period_date)
+
     def _inverse_picked(self):
         super()._inverse_picked()
         self._account_analytic_entry_move()

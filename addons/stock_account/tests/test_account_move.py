@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 from odoo.tests import Form, tagged
@@ -386,3 +388,36 @@ class TestAccountMove(TestAccountMoveStockCommon):
                 {'account_id': prod_b_accounts['expense'].id, 'product_id': self.product_b.id},
             ]
         )
+
+    def test_inventory_request_count_with_accounting_date(self):
+        """
+        Tests when a request to count a quant with an account date set is done,
+        the accounting date is included in the reference on the stock move.
+        """
+        stock_location = self.env['stock.warehouse'].search([
+            ('company_id', '=', self.env.company.id),
+        ], limit=1).lot_stock_id
+        quant = self.env['stock.quant'].create({
+            'location_id': stock_location.id,
+            'product_id': self.product_A.id,
+            'inventory_quantity': 10,
+        })
+        quant.action_apply_inventory()
+
+        request_wizard = self.env['stock.request.count'].create({
+            'quant_ids': quant.ids,
+            'set_count': 'empty',
+            'accounting_date': date.today(),
+        })
+        request_wizard.action_request_count()
+
+        moves = self.env['stock.move'].search([('product_id', '=', self.product_A.id)])
+        self.assertEqual(quant.accounting_date, date.today())
+        self.assertTrue(all('Accounted on' not in move for move in moves.mapped('reference')))
+
+        quant.inventory_quantity = 20
+        quant.action_apply_inventory()
+
+        moves = self.env['stock.move'].search([('product_id', '=', self.product_A.id)])
+        self.assertEqual(quant.accounting_date, False)
+        self.assertTrue(any('Accounted on' in move for move in moves.mapped('reference')))

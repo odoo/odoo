@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.tools.misc import groupby
 
 
@@ -87,14 +87,6 @@ class StockQuant(models.Model):
                 inventories.accounting_date = False
             else:
                 super(StockQuant, inventories)._apply_inventory()
-
-    def _get_inventory_move_values(self, qty, location_id, location_dest_id, package_id=False, package_dest_id=False):
-        res_move = super()._get_inventory_move_values(qty, location_id, location_dest_id, package_id, package_dest_id)
-        if not self.env.context.get('inventory_name'):
-            force_period_date = self.env.context.get('force_period_date', False)
-            if force_period_date:
-                res_move['name'] += _(' [Accounted on %s]', force_period_date)
-        return res_move
 
     @api.model
     def _get_inventory_fields_write(self):
