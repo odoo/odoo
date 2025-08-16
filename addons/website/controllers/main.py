@@ -720,7 +720,10 @@ class Website(Home):
                 continue
             for template in View.search([
                 ('mode', '=', 'primary'),
+                '|',
                 ('key', 'like', escape_psql(f'new_page_template_sections_{group["id"]}_')),
+                ('key', 'like', f'configurator_pages_{group["id"]}'),
+                request.website.website_domain(),
             ], order='key'):
                 try:
                     html_tree = html.fromstring(View.with_context(inherit_branding=False)._render_template(
@@ -741,6 +744,7 @@ class Website(Home):
                     group['templates'].append({
                         'key': template.key,
                         'template': html.tostring(html_tree),
+                        'is_from_configurator': 'configurator_pages' in template.key,
                     })
                 except Exception as error:
                     if hasattr(error, 'qweb'):

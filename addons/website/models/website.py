@@ -939,7 +939,7 @@ class Website(models.Model):
             return replacement
 
         # Configure the pages
-        for page_code in requested_pages:
+        for index, page_code in enumerate(requested_pages):
             snippet_list = configurator_snippets.get(page_code, [])
             if page_code == 'homepage':
                 page_view_id = self.with_context(website_id=website.id).viewref('website.homepage')
@@ -983,6 +983,11 @@ class Website(models.Model):
                     logger.warning(e)
             page_view_id.save(value=f'<div class="oe_structure">{"".join(rendered_snippets)}</div>',
                               xpath="(//div[hasclass('oe_structure')])[last()]")
+            # Copy the configurator pages to preserve the original untouched
+            # pages in the landing page category when creating a new page.
+            page_view_id.copy({
+                'key': f"{index}_{page_view_id.key}_configurator_pages_landing",
+            })
 
         # Configure the images
         images = custom_resources.get('images', {})
