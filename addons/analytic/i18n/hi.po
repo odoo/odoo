@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* analytic
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Ujjawal Pathak, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:36+0000\n"
+"POT-Creation-Date: 2025-08-15 18:38+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Ujjawal Pathak, 2025\n"
 "Language-Team: Hindi (https://app.transifex.com/odoo/teams/41243/hi/)\n"
+"Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: analytic
@@ -25,6 +25,12 @@ msgstr ""
 #: code:addons/analytic/models/analytic_account.py:0
 msgid "%s (copy)"
 msgstr "%s (कॉपी)"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_line.py:0
+msgid "%s analytic lines created"
+msgstr ""
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
@@ -43,8 +49,8 @@ msgid ""
 "A 'Project' plan needs to exist and its id needs to be set as "
 "`analytic.project_plan` in the system variables"
 msgstr ""
-"एक 'प्रोजेक्ट प्लान' ज़रूर होना चाहिए और उसकी आईडी सिस्टम में "
-"analytic.project_plan रखनी ज़रूरी है."
+"एक 'प्रोजेक्ट प्लान' ज़रूर होना चाहिए और उसकी आईडी सिस्टम में analytic.project_plan "
+"रखनी ज़रूरी है."
 
 #. module: analytic
 #. odoo-javascript
@@ -141,6 +147,7 @@ msgstr "एनालिटिक अकाउंट काउंट"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__analytic_distribution
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution
 msgid "Analytic Distribution"
 msgstr "एनालिटिक डिस्ट्रिब्यूशन"
@@ -212,6 +219,7 @@ msgstr "एनालिटिक प्लान"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_precision
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__analytic_precision
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_precision
 msgid "Analytic Precision"
 msgstr "एनालिटिक प्रीसीज़न"
@@ -486,6 +494,12 @@ msgid "Domain"
 msgstr "डोमेन"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Don't update"
+msgstr ""
+
+#. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_rd_finance
 msgid "Finance"
 msgstr "फ़ाइनेंस"
@@ -554,7 +568,8 @@ msgstr "अगर बॉक्स पर टिक है, तो कुछ म�
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sales orders and projects are implemented using\n"
-"                analytic accounts. You can track costs and revenues to analyse\n"
+"                analytic accounts. You can track costs and revenues to "
+"analyse\n"
 "                your margins easily."
 msgstr ""
 "Odoo में, सेल्स ऑर्डर और प्रोजेक्ट एनालिटिक अकाउंट्स से चलते हैं. \n"
@@ -631,6 +646,12 @@ msgid "Miscellaneous"
 msgstr "विविध"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Multi edit"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__name
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Name"
@@ -687,9 +708,7 @@ msgstr "ऐसे मैसेज की संख्या जिनमें �
 #. odoo-python
 #: code:addons/analytic/models/analytic_mixin.py:0
 msgid "One or more lines require a 100% analytic distribution."
-msgstr ""
-"एक या एक से ज़्यादा लाइनें ऐसी हैं जिनके लिए '100% विश्लेषणात्मक वितरण' "
-"ज़रूरी है."
+msgstr "एक या एक से ज़्यादा लाइनें ऐसी हैं जिनके लिए '100% विश्लेषणात्मक वितरण' ज़रूरी है."
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_internal
@@ -793,13 +812,16 @@ msgstr "रिसर्च और डेवलपमेंट"
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sales orders\n"
-"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                invoices. Customer invoices can be created based on sales "
+"orders\n"
+"                (fixed price invoices), on timesheets (based on the work "
+"done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 "जब आप ग्राहकों के लिए इनवॉइस बनाएंगे, तो आपकी कमाई अपने-आप \n"
 "दर्ज हो जाएगी. ये ग्राहकों के बिल तीन तरीकों से बनाए जा सकते हैं: \n"
-"या तो सेल्स ऑर्डर के आधार पर (निश्चित कीमतों वाले बिल), या कर्मचारियों द्वारा किए गए काम (टाइमशीट) के हिसाब से, \n"
+"या तो सेल्स ऑर्डर के आधार पर (निश्चित कीमतों वाले बिल), या कर्मचारियों द्वारा किए गए "
+"काम (टाइमशीट) के हिसाब से, \n"
 "या फिर किए गए खर्चों (जैसे यात्रा खर्चों को दोबारा बिल करना) के आधार पर."
 
 #. module: analytic
@@ -841,9 +863,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this company, it "
 "will automatically take this as an analytic account)"
 msgstr ""
-"कोई ऐसी कंपनी कैटगरी चुनें जिसके लिए एनालिटिक डिस्ट्रिब्यूशन का इस्तेमाल "
-"किया जाएगा. जैसे, अगर हम इस कंपनी को चुनेंगे, तो ग्राहक के बिल या सेल्स "
-"ऑर्डर में अपने आप वही एनालिटिक अकाउंट आ जाएगा."
+"कोई ऐसी कंपनी कैटगरी चुनें जिसके लिए एनालिटिक डिस्ट्रिब्यूशन का इस्तेमाल किया जाएगा. जैसे, "
+"अगर हम इस कंपनी को चुनेंगे, तो ग्राहक के बिल या सेल्स ऑर्डर में अपने आप वही एनालिटिक "
+"अकाउंट आ जाएगा."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
@@ -852,9 +874,9 @@ msgid ""
 "(e.g. create new customer invoice or Sales order if we select this partner, "
 "it will automatically take this as an analytic account)"
 msgstr ""
-"कोई ऐसी पार्टनर कैटगरी चुनें जिसके लिए एनालिटिक डिस्ट्रिब्यूशन का इस्तेमाल "
-"किया जाएगा. जैसे, अगर हम इस पार्टनर को चुनेंगे, तो ग्राहक के बिल या सेल्स "
-"ऑर्डर में अपने आप वही एनालिटिक अकाउंट आ जाएगा."
+"कोई ऐसी पार्टनर कैटगरी चुनें जिसके लिए एनालिटिक डिस्ट्रिब्यूशन का इस्तेमाल किया जाएगा. "
+"जैसे, अगर हम इस पार्टनर को चुनेंगे, तो ग्राहक के बिल या सेल्स ऑर्डर में अपने आप वही "
+"एनालिटिक अकाउंट आ जाएगा."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
@@ -863,9 +885,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this partner, it "
 "will automatically take this as an analytic account)"
 msgstr ""
-"कोई ऐसा पार्टनर चुनें जिसके लिए एनालिटिक डिस्ट्रिब्यूशन का इस्तेमाल किया "
-"जाएगा. जैसे, अगर हम इस पार्टनर को चुनेंगे, तो ग्राहक के बिल या सेल्स ऑर्डर "
-"में अपने आप वही एनालिटिक अकाउंट आ जाएगा."
+"कोई ऐसा पार्टनर चुनें जिसके लिए एनालिटिक डिस्ट्रिब्यूशन का इस्तेमाल किया जाएगा. जैसे, अगर "
+"हम इस पार्टनर को चुनेंगे, तो ग्राहक के बिल या सेल्स ऑर्डर में अपने आप वही एनालिटिक अकाउंट "
+"आ जाएगा."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__sequence
@@ -905,6 +927,12 @@ msgid "Unit"
 msgstr "यूनिट"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Update"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
 msgid "User"
 msgstr "उपयोगकर्ता"
@@ -921,8 +949,8 @@ msgstr "सभी को दिखेगा"
 #. odoo-python
 #: code:addons/analytic/models/analytic_account.py:0
 msgid ""
-"Whoa there! Making this change would wipe out your current data. Let's avoid"
-" that, shall we?"
+"Whoa there! Making this change would wipe out your current data. Let's avoid "
+"that, shall we?"
 msgstr "ध्यान दें! यह बदलाव आपका सारा डेटा मिटा देगा। ऐसा न करें, ठीक है?"
 
 #. module: analytic
@@ -932,8 +960,7 @@ msgid ""
 "You can't set a different company on your analytic account since there are "
 "some analytic items linked to it."
 msgstr ""
-"आप अपने एनालिटिक अकाउंट पर दूसरी कंपनी नहीं डाल सकते, क्योंकि उससे कुछ "
-"चीज़ें पहले से जुड़ी हैं."
+"आप अपने एनालिटिक अकाउंट पर दूसरी कंपनी नहीं डाल सकते, क्योंकि उससे कुछ चीज़ें पहले से जुड़ी हैं."
 
 #. module: analytic
 #. odoo-python
@@ -948,9 +975,8 @@ msgid ""
 "You defined a distribution with analytic account(s) belonging to a specific "
 "company but a model shared between companies or with a different company"
 msgstr ""
-"आपने डिस्ट्रिब्यूशन के लिए व्यवस्था बनाई है, जिसमें एक कंपनी का हिसाब "
-"(एनालिटिक अकाउंट) है, लेकिन उसका मॉडल या तो कई कंपनियों का है या किसी और "
-"कंपनी का है"
+"आपने डिस्ट्रिब्यूशन के लिए व्यवस्था बनाई है, जिसमें एक कंपनी का हिसाब (एनालिटिक अकाउंट) "
+"है, लेकिन उसका मॉडल या तो कई कंपनियों का है या किसी और कंपनी का है"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form

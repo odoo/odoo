@@ -1,32 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_edi_ubl_cii
-# 
+#
 # Translators:
 # Ilya Rozhkov, 2025
 # Anastasiia Koroleva, 2025
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-25 18:38+0000\n"
+"POT-Creation-Date: 2025-08-15 18:38+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid ""
-"%s should have a KVK or OIN number set in Company ID field or as Peppol "
-"e-address (EAS code 0106 or 0190)."
+"%s should have a KVK or OIN number set in Company ID field or as Peppol e-"
+"address (EAS code 0106 or 0190)."
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -81,8 +83,8 @@ msgstr "Статьи 226 пункты 11-15 Директива 2006/112/EN"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid ""
-"At least one of the following fields %(field_list)s is required on "
-"%(record)s."
+"At least one of the following fields %(field_list)s is required on %"
+"(record)s."
 msgstr ""
 "Хотя бы одно из следующих полей %(field_list)s обязательно для %(record)s."
 
@@ -96,6 +98,11 @@ msgstr "Вложение"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0151
 msgid "Australia ABN"
 msgstr "Australia ABN"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_a_nz
+msgid "Australia BIS Billing 3.0 A-NZ"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9914
@@ -112,21 +119,6 @@ msgstr "Austria VOKZ"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__available_peppol_eas
 msgid "Available Peppol Eas"
 msgstr ""
-
-#. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_bis3
-msgid "BIS Billing 3.0"
-msgstr "BIS Billing 3.0"
-
-#. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_a_nz
-msgid "BIS Billing 3.0 A-NZ"
-msgstr "BIS Billing 3.0 A-NZ"
-
-#. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_sg
-msgid "BIS Billing 3.0 SG"
-msgstr "BIS Billing 3.0 SG"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_de
@@ -169,10 +161,13 @@ msgstr "Проверьте партнера(ов)"
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_res_users__peppol_eas
 msgid ""
 "Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.\n"
-"             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
+"             List available at https://docs.peppol.eu/poacc/billing/3.0/"
+"codelist/eas/"
 msgstr ""
-"Код, используемый для идентификации конечной точки для BIS Billing 3.0 и его производных.\n"
-"             Список доступен по адресу https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
+"Код, используемый для идентификации конечной точки для BIS Billing 3.0 и его "
+"производных.\n"
+"             Список доступен по адресу https://docs.peppol.eu/poacc/billing/"
+"3.0/codelist/eas/"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0210
@@ -219,8 +214,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid ""
-"Could not retrieve currency: %s. Did you enable the multicurrency option and"
-" activate the currency?"
+"Could not retrieve currency: %s. Did you enable the multicurrency option and "
+"activate the currency?"
 msgstr ""
 "Не удалось получить валюту: %s. Вы включили опцию мультивалютности и "
 "активировали валюту?"
@@ -241,8 +236,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-msgid ""
-"Could not retrieve the tax: %s for the document level allowance/charge."
+msgid "Could not retrieve the tax: %s for the document level allowance/charge."
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -324,11 +318,15 @@ msgid "EN 16931"
 msgstr "EN 16931"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_bis3
+msgid "EU Standard (Peppol Bis 3.0)"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "Each invoice line shall have one and only one tax."
-msgstr ""
-"Каждая строка счета-фактуры должна содержать один и только один налог."
+msgstr "Каждая строка счета-фактуры должна содержать один и только один налог."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -374,11 +372,6 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Export outside the EU"
 msgstr "Экспорт за пределы ЕС"
-
-#. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__facturx
-msgid "Factur-X (CII)"
-msgstr "Factur-X (CII)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_cii
@@ -428,6 +421,11 @@ msgid "Format used to import the invoice: %s"
 msgstr "Формат, используемый для импорта счета-фактуры: %s"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__facturx
+msgid "France (FacturX)"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0225
 msgid "France FRCTC Electronic Address"
 msgstr ""
@@ -456,6 +454,11 @@ msgstr "France VAT"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0209
 msgid "GS1 identification keys"
 msgstr "GS1 identification keys"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__xrechnung
+msgid "Germany (XRechnung)"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0204
@@ -625,8 +628,8 @@ msgstr "Montenegro VAT"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__nlcius
-msgid "NLCIUS"
-msgstr "NLCIUS"
+msgid "Netherlands (NLCIUS)"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0106
@@ -765,6 +768,11 @@ msgid "Serbia VAT"
 msgstr "Serbia VAT"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_sg
+msgid "Singapore BIS Billing 3.0 SG"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0195
 msgid "Singapore UEN"
 msgstr "Singapore UEN"
@@ -825,8 +833,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 msgid "The Peppol endpoint is not valid. The expected format is: 0239843188"
 msgstr ""
-"Конечная точка Peppol недействительна. Ожидается следующий формат: "
-"0239843188"
+"Конечная точка Peppol недействительна. Ожидается следующий формат: 0239843188"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -880,8 +887,7 @@ msgstr "Поле %(field)s обязательно для заполнения в
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
-msgid ""
-"The field 'Sanitized Account Number' is required on the Recipient Bank."
+msgid "The field 'Sanitized Account Number' is required on the Recipient Bank."
 msgstr "Поле \"Номер санируемого счета\" требуется в банке-получателе."
 
 #. module: account_edi_ubl_cii
@@ -983,21 +989,16 @@ msgid "XML UBL"
 msgstr ""
 
 #. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__xrechnung
-msgid "XRechnung CIUS"
-msgstr "XRechnung CIUS"
-
-#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 msgid ""
 "You should include at least one tax per invoice line. [BR-CO-04]-Each "
-"Invoice line (BG-25) shall be categorized with an Invoiced item VAT category"
-" code (BT-151)."
+"Invoice line (BG-25) shall be categorized with an Invoiced item VAT category "
+"code (BT-151)."
 msgstr ""
-"В каждой строке счета-фактуры должен быть указан как минимум один налог. "
-"[BR-CO-04]- Каждая строка счета-фактуры (BG-25) должна быть классифицирована"
-" с кодом категории НДС предмета счета-фактуры (BT-151)."
+"В каждой строке счета-фактуры должен быть указан как минимум один налог. [BR-"
+"CO-04]- Каждая строка счета-фактуры (BG-25) должна быть классифицирована с "
+"кодом категории НДС предмета счета-фактуры (BT-151)."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
@@ -1024,3 +1025,21 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid "BIS Billing 3.0"
+#~ msgstr "BIS Billing 3.0"
+
+#~ msgid "BIS Billing 3.0 A-NZ"
+#~ msgstr "BIS Billing 3.0 A-NZ"
+
+#~ msgid "BIS Billing 3.0 SG"
+#~ msgstr "BIS Billing 3.0 SG"
+
+#~ msgid "Factur-X (CII)"
+#~ msgstr "Factur-X (CII)"
+
+#~ msgid "NLCIUS"
+#~ msgstr "NLCIUS"
+
+#~ msgid "XRechnung CIUS"
+#~ msgstr "XRechnung CIUS"

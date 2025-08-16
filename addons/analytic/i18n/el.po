@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* analytic
-# 
+#
 # Translators:
 # Alexandros Kapetanios <alexandros@gnugr.org>, 2024
 # Giota Dandidou <giotadandidou@gmail.com>, 2024
@@ -12,19 +12,19 @@
 # Maria Chalepiadou, 2025
 # Gerasimos Kanelatos, 2025
 # Anastasia Mimou, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-07 20:36+0000\n"
+"POT-Creation-Date: 2025-08-15 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Anastasia Mimou, 2025\n"
 "Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: analytic
@@ -32,6 +32,12 @@ msgstr ""
 #: code:addons/analytic/models/analytic_account.py:0
 msgid "%s (copy)"
 msgstr "%s (αντίγραφο)"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_line.py:0
+msgid "%s analytic lines created"
+msgstr ""
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
@@ -148,6 +154,7 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__analytic_distribution
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution
 msgid "Analytic Distribution"
 msgstr "Αναλυτική Κατανομή"
@@ -219,6 +226,7 @@ msgstr "Αναλυτικά Σχέδια"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_precision
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__analytic_precision
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_precision
 msgid "Analytic Precision"
 msgstr "Αναλυτική Ακρίβεια"
@@ -366,15 +374,6 @@ msgid "Config Settings"
 msgstr "Ρυθμίσεις διαμόρφωσης"
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_line__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"Μετατροπή ανάμεσα σε Μονάδες Μέτρησης μπορεί να πραγματοποιηθεί μόνο αν "
-"ανήκουν στην ίδια κατηγορία. Η μετατροπή θα γίνει βάσει των αναλογιών."
-
-#. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
@@ -479,6 +478,9 @@ msgstr "Απενεργοποίηση αποθήκευσης."
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__display_name
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__display_name
+#: model:ir.model.fields,field_description:analytic.field_analytic_plan_fields_mixin__display_name
+#: model:ir.model.fields,field_description:analytic.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Εμφάνιση Ονόματος"
 
@@ -497,6 +499,12 @@ msgstr "Διανομή για εφαρμογή"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__business_domain
 msgid "Domain"
 msgstr "Τομέας"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Don't update"
+msgstr ""
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_rd_finance
@@ -546,6 +554,9 @@ msgstr "Ανθρώπινοι Πόροι"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__id
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__id
+#: model:ir.model.fields,field_description:analytic.field_analytic_plan_fields_mixin__id
+#: model:ir.model.fields,field_description:analytic.field_res_config_settings__id
 msgid "ID"
 msgstr "Κωδικός"
 
@@ -564,11 +575,13 @@ msgstr "Αν επιλεγεί, κάποια μηνύματα έχουν σφάλ
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sales orders and projects are implemented using\n"
-"                analytic accounts. You can track costs and revenues to analyse\n"
+"                analytic accounts. You can track costs and revenues to "
+"analyse\n"
 "                your margins easily."
 msgstr ""
 "Στην Odoo, οι εντολές πωλήσεων και τα έργα υλοποιούνται χρησιμοποιώντας\n"
-"                αναλυτικούς λογαριασμούς. Μπορείτε να παρακολουθείτε τα κόστη και τα έσοδα για να \n"
+"                αναλυτικούς λογαριασμούς. Μπορείτε να παρακολουθείτε τα "
+"κόστη και τα έσοδα για να \n"
 "                αναλύσετε τα περιθώρια σας εύκολα.  "
 
 #. module: analytic
@@ -639,6 +652,12 @@ msgstr "Millennium Industries"
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__business_domain__general
 msgid "Miscellaneous"
 msgstr "Διάφορα"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Multi edit"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__name
@@ -801,14 +820,19 @@ msgstr "Έρευνα & Ανάπτυξη"
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sales orders\n"
-"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                invoices. Customer invoices can be created based on sales "
+"orders\n"
+"                (fixed price invoices), on timesheets (based on the work "
+"done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 "Τα έσοδα θα δημιουργηθούν αυτόματα όταν δημιουργείτε τιμολόγια\n"
-"                πελατών. Τα τιμολόγια πελατών μπορούν να δημιουργηθούν βάσει παραγγελιών πωλήσεων\n"
-"                (τιμολόγια σταθερής τιμής), σε φύλλα εργασίας (βάσει της εργασίας που έχουν \n"
-"                πραγματοποιηθεί) ή σε δαπάνες (π.χ. επαναφορά των εξόδων ταξιδιού)."
+"                πελατών. Τα τιμολόγια πελατών μπορούν να δημιουργηθούν βάσει "
+"παραγγελιών πωλήσεων\n"
+"                (τιμολόγια σταθερής τιμής), σε φύλλα εργασίας (βάσει της "
+"εργασίας που έχουν \n"
+"                πραγματοποιηθεί) ή σε δαπάνες (π.χ. επαναφορά των εξόδων "
+"ταξιδιού)."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__root_id
@@ -850,8 +874,8 @@ msgid ""
 "will automatically take this as an analytic account)"
 msgstr ""
 "Επιλέξτε μια εταιρεία για την οποία θα χρησιμοποιηθεί η αναλυτική κατανομή "
-"(π.χ. δημιουργία νέου τιμολογίου πελάτη ή παραγγελίας πώλησης. Αν επιλέξουμε"
-" αυτήν την εταιρεία, θα την πάρει αυτόματα ως αναλυτικό λογαριασμό)."
+"(π.χ. δημιουργία νέου τιμολογίου πελάτη ή παραγγελίας πώλησης. Αν επιλέξουμε "
+"αυτήν την εταιρεία, θα την πάρει αυτόματα ως αναλυτικό λογαριασμό)."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
@@ -860,8 +884,8 @@ msgid ""
 "(e.g. create new customer invoice or Sales order if we select this partner, "
 "it will automatically take this as an analytic account)"
 msgstr ""
-"Επιλέξτε μια κατηγορία συνεργάτη για την οποία θα χρησιμοποιηθεί η αναλυτική"
-" κατανομή (π.χ. δημιουργία νέου τιμολογίου πελάτη ή παραγγελίας πώλησης. Αν "
+"Επιλέξτε μια κατηγορία συνεργάτη για την οποία θα χρησιμοποιηθεί η αναλυτική "
+"κατανομή (π.χ. δημιουργία νέου τιμολογίου πελάτη ή παραγγελίας πώλησης. Αν "
 "επιλέξουμε αυτόν τον συνεργάτη, θα τον πάρει αυτόματα ως αναλυτικό "
 "λογαριασμό)."
 
@@ -872,10 +896,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this partner, it "
 "will automatically take this as an analytic account)"
 msgstr ""
-"Επιλέξτε έναν συνεργάτη για τον οποίο θα χρησιμοποιηθεί η αναλυτική κατανομή"
-" (π.χ. δημιουργία νέου τιμολογίου πελάτη ή παραγγελίας πώλησης. Αν "
-"επιλέξουμε αυτόν τον συνεργάτη, θα τον πάρει αυτόματα ως αναλυτικό "
-"λογαριασμό)."
+"Επιλέξτε έναν συνεργάτη για τον οποίο θα χρησιμοποιηθεί η αναλυτική κατανομή "
+"(π.χ. δημιουργία νέου τιμολογίου πελάτη ή παραγγελίας πώλησης. Αν επιλέξουμε "
+"αυτόν τον συνεργάτη, θα τον πάρει αυτόματα ως αναλυτικό λογαριασμό)."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__sequence
@@ -911,12 +934,13 @@ msgstr "Μη διαθέσιμο"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_id
-msgid "Unit of Measure"
-msgstr "Μονάδα Μέτρησης"
+msgid "Unit"
+msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
-msgid "UoM Category"
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Update"
 msgstr ""
 
 #. module: analytic
@@ -925,11 +949,19 @@ msgid "User"
 msgstr "Χρήστης"
 
 #. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+msgid "Visible to all"
+msgstr ""
+
+#. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_account.py:0
 msgid ""
-"Whoa there! Making this change would wipe out your current data. Let's avoid"
-" that, shall we?"
+"Whoa there! Making this change would wipe out your current data. Let's avoid "
+"that, shall we?"
 msgstr ""
 
 #. module: analytic
@@ -963,3 +995,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
 msgstr "π.χ. έργο XYZ"
+
+#~ msgid ""
+#~ "Conversion between Units of Measure can only occur if they belong to the "
+#~ "same category. The conversion will be made based on the ratios."
+#~ msgstr ""
+#~ "Μετατροπή ανάμεσα σε Μονάδες Μέτρησης μπορεί να πραγματοποιηθεί μόνο αν "
+#~ "ανήκουν στην ίδια κατηγορία. Η μετατροπή θα γίνει βάσει των αναλογιών."
+
+#~ msgid "Unit of Measure"
+#~ msgstr "Μονάδα Μέτρησης"

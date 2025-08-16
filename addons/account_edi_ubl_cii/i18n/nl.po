@@ -1,32 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_edi_ubl_cii
-# 
+#
 # Translators:
 # Manon Rondou, 2025
 # Wil Odoo, 2025
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-25 18:38+0000\n"
+"POT-Creation-Date: 2025-08-15 18:38+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid ""
-"%s should have a KVK or OIN number set in Company ID field or as Peppol "
-"e-address (EAS code 0106 or 0190)."
+"%s should have a KVK or OIN number set in Company ID field or as Peppol e-"
+"address (EAS code 0106 or 0190)."
 msgstr ""
 "%s moet een KVK- of OIN-nummer hebben ingesteld in het veld Bedrijfs-ID of "
 "als Peppol e-adres (EAS-code 0106 of 0190)."
@@ -83,11 +83,11 @@ msgstr "Artikelen 226 punten 11 tot 15 Richtlijn 2006/112/EN"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid ""
-"At least one of the following fields %(field_list)s is required on "
-"%(record)s."
+"At least one of the following fields %(field_list)s is required on %"
+"(record)s."
 msgstr ""
-"Ten minste één van de volgende velden %(field_list)s is vereist op "
-"%(record)s."
+"Ten minste één van de volgende velden %(field_list)s is vereist op %"
+"(record)s."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__ubl_cii_xml_id
@@ -99,6 +99,11 @@ msgstr "Bijlage"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0151
 msgid "Australia ABN"
 msgstr "Australië ABN"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_a_nz
+msgid "Australia BIS Billing 3.0 A-NZ"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9914
@@ -115,21 +120,6 @@ msgstr "Oostenrijk VOKZ"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__available_peppol_eas
 msgid "Available Peppol Eas"
 msgstr "Beschikbaar Peppol Eas"
-
-#. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_bis3
-msgid "BIS Billing 3.0"
-msgstr "BIS Facturering 3.0"
-
-#. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_a_nz
-msgid "BIS Billing 3.0 A-NZ"
-msgstr "BIS Facturering 3.0 A-NZ"
-
-#. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_sg
-msgid "BIS Billing 3.0 SG"
-msgstr "BIS Facturering 3.0 SG"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_de
@@ -172,10 +162,13 @@ msgstr "Controleer partner(s)"
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_res_users__peppol_eas
 msgid ""
 "Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.\n"
-"             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
+"             List available at https://docs.peppol.eu/poacc/billing/3.0/"
+"codelist/eas/"
 msgstr ""
-"Code die wordt gebruikt om het eindpunt voor BIS Billing 3.0 en zijn afgeleiden te identificeren.\n"
-"             Lijst beschikbaar op https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
+"Code die wordt gebruikt om het eindpunt voor BIS Billing 3.0 en zijn "
+"afgeleiden te identificeren.\n"
+"             Lijst beschikbaar op https://docs.peppol.eu/poacc/billing/3.0/"
+"codelist/eas/"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0210
@@ -192,8 +185,8 @@ msgstr "Codice Univoco Unità Organizzativa iPA"
 msgid ""
 "Common functions for EDI documents: generate the data, the constraints, etc"
 msgstr ""
-"Algemene functies voor EDI-documenten: genereer de gegevens, de beperkingen,"
-" enz"
+"Algemene functies voor EDI-documenten: genereer de gegevens, de beperkingen, "
+"enz"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -219,15 +212,15 @@ msgid ""
 "Could not retrieve a partner corresponding to '%s'. A new partner was "
 "created."
 msgstr ""
-"We hebben geen overeenkomstige partner met '%s' gevonden. Er werd een nieuwe"
-" partner aangemaakt."
+"We hebben geen overeenkomstige partner met '%s' gevonden. Er werd een nieuwe "
+"partner aangemaakt."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid ""
-"Could not retrieve currency: %s. Did you enable the multicurrency option and"
-" activate the currency?"
+"Could not retrieve currency: %s. Did you enable the multicurrency option and "
+"activate the currency?"
 msgstr ""
 "Kan valuta niet ophalen: %s. Heb je de optie voor meerdere valuta's "
 "ingeschakeld en de valuta geactiveerd?"
@@ -247,8 +240,7 @@ msgstr "Kan de btw: %(tax_percentage)s %% voor regel '%(line)s' niet ophalen."
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-msgid ""
-"Could not retrieve the tax: %s for the document level allowance/charge."
+msgid "Could not retrieve the tax: %s for the document level allowance/charge."
 msgstr ""
 "We konden de btw: %s niet ophalen voor de vergoeding/toeslag op "
 "documentniveau."
@@ -332,6 +324,11 @@ msgid "EN 16931"
 msgstr "EN 16931"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_bis3
+msgid "EU Standard (Peppol Bis 3.0)"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "Each invoice line shall have one and only one tax."
@@ -384,11 +381,6 @@ msgid "Export outside the EU"
 msgstr "Export buiten de EU"
 
 #. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__facturx
-msgid "Factur-X (CII)"
-msgstr "Factur-X (CII)"
-
-#. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_cii
 msgid "Factur-x/XRechnung CII 2.2.0"
 msgstr "Factur-x/XRechnung CII 2.2.0"
@@ -437,6 +429,11 @@ msgid "Format used to import the invoice: %s"
 msgstr "Formaat gebruikt om de factuur te importeren: %s"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__facturx
+msgid "France (FacturX)"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0225
 msgid "France FRCTC Electronic Address"
 msgstr "Frankrijk – FRCTC elektronisch adres"
@@ -465,6 +462,11 @@ msgstr "Frankrijk BTW"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0209
 msgid "GS1 identification keys"
 msgstr "GS1 identificatiesleutels"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__xrechnung
+msgid "Germany (XRechnung)"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0204
@@ -634,8 +636,8 @@ msgstr "Montenegro BTW"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__nlcius
-msgid "NLCIUS"
-msgstr "NLCIUS"
+msgid "Netherlands (NLCIUS)"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0106
@@ -657,8 +659,7 @@ msgstr "Nederland BTW"
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid ""
 "No gross price, net price nor line subtotal amount found for line in xml"
-msgstr ""
-"Geen brutoprijs, nettoprijs of subtotaal gevonden voor de regel in xml"
+msgstr "Geen brutoprijs, nettoprijs of subtotaal gevonden voor de regel in xml"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0192
@@ -710,8 +711,8 @@ msgid ""
 "Please fill in your company's VAT or Peppol Address to generate a complete "
 "XML file."
 msgstr ""
-"Vul het BTW- of Peppol-adres van je bedrijf in om een ​​compleet XML-bestand"
-" te genereren."
+"Vul het BTW- of Peppol-adres van je bedrijf in om een ​​compleet XML-bestand "
+"te genereren."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9945
@@ -773,6 +774,11 @@ msgstr "San Marino BTW"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9948
 msgid "Serbia VAT"
 msgstr "Servië BTW"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_sg
+msgid "Singapore BIS Billing 3.0 SG"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0195
@@ -888,8 +894,7 @@ msgstr "Het veld %(field)s is vereist op %(record)s."
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
-msgid ""
-"The field 'Sanitized Account Number' is required on the Recipient Bank."
+msgid "The field 'Sanitized Account Number' is required on the Recipient Bank."
 msgstr ""
 "Het veld 'Opgeschoond Rekeningnummer' is verplicht op de ontvangende Bank."
 
@@ -979,8 +984,8 @@ msgid ""
 "each invoice line should be greater than 0."
 msgstr ""
 "Wanneer de algemene indirecte belasting van de Canarische Eilanden (IGIC) "
-"van toepassing is, moet het belastingtarief op elke factuurregel groter zijn"
-" dan 0."
+"van toepassing is, moet het belastingtarief op elke factuurregel groter zijn "
+"dan 0."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__aq
@@ -994,17 +999,12 @@ msgid "XML UBL"
 msgstr "XML UBL"
 
 #. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__xrechnung
-msgid "XRechnung CIUS"
-msgstr "XRechnung CIUS"
-
-#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 msgid ""
 "You should include at least one tax per invoice line. [BR-CO-04]-Each "
-"Invoice line (BG-25) shall be categorized with an Invoiced item VAT category"
-" code (BT-151)."
+"Invoice line (BG-25) shall be categorized with an Invoiced item VAT category "
+"code (BT-151)."
 msgstr ""
 "Je moet ten minste één btw per factuurregel opnemen. [BR-CO-04]-Elke "
 "factuurregel (BG-25) wordt gecategoriseerd met een btw-categoriecode voor "
@@ -1035,3 +1035,21 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid "BIS Billing 3.0"
+#~ msgstr "BIS Facturering 3.0"
+
+#~ msgid "BIS Billing 3.0 A-NZ"
+#~ msgstr "BIS Facturering 3.0 A-NZ"
+
+#~ msgid "BIS Billing 3.0 SG"
+#~ msgstr "BIS Facturering 3.0 SG"
+
+#~ msgid "Factur-X (CII)"
+#~ msgstr "Factur-X (CII)"
+
+#~ msgid "NLCIUS"
+#~ msgstr "NLCIUS"
+
+#~ msgid "XRechnung CIUS"
+#~ msgstr "XRechnung CIUS"

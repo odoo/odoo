@@ -1,30 +1,38 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* analytic
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Ilya Rozhkov, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:36+0000\n"
+"POT-Creation-Date: 2025-08-15 18:38+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Ilya Rozhkov, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_account.py:0
 msgid "%s (copy)"
 msgstr "%s (копия)"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_line.py:0
+msgid "%s analytic lines created"
+msgstr ""
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
@@ -141,6 +149,7 @@ msgstr "Подсчет аналитических счетов"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__analytic_distribution
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution
 msgid "Analytic Distribution"
 msgstr "Аналитическое распределение"
@@ -212,6 +221,7 @@ msgstr "Аналитические планы"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_precision
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__analytic_precision
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_precision
 msgid "Analytic Precision"
 msgstr "Аналитическая точность"
@@ -486,6 +496,12 @@ msgid "Domain"
 msgstr "Домен"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Don't update"
+msgstr ""
+
+#. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_rd_finance
 msgid "Finance"
 msgstr "Финансы"
@@ -555,11 +571,13 @@ msgstr "Если отмечено, некоторые сообщения име�
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sales orders and projects are implemented using\n"
-"                analytic accounts. You can track costs and revenues to analyse\n"
+"                analytic accounts. You can track costs and revenues to "
+"analyse\n"
 "                your margins easily."
 msgstr ""
 "В Odoo заказы на продажу и проекты реализуются с использованием\n"
-"                 аналитических счетов. Вы можете легко отслеживать затраты и доходы для анализа\n"
+"                 аналитических счетов. Вы можете легко отслеживать затраты и "
+"доходы для анализа\n"
 "                 вашей доходности (маржи)."
 
 #. module: analytic
@@ -630,6 +648,12 @@ msgstr "Миллениум Индастриз"
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__business_domain__general
 msgid "Miscellaneous"
 msgstr "Разное"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Multi edit"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__name
@@ -792,13 +816,17 @@ msgstr "Отдел НИОКР"
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sales orders\n"
-"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                invoices. Customer invoices can be created based on sales "
+"orders\n"
+"                (fixed price invoices), on timesheets (based on the work "
+"done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 "Доходы будут созданы автоматически при создании счета-фактуры клиента.\n"
-"                 Счета-фактуры клиентов могут создаваться на основе заказов клиента\n"
-"                 (счета-фактуры с фиксированной ценой), на расписаниях (в зависимости от выполненной работы) или\n"
+"                 Счета-фактуры клиентов могут создаваться на основе заказов "
+"клиента\n"
+"                 (счета-фактуры с фиксированной ценой), на расписаниях (в "
+"зависимости от выполненной работы) или\n"
 "                 по расходам (например, пере-выставления стоимости поездки)."
 
 #. module: analytic
@@ -852,8 +880,8 @@ msgid ""
 "(e.g. create new customer invoice or Sales order if we select this partner, "
 "it will automatically take this as an analytic account)"
 msgstr ""
-"Выберите категорию партнера, для которого будет использоваться аналитическое"
-" распределение (например, при создании нового счета клиента или заказа на "
+"Выберите категорию партнера, для которого будет использоваться аналитическое "
+"распределение (например, при создании нового счета клиента или заказа на "
 "продажу, если мы выберем этого партнера, он автоматически примет его в "
 "качестве аналитического счета)"
 
@@ -907,6 +935,12 @@ msgid "Unit"
 msgstr "Единица"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Update"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
 msgid "User"
 msgstr "Пользователь"
@@ -923,8 +957,8 @@ msgstr "Видно всем"
 #. odoo-python
 #: code:addons/analytic/models/analytic_account.py:0
 msgid ""
-"Whoa there! Making this change would wipe out your current data. Let's avoid"
-" that, shall we?"
+"Whoa there! Making this change would wipe out your current data. Let's avoid "
+"that, shall we?"
 msgstr ""
 
 #. module: analytic
@@ -951,8 +985,8 @@ msgid ""
 "company but a model shared between companies or with a different company"
 msgstr ""
 "Вы определили распределение с аналитическими учетными записями, "
-"принадлежащими определенной компании, но модель разделяется между компаниями"
-" или с другой компанией"
+"принадлежащими определенной компании, но модель разделяется между компаниями "
+"или с другой компанией"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form

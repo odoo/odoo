@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* marketing_card
-# 
+#
 # Translators:
 # Lilach Gilliam <lilach@apprcase.com>, 2024
 # yael terner, 2024
@@ -14,20 +14,21 @@
 # Ha Ketem <haketem@gmail.com>, 2024
 # דודי מלכה <Dudimalka6@gmail.com>, 2024
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-03 08:35+0000\n"
+"POT-Creation-Date: 2025-08-15 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: he\n"
-"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % "
+"1 == 0) ? 1: 2;\n"
 
 #. module: marketing_card
 #. odoo-python
@@ -44,7 +45,9 @@ msgstr ""
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_kanban
-msgid "<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" title=\"Shares\"/>"
+msgid ""
+"<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" "
+"title=\"Shares\"/>"
 msgstr ""
 
 #. module: marketing_card
@@ -140,9 +143,19 @@ msgid "Attachment Count"
 msgstr "כמות קבצים מצורפים"
 
 #. module: marketing_card
+#: model:card.template,name:marketing_card.card_template_avatar_highlight
+msgid "Avatar Highlight"
+msgstr ""
+
+#. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__content_background
 msgid "Background"
 msgstr "רקע"
+
+#. module: marketing_card
+#: model:card.template,name:marketing_card.card_template_blur
+msgid "Blur"
+msgstr ""
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__body_html
@@ -201,6 +214,12 @@ msgid "Card Layout"
 msgstr ""
 
 #. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Card Preview"
+msgstr ""
+
+#. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_mailing_mailing__card_requires_sync_count
 msgid "Card Requires Sync Count"
 msgstr ""
@@ -220,6 +239,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:marketing_card.mailing_mailing_view_form_inherit_marketing_card
 msgid "Cards"
 msgstr "קלפים"
+
+#. module: marketing_card
+#: model:card.template,name:marketing_card.card_template_user_image
+msgid "Center"
+msgstr ""
+
+#. module: marketing_card
+#: model:card.template,name:marketing_card.card_template_circles
+msgid "Circles"
+msgstr ""
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
@@ -263,6 +292,11 @@ msgid "Created on"
 msgstr "נוצר ב-"
 
 #. module: marketing_card
+#: model:card.template,name:marketing_card.card_template_dark
+msgid "Dark"
+msgstr ""
+
+#. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__default_background
 msgid "Default Background"
 msgstr ""
@@ -282,8 +316,17 @@ msgstr "עיצוב"
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_tag__display_name
 #: model:ir.model.fields,field_description:marketing_card.field_card_card__display_name
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__display_name
+#: model:ir.model.fields,field_description:marketing_card.field_ir_model__display_name
+#: model:ir.model.fields,field_description:marketing_card.field_mail_compose_message__display_name
+#: model:ir.model.fields,field_description:marketing_card.field_mailing_mailing__display_name
+#: model:ir.model.fields,field_description:marketing_card.field_utm_source__display_name
 msgid "Display Name"
 msgstr "שם לתצוגה"
+
+#. module: marketing_card
+#: model:card.template,name:marketing_card.card_template_drawings
+msgid "Drawings"
+msgstr ""
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -331,6 +374,11 @@ msgid "Font awesome icon e.g. fa-tasks"
 msgstr "פונט מדהים למשל עבור משימות fa-tasks"
 
 #. module: marketing_card
+#: model:card.template,name:marketing_card.card_template_geometric
+msgid "Geometric"
+msgstr ""
+
+#. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_search
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
 msgid "Group By"
@@ -359,12 +407,19 @@ msgstr ""
 #. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Hello everyone"
+msgstr ""
+
+#. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Help us share the news"
 msgstr ""
 
 #. module: marketing_card
-#: model:ir.module.category,description:marketing_card.module_category_marketing_card
-msgid "Helps you manage marketing card campaigns."
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Here's the link to advertise your participation."
 msgstr ""
 
 #. module: marketing_card
@@ -372,6 +427,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_tag__id
 #: model:ir.model.fields,field_description:marketing_card.field_card_card__id
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__id
+#: model:ir.model.fields,field_description:marketing_card.field_ir_model__id
+#: model:ir.model.fields,field_description:marketing_card.field_mail_compose_message__id
+#: model:ir.model.fields,field_description:marketing_card.field_mailing_mailing__id
+#: model:ir.model.fields,field_description:marketing_card.field_utm_source__id
 msgid "ID"
 msgstr "מזהה"
 
@@ -463,6 +522,21 @@ msgid "Last Updated on"
 msgstr "עדכון אחרון ב"
 
 #. module: marketing_card
+#: model:card.template,name:marketing_card.card_template_light
+msgid "Light"
+msgstr ""
+
+#. module: marketing_card
+#: model:card.template,name:marketing_card.card_template_lila
+msgid "Lila"
+msgstr ""
+
+#. module: marketing_card
+#: model:card.template,name:marketing_card.card_template_lines
+msgid "Lines"
+msgstr ""
+
+#. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__link_tracker_id
 msgid "Link Tracker"
 msgstr "מעקב קישורים"
@@ -478,8 +552,13 @@ msgid "Mailing Count"
 msgstr ""
 
 #. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Many thanks"
+msgstr ""
+
+#. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_card
-#: model:ir.module.category,name:marketing_card.module_category_marketing_card
 #: model:ir.ui.menu,name:marketing_card.card_menu
 #: model:ir.ui.menu,name:marketing_card.marketing_card_menu_technical
 msgid "Marketing Card"
@@ -536,6 +615,11 @@ msgstr "שם מודל"
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid ""
 "Model of campaign %(campaign)s may not be changed as it already has cards"
+msgstr ""
+
+#. module: marketing_card
+#: model:ir.model,name:marketing_card.model_ir_model
+msgid "Models"
 msgstr ""
 
 #. module: marketing_card
@@ -615,12 +699,17 @@ msgstr "Odoo"
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"{{ object.partner_id.lang }}."
 msgstr ""
 "שפת תרגום אופציונלית (קוד ISO) לבחירה בעת שליחת אימייל. אם לא מוגדר, הגרסה "
 "האנגלית תשמש. בדרך כלל זה צריך להיות ביטוי מציין מיקום המספק את השפה "
 "המתאימה, למשל. {{ object.partner_id.lang }}."
+
+#. module: marketing_card
+#: model:card.template,name:marketing_card.card_template_organic
+msgid "Organic"
+msgstr ""
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__target_url
@@ -742,6 +831,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "שגיאה בשליחת SMS"
+
+#. module: marketing_card
+#: model:card.template,name:marketing_card.card_template_safari
+msgid "Safari"
+msgstr ""
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
@@ -885,11 +979,6 @@ msgid "Tags may not reuse existing names."
 msgstr ""
 
 #. module: marketing_card
-#: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
-msgid "Thanks for sharing, here is your reward!"
-msgstr ""
-
-#. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__reward_message
 msgid "Thank You Message"
 msgstr ""
@@ -918,16 +1007,19 @@ msgid "Update"
 msgstr "עדכן"
 
 #. module: marketing_card
-#: model_terms:ir.ui.view,arch_db:marketing_card.robots
-msgid ""
-"User-agent: *\n"
-"                Allow: /cards/"
+#: model_terms:ir.ui.view,arch_db:marketing_card.mailing_mailing_view_form_inherit_marketing_card
+msgid "Update Cards"
 msgstr ""
 
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_card__share_status__visited
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
 msgid "Visited"
+msgstr ""
+
+#. module: marketing_card
+#: model:card.template,name:marketing_card.card_template_waves
+msgid "Waves"
 msgstr ""
 
 #. module: marketing_card
@@ -946,6 +1038,11 @@ msgid "Whether the image needs to be updated to match the campaign template."
 msgstr ""
 
 #. module: marketing_card
+#: model:card.template,name:marketing_card.card_template_world_map
+msgid "World Map"
+msgstr ""
+
+#. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/models/mailing_mailing.py:0
 msgid ""
@@ -955,6 +1052,12 @@ msgstr ""
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Your Home Page"
+msgstr ""
+
+#. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid "Your help with this promotion would be greatly appreciated!"
 msgstr ""
 
 #. module: marketing_card

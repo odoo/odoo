@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* analytic
-# 
+#
 # Translators:
 # Chloe Wang, 2025
 # 何彬 <vnsoft.he@gmail.com>, 2025
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:36+0000\n"
+"POT-Creation-Date: 2025-08-15 18:38+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: analytic
@@ -26,6 +27,12 @@ msgstr ""
 #: code:addons/analytic/models/analytic_account.py:0
 msgid "%s (copy)"
 msgstr "%s（副本）"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_line.py:0
+msgid "%s analytic lines created"
+msgstr ""
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
@@ -43,7 +50,8 @@ msgstr "<span class=\"o_stat_text\">毛利率</span>"
 msgid ""
 "A 'Project' plan needs to exist and its id needs to be set as "
 "`analytic.project_plan` in the system variables"
-msgstr "\"项目\" 计划必须存在，其 id 必须在系统变量中设置为 \"analytic.project_plan\""
+msgstr ""
+"\"项目\" 计划必须存在，其 id 必须在系统变量中设置为 \"analytic.project_plan\""
 
 #. module: analytic
 #. odoo-javascript
@@ -140,6 +148,7 @@ msgstr "分析账户数量"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__analytic_distribution
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution
 msgid "Analytic Distribution"
 msgstr "分析分摊"
@@ -211,6 +220,7 @@ msgstr "分析方案"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_precision
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__analytic_precision
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_precision
 msgid "Analytic Precision"
 msgstr "分析精度"
@@ -485,6 +495,12 @@ msgid "Domain"
 msgstr "域"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Don't update"
+msgstr ""
+
+#. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_rd_finance
 msgid "Finance"
 msgstr "财务"
@@ -553,7 +569,8 @@ msgstr "如果勾选此项， 某些消息将出现发送错误。"
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sales orders and projects are implemented using\n"
-"                analytic accounts. You can track costs and revenues to analyse\n"
+"                analytic accounts. You can track costs and revenues to "
+"analyse\n"
 "                your margins easily."
 msgstr ""
 "在 Odoo 中，使用\n"
@@ -628,6 +645,12 @@ msgstr "Millennium Industries"
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__business_domain__general
 msgid "Miscellaneous"
 msgstr "杂项"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Multi edit"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__name
@@ -790,8 +813,10 @@ msgstr "Research & Development"
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sales orders\n"
-"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                invoices. Customer invoices can be created based on sales "
+"orders\n"
+"                (fixed price invoices), on timesheets (based on the work "
+"done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 "创建客户\n"
@@ -837,7 +862,9 @@ msgid ""
 "Select a company for which the analytic distribution will be used (e.g. "
 "create new customer invoice or Sales order if we select this company, it "
 "will automatically take this as an analytic account)"
-msgstr "选择将使用分析分摊的公司(例如，如果我们选择该公司，则创建新的客户发票或销售订单，它将自动将此作为分析账户)"
+msgstr ""
+"选择将使用分析分摊的公司(例如，如果我们选择该公司，则创建新的客户发票或销售订"
+"单，它将自动将此作为分析账户)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
@@ -845,7 +872,9 @@ msgid ""
 "Select a partner category for which the analytic distribution will be used "
 "(e.g. create new customer invoice or Sales order if we select this partner, "
 "it will automatically take this as an analytic account)"
-msgstr "选择将使用分析分摊的合作伙伴类别（例如，如果我们选择此合作伙伴，则创建新的客户发票或销售订单，它将自动将此作为分析账户)"
+msgstr ""
+"选择将使用分析分摊的合作伙伴类别（例如，如果我们选择此合作伙伴，则创建新的客"
+"户发票或销售订单，它将自动将此作为分析账户)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
@@ -853,7 +882,9 @@ msgid ""
 "Select a partner for which the analytic distribution will be used (e.g. "
 "create new customer invoice or Sales order if we select this partner, it "
 "will automatically take this as an analytic account)"
-msgstr "选择将使用分析分摊的合作伙伴（例如，如果我们选择此合作伙伴，则创建新的客户发票或销售订单，它将自动将此作为分析账户)"
+msgstr ""
+"选择将使用分析分摊的合作伙伴（例如，如果我们选择此合作伙伴，则创建新的客户发"
+"票或销售订单，它将自动将此作为分析账户)"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__sequence
@@ -893,6 +924,12 @@ msgid "Unit"
 msgstr "单元"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Update"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
 msgid "User"
 msgstr "用户"
@@ -909,8 +946,8 @@ msgstr "对所有人可见"
 #. odoo-python
 #: code:addons/analytic/models/analytic_account.py:0
 msgid ""
-"Whoa there! Making this change would wipe out your current data. Let's avoid"
-" that, shall we?"
+"Whoa there! Making this change would wipe out your current data. Let's avoid "
+"that, shall we?"
 msgstr "哇哦！进行此更改会清除您当前的数据。让我们避免这种情况吧，好吗？"
 
 #. module: analytic
