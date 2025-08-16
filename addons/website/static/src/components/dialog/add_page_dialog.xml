@@ -19,7 +19,7 @@
 </t>
 
 <t t-name="website.AddPageTemplatePreviewWrapper">
-    <div t-ref="holder" class="o_page_template position-relative placeholder-glow mx-auto transition-base" t-att-class="{ 'mt-4': !props.firstRow }">
+    <div t-ref="holder" class="o_page_template position-relative placeholder-glow mx-auto transition-base" t-att-class="{ 'mt-4': !props.firstRow }" t-att-data-configurator-page="props.template and props.template.is_from_configurator">
         <div t-ref="preview" class="o_page_template_preview border border-white bg-white rounded" t-out="0" inert="inert"/>
         <span class="placeholder position-absolute top-0 w-100 h-100 rounded" t-attf-style="animation-duration: #{props.animationDelay + 500}ms"/>
         <button class="btn o_button_area position-absolute top-0 w-100 h-100 start-0 cursor-pointer rounded" t-on-click="select">

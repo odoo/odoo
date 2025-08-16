@@ -96,6 +96,11 @@ class TestConfigurator(TestConfiguratorCommon):
     def test_configurator_params_step(self):
         self.start_tour('/website/configurator/3', 'configurator_params_step', login='admin')
 
+    def test_configurator_page_creation(self):
+        website = self.env['website'].create({
+            'name': "New website",
+        })
+        self.start_tour('/website/force/%s?path=%%2Fwebsite%%2Fconfigurator' % website.id, 'configurator_page_creation', login='admin')
 
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestConfiguratorTranslation(TestConfiguratorCommon):
