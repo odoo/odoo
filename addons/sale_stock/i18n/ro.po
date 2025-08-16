@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_stock
-# 
+#
 # Translators:
 # Hongu Cosmin <cosmin513@gmail.com>, 2024
 # Vacaru Adrian <adrian.vacaru@gmail.com>, 2024
@@ -12,20 +12,21 @@
 # Corina Calin, 2024
 # Wil Odoo, 2024
 # Larisa_nexterp, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-08-15 00:51+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -68,22 +69,26 @@ msgstr "<span class=\"o_stat_text\">Vânzări</span>"
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
 "<span class=\"small badge text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Shipped\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Shipped\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"small badge text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Expediat\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Expediat\n"
 "                                    </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
 msgid ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
+"                    Some deliveries are already done. Returns can be created "
+"from the Delivery Orders.\n"
 "                </span>"
 msgstr ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    Unele livrări sunt deja efectuate. Returnările pot fi create din comenzile de livrare.\n"
+"                    Unele livrări sunt deja efectuate. Returnările pot fi "
+"create din comenzile de livrare.\n"
 "                </span>"
 
 #. module: sale_stock
@@ -100,16 +105,22 @@ msgstr "<strong>Incoterm:</strong>"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"În funcție de configurarea produsului, cantitatea livrată poate fi calculată automat prin mecanism::\n"
+"În funcție de configurarea produsului, cantitatea livrată poate fi calculată "
+"automat prin mecanism::\n"
 "  - Manual: cantitatea este setată manual pe linie\n"
-"  - Analitice din cheltuieli: cantitatea este suma cantității din cheltuielile înregistrate\n"
-"  - Foaie de pontaj: cantitatea este suma orelor înregistrate pe task-uri legate de această linie de vânzare\n"
+"  - Analitice din cheltuieli: cantitatea este suma cantității din "
+"cheltuielile înregistrate\n"
+"  - Foaie de pontaj: cantitatea este suma orelor înregistrate pe task-uri "
+"legate de această linie de vânzare\n"
 "  - Mișcări de stoc: cantitatea provine din colectări confirmate\n"
 
 #. module: sale_stock
@@ -214,8 +225,8 @@ msgid ""
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
 "Data de livrare pe care o puteți promite clientului, calculată din termenul "
-"minim de livrare a liniilor de comandă în cazul produselor Service. În cazul"
-" transportului, politica de expediere a comenzii va fi luată în considerare "
+"minim de livrare a liniilor de comandă în cazul produselor Service. În cazul "
+"transportului, politica de expediere a comenzii va fi luată în considerare "
 "pentru a utiliza termenul de plată minim sau maxim al liniilor de comandă."
 
 #. module: sale_stock
@@ -410,8 +421,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
 msgstr ""
 "Marja de eroare pentru datele promise clienților. Produsele vor fi "
 "programate pentru achiziție și livrare cu multe zile mai devreme decât data "
@@ -669,6 +680,11 @@ msgid "Stock Rules report"
 msgstr "Stock Rules Report"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_valuation_layer
+msgid "Stock Valuation Layer"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "Raport Regulă Stoc"
@@ -686,20 +702,24 @@ msgstr "Livrarea"
 #, python-format
 msgid ""
 "The delivery address has been changed on the Sales Order<br/>\n"
-"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
-"                        You should probably update the partner on this document."
+"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</"
+"strong>,\n"
+"                        You should probably update the partner on this "
+"document."
 msgstr ""
 "Adresa de livrare a fost modificată în Comanda de vânzare<br/>\n"
-"                        De la <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
-"                       Probabil ar trebui să actualizați partenerul în acest document."
+"                        De la <strong>\"%s\"</strong> To <strong>\"%s\"</"
+"strong>,\n"
+"                       Probabil ar trebui să actualizați partenerul în acest "
+"document."
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js:0
 #, python-format
 msgid ""
-"The ordered quantity cannot be decreased below the amount already delivered."
-" Instead, create a return in your inventory."
+"The ordered quantity cannot be decreased below the amount already delivered. "
+"Instead, create a return in your inventory."
 msgstr ""
 "Cantitatea comandată nu poate fi redusă sub cantitatea deja livrată. În "
 "schimb, creați un retur în inventarul dvs."

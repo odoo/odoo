@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_stock
-# 
+#
 # Translators:
 # Mads Søndergaard, 2023
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
@@ -9,19 +9,19 @@
 # Martin Trigaux, 2024
 # Mads Søndergaard, 2024
 # Kira Petersen, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-08-15 00:51+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Kira Petersen, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_stock
@@ -67,7 +67,8 @@ msgstr "<span class=\"o_stat_text\">Salg</span>"
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
 "<span class=\"small badge text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Shipped\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Shipped\n"
 "                                    </span>"
 msgstr ""
 
@@ -75,7 +76,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
 msgid ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
+"                    Some deliveries are already done. Returns can be created "
+"from the Delivery Orders.\n"
 "                </span>"
 msgstr ""
 
@@ -93,16 +95,22 @@ msgstr "<strong>Incoterm:</strong>"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Ud fra produkt konfiguration kan leveret mængde udregnes automatisk via mekanismen :\n"
+"Ud fra produkt konfiguration kan leveret mængde udregnes automatisk via "
+"mekanismen :\n"
 " - Manuel: Kvantiteten angives manuelt på linjen\n"
-" - Analytisk fra udgifter: Kvantiteten er summen af kvantiteten fra posteret udgifter\n"
-" - Timeseddel: Kvantiteten er summen af timer optegnet for opgaver relateret til denne salgslinje\n"
+" - Analytisk fra udgifter: Kvantiteten er summen af kvantiteten fra posteret "
+"udgifter\n"
+" - Timeseddel: Kvantiteten er summen af timer optegnet for opgaver relateret "
+"til denne salgslinje\n"
 " - Lager bevægelser: Kvantiteten kommer fra verificerede pluk\n"
 
 #. module: sale_stock
@@ -208,8 +216,8 @@ msgid ""
 msgstr ""
 "Leveringsdatoen du kan love din kunde, udregnet fra minimums ledetiden for "
 "ordrelinjerne i tilfælde af service produkter. I tilfælde af forsendelser, "
-"vil der blive taget højde for forsendelsens policen for ordren, til enten at"
-" bruge minimum eller maksimum ledetiden for ordrelinjerne."
+"vil der blive taget højde for forsendelsens policen for ordren, til enten at "
+"bruge minimum eller maksimum ledetiden for ordrelinjerne."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
@@ -401,8 +409,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
 msgstr ""
 "Respitdage for levering. Antal dage før lovet levering, varer foreslås "
 "indkøbt - for at forebygge forsinkelse i leverings-kæden."
@@ -658,6 +666,11 @@ msgid "Stock Rules report"
 msgstr "Lager regler rapport"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_valuation_layer
+msgid "Stock Valuation Layer"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "Lager regel rapport"
@@ -675,11 +688,14 @@ msgstr "Leveringen"
 #, python-format
 msgid ""
 "The delivery address has been changed on the Sales Order<br/>\n"
-"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
-"                        You should probably update the partner on this document."
+"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</"
+"strong>,\n"
+"                        You should probably update the partner on this "
+"document."
 msgstr ""
 "Leveringsadressen er blevet ændret på salgsordren<br/>\n"
-"                        Fra <strong>\"%s\"</strong> Til <strong>\"%s\"</strong>,\n"
+"                        Fra <strong>\"%s\"</strong> Til <strong>\"%s\"</"
+"strong>,\n"
 "                        Du bør nok opdatere partneren på dette dokument."
 
 #. module: sale_stock
@@ -687,8 +703,8 @@ msgstr ""
 #: code:addons/sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js:0
 #, python-format
 msgid ""
-"The ordered quantity cannot be decreased below the amount already delivered."
-" Instead, create a return in your inventory."
+"The ordered quantity cannot be decreased below the amount already delivered. "
+"Instead, create a return in your inventory."
 msgstr ""
 "Du kan ikke reducere den bestilte mængde under den allerede leverede. Opret "
 "en retur i lagerbeholdningen i stedet."
