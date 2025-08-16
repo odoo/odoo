@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_restaurant
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Junko Augias, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:38+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_restaurant
@@ -38,7 +38,8 @@ msgid ""
 "200G Irish Black Angus beef, 9-month matured cheddar cheese, shredded "
 "iceberg lettuce, caramelised onions, crushed tomatoes and Chef’s sauce."
 msgstr ""
-"アイリッシュブラックアンガスビーフ200g、9ヶ月熟成チェダーチーズ、千切りアイスバーグレタス、キャラメリゼオニオン、クラッシュトマト、シェフズソース。"
+"アイリッシュブラックアンガスビーフ200g、9ヶ月熟成チェダーチーズ、千切りアイス"
+"バーグレタス、キャラメリゼオニオン、クラッシュトマト、シェフズソース。"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_bacon_product_template
@@ -47,7 +48,9 @@ msgid ""
 "iceberg salad, red onions, grilled bacon, tomato sauce, pickles, barbecue "
 "sauce"
 msgstr ""
-"アイリッシュブラックアンガスビーフ200G、パプリカ風味キャラメリゼオニオン、刻みアイスバーグサラダ、レッドオニオン、グリルベーコン、トマトソース、ピクルス、バーベキューソース"
+"アイリッシュブラックアンガスビーフ200G、パプリカ風味キャラメリゼオニオン、刻"
+"みアイスバーグサラダ、レッドオニオン、グリルベーコン、トマトソース、ピクル"
+"ス、バーベキューソース"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -62,7 +65,8 @@ msgstr "<strong>POS:</strong>"
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid ""
-"A restaurant floor represents the place where customers are served, this is where you can\n"
+"A restaurant floor represents the place where customers are served, this is "
+"where you can\n"
 "                define and position the tables."
 msgstr ""
 "レストランのフロアは、お客様にサービスを提供する場所で、テーブルを定義し\n"
@@ -125,7 +129,9 @@ msgstr "金額を調整"
 msgid ""
 "Adjust the amount authorized by payment terminals to add a tip after the "
 "customers left or at the end of the day."
-msgstr "支払端末で許可された金額を調整し、顧客が帰った後、またはその日の終わりにチップを追加します。"
+msgstr ""
+"支払端末で許可された金額を調整し、顧客が帰った後、またはその日の終わりにチッ"
+"プを追加します。"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -596,7 +602,8 @@ msgstr "便宜上、チップの計算方法を以下にお知らせします:"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_preset__use_guest
 msgid "Force guest selection when clicking on order button in PoS restaurant"
-msgstr "POSレストランでオーダボタンをクリックする際に、ゲストの選択を必須にする"
+msgstr ""
+"POSレストランでオーダボタンをクリックする際に、ゲストの選択を必須にする"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_funghi_product_template
@@ -662,8 +669,8 @@ msgstr "アイスティー"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__active
 msgid ""
-"If false, the table is deactivated and will not be available in the point of"
-" sale"
+"If false, the table is deactivated and will not be available in the point of "
+"sale"
 msgstr "FALSEの場合、テーブルは非有効化され、POSで利用できなくなります。"
 
 #. module: pos_restaurant
@@ -956,10 +963,12 @@ msgstr "計画"
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid ""
-"Please close and validate the following open PoS Session before modifying this floor.\n"
+"Please close and validate the following open PoS Session before modifying "
+"this floor.\n"
 "Open session: %(session_names)s"
 msgstr ""
-"このフロアを変更する前に、以下の未確定のPoSセッションを閉じて検証して下さい。\n"
+"このフロアを変更する前に、以下の未確定のPoSセッションを閉じて検証して下さ"
+"い。\n"
 "未確定セッション: %(session_names)s"
 
 #. module: pos_restaurant
@@ -1343,8 +1352,7 @@ msgstr "このオーダが提供されたテーブル"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__color
-msgid ""
-"The table's color, expressed as a valid 'background' CSS property value"
+msgid "The table's color, expressed as a valid 'background' CSS property value"
 msgstr "テーブルの色。有効な '背景' CSSプロパティの値として表されます"
 
 #. module: pos_restaurant
@@ -1355,8 +1363,8 @@ msgstr "テーブルの高さ(ピクセル)"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_h
 msgid ""
-"The table's horizontal position from the left side to the table's center, in"
-" pixels"
+"The table's horizontal position from the left side to the table's center, in "
+"pixels"
 msgstr "テーブルの左端から中央までの水平位置(ピクセル)"
 
 #. module: pos_restaurant
@@ -1376,7 +1384,9 @@ msgstr "テーブルの幅(ピクセル)"
 msgid ""
 "This order is not yet synced to server. Make sure it is synced then try "
 "again."
-msgstr "このオーダはまだサーバに同期されていません。同期されていることを確認してから、もう一度試して下さい。"
+msgstr ""
+"このオーダはまだサーバに同期されていません。同期されていることを確認してか"
+"ら、もう一度試して下さい。"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1405,7 +1415,9 @@ msgstr "チップ"
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_margherita_product_template
 msgid "Tomato sauce, Agerola mozzarella \"fior di latte\", fresh basil"
-msgstr "トマトソース、アゲローラ・モッツァレラチーズ \"fior di latte\"、フレッシュバジル"
+msgstr ""
+"トマトソース、アゲローラ・モッツァレラチーズ \"fior di latte\"、フレッシュバ"
+"ジル"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1500,7 +1512,9 @@ msgstr "ウイスキー、レモンジュース、砂糖、卵白少々。"
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_pina_colada_product_template
 msgid "White rhum, Malibu, Batida de coco, coconut liqueur, pineapple juice"
-msgstr "ホワイトラム、マリブ、バティーダデココ、ココナッツリキュール、パイナップルジュース"
+msgstr ""
+"ホワイトラム、マリブ、バティーダデココ、ココナッツリキュール、パイナップル"
+"ジュース"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_mojito_product_template
@@ -1513,17 +1527,27 @@ msgid "Width"
 msgstr "幅"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You are currently transferring the order %s"
+msgstr ""
+
+#. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid ""
 "You cannot delete a floor when orders are still in draft for this floor."
-msgstr "そのフロアのテーブルがまだドラフト中である場合、フロアを削除することはできません。"
+msgstr ""
+"そのフロアのテーブルがまだドラフト中である場合、フロアを削除することはできま"
+"せん。"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
 msgid "You cannot delete a floor with orders still in draft for this floor."
-msgstr "そのフロアにまだドラフトのオーダがある場合、そのフロアを削除することはできません。"
+msgstr ""
+"そのフロアにまだドラフトのオーダがある場合、そのフロアを削除することはできま"
+"せん。"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1536,7 +1560,9 @@ msgstr "オーダがまだドラフト状態のテーブルを削除すること
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
 msgid "You cannot delete a table with orders still in draft for this table."
-msgstr "そのテーブルのオーダがまだドラフト中である場合、テーブルを削除することはできません。"
+msgstr ""
+"そのテーブルのオーダがまだドラフト中である場合、テーブルを削除することはでき"
+"ません。"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1550,7 +1576,9 @@ msgstr "マスタープリセットは削除できません。"
 msgid ""
 "You cannot remove a floor that is used in a PoS session, close the "
 "session(s) first: \n"
-msgstr "POSセッションで使用されているフロアを削除することはできません。最初にセッションをクローズして下さい:\n"
+msgstr ""
+"POSセッションで使用されているフロアを削除することはできません。最初にセッショ"
+"ンをクローズして下さい:\n"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1558,7 +1586,15 @@ msgstr "POSセッションで使用されているフロアを削除すること
 msgid ""
 "You cannot remove a table that is used in a PoS session, close the "
 "session(s) first."
-msgstr "POSセッションで使用されているテーブルを削除することはできません。最初にセッションをクローズして下さい。"
+msgstr ""
+"POSセッションで使用されているテーブルを削除することはできません。最初にセッ"
+"ションをクローズして下さい。"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You cannot transfer an order to itself"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript

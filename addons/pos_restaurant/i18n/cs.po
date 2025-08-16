@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_restaurant
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Marta Wacławek, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:38+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: cs\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -60,7 +61,8 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid ""
-"A restaurant floor represents the place where customers are served, this is where you can\n"
+"A restaurant floor represents the place where customers are served, this is "
+"where you can\n"
 "                define and position the tables."
 msgstr ""
 "Půdorys restaurace představuje místo, kde jsou zákazníci obsluhováni, to je "
@@ -124,8 +126,8 @@ msgid ""
 "Adjust the amount authorized by payment terminals to add a tip after the "
 "customers left or at the end of the day."
 msgstr ""
-"Upravte částku autorizovanou platebními terminály a přidejte spropitné poté,"
-" co zákazníci odešli, nebo na konci dne."
+"Upravte částku autorizovanou platebními terminály a přidejte spropitné poté, "
+"co zákazníci odešli, nebo na konci dne."
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -662,11 +664,11 @@ msgstr "Ledový čaj"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__active
 msgid ""
-"If false, the table is deactivated and will not be available in the point of"
-" sale"
+"If false, the table is deactivated and will not be available in the point of "
+"sale"
 msgstr ""
-"Pokud je hodnota false, tabulka je deaktivována a nebude k dispozici v místě"
-" prodeje"
+"Pokud je hodnota false, tabulka je deaktivována a nebude k dispozici v místě "
+"prodeje"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -960,7 +962,8 @@ msgstr "Plán"
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid ""
-"Please close and validate the following open PoS Session before modifying this floor.\n"
+"Please close and validate the following open PoS Session before modifying "
+"this floor.\n"
 "Open session: %(session_names)s"
 msgstr ""
 
@@ -1345,8 +1348,7 @@ msgstr "Stůl, kam je tato objednávka doručena"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__color
-msgid ""
-"The table's color, expressed as a valid 'background' CSS property value"
+msgid "The table's color, expressed as a valid 'background' CSS property value"
 msgstr ""
 "Barva tabulky vyjádřená jako platná hodnota vlastnosti CSS \"background\"."
 
@@ -1358,8 +1360,8 @@ msgstr "Výška stolu v pixelech"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_h
 msgid ""
-"The table's horizontal position from the left side to the table's center, in"
-" pixels"
+"The table's horizontal position from the left side to the table's center, in "
+"pixels"
 msgstr "Vodorovná poloha tabulky od levé strany ke středu tabulky v pixelech."
 
 #. module: pos_restaurant
@@ -1518,6 +1520,12 @@ msgid "Width"
 msgstr "Šířka"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You are currently transferring the order %s"
+msgstr ""
+
+#. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid ""
@@ -1568,6 +1576,12 @@ msgid ""
 msgstr ""
 "Tabulku, která se používá v relaci PoS, nelze odebrat, nejprve relaci "
 "(relace) zavřete."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You cannot transfer an order to itself"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript

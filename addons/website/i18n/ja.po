@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-04 18:37+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2025-08-07 04:46+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -2791,6 +2791,12 @@ msgid "A map and a listing of your stores"
 msgstr "マップ及びあなたの店舗リスト"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website_menu.py:0
+msgid "A mega menu cannot have a parent or child menu."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid ""
 "A moist, red-hued cake with layers of cream cheese frosting, perfect for any "
@@ -5146,11 +5152,6 @@ msgid ""
 msgstr ""
 "安定したパフォーマンスと稼働率により、中断が最小限に抑えられ、迅速な応答時間"
 "で効率的かつ信頼性の高いサービスが保証されます。"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_search_console
-msgid "Google Search Console"
-msgstr "Googleサーチコンソール"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_features
@@ -8168,8 +8169,13 @@ msgid "Google Play"
 msgstr "Google Play"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings__google_search_console
+#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_search_console
 #: model:ir.model.fields,field_description:website.field_website__google_search_console
+msgid "Google Search Console"
+msgstr "Googleサーチコンソール"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__google_search_console
 msgid "Google Search Console Key"
 msgstr ""
 
@@ -10642,6 +10648,18 @@ msgstr "検索バーつきメニュー"
 #: model_terms:ir.ui.view,arch_db:website.website_controller_pages_form_view
 msgid "Menus"
 msgstr "メニュー"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_menu.py:0
+msgid "Menus cannot have more than two levels of hierarchy."
+msgstr ""
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_menu.py:0
+msgid "Menus with child menus cannot be added as a submenu."
+msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_base_partner_merge_automatic_wizard

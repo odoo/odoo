@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_restaurant
-# 
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:38+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_restaurant
@@ -63,10 +63,12 @@ msgstr "<strong>Punkt för försäljning:</strong>"
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid ""
-"A restaurant floor represents the place where customers are served, this is where you can\n"
+"A restaurant floor represents the place where customers are served, this is "
+"where you can\n"
 "                define and position the tables."
 msgstr ""
-"Ett restauranggolv representerar den plats där kunderna serveras, det är här du kan\n"
+"Ett restauranggolv representerar den plats där kunderna serveras, det är här "
+"du kan\n"
 "                definiera och placera ut borden."
 
 #. module: pos_restaurant
@@ -666,11 +668,11 @@ msgstr "Ice Tea"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__active
 msgid ""
-"If false, the table is deactivated and will not be available in the point of"
-" sale"
+"If false, the table is deactivated and will not be available in the point of "
+"sale"
 msgstr ""
-"Om den är falsk avaktiveras tabellen och kommer inte att vara tillgänglig på"
-" försäljningsstället"
+"Om den är falsk avaktiveras tabellen och kommer inte att vara tillgänglig på "
+"försäljningsstället"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -962,7 +964,8 @@ msgstr "Planera"
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid ""
-"Please close and validate the following open PoS Session before modifying this floor.\n"
+"Please close and validate the following open PoS Session before modifying "
+"this floor.\n"
 "Open session: %(session_names)s"
 msgstr ""
 
@@ -1349,8 +1352,7 @@ msgstr "Bordet där denna beställning serverades"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__color
-msgid ""
-"The table's color, expressed as a valid 'background' CSS property value"
+msgid "The table's color, expressed as a valid 'background' CSS property value"
 msgstr ""
 "Tabellens färg, uttryckt som ett giltigt CSS-egenskapsvärde för \"background"
 
@@ -1362,8 +1364,8 @@ msgstr "Tabellens höjd i pixlar"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_h
 msgid ""
-"The table's horizontal position from the left side to the table's center, in"
-" pixels"
+"The table's horizontal position from the left side to the table's center, in "
+"pixels"
 msgstr ""
 "Tabellens horisontella position från vänster sida till tabellens mitt, i "
 "pixlar"
@@ -1525,6 +1527,12 @@ msgid "Width"
 msgstr "Bredd"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You are currently transferring the order %s"
+msgstr ""
+
+#. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid ""
@@ -1571,8 +1579,8 @@ msgid ""
 "You cannot remove a floor that is used in a PoS session, close the "
 "session(s) first: \n"
 msgstr ""
-"Du kan inte ta bort ett golv som används i en PoS-session, stäng "
-"sessionen/sessionerna först:\n"
+"Du kan inte ta bort ett golv som används i en PoS-session, stäng sessionen/"
+"sessionerna först:\n"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1581,8 +1589,14 @@ msgid ""
 "You cannot remove a table that is used in a PoS session, close the "
 "session(s) first."
 msgstr ""
-"Du kan inte ta bort ett bord som används i en PoS-session, stäng "
-"sessionen/sessionerna först."
+"Du kan inte ta bort ett bord som används i en PoS-session, stäng sessionen/"
+"sessionerna först."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You cannot transfer an order to itself"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript

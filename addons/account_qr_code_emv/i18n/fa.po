@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_qr_code_emv
-# 
+#
 # Translators:
 # Tiffany Chang, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Tiffany Chang, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_qr_code_emv
@@ -29,6 +29,11 @@ msgstr "برای ایجاد کد EVM QR یک حساب بانکی مورد نیا
 #: model:ir.model,name:account_qr_code_emv.model_res_partner_bank
 msgid "Bank Accounts"
 msgstr "حساب‌های بانکی"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__display_qr_setting
@@ -44,8 +49,13 @@ msgstr "کد QR ارائه شده بوسیله‌ی EVM بازرگان"
 
 #. module: account_qr_code_emv
 #: model_terms:ir.ui.view,arch_db:account_qr_code_emv.view_partner_bank_form_inherit_account
-msgid "EMV QR Configuration"
-msgstr "پیکربندی EVM QR"
+msgid "EMV QR Settings"
+msgstr ""
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__id
+msgid "ID"
+msgstr ""
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__include_reference
@@ -87,8 +97,8 @@ msgstr "مشخص نبودن مقدار پراکسی."
 #. odoo-python
 #: code:addons/account_qr_code_emv/models/res_bank.py:0
 msgid ""
-"No EMV QR Code is available for the country of the account "
-"%(account_number)s."
+"No EMV QR Code is available for the country of the account %"
+"(account_number)s."
 msgstr "هیچ کد QR برای کشور مروبط به حساب  وجود ندراد %(account_number)s."
 
 #. module: account_qr_code_emv
@@ -107,3 +117,6 @@ msgstr "نوع پروکسی"
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_value
 msgid "Proxy Value"
 msgstr "مقدار پراکسی"
+
+#~ msgid "EMV QR Configuration"
+#~ msgstr "پیکربندی EVM QR"

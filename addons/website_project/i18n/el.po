@@ -1,32 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_project
-# 
+#
 # Translators:
 # Kostas Goutoudis <goutoudis@gmail.com>, 2024
 # Martin Trigaux, 2025
 # Agapi Psyllou, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:04+0000\n"
+"POT-Creation-Date: 2025-08-15 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Agapi Psyllou, 2025\n"
 "Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: website_project
-#: model_terms:ir.ui.view,arch_db:website_project.task_submitted
-msgid ""
-"<i class=\"fa fa-check-circle fa-1x text-success me-2\" role=\"img\" aria-"
-"label=\"Success\" title=\"Success\"/>"
-msgstr ""
 
 #. module: website_project
 #. odoo-javascript
@@ -48,14 +41,19 @@ msgid "Company Name"
 msgstr "Επωνυμία Εταιρίας"
 
 #. module: website_project
-#: model:ir.model.fields,field_description:website_project.field_project_task__partner_phone
-msgid "Contact Number"
+#: model:ir.model,website_form_label:website_project.model_project_task
+msgid "Create a Task"
 msgstr ""
 
 #. module: website_project
 #: model:ir.model.fields,field_description:website_project.field_project_task__partner_name
 msgid "Customer Name"
 msgstr "Όνομα Πελάτη"
+
+#. module: website_project
+#: model:ir.model.fields,field_description:website_project.field_project_task__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: website_project
 #. odoo-python
@@ -70,11 +68,6 @@ msgid "Email Address"
 msgstr "Email Address"
 
 #. module: website_project
-#: model:ir.model.fields,field_description:website_project.field_project_task__email_from
-msgid "Email From"
-msgstr "Email Από"
-
-#. module: website_project
 #. odoo-javascript
 #: code:addons/website_project/static/src/js/website_project_editor.js:0
 msgid "Full Name"
@@ -82,7 +75,12 @@ msgstr "Πλήρες Όνομα"
 
 #. module: website_project
 #: model_terms:ir.ui.view,arch_db:website_project.task_submitted
-msgid "Go to the Homepage"
+msgid "Go to Homepage"
+msgstr ""
+
+#. module: website_project
+#: model:ir.model.fields,field_description:website_project.field_project_task__id
+msgid "ID"
 msgstr ""
 
 #. module: website_project
@@ -96,6 +94,11 @@ msgstr ""
 #: code:addons/website_project/controllers/main.py:0
 msgid "Other Information"
 msgstr "Άλλες Πληροφορίες"
+
+#. module: website_project
+#: model_terms:ir.ui.view,arch_db:website_project.task_submitted
+msgid "Our team will get right on it."
+msgstr ""
 
 #. module: website_project
 #. odoo-javascript
@@ -116,15 +119,34 @@ msgstr "Εργασία"
 
 #. module: website_project
 #: model_terms:ir.ui.view,arch_db:website_project.task_submitted
-msgid "Thank you for contacting us, our team will get right on it!"
+msgid "Task #"
 msgstr ""
 
 #. module: website_project
 #: model_terms:ir.ui.view,arch_db:website_project.task_submitted
-msgid "View Task"
+msgid "Thank you!"
+msgstr ""
+
+#. module: website_project
+#: model:ir.model.fields,help:website_project.field_project_task__display_name
+msgid ""
+"Use these keywords in the title to set new tasks:\n"
+"\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a medium priority\n"
+"        !! Set the task a high priority\n"
+"        !!! Set the task a urgent priority\n"
+"\n"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
 
 #. module: website_project
 #: model_terms:ir.ui.view,arch_db:website_project.task_submitted
-msgid "Your Task Number is"
+msgid "Your task has been sent."
 msgstr ""
+
+#~ msgid "Email From"
+#~ msgstr "Email Από"

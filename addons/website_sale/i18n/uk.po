@@ -1,27 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale
-# 
+#
 # Translators:
 # Iryna Hrytsyshyna, 2024
 # Larissa Manderfeld, 2024
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025
 # Wil Odoo, 2025
 # Yaroslav Husyar, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Yaroslav Husyar, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -38,11 +41,6 @@ msgstr ""
 "підтвердженням замовлення, щоб відстежувати своє замовлення."
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
-msgid "#{record.name.value}"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "%s review"
 msgstr "перегляд %s "
@@ -51,16 +49,6 @@ msgstr "перегляд %s "
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "%s reviews"
 msgstr "перегляди %s "
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid "&amp; Delivery"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.products_item
-msgid "&amp;nbsp;"
-msgstr "&amp;nbsp;"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
@@ -73,6 +61,16 @@ msgid "'. Showing results for '"
 msgstr "'. Показ результату для '"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "- All products"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "1 Column"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__100_pc
 msgid "100 %"
 msgstr "100 %"
@@ -81,6 +79,11 @@ msgstr "100 %"
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "100 percent"
 msgstr "100 відсотків"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "2 Columns"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__50_pc
@@ -103,6 +106,24 @@ msgid "66 percent"
 msgstr "66 відсотків"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
+msgid ""
+"<a href=\"/terms\" class=\"text-muted o_translate_inline\"><u>Terms and "
+"Conditions</u></a><br/>\n"
+"                30-day money-back guarantee<br/>\n"
+"                Shipping: 2-3 Business Days"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid ""
+"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
+"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
+"class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
+"                    <span class=\"align-middle\">to follow your order.</span>"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "<b class=\"w-100\">Order summary</b>"
 msgstr "<b class=\"w-100\">Підсумок замовлення</b>"
@@ -120,14 +141,13 @@ msgid "<b>Communication: </b>"
 msgstr "<b>Зв'язок: </b>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-msgid "<b>Deliver to pickup point: </b>"
+#: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
+msgid "<b>Deliver to pickup point</b>"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid "<b>Delivery: </b>"
+#: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
+msgid "<b>Delivery</b>"
 msgstr ""
 
 #. module: website_sale
@@ -137,30 +157,22 @@ msgstr "<b>Діапазон цін</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
-msgid "<b>Pricelist</b>"
-msgstr "<b>Прайс-лист</b>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 msgid "<b>Sort By</b>"
 msgstr "<b>Сортувати за:</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_tags
-#: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
+#: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_filters_form
 msgid "<b>Tags</b>"
 msgstr "<b>Теги</b>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
+#: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
 msgid ""
-"<br/>\n"
-"                30-day money-back guarantee<br/>\n"
-"                Shipping: 2-3 Business Days"
+"<i class=\"d-md-none fa fa-shopping-cart\" role=\"presentation\"/>\n"
+"                                <span class=\"d-none d-md-inline\">Add to "
+"cart</span>"
 msgstr ""
-"<br/>\n"
-"                30-денна гарантія повернення коштів<br/>\n"
-"                Доставка: 2-3 робочих дні"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -170,6 +182,13 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-angle-left me-2 fw-light\"/>\n"
 "                                    Повернутися до доставки"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
+msgid ""
+"<i class=\"fa fa-angle-left me-2 fw-light\"/>\n"
+"                    Continue shopping"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_buy_now
@@ -200,16 +219,13 @@ msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
-#: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
+#: model_terms:ir.ui.view,arch_db:website_sale.address_edit_button
 msgid "<i class=\"fa fa-pencil me-1\"/>Edit"
 msgstr "<i class=\"fa fa-pencil me-1\"/>Редагувати"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_row
-msgid ""
-"<i class=\"fa fa-plus me-md-2\"/>\n"
-"                    <span class=\"d-none d-md-inline\">Add address</span>"
+#: model_terms:ir.ui.view,arch_db:website_sale.address_edit_button
+msgid "<i class=\"fa fa-pencil me-1\"/>Want an invoice?"
 msgstr ""
 
 #. module: website_sale
@@ -236,11 +252,6 @@ msgstr ""
 "                                                Додати до кошика"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "<i class=\"fw-light fa fa-angle-left me-2\"/>Discard"
-msgstr "<i class=\"fw-light fa fa-angle-left me-2\"/>Відхилити"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid ""
 "<i class=\"oi oi-chevron-left d-lg-none me-1\" role=\"presentation\"/>All "
@@ -249,7 +260,8 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
-msgid "<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>All Products"
+msgid ""
+"<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>All Products"
 msgstr ""
 
 #. module: website_sale
@@ -267,57 +279,37 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "<option value=\"\">Country...</option>"
-msgstr "<option value=\"\">Країна...</option>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "<option value=\"\">State / Province...</option>"
-msgstr "<option value=\"\">Область / провінція...</option>"
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/crm_team.py:0
 msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        You can find all abandoned carts here, i.e. the carts generated by your website's visitors from over an hour ago that haven't been confirmed yet.</p>\n"
-"                        <p>You should send an email to the customers to encourage them!</p>\n"
+"                        You can find all abandoned carts here, i.e. the "
+"carts generated by your website's visitors from over an hour ago that "
+"haven't been confirmed yet.</p>\n"
+"                        <p>You should send an email to the customers to "
+"encourage them!</p>\n"
 "                    "
 msgstr ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Тут можна знайти всі забуті кошики, тобто кошики, створені відвідувачами вашого веб-сайту більше години тому, які ще не підтверджені.</p>\n"
-"                        <p>Вам слід надіслати електронний лист клієнтам, щоб заохотити їх!</p>\n"
+"                        Тут можна знайти всі забуті кошики, тобто кошики, "
+"створені відвідувачами вашого веб-сайту більше години тому, які ще не "
+"підтверджені.</p>\n"
+"                        <p>Вам слід надіслати електронний лист клієнтам, щоб "
+"заохотити їх!</p>\n"
 "                    "
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.sort
-msgid "<small class=\"d-none d-lg-inline text-muted\">Sort By:</small>"
-msgstr "<small class=\"d-none d-lg-inline text-muted\">Сортувати за:</small>"
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid ""
+"<small class=\"mx-auto\"><b>Clear Filters</b></small>\n"
+"                                        <i class=\"oi oi-close\" "
+"role=\"presentation\"/>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid ""
-"<small class=\"form-text text-muted\">\n"
-"                                                        Changing company name or VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.\n"
-"                                                    </small>"
+msgid "<span class=\"align-middle\">Already have an account?</span>"
 msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
-msgid ""
-"<small class=\"mx-auto\"><b>Clear Filters</b></small>\n"
-"                            <i class=\"oi oi-close\" role=\"presentation\"/>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
-msgid ""
-"<span class=\"d-md-none fa fa-shopping-cart\"/>\n"
-"                            <span class=\"d-none d-md-inline\">Add to cart</span>"
-msgstr ""
-"<span class=\"d-md-none fa fa-shopping-cart\"/>\n"
-"                            <span class=\"d-none d-md-inline\">Додати до кошика</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -331,32 +323,40 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid ""
-"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" data-oe-expression=\"data['price']\">\n"
-"                                                <span class=\"oe_currency_value\">1,500.00</span>\n"
+"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
+"data-oe-expression=\"data['price']\">\n"
+"                                                <span "
+"class=\"oe_currency_value\">1,500.00</span>\n"
 "                                            </span>"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid ""
-"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" data-oe-expression=\"data['price']\">\n"
-"                                                <span class=\"oe_currency_value\">140.00</span>\n"
+"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
+"data-oe-expression=\"data['price']\">\n"
+"                                                <span "
+"class=\"oe_currency_value\">140.00</span>\n"
 "                                            </span>"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid ""
-"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" data-oe-expression=\"data['price']\">\n"
-"                                                <span class=\"oe_currency_value\">33.00</span>\n"
+"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
+"data-oe-expression=\"data['price']\">\n"
+"                                                <span "
+"class=\"oe_currency_value\">33.00</span>\n"
 "                                            </span>"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid ""
-"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" data-oe-expression=\"data['price']\">\n"
-"                                                <span class=\"oe_currency_value\">750.00</span>\n"
+"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
+"data-oe-expression=\"data['price']\">\n"
+"                                                <span "
+"class=\"oe_currency_value\">750.00</span>\n"
 "                                            </span>"
 msgstr ""
 
@@ -368,13 +368,13 @@ msgstr "<span class=\"mx-2 o_wsale_ppr_by\">за</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_method
 msgid ""
-"<span class=\"o_wsale_delivery_price_badge float-end fw-bold\" name=\"price\">\n"
+"<span class=\"o_wsale_delivery_price_badge float-end fw-bold\" "
+"name=\"price\">\n"
 "                    Select to compute delivery rate\n"
 "                </span>"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 #: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
 msgid "<span class=\"px-3\">or</span>"
@@ -382,13 +382,15 @@ msgstr "<span class=\"px-3\">або</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
-msgid "<span class=\"s_website_form_label_content\">Give us your feedback</span>"
+msgid ""
+"<span class=\"s_website_form_label_content\">Give us your feedback</span>"
 msgstr "<span class=\"s_website_form_label_content\">Залиште ваш відгук</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"s_website_form_label_content\">Upload a document</span>"
-msgstr "<span class=\"s_website_form_label_content\">Завантажити документ</span>"
+msgstr ""
+"<span class=\"s_website_form_label_content\">Завантажити документ</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -398,13 +400,29 @@ msgstr "<span class=\"s_website_form_label_content\">Ваш референс</sp
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_only_website_form_view
 msgid ""
-"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based"
-" on variants</span>"
+"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
+"on variants</span>"
 msgstr ""
 "<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">На "
 "основі варіантів</span>"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "<span class=\"text-muted\">Search results for </span>'"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "<span class=\"text-muted\">Searching</span>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "<span class=\"text-muted\">in</span>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.floating_bar
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "<span class=\"visually-hidden\">filters active</span>"
 msgstr "<span class=\"visually-hidden\">активні фільтри</span>"
@@ -413,11 +431,6 @@ msgstr "<span class=\"visually-hidden\">активні фільтри</span>"
 #: model_terms:web_tour.tour,rainbow_man_message:website_sale.test_01_admin_shop_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr "<span><b>Гарна робота!</b> Ви пройшли всі кроки цього туру.</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "<span>Already have an account?</span>"
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -432,11 +445,15 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 msgid ""
-"<span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.\n"
-"                        Please contact the responsible of the shop for more information.</span>"
+"<span>Unfortunately your order can not be confirmed as the amount of your "
+"payment does not match the amount of your cart.\n"
+"                        Please contact the responsible of the shop for more "
+"information.</span>"
 msgstr ""
-"<span>На жаль, ваше замовлення не може бути підтверджено, оскільки сума вашого платежу не відповідає сумі вашого кошика.\n"
-"                        Будь ласка, зверніться до відповідального в магазині для отримання додаткової інформації.</span>"
+"<span>На жаль, ваше замовлення не може бути підтверджено, оскільки сума "
+"вашого платежу не відповідає сумі вашого кошика.\n"
+"                        Будь ласка, зверніться до відповідального в магазині "
+"для отримання додаткової інформації.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -444,14 +461,31 @@ msgid "<span>Video Preview</span>"
 msgstr "<span>Попередній перегляд відео</span>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
-msgid "<strong>No suitable delivery method could be found.</strong>"
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"<strong>\n"
+"                                <a class=\"o_translate_inline\" t-attf-"
+"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+"&amp;revive_method=merge\">Click here</a>\n"
+"                            </strong> if you want to merge your previous "
+"cart into current cart."
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid "<strong>Total:</strong>"
-msgstr "<strong>Всього:</strong>"
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"<strong>\n"
+"                                <a class=\"o_translate_inline\" t-attf-"
+"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+"&amp;revive_method=squash\">Click here</a>\n"
+"                            </strong> if you want to restore your previous "
+"cart. Your current cart will be replaced with your previous cart."
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
+msgid "<strong>No suitable delivery method could be found.</strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -467,41 +501,64 @@ msgstr "<strong>Увага!</strong>"
 #. module: website_sale
 #: model:mail.template,body_html:website_sale.mail_template_sale_cart_recovery
 msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 0px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 0px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
 "<tbody>\n"
 "    <!-- CONTENT -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 0px 0px 0px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                    <h1 style=\"color:#A9A9A9;\">THERE'S SOMETHING IN YOUR CART.</h1>\n"
+"                    <h1 style=\"color:#A9A9A9;\">THERE'S SOMETHING IN YOUR "
+"CART.</h1>\n"
 "                    Would you like to complete your purchase?<br/><br/>\n"
 "                    <t t-if=\"object.order_line\">\n"
-"                        <t t-foreach=\"object.website_order_line\" t-as=\"line\">\n"
+"                        <t t-foreach=\"object.website_order_line\" t-"
+"as=\"line\">\n"
 "                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; width:150px;\">\n"
-"                                        <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
+"                                    <td style=\"padding: 10px; width:150px;"
+"\">\n"
+"                                        <img t-attf-src=\"/web/image/"
+"product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
+"height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
 "                                    </td>\n"
 "                                    <td>\n"
-"                                        <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] Desk Combination</strong><br/><t t-out=\"line.name or ''\">[FURN_7800] Desk Combination Desk combination, black-brown: chair + desk + drawer.</t>\n"
+"                                        <strong t-"
+"out=\"line.product_id.display_name or ''\">[FURN_7800] Desk Combination</"
+"strong><br/><t t-out=\"line.name or ''\">[FURN_7800] Desk Combination Desk "
+"combination, black-brown: chair + desk + drawer.</t>\n"
 "                                    </td>\n"
 "                                    <td width=\"100px\" align=\"right\">\n"
-"                                        <t t-out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-out=\"line.product_uom.name or ''\">Units</t>\n"
+"                                        <t t-out=\"int(line.product_uom_qty) "
+"or ''\">10000</t> <t t-out=\"line.product_uom_id.name or ''\">Units</t>\n"
 "                                    </td>\n"
 "                                </tr>\n"
 "                            </table>\n"
 "                        </t>\n"
 "                        <hr/>\n"
 "                    </t>\n"
-"                    <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
-"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?access_token={{ object.access_token }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                    <div style=\"text-align: center; padding: 16px 0px 16px "
+"0px; font-size: 14px;\">\n"
+"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/"
+"cart?id={{ object.id }}&amp;access_token={{ object.access_token }}\" "
+"target=\"_blank\" t-attf-style=\"background-color: "
+"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
+"8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"radius: 5px; font-size:13px;\">\n"
 "                            Resume order\n"
 "                        </a>\n"
 "                    </div>\n"
-"                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"/>\n"
-"                    <div style=\"text-align: center;\"><strong>Thank you for shopping with <t t-out=\"company.name or ''\">My Company (San Francisco)</t>!</strong></div>\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id or "
+"object.user_id.company_id or user.company_id\"/>\n"
+"                    <div style=\"text-align: center;\"><strong>Thank you for "
+"shopping with <t t-out=\"company.name or ''\">My Company (San Francisco)</t>!"
+"</strong></div>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -512,21 +569,10 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
-msgid "<u>Terms and Conditions</u>"
-msgstr "<u>Терміни та умови</u>"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/combo_configurator.py:0
-msgid "A combo product can't be empty. Please select at least one option."
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_description
 msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sales Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
 "Опис товару, який ви хочете повідомити своїм клієнтам. Цей опис буде "
@@ -545,8 +591,8 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid ""
-"A detailed,formatted description to promote your product on"
-"                                      this page. Use '/' to discover more "
+"A detailed,formatted description to promote your product "
+"on                                      this page. Use '/' to discover more "
 "features."
 msgstr ""
 
@@ -555,8 +601,7 @@ msgstr ""
 msgid ""
 "A product can be either a physical product or a service that you sell to "
 "your customers."
-msgstr ""
-"Товар може бути фізичним або послугою, яку ви продаєте своїм клієнтам."
+msgstr "Товар може бути фізичним або послугою, яку ви продаєте своїм клієнтам."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -576,11 +621,6 @@ msgstr "Залишений кошик"
 #: model:ir.ui.menu,name:website_sale.menu_orders_abandoned_orders
 msgid "Abandoned Carts"
 msgstr "Залишені кошики"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.crm_team_view_kanban_dashboard
-msgid "Abandoned Carts to Recover"
-msgstr "Залишені кошики для відновлення"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__cart_abandoned_delay
@@ -617,8 +657,8 @@ msgstr "Аксесуари для товару"
 #: model:ir.model.fields,help:website_sale.field_product_product__accessory_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__accessory_product_ids
 msgid ""
-"Accessories show up when the customer reviews the cart before payment "
-"(cross-sell strategy)."
+"Accessories show up when the customer reviews the cart before payment (cross-"
+"sell strategy)."
 msgstr ""
 "Аксесуари з'являються тоді, коли клієнт перевіряє кошик перед оплатою "
 "(стратегія перехресного продажу)."
@@ -638,6 +678,11 @@ msgstr "Дія"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_needaction
 msgid "Action Needed"
 msgstr "Необхідна дія"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Actions"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -665,8 +710,7 @@ msgstr "Дія додати в кошик"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Add a customizable form during checkout (after address)"
-msgstr ""
-"Додайте настроювану форму під час оформлення замовлення (після адреси)"
+msgstr "Додайте настроювану форму під час оформлення замовлення (після адреси)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -694,7 +738,7 @@ msgstr "Додайте закреслену ціну для порівняння
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
 #: model_terms:ir.ui.view,arch_db:website_sale.product_quantity
 msgid "Add one"
 msgstr "Додати один"
@@ -719,13 +763,18 @@ msgid "Add to Cart Button"
 msgstr "Кнопка Додати до кошика"
 
 #. module: website_sale
+#: model:website.checkout.step,name:website_sale.checkout_step_delivery
+msgid "Address"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_autocomplete
 msgid "Address Autocomplete"
 msgstr "Автозаповнення адреси"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.filter_select_attributes
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
-#: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
 msgid "All"
 msgstr "Всі"
 
@@ -734,11 +783,6 @@ msgstr "Всі"
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "All Products"
 msgstr "Всі товари"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website__all_pricelist_ids
-msgid "All pricelists"
-msgstr "Усі прайс-листи"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__ecommerce_access__everyone
@@ -782,8 +826,14 @@ msgstr "Дозвольте клієнту додавати товари з по�
 #: model:ir.model.fields,field_description:website_sale.field_product_product__alternative_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__alternative_product_ids
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_alternative_products
+#: model_terms:ir.ui.view,arch_db:website_sale.alternative_products
 msgid "Alternative Products"
 msgstr "Альтернативні товари"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Always Fill the box"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_amount
@@ -795,11 +845,6 @@ msgstr "Кількість залишених кошиків"
 #: code:addons/website_sale/controllers/delivery.py:0
 msgid "Anonymous express checkout partner for order %s"
 msgstr "Анонімний партнер оформлення замовлення для замовлення %s"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Apartment, suite, etc."
-msgstr "Квартира, офіс тощо."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -830,7 +875,6 @@ msgstr "Підрахунок прикріплення"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_product_attribute_action
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Attributes"
 msgstr "Атрибути"
 
@@ -856,16 +900,29 @@ msgid "Average Rating"
 msgstr "Середня оцінка"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__back_button_label
+msgid "Back Button Label"
+msgstr ""
+
+#. module: website_sale
+#: model:website.checkout.step,back_button_label:website_sale.checkout_step_delivery
+msgid "Back to address"
+msgstr ""
+
+#. module: website_sale
+#: model:website.checkout.step,back_button_label:website_sale.checkout_step_cart
 msgid "Back to cart"
 msgstr "Перейти до кошика"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "Back to delivery"
-msgstr "Повернутися до доставки"
+#: model:website.checkout.step,back_button_label:website_sale.checkout_step_extra
+msgid "Back to extra info"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "Back to {{0}}"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -905,11 +962,6 @@ msgid "Bathroom Cabinets"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Be aware!"
-msgstr "Будьте обережними!"
-
-#. module: website_sale
 #: model:res.country.group,name:website_sale.benelux
 msgid "BeNeLux"
 msgstr "BeNeLux"
@@ -935,20 +987,14 @@ msgid "Big Icons Subtitles"
 msgstr "Підзаголовок великої іконки"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+#: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
 msgid "Billing"
 msgstr "Виставлення рахунку постачальникам"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_row
 msgid "Billing address"
 msgstr "Адреса для виставлення рахунку"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-msgid "Billing:"
-msgstr "Виставлення рахунку:"
 
 #. module: website_sale
 #. odoo-python
@@ -1011,11 +1057,6 @@ msgid "Button url"
 msgstr "url кнопки"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Buttons"
-msgstr "Кнопки"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__enabled_buy_now_button
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1046,6 +1087,7 @@ msgstr "Чи можна збільшити зображення 1024"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__can_publish
 #: model:ir.model.fields,field_description:website_sale.field_product_template__can_publish
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__can_publish
 msgid "Can Publish"
 msgstr "Можна опублікувати"
 
@@ -1082,9 +1124,9 @@ msgid "Cart recovery email already sent"
 msgstr "Електронний лист для відновлення кошика вже відправлений"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Carts are flagged as abandoned after this delay."
-msgstr "Кошики позначені як забуті після цієї затримки."
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Catalog of products"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -1155,39 +1197,7 @@ msgid "Change location"
 msgstr ""
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid ""
-"Changing VAT number is not allowed once document(s) have been issued for "
-"your account. Please contact us directly for this operation."
-msgstr ""
-"Зміна номера ПДВ не дозволяється після того, як документ(и) видано для "
-"вашого облікового запису. Зв'яжіться з нами безпосередньо для цієї операції."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid ""
-"Changing company name is not allowed once document(s) have been issued for "
-"your account. Please contact us directly for this operation."
-msgstr ""
-"Зміна назви компанії забороняється, як тільки документи видаються для вашого"
-" облікового запису. Зв'яжіться з нами щодо цієї операції."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid ""
-"Changing your name is not allowed once invoices have been issued for your "
-"account. Please contact us directly for this operation."
-msgstr ""
-"Не можна змінити ваше ім'я, якщо хоча би один раз на ваш рахунок видавався "
-"рахунок-фактура. Будь ласка, зв'яжіться з нами безпосередньо для цієї "
-"операції."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
+#: model:website.checkout.step,main_button_label:website_sale.checkout_step_delivery
 msgid "Checkout"
 msgstr "Оформити замовлення"
 
@@ -1200,11 +1210,6 @@ msgstr "Сторінки оформлення замовлення"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "Дочірні категорії"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
-msgid "Choose a delivery method"
-msgstr "Виберіть спосіб доставки"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1220,20 +1225,39 @@ msgid "Choose this location"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
+#: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
+msgid "Choose your favorite"
+msgstr ""
+
+#. module: website_sale
 #: model:product.pricelist,name:website_sale.list_christmas
 msgid "Christmas"
 msgstr "Різдво"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "City"
-msgstr "Місто"
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Classic"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Classic Grid"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
-#: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
+#: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Clear Filters"
 msgstr "Очистити фільтри"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "Clear search for this category"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_collect
@@ -1245,13 +1269,7 @@ msgstr ""
 msgid ""
 "Click <i>'New'</i> in the top-right corner to create your first product."
 msgstr ""
-"Натисніть <i>'Новий'</i> у верхньому правому куті, щоб створити перший "
-"товар."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid "Click here"
-msgstr "Натисніть тут"
+"Натисніть <i>'Новий'</i> у верхньому правому куті, щоб створити перший товар."
 
 #. module: website_sale
 #. odoo-javascript
@@ -1273,6 +1291,13 @@ msgstr "Натисніть на цю кнопку, тепер ваш клієн�
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
+#: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
+msgid "Click to select"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
 #: code:addons/website_sale/static/src/js/notification/cart_notification/cart_notification.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 msgid "Close"
@@ -1290,13 +1315,13 @@ msgid "Collapse Category Recursive"
 msgstr "Згорнути рекурсивну категорію"
 
 #. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_boxes_collapsible
-msgid "Collapsible Boxes"
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Collapse sidebar sections"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Collapsible sidebar"
+#: model:product.public.category,name:website_sale.public_category_boxes_collapsible
+msgid "Collapsible Boxes"
 msgstr ""
 
 #. module: website_sale
@@ -1324,6 +1349,12 @@ msgstr ""
 "посилання"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Compact List"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_res_company
 msgid "Companies"
 msgstr "Компанії"
@@ -1331,7 +1362,6 @@ msgstr "Компанії"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
-#: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Company Name"
 msgstr "Назва компанії"
 
@@ -1364,23 +1394,35 @@ msgstr "Обчислюйте вартість доставки через Shipro
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "Обчислюйте витрати на доставку та відправляйте з DHL"
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</"
+"strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "Обчислюйте витрати на доставку та відправляйте з FedEx"
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</"
+"strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "Обчислюйте витрати на доставку та відправляйте з UPS"
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</"
+"strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "Обчислюйте витрати на доставку та відправляйте з USPS"
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</"
+"strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1391,6 +1433,12 @@ msgstr "Обчислюйте витрати на доставку та відп�
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
 msgstr "Обчислюйте витрати на доставку на замовленнях"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/checkout.js:0
+msgid "Computed after delivery"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -1414,8 +1462,8 @@ msgid "Configure your product"
 msgstr "Налаштуйте ваш товар"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
+#: model:website.checkout.step,main_button_label:website_sale.checkout_step_extra
+#: model:website.checkout.step,main_button_label:website_sale.checkout_step_payment
 msgid "Confirm"
 msgstr "Підтвердити"
 
@@ -1440,6 +1488,11 @@ msgid "Confirmed Orders"
 msgstr "Підтверджені замовлення"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Connect your eCommerce to Google Merchant Center via a product file."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_res_partner
 msgid "Contact"
 msgstr "Контакт"
@@ -1455,6 +1508,16 @@ msgid "Contact Us Button URL"
 msgstr "URL кнопки Зв'язатися з нами"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Contain within the box"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Content Width"
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 #: code:addons/website_sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
@@ -1462,26 +1525,20 @@ msgid "Continue Shopping"
 msgstr "Продовжити покупки"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Continue checkout"
-msgstr "Продовжити чекаут"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid ""
 "Continue checkout\n"
-"                                    <i class=\"fa fa-angle-right ms-2 fw-light\"/>"
+"                                    <i class=\"fa fa-angle-right ms-2 fw-"
+"light\"/>"
 msgstr ""
 "Продовжити чекаут\n"
-"                                    <i class=\"fa fa-angle-right ms-2 fw-light\"/>"
+"                                    <i class=\"fa fa-angle-right ms-2 fw-"
+"light\"/>"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "Continue shopping"
-msgstr "Продовжити покупки"
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Copy file link"
+msgstr ""
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_couches
@@ -1489,14 +1546,14 @@ msgid "Couches"
 msgstr "Дивани"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Country"
-msgstr "Країна"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Create"
 msgstr "Створити"
+
+#. module: website_sale
+#: model:ir.model,website_form_label:website_sale.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -1508,6 +1565,7 @@ msgstr "Створити новий товар"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__create_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__create_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__create_uid
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__create_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__create_uid
 msgid "Created by"
 msgstr "Створив"
@@ -1519,14 +1577,15 @@ msgid ""
 "Created in 2021, the company is young and dynamic. Discover the composition "
 "of the team and their skills."
 msgstr ""
-"Створена в 2021 році, компанія молода та динамічна. Відкрийте для себе склад"
-" команди та їхні навички."
+"Створена в 2021 році, компанія молода та динамічна. Відкрийте для себе склад "
+"команди та їхні навички."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__create_date
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__create_date
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__create_date
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__create_date
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__create_date
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__create_date
 msgid "Created on"
 msgstr "Створено"
@@ -1574,39 +1633,7 @@ msgid "Customer Reviews"
 msgstr "Перегляди клієнта"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid ""
-"Customer needs to be signed in otherwise the mail address is not known.     \n"
-"\n"
-"- If a potential customer creates one or more abandoned checkouts and then completes a sale before the recovery email gets sent, then the email won't be sent.     \n"
-"\n"
-"- If user has manually sent a recovery email, the mail will not be sent a second time     \n"
-"\n"
-"- If a payment processing error occurred when the customer tried to complete their checkout, then the email won't be sent.     \n"
-"\n"
-"- If your shop does not support shipping to the customer's address, then the email won't be sent.     \n"
-"\n"
-"- If none of the products in the checkout are available for purchase (empty inventory, for example), then the email won't be sent.     \n"
-"\n"
-"- If all the products in the checkout are free, and the customer does not visit the shipping page to add a shipping fee or the shipping fee is also free, then the email won't be sent."
-msgstr ""
-"Клієнт повинен увійти, інакше адреса електронної пошти невідома.\n"
-"\n"
-"- Якщо потенційний клієнт створить одну або кілька залишених оформлень замовлення, а потім завершить продаж до того, як буде надіслано електронний лист для відновлення, електронний лист не буде надіслано.\n"
-"\n"
-"- Якщо користувач вручну надіслав електронний лист для відновлення, другий раз лист не буде надіслано\n"
-"\n"
-"- Якщо сталася помилка обробки платежу, коли клієнт намагався завершити оформлення замовлення, електронний лист не буде надіслано.\n"
-"\n"
-"- Якщо ваш магазин не підтримує доставку на адресу клієнта, електронний лист не буде надіслано.\n"
-"\n"
-"- Якщо жоден із товарів на касі недоступний для покупки (наприклад, порожній склад), електронний лист не буде надіслано.\n"
-"\n"
-"- Якщо всі товари на касі безкоштовні, а клієнт не відвідує сторінку доставки, щоб додати комісію за доставку, або плата за доставку також безкоштовна, електронний лист не буде надіслано."
-
-#. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Customers"
 msgstr "Клієнти"
 
@@ -1628,13 +1655,8 @@ msgstr "Налаштуйте шаблони листів"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "DHL Express Connector"
-msgstr "Конектор DHL Express "
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "DHL Shipping Methods"
-msgstr "Способи доставки DHL"
+msgid "DHL"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -1662,11 +1684,6 @@ msgid "Default Currency"
 msgstr "Типова валюта"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website__pricelist_id
-msgid "Default Pricelist if any"
-msgstr "Прайс-лист за замовчуванням, якщо такий є"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Default Sort"
 msgstr "Сортування за замовчуванням"
@@ -1675,8 +1692,7 @@ msgstr "Сортування за замовчуванням"
 #: model:ir.model.fields,help:website_sale.field_product_product__base_unit_id
 #: model:ir.model.fields,help:website_sale.field_product_template__base_unit_id
 #: model:ir.model.fields,help:website_sale.field_website_base_unit__name
-msgid ""
-"Define a custom unit to display in the price per unit of measure field."
+msgid "Define a custom unit to display in the price per unit of measure field."
 msgstr ""
 "Визначте користувацьку одиницю для відображення в полі ціни за одиницю "
 "вимірювання."
@@ -1697,16 +1713,14 @@ msgid "Delete Ribbon"
 msgstr ""
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "Delivery"
 msgstr "Доставка"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-msgid "Delivery &amp;"
+#: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
+msgid "Delivery &amp; Billing"
 msgstr ""
 
 #. module: website_sale
@@ -1721,7 +1735,6 @@ msgid "Delivery Methods"
 msgstr "Способи доставки"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_address_row
 msgid "Delivery address"
 msgstr ""
@@ -1732,7 +1745,13 @@ msgid "Delivery and Installation"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
+msgid "Delivery method"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Description"
 msgstr "Опис"
 
@@ -1775,6 +1794,17 @@ msgid "Desks"
 msgstr "Столи"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Detailed List"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Details"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_sequence
 #: model:ir.model.fields,help:website_sale.field_product_template__website_sequence
 msgid "Determine the display order in the Website E-commerce"
@@ -1814,11 +1844,38 @@ msgid "Discover our team"
 msgstr "Відкрийте для себе нашу команду"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_account_move__display_name
+#: model:ir.model.fields,field_description:website_sale.field_crm_team__display_name
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:website_sale.field_digest_digest__display_name
+#: model:ir.model.fields,field_description:website_sale.field_ir_http__display_name
+#: model:ir.model.fields,field_description:website_sale.field_payment_token__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_attribute__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_document__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_image__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist_item__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_product__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_tag__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_template__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_template_attribute_line__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_template_attribute_value__display_name
+#: model:ir.model.fields,field_description:website_sale.field_res_company__display_name
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_sale.field_res_partner__display_name
+#: model:ir.model.fields,field_description:website_sale.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_sale.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:website_sale.field_sale_report__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_menu__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_track__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_visitor__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
 
@@ -1851,8 +1908,8 @@ msgstr "Відображення у низу сторінки товару"
 #: model:ir.model.fields,help:website_sale.field_product_product__base_unit_name
 #: model:ir.model.fields,help:website_sale.field_product_template__base_unit_name
 msgid ""
-"Displays the custom unit for the products if defined or the selected unit of"
-" measure otherwise."
+"Displays the custom unit for the products if defined or the selected unit of "
+"measure otherwise."
 msgstr ""
 "Відображає користувацьку одиницю для товарів, якщо вона визначена, або "
 "вибрану одиницю вимірювання в іншому випадку."
@@ -1870,6 +1927,11 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/website_sale_reorder.js:0
 msgid "Do you wish to clear your cart before adding products to it?"
 msgstr "Ви хочете очистити кошик перед додаванням туди товарів?"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Documentation"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -1902,7 +1964,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid ""
 "Drag building blocks here to customize the header for\n"
-"                                    \""
+"                                        \""
 msgstr ""
 
 #. module: website_sale
@@ -1984,26 +2046,20 @@ msgid "Edit"
 msgstr "Редагувати"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Edit address"
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Edit the price of this product by clicking on the amount."
 msgstr "Редагуйте ціну товару, натиснувши на кількість."
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
-msgid "Edit this address"
-msgstr "Відредагуйте цю адресу"
-
-#. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_multimedia_education
 msgid "Education Tools"
 msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
-msgid "Email"
-msgstr "Ел. пошта"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__embed_code
@@ -2034,15 +2090,14 @@ msgid "Error! You cannot create recursive categories."
 msgstr "Помилка! Ви не можете створити рекурсивні категорії."
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Extra Images"
-msgstr "Додаткові зображення"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
+#: model:website.checkout.step,name:website_sale.checkout_step_extra
 msgid "Extra Info"
 msgstr "Додаткова інформація"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Extra Media"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__product_template_image_ids
@@ -2076,11 +2131,6 @@ msgid "Extra info"
 msgstr "Додаткова інформація"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
-msgid "Facebook"
-msgstr "Facebook"
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 msgid "Featured"
@@ -2090,11 +2140,6 @@ msgstr "Рекомендовані"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "FedEx"
 msgstr "FedEx"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "FedEx Shipping Methods"
-msgstr "Способи доставки FedEx"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__field_id
@@ -2118,13 +2163,14 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Fill"
-msgstr "Заповнити"
+msgid "Filmstrip - default"
+msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Fill in your address"
-msgstr "Заповніть вашу адресу"
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Filters"
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -2134,9 +2180,20 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website__fiscal_position_id
-msgid "Fiscal Position"
-msgstr "Схема оподаткування"
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Floating"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Floating sticky Toolbar"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Focused"
+msgstr ""
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_foldable
@@ -2170,9 +2227,9 @@ msgid "From Website"
 msgstr "З веб-сайту"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Full name"
-msgstr "Повна назва"
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Full"
+msgstr ""
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures
@@ -2191,14 +2248,18 @@ msgstr "Gap"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid ""
-"Generate the invoice automatically when the online payment is confirmed"
+msgid "Generate the invoice automatically when the online payment is confirmed"
 msgstr ""
 "Створіть рахунок-фактуру автоматично після підтвердження онлайн-платежу"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_glass
 msgid "Glass Desks"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__gmc_xml_url
+msgid "Gmc Xml Url"
 msgstr ""
 
 #. module: website_sale
@@ -2209,8 +2270,13 @@ msgid "Go to cart"
 msgstr "Перейти до кошика"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__enabled_gmc_src
+#: model:ir.model.fields,field_description:website_sale.field_website__enabled_gmc_src
+msgid "Google Merchant Center Data Source"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_layout__grid
-#: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Grid"
@@ -2244,14 +2310,29 @@ msgid "Hidden"
 msgstr "Приховано"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Hide"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__prevent_zero_price_sale
 msgid "Hide 'Add To Cart' when price = 0"
 msgstr "Приховати 'Додати до кошика' коли ціна = 0"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Hide all filters"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Hours."
 msgstr "Години."
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__step_href
+msgid "Href"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -2264,11 +2345,38 @@ msgid "I agree to the"
 msgstr "Я погоджуюся з "
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_account_move__id
+#: model:ir.model.fields,field_description:website_sale.field_crm_team__id
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:website_sale.field_digest_digest__id
+#: model:ir.model.fields,field_description:website_sale.field_ir_http__id
+#: model:ir.model.fields,field_description:website_sale.field_payment_token__id
+#: model:ir.model.fields,field_description:website_sale.field_product_attribute__id
+#: model:ir.model.fields,field_description:website_sale.field_product_document__id
 #: model:ir.model.fields,field_description:website_sale.field_product_image__id
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__id
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist_item__id
+#: model:ir.model.fields,field_description:website_sale.field_product_product__id
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__id
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__id
+#: model:ir.model.fields,field_description:website_sale.field_product_tag__id
+#: model:ir.model.fields,field_description:website_sale.field_product_template__id
+#: model:ir.model.fields,field_description:website_sale.field_product_template_attribute_line__id
+#: model:ir.model.fields,field_description:website_sale.field_product_template_attribute_value__id
+#: model:ir.model.fields,field_description:website_sale.field_res_company__id
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_sale.field_res_partner__id
+#: model:ir.model.fields,field_description:website_sale.field_sale_order__id
+#: model:ir.model.fields,field_description:website_sale.field_sale_order_line__id
+#: model:ir.model.fields,field_description:website_sale.field_sale_report__id
+#: model:ir.model.fields,field_description:website_sale.field_website__id
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__id
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__id
+#: model:ir.model.fields,field_description:website_sale.field_website_menu__id
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__id
+#: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter__id
+#: model:ir.model.fields,field_description:website_sale.field_website_track__id
+#: model:ir.model.fields,field_description:website_sale.field_website_visitor__id
 msgid "ID"
 msgstr "ID"
 
@@ -2306,19 +2414,6 @@ msgstr ""
 "які залишили свій кошик"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid ""
-"If you are ordering for an external person, please place your order via the "
-"backend. If you wish to change your name or email address, please do so in "
-"the account settings or contact your administrator."
-msgstr ""
-"Якщо ви замовляєте для сторонньої особи, розмістіть своє замовлення через "
-"серверну систему. Якщо ви бажаєте змінити своє ім’я чи адресу електронної "
-"пошти, зробіть це в налаштуваннях облікового запису або зверніться до "
-"адміністратора."
-
-#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__website_id
 msgid ""
 "If you want a pricelist to be available on a website,you must fill in this "
@@ -2329,7 +2424,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
-#: model:ir.model.fields,field_description:website_sale.field_product_tag__image
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
 msgid "Image"
 msgstr "Зображення"
@@ -2359,6 +2453,12 @@ msgid "Image 512"
 msgstr "Зображення 512"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Image Grid"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Image Menu"
 msgstr "Меню зображення"
@@ -2377,6 +2477,11 @@ msgstr "Інтервал між зображеннями"
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Image Zoom"
 msgstr "Збільшення зображення"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Images Fill"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2406,14 +2511,14 @@ msgstr "Миттєва оплата, замість додавання в кош
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
-msgid "Invalid Email! Please enter a valid email address."
-msgstr "Невірна адреса ел. пошти. Будь ласка, вкажіть правильну адресу."
+msgid "Invalid image"
+msgstr "Недійсне зображення"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
-msgid "Invalid image"
-msgstr "Недійсне зображення"
+msgid "Invalid video URL provided."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_account
@@ -2434,6 +2539,7 @@ msgstr "Стежить"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__is_published
 #: model:ir.model.fields,field_description:website_sale.field_product_template__is_published
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__is_published
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_website_tree_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_view_tree_website_sale
 msgid "Is Published"
@@ -2443,13 +2549,6 @@ msgstr "Опубліковано"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Issue invoices to customers"
 msgstr "Виставлення рахунків клієнтам"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/sale_order.py:0
-msgid "It is forbidden to modify a sales order which is not in draft status."
-msgstr ""
-"Забороняється змінювати замовлення на продаж, що не в статусі чернетки."
 
 #. module: website_sale
 #. odoo-python
@@ -2471,7 +2570,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/website_sale_utils.js:0
+#: code:addons/website_sale/static/src/js/cart_service.js:0
 msgid "Item(s) added to your cart"
 msgstr "Товари додані до вашого кошика"
 
@@ -2512,6 +2611,12 @@ msgid "Landscape (4/3)"
 msgstr "Альбомний (4/3)"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Large Image"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -2519,16 +2624,11 @@ msgid "Last Month"
 msgstr "Останній місяць"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_partner__last_website_so_id
-#: model:ir.model.fields,field_description:website_sale.field_res_users__last_website_so_id
-msgid "Last Online Sales Order"
-msgstr "Останнє замовлення на продаж онлайн"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__write_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__write_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__write_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__write_uid
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__write_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__write_uid
 msgid "Last Updated by"
 msgstr "Востаннє оновив"
@@ -2538,6 +2638,7 @@ msgstr "Востаннє оновив"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__write_date
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__write_date
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__write_date
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__write_date
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__write_date
 msgid "Last Updated on"
 msgstr "Останнє оновлення"
@@ -2616,15 +2717,9 @@ msgid "Line Subtotals Tax Display"
 msgstr "Відображати сумарні рядки податку"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
-msgid "LinkedIn"
-msgstr "LinkedIn"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "List"
-msgstr "Список"
+msgid "List of products"
+msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -2666,11 +2761,14 @@ msgstr "Екранна лупа при наведенні"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
-"Mail only sent to signed in customers with items available for sale in their"
-" cart."
+"Mail only sent to signed in customers with items available for sale in carts "
+"created after the feature activation."
 msgstr ""
-"Пошта надсилається лише зареєстрованим клієнтам із товарами, доступними для "
-"продажу, у їхніх кошиках."
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__main_button_label
+msgid "Main Button Label"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2690,8 +2788,8 @@ msgid ""
 "Manage pricelists to apply specific prices per country, customer, products, "
 "etc"
 msgstr ""
-"Керуйте прайс-листами, щоб застосовувати конкретні ціни для країни, клієнта,"
-" товарів тощо"
+"Керуйте прайс-листами, щоб застосовувати конкретні ціни для країни, клієнта, "
+"товарів тощо"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__account_on_checkout__mandatory
@@ -2731,6 +2829,17 @@ msgid "Messages"
 msgstr "Повідомлення"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Mobile"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Modern Showcase"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Mondial Relay"
 msgstr "Mondial Relay"
@@ -2742,7 +2851,6 @@ msgstr "Конектор Mondial Relay"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.accordion_more_information
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "More Information"
 msgstr "Більше інформації"
 
@@ -2785,6 +2893,7 @@ msgstr "Мій кошик"
 #: model:ir.model.fields,field_description:website_sale.field_product_image__name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__name
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__name
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__name
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Name"
 msgstr "Назва"
@@ -2810,6 +2919,11 @@ msgstr "Новий"
 #: model:ir.actions.act_window,name:website_sale.product_product_action_add
 msgid "New Product"
 msgstr "Новий товар"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "New address"
+msgstr ""
 
 #. module: website_sale
 #: model:product.ribbon,name:website_sale.new_ribbon
@@ -2896,8 +3010,8 @@ msgstr "Не знайдено результату для '"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid ""
-"No shipping method is available for your current order and shipping address."
-" Please contact us for more information."
+"No shipping method is available for your current order and shipping address. "
+"Please contact us for more information."
 msgstr ""
 "Немає жодного способу доставки для вашого замовлення та адреси доставки. "
 "Будь ласка, зв’яжіться з нами для отримання детальної інформації."
@@ -2972,8 +3086,18 @@ msgid "Odoo Menu"
 msgstr "Меню Odoo"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Off-screen Menu"
+msgstr ""
+
+#. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_office
 msgid "Office Desks"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
+msgid "On the website original price is crossed out."
 msgstr ""
 
 #. module: website_sale
@@ -3002,6 +3126,12 @@ msgstr "Онлайн продажі"
 #: model:ir.actions.act_window,name:website_sale.sale_report_action_dashboard
 msgid "Online Sales Analysis"
 msgstr "Аналіз онлайн продажів"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
+msgid "Online catalog"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__only_services
@@ -3052,14 +3182,14 @@ msgid "Optional"
 msgstr "Необов'язково"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Options"
-msgstr "Опції"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 msgid "Or scan me with your banking app."
 msgstr "Або відскануйте мене через ваш банківський додаток."
+
+#. module: website_sale
+#: model:website.checkout.step,name:website_sale.checkout_step_cart
+msgid "Order"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -3076,8 +3206,8 @@ msgstr "Рядки замовлення відображені на веб-са�
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid "Order overview"
-msgstr "Огляд замовлення"
+msgid "Order summary"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
@@ -3118,15 +3248,9 @@ msgid "Pay now"
 msgstr "Оплатити зараз"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
+#: model:website.checkout.step,name:website_sale.checkout_step_payment
 msgid "Payment"
 msgstr "Оплата"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid "Payment Information"
-msgstr "Інформація про оплату"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_methods
@@ -3166,25 +3290,21 @@ msgid "Pedal-based opening system"
 msgstr "Система відкривання на основі педалі"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Phone"
-msgstr "Телефон"
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 msgid "Phone Number"
 msgstr "Номер телефону"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "Pickup Location"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Pills"
 msgstr "Вкладки"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
-msgid "Pinterest"
-msgstr "Pinterest"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -3234,6 +3354,7 @@ msgstr "Попередній (Стрілка вліво)"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Price"
 msgstr "Ціна"
 
@@ -3248,11 +3369,6 @@ msgstr "Ціна - від найвищої до найнижчої"
 #: code:addons/website_sale/models/website.py:0
 msgid "Price - Low to High"
 msgstr "Ціна - від найнижчої до найвищої"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Price Filter"
-msgstr "Фільтр по ціні"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_price
@@ -3272,6 +3388,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_pricelist
+#: model_terms:ir.ui.view,arch_db:website_sale.pricelist_list
 msgid "Pricelist"
 msgstr "Прайс-лист"
 
@@ -3308,11 +3425,6 @@ msgstr "Перейти до замовлення"
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "Process the order once the payment is received."
 msgstr "Оформити замовлення після отримання платежу."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Prod. Desc."
-msgstr "Опис товару"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3379,6 +3491,8 @@ msgid "Product Names"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Product Page"
 msgstr "Сторінка товару"
@@ -3444,11 +3558,6 @@ msgstr "Тег товару"
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Product Tags"
 msgstr "Теги товару"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Product Tags Filter"
-msgstr "Фільтр тегів товару"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__product_tmpl_id
@@ -3519,11 +3628,6 @@ msgstr "Товари"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Products List"
-msgstr "Список товарів"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Products Page"
 msgstr "Стоірнка товарів "
 
@@ -3554,6 +3658,12 @@ msgid ""
 "Provided video URL for '%s' is not valid. Please enter a valid video URL."
 msgstr ""
 "Надана URL-адреса відео для '%s' недійсна. Введіть дійсну URL-адресу відео."
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__publish_date
+#: model:ir.model.fields,field_description:website_sale.field_product_template__publish_date
+msgid "Publish Date"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_document__shown_on_product_page
@@ -3590,18 +3700,20 @@ msgstr "Перемістити наверх"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Quantity"
 msgstr "Кількість"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Quick Browse Grid"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Radio"
 msgstr "Перемикач"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Rating"
-msgstr "Оцінка"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_avg_text
@@ -3670,8 +3782,8 @@ msgstr "Нещодавно продані товари"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_viewed_products
-msgid "Recently Viewed Products"
-msgstr "Нещодавно переглянуті товари"
+msgid "Recently Viewed Products (per user)"
+msgstr ""
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_recliners
@@ -3687,6 +3799,11 @@ msgstr "Відправлено електронний лист для відно
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email to Send"
 msgstr "Електронний лист відновлення до відправки"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Regular"
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -3718,10 +3835,15 @@ msgstr "Вилучити з кошика"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
 #: model_terms:ir.ui.view,arch_db:website_sale.product_quantity
 msgid "Remove one"
 msgstr "Вилучити один"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Render a button to show the Off-screen Menu"
+msgstr ""
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_repair_and_maintenance
@@ -3744,6 +3866,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_product_public_category__website_id
 #: model:ir.model.fields,help:website_sale.field_product_tag__website_id
 #: model:ir.model.fields,help:website_sale.field_product_template__website_id
+#: model:ir.model.fields,help:website_sale.field_website_checkout_step__website_id
 msgid "Restrict to a specific website."
 msgstr ""
 
@@ -3754,10 +3877,9 @@ msgid "Resume Order"
 msgstr "Підсумувати замовлення"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "Review Order"
-msgstr "Перегляд замовлень"
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Reviews"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_ribbon_id
@@ -3868,9 +3990,9 @@ msgid "Sample"
 msgstr "Зразок"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Save address"
-msgstr "Зберегти адресу"
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Search"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -3878,9 +4000,26 @@ msgid "Search Abandoned Sales Orders"
 msgstr "Пошук забутих замовлень на продаж"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Search Bar"
-msgstr "Пошукова панель"
+#: model_terms:ir.ui.view,arch_db:website_sale.floating_bar
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "Search Products"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "Search globally"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "Search in"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "Search {{0}} globally"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3894,8 +4033,8 @@ msgid ""
 "Select <b>New Product</b> to create it and manage its properties to boost "
 "your sales."
 msgstr ""
-"Оберіть <b>Новий товар</b>, щоб створити його та керувати його властивостями"
-" для збільшення продажів."
+"Оберіть <b>Новий товар</b>, щоб створити його та керувати його властивостями "
+"для збільшення продажів."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3918,7 +4057,7 @@ msgid "Selectable"
 msgstr "Можна вибрати"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form
 msgid "Send a Recovery Email"
 msgstr "Надіслати електронну пошту відновлення"
 
@@ -3928,7 +4067,7 @@ msgid "Send after"
 msgstr "Надіслати після"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form
 msgid "Send by Email"
 msgstr "Надіслати поштою"
 
@@ -3946,6 +4085,7 @@ msgstr "Назва Seo"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__sequence
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__sequence
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__sequence
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__sequence
 msgid "Sequence"
 msgstr "Послідовність"
@@ -3954,12 +4094,6 @@ msgstr "Послідовність"
 #: model:product.public.category,name:website_sale.public_category_services
 msgid "Services"
 msgstr "Послуги"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Share"
-msgstr "Поділитися"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_delivery_invoice_address
@@ -4042,6 +4176,21 @@ msgid "Show Empty"
 msgstr "Показати пусті"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Show a filmstrip navigation at the Top"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Show filters into Sidebar"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Show into Sidebar"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_search
 msgid "Show on Ecommerce"
 msgstr "Показати в електронній комерції"
@@ -4057,15 +4206,15 @@ msgid "Show/hide shopping cart"
 msgstr "Показати/приховати кошик"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "Sign In"
-msgstr "Вхід"
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Sidebar"
+msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid "Sign Up"
-msgstr "Зареєструватися"
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Sidebar Grid"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -4118,13 +4267,12 @@ msgstr "Продано"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
-msgid "Some required fields are empty."
-msgstr "Деякі обов’язкові поля пусті."
+msgid "Sorry, we are unable to ship your order."
+msgstr ""
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid "Sorry, we are unable to ship your order."
+#: model_terms:ir.ui.view,arch_db:website_sale.sort
+msgid "Sort By"
 msgstr ""
 
 #. module: website_sale
@@ -4155,11 +4303,6 @@ msgid "Standing Desks"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "State / Province"
-msgstr "Область/район"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Status"
 msgstr "Статус"
@@ -4175,11 +4318,6 @@ msgid "Storage Cabinets"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Street and Number"
-msgstr "Вулиця та номер будинку"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Style"
 msgstr "Стиль"
@@ -4193,8 +4331,8 @@ msgstr "Підсумок"
 #: model:ir.model.fields,help:website_sale.field_product_product__alternative_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__alternative_product_ids
 msgid ""
-"Suggest alternatives to your customer (upsell strategy). Those products show"
-" up on the product page."
+"Suggest alternatives to your customer (upsell strategy). Those products show "
+"up on the product page."
 msgstr ""
 "Запропонуйте альтернативні товару своєму клієнту (стратегія допродажу). Ці "
 "товари відображаються на сторінці товару."
@@ -4216,6 +4354,7 @@ msgstr "Пропоновані аксесуари в кошику електро
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Tags"
 msgstr "Мітки"
 
@@ -4239,13 +4378,17 @@ msgstr "Індикація податку"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_sale_order__amount_delivery
 msgid "Tax included or excluded depending on the website configuration."
-msgstr ""
-"Враховуючи або виключаючи податок, залежно від конфігурації веб-сайту."
+msgstr "Враховуючи або виключаючи податок, залежно від конфігурації веб-сайту."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "Taxes"
 msgstr "Податки"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Terms and Conditions"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4256,11 +4399,6 @@ msgstr "Текст"
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__text_color
 msgid "Text Color"
 msgstr "Колір тексту"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website__prevent_zero_price_sale_text
-msgid "Text to show instead of price"
-msgstr "Текст для показу замість ціни"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -4279,6 +4417,12 @@ msgid "The access token is invalid."
 msgstr "Токен доступу недійсний."
 
 #. module: website_sale
+#: model:website.snippet.filter,help:website_sale.dynamic_filter_latest_viewed_products
+msgid ""
+"The building block will remain empty until the user visits a product page."
+msgstr ""
+
+#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
 msgid "The cart has already been paid. Please refresh the page."
@@ -4294,16 +4438,28 @@ msgstr "Кошик оновлено. Будь ласка, оновіть сто�
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid ""
-"The company of the website you are trying to sell from (%(website_company)s)"
-" is different than the one you want to use (%(company)s)"
+"The company of the website you are trying to sell from (%(website_company)s) "
+"is different than the one you want to use (%(company)s)"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product__website_url
+msgid "The full URL to access the document through the website."
+msgstr "URL-адреса повністю, для доступу до документації через сайт."
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_absolute_url
+#: model:ir.model.fields,help:website_sale.field_product_template__website_absolute_url
+#: model:ir.model.fields,help:website_sale.field_website_checkout_step__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
 msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_url
-#: model:ir.model.fields,help:website_sale.field_product_product__website_url
 #: model:ir.model.fields,help:website_sale.field_product_template__website_url
-msgid "The full URL to access the document through the website."
-msgstr "URL-адреса повністю, для доступу до документації через сайт."
+#: model:ir.model.fields,help:website_sale.field_website_checkout_step__website_url
+msgid "The full relative URL to access the document through the website."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -4314,17 +4470,15 @@ msgstr "Ця комбінація не існує, тому її не можна
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/models/sale_order.py:0
+#: code:addons/website_sale/controllers/cart.py:0
 msgid "The given product does not exist therefore it cannot be added to cart."
 msgstr "Цього товару не існує, тому його не можна додавати до кошика."
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/combo_configurator.py:0
-#: code:addons/website_sale/models/sale_order.py:0
+#: code:addons/website_sale/models/sale_order_line.py:0
 msgid ""
-"The given product does not have a price therefore it cannot be added to "
-"cart."
+"The given product does not have a price therefore it cannot be added to cart."
 msgstr "Даний товар не має ціни, тому його не можна додати в кошик."
 
 #. module: website_sale
@@ -4345,6 +4499,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__public_categ_ids
+#: model:ir.model.fields,help:website_sale.field_sale_report__public_categ_ids
 msgid ""
 "The product will be available in each mentioned eCommerce category. Go to "
 "Shop > Edit Click on the page and enable 'Categories' to view all eCommerce "
@@ -4369,8 +4524,8 @@ msgstr "Час позначення кошика як залишений мож�
 #. odoo-python
 #: code:addons/website_sale/models/product_product.py:0
 msgid ""
-"The value of Base Unit Count must be greater than 0. Use 0 to hide the price"
-" per unit on this product."
+"The value of Base Unit Count must be greater than 0. Use 0 to hide the price "
+"per unit on this product."
 msgstr ""
 "Значення базової одиниці вимірювання має бути більше 0. Використовуйте 0, "
 "щоб приховати ціну за одиницю цього продукту."
@@ -4390,6 +4545,11 @@ msgstr "Ще немає неоплаченого замовлення на са�
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/map_container/map_container.js:0
 msgid "There was an error loading the map"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.alternative_products
+msgid "These other products might interest you"
 msgstr ""
 
 #. module: website_sale
@@ -4462,25 +4622,30 @@ msgid "Thumbnails"
 msgstr "Ескізи"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website__send_abandoned_cart_email_activation_time
+msgid "Time when the 'Send abandoned cart email' feature was activated."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "To send invitations in B2B mode, open a contact or select several ones in "
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
-"Щоб надіслати запрошення в режимі B2B, відкрийте контакт або виберіть кілька"
-" у списку та натисніть на 'Управління доступом до порталу' у випадаючому "
-"меню *Дія*."
+"Щоб надіслати запрошення в режимі B2B, відкрийте контакт або виберіть кілька "
+"у списку та натисніть на 'Управління доступом до порталу' у випадаючому меню "
+"*Дія*."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Toolbar"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Top"
 msgstr "Зверху"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Top Bar"
-msgstr "Верхня гістограма"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4545,11 +4710,6 @@ msgid "USPS"
 msgstr "USPS"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "USPS Shipping Methods"
-msgstr "Способи доставки USPS"
-
-#. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_drawers_underbed
 msgid "Under-bed Drawers"
 msgstr ""
@@ -4591,12 +4751,6 @@ msgstr ""
 "відвідувачами"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid "VAT"
-msgstr "ПДВ"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
 msgid "Variant"
 msgstr "Варіант"
@@ -4608,11 +4762,6 @@ msgstr "Варіант стрічки"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Variants"
-msgstr "Варіанти"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Vertical (2/3)"
 msgstr "Вертикально (2/3)"
 
@@ -4621,6 +4770,11 @@ msgstr "Вертикально (2/3)"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Video URL"
 msgstr "URL-адреса відео"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.filter_radio_and_multi_attributes
+msgid "View More"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_banner
@@ -4668,13 +4822,9 @@ msgstr "Видимий"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_published
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_published
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__website_published
 msgid "Visible on current website"
 msgstr "Видимий на поточному веб-сайті"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_tag__visible_on_ecommerce
-msgid "Visible on eCommerce"
-msgstr "Видимий в електронній комерції"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_track
@@ -4683,7 +4833,6 @@ msgstr "Відвідані сторінки"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_ids
-#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_kanban
 msgid "Visited Products"
 msgstr "Переглянуті товари"
 
@@ -4704,10 +4853,10 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/website_sale_utils.js:0
+#: code:addons/website_sale/static/src/js/cart_service.js:0
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__shop_warning
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__shop_warning
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "Warning"
 msgstr "Попередження"
@@ -4733,6 +4882,14 @@ msgstr ""
 "замінити її, якщо це необхідно, протягом певного періоду часу."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid ""
+"We weren't able to update your cart. Please refresh your page before trying "
+"again."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_website
 #: model:ir.model.fields,field_description:website_sale.field_account_bank_statement_line__website_id
 #: model:ir.model.fields,field_description:website_sale.field_account_move__website_id
@@ -4744,14 +4901,27 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_id
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__website_id
 #: model:ir.model.fields,field_description:website_sale.field_sale_report__website_id
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__website_id
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__website_id
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Website"
 msgstr "Веб-сайт"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_absolute_url
+#: model:ir.model.fields,field_description:website_sale.field_product_template__website_absolute_url
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__website_absolute_url
+msgid "Website Absolute URL"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_normalized
 msgid "Website Category"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_website_checkout_step
+msgid "Website Checkout Step"
 msgstr ""
 
 #. module: website_sale
@@ -4796,6 +4966,7 @@ msgstr "Фільтр сніпетів веб-сайту"
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_url
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_url
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_url
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__website_url
 msgid "Website URL"
 msgstr "URL сайту"
 
@@ -4859,14 +5030,20 @@ msgid "What should be done on \"Add to Cart\"?"
 msgstr "Що слід зробити в \"Додати до кошика\"?"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
-msgid "WhatsApp"
-msgstr "WhatsApp"
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_tag__visible_on_ecommerce
-msgid "Whether the tag is displayed on the eCommerce."
-msgstr "Чи відображається тег в eCommerce."
+#: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
+msgid ""
+"When prices are calculated through a formula or fixed, the original price "
+"is\n"
+"                    generally not displayed in the sale order lines or "
+"checkout. However, for\n"
+"                    specific formula-based pricing rules, the discount can "
+"be shown on the shop\n"
+"                    page (e.g. product pages and configurators), but not in "
+"the cart or at checkout.\n"
+"                    In these cases, the calculated/fixed price is set as the "
+"unit price with 0% discount\n"
+"                    in the order."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -4896,6 +5073,12 @@ msgid "With three feet"
 msgstr "З трьома ногами"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "Wrong format: got `pricelist=%s`, expected an integer"
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 msgid "Yes"
@@ -4905,8 +5088,11 @@ msgstr "Так"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid ""
 "You are editing your <b>delivery and billing</b> addresses\n"
-"                                        at the same time!<br/>\n"
-"                                        If you want to modify your billing address, create a"
+"                            at the same time!<br/>\n"
+"                            If you want to modify your billing address, "
+"create a\n"
+"                            <a class=\"o_translate_inline\" href=\"/shop/"
+"address?address_type=billing\">new address</a>."
 msgstr ""
 
 #. module: website_sale
@@ -4935,19 +5121,12 @@ msgstr "Ви залишили товари в кошику!"
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid ""
 "You'll find here all the carts abandoned by your visitors.\n"
-"                If they completed their address, you should send them a recovery email!"
+"                If they completed their address, you should send them a "
+"recovery email!"
 msgstr ""
 "Тут ви знайдете всі кошики, забуті вашими відвідувачами.\n"
-"                 Якщо вони заповнили свою адресу, ви повинні надіслати їм електронний лист для відновлення!"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.alternative_products
-msgid ""
-"Your Dynamic Snippet will be displayed here...\n"
-"                                This message is displayed because youy did not provide both a filter and a template to use."
-msgstr ""
-"Тут відображатиметься ваш динамічний фрагмент...\n"
-"Це повідомлення відображається, оскільки ви не надали фільтр і шаблон для використання."
+"                 Якщо вони заповнили свою адресу, ви повинні надіслати їм "
+"електронний лист для відновлення!"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4962,7 +5141,6 @@ msgid "Your Name"
 msgstr "Ваше ім’я"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_row
 msgid "Your address"
 msgstr ""
@@ -5002,11 +5180,6 @@ msgid "Your previous cart has already been completed."
 msgstr "Ваш попередній кошик вже заповнений."
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Zip Code"
-msgstr "Zip код"
-
-#. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_delivery_zip_prefix
 msgid "Zip Prefix"
 msgstr "Префікс індексу"
@@ -5036,10 +5209,16 @@ msgstr "Електронна комерція"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action
+#: model:ir.model.fields,field_description:website_sale.field_sale_report__public_categ_ids
 #: model:ir.ui.menu,name:website_sale.menu_catalog_categories
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "eCommerce Categories"
 msgstr "Категорії електронної комерції"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+msgid "eCommerce Category"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__description_ecommerce
@@ -5073,6 +5252,13 @@ msgid "eCommerce cart"
 msgstr "Кошик електронної комерції"
 
 #. module: website_sale
+#: model:ir.model.constraint,message:website_sale.constraint_website_check_gmc_ecommerce_access
+msgid ""
+"eCommerce must be accessible to all users for Google Merchant Center to "
+"operate properly."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server
 msgid "eCommerce: send email to customers about their abandoned cart"
 msgstr ""
@@ -5080,28 +5266,45 @@ msgstr ""
 "покинутий кошик"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid "if you want to merge your previous cart into current cart."
-msgstr "якщо ви хочете об'єднати свій попередній кошик з поточним кошиком."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"if you want to restore your previous cart. Your current cart will be "
-"replaced with your previous cart."
-msgstr ""
-"якщо ви хочете відновити попередній кошик. Ваш поточний кошик буде замінено "
-"на ваш попередній кошик."
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "in category \""
 msgstr "в категорії \""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "new address"
-msgstr "нова адреса"
+#. odoo-python
+#: code:addons/website_sale/models/crm_team.py:0
+msgid "is_abandoned_cart"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+msgid "list_price asc"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+msgid "list_price desc"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/res_config_settings.py:0
+msgid "model"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+msgid "name asc"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+msgid "publish_date desc"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -5113,7 +5316,350 @@ msgstr "вилучити"
 msgid "terms &amp; conditions"
 msgstr "терміни та умови"
 
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid "to follow your order."
-msgstr "щоб слідкувати за вашим замовленням."
+#~ msgid "&amp;nbsp;"
+#~ msgstr "&amp;nbsp;"
+
+#~ msgid "<b>Pricelist</b>"
+#~ msgstr "<b>Прайс-лист</b>"
+
+#~ msgid ""
+#~ "<br/>\n"
+#~ "                30-day money-back guarantee<br/>\n"
+#~ "                Shipping: 2-3 Business Days"
+#~ msgstr ""
+#~ "<br/>\n"
+#~ "                30-денна гарантія повернення коштів<br/>\n"
+#~ "                Доставка: 2-3 робочих дні"
+
+#~ msgid "<i class=\"fw-light fa fa-angle-left me-2\"/>Discard"
+#~ msgstr "<i class=\"fw-light fa fa-angle-left me-2\"/>Відхилити"
+
+#~ msgid "<option value=\"\">Country...</option>"
+#~ msgstr "<option value=\"\">Країна...</option>"
+
+#~ msgid "<option value=\"\">State / Province...</option>"
+#~ msgstr "<option value=\"\">Область / провінція...</option>"
+
+#~ msgid "<small class=\"d-none d-lg-inline text-muted\">Sort By:</small>"
+#~ msgstr ""
+#~ "<small class=\"d-none d-lg-inline text-muted\">Сортувати за:</small>"
+
+#~ msgid ""
+#~ "<span class=\"d-md-none fa fa-shopping-cart\"/>\n"
+#~ "                            <span class=\"d-none d-md-inline\">Add to "
+#~ "cart</span>"
+#~ msgstr ""
+#~ "<span class=\"d-md-none fa fa-shopping-cart\"/>\n"
+#~ "                            <span class=\"d-none d-md-inline\">Додати до "
+#~ "кошика</span>"
+
+#~ msgid "<strong>Total:</strong>"
+#~ msgstr "<strong>Всього:</strong>"
+
+#~ msgid "<u>Terms and Conditions</u>"
+#~ msgstr "<u>Терміни та умови</u>"
+
+#~ msgid "Abandoned Carts to Recover"
+#~ msgstr "Залишені кошики для відновлення"
+
+#~ msgid "All pricelists"
+#~ msgstr "Усі прайс-листи"
+
+#~ msgid "Apartment, suite, etc."
+#~ msgstr "Квартира, офіс тощо."
+
+#~ msgid "Back to delivery"
+#~ msgstr "Повернутися до доставки"
+
+#~ msgid "Be aware!"
+#~ msgstr "Будьте обережними!"
+
+#~ msgid "Billing:"
+#~ msgstr "Виставлення рахунку:"
+
+#~ msgid "Buttons"
+#~ msgstr "Кнопки"
+
+#~ msgid "Carts are flagged as abandoned after this delay."
+#~ msgstr "Кошики позначені як забуті після цієї затримки."
+
+#~ msgid ""
+#~ "Changing VAT number is not allowed once document(s) have been issued for "
+#~ "your account. Please contact us directly for this operation."
+#~ msgstr ""
+#~ "Зміна номера ПДВ не дозволяється після того, як документ(и) видано для "
+#~ "вашого облікового запису. Зв'яжіться з нами безпосередньо для цієї "
+#~ "операції."
+
+#~ msgid ""
+#~ "Changing company name is not allowed once document(s) have been issued "
+#~ "for your account. Please contact us directly for this operation."
+#~ msgstr ""
+#~ "Зміна назви компанії забороняється, як тільки документи видаються для "
+#~ "вашого облікового запису. Зв'яжіться з нами щодо цієї операції."
+
+#~ msgid ""
+#~ "Changing your name is not allowed once invoices have been issued for your "
+#~ "account. Please contact us directly for this operation."
+#~ msgstr ""
+#~ "Не можна змінити ваше ім'я, якщо хоча би один раз на ваш рахунок "
+#~ "видавався рахунок-фактура. Будь ласка, зв'яжіться з нами безпосередньо "
+#~ "для цієї операції."
+
+#~ msgid "Choose a delivery method"
+#~ msgstr "Виберіть спосіб доставки"
+
+#~ msgid "City"
+#~ msgstr "Місто"
+
+#~ msgid "Click here"
+#~ msgstr "Натисніть тут"
+
+#~ msgid "Compute shipping costs and ship with DHL"
+#~ msgstr "Обчислюйте витрати на доставку та відправляйте з DHL"
+
+#~ msgid "Compute shipping costs and ship with FedEx"
+#~ msgstr "Обчислюйте витрати на доставку та відправляйте з FedEx"
+
+#~ msgid "Compute shipping costs and ship with UPS"
+#~ msgstr "Обчислюйте витрати на доставку та відправляйте з UPS"
+
+#~ msgid "Compute shipping costs and ship with USPS"
+#~ msgstr "Обчислюйте витрати на доставку та відправляйте з USPS"
+
+#~ msgid "Continue checkout"
+#~ msgstr "Продовжити чекаут"
+
+#~ msgid "Continue shopping"
+#~ msgstr "Продовжити покупки"
+
+#~ msgid "Country"
+#~ msgstr "Країна"
+
+#~ msgid ""
+#~ "Customer needs to be signed in otherwise the mail address is not "
+#~ "known.     \n"
+#~ "\n"
+#~ "- If a potential customer creates one or more abandoned checkouts and "
+#~ "then completes a sale before the recovery email gets sent, then the email "
+#~ "won't be sent.     \n"
+#~ "\n"
+#~ "- If user has manually sent a recovery email, the mail will not be sent a "
+#~ "second time     \n"
+#~ "\n"
+#~ "- If a payment processing error occurred when the customer tried to "
+#~ "complete their checkout, then the email won't be sent.     \n"
+#~ "\n"
+#~ "- If your shop does not support shipping to the customer's address, then "
+#~ "the email won't be sent.     \n"
+#~ "\n"
+#~ "- If none of the products in the checkout are available for purchase "
+#~ "(empty inventory, for example), then the email won't be sent.     \n"
+#~ "\n"
+#~ "- If all the products in the checkout are free, and the customer does not "
+#~ "visit the shipping page to add a shipping fee or the shipping fee is also "
+#~ "free, then the email won't be sent."
+#~ msgstr ""
+#~ "Клієнт повинен увійти, інакше адреса електронної пошти невідома.\n"
+#~ "\n"
+#~ "- Якщо потенційний клієнт створить одну або кілька залишених оформлень "
+#~ "замовлення, а потім завершить продаж до того, як буде надіслано "
+#~ "електронний лист для відновлення, електронний лист не буде надіслано.\n"
+#~ "\n"
+#~ "- Якщо користувач вручну надіслав електронний лист для відновлення, "
+#~ "другий раз лист не буде надіслано\n"
+#~ "\n"
+#~ "- Якщо сталася помилка обробки платежу, коли клієнт намагався завершити "
+#~ "оформлення замовлення, електронний лист не буде надіслано.\n"
+#~ "\n"
+#~ "- Якщо ваш магазин не підтримує доставку на адресу клієнта, електронний "
+#~ "лист не буде надіслано.\n"
+#~ "\n"
+#~ "- Якщо жоден із товарів на касі недоступний для покупки (наприклад, "
+#~ "порожній склад), електронний лист не буде надіслано.\n"
+#~ "\n"
+#~ "- Якщо всі товари на касі безкоштовні, а клієнт не відвідує сторінку "
+#~ "доставки, щоб додати комісію за доставку, або плата за доставку також "
+#~ "безкоштовна, електронний лист не буде надіслано."
+
+#~ msgid "DHL Express Connector"
+#~ msgstr "Конектор DHL Express "
+
+#~ msgid "DHL Shipping Methods"
+#~ msgstr "Способи доставки DHL"
+
+#~ msgid "Default Pricelist if any"
+#~ msgstr "Прайс-лист за замовчуванням, якщо такий є"
+
+#~ msgid "Edit this address"
+#~ msgstr "Відредагуйте цю адресу"
+
+#~ msgid "Email"
+#~ msgstr "Ел. пошта"
+
+#~ msgid "Extra Images"
+#~ msgstr "Додаткові зображення"
+
+#~ msgid "Facebook"
+#~ msgstr "Facebook"
+
+#~ msgid "FedEx Shipping Methods"
+#~ msgstr "Способи доставки FedEx"
+
+#~ msgid "Fill"
+#~ msgstr "Заповнити"
+
+#~ msgid "Fill in your address"
+#~ msgstr "Заповніть вашу адресу"
+
+#~ msgid "Fiscal Position"
+#~ msgstr "Схема оподаткування"
+
+#~ msgid "Full name"
+#~ msgstr "Повна назва"
+
+#~ msgid ""
+#~ "If you are ordering for an external person, please place your order via "
+#~ "the backend. If you wish to change your name or email address, please do "
+#~ "so in the account settings or contact your administrator."
+#~ msgstr ""
+#~ "Якщо ви замовляєте для сторонньої особи, розмістіть своє замовлення через "
+#~ "серверну систему. Якщо ви бажаєте змінити своє ім’я чи адресу електронної "
+#~ "пошти, зробіть це в налаштуваннях облікового запису або зверніться до "
+#~ "адміністратора."
+
+#~ msgid "Invalid Email! Please enter a valid email address."
+#~ msgstr "Невірна адреса ел. пошти. Будь ласка, вкажіть правильну адресу."
+
+#~ msgid ""
+#~ "It is forbidden to modify a sales order which is not in draft status."
+#~ msgstr ""
+#~ "Забороняється змінювати замовлення на продаж, що не в статусі чернетки."
+
+#~ msgid "Last Online Sales Order"
+#~ msgstr "Останнє замовлення на продаж онлайн"
+
+#~ msgid "LinkedIn"
+#~ msgstr "LinkedIn"
+
+#~ msgid "List"
+#~ msgstr "Список"
+
+#~ msgid ""
+#~ "Mail only sent to signed in customers with items available for sale in "
+#~ "their cart."
+#~ msgstr ""
+#~ "Пошта надсилається лише зареєстрованим клієнтам із товарами, доступними "
+#~ "для продажу, у їхніх кошиках."
+
+#~ msgid "Options"
+#~ msgstr "Опції"
+
+#~ msgid "Order overview"
+#~ msgstr "Огляд замовлення"
+
+#~ msgid "Payment Information"
+#~ msgstr "Інформація про оплату"
+
+#~ msgid "Phone"
+#~ msgstr "Телефон"
+
+#~ msgid "Pinterest"
+#~ msgstr "Pinterest"
+
+#~ msgid "Price Filter"
+#~ msgstr "Фільтр по ціні"
+
+#~ msgid "Prod. Desc."
+#~ msgstr "Опис товару"
+
+#~ msgid "Product Tags Filter"
+#~ msgstr "Фільтр тегів товару"
+
+#~ msgid "Products List"
+#~ msgstr "Список товарів"
+
+#~ msgid "Rating"
+#~ msgstr "Оцінка"
+
+#~ msgid "Recently Viewed Products"
+#~ msgstr "Нещодавно переглянуті товари"
+
+#~ msgid "Review Order"
+#~ msgstr "Перегляд замовлень"
+
+#~ msgid "Save address"
+#~ msgstr "Зберегти адресу"
+
+#~ msgid "Search Bar"
+#~ msgstr "Пошукова панель"
+
+#~ msgid "Share"
+#~ msgstr "Поділитися"
+
+#~ msgid "Sign In"
+#~ msgstr "Вхід"
+
+#~ msgid "Sign Up"
+#~ msgstr "Зареєструватися"
+
+#~ msgid "Some required fields are empty."
+#~ msgstr "Деякі обов’язкові поля пусті."
+
+#~ msgid "State / Province"
+#~ msgstr "Область/район"
+
+#~ msgid "Street and Number"
+#~ msgstr "Вулиця та номер будинку"
+
+#~ msgid "Text to show instead of price"
+#~ msgstr "Текст для показу замість ціни"
+
+#~ msgid "Top Bar"
+#~ msgstr "Верхня гістограма"
+
+#~ msgid "USPS Shipping Methods"
+#~ msgstr "Способи доставки USPS"
+
+#~ msgid "VAT"
+#~ msgstr "ПДВ"
+
+#~ msgid "Variants"
+#~ msgstr "Варіанти"
+
+#~ msgid "Visible on eCommerce"
+#~ msgstr "Видимий в електронній комерції"
+
+#~ msgid "WhatsApp"
+#~ msgstr "WhatsApp"
+
+#~ msgid "Whether the tag is displayed on the eCommerce."
+#~ msgstr "Чи відображається тег в eCommerce."
+
+#~ msgid ""
+#~ "Your Dynamic Snippet will be displayed here...\n"
+#~ "                                This message is displayed because youy "
+#~ "did not provide both a filter and a template to use."
+#~ msgstr ""
+#~ "Тут відображатиметься ваш динамічний фрагмент...\n"
+#~ "Це повідомлення відображається, оскільки ви не надали фільтр і шаблон для "
+#~ "використання."
+
+#~ msgid "Zip Code"
+#~ msgstr "Zip код"
+
+#~ msgid "if you want to merge your previous cart into current cart."
+#~ msgstr "якщо ви хочете об'єднати свій попередній кошик з поточним кошиком."
+
+#~ msgid ""
+#~ "if you want to restore your previous cart. Your current cart will be "
+#~ "replaced with your previous cart."
+#~ msgstr ""
+#~ "якщо ви хочете відновити попередній кошик. Ваш поточний кошик буде "
+#~ "замінено на ваш попередній кошик."
+
+#~ msgid "new address"
+#~ msgstr "нова адреса"
+
+#~ msgid "to follow your order."
+#~ msgstr "щоб слідкувати за вашим замовленням."

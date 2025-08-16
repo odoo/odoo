@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_timesheet
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Larissa Manderfeld, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_timesheet
@@ -66,11 +66,11 @@ msgstr "Zeiterfassungen von %(name)s"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
-"'%(missing_plan_names)s' analytic plan(s) required on the project "
-"'%(project_name)s' linked to the timesheet."
+"'%(missing_plan_names)s' analytic plan(s) required on the project '%"
+"(project_name)s' linked to the timesheet."
 msgstr ""
-"Die im Projekt „%(project_name)s“ erforderlichen Kostenstellenpläne "
-"„%(missing_plan_names)s“, die mit der Zeiterfassung verknüpft sind."
+"Die im Projekt „%(project_name)s“ erforderlichen Kostenstellenpläne „%"
+"(missing_plan_names)s“, die mit der Zeiterfassung verknüpft sind."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -108,12 +108,17 @@ msgstr "2021-09-01"
 #. module: hr_timesheet
 #: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "<b class=\"tip_title\">Tip: Record your Timesheets faster</b>"
-msgstr "<b class=\"tip_title\">Tipp: Erfassen Sie Ihre Arbeitszeit schneller</b>"
+msgstr ""
+"<b class=\"tip_title\">Tipp: Erfassen Sie Ihre Arbeitszeit schneller</b>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
-msgid "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgid ""
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
+"title=\"Date\"/>"
+msgstr ""
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
+"title=\"Date\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -137,9 +142,11 @@ msgid ""
 "<span invisible=\"not has_timesheet\">\n"
 "                        You cannot delete employees who have timesheets.\n"
 "                        <span invisible=\"not has_active_employee\">\n"
-"                            You can either archive these employees or first delete all of their timesheets.\n"
+"                            You can either archive these employees or first "
+"delete all of their timesheets.\n"
 "                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                        <span invisible=\"has_active_employee\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
 "                            Please first delete all of their timesheets.\n"
 "                        </span>\n"
 "                    </span>\n"
@@ -148,16 +155,21 @@ msgid ""
 "                    </span>"
 msgstr ""
 "<span invisible=\"not has_timesheet\">\n"
-"                        Sie können keine Mitarbeiter löschen, die Zeiterfassungsbögen haben.\n"
+"                        Sie können keine Mitarbeiter löschen, die "
+"Zeiterfassungsbögen haben.\n"
 "                        <span invisible=\"not has_active_employee\">\n"
-"                            Sie können diese Mitarbeiter entweder archivieren oder erst alle ihre Zeiterfassungsbögen löschen.\n"
+"                            Sie können diese Mitarbeiter entweder "
+"archivieren oder erst alle ihre Zeiterfassungsbögen löschen.\n"
 "                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
-"                            Bitte löschen Sie zuerst alle ihre Zeiterfassungsbögen.\n"
+"                        <span invisible=\"has_active_employee\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                            Bitte löschen Sie zuerst alle ihre "
+"Zeiterfassungsbögen.\n"
 "                        </span>\n"
 "                    </span>\n"
 "                    <span invisible=\"has_timesheet\">\n"
-"                       Sind Sie sicher, dass Sie diese Mitarbeiter löschen müssen?\n"
+"                       Sind Sie sicher, dass Sie diese Mitarbeiter löschen "
+"müssen?\n"
 "                    </span>"
 
 #. module: hr_timesheet
@@ -275,11 +287,14 @@ msgstr "Anwendbarkeit des Kostenstellenplans"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid ""
-"Analyze the projects and tasks on which your employees spend their time.<br>\n"
+"Analyze the projects and tasks on which your employees spend their time."
+"<br>\n"
 "                Evaluate which part is billable and what costs it represents."
 msgstr ""
-"Analysieren Sie die Projekte und Aufgaben, mit denen Ihre Mitarbeiter ihre Zeit verbringen.<br>\n"
-"                Bewerten Sie, welcher Teil abrechenbar ist und welche Kosten er darstellt."
+"Analysieren Sie die Projekte und Aufgaben, mit denen Ihre Mitarbeiter ihre "
+"Zeit verbringen.<br>\n"
+"                Bewerten Sie, welcher Teil abrechenbar ist und welche Kosten "
+"er darstellt."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__reminder_allow
@@ -402,8 +417,7 @@ msgstr "Das Konto deaktivieren."
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__internal_project_id
 msgid "Default project value for timesheet generated from time off type."
 msgstr ""
-"Standardprojektwert für die aus der Abwesenheitsart generierte "
-"Zeiterfassung."
+"Standardprojektwert für die aus der Abwesenheitsart generierte Zeiterfassung."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_line__employee_id
@@ -430,8 +444,8 @@ msgid ""
 "Deliver your services automatically when a milestone is reached by linking "
 "it to a sales order item."
 msgstr ""
-"Liefern Sie Ihre Dienstleistungen automatisch, wenn ein Meilenstein erreicht"
-" wird, indem Sie ihn mit einem Verkaufsauftrag verknüpfen."
+"Liefern Sie Ihre Dienstleistungen automatisch, wenn ein Meilenstein erreicht "
+"wird, indem Sie ihn mit einem Verkaufsauftrag verknüpfen."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__department_id
@@ -537,8 +551,7 @@ msgstr "Überstunden"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
-msgid ""
-"Generate timesheets for validated time off requests and public holidays"
+msgid "Generate timesheets for validated time off requests and public holidays"
 msgstr ""
 "Generieren Sie Zeiterfassungen für validierte Abwesenheitsanträge und "
 "gesetzliche Urlaubstage"
@@ -945,8 +958,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
-"The project, the task and the analytic accounts of the timesheet must belong"
-" to the same company."
+"The project, the task and the analytic accounts of the timesheet must belong "
+"to the same company."
 msgstr ""
 "Das Projekt, die Aufgabe und die Kostenstellen der Zeiterfassung müssen zum "
 "selben Unternehmen gehören."
@@ -960,11 +973,11 @@ msgstr "Es gibt keine Zeiterfassungen."
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid ""
-"These projects have some timesheet entries referencing them. Before removing"
-" these projects, you have to remove these timesheet entries."
+"These projects have some timesheet entries referencing them. Before removing "
+"these projects, you have to remove these timesheet entries."
 msgstr ""
-"Mit diesen Projekten sind einige Zeiterfassungseinträge verknüpft. Entfernen"
-" Sie zunächst diese Einträge, anschließend die Projekte."
+"Mit diesen Projekten sind einige Zeiterfassungseinträge verknüpft. Entfernen "
+"Sie zunächst diese Einträge, anschließend die Projekte."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1005,8 +1018,8 @@ msgstr "Dieses Jahr"
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid ""
-"This project has some timesheet entries referencing it. Before removing this"
-" project, you have to remove these timesheet entries."
+"This project has some timesheet entries referencing it. Before removing this "
+"project, you have to remove these timesheet entries."
 msgstr ""
 "Mit diesem Projekt sind einige Zeiterfassungseinträge verknüpft. Entfernen "
 "Sie zunächst diese Einträge, anschließend das Projekt."
@@ -1023,8 +1036,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_task.py:0
 msgid ""
-"This task can’t be deleted because it’s linked to timesheets. Please contact"
-" someone with higher access to remove the timesheets first, and then you’ll "
+"This task can’t be deleted because it’s linked to timesheets. Please contact "
+"someone with higher access to remove the timesheets first, and then you’ll "
 "be able to delete the task."
 msgstr ""
 "Diese Aufgabe kann nicht gelöscht werden, da sie mit Zeiterfassungen "
@@ -1048,10 +1061,12 @@ msgstr ""
 #: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__project_time_mode_id
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
+"If you use the timesheet linked to projects, don't forget to setup the right "
+"unit of measure in your employees."
 msgstr ""
 "Dies legt die Maßeinheit für Projekte und Aufgaben fest.\n"
-"Falls Sie Zeiterfassung für Projekte verwenden, vergessen Sie nicht, die richtige Maßeinheit für Ihre Mitarbeiter einzurichten."
+"Falls Sie Zeiterfassung für Projekte verwenden, vergessen Sie nicht, die "
+"richtige Maßeinheit für Ihre Mitarbeiter einzurichten."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -1274,18 +1289,16 @@ msgstr "Zeiterfassungen nach Aufgabe"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Timesheets cannot be created on a private task."
-msgstr ""
-"Für eine private Aufgabe können keine Zeiterfassungen erstellt werden."
+msgstr "Für eine private Aufgabe können keine Zeiterfassungen erstellt werden."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
-"Timesheets must be created with an active employee in the selected "
-"companies."
+"Timesheets must be created with an active employee in the selected companies."
 msgstr ""
-"Die Zeiterfassungen müssen mit einem aktiven Mitarbeiter in den ausgewählten"
-" Unternehmen erstellt werden."
+"Die Zeiterfassungen müssen mit einem aktiven Mitarbeiter in den ausgewählten "
+"Unternehmen erstellt werden."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1294,8 +1307,8 @@ msgid ""
 "Timesheets must be created with at least an active analytic account defined "
 "in the plan '%(plan_name)s'."
 msgstr ""
-"Die Zeiterfassungen müssen mit mindestens einer aktiven Kostenstelle im Plan"
-" „%(plan_name)s“ definiert werden"
+"Die Zeiterfassungen müssen mit mindestens einer aktiven Kostenstelle im Plan "
+"„%(plan_name)s“ definiert werden"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1316,9 +1329,9 @@ msgid ""
 "project. Please set one up in the plan '%(plan_name)s' or turn off the "
 "timesheets feature."
 msgstr ""
-"Um die Zeiterfassungsfunktion zu verwenden, müssen Sie eine Kostenstelle für"
-" Ihr Projekt festlegen. Bitte konfigurieren Sie eine im Plan „%(plan_name)s“"
-" oder schalten Sie die Zeiterfassungsfunktion aus."
+"Um die Zeiterfassungsfunktion zu verwenden, müssen Sie eine Kostenstelle für "
+"Ihr Projekt festlegen. Bitte konfigurieren Sie eine im Plan „%(plan_name)s“ "
+"oder schalten Sie die Zeiterfassungsfunktion aus."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1364,8 +1377,8 @@ msgstr "Gesamt:"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid ""
-"Track your working hours by projects every day and invoice this time to your"
-" customers."
+"Track your working hours by projects every day and invoice this time to your "
+"customers."
 msgstr ""
 "Erfassen Sie täglich Ihre Arbeitsstunden nach Projekten und berechnen Sie "
 "sie Ihren Kunden."
@@ -1384,18 +1397,13 @@ msgid ""
 "        30h Allocate 30 hours to the task\n"
 "        #tags Set tags on the task\n"
 "        @user Assign the task to a user\n"
-"        ! Set the task a high priority\n"
+"        ! Set the task a medium priority\n"
+"        !! Set the task a high priority\n"
+"        !!! Set the task a urgent priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
-"Verwenden Sie diese Schlagwörter im Titel, um neue Aufgaben zu erstellen:\n"
-"\n"
-"        30 St. Der Aufgabe 30 Stunden zuteilen\n"
-"        #Stichwörter Stichwörter für Aufgabe festlegen\n"
-"        @Benutzer Die Aufgabe einem Benutzer zuweisen\n"
-"        ! Aufgabe als höchste Priorität einstellen\n"
-"\n"
-"        Stellen Sie sicher, dass Sie das richtige Format und die richtige Reihenfolge verwenden, z. B. Verbessern Sie den Konfigurationsbildschirm 5h #Funktion #v16 @Mitchell!"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
@@ -1422,11 +1430,14 @@ msgstr "Details anzeigen"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_from_employee
 msgid ""
 "You can register and track your workings hours by project every\n"
-"                    day. Every time spent on a project will become a cost and can be re-invoiced to\n"
+"                    day. Every time spent on a project will become a cost "
+"and can be re-invoiced to\n"
 "                    customers if required."
 msgstr ""
-"Sie können Ihre Arbeitsstunden pro Projekt jeden Tag erfassen und verfolgen.\n"
-"                    Die für ein Projekt aufgewendete Zeit wird zu einem Kostenpunkt und kann gegebenenfalls\n"
+"Sie können Ihre Arbeitsstunden pro Projekt jeden Tag erfassen und "
+"verfolgen.\n"
+"                    Die für ein Projekt aufgewendete Zeit wird zu einem "
+"Kostenpunkt und kann gegebenenfalls\n"
 "                    an den Kunden weiterberechnet werden."
 
 #. module: hr_timesheet
@@ -1444,18 +1455,22 @@ msgstr "Sie können keine Mitarbeiter löschen, die Zeiterfassungsbögen haben."
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid ""
-"You cannot log timesheets on this project since it is linked to an inactive analytic account.<br/>\n"
-"                            Please switch to another account, or reactivate the current one to timesheet on the project."
+"You cannot log timesheets on this project since it is linked to an inactive "
+"analytic account.<br/>\n"
+"                            Please switch to another account, or reactivate "
+"the current one to timesheet on the project."
 msgstr ""
-"Sie können für dieses Projekt Zeiten erfassen, da es mit einer inaktiven Kostenstelle verknüpft ist.<br/>\n"
-"                            Bitte ändern Sie die Kostenstelle oder reaktivieren Sie die aktuelle, um Zeiten für das Projekt zu erfassen."
+"Sie können für dieses Projekt Zeiten erfassen, da es mit einer inaktiven "
+"Kostenstelle verknüpft ist.<br/>\n"
+"                            Bitte ändern Sie die Kostenstelle oder "
+"reaktivieren Sie die aktuelle, um Zeiten für das Projekt zu erfassen."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid ""
 "You cannot log timesheets on this project since it is linked to an inactive "
-"analytic account.<br/> Please change this account, or reactivate the current"
-" one to timesheet on the project."
+"analytic account.<br/> Please change this account, or reactivate the current "
+"one to timesheet on the project."
 msgstr ""
 "Sie können für dieses Projekt Zeiten erfassen, da es mit einer inaktiven "
 "Kostenstelle verknüpft ist.<br/> Bitte ändern Sie die Kostenstelle oder "
@@ -1489,10 +1504,12 @@ msgstr "für das"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid ""
 "on\n"
-"                            <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
+"                            <span class=\"fw-bold text-dark\"> Sub-tasks</"
+"span>)"
 msgstr ""
 "auf\n"
-"                            <span class=\"fw-bold text-dark\"> Teilaufgaben</span>)"
+"                            <span class=\"fw-bold text-dark\"> Teilaufgaben</"
+"span>)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -1501,4 +1518,28 @@ msgid ""
 "                        <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
 msgstr ""
 "auf\n"
-"                        <span class=\"fw-bold text-dark\"> Teilaufgaben</span>)"
+"                        <span class=\"fw-bold text-dark\"> Teilaufgaben</"
+"span>)"
+
+#~ msgid ""
+#~ "Use these keywords in the title to set new tasks:\n"
+#~ "\n"
+#~ "        30h Allocate 30 hours to the task\n"
+#~ "        #tags Set tags on the task\n"
+#~ "        @user Assign the task to a user\n"
+#~ "        ! Set the task a high priority\n"
+#~ "\n"
+#~ "        Make sure to use the right format and order e.g. Improve the "
+#~ "configuration screen 5h #feature #v16 @Mitchell !"
+#~ msgstr ""
+#~ "Verwenden Sie diese Schlagwörter im Titel, um neue Aufgaben zu "
+#~ "erstellen:\n"
+#~ "\n"
+#~ "        30 St. Der Aufgabe 30 Stunden zuteilen\n"
+#~ "        #Stichwörter Stichwörter für Aufgabe festlegen\n"
+#~ "        @Benutzer Die Aufgabe einem Benutzer zuweisen\n"
+#~ "        ! Aufgabe als höchste Priorität einstellen\n"
+#~ "\n"
+#~ "        Stellen Sie sicher, dass Sie das richtige Format und die richtige "
+#~ "Reihenfolge verwenden, z. B. Verbessern Sie den Konfigurationsbildschirm "
+#~ "5h #Funktion #v16 @Mitchell!"

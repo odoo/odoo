@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_qr_code_emv
-# 
+#
 # Translators:
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: account_qr_code_emv
 #. odoo-python
@@ -29,6 +30,11 @@ msgstr "Este necesar un cont bancar pentru generarea codului QR EMV."
 #: model:ir.model,name:account_qr_code_emv.model_res_partner_bank
 msgid "Bank Accounts"
 msgstr "Conturi Bancare"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__display_qr_setting
@@ -44,8 +50,13 @@ msgstr "Cod QR prezentat de comerciant EMV"
 
 #. module: account_qr_code_emv
 #: model_terms:ir.ui.view,arch_db:account_qr_code_emv.view_partner_bank_form_inherit_account
-msgid "EMV QR Configuration"
-msgstr "Configurare EMV QR"
+msgid "EMV QR Settings"
+msgstr ""
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__id
+msgid "ID"
+msgstr ""
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__include_reference
@@ -87,11 +98,10 @@ msgstr "Valoarea proxy lipsește."
 #. odoo-python
 #: code:addons/account_qr_code_emv/models/res_bank.py:0
 msgid ""
-"No EMV QR Code is available for the country of the account "
-"%(account_number)s."
+"No EMV QR Code is available for the country of the account %"
+"(account_number)s."
 msgstr ""
-"Nu este disponibil niciun cod QR EMV pentru țara contului "
-"%(account_number)s."
+"Nu este disponibil niciun cod QR EMV pentru țara contului %(account_number)s."
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields.selection,name:account_qr_code_emv.selection__res_partner_bank__proxy_type__none
@@ -109,3 +119,6 @@ msgstr "Tip proxy"
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_value
 msgid "Proxy Value"
 msgstr "Valoarea proxy"
+
+#~ msgid "EMV QR Configuration"
+#~ msgstr "Configurare EMV QR"

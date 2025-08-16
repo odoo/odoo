@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_restaurant
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Maitê Dietze, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:38+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Maitê Dietze, 2025\n"
-"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/"
+"41243/pt_BR/)\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt_BR\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -49,9 +51,9 @@ msgid ""
 "iceberg salad, red onions, grilled bacon, tomato sauce, pickles, barbecue "
 "sauce"
 msgstr ""
-"200g de carne Black Angus irlandesa, cebola caramelizada com páprica, salada"
-" iceberg picada, cebola roxa, bacon grelhado, molho de tomate, picles, molho"
-" barbecue"
+"200g de carne Black Angus irlandesa, cebola caramelizada com páprica, salada "
+"iceberg picada, cebola roxa, bacon grelhado, molho de tomate, picles, molho "
+"barbecue"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -66,10 +68,12 @@ msgstr "<strong>Ponto de venda: </strong>"
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid ""
-"A restaurant floor represents the place where customers are served, this is where you can\n"
+"A restaurant floor represents the place where customers are served, this is "
+"where you can\n"
 "                define and position the tables."
 msgstr ""
-"Um piso de restaurante representa a área onde clientes são servidos, onde você pode\n"
+"Um piso de restaurante representa a área onde clientes são servidos, onde "
+"você pode\n"
 "                definir e posicionar as mesas."
 
 #. module: pos_restaurant
@@ -598,15 +602,13 @@ msgstr "Comida"
 #: code:addons/pos_restaurant/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
 msgid "For convenience, we are providing the following gratuity calculations:"
 msgstr ""
-"Para a sua conveniência, estamos fornecendo os seguintes cálculos de "
-"gorjeta:"
+"Para a sua conveniência, estamos fornecendo os seguintes cálculos de gorjeta:"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_preset__use_guest
 msgid "Force guest selection when clicking on order button in PoS restaurant"
 msgstr ""
-"Forçar a seleção do convidado ao clicar no botão de pedido no restaurante "
-"PDV"
+"Forçar a seleção do convidado ao clicar no botão de pedido no restaurante PDV"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_funghi_product_template
@@ -672,8 +674,8 @@ msgstr "Chá gelado"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__active
 msgid ""
-"If false, the table is deactivated and will not be available in the point of"
-" sale"
+"If false, the table is deactivated and will not be available in the point of "
+"sale"
 msgstr ""
 "Se falso, a mesa é desativada e não estará disponível no ponto de venda"
 
@@ -969,10 +971,12 @@ msgstr "Plano"
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid ""
-"Please close and validate the following open PoS Session before modifying this floor.\n"
+"Please close and validate the following open PoS Session before modifying "
+"this floor.\n"
 "Open session: %(session_names)s"
 msgstr ""
-"Feche e valide a seguinte sessão de PDV aberta antes de modificar essa planta baixa.\n"
+"Feche e valide a seguinte sessão de PDV aberta antes de modificar essa "
+"planta baixa.\n"
 "Abrir sessão: %(session_names)s"
 
 #. module: pos_restaurant
@@ -1358,8 +1362,7 @@ msgstr "A mesa à qual este pedido foi servido"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__color
-msgid ""
-"The table's color, expressed as a valid 'background' CSS property value"
+msgid "The table's color, expressed as a valid 'background' CSS property value"
 msgstr ""
 "A cor da tabela, expressa como um valor de propriedade de CSS de 'fundo' "
 "válido"
@@ -1372,8 +1375,8 @@ msgstr "A altura da mesa em pixels"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_h
 msgid ""
-"The table's horizontal position from the left side to the table's center, in"
-" pixels"
+"The table's horizontal position from the left side to the table's center, in "
+"pixels"
 msgstr ""
 "A posição horizontal da mesa, do lado esquerdo ao centro da mesa, em pixels"
 
@@ -1533,6 +1536,12 @@ msgid "Width"
 msgstr "Largura"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You are currently transferring the order %s"
+msgstr ""
+
+#. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid ""
@@ -1553,16 +1562,14 @@ msgstr ""
 msgid ""
 "You cannot delete a table when orders are still in draft for this table."
 msgstr ""
-"Não é possível excluir uma mesa quando há pedidos em rascunho para esta "
-"mesa."
+"Não é possível excluir uma mesa quando há pedidos em rascunho para esta mesa."
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
 msgid "You cannot delete a table with orders still in draft for this table."
 msgstr ""
-"Não é possível excluir uma mesa quando há pedidos em rascunho para esta "
-"mesa."
+"Não é possível excluir uma mesa quando há pedidos em rascunho para esta mesa."
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1589,6 +1596,12 @@ msgid ""
 msgstr ""
 "Não é possível remover uma mesa que é usada em uma sessão de PDV. Feche as "
 "sessões primeiro."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You cannot transfer an order to itself"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript

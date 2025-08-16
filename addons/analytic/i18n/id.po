@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* analytic
-# 
+#
 # Translators:
 # Abe Manyo, 2025
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:38+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
+"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: analytic
@@ -25,6 +25,12 @@ msgstr ""
 #: code:addons/analytic/models/analytic_account.py:0
 msgid "%s (copy)"
 msgstr "%s (salin)"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_line.py:0
+msgid "%s analytic lines created"
+msgstr ""
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
@@ -141,6 +147,7 @@ msgstr "Jumlah Akun Analitik"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__analytic_distribution
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution
 msgid "Analytic Distribution"
 msgstr "Distribusi Analitik"
@@ -212,6 +219,7 @@ msgstr "Rencana Analitik"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_precision
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__analytic_precision
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_precision
 msgid "Analytic Precision"
 msgstr "Ketelitian Analitik"
@@ -486,6 +494,12 @@ msgid "Domain"
 msgstr "Ruang Lingkup"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Don't update"
+msgstr ""
+
+#. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_rd_finance
 msgid "Finance"
 msgstr "Keuangan"
@@ -554,11 +568,13 @@ msgstr "Jika dicentang, beberapa pesan mempunyai kesalahan dalam pengiriman."
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sales orders and projects are implemented using\n"
-"                analytic accounts. You can track costs and revenues to analyse\n"
+"                analytic accounts. You can track costs and revenues to "
+"analyse\n"
 "                your margins easily."
 msgstr ""
 "Di Odoo, sale order dan project diimplementasi menggunakan\n"
-"                akun analitik. Anda dapat melacak biaya dan pendapatan untuk menganalisis\n"
+"                akun analitik. Anda dapat melacak biaya dan pendapatan untuk "
+"menganalisis\n"
 "                margin Anda dengan mudah."
 
 #. module: analytic
@@ -629,6 +645,12 @@ msgstr "Millennium Industries"
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__business_domain__general
 msgid "Miscellaneous"
 msgstr "Lain-lain"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Multi edit"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__name
@@ -792,13 +814,17 @@ msgstr "Penelitian & Pengembangan"
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sales orders\n"
-"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                invoices. Customer invoices can be created based on sales "
+"orders\n"
+"                (fixed price invoices), on timesheets (based on the work "
+"done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 "Pendapatan akan dibuat secara otomatis saat Anda membuat faktur\n"
-"                pelanggan. Faktur pelanggan dapat dibuat berdasarkan sales order\n"
-"                (faktur harga tetap), pada timesheet (berdasarkan pekerjaan yang diselesaikan) atau\n"
+"                pelanggan. Faktur pelanggan dapat dibuat berdasarkan sales "
+"order\n"
+"                (faktur harga tetap), pada timesheet (berdasarkan pekerjaan "
+"yang diselesaikan) atau\n"
 "                pada pengeluaran (misalnya memfaktur ulang biaya travel)."
 
 #. module: analytic
@@ -840,9 +866,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this company, it "
 "will automatically take this as an analytic account)"
 msgstr ""
-"Pilih perusahaan yang mana distribusi analitik akan dilakukan (misalnya buat"
-" faktur pelanggan baru atau Sales order bila kita memilih perusahaan ini, "
-"ini akan secara otomatis menjadikan ini sebagai akun analitik)"
+"Pilih perusahaan yang mana distribusi analitik akan dilakukan (misalnya buat "
+"faktur pelanggan baru atau Sales order bila kita memilih perusahaan ini, ini "
+"akan secara otomatis menjadikan ini sebagai akun analitik)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
@@ -852,8 +878,8 @@ msgid ""
 "it will automatically take this as an analytic account)"
 msgstr ""
 "Pilih kategori mitra yang mana distribusi analitik akan dilakukan (misalnya "
-"buat faktur pelanggan baru atau Sales order bila kita memilih mitra ini, ini"
-" akan secara otomatis menjadikan ini sebagai akun analitik)"
+"buat faktur pelanggan baru atau Sales order bila kita memilih mitra ini, ini "
+"akan secara otomatis menjadikan ini sebagai akun analitik)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
@@ -863,8 +889,8 @@ msgid ""
 "will automatically take this as an analytic account)"
 msgstr ""
 "Pilih mitra yang mana distribusi analitik akan dilakukan (misalnya buat "
-"faktur pelanggan baru atau Sales order bila kita memilih mitra ini, ini akan"
-" secara otomatis menjadikan ini sebagai akun analitik)"
+"faktur pelanggan baru atau Sales order bila kita memilih mitra ini, ini akan "
+"secara otomatis menjadikan ini sebagai akun analitik)"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__sequence
@@ -904,6 +930,12 @@ msgid "Unit"
 msgstr "Unit"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Update"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
 msgid "User"
 msgstr "Pengguna"
@@ -920,8 +952,8 @@ msgstr "Terlihat untuk semua"
 #. odoo-python
 #: code:addons/analytic/models/analytic_account.py:0
 msgid ""
-"Whoa there! Making this change would wipe out your current data. Let's avoid"
-" that, shall we?"
+"Whoa there! Making this change would wipe out your current data. Let's avoid "
+"that, shall we?"
 msgstr ""
 "Whoa! Membuat perubahan ini dapat menghapus semua data Anda saat ini. Apa "
 "ini yang Anda inginkan?"

@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_peppol
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Aleš Pipan, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:35+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sl\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3);\n"
 
 #. module: account_peppol
 #. odoo-python
@@ -60,54 +61,76 @@ msgstr "%s je zahteval prejemanje elektronskih računov na Peppolu."
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 ".<br/>\n"
-"                            But you are receiving your e-invoices via this Access Point:"
+"                            But you are receiving your e-invoices via this "
+"Access Point:"
 msgstr ""
 ".<br/>\n"
-"                            Vendar pa prejemate svoje e-račune prek te dostopne točke:"
+"                            Vendar pa prejemate svoje e-račune prek te "
+"dostopne točke:"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid ""
 "<br/>\n"
-"                                In Belgium, electronic invoicing is <u>mandatory as of January 2026</u> - don't wait to register."
+"                                In Belgium, electronic invoicing is "
+"<u>mandatory as of January 2026</u> - don't wait to register."
 msgstr ""
 "<br/>\n"
-"                                V Belgiji je elektronsko izdajanje računov <u>obvezno od januarja 2026\n"
+"                                V Belgiji je elektronsko izdajanje računov "
+"<u>obvezno od januarja 2026\n"
 "</u> - ne čakajte z registracijo."
 
 #. module: account_peppol
 #: model:mail.template,body_html:account_peppol.mail_template_peppol_registration
 msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\">\n"
 "    <tr>\n"
 "        <td align=\"center\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"padding: 16px; background-color: white; color: "
+"#454748; border-collapse:separate;\">\n"
 "                <!-- HEADER -->\n"
 "                <tr>\n"
 "                    <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                        <table width=\"590\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-collapse:separate;\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-"
+"collapse:separate;\">\n"
 "                            <tr>\n"
 "                                <td valign=\"middle\">\n"
-"                                    <span style=\"font-size: 10px;\">Notification</span>\n"
+"                                    <span style=\"font-size: 10px;"
+"\">Notification</span>\n"
 "                                    <br/>\n"
-"                                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                                    <span style=\"font-size: 20px; font-"
+"weight: bold;\">\n"
 "                                        Welcome to Peppol\n"
 "                                    </span>\n"
-"                                    <div style=\"margin-bottom: 5px; margin-top: 18px;\">\n"
-"                                        <a t-attf-href=\"/odoo/accounting/\" target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: {{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none !important; font-weight: 400; background-color: {{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"                                    <div style=\"margin-bottom: 5px; margin-"
+"top: 18px;\">\n"
+"                                        <a t-attf-href=\"/odoo/accounting/\" "
+"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: "
+"{{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none !"
+"important; font-weight: 400; background-color: "
+"{{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
 "                                            Send invoices\n"
 "                                        </a>\n"
 "                                    </div>\n"
 "                                </td>\n"
 "                                <td valign=\"middle\" align=\"right\">\n"
-"                                    <t t-if=\"not object.uses_default_logo\">\n"
-"                                        <img t-att-src=\"'/logo.png?company=%s' % object.id\" style=\"height: auto; width: 80px; margin-right: 10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
+"                                    <t t-if=\"not "
+"object.uses_default_logo\">\n"
+"                                        <img t-att-src=\"'/logo.png?"
+"company=%s' % object.id\" style=\"height: auto; width: 80px; margin-right: "
+"10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
 "                                    </t>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                            <tr>\n"
-"                                <td colspan=\"2\" style=\"text-align:center;\">\n"
-"                                    <hr style=\"background-color:#CCCCCC; border:none; height:1px; margin:16px 0;\"/>\n"
+"                                <td colspan=\"2\" style=\"text-align:center;"
+"\">\n"
+"                                    <hr style=\"background-color:#CCCCCC; "
+"border:none; height:1px; margin:16px 0;\"/>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                        </table>\n"
@@ -116,18 +139,25 @@ msgid ""
 "                <!-- BODY -->\n"
 "                <tr>\n"
 "                    <td align=\"center\">\n"
-"                        <table width=\"590\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-collapse:separate;\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-"
+"collapse:separate;\">\n"
 "                            <tr>\n"
 "                                <td style=\"font-size: 14px;\">\n"
-"                                    <p>Dear <t t-out=\"object.name or ''\">YourCompany</t>,</p>\n"
+"                                    <p>Dear <t t-out=\"object.name or "
+"''\">YourCompany</t>,</p>\n"
 "\n"
-"                                    <p>We have successfully added your company to the <strong>Peppol Network</strong>.</p>\n"
+"                                    <p>We have successfully added your "
+"company to the <strong>Peppol Network</strong>.</p>\n"
 "\n"
-"                                    <p>You can now <strong>send<t t-if=\"object.account_peppol_proxy_state == 'receiver'\"> and receive</t></strong> electronic invoices via Odoo — completely free of charge.</p>\n"
+"                                    <p>You can now <strong>send<t t-"
+"if=\"object.account_peppol_proxy_state == 'receiver'\"> and receive</t></"
+"strong> electronic invoices via Odoo — completely free of charge.</p>\n"
 "\n"
 "                                    <p>Best regards,</p>\n"
 "\n"
-"                                    <p style=\"margin-bottom: 24px;\">The Odoo Team</p>\n"
+"                                    <p style=\"margin-bottom: 24px;\">The "
+"Odoo Team</p>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                        </table>\n"
@@ -201,8 +231,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 msgid ""
-"A participant with these details has already been registered on the network."
-" If you have previously registered to a Peppol service, please deregister."
+"A participant with these details has already been registered on the network. "
+"If you have previously registered to a Peppol service, please deregister."
 msgstr ""
 "Udeleženec s temi podatki je že registriran v omrežju. Če ste se že prej "
 "registrirali v storitvi Peppol, prosimo, da se odjavite."
@@ -305,28 +335,28 @@ msgstr "Omogoči pošiljanje in prejemanje računov prek omrežja Peppol"
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
-"Although the message document is well formed and schema valid, some "
-"element/attribute contains a value that could not be recognized and "
-"therefore could not be used by the MSH."
+"Although the message document is well formed and schema valid, some element/"
+"attribute contains a value that could not be recognized and therefore could "
+"not be used by the MSH."
 msgstr ""
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
-"Although the message document is well formed and schema valid, some "
-"element/attribute value cannot be processed as expected because the related "
-"feature is not supported by the MSH."
+"Although the message document is well formed and schema valid, some element/"
+"attribute value cannot be processed as expected because the related feature "
+"is not supported by the MSH."
 msgstr ""
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
-"Although the message document is well formed and schema valid, some "
-"element/attribute value is inconsistent either with the content of other "
-"element/attribute, or with the processing mode of the MSH, or with the "
-"normative requirements of the ebMS specification."
+"Although the message document is well formed and schema valid, some element/"
+"attribute value is inconsistent either with the content of other element/"
+"attribute, or with the processing mode of the MSH, or with the normative "
+"requirements of the ebMS specification."
 msgstr ""
 
 #. module: account_peppol
@@ -480,12 +510,17 @@ msgstr "Preverite partnerja(-je)"
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__peppol_eas
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_eas
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_eas
+#: model:ir.model.fields,help:account_peppol.field_res_partner__peppol_eas
+#: model:ir.model.fields,help:account_peppol.field_res_users__peppol_eas
 msgid ""
 "Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.\n"
-"             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
+"             List available at https://docs.peppol.eu/poacc/billing/3.0/"
+"codelist/eas/"
 msgstr ""
-"Koda, ki se uporablja za identifikacijo končne točke za BIS Billing 3.0 in njegove izpeljanke.\n"
-"             Seznam je na voljo na https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
+"Koda, ki se uporablja za identifikacijo končne točke za BIS Billing 3.0 in "
+"njegove izpeljanke.\n"
+"             Seznam je na voljo na https://docs.peppol.eu/poacc/billing/3.0/"
+"codelist/eas/"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_company
@@ -701,8 +736,7 @@ msgstr "ID"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/controllers/portal.py:0
-msgid ""
-"If you want to be invoiced by Peppol, your configuration must be valid."
+msgid "If you want to be invoiced by Peppol, your configuration must be valid."
 msgstr ""
 "Če želite, da vam Peppol izstavi račun, mora biti vaša konfiguracija "
 "veljavna."
@@ -830,6 +864,11 @@ msgid "Odoo"
 msgstr "Odoo"
 
 #. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_eas__odemo
+msgid "Odoo Demo ID"
+msgstr ""
+
+#. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Odoo keeps you up to date with the new regulation."
@@ -858,8 +897,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid ""
-"PEPPOL is the secure standard for e-invoices used in EU and across the "
-"world."
+"PEPPOL is the secure standard for e-invoices used in EU and across the world."
 msgstr ""
 "PEPPOL je varni standard za e-račune, ki se uporablja v EU in po vsem svetu."
 
@@ -991,6 +1029,8 @@ msgstr "Peppol e-Naslov (EAS)"
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_eas
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_eas
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_eas
+#: model:ir.model.fields,field_description:account_peppol.field_res_partner__peppol_eas
+#: model:ir.model.fields,field_description:account_peppol.field_res_users__peppol_eas
 msgid "Peppol e-address (EAS)"
 msgstr "Peppolov e-naslov (EAS)"
 
@@ -1206,11 +1246,15 @@ msgstr ""
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid ""
-"Some service support migration keys. If this is your case you can enter your migration key below.\n"
-"                        If not, you should de-register from your current service provider and register with Odoo afterward."
+"Some service support migration keys. If this is your case you can enter your "
+"migration key below.\n"
+"                        If not, you should de-register from your current "
+"service provider and register with Odoo afterward."
 msgstr ""
-"Nekatere storitve podpirajo migracijske ključe. Če je to vaš primer, lahko spodaj vnesete svoj migracijski ključ.\n"
-"                        Če ne, se morate odjaviti pri trenutnem ponudniku storitev in se nato registrirati pri Odoo."
+"Nekatere storitve podpirajo migracijske ključe. Če je to vaš primer, lahko "
+"spodaj vnesete svoj migracijski ključ.\n"
+"                        Če ne, se morate odjaviti pri trenutnem ponudniku "
+"storitev in se nato registrirati pri Odoo."
 
 #. module: account_peppol
 #. odoo-python
@@ -1227,10 +1271,12 @@ msgstr "Test"
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid ""
 "Test mode allows sending e-invoices through the test Peppol network.\n"
-"                                    By clicking the button below I accept that Odoo may process my e-invoices."
+"                                    By clicking the button below I accept "
+"that Odoo may process my e-invoices."
 msgstr ""
 "Testni način omogoča pošiljanje e-računov prek testnega omrežja Peppol.\n"
-"                                    S klikom na spodnji gumb soglašam, da Odoo lahko obdeluje moje e-račune."
+"                                    S klikom na spodnji gumb soglašam, da "
+"Odoo lahko obdeluje moje e-račune."
 
 #. module: account_peppol
 #. odoo-python
@@ -1250,8 +1296,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
-"The MSH is unable to resolve an external payload reference (i.e. a Part that"
-" is not contained within the ebMS Message, as identified by a PartInfo/href "
+"The MSH is unable to resolve an external payload reference (i.e. a Part that "
+"is not contained within the ebMS Message, as identified by a PartInfo/href "
 "URI)."
 msgstr ""
 
@@ -1378,8 +1424,8 @@ msgstr ""
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
 "The ebMS header or another header (e.g. reliability, security) expected by "
-"the MSH is not compatible with the expected content, based on the associated"
-" P-Mode."
+"the MSH is not compatible with the expected content, based on the associated "
+"P-Mode."
 msgstr ""
 
 #. module: account_peppol
@@ -1417,8 +1463,8 @@ msgstr ""
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
 "The href attribute does not reference a valid MIME data part, MIME parts "
-"other than the fragment header and a data part are in the message. are added"
-" or the SOAP Body is not empty."
+"other than the fragment header and a data part are in the message. are added "
+"or the SOAP Body is not empty."
 msgstr ""
 
 #. module: account_peppol
@@ -1496,8 +1542,7 @@ msgstr ""
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
-msgid ""
-"There is no message available for pulling from this MPC at this moment."
+msgid "There is no message available for pulling from this MPC at this moment."
 msgstr ""
 
 #. module: account_peppol
@@ -1584,8 +1629,8 @@ msgid ""
 "Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
 "known as 'Endpoint ID'."
 msgstr ""
-"Unikatni identifikator, ki ga uporablja BIS Billing 3.0 in njegovi derivati,"
-" znan tudi kot »ID končne točke«."
+"Unikatni identifikator, ki ga uporablja BIS Billing 3.0 in njegovi derivati, "
+"znan tudi kot »ID končne točke«."
 
 #. module: account_peppol
 #. odoo-python
@@ -1626,8 +1671,8 @@ msgid ""
 "We could not find a user with this information on our server. Please check "
 "your information."
 msgstr ""
-"Na našem strežniku nismo našli uporabnika s temi podatki. Prosimo, preverite"
-" svoje podatke."
+"Na našem strežniku nismo našli uporabnika s temi podatki. Prosimo, preverite "
+"svoje podatke."
 
 #. module: account_peppol
 #: model:mail.template,subject:account_peppol.mail_template_peppol_registration
@@ -1662,8 +1707,7 @@ msgstr "Čarovnik"
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 "You are sending and receiving your e-invoices via Odoo with this Peppol ID"
-msgstr ""
-"Svoje e-račune pošiljate in prejemate prek Odooja s tem Peppol ID-jem."
+msgstr "Svoje e-račune pošiljate in prejemate prek Odooja s tem Peppol ID-jem."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1718,11 +1762,14 @@ msgstr ""
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
-"You registration has been rejected, the reason has been sent to you via email.\n"
-"                            Please contact our support if you need further assistance."
+"You registration has been rejected, the reason has been sent to you via "
+"email.\n"
+"                            Please contact our support if you need further "
+"assistance."
 msgstr ""
 "Vaša registracija je bila zavrnjena, razlog vam je bil poslan po e-pošti.\n"
-"                            Če potrebujete dodatno pomoč, se obrnite na našo podporo."
+"                            Če potrebujete dodatno pomoč, se obrnite na našo "
+"podporo."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__phone_number
@@ -1738,8 +1785,7 @@ msgid ""
 "Your Peppol registration will be activated soon. You can already send "
 "invoices."
 msgstr ""
-"Vaša registracija pri Peppolu bo kmalu aktivirana. Račune lahko že "
-"pošiljate."
+"Vaša registracija pri Peppolu bo kmalu aktivirana. Račune lahko že pošiljate."
 
 #. module: account_peppol
 #. odoo-python

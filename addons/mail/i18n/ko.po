@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-18 18:36+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2025-08-15 23:50+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s18-3/mail/"
@@ -29,13 +29,17 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_ir_cron__followers_type
 msgid ""
 "\n"
-"            - Specific Followers: select specific contacts to add/remove from record's followers.\n"
-"            - Dynamic Followers: all contacts of the chosen record's field will be added/removed from followers.\n"
+"            - Specific Followers: select specific contacts to add/remove "
+"from record's followers.\n"
+"            - Dynamic Followers: all contacts of the chosen record's field "
+"will be added/removed from followers.\n"
 "        "
 msgstr ""
 "\n"
-"            - 특정 팔로워: 기록의 팔로워에 추가하거나 제거할 특정 연락처를 수동으로 선택합니다.\n"
-"            - 동적 팔로워: 기록의 선택된 필드와 관련된 모든 연락처를 자동으로 추가하거나 제거합니다.\n"
+"            - 특정 팔로워: 기록의 팔로워에 추가하거나 제거할 특정 연락처를 수"
+"동으로 선택합니다.\n"
+"            - 동적 팔로워: 기록의 선택된 필드와 관련된 모든 연락처를 자동으"
+"로 추가하거나 제거합니다.\n"
 "        "
 
 #. module: mail
@@ -46,20 +50,28 @@ msgid ""
 "            <p class=\"o_view_nocontent_smiling_face\">\n"
 "                Add addresses to the Allowed List\n"
 "            </p><p>\n"
-"                To protect you from spam and reply loops, Odoo automatically blocks emails\n"
-"                coming to your gateway past a threshold of <b>%(threshold)i</b> emails every <b>%(minutes)i</b>\n"
-"                minutes. If there are some addresses from which you need to receive very frequent\n"
-"                updates, you can however add them below and Odoo will let them go through.\n"
+"                To protect you from spam and reply loops, Odoo automatically "
+"blocks emails\n"
+"                coming to your gateway past a threshold of <b>%(threshold)i</"
+"b> emails every <b>%(minutes)i</b>\n"
+"                minutes. If there are some addresses from which you need to "
+"receive very frequent\n"
+"                updates, you can however add them below and Odoo will let "
+"them go through.\n"
 "            </p>"
 msgstr ""
 "\n"
 "            <p class=\"o_view_nocontent_smiling_face\">\n"
 "                허용 목록에 주소 추가\n"
 "            </p><p>\n"
-"               Odoo에서는 사용자가 스팸이나 회신 연락을 받지 않도록 보호하기 위해\n"
-"                 임계값 <b>%(threshold)i</b>을 초과하여  <b>%(minutes)i</b>분마다 게이트웨이로 수신되는 이메일을\n"
-"                자동으로 차단합니다. 매우 자주 받아야 하는 이메일이 있는 경우에는\n"
-"                아래에 주소를 추가하시면 Odoo에서 해당 이메일 수신이 가능합니다.\n"
+"               Odoo에서는 사용자가 스팸이나 회신 연락을 받지 않도록 보호하기 "
+"위해\n"
+"                 임계값 <b>%(threshold)i</b>을 초과하여  <b>%(minutes)i</b>분"
+"마다 게이트웨이로 수신되는 이메일을\n"
+"                자동으로 차단합니다. 매우 자주 받아야 하는 이메일이 있는 경우"
+"에는\n"
+"                아래에 주소를 추가하시면 Odoo에서 해당 이메일 수신이 가능합니"
+"다.\n"
 "            </p>"
 
 #. module: mail
@@ -82,6 +94,7 @@ msgstr "\"%(hostname)s\" 님이 귀하의 마이크에 액세스해야 합니다
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
+#: code:addons/mail/static/src/utils/common/hooks.js:0
 msgid "\"%(hostname)s\" requires microphone access"
 msgstr "\"%(hostname)s\"에 마이크 액세스를 허용해야 합니다."
 
@@ -132,7 +145,9 @@ msgstr "%(date)s %(time)s"
 msgid ""
 "%(email)s is not recognized as a valid email. This is required to create a "
 "new customer."
-msgstr "%(email)s 항목은 유효한 이메일이 아닙니다. 새로운 고객을 생성하는데 필요한 항목입니다."
+msgstr ""
+"%(email)s 항목은 유효한 이메일이 아닙니다. 새로운 고객을 생성하는데 필요한 항"
+"목입니다."
 
 #. module: mail
 #. odoo-javascript
@@ -153,15 +168,16 @@ msgid ""
 "%(emoji)s reacted by %(person1)s, %(person2)s, %(person3)s, and %(count)s "
 "others"
 msgstr ""
-"%(emoji)s이 %(person1)s, %(person2)s, %(person3)s 및 %(count)s의 다른 사람에게 "
-"반응했습니다."
+"%(emoji)s이 %(person1)s, %(person2)s, %(person3)s 및 %(count)s의 다른 사람에"
+"게 반응했습니다."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_reaction_list.js:0
-msgid ""
-"%(emoji)s reacted by %(person1)s, %(person2)s, %(person3)s, and 1 other"
-msgstr "%(emoji)s이 %(person1)s, %(person2)s, %(person3)s 및 기타 1명에게 반응했습니다."
+msgid "%(emoji)s reacted by %(person1)s, %(person2)s, %(person3)s, and 1 other"
+msgstr ""
+"%(emoji)s이 %(person1)s, %(person2)s, %(person3)s 및 기타 1명에게 반응했습니"
+"다."
 
 #. module: mail
 #. odoo-javascript
@@ -219,54 +235,51 @@ msgstr "%(name)s: %(message)s)"
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "%(new_line)s%(new_line)sType %(bold_start)s@username%(bold_end)s to mention "
-"someone, and grab their attention.%(new_line)sType "
-"%(bold_start)s#channel%(bold_end)s to mention a channel.%(new_line)sType "
-"%(bold_start)s/command%(bold_end)s to execute a command.%(new_line)sType "
-"%(bold_start)s::shortcut%(bold_end)s to insert a canned response in your "
-"message.%(new_line)sType %(bold_start)s:emoji:%(bold_end)s to insert an "
-"emoji in your message."
+"someone, and grab their attention.%(new_line)sType %(bold_start)s#channel%"
+"(bold_end)s to mention a channel.%(new_line)sType %(bold_start)s/command%"
+"(bold_end)s to execute a command.%(new_line)sType %(bold_start)s::shortcut%"
+"(bold_end)s to insert a canned response in your message.%(new_line)sType %"
+"(bold_start)s:emoji:%(bold_end)s to insert an emoji in your message."
 msgstr ""
-"%(new_line)s%(new_line)s%(bold_start)s@username%(bold_end)s을 입력하여 누군가를 태그하고 "
-"관심을 끌 수 있습니다. %(new_line)s%(bold_start)s#channel%(bold_end)s을 입력하여 채널을 "
-"멘션합니다.%(new_line)s%(bold_start)s/command%(bold_end)s를 입력하여 명령을 실행할 수 있습니다. "
-"%(new_line)s미리 준비된 응답을 메시지에 삽입하려면 %(bold_start)s::바로가기%(bold_end)s를 "
-"입력합니다.%(new_line)s 메시지에 이모지를 삽입하려면 %(bold_start)s:emoji:%(bold_end)s를 입력합니다."
+"%(new_line)s%(new_line)s%(bold_start)s@username%(bold_end)s을 입력하여 누군가"
+"를 태그하고 관심을 끌 수 있습니다. %(new_line)s%(bold_start)s#channel%"
+"(bold_end)s을 입력하여 채널을 멘션합니다.%(new_line)s%(bold_start)s/command%"
+"(bold_end)s를 입력하여 명령을 실행할 수 있습니다. %(new_line)s미리 준비된 응"
+"답을 메시지에 삽입하려면 %(bold_start)s::바로가기%(bold_end)s를 입력합니다.%"
+"(new_line)s 메시지에 이모지를 삽입하려면 %(bold_start)s:emoji:%(bold_end)s를 "
+"입력합니다."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid ""
-"%(open_button)s%(icon)s%(open_em)sDiscard "
-"editing%(close_em)s%(close_button)s"
-msgstr "%(open_button)s%(icon)s%(open_em)s편집 취소%(close_em)s%(close_button)s"
+"%(open_button)s%(icon)s%(open_em)sDiscard editing%(close_em)s%(close_button)s"
+msgstr ""
+"%(open_button)s%(icon)s%(open_em)s편집 취소%(close_em)s%(close_button)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid ""
-"%(open_samp)sEscape%(close_samp)s %(open_em)sto "
-"%(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-"
-"Enter%(close_samp)s %(open_em)sto "
-"%(open_save)ssave%(close_save)s%(close_em)s"
+"%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%"
+"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
+"(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
-"%(open_samp)sESC%(close_samp)s %(open_em)s를 눌러 "
-"%(open_cancel)s취소하거나%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-"
-"엔터%(close_samp)s %(open_em)s버튼을 눌러 "
-"%(open_save)s저장합니다.%(close_save)s%(close_em)s"
+"%(open_samp)sESC%(close_samp)s %(open_em)s를 눌러 %(open_cancel)s취소하거나%"
+"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-엔터%(close_samp)s %(open_em)s"
+"버튼을 눌러 %(open_save)s저장합니다.%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid ""
-"%(open_samp)sEscape%(close_samp)s %(open_em)sto "
-"%(open_cancel)scancel%(close_cancel)s%(close_em)s, "
-"%(open_samp)sEnter%(close_samp)s %(open_em)sto "
-"%(open_save)ssave%(close_save)s%(close_em)s"
+"%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%"
+"(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sto %"
+"(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
-"%(open_samp)sESC%(close_samp)s %(open_em)s를 눌러 "
-"%(open_cancel)s취소하거나%(close_cancel)s%(close_em)s, "
-"%(open_samp)s엔터%(close_samp)s %(open_em)s버튼을 눌러 "
-"%(open_save)s저장합니다.%(close_save)s%(close_em)s"
+"%(open_samp)sESC%(close_samp)s %(open_em)s를 눌러 %(open_cancel)s취소하거나%"
+"(close_cancel)s%(close_em)s, %(open_samp)s엔터%(close_samp)s %(open_em)s버튼"
+"을 눌러 %(open_save)s저장합니다.%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-python
@@ -291,13 +304,16 @@ msgstr "%(recipientCount)s 더 보기"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
 msgid "%(user)s connected. This is their first connection. Wish them luck."
-msgstr "%(user)s 사용자 접속 완료. 첫 접속이며, 앞으로 유용하게 사용하시기를 바랍니다."
+msgstr ""
+"%(user)s 사용자 접속 완료. 첫 접속이며, 앞으로 유용하게 사용하시기를 바랍니"
+"다."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "%(user)s started a thread: %(goto)s%(thread_name)s%(goto_end)s."
-msgstr "%(user)s 님이 스레드를 시작했습니다: %(goto)s%(thread_name)s%(goto_end)s."
+msgstr ""
+"%(user)s 님이 스레드를 시작했습니다: %(goto)s%(thread_name)s%(goto_end)s."
 
 #. module: mail
 #. odoo-javascript
@@ -464,7 +480,9 @@ msgstr "111.222.333.444"
 msgid ""
 "<b invisible=\"not no_record\" class=\"text-warning\">No record for this "
 "model</b>"
-msgstr "<b invisible=\"not no_record\" class=\"text-warning\">이 모델에 대한 기록이 없습니다.</b>"
+msgstr ""
+"<b invisible=\"not no_record\" class=\"text-warning\">이 모델에 대한 기록이 "
+"없습니다.</b>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -483,7 +501,8 @@ msgstr ""
 msgid ""
 "<button>Change your preferences</button> to receive new notifications in "
 "your inbox."
-msgstr "받은 편지함에서 새 알림을 받으려면 <button>환경설정</button>을 변경하세요."
+msgstr ""
+"받은 편지함에서 새 알림을 받으려면 <button>환경설정</button>을 변경하세요."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
@@ -495,7 +514,9 @@ msgstr "<i class=\"fa fa-check\"/> 완료"
 msgid ""
 "<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"Steps count\" "
 "title=\"Steps count\"/>"
-msgstr "<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"단계 수\" title=\"단계 수\"/>"
+msgstr ""
+"<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"단계 수\" "
+"title=\"단계 수\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -511,35 +532,36 @@ msgstr "<i class=\"fa fa-times\"/> 취소"
 #. odoo-javascript
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
 msgid ""
-"<p><b>Chat with coworkers</b> in real-time using direct "
-"messages.</p><p><i>You might need to invite users from the Settings app "
-"first.</i></p>"
+"<p><b>Chat with coworkers</b> in real-time using direct messages.</"
+"p><p><i>You might need to invite users from the Settings app first.</i></p>"
 msgstr ""
-"직접 메시지를 사용하여 <p><b>동료와 실시간으로 채팅</b> 할 수 있습니다. </p><p><i>먼저 설정 앱에서 사용자를 초대해야 "
-"할 수도 있습니다.</i></p>"
+"직접 메시지를 사용하여 <p><b>동료와 실시간으로 채팅</b> 할 수 있습니다. </"
+"p><p><i>먼저 설정 앱에서 사용자를 초대해야 할 수도 있습니다.</i></p>"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
 msgid ""
-"<p><b>Write a message</b> to the members of the channel here.</p> <p>You can"
-" notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
+"<p><b>Write a message</b> to the members of the channel here.</p> <p>You can "
+"notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
-"<p>여기 채널의 참여자에게<b>메시지를 쓰세요.</b></p> <p><i>'@'</i>를 사용하여 다른 사용자에게 알리거나 "
-"<i>'#'</i>를 사용하여 다른 채널을 연결할 수 있습니다. 가능한 명령 목록을 보려면 <i>'/'</i>를 사용하여 메시지를 "
-"시작하십시오.</p>"
+"<p>여기 채널의 참여자에게<b>메시지를 쓰세요.</b></p> <p><i>'@'</i>를 사용하"
+"여 다른 사용자에게 알리거나 <i>'#'</i>를 사용하여 다른 채널을 연결할 수 있습"
+"니다. 가능한 명령 목록을 보려면 <i>'/'</i>를 사용하여 메시지를 시작하십시오."
+"</p>"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
 msgid ""
-"<p>Channels make it easy to organize information across different topics and"
-" groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
+"<p>Channels make it easy to organize information across different topics and "
+"groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
 "marketing, product XYZ, after work party, etc).</p>"
 msgstr ""
-"<p>채널을 통해 서로 다른 주제와 그룹에서 정보를 쉽게 구성할 수 있습니다.</p> <p><b>첫 번째 채널을 만드십시오</b>(예 :"
-" 영업, 마케팅, 제품 XYZ, 업무용 파티 등).</p>"
+"<p>채널을 통해 서로 다른 주제와 그룹에서 정보를 쉽게 구성할 수 있습니다.</p> "
+"<p><b>첫 번째 채널을 만드십시오</b>(예 : 영업, 마케팅, 제품 XYZ, 업무용 파티 "
+"등).</p>"
 
 #. module: mail
 #. odoo-javascript
@@ -589,28 +611,40 @@ msgstr "<span class=\"o_stat_text\">상위 문서 열기</span>"
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid ""
 "<span invisible=\"mail_post_method != 'email'\">\n"
-"                                        The message will be sent as an email to the recipients of the\n"
-"                                        template and will not appear in the messaging history.\n"
+"                                        The message will be sent as an email "
+"to the recipients of the\n"
+"                                        template and will not appear in the "
+"messaging history.\n"
 "                                    </span>\n"
-"                                    <span invisible=\"mail_post_method != 'note'\">\n"
-"                                        The message will be posted as an internal note visible to internal\n"
+"                                    <span invisible=\"mail_post_method != "
+"'note'\">\n"
+"                                        The message will be posted as an "
+"internal note visible to internal\n"
 "                                        users in the messaging history.\n"
 "                                    </span>\n"
-"                                    <span invisible=\"mail_post_method != 'comment'\">\n"
-"                                        The message will be posted as a message on the record,\n"
-"                                        notifying all followers. It will appear in the messaging history.\n"
+"                                    <span invisible=\"mail_post_method != "
+"'comment'\">\n"
+"                                        The message will be posted as a "
+"message on the record,\n"
+"                                        notifying all followers. It will "
+"appear in the messaging history.\n"
 "                                    </span>"
 msgstr ""
 "<span invisible=\"mail_post_method != 'email'\">\n"
-"                                        메시지는 서식을 수신하는 대상에게 이메일로 전송되며\n"
+"                                        메시지는 서식을 수신하는 대상에게 이"
+"메일로 전송되며\n"
 "                                        메시지 이력에는 표시되지 않습니다.\n"
 "                                    </span>\n"
-"                                    <span invisible=\"mail_post_method != 'note'\">\n"
-"                                        메시지는 내부 사용자가 볼 수 있도록 메모로 게시되어\n"
+"                                    <span invisible=\"mail_post_method != "
+"'note'\">\n"
+"                                        메시지는 내부 사용자가 볼 수 있도록 "
+"메모로 게시되어\n"
 "                                        메시지 이력에 표시됩니다.\n"
 "                                    </span>\n"
-"                                    <span invisible=\"mail_post_method != 'comment'\">\n"
-"                                        메시지는 레코드에 메시지로 게시되어서 팔로워에게 알림 표시되며,\n"
+"                                    <span invisible=\"mail_post_method != "
+"'comment'\">\n"
+"                                        메시지는 레코드에 메시지로 게시되어"
+"서 팔로워에게 알림 표시되며,\n"
 "                                        메시지 이력에 표시됩니다.\n"
 "                                    </span>"
 
@@ -687,7 +721,9 @@ msgstr "<strong>더 이상 해당 문서를 팔로우하지 않습니다:</stron
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr "이 별칭에 대한 새 레코드를 만들 때 기본값을 제공하도록 평가되는 Python 사전입니다."
+msgstr ""
+"이 별칭에 대한 새 레코드를 만들 때 기본값을 제공하도록 평가되는 Python 사전입"
+"니다."
 
 #. module: mail
 #. odoo-python
@@ -763,11 +799,11 @@ msgstr "예약된 메시지를 보낼 수 없습니다"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__google_translate_api_key
 msgid ""
-"A valid Google API key is required to enable message translation. "
-"https://cloud.google.com/translate/docs/setup"
+"A valid Google API key is required to enable message translation. https://"
+"cloud.google.com/translate/docs/setup"
 msgstr ""
-"메시지 번역을 활성화시키려면 유효한 Google API 키가 있어야 합니다.  "
-"https://cloud.google.com/translate/docs/setup"
+"메시지 번역을 활성화시키려면 유효한 Google API 키가 있어야 합니다.  https://"
+"cloud.google.com/translate/docs/setup"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_users_settings_volumes_partner_or_guest_exists
@@ -862,7 +898,9 @@ msgstr "활동"
 msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
-msgstr "캘린더 화면 열기와 같은 특정한 작업이 활동에서 진행되도록 하거나 문서 업로드가 되면 자동 완료로 표시되게 합니다."
+msgstr ""
+"캘린더 화면 열기와 같은 특정한 작업이 활동에서 진행되도록 하거나 문서 업로드"
+"가 되면 자동 완료로 표시되게 합니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -1032,10 +1070,12 @@ msgstr "활동 계획 서식"
 #: model_terms:ir.actions.act_window,help:mail.mail_activity_plan_action
 msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
-"                    (e.g. \"Onboarding\", \"Prospect Follow-up\", \"Project Milestone Meeting\", ...)"
+"                    (e.g. \"Onboarding\", \"Prospect Follow-up\", \"Project "
+"Milestone Meeting\", ...)"
 msgstr ""
 "작업 계획은 몇 번의 클릭만으로 작업 목록을 빠르게 할당하는 데 활용됩니다.\n"
-"                    (예: “온보딩”, “잠재 고객 후속 조치”, “프로젝트 마일스톤 회의”, ...)"
+"                    (예: “온보딩”, “잠재 고객 후속 조치”, “프로젝트 마일스톤 "
+"회의”, ...)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule
@@ -1115,11 +1155,11 @@ msgstr "GIF 지원을 활성화하려면 Tenor GIF API 키를 추가하세요."
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
 msgid ""
-"Add a Tenor GIF API key to enable GIFs support. "
-"https://developers.google.com/tenor/guides/quickstart#setup"
+"Add a Tenor GIF API key to enable GIFs support. https://"
+"developers.google.com/tenor/guides/quickstart#setup"
 msgstr ""
-"GIF 지원을 활성화하려면 Tenor GIF API 키를 추가하세요. "
-"https://developers.google.com/tenor/guides/quickstart#setup"
+"GIF 지원을 활성화하려면 Tenor GIF API 키를 추가하세요. https://"
+"developers.google.com/tenor/guides/quickstart#setup"
 
 #. module: mail
 #. odoo-javascript
@@ -1310,23 +1350,23 @@ msgstr "별칭"
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"Alias %(matching_name)s (%(current_id)s) is already linked with "
-"%(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s "
-"%(parent_model_name)s."
+"Alias %(matching_name)s (%(current_id)s) is already linked with %"
+"(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s %"
+"(parent_model_name)s."
 msgstr ""
-"%(matching_name)s (%(current_id)s) 별칭은 이미 %(alias_model_name)s "
-"(%(matching_id)s)에 연결되어 있으며 %(parent_name)s %(parent_model_name)s 항목에서 사용 "
-"중입니다."
+"%(matching_name)s (%(current_id)s) 별칭은 이미 %(alias_model_name)s (%"
+"(matching_id)s)에 연결되어 있으며 %(parent_name)s %(parent_model_name)s 항목"
+"에서 사용 중입니다."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"Alias %(matching_name)s (%(current_id)s) is already linked with "
-"%(alias_model_name)s (%(matching_id)s)."
+"Alias %(matching_name)s (%(current_id)s) is already linked with %"
+"(alias_model_name)s (%(matching_id)s)."
 msgstr ""
-"%(matching_name)s (%(current_id)s) 별칭은 이미 %(alias_model_name)s "
-"(%(matching_id)s)에 연결되어 있습니다."
+"%(matching_name)s (%(current_id)s) 별칭은 이미 %(alias_model_name)s (%"
+"(matching_id)s)에 연결되어 있습니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
@@ -1405,7 +1445,9 @@ msgstr "별칭"
 msgid ""
 "Aliases %(alias_names)s is already used as bounce or catchall address. "
 "Please choose another alias."
-msgstr "%(alias_names)s 별칭은 이미 바운스 또는 캐치올 주소로 사용 중이빈다. 다른 별칭을 선택하세요."
+msgstr ""
+"%(alias_names)s 별칭은 이미 바운스 또는 캐치올 주소로 사용 중이빈다. 다른 별"
+"칭을 선택하세요."
 
 #. module: mail
 #. odoo-javascript
@@ -1441,7 +1483,8 @@ msgid ""
 "An SSL exception occurred. Check SSL/TLS configuration on server port.\n"
 " %s"
 msgstr ""
-"SSL 예외 사항이 발생하였습니다. 서버 포트에서 SSL/TLS 구성 내용을 확인하십시오.\n"
+"SSL 예외 사항이 발생하였습니다. 서버 포트에서 SSL/TLS 구성 내용을 확인하십시"
+"오.\n"
 " %s"
 
 #. module: mail
@@ -1525,7 +1568,9 @@ msgstr "보관됨"
 #: code:addons/mail/models/res_users.py:0
 msgid ""
 "Archived because %(user_name)s (#%(user_id)s) deleted the portal account"
-msgstr "%(user_name)s (# %(user_id)s) 사용자가 포털 계정을 삭제하였으므로 보관 처리되었습니다"
+msgstr ""
+"%(user_name)s (# %(user_id)s) 사용자가 포털 계정을 삭제하였으므로 보관 처리되"
+"었습니다"
 
 #. module: mail
 #. odoo-javascript
@@ -1545,7 +1590,9 @@ msgstr "이 메시지를 삭제하시겠습니까?"
 msgid ""
 "Are you sure you want to reset these email templates to their original "
 "configuration? Changes and translations will be lost."
-msgstr "이 메일 서식을 원래의 구성으로 재설정하시겠습니까? 변경 사항 및 번역한 내용이 삭제됩니다."
+msgstr ""
+"이 메일 서식을 원래의 구성으로 재설정하시겠습니까? 변경 사항 및 번역한 내용"
+"이 삭제됩니다."
 
 #. module: mail
 #. odoo-python
@@ -1684,10 +1731,11 @@ msgstr "작성자"
 #: model:ir.model.fields,help:mail.field_mail_message__author_id
 #: model:ir.model.fields,help:mail.field_mail_message_link_preview__author_id
 msgid ""
-"Author of the message. If not set, email_from may hold an email address that"
-" did not match any partner."
+"Author of the message. If not set, email_from may hold an email address that "
+"did not match any partner."
 msgstr ""
-"메시지 작성자입니다. 설정하지 않으면 이메일의 보낸 사람 항목에 해당 협력사가 아닌 다른 이메일 주소가 선택될 수 있습니다. "
+"메시지 작성자입니다. 설정하지 않으면 이메일의 보낸 사람 항목에 해당 협력사가 "
+"아닌 다른 이메일 주소가 선택될 수 있습니다. "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__author_avatar
@@ -1840,7 +1888,9 @@ msgstr "일괄 구성"
 msgid ""
 "Batch log cannot support attachments or tracking values on more than 1 "
 "document"
-msgstr "두 개 이상의 문서를 첨부하거나 조회해야 하는 경우에는 일괄 기록이 지원되지 않습니다. "
+msgstr ""
+"두 개 이상의 문서를 첨부하거나 조회해야 하는 경우에는 일괄 기록이 지원되지 않"
+"습니다. "
 
 #. module: mail
 #. odoo-javascript
@@ -1885,7 +1935,8 @@ msgid ""
 "Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s "
 "(#%(user_id)s)"
 msgstr ""
-"%(user_name)s (#%(user_id)s) 사용자가 포털 계정 %(portal_user_name)s 삭제로 인해 차단됨"
+"%(user_name)s (#%(user_id)s) 사용자가 포털 계정 %(portal_user_name)s 삭제로 "
+"인해 차단됨"
 
 #. module: mail
 #. odoo-javascript
@@ -1949,8 +2000,8 @@ msgid ""
 "Bounce alias %(bounce)s is already used for another domain with same name. "
 "Use another bounce or simply use the other alias domain."
 msgstr ""
-"%(bounce)s 반송 별칭은 같은 이름으로 이미 다른 도메인에서 사용 중입니다. 다른 반송 항목을 사용하시거나 다른 별칭 도메인을 "
-"사용하세요."
+"%(bounce)s 반송 별칭은 같은 이름으로 이미 다른 도메인에서 사용 중입니다. 다"
+"른 반송 항목을 사용하시거나 다른 별칭 도메인을 사용하세요."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_bounce_email_uniques
@@ -1961,11 +2012,11 @@ msgstr "반송 이메일은 고유해야 합니다."
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 msgid ""
-"Bounce/Catchall '%(matching_alias_name)s' is already used by "
-"%(document_name)s. Choose another alias or change it on the other document."
+"Bounce/Catchall '%(matching_alias_name)s' is already used by %"
+"(document_name)s. Choose another alias or change it on the other document."
 msgstr ""
-"'%(matching_alias_name)s' 반송/캐치올은 이미%(document_name)s에서 사용 중입니다. 다른 별칭을 "
-"선택하거나 다른 문서에서 변경하세요."
+"'%(matching_alias_name)s' 반송/캐치올은 이미%(document_name)s에서 사용 중입니"
+"다. 다른 별칭을 선택하거나 다른 문서에서 변경하세요."
 
 #. module: mail
 #. odoo-python
@@ -1974,7 +2025,8 @@ msgid ""
 "Bounce/Catchall '%(matching_alias_name)s' is already used. Choose another "
 "alias or change it on the linked model."
 msgstr ""
-"'%(matching_alias_name)s' 반송/캐치올이 이미 사용 중입니다. 다른 별칭을 선택하거나 다른 문서에서 변경하세요."
+"'%(matching_alias_name)s' 반송/캐치올이 이미 사용 중입니다. 다른 별칭을 선택"
+"하거나 다른 문서에서 변경하세요."
 
 #. module: mail
 #. odoo-javascript
@@ -1989,7 +2041,9 @@ msgstr "반송됨"
 msgid ""
 "Brave: enable 'Google Services for Push Messaging' to enable push "
 "notifications"
-msgstr "Brave: 푸시 알림을 활성화하려면 '푸시 메시징용 Google 서비스'를 사용 설정하세요."
+msgstr ""
+"Brave: 푸시 알림을 활성화하려면 '푸시 메시징용 Google 서비스'를 사용 설정하세"
+"요."
 
 #. module: mail
 #. odoo-javascript
@@ -2198,11 +2252,11 @@ msgstr "미리 준비된 응답"
 #: model:ir.model.fields,help:mail.field_mail_canned_response__source
 msgid ""
 "Canned response that will automatically be substituted with longer content "
-"in your messages. Type ':' followed by the name of your shortcut (e.g. "
-":hello) to use in your messages."
+"in your messages. Type ':' followed by the name of your shortcut "
+"(e.g. :hello) to use in your messages."
 msgstr ""
-"미리 준비된 응답은 메시지에서 더 긴 내용으로 자동 대체될 수 있습니다. ':'를 입력한 다음 단축키 이름(예: :hello)을 입력하면"
-" 메시지를 사용할 수 있습니다."
+"미리 준비된 응답은 메시지에서 더 긴 내용으로 자동 대체될 수 있습니다. ':'를 "
+"입력한 다음 단축키 이름(예: :hello)을 입력하면 메시지를 사용할 수 있습니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
@@ -2232,18 +2286,19 @@ msgstr "다음 채널 유형을 변경할 수 없습니다: %(channel_names)s"
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "Cannot create %(channels)s: initial message should belong to parent channel."
-msgstr "%(channels)s을 만들 수 없습니다: 초기 메시지는 상위 채널에 속해야 합니다."
+msgstr ""
+"%(channels)s을 만들 수 없습니다: 초기 메시지는 상위 채널에 속해야 합니다."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
-"Cannot create %(channels)s: parent should not be a sub-channel and should be"
-" of type 'channel' or 'group'. The sub-channel should have the same type as "
+"Cannot create %(channels)s: parent should not be a sub-channel and should be "
+"of type 'channel' or 'group'. The sub-channel should have the same type as "
 "the parent."
 msgstr ""
-"%(channels)s을 만들 수 없습니다: 부모는 하위 채널이 아니어야 하며 '채널' 유형이어야 합니다. 또한, 하위 채널은 부모와 "
-"동일한 유형이어야 합니다."
+"%(channels)s을 만들 수 없습니다: 부모는 하위 채널이 아니어야 하며 '채널' 유형"
+"이어야 합니다. 또한, 하위 채널은 부모와 동일한 유형이어야 합니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_cc
@@ -2283,8 +2338,8 @@ msgid ""
 "Catchall alias %(catchall)s is already used for another domain with same "
 "name. Use another catchall or simply use the other alias domain."
 msgstr ""
-"%(catchall)s 캐치올 별칭은 같은 이름으로 이미 다른 도메인에서 사용 중입니다. 다른 캐치올 항목을 사용하시거나 다른 별칭 "
-"도메인을 사용하세요."
+"%(catchall)s 캐치올 별칭은 같은 이름으로 이미 다른 도메인에서 사용 중입니다. "
+"다른 캐치올 항목을 사용하시거나 다른 별칭 도메인을 사용하세요."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_catchall_email_uniques
@@ -2417,11 +2472,12 @@ msgstr "채팅 옵션"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__channel_type
 msgid ""
-"Chat is private and unique between 2 persons. Group is private among invited"
-" persons. Channel can be freely joined (depending on its configuration)."
+"Chat is private and unique between 2 persons. Group is private among invited "
+"persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
-"채팅은 두 사람 사이에 비공개로 고유하게 진행됩니다. 그룹은 초대받은 사람들간에 비공개로 진행됩니다. 채널은 자유롭게 가입할 수 있습니다"
-" (설정에 따라 다름)."
+"채팅은 두 사람 사이에 비공개로 고유하게 진행됩니다. 그룹은 초대받은 사람들간"
+"에 비공개로 진행됩니다. 채널은 자유롭게 가입할 수 있습니다 (설정에 따라 다"
+"름)."
 
 #. module: mail
 #. odoo-javascript
@@ -2591,7 +2647,8 @@ msgstr "쉼표로 수신인의 id 구분"
 #: model:ir.model.fields,help:mail.field_mail_template__partner_to
 msgid ""
 "Comma-separated ids of recipient partners (placeholders may be used here)"
-msgstr "쉼표로 구분된 수신 협력사 ID (사전 표시 문자를 여기에 사용할 수 있습니다)"
+msgstr ""
+"쉼표로 구분된 수신 협력사 ID (사전 표시 문자를 여기에 사용할 수 있습니다)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_to
@@ -2766,7 +2823,9 @@ msgstr "연결:"
 msgid ""
 "Connections are encrypted with SSL/TLS through a dedicated port (default: "
 "IMAPS=993, POP3S=995)"
-msgstr "연결은 전용 포트 (기본값 : IMAPS = 993, POP3S = 995)를 통해 SSL/TLS로 암호화됩니다"
+msgstr ""
+"연결은 전용 포트 (기본값 : IMAPS = 993, POP3S = 995)를 통해 SSL/TLS로 암호화"
+"됩니다"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_force_new
@@ -2794,8 +2853,9 @@ msgid ""
 "Contains the date and time of the last interesting event that happened in "
 "this channel for this user. This includes: creating, joining, pinning"
 msgstr ""
-"이 사용자에 대해 이 채널에서 가장 최근에 발생한 주목할 만한 이벤트의 날짜와 시간을 포함합니다. 여기에는 만들기, 참여하기, 고정하기 "
-"등의 활동이 포함됩니다."
+"이 사용자에 대해 이 채널에서 가장 최근에 발생한 주목할 만한 이벤트의 날짜와 "
+"시간을 포함합니다. 여기에는 만들기, 참여하기, 고정하기 등의 활동이 포함됩니"
+"다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__last_interest_dt
@@ -2803,7 +2863,8 @@ msgid ""
 "Contains the date and time of the last interesting event that happened in "
 "this channel. This updates itself when new message posted."
 msgstr ""
-"이 채널에서 가장 최근에 발생한 주목할 만한 이벤트의 날짜와 시간을 포함합니다. 새 메시지가 게시될 때마다 자동으로 업데이트됩니다."
+"이 채널에서 가장 최근에 발생한 주목할 만한 이벤트의 날짜와 시간을 포함합니"
+"다. 새 메시지가 게시될 때마다 자동으로 업데이트됩니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__unpin_dt
@@ -2823,7 +2884,9 @@ msgstr "내용"
 msgid ""
 "Content that will automatically replace the shortcut of your choosing. This "
 "content can still be adapted before sending your message."
-msgstr "선택한 바로가기를 자동으로 대체할 콘텐츠입니다. 메시지를 보내기 전까지 계속 콘텐츠를 조정할 수 있습니다."
+msgstr ""
+"선택한 바로가기를 자동으로 대체할 콘텐츠입니다. 메시지를 보내기 전까지 계속 "
+"콘텐츠를 조정할 수 있습니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__body
@@ -3288,12 +3351,13 @@ msgstr "작업의 기본 마감일 ..."
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__default_from
 msgid ""
-"Default from when it does not match outgoing server filters. Can be either a"
-" local-part e.g. 'notifications' either a complete email address e.g. "
+"Default from when it does not match outgoing server filters. Can be either a "
+"local-part e.g. 'notifications' either a complete email address e.g. "
 "'notifications@example.com' to override all outgoing emails."
 msgstr ""
-"발신 서버 필터와 일치하지 않는 경우 기본값입니다. 로컬 부분 (예: '알림')이나 전체 이메일 주소 (예: "
-"'notifications@example.com')로 모든 발신 이메일을 재설정할 수 있습니다."
+"발신 서버 필터와 일치하지 않는 경우 기본값입니다. 로컬 부분 (예: '알림')이나 "
+"전체 이메일 주소 (예: 'notifications@example.com')로 모든 발신 이메일을 재설"
+"정할 수 있습니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
@@ -3365,6 +3429,12 @@ msgstr "미리보기 전체를 삭제합니다."
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/message.xml:0
+msgid "Deleted document"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_model.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__sent
 msgid "Delivered"
@@ -3385,7 +3455,8 @@ msgstr "전송 실패"
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "Deprecated usage of 'default_res_id', should use 'default_res_ids'."
-msgstr "'default_res_id' 사용을 중단하고, 'default_res_ids' 를 사용해야만 합니다."
+msgstr ""
+"'default_res_id' 사용을 중단하고, 'default_res_ids' 를 사용해야만 합니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__description
@@ -3401,16 +3472,18 @@ msgstr "설명"
 msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
-msgstr "이 하위 유형에 대해 게시된 메시지에 추가할 설명입니다. 비워두면 이름이 대신 추가됩니다."
+msgstr ""
+"이 하위 유형에 대해 게시된 메시지에 추가할 설명입니다. 비워두면 이름이 대신 "
+"추가됩니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__default_display_mode
 msgid ""
-"Determines how the channel will be displayed by default when opening it from"
-" its invitation link. No value means display text (no voice/video)."
+"Determines how the channel will be displayed by default when opening it from "
+"its invitation link. No value means display text (no voice/video)."
 msgstr ""
-"초대 링크를 통해서 열 경우 기본값으로 채널을 어떻게 표시할 것인지를 결정합니다. 값을 지정하지 않는 경우 텍스트를 표시합니다 (사운드나"
-" 동영상 없음)."
+"초대 링크를 통해서 열 경우 기본값으로 채널을 어떻게 표시할 것인지를 결정합니"
+"다. 값을 지정하지 않는 경우 텍스트를 표시합니다 (사운드나 동영상 없음)."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_editable
@@ -3585,7 +3658,8 @@ msgstr "표시명"
 msgid ""
 "Display an option on related documents to open a composition wizard with "
 "this template"
-msgstr "관련 문서에 옵션을 표시하여 이 서식을 사용하여 구성 마법사를 열도록 합니다."
+msgstr ""
+"관련 문서에 옵션을 표시하여 이 서식을 사용하여 구성 마법사를 열도록 합니다."
 
 #. module: mail
 #. odoo-javascript
@@ -3968,13 +4042,14 @@ msgstr "이메일 주소가 이미 존재합니다!"
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
-msgstr "보낸 사람의 이메일 주소입니다. 이 필드는 일치하는 협력사가 없는 경우에 설정되어 메시지 창에서 작성자 필드를 대체합니다."
+msgstr ""
+"보낸 사람의 이메일 주소입니다. 이 필드는 일치하는 협력사가 없는 경우에 설정되"
+"어 메시지 창에서 작성자 필드를 대체합니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid ""
-"Email address to which replies will be redirected when sending emails in "
-"mass"
+"Email address to which replies will be redirected when sending emails in mass"
 msgstr "대량 메일에 대한 회신이 전송될 이메일 주소"
 
 #. module: mail
@@ -3983,13 +4058,16 @@ msgid ""
 "Email address to which replies will be redirected when sending emails in "
 "mass; only used when the reply is not logged in the original discussion "
 "thread."
-msgstr "대량 메일에 대한 회신이 전송될 이메일 주소입니다. 회신 메일이 원본 대화 스레드에 기록되어 있지 않은 경우에만 사용됩니다."
+msgstr ""
+"대량 메일에 대한 회신이 전송될 이메일 주소입니다. 회신 메일이 원본 대화 스레"
+"드에 기록되어 있지 않은 경우에만 사용됩니다."
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
 msgid ""
 "Email addresses that are blacklisted won't receive Email mailings anymore."
-msgstr "블랙리스트에 올라 있는 이메일인 경우에는 더 이상 메일링을 받지 않습니다."
+msgstr ""
+"블랙리스트에 올라 있는 이메일인 경우에는 더 이상 메일링을 받지 않습니다."
 
 #. module: mail
 #. odoo-python
@@ -3998,7 +4076,8 @@ msgid ""
 "Email aliases %(alias_name)s cannot be used on several records at the same "
 "time. Please update records one by one."
 msgstr ""
-"%(alias_name)s 이메일 별칭은 여러 개의 레코드에서 동시에 사용할 수 없습니다. 레코드를 하나씩 업데이트하시기 바랍니다. "
+"%(alias_name)s 이메일 별칭은 여러 개의 레코드에서 동시에 사용할 수 없습니다. "
+"레코드를 하나씩 업데이트하시기 바랍니다. "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__email_cc
@@ -4194,7 +4273,8 @@ msgid ""
 "Error without exception. Probably due to concurrent access update of "
 "notification records. Please see with an administrator."
 msgstr ""
-"전체에서 오류가 발생했습니다. 알림 레코드에 대한 동시 접속 업데이트에서 발생했을 가능성이 있습니다. 관리자에게 문의하시기 바랍니다."
+"전체에서 오류가 발생했습니다. 알림 레코드에 대한 동시 접속 업데이트에서 발생"
+"했을 가능성이 있습니다. 관리자에게 문의하시기 바랍니다."
 
 #. module: mail
 #. odoo-python
@@ -4202,7 +4282,9 @@ msgstr ""
 msgid ""
 "Error without exception. Probably due to sending an email without computed "
 "recipients."
-msgstr "전체에서 오류가 발생했습니다. 지정된 수신자 없이 이메일을 발송하여 발생했을 가능성이 있습니다. "
+msgstr ""
+"전체에서 오류가 발생했습니다. 지정된 수신자 없이 이메일을 발송하여 발생했을 "
+"가능성이 있습니다. "
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_followers_mail_followers_res_partner_res_model_id_uniq
@@ -4348,7 +4430,9 @@ msgstr "실패 이유"
 msgid ""
 "Failure reason. This is usually the exception thrown by the email server, "
 "stored to ease the debugging of mailing issues."
-msgstr "실패 이유. 이메일 서버가 보낸 예외는 일반적으로 메일 문제의 디버깅을 쉽게 하기 위해 저장됩니다."
+msgstr ""
+"실패 이유. 이메일 서버가 보낸 예외는 일반적으로 메일 문제의 디버깅을 쉽게 하"
+"기 위해 저장됩니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_type
@@ -4425,8 +4509,9 @@ msgid ""
 "automatic subscription on a related document. The field is used to compute "
 "getattr(related_document.relation_field)."
 msgstr ""
-"관련 문서에서 자동 가입을 사용할 때 관련 모델을 하위 유형 모델에 연결하는 데 사용되는 필드입니다. 이 필드는 getattr "
-"(related_document.relation_field)을 계산하는 데 사용됩니다."
+"관련 문서에서 자동 가입을 사용할 때 관련 모델을 하위 유형 모델에 연결하는 데 "
+"사용되는 필드입니다. 이 필드는 getattr (related_document.relation_field)을 계"
+"산하는 데 사용됩니다."
 
 #. module: mail
 #. odoo-python
@@ -4435,8 +4520,8 @@ msgid ""
 "Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
 "tracking=True for the computation of duration."
 msgstr ""
-"“%(field)s” 필드에 포함되어 있는 “%(model)s” 모델은 반드시 Many2one 유형이여야 하며, 기간을 계산하기 위해 "
-"tracking=True으로 설정되어 있어야 합니다."
+"“%(field)s” 필드에 포함되어 있는 “%(model)s” 모델은 반드시 Many2one 유형이여"
+"야 하며, 기간을 계산하기 위해 tracking=True으로 설정되어 있어야 합니다."
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_model_fields
@@ -4446,9 +4531,10 @@ msgstr "필드"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__template_fs
 #: model:ir.model.fields,help:mail.field_template_reset_mixin__template_fs
-msgid ""
-"File from where the template originates. Used to reset broken template."
-msgstr "서식이 만들어진 원래의 파일입니다. 서식이 손상된 경우 다시 제작하는데 사용합니다."
+msgid "File from where the template originates. Used to reset broken template."
+msgstr ""
+"서식이 만들어진 원래의 파일입니다. 서식이 손상된 경우 다시 제작하는데 사용합"
+"니다."
 
 #. module: mail
 #. odoo-javascript
@@ -4595,8 +4681,8 @@ msgid ""
 "For %(channels)s, channel_type should be 'channel' to have the group-based "
 "authorization or group auto-subscription."
 msgstr ""
-"%(channels)s의 경우, channel_type을 '채널'로 설정해야 그룹 기준으로 승인을 하거나 그룹 자동 구독을 할 수 "
-"있습니다. "
+"%(channels)s의 경우, channel_type을 '채널'로 설정해야 그룹 기준으로 승인을 하"
+"거나 그룹 자동 구독을 할 수 있습니다. "
 
 #. module: mail
 #. odoo-javascript
@@ -4632,13 +4718,21 @@ msgstr "8시간 동안"
 #: model:ir.model.fields,help:mail.field_ir_actions_server__value
 #: model:ir.model.fields,help:mail.field_ir_cron__value
 msgid ""
-"For Python expressions, this field may hold a Python expression that can use the same values as for the code field on the server action,e.g. `env.user.name` to set the current user's name as the value or `record.id` to set the ID of the record on which the action is run.\n"
+"For Python expressions, this field may hold a Python expression that can use "
+"the same values as for the code field on the server action,e.g. "
+"`env.user.name` to set the current user's name as the value or `record.id` "
+"to set the ID of the record on which the action is run.\n"
 "\n"
-"For Static values, the value will be used directly without evaluation, e.g.`42` or `My custom name` or the selected record."
+"For Static values, the value will be used directly without evaluation, "
+"e.g.`42` or `My custom name` or the selected record."
 msgstr ""
-"파이썬 표현식의 경우 이 필드에는 서버 작업의 코드 필드와 동일한 값을 사용할 수 있는 파이썬 표현식(예: `env.user.name`를 사용하여 현재 사용자의 이름을 값으로 지정하거나`record.id`를 사용하여 작업이 실행되는 레코드의 ID를 설정)이 포함될 수 있습니다.\n"
+"파이썬 표현식의 경우 이 필드에는 서버 작업의 코드 필드와 동일한 값을 사용할 "
+"수 있는 파이썬 표현식(예: `env.user.name`를 사용하여 현재 사용자의 이름을 값"
+"으로 지정하거나`record.id`를 사용하여 작업이 실행되는 레코드의 ID를 설정)이 "
+"포함될 수 있습니다.\n"
 "\n"
-"정적 값의 경우 제공된 값은 별도의 평가 없이 바로 사용됩니다 .예를 들어, `42` 또는 `My custom name` 또는 선택한 레코드를 정적 값으로 사용할 수 있습니다."
+"정적 값의 경우 제공된 값은 별도의 평가 없이 바로 사용됩니다 .예를 들어, `42` "
+"또는 `My custom name` 또는 선택한 레코드를 정적 값으로 사용할 수 있습니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_form
@@ -5110,9 +5204,11 @@ msgstr "ID"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
-msgstr "별칭을 담고 있는 상위 레코드의 ID (예: 별칭을 생성한 작업을 담고 있는 프로젝트)"
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
+msgstr ""
+"별칭을 담고 있는 상위 레코드의 ID (예: 별칭을 생성한 작업을 담고 있는 프로젝"
+"트)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__im_status
@@ -5213,7 +5309,9 @@ msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합�
 msgid ""
 "If set every modification done to this field is tracked. Value is used to "
 "order tracking values."
-msgstr "설정할 경우, 이 필드에 대한 모든 수정 내역을 추적합니다. 설정값은 주문 추적값으로 사용합니다."
+msgstr ""
+"설정할 경우, 이 필드에 대한 모든 수정 내역을 추적합니다. 설정값은 주문 추적값"
+"으로 사용합니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__mute_until_dt
@@ -5229,8 +5327,9 @@ msgid ""
 "the email will be send as soon as possible. Unless a timezone is specified, "
 "it is considered as being in UTC timezone."
 msgstr ""
-"설정할 경우, 대기열 관리자가 해당 날짜 이후에 이메일을 전송합니다. 설정하지 않을 경우, 이메일은 최대한 빠른 시간 안에 전송됩니다. "
-"시간대를 지정하지 않으면, UTC 시간대에 있는 것으로 간주합니다."
+"설정할 경우, 대기열 관리자가 해당 날짜 이후에 이메일을 전송합니다. 설정하지 "
+"않을 경우, 이메일은 최대한 빠른 시간 안에 전송됩니다. 시간대를 지정하지 않으"
+"면, UTC 시간대에 있는 것으로 간주합니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
@@ -5238,8 +5337,9 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible. You can use dynamic expression."
 msgstr ""
-"설정할 경우, 대기열 관리자가 해당 날짜 이후에 이메일을 전송합니다. 설정하지 않을 경우, 이메일은 최대한 빠른 시간 안에 전송됩니다. "
-"동적 표현식을 사용할 수 있습니다."
+"설정할 경우, 대기열 관리자가 해당 날짜 이후에 이메일을 전송합니다. 설정하지 "
+"않을 경우, 이메일은 최대한 빠른 시간 안에 전송됩니다. 동적 표현식을 사용할 "
+"수 있습니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings__mute_until_dt
@@ -5253,17 +5353,19 @@ msgstr "설정 시 해당 날짜까지 모든 채널에서 알림을 받지 않�
 msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
-msgstr "설정할 경우, 권한이 없는 사용자에게 기본 메시지 대신 이 내용을 전송합니다. "
+msgstr ""
+"설정할 경우, 권한이 없는 사용자에게 기본 메시지 대신 이 내용을 전송합니다. "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid ""
-"If set, will restrict the template to this specific user."
-"                                                   If not set, shared with "
-"all users."
+"If set, will restrict the template to this specific "
+"user.                                                   If not set, shared "
+"with all users."
 msgstr ""
-"설정할 경우, 서식 사용을 특정 사용자로 제한합니다."
-"                                                   설정하지 않으면, 모든 사용자와 공유합니다."
+"설정할 경우, 서식 사용을 특정 사용자로 제한합니"
+"다.                                                   설정하지 않으면, 모든 "
+"사용자와 공유합니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__is_blacklisted
@@ -5272,7 +5374,9 @@ msgstr ""
 msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
-msgstr "이메일 주소가 블랙리스트에 있는 경우, 해당 연락처는 더 이상 일괄 메일을 수신하지 않습니다."
+msgstr ""
+"이메일 주소가 블랙리스트에 있는 경우, 해당 연락처는 더 이상 일괄 메일을 수신"
+"하지 않습니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_scheduled_message__is_note
@@ -5287,22 +5391,26 @@ msgid ""
 "Instead, it will check for the reply_to in tracking message-id and "
 "redirected accordingly. This has an impact on the generated message-id."
 msgstr ""
-"참인 경우, 응답 내용이 원본 문서의 토론 스레드로 포함되지 않습니다. 대신 message-id를 추적하여 reply_to 내용을 "
-"확인하고 그에 따라서 리디렉트합니다. 이는 생성된 message-id 항목에 영향을 미치게 됩니다."
+"참인 경우, 응답 내용이 원본 문서의 토론 스레드로 포함되지 않습니다. 대신 "
+"message-id를 추적하여 reply_to 내용을 확인하고 그에 따라서 리디렉트합니다. 이"
+"는 생성된 message-id 항목에 영향을 미치게 됩니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid ""
 "If you don't recognize it, you should change your password immediately via "
 "this link:<br/>"
-msgstr "확인할 수 없는 경우에는, 이 링크를 통해 즉시 비밀번호를 변경하세요:<br/>"
+msgstr ""
+"확인할 수 없는 경우에는, 이 링크를 통해 즉시 비밀번호를 변경하세요:<br/>"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain_id
 msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
 "enter the domain name here."
-msgstr "Odoo 서버로 리디렉션되는 도메인에 모든 이메일을 수집하도록 설정한 경우 여기에 도메인 이름을 입력합니다."
+msgstr ""
+"Odoo 서버로 리디렉션되는 도메인에 모든 이메일을 수집하도록 설정한 경우 여기"
+"에 도메인 이름을 입력합니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_twilio_rtc_servers
@@ -5364,8 +5472,9 @@ msgid ""
 "if sent, send emails after that date. This date is considered as being in "
 "UTC timezone."
 msgstr ""
-"댓글 모드에서 설정할 경우, 알림 전송을 연기합니다. 대량 메일 모드에서 설정할 경우, 해당 날짜 이후에 이메일을 전송합니다. 이 날짜는"
-" UTC 시간대를 사용합니다."
+"댓글 모드에서 설정할 경우, 알림 전송을 연기합니다. 대량 메일 모드에서 설정할 "
+"경우, 해당 날짜 이후에 이메일을 전송합니다. 이 날짜는 UTC 시간대를 사용합니"
+"다."
 
 #. module: mail
 #. odoo-python
@@ -5536,13 +5645,16 @@ msgstr "잘못된 이메일 주소입니다. “%s”"
 msgid ""
 "Invalid expression, it must be a literal python dictionary definition e.g. "
 "\"{'field': 'value'}\""
-msgstr "잘못된 표현, 그것은 문자 그대로의 파이썬 사전 정의여야 합니다. 예: \"{'field': 'value'}\""
+msgstr ""
+"잘못된 표현, 그것은 문자 그대로의 파이썬 사전 정의여야 합니다. 예: "
+"\"{'field': 'value'}\""
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Invalid field “%(field_name)s” when creating a channel with members."
-msgstr "구성원이 있는 채널을 생성할 때 “%(field_name)s” 필드가 유효하지 않았습니다."
+msgstr ""
+"구성원이 있는 채널을 생성할 때 “%(field_name)s” 필드가 유효하지 않았습니다."
 
 #. module: mail
 #. odoo-javascript
@@ -5580,20 +5692,23 @@ msgstr ""
 msgid ""
 "Invalid template or view source %(svalue)s (type %(stype)s), should be a "
 "record or an XMLID"
-msgstr "잘못된 도메인이나 화면 소스 %(svalue)s (%(stype)s 유형), 레코드 또는 XMLID 여야 합니다."
+msgstr ""
+"잘못된 도메인이나 화면 소스 %(svalue)s (%(stype)s 유형), 레코드 또는 XMLID 여"
+"야 합니다."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
 "Invalid template or view source Xml ID %(source_ref)s does not exist anymore"
-msgstr "잘못된 서식이나 화면 소스 Xml ID %(source_ref)s 항목은 더 이상 존재하지 않습니다."
+msgstr ""
+"잘못된 서식이나 화면 소스 Xml ID %(source_ref)s 항목은 더 이상 존재하지 않습"
+"니다."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
-msgid ""
-"Invalid template or view source record %(svalue)s, is %(model)s instead"
+msgid "Invalid template or view source record %(svalue)s, is %(model)s instead"
 msgstr "잘못된 서식이나 화면 소스 레코드 %(svalue)s, 대신 %(model)s입니다."
 
 #. module: mail
@@ -5608,7 +5723,8 @@ msgstr "잘못된 서식이나 화면 소스 참조 %(svalue)s, 대신 %(model)s
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "Invalid value when creating a channel with members, only 4 or 6 are allowed."
-msgstr "채널을 생성할 때 구성원 값이 잘못되었습니다. 4나 6만 사용할 수 있습니다."
+msgstr ""
+"채널을 생성할 때 구성원 값이 잘못되었습니다. 4나 6만 사용할 수 있습니다."
 
 #. module: mail
 #. odoo-python
@@ -5793,20 +5909,25 @@ msgid ""
 "It appears you're trying to create a channel member, but it seems like you "
 "forgot to specify the related channel. To move forward, please make sure to "
 "provide the necessary channel information."
-msgstr "채널 멤버 생성과 관련된 채널을 지정하지 않았습니다. 계속 진행하려면 필요한 채널 정보를 입력해 주세요."
+msgstr ""
+"채널 멤버 생성과 관련된 채널을 지정하지 않았습니다. 계속 진행하려면 필요한 채"
+"널 정보를 입력해 주세요."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_push_device__keys
 msgid ""
 "It's refer to browser keys used by the notification: \n"
-"- p256dh: It's the subscription public key generated by the browser. The browser will \n"
+"- p256dh: It's the subscription public key generated by the browser. The "
+"browser will \n"
 "          keep the private key secret and use it for decrypting the payload\n"
-"- auth: The auth value should be treated as a secret and not shared outside of Odoo"
+"- auth: The auth value should be treated as a secret and not shared outside "
+"of Odoo"
 msgstr ""
 "알림에서 사용하는 브라우저 키를 참조합니다: \n"
 "- p256dh: 브라우저에서 생성한 subscription 공개 키입니다. 브라우저는 \n"
 "개인 키를 보안으로 유지하고 페이로드를 해독하는 데 사용합니다.\n"
-"- 인증: 인증 값은 보안으로 취급되어야 하며 Odoo 외부에서 공유해서는 안 됩니다."
+"- 인증: 인증 값은 보안으로 취급되어야 하며 Odoo 외부에서 공유해서는 안 됩니"
+"다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_tracking_duration_mixin__duration_tracking
@@ -5879,7 +6000,8 @@ msgstr "원본 유지"
 #: model:ir.model.fields,help:mail.field_mail_compose_message__auto_delete_keep_log
 msgid ""
 "Keep a copy of the email content if emails are removed (mass mailing only)"
-msgstr "이메일이 삭제된 경우 이메일 본문 사본을 보관하십시오 (대량 메일만 해당)"
+msgstr ""
+"이메일이 삭제된 경우 이메일 본문 사본을 보관하십시오 (대량 메일만 해당)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_call_history
@@ -6200,7 +6322,9 @@ msgstr "로컬 부품 기반 입고 감지"
 msgid ""
 "Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
 "'catchall@example.com'"
-msgstr "답장 수신에 사용되는 이메일의 로컬 부분 (예: 'catchall@example.com'의 'catchall')"
+msgstr ""
+"답장 수신에 사용되는 이메일의 로컬 부분 (예: 'catchall@example.com'의 "
+"'catchall')"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
@@ -6208,7 +6332,8 @@ msgid ""
 "Local-part of email used for Return-Path used when emails bounce e.g. "
 "'bounce' in 'bounce@example.com'"
 msgstr ""
-"반송된 이메일을 처리할 때 반환 경로에 사용되는 이메일의 로컬 부분 (예: 'bounce@example.com'의 'bounce')."
+"반송된 이메일을 처리할 때 반환 경로에 사용되는 이메일의 로컬 부분 (예: "
+"'bounce@example.com'의 'bounce')."
 
 #. module: mail
 #. odoo-javascript
@@ -6405,8 +6530,8 @@ msgid ""
 "Mail composer in comment mode should run on at least one record. No records "
 "found (model %(model_name)s)."
 msgstr ""
-"댓글 모드의 메일 쓰기는 반드시 하나 이상의 레코드에서 실행되어야 합니다. 레코드를 찾을 수 없습니다 (%(model_name)s "
-"모델)."
+"댓글 모드의 메일 쓰기는 반드시 하나 이상의 레코드에서 실행되어야 합니다. 레코"
+"드를 찾을 수 없습니다 (%(model_name)s 모델)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__is_notification
@@ -6460,9 +6585,11 @@ msgstr "메일함"
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
-"Mailing or posting with a source should not be called with an empty "
-"%(source_type)s"
-msgstr "소스가 포함되어 있는 메일이나 포스팅은 %(source_type)s 항목을 비운 채로 호출해서는 안됩니다."
+"Mailing or posting with a source should not be called with an empty %"
+"(source_type)s"
+msgstr ""
+"소스가 포함되어 있는 메일이나 포스팅은 %(source_type)s 항목을 비운 채로 호출"
+"해서는 안됩니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_ids
@@ -6492,7 +6619,8 @@ msgstr "템플릿 관리"
 msgid ""
 "Manage answers as new incoming emails instead of replies going to the same "
 "thread."
-msgstr "같은 스레드를 유지하여 답신하는 대신 새로운 수신 이메일로 답변을 관리합니다."
+msgstr ""
+"같은 스레드를 유지하여 답신하는 대신 새로운 수신 이메일로 답변을 관리합니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -6556,7 +6684,8 @@ msgstr "완료"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.js:0
 msgid "Media devices unobtainable. SSL might not be set up properly."
-msgstr "미디어 장치를 가져올 수 없습니다. SSL 항목이 제대로 설치되지 않았습니다."
+msgstr ""
+"미디어 장치를 가져올 수 없습니다. SSL 항목이 제대로 설치되지 않았습니다."
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
@@ -6583,7 +6712,9 @@ msgstr "참여자"
 msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
-msgstr "해당 그룹의 참여자는 자동으로 팔로워로 추가됩니다. 필요한 경우 수동으로 구독을 관리할 수 있습니다."
+msgstr ""
+"해당 그룹의 참여자는 자동으로 팔로워로 추가됩니다. 필요한 경우 수동으로 구독"
+"을 관리할 수 있습니다."
 
 #. module: mail
 #. odoo-javascript
@@ -6774,13 +6905,15 @@ msgstr "메시지 소리"
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__name
 msgid ""
 "Message subtype gives a more precise type on the message, especially for "
-"system notifications. For example, it can be a notification related to a new"
-" record (New), or to a stage change in a process (Stage change). Message "
+"system notifications. For example, it can be a notification related to a new "
+"record (New), or to a stage change in a process (Stage change). Message "
 "subtypes allow to precisely tune the notifications the user want to receive "
 "on its wall."
 msgstr ""
-"메시지 하위유형은 특히 시스템 알림 메시지에 대해 보다 정확한 유형을 제공합니다. 예를 들어 새로운 레코드(신규)에 관련해서 통지하거나 "
-"진행 중에 단계가 변경되는 것(단계 변경) 등입니다. 메시지 하위유형을 통해서 사용자가 받기 원하는 알림을 정확하게 조정할 수 있습니다."
+"메시지 하위유형은 특히 시스템 알림 메시지에 대해 보다 정확한 유형을 제공합니"
+"다. 예를 들어 새로운 레코드(신규)에 관련해서 통지하거나 진행 중에 단계가 변경"
+"되는 것(단계 변경) 등입니다. 메시지 하위유형을 통해서 사용자가 받기 원하는 알"
+"림을 정확하게 조정할 수 있습니다."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_subtype
@@ -6792,14 +6925,18 @@ msgstr "메시지 하위유형"
 msgid ""
 "Message subtypes followed, meaning subtypes that will be pushed onto the "
 "user's Wall."
-msgstr "팔로우하는 메시지 하위유형. 하위유형의 의미는 사용자에게 푸쉬해 주는 것입니다."
+msgstr ""
+"팔로우하는 메시지 하위유형. 하위유형의 의미는 사용자에게 푸쉬해 주는 것입니"
+"다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__message_type
 msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
-msgstr "메시지 유형: 이메일 메시지를 위한 이메일, 시스템 메시지를 위한 알림, 사용자 댓글과 같이 기타 메시지에 대한 코멘트"
+msgstr ""
+"메시지 유형: 이메일 메시지를 위한 이메일, 시스템 메시지를 위한 알림, 사용자 "
+"댓글과 같이 기타 메시지에 대한 코멘트"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__message_id
@@ -6861,7 +6998,9 @@ msgstr "읽은 것으로 표시된 메시지가 이전 기록에 표시됩니다
 msgid ""
 "Messages with internal subtypes will be visible only by employees, aka "
 "members of base_user group"
-msgstr "내부 하위 유형이 있는 메시지는 직원, 즉 base_user 그룹 구성원만 볼 수 있습니다."
+msgstr ""
+"내부 하위 유형이 있는 메시지는 직원, 즉 base_user 그룹 구성원만 볼 수 있습니"
+"다."
 
 #. module: mail
 #. odoo-python
@@ -6899,7 +7038,8 @@ msgstr "주소 누락"
 msgid ""
 "Mixin to compute the time a record has spent in each value a many2one field "
 "can take"
-msgstr "혼합을 사용하여 각 many2one 필드 값의 레코드에 소요된 시간을 계산합니다."
+msgstr ""
+"혼합을 사용하여 각 many2one 필드 값의 레코드에 소요된 시간을 계산합니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__model_id
@@ -6934,7 +7074,9 @@ msgstr "서버 동작이 실행되는 모델"
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__res_model
 msgid ""
 "Model the subtype applies to. If False, this subtype applies to all models."
-msgstr "모델에 적용되는 하위 유형. False인 경우 이 하위 유형의 모든 모델에 적용됩니다."
+msgstr ""
+"모델에 적용되는 하위 유형. False인 경우 이 하위 유형의 모든 모델에 적용됩니"
+"다."
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_model
@@ -6946,7 +7088,9 @@ msgstr "모델"
 msgid ""
 "Modifying the model can have an impact on existing activities using this "
 "activity type, be careful."
-msgstr "모델을 수정하면 이 활동 유형을 사용한 기존 활동에 영향을 미칠 수 있습니다. 주의하십시오."
+msgstr ""
+"모델을 수정하면 이 활동 유형을 사용한 기존 활동에 영향을 미칠 수 있습니다. 주"
+"의하십시오."
 
 #. module: mail
 #: model:ir.model,name:mail.model_base_module_uninstall
@@ -7467,23 +7611,28 @@ msgstr "알림 매개변수"
 msgid ""
 "Notification should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
-msgstr "알림은 목록이나 집합으로 된 첨부 파일을 수신해야 합니다 (수신된 %(aids)s)."
+msgstr ""
+"알림은 목록이나 집합으로 된 첨부 파일을 수신해야 합니다 (수신된 %(aids)s)."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
-"Notification should receive attachments records as a list of IDs (received "
-"%(aids)s)"
-msgstr "알림은 아이디 목록으로 된 첨부 파일 레코드를 수신해야 합니다 (수신된 %(aids)s)."
+"Notification should receive attachments records as a list of IDs (received %"
+"(aids)s)"
+msgstr ""
+"알림은 아이디 목록으로 된 첨부 파일 레코드를 수신해야 합니다 (수신된 %"
+"(aids)s)."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
-"Notification should receive partners given as a list of IDs (received "
-"%(pids)s)"
-msgstr "알림은 주어진 협력사 정보를 아이디 목록으로 수신해야 합니다 (수신된 %(pids)s)."
+"Notification should receive partners given as a list of IDs (received %"
+"(pids)s)"
+msgstr ""
+"알림은 주어진 협력사 정보를 아이디 목록으로 수신해야 합니다 (수신된 %"
+"(pids)s)."
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_delete_notification_ir_actions_server
@@ -7548,7 +7697,8 @@ msgstr "모두에게 알림"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.res_role_action
 msgid "Notify multiple people at once by @-mentioning roles in conversations."
-msgstr "대화 중에 역할을 @로 멘션하면 한 번에 여러 명에게 알림을 보낼 수 있습니다."
+msgstr ""
+"대화 중에 역할을 @로 멘션하면 한 번에 여러 명에게 알림을 보낼 수 있습니다."
 
 #. module: mail
 #. odoo-javascript
@@ -7586,9 +7736,10 @@ msgstr "작업을 실행하기 위한 예정된 계획 날짜 전후의 일/주/
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_count
 msgid ""
-"Number of days/week/month before executing the action. It allows to plan the"
-" action deadline."
-msgstr "활동 실행 전까지의 일, 주 및 월 기간입니다. 활동 마감일을 계획할 수 있습니다."
+"Number of days/week/month before executing the action. It allows to plan the "
+"action deadline."
+msgstr ""
+"활동 실행 전까지의 일, 주 및 월 기간입니다. 활동 마감일을 계획할 수 있습니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_has_error_counter
@@ -7716,8 +7867,8 @@ msgstr "사용"
 #. odoo-javascript
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
 msgid ""
-"Once a message has been starred, you can come back and review it at any time"
-" here."
+"Once a message has been starred, you can come back and review it at any time "
+"here."
 msgstr "별표가 표시된 메일은 언제든지 여기에서 다시 볼 수 있습니다."
 
 #. module: mail
@@ -7769,7 +7920,9 @@ msgstr "내부 사용자만 Odoo 알림을 받을 수 있습니다."
 msgid ""
 "Only members of %(group_name)s group are allowed to edit templates "
 "containing sensible placeholders"
-msgstr "%(group_name)s의 그룹 구성원만 적절한 자리 표시자가 포함된 템플릿을 편집할 수 있습니다."
+msgstr ""
+"%(group_name)s의 그룹 구성원만 적절한 자리 표시자가 포함된 템플릿을 편집할 "
+"수 있습니다."
 
 #. module: mail
 #. odoo-python
@@ -7783,16 +7936,18 @@ msgstr "메시지 유형 코멘트에서만 내용을 업데이트할 수 있습
 msgid ""
 "Only messages type comment can have their content updated on model "
 "'discuss.channel'"
-msgstr "댓글 종류가 메시지인 경우에만 '메일 및 채팅 채널' 모델에서 업데이트됩니다."
+msgstr ""
+"댓글 종류가 메시지인 경우에만 '메일 및 채팅 채널' 모델에서 업데이트됩니다."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
 msgid ""
-"Oops! We couldn't save your template due to an issue with this value: "
-"%(template_txt)s. Correct it and try again."
+"Oops! We couldn't save your template due to an issue with this value: %"
+"(template_txt)s. Correct it and try again."
 msgstr ""
-"죄송합니다! 템플릿을 저장할 수 없습니다. %(template_txt)s 값에 문제가 있습니다. 값을 수정한 후 다시 시도하세요."
+"죄송합니다! 템플릿을 저장할 수 없습니다. %(template_txt)s 값에 문제가 있습니"
+"다. 값을 수정한 후 다시 시도하세요."
 
 #. module: mail
 #. odoo-javascript
@@ -7888,19 +8043,23 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"회신하지 않은 것까지 모든 받는 메시지를 첨부할 스레드(레코드)의 선택사항 ID. 설정하면 완벽하게 새로운 레코드의 생성을 억제합니다."
+"회신하지 않은 것까지 모든 받는 메시지를 첨부할 스레드(레코드)의 선택사항 ID. "
+"설정하면 완벽하게 새로운 레코드의 생성을 억제합니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_notification__mail_mail_id
 msgid "Optional mail_mail ID. Used mainly to optimize searches."
-msgstr "선택 사항인 mail_mail ID입니다. 주로 검색을 최적화하기 위해 사용합니다."
+msgstr ""
+"선택 사항인 mail_mail ID입니다. 주로 검색을 최적화하기 위해 사용합니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__mail_server_id
 msgid ""
 "Optional preferred server for outgoing mails. If not set, the highest "
 "priority one will be used."
-msgstr "발신 메일에 대해 선호하는 서버를 설정합니다. 설정되어 있지 않은 경우 가장 높은 우선 순위의 서버가 사용됩니다."
+msgstr ""
+"발신 메일에 대해 선호하는 서버를 설정합니다. 설정되어 있지 않은 경우 가장 높"
+"은 우선 순위의 서버가 사용됩니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__lang
@@ -7910,11 +8069,12 @@ msgstr "발신 메일에 대해 선호하는 서버를 설정합니다. 설정�
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"{{ object.partner_id.lang }}."
 msgstr ""
-"이메일 전송 시 번역할 언어 (ISO code)를 선택할 수 있습니다. 설정하지 않을 경우, 영어가 기본 언어로 사용됩니다. 적절한 "
-"언어를 선택할 수 있도록 다음과 같은 예시용 메시지를 사용합니다. {{ object.partner_id.lang }}."
+"이메일 전송 시 번역할 언어 (ISO code)를 선택할 수 있습니다. 설정하지 않을 경"
+"우, 영어가 기본 언어로 사용됩니다. 적절한 언어를 선택할 수 있도록 다음과 같"
+"은 예시용 메시지를 사용합니다. {{ object.partner_id.lang }}."
 
 #. module: mail
 #. odoo-javascript
@@ -7925,12 +8085,16 @@ msgstr "옵션"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to_mode
 msgid ""
-"Original Discussion: Answers go in the original document discussion thread. \n"
-" Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n"
+"Original Discussion: Answers go in the original document discussion "
+"thread. \n"
+" Another Email Address: Answers go to the email address mentioned in the "
+"tracking message-id instead of original document discussion thread. \n"
 " This has an impact on the generated message-id."
 msgstr ""
-"원본 논의 내용: 답변 내용은 원래 진행되고 있던 문서의 논의 사항 스레드로 이동됩니다. \n"
-"다른 이메일 주소: 답변 내용은 논의 스레드가 아니라 추적용 메시지 ID에서 지정된 이메일 주소로 이동됩니다.\n"
+"원본 논의 내용: 답변 내용은 원래 진행되고 있던 문서의 논의 사항 스레드로 이동"
+"됩니다. \n"
+"다른 이메일 주소: 답변 내용은 논의 스레드가 아니라 추적용 메시지 ID에서 지정"
+"된 이메일 주소로 이동됩니다.\n"
 "이는 생성한 메시지 ID에 영향을 주게 됩니다."
 
 #. module: mail
@@ -8118,22 +8282,24 @@ msgstr "상위 채널"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"별칭이 있는 상위 모델입니다. 별칭 참조를 포함하는 모델은 반드시 alias_model_id(예: 프로젝트(parent_model) 및 "
-"태스크(model)에서 제공하는 모델일 필요는 없습니다.)"
+"별칭이 있는 상위 모델입니다. 별칭 참조를 포함하는 모델은 반드시 "
+"alias_model_id(예: 프로젝트(parent_model) 및 태스크(model)에서 제공하는 모델"
+"일 필요는 없습니다.)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__parent_id
 msgid ""
-"Parent subtype, used for automatic subscription. This field is not correctly"
-" named. For example on a project, the parent_id of project subtypes refers "
-"to task-related subtypes."
+"Parent subtype, used for automatic subscription. This field is not correctly "
+"named. For example on a project, the parent_id of project subtypes refers to "
+"task-related subtypes."
 msgstr ""
-"자동 구독에 사용되는 상위 하위 유형입니다.이 필드의 이름이 올바르지 않습니다. 예를 들어 프로젝트의 경우 프로젝트 하위 유형의 "
-"parent_id는 작업 관련 하위유형을 나타냅니다."
+"자동 구독에 사용되는 상위 하위 유형입니다.이 필드의 이름이 올바르지 않습니"
+"다. 예를 들어 프로젝트의 경우 프로젝트 하위 유형의 parent_id는 작업 관련 하위"
+"유형을 나타냅니다."
 
 #. module: mail
 #. odoo-javascript
@@ -8412,12 +8578,14 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
 msgstr ""
 "Mailgateway를 사용하여 문서에 메시지를 게시하는 정책.\n"
 "- 모든 사용자: 모든 사용자가 게시할 수 있습니다\n"
 "- 협력사: 인증된 협력사만 게시할 수 있습니다\n"
-"- 팔로워: 관련 문서의 팔로워 또는 팔로잉 중인 채널의 사용자만 게시할 수 있습니다\n"
+"- 팔로워: 관련 문서의 팔로워 또는 팔로잉 중인 채널의 사용자만 게시할 수 있습"
+"니다\n"
 
 #. module: mail
 #. odoo-javascript
@@ -8465,7 +8633,9 @@ msgstr "스레드에 메시지 게시"
 msgid ""
 "Posting a message should be done on a business document. Use message_notify "
 "to send a notification to an user."
-msgstr "메시지는 비즈니스 문서에서 게시되어야 합니다. message_notify 를 통하여 사용자에게 알림을 전송합니다."
+msgstr ""
+"메시지는 비즈니스 문서에서 게시되어야 합니다. message_notify 를 통하여 사용자"
+"에게 알림을 전송합니다."
 
 #. module: mail
 #. odoo-python
@@ -8473,7 +8643,9 @@ msgstr "메시지는 비즈니스 문서에서 게시되어야 합니다. messag
 msgid ""
 "Posting a message should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
-msgstr "메시지를 게시하면 목록이나 집합으로 된 첨부 파일을 수신해야 합니다 (수신된 %(aids)s)."
+msgstr ""
+"메시지를 게시하면 목록이나 집합으로 된 첨부 파일을 수신해야 합니다 (수신된 %"
+"(aids)s)."
 
 #. module: mail
 #. odoo-python
@@ -8481,15 +8653,19 @@ msgstr "메시지를 게시하면 목록이나 집합으로 된 첨부 파일을
 msgid ""
 "Posting a message should receive attachments records as a list of IDs "
 "(received %(aids)s)"
-msgstr "메시지를 게시하면 아이디 목록으로 된 첨부 파일 레코드를 수신해야 합니다 (수신된 %(aids)s)."
+msgstr ""
+"메시지를 게시하면 아이디 목록으로 된 첨부 파일 레코드를 수신해야 합니다 (수신"
+"된 %(aids)s)."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
-"Posting a message should receive partners as a list of IDs (received "
-"%(pids)s)"
-msgstr "메시지를 게시하면 아이디 목록으로 된 협력사 정보를 수신해야 합니다 (수신된 %(pids)s)."
+"Posting a message should receive partners as a list of IDs (received %"
+"(pids)s)"
+msgstr ""
+"메시지를 게시하면 아이디 목록으로 된 협력사 정보를 수신해야 합니다 (수신된 %"
+"(pids)s)."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
@@ -8562,8 +8738,9 @@ msgid ""
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
 msgstr ""
-"이 문서 유형에 해당하는 대화의 일부로 각 받는 메일을 처리합니다. 이렇게하면 새 대화를 위한 새 문서를 만들거나 기존 대화(문서)에 "
-"후속 이메일을 첨부할 수 있습니다."
+"이 문서 유형에 해당하는 대화의 일부로 각 받는 메일을 처리합니다. 이렇게하면 "
+"새 대화를 위한 새 문서를 만들거나 기존 대화(문서)에 후속 이메일을 첨부할 수 "
+"있습니다."
 
 #. module: mail
 #. odoo-javascript
@@ -8675,8 +8852,7 @@ msgstr "손들기"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings_volumes__volume
-msgid ""
-"Ranges between 0.0 and 1.0, scale depends on the browser implementation"
+msgid "Ranges between 0.0 and 1.0, scale depends on the browser implementation"
 msgstr "0.0에서 1.0 사이의 범위, 크기는 브라우저 구현 상황에 따라 다름"
 
 #. module: mail
@@ -8983,15 +9159,16 @@ msgstr "렌더링 모델"
 #: code:addons/mail/models/mail_composer_mixin.py:0
 msgid ""
 "Rendering of %(field_name)s is not possible as no counterpart on template."
-msgstr "서식에 대응 내용이 없으므로 %(field_name)s 항목을 렌더링할 수 없습니다."
+msgstr ""
+"서식에 대응 내용이 없으므로 %(field_name)s 항목을 렌더링할 수 없습니다."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_composer_mixin.py:0
 #: code:addons/mail/models/mail_render_mixin.py:0
-msgid ""
-"Rendering of %(field_name)s is not possible as not defined on template."
-msgstr "서식에 정의된 내용이 없으므로 %(field_name)s 항목을 렌더링할 수 없습니다."
+msgid "Rendering of %(field_name)s is not possible as not defined on template."
+msgstr ""
+"서식에 정의된 내용이 없으므로 %(field_name)s 항목을 렌더링할 수 없습니다."
 
 #. module: mail
 #. odoo-javascript
@@ -9069,8 +9246,9 @@ msgid ""
 "unique name and can be associated with multiple users. Roles can be "
 "mentioned in messages to notify all associated users."
 msgstr ""
-"시스템에서 사용자를 분류할 때 사용하는 역할을 나타냅니다. 각 역할에는 고유한 명칭이 있으며, 복수의 사용자에게 연결할 수 있습니다. "
-"메시지에서 특정 역할을 멘션할 경우 관련된 모든 사용자에게 알림을 전달할 수 있습니다."
+"시스템에서 사용자를 분류할 때 사용하는 역할을 나타냅니다. 각 역할에는 고유한 "
+"명칭이 있으며, 복수의 사용자에게 연결할 수 있습니다. 메시지에서 특정 역할을 "
+"멘션할 경우 관련된 모든 사용자에게 알림을 전달할 수 있습니다."
 
 #. module: mail
 #. odoo-javascript
@@ -9720,8 +9898,8 @@ msgid ""
 "Sender address (placeholders may be used here). If not set, the default "
 "value will be the author's email alias if configured, or email address."
 msgstr ""
-"발신자 주소(자리 표시자를 여기에 사용할 수 있습니다). 설정하지 않으면 기본값으로 설정된 작성자의 이메일 별칭 또는 이메일 주소를 "
-"사용합니다."
+"발신자 주소(자리 표시자를 여기에 사용할 수 있습니다). 설정하지 않으면 기본값"
+"으로 설정된 작성자의 이메일 별칭 또는 이메일 주소를 사용합니다."
 
 #. module: mail
 #. odoo-javascript
@@ -9875,8 +10053,7 @@ msgstr "바로가기"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
-msgid ""
-"Shortened language code used as the target for the translation request."
+msgid "Shortened language code used as the target for the translation request."
 msgstr "번역을 요청할 대상으로 사용되는 단축 언어 코드입니다."
 
 #. module: mail
@@ -9963,7 +10140,8 @@ msgid ""
 "Showing %(result_count)s results out of %(total_count)s. Narrow your search "
 "to see more choices."
 msgstr ""
-"%(result_count)s개의 결과 중 %(total_count)s개가 표시됩니다. 더 많은 옵션을 보려면 검색 범위를 좁혀보세요."
+"%(result_count)s개의 결과 중 %(total_count)s개가 표시됩니다. 더 많은 옵션을 "
+"보려면 검색 범위를 좁혀보세요."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__ref_ir_act_window
@@ -9975,7 +10153,8 @@ msgstr "사이드바 동작"
 msgid ""
 "Sidebar action to make this template available on records of the related "
 "document model"
-msgstr "관련 문서 모델의 레코드에서 이 서식을 사용할 수 있도록 하는 사이드바 동작"
+msgstr ""
+"관련 문서 모델의 레코드에서 이 서식을 사용할 수 있도록 하는 사이드바 동작"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__og_site_name
@@ -10014,7 +10193,9 @@ msgstr "특정 사용자"
 msgid ""
 "Specify a field used to link the newly created record on the record used by "
 "the server action."
-msgstr "서버 작업에서 사용한 레코드에 새로 만든 레코드를 연결하는 데 사용되는 필드를 지정합니다."
+msgstr ""
+"서버 작업에서 사용한 레코드에 새로 만든 레코드를 연결하는 데 사용되는 필드를 "
+"지정합니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_plan__res_model
@@ -10023,7 +10204,9 @@ msgstr "서버 작업에서 사용한 레코드에 새로 만든 레코드를 �
 msgid ""
 "Specify a model if the activity should be specific to a model and not "
 "available when managing activities for other models."
-msgstr "활동이 모델에 고유해야 하고 다른 모델에 대한 활동을 관리 할 때 사용할 수 없는 경우 모델을 지정하십시오."
+msgstr ""
+"활동이 모델에 고유해야 하고 다른 모델에 대한 활동을 관리 할 때 사용할 수 없"
+"는 경우 모델을 지정하십시오."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__crud_model_id
@@ -10031,7 +10214,9 @@ msgstr "활동이 모델에 고유해야 하고 다른 모델에 대한 활동�
 msgid ""
 "Specify which kind of record should be created. Set this field only to "
 "specify a different model than the base model."
-msgstr "생성할 레코드의 유형을 지정합니다. 이 필드를 설정하면 기본 모델과 다른 모델만 정의됩니다."
+msgstr ""
+"생성할 레코드의 유형을 지정합니다. 이 필드를 설정하면 기본 모델과 다른 모델"
+"만 정의됩니다."
 
 #. module: mail
 #. odoo-javascript
@@ -10143,7 +10328,9 @@ msgstr "시간별 상태"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
 msgid "Stay tuned! Enable push notifications to never miss a message."
-msgstr "최신 정보를 놓치지 마세요! 푸시 알림을 활성화하면 메시지를 놓치지 않을 수 있습니다."
+msgstr ""
+"최신 정보를 놓치지 마세요! 푸시 알림을 활성화하면 메시지를 놓치지 않을 수 있"
+"습니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__steps_count
@@ -10196,8 +10383,8 @@ msgid ""
 "String formatted to represent a key with modifiers following this pattern: "
 "shift.ctrl.alt.key, e.g: truthy.1.true.b"
 msgstr ""
-"다음의 패턴에 따라 수정할 수 있는 키를 표시하도록 형식이 지정된 문자열: shift.ctrl.alt.key, 예: "
-"truthy.1.true.b "
+"다음의 패턴에 따라 수정할 수 있는 키를 표시하도록 형식이 지정된 문자열: "
+"shift.ctrl.alt.key, 예: truthy.1.true.b "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_translation__body
@@ -10348,7 +10535,8 @@ msgstr "기술 설정"
 msgid ""
 "Technical field to keep track of the model at the start of editing to "
 "support UX related behaviour"
-msgstr "편집을 시작할 경우 UX 관련 동작을 지원할 수 있도록 모델을 추적하는 기술 필드"
+msgstr ""
+"편집을 시작할 경우 UX 관련 동작을 지원할 수 있도록 모델을 추적하는 기술 필드"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_reset__template_ids
@@ -10401,9 +10589,11 @@ msgstr "컴포저에서 서식을 작성하려면 유효한 모델이 필요합�
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid ""
-"Template rendering should only be called with a list of IDs. Received "
-"“%(res_ids)s” instead."
-msgstr "서식 렌더링은 반드시 ID 목록에서만 호출해야 합니다. 대신 “%(res_ids)s ” 항목을 수신합니다."
+"Template rendering should only be called with a list of IDs. Received “%"
+"(res_ids)s” instead."
+msgstr ""
+"서식 렌더링은 반드시 ID 목록에서만 호출해야 합니다. 대신 “%(res_ids)s ” 항목"
+"을 수신합니다."
 
 #. module: mail
 #. odoo-python
@@ -10412,8 +10602,8 @@ msgid ""
 "Template rendering supports only inline_template, qweb, or qweb_view (view "
 "or raw); received %(engine)s instead."
 msgstr ""
-"서식 렌더링은 inline_template, qweb, 또는 qweb_view (보기 또는 원본 화면)에서만 지원됩니다. 대신 "
-"%(engine)s 항목을 수신합니다."
+"서식 렌더링은 inline_template, qweb, 또는 qweb_view (보기 또는 원본 화면)에서"
+"만 지원됩니다. 대신 %(engine)s 항목을 수신합니다."
 
 #. module: mail
 #. odoo-javascript
@@ -10474,8 +10664,8 @@ msgid ""
 "The 'To-Do' activity type is used to create reminders from the top bar menu "
 "and the command palette. Consequently, it cannot be archived or deleted."
 msgstr ""
-"'To-Do' 작업 유형은 상단 표시줄 메뉴와 명령 팔레트에서 미리 알림을 생성하는 데 사용됩니다. 따라서 보관하거나 삭제할 수 "
-"없습니다."
+"'To-Do' 작업 유형은 상단 표시줄 메뉴와 명령 팔레트에서 미리 알림을 생성하는 "
+"데 사용됩니다. 따라서 보관하거나 삭제할 수 없습니다."
 
 #. module: mail
 #. odoo-javascript
@@ -10488,11 +10678,12 @@ msgstr "브라우저에서 전체 화면 모드가 거부되었습니다."
 #: code:addons/mail/static/src/discuss/call/common/ptt_extension_service.js:0
 msgid ""
 "The Push-to-Talk feature is only accessible within tab focus. To enable the "
-"Push-to-Talk functionality outside of this tab, we recommend downloading our"
-" %(anchor_start)sextension%(anchor_end)s."
+"Push-to-Talk functionality outside of this tab, we recommend downloading our "
+"%(anchor_start)sextension%(anchor_end)s."
 msgstr ""
-"푸시 투 토크 기능은 탭 포커스 내에서만 액세스할 수 있습니다. 이 탭 외부에서 푸시 투 토크 기능을 사용하려면  "
-"%(anchor_start)s확장%(anchor_end)s을 다운로드하는 것이 좋습니다."
+"푸시 투 토크 기능은 탭 포커스 내에서만 액세스할 수 있습니다. 이 탭 외부에서 "
+"푸시 투 토크 기능을 사용하려면  %(anchor_start)s확장%(anchor_end)s을 다운로드"
+"하는 것이 좋습니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner__vat
@@ -10502,7 +10693,8 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
-"세무 신고용 등록 번호입니다. 국가별로 지정된 형식을 기준으로 값을 검증합니다. 협력사가 과세 대상이 아닌 경우에는 '/'를 입력하세요."
+"세무 신고용 등록 번호입니다. 국가별로 지정된 형식을 기준으로 값을 검증합니"
+"다. 협력사가 과세 대상이 아닌 경우에는 '/'를 입력하세요."
 
 #. module: mail
 #. odoo-python
@@ -10520,12 +10712,13 @@ msgstr "활동을 시작할 수 없습니다:"
 #. odoo-python
 #: code:addons/mail/models/mail_activity_plan_template.py:0
 msgid ""
-"The activity type \"%(activity_type_name)s\" is not compatible with the plan"
-" \"%(plan_name)s\" because it is limited to the model "
-"\"%(activity_type_model)s\"."
+"The activity type \"%(activity_type_name)s\" is not compatible with the plan "
+"\"%(plan_name)s\" because it is limited to the model \"%"
+"(activity_type_model)s\"."
 msgstr ""
-"\"%(activity_type_name)s\"의 활동 유형은 \"%(plan_name)s\"과 호환될 수 없습니다. 이 활동 유형은 "
-"현재 \"%(activity_type_model)s\"의 모델로 제한되어 있습니다."
+"\"%(activity_type_name)s\"의 활동 유형은 \"%(plan_name)s\"과 호환될 수 없습니"
+"다. 이 활동 유형은 현재 \"%(activity_type_model)s\"의 모델로 제한되어 있습니"
+"다."
 
 #. module: mail
 #. odoo-python
@@ -10611,7 +10804,8 @@ msgstr "'%(field_chain_str)s' 필드가 사용자 필드가 아닙니다."
 #. odoo-python
 #: code:addons/mail/models/template_reset_mixin.py:0
 msgid ""
-"The following email templates could not be reset because their related source files could not be found:\n"
+"The following email templates could not be reset because their related "
+"source files could not be found:\n"
 "- %s"
 msgstr ""
 "관련 소스 파일이 없으므로 다음의 이메일 서식을 재설정할 수 없습니다:\n"
@@ -10637,19 +10831,25 @@ msgstr "아래의 메시지는 주소에서 받을 수 없습니다."
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"The message below could not be accepted by the address %(alias_display_name)s.\n"
-"                 Only %(contact_description)s are allowed to contact it.<br /><br />\n"
-"                 Please make sure you are using the correct address or contact us at %(default_email)s instead."
+"The message below could not be accepted by the address %"
+"(alias_display_name)s.\n"
+"                 Only %(contact_description)s are allowed to contact it.<br /"
+"><br />\n"
+"                 Please make sure you are using the correct address or "
+"contact us at %(default_email)s instead."
 msgstr ""
 "아래의 메시지는 %(alias_display_name)s 주소에서 받을 수 없습니다.\n"
-"                 %(contact_description)s 주소로만 연락할 수 있습니다.<br /><br />\n"
-"                  정확한 주소인지 확인하시거나 %(default_email)s 주소로 대신 문의주시기 바랍니다."
+"                 %(contact_description)s 주소로만 연락할 수 있습니다.<br /"
+"><br />\n"
+"                  정확한 주소인지 확인하시거나 %(default_email)s 주소로 대신 "
+"문의주시기 바랍니다."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"The message below could not be accepted by the address %(alias_display_name)s.\n"
+"The message below could not be accepted by the address %"
+"(alias_display_name)s.\n"
 "Please try again later or contact %(company_name)s instead."
 msgstr ""
 "아래의 메시지는 %(alias_display_name)s 주소에서 받을 수 없습니다.\n"
@@ -10661,7 +10861,9 @@ msgstr ""
 msgid ""
 "The message scheduled on %(model)s(%(id)s) with the following content could "
 "not be sent:%(original_message)s"
-msgstr "%(model)s(%(id)s)에 %(original_message)s 내용으로 예약된 메시지가 전송되지 못했습니다."
+msgstr ""
+"%(model)s(%(id)s)에 %(original_message)s 내용으로 예약된 메시지가 전송되지 못"
+"했습니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__from_message_id
@@ -10671,12 +10873,12 @@ msgstr "채널이 생성된 메시지입니다."
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
 msgstr ""
-"이 별칭에 해당하는 모델(Odoo 문서 종류)입니다. 모든 받는 메일은 기존 레코드로 기록되지 않고 이 모델의 새 레코드로 작성됩니다. "
-"(예. 프로젝트 작업)"
+"이 별칭에 해당하는 모델(Odoo 문서 종류)입니다. 모든 받는 메일은 기존 레코드"
+"로 기록되지 않고 이 모델의 새 레코드로 작성됩니다. (예. 프로젝트 작업)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_name
@@ -10686,13 +10888,17 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"<jobs@example.odoo.com>에 대한 이메일을 수신하도록 하려면 이메일의 별칭 이름을 적어주세요. 예: 'jobs'"
+"<jobs@example.odoo.com>에 대한 이메일을 수신하도록 하려면 이메일의 별칭 이름"
+"을 적어주세요. 예: 'jobs'"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
-msgid "The plan \"%(plan_name)s\" can be launched, with these additional effects:"
-msgstr "\"%(plan_name)s\" 계획을 실행할 수 있으며, 다음과 같은 추가 효과가 적용됩니다:"
+msgid ""
+"The plan \"%(plan_name)s\" can be launched, with these additional effects:"
+msgstr ""
+"\"%(plan_name)s\" 계획을 실행할 수 있으며, 다음과 같은 추가 효과가 적용됩니"
+"다:"
 
 #. module: mail
 #. odoo-python
@@ -10711,7 +10917,9 @@ msgstr "\"%(plan_name)s\" 계획이 시작되었습니다"
 msgid ""
 "The priority of the job, as an integer: 0 means higher priority, 10 means "
 "lower priority."
-msgstr "작업의 우선 순위로 정수임 : 0은 높은 우선 순위를 의미하고 10은 낮은 우선 순위를 의미합니다."
+msgstr ""
+"작업의 우선 순위로 정수임 : 0은 높은 우선 순위를 의미하고 10은 낮은 우선 순위"
+"를 의미합니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__scheduled_date
@@ -10729,13 +10937,15 @@ msgstr "레코드는 같은 회사에 속해야 합니다."
 #: code:addons/mail/models/mail_activity.py:0
 #: code:addons/mail/models/mail_message.py:0
 msgid ""
-"The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
+"The requested operation cannot be completed due to security restrictions. "
+"Please contact your system administrator.\n"
 "\n"
 "(Document type: %(type)s, Operation: %(operation)s)\n"
 "\n"
 "Records: %(records)s, User: %(user)s"
 msgstr ""
-"보안 제한으로 인해 요청하신 작업을 완료할 수 없습니다. 시스템 관리자에게 문의하세요.\n"
+"보안 제한으로 인해 요청하신 작업을 완료할 수 없습니다. 시스템 관리자에게 문의"
+"하세요.\n"
 "\n"
 "(문서 유형: %(type)s, 작업: %(operation)s)\n"
 "\n"
@@ -10837,7 +11047,8 @@ msgstr "이 대화에는 핀 고정한 메시지가 없습니다."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
-msgstr "이 메일은 대량메일에서 블랙리스트에 올라있습니다. 블랙리스트를 해제하세요."
+msgstr ""
+"이 메일은 대량메일에서 블랙리스트에 올라있습니다. 블랙리스트를 해제하세요."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__email
@@ -10854,9 +11065,11 @@ msgstr "이 필드는 서식 사용에 대한 내부 설명용으로 사용합�
 #: model:ir.model.fields,help:mail.field_res_partner__email_normalized
 #: model:ir.model.fields,help:mail.field_res_users__email_normalized
 msgid ""
-"This field is used to search on email address as the primary email field can"
-" contain more than strictly an email address."
-msgstr "이 필드는 기본 이메일 필드에 이메일 주소 이상을 포함할 수 있으므로 이메일 주소를 검색하는 데 사용됩니다."
+"This field is used to search on email address as the primary email field can "
+"contain more than strictly an email address."
+msgstr ""
+"이 필드는 기본 이메일 필드에 이메일 주소 이상을 포함할 수 있으므로 이메일 주"
+"소를 검색하는 데 사용됩니다."
 
 #. module: mail
 #. odoo-javascript
@@ -10905,8 +11118,8 @@ msgid ""
 "including from the Technical menu in the Settings, in order to preserve "
 "storage space of your Odoo database."
 msgstr ""
-"이 옵션은 Odoo 데이터베이스의 저장 공간을 확보하기 위해 설정에 있는 기술 메뉴에서 발신된 것을 포함하여 보낸 메일 기록 전체를 "
-"영구적으로 삭제합니다."
+"이 옵션은 Odoo 데이터베이스의 저장 공간을 확보하기 위해 설정에 있는 기술 메뉴"
+"에서 발신된 것을 포함하여 보낸 메일 기록 전체를 영구적으로 삭제합니다."
 
 #. module: mail
 #. odoo-javascript
@@ -11174,7 +11387,9 @@ msgstr "수신자 추적"
 msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
-msgstr "추적된 값은 별도의 모델에 저장됩니다. 이 필드를 사용하면 추적을 재구성하고 모델에 대한 통계를 생성할 수 있습니다."
+msgstr ""
+"추적된 값은 별도의 모델에 저장됩니다. 이 필드를 사용하면 추적을 재구성하고 모"
+"델에 대한 통계를 생성할 수 있습니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
@@ -11284,20 +11499,25 @@ msgid ""
 "- 'Update a Record': update the values of a record\n"
 "- 'Create Activity': create an activity (Discuss)\n"
 "- 'Send Email': post a message, a note or send an email (Discuss)\n"
-"- 'Send SMS': send SMS, log them on documents (SMS)- 'Add/Remove Followers': add or remove followers to a record (Discuss)\n"
+"- 'Send SMS': send SMS, log them on documents (SMS)- 'Add/Remove Followers': "
+"add or remove followers to a record (Discuss)\n"
 "- 'Create Record': create a new record with new values\n"
 "- 'Execute Code': a block of Python code that will be executed\n"
-"- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
-"- 'Multi Actions': define an action that triggers several other server actions\n"
+"- 'Send Webhook Notification': send a POST request to an external system, "
+"also known as a Webhook\n"
+"- 'Multi Actions': define an action that triggers several other server "
+"actions\n"
 msgstr ""
 "서버 작업 유형입니다. 다음 값을 사용할 수 있습니다:\n"
 "- '레코드 업데이트': 레코드 값을 업데이트합니다.\n"
 "- '활동 만들기': 활동을 생성합니다. (토론)\n"
 "- '이메일 보내기': 메시지, 메모를 게시하거나 이메일을 전송합니다. (토론)\n"
-"- 'SMS 보내기': SMS를 보내고, 문서에 기록합니다. (SMS)- '팔로워 추가/제거': 레코드에 팔로워를 추가하거나 제거합니다. (토론)\n"
+"- 'SMS 보내기': SMS를 보내고, 문서에 기록합니다. (SMS)- '팔로워 추가/제거': "
+"레코드에 팔로워를 추가하거나 제거합니다. (토론)\n"
 "- '레코드 만들기': 새로운 값으로 새 레코드를 생성합니다.\n"
 "- '코드 실행': 실행할 파이썬 코드 블록입니다.\n"
-"- '웹훅 알림 보내기': 웹훅이라고도 하는 외부 시스템으로 POST 요청을 보냅니다.\n"
+"- '웹훅 알림 보내기': 웹훅이라고도 하는 외부 시스템으로 POST 요청을 보냅니"
+"다.\n"
 "- '다중 작업 실행': 여러 다른 서버 작업을 트리거하는 작업을 정의합니다.\n"
 
 #. module: mail
@@ -11580,12 +11800,11 @@ msgstr "업로드 중"
 #: model:ir.model.fields,help:mail.field_ir_actions_server__activity_user_type
 #: model:ir.model.fields,help:mail.field_ir_cron__activity_user_type
 msgid ""
-"Use 'Specific User' to always assign the same user on the next activity. Use"
-" 'Dynamic User' to specify the field name of the user to choose on the "
-"record."
+"Use 'Specific User' to always assign the same user on the next activity. Use "
+"'Dynamic User' to specify the field name of the user to choose on the record."
 msgstr ""
-"다음 작업에서 항상 동일한 사용자를 할당하려면 '특정 사용자'를 사용합니다. '동적 사용자'를 사용하여 레코드에서 선택할 사용자의 필드 "
-"이름을 지정합니다."
+"다음 작업에서 항상 동일한 사용자를 할당하려면 '특정 사용자'를 사용합니다. '동"
+"적 사용자'를 사용하여 레코드에서 선택할 사용자의 필드 이름을 지정합니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__external_email_server_default
@@ -11625,15 +11844,17 @@ msgid ""
 "Use canned responses to quickly insert prewritten messages with "
 "<i>::shortcut</i>. You can edit the text before sending."
 msgstr ""
-"미리 준비된 응답은 <i>:: 단축키</i>를 사용하여 미리 작성된 메시지를 빠르게 삽입할 수 있습니다. 전송 전에 텍스트를 편집할 수도"
-" 있습니다."
+"미리 준비된 응답은 <i>:: 단축키</i>를 사용하여 미리 작성된 메시지를 빠르게 삽"
+"입할 수 있습니다. 전송 전에 텍스트를 편집할 수도 있습니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__custom_notifications
 msgid ""
 "Use default from user settings if not specified. This setting will only be "
 "applied to channels."
-msgstr "지정하지 않으면 사용자 설정에서 기본값을 사용합니다. 이 설정은 채널에만 적용됩니다."
+msgstr ""
+"지정하지 않으면 사용자 설정에서 기본값을 사용합니다. 이 설정은 채널에만 적용"
+"됩니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -11680,7 +11901,8 @@ msgid ""
 "'comment': generated by user input e.g. through discuss or composer\n"
 "'email_outgoing': generated by a mailing\n"
 "'notification': generated by system e.g. tracking messages\n"
-"'auto_comment': generated by automated notification mechanism e.g. acknowledgment\n"
+"'auto_comment': generated by automated notification mechanism e.g. "
+"acknowledgment\n"
 "'user_notification': generated for a specific recipient"
 msgstr ""
 "메세지 작성을 분류하는 데 사용됩니다.\n"
@@ -11806,7 +12028,8 @@ msgstr "사용자"
 msgid ""
 "Users are notified whenever one of their roles is @-mentioned in a "
 "conversation."
-msgstr "수행 중인 역할이 대화에서 @- 로 멘션될 때마다 사용자에게 알림이 전송됩니다."
+msgstr ""
+"수행 중인 역할이 대화에서 @- 로 멘션될 때마다 사용자에게 알림이 전송됩니다."
 
 #. module: mail
 #. odoo-python
@@ -11818,10 +12041,12 @@ msgstr "이 채널의 사용자: %(members)s."
 #: model:ir.model.fields,help:mail.field_res_config_settings__restrict_template_rendering
 msgid ""
 "Users will still be able to render templates.\n"
-"However only Mail Template Editors will be able to create new dynamic templates or modify existing ones."
+"However only Mail Template Editors will be able to create new dynamic "
+"templates or modify existing ones."
 msgstr ""
 "사용자는 서식 렌더링을 계속 사용할 수 있습니다.\n"
-"다만 메일 서식 편집기에서만 새로운 동적 서식을 생성하거나 기존 서식을 수정할 수 있습니다."
+"다만 메일 서식 편집기에서만 새로운 동적 서식을 생성하거나 기존 서식을 수정할 "
+"수 있습니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -11830,8 +12055,9 @@ msgid ""
 "and Enterprise versions. Online users already benefit from a ready-to-use "
 "email server (@mycompany.odoo.com)."
 msgstr ""
-"커뮤니티 및 유료버전에서 이메일을 보내고 받으려면 전자 메일 서버를 사용해야 합니다. 온라인 사용자는 이미 가입하면 바로 사용가능한 "
-"이메일 서버(@ mycompany.odoo.com)를 이미 활용하고 있습니다."
+"커뮤니티 및 유료버전에서 이메일을 보내고 받으려면 전자 메일 서버를 사용해야 "
+"합니다. 온라인 사용자는 이미 가입하면 바로 사용가능한 이메일 서버(@ "
+"mycompany.odoo.com)를 이미 활용하고 있습니다."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__valid
@@ -11848,10 +12074,12 @@ msgstr "금액"
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"Value %(allowed_domains)s for `mail.catchall.domain.allowed` cannot be validated.\n"
+"Value %(allowed_domains)s for `mail.catchall.domain.allowed` cannot be "
+"validated.\n"
 "It should be a comma separated list of domains e.g. example.com,example.org."
 msgstr ""
-"`mail.catchall.domain.allowed`에 대한 %(allowed_domains)s의 값을 확인할 수 없습니다.\n"
+"`mail.catchall.domain.allowed`에 대한 %(allowed_domains)s의 값을 확인할 수 없"
+"습니다.\n"
 "도메인 목록은 쉼표로 구분되어야 합니다. (예: example.com,example.org.)"
 
 #. module: mail
@@ -12021,23 +12249,25 @@ msgstr "주의"
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"We could not create alias %(alias_name)s because domain "
-"%(alias_domain_name)s belongs to company %(alias_company_names)s while the "
+"We could not create alias %(alias_name)s because domain %"
+"(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "owner document belongs to company %(company_name)s."
 msgstr ""
-"별칭 %(alias_name)s을 만들 수 없습니다. 도메인 %(alias_domain_name)s이 "
-"%(alias_company_names)s에 포함되어 있으며, 소유자의 문서가 %(company_name)s에 포함되어 있습니다."
+"별칭 %(alias_name)s을 만들 수 없습니다. 도메인 %(alias_domain_name)s이 %"
+"(alias_company_names)s에 포함되어 있으며, 소유자의 문서가 %(company_name)s에 "
+"포함되어 있습니다."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"We could not create alias %(alias_name)s because domain "
-"%(alias_domain_name)s belongs to company %(alias_company_names)s while the "
+"We could not create alias %(alias_name)s because domain %"
+"(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "target document belongs to company %(company_name)s."
 msgstr ""
-"별칭 %(alias_name)s을 만들 수 없습니다. 도메인 %(alias_domain_name)s이 "
-"회사%(alias_company_names)s에 포함되어 있고, 대상 문서가 %(company_name)s에 포함되어 있습니다."
+"별칭 %(alias_name)s을 만들 수 없습니다. 도메인 %(alias_domain_name)s이 회사%"
+"(alias_company_names)s에 포함되어 있고, 대상 문서가 %(company_name)s에 포함되"
+"어 있습니다."
 
 #. module: mail
 #. odoo-python
@@ -12071,8 +12301,7 @@ msgstr "MyCompany에 오신 것을 환영합니다!"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/message_pin/common/message_model_patch.js:0
 msgid ""
-"Well, nothing lasts forever, but are you sure you want to unpin this "
-"message?"
+"Well, nothing lasts forever, but are you sure you want to unpin this message?"
 msgstr "메시지 핀 고정을 해제할까요?"
 
 #. module: mail
@@ -12090,11 +12319,14 @@ msgstr "이름이 무엇입니까?"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__user_tz
 msgid ""
-"When printing documents and exporting/importing data, time values are computed according to this timezone.\n"
+"When printing documents and exporting/importing data, time values are "
+"computed according to this timezone.\n"
 "If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
-"Anywhere else, time values are computed according to the time offset of your web client."
+"Anywhere else, time values are computed according to the time offset of your "
+"web client."
 msgstr ""
-"문서를 인쇄하고 데이터를 내보내거나 가져올 때 기준이 되는 시간값을 설정합니다.\n"
+"문서를 인쇄하고 데이터를 내보내거나 가져올 때 기준이 되는 시간값을 설정합니"
+"다.\n"
 "시간대를 따로 설정하지 않은 경우 UTC (협정세계시)가 기본으로 적용됩니다.\n"
 "기타 상황에서는 웹 클라이언트의 시간 오프셋에 따라 시간을 계산합니다."
 
@@ -12112,15 +12344,17 @@ msgid ""
 "attached to each processed message. This will usually double the size of "
 "your message database."
 msgstr ""
-"각 이메일의 전체 원본을 참조용으로 보관하고 처리된 각 메시지에 첨부할지 여부. 이것은 대개 메시지 데이터베이스의 크기를 두 배로 "
-"늘립니다."
+"각 이메일의 전체 원본을 참조용으로 보관하고 처리된 각 메시지에 첨부할지 여"
+"부. 이것은 대개 메시지 데이터베이스의 크기를 두 배로 늘립니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__attach
 msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
-msgstr "첨부 파일이 다운로드 될지 여부를 나타냅니다. 활성화하지 않으면 수신 이메일이 처리되기 전에 첨부 파일이 제거됩니다."
+msgstr ""
+"첨부 파일이 다운로드 될지 여부를 나타냅니다. 활성화하지 않으면 수신 이메일이 "
+"처리되기 전에 첨부 파일이 제거됩니다."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__track_recipients
@@ -12196,10 +12430,10 @@ msgstr "어제:"
 #: code:addons/mail/static/src/core/common/thread_model.js:0
 msgid ""
 "You are about to leave this group conversation and will no longer have "
-"access to it unless you are invited again. Are you sure you want to "
-"continue?"
+"access to it unless you are invited again. Are you sure you want to continue?"
 msgstr ""
-"대화창에서 나가시면 더 이상 그룹 대화에 참여할 수 없으며, 참여를 원하실 경우 다시 초대를 받으셔야 합니다. 계속하시겠습니까?"
+"대화창에서 나가시면 더 이상 그룹 대화에 참여할 수 없으며, 참여를 원하실 경우 "
+"다시 초대를 받으셔야 합니다. 계속하시겠습니까?"
 
 #. module: mail
 #. odoo-python
@@ -12234,8 +12468,7 @@ msgstr "더이상 \"%(thread_name)s\"를 팔로우하고 있지 않습니다."
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_scheduled_message.py:0
-msgid ""
-"You are not allowed to change the target record of a scheduled message."
+msgid "You are not allowed to change the target record of a scheduled message."
 msgstr "예약된 메시지의 대상 레코드를 수정할 수 있는 권한이 없습니다."
 
 #. module: mail
@@ -12260,8 +12493,7 @@ msgstr "현재 이 채널의 관리자입니다. 정말로 탈퇴하시겠습니
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_patch.xml:0
-msgid ""
-"You can mark any message as 'starred', and it shows up in this mailbox."
+msgid "You can mark any message as 'starred', and it shows up in this mailbox."
 msgstr "'별표' 표시된 메시지가 이 메일함에 표시됩니다."
 
 #. module: mail
@@ -12285,9 +12517,10 @@ msgstr "지정 사용자가 있는 협력사와만 채팅하실 수 있습니다
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_activity_type.py:0
-msgid ""
-"You cannot delete %(activity_names)s as it is required in various apps."
-msgstr "다양한 앱에서 필요로 하기 때문에 %(activity_names)s 항목은 삭제할 수 없습니다."
+msgid "You cannot delete %(activity_names)s as it is required in various apps."
+msgstr ""
+"다양한 앱에서 필요로 하기 때문에 %(activity_names)s 항목은 삭제할 수 없습니"
+"다."
 
 #. module: mail
 #. odoo-python
@@ -12295,15 +12528,18 @@ msgstr "다양한 앱에서 필요로 하기 때문에 %(activity_names)s 항목
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
 "other modules."
-msgstr "해당 그룹을 삭제할 수 없습니다. 전체 회사 그룹은 다른 모듈에서 사용합니다."
+msgstr ""
+"해당 그룹을 삭제할 수 없습니다. 전체 회사 그룹은 다른 모듈에서 사용합니다."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_activity_type.py:0
 msgid ""
-"You cannot modify %(activities_names)s target model as they are are required"
-" in various apps."
-msgstr "다양한 앱에서 필요로 하기 때문에 %(activities_names)s 대상 모델은 수정할 수 없습니다."
+"You cannot modify %(activities_names)s target model as they are are required "
+"in various apps."
+msgstr ""
+"다양한 앱에서 필요로 하기 때문에 %(activities_names)s 대상 모델은 수정할 수 "
+"없습니다."
 
 #. module: mail
 #. odoo-python
@@ -12311,7 +12547,9 @@ msgstr "다양한 앱에서 필요로 하기 때문에 %(activities_names)s 대�
 msgid ""
 "You cannot use anything else than unaccented latin characters in the alias "
 "address %(alias_name)s."
-msgstr "별칭 주소%(alias_name)s에는 악센트가 제거된 라틴 문자 외에 다른 문자는 사용할 수 없습니다."
+msgstr ""
+"별칭 주소%(alias_name)s에는 악센트가 제거된 라틴 문자 외에 다른 문자는 사용"
+"할 수 없습니다."
 
 #. module: mail
 #. odoo-python
@@ -12319,7 +12557,9 @@ msgstr "별칭 주소%(alias_name)s에는 악센트가 제거된 라틴 문자 �
 msgid ""
 "You cannot use anything else than unaccented latin characters in the domain "
 "name %(domain_name)s."
-msgstr "도메인 이름 %(domain_name)s에는 악센트가 제거된 라틴 문자 외에 다른 문자는 사용할 수 없습니다."
+msgstr ""
+"도메인 이름 %(domain_name)s에는 악센트가 제거된 라틴 문자 외에 다른 문자는 사"
+"용할 수 없습니다."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -12332,7 +12572,8 @@ msgstr "다음에 대한 액세스 권한이 없습니다"
 msgid ""
 "You do not have the access right to unblacklist emails. Please contact your "
 "administrator."
-msgstr "이메일 차단을 해제할 수 있는 권한이 없습니다. 관리자에게 문의해 주세요."
+msgstr ""
+"이메일 차단을 해제할 수 있는 권한이 없습니다. 관리자에게 문의해 주세요."
 
 #. module: mail
 #. odoo-python
@@ -12356,7 +12597,9 @@ msgstr "#%s에 초대되었습니다."
 msgid ""
 "You may attach files to this template, to be added to all emails created "
 "from this template"
-msgstr "이 서식에 파일을 첨부할 수 있습니다. 이 서식으로 작성된 모든 이메일에 추가할 수 있습니다."
+msgstr ""
+"이 서식에 파일을 첨부할 수 있습니다. 이 서식으로 작성된 모든 이메일에 추가할 "
+"수 있습니다."
 
 #. module: mail
 #. odoo-python
@@ -12367,8 +12610,7 @@ msgstr "추상 모델에서 템플릿을 정의할 수 없습니다: %s"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/message_pin/common/message_model_patch.js:0
-msgid ""
-"You sure want this message pinned to %(conversation)s forever and ever?"
+msgid "You sure want this message pinned to %(conversation)s forever and ever?"
 msgstr "이 메시지를 %(conversation)s로 핀 고정할까요?"
 
 #. module: mail
@@ -12520,7 +12762,8 @@ msgid ""
 "    is used to collect replies and should not be used to directly contact"
 msgstr ""
 "항목을 처리할 수 없습니다.\n"
-"          답장을 수신하기 위한 것이며 직접적인 연락을 위해 사용해서는 안 됩니다."
+"          답장을 수신하기 위한 것이며 직접적인 연락을 위해 사용해서는 안 됩니"
+"다."
 
 #. module: mail
 #. odoo-javascript
@@ -12627,8 +12870,11 @@ msgstr "예. \"환영 이메일\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
-msgid "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
-msgstr "예. \"MyCompany에 오신 것을 환영합니다\" 또는 \"반갑습니다, {{ object.name }}님\""
+msgid ""
+"e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
+msgstr ""
+"예. \"MyCompany에 오신 것을 환영합니다\" 또는 \"반갑습니다, {{ object.name }}"
+"님\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -12921,7 +13167,8 @@ msgstr "손바닥"
 msgid ""
 "reply to missing document (%(model)s,%(thread)s), fall back on document "
 "creation"
-msgstr "누락된 문서(%(model)s,%(thread)s)에 대한 회신, 문서 작성 시점으로 돌아갑니다"
+msgstr ""
+"누락된 문서(%(model)s,%(thread)s)에 대한 회신, 문서 작성 시점으로 돌아갑니다"
 
 #. module: mail
 #. odoo-python
@@ -12929,7 +13176,9 @@ msgstr "누락된 문서(%(model)s,%(thread)s)에 대한 회신, 문서 작성 �
 msgid ""
 "reply to model %s that does not accept document update, fall back on "
 "document creation"
-msgstr "%s 모델에 회신이 문서 업데이트를 수락하지 않습니다. 문서 작성 시점으로 돌아갑니다."
+msgstr ""
+"%s 모델에 회신이 문서 업데이트를 수락하지 않습니다. 문서 작성 시점으로 돌아갑"
+"니다."
 
 #. module: mail
 #. odoo-python

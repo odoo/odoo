@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_restaurant
-# 
+#
 # Translators:
 # Raymond Yu <cl_yu@hotmail.com>, 2025
 # Wil Odoo, 2025
 # Chloe Wang, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:38+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Chloe Wang, 2025\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_restaurant
@@ -38,7 +39,9 @@ msgstr "18:45 约翰 4位"
 msgid ""
 "200G Irish Black Angus beef, 9-month matured cheddar cheese, shredded "
 "iceberg lettuce, caramelised onions, crushed tomatoes and Chef’s sauce."
-msgstr "200 克爱尔兰黑安格斯牛肉、9 个月熟成的车打芝士、切丝卷心生菜、焦糖洋葱、番茄碎和厨师酱汁。"
+msgstr ""
+"200 克爱尔兰黑安格斯牛肉、9 个月熟成的车打芝士、切丝卷心生菜、焦糖洋葱、番茄"
+"碎和厨师酱汁。"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_bacon_product_template
@@ -46,7 +49,9 @@ msgid ""
 "200G Irish Black Angus beef, caramelized onions with paprika, chopped "
 "iceberg salad, red onions, grilled bacon, tomato sauce, pickles, barbecue "
 "sauce"
-msgstr "200 克爱尔兰黑安格斯牛肉、焦糖红辣椒洋葱、切碎冰山沙拉、红洋葱、烤培根、番茄酱、泡菜、烤肉酱"
+msgstr ""
+"200 克爱尔兰黑安格斯牛肉、焦糖红辣椒洋葱、切碎冰山沙拉、红洋葱、烤培根、番茄"
+"酱、泡菜、烤肉酱"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -61,7 +66,8 @@ msgstr "<strong>POS：</strong>"
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid ""
-"A restaurant floor represents the place where customers are served, this is where you can\n"
+"A restaurant floor represents the place where customers are served, this is "
+"where you can\n"
 "                define and position the tables."
 msgstr ""
 "餐馆楼层代表您服务的客户的位置，您可以\n"
@@ -661,8 +667,8 @@ msgstr "冰茶"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__active
 msgid ""
-"If false, the table is deactivated and will not be available in the point of"
-" sale"
+"If false, the table is deactivated and will not be available in the point of "
+"sale"
 msgstr "如果失败，表单将会在POS失效"
 
 #. module: pos_restaurant
@@ -955,7 +961,8 @@ msgstr "安排"
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid ""
-"Please close and validate the following open PoS Session before modifying this floor.\n"
+"Please close and validate the following open PoS Session before modifying "
+"this floor.\n"
 "Open session: %(session_names)s"
 msgstr ""
 "在修改此楼层之前，请关闭并验证以下使用中的销售点（PoS）操作时段。\n"
@@ -1342,8 +1349,7 @@ msgstr "订单服务台"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__color
-msgid ""
-"The table's color, expressed as a valid 'background' CSS property value"
+msgid "The table's color, expressed as a valid 'background' CSS property value"
 msgstr "桌子的颜色，用一个有效的“背景色”CSS属性值表示"
 
 #. module: pos_restaurant
@@ -1354,8 +1360,8 @@ msgstr "阵列中表格的高度"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_h
 msgid ""
-"The table's horizontal position from the left side to the table's center, in"
-" pixels"
+"The table's horizontal position from the left side to the table's center, in "
+"pixels"
 msgstr "阵列中表格的水平位置-从左到中心"
 
 #. module: pos_restaurant
@@ -1512,6 +1518,12 @@ msgid "Width"
 msgstr "宽度"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You are currently transferring the order %s"
+msgstr ""
+
+#. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid ""
@@ -1558,6 +1570,12 @@ msgid ""
 "You cannot remove a table that is used in a PoS session, close the "
 "session(s) first."
 msgstr "您无法删除PoS营业点中使用的餐桌，请先关闭营业点."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You cannot transfer an order to itself"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript

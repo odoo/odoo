@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_timesheet
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Manon Rondou, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_timesheet
@@ -66,11 +66,11 @@ msgstr "Urenstaten van %(name)s"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
-"'%(missing_plan_names)s' analytic plan(s) required on the project "
-"'%(project_name)s' linked to the timesheet."
+"'%(missing_plan_names)s' analytic plan(s) required on the project '%"
+"(project_name)s' linked to the timesheet."
 msgstr ""
-"'%(missing_plan_names)s' analyseplan(nen) vereist voor het project "
-"'%(project_name)s' gekoppeld aan de urenstaat."
+"'%(missing_plan_names)s' analyseplan(nen) vereist voor het project '%"
+"(project_name)s' gekoppeld aan de urenstaat."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -112,8 +112,12 @@ msgstr "<b class=\"tip_title\">Tip: registreer je urenstaten sneller</b>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
-msgid "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Datu\" title=\"Datum\"/>"
+msgid ""
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
+"title=\"Date\"/>"
+msgstr ""
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Datu\" "
+"title=\"Datum\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -137,9 +141,11 @@ msgid ""
 "<span invisible=\"not has_timesheet\">\n"
 "                        You cannot delete employees who have timesheets.\n"
 "                        <span invisible=\"not has_active_employee\">\n"
-"                            You can either archive these employees or first delete all of their timesheets.\n"
+"                            You can either archive these employees or first "
+"delete all of their timesheets.\n"
 "                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                        <span invisible=\"has_active_employee\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
 "                            Please first delete all of their timesheets.\n"
 "                        </span>\n"
 "                    </span>\n"
@@ -148,16 +154,20 @@ msgid ""
 "                    </span>"
 msgstr ""
 "<span invisible=\"not has_timesheet\">\n"
-"                        Je kunt geen werknemers verwijderen die urenstaten hebben.\n"
+"                        Je kunt geen werknemers verwijderen die urenstaten "
+"hebben.\n"
 "                        <span invisible=\"not has_active_employee\">\n"
-"                            Je kunt ofwel deze werknemers archiveren, ofwel eerst al hun urenstaten verwijderen.\n"
+"                            Je kunt ofwel deze werknemers archiveren, ofwel "
+"eerst al hun urenstaten verwijderen.\n"
 "                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                        <span invisible=\"has_active_employee\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
 "                            Verwijder eerst al hun urenstaten.\n"
 "                        </span>\n"
 "                    </span>\n"
 "                    <span invisible=\"has_timesheet\">\n"
-"                        Weet je zeker dat je deze werknemers wilt verwijderen?\n"
+"                        Weet je zeker dat je deze werknemers wilt "
+"verwijderen?\n"
 "                    </span>"
 
 #. module: hr_timesheet
@@ -275,11 +285,14 @@ msgstr "Toepassingen van analytische dimensies"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid ""
-"Analyze the projects and tasks on which your employees spend their time.<br>\n"
+"Analyze the projects and tasks on which your employees spend their time."
+"<br>\n"
 "                Evaluate which part is billable and what costs it represents."
 msgstr ""
-"Analyseer de projecten en de taken waaraan je werknemers hun tijd hebben besteed.<br>\n"
-"                Bekijk welk deel factureerbaar is en welke kosten dit vertegenwoordigt."
+"Analyseer de projecten en de taken waaraan je werknemers hun tijd hebben "
+"besteed.<br>\n"
+"                Bekijk welk deel factureerbaar is en welke kosten dit "
+"vertegenwoordigt."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__reminder_allow
@@ -401,16 +414,14 @@ msgstr "Deactiveer de rekening."
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__internal_project_id
 msgid "Default project value for timesheet generated from time off type."
-msgstr ""
-"Standaard projectwaarde voor urenstaten gegenereerd vanuit verloftype."
+msgstr "Standaard projectwaarde voor urenstaten gegenereerd vanuit verloftype."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_line__employee_id
 msgid ""
 "Define an 'hourly cost' on the employee to track the cost of their time."
 msgstr ""
-"Bepaal een 'uurtarief' op de werknemer om de kost van hun tijd bij te "
-"houden."
+"Bepaal een 'uurtarief' op de werknemer om de kost van hun tijd bij te houden."
 
 #. module: hr_timesheet
 #: model:ir.actions.server,name:hr_timesheet.unlink_employee_action
@@ -536,8 +547,7 @@ msgstr "Extra tijd"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
-msgid ""
-"Generate timesheets for validated time off requests and public holidays"
+msgid "Generate timesheets for validated time off requests and public holidays"
 msgstr "Genereer urenstaten voor goedgekeurde verlofverzoeken en feestdagen"
 
 #. module: hr_timesheet
@@ -938,8 +948,8 @@ msgstr "Het interne project van een bedrijf moet in dat bedrijf zijn."
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
-"The project, the task and the analytic accounts of the timesheet must belong"
-" to the same company."
+"The project, the task and the analytic accounts of the timesheet must belong "
+"to the same company."
 msgstr ""
 "Het project, de taak en de analytische boekhouding van de urenstaat moeten "
 "bij hetzelfde bedrijf horen."
@@ -953,8 +963,8 @@ msgstr "Er zijn geen urenstaten."
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid ""
-"These projects have some timesheet entries referencing them. Before removing"
-" these projects, you have to remove these timesheet entries."
+"These projects have some timesheet entries referencing them. Before removing "
+"these projects, you have to remove these timesheet entries."
 msgstr ""
 "Deze projecten hebben enkele urenstaatboekingen die ernaar verwijzen. "
 "Voordat je deze projecten verwijdert, moet je deze urenstaatboekingen "
@@ -999,11 +1009,11 @@ msgstr "Dit jaar"
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid ""
-"This project has some timesheet entries referencing it. Before removing this"
-" project, you have to remove these timesheet entries."
+"This project has some timesheet entries referencing it. Before removing this "
+"project, you have to remove these timesheet entries."
 msgstr ""
-"Dit project heeft enkele urenstaatboekingen die ernaar verwijzen. Voordat je"
-" dit project verwijdert, moet je deze urenstaatboekingen verwijderen."
+"Dit project heeft enkele urenstaatboekingen die ernaar verwijzen. Voordat je "
+"dit project verwijdert, moet je deze urenstaatboekingen verwijderen."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1016,8 +1026,8 @@ msgstr "Deze taak kan niet privé zijn omdat er urenstaten aan gekoppeld zijn."
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_task.py:0
 msgid ""
-"This task can’t be deleted because it’s linked to timesheets. Please contact"
-" someone with higher access to remove the timesheets first, and then you’ll "
+"This task can’t be deleted because it’s linked to timesheets. Please contact "
+"someone with higher access to remove the timesheets first, and then you’ll "
 "be able to delete the task."
 msgstr ""
 "Deze taak kan niet worden verwijderd omdat ze gekoppeld is aan "
@@ -1039,10 +1049,13 @@ msgstr ""
 #: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__project_time_mode_id
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
+"If you use the timesheet linked to projects, don't forget to setup the right "
+"unit of measure in your employees."
 msgstr ""
-"Hiermee wordt de gebruikte maateenheid ingesteld die wordt gebruikt in projecten en taken.\n"
-"Wanneer je gebruik maakt van urenstaten gekoppeld aan projecten, vergeet dan niet de juiste eenheid voor je werknemers in te stellen."
+"Hiermee wordt de gebruikte maateenheid ingesteld die wordt gebruikt in "
+"projecten en taken.\n"
+"Wanneer je gebruik maakt van urenstaten gekoppeld aan projecten, vergeet dan "
+"niet de juiste eenheid voor je werknemers in te stellen."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -1268,8 +1281,7 @@ msgstr "Urenstaten kunnen niet aangemaakt worden op een privé taak."
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
-"Timesheets must be created with an active employee in the selected "
-"companies."
+"Timesheets must be created with an active employee in the selected companies."
 msgstr ""
 "Urenstaten moeten worden aangemaakt met een actieve werknemer in de "
 "geselecteerde bedrijven."
@@ -1303,9 +1315,9 @@ msgid ""
 "project. Please set one up in the plan '%(plan_name)s' or turn off the "
 "timesheets feature."
 msgstr ""
-"Om de urenverantwoordingsfunctie te kunnen gebruiken, heb je een analytische"
-" rekening voor je project nodig. Maak er een aan in de analytisch dimensie "
-"'%(plan_name)s' of schakel de urenverantwoordingsfunctie uit."
+"Om de urenverantwoordingsfunctie te kunnen gebruiken, heb je een analytische "
+"rekening voor je project nodig. Maak er een aan in de analytisch dimensie '%"
+"(plan_name)s' of schakel de urenverantwoordingsfunctie uit."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1351,8 +1363,8 @@ msgstr "Totaal:"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid ""
-"Track your working hours by projects every day and invoice this time to your"
-" customers."
+"Track your working hours by projects every day and invoice this time to your "
+"customers."
 msgstr ""
 "Houd elke dag je werkuren per project bij en factureer deze tijd aan je "
 "klanten."
@@ -1371,18 +1383,13 @@ msgid ""
 "        30h Allocate 30 hours to the task\n"
 "        #tags Set tags on the task\n"
 "        @user Assign the task to a user\n"
-"        ! Set the task a high priority\n"
+"        ! Set the task a medium priority\n"
+"        !! Set the task a high priority\n"
+"        !!! Set the task a urgent priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
-"Gebruik deze trefwoorden in de titel om nieuwe taken in te stellen:\n"
-"\n"
-"        30h Wijs 30 uur toe aan de taak\n"
-"        #tags Stel labels in op de taak\n"
-"        @user Wijs de taak toe aan een gebruiker\n"
-"        ! Geef de taak een hoge prioriteit\n"
-"\n"
-"        Zorg voor het juiste formaat en volgorde bijv. Verbeter het configuratiescherm 5u #functie #v16 @Mitchell !"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
@@ -1409,11 +1416,13 @@ msgstr "Bekijk details"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_from_employee
 msgid ""
 "You can register and track your workings hours by project every\n"
-"                    day. Every time spent on a project will become a cost and can be re-invoiced to\n"
+"                    day. Every time spent on a project will become a cost "
+"and can be re-invoiced to\n"
 "                    customers if required."
 msgstr ""
 "Je kunt elke dag je werkuren per project registreren en opvolgen.\n"
-"                    Alle tijd die gespendeerd wordt op een project wordt als kosten geboekt en kan opnieuw gefactureerd worden aan\n"
+"                    Alle tijd die gespendeerd wordt op een project wordt als "
+"kosten geboekt en kan opnieuw gefactureerd worden aan\n"
 "                    klanten indien nodig."
 
 #. module: hr_timesheet
@@ -1431,18 +1440,22 @@ msgstr "Je kunt geen werknemers verwijderen die urenstaten hebben."
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid ""
-"You cannot log timesheets on this project since it is linked to an inactive analytic account.<br/>\n"
-"                            Please switch to another account, or reactivate the current one to timesheet on the project."
+"You cannot log timesheets on this project since it is linked to an inactive "
+"analytic account.<br/>\n"
+"                            Please switch to another account, or reactivate "
+"the current one to timesheet on the project."
 msgstr ""
-"Je kunt geen urenstaten op dit project registreren omdat dit is gekoppeld aan een inactieve analytische rekening.<br/>\n"
-"                            Graag over te schakelen naar een andere account of de huidige account te heractiveren om urenstaten aan te maken."
+"Je kunt geen urenstaten op dit project registreren omdat dit is gekoppeld "
+"aan een inactieve analytische rekening.<br/>\n"
+"                            Graag over te schakelen naar een andere account "
+"of de huidige account te heractiveren om urenstaten aan te maken."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid ""
 "You cannot log timesheets on this project since it is linked to an inactive "
-"analytic account.<br/> Please change this account, or reactivate the current"
-" one to timesheet on the project."
+"analytic account.<br/> Please change this account, or reactivate the current "
+"one to timesheet on the project."
 msgstr ""
 "Je kunt geen urenstaten op dit project registreren omdat dit is gekoppeld "
 "aan een inactieve analytische rekening.<br/> Verander de analytische "
@@ -1475,10 +1488,12 @@ msgstr "voor het"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid ""
 "on\n"
-"                            <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
+"                            <span class=\"fw-bold text-dark\"> Sub-tasks</"
+"span>)"
 msgstr ""
 "op\n"
-"                            <span class=\"fw-bold text-dark\"> Subtaken</span>)"
+"                            <span class=\"fw-bold text-dark\"> Subtaken</"
+"span>)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -1488,3 +1503,24 @@ msgid ""
 msgstr ""
 "op\n"
 "                        <span class=\"fw-bold text-dark\"> Subtaken</span>)"
+
+#~ msgid ""
+#~ "Use these keywords in the title to set new tasks:\n"
+#~ "\n"
+#~ "        30h Allocate 30 hours to the task\n"
+#~ "        #tags Set tags on the task\n"
+#~ "        @user Assign the task to a user\n"
+#~ "        ! Set the task a high priority\n"
+#~ "\n"
+#~ "        Make sure to use the right format and order e.g. Improve the "
+#~ "configuration screen 5h #feature #v16 @Mitchell !"
+#~ msgstr ""
+#~ "Gebruik deze trefwoorden in de titel om nieuwe taken in te stellen:\n"
+#~ "\n"
+#~ "        30h Wijs 30 uur toe aan de taak\n"
+#~ "        #tags Stel labels in op de taak\n"
+#~ "        @user Wijs de taak toe aan een gebruiker\n"
+#~ "        ! Geef de taak een hoge prioriteit\n"
+#~ "\n"
+#~ "        Zorg voor het juiste formaat en volgorde bijv. Verbeter het "
+#~ "configuratiescherm 5u #functie #v16 @Mitchell !"

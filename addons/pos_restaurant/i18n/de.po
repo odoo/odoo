@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_restaurant
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Larissa Manderfeld, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:38+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_restaurant
@@ -66,7 +66,8 @@ msgstr "<strong>Kassensystem: </strong>"
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid ""
-"A restaurant floor represents the place where customers are served, this is where you can\n"
+"A restaurant floor represents the place where customers are served, this is "
+"where you can\n"
 "                define and position the tables."
 msgstr ""
 "Ein Restaurantraum repräsentiert den Platz, wo Kunden bedient werden, hier "
@@ -674,8 +675,8 @@ msgstr "Ice Tea"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__active
 msgid ""
-"If false, the table is deactivated and will not be available in the point of"
-" sale"
+"If false, the table is deactivated and will not be available in the point of "
+"sale"
 msgstr ""
 "Wenn fehlerhaft ist der Tisch deaktiviert und nicht in der Kasse verfügbar."
 
@@ -972,10 +973,12 @@ msgstr "Planen"
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid ""
-"Please close and validate the following open PoS Session before modifying this floor.\n"
+"Please close and validate the following open PoS Session before modifying "
+"this floor.\n"
 "Open session: %(session_names)s"
 msgstr ""
-"Bitte schließen und validieren Sie die folgenden Kassensitzungen, bevor Sie diesen Raum ändern.\n"
+"Bitte schließen und validieren Sie die folgenden Kassensitzungen, bevor Sie "
+"diesen Raum ändern.\n"
 "Offene Sitzungen: %(session_names)s"
 
 #. module: pos_restaurant
@@ -1361,8 +1364,7 @@ msgstr "Der Tisch, an dem die Bestellung serviert wurde."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__color
-msgid ""
-"The table's color, expressed as a valid 'background' CSS property value"
+msgid "The table's color, expressed as a valid 'background' CSS property value"
 msgstr ""
 "Die Tischfarbe, ausgedrückt als gültiger Wert der CSS-Eigenschaft "
 "„Hintergrund“."
@@ -1375,8 +1377,8 @@ msgstr "Die Tischhöhe in Pixel"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_h
 msgid ""
-"The table's horizontal position from the left side to the table's center, in"
-" pixels"
+"The table's horizontal position from the left side to the table's center, in "
+"pixels"
 msgstr ""
 "Die horizontale Tischposition, von der linken Seite zur Tischmitte in Pixel."
 
@@ -1536,6 +1538,12 @@ msgid "Width"
 msgstr "Breite"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You are currently transferring the order %s"
+msgstr ""
+
+#. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid ""
@@ -1582,8 +1590,8 @@ msgid ""
 "You cannot remove a floor that is used in a PoS session, close the "
 "session(s) first: \n"
 msgstr ""
-"Es kann kein Raum, der in einer Kassensitzung benutzt wird, gelöscht werden."
-" Sitzung muss erst geschlossen werden: \n"
+"Es kann kein Raum, der in einer Kassensitzung benutzt wird, gelöscht werden. "
+"Sitzung muss erst geschlossen werden: \n"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1594,6 +1602,12 @@ msgid ""
 msgstr ""
 "Es kann kein Tisch, der in einer Kassensitzung benutzt wird, gelöscht "
 "werden. Sitzung muss erst geschlossen werden"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You cannot transfer an order to itself"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript

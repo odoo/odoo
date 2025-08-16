@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_restaurant
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # Fernanda Alvarez, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:38+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Fernanda Alvarez, 2025\n"
-"Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
+"Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/"
+"41243/es_419/)\n"
+"Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es_419\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -50,9 +52,9 @@ msgid ""
 "iceberg salad, red onions, grilled bacon, tomato sauce, pickles, barbecue "
 "sauce"
 msgstr ""
-"200 gramos de carne de res irlandesa Black Angus, cebollas caramelizadas con"
-" paprika, lechuga iceberg picada, cebolla morada, tocino a la parrilla, "
-"salsa de tomate, pepinillos y salsa BBQ."
+"200 gramos de carne de res irlandesa Black Angus, cebollas caramelizadas con "
+"paprika, lechuga iceberg picada, cebolla morada, tocino a la parrilla, salsa "
+"de tomate, pepinillos y salsa BBQ."
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -67,10 +69,12 @@ msgstr "<strong>Puntos de venta:</strong>"
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid ""
-"A restaurant floor represents the place where customers are served, this is where you can\n"
+"A restaurant floor represents the place where customers are served, this is "
+"where you can\n"
 "                define and position the tables."
 msgstr ""
-"El piso de un restaurante representa el lugar donde se da servicio a los clientes. Ahí es donde\n"
+"El piso de un restaurante representa el lugar donde se da servicio a los "
+"clientes. Ahí es donde\n"
 "puede indicar cómo están organizadas las mesas."
 
 #. module: pos_restaurant
@@ -673,11 +677,11 @@ msgstr "Té helado"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__active
 msgid ""
-"If false, the table is deactivated and will not be available in the point of"
-" sale"
+"If false, the table is deactivated and will not be available in the point of "
+"sale"
 msgstr ""
-"Si es falso, la mesa se desactivará y ya no estará disponible en el punto de"
-" venta"
+"Si es falso, la mesa se desactivará y ya no estará disponible en el punto de "
+"venta"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -969,10 +973,12 @@ msgstr "Plan"
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid ""
-"Please close and validate the following open PoS Session before modifying this floor.\n"
+"Please close and validate the following open PoS Session before modifying "
+"this floor.\n"
 "Open session: %(session_names)s"
 msgstr ""
-"Cierre y valide la siguiente sesión abierta del PdV antes de modificar este piso.\n"
+"Cierre y valide la siguiente sesión abierta del PdV antes de modificar este "
+"piso.\n"
 "Sesión abierta: %(session_names)s"
 
 #. module: pos_restaurant
@@ -1358,8 +1364,7 @@ msgstr "La mesa donde se sirvió esta comanda"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__color
-msgid ""
-"The table's color, expressed as a valid 'background' CSS property value"
+msgid "The table's color, expressed as a valid 'background' CSS property value"
 msgstr ""
 "El color de la mesa, expresado como un valor de 'fondo' con propiedad CSS "
 "válido"
@@ -1372,8 +1377,8 @@ msgstr "Altura de la mesa en pixeles"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_h
 msgid ""
-"The table's horizontal position from the left side to the table's center, in"
-" pixels"
+"The table's horizontal position from the left side to the table's center, in "
+"pixels"
 msgstr ""
 "La posición horizontal de la mesa desde el lado izquierdo del centro de la "
 "mesa, en pixeles"
@@ -1537,6 +1542,12 @@ msgid "Width"
 msgstr "Ancho"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You are currently transferring the order %s"
+msgstr ""
+
+#. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid ""
@@ -1556,8 +1567,8 @@ msgstr "No puede eliminar un piso que todavía tiene órdenes en borradores."
 msgid ""
 "You cannot delete a table when orders are still in draft for this table."
 msgstr ""
-"No puede eliminar esta mesa cuando todavía hay órdenes en borrador para esta"
-" mesa."
+"No puede eliminar esta mesa cuando todavía hay órdenes en borrador para esta "
+"mesa."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1579,8 +1590,8 @@ msgid ""
 "You cannot remove a floor that is used in a PoS session, close the "
 "session(s) first: \n"
 msgstr ""
-"No puede eliminar un piso que se se está usando en una sesión de PdV, cierre"
-" primero la(s) sesión(es):\n"
+"No puede eliminar un piso que se se está usando en una sesión de PdV, cierre "
+"primero la(s) sesión(es):\n"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1591,6 +1602,12 @@ msgid ""
 msgstr ""
 "No puede eliminar una mesa utilizada en una sesión de PdV, primero cierre "
 "esa sesión."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You cannot transfer an order to itself"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript

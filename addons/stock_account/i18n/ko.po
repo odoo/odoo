@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_account
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Sarah Park, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 09:28+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_account
@@ -41,41 +41,50 @@ msgstr " [회계 처리 %s]"
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid ""
 "%(description_base)s Product cost updated from %(previous)s to %(new_cost)s."
-msgstr "%(description_base)s 제품 비용이 %(previous)s 부터 %(new_cost)s 까지 변경되었습니다."
+msgstr ""
+"%(description_base)s 제품 비용이 %(previous)s 부터 %(new_cost)s 까지 변경되었"
+"습니다."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid ""
-"%(description_base)s lot/serial number cost updated from %(previous)s to "
-"%(new_cost)s."
+"%(description_base)s lot/serial number cost updated from %(previous)s to %"
+"(new_cost)s."
 msgstr ""
-"%(description_base)s 로트/일련번호 비용이 %(previous)s 에서 %(new_cost)s 으로 업데이트되었습니다."
+"%(description_base)s 로트/일련번호 비용이 %(previous)s 에서 %(new_cost)s 으"
+"로 업데이트되었습니다."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_valuation_layer.py:0
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(record)s"
-msgstr "%(user)s 사용자가 %(previous)s에서 %(new_price)s-%(record)s로 원가를 변경했습니다."
+msgstr ""
+"%(user)s 사용자가 %(previous)s에서 %(new_price)s-%(record)s로 원가를 변경했습"
+"니다."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid ""
-"%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s\n"
+"%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %"
+"(product)s\n"
 "%(reason)s"
 msgstr ""
-"%(user)s가 재고 평가를 %(previous)s에서 %(new_value)s%(product)s으로 변경했습니다:\n"
+"%(user)s가 재고 평가를 %(previous)s에서 %(new_value)s%(product)s으로 변경했습"
+"니다:\n"
 "%(reason)s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid ""
 ")\n"
-"                            <small class=\"mx-2 fst-italic\">Use a negative added value to record a decrease in the product value</small>"
+"                            <small class=\"mx-2 fst-italic\">Use a negative "
+"added value to record a decrease in the product value</small>"
 msgstr ""
 ")\n"
-"                            <small class=\"mx-2 fst-italic\">재고 가치 감소를 기록하려면 값에 음수를 사용합니다.</small>"
+"                            <small class=\"mx-2 fst-italic\">재고 가치 감소"
+"를 기록하려면 값에 음수를 사용합니다.</small>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -176,9 +185,11 @@ msgstr "평가 조정 - %s"
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid ""
-"Affect landed costs on reception operations and split them among products to"
-" update their cost price."
-msgstr "입고 작업에서 양륙비에 영향을 주며, 이를 품목 간에 분할하여 원가를 업데이트합니다."
+"Affect landed costs on reception operations and split them among products to "
+"update their cost price."
+msgstr ""
+"입고 작업에서 양륙비에 영향을 주며, 이를 품목 간에 분할하여 원가를 업데이트합"
+"니다."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__lot_ids
@@ -244,9 +255,11 @@ msgstr "취소"
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid ""
-"Cannot find a stock input account for the product %s. You must define one on"
-" the product category, or on the location, before processing this operation."
-msgstr "%s 상품의 재고 입고 계정을 찾을 수 없습니다. 이 조작을 처리하기 전에 제품 범주 또는 위치에서 하나를 정의해야 합니다."
+"Cannot find a stock input account for the product %s. You must define one on "
+"the product category, or on the location, before processing this operation."
+msgstr ""
+"%s 상품의 재고 입고 계정을 찾을 수 없습니다. 이 조작을 처리하기 전에 제품 범"
+"주 또는 위치에서 하나를 정의해야 합니다."
 
 #. module: stock_account
 #. odoo-python
@@ -256,7 +269,8 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
-"%s 상품의 재고 출고 계정을 찾을 수 없습니다. 이 조작을 처리하기 전에 제품 범주 또는 위치에서 하나를 정의해야합니다.\n"
+"%s 상품의 재고 출고 계정을 찾을 수 없습니다. 이 조작을 처리하기 전에 제품 범"
+"주 또는 위치에서 하나를 정의해야합니다.\n"
 " "
 
 #. module: stock_account
@@ -265,7 +279,9 @@ msgstr ""
 msgid ""
 "Changing your cost method is an important change that will impact your "
 "inventory valuation. Are you sure you want to make that change?"
-msgstr "비용 방법 변경은 재고 평가에 영향을 미치는 중요한 변경입니다. 변경 하시겠습니까?"
+msgstr ""
+"비용 방법 변경은 재고 평가에 영향을 미치는 중요한 변경입니다. 변경 하시겠습니"
+"까?"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
@@ -300,7 +316,9 @@ msgstr "환경설정"
 msgid ""
 "Configuration error. Please configure the price difference account on the "
 "product or its category to process this operation."
-msgstr "환경 설정 오류. 이 작업을 처리하려면 제품 또는 범주에서 가격 차이 계정을 구성하십시오."
+msgstr ""
+"환경 설정 오류. 이 작업을 처리하려면 제품 또는 범주에서 가격 차이 계정을 구성"
+"하십시오."
 
 #. module: stock_account
 #. odoo-python
@@ -330,10 +348,11 @@ msgstr "원가계산법"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Costing method change for product category %(category)s: from %(old_method)s"
-" to %(new_method)s."
+"Costing method change for product category %(category)s: from %(old_method)s "
+"to %(new_method)s."
 msgstr ""
-"품목 카테고리 %(category)s의 원가 계산 방법이 %(old_method)s에서 %(new_method)s로 변경되었습니다."
+"품목 카테고리 %(category)s의 원가 계산 방법이 %(old_method)s에서 %"
+"(new_method)s로 변경되었습니다."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
@@ -343,11 +362,15 @@ msgstr "상대 계정"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_input_categ_id
 msgid ""
-"Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
-"                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
+"Counterpart journal items for all incoming stock moves will be posted in "
+"this account, unless there is a specific valuation account\n"
+"                set on the source location. This is the default value for "
+"all products in this category. It can also directly be set on each product."
 msgstr ""
-"원래의 위치에 특정 평가 계정이 설정되어 있지 않는 한, 모든 재고 입고 이동 항목에 대한 상대 전표 항목이 이 계정에 전기됩니다.\n"
-"                이는 해당 카테고리에 속하는 전체 품목의 기본값이며, 각각의 품목에 직접 설정할 수도 있습니다. "
+"원래의 위치에 특정 평가 계정이 설정되어 있지 않는 한, 모든 재고 입고 이동 항"
+"목에 대한 상대 전표 항목이 이 계정에 전기됩니다.\n"
+"                이는 해당 카테고리에 속하는 전체 품목의 기본값이며, 각각의 품"
+"목에 직접 설정할 수도 있습니다. "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
@@ -396,7 +419,9 @@ msgstr "날짜"
 msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
-msgstr "자동 재고 평가의 경우 회계 항목이 생성되는 날짜입니다. 비어 있으면 재고 날짜가 사용됩니다."
+msgstr ""
+"자동 재고 평가의 경우 회계 항목이 생성되는 날짜입니다. 비어 있으면 재고 날짜"
+"가 사용됩니다."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
@@ -448,12 +473,13 @@ msgstr "청구서에 일련번호 및 로트 번호 표시"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Due to a change of product category (from %(old_category)s to "
-"%(new_category)s), the costing method has changed for product %(product)s: "
+"Due to a change of product category (from %(old_category)s to %"
+"(new_category)s), the costing method has changed for product %(product)s: "
 "from %(old_method)s to %(new_method)s."
 msgstr ""
-"품목 카테고리가 %(old_category)s에서 %(new_category)s으로 변경됨에 따라 %(product)s에 대한 원가 계산"
-" 방법도 %(old_method)s에서 %(new_method)s으로 변경되었습니다."
+"품목 카테고리가 %(old_category)s에서 %(new_category)s으로 변경됨에 따라 %"
+"(product)s에 대한 원가 계산 방법도 %(old_method)s에서 %(new_method)s으로 변경"
+"되었습니다."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -638,12 +664,15 @@ msgstr "수기 재고 가치 평가: %s"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
 msgid ""
-"Manual: The accounting entries to value the inventory are not posted automatically.\n"
-"        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.\n"
+"Manual: The accounting entries to value the inventory are not posted "
+"automatically.\n"
+"        Automated: An accounting entry is automatically created to value the "
+"inventory when a product enters or leaves the company.\n"
 "        "
 msgstr ""
 "수동: 재고 가치 평가에 관한 회계 전표가 자동으로 발행되지 않습니다. \n"
-"        자동: 제품이 회사에 들어 오거나 나갈 때 재고 가치 평가에 관한 전표가 자동으로 작성됩니다."
+"        자동: 제품이 회사에 들어 오거나 나갈 때 재고 가치 평가에 관한 전표가 "
+"자동으로 작성됩니다."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__added_value_by_qty
@@ -682,11 +711,12 @@ msgstr "품목"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Product %(product)s has quantity in valued location %(location)s without any lot.\n"
+"Product %(product)s has quantity in valued location %(location)s without any "
+"lot.\n"
 "Please assign lots to all your quantities before enabling lot valuation."
 msgstr ""
-"%(product)s 품목 중에 %(location)s 평가 위치에 있는 수량은 로트가 지정되지 않았습니다. 로트 평가 활성화 전에 모든"
-" 수량에 로트를 지정하세요."
+"%(product)s 품목 중에 %(location)s 평가 위치에 있는 수량은 로트가 지정되지 않"
+"았습니다. 로트 평가 활성화 전에 모든 수량에 로트를 지정하세요."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
@@ -726,7 +756,8 @@ msgstr "품목 세부선택"
 #: code:addons/stock_account/models/product.py:0
 msgid ""
 "Product value manually modified (from %(original_price)s to %(new_price)s)"
-msgstr "수동으로 수정된 품목 가격 (%(original_price)s에서 %(new_price)s으로 변경)"
+msgstr ""
+"수동으로 수정된 품목 가격 (%(original_price)s에서 %(new_price)s으로 변경)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_account_id
@@ -823,14 +854,18 @@ msgstr "표준 가격"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_cost_method
 msgid ""
-"Standard Price: The products are valued at their standard cost defined on the product.\n"
-"        Average Cost (AVCO): The products are valued at weighted average cost.\n"
-"        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.\n"
+"Standard Price: The products are valued at their standard cost defined on "
+"the product.\n"
+"        Average Cost (AVCO): The products are valued at weighted average "
+"cost.\n"
+"        First In First Out (FIFO): The products are valued supposing those "
+"that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
 "표준원가법: 품목에 지정되어 있는 표준 원가로 계산합니다.\n"
 "        평균법 (AVCO): 가중 평균 비용으로 계산합니다.\n"
-"        선입선출법 (FIFO): 먼저 회사로 입고된 품목을 먼저 출고시키는 것을 가정하여 계산합니다."
+"        선입선출법 (FIFO): 먼저 회사로 입고된 품목을 먼저 출고시키는 것을 가"
+"정하여 계산합니다."
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_stock_accounting_automatic
@@ -916,7 +951,9 @@ msgstr "재고 평가 레이어"
 msgid ""
 "Technical field to correctly show the currently selected company's currency "
 "that corresponds to the totaled value of the product's valuation layers"
-msgstr "품목의 가치 평가 단계에서 총 가치에 해당하는 값을 회사에서 현재 사용하는 통화로 올바르게 표시하도록 하는 기술 필드"
+msgstr ""
+"품목의 가치 평가 단계에서 총 가치에 해당하는 값을 회사에서 현재 사용하는 통화"
+"로 올바르게 표시하도록 하는 기술 필드"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
@@ -933,7 +970,9 @@ msgstr ""
 msgid ""
 "The Stock Input and/or Output accounts cannot be the same as the Stock "
 "Valuation account."
-msgstr "재고 입고 및/또는 출고 계정은 재고 가치 평가 계정과 동일하게 사용할 수 없습니다."
+msgstr ""
+"재고 입고 및/또는 출고 계정은 재고 가치 평가 계정과 동일하게 사용할 수 없습니"
+"다."
 
 #. module: stock_account
 #. odoo-python
@@ -955,7 +994,9 @@ msgstr "추가된 값은 재고 가치 평가에 아무런 영향을 미치지 �
 msgid ""
 "The move lines are not in a consistent state: some are entering and other "
 "are leaving the company."
-msgstr "이동 명세가 일관된 상태가 아닙니다. 일부는 들어오고 다른 하나는 회사를 떠납니다."
+msgstr ""
+"이동 명세가 일관된 상태가 아닙니다. 일부는 들어오고 다른 하나는 회사를 떠납니"
+"다."
 
 #. module: stock_account
 #. odoo-python
@@ -964,7 +1005,9 @@ msgid ""
 "The move lines are not in a consistent states: they are doing an "
 "intercompany in a single step while they should go through the intercompany "
 "transit location."
-msgstr "이동 명세가 일관된 상태가 아닙니다. 회사 간 이동 위치를 통과해야 하는 한 단계로 회사 간을 수행하고 있습니다."
+msgstr ""
+"이동 명세가 일관된 상태가 아닙니다. 회사 간 이동 위치를 통과해야 하는 한 단계"
+"로 회사 간을 수행하고 있습니다."
 
 #. module: stock_account
 #. odoo-python
@@ -972,7 +1015,9 @@ msgstr "이동 명세가 일관된 상태가 아닙니다. 회사 간 이동 위
 msgid ""
 "The move lines are not in a consistent states: they do not share the same "
 "origin or destination company."
-msgstr "이동 명세가 일관된 상태가 아닙니다. 동일한 출발지 또는 목적지 회사를 공유하지 않습니다."
+msgstr ""
+"이동 명세가 일관된 상태가 아닙니다. 동일한 출발지 또는 목적지 회사를 공유하"
+"지 않습니다."
 
 #. module: stock_account
 #. odoo-python
@@ -990,8 +1035,9 @@ msgid ""
 "the locations in a way that changes the valuation logic defined during the "
 "initial processing."
 msgstr ""
-"이동에 대한 재고 평가는 출발지와 도착지의 유형에 따라 결정됩니다. 이동이 이미 처리되었으므로, 초기 처리 과정에서 정의된 평가 논리를 "
-"변경하는 방식으로 위치를 수정할 수 없습니다."
+"이동에 대한 재고 평가는 출발지와 도착지의 유형에 따라 결정됩니다. 이동이 이"
+"미 처리되었으므로, 초기 처리 과정에서 정의된 평가 논리를 변경하는 방식으로 위"
+"치를 수정할 수 없습니다."
 
 #. module: stock_account
 #. odoo-python
@@ -999,7 +1045,9 @@ msgstr ""
 msgid ""
 "The value of a stock valuation layer cannot be negative. Landed cost could "
 "be use to correct a specific transfer."
-msgstr "주식 가치 평가값은 음수가 될 수 없습니다. 도입 원가를 사용하여 특정한 이전 항목을 수정해 보세요."
+msgstr ""
+"주식 가치 평가값은 음수가 될 수 없습니다. 도입 원가를 사용하여 특정한 이전 항"
+"목을 수정해 보세요."
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
@@ -1007,24 +1055,37 @@ msgstr "주식 가치 평가값은 음수가 될 수 없습니다. 도입 원가
 msgid ""
 "There are no valuation layers. Valuation layers are created when there are "
 "product moves that impact the valuation of the stock."
-msgstr "평가 단계가 없습니다. 재고 평가에 영향을 미칠 수 있는 품목 이동이 발생할 경우 평가 단계가 생성됩니다. "
+msgstr ""
+"평가 단계가 없습니다. 재고 평가에 영향을 미칠 수 있는 품목 이동이 발생할 경"
+"우 평가 단계가 생성됩니다. "
 
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/fields/boolean_confirm.js:0
 msgid ""
-"This operation might lead in a loss of data. Valuation will be identical for"
-" all lots/SN. Do you want to proceed ? "
-msgstr "이 작업으로 인해 데이터가 손실될 수 있습니다. 평가는 모든 로트/SN에 대해 동일하게 적용됩니다.계속 진행하시겠습니까?"
+"This operation might lead in a loss of data. Valuation will be identical for "
+"all lots/SN. Do you want to proceed ? "
+msgstr ""
+"이 작업으로 인해 데이터가 손실될 수 있습니다. 평가는 모든 로트/SN에 대해 동일"
+"하게 적용됩니다.계속 진행하시겠습니까?"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"This product is valuated by lot/serial number. Changing the cost will update"
-" the cost of every lot/serial number in stock."
+"This product is valuated by lot/serial number. Changing the cost will update "
+"the cost of every lot/serial number in stock."
 msgstr ""
-"이 제품은 로트/일련 번호별로 가격이 책정됩니다. 원가를 변경하면 현재 재고가 있는 모든 로트/일련 번호의 원가가 업데이트됩니다."
+"이 제품은 로트/일련 번호별로 가격이 책정됩니다. 원가를 변경하면 현재 재고가 "
+"있는 모든 로트/일련 번호의 원가가 업데이트됩니다."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+msgid ""
+"This product is valuated by lot: an explicit Lot/Serial number is required "
+"when adding quantity"
+msgstr ""
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
@@ -1062,8 +1123,8 @@ msgstr "전송"
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,help:stock_account.field_stock_return_picking_line__to_refund
 msgid ""
-"Trigger a decrease of the delivered/received quantity in the associated Sale"
-" Order/Purchase Order"
+"Trigger a decrease of the delivered/received quantity in the associated Sale "
+"Order/Purchase Order"
 msgstr "관련 판매 주문/구매 주문에서 배송/납품 수량 감소를 트리거합니다"
 
 #. module: stock_account
@@ -1103,8 +1164,9 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"실시간 재고 평가 사용하기. 가상 위치(비 내부 유형)를 설정하면 제품에 설정된 일반 재고 출고 계정 대신에 이 계정을 내부 위치에서 이"
-" 위치로 이동하는 상품의 값을 유지하는데 사용합니다. 이것은 내부 위치에 영향을 주지 않습니다."
+"실시간 재고 평가 사용하기. 가상 위치(비 내부 유형)를 설정하면 제품에 설정된 "
+"일반 재고 출고 계정 대신에 이 계정을 내부 위치에서 이 위치로 이동하는 상품의 "
+"값을 유지하는데 사용합니다. 이것은 내부 위치에 영향을 주지 않습니다."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
@@ -1115,8 +1177,9 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"실시간 재고 평가 사용하기. 가상 위치(비 내부 유형)를 설정하면 제품에 설정된 일반 재고 출고 계정 대신에 이 계정을 이 위치에서 내부"
-" 위치로 이동하는 상품의 값을 유지하는데 사용합니다. 이것은 내부 위치에 영향을 주지 않습니다."
+"실시간 재고 평가 사용하기. 가상 위치(비 내부 유형)를 설정하면 제품에 설정된 "
+"일반 재고 출고 계정 대신에 이 계정을 이 위치에서 내부 위치로 이동하는 상품의 "
+"값을 유지하는데 사용합니다. 이것은 내부 위치에 영향을 주지 않습니다."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__valuation
@@ -1162,10 +1225,11 @@ msgstr "로트/일련번호별 평가"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Valuation method change for product category %(category)s: from "
-"%(old_method)s to %(new_method)s."
+"Valuation method change for product category %(category)s: from %"
+"(old_method)s to %(new_method)s."
 msgstr ""
-"품목 카테고리 %(category)s에 대한 평가 방법이 %(old_method)s에서 %(new_method)s로 변경되었습니다."
+"품목 카테고리 %(category)s에 대한 평가 방법이 %(old_method)s에서 %"
+"(new_method)s로 변경되었습니다."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__adjusted_layer_ids
@@ -1193,11 +1257,13 @@ msgstr "값 Svl"
 #: model:ir.model.fields,help:stock_account.field_stock_lot__standard_price
 msgid ""
 "Value of the lot (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
+"        Used to value the product when the purchase cost is not known (e.g. "
+"inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
 "로트 값 (AVCO에서 자동으로 계산됨)은\n"
-"        구매 비용을 알 수 없는 경우 (예: 재고 조정) 제품의 가치를 계산하는 데 사용됩니다. \n"
+"        구매 비용을 알 수 없는 경우 (예: 재고 조정) 제품의 가치를 계산하는 "
+"데 사용됩니다. \n"
 "        또한 판매 주문의 마진 계산에도 사용됩니다."
 
 #. module: stock_account
@@ -1211,17 +1277,23 @@ msgstr "주의"
 msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
-msgstr "제품에서 자동 재고 평가가 활성화되면 이 계정에 제품의 현재 가치가 유지됩니다."
+msgstr ""
+"제품에서 자동 재고 평가가 활성화되면 이 계정에 제품의 현재 가치가 유지됩니다."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
 msgid ""
-"When doing automated inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account,\n"
-"                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
+"When doing automated inventory valuation, counterpart journal items for all "
+"outgoing stock moves will be posted in this account,\n"
+"                unless there is a specific valuation account set on the "
+"destination location. This is the default value for all products in this "
+"category.\n"
 "                It can also directly be set on each product."
 msgstr ""
-"자동 재고 평가를 수행하면 모든 출고 재고 이동에 대한 전표가 이 계정에 발행됩니다. \n"
-"                  대상 위치에 특정 평가 계정이 설정되어 있지 않으면 이 카테고리 내의 모든 품목에 대한 기본값입니다. \n"
+"자동 재고 평가를 수행하면 모든 출고 재고 이동에 대한 전표가 이 계정에 발행됩"
+"니다. \n"
+"                  대상 위치에 특정 평가 계정이 설정되어 있지 않으면 이 카테고"
+"리 내의 모든 품목에 대한 기본값입니다. \n"
 "                  각 품목에 직접 설정할 수도 있습니다."
 
 #. module: stock_account
@@ -1229,7 +1301,9 @@ msgstr ""
 msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
-msgstr "자동화된 재고가치 평가 시, 이 항목은 재고 이동을 진행할 때 자동으로 발행되는 회계 전표입니다."
+msgstr ""
+"자동화된 재고가치 평가 시, 이 항목은 재고 이동을 진행할 때 자동으로 발행되는 "
+"회계 전표입니다."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
@@ -1292,15 +1366,19 @@ msgid ""
 "You cannot update the cost of a product in automated valuation as it leads "
 "to the creation of a journal entry, for which you don't have the access "
 "rights."
-msgstr "접근 권한이 없는 전표입력 항목이 생성되므로 자동 평가에서 품목 원가를 업데이트할 수 없습니다."
+msgstr ""
+"접근 권한이 없는 전표입력 항목이 생성되므로 자동 평가에서 품목 원가를 업데이"
+"트할 수 없습니다."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"You don't have any input valuation account defined on your product category."
-" You must define one before processing this operation."
-msgstr "제품 범주에 정의된 입고 평가 계정이 없습니다. 이 작업을 처리하기 전에 하나를 정의해야 합니다."
+"You don't have any input valuation account defined on your product category. "
+"You must define one before processing this operation."
+msgstr ""
+"제품 범주에 정의된 입고 평가 계정이 없습니다. 이 작업을 처리하기 전에 하나를 "
+"정의해야 합니다."
 
 #. module: stock_account
 #. odoo-python
@@ -1308,15 +1386,19 @@ msgstr "제품 범주에 정의된 입고 평가 계정이 없습니다. 이 작
 msgid ""
 "You don't have any output valuation account defined on your product "
 "category. You must define one before processing this operation."
-msgstr "품목 카테고리에 정의되어 있는 출고 평가 계정이 없습니다. 이 작업을 처리하기 전 항목을 설정해야 합니다."
+msgstr ""
+"품목 카테고리에 정의되어 있는 출고 평가 계정이 없습니다. 이 작업을 처리하기 "
+"전 항목을 설정해야 합니다."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"You don't have any stock input account defined on your product category. You"
-" must define one before processing this operation."
-msgstr "품목 카테고리에 정의되어 있는 입고 재고 계정이 없습니다. 작업을 차리하기 전에 항목을 설정해야 합니다."
+"You don't have any stock input account defined on your product category. You "
+"must define one before processing this operation."
+msgstr ""
+"품목 카테고리에 정의되어 있는 입고 재고 계정이 없습니다. 작업을 차리하기 전"
+"에 항목을 설정해야 합니다."
 
 #. module: stock_account
 #. odoo-python
@@ -1324,7 +1406,9 @@ msgstr "품목 카테고리에 정의되어 있는 입고 재고 계정이 없�
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts."
-msgstr "제품 카테고리에에 재고 전표가 정의되어 있지 않습니다. 계정과목표가 설치되어 있는지 확인하십시오."
+msgstr ""
+"제품 카테고리에에 재고 전표가 정의되어 있지 않습니다. 계정과목표가 설치되어 "
+"있는지 확인하십시오."
 
 #. module: stock_account
 #. odoo-python
@@ -1332,9 +1416,11 @@ msgstr "제품 카테고리에에 재고 전표가 정의되어 있지 않습니
 #: code:addons/stock_account/models/stock_move.py:0
 #: code:addons/stock_account/models/stock_valuation_layer.py:0
 msgid ""
-"You don't have any stock valuation account defined on your product category."
-" You must define one before processing this operation."
-msgstr "제품 범주에 정의된 재고 평가 계정이 없습니다. 이 작업을 처리하기 전에 하나를 정의해야 합니다."
+"You don't have any stock valuation account defined on your product category. "
+"You must define one before processing this operation."
+msgstr ""
+"제품 범주에 정의된 재고 평가 계정이 없습니다. 이 작업을 처리하기 전에 하나를 "
+"정의해야 합니다."
 
 #. module: stock_account
 #. odoo-python

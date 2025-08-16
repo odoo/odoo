@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_project
-# 
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:39+0000\n"
+"POT-Creation-Date: 2025-08-15 18:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_project
@@ -27,7 +27,8 @@ msgid ""
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
 "                    No milestones found. Let's create one!\n"
 "                </p><p>\n"
-"                    Track major progress points that must be reached to achieve success.\n"
+"                    Track major progress points that must be reached to "
+"achieve success.\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -62,8 +63,8 @@ msgid ""
 msgstr ""
 "<span class=\"fa fa-exclamation-triangle text-warning\" "
 "title=\"ใบสั่งขายที่เกี่ยวข้องกับโครงการนี้ถูกยกเลิกแล้ว "
-"แนะนำให้อัปเดตรายการในใบสั่งขายหรือยกเลิกโครงการนี้ให้สอดคล้องกับการยกเลิกใบสั่งขาย\""
-" invisible=\"sale_order_state != 'cancel'\"/>"
+"แนะนำให้อัปเดตรายการในใบสั่งขายหรือยกเลิกโครงการนี้ให้สอดคล้องกับการยกเลิกใบสั่งขาย\" "
+"invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
@@ -76,14 +77,15 @@ msgid ""
 msgstr ""
 "<span class=\"fa fa-exclamation-triangle text-warning\" "
 "title=\"ใบสั่งขายที่เกี่ยวข้องกับงานนี้ถูกยกเลิกแล้ว "
-"แนะนำให้อัปเดตรายการในใบสั่งขายหรือยกเลิกงานนี้ให้สอดคล้องกับการยกเลิกใบสั่งขาย\""
-" invisible=\"sale_order_state != 'cancel'\"/>"
+"แนะนำให้อัปเดตรายการในใบสั่งขายหรือยกเลิกงานนี้ให้สอดคล้องกับการยกเลิกใบสั่งขาย\" "
+"invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid ""
 "<span class=\"o_stat_text\">\n"
-"                            <span class=\"o_stat_value\">0</span> Sales Order\n"
+"                            <span class=\"o_stat_value\">0</span> Sales "
+"Order\n"
 "                        </span>\n"
 "                        <span class=\"o_stat_text\">\n"
 "                            Make Billable\n"
@@ -135,8 +137,10 @@ msgstr "<span>)</span>"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid ""
-"A project must be defined on the quotation %(order)s or on the form of products creating a task on order.\n"
-"The following product need a project in which to put its task: %(product_name)s"
+"A project must be defined on the quotation %(order)s or on the form of "
+"products creating a task on order.\n"
+"The following product need a project in which to put its task: %"
+"(product_name)s"
 msgstr ""
 
 #. module: sale_project
@@ -152,10 +156,13 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 "ตามการกำหนดค่าของสินค้า ปริมาณที่ส่งมอบสามารถคำนวณโดยอัตโนมัติตามกลไก:\n"
@@ -233,8 +240,7 @@ msgstr "สร้างใบเสนอราคาใหม่ ขั้น�
 msgid ""
 "Create a project for the order with a task for each sales order line to "
 "track the time spent."
-msgstr ""
-"สร้างโปรเจ็กต์สำหรับคำสั่งซื้อโดยมีงานสำหรับบรรทัดคำสั่งซื้อแต่ละรายการเพื่อติดตามเวลาที่ใช้ไป"
+msgstr "สร้างโปรเจ็กต์สำหรับคำสั่งซื้อโดยมีงานสำหรับบรรทัดคำสั่งซื้อแต่ละรายการเพื่อติดตามเวลาที่ใช้ไป"
 
 #. module: sale_project
 #. odoo-python
@@ -260,8 +266,7 @@ msgstr "สร้างโปรเจ็กต์เปล่าสำหรั
 msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
-msgstr ""
-"สร้างใบแจ้งหนี้ ลงทะเบียนการชําระเงิน และติดตามการสนทนากับลูกค้าของคุณ"
+msgstr "สร้างใบแจ้งหนี้ ลงทะเบียนการชําระเงิน และติดตามการสนทนากับลูกค้าของคุณ"
 
 #. module: sale_project
 #. odoo-python
@@ -283,9 +288,7 @@ msgstr "สร้างคำสั่ง"
 msgid ""
 "Create projects or tasks later, and link them to order to track the time "
 "spent."
-msgstr ""
-"สร้างโปรเจ็กต์หรืองานในภายหลัง "
-"และเชื่อมโยงเข้ากับคำสั่งซื้อเพื่อติดตามเวลาที่ใช้ไป"
+msgstr "สร้างโปรเจ็กต์หรืองานในภายหลัง และเชื่อมโยงเข้ากับคำสั่งซื้อเพื่อติดตามเวลาที่ใช้ไป"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__partner_id
@@ -435,11 +438,15 @@ msgstr "โหลดเพิ่ม"
 #: model:ir.model.fields,help:sale_project.field_product_product__service_type
 #: model:ir.model.fields,help:sale_project.field_product_template__service_type
 msgid ""
-"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
-"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
-"Create a task and track hours: Create a task on the sales order validation and track the work hours."
+"Manually set quantities on order: Invoice based on the manually entered "
+"quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related "
+"timesheet.\n"
+"Create a task and track hours: Create a task on the sales order validation "
+"and track the work hours."
 msgstr ""
-"กำหนดปริมาณตามคำสั่งซื้อด้วยตนเอง: ใบแจ้งหนี้ตามปริมาณที่ป้อนด้วยตนเอง โดยไม่ต้องสร้างบัญชีวิเคราะห์\n"
+"กำหนดปริมาณตามคำสั่งซื้อด้วยตนเอง: ใบแจ้งหนี้ตามปริมาณที่ป้อนด้วยตนเอง "
+"โดยไม่ต้องสร้างบัญชีวิเคราะห์\n"
 "ใบบันทึกเวลาในสัญญา: ใบแจ้งหนี้ตามชั่วโมงที่ติดตามบนใบบันทึกเวลาที่เกี่ยวข้อง\n"
 "สร้างงานและติดตามชั่วโมง: สร้างงานในการตรวจสอบคำสั่งขายและติดตามชั่วโมงทำงาน"
 
@@ -506,10 +513,9 @@ msgstr "ภาพเขียน"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
 msgid ""
-"Percentage of the ordered quantity that will automatically be delivered once"
-" the milestone is reached."
-msgstr ""
-"เปอร์เซ็นต์ของปริมาณที่สั่งซื้อซึ่งจะถูกจัดส่งโดยอัตโนมัติเมื่อบรรลุเป้าหมายแล้ว"
+"Percentage of the ordered quantity that will automatically be delivered once "
+"the milestone is reached."
+msgstr "เปอร์เซ็นต์ของปริมาณที่สั่งซื้อซึ่งจะถูกจัดส่งโดยอัตโนมัติเมื่อบรรลุเป้าหมายแล้ว"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_plumbing_product_template
@@ -542,8 +548,8 @@ msgstr "ตัวแปรสินค้า"
 #: model:ir.model.fields,help:sale_project.field_project_project__reinvoiced_sale_order_id
 msgid ""
 "Products added to stock pickings, whose operation type is configured to "
-"generate analytic costs, will be re-invoiced in this sales order if they are"
-" set up for it."
+"generate analytic costs, will be re-invoiced in this sales order if they are "
+"set up for it."
 msgstr ""
 "ผลิตภัณฑ์ที่เพิ่มเข้าในการเลือกสินค้า "
 "ซึ่งประเภทการดำเนินการได้รับการกำหนดค่าให้สร้างต้นทุนการวิเคราะห์ "
@@ -655,13 +661,20 @@ msgstr "รายการใบสั่งขายที่จะมีกา
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
 msgid ""
-"Sales Order Item to which the time spent on this task will be added in order to be invoiced to your customer.\n"
-"By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
-"Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
+"Sales Order Item to which the time spent on this task will be added in order "
+"to be invoiced to your customer.\n"
+"By default the sales order item set on the project will be selected. In the "
+"absence of one, the last prepaid sales order item that has time remaining "
+"will be used.\n"
+"Remove the sales order item in order to make this task non billable. You can "
+"also change or remove the sales order item of each timesheet entry "
+"individually."
 msgstr ""
 "เวลาที่ใช้ในงานของรายการใบสั่งขายนี้จะถูกเพิ่มเพื่อที่จะออกใบแจ้งหนี้ให้กับลูกค้าของคุณ\n"
-"ตามค่าเริ่มต้น รายการใบสั่งขายที่ตั้งค่าไว้ในโปรเจ็กต์จะถูกเลือก หากไม่มีรายการใดรายการหนึ่ง ระบบจะใช้รายการใบสั่งขายแบบชำระเงินล่วงหน้าล่าสุดที่มีเวลาคงเหลือ\n"
-"ลบรายการในใบสั่งขายเพื่อทำให้งานนี้ไม่สามารถเรียกเก็บเงินได้ คุณยังสามารถเปลี่ยนแปลงหรือลบรายการใบสั่งขายของแต่ละรายการในระบบบันทึกเวลาทีละรายการได้"
+"ตามค่าเริ่มต้น รายการใบสั่งขายที่ตั้งค่าไว้ในโปรเจ็กต์จะถูกเลือก หากไม่มีรายการใดรายการหนึ่ง "
+"ระบบจะใช้รายการใบสั่งขายแบบชำระเงินล่วงหน้าล่าสุดที่มีเวลาคงเหลือ\n"
+"ลบรายการในใบสั่งขายเพื่อทำให้งานนี้ไม่สามารถเรียกเก็บเงินได้ "
+"คุณยังสามารถเปลี่ยนแปลงหรือลบรายการใบสั่งขายของแต่ละรายการในระบบบันทึกเวลาทีละรายการได้"
 
 #. module: sale_project
 #. odoo-javascript
@@ -687,10 +700,14 @@ msgstr "คำสั่งขาย"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
 msgid ""
-"Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
-"It can be modified on each task and timesheet entry individually if necessary."
+"Sales order item that will be selected by default on the tasks and "
+"timesheets of this project, except if the employee set on the timesheets is "
+"explicitely linked to another sales order item on the project.\n"
+"It can be modified on each task and timesheet entry individually if "
+"necessary."
 msgstr ""
-"รายการในใบสั่งขายที่จะถูกเลือกตามค่าเริ่มต้นในงานและระบบบันทึกเวลาของโปรเจ็กต์นี้ ยกเว้นว่าพนักงานที่ตั้งค่าไว้ในระบบบันทึกเวลาจะเชื่อมโยงอย่างชัดเจนกับรายการในใบสั่งขายอื่นในโปรเจ็กต์\n"
+"รายการในใบสั่งขายที่จะถูกเลือกตามค่าเริ่มต้นในงานและระบบบันทึกเวลาของโปรเจ็กต์นี้ "
+"ยกเว้นว่าพนักงานที่ตั้งค่าไว้ในระบบบันทึกเวลาจะเชื่อมโยงอย่างชัดเจนกับรายการในใบสั่งขายอื่นในโปรเจ็กต์\n"
 "สามารถแก้ไขได้ในแต่ละงานและรายการบันทึกเวลาจะแยกกันหากมีความจำเป็น"
 
 #. module: sale_project
@@ -784,8 +801,7 @@ msgstr "สินค้า %sไม่ควรมีโปรเจ็กต์
 msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
-msgstr ""
-"สินค้า  %sไม่ควรมีโปรเจ็กต์หรือเทมเพลตโปรเจ็กต์เนื่องจากจะไม่สร้างโปรเจ็กต์"
+msgstr "สินค้า  %sไม่ควรมีโปรเจ็กต์หรือเทมเพลตโปรเจ็กต์เนื่องจากจะไม่สร้างโปรเจ็กต์"
 
 #. module: sale_project
 #. odoo-python
@@ -793,8 +809,7 @@ msgstr ""
 msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
-msgstr ""
-"สินค้า %s ไม่ควรมีเทมเพลตโปรเจ็กต์เนื่องจากจะสร้างงานในโปรเจ็กต์ทั่วโลก"
+msgstr "สินค้า %s ไม่ควรมีเทมเพลตโปรเจ็กต์เนื่องจากจะสร้างงานในโปรเจ็กต์ทั่วโลก"
 
 #. module: sale_project
 #. odoo-python
@@ -803,8 +818,8 @@ msgid ""
 "The project couldn't be created as the Sales Order must be confirmed, is "
 "already linked to a project, or doesn't involve any services."
 msgstr ""
-"ไม่สามารถสร้างโปรเจ็กต์ได้ เนื่องจากต้องยืนยันใบสั่งขาย "
-"เชื่อมโยงกับโปรเจ็กต์อยู่แล้ว หรือไม่เกี่ยวข้องกับบริการใดๆ"
+"ไม่สามารถสร้างโปรเจ็กต์ได้ เนื่องจากต้องยืนยันใบสั่งขาย เชื่อมโยงกับโปรเจ็กต์อยู่แล้ว "
+"หรือไม่เกี่ยวข้องกับบริการใดๆ"
 
 #. module: sale_project
 #. odoo-python
@@ -843,18 +858,13 @@ msgid ""
 "        30h Allocate 30 hours to the task\n"
 "        #tags Set tags on the task\n"
 "        @user Assign the task to a user\n"
-"        ! Set the task a high priority\n"
+"        ! Set the task a medium priority\n"
+"        !! Set the task a high priority\n"
+"        !!! Set the task a urgent priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
-"ใช้คำสำคัญเหล่านี้ในชื่อเรื่องเพื่อกำหนดงานใหม่:\n"
-"\n"
-"        30 ชม. จัดสรรเวลา 30 ชั่วโมงให้กับงาน\n"
-"        #แท็ก ตั้งค่าแท็กในงาน\n"
-"        @ผู้ใช้ มอบหมายงานให้กับผู้ใช้\n"
-"        ! กำหนดให้งานมีลำดับความสำคัญสูง\n"
-"\n"
-"        ตรวจสอบให้แน่ใจว่าใช้รูปแบบและลำดับที่ถูกต้อง เช่น ปรับหน้าจอของการกำหนดค่า 5 ชม #feature #v16 @Mitchell !"
 
 #. module: sale_project
 #. odoo-python
@@ -912,3 +922,24 @@ msgstr ""
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "sale_order_id"
 msgstr ""
+
+#~ msgid ""
+#~ "Use these keywords in the title to set new tasks:\n"
+#~ "\n"
+#~ "        30h Allocate 30 hours to the task\n"
+#~ "        #tags Set tags on the task\n"
+#~ "        @user Assign the task to a user\n"
+#~ "        ! Set the task a high priority\n"
+#~ "\n"
+#~ "        Make sure to use the right format and order e.g. Improve the "
+#~ "configuration screen 5h #feature #v16 @Mitchell !"
+#~ msgstr ""
+#~ "ใช้คำสำคัญเหล่านี้ในชื่อเรื่องเพื่อกำหนดงานใหม่:\n"
+#~ "\n"
+#~ "        30 ชม. จัดสรรเวลา 30 ชั่วโมงให้กับงาน\n"
+#~ "        #แท็ก ตั้งค่าแท็กในงาน\n"
+#~ "        @ผู้ใช้ มอบหมายงานให้กับผู้ใช้\n"
+#~ "        ! กำหนดให้งานมีลำดับความสำคัญสูง\n"
+#~ "\n"
+#~ "        ตรวจสอบให้แน่ใจว่าใช้รูปแบบและลำดับที่ถูกต้อง เช่น ปรับหน้าจอของการกำหนดค่า 5 "
+#~ "ชม #feature #v16 @Mitchell !"

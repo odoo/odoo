@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* project_timesheet_holidays
-# 
+#
 # Translators:
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 13:24+0000\n"
+"POT-Creation-Date: 2025-08-15 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_account_analytic_line
@@ -31,17 +34,6 @@ msgid "Analytic Lines"
 msgstr "Рядки аналітики"
 
 #. module: project_timesheet_holidays
-#. odoo-python
-#: code:addons/project_timesheet_holidays/models/hr_holidays.py:0
-msgid ""
-"Both the internal project and task are required to generate a timesheet for "
-"the time off %s. If you don't want a timesheet, you should leave the "
-"internal project and task empty."
-msgstr ""
-"І проект і завдання вимагають ствоерння табеля для відпустки %s. Якщо ви не "
-"хочете табель, ви повинні залишити внутрішній проект та завдання пустими."
-
-#. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
 msgid "Companies"
 msgstr "Компанії"
@@ -52,28 +44,36 @@ msgid "Config Settings"
 msgstr "Налаштування"
 
 #. module: project_timesheet_holidays
+#: model:ir.model,website_form_label:project_timesheet_holidays.model_project_task
+msgid "Create a Task"
+msgstr ""
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_resource_calendar_leaves__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_employee
 msgid "Employee"
 msgstr "Співробітник"
 
 #. module: project_timesheet_holidays
-#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
-msgid "Generate Timesheets"
-msgstr "Створити табелі"
-
-#. module: project_timesheet_holidays
-#: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
-msgid "Generate timesheets when validating time off requests of this type"
-msgstr "Створюйте табелі під час перевірки запитів на відпустку цього типу"
-
-#. module: project_timesheet_holidays
-#: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
-msgid ""
-"If checked, when validating a time off, timesheet will be generated in the "
-"Vacation Project of the company."
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_employee__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_resource_calendar_leaves__id
+msgid "ID"
 msgstr ""
-"Якщо перевірено, під час підтвердження відпустки, табель буде створюватися у"
-" проекті відпусток компанії."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -87,13 +87,6 @@ msgid "Internal Project"
 msgstr "Внутрішній проект"
 
 #. module: project_timesheet_holidays
-#. odoo-python
-#: code:addons/project_timesheet_holidays/models/project_task.py:0
-msgid "Operation not supported"
-msgstr "Операція не підтримується"
-
-#. module: project_timesheet_holidays
-#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_project_id
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
 msgid "Project"
 msgstr "Проект"
@@ -106,7 +99,6 @@ msgstr "Деталі відпустки співробітника"
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_project_task
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__task_id
-#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_task_id
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
 msgid "Task"
 msgstr "Завдання"
@@ -119,8 +111,8 @@ msgid ""
 "individually."
 msgstr ""
 "Проект за замовчуванням, який використовується під час автоматичного "
-"створення табелів за допомогою запитів на відпустку. Ви можете вказати інший"
-" проект для кожного типу відпустки окремо."
+"створення табелів за допомогою запитів на відпустку. Ви можете вказати інший "
+"проект для кожного типу відпустки окремо."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
@@ -143,7 +135,7 @@ msgstr "Відпустка"
 
 #. module: project_timesheet_holidays
 #. odoo-python
-#: code:addons/project_timesheet_holidays/models/hr_holidays.py:0
+#: code:addons/project_timesheet_holidays/models/hr_leave.py:0
 #: code:addons/project_timesheet_holidays/models/resource_calendar_leaves.py:0
 msgid "Time Off (%(index)s/%(total)s)"
 msgstr "Відпустка (%(index)s/%(total)s)"
@@ -155,19 +147,25 @@ msgid "Time Off Task"
 msgstr "Завдання відпустки"
 
 #. module: project_timesheet_holidays
-#: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
-msgid "Time Off Type"
-msgstr "Тип відпустки"
-
-#. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
 msgid "Time Off Types Count"
 msgstr "Підрахунок типів відпусток"
 
 #. module: project_timesheet_holidays
-#: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
-msgid "Timesheets"
-msgstr "Табелі"
+#: model:ir.model.fields,help:project_timesheet_holidays.field_project_task__display_name
+msgid ""
+"Use these keywords in the title to set new tasks:\n"
+"\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a medium priority\n"
+"        !! Set the task a high priority\n"
+"        !!! Set the task a urgent priority\n"
+"\n"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
+msgstr ""
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -210,5 +208,41 @@ msgid ""
 "use the Time Off application to modify your time off requests instead."
 msgstr ""
 "Ви не можете змінювати табелі, пов’язані із запитами на відпустку. Будь "
-"ласка, використовуйте модуль Відпустка, щоб змінити ваші запити на "
-"відпустку."
+"ласка, використовуйте модуль Відпустка, щоб змінити ваші запити на відпустку."
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/__init__.py:0
+msgid "allow_timesheets"
+msgstr ""
+
+#~ msgid ""
+#~ "Both the internal project and task are required to generate a timesheet "
+#~ "for the time off %s. If you don't want a timesheet, you should leave the "
+#~ "internal project and task empty."
+#~ msgstr ""
+#~ "І проект і завдання вимагають ствоерння табеля для відпустки %s. Якщо ви "
+#~ "не хочете табель, ви повинні залишити внутрішній проект та завдання "
+#~ "пустими."
+
+#~ msgid "Generate Timesheets"
+#~ msgstr "Створити табелі"
+
+#~ msgid "Generate timesheets when validating time off requests of this type"
+#~ msgstr "Створюйте табелі під час перевірки запитів на відпустку цього типу"
+
+#~ msgid ""
+#~ "If checked, when validating a time off, timesheet will be generated in "
+#~ "the Vacation Project of the company."
+#~ msgstr ""
+#~ "Якщо перевірено, під час підтвердження відпустки, табель буде "
+#~ "створюватися у проекті відпусток компанії."
+
+#~ msgid "Operation not supported"
+#~ msgstr "Операція не підтримується"
+
+#~ msgid "Time Off Type"
+#~ msgstr "Тип відпустки"
+
+#~ msgid "Timesheets"
+#~ msgstr "Табелі"

@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_account
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Manon Rondou, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 09:28+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_account
@@ -42,15 +42,15 @@ msgstr " [Geboekt op %s]"
 msgid ""
 "%(description_base)s Product cost updated from %(previous)s to %(new_cost)s."
 msgstr ""
-"%(description_base)s productkost bijgewerkt van %(previous)s naar "
-"%(new_cost)s."
+"%(description_base)s productkost bijgewerkt van %(previous)s naar %"
+"(new_cost)s."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid ""
-"%(description_base)s lot/serial number cost updated from %(previous)s to "
-"%(new_cost)s."
+"%(description_base)s lot/serial number cost updated from %(previous)s to %"
+"(new_cost)s."
 msgstr ""
 "%(description_base)s partij-/serienummerkost bijgewerkt van %(previous)s "
 "naar %(new_cost)s."
@@ -66,20 +66,25 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid ""
-"%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s\n"
+"%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %"
+"(product)s\n"
 "%(reason)s"
 msgstr ""
-"%(user)s veranderde voorraadwaardering van %(previous)s naar %(new_value)s - %(product)s\n"
+"%(user)s veranderde voorraadwaardering van %(previous)s naar %(new_value)s - "
+"%(product)s\n"
 "%(reason)s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid ""
 ")\n"
-"                            <small class=\"mx-2 fst-italic\">Use a negative added value to record a decrease in the product value</small>"
+"                            <small class=\"mx-2 fst-italic\">Use a negative "
+"added value to record a decrease in the product value</small>"
 msgstr ""
 ")\n"
-"                            <small class=\"mx-2 fst-italic\">Gebruik een negatieve toegevoegde waarde om een daling van de productwaarde vast te leggen</small>"
+"                            <small class=\"mx-2 fst-italic\">Gebruik een "
+"negatieve toegevoegde waarde om een daling van de productwaarde vast te "
+"leggen</small>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -183,8 +188,8 @@ msgstr "Waarde aanpassen - %s"
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid ""
-"Affect landed costs on reception operations and split them among products to"
-" update their cost price."
+"Affect landed costs on reception operations and split them among products to "
+"update their cost price."
 msgstr ""
 "Heeft effect op de logistieke kosten bij ontvangsten en wordt gedeeld over "
 "de producten om de kostprijs bij te werken."
@@ -253,8 +258,8 @@ msgstr "Annuleren"
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid ""
-"Cannot find a stock input account for the product %s. You must define one on"
-" the product category, or on the location, before processing this operation."
+"Cannot find a stock input account for the product %s. You must define one on "
+"the product category, or on the location, before processing this operation."
 msgstr ""
 "Kan geen voorraadtoename rekening vinden voor het product %s. Deze moet "
 "ingesteld worden op de productcategorie, of op de locatie, vóór het "
@@ -317,8 +322,8 @@ msgid ""
 "Configuration error. Please configure the price difference account on the "
 "product or its category to process this operation."
 msgstr ""
-"Configuratiefout. Configureer de prijsverschillen rekening op het product of"
-" de categorie om deze bewerking te verwerken."
+"Configuratiefout. Configureer de prijsverschillen rekening op het product of "
+"de categorie om deze bewerking te verwerken."
 
 #. module: stock_account
 #. odoo-python
@@ -348,11 +353,11 @@ msgstr "Kostprijsbepaling"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Costing method change for product category %(category)s: from %(old_method)s"
-" to %(new_method)s."
+"Costing method change for product category %(category)s: from %(old_method)s "
+"to %(new_method)s."
 msgstr ""
-"Wijziging van de kostprijsbepaling voor productcategorie %(category)s: van "
-"%(old_method)s naar %(new_method)s."
+"Wijziging van de kostprijsbepaling voor productcategorie %(category)s: van %"
+"(old_method)s naar %(new_method)s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
@@ -362,11 +367,16 @@ msgstr "Tegenrekening"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_input_categ_id
 msgid ""
-"Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
-"                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
+"Counterpart journal items for all incoming stock moves will be posted in "
+"this account, unless there is a specific valuation account\n"
+"                set on the source location. This is the default value for "
+"all products in this category. It can also directly be set on each product."
 msgstr ""
-"Tegenrekening boekingen voor alle inkomende voorraadbewegingen worden op deze rekening geboekt, maar niet als er een specifieke waarderingsrekening is\n"
-"ingesteld op de bronlocatie. Dit is de standaardwaarde voor alle producten in deze categorie. Het kan ook direct op elk product worden ingesteld."
+"Tegenrekening boekingen voor alle inkomende voorraadbewegingen worden op "
+"deze rekening geboekt, maar niet als er een specifieke waarderingsrekening "
+"is\n"
+"ingesteld op de bronlocatie. Dit is de standaardwaarde voor alle producten "
+"in deze categorie. Het kan ook direct op elk product worden ingesteld."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
@@ -469,13 +479,13 @@ msgstr "Toon serie & partijnummer op facturen"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Due to a change of product category (from %(old_category)s to "
-"%(new_category)s), the costing method has changed for product %(product)s: "
+"Due to a change of product category (from %(old_category)s to %"
+"(new_category)s), the costing method has changed for product %(product)s: "
 "from %(old_method)s to %(new_method)s."
 msgstr ""
-"Door een wijziging in de productcategorie (van %(old_category)s naar "
-"%(new_category)s), is de kostprijsbepaling voor productsjabloon van "
-"%(product)s gewijzigd van %(old_method)s naar %(new_method)s."
+"Door een wijziging in de productcategorie (van %(old_category)s naar %"
+"(new_category)s), is de kostprijsbepaling voor productsjabloon van %"
+"(product)s gewijzigd van %(old_method)s naar %(new_method)s."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -527,8 +537,8 @@ msgstr "ID"
 #: model:ir.model.fields,help:stock_account.field_stock_lot__lot_valuated
 msgid "If checked, the valuation will be specific by Lot/Serial number."
 msgstr ""
-"Als deze optie is aangevinkt, wordt de taxatie specifiek op "
-"serie-/partijnummer uitgevoerd."
+"Als deze optie is aangevinkt, wordt de taxatie specifiek op serie-/"
+"partijnummer uitgevoerd."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
@@ -606,7 +616,8 @@ msgid ""
 "Correct this quantity before enabling/disabling lot valuation."
 msgstr ""
 "Partij-/serienummer %(lot)s heeft een negatieve hoeveelheid op voorraad.\n"
-"Corrigeer deze hoeveelheid voordat je Partij-/serienummer-waardering in-/uitschakelt."
+"Corrigeer deze hoeveelheid voordat je Partij-/serienummer-waardering in-/"
+"uitschakelt."
 
 #. module: stock_account
 #. odoo-python
@@ -664,12 +675,16 @@ msgstr "Handmatige voorraadwaardering: %s."
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
 msgid ""
-"Manual: The accounting entries to value the inventory are not posted automatically.\n"
-"        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.\n"
+"Manual: The accounting entries to value the inventory are not posted "
+"automatically.\n"
+"        Automated: An accounting entry is automatically created to value the "
+"inventory when a product enters or leaves the company.\n"
 "        "
 msgstr ""
-"Handmatig: de boekingen om de voorraad te waarderen worden niet automatisch geboekt.\n"
-"Realtime: een boeking wordt automatisch gemaakt om de voorraad te waarderen wanneer een product het bedrijf binnenkomt of verlaat.\n"
+"Handmatig: de boekingen om de voorraad te waarderen worden niet automatisch "
+"geboekt.\n"
+"Realtime: een boeking wordt automatisch gemaakt om de voorraad te waarderen "
+"wanneer een product het bedrijf binnenkomt of verlaat.\n"
 "        "
 
 #. module: stock_account
@@ -709,11 +724,14 @@ msgstr "Product"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Product %(product)s has quantity in valued location %(location)s without any lot.\n"
+"Product %(product)s has quantity in valued location %(location)s without any "
+"lot.\n"
 "Please assign lots to all your quantities before enabling lot valuation."
 msgstr ""
-"Product %(product)s heeft hoeveelheid in gewaardeerde locatie %(location)s zonder partij-/serienummer.\n"
-"Wijs partij-/serienummers toe aan alle hoeveelheden voordat je partij-/serienummer-waardering inschakelt."
+"Product %(product)s heeft hoeveelheid in gewaardeerde locatie %(location)s "
+"zonder partij-/serienummer.\n"
+"Wijs partij-/serienummers toe aan alle hoeveelheden voordat je partij-/"
+"serienummer-waardering inschakelt."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
@@ -754,8 +772,8 @@ msgstr "Productvariant"
 msgid ""
 "Product value manually modified (from %(original_price)s to %(new_price)s)"
 msgstr ""
-"Productwaarde handmatig gewijzigd (vanaf %(original_price)s naar "
-"%(new_price)s)"
+"Productwaarde handmatig gewijzigd (vanaf %(original_price)s naar %"
+"(new_price)s)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_account_id
@@ -840,8 +858,7 @@ msgstr "Herwaardering"
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Select an existing lot/serial number to be reevaluated"
 msgstr ""
-"Selecteer een bestaand serie-/partijnummer dat opnieuw moet worden "
-"beoordeeld"
+"Selecteer een bestaand serie-/partijnummer dat opnieuw moet worden beoordeeld"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
@@ -854,14 +871,21 @@ msgstr "Kostprijs"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_cost_method
 msgid ""
-"Standard Price: The products are valued at their standard cost defined on the product.\n"
-"        Average Cost (AVCO): The products are valued at weighted average cost.\n"
-"        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.\n"
+"Standard Price: The products are valued at their standard cost defined on "
+"the product.\n"
+"        Average Cost (AVCO): The products are valued at weighted average "
+"cost.\n"
+"        First In First Out (FIFO): The products are valued supposing those "
+"that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
-"Vaste verreken prijs: De producten worden gewaardeerd tegen de kostprijs zoals ingesteld op het product\n"
-"Gemiddelde kostprijs (AVCO): De producten worden gewaardeerd tegen de gewogen gemiddelde waarde.\n"
-"First In First Out (FIFO): De producten worden gewaardeerd, waarbij ervan uit wordt gegaan dat de producten die het bedrijf als eerste binnenkomen ook als eerste het bedrijf verlaten.\n"
+"Vaste verreken prijs: De producten worden gewaardeerd tegen de kostprijs "
+"zoals ingesteld op het product\n"
+"Gemiddelde kostprijs (AVCO): De producten worden gewaardeerd tegen de "
+"gewogen gemiddelde waarde.\n"
+"First In First Out (FIFO): De producten worden gewaardeerd, waarbij ervan "
+"uit wordt gegaan dat de producten die het bedrijf als eerste binnenkomen ook "
+"als eerste het bedrijf verlaten.\n"
 "        "
 
 #. module: stock_account
@@ -949,8 +973,8 @@ msgid ""
 "Technical field to correctly show the currently selected company's currency "
 "that corresponds to the totaled value of the product's valuation layers"
 msgstr ""
-"Technisch veld om de huidige door het bedrijf gekozen valuta correct weer te"
-" geven, dat overeenkomst met de totale waarde van de waardelagen van het "
+"Technisch veld om de huidige door het bedrijf gekozen valuta correct weer te "
+"geven, dat overeenkomst met de totale waarde van de waardelagen van het "
 "product"
 
 #. module: stock_account
@@ -979,8 +1003,8 @@ msgid ""
 "The action leads to the creation of a journal entry, for which you don't "
 "have the access rights."
 msgstr ""
-"De actie leidt tot het aanmaken van een financiële boeking, waarvoor je geen"
-" toegangsrechten heeft."
+"De actie leidt tot het aanmaken van een financiële boeking, waarvoor je geen "
+"toegangsrechten heeft."
 
 #. module: stock_account
 #. odoo-python
@@ -1017,8 +1041,8 @@ msgid ""
 "The move lines are not in a consistent states: they do not share the same "
 "origin or destination company."
 msgstr ""
-"De boekingsregels bevinden zich niet in een consistente staat: ze delen niet"
-" dezelfde bron of bestemmingsbedrijf."
+"De boekingsregels bevinden zich niet in een consistente staat: ze delen niet "
+"dezelfde bron of bestemmingsbedrijf."
 
 #. module: stock_account
 #. odoo-python
@@ -1038,10 +1062,10 @@ msgid ""
 "the locations in a way that changes the valuation logic defined during the "
 "initial processing."
 msgstr ""
-"De voorraadwaardering van een verplaatsing is gebaseerd op het type bron- en"
-" bestemmingslocatie. Omdat de verplaatsing al is verwerkt, kun je de "
-"locaties niet zodanig wijzigen dat de waarderingslogica verandert die "
-"tijdens de initiële verwerking is gedefinieerd."
+"De voorraadwaardering van een verplaatsing is gebaseerd op het type bron- en "
+"bestemmingslocatie. Omdat de verplaatsing al is verwerkt, kun je de locaties "
+"niet zodanig wijzigen dat de waarderingslogica verandert die tijdens de "
+"initiële verwerking is gedefinieerd."
 
 #. module: stock_account
 #. odoo-python
@@ -1050,8 +1074,8 @@ msgid ""
 "The value of a stock valuation layer cannot be negative. Landed cost could "
 "be use to correct a specific transfer."
 msgstr ""
-"De waarde van een voorraadwaarderingslaag kan niet negatief zijn. Logistieke"
-" kosten kunnen worden gebruikt om een specifieke overboeking te corrigeren."
+"De waarde van een voorraadwaarderingslaag kan niet negatief zijn. Logistieke "
+"kosten kunnen worden gebruikt om een specifieke overboeking te corrigeren."
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
@@ -1061,15 +1085,14 @@ msgid ""
 "product moves that impact the valuation of the stock."
 msgstr ""
 "Er zijn geen waarderingslagen. Waarderingslagen worden gemaakt wanneer er "
-"productbewegingen zijn die van invloed zijn op de waardering van de "
-"voorraad."
+"productbewegingen zijn die van invloed zijn op de waardering van de voorraad."
 
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/fields/boolean_confirm.js:0
 msgid ""
-"This operation might lead in a loss of data. Valuation will be identical for"
-" all lots/SN. Do you want to proceed ? "
+"This operation might lead in a loss of data. Valuation will be identical for "
+"all lots/SN. Do you want to proceed ? "
 msgstr ""
 "Deze bewerking kan leiden tot gegevensverlies. De waardering zal identiek "
 "zijn voor alle Partijen/SN. Wil je doorgaan?"
@@ -1078,12 +1101,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"This product is valuated by lot/serial number. Changing the cost will update"
-" the cost of every lot/serial number in stock."
+"This product is valuated by lot/serial number. Changing the cost will update "
+"the cost of every lot/serial number in stock."
 msgstr ""
 "Dit product wordt gewaardeerd per serie-/partijnummer. Als je de kosten "
-"wijzigt, worden de kosten van elke partij/serienummer in voorraad "
-"bijgewerkt."
+"wijzigt, worden de kosten van elke partij/serienummer in voorraad bijgewerkt."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+msgid ""
+"This product is valuated by lot: an explicit Lot/Serial number is required "
+"when adding quantity"
+msgstr ""
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
@@ -1121,8 +1151,8 @@ msgstr "Verplaatsing"
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,help:stock_account.field_stock_return_picking_line__to_refund
 msgid ""
-"Trigger a decrease of the delivered/received quantity in the associated Sale"
-" Order/Purchase Order"
+"Trigger a decrease of the delivered/received quantity in the associated Sale "
+"Order/Purchase Order"
 msgstr ""
 "Leidt tot een daling van de geleverde/ontvangen aantal in de bijbehorende "
 "verkooporder/inkooporder"
@@ -1167,8 +1197,8 @@ msgstr ""
 "Gebruik real-time voorraadwaardering. Wanneer dit is ingesteld op een "
 "virtuele locatie (niet een interne locatie), dan zal deze rekening de "
 "inkoopwaarde bevatten van de producten welke worden verplaatst uit een "
-"interne locatie naar deze locatie, in plaats van de standaard voorraadafname"
-" rekening, zoals ingesteld bij het product. Dit heeft geen effect voor "
+"interne locatie naar deze locatie, in plaats van de standaard voorraadafname "
+"rekening, zoals ingesteld bij het product. Dit heeft geen effect voor "
 "interne locaties."
 
 #. module: stock_account
@@ -1183,8 +1213,8 @@ msgstr ""
 "Gebruik real-time voorraadwaardering. Wanneer dit is ingesteld op een "
 "virtuele locatie (niet een interne locatie), dan zal deze rekening de "
 "inkoopwaarde bevatten van de producten welke worden verplaatst uit deze "
-"locatie naar een interne locatie, in plaats van de standaard voorraadafname"
-"  rekening, zoals ingesteld bij het product. Dit heeft geen effect voor "
+"locatie naar een interne locatie, in plaats van de standaard voorraadafname  "
+"rekening, zoals ingesteld bij het product. Dit heeft geen effect voor "
 "interne locaties."
 
 #. module: stock_account
@@ -1231,11 +1261,11 @@ msgstr "Waardering per partij/serienummer"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Valuation method change for product category %(category)s: from "
-"%(old_method)s to %(new_method)s."
+"Valuation method change for product category %(category)s: from %"
+"(old_method)s to %(new_method)s."
 msgstr ""
-"Wijziging van de prijsbepaling voor productcategorie %(category)s: van "
-"%(old_method)s naar %(new_method)s."
+"Wijziging van de prijsbepaling voor productcategorie %(category)s: van %"
+"(old_method)s naar %(new_method)s."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__adjusted_layer_ids
@@ -1263,11 +1293,13 @@ msgstr "Waarde Svl"
 #: model:ir.model.fields,help:stock_account.field_stock_lot__standard_price
 msgid ""
 "Value of the lot (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
+"        Used to value the product when the purchase cost is not known (e.g. "
+"inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
 "Waarde van de partij (automatisch berekend in AVCO).\n"
-"        Wordt gebruikt om het product te waarderen als de inkoopkosten niet bekend zijn (bijv. voorraadaanpassing).\n"
+"        Wordt gebruikt om het product te waarderen als de inkoopkosten niet "
+"bekend zijn (bijv. voorraadaanpassing).\n"
 "        Wordt gebruikt om marges op verkooporders te berekenen."
 
 #. module: stock_account
@@ -1288,12 +1320,18 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
 msgid ""
-"When doing automated inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account,\n"
-"                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
+"When doing automated inventory valuation, counterpart journal items for all "
+"outgoing stock moves will be posted in this account,\n"
+"                unless there is a specific valuation account set on the "
+"destination location. This is the default value for all products in this "
+"category.\n"
 "                It can also directly be set on each product."
 msgstr ""
-"Bij het uitvoeren van automatische voorraadwaardering, zal de tegenboeking voor alle uitgaande voorraadverplaatsingen worden geboekt op deze rekening,\n"
-"                 maar niet als er een specifieke waarderingsrekening is ingesteld op de bestemmingslocatie. Dit is de standaardwaarde voor alle producten in deze categorie.\n"
+"Bij het uitvoeren van automatische voorraadwaardering, zal de tegenboeking "
+"voor alle uitgaande voorraadverplaatsingen worden geboekt op deze rekening,\n"
+"                 maar niet als er een specifieke waarderingsrekening is "
+"ingesteld op de bestemmingslocatie. Dit is de standaardwaarde voor alle "
+"producten in deze categorie.\n"
 "                 Het kan ook direct worden ingesteld bij een product."
 
 #. module: stock_account
@@ -1343,8 +1381,8 @@ msgid ""
 "You cannot change the product category of a product valuated by lot/serial "
 "number."
 msgstr ""
-"Je kunt de productcategorie van een product dat wordt gewaardeerd op "
-"serie-/partijnummer niet wijzigen."
+"Je kunt de productcategorie van een product dat wordt gewaardeerd op serie-/"
+"partijnummer niet wijzigen."
 
 #. module: stock_account
 #. odoo-python
@@ -1382,8 +1420,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"You don't have any input valuation account defined on your product category."
-" You must define one before processing this operation."
+"You don't have any input valuation account defined on your product category. "
+"You must define one before processing this operation."
 msgstr ""
 "Er is geen voorraadtoename rekening gedefinieerd op je productcategorie. Je "
 "moet een er vóór de verwerking van deze bewerking definiëren."
@@ -1403,11 +1441,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"You don't have any stock input account defined on your product category. You"
-" must define one before processing this operation."
+"You don't have any stock input account defined on your product category. You "
+"must define one before processing this operation."
 msgstr ""
-"Je hebt geen voorraadtoename rekening gedefinieerd voor de productcategorie."
-" Je moet er een definiëren voordat je deze bewerking kunt verwerken."
+"Je hebt geen voorraadtoename rekening gedefinieerd voor de productcategorie. "
+"Je moet er een definiëren voordat je deze bewerking kunt verwerken."
 
 #. module: stock_account
 #. odoo-python
@@ -1416,8 +1454,8 @@ msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts."
 msgstr ""
-"Je hebt geen voorraadboek gedefinieerd op je productcategorie, controleer of"
-" je een grootboekschema heeft geïnstalleerd."
+"Je hebt geen voorraadboek gedefinieerd op je productcategorie, controleer of "
+"je een grootboekschema heeft geïnstalleerd."
 
 #. module: stock_account
 #. odoo-python
@@ -1425,8 +1463,8 @@ msgstr ""
 #: code:addons/stock_account/models/stock_move.py:0
 #: code:addons/stock_account/models/stock_valuation_layer.py:0
 msgid ""
-"You don't have any stock valuation account defined on your product category."
-" You must define one before processing this operation."
+"You don't have any stock valuation account defined on your product category. "
+"You must define one before processing this operation."
 msgstr ""
 "Er is geen voorraadwaardering rekening gedefinieerd op je productcategorie. "
 "Je moet een er vóór de verwerking van deze bewerking definiëren."

@@ -1,24 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes_gs1_nomenclature
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Aleš Pipan, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sl\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3);\n"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
+msgid ""
+"A GS1 barcode nomenclature pattern was matched. However, the barcode failed "
+"to be converted to a valid date: '%(error_message)'"
+msgstr ""
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
@@ -193,15 +202,14 @@ msgid ""
 "The GS1 content type defines what kind of data the rule will process the "
 "barcode as:        * Date: the barcode will be converted into a Odoo "
 "datetime;        * Measure: the barcode's value is related to a specific "
-"unit;        * Numeric Identifier: fixed length barcode following a specific"
-" encoding;        * Alpha-Numeric Name: variable length barcode."
+"unit;        * Numeric Identifier: fixed length barcode following a specific "
+"encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
-"Vrsta vsebine GS1 določa, za kakšno vrsto podatkov bo pravilo obdelalo črtno"
-" kodo:        * Datum: črtna koda bo pretvorjena v datum in čas Odoo;"
-"        * Merjenje: vrednost črtne kode je povezana z določeno enoto;"
-"        * Številski identifikator: črtna koda fiksne dolžine, ki sledi "
-"določenemu kodiranju;        * Alfanumerično ime: črtna koda spremenljive "
-"dolžine."
+"Vrsta vsebine GS1 določa, za kakšno vrsto podatkov bo pravilo obdelalo črtno "
+"kodo:        * Datum: črtna koda bo pretvorjena v datum in čas Odoo;        "
+"* Merjenje: vrednost črtne kode je povezana z določeno enoto;        * "
+"Številski identifikator: črtna koda fiksne dolžine, ki sledi določenemu "
+"kodiranju;        * Alfanumerično ime: črtna koda spremenljive dolžine."
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
@@ -226,12 +234,16 @@ msgstr "Vzorec pravila '%(rule)s' ni veljaven regularni izraz: %(error)s"
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 msgid ""
 "There is something wrong with the barcode rule \"%s\" pattern.\n"
-"If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
-"Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
+"If this rule uses decimal, check it can't get sometime else than a digit as "
+"last char for the Application Identifier.\n"
+"Check also the possible matched values can only be digits, otherwise the "
+"value can't be casted as a measure."
 msgstr ""
 "Nekaj ​​je narobe s pravilom o črtni kodi \"%s\" vzorca.\n"
-"Če to pravilo uporablja decimalno število, preverite, ali lahko kot zadnji znak za identifikator aplikacije dobi kaj drugega kot številko.\n"
-"Preverite tudi, ali so možne ujemajoče se vrednosti lahko samo števke, sicer vrednosti ni mogoče pretvoriti v mero."
+"Če to pravilo uporablja decimalno število, preverite, ali lahko kot zadnji "
+"znak za identifikator aplikacije dobi kaj drugega kot številko.\n"
+"Preverite tudi, ali so možne ujemajoče se vrednosti lahko samo števke, sicer "
+"vrednosti ni mogoče pretvoriti v mero."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature

@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* project_timesheet_holidays
-# 
+#
 # Translators:
 # Tony Ng, 2025
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:37+0000\n"
+"POT-Creation-Date: 2025-08-15 18:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: project_timesheet_holidays
@@ -106,14 +107,18 @@ msgid ""
 "The default project used when automatically generating timesheets via time "
 "off requests. You can specify another project on each time off type "
 "individually."
-msgstr "透過休假請求自動產生時間表時使用的預設專案。你可對每種休假類型單獨指定不同的專案。"
+msgstr ""
+"透過休假請求自動產生時間表時使用的預設專案。你可對每種休假類型單獨指定不同的"
+"專案。"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid ""
 "The default task used when automatically generating timesheets via time off "
 "requests. You can specify another task on each time off type individually."
-msgstr "透過休假請求自動產生時間表時使用的預設任務。你可對每種休假類型單獨指定不同的任務。"
+msgstr ""
+"透過休假請求自動產生時間表時使用的預設任務。你可對每種休假類型單獨指定不同的"
+"任務。"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -150,18 +155,13 @@ msgid ""
 "        30h Allocate 30 hours to the task\n"
 "        #tags Set tags on the task\n"
 "        @user Assign the task to a user\n"
-"        ! Set the task a high priority\n"
+"        ! Set the task a medium priority\n"
+"        !! Set the task a high priority\n"
+"        !!! Set the task a urgent priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
-"在新任務標題中，使用這些關鍵字進行設定：\n"
-"\n"
-"        30h：向任務分配 30 小時\n"
-"        #標籤名稱：對任務設定標籤\n"
-"        @用戶名稱：將任務指派給用戶\n"
-"        !：將任務設為高優先級別\n"
-"\n"
-"        記得使用正確格式和順序，例如：改進配置畫面 5h #特色功能 #v16 @志明 !"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -175,7 +175,8 @@ msgstr "查看休假"
 msgid ""
 "You cannot create timesheets for a task that is linked to a time off type. "
 "Please use the Time Off application to request new time off instead."
-msgstr "不可為連結至休假類型的任務建立工時表。請使用「休假」應用程式，申請新的休假。"
+msgstr ""
+"不可為連結至休假類型的任務建立工時表。請使用「休假」應用程式，申請新的休假。"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -189,7 +190,8 @@ msgstr "你不可刪除已連結至全域休假的工時表。"
 msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
-msgstr "不可刪除連結至休假請求的工時表。請改為在「休假」應用程式取消你的休假請求。"
+msgstr ""
+"不可刪除連結至休假請求的工時表。請改為在「休假」應用程式取消你的休假請求。"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -197,10 +199,33 @@ msgstr "不可刪除連結至休假請求的工時表。請改為在「休假」
 msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
-msgstr "不可修改連結至休假請求的工時表。請改為使用「休假」應用程式，修改你的休假請求。"
+msgstr ""
+"不可修改連結至休假請求的工時表。請改為使用「休假」應用程式，修改你的休假請"
+"求。"
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/__init__.py:0
 msgid "allow_timesheets"
 msgstr "allow_timesheets"
+
+#~ msgid ""
+#~ "Use these keywords in the title to set new tasks:\n"
+#~ "\n"
+#~ "        30h Allocate 30 hours to the task\n"
+#~ "        #tags Set tags on the task\n"
+#~ "        @user Assign the task to a user\n"
+#~ "        ! Set the task a high priority\n"
+#~ "\n"
+#~ "        Make sure to use the right format and order e.g. Improve the "
+#~ "configuration screen 5h #feature #v16 @Mitchell !"
+#~ msgstr ""
+#~ "在新任務標題中，使用這些關鍵字進行設定：\n"
+#~ "\n"
+#~ "        30h：向任務分配 30 小時\n"
+#~ "        #標籤名稱：對任務設定標籤\n"
+#~ "        @用戶名稱：將任務指派給用戶\n"
+#~ "        !：將任務設為高優先級別\n"
+#~ "\n"
+#~ "        記得使用正確格式和順序，例如：改進配置畫面 5h #特色功能 #v16 @志"
+#~ "明 !"

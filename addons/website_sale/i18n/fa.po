@@ -1,26 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale
-# 
+#
 # Translators:
 # zakariya moradi, 2025
 # Tiffany Chang, 2025
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2025
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025
 # Naser mars, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Naser mars, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_sale
@@ -38,11 +38,6 @@ msgstr ""
 "سفارش خود را پیگیری کنند."
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
-msgid "#{record.name.value}"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "%s review"
 msgstr "%s بررسی"
@@ -51,16 +46,6 @@ msgstr "%s بررسی"
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "%s reviews"
 msgstr "بررسی‌ها %s"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid "&amp; Delivery"
-msgstr "و تحویل"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.products_item
-msgid "&amp;nbsp;"
-msgstr "&amp;nbsp;"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
@@ -73,6 +58,16 @@ msgid "'. Showing results for '"
 msgstr "'. نمایش نتایج برای'"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "- All products"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "1 Column"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__100_pc
 msgid "100 %"
 msgstr "100%"
@@ -81,6 +76,11 @@ msgstr "100%"
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "100 percent"
 msgstr "100درصد"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "2 Columns"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__50_pc
@@ -103,6 +103,24 @@ msgid "66 percent"
 msgstr "۶۶ درصد"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
+msgid ""
+"<a href=\"/terms\" class=\"text-muted o_translate_inline\"><u>Terms and "
+"Conditions</u></a><br/>\n"
+"                30-day money-back guarantee<br/>\n"
+"                Shipping: 2-3 Business Days"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid ""
+"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
+"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
+"class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
+"                    <span class=\"align-middle\">to follow your order.</span>"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "<b class=\"w-100\">Order summary</b>"
 msgstr "<b class=\"w-100\">خلاصه سفارش</b>"
@@ -120,15 +138,14 @@ msgid "<b>Communication: </b>"
 msgstr "<b>ارتباطات: </b>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-msgid "<b>Deliver to pickup point: </b>"
-msgstr "<b>تحویل به نقطه تحویل:</b>"
+#: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
+msgid "<b>Deliver to pickup point</b>"
+msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid "<b>Delivery: </b>"
-msgstr "<b>تحویل: </b>"
+#: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
+msgid "<b>Delivery</b>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_price
@@ -137,30 +154,22 @@ msgstr "<b>محدوده قیمت</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
-msgid "<b>Pricelist</b>"
-msgstr "<b>لیست قیمت</b>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 msgid "<b>Sort By</b>"
 msgstr "<b>مرتب‌سازی بر اساس</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_tags
-#: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
+#: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_filters_form
 msgid "<b>Tags</b>"
 msgstr "<b>تگ‌ها</b>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
+#: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
 msgid ""
-"<br/>\n"
-"                30-day money-back guarantee<br/>\n"
-"                Shipping: 2-3 Business Days"
+"<i class=\"d-md-none fa fa-shopping-cart\" role=\"presentation\"/>\n"
+"                                <span class=\"d-none d-md-inline\">Add to "
+"cart</span>"
 msgstr ""
-"<br/>\n"
-"                با ضمانت برگشت 30 روزه پول<br/>\n"
-"                حمل و نقل: 2-3 روز کاری"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -170,6 +179,13 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-angle-left me-2 fw-light\"/>\n"
 "                                    بازگشت به حمل و نقل"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
+msgid ""
+"<i class=\"fa fa-angle-left me-2 fw-light\"/>\n"
+"                    Continue shopping"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_buy_now
@@ -196,19 +212,14 @@ msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
-#: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
+#: model_terms:ir.ui.view,arch_db:website_sale.address_edit_button
 msgid "<i class=\"fa fa-pencil me-1\"/>Edit"
 msgstr "<i class=\"fa fa-pencil me-1\"/>ویرایش"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_row
-msgid ""
-"<i class=\"fa fa-plus me-md-2\"/>\n"
-"                    <span class=\"d-none d-md-inline\">Add address</span>"
+#: model_terms:ir.ui.view,arch_db:website_sale.address_edit_button
+msgid "<i class=\"fa fa-pencil me-1\"/>Want an invoice?"
 msgstr ""
-"<i class=\"fa fa-plus me-md-2\"/>\n"
-"                    <span class=\"d-none d-md-inline\">افزودن آدرس</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -230,11 +241,6 @@ msgid ""
 msgstr "<i class=\"fa fa-shopping-cart me-2\"/> افزودن به سبد خرید"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "<i class=\"fw-light fa fa-angle-left me-2\"/>Discard"
-msgstr "<i class=\"fw-light fa fa-angle-left me-2\"/>لغو"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid ""
 "<i class=\"oi oi-chevron-left d-lg-none me-1\" role=\"presentation\"/>All "
@@ -245,8 +251,10 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
-msgid "<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>All Products"
-msgstr "<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>همه محصولات"
+msgid ""
+"<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>All Products"
+msgstr ""
+"<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>همه محصولات"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -263,62 +271,34 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "<option value=\"\">Country...</option>"
-msgstr "<option value=\"\">کشور...</option>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "<option value=\"\">State / Province...</option>"
-msgstr "<option value=\"\">ایالت / استان...</option>"
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/crm_team.py:0
 msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        You can find all abandoned carts here, i.e. the carts generated by your website's visitors from over an hour ago that haven't been confirmed yet.</p>\n"
-"                        <p>You should send an email to the customers to encourage them!</p>\n"
+"                        You can find all abandoned carts here, i.e. the "
+"carts generated by your website's visitors from over an hour ago that "
+"haven't been confirmed yet.</p>\n"
+"                        <p>You should send an email to the customers to "
+"encourage them!</p>\n"
 "                    "
 msgstr ""
 "<p class=\"o_view_nocontent_smiling_face\"> می‌توانید تمام سبدهای خرید رها "
-"شده را اینجا پیدا کنید، یعنی سبدهایی که توسط بازدیدکنندگان وب‌سایت شما از "
-"بیش از یک ساعت پیش ایجاد شده‌اند و هنوز تأیید نشده‌اند.</p> <p>باید به "
-"مشتریان ایمیل ارسال کنید تا آنها را تشویق کنید!</p>"
+"شده را اینجا پیدا کنید، یعنی سبدهایی که توسط بازدیدکنندگان وب‌سایت شما از بیش "
+"از یک ساعت پیش ایجاد شده‌اند و هنوز تأیید نشده‌اند.</p> <p>باید به مشتریان "
+"ایمیل ارسال کنید تا آنها را تشویق کنید!</p>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.sort
-msgid "<small class=\"d-none d-lg-inline text-muted\">Sort By:</small>"
-msgstr "<small class=\"d-none d-lg-inline text-muted\">مرتب‌سازی بر اساس:</small>"
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid ""
+"<small class=\"mx-auto\"><b>Clear Filters</b></small>\n"
+"                                        <i class=\"oi oi-close\" "
+"role=\"presentation\"/>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid ""
-"<small class=\"form-text text-muted\">\n"
-"                                                        Changing company name or VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.\n"
-"                                                    </small>"
+msgid "<span class=\"align-middle\">Already have an account?</span>"
 msgstr ""
-"<small class=\"form-text text-muted\">\n"
-"                                                        تغییر نام شرکت یا شماره VAT پس از صدور اسناد برای حسابتان مجاز نیست. لطفا برای این عملیات مستقیماً با ما تماس بگیرید..\n"
-"                                                    </small>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
-msgid ""
-"<small class=\"mx-auto\"><b>Clear Filters</b></small>\n"
-"                            <i class=\"oi oi-close\" role=\"presentation\"/>"
-msgstr ""
-"<small class=\"mx-auto\"><b>حذف فیلترها</b></small>\n"
-"                            <i class=\"oi oi-close\" role=\"presentation\"/>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
-msgid ""
-"<span class=\"d-md-none fa fa-shopping-cart\"/>\n"
-"                            <span class=\"d-none d-md-inline\">Add to cart</span>"
-msgstr ""
-"<span class=\"d-md-none fa fa-shopping-cart\"/> <span class=\"d-none d-md-"
-"inline\">افزودن به سبد خرید</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -332,32 +312,40 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid ""
-"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" data-oe-expression=\"data['price']\">\n"
-"                                                <span class=\"oe_currency_value\">1,500.00</span>\n"
+"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
+"data-oe-expression=\"data['price']\">\n"
+"                                                <span "
+"class=\"oe_currency_value\">1,500.00</span>\n"
 "                                            </span>"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid ""
-"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" data-oe-expression=\"data['price']\">\n"
-"                                                <span class=\"oe_currency_value\">140.00</span>\n"
+"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
+"data-oe-expression=\"data['price']\">\n"
+"                                                <span "
+"class=\"oe_currency_value\">140.00</span>\n"
 "                                            </span>"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid ""
-"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" data-oe-expression=\"data['price']\">\n"
-"                                                <span class=\"oe_currency_value\">33.00</span>\n"
+"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
+"data-oe-expression=\"data['price']\">\n"
+"                                                <span "
+"class=\"oe_currency_value\">33.00</span>\n"
 "                                            </span>"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid ""
-"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" data-oe-expression=\"data['price']\">\n"
-"                                                <span class=\"oe_currency_value\">750.00</span>\n"
+"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
+"data-oe-expression=\"data['price']\">\n"
+"                                                <span "
+"class=\"oe_currency_value\">750.00</span>\n"
 "                                            </span>"
 msgstr ""
 
@@ -369,16 +357,17 @@ msgstr "<span class=\"mx-2 o_wsale_ppr_by\">توسط</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_method
 msgid ""
-"<span class=\"o_wsale_delivery_price_badge float-end fw-bold\" name=\"price\">\n"
+"<span class=\"o_wsale_delivery_price_badge float-end fw-bold\" "
+"name=\"price\">\n"
 "                    Select to compute delivery rate\n"
 "                </span>"
 msgstr ""
-"<span class=\"o_wsale_delivery_price_badge float-end fw-bold\" name=\"price\">\n"
+"<span class=\"o_wsale_delivery_price_badge float-end fw-bold\" "
+"name=\"price\">\n"
 "                    برای محاسبه نرخ تحویل انتخاب کنید\n"
 "                </span>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 #: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
 msgid "<span class=\"px-3\">or</span>"
@@ -386,7 +375,8 @@ msgstr "<span class=\"px-3\">یا</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
-msgid "<span class=\"s_website_form_label_content\">Give us your feedback</span>"
+msgid ""
+"<span class=\"s_website_form_label_content\">Give us your feedback</span>"
 msgstr ""
 "<span class=\"s_website_form_label_content\">نظرات خود را به ما بدهید</span>"
 
@@ -404,13 +394,29 @@ msgstr "<span class=\"s_website_form_label_content\">ارجاع شما</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_only_website_form_view
 msgid ""
-"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based"
-" on variants</span>"
+"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
+"on variants</span>"
 msgstr ""
 "<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">بر "
 "اساس واریانت‌ها</span>"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "<span class=\"text-muted\">Search results for </span>'"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "<span class=\"text-muted\">Searching</span>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "<span class=\"text-muted\">in</span>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.floating_bar
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "<span class=\"visually-hidden\">filters active</span>"
 msgstr "<span class=\"visually-hidden\">فیلترها فعال</span>"
@@ -418,13 +424,7 @@ msgstr "<span class=\"visually-hidden\">فیلترها فعال</span>"
 #. module: website_sale
 #: model_terms:web_tour.tour,rainbow_man_message:website_sale.test_01_admin_shop_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
-msgstr ""
-"<span><b>کارت عالی بود!</b> شما تمام مراحل این تور را طی کردید.</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "<span>Already have an account?</span>"
-msgstr "<span>از قبل حساب کاربری دارید؟</span>"
+msgstr "<span><b>کارت عالی بود!</b> شما تمام مراحل این تور را طی کردید.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -439,12 +439,14 @@ msgstr "<span>انتشار در سایت</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 msgid ""
-"<span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.\n"
-"                        Please contact the responsible of the shop for more information.</span>"
+"<span>Unfortunately your order can not be confirmed as the amount of your "
+"payment does not match the amount of your cart.\n"
+"                        Please contact the responsible of the shop for more "
+"information.</span>"
 msgstr ""
-"<span>متأسفانه سفارش شما نمی‌تواند تأیید شود زیرا مبلغ پرداخت شما با مبلغ "
-"سبد خرید شما مطابقت ندارد. لطفاً برای اطلاعات بیشتر با مسئول فروشگاه تماس "
-"بگیرید.</span>"
+"<span>متأسفانه سفارش شما نمی‌تواند تأیید شود زیرا مبلغ پرداخت شما با مبلغ سبد "
+"خرید شما مطابقت ندارد. لطفاً برای اطلاعات بیشتر با مسئول فروشگاه تماس بگیرید."
+"</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -452,14 +454,31 @@ msgid "<span>Video Preview</span>"
 msgstr "<span>پیشنمایش ویدئو</span>"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"<strong>\n"
+"                                <a class=\"o_translate_inline\" t-attf-"
+"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+"&amp;revive_method=merge\">Click here</a>\n"
+"                            </strong> if you want to merge your previous "
+"cart into current cart."
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"<strong>\n"
+"                                <a class=\"o_translate_inline\" t-attf-"
+"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+"&amp;revive_method=squash\">Click here</a>\n"
+"                            </strong> if you want to restore your previous "
+"cart. Your current cart will be replaced with your previous cart."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
 msgid "<strong>No suitable delivery method could be found.</strong>"
 msgstr "<strong>هیچ روش تحویل مناسبی پیدا نشد.</strong>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid "<strong>Total:</strong>"
-msgstr "<strong>جمع کل:</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -475,41 +494,64 @@ msgstr "<strong>هشدار!</strong>"
 #. module: website_sale
 #: model:mail.template,body_html:website_sale.mail_template_sale_cart_recovery
 msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 0px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 0px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
 "<tbody>\n"
 "    <!-- CONTENT -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 0px 0px 0px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                    <h1 style=\"color:#A9A9A9;\">THERE'S SOMETHING IN YOUR CART.</h1>\n"
+"                    <h1 style=\"color:#A9A9A9;\">THERE'S SOMETHING IN YOUR "
+"CART.</h1>\n"
 "                    Would you like to complete your purchase?<br/><br/>\n"
 "                    <t t-if=\"object.order_line\">\n"
-"                        <t t-foreach=\"object.website_order_line\" t-as=\"line\">\n"
+"                        <t t-foreach=\"object.website_order_line\" t-"
+"as=\"line\">\n"
 "                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; width:150px;\">\n"
-"                                        <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
+"                                    <td style=\"padding: 10px; width:150px;"
+"\">\n"
+"                                        <img t-attf-src=\"/web/image/"
+"product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
+"height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
 "                                    </td>\n"
 "                                    <td>\n"
-"                                        <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] Desk Combination</strong><br/><t t-out=\"line.name or ''\">[FURN_7800] Desk Combination Desk combination, black-brown: chair + desk + drawer.</t>\n"
+"                                        <strong t-"
+"out=\"line.product_id.display_name or ''\">[FURN_7800] Desk Combination</"
+"strong><br/><t t-out=\"line.name or ''\">[FURN_7800] Desk Combination Desk "
+"combination, black-brown: chair + desk + drawer.</t>\n"
 "                                    </td>\n"
 "                                    <td width=\"100px\" align=\"right\">\n"
-"                                        <t t-out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-out=\"line.product_uom.name or ''\">Units</t>\n"
+"                                        <t t-out=\"int(line.product_uom_qty) "
+"or ''\">10000</t> <t t-out=\"line.product_uom_id.name or ''\">Units</t>\n"
 "                                    </td>\n"
 "                                </tr>\n"
 "                            </table>\n"
 "                        </t>\n"
 "                        <hr/>\n"
 "                    </t>\n"
-"                    <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
-"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?access_token={{ object.access_token }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                    <div style=\"text-align: center; padding: 16px 0px 16px "
+"0px; font-size: 14px;\">\n"
+"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/"
+"cart?id={{ object.id }}&amp;access_token={{ object.access_token }}\" "
+"target=\"_blank\" t-attf-style=\"background-color: "
+"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
+"8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"radius: 5px; font-size:13px;\">\n"
 "                            Resume order\n"
 "                        </a>\n"
 "                    </div>\n"
-"                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"/>\n"
-"                    <div style=\"text-align: center;\"><strong>Thank you for shopping with <t t-out=\"company.name or ''\">My Company (San Francisco)</t>!</strong></div>\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id or "
+"object.user_id.company_id or user.company_id\"/>\n"
+"                    <div style=\"text-align: center;\"><strong>Thank you for "
+"shopping with <t t-out=\"company.name or ''\">My Company (San Francisco)</t>!"
+"</strong></div>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -520,22 +562,10 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
-msgid "<u>Terms and Conditions</u>"
-msgstr "شرایط و ضوابط"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/combo_configurator.py:0
-msgid "A combo product can't be empty. Please select at least one option."
-msgstr ""
-"یک محصول ترکیبی نمی تواند خالی باشد. لطفا حداقل یک گزینه را انتخاب کنید."
-
-#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_description
 msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sales Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
 "شرح محصولی که می خواهید به مشتریان خود اطلاع دهید. این توضیحات در هر سفارش "
@@ -553,8 +583,8 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid ""
-"A detailed,formatted description to promote your product on"
-"                                      this page. Use '/' to discover more "
+"A detailed,formatted description to promote your product "
+"on                                      this page. Use '/' to discover more "
 "features."
 msgstr ""
 "توضیحات دقیق و قالب بندی شده برای تبلیغ محصول شما در این صفحه. برای کشف "
@@ -587,11 +617,6 @@ msgstr "سبد رها شده"
 #: model:ir.ui.menu,name:website_sale.menu_orders_abandoned_orders
 msgid "Abandoned Carts"
 msgstr "سبدهای رها شده"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.crm_team_view_kanban_dashboard
-msgid "Abandoned Carts to Recover"
-msgstr "سبدهای رها شده برای بازیابی"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__cart_abandoned_delay
@@ -628,8 +653,8 @@ msgstr "لوازم جانبی برای محصول"
 #: model:ir.model.fields,help:website_sale.field_product_product__accessory_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__accessory_product_ids
 msgid ""
-"Accessories show up when the customer reviews the cart before payment "
-"(cross-sell strategy)."
+"Accessories show up when the customer reviews the cart before payment (cross-"
+"sell strategy)."
 msgstr ""
 "لوازم جانبی زمانی نمایش داده می‌شوند که مشتری قبل از پرداخت، سبد خرید را "
 "بررسی می‌کند (استراتژی فروش متقابل)."
@@ -649,6 +674,11 @@ msgstr "عمل"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_needaction
 msgid "Action Needed"
 msgstr "نیاز به اقدام"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Actions"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -684,8 +714,8 @@ msgid ""
 "Add a reference price per UoM on products (i.e $/kg), in addition to the "
 "sale price"
 msgstr ""
-"اضافه کردن قیمت مرجع به ازای هر واحد اندازه‌گیری (UoM) روی محصولات (مثلاً "
-"$/کیلوگرم)، علاوه بر قیمت فروش"
+"اضافه کردن قیمت مرجع به ازای هر واحد اندازه‌گیری (UoM) روی محصولات (مثلاً $/"
+"کیلوگرم)، علاوه بر قیمت فروش"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__compare_list_price
@@ -704,7 +734,7 @@ msgstr "افزودن قیمت خط خورده، به عنوان مقایسه"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
 #: model_terms:ir.ui.view,arch_db:website_sale.product_quantity
 msgid "Add one"
 msgstr "افزودن یکی"
@@ -729,13 +759,18 @@ msgid "Add to Cart Button"
 msgstr "دکمه افزودن به سبد خرید"
 
 #. module: website_sale
+#: model:website.checkout.step,name:website_sale.checkout_step_delivery
+msgid "Address"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_autocomplete
 msgid "Address Autocomplete"
 msgstr "تکمیل خودکار آدرس"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.filter_select_attributes
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
-#: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
 msgid "All"
 msgstr "همه"
 
@@ -744,11 +779,6 @@ msgstr "همه"
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "All Products"
 msgstr "همه کالاها"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website__all_pricelist_ids
-msgid "All pricelists"
-msgstr "تمام لیست قیمت‌ها"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__ecommerce_access__everyone
@@ -797,8 +827,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product__alternative_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__alternative_product_ids
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_alternative_products
+#: model_terms:ir.ui.view,arch_db:website_sale.alternative_products
 msgid "Alternative Products"
 msgstr "محصولات جایگزین"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Always Fill the box"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_amount
@@ -810,11 +846,6 @@ msgstr "تعداد سبدهای رها شده"
 #: code:addons/website_sale/controllers/delivery.py:0
 msgid "Anonymous express checkout partner for order %s"
 msgstr "شریک تسویه حساب سریع ناشناس برای سفارش%s"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Apartment, suite, etc."
-msgstr "آپارتمان، سوئیت، و غیره."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -845,7 +876,6 @@ msgstr "تعداد پیوست ها"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_product_attribute_action
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Attributes"
 msgstr "ویژگی ها"
 
@@ -871,16 +901,29 @@ msgid "Average Rating"
 msgstr "رتبه‌ی متوسط"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__back_button_label
+msgid "Back Button Label"
+msgstr ""
+
+#. module: website_sale
+#: model:website.checkout.step,back_button_label:website_sale.checkout_step_delivery
+msgid "Back to address"
+msgstr ""
+
+#. module: website_sale
+#: model:website.checkout.step,back_button_label:website_sale.checkout_step_cart
 msgid "Back to cart"
 msgstr "بازگشت به سبد خرید"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "Back to delivery"
-msgstr "بازگشت به تحویل"
+#: model:website.checkout.step,back_button_label:website_sale.checkout_step_extra
+msgid "Back to extra info"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "Back to {{0}}"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -920,11 +963,6 @@ msgid "Bathroom Cabinets"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Be aware!"
-msgstr "هشیار باش!"
-
-#. module: website_sale
 #: model:res.country.group,name:website_sale.benelux
 msgid "BeNeLux"
 msgstr "بنلوکس"
@@ -950,20 +988,14 @@ msgid "Big Icons Subtitles"
 msgstr "زیرنویس آیکون‌های بزرگ"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+#: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
 msgid "Billing"
 msgstr "صورتحساب"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_row
 msgid "Billing address"
 msgstr "آدرس صورت‌حساب"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-msgid "Billing:"
-msgstr "صورتحساب:"
 
 #. module: website_sale
 #. odoo-python
@@ -1025,11 +1057,6 @@ msgid "Button url"
 msgstr "دکمه آدرس اینترنتی"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Buttons"
-msgstr "دکمه‌ها"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__enabled_buy_now_button
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1060,6 +1087,7 @@ msgstr "تصویر 1024 می‌تواند زوم شود"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__can_publish
 #: model:ir.model.fields,field_description:website_sale.field_product_template__can_publish
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__can_publish
 msgid "Can Publish"
 msgstr "می تواند منتشر کند"
 
@@ -1096,9 +1124,9 @@ msgid "Cart recovery email already sent"
 msgstr "ایمیل بازیابی سبد خرید قبلاً ارسال شده است"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Carts are flagged as abandoned after this delay."
-msgstr "سبدهای خرید پس از این تاخیر به عنوان رها شده علامت‌گذاری می‌شوند."
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Catalog of products"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -1169,38 +1197,7 @@ msgid "Change location"
 msgstr "تغییر آدرس"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid ""
-"Changing VAT number is not allowed once document(s) have been issued for "
-"your account. Please contact us directly for this operation."
-msgstr ""
-"تغییر شماره مالیات بر ارزش افزوده پس از صدور سند(ها) برای حساب شما مجاز "
-"نیست. لطفاً برای این عملیات مستقیماً با ما تماس بگیرید."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid ""
-"Changing company name is not allowed once document(s) have been issued for "
-"your account. Please contact us directly for this operation."
-msgstr ""
-"تغییر نام شرکت زمانی که سند(ها) برای حساب شما صادر شده‌اند مجاز نیست. لطفاً "
-"برای انجام این عملیات مستقیماً با ما تماس بگیرید."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid ""
-"Changing your name is not allowed once invoices have been issued for your "
-"account. Please contact us directly for this operation."
-msgstr ""
-"زمانی که فاکتورهایی برای حساب شما صادر شده باشد، تغییر نام شرکت شما مجاز "
-"نیست. لطفا برای این عملیات مستقیما با ما تماس بگیرید."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
+#: model:website.checkout.step,main_button_label:website_sale.checkout_step_delivery
 msgid "Checkout"
 msgstr "پرداخت"
 
@@ -1213,11 +1210,6 @@ msgstr "صفحات پرداخت"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "طبقه بندی‌های فرزند"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
-msgid "Choose a delivery method"
-msgstr "یک روش تحویل را انتخاب کنید"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1233,20 +1225,39 @@ msgid "Choose this location"
 msgstr "انتخاب این آدرس"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
+#: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
+msgid "Choose your favorite"
+msgstr ""
+
+#. module: website_sale
 #: model:product.pricelist,name:website_sale.list_christmas
 msgid "Christmas"
 msgstr "کریسمس"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "City"
-msgstr "شهر"
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Classic"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Classic Grid"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
-#: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
+#: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Clear Filters"
 msgstr "پاک کردن فیلترها"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "Clear search for this category"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_collect
@@ -1257,13 +1268,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid ""
 "Click <i>'New'</i> in the top-right corner to create your first product."
-msgstr ""
-"بر روی <i>'جدید'</i> در گوشه بالا-راست کلیک کن برای ایجاد اولین محصول."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid "Click here"
-msgstr "اینجا کلیک کن"
+msgstr "بر روی <i>'جدید'</i> در گوشه بالا-راست کلیک کن برای ایجاد اولین محصول."
 
 #. module: website_sale
 #. odoo-javascript
@@ -1285,6 +1290,13 @@ msgstr "روی این دکمه کلیک کنید، سپس مشتریان شما 
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
+#: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
+msgid "Click to select"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
 #: code:addons/website_sale/static/src/js/notification/cart_notification/cart_notification.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 msgid "Close"
@@ -1302,13 +1314,13 @@ msgid "Collapse Category Recursive"
 msgstr "جمع‌شدن دسته‌بندی به صورت بازگشتی"
 
 #. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_boxes_collapsible
-msgid "Collapsible Boxes"
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Collapse sidebar sections"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Collapsible sidebar"
+#: model:product.public.category,name:website_sale.public_category_boxes_collapsible
+msgid "Collapsible Boxes"
 msgstr ""
 
 #. module: website_sale
@@ -1334,6 +1346,12 @@ msgid ""
 msgstr "فهرست جدا شده با ویرگول از بخش‌های نام محصولات، بارکدها یا مرجع داخلی"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Compact List"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_res_company
 msgid "Companies"
 msgstr "شرکت‌ها"
@@ -1341,7 +1359,6 @@ msgstr "شرکت‌ها"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
-#: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Company Name"
 msgstr "نام شرکت"
 
@@ -1374,23 +1391,35 @@ msgstr "محاسبه هزینه حمل و نقل و ارسال با Shiprocket"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "محاسبه هزینه حمل و نقل و ارسال با DHL"
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</"
+"strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "محاسبه هزینه حمل و نقل و ارسال با FedEx"
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</"
+"strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "محاسبه هزینه حمل و نقل و ارسال با UPS"
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</"
+"strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "محاسبه هزینه حمل و نقل و ارسال با USPS"
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</"
+"strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1401,6 +1430,12 @@ msgstr "محاسبه هزینه حمل و نقل و ارسال با bpost"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
 msgstr "هزینه‌های ارسال در سفارش‌ها محاسبه کن"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/checkout.js:0
+msgid "Computed after delivery"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -1424,8 +1459,8 @@ msgid "Configure your product"
 msgstr "پیکربندی محصول خود را تنظیم کنید"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
+#: model:website.checkout.step,main_button_label:website_sale.checkout_step_extra
+#: model:website.checkout.step,main_button_label:website_sale.checkout_step_payment
 msgid "Confirm"
 msgstr "تایید کردن"
 
@@ -1450,6 +1485,11 @@ msgid "Confirmed Orders"
 msgstr "سفارشات تایید شده"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Connect your eCommerce to Google Merchant Center via a product file."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_res_partner
 msgid "Contact"
 msgstr "مخاطب"
@@ -1465,6 +1505,16 @@ msgid "Contact Us Button URL"
 msgstr "دکمه تماس با ما URL"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Contain within the box"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Content Width"
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 #: code:addons/website_sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
@@ -1472,26 +1522,20 @@ msgid "Continue Shopping"
 msgstr "ادامه خرید"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Continue checkout"
-msgstr "ادامه پرداخت"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid ""
 "Continue checkout\n"
-"                                    <i class=\"fa fa-angle-right ms-2 fw-light\"/>"
+"                                    <i class=\"fa fa-angle-right ms-2 fw-"
+"light\"/>"
 msgstr ""
 "ادامه فرآیند پرداخت\n"
-"                                    <i class=\"fa fa-angle-right ms-2 fw-light\"/>"
+"                                    <i class=\"fa fa-angle-right ms-2 fw-"
+"light\"/>"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "Continue shopping"
-msgstr "ادامه خرید"
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Copy file link"
+msgstr ""
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_couches
@@ -1499,14 +1543,14 @@ msgid "Couches"
 msgstr "کاناپه‌ها"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Country"
-msgstr "کشور"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Create"
 msgstr "ایجاد"
+
+#. module: website_sale
+#: model:ir.model,website_form_label:website_sale.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -1518,6 +1562,7 @@ msgstr "ایجاد یک محصول جدید"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__create_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__create_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__create_uid
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__create_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__create_uid
 msgid "Created by"
 msgstr "ایجاد شده توسط"
@@ -1529,14 +1574,15 @@ msgid ""
 "Created in 2021, the company is young and dynamic. Discover the composition "
 "of the team and their skills."
 msgstr ""
-"ایجاد شده در سال ۲۰۲۱، این شرکت جوان و پویا است. ترکیب تیم و مهارت‌های آن‌ها"
-" را کشف کنید."
+"ایجاد شده در سال ۲۰۲۱، این شرکت جوان و پویا است. ترکیب تیم و مهارت‌های آن‌ها "
+"را کشف کنید."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__create_date
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__create_date
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__create_date
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__create_date
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__create_date
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__create_date
 msgid "Created on"
 msgstr "ایجادشده در"
@@ -1584,39 +1630,7 @@ msgid "Customer Reviews"
 msgstr "بازخورد مشتریان"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid ""
-"Customer needs to be signed in otherwise the mail address is not known.     \n"
-"\n"
-"- If a potential customer creates one or more abandoned checkouts and then completes a sale before the recovery email gets sent, then the email won't be sent.     \n"
-"\n"
-"- If user has manually sent a recovery email, the mail will not be sent a second time     \n"
-"\n"
-"- If a payment processing error occurred when the customer tried to complete their checkout, then the email won't be sent.     \n"
-"\n"
-"- If your shop does not support shipping to the customer's address, then the email won't be sent.     \n"
-"\n"
-"- If none of the products in the checkout are available for purchase (empty inventory, for example), then the email won't be sent.     \n"
-"\n"
-"- If all the products in the checkout are free, and the customer does not visit the shipping page to add a shipping fee or the shipping fee is also free, then the email won't be sent."
-msgstr ""
-"برای ورود مشتری لازم است در سیستم وارد شده باشد وگرنه نشانی ایمیل او ناشناخته خواهد بود.\n"
-"\n"
-"- اگر مشتری احتمالی یک یا چند تسویه حساب ناتمام ایجاد کند و سپس قبل از ارسال ایمیل یادآوری خرید را کامل کند، آنگاه ایمیل ارسال نخواهد شد.\n"
-"\n"
-"- اگر کاربر به صورت دستی یک ایمیل بازیابی ارسال کرده باشد، ایمیل برای بار دوم ارسال نخواهد شد. \n"
-"\n"
-"- اگر خطایی در پردازش پرداخت زمانی که مشتری سعی در تکمیل تسویه حساب خود داشت رخ داده‌است، ایمیل ارسال نخواهد شد.\n"
-"\n"
-"- اگر فروشگاه شما از ارسال به نشانی مشتری پشتیبانی نمی‌کند، ایمیل ارسال نخواهد شد.\n"
-"\n"
-"- اگر هیچ‌یک از محصولات در تسویه حساب برای خرید در دسترس نباشند (مثلاً موجودی خالی)، ایمیل ارسال نخواهد شد.\n"
-"\n"
-"- اگر تمام محصولات در تسویه حساب رایگان باشند، و مشتری به صفحه حمل و نقل برای افزودن هزینه حمل و نقل نرود یا در صورتی که هزینه حمل و نقل نیز رایگان باشد، ایمیل ارسال نخواهد شد."
-
-#. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Customers"
 msgstr "مشتریان"
 
@@ -1638,13 +1652,8 @@ msgstr "سفارشی‌سازی قالب‌های ایمیل"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "DHL Express Connector"
-msgstr "کانکتور DHL Express"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "DHL Shipping Methods"
-msgstr "روش های حمل و نقل DHL"
+msgid "DHL"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -1672,11 +1681,6 @@ msgid "Default Currency"
 msgstr "ارز پیش‌فرض"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website__pricelist_id
-msgid "Default Pricelist if any"
-msgstr "اگر لیست قیمتی پیش‌فرض وجود داشته باشد"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Default Sort"
 msgstr "مرتب سازی پیش‌فرض"
@@ -1685,8 +1689,7 @@ msgstr "مرتب سازی پیش‌فرض"
 #: model:ir.model.fields,help:website_sale.field_product_product__base_unit_id
 #: model:ir.model.fields,help:website_sale.field_product_template__base_unit_id
 #: model:ir.model.fields,help:website_sale.field_website_base_unit__name
-msgid ""
-"Define a custom unit to display in the price per unit of measure field."
+msgid "Define a custom unit to display in the price per unit of measure field."
 msgstr ""
 "واحد سفارشی را برای نمایش در فیلد قیمت به ازای واحد اندازه‌گیری تعریف کنید."
 
@@ -1706,17 +1709,15 @@ msgid "Delete Ribbon"
 msgstr "حذف روبان"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "Delivery"
 msgstr "تحویل"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-msgid "Delivery &amp;"
-msgstr "حمل و "
+#: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
+msgid "Delivery &amp; Billing"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__amount_delivery
@@ -1730,7 +1731,6 @@ msgid "Delivery Methods"
 msgstr "روش های تحویل"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_address_row
 msgid "Delivery address"
 msgstr "آدرس تحویل"
@@ -1741,7 +1741,13 @@ msgid "Delivery and Installation"
 msgstr "تحویل و نصب"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
+msgid "Delivery method"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Description"
 msgstr "توصیف"
 
@@ -1780,6 +1786,17 @@ msgstr ""
 #: model:product.public.category,name:website_sale.public_category_desks
 msgid "Desks"
 msgstr "میزها"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Detailed List"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Details"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_sequence
@@ -1821,11 +1838,38 @@ msgid "Discover our team"
 msgstr "تیم ما را بشناسید"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_account_move__display_name
+#: model:ir.model.fields,field_description:website_sale.field_crm_team__display_name
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:website_sale.field_digest_digest__display_name
+#: model:ir.model.fields,field_description:website_sale.field_ir_http__display_name
+#: model:ir.model.fields,field_description:website_sale.field_payment_token__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_attribute__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_document__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_image__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist_item__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_product__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_tag__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_template__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_template_attribute_line__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_template_attribute_value__display_name
+#: model:ir.model.fields,field_description:website_sale.field_res_company__display_name
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_sale.field_res_partner__display_name
+#: model:ir.model.fields,field_description:website_sale.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_sale.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:website_sale.field_sale_report__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_menu__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_track__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_visitor__display_name
 msgid "Display Name"
 msgstr "نام نمایش داده شده"
 
@@ -1858,8 +1902,8 @@ msgstr "نمایش داده شده در پایین صفحات محصول"
 #: model:ir.model.fields,help:website_sale.field_product_product__base_unit_name
 #: model:ir.model.fields,help:website_sale.field_product_template__base_unit_name
 msgid ""
-"Displays the custom unit for the products if defined or the selected unit of"
-" measure otherwise."
+"Displays the custom unit for the products if defined or the selected unit of "
+"measure otherwise."
 msgstr ""
 "محصولات را با واحد سفارشی نمایش می‌دهد اگر تعریف شده باشد، وگرنه واحد "
 "اندازه‌گیری انتخاب شده را نمایش می‌دهد."
@@ -1875,6 +1919,11 @@ msgstr "دسترسی ندارید، از این داده ها برای ایمی�
 #: code:addons/website_sale/static/src/js/website_sale_reorder.js:0
 msgid "Do you wish to clear your cart before adding products to it?"
 msgstr "آیا می‌خواهید سبد خرید خود را قبل از افزودن محصولات به آن پاک کنید؟"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Documentation"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -1907,10 +1956,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid ""
 "Drag building blocks here to customize the header for\n"
-"                                    \""
+"                                        \""
 msgstr ""
-"بلوک های ایجادی را به اینجا بکشید تا سرصفحه را سفارشی کنید\n"
-"                                    \""
 
 #. module: website_sale
 #. odoo-python
@@ -1991,26 +2038,20 @@ msgid "Edit"
 msgstr "ویرایش"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Edit address"
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Edit the price of this product by clicking on the amount."
 msgstr "ویرایش قیمت این محصول با کلیک بر روی مقدار."
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
-msgid "Edit this address"
-msgstr "ویرایش این نشانی"
-
-#. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_multimedia_education
 msgid "Education Tools"
 msgstr "ابزارهای آموزش"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
-msgid "Email"
-msgstr "پست الکترونیک"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__embed_code
@@ -2041,15 +2082,14 @@ msgid "Error! You cannot create recursive categories."
 msgstr "خطا! شما نمی‌توانید دسته‌بندی‌های بازگشتی ایجاد کنید."
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Extra Images"
-msgstr "تصاویر اضافی"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
+#: model:website.checkout.step,name:website_sale.checkout_step_extra
 msgid "Extra Info"
 msgstr "اطلاعات اضافی"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Extra Media"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__product_template_image_ids
@@ -2083,11 +2123,6 @@ msgid "Extra info"
 msgstr "اطلاعات اضافی"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
-msgid "Facebook"
-msgstr "فیسبوک"
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 msgid "Featured"
@@ -2097,11 +2132,6 @@ msgstr "منتخب"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "FedEx"
 msgstr "فدکس"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "FedEx Shipping Methods"
-msgstr "روش های حمل و نقل FedEx"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__field_id
@@ -2125,13 +2155,14 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Fill"
-msgstr "پر کردن"
+msgid "Filmstrip - default"
+msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Fill in your address"
-msgstr "آدرس خود را وارد کنید"
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Filters"
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -2143,9 +2174,20 @@ msgstr ""
 "محاسبه می شود."
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website__fiscal_position_id
-msgid "Fiscal Position"
-msgstr "موقعیت مالی"
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Floating"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Floating sticky Toolbar"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Focused"
+msgstr ""
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_foldable
@@ -2179,9 +2221,9 @@ msgid "From Website"
 msgstr "از وبسایت"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Full name"
-msgstr "نام کامل"
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Full"
+msgstr ""
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures
@@ -2200,13 +2242,17 @@ msgstr "اختلاف "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid ""
-"Generate the invoice automatically when the online payment is confirmed"
+msgid "Generate the invoice automatically when the online payment is confirmed"
 msgstr "تولید خودکار فاکتور وقتی پرداخت تایید شده است"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_glass
 msgid "Glass Desks"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__gmc_xml_url
+msgid "Gmc Xml Url"
 msgstr ""
 
 #. module: website_sale
@@ -2217,8 +2263,13 @@ msgid "Go to cart"
 msgstr "به سبد خرید بروید"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__enabled_gmc_src
+#: model:ir.model.fields,field_description:website_sale.field_website__enabled_gmc_src
+msgid "Google Merchant Center Data Source"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_layout__grid
-#: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Grid"
@@ -2252,14 +2303,29 @@ msgid "Hidden"
 msgstr "پنهان"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Hide"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__prevent_zero_price_sale
 msgid "Hide 'Add To Cart' when price = 0"
 msgstr "پنهان کردن 'افزودن به سبد خرید' وقتی قیمت = 0 باشد"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Hide all filters"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Hours."
 msgstr "ساعت‌ها."
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__step_href
+msgid "Href"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -2272,11 +2338,38 @@ msgid "I agree to the"
 msgstr "من موافقم با"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_account_move__id
+#: model:ir.model.fields,field_description:website_sale.field_crm_team__id
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:website_sale.field_digest_digest__id
+#: model:ir.model.fields,field_description:website_sale.field_ir_http__id
+#: model:ir.model.fields,field_description:website_sale.field_payment_token__id
+#: model:ir.model.fields,field_description:website_sale.field_product_attribute__id
+#: model:ir.model.fields,field_description:website_sale.field_product_document__id
 #: model:ir.model.fields,field_description:website_sale.field_product_image__id
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__id
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist_item__id
+#: model:ir.model.fields,field_description:website_sale.field_product_product__id
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__id
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__id
+#: model:ir.model.fields,field_description:website_sale.field_product_tag__id
+#: model:ir.model.fields,field_description:website_sale.field_product_template__id
+#: model:ir.model.fields,field_description:website_sale.field_product_template_attribute_line__id
+#: model:ir.model.fields,field_description:website_sale.field_product_template_attribute_value__id
+#: model:ir.model.fields,field_description:website_sale.field_res_company__id
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_sale.field_res_partner__id
+#: model:ir.model.fields,field_description:website_sale.field_sale_order__id
+#: model:ir.model.fields,field_description:website_sale.field_sale_order_line__id
+#: model:ir.model.fields,field_description:website_sale.field_sale_report__id
+#: model:ir.model.fields,field_description:website_sale.field_website__id
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__id
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__id
+#: model:ir.model.fields,field_description:website_sale.field_website_menu__id
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__id
+#: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter__id
+#: model:ir.model.fields,field_description:website_sale.field_website_track__id
+#: model:ir.model.fields,field_description:website_sale.field_website_visitor__id
 msgid "ID"
 msgstr "شناسه"
 
@@ -2310,20 +2403,8 @@ msgid ""
 "If the setting is set, sent to authenticated visitors who abandoned their "
 "cart"
 msgstr ""
-"اگر تنظیمات فعال باشند، به بازدیدکنندگان تأیید شده‌ای که سبد خرید خود را ترک"
-" کرده‌اند ارسال شود."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid ""
-"If you are ordering for an external person, please place your order via the "
-"backend. If you wish to change your name or email address, please do so in "
-"the account settings or contact your administrator."
-msgstr ""
-"اگر برای فردی خارجی سفارش می‌دهید، لطفاً سفارش خود را از طریق بک‌اند ثبت "
-"کنید. اگر می‌خواهید نام یا آدرس ایمیل خود را تغییر دهید، لطفاً این کار را در"
-" تنظیمات حساب انجام دهید یا با مدیر خود تماس بگیرید."
+"اگر تنظیمات فعال باشند، به بازدیدکنندگان تأیید شده‌ای که سبد خرید خود را ترک "
+"کرده‌اند ارسال شود."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__website_id
@@ -2339,7 +2420,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
-#: model:ir.model.fields,field_description:website_sale.field_product_tag__image
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
 msgid "Image"
 msgstr "تصویر"
@@ -2369,6 +2449,12 @@ msgid "Image 512"
 msgstr "تصویر 512"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Image Grid"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Image Menu"
 msgstr "منوی تصویر"
@@ -2387,6 +2473,11 @@ msgstr "فاصله تصویر"
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Image Zoom"
 msgstr "بزرگنمایی تصویر"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Images Fill"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2416,14 +2507,14 @@ msgstr "فوراً خرید کنید، به جای اضافه کردن به سب
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
-msgid "Invalid Email! Please enter a valid email address."
-msgstr "ایمیل نامعتبر! لطفا یک ایمیل معتبر وارد کنید."
+msgid "Invalid image"
+msgstr "تصویر نامعتبر"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
-msgid "Invalid image"
-msgstr "تصویر نامعتبر"
+msgid "Invalid video URL provided."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_account
@@ -2444,6 +2535,7 @@ msgstr "آیا دنبال می کند"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__is_published
 #: model:ir.model.fields,field_description:website_sale.field_product_template__is_published
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__is_published
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_website_tree_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_view_tree_website_sale
 msgid "Is Published"
@@ -2453,12 +2545,6 @@ msgstr "منتشر شده است"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Issue invoices to customers"
 msgstr "برای مشتریان فاکتور صادر کن"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/sale_order.py:0
-msgid "It is forbidden to modify a sales order which is not in draft status."
-msgstr "تغییر یک سفارش فروش که در وضعیت پیش‌نویس نیست، ممنوع است."
 
 #. module: website_sale
 #. odoo-python
@@ -2482,7 +2568,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/website_sale_utils.js:0
+#: code:addons/website_sale/static/src/js/cart_service.js:0
 msgid "Item(s) added to your cart"
 msgstr "ایتم(ها) به سبد خرید شما اضافه شد"
 
@@ -2523,6 +2609,12 @@ msgid "Landscape (4/3)"
 msgstr "منظره (۴/۳)"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Large Image"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -2530,16 +2622,11 @@ msgid "Last Month"
 msgstr "ماه گذشته"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_partner__last_website_so_id
-#: model:ir.model.fields,field_description:website_sale.field_res_users__last_website_so_id
-msgid "Last Online Sales Order"
-msgstr "آخرین سفارش فروش آنلاین"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__write_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__write_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__write_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__write_uid
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__write_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__write_uid
 msgid "Last Updated by"
 msgstr "آخرین بروز رسانی توسط"
@@ -2549,6 +2636,7 @@ msgstr "آخرین بروز رسانی توسط"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__write_date
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__write_date
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__write_date
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__write_date
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__write_date
 msgid "Last Updated on"
 msgstr "آخرین بروز رسانی در"
@@ -2627,15 +2715,9 @@ msgid "Line Subtotals Tax Display"
 msgstr "صفحه نمایش سطر فرعی مالیات"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
-msgid "LinkedIn"
-msgstr "لینکدین"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "List"
-msgstr "فهرست"
+msgid "List of products"
+msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -2677,11 +2759,14 @@ msgstr "ذره‌بین در هنگام شناور شدن"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
-"Mail only sent to signed in customers with items available for sale in their"
-" cart."
+"Mail only sent to signed in customers with items available for sale in carts "
+"created after the feature activation."
 msgstr ""
-"فقط به مشتریانی که وارد سایت شده‌اند و در سبد خرید خود اقلامی برای فروش "
-"دارند، ایمیل ارسال می‌شود."
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__main_button_label
+msgid "Main Button Label"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2699,8 +2784,8 @@ msgid ""
 "Manage pricelists to apply specific prices per country, customer, products, "
 "etc"
 msgstr ""
-"مدیریت لیست‌های قیمت برای اعمال قیمت‌های خاص به ازای هر کشور، مشتری، محصول و"
-" غیره"
+"مدیریت لیست‌های قیمت برای اعمال قیمت‌های خاص به ازای هر کشور، مشتری، محصول و "
+"غیره"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__account_on_checkout__mandatory
@@ -2740,6 +2825,17 @@ msgid "Messages"
 msgstr "پیام ها"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Mobile"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Modern Showcase"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Mondial Relay"
 msgstr "رله موندیال"
@@ -2751,7 +2847,6 @@ msgstr "مبدل ارتباطی Mondial Relay"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.accordion_more_information
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "More Information"
 msgstr "اطلاعات بیشتر"
 
@@ -2794,6 +2889,7 @@ msgstr "سبد من"
 #: model:ir.model.fields,field_description:website_sale.field_product_image__name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__name
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__name
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__name
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Name"
 msgstr "نام"
@@ -2819,6 +2915,11 @@ msgstr "جدید"
 #: model:ir.actions.act_window,name:website_sale.product_product_action_add
 msgid "New Product"
 msgstr "محصول جدید"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "New address"
+msgstr ""
 
 #. module: website_sale
 #: model:product.ribbon,name:website_sale.new_ribbon
@@ -2905,8 +3006,8 @@ msgstr "هیچ نتیجه‌ای برای این موارد یافت نشد"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid ""
-"No shipping method is available for your current order and shipping address."
-" Please contact us for more information."
+"No shipping method is available for your current order and shipping address. "
+"Please contact us for more information."
 msgstr ""
 "هیچ روش حمل و نقلی برای سفارش فعلی و آدرس حمل و نقل شما موجود نیست. لطفا "
 "برای اطلاعات بیشتر با ما تماس بگیرید."
@@ -2981,9 +3082,19 @@ msgid "Odoo Menu"
 msgstr "منوی اودو"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Off-screen Menu"
+msgstr ""
+
+#. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_office
 msgid "Office Desks"
 msgstr "میزهای اداری"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
+msgid "On the website original price is crossed out."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -3011,6 +3122,12 @@ msgstr "فروش آنلاین"
 #: model:ir.actions.act_window,name:website_sale.sale_report_action_dashboard
 msgid "Online Sales Analysis"
 msgstr "تجزیه و تحلیل فروش آنلاین"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
+msgid "Online catalog"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__only_services
@@ -3061,14 +3178,14 @@ msgid "Optional"
 msgstr "اختیاری"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Options"
-msgstr "گزینه‌ها"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 msgid "Or scan me with your banking app."
 msgstr "یا مرا با برنامه بانکی خود اسکن کنید."
+
+#. module: website_sale
+#: model:website.checkout.step,name:website_sale.checkout_step_cart
+msgid "Order"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -3085,8 +3202,8 @@ msgstr "نمایش خطوط سفارش در وب‌سایت"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid "Order overview"
-msgstr "مرور سفارش"
+msgid "Order summary"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
@@ -3127,15 +3244,9 @@ msgid "Pay now"
 msgstr "اکنون بپرداز"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
+#: model:website.checkout.step,name:website_sale.checkout_step_payment
 msgid "Payment"
 msgstr "پرداخت"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid "Payment Information"
-msgstr "اطلاعات پرداخت"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_methods
@@ -3175,15 +3286,16 @@ msgid "Pedal-based opening system"
 msgstr "سیستم باز شدن مبتنی بر پدال"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Phone"
-msgstr "تلفن"
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 msgid "Phone Number"
 msgstr "شماره تلفن"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "Pickup Location"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3191,11 +3303,6 @@ msgid "Pills"
 msgstr ""
 "Pills\n"
 "حبات"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
-msgid "Pinterest"
-msgstr "پینترست"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -3245,6 +3352,7 @@ msgstr "قبلی (پیکان-چپ)"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Price"
 msgstr "قیمت"
 
@@ -3259,11 +3367,6 @@ msgstr "قیمت - نزولی"
 #: code:addons/website_sale/models/website.py:0
 msgid "Price - Low to High"
 msgstr "قیمت - صعودی"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Price Filter"
-msgstr "فیلتر قیمت"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_price
@@ -3283,6 +3386,7 @@ msgstr "قیمت پس از انتخاب روش ارسال به روز می شو�
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_pricelist
+#: model_terms:ir.ui.view,arch_db:website_sale.pricelist_list
 msgid "Pricelist"
 msgstr "لیست قیمت"
 
@@ -3319,11 +3423,6 @@ msgstr "به پرداخت ادامه دهید"
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "Process the order once the payment is received."
 msgstr "پردازش سفارش هنگامی که پرداخت دریافت شد."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Prod. Desc."
-msgstr "توضیحات محصول"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3390,6 +3489,8 @@ msgid "Product Names"
 msgstr "نام‌های محصول"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Product Page"
 msgstr "صفحه محصول"
@@ -3455,11 +3556,6 @@ msgstr "برچسب محصول"
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Product Tags"
 msgstr "برچسپ محصول"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Product Tags Filter"
-msgstr "فیلتر برچسب‌های محصول"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__product_tmpl_id
@@ -3530,11 +3626,6 @@ msgstr "محصولات"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Products List"
-msgstr "لیست محصولات"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Products Page"
 msgstr "صفحه محصولات"
 
@@ -3566,6 +3657,12 @@ msgid ""
 msgstr ""
 "آدرس ویدئویی که برای '%s' ارائه شده معتبر نیست. لطفاً یک آدرس ویدئویی معتبر "
 "وارد کنید."
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__publish_date
+#: model:ir.model.fields,field_description:website_sale.field_product_template__publish_date
+msgid "Publish Date"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_document__shown_on_product_page
@@ -3602,18 +3699,20 @@ msgstr "بالا کشیدن"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Quantity"
 msgstr "تعداد"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Quick Browse Grid"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Radio"
 msgstr "رادیو"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Rating"
-msgstr "رتبه دهی"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_avg_text
@@ -3682,8 +3781,8 @@ msgstr "محصولات اخیراً فروخته‌شده"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_viewed_products
-msgid "Recently Viewed Products"
-msgstr "اخیراً مشاهده شده‌ها"
+msgid "Recently Viewed Products (per user)"
+msgstr ""
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_recliners
@@ -3699,6 +3798,11 @@ msgstr "ایمیل بازیابی ارسال شد"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email to Send"
 msgstr "ارسال ایمیل بازیابی"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Regular"
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -3730,10 +3834,15 @@ msgstr "حذف از سبد"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
 #: model_terms:ir.ui.view,arch_db:website_sale.product_quantity
 msgid "Remove one"
 msgstr "حذف یکی"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Render a button to show the Off-screen Menu"
+msgstr ""
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_repair_and_maintenance
@@ -3756,6 +3865,7 @@ msgstr "حذف دسته‌بندی‌ها"
 #: model:ir.model.fields,help:website_sale.field_product_public_category__website_id
 #: model:ir.model.fields,help:website_sale.field_product_tag__website_id
 #: model:ir.model.fields,help:website_sale.field_product_template__website_id
+#: model:ir.model.fields,help:website_sale.field_website_checkout_step__website_id
 msgid "Restrict to a specific website."
 msgstr "محدود به یک وب سایت خاص."
 
@@ -3766,10 +3876,9 @@ msgid "Resume Order"
 msgstr "از سرگیری سفارش"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "Review Order"
-msgstr "مرور سفارش"
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Reviews"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_ribbon_id
@@ -3880,9 +3989,9 @@ msgid "Sample"
 msgstr "نمونه"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Save address"
-msgstr "ذخیره آدرس"
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Search"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -3890,9 +3999,26 @@ msgid "Search Abandoned Sales Orders"
 msgstr "جستجوی سفارشات فروش رها شده"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Search Bar"
-msgstr "جستجوی خط"
+#: model_terms:ir.ui.view,arch_db:website_sale.floating_bar
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "Search Products"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "Search globally"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "Search in"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "Search {{0}} globally"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3906,8 +4032,8 @@ msgid ""
 "Select <b>New Product</b> to create it and manage its properties to boost "
 "your sales."
 msgstr ""
-"برای ایجاد <b>محصول جدید</b> را انتخاب کنید و خصوصیات آن را برای افزایش فروش"
-" آن مدیریت کنید."
+"برای ایجاد <b>محصول جدید</b> را انتخاب کنید و خصوصیات آن را برای افزایش فروش "
+"آن مدیریت کنید."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3930,7 +4056,7 @@ msgid "Selectable"
 msgstr "گزینش پذیر"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form
 msgid "Send a Recovery Email"
 msgstr "ارسال ایمیل بازیابی"
 
@@ -3940,7 +4066,7 @@ msgid "Send after"
 msgstr "ارسال بعد"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form
 msgid "Send by Email"
 msgstr "ارسال از طریق ایمیل"
 
@@ -3958,6 +4084,7 @@ msgstr "نام سئو"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__sequence
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__sequence
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__sequence
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__sequence
 msgid "Sequence"
 msgstr "دنباله"
@@ -3966,12 +4093,6 @@ msgstr "دنباله"
 #: model:product.public.category,name:website_sale.public_category_services
 msgid "Services"
 msgstr "محصولات"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Share"
-msgstr "اشتراک‌گذاری"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_delivery_invoice_address
@@ -4054,6 +4175,21 @@ msgid "Show Empty"
 msgstr "نمایش خالی"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Show a filmstrip navigation at the Top"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Show filters into Sidebar"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Show into Sidebar"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_search
 msgid "Show on Ecommerce"
 msgstr "نمایش در تجارت الکترونیک"
@@ -4069,15 +4205,15 @@ msgid "Show/hide shopping cart"
 msgstr "نمایش/پنهان کردن سبد خرید"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "Sign In"
-msgstr "ورود"
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Sidebar"
+msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid "Sign Up"
-msgstr "ثبت نام"
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Sidebar Grid"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -4130,14 +4266,13 @@ msgstr "ناموجود"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
-msgid "Some required fields are empty."
-msgstr "بعضی فیلدهای اجباری خالی هستند."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
 msgid "Sorry, we are unable to ship your order."
 msgstr "با عرض پوزش، ما نمی توانیم سفارش شما را ارسال کنیم"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sort
+msgid "Sort By"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4167,11 +4302,6 @@ msgid "Standing Desks"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "State / Province"
-msgstr "ایالت / استان"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Status"
 msgstr "وضعیت"
@@ -4187,11 +4317,6 @@ msgid "Storage Cabinets"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Street and Number"
-msgstr "خیابان و شماره"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Style"
 msgstr "استایل"
@@ -4205,11 +4330,11 @@ msgstr "جمع جزء"
 #: model:ir.model.fields,help:website_sale.field_product_product__alternative_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__alternative_product_ids
 msgid ""
-"Suggest alternatives to your customer (upsell strategy). Those products show"
-" up on the product page."
+"Suggest alternatives to your customer (upsell strategy). Those products show "
+"up on the product page."
 msgstr ""
-"پیشنهاد گزینه‌های جایگزین به مشتری خود (استراتژی فروش بیشتر). این محصولات در"
-" صفحه محصول نمایش داده می‌شوند."
+"پیشنهاد گزینه‌های جایگزین به مشتری خود (استراتژی فروش بیشتر). این محصولات در "
+"صفحه محصول نمایش داده می‌شوند."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4228,6 +4353,7 @@ msgstr "پیشنهاد شده لوازم جانبی در سبد خرید تجا�
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Tags"
 msgstr "برچسب‌ها"
 
@@ -4260,6 +4386,11 @@ msgstr "مالیات ها"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Terms and Conditions"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Text"
 msgstr "متن"
 
@@ -4267,11 +4398,6 @@ msgstr "متن"
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__text_color
 msgid "Text Color"
 msgstr "رنگ متن"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website__prevent_zero_price_sale_text
-msgid "Text to show instead of price"
-msgstr "متنی که به جای قیمت نمایش داده می‌شود"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -4290,6 +4416,12 @@ msgid "The access token is invalid."
 msgstr "توکن دسترسی نامعتبر است."
 
 #. module: website_sale
+#: model:website.snippet.filter,help:website_sale.dynamic_filter_latest_viewed_products
+msgid ""
+"The building block will remain empty until the user visits a product page."
+msgstr ""
+
+#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
 msgid "The cart has already been paid. Please refresh the page."
@@ -4305,18 +4437,30 @@ msgstr "سبد خرید به‌روز شد. لطفاً صفحه را تازه‌
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid ""
-"The company of the website you are trying to sell from (%(website_company)s)"
-" is different than the one you want to use (%(company)s)"
+"The company of the website you are trying to sell from (%(website_company)s) "
+"is different than the one you want to use (%(company)s)"
 msgstr ""
-"شرکت وب‌سایتی که می‌خواهید از (%(website_company)s) بفروشید با (%(company)s)"
-" که می‌خواهید از آن استفاده کنید متفاوت است"
+"شرکت وب‌سایتی که می‌خواهید از (%(website_company)s) بفروشید با (%(company)s) "
+"که می‌خواهید از آن استفاده کنید متفاوت است"
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product__website_url
+msgid "The full URL to access the document through the website."
+msgstr "آدرس URL کامل برای دسترسی سند در وبسایت."
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_absolute_url
+#: model:ir.model.fields,help:website_sale.field_product_template__website_absolute_url
+#: model:ir.model.fields,help:website_sale.field_website_checkout_step__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_url
-#: model:ir.model.fields,help:website_sale.field_product_product__website_url
 #: model:ir.model.fields,help:website_sale.field_product_template__website_url
-msgid "The full URL to access the document through the website."
-msgstr "آدرس URL کامل برای دسترسی سند در وبسایت."
+#: model:ir.model.fields,help:website_sale.field_website_checkout_step__website_url
+msgid "The full relative URL to access the document through the website."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -4328,18 +4472,16 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/models/sale_order.py:0
+#: code:addons/website_sale/controllers/cart.py:0
 msgid "The given product does not exist therefore it cannot be added to cart."
 msgstr ""
 "محصول داده شده وجود ندارد بنابراین نمی‌توان آن را به سبد خرید اضافه کرد."
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/combo_configurator.py:0
-#: code:addons/website_sale/models/sale_order.py:0
+#: code:addons/website_sale/models/sale_order_line.py:0
 msgid ""
-"The given product does not have a price therefore it cannot be added to "
-"cart."
+"The given product does not have a price therefore it cannot be added to cart."
 msgstr ""
 "محصول داده شده قیمتی ندارد بنابراین نمی‌توان آن را به سبد خرید اضافه کرد."
 
@@ -4349,8 +4491,8 @@ msgid ""
 "The mode selected here applies as invoicing policy of any new product "
 "created but not of products already existing."
 msgstr ""
-"انتخاب حالت در اینجا به عنوان سیاست صدور فاکتور برای هر محصول جدید ایجاد‌شده"
-" اعمال می‌شود، اما برای محصولات موجود در حال حاضر اعمال نمی‌شود."
+"انتخاب حالت در اینجا به عنوان سیاست صدور فاکتور برای هر محصول جدید ایجاد‌شده "
+"اعمال می‌شود، اما برای محصولات موجود در حال حاضر اعمال نمی‌شود."
 
 #. module: website_sale
 #. odoo-python
@@ -4361,13 +4503,14 @@ msgstr "سفارش لغو شده است."
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__public_categ_ids
+#: model:ir.model.fields,help:website_sale.field_sale_report__public_categ_ids
 msgid ""
 "The product will be available in each mentioned eCommerce category. Go to "
 "Shop > Edit Click on the page and enable 'Categories' to view all eCommerce "
 "categories."
 msgstr ""
-"محصول در هر دسته‌بندی تجارت الکترونیک ذکر شده در دسترس خواهد بود. به فروشگاه"
-" بروید و > ویرایش کلیک کنید و صفحه را فعال کنید تا 'دسته‌بندی‌ها' تمام "
+"محصول در هر دسته‌بندی تجارت الکترونیک ذکر شده در دسترس خواهد بود. به فروشگاه "
+"بروید و > ویرایش کلیک کنید و صفحه را فعال کنید تا 'دسته‌بندی‌ها' تمام "
 "دسته‌بندی‌های تجارت الکترونیک را مشاهده کنید."
 
 #. module: website_sale
@@ -4386,8 +4529,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/models/product_product.py:0
 msgid ""
-"The value of Base Unit Count must be greater than 0. Use 0 to hide the price"
-" per unit on this product."
+"The value of Base Unit Count must be greater than 0. Use 0 to hide the price "
+"per unit on this product."
 msgstr ""
 "مقدار شمارش واحد پایه باید بزرگتر از 0 باشد. از 0 برای مخفی کردن قیمت هر "
 "واحد در این محصول استفاده کنید."
@@ -4408,6 +4551,11 @@ msgstr "هنوز هیچ سفارشی پرداخت نشده از سایت موج�
 #: code:addons/website_sale/static/src/js/location_selector/map_container/map_container.js:0
 msgid "There was an error loading the map"
 msgstr "هنگام بارگیری نقشه خطایی روی داد"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.alternative_products
+msgid "These other products might interest you"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -4432,9 +4580,9 @@ msgid ""
 "updated on that cart. Also, the cart might not be visible for the customer "
 "until you update the pricelist of that cart."
 msgstr ""
-"این شریک یک سبد خرید باز دارد. لطفاً توجه داشته باشید که فهرست قیمت در آن "
-"سبد به‌روزرسانی نخواهد شد. همچنین، این امکان وجود دارد که سبد برای مشتری "
-"قابل دیدن نباشد تا زمانی که فهرست قیمت آن سبد را به‌روزرسانی کنید."
+"این شریک یک سبد خرید باز دارد. لطفاً توجه داشته باشید که فهرست قیمت در آن سبد "
+"به‌روزرسانی نخواهد شد. همچنین، این امکان وجود دارد که سبد برای مشتری قابل "
+"دیدن نباشد تا زمانی که فهرست قیمت آن سبد را به‌روزرسانی کنید."
 
 #. module: website_sale
 #. odoo-javascript
@@ -4479,6 +4627,11 @@ msgid "Thumbnails"
 msgstr "تصاویر کوچک"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website__send_abandoned_cart_email_activation_time
+msgid "Time when the 'Send abandoned cart email' feature was activated."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "To send invitations in B2B mode, open a contact or select several ones in "
@@ -4491,13 +4644,13 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Top"
-msgstr "بالا"
+msgid "Toolbar"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Top Bar"
-msgstr "نوار بالا"
+msgid "Top"
+msgstr "بالا"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4562,11 +4715,6 @@ msgid "USPS"
 msgstr "اداره پست ایالات متحده آمریکا"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "USPS Shipping Methods"
-msgstr "روش های حمل و نقل USPS"
-
-#. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_drawers_underbed
 msgid "Under-bed Drawers"
 msgstr ""
@@ -4604,14 +4752,8 @@ msgstr "از کتابخانه محلی خود یک فایل بارگذاری ک�
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Use Google Places API to validate addresses entered by your visitors"
 msgstr ""
-"از Google Places API برای اعتبارسنجی آدرس‌های وارد شده توسط بازدیدکنندگان "
-"خود استفاده کنید"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid "VAT"
-msgstr "ارزش افزوده"
+"از Google Places API برای اعتبارسنجی آدرس‌های وارد شده توسط بازدیدکنندگان خود "
+"استفاده کنید"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
@@ -4625,11 +4767,6 @@ msgstr "روبان نوع‌بندی"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Variants"
-msgstr "گونه ها"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Vertical (2/3)"
 msgstr "عمودی (2/3)"
 
@@ -4638,6 +4775,11 @@ msgstr "عمودی (2/3)"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Video URL"
 msgstr "URL ویدیو"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.filter_radio_and_multi_attributes
+msgid "View More"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_banner
@@ -4685,13 +4827,9 @@ msgstr "نمايان"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_published
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_published
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__website_published
 msgid "Visible on current website"
 msgstr "قابل دید در وبسایت حاضر"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_tag__visible_on_ecommerce
-msgid "Visible on eCommerce"
-msgstr "قابل مشاهده در تجارت الکترونیک"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_track
@@ -4700,7 +4838,6 @@ msgstr "صفحات بازدید شده"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_ids
-#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_kanban
 msgid "Visited Products"
 msgstr "محصولات بازدید شده"
 
@@ -4721,10 +4858,10 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/website_sale_utils.js:0
+#: code:addons/website_sale/static/src/js/cart_service.js:0
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__shop_warning
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__shop_warning
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "Warning"
 msgstr "هشدار"
@@ -4746,8 +4883,16 @@ msgid ""
 "promising to repair or replace it if necessary within a specified period of "
 "time."
 msgstr ""
-"گارانتی، که به خریدار یک محصول توسط سازنده آن صادر می‌شود و وعده می‌دهد که "
-"در صورت لزوم در یک بازه زمانی مشخص، آن را تعمیر یا تعویض کند."
+"گارانتی، که به خریدار یک محصول توسط سازنده آن صادر می‌شود و وعده می‌دهد که در "
+"صورت لزوم در یک بازه زمانی مشخص، آن را تعمیر یا تعویض کند."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid ""
+"We weren't able to update your cart. Please refresh your page before trying "
+"again."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website
@@ -4761,15 +4906,28 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_id
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__website_id
 #: model:ir.model.fields,field_description:website_sale.field_sale_report__website_id
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__website_id
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__website_id
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Website"
 msgstr "تارنما"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_absolute_url
+#: model:ir.model.fields,field_description:website_sale.field_product_template__website_absolute_url
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__website_absolute_url
+msgid "Website Absolute URL"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_normalized
 msgid "Website Category"
 msgstr "دسته‌بندی وبسایت"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_website_checkout_step
+msgid "Website Checkout Step"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_menu
@@ -4813,6 +4971,7 @@ msgstr "فیلتر قطعه وب سایت"
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_url
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_url
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_url
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__website_url
 msgid "Website URL"
 msgstr "URL وبسایت"
 
@@ -4855,8 +5014,7 @@ msgstr "تصویر opengraph وب سایت"
 #: model:ir.model.fields,help:website_sale.field_account_move__website_id
 msgid "Website through which this invoice was created for eCommerce orders."
 msgstr ""
-"وب سایتی که از طریق آن این فاکتور برای سفارشات تجارت الکترونیک ایجاد شده "
-"است."
+"وب سایتی که از طریق آن این فاکتور برای سفارشات تجارت الکترونیک ایجاد شده است."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_sale_order__website_id
@@ -4875,14 +5033,20 @@ msgid "What should be done on \"Add to Cart\"?"
 msgstr "در «افزودن به سبد خرید» چه باید کرد؟"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
-msgid "WhatsApp"
-msgstr "واتس‌اَپ"
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_tag__visible_on_ecommerce
-msgid "Whether the tag is displayed on the eCommerce."
-msgstr "آیا برچسب در فروشگاه الکترونیکی نمایش داده شود."
+#: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
+msgid ""
+"When prices are calculated through a formula or fixed, the original price "
+"is\n"
+"                    generally not displayed in the sale order lines or "
+"checkout. However, for\n"
+"                    specific formula-based pricing rules, the discount can "
+"be shown on the shop\n"
+"                    page (e.g. product pages and configurators), but not in "
+"the cart or at checkout.\n"
+"                    In these cases, the calculated/fixed price is set as the "
+"unit price with 0% discount\n"
+"                    in the order."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -4912,6 +5076,12 @@ msgid "With three feet"
 msgstr "با سه پا(قدم)"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "Wrong format: got `pricelist=%s`, expected an integer"
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 msgid "Yes"
@@ -4921,12 +5091,12 @@ msgstr "بله"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid ""
 "You are editing your <b>delivery and billing</b> addresses\n"
-"                                        at the same time!<br/>\n"
-"                                        If you want to modify your billing address, create a"
+"                            at the same time!<br/>\n"
+"                            If you want to modify your billing address, "
+"create a\n"
+"                            <a class=\"o_translate_inline\" href=\"/shop/"
+"address?address_type=billing\">new address</a>."
 msgstr ""
-"شما در حال ویرایش آدرس‌های <b>تحویل و فاکتور</b> \n"
-"                                        به صورت همزمان هستید!<br/>\n"
-"                                        اگر می خواهید آدرس صورتحساب خود را تغییر دهید،  ایجاد کنید"
 
 #. module: website_sale
 #. odoo-python
@@ -4954,19 +5124,12 @@ msgstr "شما موارد را در سبد خرید خود جا گذاشته ا�
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid ""
 "You'll find here all the carts abandoned by your visitors.\n"
-"                If they completed their address, you should send them a recovery email!"
+"                If they completed their address, you should send them a "
+"recovery email!"
 msgstr ""
 "در اینجا تمام چرخ دستی های رها شده توسط بازدیدکنندگان خود را خواهید یافت.\n"
-"       اگر آدرس خود را تکمیل کردند، باید یک ایمیل بازیابی برای آنها ارسال کنید!"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.alternative_products
-msgid ""
-"Your Dynamic Snippet will be displayed here...\n"
-"                                This message is displayed because youy did not provide both a filter and a template to use."
-msgstr ""
-"قطعه پویا شما در اینجا نمایش داده می شود...\n"
-"این پیام به این دلیل نمایش داده می شود که شما هم فیلتر و هم الگوی استفاده را ارائه نکرده اید."
+"       اگر آدرس خود را تکمیل کردند، باید یک ایمیل بازیابی برای آنها ارسال "
+"کنید!"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4981,7 +5144,6 @@ msgid "Your Name"
 msgstr "نام"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_row
 msgid "Your address"
 msgstr "نشانی شما"
@@ -5021,11 +5183,6 @@ msgid "Your previous cart has already been completed."
 msgstr "سبد خرید قبلی شما قبلا تکمیل شده است."
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Zip Code"
-msgstr "کد پستی"
-
-#. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_delivery_zip_prefix
 msgid "Zip Prefix"
 msgstr "پیشوند زیپ"
@@ -5055,10 +5212,16 @@ msgstr "تجارت الکترونیکی"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action
+#: model:ir.model.fields,field_description:website_sale.field_sale_report__public_categ_ids
 #: model:ir.ui.menu,name:website_sale.menu_catalog_categories
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "eCommerce Categories"
 msgstr "دسته‌بندی‌های تجارت الکترونیک"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+msgid "eCommerce Category"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__description_ecommerce
@@ -5092,24 +5255,17 @@ msgid "eCommerce cart"
 msgstr "سبد خرید تجارت الکترونیک"
 
 #. module: website_sale
+#: model:ir.model.constraint,message:website_sale.constraint_website_check_gmc_ecommerce_access
+msgid ""
+"eCommerce must be accessible to all users for Google Merchant Center to "
+"operate properly."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server
 msgid "eCommerce: send email to customers about their abandoned cart"
 msgstr ""
 "بازرگانی الکترونیکی: ارسال ایمیل به مشتریان درباره سبد خرید رها شده آنها"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid "if you want to merge your previous cart into current cart."
-msgstr "اگر می‌خواهید سبد خرید قبلی خود را با سبد خرید فعلی ادغام کنید."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"if you want to restore your previous cart. Your current cart will be "
-"replaced with your previous cart."
-msgstr ""
-"اگر می‌خواهید سبد خرید قبلی خود را بازگردانید. سبد خرید فعلی شما با سبد خرید"
-" قبلی شما جایگزین خواهد شد."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -5117,9 +5273,40 @@ msgid "in category \""
 msgstr "در دسته‌بندی \""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "new address"
-msgstr "آدرس جدید"
+#. odoo-python
+#: code:addons/website_sale/models/crm_team.py:0
+msgid "is_abandoned_cart"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+msgid "list_price asc"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+msgid "list_price desc"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/res_config_settings.py:0
+msgid "model"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+msgid "name asc"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+msgid "publish_date desc"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -5131,7 +5318,411 @@ msgstr "حذف"
 msgid "terms &amp; conditions"
 msgstr "شرایط و ضوابط"
 
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid "to follow your order."
-msgstr "تا سفارش شما را دنبال کند"
+#~ msgid "&amp; Delivery"
+#~ msgstr "و تحویل"
+
+#~ msgid "&amp;nbsp;"
+#~ msgstr "&amp;nbsp;"
+
+#~ msgid "<b>Deliver to pickup point: </b>"
+#~ msgstr "<b>تحویل به نقطه تحویل:</b>"
+
+#~ msgid "<b>Delivery: </b>"
+#~ msgstr "<b>تحویل: </b>"
+
+#~ msgid "<b>Pricelist</b>"
+#~ msgstr "<b>لیست قیمت</b>"
+
+#~ msgid ""
+#~ "<br/>\n"
+#~ "                30-day money-back guarantee<br/>\n"
+#~ "                Shipping: 2-3 Business Days"
+#~ msgstr ""
+#~ "<br/>\n"
+#~ "                با ضمانت برگشت 30 روزه پول<br/>\n"
+#~ "                حمل و نقل: 2-3 روز کاری"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-plus me-md-2\"/>\n"
+#~ "                    <span class=\"d-none d-md-inline\">Add address</span>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-plus me-md-2\"/>\n"
+#~ "                    <span class=\"d-none d-md-inline\">افزودن آدرس</span>"
+
+#~ msgid "<i class=\"fw-light fa fa-angle-left me-2\"/>Discard"
+#~ msgstr "<i class=\"fw-light fa fa-angle-left me-2\"/>لغو"
+
+#~ msgid "<option value=\"\">Country...</option>"
+#~ msgstr "<option value=\"\">کشور...</option>"
+
+#~ msgid "<option value=\"\">State / Province...</option>"
+#~ msgstr "<option value=\"\">ایالت / استان...</option>"
+
+#~ msgid "<small class=\"d-none d-lg-inline text-muted\">Sort By:</small>"
+#~ msgstr ""
+#~ "<small class=\"d-none d-lg-inline text-muted\">مرتب‌سازی بر اساس:</small>"
+
+#~ msgid ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                                                        Changing company "
+#~ "name or VAT number is not allowed once document(s) have been issued for "
+#~ "your account. Please contact us directly for this operation.\n"
+#~ "                                                    </small>"
+#~ msgstr ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                                                        تغییر نام شرکت یا "
+#~ "شماره VAT پس از صدور اسناد برای حسابتان مجاز نیست. لطفا برای این عملیات "
+#~ "مستقیماً با ما تماس بگیرید..\n"
+#~ "                                                    </small>"
+
+#~ msgid ""
+#~ "<small class=\"mx-auto\"><b>Clear Filters</b></small>\n"
+#~ "                            <i class=\"oi oi-close\" "
+#~ "role=\"presentation\"/>"
+#~ msgstr ""
+#~ "<small class=\"mx-auto\"><b>حذف فیلترها</b></small>\n"
+#~ "                            <i class=\"oi oi-close\" "
+#~ "role=\"presentation\"/>"
+
+#~ msgid ""
+#~ "<span class=\"d-md-none fa fa-shopping-cart\"/>\n"
+#~ "                            <span class=\"d-none d-md-inline\">Add to "
+#~ "cart</span>"
+#~ msgstr ""
+#~ "<span class=\"d-md-none fa fa-shopping-cart\"/> <span class=\"d-none d-md-"
+#~ "inline\">افزودن به سبد خرید</span>"
+
+#~ msgid "<span>Already have an account?</span>"
+#~ msgstr "<span>از قبل حساب کاربری دارید؟</span>"
+
+#~ msgid "<strong>Total:</strong>"
+#~ msgstr "<strong>جمع کل:</strong>"
+
+#~ msgid "<u>Terms and Conditions</u>"
+#~ msgstr "شرایط و ضوابط"
+
+#~ msgid "A combo product can't be empty. Please select at least one option."
+#~ msgstr ""
+#~ "یک محصول ترکیبی نمی تواند خالی باشد. لطفا حداقل یک گزینه را انتخاب کنید."
+
+#~ msgid "Abandoned Carts to Recover"
+#~ msgstr "سبدهای رها شده برای بازیابی"
+
+#~ msgid "All pricelists"
+#~ msgstr "تمام لیست قیمت‌ها"
+
+#~ msgid "Apartment, suite, etc."
+#~ msgstr "آپارتمان، سوئیت، و غیره."
+
+#~ msgid "Back to delivery"
+#~ msgstr "بازگشت به تحویل"
+
+#~ msgid "Be aware!"
+#~ msgstr "هشیار باش!"
+
+#~ msgid "Billing:"
+#~ msgstr "صورتحساب:"
+
+#~ msgid "Buttons"
+#~ msgstr "دکمه‌ها"
+
+#~ msgid "Carts are flagged as abandoned after this delay."
+#~ msgstr "سبدهای خرید پس از این تاخیر به عنوان رها شده علامت‌گذاری می‌شوند."
+
+#~ msgid ""
+#~ "Changing VAT number is not allowed once document(s) have been issued for "
+#~ "your account. Please contact us directly for this operation."
+#~ msgstr ""
+#~ "تغییر شماره مالیات بر ارزش افزوده پس از صدور سند(ها) برای حساب شما مجاز "
+#~ "نیست. لطفاً برای این عملیات مستقیماً با ما تماس بگیرید."
+
+#~ msgid ""
+#~ "Changing company name is not allowed once document(s) have been issued "
+#~ "for your account. Please contact us directly for this operation."
+#~ msgstr ""
+#~ "تغییر نام شرکت زمانی که سند(ها) برای حساب شما صادر شده‌اند مجاز نیست. لطفاً "
+#~ "برای انجام این عملیات مستقیماً با ما تماس بگیرید."
+
+#~ msgid ""
+#~ "Changing your name is not allowed once invoices have been issued for your "
+#~ "account. Please contact us directly for this operation."
+#~ msgstr ""
+#~ "زمانی که فاکتورهایی برای حساب شما صادر شده باشد، تغییر نام شرکت شما مجاز "
+#~ "نیست. لطفا برای این عملیات مستقیما با ما تماس بگیرید."
+
+#~ msgid "Choose a delivery method"
+#~ msgstr "یک روش تحویل را انتخاب کنید"
+
+#~ msgid "City"
+#~ msgstr "شهر"
+
+#~ msgid "Click here"
+#~ msgstr "اینجا کلیک کن"
+
+#~ msgid "Compute shipping costs and ship with DHL"
+#~ msgstr "محاسبه هزینه حمل و نقل و ارسال با DHL"
+
+#~ msgid "Compute shipping costs and ship with FedEx"
+#~ msgstr "محاسبه هزینه حمل و نقل و ارسال با FedEx"
+
+#~ msgid "Compute shipping costs and ship with UPS"
+#~ msgstr "محاسبه هزینه حمل و نقل و ارسال با UPS"
+
+#~ msgid "Compute shipping costs and ship with USPS"
+#~ msgstr "محاسبه هزینه حمل و نقل و ارسال با USPS"
+
+#~ msgid "Continue checkout"
+#~ msgstr "ادامه پرداخت"
+
+#~ msgid "Continue shopping"
+#~ msgstr "ادامه خرید"
+
+#~ msgid "Country"
+#~ msgstr "کشور"
+
+#~ msgid ""
+#~ "Customer needs to be signed in otherwise the mail address is not "
+#~ "known.     \n"
+#~ "\n"
+#~ "- If a potential customer creates one or more abandoned checkouts and "
+#~ "then completes a sale before the recovery email gets sent, then the email "
+#~ "won't be sent.     \n"
+#~ "\n"
+#~ "- If user has manually sent a recovery email, the mail will not be sent a "
+#~ "second time     \n"
+#~ "\n"
+#~ "- If a payment processing error occurred when the customer tried to "
+#~ "complete their checkout, then the email won't be sent.     \n"
+#~ "\n"
+#~ "- If your shop does not support shipping to the customer's address, then "
+#~ "the email won't be sent.     \n"
+#~ "\n"
+#~ "- If none of the products in the checkout are available for purchase "
+#~ "(empty inventory, for example), then the email won't be sent.     \n"
+#~ "\n"
+#~ "- If all the products in the checkout are free, and the customer does not "
+#~ "visit the shipping page to add a shipping fee or the shipping fee is also "
+#~ "free, then the email won't be sent."
+#~ msgstr ""
+#~ "برای ورود مشتری لازم است در سیستم وارد شده باشد وگرنه نشانی ایمیل او "
+#~ "ناشناخته خواهد بود.\n"
+#~ "\n"
+#~ "- اگر مشتری احتمالی یک یا چند تسویه حساب ناتمام ایجاد کند و سپس قبل از "
+#~ "ارسال ایمیل یادآوری خرید را کامل کند، آنگاه ایمیل ارسال نخواهد شد.\n"
+#~ "\n"
+#~ "- اگر کاربر به صورت دستی یک ایمیل بازیابی ارسال کرده باشد، ایمیل برای بار "
+#~ "دوم ارسال نخواهد شد. \n"
+#~ "\n"
+#~ "- اگر خطایی در پردازش پرداخت زمانی که مشتری سعی در تکمیل تسویه حساب خود "
+#~ "داشت رخ داده‌است، ایمیل ارسال نخواهد شد.\n"
+#~ "\n"
+#~ "- اگر فروشگاه شما از ارسال به نشانی مشتری پشتیبانی نمی‌کند، ایمیل ارسال "
+#~ "نخواهد شد.\n"
+#~ "\n"
+#~ "- اگر هیچ‌یک از محصولات در تسویه حساب برای خرید در دسترس نباشند (مثلاً "
+#~ "موجودی خالی)، ایمیل ارسال نخواهد شد.\n"
+#~ "\n"
+#~ "- اگر تمام محصولات در تسویه حساب رایگان باشند، و مشتری به صفحه حمل و نقل "
+#~ "برای افزودن هزینه حمل و نقل نرود یا در صورتی که هزینه حمل و نقل نیز "
+#~ "رایگان باشد، ایمیل ارسال نخواهد شد."
+
+#~ msgid "DHL Express Connector"
+#~ msgstr "کانکتور DHL Express"
+
+#~ msgid "DHL Shipping Methods"
+#~ msgstr "روش های حمل و نقل DHL"
+
+#~ msgid "Default Pricelist if any"
+#~ msgstr "اگر لیست قیمتی پیش‌فرض وجود داشته باشد"
+
+#~ msgid "Delivery &amp;"
+#~ msgstr "حمل و "
+
+#~ msgid ""
+#~ "Drag building blocks here to customize the header for\n"
+#~ "                                    \""
+#~ msgstr ""
+#~ "بلوک های ایجادی را به اینجا بکشید تا سرصفحه را سفارشی کنید\n"
+#~ "                                    \""
+
+#~ msgid "Edit this address"
+#~ msgstr "ویرایش این نشانی"
+
+#~ msgid "Email"
+#~ msgstr "پست الکترونیک"
+
+#~ msgid "Extra Images"
+#~ msgstr "تصاویر اضافی"
+
+#~ msgid "Facebook"
+#~ msgstr "فیسبوک"
+
+#~ msgid "FedEx Shipping Methods"
+#~ msgstr "روش های حمل و نقل FedEx"
+
+#~ msgid "Fill"
+#~ msgstr "پر کردن"
+
+#~ msgid "Fill in your address"
+#~ msgstr "آدرس خود را وارد کنید"
+
+#~ msgid "Fiscal Position"
+#~ msgstr "موقعیت مالی"
+
+#~ msgid "Full name"
+#~ msgstr "نام کامل"
+
+#~ msgid ""
+#~ "If you are ordering for an external person, please place your order via "
+#~ "the backend. If you wish to change your name or email address, please do "
+#~ "so in the account settings or contact your administrator."
+#~ msgstr ""
+#~ "اگر برای فردی خارجی سفارش می‌دهید، لطفاً سفارش خود را از طریق بک‌اند ثبت "
+#~ "کنید. اگر می‌خواهید نام یا آدرس ایمیل خود را تغییر دهید، لطفاً این کار را "
+#~ "در تنظیمات حساب انجام دهید یا با مدیر خود تماس بگیرید."
+
+#~ msgid "Invalid Email! Please enter a valid email address."
+#~ msgstr "ایمیل نامعتبر! لطفا یک ایمیل معتبر وارد کنید."
+
+#~ msgid ""
+#~ "It is forbidden to modify a sales order which is not in draft status."
+#~ msgstr "تغییر یک سفارش فروش که در وضعیت پیش‌نویس نیست، ممنوع است."
+
+#~ msgid "Last Online Sales Order"
+#~ msgstr "آخرین سفارش فروش آنلاین"
+
+#~ msgid "LinkedIn"
+#~ msgstr "لینکدین"
+
+#~ msgid "List"
+#~ msgstr "فهرست"
+
+#~ msgid ""
+#~ "Mail only sent to signed in customers with items available for sale in "
+#~ "their cart."
+#~ msgstr ""
+#~ "فقط به مشتریانی که وارد سایت شده‌اند و در سبد خرید خود اقلامی برای فروش "
+#~ "دارند، ایمیل ارسال می‌شود."
+
+#~ msgid "Options"
+#~ msgstr "گزینه‌ها"
+
+#~ msgid "Order overview"
+#~ msgstr "مرور سفارش"
+
+#~ msgid "Payment Information"
+#~ msgstr "اطلاعات پرداخت"
+
+#~ msgid "Phone"
+#~ msgstr "تلفن"
+
+#~ msgid "Pinterest"
+#~ msgstr "پینترست"
+
+#~ msgid "Price Filter"
+#~ msgstr "فیلتر قیمت"
+
+#~ msgid "Prod. Desc."
+#~ msgstr "توضیحات محصول"
+
+#~ msgid "Product Tags Filter"
+#~ msgstr "فیلتر برچسب‌های محصول"
+
+#~ msgid "Products List"
+#~ msgstr "لیست محصولات"
+
+#~ msgid "Rating"
+#~ msgstr "رتبه دهی"
+
+#~ msgid "Recently Viewed Products"
+#~ msgstr "اخیراً مشاهده شده‌ها"
+
+#~ msgid "Review Order"
+#~ msgstr "مرور سفارش"
+
+#~ msgid "Save address"
+#~ msgstr "ذخیره آدرس"
+
+#~ msgid "Search Bar"
+#~ msgstr "جستجوی خط"
+
+#~ msgid "Share"
+#~ msgstr "اشتراک‌گذاری"
+
+#~ msgid "Sign In"
+#~ msgstr "ورود"
+
+#~ msgid "Sign Up"
+#~ msgstr "ثبت نام"
+
+#~ msgid "Some required fields are empty."
+#~ msgstr "بعضی فیلدهای اجباری خالی هستند."
+
+#~ msgid "State / Province"
+#~ msgstr "ایالت / استان"
+
+#~ msgid "Street and Number"
+#~ msgstr "خیابان و شماره"
+
+#~ msgid "Text to show instead of price"
+#~ msgstr "متنی که به جای قیمت نمایش داده می‌شود"
+
+#~ msgid "Top Bar"
+#~ msgstr "نوار بالا"
+
+#~ msgid "USPS Shipping Methods"
+#~ msgstr "روش های حمل و نقل USPS"
+
+#~ msgid "VAT"
+#~ msgstr "ارزش افزوده"
+
+#~ msgid "Variants"
+#~ msgstr "گونه ها"
+
+#~ msgid "Visible on eCommerce"
+#~ msgstr "قابل مشاهده در تجارت الکترونیک"
+
+#~ msgid "WhatsApp"
+#~ msgstr "واتس‌اَپ"
+
+#~ msgid "Whether the tag is displayed on the eCommerce."
+#~ msgstr "آیا برچسب در فروشگاه الکترونیکی نمایش داده شود."
+
+#~ msgid ""
+#~ "You are editing your <b>delivery and billing</b> addresses\n"
+#~ "                                        at the same time!<br/>\n"
+#~ "                                        If you want to modify your "
+#~ "billing address, create a"
+#~ msgstr ""
+#~ "شما در حال ویرایش آدرس‌های <b>تحویل و فاکتور</b> \n"
+#~ "                                        به صورت همزمان هستید!<br/>\n"
+#~ "                                        اگر می خواهید آدرس صورتحساب خود "
+#~ "را تغییر دهید،  ایجاد کنید"
+
+#~ msgid ""
+#~ "Your Dynamic Snippet will be displayed here...\n"
+#~ "                                This message is displayed because youy "
+#~ "did not provide both a filter and a template to use."
+#~ msgstr ""
+#~ "قطعه پویا شما در اینجا نمایش داده می شود...\n"
+#~ "این پیام به این دلیل نمایش داده می شود که شما هم فیلتر و هم الگوی استفاده "
+#~ "را ارائه نکرده اید."
+
+#~ msgid "Zip Code"
+#~ msgstr "کد پستی"
+
+#~ msgid "if you want to merge your previous cart into current cart."
+#~ msgstr "اگر می‌خواهید سبد خرید قبلی خود را با سبد خرید فعلی ادغام کنید."
+
+#~ msgid ""
+#~ "if you want to restore your previous cart. Your current cart will be "
+#~ "replaced with your previous cart."
+#~ msgstr ""
+#~ "اگر می‌خواهید سبد خرید قبلی خود را بازگردانید. سبد خرید فعلی شما با سبد "
+#~ "خرید قبلی شما جایگزین خواهد شد."
+
+#~ msgid "new address"
+#~ msgstr "آدرس جدید"
+
+#~ msgid "to follow your order."
+#~ msgstr "تا سفارش شما را دنبال کند"

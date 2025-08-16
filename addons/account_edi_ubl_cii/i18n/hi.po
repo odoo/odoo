@@ -1,16 +1,16 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_edi_ubl_cii
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Ujjawal Pathak, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-18 18:36+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2025-08-05 12:23+0000\n"
 "Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -26,21 +26,16 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid ""
-"%s should have a KVK or OIN number set in Company ID field or as Peppol "
-"e-address (EAS code 0106 or 0190)."
+"%s should have a KVK or OIN number set in Company ID field or as Peppol e-"
+"address (EAS code 0106 or 0190)."
 msgstr ""
-"%s में कंपनी आईडी फ़ील्ड में एक केवीके या ओआईएन नंबर सेट होना चाहिए या Peppol ई-एड्रेस ("
-"EAS कोड 0106 या 0190) के रूप में होना चाहिए।"
+"%s में कंपनी आईडी फ़ील्ड में एक केवीके या ओआईएन नंबर सेट होना चाहिए या Peppol ई-एड्रेस "
+"(EAS कोड 0106 या 0190) के रूप में होना चाहिए।"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "1.0"
 msgstr "1.0"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_facturx_export_22
-msgid "42"
-msgstr "42"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -89,10 +84,9 @@ msgstr "निर्देश 2006/112/EN के अनुच्छेद 226 �
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid ""
-"At least one of the following fields %(field_list)s is required on "
-"%(record)s."
-msgstr ""
-"%(record)s में %(field_list)s में से कम से कम एक जानकारी भरनी ज़रूरी है."
+"At least one of the following fields %(field_list)s is required on %"
+"(record)s."
+msgstr "%(record)s में %(field_list)s में से कम से कम एक जानकारी भरनी ज़रूरी है."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__ubl_cii_xml_id
@@ -106,6 +100,11 @@ msgid "Australia ABN"
 msgstr "ऑस्ट्रेलिया ABN"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_a_nz
+msgid "Australia BIS Billing 3.0 A-NZ"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9914
 msgid "Austria UID"
 msgstr "ऑस्ट्रिया UID"
@@ -116,19 +115,10 @@ msgid "Austria VOKZ"
 msgstr "ऑस्ट्रिया VOKZ"
 
 #. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_bis3
-msgid "BIS Billing 3.0"
-msgstr "BIS Billing 3.0"
-
-#. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_a_nz
-msgid "BIS Billing 3.0 A-NZ"
-msgstr "BIS Billing 3.0 A-NZ"
-
-#. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_sg
-msgid "BIS Billing 3.0 SG"
-msgstr "BIS Billing 3.0 SG"
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__available_peppol_eas
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__available_peppol_eas
+msgid "Available Peppol Eas"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_de
@@ -171,10 +161,13 @@ msgstr "पार्टनर की जांच करें"
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_res_users__peppol_eas
 msgid ""
 "Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.\n"
-"             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
+"             List available at https://docs.peppol.eu/poacc/billing/3.0/"
+"codelist/eas/"
 msgstr ""
-"यह एक कोड है जो BIS बिलिंग 3.0 और उससे संबंधित वर्शन के लिए भुगतान प्राप्त करने वाले सिस्टम की पहचान करता है. \n"
-"इनकी पूरी सूची दिए गए लिंक पर देखी जा सकती है: https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
+"यह एक कोड है जो BIS बिलिंग 3.0 और उससे संबंधित वर्शन के लिए भुगतान प्राप्त करने वाले "
+"सिस्टम की पहचान करता है. \n"
+"इनकी पूरी सूची दिए गए लिंक पर देखी जा सकती है: https://docs.peppol.eu/poacc/"
+"billing/3.0/codelist/eas/"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0210
@@ -190,8 +183,7 @@ msgstr "Codice Univoco Unità Organizzativa iPA"
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_common
 msgid ""
 "Common functions for EDI documents: generate the data, the constraints, etc"
-msgstr ""
-"EDI डॉक्यूमेंट के मुख्य काम: डेटा बनाना, नियम तय करना, और ऐसे ही दूसरे काम."
+msgstr "EDI डॉक्यूमेंट के मुख्य काम: डेटा बनाना, नियम तय करना, और ऐसे ही दूसरे काम."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -217,18 +209,16 @@ msgid ""
 "Could not retrieve a partner corresponding to '%s'. A new partner was "
 "created."
 msgstr ""
-"'%s' जैसा कोई पुराना पार्टनर नहीं मिला, इसलिए एक नया पार्टनर बना दिया गया "
-"है."
+"'%s' जैसा कोई पुराना पार्टनर नहीं मिला, इसलिए एक नया पार्टनर बना दिया गया है."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid ""
-"Could not retrieve currency: %s. Did you enable the multicurrency option and"
-" activate the currency?"
+"Could not retrieve currency: %s. Did you enable the multicurrency option and "
+"activate the currency?"
 msgstr ""
-"करेंसी नहीं मिल पाई: %s. क्या आपने कई करेंसी चालू की हैं और इस करेंसी को "
-"ऐक्टिव किया है?"
+"करेंसी नहीं मिल पाई: %s. क्या आपने कई करेंसी चालू की हैं और इस करेंसी को ऐक्टिव किया है?"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -245,8 +235,7 @@ msgstr "टैक्स नहीं मिल सका: लाइन '%(line)s
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-msgid ""
-"Could not retrieve the tax: %s for the document level allowance/charge."
+msgid "Could not retrieve the tax: %s for the document level allowance/charge."
 msgstr "पूरे डॉक्यूमेंट पर लगने वाले भत्ते/चार्ज के लिए %s टैक्स नहीं मिला."
 
 #. module: account_edi_ubl_cii
@@ -328,6 +317,11 @@ msgid "EN 16931"
 msgstr "EN 16931"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_bis3
+msgid "EU Standard (Peppol Bis 3.0)"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "Each invoice line shall have one and only one tax."
@@ -385,11 +379,6 @@ msgid "Export outside the EU"
 msgstr "यूरोपीय संघ के बाहर एक्सपोर्ट करें"
 
 #. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__facturx
-msgid "Factur-X (CII)"
-msgstr "Factur-X (CII)"
-
-#. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_cii
 msgid "Factur-x/XRechnung CII 2.2.0"
 msgstr "Factur-x/XRechnung CII 2.2.0"
@@ -421,8 +410,8 @@ msgid ""
 "For intracommunity supply, the actual delivery date or the invoicing period "
 "should be included."
 msgstr ""
-"यूरोप के अंदर सामान भेजने पर, इनवॉइस में सामान पहुंचने की असली तारीख या जिस "
-"अवधि का बिल है, वो लिखा होना चाहिए."
+"यूरोप के अंदर सामान भेजने पर, इनवॉइस में सामान पहुंचने की असली तारीख या जिस अवधि का "
+"बिल है, वो लिखा होना चाहिए."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -435,6 +424,21 @@ msgstr "यूरोप के अंदर सामान भेजने प�
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Format used to import the invoice: %s"
 msgstr "इनवॉइस इंपोर्ट करने के लिए इस्तेमाल किया गया फ़ॉर्मेट: %s"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__facturx
+msgid "France (FacturX)"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0225
+msgid "France FRCTC Electronic Address"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0240
+msgid "France Register of legal persons"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0002
@@ -455,6 +459,11 @@ msgstr "फ्रांस वैट"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0209
 msgid "GS1 identification keys"
 msgstr "GS1 आइडेंटिफ़िकेशन कुंजी"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__xrechnung
+msgid "Germany (XRechnung)"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0204
@@ -563,6 +572,11 @@ msgid "Kennziffer des Unternehmensregisters"
 msgstr "Kennziffer des Unternehmensregisters"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0218
+msgid "Latvia Unified registration number"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9939
 msgid "Latvia VAT"
 msgstr "लातविया वैट"
@@ -619,8 +633,8 @@ msgstr "मोंटेनेग्रो वैट"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__nlcius
-msgid "NLCIUS"
-msgstr "NLCIUS"
+msgid "Netherlands (NLCIUS)"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0106
@@ -643,8 +657,8 @@ msgstr "नीदरलैंड वैट"
 msgid ""
 "No gross price, net price nor line subtotal amount found for line in xml"
 msgstr ""
-"XML फ़ाइल में लाइन के लिए न तो कुल कीमत मिली, न शुद्ध कीमत , और न ही उस लाइन"
-" का कुल जोड़"
+"XML फ़ाइल में लाइन के लिए न तो कुल कीमत मिली, न शुद्ध कीमत , और न ही उस लाइन का कुल "
+"जोड़"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0192
@@ -695,8 +709,7 @@ msgstr "कृपया पार्टनर का वैट नंबर य�
 msgid ""
 "Please fill in your company's VAT or Peppol Address to generate a complete "
 "XML file."
-msgstr ""
-"पूरी XML फ़ाइल बनाने के लिए, कृपया अपनी कंपनी का वैट या Peppol पता भरें."
+msgstr "पूरी XML फ़ाइल बनाने के लिए, कृपया अपनी कंपनी का वैट या Peppol पता भरें."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9945
@@ -760,6 +773,11 @@ msgid "Serbia VAT"
 msgstr "सर्बिया वैट"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_sg
+msgid "Singapore BIS Billing 3.0 SG"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0195
 msgid "Singapore UEN"
 msgstr "सिंगापुर UEN"
@@ -820,8 +838,8 @@ msgid ""
 "The Peppol endpoint is not valid. It should contain exactly 10 digits "
 "(Company Registry number).The expected format is: 1234567890"
 msgstr ""
-"Peppol एंडपॉइंट गलत है. इसमें कंपनी के रजिस्ट्रेशन नंबर की तरह, पूरे 10 अंक "
-"होने चाहिए (जैसे: 1234567890)."
+"Peppol एंडपॉइंट गलत है. इसमें कंपनी के रजिस्ट्रेशन नंबर की तरह, पूरे 10 अंक होने चाहिए (जैसे: "
+"1234567890)."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -877,8 +895,7 @@ msgstr "%(record)sमें %(field)s भरना ज़रूरी है."
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
-msgid ""
-"The field 'Sanitized Account Number' is required on the Recipient Bank."
+msgid "The field 'Sanitized Account Number' is required on the Recipient Bank."
 msgstr "प्राप्तकर्ता बैंक में 'सैनिटाइज्ड अकाउंट नंबर' भरना ज़रूरी है."
 
 #. module: account_edi_ubl_cii
@@ -888,13 +905,17 @@ msgstr "प्राप्तकर्ता बैंक में 'सैन�
 msgid ""
 "The invoice has been converted into a credit note and the quantities have "
 "been reverted."
-msgstr ""
-"इनवॉइस को क्रेडिट नोट बना दिया गया है और सामान की गिनती पहले जैसी हो गई है."
+msgstr "इनवॉइस को क्रेडिट नोट बना दिया गया है और सामान की गिनती पहले जैसी हो गई है."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9952
 msgid "Turkey VAT"
 msgstr "तुर्किए वैट"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0235
+msgid "UAE Tax Identification Number (TIN)"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_20
@@ -934,8 +955,8 @@ msgid ""
 "Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
 "known as 'Endpoint ID'."
 msgstr ""
-"यह एक खास पहचान संख्या है जिसका उपयोग BIS बिलिंग 3.0 और उससे जुड़े सिस्टम "
-"करते हैं. इसे 'एंडपॉइंट आईडी' भी कहते हैं."
+"यह एक खास पहचान संख्या है जिसका उपयोग BIS बिलिंग 3.0 और उससे जुड़े सिस्टम करते हैं. इसे "
+"'एंडपॉइंट आईडी' भी कहते हैं."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9932
@@ -960,8 +981,8 @@ msgid ""
 "When the Canary Island General Indirect Tax (IGIC) applies, the tax rate on "
 "each invoice line should be greater than 0."
 msgstr ""
-"जब कैनरी आइलैंड्स का IGIC टैक्स लागू हो, तो इनवॉइस की हर लाइन पर टैक्स रेट "
-"ज़ीरो से ज़्यादा होनी चाहिए. यानी, उस पर कुछ न कुछ टैक्स ज़रूर लगना चाहिए."
+"जब कैनरी आइलैंड्स का IGIC टैक्स लागू हो, तो इनवॉइस की हर लाइन पर टैक्स रेट ज़ीरो से "
+"ज़्यादा होनी चाहिए. यानी, उस पर कुछ न कुछ टैक्स ज़रूर लगना चाहिए."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__aq
@@ -969,21 +990,16 @@ msgid "X.400 address for mail text"
 msgstr "मेल टेक्स्ट के लिए X.400 पते"
 
 #. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__xrechnung
-msgid "XRechnung CIUS"
-msgstr "XRechnung CIUS"
-
-#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 msgid ""
 "You should include at least one tax per invoice line. [BR-CO-04]-Each "
-"Invoice line (BG-25) shall be categorized with an Invoiced item VAT category"
-" code (BT-151)."
+"Invoice line (BG-25) shall be categorized with an Invoiced item VAT category "
+"code (BT-151)."
 msgstr ""
-"इनवॉइस की हर लाइन पर कम से कम एक टैक्स लगाना ज़रूरी है. साथ ही, नियम [BR-"
-"CO-04] के तहत, हर बिल लाइन (जिसे BG-25 भी कहा गया है) को उसकी वैट कैटगरी के "
-"कोड (BT-151) के साथ भी पहचानना ज़रूरी है."
+"इनवॉइस की हर लाइन पर कम से कम एक टैक्स लगाना ज़रूरी है. साथ ही, नियम [BR-CO-04] के "
+"तहत, हर बिल लाइन (जिसे BG-25 भी कहा गया है) को उसकी वैट कैटगरी के कोड (BT-151) के "
+"साथ भी पहचानना ज़रूरी है."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
@@ -1010,3 +1026,24 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid "42"
+#~ msgstr "42"
+
+#~ msgid "BIS Billing 3.0"
+#~ msgstr "BIS Billing 3.0"
+
+#~ msgid "BIS Billing 3.0 A-NZ"
+#~ msgstr "BIS Billing 3.0 A-NZ"
+
+#~ msgid "BIS Billing 3.0 SG"
+#~ msgstr "BIS Billing 3.0 SG"
+
+#~ msgid "Factur-X (CII)"
+#~ msgstr "Factur-X (CII)"
+
+#~ msgid "NLCIUS"
+#~ msgstr "NLCIUS"
+
+#~ msgid "XRechnung CIUS"
+#~ msgstr "XRechnung CIUS"

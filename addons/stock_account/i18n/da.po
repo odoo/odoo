@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_account
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Kira Petersen, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 09:28+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Kira Petersen, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_account
@@ -45,8 +45,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid ""
-"%(description_base)s lot/serial number cost updated from %(previous)s to "
-"%(new_cost)s."
+"%(description_base)s lot/serial number cost updated from %(previous)s to %"
+"(new_cost)s."
 msgstr ""
 
 #. module: stock_account
@@ -60,7 +60,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid ""
-"%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s\n"
+"%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %"
+"(product)s\n"
 "%(reason)s"
 msgstr ""
 
@@ -68,7 +69,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid ""
 ")\n"
-"                            <small class=\"mx-2 fst-italic\">Use a negative added value to record a decrease in the product value</small>"
+"                            <small class=\"mx-2 fst-italic\">Use a negative "
+"added value to record a decrease in the product value</small>"
 msgstr ""
 
 #. module: stock_account
@@ -144,8 +146,7 @@ msgstr "Tilføj Manuel Evaluering"
 msgid ""
 "Add additional cost (transport, customs, ...) in the value of the product."
 msgstr ""
-"Tilføj yderligere omkostning (transport, told, ...) til værdien af "
-"produktet."
+"Tilføj yderligere omkostning (transport, told, ...) til værdien af produktet."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -172,8 +173,8 @@ msgstr ""
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid ""
-"Affect landed costs on reception operations and split them among products to"
-" update their cost price."
+"Affect landed costs on reception operations and split them among products to "
+"update their cost price."
 msgstr ""
 "Påvirk landede omkostninger ved modtagelsesoperationer og opdel dem mellem "
 "produkter for at opdatere deres omkostningspris."
@@ -242,8 +243,8 @@ msgstr "Annullér"
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid ""
-"Cannot find a stock input account for the product %s. You must define one on"
-" the product category, or on the location, before processing this operation."
+"Cannot find a stock input account for the product %s. You must define one on "
+"the product category, or on the location, before processing this operation."
 msgstr ""
 "Kan ikke finde en lagertilgangskonto for dette produktet %s. Du skal "
 "definere en på produktkategorien eller på lokationen, før du fortsætter "
@@ -257,8 +258,8 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
-"Kan ikke finde lagerafgangskonto for dette produktet %s. Du skal definere en"
-" på produktkategorien eller på lokationen, før du fortsætter denne handling."
+"Kan ikke finde lagerafgangskonto for dette produktet %s. Du skal definere en "
+"på produktkategorien eller på lokationen, før du fortsætter denne handling."
 
 #. module: stock_account
 #. odoo-python
@@ -304,8 +305,8 @@ msgid ""
 "Configuration error. Please configure the price difference account on the "
 "product or its category to process this operation."
 msgstr ""
-"Konfigurationsfejl. Venligst opsæt en konto for prisdifferencer på produktet"
-" eller dets kategori, for at fuldføre denne handling. "
+"Konfigurationsfejl. Venligst opsæt en konto for prisdifferencer på produktet "
+"eller dets kategori, for at fuldføre denne handling. "
 
 #. module: stock_account
 #. odoo-python
@@ -335,11 +336,11 @@ msgstr "Kostpris metode"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Costing method change for product category %(category)s: from %(old_method)s"
-" to %(new_method)s."
+"Costing method change for product category %(category)s: from %(old_method)s "
+"to %(new_method)s."
 msgstr ""
-"Omkostningsmetode ændring for produkt kategori %(category)s: fra "
-"%(old_method)s til %(new_method)s."
+"Omkostningsmetode ændring for produkt kategori %(category)s: fra %"
+"(old_method)s til %(new_method)s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
@@ -349,11 +350,16 @@ msgstr "Modkonto"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_input_categ_id
 msgid ""
-"Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
-"                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
+"Counterpart journal items for all incoming stock moves will be posted in "
+"this account, unless there is a specific valuation account\n"
+"                set on the source location. This is the default value for "
+"all products in this category. It can also directly be set on each product."
 msgstr ""
-"Modpart journalposter for alle indgående lager bevægelser vil blive posteret i denne konto, medmindre der er en specifik evaluerings konto\n"
-"                angivet i kilde lokationen. Dette er standard værdien for alle produkter i denne kategori. Det kan også angivet direkte på hvert produkt."
+"Modpart journalposter for alle indgående lager bevægelser vil blive posteret "
+"i denne konto, medmindre der er en specifik evaluerings konto\n"
+"                angivet i kilde lokationen. Dette er standard værdien for "
+"alle produkter i denne kategori. Det kan også angivet direkte på hvert "
+"produkt."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
@@ -403,8 +409,8 @@ msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
 msgstr ""
-"Dato hvorpå konto posteringerne vil blive oprettet, i tilfælde af automatisk"
-" inventar vurdering. Hvis efterladt tom, vil inventar datoen anvendes."
+"Dato hvorpå konto posteringerne vil blive oprettet, i tilfælde af automatisk "
+"inventar vurdering. Hvis efterladt tom, vil inventar datoen anvendes."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
@@ -456,8 +462,8 @@ msgstr "Vis Serie & lot nummer på faktura"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Due to a change of product category (from %(old_category)s to "
-"%(new_category)s), the costing method has changed for product %(product)s: "
+"Due to a change of product category (from %(old_category)s to %"
+"(new_category)s), the costing method has changed for product %(product)s: "
 "from %(old_method)s to %(new_method)s."
 msgstr ""
 
@@ -642,12 +648,17 @@ msgstr "Manuel Lager Evaluering: %s."
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
 msgid ""
-"Manual: The accounting entries to value the inventory are not posted automatically.\n"
-"        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.\n"
+"Manual: The accounting entries to value the inventory are not posted "
+"automatically.\n"
+"        Automated: An accounting entry is automatically created to value the "
+"inventory when a product enters or leaves the company.\n"
 "        "
 msgstr ""
-"Manuel: Renskabsposteringer til værdiansætning af inventar posteres ikke automatisk.\n"
-"        Automatiseret: En regnskabspost oprettes automatisk for at værdiansætte beholdningen, når et produkt går ind i eller forlader virksomheden.\n"
+"Manuel: Renskabsposteringer til værdiansætning af inventar posteres ikke "
+"automatisk.\n"
+"        Automatiseret: En regnskabspost oprettes automatisk for at "
+"værdiansætte beholdningen, når et produkt går ind i eller forlader "
+"virksomheden.\n"
 "  "
 
 #. module: stock_account
@@ -687,7 +698,8 @@ msgstr "Produkt"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Product %(product)s has quantity in valued location %(location)s without any lot.\n"
+"Product %(product)s has quantity in valued location %(location)s without any "
+"lot.\n"
 "Please assign lots to all your quantities before enabling lot valuation."
 msgstr ""
 
@@ -827,14 +839,21 @@ msgstr "Standard pris"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_cost_method
 msgid ""
-"Standard Price: The products are valued at their standard cost defined on the product.\n"
-"        Average Cost (AVCO): The products are valued at weighted average cost.\n"
-"        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.\n"
+"Standard Price: The products are valued at their standard cost defined on "
+"the product.\n"
+"        Average Cost (AVCO): The products are valued at weighted average "
+"cost.\n"
+"        First In First Out (FIFO): The products are valued supposing those "
+"that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
-"Standard pris: Produkterne er værdiansat ved deres standard pris, defineret på produktet.\n"
-"          Gennemsnitlig pris (AVCO): Produkterne er værdiansat til den vægtede gennemsnits pris.\n"
-"           Første ind, første ud (FIFO): Produkterne er værdiansat udfra antagelsen, at de der først ankommer til virksomheden, vil være de sidste der forlader den."
+"Standard pris: Produkterne er værdiansat ved deres standard pris, defineret "
+"på produktet.\n"
+"          Gennemsnitlig pris (AVCO): Produkterne er værdiansat til den "
+"vægtede gennemsnits pris.\n"
+"           Første ind, første ud (FIFO): Produkterne er værdiansat udfra "
+"antagelsen, at de der først ankommer til virksomheden, vil være de sidste "
+"der forlader den."
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_stock_accounting_automatic
@@ -1031,16 +1050,24 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock_account/static/src/fields/boolean_confirm.js:0
 msgid ""
-"This operation might lead in a loss of data. Valuation will be identical for"
-" all lots/SN. Do you want to proceed ? "
+"This operation might lead in a loss of data. Valuation will be identical for "
+"all lots/SN. Do you want to proceed ? "
 msgstr ""
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"This product is valuated by lot/serial number. Changing the cost will update"
-" the cost of every lot/serial number in stock."
+"This product is valuated by lot/serial number. Changing the cost will update "
+"the cost of every lot/serial number in stock."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+msgid ""
+"This product is valuated by lot: an explicit Lot/Serial number is required "
+"when adding quantity"
 msgstr ""
 
 #. module: stock_account
@@ -1079,11 +1106,11 @@ msgstr "Overfør"
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,help:stock_account.field_stock_return_picking_line__to_refund
 msgid ""
-"Trigger a decrease of the delivered/received quantity in the associated Sale"
-" Order/Purchase Order"
+"Trigger a decrease of the delivered/received quantity in the associated Sale "
+"Order/Purchase Order"
 msgstr ""
-"Udlys en sænkning af kvantiteten på leveret/modtaget i den tilhørende "
-"salg-/købsordre"
+"Udlys en sænkning af kvantiteten på leveret/modtaget i den tilhørende salg-/"
+"købsordre"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__uom_id
@@ -1187,11 +1214,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Valuation method change for product category %(category)s: from "
-"%(old_method)s to %(new_method)s."
+"Valuation method change for product category %(category)s: from %"
+"(old_method)s to %(new_method)s."
 msgstr ""
-"Vurderings metode ændring for produkt kategori %(category)s: fra "
-"%(old_method)s til %(new_method)s."
+"Vurderings metode ændring for produkt kategori %(category)s: fra %"
+"(old_method)s til %(new_method)s."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__adjusted_layer_ids
@@ -1219,7 +1246,8 @@ msgstr "Værdi Svl"
 #: model:ir.model.fields,help:stock_account.field_stock_lot__standard_price
 msgid ""
 "Value of the lot (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
+"        Used to value the product when the purchase cost is not known (e.g. "
+"inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
 
@@ -1241,12 +1269,18 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
 msgid ""
-"When doing automated inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account,\n"
-"                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
+"When doing automated inventory valuation, counterpart journal items for all "
+"outgoing stock moves will be posted in this account,\n"
+"                unless there is a specific valuation account set on the "
+"destination location. This is the default value for all products in this "
+"category.\n"
 "                It can also directly be set on each product."
 msgstr ""
-"Ved udførsel af en automatisk inventar vurdering, vil modparts journalgenstande for alle udgående lager bevægelse blive posteret i denne konto,\n"
-"medmindre der er en specifik vurderings konto angivet i kilde destinationen. Dette er standard værdien for alle produkter i denne kategori.\n"
+"Ved udførsel af en automatisk inventar vurdering, vil modparts "
+"journalgenstande for alle udgående lager bevægelse blive posteret i denne "
+"konto,\n"
+"medmindre der er en specifik vurderings konto angivet i kilde destinationen. "
+"Dette er standard værdien for alle produkter i denne kategori.\n"
 "Det kan også angives direkte på hvert produkt."
 
 #. module: stock_account
@@ -1330,8 +1364,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"You don't have any input valuation account defined on your product category."
-" You must define one before processing this operation."
+"You don't have any input valuation account defined on your product category. "
+"You must define one before processing this operation."
 msgstr ""
 "Du har ikke nogen input vurderings konto defineret på din produkt kategori. "
 "Du skal definere en, før behandling af denne operation."
@@ -1348,8 +1382,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"You don't have any stock input account defined on your product category. You"
-" must define one before processing this operation."
+"You don't have any stock input account defined on your product category. You "
+"must define one before processing this operation."
 msgstr ""
 
 #. module: stock_account
@@ -1368,8 +1402,8 @@ msgstr ""
 #: code:addons/stock_account/models/stock_move.py:0
 #: code:addons/stock_account/models/stock_valuation_layer.py:0
 msgid ""
-"You don't have any stock valuation account defined on your product category."
-" You must define one before processing this operation."
+"You don't have any stock valuation account defined on your product category. "
+"You must define one before processing this operation."
 msgstr ""
 "Du har ikke defineret en konto for lagerværdien på din produktkategori. Du "
 "skal definere en før du kan gennemføre denne handling. "

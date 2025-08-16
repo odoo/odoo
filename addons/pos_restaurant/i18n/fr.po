@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_restaurant
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Manon Rondou, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:38+0000\n"
+"POT-Creation-Date: 2025-08-15 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -65,10 +66,12 @@ msgstr "<strong>Point de Vente :</strong>"
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid ""
-"A restaurant floor represents the place where customers are served, this is where you can\n"
+"A restaurant floor represents the place where customers are served, this is "
+"where you can\n"
 "                define and position the tables."
 msgstr ""
-"Un plan de salle représente le lieu où les clients sont servi, vous pouvez y \n"
+"Un plan de salle représente le lieu où les clients sont servi, vous pouvez "
+"y \n"
 "définir l'emplacement des tables."
 
 #. module: pos_restaurant
@@ -602,8 +605,8 @@ msgstr "Par commodité, nous fournissons les calculs gratuits suivants :"
 #: model:ir.model.fields,help:pos_restaurant.field_pos_preset__use_guest
 msgid "Force guest selection when clicking on order button in PoS restaurant"
 msgstr ""
-"Forcer la sélection des convives lors du clic sur le bouton de commande dans"
-" le PdV restaurant"
+"Forcer la sélection des convives lors du clic sur le bouton de commande dans "
+"le PdV restaurant"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_funghi_product_template
@@ -669,8 +672,8 @@ msgstr "Ice Tea"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__active
 msgid ""
-"If false, the table is deactivated and will not be available in the point of"
-" sale"
+"If false, the table is deactivated and will not be available in the point of "
+"sale"
 msgstr ""
 "Si faux, la table est désactivée et ne sera pas disponible sur le point de "
 "vente"
@@ -969,10 +972,12 @@ msgstr "Plan"
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid ""
-"Please close and validate the following open PoS Session before modifying this floor.\n"
+"Please close and validate the following open PoS Session before modifying "
+"this floor.\n"
 "Open session: %(session_names)s"
 msgstr ""
-"Veuillez fermer et valider la session PdV ouverte suivante avant de modifier cette salle.\n"
+"Veuillez fermer et valider la session PdV ouverte suivante avant de modifier "
+"cette salle.\n"
 "Session ouverte : %(session_names)s"
 
 #. module: pos_restaurant
@@ -1361,8 +1366,7 @@ msgstr "La table où cette commande a été servie"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__color
-msgid ""
-"The table's color, expressed as a valid 'background' CSS property value"
+msgid "The table's color, expressed as a valid 'background' CSS property value"
 msgstr ""
 "La couleur de la table, exprimée dans une valeur d'e 'fond' CSS correct"
 
@@ -1374,8 +1378,8 @@ msgstr "La hauteur de la table en pixels"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_h
 msgid ""
-"The table's horizontal position from the left side to the table's center, in"
-" pixels"
+"The table's horizontal position from the left side to the table's center, in "
+"pixels"
 msgstr ""
 "La position horizontale de la table du côté gauche jusqu'à son centre, en "
 "pixels"
@@ -1538,6 +1542,12 @@ msgid "Width"
 msgstr "Largeur"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You are currently transferring the order %s"
+msgstr ""
+
+#. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid ""
@@ -1560,8 +1570,7 @@ msgstr ""
 msgid ""
 "You cannot delete a table when orders are still in draft for this table."
 msgstr ""
-"Vous ne pouvez pas supprimer une table ayant des commandes toujours en "
-"cours."
+"Vous ne pouvez pas supprimer une table ayant des commandes toujours en cours."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1575,8 +1584,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_preset.py:0
 msgid "You cannot delete the master preset(s)."
-msgstr ""
-"Vous ne pouvez pas supprimer le(s) préréglage(s) principal/principaux."
+msgstr "Vous ne pouvez pas supprimer le(s) préréglage(s) principal/principaux."
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1597,6 +1605,12 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas supprimer une table qui est utilisée dans une session "
 "PdV. Fermez d'abord la ou les sessions."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You cannot transfer an order to itself"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
