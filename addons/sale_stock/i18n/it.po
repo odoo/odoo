@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_stock
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Marianna Ciofani, 2025
 # Sergio Zanchetta <primes2h@gmail.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-08-15 00:51+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: it\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -64,22 +65,26 @@ msgstr "<span class=\"o_stat_text\">Vendite</span>"
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
 "<span class=\"small badge text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Shipped\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Shipped\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"small badge text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Spedito\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Spedito\n"
 "                                    </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
 msgid ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
+"                    Some deliveries are already done. Returns can be created "
+"from the Delivery Orders.\n"
 "                </span>"
 msgstr ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    Alcune consegne sono già state effettuate. I resi possono essere creati dagli ordini di consegna.\n"
+"                    Alcune consegne sono già state effettuate. I resi "
+"possono essere creati dagli ordini di consegna.\n"
 "                </span>"
 
 #. module: sale_stock
@@ -96,16 +101,22 @@ msgstr "<strong>Termine di resa:</strong>"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"In base alla configurazione del prodotto, la quantità consegnata può essere calcolata automaticamente tramite una procedura.\n"
+"In base alla configurazione del prodotto, la quantità consegnata può essere "
+"calcolata automaticamente tramite una procedura.\n"
 "  - Manuale: quantità impostata manualmente sulla riga\n"
-"  - Analitica dalle spese: quantità calcolata come somma delle spese confermate\n"
-"  - Foglio ore: quantità calcolata come somma delle ore registrate sui lavori collegati alla riga di vendita\n"
+"  - Analitica dalle spese: quantità calcolata come somma delle spese "
+"confermate\n"
+"  - Foglio ore: quantità calcolata come somma delle ore registrate sui "
+"lavori collegati alla riga di vendita\n"
 "  - Movimenti di magazzino: quantità proveniente da prelievi confermati\n"
 
 #. module: sale_stock
@@ -209,9 +220,9 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
-"Data di consegna che può essere promessa al cliente. Per i prodotti servizio"
-" viene calcolata dal tempo di risposta minimo delle righe ordine. in caso di"
-" spedizione, per la politica dell'ordine viene preso in considerazione il "
+"Data di consegna che può essere promessa al cliente. Per i prodotti servizio "
+"viene calcolata dal tempo di risposta minimo delle righe ordine. in caso di "
+"spedizione, per la politica dell'ordine viene preso in considerazione il "
 "tempo di risposta minimo o massimo delle righe ordine."
 
 #. module: sale_stock
@@ -405,13 +416,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
 msgstr ""
 "Margine di errore per date promesse ai clienti. Per superare ritardi "
-"imprevisti nella catena di fornitura, l'approvvigionamento e la consegna dei"
-" prodotti vengono programmate con alcuni giorni di anticipo sull'attuale "
-"data promessa."
+"imprevisti nella catena di fornitura, l'approvvigionamento e la consegna dei "
+"prodotti vengono programmate con alcuni giorni di anticipo sull'attuale data "
+"promessa."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
@@ -448,8 +459,8 @@ msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
 msgstr ""
-"Numero di giorni tra la conferma dell'ordine e la spedizione dei prodotti al"
-" cliente"
+"Numero di giorni tra la conferma dell'ordine e la spedizione dei prodotti al "
+"cliente"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -665,6 +676,11 @@ msgid "Stock Rules report"
 msgstr "Resoconto regole di giacenza"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_valuation_layer
+msgid "Stock Valuation Layer"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "Resoconto regola di giacenza"
@@ -682,20 +698,24 @@ msgstr "La consegna di"
 #, python-format
 msgid ""
 "The delivery address has been changed on the Sales Order<br/>\n"
-"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
-"                        You should probably update the partner on this document."
+"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</"
+"strong>,\n"
+"                        You should probably update the partner on this "
+"document."
 msgstr ""
 "L'indirizzo di consegna dell'ordine di vendita è stato cambiato<br/>\n"
-"                        da <strong>\"%s\"</strong> a <strong>\"%s\"</strong>,\n"
-"                        È probabile che sia necessario aggiornare il partner nel documento."
+"                        da <strong>\"%s\"</strong> a <strong>\"%s\"</"
+"strong>,\n"
+"                        È probabile che sia necessario aggiornare il partner "
+"nel documento."
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js:0
 #, python-format
 msgid ""
-"The ordered quantity cannot be decreased below the amount already delivered."
-" Instead, create a return in your inventory."
+"The ordered quantity cannot be decreased below the amount already delivered. "
+"Instead, create a return in your inventory."
 msgstr ""
 "La quantità ordinata non può essere ridotta al di sotto della quantità già "
 "consegnata. In alternativa, puoi creare un reso nel magazzino."

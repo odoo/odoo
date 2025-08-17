@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_stock
-# 
+#
 # Translators:
 # Kim Asplund <kim.asplund@gmail.com>, 2023
 # emavertel, 2023
@@ -14,19 +14,19 @@
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
 # Simon S, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-08-15 00:51+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_stock
@@ -72,22 +72,26 @@ msgstr "<span class=\"o_stat_text\">Försäljning</span>"
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
 "<span class=\"small badge text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Shipped\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Shipped\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"small badge text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Skickad\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Skickad\n"
 "                                    </span> </span"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
 msgid ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
+"                    Some deliveries are already done. Returns can be created "
+"from the Delivery Orders.\n"
 "                </span>"
 msgstr ""
 "<span osynlig=\"inte display_delivery_alert\">\n"
-"                    Vissa leveranser är redan utförda. Returer kan skapas från leveransorder.\n"
+"                    Vissa leveranser är redan utförda. Returer kan skapas "
+"från leveransorder.\n"
 "                </span>"
 
 #. module: sale_stock
@@ -104,16 +108,22 @@ msgstr "<strong>Incoterm:</strong>"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Enligt produktkonfigurationen kan den levererade kvantiteten beräknas automatiskt av en mekanism:\n"
+"Enligt produktkonfigurationen kan den levererade kvantiteten beräknas "
+"automatiskt av en mekanism:\n"
 "  - Manuell: kvantiteten ställs in manuellt på linjen\n"
-"  - Objekt Från kostnader: kvantiteten är kvantitetssumman från bokförda kostnader\n"
-"  - Timesheet: kvantiteten är summan av timmar som registrerats på uppgifter kopplade till denna försäljningsrad\n"
+"  - Objekt Från kostnader: kvantiteten är kvantitetssumman från bokförda "
+"kostnader\n"
+"  - Timesheet: kvantiteten är summan av timmar som registrerats på uppgifter "
+"kopplade till denna försäljningsrad\n"
 "  - Lagerförflyttningar: kvantiteten kommer från bekräftade plockningar\n"
 
 #. module: sale_stock
@@ -219,8 +229,8 @@ msgid ""
 msgstr ""
 "Leveransdatum du kan lova kunden, beräknat från den minsta ledtiden för "
 "orderlinjerna i fallet med serviceprodukter. Vid leverans kommer orderns "
-"leveranspolicy att tas i beaktande för att använda antingen den minsta eller"
-" största ledtiden för orderlinjerna."
+"leveranspolicy att tas i beaktande för att använda antingen den minsta eller "
+"största ledtiden för orderlinjerna."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
@@ -412,8 +422,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
 msgstr ""
 "Felmarginal för datum som utlovats till kunder. Produkter kommer att "
 "planeras för inköp och leverans så många dagar tidigare än det faktiska "
@@ -669,6 +679,11 @@ msgid "Stock Rules report"
 msgstr "Rapport om lagerregler"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_valuation_layer
+msgid "Stock Valuation Layer"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "Rapport om lagerregler"
@@ -686,20 +701,24 @@ msgstr "Leveransen"
 #, python-format
 msgid ""
 "The delivery address has been changed on the Sales Order<br/>\n"
-"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
-"                        You should probably update the partner on this document."
+"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</"
+"strong>,\n"
+"                        You should probably update the partner on this "
+"document."
 msgstr ""
 "Leveransadressen har ändrats på försäljningsordern<br/>\n"
-"                        Från <strong>\"%s</strong> \" Till <strong>\"%s</strong>\",\n"
-"                        Du bör förmodligen uppdatera partnern på detta dokument."
+"                        Från <strong>\"%s</strong> \" Till <strong>\"%s</"
+"strong>\",\n"
+"                        Du bör förmodligen uppdatera partnern på detta "
+"dokument."
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js:0
 #, python-format
 msgid ""
-"The ordered quantity cannot be decreased below the amount already delivered."
-" Instead, create a return in your inventory."
+"The ordered quantity cannot be decreased below the amount already delivered. "
+"Instead, create a return in your inventory."
 msgstr ""
 "Den beställda kvantiteten kan inte minskas under den mängd som redan "
 "levererats. Skapa istället en retur i ditt lager."
@@ -713,8 +732,7 @@ msgid ""
 "amount already delivered. Instead, create a return in your inventory."
 msgstr ""
 "Den beställda kvantiteten på en försäljningsorderrad kan inte minskas under "
-"den kvantitet som redan har levererats. Skapa istället en retur i ditt "
-"lager."
+"den kvantitet som redan har levererats. Skapa istället en retur i ditt lager."
 
 #. module: sale_stock
 #. odoo-javascript

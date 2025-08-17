@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_stock
-# 
+#
 # Translators:
 # Sarah Park, 2024
 # Daye Jeong, 2024
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-08-15 00:51+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_stock
@@ -64,22 +64,26 @@ msgstr "<span class=\"o_stat_text\">판매</span>"
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
 "<span class=\"small badge text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Shipped\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Shipped\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"small badge text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> 배송 완료\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> 배"
+"송 완료\n"
 "                                    </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
 msgid ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
+"                    Some deliveries are already done. Returns can be created "
+"from the Delivery Orders.\n"
 "                </span>"
 msgstr ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    배송이 이미 일부 완료되었습니다. 반품 시 배송주문서에서 생성할 수 있습니다.\n"
+"                    배송이 이미 일부 완료되었습니다. 반품 시 배송주문서에서 "
+"생성할 수 있습니다.\n"
 "                </span>"
 
 #. module: sale_stock
@@ -96,10 +100,13 @@ msgstr "<strong>인코텀:</strong>"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 "품목의 환경 설정에 따라, 출고 수량은 자동으로 계산될 수 있습니다:\n"
@@ -209,8 +216,9 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
-"고객에게 약속할 수 있는 배송 날짜로, 서비스 제품의 경우 주문 내역의 최소 리드타임을 기준으로 계산됩니다. 배송되는 품목의 경우, "
-"주문의 배송 정책을 고려하여 주문 내역의 최소 또는 최대 리드타임을 사용하도록 권장합니다."
+"고객에게 약속할 수 있는 배송 날짜로, 서비스 제품의 경우 주문 내역의 최소 리드"
+"타임을 기준으로 계산됩니다. 배송되는 품목의 경우, 주문의 배송 정책을 고려하"
+"여 주문 내역의 최소 또는 최대 리드타임을 사용하도록 권장합니다."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
@@ -297,8 +305,8 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
-"모든 품목을 한 번에 배송하는 경우 최대 제품 리드타임을 기준으로 배송 주문이 예약됩니다. 그렇지 않으면 가장 짧은 시간을 기준으로 "
-"합니다."
+"모든 품목을 한 번에 배송하는 경우 최대 제품 리드타임을 기준으로 배송 주문이 "
+"예약됩니다. 그렇지 않으면 가장 짧은 시간을 기준으로 합니다."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -330,7 +338,9 @@ msgstr "인코텀즈:"
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr "Incoterm(국제 상업 약관)은 국제 무역 거래에서 사용되는 미리 정의된 상업 용어입니다."
+msgstr ""
+"Incoterm(국제 상업 약관)은 국제 무역 거래에서 사용되는 미리 정의된 상업 용어"
+"입니다."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_users_view_form
@@ -389,8 +399,8 @@ msgid ""
 "for delivery that many days earlier than the actual promised date, to cope "
 "with unexpected delays in the supply chain."
 msgstr ""
-"고객에게 약속된 날짜에 대한 오류 여유. 공급망의 예상치 못한 지연에 대처하기 위해 제품은 실제 약속 날짜보다 며칠 일찍 납품될 "
-"예정입니다."
+"고객에게 약속된 날짜에 대한 오류 여유. 공급망의 예상치 못한 지연에 대처하기 "
+"위해 제품은 실제 약속 날짜보다 며칠 일찍 납품될 예정입니다."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
@@ -398,11 +408,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
 msgstr ""
-"고객에게 약속한 날짜에 대한 오차 범위입니다. 상품은 공급망의 예기치 않은 지연 사태에 대처하기 위해 실제 약속 날짜보다 며칠 전에 조달"
-" 및 납품할 수 있도록 예약해야 합니다."
+"고객에게 약속한 날짜에 대한 오차 범위입니다. 상품은 공급망의 예기치 않은 지"
+"연 사태에 대처하기 위해 실제 약속 날짜보다 며칠 전에 조달 및 납품할 수 있도"
+"록 예약해야 합니다."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
@@ -654,6 +665,11 @@ msgid "Stock Rules report"
 msgstr "재고 규칙 보고서"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_valuation_layer
+msgid "Stock Valuation Layer"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "재고 규칙 보고서"
@@ -671,8 +687,10 @@ msgstr "배송"
 #, python-format
 msgid ""
 "The delivery address has been changed on the Sales Order<br/>\n"
-"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
-"                        You should probably update the partner on this document."
+"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</"
+"strong>,\n"
+"                        You should probably update the partner on this "
+"document."
 msgstr ""
 "배송 주소가 판매 주문서에서 변경되었습니다.<br/>\n"
 "<strong>\"%s\"</strong>에서 \"%s\"<strong>로 변경되었습니다.\n"
@@ -683,9 +701,11 @@ msgstr ""
 #: code:addons/sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js:0
 #, python-format
 msgid ""
-"The ordered quantity cannot be decreased below the amount already delivered."
-" Instead, create a return in your inventory."
-msgstr "주문 수량은 이미 배송 완료된 수량보다 적을 수 없습니다. 대신, 재고에 반품 항목을 생성하시기 바랍니다."
+"The ordered quantity cannot be decreased below the amount already delivered. "
+"Instead, create a return in your inventory."
+msgstr ""
+"주문 수량은 이미 배송 완료된 수량보다 적을 수 없습니다. 대신, 재고에 반품 항"
+"목을 생성하시기 바랍니다."
 
 #. module: sale_stock
 #. odoo-python
@@ -695,7 +715,8 @@ msgid ""
 "The ordered quantity of a sale order line cannot be decreased below the "
 "amount already delivered. Instead, create a return in your inventory."
 msgstr ""
-"판매주문서 줄에 있는 주문 수량은 이미 배송 완료된 수량보다 적을 수 없습니다. 대신, 재고에 반품 항목을 생성하시기 바랍니다."
+"판매주문서 줄에 있는 주문 수량은 이미 배송 완료된 수량보다 적을 수 없습니다. "
+"대신, 재고에 반품 항목을 생성하시기 바랍니다."
 
 #. module: sale_stock
 #. odoo-javascript

@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_stock
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Rasareeyar Lappiam, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-08-15 00:51+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_stock
@@ -63,22 +63,26 @@ msgstr "<span class=\"o_stat_text\">การขาย</span>"
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
 "<span class=\"small badge text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Shipped\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Shipped\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"small badge text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> จัดส่งแล้ว\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"จัดส่งแล้ว\n"
 "                                    </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
 msgid ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
+"                    Some deliveries are already done. Returns can be created "
+"from the Delivery Orders.\n"
 "                </span>"
 msgstr ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    จัดส่งบางส่วนเรียบร้อยแล้ว สามารถสร้างการคืนสินค้าได้จากคำสั่งการจัดส่ง\n"
+"                    จัดส่งบางส่วนเรียบร้อยแล้ว "
+"สามารถสร้างการคืนสินค้าได้จากคำสั่งการจัดส่ง\n"
 "                </span>"
 
 #. module: sale_stock
@@ -95,10 +99,13 @@ msgstr "<strong>Incoterm:</strong>"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 "ตามการกำหนดค่าของสินค้า ปริมาณที่ส่งมอบสามารถคำนวณโดยอัตโนมัติตามกลไก:\n"
@@ -209,8 +216,7 @@ msgid ""
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
 "วันที่จัดส่งที่คุณสามารถสัญญากับลูกค้าได้ "
-"โดยคำนวณจากระยะเวลานำสินค้าขั้นต่ำของไลน์คำสั่งในกรณีของสินค้าบริการ "
-"ในกรณีของการจัดส่ง "
+"โดยคำนวณจากระยะเวลานำสินค้าขั้นต่ำของไลน์คำสั่งในกรณีของสินค้าบริการ ในกรณีของการจัดส่ง "
 "นโยบายการจัดส่งของคำสั่งจะถูกนำมาพิจารณาโดยใช้ระยะเวลานำสินค้าขั้นต่ำหรือสูงสุดของไลน์คำสั่ง"
 
 #. module: sale_stock
@@ -298,8 +304,7 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
-"ถ้าคุณจัดส่งสินค้าทั้งหมดในคราวเดียว "
-"คำสั่งจัดส่งจะถูกกำหนดเวลาตามระยะเวลานำสินค้าที่มากที่สุด "
+"ถ้าคุณจัดส่งสินค้าทั้งหมดในคราวเดียว คำสั่งจัดส่งจะถูกกำหนดเวลาตามระยะเวลานำสินค้าที่มากที่สุด "
 "มิฉะนั้นจะยึดตามระยะเวลาที่สั้นที่สุด"
 
 #. module: sale_stock
@@ -332,9 +337,7 @@ msgstr "Incoterm:"
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr ""
-"Incoterm "
-"คือชุดของข้อกำหนดทางการค้าที่กำหนดไว้ล่วงหน้าที่ใช้ในธุรกรรมระหว่างประเทศ"
+msgstr "Incoterm คือชุดของข้อกำหนดทางการค้าที่กำหนดไว้ล่วงหน้าที่ใช้ในธุรกรรมระหว่างประเทศ"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_users_view_form
@@ -403,8 +406,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
 msgstr ""
 "สัดส่วนข้อผิดพลาดสำหรับวันที่สัญญากับลูกค้า "
 "สินค้าจะได้รับการจัดซื้อและจัดส่งเร็วกว่าวันที่สัญญาจริงหลายวัน "
@@ -660,6 +663,11 @@ msgid "Stock Rules report"
 msgstr "รายงานกฎสต็อก"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_valuation_layer
+msgid "Stock Valuation Layer"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "รายงานกฎสต็อก"
@@ -677,11 +685,14 @@ msgstr "การจัดส่ง"
 #, python-format
 msgid ""
 "The delivery address has been changed on the Sales Order<br/>\n"
-"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
-"                        You should probably update the partner on this document."
+"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</"
+"strong>,\n"
+"                        You should probably update the partner on this "
+"document."
 msgstr ""
 "ที่อยู่จัดส่งมีการเปลี่ยนแปลงในคำสั่งขาย<br/>\n"
-"                        จาก <strong>\"%s\"</strong> ถึง <strong>\"%s\"</strong>\n"
+"                        จาก <strong>\"%s\"</strong> ถึง <strong>\"%s\"</"
+"strong>\n"
 "                        คุณควรอัปเดตพาร์ทเนอร์ในเอกสารนี้"
 
 #. module: sale_stock
@@ -689,11 +700,10 @@ msgstr ""
 #: code:addons/sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js:0
 #, python-format
 msgid ""
-"The ordered quantity cannot be decreased below the amount already delivered."
-" Instead, create a return in your inventory."
+"The ordered quantity cannot be decreased below the amount already delivered. "
+"Instead, create a return in your inventory."
 msgstr ""
-"ปริมาณที่สั่งไม่สามารถลดลงต่ำกว่าจำนวนที่จัดส่งไปแล้วได้ "
-"ให้สร้างการคืนสินค้าในสินค้าคงคลังของคุณแทน"
+"ปริมาณที่สั่งไม่สามารถลดลงต่ำกว่าจำนวนที่จัดส่งไปแล้วได้ ให้สร้างการคืนสินค้าในสินค้าคงคลังของคุณแทน"
 
 #. module: sale_stock
 #. odoo-python
