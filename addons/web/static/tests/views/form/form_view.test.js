@@ -9,6 +9,7 @@ import {
     queryAllAttributes,
     queryAllTexts,
     queryFirst,
+    waitFor,
 } from "@odoo/hoot-dom";
 import {
     animationFrame,
@@ -9073,6 +9074,78 @@ test(`form view is not broken if save operation fails with redirect warning`, as
 
     // RedirectWarning dialog
     expect(`.modal-title`).toHaveText("Sub view");
+});
+
+test.tags("desktop");
+test("Redirect Warning full feature: additional context, action_id, leaving while dirty", async function () {
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [[false, "form"]],
+            res_id: 1,
+        },
+        {
+            id: 2,
+            name: "Partner List",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            domain: "[['id', 'in', [active_id]]]",
+            views: [[false, "list"]],
+        },
+    ]);
+    Partner._views = {
+        list: `
+                <list>
+                    <field name="name"/>
+                </list>`,
+        form: `
+                <form>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>`,
+        "partner,false,search": "<search></search>",
+    };
+    onRpc("partner", "web_save", () => {
+        expect.step("web_save");
+        throw makeServerError({
+            type: `RedirectWarning`,
+            args: [
+                "The message",
+                2,
+                "Button Label",
+                {
+                    active_id: 4,
+                },
+            ],
+            description: "Beep boop server stuff and technical string",
+        });
+    });
+    onRpc("partner", "web_search_read", (args) => {
+        expect.step("web_search_read");
+        expect(args.kwargs.domain).toEqual([["id", "in", [4]]]);
+    });
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    await contains(".o_field_widget[name='name'] input").edit("some invalid input");
+    await contains(".o_form_button_save").click();
+    expect.verifySteps(["web_save"]);
+
+    await waitFor(".o_error_dialog");
+    expect.verifyErrors(["RPC_ERROR: Odoo Server Error"])
+
+    expect(".o_error_dialog .btn-primary").toHaveCount(1);
+    expect(".o_error_dialog .btn-secondary").toHaveCount(1);
+
+    await contains(".o_error_dialog .btn-primary").click();
+    await waitFor(".o_list_view");
+    expect.verifySteps(["web_search_read"]);
+    expect(".o_breadcrumb").toHaveText("first record\nPartner List");
 });
 
 test.tags("desktop");

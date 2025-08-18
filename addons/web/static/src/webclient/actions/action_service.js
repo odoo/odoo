@@ -69,12 +69,13 @@ const actionRegistry = registry.category("actions");
  * @property {"replaceCurrentAction" | "replacePreviousAction"} [stackPosition]
  * @property {number} [index]
  * @property {boolean} [newWindow]
+ * @property {boolean} [forceLeave]
  */
 
-export async function clearUncommittedChanges(env) {
+export async function clearUncommittedChanges(env, { forceLeave } = {}) {
     const callbacks = [];
     env.bus.trigger("CLEAR-UNCOMMITTED-CHANGES", callbacks);
-    const res = await Promise.all(callbacks.map((fn) => fn()));
+    const res = await Promise.all(callbacks.map((fn) => fn({ forceLeave })));
     return !res.includes(false);
 }
 
@@ -1255,7 +1256,7 @@ export function makeActionManager(env, router = _router) {
         action.path ||= clientAction.path;
         if (clientAction.prototype instanceof Component) {
             if (action.target !== "new" && !options.newWindow) {
-                const canProceed = await clearUncommittedChanges(env);
+                const canProceed = await clearUncommittedChanges(env, pick(options, "forceLeave"));
                 if (!canProceed) {
                     return;
                 }
@@ -1412,7 +1413,7 @@ export function makeActionManager(env, router = _router) {
                 return _executeActURLAction(action, options);
             case "ir.actions.act_window":
                 if (action.target !== "new" && !options.newWindow) {
-                    const canProceed = await clearUncommittedChanges(env);
+                    const canProceed = await clearUncommittedChanges(env, pick(options, "forceLeave"));
                     if (!canProceed) {
                         return new Promise(() => {});
                     }
