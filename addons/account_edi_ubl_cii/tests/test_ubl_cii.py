@@ -488,15 +488,14 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon, HttpCase):
         ])
         invoices[:2].action_post()
         invoices[:2]._generate_and_send()
-        print_items = invoices.get_extra_print_items()
+        xml_print_url = next(item for item in invoices.get_extra_print_items() if item['key'] == 'download_ubl')['url']
         self.assertEqual(
-            print_items[0]['url'],
+            xml_print_url,
             f'/account/download_invoice_documents/{invoices[0].id},{invoices[1].id}/ubl?allow_fallback=true',
             'Only posted invoices should be called in the URL',
         )
-        url = print_items[0]['url']
         self.authenticate(self.env.user.login, self.env.user.login)
-        res = self.url_open(url)
+        res = self.url_open(xml_print_url)
         self.assertEqual(res.status_code, 200)
         with ZipFile(BytesIO(res.content)) as zip_file:
             self.assertEqual(

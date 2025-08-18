@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import io
 import zipfile
+from collections import defaultdict
 
 from odoo import http, _
 from odoo.exceptions import UserError
@@ -15,6 +16,32 @@ def _get_headers(filename, filetype, content):
         ('Content-Disposition', content_disposition(filename)),
         ('X-Content-Type-Options', 'nosniff'),
     ]
+
+
+def _generate_error_txt_file(missing_documents: list[str]):
+    content = request.env._("Error: Couldn't Generate Documents for the Following\n")
+    content += "\n".join(missing_documents)
+    return {
+        'filename': "error.txt",
+        'filetype': 'text/plain',
+        'content': content,
+    }
+
+
+def rename_duplicates(docs):
+    seen = {}
+    for doc in docs:
+        name = doc["filename"]
+        if name not in seen:
+            seen[name] = 0
+        else:
+            seen[name] += 1
+            base, *ext = name.rsplit('.', 1)
+            name = f"{base} ({seen[name]})" + f".{ext[0]}" if ext else ""
+            doc["filename"] = name
+            seen[name] = 0
+
+    return docs
 
 
 def _build_zip_from_data(docs_data):
@@ -61,7 +88,31 @@ class AccountDocumentDownloadController(http.Controller):
             doc_data = docs_data[0]
             headers = _get_headers(doc_data['filename'], doc_data['filetype'], doc_data['content'])
             return request.make_response(doc_data['content'], headers)
-        elif len(docs_data) > 1:
+        if len(docs_data) > 1:
             zip_content = _build_zip_from_data(docs_data)
             headers = _get_headers(_('invoices') + '.zip', 'zip', zip_content)
             return request.make_response(zip_content, headers)
+        raise UserError(_("There are no available documents to export."))
+
+    @http.route('/account/download_move_attachments/<models("account.move"):moves>', type='http', auth='user')
+    def _get_move_attachments(self, moves):
+        moves_docs = defaultdict(list)
+        for move in moves:
+            moves_docs[move.id] += move._get_invoice_legal_documents_all() or []
+            if move.move_type in ('in_invoice', 'in_refund', 'in_receipt') and (attachment := move.message_main_attachment_id):
+                moves_docs[move.id].append({
+                    'filename': attachment.name,
+                    'filetype': attachment.mimetype,
+                    'content': attachment.raw,
+                })
+
+        if docs_data := [doc for docs in moves_docs.values() for doc in docs]:
+
+            if missing_moves := [move.name for move in moves if not moves_docs[move.id]]:
+                docs_data.append(_generate_error_txt_file(missing_moves))
+
+            docs_data = rename_duplicates(docs_data)
+            zip_content = _build_zip_from_data(docs_data)
+            headers = _get_headers(request.env._("Moves") + '.zip', 'zip', zip_content)
+            return request.make_response(zip_content, headers)
+        raise UserError(request.env._("There are no available documents to export. Please ensure the selected invoices have been sent or contain PDF/XML files."))
