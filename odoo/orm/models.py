@@ -1376,7 +1376,7 @@ class BaseModel(metaclass=MetaModel):
     def search_fetch(
         self,
         domain: DomainType,
-        field_names: Sequence[str],
+        field_names: Sequence[str] | None = None,
         offset: int = 0,
         limit: int | None = None,
         order: str | None = None,
@@ -1389,7 +1389,8 @@ class BaseModel(metaclass=MetaModel):
 
         :param domain: :ref:`A search domain <reference/orm/domains>`. Use an empty
                      list to match all records.
-        :param field_names: a collection of field names to fetch
+        :param field_names: a collection of field names to fetch, or ``None`` for
+            all accessible fields marked with ``prefetch=True``
         :param offset: number of results to ignore (default: none)
         :param limit: maximum number of records to return (default: all)
         :param order: sort string
@@ -3683,19 +3684,20 @@ class BaseModel(metaclass=MetaModel):
         self.fetch(fnames)
 
     @api.private
-    def fetch(self, field_names: Collection[str]) -> None:
+    def fetch(self, field_names: Collection[str] | None = None) -> None:
         """ Make sure the given fields are in memory for the records in ``self``,
         by fetching what is necessary from the database.  Non-stored fields are
         mostly ignored, except for their stored dependencies. This method should
         be called to optimize code.
 
-        :param field_names: a collection of field names to fetch
+        :param field_names: a collection of field names to fetch, or ``None`` for
+            all accessible fields marked with ``prefetch=True``
         :raise AccessError: if user is not allowed to access requested information
 
         This method is implemented thanks to methods :meth:`_search` and
         :meth:`_fetch_query`, and should not be overridden.
         """
-        if not self or not field_names:
+        if not self or not (field_names is None or field_names):
             return
 
         fields_to_fetch = self._determine_fields_to_fetch(field_names, ignore_when_in_cache=True)
@@ -3726,17 +3728,29 @@ class BaseModel(metaclass=MetaModel):
             if forbidden:
                 raise self.env['ir.rule']._make_access_error('read', forbidden)
 
-    def _determine_fields_to_fetch(self, field_names: Collection[str], ignore_when_in_cache: bool = False) -> list[Field]:
+    def _determine_fields_to_fetch(
+            self,
+            field_names: Collection[str] | None = None,
+            ignore_when_in_cache: bool = False,
+        ) -> list[Field]:
         """
         Return the fields to fetch from database among the given field names,
         and following the dependencies of computed fields. The method is used
         by :meth:`fetch` and :meth:`search_fetch`.
 
-        :param field_names: the list of fields requested
+        :param field_names: the collection of requested fields, or ``None`` for
+            all accessible fields marked with ``prefetch=True``
         :param ignore_when_in_cache: whether to ignore fields that are alreay in cache for ``self``
         :return: the list of fields that must be fetched
         :raise AccessError: when trying to fetch fields to which the user does not have access
         """
+        if field_names is None:
+            return [
+                field
+                for field in self._fields.values()
+                if field.prefetch is True and self._has_field_access(field, 'read')
+            ]
+
         if not field_names:
             return []
 

@@ -853,13 +853,15 @@ class HrEmployee(models.Model):
             employee_private.display_name = employee_public.display_name
 
     @api.model
-    def search_fetch(self, domain, field_names, offset=0, limit=None, order=None):
+    def search_fetch(self, domain, field_names=None, offset=0, limit=None, order=None):
         if self.browse().has_access('read'):
             return super().search_fetch(domain, field_names, offset, limit, order)
 
         # HACK: retrieve publicly available values from hr.employee.public and
         # copy them to the cache of self; non-public data will be missing from
         # cache, and interpreted as an access error
+        if field_names is None:
+            field_names = [field.name for field in self._determine_fields_to_fetch()]
         self._check_private_fields(field_names)
         self.flush_model(field_names)
         # HACK: suppress warning if domain is optimized for another model
@@ -869,13 +871,15 @@ class HrEmployee(models.Model):
         employees._copy_cache_from(public, field_names)
         return employees
 
-    def fetch(self, field_names):
+    def fetch(self, field_names=None):
         if self.browse().has_access('read'):
             return super().fetch(field_names)
 
         # HACK: retrieve publicly available values from hr.employee.public and
         # copy them to the cache of self; non-public data will be missing from
         # cache, and interpreted as an access error
+        if field_names is None:
+            field_names = [field.name for field in self._determine_fields_to_fetch()]
         self._check_private_fields(field_names)
         self.flush_recordset(field_names)
         public = self.env['hr.employee.public'].browse(self._ids)

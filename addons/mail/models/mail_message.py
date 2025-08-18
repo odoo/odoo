@@ -761,7 +761,7 @@ class MailMessage(models.Model):
         self.check_access('read')
         return super().read(fields=fields, load=load)
 
-    def fetch(self, field_names):
+    def fetch(self, field_names=None):
         # This freaky hack is aimed at reading data without the overhead of
         # checking that "self" is accessible, which is already done above in
         # methods read() and _search(). It reproduces the existing behavior
