@@ -1151,7 +1151,14 @@ class MrpProduction(models.Model):
     def action_update_bom(self):
         for production in self:
             if production.bom_id:
+                old_durations = production.is_planned and production.workorder_ids.mapped('duration_expected')
                 production._link_bom(production.bom_id)
+
+                if production.is_planned:
+                    new_durations = production.workorder_ids.mapped('duration_expected')
+                    if old_durations != new_durations:
+                        production.button_unplan()
+                        production._plan_workorders()
         self.is_outdated_bom = False
 
     def _get_bom_values(self, ratio=1):
