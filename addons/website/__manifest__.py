@@ -397,7 +397,6 @@
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
-            'website/static/src/scss/website.wysiwyg.scss',
             'website/static/src/scss/website.edit_mode.scss',
             'website/static/src/snippets/s_image_gallery/000.xml',
             'website/static/src/snippets/s_image_gallery/001.xml',
