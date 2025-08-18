@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="account_tax_form_inherit_l10n_lt" model="ir.ui.view">
+        <field name="name">account.tax.form.inherit.l10n_lt</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_legal_notes']" position="after">
+                <field name="l10n_lt_tax_code" invisible="country_code != 'LT'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
