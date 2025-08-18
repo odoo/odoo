@@ -325,6 +325,7 @@ class MrpBom(models.Model):
 
     @api.model
     def _bom_find_domain(self, products, picking_type=None, company_id=False, bom_type=False):
+        products.fetch(['product_tmpl_id'])
         domain = ['&', '|', ('product_id', 'in', products.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', products.product_tmpl_id.ids), ('active', '=', True)]
         if company_id or self.env.context.get('company_id'):
             domain = AND([domain, ['|', ('company_id', '=', False), ('company_id', '=', company_id or self.env.context.get('company_id'))]])
@@ -343,7 +344,8 @@ class MrpBom(models.Model):
         :rtype: defaultdict(`lambda: self.env['mrp.bom']`)
         """
         bom_by_product = defaultdict(lambda: self.env['mrp.bom'])
-        products = products.filtered(lambda p: p.type != 'service')
+        if not self.env.context.get('skip_products_filter'):
+            products = products.filtered(lambda p: p.type != 'service')
         if not products:
             return bom_by_product
         domain = self._bom_find_domain(products, picking_type=picking_type, company_id=company_id, bom_type=bom_type)

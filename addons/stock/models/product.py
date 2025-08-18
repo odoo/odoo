@@ -188,6 +188,9 @@ class Product(models.Model):
                 moves_out_res_past[product.id] += uom._compute_quantity(quantity, product.uom_id)
 
         res = dict()
+        self.sudo().fetch(['product_tmpl_id'])  # Need sudo to avoid extra check_access_rule queries if product_tmpl_id is already in cache
+        self.product_tmpl_id.fetch(['uom_id'])
+        self.product_tmpl_id.uom_id.fetch(['rounding'])
         for product in self.with_context(prefetch_fields=False):
             origin_product_id = product._origin.id
             product_id = product.id
@@ -197,7 +200,7 @@ class Product(models.Model):
                     0.0,
                 )
                 continue
-            rounding = product.uom_id.rounding
+            rounding = product.product_tmpl_id.uom_id.rounding  # Skip computing product.uom_id and get directly from product_tmpl_id
             res[product_id] = {}
             if dates_in_the_past:
                 qty_available = quants_res.get(origin_product_id, [0.0])[0] - moves_in_res_past.get(origin_product_id, 0.0) + moves_out_res_past.get(origin_product_id, 0.0)
@@ -366,13 +369,29 @@ class Product(models.Model):
         if not isinstance(value, (float, int)):
             raise UserError(_("Invalid domain right operand '%s'. It must be of type Integer/Float", value))
 
-        # TODO: Still optimization possible when searching virtual quantities
         ids = []
-        # Order the search on `id` to prevent the default order on the product name which slows
-        # down the search because of the join on the translation table to get the translated names.
-        for product in self.with_context(prefetch_fields=False).search([], order='id'):
-            if OPERATORS[operator](product[field], value):
-                ids.append(product.id)
+        quantities = (
+            self.with_context(prefetch_fields=False, skip_products_filter=True)
+            .search([('type', '!=', 'service')])
+            ._compute_quantities_dict(
+                self._context.get('lot_id'),
+                self._context.get('owner_id'),
+                self._context.get('package_id'),
+                self._context.get('from_date'),
+                self._context.get('to_date'),
+            )
+        )
+        for service in self.search_read([('type', '=', 'service')], ['id']):
+            quantities[service['id']] = {
+                'qty_available': 0.0,
+                'free_qty': 0.0,
+                'incoming_qty': 0.0,
+                'outgoing_qty': 0.0,
+                'virtual_available': 0.0,
+            }
+        for product_id in quantities:
+            if OPERATORS[operator](quantities[product_id][field], value):
+                ids.append(product_id)
         return [('id', 'in', ids)]
 
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
