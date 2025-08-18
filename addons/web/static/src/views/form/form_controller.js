@@ -157,6 +157,7 @@ export class FormController extends Component {
 
     setup() {
         this.evaluateBooleanExpr = evaluateBooleanExpr;
+        this.actionService = useService("action");
         this.dialogService = useService("dialog");
         this.orm = useService("orm");
         this.viewService = useService("view");
@@ -270,7 +271,7 @@ export class FormController extends Component {
         useSetupAction({
             rootRef: this.rootRef,
             beforeVisibilityChange: () => this.beforeVisibilityChange(),
-            beforeLeave: () => this.beforeLeave(),
+            beforeLeave: (options) => this.beforeLeave(options),
             beforeUnload: (ev) => this.beforeUnload(ev),
             getLocalState: () => ({
                 activeNotebookPages: !this.model.root.isNew ? activeNotebookPages : {},
@@ -430,6 +431,16 @@ export class FormController extends Component {
                         discard();
                         resolve(true);
                     },
+                    onRedirect: async ({ action, additionalContext }) => {
+                        try {
+                            await this.actionService.doAction(action, {
+                                additionalContext,
+                                forceLeave: true,
+                            });
+                        } finally {
+                            resolve(false);
+                        }
+                    },
                     onStayHere: () => resolve(false),
                 });
             });
@@ -469,8 +480,8 @@ export class FormController extends Component {
         }
     }
 
-    async beforeLeave() {
-        if (this.model.root.dirty) {
+    async beforeLeave({ forceLeave } = {}) {
+        if (this.model.root.dirty && !forceLeave) {
             return this.save({
                 reload: false,
                 onError: (error, options) => this.onSaveError(error, options, true),

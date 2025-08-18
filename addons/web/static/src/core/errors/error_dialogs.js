@@ -185,7 +185,7 @@ export class RedirectWarningDialog extends Component {
         this.additionalContext = additionalContext;
     }
     async onClick() {
-        const options = {};
+        const options = { forceLeave: true };
         if (this.additionalContext) {
             options.additionalContext = this.additionalContext;
         }
