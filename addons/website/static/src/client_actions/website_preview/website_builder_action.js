@@ -74,6 +74,8 @@ export class WebsiteBuilderClientAction extends Component {
         this.cleanups = [];
 
         this.snippetsTemplate = "website.snippets";
+        // Track iframe navigation state
+        this.isNavigatingToAnotherPage = null;
 
         useSubEnv({
             builderRef: useRef("container"),
@@ -262,6 +264,12 @@ export class WebsiteBuilderClientAction extends Component {
     async onEditPage() {
         this.websiteContext.showResourceEditor = false;
         this.blockIframe();
+
+        // Wait for navigation to complete if currently navigating
+        if (this.isNavigatingToAnotherPage) {
+            await this.isNavigatingToAnotherPage;
+        }
+
         await this.loadIframeAndBundles(true);
         window.document.dispatchEvent(
             new CustomEvent("edit_page", {
@@ -387,6 +395,11 @@ export class WebsiteBuilderClientAction extends Component {
         this.addWelcomeMessage();
         this.websiteService.hideLoader();
         this.lastPageURL = iframe.contentWindow.location.href;
+
+        if (this.isNavigatingToAnotherPage) {
+            this.isNavigatingToAnotherPage.resolve();
+            this.isNavigatingToAnotherPage = null;
+        }
     }
 
     blockIframe() {
@@ -434,6 +447,8 @@ export class WebsiteBuilderClientAction extends Component {
                 ) {
                     // This scenario triggers a navigation inside the iframe.
                     this.websiteService.websiteRootInstance = undefined;
+
+                    this.isNavigatingToAnotherPage = new Deferred();
                 }
             }
         });
