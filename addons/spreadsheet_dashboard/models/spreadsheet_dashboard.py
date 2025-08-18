@@ -15,7 +15,7 @@ class SpreadsheetDashboard(models.Model):
     sequence = fields.Integer()
     sample_dashboard_file_path = fields.Char(export_string_translation=False)
     is_published = fields.Boolean(default=True)
-    company_id = fields.Many2one('res.company')
+    company_ids = fields.Many2many('res.company', string="Companies")
     group_ids = fields.Many2many('res.groups', default=lambda self: self.env.ref('base.group_user'))
     favorite_user_ids = fields.Many2many(
         'res.users',
