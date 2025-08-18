@@ -536,6 +536,21 @@ describe("Import view", () => {
         expect(".o_list_view").toHaveCount(1);
     });
 
+    test("cancel in import view", async () => {
+        await mountWebClient();
+        await getService("action").doAction({
+            name: "Fall back",
+            type: "ir.actions.client",
+            tag: "import",
+            params: { active_model: "partner" },
+        });
+        expect(".o_last_breadcrumb_item span").toHaveText("Fall back");
+        await getService("action").doAction(1);
+        expect(".o_last_breadcrumb_item span").toHaveText("Import Data");
+        await contains(".o_control_panel_main_buttons button:contains(Cancel)").click();
+        expect(".o_last_breadcrumb_item span").toHaveText("Fall back");
+    })
+
     test("additional options in debug", async () => {
         serverState.debug = "1";
 
