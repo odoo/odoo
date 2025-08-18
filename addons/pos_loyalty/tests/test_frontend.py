@@ -3072,8 +3072,16 @@ class TestUi(TestPointOfSaleHttpCommon):
         partners that already have points in the loyalty program cannot claim rewards anymore."""
 
         self.env['loyalty.program'].search([]).write({'active': False})
+<<<<<<< 386f090b285154253c6a1cbbb94360de95694436
         test_partner = self.env['res.partner'].create({'name': 'AAA Partner'})
         self.env['res.partner'].create({'name': 'AAA Partner 2'})
+||||||| 6fa4ccdff2de30241473936c9ecc4e4f67283734
+        test_partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        self.env['res.partner'].create({'name': 'AAA Test Partner 2'})
+=======
+        test_partner = self.env['res.partner'].create({'name': 'AAA Test Partner 3'})
+        self.env['res.partner'].create({'name': 'AAA Test Partner 2'})
+>>>>>>> a69bcc190782ffcee4afc1cf9c3123237399febe
 
         loyalty_program = self.env['loyalty.program'].create({
             'name': 'Loyalty Program',

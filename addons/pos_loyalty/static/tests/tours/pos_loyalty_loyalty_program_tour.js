@@ -379,7 +379,13 @@ registry.category("web_tour.tours").add("test_max_usage_partner_with_point", {
             PosLoyalty.claimReward("100% on your order"),
             PosLoyalty.finalizeOrder("Cash", "0"),
             ProductScreen.clickPartnerButton(),
+<<<<<<< 386f090b285154253c6a1cbbb94360de95694436
             ProductScreen.clickCustomer("AAA Partner"),
+||||||| 6fa4ccdff2de30241473936c9ecc4e4f67283734
+            ProductScreen.clickCustomer("Test Partner"),
+=======
+            ProductScreen.clickCustomer("AAA Test Partner 3"),
+>>>>>>> a69bcc190782ffcee4afc1cf9c3123237399febe
             ProductScreen.addOrderline("Desk Organizer", "3"),
             PosLoyalty.isRewardButtonHighlighted(false),
         ].flat(),
