@@ -41,3 +41,8 @@ $o-caret-down: url("data:image/svg+xml," +
 "<svg xmlns='http://www.w3.org/2000/svg' width='7' height='4' viewBox='0 0 7 4'>" +
     "<polygon fill='%23#{str-slice(#{$o-main-text-color}, 2)}' points='3.5 4 7 0 0 0'/>" +
 "</svg>");
+
+// Used in color picker and web_editor toolbar
+// TODO: move to color_picker.scss when web_editor is removed
+$o-we-toolbar-bg: #FFF !default;
+$o-we-toolbar-color-text: #2b2b33 !default; // Same as $o-we-bg-light
