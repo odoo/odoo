@@ -20,7 +20,7 @@ class AccountEdiXmlUbl_Sg(models.AbstractModel):
 
     def _get_tax_category_code(self, customer, supplier, tax):
         """ https://www.peppolguide.sg/billing/bis/#_gst_category_codes """
-        if tax.amount == 0:
+        if not tax or tax.amount == 0:
             return 'ZR'
         return 'SR'
 
