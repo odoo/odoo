@@ -128,23 +128,36 @@ class ResGroups(models.Model):
         if Domain.is_negative_operator(operator):
             return NotImplemented
 
-        lst = True
         if isinstance(operand, str):
-            lst = False
+            def make_operand(val): return val
             operand = [operand]
+        else:
+            def make_operand(val): return [val]
 
         where_domains = [Domain('name', operator, operand)]
         for group in operand:
             if not group:
                 continue
-            values = [v for v in group.split('/') if v]
-            group_name = values.pop().strip() if values else ''
-            privilege_name = '/'.join(values).strip() if values else group_name
-            group_domain = Domain('name', operator, [group_name] if lst else group_name)
-            privilege_ids = self.env['res.groups.privilege'].sudo()._search(
-                Domain('name', operator, [privilege_name] if lst else privilege_name))
-            privilege_domain = Domain('privilege_id', 'in', privilege_ids)
-            where_domains.append(group_domain | privilege_domain)
+            domain = Domain('name', operator, make_operand(group))
+
+            if '/' in group:
+                privilege_name, _, group_name = group.partition('/')
+                group_name = group_name.strip()
+                privilege_name = privilege_name.strip()
+            else:
+                privilege_name = group
+                group_name = None
+
+            if privilege_name:
+                privilege_ids = self.env['res.groups.privilege'].sudo()._search(
+                    Domain('name', operator, make_operand(privilege_name)),
+                )
+                privilege_domain = Domain('privilege_id', 'in', privilege_ids)
+                if group_name:
+                    privilege_domain &= Domain('name', operator, make_operand(group_name))
+                domain |= privilege_domain
+
+            where_domains.append(domain)
 
         return Domain.OR(where_domains)
 
