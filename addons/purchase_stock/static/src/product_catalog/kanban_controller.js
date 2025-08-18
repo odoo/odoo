@@ -1,6 +1,5 @@
 import { ProductCatalogKanbanController } from "@product/product_catalog/kanban_controller";
 import { onWillStart, useState, useSubEnv, useEffect } from "@odoo/owl";
-import { rpc } from "@web/core/network/rpc";
 import { useDebounced } from "@web/core/utils/timing";
 import { useBus } from "@web/core/utils/hooks";
 
@@ -35,11 +34,13 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
             await this.model.root.load({}); // Reload the Kanban with ctx
 
             if (this.state.suggestToggle.isOn) {
-                this.state.estimatedPrice = await rpc("/purchase_stock/update_purchase_suggest", {
-                    po_id: this.orderId,
-                    domain: this.model.config.domain,
-                    suggest_ctx: this._getCatalogContext(),
-                });
+                const [po] = await this.orm.read(
+                    "purchase.order",
+                    [this.orderId],
+                    ["suggest_estimated_price"],
+                    { context: this._getCatalogContext() }
+                );
+                this.state.estimatedPrice = po?.suggest_estimated_price || 0;
                 await this._reorderKanbanGrid();
             }
         }, 300); // Enough to type eg. 110 in percent input without rendering 3 times
@@ -67,7 +68,6 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
         // FIX me: Bug if Add all, then remove one by one product, then add all again
         const onAddAll = async () => {
             await this.model.orm.call("purchase.order", "action_purchase_order_suggest", [
-                this.model.config.domain,
                 this._getCatalogContext(),
             ]);
             this._filterInTheOrder(); // Apply filter to show what was added
@@ -79,8 +79,12 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
         });
     }
 
-    /* Moves records with suggested_qty > 0 to the front, keeping original order.
-     * Doesn't work with paging (because suggested_qty is computed on backed) */
+    /**
+     * Moves records with suggested_qty > 0 to the front, keeping original order.
+     * Works with normal and group filters but not accross pagination (eg if 41st
+     * record has suggested qty > 0 it won't show).
+     * @returns {null} Forces a refresh (only if changed order) by not sorting in place.
+     */
     async _reorderKanbanGrid() {
         const sortBySuggested = (list) => {
             const suggest_products = list.filter((record) => record.data.suggested_qty > 0);
@@ -131,6 +135,8 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
         }
         return {
             ...ctx,
+            domain: this.model.config.domain,
+            hashable_domain: JSON.stringify(this.model.config.domain), // To trigger api.depends
             warehouse_id: this.props.context.warehouse_id,
             suggest_based_on: this.state.basedOn,
             suggest_days: this.state.numberOfDays,
