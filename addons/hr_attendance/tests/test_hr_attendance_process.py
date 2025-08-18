@@ -41,6 +41,43 @@ class TestHrAttendance(TransactionCase):
         self.test_employee._attendance_action_change()
         assert self.test_employee.attendance_state == 'checked_out'
 
+    def test_employee_group_id(self):
+        # Create attendance for one of them
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee_kiosk.id,
+            'check_in': '2025-08-01 08:00:00',
+            'check_out': '2025-08-01 17:00:00',
+        })
+        context = self.env.context.copy()
+        context['read_group_expand'] = True
+
+        groups = self.env['hr.attendance'].with_context(**context).web_read_group(
+            domain=[],
+            groupby=['employee_id']
+        )
+        groups = groups['groups']
+
+        grouped_employee_ids = [g['employee_id'][0] for g in groups]
+
+        self.assertNotIn(self.test_employee.id, grouped_employee_ids)
+        self.assertIn(self.employee_kiosk.id, grouped_employee_ids)
+
+        # Specific to gantt view.
+        context['gantt_start_date'] = fields.Datetime.now()
+        context['allowed_company_ids'] = [self.env.company.id]
+
+        groups = self.env['hr.attendance'].with_context(**context).web_read_group(
+            domain=[],
+            groupby=['employee_id']
+        )
+        groups = groups['groups']
+
+        grouped_employee_ids = [g['employee_id'][0] for g in groups]
+
+        # Check that both employees appears
+        self.assertIn(self.test_employee.id, grouped_employee_ids)
+        self.assertIn(self.employee_kiosk.id, grouped_employee_ids)
+
     def test_hours_today(self):
         """ Test day start is correctly computed according to the employee's timezone """
 
