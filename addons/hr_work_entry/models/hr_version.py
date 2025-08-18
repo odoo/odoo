@@ -30,7 +30,7 @@ class HrVersion(models.Model):
         Working Schedule: Work entries will be generated from the working hours below.
         Attendances: Work entries will be generated from the employee's attendances. (requires Attendance app)
         Planning: Work entries will be generated from the employee's planning. (requires Planning app)
-    ''', groups="hr.group_hr_manager")
+    ''', groups="hr.group_hr_manager", tracking=True)
     work_entry_source_calendar_invalid = fields.Boolean(
         compute='_compute_work_entry_source_calendar_invalid',
         groups="hr.group_hr_manager",
@@ -134,6 +134,10 @@ class HrVersion(models.Model):
     def _get_valid_leave_intervals(self, attendances, interval):
         self.ensure_one()
         return [interval]
+
+    @api.model
+    def _get_whitelist_fields_from_template(self):
+        return super()._get_whitelist_fields_from_template() + ['work_entry_source']
 
     def _get_version_work_entries_values(self, date_start, date_stop):
         start_dt = pytz.utc.localize(date_start) if not date_start.tzinfo else date_start
