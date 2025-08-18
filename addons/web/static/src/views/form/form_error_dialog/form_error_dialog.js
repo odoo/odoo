@@ -11,6 +11,7 @@ export class FormErrorDialog extends Component {
         data: { type: Object },
         onDiscard: Function,
         onStayHere: Function,
+        onRedirect: { type: Function, optional: true },
         close: Function,
     };
 
@@ -21,12 +22,23 @@ export class FormErrorDialog extends Component {
             this.message = this.props.data.arguments[0];
             this.redirectAction = this.props.data.arguments[1];
             this.redirectBtnLabel = this.props.data.arguments[2];
+            this.additionalContext = this.props.data.arguments[3];
         }
     }
 
-    onRedirectBtnClicked() {
-        this.action.doAction(this.redirectAction);
-        this.stay();
+    async onRedirectBtnClicked() {
+        if (this.props.onRedirect) {
+            await this.props.onRedirect({
+                action: this.redirectAction,
+                additionalContext: this.additionalContext,
+            });
+            this.props.close();
+        } else {
+            await this.action.doAction(this.redirectAction, {
+                additionalContext: this.additionalContext,
+            });
+            this.stay();
+        }
     }
 
     async discard() {
