@@ -1,4 +1,4 @@
-import { Component, useEffect, useRef, useState, onMounted } from "@odoo/owl";
+import { Component, useRef, useState, onMounted } from "@odoo/owl";
 import {
     useVisibilityObserver,
     useApplyVisibility,
@@ -40,20 +40,15 @@ export class BuilderRow extends Component {
         this.labelRef = useRef("label");
         this.collapseContentRef = useRef("collapse-content");
 
-        useEffect(
-            (labelEl) => {
-                if (!this.state.tooltip && labelEl && labelEl.clientWidth < labelEl.scrollWidth) {
-                    this.state.tooltip = this.props.label;
-                }
-            },
-            () => [this.labelRef.el]
-        );
-
         onMounted(() => {
             if (this.props.initialExpandAnim) {
                 setTimeout(() => {
                     this.toggleCollapseContent();
                 }, 150);
+            }
+            const labelEl = this.labelRef.el;
+            if (!this.state.tooltip && labelEl && labelEl.clientWidth < labelEl.scrollWidth) {
+                this.state.tooltip = this.props.label;
             }
         });
     }
@@ -67,7 +62,9 @@ export class BuilderRow extends Component {
         const expanded = this.state.expanded;
         const contentEl = this.collapseContentRef.el;
 
-        if (!contentEl) return;
+        if (!contentEl) {
+            return;
+        }
 
         const cleanup = () => {
             contentEl.style.display = expanded ? "block" : "";
