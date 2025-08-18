@@ -23,6 +23,7 @@ from odoo import tools, fields
 from odoo.addons.base.models.ir_mail_server import IrMail_Server
 from odoo.addons.base.tests.common import MockSmtplibCase
 from odoo.addons.bus.models.bus import BusBus, json_dump
+from odoo.addons.bus.tests.common import BusCase
 from odoo.addons.mail.models import mail_thread
 from odoo.addons.mail.models.mail_mail import MailMail
 from odoo.addons.mail.models.mail_message import MailMessage
@@ -1038,7 +1039,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 self.assertEqual(1, 0, f'Tracking: unsupported tracking test on {value_type}')
 
 
-class MailCase(common.TransactionCase, MockEmail):
+class MailCase(common.TransactionCase, MockEmail, BusCase):
     """ Tools, helpers and asserts for mail-related tests, including mail
     gateway mock and helpers (see ´´MockEmail´´).
 
@@ -1105,10 +1106,6 @@ class MailCase(common.TransactionCase, MockEmail):
 
     def _init_mock_bus(self):
         self._new_bus_notifs = self.env['bus.bus'].sudo()
-
-    def _reset_bus(self):
-        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
-        self.env["bus.bus"].sudo().search([]).unlink()
 
     @contextmanager
     def mock_mail_app(self):
