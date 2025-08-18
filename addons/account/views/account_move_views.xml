@@ -61,7 +61,8 @@
                                     </group>
                                     <group string="Currency" groups="base.group_multi_currency">
                                         <field name="currency_id" invisible="1"/>
-                                        <field name="amount_currency"/>
+                                        <field name="display_type" invisible="1" />
+                                        <field name="amount_currency" attrs="{'readonly': ['|', ('display_type', '!=', 'tax'), ('parent_state', '!=', 'draft')]}" />
                                     </group>
                                     <group string="Product" attrs="{'invisible': [('product_id', '=', False)]}">
                                         <field name="product_id" readonly="1"/>
