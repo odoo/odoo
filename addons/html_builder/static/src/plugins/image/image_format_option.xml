@@ -18,7 +18,11 @@
         <BuilderRange
             action="'setImageQuality'"
             min="0"
-            max="100" />
+            max="100"
+            t-if="!state.compressionUnsupported" />
+        <span t-if="state.compressionUnsupported" class="fst-italic">
+            WebP compression not supported on this browser
+        </span>
     </BuilderRow>
 </t>
 
