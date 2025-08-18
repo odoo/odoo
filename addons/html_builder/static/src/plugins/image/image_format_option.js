@@ -20,8 +20,12 @@ export class ImageFormatOption extends BaseOptionComponent {
                 this.computeMaxDisplayWidth.bind(this)
             );
             const hasSrc = !!getImageSrc(editingElement);
+            const mimetype = getMimetype(editingElement);
+            const compressionUnsupported =
+                mimetype === "image/webp" && this.webpCompressionUnuspported();
             return {
-                showQuality: ["image/jpeg", "image/webp"].includes(getMimetype(editingElement)),
+                showQuality: ["image/jpeg", "image/webp"].includes(mimetype),
+                compressionUnsupported: compressionUnsupported,
                 formats: hasSrc ? formats : [],
             };
         });
@@ -31,6 +35,11 @@ export class ImageFormatOption extends BaseOptionComponent {
             return this.props.computeMaxDisplayWidth(img);
         }
         return computeMaxDisplayWidth(img, this.MAX_SUGGESTED_WIDTH);
+    }
+    webpCompressionUnuspported() {
+        const canvas = document.createElement("canvas");
+        canvas.width = canvas.height = 1;
+        return canvas.toDataURL("image/webp").slice(0, 16) !== "data:image/webp;";
     }
 }
 
