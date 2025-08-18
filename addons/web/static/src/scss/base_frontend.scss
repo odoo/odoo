@@ -6,13 +6,12 @@ html, body {
 #wrapwrap {
     // The z-index is useful to prevent that children with a negative z-index
     // go behind the wrapwrap (we create a new stacking context).
-    z-index: 0;
+     z-index: 0;
     position: relative;
     display: flex;
     flex-flow: column nowrap;
     width: 100%;
     min-height: 100%;
-
     > * {
         flex: 0 0 auto;
     }
