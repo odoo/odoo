@@ -17,12 +17,12 @@ patch(Composer.prototype, {
         return super.allowUpload && !this.props.composer.portalComment;
     },
 
-    editMessage() {
+    async editMessage() {
         if (this.props.composer.portalComment) {
-            this.savePublisherComment();
+            await this.savePublisherComment();
             return;
         }
-        super.editMessage();
+        await super.editMessage();
     },
 
     async savePublisherComment() {
@@ -36,6 +36,14 @@ patch(Composer.prototype, {
         });
         this.message.rating = data;
         this.props.onPostCallback();
+    },
+
+    get canProcessMessage() {
+        return super.canProcessMessage || (this.message && this.message.rating_value);
+    },
+
+    get askDeleteFromEdit() {
+        return super.askDeleteFromEdit && !this.message.rating_value;
     },
 
     onMoveStar(ev) {

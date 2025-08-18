@@ -20,6 +20,7 @@
                     'o-editing': props.composer.message,
                     'o-chatWindow mx-2': env.inChatWindow,
                     'mb-3': env.inChatWindow and !props.composer.message,
+<<<<<<< 3ae387d744bd5ebc2d11807efe2e3bba87872f1d
                     'o-discussApp pt-1': env.inDiscussApp,
                     'm-1': env.inChatWindow,
                 }" t-attf-class="{{ props.className }}">
@@ -30,6 +31,17 @@
             </FileUploader>
             <div t-if="showComposerAvatar" class="o-mail-Composer-sidebarMain flex-shrink-0 d-flex">
                 <img class="o-mail-Composer-avatar mx-auto o_avatar rounded-3" t-att-src="(thread?.effectiveSelf or message.effectiveSelf).avatarUrl" alt="Avatar of user"/>
+||||||| 8d61d23c3ccd41615f445e234424bacf938c3b5e
+                    'o-discussApp': env.inDiscussApp,
+                }" t-attf-class="{{ props.className }}">
+            <div class="o-mail-Composer-sidebarMain flex-shrink-0" t-if="showComposerAvatar">
+                <img class="o-mail-Composer-avatar o_avatar rounded" t-att-src="(thread?.effectiveSelf or message.effectiveSelf).avatarUrl" alt="Avatar of user"/>
+=======
+                    'o-discussApp': env.inDiscussApp,
+                }" t-attf-class="{{ props.className }}" t-ref="root">
+            <div class="o-mail-Composer-sidebarMain flex-shrink-0" t-if="showComposerAvatar">
+                <img class="o-mail-Composer-avatar o_avatar rounded" t-att-src="(thread?.effectiveSelf or message.effectiveSelf).avatarUrl" alt="Avatar of user"/>
+>>>>>>> 1eef8489397462431d820938c030b27e0e62a58f
             </div>
             <div class="o-mail-Composer-coreHeader text-truncate small p-2" t-if="props.composer.thread and props.messageToReplyTo?.thread?.eq(props.composer.thread)">
                 <span class="cursor-pointer" t-on-click="() => env.messageHighlight?.highlightMessage(props.messageToReplyTo.message, props.composer.thread)">
