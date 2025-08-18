@@ -6,3 +6,4 @@ from . import website_gallery
 from . import publication_view_log
 from . import res_company
 from . import news_article
+from . import hr_leave

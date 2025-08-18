@@ -365,11 +365,17 @@ class WebsiteCustom(http.Controller):
     @http.route("/notify/absence", type="json", auth="user", methods=["POST"], website=True)
     def notify_absence(self, **kwargs):
         user = request.env.user
-        employee = user.employee_id
+        employee = request.env['hr.employee'].sudo().search([
+        ('user_id', '=', user.id)
+    ], limit=1)
+        
+        _logger.info(f"Empleado encontrado mediante búsqueda: {employee.name if employee else 'Ninguno'}")
+
 
         if not employee:
-            _logger.warning("⚠️ Usuario sin empleado vinculado: %s", user.name)
-            return {"error": "Tu usuario no está vinculado a un empleado."}
+            _logger.warning(f"⚠️ FALLO: No se encontró un registro de empleado para el usuario con ID {user.id}.")
+            return {"error": "Tu usuario no está vinculado a un empleado. Por favor, contacta a RRHH para verificar el enlace en tu perfil de usuario."}
+
 
         try:
             _logger.warning("✅ Iniciando proceso de notificación para %s", employee.name)
