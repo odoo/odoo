@@ -2,8 +2,8 @@
 <odoo>
     <template id="stock.report_return_slip">
         <t t-call="web.html_container">
-            <t t-foreach="docs" t-as="o">
-                <t t-call="web.external_layout">
+            <t t-call="web.external_layout">
+                <t t-set="o" t-value="o.with_context(lang=o._get_report_lang())" />
                 <div class="page">
                     <div class="oe_structure"/>
                     <div class="row mt8">
@@ -32,7 +32,13 @@
                     <div class="oe_structure"/>
                 </div>
             </t>
-            </t>
+        </t>
+    </template>
+
+
+    <template id="report_return_document">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="stock.report_return_slip" t-lang="o._get_report_lang()"/>
         </t>
     </template>
 
@@ -40,7 +46,7 @@
         <field name="name">Return slip</field>
         <field name="model">stock.picking</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">stock.report_return_slip</field>
+        <field name="report_name">stock.report_return_document</field>
         <field name="report_file">return_slip</field>
         <field name="binding_model_id" ref="model_stock_picking"/>
         <field name="binding_type">report</field>
