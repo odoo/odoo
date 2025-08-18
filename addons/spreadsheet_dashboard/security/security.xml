@@ -11,7 +11,7 @@
     <record id="spreadsheet_dashboard_rule_company" model="ir.rule">
         <field name="name">Dashboard multi-company</field>
         <field name="model_id" ref="model_spreadsheet_dashboard"/>
-        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        <field name="domain_force">[('company_ids', 'in', company_ids + [False])]</field>
     </record>
 
     <record model="res.groups.privilege" id="res_groups_privilege_dashboard">
