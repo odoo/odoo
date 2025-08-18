@@ -100,7 +100,11 @@ class PosOrder(models.Model):
             # when vals change the state to 'paid'
             for field in ['lines', 'payment_ids']:
                 if order.get(field):
-                    pos_order.write({field: order.get(field)})
+                    existing_ids = set(pos_order[field].ids)
+                    pos_order.write({field: order[field]})
+                    added_ids = set(pos_order[field].ids) - existing_ids
+                    if added_ids:
+                        _logger.info("Added %s %s to pos.order #%s", field, list(added_ids), pos_order.id)
                     order[field] = []
 
             del order['uuid']
