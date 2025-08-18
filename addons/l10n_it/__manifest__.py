@@ -1,4 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Italy - Accounting',
     'countries': ['it'],
@@ -20,7 +19,6 @@ Italian accounting chart and localization.
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/italy.html',
     'data': [
         'data/account_account_tag.xml',
-        'data/tax_report/account_monthly_tax_report_data.xml',
         'data/tax_report/annual_report_sections/va.xml',
         'data/tax_report/annual_report_sections/ve.xml',
         'data/tax_report/annual_report_sections/vf.xml',
@@ -28,6 +26,8 @@ Italian accounting chart and localization.
         'data/tax_report/annual_report_sections/vj.xml',
         'data/tax_report/annual_report_sections/vl.xml',
         'data/tax_report/account_annual_tax_report_data.xml',
+        'data/tax_report/account_monthly_tax_report_data.xml',
+        'data/tax_report/account_withholding_report_data.xml',
         'views/account_tax_views.xml'
     ],
     'demo': [
