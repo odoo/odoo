@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from lxml import etree, html
+from markupsafe import Markup
 from werkzeug.exceptions import NotFound, Forbidden
 
 from odoo import http
@@ -42,7 +44,12 @@ class SlidesPortalChatter(PortalChatter):
             raise Forbidden()
         # fetch and update mail.message
         message_id = int(message_id)
-        message_body = plaintext2html(post_data.get('body', ''))
+        body_html_string = str(plaintext2html(post_data.get("body", "")))
+        tree = html.fragment_fromstring(body_html_string, create_parent="div")
+        last_p_element = tree.xpath("//p[last()]")[0]
+        last_p_element.text = (last_p_element.text or "") + " "
+        etree.SubElement(last_p_element, "span", attrib={"class": "o-mail-Message-edited"})
+        message_body = Markup("".join(etree.tostring(child, encoding="unicode") for child in tree))
         subtype_comment_id = request.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
         domain = [
             ('model', '=', thread_model),
