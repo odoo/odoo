@@ -31,7 +31,7 @@ class PurchaseBillUnion(models.Model):
                     id as vendor_bill_id, NULL as purchase_order_id
                 FROM account_move
                 WHERE
-                    move_type='in_invoice' and state = 'posted'
+                    move_type in ('in_invoice', 'in_refund') and state = 'posted'
             UNION
                 SELECT
                     -id, name, partner_ref as reference, partner_id, date_order::date as date, amount_untaxed as amount, currency_id, company_id,
