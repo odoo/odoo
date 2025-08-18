@@ -7,7 +7,7 @@
         <field name="model_id">event.event</field>
         <field name="user_ids" eval="False" />
         <field name="domain">[
-            ('date_begin', '&gt;=', 'today'),
+            ('date_begin', '&gt;=', 'now'),
             ('is_visible_on_website', '=', True)
         ]</field>
         <field name="sort">["date_begin asc"]</field>

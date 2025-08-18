@@ -6,7 +6,7 @@
             <field name="name">Latest Blog Posts</field>
             <field name="model_id">blog.post</field>
             <field name="user_ids" eval="False" />
-            <field name="domain">[('post_date', '&lt;=', 'today')]</field>
+            <field name="domain">[('post_date', '&lt;=', 'now')]</field>
             <field name="sort">["post_date desc"]</field>
             <field name="action_id" ref="website.action_website"/>
         </record>
@@ -14,7 +14,7 @@
             <field name="name">Most Viewed Blog Posts</field>
             <field name="model_id">blog.post</field>
             <field name="user_ids" eval="False" />
-            <field name="domain">[('post_date', '&lt;=', 'today'), ('visits', '!=', False)]</field>
+            <field name="domain">[('post_date', '&lt;=', 'now'), ('visits', '!=', False)]</field>
             <field name="sort">["visits desc"]</field>
             <field name="action_id" ref="website.action_website"/>
         </record>
