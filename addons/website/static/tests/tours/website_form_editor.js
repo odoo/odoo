@@ -1084,19 +1084,19 @@ registerWebsitePreviewTour("website_form_editable_content", {
     },
     {
         content: "Click on the text inside the dropped form column",
-        trigger: ":iframe section.s_website_form h5.card-title",
+        trigger: ":iframe section.s_website_form h2.card-title",
         run: "dblclick",
     },
     {
         // Simulate a user interaction with the editable content.
         content: "Update the text inside the form column",
-        trigger: ":iframe section.s_website_form h5.card-title",
+        trigger: ":iframe section.s_website_form h2.card-title",
         run: "editor ABC",
     },
     {
         content: "Check that the new text value was correctly set",
-        trigger: ":iframe section.s_website_form h5:contains(/^ABC$/)",
-        run () {
+        trigger: ":iframe section.s_website_form h2:contains(/^ABC$/)",
+        run() {
             this.anchor.scrollIntoView();
         }
     },
