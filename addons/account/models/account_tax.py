@@ -1708,6 +1708,11 @@ class AccountTax(models.Model):
 
         return [same_product, same_price_subtotal, biggest_amount]
 
+    def _has_negative_factor(self):
+        self.ensure_one()
+        tax_reps = self.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
+        return bool(tax_reps.filtered(lambda tax_rep: tax_rep.factor < 0.0))
+
 
 class AccountTaxRepartitionLine(models.Model):
     _name = "account.tax.repartition.line"
