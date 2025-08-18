@@ -102,14 +102,14 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
             },
         },
         ...setSuggestParameters({ basedOn: "Forecasted", nbDays: 30, factor: 50 }),
-        // Suggest total should be -100 units forcasted * 50% * 20 = 1000$
+        // Suggest total should be -100 units forcasted * 50% * 20 = 1,000$
         { trigger: "span[name='suggest_total']:visible:contains('1,000')" },
         /*
          * -----------------  PART 2 : Kanban Interactions -----------------
          * Checks that the Suggest UI and the Kanban record interactions
-         * (monthly demand, suggest_qtys, ADD suggested qtys)
-         * TODO: filtering attributes and categories (including Group by)
-         * TODO: Check monthly demand and Suggested qty when changing warehouse
+         * (monthly demand, suggest_qtys, ADD suggested qtys
+         * TODO: Check monthly demand and Suggested qty when changing warehouse,
+         * TODO: Use check highlight to check correct order preserved on multiple
          * ------------------------------------------------------------------
          */
         ...setSuggestParameters({ basedOn: "Last 7 days", nbDays: 28, factor: 50 }),
