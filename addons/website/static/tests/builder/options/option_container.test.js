@@ -32,5 +32,5 @@ test("version control: replace outdated", async () => {
     await animationFrame();
     expect(".o_we_version_control").toHaveCount(0);
     expect(".we-bg-options-container:contains('Visibility'").toHaveCount(1);
-    expect(":iframe .s_title:contains('Your Site Title')").toHaveCount(1);
+    expect(":iframe .s_title:contains('Your section title')").toHaveCount(1);
 });
