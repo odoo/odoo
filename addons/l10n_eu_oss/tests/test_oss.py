@@ -60,9 +60,7 @@ class TestOSSBelgium(AccountTestInvoicingCommon):
                     .filtered(lambda x: x.repartition_type == 'base')\
                     .tag_ids
 
-                expected_tag_id = self.env.ref(report_expression_xml_id)\
-                    ._get_matching_tags()\
-                    .filtered(lambda t: not t.tax_negate)
+                expected_tag_id = self.env.ref(report_expression_xml_id)._get_matching_tags()
 
                 self.assertIn(expected_tag_id, oss_tag_id, f"{doc_type} tag from Belgian CoA not correctly linked")
 
@@ -109,9 +107,7 @@ class TestOSSSpain(AccountTestInvoicingCommon):
                     .filtered(lambda x: x.repartition_type == 'base')\
                     .tag_ids
 
-                expected_tag_id = self.env.ref(tag_xml_id)\
-                    ._get_matching_tags()\
-                    .filtered(lambda t: not t.tax_negate)
+                expected_tag_id = self.env.ref(tag_xml_id)._get_matching_tags()
 
                 self.assertIn(expected_tag_id, oss_tag_id, f"{doc_type} tag from Spanish CoA not correctly linked")
 

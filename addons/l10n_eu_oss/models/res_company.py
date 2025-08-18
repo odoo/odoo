@@ -208,7 +208,7 @@ class ResCompany(models.Model):
         for repartition_line_key, tag_xml_id in tag_for_country.items():
             tag = self.env.ref(tag_xml_id) if tag_xml_id else self.env['account.account.tag']
             if tag and tag._name == "account.report.expression":
-                tag = tag._get_matching_tags("+")
+                tag = tag._get_matching_tags()
             mapping[repartition_line_key] = tag + oss_tag
 
         return mapping

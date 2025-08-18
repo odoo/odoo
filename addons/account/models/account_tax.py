@@ -1556,9 +1556,6 @@ class AccountTax(models.Model):
             # If the document is a refund or not to know which repartition lines must be used.
             'is_refund': load('is_refund', False),
 
-            # If the tags must be inverted or not.
-            'tax_tag_invert': load('tax_tag_invert', False),
-
             # Extra fields for tax lines generation:
             'partner_id': load('partner_id', self.env['res.partner']),
             'account_id': load('account_id', self.env['account.account']),
@@ -2927,7 +2924,6 @@ class AccountTax(models.Model):
         base_lines_to_update = []
         for base_line in base_lines:
             sign = base_line['sign']
-            tax_tag_invert = base_line['tax_tag_invert']
             tax_details = base_line['tax_details']
             base_lines_to_update.append((
                 base_line,
@@ -2943,7 +2939,7 @@ class AccountTax(models.Model):
                     grouping_key = frozendict(tax_rep_data['grouping_key'])
                     tax_line = tax_lines_mapping[grouping_key]
                     tax_line['name'] = base_line.get('manual_tax_line_name', tax.name)
-                    tax_line['tax_base_amount'] += sign * tax_data['base_amount'] * (-1 if tax_tag_invert else 1)
+                    tax_line['tax_base_amount'] += sign * tax_data['base_amount']
                     tax_line['amount_currency'] += sign * tax_rep_data['tax_amount_currency']
                     tax_line['balance'] += sign * tax_rep_data['tax_amount']
 

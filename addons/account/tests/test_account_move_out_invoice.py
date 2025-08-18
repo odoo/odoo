@@ -1801,7 +1801,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'amount_currency': 1000.0,
                 'debit': 1000.0,
                 'credit': 0.0,
-                'tax_tag_invert': False,
                 'tax_base_amount': 0.0,
             },
             {
@@ -1809,7 +1808,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'amount_currency': 200.0,
                 'debit': 200.0,
                 'credit': 0.0,
-                'tax_tag_invert': False,
                 'tax_base_amount': 0.0,
             },
             {
@@ -1817,7 +1815,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'amount_currency': 180.0,
                 'debit': 180.0,
                 'credit': 0.0,
-                'tax_tag_invert': False,
                 'tax_base_amount': 1200.0,
             },
             {
@@ -1825,7 +1822,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'amount_currency': 30.0,
                 'debit': 30.0,
                 'credit': 0.0,
-                'tax_tag_invert': False,
                 'tax_base_amount': 200.0,
             },
             {
@@ -1835,7 +1831,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'debit': 0.0,
                 'credit': 1410.0,
                 'date_maturity': move_reversal.date,
-                'tax_tag_invert': False,
                 'tax_base_amount': 0.0,
             },
         ], {
@@ -1864,7 +1859,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'amount_currency': -1000.0,
                 'debit': 0.0,
                 'credit': 1000.0,
-                'tax_tag_invert': True,
                 'tax_base_amount': 0.0,
             },
             {
@@ -1872,7 +1866,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'amount_currency': -200.0,
                 'debit': 0.0,
                 'credit': 200.0,
-                'tax_tag_invert': True,
                 'tax_base_amount': 0.0,
             },
             {
@@ -1880,16 +1873,14 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'amount_currency': -180.0,
                 'debit': 0.0,
                 'credit': 180.0,
-                'tax_tag_invert': True,
-                'tax_base_amount': 1200.0,
+                'tax_base_amount': -1200.0,
             },
             {
                 **self.tax_line_vals_2,
                 'amount_currency': -30.0,
                 'debit': 0.0,
                 'credit': 30.0,
-                'tax_tag_invert': True,
-                'tax_base_amount': 200.0,
+                'tax_base_amount': -200.0,
             },
             {
                 **self.term_line_vals_1,
@@ -1898,7 +1889,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'debit': 1410.0,
                 'credit': 0.0,
                 'date_maturity': move_reversal.date,
-                'tax_tag_invert': False,
                 'tax_base_amount': 0.0,
             },
         ], {
@@ -3613,7 +3603,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         # check caba move
         partial_rec = invoice.mapped('line_ids.matched_credit_ids')
         caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
-        # all amls with tax_tag should all have tax_tag_invert at True since the caba move comes from an invoice
         expected_values = [
             {
                 'tax_line_id': False,
@@ -3623,7 +3612,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'account_id': not_default_income_account.id,
                 'debit': 1000.0,
                 'credit': 0.0,
-                'tax_tag_invert': False,
             },
             {
                 'tax_line_id': False,
@@ -3633,7 +3621,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'account_id': not_default_income_account.id,
                 'debit': 0.0,
                 'credit': 1000.0,
-                'tax_tag_invert': True,
             },
             {
                 'tax_line_id': False,
@@ -3643,7 +3630,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'account_id': default_income_account.id,
                 'debit': 0.0,
                 'credit': 300.0,
-                'tax_tag_invert': False,
             },
             {
                 'tax_line_id': False,
@@ -3653,7 +3639,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'account_id': default_income_account.id,
                 'debit': 300.0,
                 'credit': 0.0,
-                'tax_tag_invert': True,
             },
             {
                 'tax_line_id': False,
@@ -3663,7 +3648,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'account_id': tax_waiting_account.id,
                 'debit': 70.0,
                 'credit': 0.0,
-                'tax_tag_invert': False,
             },
             {
                 'tax_line_id': tax.id,
@@ -3673,7 +3657,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'account_id': tax_final_account.id,
                 'debit': 0.0,
                 'credit': 70.0,
-                'tax_tag_invert': True,
             },
         ]
         self.assertRecordValues(caba_move.line_ids, expected_values)

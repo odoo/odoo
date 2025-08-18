@@ -601,21 +601,18 @@ class TestPointOfSaleFlow(CommonPosTest):
                     'account_id': self.company_data['default_account_tax_sale'].id,
                     'tax_ids': [],
                     'tax_tag_ids': tags[1].ids,
-                    'tax_tag_invert': True,
                     'reconciled': False
                 }, {
                     'balance': -20.0,
                     'account_id': self.company_data['default_account_revenue'].id,
                     'tax_ids': self.tax_sale_a.ids,
                     'tax_tag_ids': tags[0].ids,
-                    'tax_tag_invert': True,
                     'reconciled': False
                 }, {
                     'balance': 23.0,
                     'account_id': self.company_data['default_account_receivable'].id,
                     'tax_ids': [],
                     'tax_tag_ids': [],
-                    'tax_tag_invert': False,
                     'reconciled': True
             }])
 
@@ -636,21 +633,18 @@ class TestPointOfSaleFlow(CommonPosTest):
                 'account_id': self.company_data['default_account_tax_sale'].id,
                 'tax_ids': [],
                 'tax_tag_ids': tags[1].ids,
-                'tax_tag_invert': True,
                 'reconciled': False
             }, {
                 'balance': 20.0,
                 'account_id': self.company_data['default_account_revenue'].id,
                 'tax_ids': self.tax_sale_a.ids,
                 'tax_tag_ids': tags[0].ids,
-                'tax_tag_invert': True,
                 'reconciled': False
             }, {
                 'balance': -23.0,
                 'account_id': self.company_data['default_account_receivable'].id,
                 'tax_ids': [],
                 'tax_tag_ids': [],
-                'tax_tag_invert': False,
                 'reconciled': True
         }])
         self.assertRecordValues(reverse_closing_entries[2].line_ids.sorted(), [{
@@ -658,14 +652,12 @@ class TestPointOfSaleFlow(CommonPosTest):
                 'account_id': self.company_data['default_account_receivable'].id,
                 'tax_ids': [],
                 'tax_tag_ids': [],
-                'tax_tag_invert': False,
                 'reconciled': True
             }, {
                 'balance': 23.0,
                 'account_id': self.company_data['default_account_receivable'].id,
                 'tax_ids': [],
                 'tax_tag_ids': [],
-                'tax_tag_invert': False,
                 'reconciled': True
         }])
 
@@ -705,7 +697,6 @@ class TestPointOfSaleFlow(CommonPosTest):
                     'account_id': self.company_data['default_account_tax_sale'].id,
                     'tax_ids': [],
                     'tax_tag_ids': tags[1].ids,
-                    'tax_tag_invert': True,
                     'reconciled': False,
                 }, {
                     'balance': -20.0,
@@ -714,7 +705,6 @@ class TestPointOfSaleFlow(CommonPosTest):
                     'account_id': self.company_data['default_account_revenue'].id,
                     'tax_ids': self.tax_sale_a.ids,
                     'tax_tag_ids': tags[0].ids,
-                    'tax_tag_invert': True,
                     'reconciled': False,
                 }, {
                     'balance': 23.0,
@@ -723,7 +713,6 @@ class TestPointOfSaleFlow(CommonPosTest):
                     'account_id': self.company_data['default_account_receivable'].id,
                     'tax_ids': [],
                     'tax_tag_ids': [],
-                    'tax_tag_invert': False,
                     'reconciled': True,
             }])
 
@@ -746,7 +735,6 @@ class TestPointOfSaleFlow(CommonPosTest):
                 'account_id': self.company_data['default_account_tax_sale'].id,
                 'tax_ids': [],
                 'tax_tag_ids': tags[1].ids,
-                'tax_tag_invert': True,
                 'reconciled': False,
             }, {
                 'balance': 20.0,
@@ -755,7 +743,6 @@ class TestPointOfSaleFlow(CommonPosTest):
                 'account_id': self.company_data['default_account_revenue'].id,
                 'tax_ids': self.tax_sale_a.ids,
                 'tax_tag_ids': tags[0].ids,
-                'tax_tag_invert': True,
                 'reconciled': False,
             }, {
                 'balance': -23.0,
@@ -764,7 +751,6 @@ class TestPointOfSaleFlow(CommonPosTest):
                 'account_id': self.company_data['default_account_receivable'].id,
                 'tax_ids': [],
                 'tax_tag_ids': [],
-                'tax_tag_invert': False,
                 'reconciled': True,
         }])
         self.assertTrue(all(amount >= 0 for amount in reverse_closing_entries[1:].line_ids.mapped('debit') + reverse_closing_entries[1:].line_ids.mapped('credit')),

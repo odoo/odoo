@@ -657,10 +657,9 @@ class AccountReportExpression(models.Model):
             vals['formula'] = re.sub(r'\s+', ' ', vals['formula'].strip())
 
     def _create_tax_tags(self, tag_name, country):
-        existing_tags = self.env['account.account.tag']._get_tax_tags(tag_name, country.id)
-        if len(existing_tags) < 2:
-            # We can have only one tag in case we archived it and deleted its unused complement sign
-            tag_vals = self._get_tags_create_vals(tag_name, country.id, existing_tag=existing_tags)
+        existing_tag = self.env['account.account.tag']._get_tax_tags(tag_name, country.id)
+        if not existing_tag:
+            tag_vals = self._get_tags_create_vals(tag_name, country.id, existing_tag=existing_tag)
             self.env['account.account.tag'].create(tag_vals)
 
     @api.model_create_multi
@@ -709,7 +708,6 @@ class AccountReportExpression(models.Model):
             former_formulas_by_country[expr.report_line_id.report_id.country_id].append(expr.formula)
 
         result = super().write(vals)
-
         for country, former_formulas_list in former_formulas_by_country.items():
             for former_formula in former_formulas_list:
                 new_tax_tags = self.env['account.account.tag']._get_tax_tags(vals['formula'], country.id)
@@ -720,13 +718,7 @@ class AccountReportExpression(models.Model):
 
                     if former_tax_tags and all(tag_expr in self for tag_expr in former_tax_tags._get_related_tax_report_expressions()):
                         # If we're changing the formula of all the expressions using that tag, rename the tag
-                        positive_tags, negative_tags = former_tax_tags.sorted(lambda x: x.tax_negate)
-                        if self.pool['account.tax'].name.translate:
-                            positive_tags._update_field_translations('name', {'en_US': f"+{vals['formula']}"})
-                            negative_tags._update_field_translations('name', {'en_US': f"-{vals['formula']}"})
-                        else:
-                            positive_tags.name = f"+{vals['formula']}"
-                            negative_tags.name = f"-{vals['formula']}"
+                        former_tax_tags._update_field_translations('name', {'en_US': vals['formula']})
                     else:
                         # Else, create a new tag. Its the compute functions will make sure it is properly linked to the expressions
                         tag_vals = self.env['account.report.expression']._get_tags_create_vals(vals['formula'], country.id)
@@ -746,7 +738,7 @@ class AccountReportExpression(models.Model):
         for tag in expressions_tags:
             other_expression_using_tag = self.env['account.report.expression'].sudo().search([
                 ('engine', '=', 'tax_tags'),
-                ('formula', '=', tag.with_context(lang='en_US').name[1:]),  # we escape the +/- sign
+                ('formula', '=', tag.with_context(lang='en_US').name),
                 ('report_line_id.report_id.country_id', '=', tag.country_id.id),
                 ('id', 'not in', self.ids),
             ], limit=1)
@@ -854,7 +846,7 @@ class AccountReportExpression(models.Model):
 
         return totals_by_code
 
-    def _get_matching_tags(self, sign=None):
+    def _get_matching_tags(self):
         """ Returns all the signed account.account.tags records whose name matches any of the formulas of the tax_tags expressions contained in self.
         """
         tag_expressions = self.filtered(lambda x: x.engine == 'tax_tags')
@@ -864,34 +856,20 @@ class AccountReportExpression(models.Model):
         or_domains = []
         for tag_expression in tag_expressions:
             country = tag_expression.report_line_id.report_id.country_id
-            or_domains.append(self.env['account.account.tag']._get_tax_tags_domain(tag_expression.formula, country.id, sign))
+            or_domains.append(self.env['account.account.tag']._get_tax_tags_domain(tag_expression.formula, country.id))
 
         return self.env['account.account.tag'].with_context(active_test=False, lang='en_US').search(Domain.OR(or_domains))
 
     @api.model
     def _get_tags_create_vals(self, tag_name, country_id, existing_tag=None):
-        """
-        We create the plus and minus tags with tag_name.
-        In case there is an existing_tag (which can happen if we deleted its unused complement sign)
-        we only recreate the missing sign.
-        """
-        minus_tag_vals = {
-          'name': '-' + tag_name,
+        tag_vals = {
+          'name': tag_name.lstrip('-'),
           'applicability': 'taxes',
-          'tax_negate': True,
-          'country_id': country_id,
-        }
-        plus_tag_vals = {
-          'name': '+' + tag_name,
-          'applicability': 'taxes',
-          'tax_negate': False,
           'country_id': country_id,
         }
         res = []
-        if not existing_tag or not existing_tag.tax_negate:
-            res.append(minus_tag_vals)
-        if not existing_tag or existing_tag.tax_negate:
-            res.append(plus_tag_vals)
+        if not existing_tag:
+            res.append(tag_vals)
         return res
 
     def _get_carryover_target_expression(self, options):
