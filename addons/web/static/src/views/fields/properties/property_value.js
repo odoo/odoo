@@ -20,6 +20,7 @@ import { formatFloat } from "@web/core/utils/numbers";
 import { parseFloat, parseInteger } from "@web/views/fields/parsers";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 import { PropertyTags } from "./property_tags";
+import { PropertyText } from "./property_text";
 import { imageUrl } from "@web/core/utils/urls";
 
 function extractData(record) {
@@ -55,6 +56,7 @@ export class PropertyValue extends Component {
         Many2XAutocomplete,
         TagsList,
         PropertyTags,
+        PropertyText,
     };
 
     static props = {
