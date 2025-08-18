@@ -9,36 +9,46 @@ export class AccountTypeSelection extends SelectionField {
         const getChoicesForGroup = (group) => {
             return this.choices.filter(x => x.value.startsWith(group));
         }
-        this.groups = [
+        this.sections = [
             {
                 label: _t('Balance Sheet'),
+                name: "balance_sheet"
             },
+            {
+                label: _t('Profit & Loss'),
+                name: "profit_and_loss"
+            },
+        ]
+        this.groups = [
             {
                 label: _t('Assets'),
                 choices: getChoicesForGroup('asset'),
+                section: "balance_sheet",
             },
             {
                 label: _t('Liabilities'),
                 choices: getChoicesForGroup('liability'),
+                section: "balance_sheet",
             },
             {
                 label: _t('Equity'),
                 choices: getChoicesForGroup('equity'),
-            },
-            {
-                label: _t('Profit & Loss'),
+                section: "balance_sheet",
             },
             {
                 label: _t('Income'),
                 choices: getChoicesForGroup('income'),
+                section: "profit_and_loss",
             },
             {
                 label: _t('Expense'),
                 choices: getChoicesForGroup('expense'),
+                section: "profit_and_loss",
             },
             {
                 label: _t('Other'),
                 choices: getChoicesForGroup('off_balance'),
+                section: "profit_and_loss",
             },
         ];
     }

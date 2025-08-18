@@ -35,6 +35,7 @@ export class SelectMenu extends Component {
         searchPlaceholder: "",
         choices: [],
         groups: [],
+        sections: [],
         disabled: false,
     };
 
@@ -68,9 +69,20 @@ export class SelectMenu extends Component {
                                 "*": true,
                             },
                         },
+                    },
+                    section: {
+                        type: String,
                         optional: true,
                     },
                 },
+            },
+        },
+        sections: {
+            type: Array,
+            optional: true,
+            element: {
+                label: { type: String },
+                name: { type: String },
             },
         },
         id: { type: String, optional: true },
@@ -326,9 +338,16 @@ export class SelectMenu extends Component {
      * @param {String} searchString
      */
     filterOptions(searchString = "", groups) {
-        const groupsList = groups || [{ choices: this.props.choices }, ...this.props.groups];
+        const groupsList = groups || [
+            { choices: this.props.choices, section: "" },
+            ...this.props.groups,
+        ];
 
-        this.state.choices = [];
+        const _choices = [];
+        const _sections = new Set();
+        groupsList.sort((a, b) =>
+            a.section && b.section ? a.section.localeCompare(b.section) : 1
+        );
 
         for (const group of groupsList) {
             let filteredOptions = group.choices || [];
@@ -347,16 +366,23 @@ export class SelectMenu extends Component {
                 }
             }
 
-            if (group.choices && filteredOptions.length === 0) {
+            if (filteredOptions.length === 0) {
                 continue;
             }
-
-            if (group.label) {
-                this.state.choices.push({ ...group, isGroup: true });
+            if (group.section) {
+                const section = this.props.sections.find((e) => e.name === group.section);
+                if (!_sections.has(section)) {
+                    _sections.add(section);
+                    _choices.push({ ...section, isGroup: true });
+                }
             }
-            this.state.choices.push(...filteredOptions);
+            if (group.label) {
+                _choices.push({ ...group, isGroup: true });
+            }
+            _choices.push(...filteredOptions);
         }
 
+        this.state.choices = _choices;
         this.sliceDisplayedOptions();
     }
 
