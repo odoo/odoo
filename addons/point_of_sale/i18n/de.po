@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-15 18:37+0000\n"
-"PO-Revision-Date: 2025-08-13 23:50+0000\n"
+"PO-Revision-Date: 2025-08-18 23:51+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s18-3/"
 "point_of_sale/de/>\n"
@@ -175,7 +175,7 @@ msgstr "%s unversteuert"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 msgid "(DUPLICATE !)"
-msgstr ""
+msgstr "(DUPLIZIEREN!)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -557,7 +557,7 @@ msgstr "Eine Notiz mit demselben Namen existiert bereits"
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_payment_unique_uuid
 msgid "A payment with this uuid already exists"
-msgstr ""
+msgstr "Es gibt bereits eine Zahlung mit UUID vorhanden"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -1082,12 +1082,12 @@ msgstr "Eine interne Druckeridentifikation"
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_line_unique_uuid
 msgid "An order line with this uuid already exists"
-msgstr ""
+msgstr "Eine Auftragszeile mit dieser UUID ist bereits vorhanden"
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_unique_uuid
 msgid "An order with this uuid already exists"
-msgstr ""
+msgstr "Ein Auftrag mit dieser UUID ist bereits vorhanden"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5589,7 +5589,7 @@ msgstr "Auftragsnummer"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Order Outdated"
-msgstr ""
+msgstr "Auftrag veraltet"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_order_printer
@@ -8732,6 +8732,12 @@ msgid ""
 "The order will be sent to the server with the last changes made on this "
 "device."
 msgstr ""
+"Der Auftrag wurde auf einem anderen Gerät geändert. Wenn Sie bestehende "
+"Auftragspositionen geändert haben, überprüfen Sie, ob Ihre Änderungen nicht "
+"überschrieben wurden.\n"
+"\n"
+"Der Auftrag wird mit den letzten Änderungen, die auf diesem Gerät "
+"vorgenommen wurden, an den Server gesendet."
 
 #. module: point_of_sale
 #. odoo-javascript
