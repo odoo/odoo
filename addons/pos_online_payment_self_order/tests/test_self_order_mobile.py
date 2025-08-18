@@ -51,7 +51,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest, OnlinePaymentCommon):
         self.pos_config.write({
             'self_ordering_mode': 'kiosk',
             'self_ordering_service_mode': 'counter',
-            'self_order_online_payment_method_id': self.online_payment_method.id,
+            'payment_method_ids': [Command.set(self.online_payment_method.ids)],
             'use_presets': False,
         })
         self.pos_config.with_user(self.pos_user).open_ui()
