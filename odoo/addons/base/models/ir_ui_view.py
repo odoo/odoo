@@ -455,8 +455,16 @@ actual arch.
 
                     # During an upgrade, we can only use the views that have been
                     # fully upgraded already.
-                    if self.pool._init:
-                        sibling_primary_views = sibling_primary_views._filter_loaded_views(set(sibling_primary_views.ids))
+                    if self.pool._init and sibling_primary_views:
+                        query = sibling_primary_views._get_filter_xmlid_query()
+                        sql = SQL(query, res_ids=tuple(sibling_primary_views.ids), modules=tuple(self.pool._init_modules))
+                        loaded_view_ids = {id_ for id_, in self.env.execute_query(sql)}
+                        loaded_view_ids.update({
+                            id
+                            for id, xid in (sibling_primary_views - views.browse(loaded_view_ids)).get_external_id().items()
+                            if xid in self.pool.loaded_xmlids
+                        })
+                        sibling_primary_views = sibling_primary_views.browse(loaded_view_ids)
 
                     # Check if we know how to apply inheritances
                     sibling_primary_views._get_combined_archs()
