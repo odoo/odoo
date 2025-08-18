@@ -287,31 +287,31 @@
                     <record id="tax_report_mx_diot_paid_8_n_wnc_tag" model="account.report.expression">
                         <field name="label">paid_8_n_wnc</field>
                         <field name="engine">domain</field>
-                        <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', '+DIOT: 8% N.'), ('tax_tag_ids', '=', '-DIOT: 8% N.'), ('tax_tag_ids', '=', '+DIOT: 8% N. NO ACREDITABLE'), ('tax_tag_ids', '=', '-DIOT: 8% N. NO ACREDITABLE')]"/>
+                        <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', 'DIOT: 8% N.'), ('tax_tag_ids', '=', 'DIOT: 8% N.'), ('tax_tag_ids', '=', 'DIOT: 8% N. NO ACREDITABLE'), ('tax_tag_ids', '=', 'DIOT: 8% N. NO ACREDITABLE')]"/>
                         <field name="subformula">sum</field>
                     </record>
                     <record id="tax_report_mx_diot_paid_8_s_wnc_tag" model="account.report.expression">
                         <field name="label">paid_8_s_wnc</field>
                         <field name="engine">domain</field>
-                        <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', '+DIOT: 8% S.'), ('tax_tag_ids', '=', '-DIOT: 8% S.'), ('tax_tag_ids', '=', '+DIOT: 8% S. NO ACREDITABLE'), ('tax_tag_ids', '=', '-DIOT: 8% S. NO ACREDITABLE')]"/>
+                        <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', 'DIOT: 8% S.'), ('tax_tag_ids', '=', 'DIOT: 8% S.'), ('tax_tag_ids', '=', 'DIOT: 8% S. NO ACREDITABLE'), ('tax_tag_ids', '=', 'DIOT: 8% S. NO ACREDITABLE')]"/>
                         <field name="subformula">sum</field>
                     </record>
                     <record id="tax_report_mx_diot_paid_16_wnc_tag" model="account.report.expression">
                         <field name="label">paid_16_wnc</field>
                         <field name="engine">domain</field>
-                        <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', '+DIOT: 16%'), ('tax_tag_ids', '=', '-DIOT: 16%'), ('tax_tag_ids', '=', '+DIOT: 16% NO ACREDITABLE'), ('tax_tag_ids', '=', '-DIOT: 16% NO ACREDITABLE')]"/>
+                        <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', 'DIOT: 16%'), ('tax_tag_ids', '=', 'DIOT: 16%'), ('tax_tag_ids', '=', 'DIOT: 16% NO ACREDITABLE'), ('tax_tag_ids', '=', 'DIOT: 16% NO ACREDITABLE')]"/>
                         <field name="subformula">sum</field>
                     </record>
                     <record id="tax_report_mx_diot_paid_16_imp_wnc_tag" model="account.report.expression">
                         <field name="label">paid_16_imp_wnc</field>
                         <field name="engine">domain</field>
-                        <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', '+DIOT: 16% IMP'), ('tax_tag_ids', '=', '-DIOT: 16% IMP'), ('tax_tag_ids', '=', '+DIOT: 16% IMP NO ACREDITABLE'), ('tax_tag_ids', '=', '-DIOT: 16% IMP NO ACREDITABLE')]"/>
+                        <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', 'DIOT: 16% IMP'), ('tax_tag_ids', '=', 'DIOT: 16% IMP'), ('tax_tag_ids', '=', 'DIOT: 16% IMP NO ACREDITABLE'), ('tax_tag_ids', '=', 'DIOT: 16% IMP NO ACREDITABLE')]"/>
                         <field name="subformula">sum</field>
                     </record>
                     <record id="tax_report_mx_diot_paid_16_imp_int_wnc_tag" model="account.report.expression">
                         <field name="label">paid_16_imp_int_wnc</field>
                         <field name="engine">domain</field>
-                        <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', '+DIOT: 16% IMP INT'), ('tax_tag_ids', '=', '-DIOT: 16% IMP INT'), ('tax_tag_ids', '=', '+DIOT: 16% IMP INT NO ACREDITABLE'), ('tax_tag_ids', '=', '-DIOT: 16% IMP INT NO ACREDITABLE')]"/>
+                        <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', 'DIOT: 16% IMP INT'), ('tax_tag_ids', '=', 'DIOT: 16% IMP INT'), ('tax_tag_ids', '=', 'DIOT: 16% IMP INT NO ACREDITABLE'), ('tax_tag_ids', '=', 'DIOT: 16% IMP INT NO ACREDITABLE')]"/>
                         <field name="subformula">sum</field>
                     </record>
 

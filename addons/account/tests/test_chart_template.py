@@ -181,7 +181,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         cls.ChartTemplate = cls.env['account.chart.template'].with_company(cls.company)
         cls.country_be = cls.env.ref('base.be')
 
-    def test_signed_and_unsigned_tags_tax(self):
+    def test_tax_report_and_manual_tax_tag(self):
         tax_report = self.env['account.report'].create({
             'name': "Tax report 1",
             'country_id': self.country_be.id,
@@ -193,20 +193,20 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             ],
         })
         self.env['account.report.line'].create({
-            'name': "[SIGNED_TAG] Signed tag line",
+            'name': "[TAG] Tax report line",
             'report_id': tax_report.id,
             'sequence': max(tax_report.mapped('line_ids.sequence') or [0]) + 1,
             'expression_ids': [
                 Command.create({
                     'label': 'balance',
                     'engine': 'tax_tags',
-                    'formula': 'SIGNED_TAG',
+                    'formula': 'TAG',
                 }),
             ],
         })
-        signed_tag = self.env['account.account.tag'].search([
+        tax_report_tag = self.env['account.account.tag'].search([
             ('applicability', '=', 'taxes'),
-            ('name', '=', '+SIGNED_TAG'),
+            ('name', '=', 'TAG'),
         ])
         self.env['account.account.tag']._load_records([
             {
@@ -226,7 +226,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             'tax_group_id': 'tax_group_taxes',
             'active': True,
             'repartition_line_ids': [
-                Command.create({'document_type': 'invoice', 'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': 'account.unsigned_tax_tag||+SIGNED_TAG'}),
+                Command.create({'document_type': 'invoice', 'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': 'account.unsigned_tax_tag||TAG'}),
                 Command.create({'document_type': 'invoice', 'factor_percent': 100, 'repartition_type': 'tax'}),
                 Command.create({'document_type': 'refund', 'factor_percent': 100, 'repartition_type': 'base'}),
                 Command.create({'document_type': 'refund', 'factor_percent': 100, 'repartition_type': 'tax'}),
@@ -239,7 +239,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
                 'document_type': 'invoice',
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'tag_ids': [Command.set(['account.unsigned_tax_tag', signed_tag.id])],
+                'tag_ids': [Command.set(['account.unsigned_tax_tag', tax_report_tag.id])],
             })
         )
 
@@ -819,7 +819,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             'tax_group_id': 'tax_group_taxes',
             'active': True,
             'repartition_line_ids': [
-                Command.create({'document_type': 'invoice', 'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': '+SIGNED_TAG'}),
+                Command.create({'document_type': 'invoice', 'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': '+TAG'}),
                 Command.create({'document_type': 'invoice', 'factor_percent': 100, 'repartition_type': 'tax'}),
                 Command.create({'document_type': 'refund', 'factor_percent': 100, 'repartition_type': 'base'}),
                 Command.create({'document_type': 'refund', 'factor_percent': 100, 'repartition_type': 'tax'}),

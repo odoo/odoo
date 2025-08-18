@@ -71,11 +71,11 @@ class TaxReportTest(AccountTestInvoicingCommon):
     def _get_tax_tags(self, country, tag_name=None, active_test=True):
         domain = [('country_id', '=', country.id), ('applicability', '=', 'taxes')]
         if tag_name:
-            domain.append(('name', '=like', '_' + tag_name))
+            domain.append(('name', '=', tag_name))
         return self.env['account.account.tag'].with_context(active_test=active_test).search(domain)
 
     def test_create_shared_tags(self):
-        self.assertEqual(len(self._get_tax_tags(self.test_country_1, tag_name='01')), 2, "tax_tags expressions created for reports within the same countries using the same formula should create a single pair of tags.")
+        self.assertEqual(len(self._get_tax_tags(self.test_country_1, tag_name='01')), 1, "tax_tags expressions created for reports within the same countries using the same formula should create a single tag.")
 
     def test_add_expression(self):
         """ Adding a tax_tags expression creates new tags.
@@ -84,7 +84,7 @@ class TaxReportTest(AccountTestInvoicingCommon):
         self._create_basic_tax_report_line(self.tax_report_1, "new tax_tags line", 'tournicoti')
         tags_after = self._get_tax_tags(self.test_country_1)
 
-        self.assertEqual(len(tags_after), len(tags_before) + 2, "Two tags should have been created, +tournicoti and -tournicoti.")
+        self.assertEqual(len(tags_after), len(tags_before) + 1)
 
     def test_write_single_line_tagname_not_shared(self):
         """ Writing on the formula of a tax_tags expression should overwrite the name of the existing tags if they are not used in other formulas.
@@ -109,7 +109,7 @@ class TaxReportTest(AccountTestInvoicingCommon):
         new_tags = self.tax_report_line_1_1.expression_ids._get_matching_tags()
 
         self.assertEqual(self._get_tax_tags(self.test_country_1, tag_name=original_tag_name), original_tags, "The original tags should be unchanged")
-        self.assertEqual(len(self._get_tax_tags(self.test_country_1)), len(start_tags) + 2, "A + and - tag should have been created")
+        self.assertEqual(len(self._get_tax_tags(self.test_country_1)), len(start_tags) + 1, "A tag should have been created")
         self.assertNotEqual(original_tags, new_tags, "New tags should have been assigned to the expression")
 
     def test_write_multi_no_change(self):
@@ -130,7 +130,7 @@ class TaxReportTest(AccountTestInvoicingCommon):
         lines.expression_ids.write({'formula': 'crabe'})
         tags_after = self._get_tax_tags(self.test_country_1)
 
-        self.assertEqual(len(tags_before) + 2, len(tags_after), "Only two distinct tags should have been created.")
+        self.assertEqual(len(tags_before) + 1, len(tags_after), "Only tag should have been created.")
 
         line_1_1_tags = self.tax_report_line_1_1.expression_ids._get_matching_tags()
         line_2_2_tags = self.tax_report_line_2_2.expression_ids._get_matching_tags()
@@ -155,7 +155,7 @@ class TaxReportTest(AccountTestInvoicingCommon):
         country_1_tags_after_change = self._get_tax_tags(self.test_country_1)
 
         self.assertEqual(country_1_tags_after_change, country_1_tags_after_copy, "Modifying the country should not have changed the tags in the original country.")
-        self.assertEqual(len(country_2_tags_after_change), len(country_2_tags_before_change) + 2 * len(copied_report_1.line_ids), "Modifying the country should have created a new + and - tag in the new country for each tax_tags expression of the report.")
+        self.assertEqual(len(country_2_tags_after_change), len(country_2_tags_before_change) + len(copied_report_1.line_ids), "Modifying the country should have created a tag in the new country for each tax_tags expression of the report.")
 
         for original, copy in zip(self.tax_report_1.line_ids, copied_report_1.line_ids):
             original_tags = original.expression_ids._get_matching_tags()
@@ -185,7 +185,7 @@ class TaxReportTest(AccountTestInvoicingCommon):
         """
         tag_name = "55b"
         tax_report_line = self._create_basic_tax_report_line(self.tax_report_1, "Line 55 bis", tag_name)
-        test_tag = tax_report_line.expression_ids._get_matching_tags("+")
+        test_tag = tax_report_line.expression_ids._get_matching_tags()
         self.env['account.tax.group'].create({
             'name': 'Tax group',
             'country_id': self.tax_report_1.country_id.id,
@@ -226,7 +226,6 @@ class TaxReportTest(AccountTestInvoicingCommon):
         tax_report_line.unlink()
         tags_after = self._get_tax_tags(self.test_country_1, tag_name=tag_name, active_test=False)
         # only the +tag_name should be kept (and archived), -tag_name should be unlinked
-        self.assertEqual(tags_after.mapped('tax_negate'), [False], "Unlinking a tax_tags expression should keep the tag if it was used on move lines, and unlink it otherwise.")
         self.assertEqual(tags_after.mapped('active'), [False], "Unlinking a tax_tags expression should archive the tag if it was used on move lines, and unlink it otherwise.")
         self.assertEqual(len(test_tax.invoice_repartition_line_ids.tag_ids), 0, "After a tag is archived it shouldn't be on tax repartition lines.")
 
@@ -251,12 +250,18 @@ class TaxReportTest(AccountTestInvoicingCommon):
         """
         tag_name = self.tax_report_line_1_55.expression_ids.formula
         tags_before = self._get_tax_tags(self.test_country_1, tag_name=tag_name, active_test=False)
-        tags_before[0].unlink()  # we unlink one and archive the other, doesn't matter which one
-        tags_before[1].active = False
+
+        tags_before.unlink()
         self._create_basic_tax_report_line(self.tax_report_1, "Line 55 bis", tag_name)
         tags_after = self._get_tax_tags(self.test_country_1, tag_name=tag_name, active_test=False)
-        self.assertEqual(len(tags_after), 2, "When creating a tax report line with an archived tag and it's complement doesn't exist, it should be re-created.")
-        self.assertEqual(tags_after.mapped('name'), ['+' + tag_name, '-' + tag_name], "After creating a tax report line with an archived tag and when its complement doesn't exist, both a negative and a positive tag should be created.")
+        self.assertEqual(len(tags_after), 1)
+        self.assertEqual(tags_after.mapped('name'), [tag_name])
+
+        tags_before.active = False
+        self._create_basic_tax_report_line(self.tax_report_1, "Line 55 bis", tag_name)
+        tags_after = self._get_tax_tags(self.test_country_1, tag_name=tag_name, active_test=False)
+        self.assertEqual(len(tags_after), 1)
+        self.assertEqual(tags_after.mapped('name'), [tag_name])
 
     def test_change_engine_without_formula(self):
         aggregation_line = self.env['account.report.line'].create({
@@ -277,8 +282,8 @@ class TaxReportTest(AccountTestInvoicingCommon):
         aggregation_line.expression_ids.engine = 'tax_tags'
 
         tags_after = self._get_tax_tags(self.test_country_1, tag_name='Dudu')
-        self.assertEqual(len(tags_after), 2, "Changing the engine should have created tags")
-        self.assertEqual(tags_after.mapped('name'), ['-Dudu', '+Dudu'])
+        self.assertEqual(len(tags_after), 1, "Changing the engine should have created a tag")
+        self.assertEqual(tags_after.mapped('name'), ['Dudu'])
 
     def test_change_engine_shared_tags(self):
         aggregation_line = self.env['account.report.line'].create({
@@ -294,7 +299,7 @@ class TaxReportTest(AccountTestInvoicingCommon):
         })
 
         tags_before = self._get_tax_tags(self.test_country_1, tag_name='01')
-        self.assertEqual(len(tags_before), 2, "The tags should already exist because of another expression")
+        self.assertEqual(len(tags_before), 1, "The tag should already exist because of another expression")
 
         aggregation_line.expression_ids.write({'engine': 'tax_tags', 'formula': '01'})
 
@@ -313,6 +318,6 @@ class TaxReportTest(AccountTestInvoicingCommon):
         })
 
         tags_after = self._get_tax_tags(self.test_country_1, tag_name='Buny')
-        self.assertEqual(len(tags_after), 2, "Changing the formula should have renamed the tags")
-        self.assertEqual(tags_after.mapped('name'), ['-Buny', '+Buny'])
+        self.assertEqual(len(tags_after), 1, "Changing the formula should have renamed the tag")
+        self.assertEqual(tags_after.mapped('name'), ['Buny'])
         self.assertEqual(tags_after, tags_to_rename, "Changing the formula should have renamed the tags")

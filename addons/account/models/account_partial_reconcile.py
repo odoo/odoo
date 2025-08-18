@@ -413,7 +413,6 @@ class AccountPartialReconcile(models.Model):
             'partner_id': tax_line.partner_id.id,
             'analytic_distribution': tax_line.analytic_distribution,
             'display_type': tax_line.display_type,
-            # No need to set tax_tag_invert as on the base line; it will be computed from the repartition line
         }
 
     @api.model
