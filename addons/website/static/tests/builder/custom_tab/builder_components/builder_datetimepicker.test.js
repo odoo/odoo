@@ -60,8 +60,13 @@ test("defaults to last one when invalid date provided", async () => {
         selector: ".test-options-target",
         template: xml`<BuilderDateTimePicker dataAttributeAction="'date'"/>`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await setupWebsiteBuilder(`<div class="test-options-target" data-date="1554219400">b</div>`);
     await contains(":iframe .test-options-target").click();
+    expect(".we-bg-options-container input").toHaveValue("04/02/2019 16:36:40");
+
+    await contains(".we-bg-options-container input").edit("INVALID DATE");
+    expect(".we-bg-options-container input").toHaveValue("04/02/2019 16:36:40");
+
     await contains(".we-bg-options-container input").edit("04/01/2019 10:00:00");
     expect(".we-bg-options-container input").toHaveValue("04/01/2019 10:00:00");
 
@@ -74,8 +79,13 @@ test("defaults to last one when invalid date provided (date)", async () => {
         selector: ".test-options-target",
         template: xml`<BuilderDateTimePicker type="'date'" dataAttributeAction="'date'"/>`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await setupWebsiteBuilder(`<div class="test-options-target" data-date="1554219400">b</div>`);
     await contains(":iframe .test-options-target").click();
+    expect(".we-bg-options-container input").toHaveValue("04/02/2019");
+
+    await contains(".we-bg-options-container input").edit("INVALID DATE");
+    expect(".we-bg-options-container input").toHaveValue("04/02/2019");
+
     await contains(".we-bg-options-container input").edit("04/01/2019 10:00:00");
     expect(".we-bg-options-container input").toHaveValue("04/01/2019");
 
@@ -155,4 +165,28 @@ test("selects a date and synchronize the input field, while still in preview", a
     const expectedDateTimestamp = expectedDateTime.toUnixInteger();
     const dateTimestamp = parseFloat(queryOne(":iframe .test-options-target").dataset.date);
     expect(Math.abs(expectedDateTimestamp - dateTimestamp)).toBeLessThan(TIME_TOLERANCE);
+});
+
+test("edit a date with the datetime picker should correctly apply the mutation", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderDateTimePicker dataAttributeAction="'date'"/>`,
+    });
+    await setupWebsiteBuilder(`
+        <div class="test-options-target" data-date="1554219400">b</div>
+        <div class="another-target">c</div>`);
+    await contains(":iframe .test-options-target").click();
+    await contains(".we-bg-options-container input").click();
+    await contains(".o_date_item_cell:contains('9')").click();
+    expect(".we-bg-options-container input").toHaveValue("04/09/2019 16:36:40");
+
+    await contains(".o_datetime_buttons .btn:contains('apply')").click();
+    expect(".we-bg-options-container input").toHaveValue("04/09/2019 16:36:40");
+    expect(":iframe .test-options-target").toHaveAttribute("data-date", "1554824200");
+
+    // refresh the Edit tab
+    await contains(":iframe .another-target").click();
+    await contains(":iframe .test-options-target").click();
+    expect(".we-bg-options-container input").toHaveValue("04/09/2019 16:36:40");
+    expect(":iframe .test-options-target").toHaveAttribute("data-date", "1554824200");
 });

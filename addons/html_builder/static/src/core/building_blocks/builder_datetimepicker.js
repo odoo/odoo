@@ -1,5 +1,6 @@
-import { Component } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
+import { Component, useState } from "@odoo/owl";
+import { effect } from "@web/core/utils/reactive";
 import { ConversionError, formatDate, formatDateTime, parseDateTime } from "@web/core/l10n/dates";
 import { pick } from "@web/core/utils/objects";
 import {
@@ -39,15 +40,19 @@ export class BuilderDateTimePicker extends Component {
             formatRawValue: this.formatRawValue.bind(this),
             parseDisplayValue: this.parseDisplayValue.bind(this),
         });
-        this.state = state;
-        this.oldValue = this.state.value;
+        this.domState = state;
+        this.state = useState({});
+        effect(
+            ({ value }) => {
+                // State to display in the input.
+                this.state.value = value;
+            },
+            [state]
+        );
 
         this.commit = (userInputValue) => {
             this.isPreviewing = false;
             const result = commit(userInputValue);
-            if (result) {
-                this.oldValue = parseDateTime(result).toUnixInteger().toString();
-            }
             return result;
         };
 
@@ -56,10 +61,12 @@ export class BuilderDateTimePicker extends Component {
             preview(userInputValue);
         };
 
+        const minDate = DateTime.fromObject({ year: 1000 });
+        const maxDate = DateTime.now().plus({ year: 200 });
         const getPickerProps = () => ({
             type: this.props.type,
-            minDate: DateTime.fromObject({ year: 1000 }),
-            maxDate: DateTime.now().plus({ year: 200 }),
+            minDate,
+            maxDate,
             value: this.getCurrentValueDateTime(),
             rounding: 0,
         });
@@ -78,7 +85,7 @@ export class BuilderDateTimePicker extends Component {
             onChange: (value) => {
                 const dateString = this.formatDateTime(value);
                 this.preview(dateString);
-                state.value = this.parseDisplayValue(dateString);
+                this.state.value = this.parseDisplayValue(dateString);
             },
         });
     }
@@ -87,7 +94,7 @@ export class BuilderDateTimePicker extends Component {
      * @returns {DateTime} the current value of the datetime picker
      */
     getCurrentValueDateTime() {
-        return this.state.value ? DateTime.fromSeconds(parseInt(this.state.value)) : false;
+        return this.domState.value ? DateTime.fromSeconds(parseInt(this.domState.value)) : false;
     }
 
     /**
@@ -118,7 +125,7 @@ export class BuilderDateTimePicker extends Component {
                 throw e;
             }
             if (!this.isPreviewing && displayValue !== "") {
-                return this.oldValue;
+                return this.domState.value;
             }
         }
         return this.defaultValue;
