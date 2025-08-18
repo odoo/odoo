@@ -391,6 +391,27 @@ class TestOldRules(TestStockCommon):
         report_values = report._get_report_values(docids=[receipt.id])
         self.assertEqual(len(report_values['sources_to_lines']), 1, "There should only be 1 line (pick move)")
 
+    def test_update_picking_origin(self):
+        """ Check that adding new moves to a picking updates its origin without duplicate nor order mismatch
+        """
+
+        moves = self.env['stock.move'].create([
+            {
+                'picking_type_id': self.warehouse_1.out_type_id.id,
+                'location_id': self.warehouse_1.lot_stock_id.id,
+                'location_dest_id': self.customer_location.id,
+                'product_id': product.id,
+                'product_uom': product.uom_id.id,
+                'product_uom_qty': 1.0,
+                'origin': origin,
+            } for product, origin in [(self.productA, 'origin1'), (self.productA, 'origin2'), (self.productB, 'origin2'), (self.productB, 'origin1')]
+        ])
+        moves[0]._action_confirm()
+        receipt = moves.picking_id
+        self.assertEqual(receipt.origin, 'origin1')
+        moves[1:]._action_confirm()
+        self.assertEqual(receipt.origin, 'origin1,origin2')
+
     def test_propagate_cancel_in_pull_setup(self):
         """
         Check the cancellation propagation in pull set ups.
