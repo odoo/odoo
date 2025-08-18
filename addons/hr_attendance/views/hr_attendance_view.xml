@@ -99,7 +99,7 @@
                                         ('attendance_manager_id', '=', uid),
                                         ('company_id', 'in', allowed_company_ids),
                                     ]"
-                                    groups="hr_attendance.group_hr_attendance_officer,!hr_attendance.group_hr_attendance_manager"/>
+                                    groups="hr_attendance.group_hr_attendance_officer,!hr_attendance.group_hr_attendance_user"/>
                                 <field
                                     id="employee_manager"
                                     name="employee_id"
@@ -107,7 +107,7 @@
                                     domain="[
                                         ('company_id', 'in', allowed_company_ids),
                                     ]"
-                                    groups="hr_attendance.group_hr_attendance_manager"/>
+                                    groups="hr_attendance.group_hr_attendance_user"/>
                                 <field name="check_in" options="{'rounding': 0}" readonly="not is_manager"/>
                                 <field name="check_out" options="{'rounding': 0}" placeholder="Currently Working" readonly="not is_manager"/>
                             </group>
@@ -436,14 +436,14 @@
         <field name="code">
             action = model._action_open_kiosk_mode()
         </field>
-        <field name="group_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_manager'))]"/>
+        <field name="group_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_user'))]"/>
     </record>
 
     <!-- Menus -->
 
     <menuitem id="menu_hr_attendance_root" name="Attendances" sequence="205" groups="hr_attendance.group_hr_attendance_officer" web_icon="hr_attendance,static/description/icon.png"/>
 
-    <menuitem id="menu_action_open_form" name="Kiosk Mode" action="open_kiosk_url" parent="menu_hr_attendance_root" sequence="10" groups="hr_attendance.group_hr_attendance_manager"/>
+    <menuitem id="menu_action_open_form" name="Kiosk Mode" action="open_kiosk_url" parent="menu_hr_attendance_root" sequence="10" groups="hr_attendance.group_hr_attendance_user"/>
 
     <menuitem
         id="menu_hr_attendance_reporting"
