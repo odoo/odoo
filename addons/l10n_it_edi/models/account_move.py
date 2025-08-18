@@ -124,27 +124,6 @@ class AccountMove(models.Model):
         copy=False,
     )
 
-    l10n_it_amount_vat_signed = fields.Monetary(
-        string='VAT',
-        compute='_compute_amount_extended',
-        currency_field='company_currency_id',
-    )
-    l10n_it_amount_pension_fund_signed = fields.Monetary(
-        string='Pension Fund',
-        compute='_compute_amount_extended',
-        currency_field='company_currency_id',
-    )
-    l10n_it_amount_withholding_signed = fields.Monetary(
-        string='Withholding',
-        compute='_compute_amount_extended',
-        currency_field='company_currency_id',
-    )
-    l10n_it_amount_before_withholding_signed = fields.Monetary(
-        string='Total Before Withholding',
-        compute='_compute_amount_extended',
-        currency_field='company_currency_id',
-    )
-
     def _auto_init(self):
         # Create compute stored field l10n_it_document_type and l10n_it_payment_method
         # here to avoid timeout error on large databases.
@@ -232,19 +211,6 @@ class AccountMove(models.Model):
                 invoice_lines_tags = move.line_ids.tax_tag_ids
                 ids_intersection = set(invoice_lines_tags.ids) & set(vj_lines_tags.ids)
                 move.l10n_it_edi_is_self_invoice = bool(ids_intersection)
-
-    @api.depends('amount_total_signed')
-    def _compute_amount_extended(self):
-        for move in self:
-            totals = {None: 0.0, 'vat': 0.0, 'withholding': 0.0, 'pension_fund': 0.0}
-            if move.country_code == 'IT' and move.is_invoice(True):
-                for line in [line for line in move.line_ids if line.tax_line_id]:
-                    kind = line.tax_line_id._l10n_it_get_tax_kind()
-                    totals[kind] -= line.balance
-            move.l10n_it_amount_vat_signed = totals['vat']
-            move.l10n_it_amount_withholding_signed = totals['withholding']
-            move.l10n_it_amount_pension_fund_signed = totals['pension_fund']
-            move.l10n_it_amount_before_withholding_signed = move.amount_untaxed_signed + totals['vat'] + totals['pension_fund']
 
     def _l10n_it_edi_exempt_reason_tag_mapping(self):
         return {

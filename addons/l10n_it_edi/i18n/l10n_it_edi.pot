@@ -69,11 +69,6 @@ msgid ""
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model,name:l10n_it_edi.model_account_chart_template
-msgid "Account Chart Template"
-msgstr ""
-
-#. module: l10n_it_edi
 #: model:ir.model,name:l10n_it_edi.model_account_edi_proxy_client_user
 msgid "Account EDI proxy user"
 msgstr ""
@@ -86,11 +81,6 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_origin_document_type__agreement
 msgid "Agreement"
-msgstr ""
-
-#. module: l10n_it_edi
-#: model_terms:ir.ui.view,arch_db:l10n_it_edi.view_invoice_tree_inherit
-msgid "All Taxes Included"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -304,7 +294,6 @@ msgid "Destination Code (SDI) must have between 6 and 7 characters."
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_chart_template__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_edi_proxy_client_user__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__display_name
@@ -320,6 +309,7 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_form_l10n_it
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.l10n_it_document_type_form
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.l10n_it_document_type_tree
 msgid "Document Type"
 msgstr ""
@@ -434,11 +424,6 @@ msgid "Fattura Electronica (FatturaPA)"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_partner__invoice_edi_format__it_edi_xml
-msgid "FatturaPA"
-msgstr ""
-
-#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_attachment_name
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_edi_attachment_name
 msgid "FatturaPA Attachment"
@@ -456,7 +441,6 @@ msgid "Fiscal code of your company"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_chart_template__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_edi_proxy_client_user__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__id
@@ -548,6 +532,11 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment_method_line__l10n_it_payment_method
 msgid "Italian Payment Method"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_partner__invoice_edi_format__it_edi_xml
+msgid "Italy (Factura PA)"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -919,13 +908,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "Payment due date invalid in XML file: %s"
-msgstr ""
-
-#. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_amount_pension_fund_signed
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_amount_pension_fund_signed
-#: model_terms:ir.ui.view,arch_db:l10n_it_edi.view_invoice_tree_inherit
-msgid "Pension Fund"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -1417,17 +1399,6 @@ msgid "This state is updated by default, but you can force the value. "
 msgstr ""
 
 #. module: l10n_it_edi
-#: model_terms:ir.ui.view,arch_db:l10n_it_edi.view_invoice_tree_inherit
-msgid "Total"
-msgstr ""
-
-#. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_amount_before_withholding_signed
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_amount_before_withholding_signed
-msgid "Total Before Withholding"
-msgstr ""
-
-#. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "Total amount from the XML File: %s"
@@ -1485,13 +1456,6 @@ msgid ""
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_amount_vat_signed
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_amount_vat_signed
-#: model_terms:ir.ui.view,arch_db:l10n_it_edi.view_invoice_tree_inherit
-msgid "VAT"
-msgstr ""
-
-#. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/res_company.py:0
 msgid "View Company/ies"
@@ -1521,13 +1485,6 @@ msgstr ""
 msgid ""
 "We are simulating the sending of the e-invoice file %s, as we are in demo "
 "mode."
-msgstr ""
-
-#. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_amount_withholding_signed
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_amount_withholding_signed
-#: model_terms:ir.ui.view,arch_db:l10n_it_edi.view_invoice_tree_inherit
-msgid "Withholding"
 msgstr ""
 
 #. module: l10n_it_edi
