@@ -253,6 +253,15 @@ class AccountMoveLine(models.Model):
     )
     # TODO: could this be combined with the above - possibly improving the _compute_residual? kept separate for now to avoid breaking the aged report residual_at_date feature
     reconciled_at_date = fields.Date(store=False, search='_search_reconciled_at_date')
+    reconciled_line_ids_at_date = fields.Date(
+        store=False,
+        search='_search_reconciled_line_ids_at_date',
+    )
+    reconciled_with_lines_at_date = fields.Date(store=False, search='_search_reconciled_with_lines_at_date')
+    is_open_at_date = fields.Date(
+        store=False,
+        search='_search_is_open_at_date',
+    )
     amount_residual = fields.Monetary(
         string='Residual Amount',
         compute='_compute_amount_residual', store=True,
@@ -782,6 +791,118 @@ class AccountMoveLine(models.Model):
         for record in self:
             record.cumulated_balance = result[record.id]
 
+    def _search_reconciled_with_lines_at_date(self, operator, value):
+        if operator not in ('<', '<=', '='):
+            return NotImplemented
+
+        domain_without_recon_date = self.env.context.get('domain_without_recon_date', [])
+
+        original_alias = self._table
+        original_query = Query(self.env, original_alias, self._table_sql)
+        original_query.add_where(
+            Domain(domain_without_recon_date)
+            .optimize_full(self)
+            ._to_sql(self, original_alias, original_query)
+        )
+
+        sql = SQL('''
+            WITH original_lines AS (
+                SELECT %(original_alias)s.id
+                FROM account_move_line AS %(original_alias)s
+                %(joins)s
+                WHERE %(conditions)s
+            ),
+            reconciled_lines AS (
+                SELECT DISTINCT part.credit_move_id AS id
+                FROM account_partial_reconcile part
+                JOIN original_lines orig ON part.debit_move_id = orig.id
+                WHERE part.max_date %(op)s %(recon_date)s
+
+                UNION
+
+                SELECT DISTINCT part.debit_move_id AS id
+                FROM account_partial_reconcile part
+                JOIN original_lines orig ON part.credit_move_id = orig.id
+                WHERE part.max_date %(op)s %(recon_date)s
+            )
+            SELECT id FROM reconciled_lines
+        ''',
+            original_alias=SQL(original_alias),
+            joins=SQL(" ").join(
+                _sql_from_join(kind, alias, table, condition)
+                for alias, (kind, table, condition) in original_query._joins.items()
+            ),
+            conditions=original_query.where_clause,
+            op=SQL(operator),
+            recon_date=value,
+        )
+
+        return [('id', 'in', sql)]
+
+    def _search_is_open_at_date(self, operator, value):
+        def to_sql(model, alias, query):
+            recon_check_alias = query.make_alias(alias, 'exclude_full_recon')
+            query.add_join(
+                kind="LEFT JOIN",
+                alias=recon_check_alias,
+                table=SQL(
+                    """
+                    (
+                        SELECT DISTINCT apr.full_reconcile_id, TRUE AS has_future_partial
+                        FROM account_partial_reconcile apr
+                        WHERE apr.full_reconcile_id IS NOT NULL
+                        AND apr.max_date > %(recon_date_limit)s
+                    )
+                    """,
+                    recon_date_limit=value,
+                ),
+                condition=SQL(
+                    "%(recon_check_alias)s.full_reconcile_id = %(original_alias)s.full_reconcile_id",
+                    recon_check_alias=SQL.identifier(recon_check_alias),
+                    original_alias=SQL.identifier(alias),
+                ),
+            )
+            return SQL("(%(original_alias)s.full_reconcile_id IS NULL OR %(recon_check_alias)s.has_future_partial IS NOT NULL)",
+                recon_check_alias=SQL.identifier(recon_check_alias),
+                original_alias=SQL.identifier(alias),
+            )
+
+        return Domain.custom(to_sql=to_sql)
+
+    def _search_reconciled_line_ids_at_date(self, operator, value):
+        domain_without_recon_date = self.env.context.get('domain_without_recon_date', [])
+
+        original_alias = self._table
+        original_query = Query(self.env, original_alias, self._table_sql)
+        original_query.add_where(
+            Domain(domain_without_recon_date)
+            .optimize_full(self)
+            ._to_sql(self, original_alias, original_query)
+        )
+
+        date_clause = SQL('AND account_partial_reconcile.max_date %(operator)s %(value)s', operator=SQL(operator), value=value)
+
+        sql_query = SQL('''
+            SELECT account_partial_reconcile.credit_move_id as id
+              FROM account_partial_reconcile
+              JOIN account_move_line on account_partial_reconcile.debit_move_id = account_move_line.id
+               %(joins)s
+             WHERE %(where_clause)s
+               %(date_clause)s
+             UNION ALL
+            SELECT account_partial_reconcile.debit_move_id as id
+              FROM account_partial_reconcile
+              JOIN account_move_line on account_partial_reconcile.credit_move_id = account_move_line.id
+               %(joins)s
+             WHERE %(where_clause)s
+               %(date_clause)s
+            ''',
+            joins=SQL(" ").join(_sql_from_join(kind, alias, table, condition) for alias, (kind, table, condition) in original_query._joins.items()),
+            where_clause=original_query.where_clause,
+            date_clause=date_clause,
+        )
+        return [('id', 'in', sql_query)]
+
     def _search_reconciled_at_date(self, operator, value):
         """ TODO: check this
             Include reconciled lines by using 'reconciled_at_date' in the domain with an OR clause
@@ -853,34 +974,6 @@ class AccountMoveLine(models.Model):
                 ),
                 condition=SQL("TRUE"),
             )
-
-            if exclude_fully_reconciled:
-                recon_check_alias = query.make_alias(alias, 'exclude_full_recon')
-                query.add_join(
-                    kind="LEFT JOIN LATERAL",
-                    alias=recon_check_alias,
-                    table=SQL(
-                        """
-                        (
-                            SELECT TRUE AS has_future_partial
-                              FROM account_partial_reconcile apr
-                             WHERE apr.full_reconcile_id = %(afr_id)s
-                               AND apr.max_date > %(recon_date_limit)s
-                             LIMIT 1
-                        )
-                        """,
-                        afr_id=SQL.identifier(alias, 'full_reconcile_id'),
-                        recon_date_limit=value,
-                    ),
-                    condition=SQL("TRUE"),
-                )
-                query.add_where(SQL(
-                    """
-                    (%(alias)s.has_future_partial IS NOT NULL OR %(original_alias)s.full_reconcile_id IS NULL)
-                    """,
-                    alias=SQL.identifier(recon_check_alias),
-                    original_alias=SQL.identifier(alias),
-                ))
             return SQL("%s.is_recon_line", SQL.identifier(partial_table))
 
         return Domain.custom(to_sql=to_sql)
@@ -1688,7 +1781,8 @@ class AccountMoveLine(models.Model):
         # It doesn't seem possible because the _search_reconciled_at_date function will result in `AND "account_move_line__reconcile_at_date".is_reconciled` (maybe modify query?)
         # Benefits: Easier to use with the standard Search Panel search bar filters
         # Caveats: AND (or TRUE) will return all records when used with OR
-        domain_without_recon_at_date_condition = original_domain.map_conditions(lambda cond: Domain.FALSE if cond.field_expr == 'reconciled_at_date' else cond)
+        # domain_without_recon_at_date_condition = original_domain.map_conditions(lambda cond: Domain.TRUE if cond.field_expr in {'is_open_at_date'} else cond)
+        domain_without_recon_at_date_condition = original_domain.map_conditions(lambda cond: Domain.FALSE if cond.field_expr in {'reconciled_at_date', 'reconciled_line_ids_at_date', 'reconciled_with_lines_at_date'} else cond)
         contextualized = self.with_context(domain_without_recon_date=domain_without_recon_at_date_condition)
         return super(AccountMoveLine, contextualized)._search(original_domain, *args, **kwargs)
 

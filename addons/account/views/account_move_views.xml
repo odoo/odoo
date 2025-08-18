@@ -325,6 +325,8 @@
                     <field name="tax_ids" />
                     <field name="tax_line_id" string="Originator Tax"/>
                     <field name="reconcile_model_id"/>
+                    <field name="reconcile_until"/>
+                    <field name="reconciled_with_lines_at_date"/>
                     <separator/>
                     <filter string="Unposted" name="unposted" domain="[('parent_state', '=', 'draft')]" help="Unposted Journal Items"/>
                     <filter string="Posted" name="posted" domain="[('parent_state', '=', 'posted')]" help="Posted Journal Items"/>

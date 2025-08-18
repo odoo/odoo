@@ -615,6 +615,18 @@ class AccountTestInvoicingCommon(ProductCommon):
 
         return line
 
+    def _create_move(self, **field_vals):
+        return self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': '2024-10-10',
+            'journal_id': self.company_data['default_journal_misc'].id,
+            'line_ids': [
+                Command.create({'debit': 0.0,       'credit': 500.0,    'account_id': self.partner.property_account_receivable_id.id, 'partner_id': self.partner.id}),
+                Command.create({'debit': 500.0,     'credit': 0.0,      'account_id': self.company_data['default_journal_bank'].default_account_id.id}),
+            ],
+            **field_vals,
+        })
+
     def _create_invoice(self, **invoice_args):
         return self.env['account.move'].create({
             'move_type': 'out_invoice',
