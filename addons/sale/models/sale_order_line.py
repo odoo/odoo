@@ -1200,7 +1200,7 @@ class SaleOrderLine(models.Model):
                 }
             }
 
-    @api.onchange('product_id')
+    @api.onchange('product_id', 'product_uom')
     def _onchange_product_id(self):
         if not self.product_id:
             return
