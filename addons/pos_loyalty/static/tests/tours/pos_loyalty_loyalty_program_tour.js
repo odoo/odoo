@@ -379,7 +379,7 @@ registry.category("web_tour.tours").add("test_max_usage_partner_with_point", {
             PosLoyalty.claimReward("100% on your order"),
             PosLoyalty.finalizeOrder("Cash", "0"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner"),
+            ProductScreen.clickCustomer("AAA Test Partner 3"),
             ProductScreen.addOrderline("Desk Organizer", "3"),
             PosLoyalty.isRewardButtonHighlighted(false),
         ].flat(),
