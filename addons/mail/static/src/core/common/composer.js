@@ -130,6 +130,7 @@ export class Composer extends Component {
             active: true,
             isFullComposerOpen: false,
         });
+        this.root = useRef("root");
         this.fullComposerBus = new EventBus();
         this.selection = useSelection({
             refName: "textarea",
@@ -701,16 +702,11 @@ export class Composer extends Component {
     }
 
     async processMessage(cb) {
-        const attachments = this.props.composer.attachments;
-        if (attachments.some(({ uploading }) => uploading)) {
+        if (this.props.composer.attachments.some(({ uploading }) => uploading)) {
             this.env.services.notification.add(_t("Please wait while the file is uploading."), {
                 type: "warning",
             });
-        } else if (
-            !isHtmlEmpty(this.props.composer.composerHtml) ||
-            attachments.length > 0 ||
-            (this.message && this.message.attachment_ids.length > 0)
-        ) {
+        } else if (this.canProcessMessage) {
             if (!this.state.active) {
                 return;
             }
@@ -723,6 +719,14 @@ export class Composer extends Component {
             this.state.active = true;
             this.ref.el?.focus();
         }
+    }
+
+    get canProcessMessage() {
+        return (
+            !isHtmlEmpty(this.props.composer.composerHtml) ||
+            this.props.composer.attachments.length > 0 ||
+            (this.message && this.message.attachment_ids.length > 0)
+        );
     }
 
     async sendMessage() {
@@ -798,7 +802,7 @@ export class Composer extends Component {
 
     async editMessage() {
         const composer = toRaw(this.props.composer);
-        if (composer.composerText || composer.message.attachment_ids.length > 0) {
+        if (!this.askDeleteFromEdit) {
             await this.processMessage(async (value) =>
                 composer.message.edit(value, composer.attachments, {
                     mentionedChannels: composer.mentionedChannels,
@@ -807,16 +811,25 @@ export class Composer extends Component {
                 })
             );
         } else {
-            this.env.services.dialog.add(MessageConfirmDialog, {
-                message: composer.message,
-                onConfirm: () =>
-                    this.message.remove({
-                        removeFromThread: this.shouldHideFromMessageListOnDelete,
-                    }),
-                prompt: _t("Are you sure you want to bid farewell to this message forever?"),
-            });
+            this.env.services.dialog.add(
+                MessageConfirmDialog,
+                {
+                    message: composer.message,
+                    onConfirm: () =>
+                        this.message.remove({
+                            removeFromThread: this.shouldHideFromMessageListOnDelete,
+                        }),
+                    prompt: _t("Are you sure you want to bid farewell to this message forever?"),
+                },
+                { context: this }
+            );
         }
         this.suggestion?.clearRawMentions();
+    }
+
+    get askDeleteFromEdit() {
+        const composer = toRaw(this.props.composer);
+        return !composer.composerText && composer.message.attachment_ids.length === 0;
     }
 
     onClickInsertCannedResponse(ev) {
