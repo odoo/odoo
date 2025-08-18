@@ -7,6 +7,7 @@ from collections import defaultdict
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Command, Domain
+from odoo.tools import SQL
 
 FIGURE_TYPE_SELECTION_VALUES = [
     ('monetary', "Monetary"),
@@ -768,75 +769,118 @@ class AccountReportExpression(models.Model):
         for expr in self:
             expr.display_name = f'{expr.report_line_name} [{expr.label}]'
 
-
     def _expand_aggregations(self):
         """Return self and its full aggregation expression dependency"""
         result = self
 
-        to_expand = self.filtered(lambda x: x.engine == 'aggregation')
+        to_expand = self.filtered(lambda x: x.engine == "aggregation")
+
         while to_expand:
-            domains = []
-            sub_expressions = self.env['account.report.expression']
+            formula_criteria = []
+            sum_children_criteria = []
 
-            for candidate_expr in to_expand:
-                if candidate_expr.formula == 'sum_children':
-                    sub_expressions |= candidate_expr.report_line_id.children_ids.expression_ids.filtered(lambda e: e.label == candidate_expr.label)
-                else:
-                    labels_by_code = candidate_expr._get_aggregation_terms_details()
+            # Process expressions that are not 'sum_children'
+            formula_exprs = to_expand.filtered(lambda e: e.formula != "sum_children")
+            all_labels_by_code = formula_exprs._get_aggregation_terms_details()
+            for expr in formula_exprs:
+                target_report_id = expr.report_line_id.report_id.id
+                # In case of cross_report formulas, we target the other report instead.
+                if expr.subformula and expr.subformula.startswith("cross_report"):
+                    subformula_match = CROSS_REPORT_REGEX.match(expr.subformula)
+                    if not subformula_match:
+                        raise UserError(_(
+                            "In report '%(report_name)s', on line '%(line_name)s', with label '%(label)s',\n"
+                            "The format of the cross report expression is invalid. \n"
+                            "Expected: cross_report(<report_id>|<xml_id>)"
+                            "Example:  cross_report(my_module.my_report) or cross_report(123)",
+                            report_name=expr.report_line_id.report_id.display_name,
+                            line_name=expr.report_line_name,
+                            label=expr.label,
+                        ))
 
-                    if candidate_expr.subformula and candidate_expr.subformula.startswith('cross_report'):
-                        subformula_match = CROSS_REPORT_REGEX.match(candidate_expr.subformula)
-                        if not subformula_match:
-                            raise UserError(_(
-                                "In report '%(report_name)s', on line '%(line_name)s', with label '%(label)s',\n"
-                                "The format of the cross report expression is invalid. \n"
-                                "Expected: cross_report(<report_id>|<xml_id>)"
-                                "Example:  cross_report(my_module.my_report) or cross_report(123)",
-                                report_name=candidate_expr.report_line_id.report_id.display_name,
-                                line_name=candidate_expr.report_line_name,
-                                label=candidate_expr.label,
-                            ))
+                    if subformula_match:
                         cross_report_value = subformula_match.groups()[0]
                         try:
-                            report_id = int(cross_report_value)
+                            target_report_id = int(cross_report_value)
                         except ValueError:
-                            report_id = report.id if (report := self.env.ref(cross_report_value, raise_if_not_found=False)) else None
+                            target_report_id = report.id if (report := self.env.ref(cross_report_value, raise_if_not_found=False)) else None
+                        if target_report_id == expr.report_line_id.report_id.id:
+                            raise UserError(self.env._("You cannot use cross report on itself"))
 
-                        if not report_id:
-                            raise UserError(_(
-                                "In report '%(report_name)s', on line '%(line_name)s', with label '%(label)s',\n"
-                                "Failed to parse the cross report id or xml_id.\n",
-                                report_name=candidate_expr.report_line_id.report_id.display_name,
-                                line_name=candidate_expr.report_line_name,
-                                label=candidate_expr.label,
-                            ))
-                        elif report_id == candidate_expr.report_line_id.report_id.id:
-                            raise UserError(_("You cannot use cross report on itself"))
+                if not target_report_id:
+                    raise UserError(self.env._(
+                        "In report '%(report_name)s', on line '%(line_name)s', with label '%(label)s',\n"
+                        "Failed to parse the cross report id or xml_id.\n",
+                        report_name=expr.report_line_id.report_id.display_name,
+                        line_name=expr.report_line_name,
+                        label=expr.label,
+                    ))
 
-                        cross_report_domain = [('report_line_id.report_id', '=', report_id)]
-                    else:
-                        cross_report_domain = [('report_line_id.report_id', '=', candidate_expr.report_line_id.report_id.id)]
+                labels_by_code = all_labels_by_code.get(expr.id, {})
+                for line_code, labels in labels_by_code.items():
+                    for label in labels:
+                        formula_criteria.append((target_report_id, line_code, label))
 
-                    for line_code, expr_labels in labels_by_code.items():
-                        dependency_domain = [('report_line_id.code', '=', line_code), ('label', 'in', tuple(expr_labels))] + cross_report_domain
-                        domains.append(dependency_domain)
+            # Process 'sum_children' expressions
+            sum_children_exprs = to_expand - formula_exprs
+            for expr in sum_children_exprs:
+                sum_children_criteria.append((expr.report_line_id.id, expr.label))
 
-            if domains:
-                sub_expressions |= self.env['account.report.expression'].search(Domain.OR(domains))
+            # Find the id of the expressions needed to compute the current one
+            dependency_ids = self._fetch_dependencies_batch(formula_criteria, sum_children_criteria)
+            if not dependency_ids:
+                break  # No new dependencies found, expansion is complete.
 
-            to_expand = sub_expressions.filtered(lambda x: x.engine == 'aggregation' and x not in result)
-            result |= sub_expressions
+            all_new_dependencies = self.env["account.report.expression"].browse(dependency_ids)
+            next_to_expand = all_new_dependencies.filtered(lambda e: e not in result and e.engine == "aggregation")
+
+            result |= all_new_dependencies
+            to_expand = next_to_expand
 
         return result
+
+    def _fetch_dependencies_batch(self, formula_criteria, sum_children_criteria):
+        """
+        Finds the dependencies of an aggregation expression based on the provided criteria.
+        :param formula_criteria: a list of tuples (target_report_id, target_line_code, target_expression_label)
+        :param sum_children_criteria: a list of tuples (parent_report_line_id, label)
+        :return:
+        """
+        if not formula_criteria and not sum_children_criteria:
+            return []
+
+        query_parts = []
+
+        # Build the query part for formula-based dependencies
+        if formula_criteria:
+            query_parts.append(SQL("""
+                SELECT dep_expr.id
+                  FROM account_report_line dep_line
+                  JOIN account_report_expression dep_expr ON dep_expr.report_line_id = dep_line.id
+                 WHERE (dep_line.report_id, dep_line.code, dep_expr.label) IN %(formula_criteria)s
+            """, formula_criteria=tuple(formula_criteria)))
+
+        # Build the query part for sum_children dependencies
+        if sum_children_criteria:
+            query_parts.append(SQL("""
+                SELECT child_expr.id
+                  FROM account_report_line parent_line
+                  JOIN account_report_line child_line ON child_line.parent_id = parent_line.id
+                  JOIN account_report_expression child_expr ON child_expr.report_line_id = child_line.id
+                 WHERE (parent_line.id, child_expr.label) IN %(sum_children_criteria)s
+            """, sum_children_criteria=tuple(sum_children_criteria)))
+
+        self.env.cr.execute(SQL(" UNION ALL ").join(query_parts))
+        return [row[0] for row in self.env.cr.fetchall()]
 
     def _get_aggregation_terms_details(self):
         """ Computes the details of each aggregation expression in self, and returns them in the form of a single dict aggregating all the results.
 
         Example of aggregation details:
         formula 'A.balance + B.balance + A.other'
-        will return: {'A': {'balance', 'other'}, 'B': {'balance'}}
+        will return: {expr_id: {'A': {'balance', 'other'}, 'B': {'balance'}}, ...}
         """
-        totals_by_code = defaultdict(set)
+        results_by_expr_id = defaultdict(lambda: defaultdict(set))
         for expression in self:
             if expression.engine != 'aggregation':
                 raise UserError(_("Cannot get aggregation details from a line not using 'aggregation' engine"))
@@ -845,14 +889,14 @@ class AccountReportExpression(models.Model):
             for term in expression_terms:
                 if term and not re.match(r'^([0-9]*[.])?[0-9]*$', term): # term might be empty if the formula contains a negative term
                     line_code, total_name = term.split('.')
-                    totals_by_code[line_code].add(total_name)
+                    results_by_expr_id[expression.id][line_code].add(total_name)
 
             if expression.subformula:
                 if_other_expr_match = re.match(r'if_other_expr_(above|below)\((?P<line_code>.+)[.](?P<expr_label>.+),.+\)', expression.subformula)
                 if if_other_expr_match:
-                    totals_by_code[if_other_expr_match['line_code']].add(if_other_expr_match['expr_label'])
+                    results_by_expr_id[expression.id][if_other_expr_match['line_code']].add(if_other_expr_match['expr_label'])
 
-        return totals_by_code
+        return results_by_expr_id
 
     def _get_matching_tags(self, sign=None):
         """ Returns all the signed account.account.tags records whose name matches any of the formulas of the tax_tags expressions contained in self.
