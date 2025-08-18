@@ -61,7 +61,37 @@ class AccountDocumentDownloadController(http.Controller):
             doc_data = docs_data[0]
             headers = _get_headers(doc_data['filename'], doc_data['filetype'], doc_data['content'])
             return request.make_response(doc_data['content'], headers)
-        elif len(docs_data) > 1:
+        if len(docs_data) > 1:
             zip_content = _build_zip_from_data(docs_data)
             headers = _get_headers(_('invoices') + '.zip', 'zip', zip_content)
+            return request.make_response(zip_content, headers)
+
+    @http.route('/account/download_move_attachments/<models("account.move"):moves>', type='http', auth='user')
+    def download_move_attachments(self, moves):
+
+        def rename_duplicates(docs):
+            seen = {}
+            for doc in docs:
+                name = doc["filename"]
+                if name not in seen:
+                    seen[name] = 0
+                else:
+                    seen[name] += 1
+                    base, *ext = name.rsplit('.', 1)
+                    new_name = f"{base} ({seen[name]})" + (f".{ext[0]}" if ext else "")
+                    doc["filename"] = new_name
+                    seen[new_name] = 0
+            return docs
+
+        docs_data = []
+        for move in moves:
+            if move.is_purchase_document(include_receipts=True):
+                if attachment := move.message_main_attachment_id:
+                    docs_data.append({'filename': attachment.name, 'filetype': attachment.mimetype, 'content': attachment.raw})
+            else:
+                docs_data += move._get_invoice_legal_documents_all() or []
+        if docs_data:
+            docs_data = rename_duplicates(docs_data)
+            zip_content = _build_zip_from_data(docs_data)
+            headers = _get_headers(request.env._("Invoices") + '.zip', 'zip', zip_content)
             return request.make_response(zip_content, headers)
