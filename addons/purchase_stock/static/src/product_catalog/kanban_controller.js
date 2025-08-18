@@ -65,11 +65,9 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
             this._debouncedKanbanRecompute();
         });
 
-        // FIX me: Bug if Add all, then remove one by one product, then add all again
         const onAddAll = async () => {
-            await this.model.orm.call("purchase.order", "action_purchase_order_suggest", [
-                this._getCatalogContext(),
-            ]);
+            const ctx = this._filter_add_all_ctx(this._getCatalogContext()); // IMPROVE: Quickfix
+            await this.model.orm.call("purchase.order", "action_purchase_order_suggest", [ctx]);
             this._filterInTheOrder(); // Apply filter to show what was added
         };
 
@@ -77,6 +75,20 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
             suggest: this.state,
             addAllProducts: onAddAll,
         });
+    }
+
+    /**
+     * Removes inOrderFilter from domain key in passed context, preventing circular domain issues
+     * (ie. AddAll impacts what goes in order but shouldn't be impacted by what is in order)
+     * Improve: Assumes filters are always added as & in domains. (OR Domain.all would alter logic)
+     * Simply removing inOrderFilter before "Add All" doesn't work due to SearchModel update trigger
+     */
+    _filter_add_all_ctx(ctx) {
+        const domain_all = ["id", "!=", 0];
+        ctx.domain = Array.from(ctx.domain, (el) =>
+            el[0] === "is_in_purchase_order" && el[1] === "=" && el[2] === true ? domain_all : el
+        );
+        return ctx;
     }
 
     /**
@@ -113,13 +125,10 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
         const inTheOrderFilter = Object.values(sm.searchItems).find(
             (searchItem) => searchItem.name === "products_in_purchase_order"
         );
-        if (
-            inTheOrderFilter &&
-            sm.query.findIndex((el) => el.searchItemId === inTheOrderFilter.id) === -1
-        ) {
-            sm.toggleSearchItem(inTheOrderFilter.id);
-        } else {
-            this.model.load();
+        const isActive = sm.query.some((f) => f.searchItemId === inTheOrderFilter.id);
+        sm.toggleSearchItem(inTheOrderFilter.id);
+        if (isActive) {
+            sm.toggleSearchItem(inTheOrderFilter.id); // Reapply with new updated values
         }
     }
 
