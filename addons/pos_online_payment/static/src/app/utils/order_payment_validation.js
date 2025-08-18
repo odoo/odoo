@@ -233,6 +233,8 @@ patch(OrderPaymentValidation.prototype, {
 
         await this.beforePostPushOrderResolve([this.order.id]);
 
-        this.afterOrderValidation(true);
+        await this.afterOrderValidation(true);
+        const nextPage = this.nextPage;
+        this.pos.navigate(nextPage.page, nextPage.params);
     },
 });

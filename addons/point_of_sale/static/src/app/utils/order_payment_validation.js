@@ -39,7 +39,6 @@ export default class OrderPaymentValidation {
 
     get nextPage() {
         if (
-            this.order.nb_print === 0 &&
             this.pos.config.iface_print_auto &&
             this.pos.config.iface_print_skip_screen &&
             this.order.payment_ids[0]?.payment_method_id
