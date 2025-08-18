@@ -124,22 +124,15 @@ export class OdooChartCorePlugin extends OdooCorePlugin {
      */
     import(data) {
         for (const sheet of data.sheets) {
-            if (sheet.figures) {
-                for (const figure of sheet.figures) {
-                    if (figure.tag === "chart" && figure.data.type.startsWith("odoo_")) {
-                        this._addOdooChart(figure.data.chartId, figure.data.fieldMatching ?? {});
-                    } else if (figure.tag === "carousel") {
-                        for (const chartId in figure.data.chartDefinitions) {
-                            const fieldMatching = figure.data.fieldMatching ?? {};
-                            if (figure.data.chartDefinitions[chartId].type.startsWith("odoo_")) {
-                                this._addOdooChart(chartId, fieldMatching[chartId]);
-                            }
-                        }
-                    }
+            for (const chartId in sheet.charts || {}) {
+                const chart = sheet.charts[chartId].chart;
+                if (chart.type.startsWith("odoo_")) {
+                    this._addOdooChart(chartId, chart.fieldMatching ?? {});
                 }
             }
         }
     }
+
     /**
      * Export the chart
      *
@@ -147,27 +140,13 @@ export class OdooChartCorePlugin extends OdooCorePlugin {
      */
     export(data) {
         for (const sheet of data.sheets) {
-            if (sheet.figures) {
-                for (const figure of sheet.figures) {
-                    if (figure.tag === "chart" && figure.data.type.startsWith("odoo_")) {
-                        figure.data.fieldMatching = this.getChartFieldMatch(figure.data.chartId);
-                        figure.data.searchParams.domain = new Domain(
-                            figure.data.searchParams.domain
-                        ).toJson();
-                    } else if (figure.tag === "carousel") {
-                        figure.data.fieldMatching = {};
-                        for (const chartId in figure.data.chartDefinitions) {
-                            const chartDefinition = figure.data.chartDefinitions[chartId];
-                            if (chartDefinition.type.startsWith("odoo_")) {
-                                figure.data.fieldMatching[chartId] =
-                                    this.getChartFieldMatch(chartId);
-                                chartDefinition.searchParams.domain = new Domain(
-                                    chartDefinition.searchParams.domain
-                                ).toJson();
-                            }
-                        }
-                    }
+            for (const chartId in sheet.charts || {}) {
+                const chart = sheet.charts[chartId].chart;
+                if (!chart.type.startsWith("odoo_")) {
+                    continue;
                 }
+                chart.fieldMatching = this.getChartFieldMatch(chartId);
+                chart.searchParams.domain = new Domain(chart.searchParams.domain).toJson();
             }
         }
     }

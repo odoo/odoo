@@ -415,9 +415,10 @@ test("Can import/export an Odoo chart", async () => {
     const data = model.exportData();
     const figures = data.sheets[0].figures;
     expect(figures.length).toBe(1);
-    const figure = figures[0];
-    expect(figure.tag).toBe("chart");
-    expect(figure.data.type).toBe("odoo_line");
+    expect(figures[0].tag).toBe("chart");
+    const charts = data.sheets[0].charts;
+    expect(Object.keys(charts).length).toBe(1);
+    expect(Object.values(charts)[0].chart.type).toBe("odoo_line");
     const { model: m1 } = await createModelWithDataSource({ spreadsheetData: data });
     const sheetId = m1.getters.getActiveSheetId();
     expect(m1.getters.getChartIds(sheetId).length).toBe(1);
@@ -430,6 +431,7 @@ test("can import (export) contextual domain", async function () {
     const chartId = "1";
     const uid = user.userId;
     const spreadsheetData = {
+        version: "18.4.3",
         sheets: [
             {
                 figures: [
@@ -472,10 +474,10 @@ test("can import (export) contextual domain", async function () {
     });
     model.getters.getChartRuntime(chartId).chartJsConfig.data; // force loading the chart data
     await animationFrame();
-    expect(model.exportData().sheets[0].figures[0].data.searchParams.domain).toBe(
-        '[("foo", "=", uid)]',
-        { message: "the domain is exported with the dynamic parts" }
-    );
+    const chartData = Object.values(model.exportData().sheets[0].charts)[0].chart;
+    expect(chartData.searchParams.domain).toBe('[("foo", "=", uid)]', {
+        message: "the domain is exported with the dynamic parts",
+    });
     expect.verifySteps(["formatted_read_group"]);
 });
 
@@ -755,9 +757,9 @@ test("cumulative line chart with past data before domain period without cumulate
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data).toEqual([
         3, 7, 12,
     ]);
-    const figure = model.exportData().sheets[0].figures[0];
-    expect(figure.data.cumulative).toBe(true);
-    expect(figure.data.cumulatedStart).toBe(undefined);
+    const chartData = Object.values(model.exportData().sheets[0].charts)[0].chart;
+    expect(chartData.cumulative).toBe(true);
+    expect(chartData.cumulatedStart).toBe(undefined);
 });
 
 test("cumulative line chart with past data before domain period with cumulated start", async () => {
@@ -776,9 +778,9 @@ test("cumulative line chart with past data before domain period with cumulated s
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data).toEqual([
         15, 19, 24,
     ]);
-    const figure = model.exportData().sheets[0].figures[0];
-    expect(figure.data.cumulative).toBe(true);
-    expect(figure.data.cumulatedStart).toBe(true);
+    const chartData = Object.values(model.exportData().sheets[0].charts)[0].chart;
+    expect(chartData.cumulative).toBe(true);
+    expect(chartData.cumulatedStart).toBe(true);
 });
 
 test("update existing chart to cumulate past data", async () => {
@@ -797,9 +799,9 @@ test("update existing chart to cumulate past data", async () => {
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data).toEqual([
         3, 7, 12,
     ]);
-    const figure = model.exportData().sheets[0].figures[0];
-    expect(figure.data.cumulative).toBe(true);
-    expect(figure.data.cumulatedStart).toBe(false);
+    const chartData = Object.values(model.exportData().sheets[0].charts)[0].chart;
+    expect(chartData.cumulative).toBe(true);
+    expect(chartData.cumulatedStart).toBe(false);
 
     model.dispatch("UPDATE_CHART", {
         definition: {
@@ -1285,7 +1287,8 @@ test("import/export action xml id", async () => {
         },
     });
     const exported = model.exportData();
-    expect(exported.sheets[0].figures[0].data.actionXmlId).toBe("test.my_action");
+    const chartData = Object.values(model.exportData().sheets[0].charts)[0].chart;
+    expect(chartData.actionXmlId).toBe("test.my_action");
 
     const { model: model2 } = await createModelWithDataSource({ spreadsheetData: exported });
     const sheetId = model2.getters.getActiveSheetId();

@@ -1,5 +1,5 @@
 {
-  "version": "18.4.14",
+  "version": "18.5.10",
   "sheets": [
     {
       "id": "sheet1",
@@ -311,18 +311,6 @@
           "width": 200,
           "height": 109,
           "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "percentage",
-            "title": { "text": "Billable Hours", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#FEF2F2",
-            "baseline": "Data!E5",
-            "baselineDescr": { "text": "since last period" },
-            "keyValue": "Data!D5",
-            "humanize": false
-          },
           "offset": { "x": 0, "y": 9 },
           "col": 0,
           "row": 0
@@ -332,18 +320,6 @@
           "width": 200,
           "height": 109,
           "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "percentage",
-            "title": { "text": "Non-billable Hours", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#FEF2F2",
-            "baseline": "Data!E6",
-            "baselineDescr": { "text": "since last period" },
-            "keyValue": "Data!D6",
-            "humanize": false
-          },
           "offset": { "x": 210, "y": 9 },
           "col": 0,
           "row": 0
@@ -353,18 +329,6 @@
           "width": 200,
           "height": 109,
           "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "text",
-            "title": { "text": "Billable Rate", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#ECFDF5",
-            "baseline": "Data!E8",
-            "baselineDescr": { "text": "last period" },
-            "keyValue": "Data!D8",
-            "humanize": false
-          },
           "offset": { "x": 420, "y": 9 },
           "col": 0,
           "row": 0
@@ -374,41 +338,6 @@
           "width": 1000,
           "height": 344,
           "tag": "chart",
-          "data": {
-            "title": { "text": "" },
-            "background": "#FFFFFF",
-            "legendPosition": "none",
-            "metaData": {
-              "groupBy": ["date:week"],
-              "measure": "billable_time",
-              "order": null,
-              "resModel": "timesheets.analysis.report",
-              "mode": "line",
-              "cumulatedStart": false
-            },
-            "searchParams": {
-              "comparison": null,
-              "context": {},
-              "domain": [
-                ["project_id", "!=", false]
-              ],
-              "groupBy": ["date:week"],
-              "orderBy": []
-            },
-            "type": "odoo_line",
-            "dataSets": [],
-            "verticalAxisPosition": "left",
-            "stacked": false,
-            "cumulatedStart": false,
-            "fillArea": true,
-            "fieldMatching": {
-              "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": 0 },
-              "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
-              "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
-              "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
-              "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
-            }
-          },
           "offset": { "x": 0, "y": 178 },
           "col": 0,
           "row": 0
@@ -476,8 +405,95 @@
           }
         }
       ],
-      "areGridLinesVisible": true,
+      "charts": {
+        "14907ee1-177b-4dda-97d7-223b1b00abe5": {
+          "figureId": "14907ee1-177b-4dda-97d7-223b1b00abe5",
+          "chart": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "percentage",
+            "title": { "text": "Billable Hours", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#FEF2F2",
+            "baseline": "Data!E5",
+            "baselineDescr": { "text": "since last period" },
+            "keyValue": "Data!D5",
+            "humanize": false
+          }
+        },
+        "c484c691-bb4a-4a9d-8a25-8464162ee96a": {
+          "figureId": "c484c691-bb4a-4a9d-8a25-8464162ee96a",
+          "chart": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "percentage",
+            "title": { "text": "Non-billable Hours", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#FEF2F2",
+            "baseline": "Data!E6",
+            "baselineDescr": { "text": "since last period" },
+            "keyValue": "Data!D6",
+            "humanize": false
+          }
+        },
+        "0b033641-2a0f-4db7-893d-f14fbb320b94": {
+          "figureId": "0b033641-2a0f-4db7-893d-f14fbb320b94",
+          "chart": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": { "text": "Billable Rate", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#ECFDF5",
+            "baseline": "Data!E8",
+            "baselineDescr": { "text": "last period" },
+            "keyValue": "Data!D8",
+            "humanize": false
+          }
+        },
+        "39c6667b-b74a-478e-87e9-75c22de5ea1f": {
+          "figureId": "39c6667b-b74a-478e-87e9-75c22de5ea1f",
+          "chart": {
+            "title": { "text": "" },
+            "background": "#FFFFFF",
+            "legendPosition": "none",
+            "metaData": {
+              "groupBy": ["date:week"],
+              "measure": "billable_time",
+              "order": null,
+              "resModel": "timesheets.analysis.report",
+              "mode": "line",
+              "cumulatedStart": false
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {},
+              "domain": [
+                ["project_id", "!=", false]
+              ],
+              "groupBy": ["date:week"],
+              "orderBy": []
+            },
+            "type": "odoo_line",
+            "dataSets": [],
+            "verticalAxisPosition": "left",
+            "stacked": false,
+            "cumulatedStart": false,
+            "fillArea": true,
+            "fieldMatching": {
+              "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": 0 },
+              "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+              "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+              "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+              "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+            }
+          }
+        }
+      },
+      "carousels": {},
+      "images": {},
       "isVisible": true,
+      "areGridLinesVisible": true,
       "headerGroups": {
         "ROW": [],
         "COL": []
@@ -547,8 +563,11 @@
       "dataValidationRules": [],
       "figures": [],
       "tables": [],
-      "areGridLinesVisible": true,
+      "charts": {},
+      "carousels": {},
+      "images": {},
       "isVisible": true,
+      "areGridLinesVisible": true,
       "headerGroups": {
         "ROW": [],
         "COL": []

@@ -235,7 +235,7 @@ test("fieldMatchings are moved from filters to their respective datasources", ()
     expect(migratedData.lists["1"].fieldMatching).toEqual({
         Filter: { chain: "parent_id", type: "many2one" },
     });
-    expect(migratedData.sheets[0].figures[0].data.fieldMatching).toEqual({
+    expect(Object.values(migratedData.sheets[0].charts)[0].chart.fieldMatching).toEqual({
         Filter: { chain: "parent_id", type: "many2one" },
     });
 });
@@ -306,7 +306,7 @@ test("fieldMatchings offsets are correctly preserved after migration", () => {
     expect(migratedData.lists["1"].fieldMatching).toEqual({
         Filter: { chain: "parent_id", type: "date", offset: "-1" },
     });
-    expect(migratedData.sheets[0].figures[0].data.fieldMatching).toEqual({
+    expect(Object.values(migratedData.sheets[0].charts)[0].chart.fieldMatching).toEqual({
         Filter: { chain: "parent_id", type: "date", offset: "-1" },
     });
 });
@@ -591,12 +591,18 @@ test("Chart cumulatedStart is set to true if cumulative at migration", () => {
     };
     const migratedData = load(data);
     const sheet = migratedData.sheets[0];
-    expect(sheet.figures[0].data.metaData.cumulatedStart).toBe(true);
-    expect(sheet.figures[0].data.cumulatedStart).toBe(true);
-    expect(sheet.figures[1].data.metaData.cumulatedStart).toBe(false);
-    expect(sheet.figures[1].data.cumulatedStart).toBe(false);
-    expect(sheet.figures[2].data.metaData.cumulatedStart).toBe(false);
-    expect(sheet.figures[2].data.cumulatedStart).toBe(false);
+
+    const chartData1 = Object.values(sheet.charts)[0].chart;
+    expect(chartData1.metaData.cumulatedStart).toBe(true);
+    expect(chartData1.cumulatedStart).toBe(true);
+
+    const chartData2 = Object.values(sheet.charts)[1].chart;
+    expect(chartData2.metaData.cumulatedStart).toBe(false);
+    expect(chartData2.cumulatedStart).toBe(false);
+
+    const chartData3 = Object.values(sheet.charts)[2].chart;
+    expect(chartData3.metaData.cumulatedStart).toBe(false);
+    expect(chartData3.cumulatedStart).toBe(false);
 });
 
 test("text global filter default value is now an array of strings", () => {

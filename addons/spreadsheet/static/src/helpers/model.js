@@ -133,15 +133,21 @@ export async function freezeOdooData(model) {
             }
         }
         for (const figure of sheet.figures) {
-            if (
-                figure.tag === "chart" &&
-                (figure.data.type.startsWith("odoo_") || figure.data.type === "geo")
-            ) {
-                const img = odooChartToImage(model, figure, figure.data.chartId);
+            if (figure.tag !== "chart") {
+                continue;
+            }
+            const chartId = model.getters.getChartIdFromFigureId(figure.id);
+            const definition = model.getters.getChartDefinition(chartId);
+            if (definition.type.startsWith("odoo_") || definition.type === "geo") {
+                const img = odooChartToImage(model, figure, chartId);
                 figure.tag = "image";
-                figure.data = {
-                    path: img,
-                    size: { width: figure.width, height: figure.height },
+                delete sheet.charts[chartId];
+                sheet.images[chartId] = {
+                    figureId: figure.id,
+                    image: {
+                        path: img,
+                        size: { width: figure.width, height: figure.height },
+                    },
                 };
             }
         }

@@ -1,5 +1,5 @@
 {
-  "version": "18.4.14",
+  "version": "18.5.10",
   "sheets": [
     {
       "id": "a7cd7db1-9407-4895-82f2-7657102c7688",
@@ -361,51 +361,6 @@
           "width": 1000,
           "height": 345,
           "tag": "chart",
-          "data": {
-            "title": { "text": "" },
-            "background": "#FFFFFF",
-            "legendPosition": "none",
-            "metaData": {
-              "groupBy": ["invoice_date:month"],
-              "measure": "price_subtotal",
-              "order": null,
-              "resModel": "account.invoice.report",
-              "mode": "line",
-              "cumulatedStart": false
-            },
-            "searchParams": {
-              "comparison": null,
-              "context": {
-                "group_by": ["invoice_date"]
-              },
-              "domain": [
-                "&",
-                [
-                  "state",
-                  "not in",
-                  ["draft", "cancel"]
-                ],
-                "|",
-                ["move_type", "=", "out_invoice"],
-                ["move_type", "=", "out_refund"]
-              ],
-              "groupBy": ["invoice_date"],
-              "orderBy": []
-            },
-            "type": "odoo_line",
-            "dataSets": [],
-            "verticalAxisPosition": "left",
-            "stacked": false,
-            "cumulatedStart": false,
-            "fillArea": true,
-            "fieldMatching": {
-              "757a1b4b-e339-4879-beb6-9851050387cf": { "chain": "invoice_date", "type": "date", "offset": 0 },
-              "8051befe-619f-4fe7-b788-d34584297bad": { "chain": "country_id", "type": "many2one" },
-              "17277380-12d8-4a83-b133-3532e5618c43": { "chain": "product_categ_id", "type": "many2one" },
-              "accd0cbe-12c9-4cab-93a1-afa5080dd635": { "chain": "product_id", "type": "many2one" },
-              "02acc7f7-b282-4ce9-bf38-6abfb72be6aa": { "chain": "invoice_user_id", "type": "many2one" }
-            }
-          },
           "offset": { "x": 0, "y": 178 },
           "col": 0,
           "row": 0
@@ -415,18 +370,6 @@
           "width": 200,
           "height": 109,
           "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "text",
-            "title": { "text": "Invoiced", "color": "#434343", "bold": true },
-            "type": "scorecard",
-            "background": "#EFF6FF",
-            "baseline": "Data!C11",
-            "baselineDescr": { "text": "unpaid" },
-            "keyValue": "Data!C1",
-            "humanize": false
-          },
           "offset": { "x": 0, "y": 11 },
           "col": 0,
           "row": 0
@@ -436,18 +379,6 @@
           "width": 200,
           "height": 109,
           "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "text",
-            "title": { "text": "Average Invoice", "color": "#434343", "bold": true },
-            "type": "scorecard",
-            "background": "#EFF6FF",
-            "baseline": "Data!C3",
-            "baselineDescr": { "text": "Invoices" },
-            "keyValue": "Data!C2",
-            "humanize": false
-          },
           "offset": { "x": 210, "y": 11 },
           "col": 0,
           "row": 0
@@ -457,17 +388,6 @@
           "width": 200,
           "height": 109,
           "tag": "chart",
-          "data": {
-            "baselineColorDown": "#DC6965",
-            "baselineColorUp": "#00A04A",
-            "baselineMode": "difference",
-            "title": { "text": "DSO", "color": "#434343", "bold": true },
-            "type": "scorecard",
-            "background": "#FEF2F2",
-            "baselineDescr": { "text": "in current year" },
-            "keyValue": "Data!C10",
-            "humanize": false
-          },
           "offset": { "x": 419, "y": 11 },
           "col": 0,
           "row": 0
@@ -550,8 +470,104 @@
           }
         }
       ],
-      "areGridLinesVisible": true,
+      "charts": {
+        "5ea5dd7f-9f83-4482-a2bb-2ec72ab35912": {
+          "figureId": "5ea5dd7f-9f83-4482-a2bb-2ec72ab35912",
+          "chart": {
+            "title": { "text": "" },
+            "background": "#FFFFFF",
+            "legendPosition": "none",
+            "metaData": {
+              "groupBy": ["invoice_date:month"],
+              "measure": "price_subtotal",
+              "order": null,
+              "resModel": "account.invoice.report",
+              "mode": "line",
+              "cumulatedStart": false
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {
+                "group_by": ["invoice_date"]
+              },
+              "domain": [
+                "&",
+                [
+                  "state",
+                  "not in",
+                  ["draft", "cancel"]
+                ],
+                "|",
+                ["move_type", "=", "out_invoice"],
+                ["move_type", "=", "out_refund"]
+              ],
+              "groupBy": ["invoice_date"],
+              "orderBy": []
+            },
+            "type": "odoo_line",
+            "dataSets": [],
+            "verticalAxisPosition": "left",
+            "stacked": false,
+            "cumulatedStart": false,
+            "fillArea": true,
+            "fieldMatching": {
+              "757a1b4b-e339-4879-beb6-9851050387cf": { "chain": "invoice_date", "type": "date", "offset": 0 },
+              "8051befe-619f-4fe7-b788-d34584297bad": { "chain": "country_id", "type": "many2one" },
+              "17277380-12d8-4a83-b133-3532e5618c43": { "chain": "product_categ_id", "type": "many2one" },
+              "accd0cbe-12c9-4cab-93a1-afa5080dd635": { "chain": "product_id", "type": "many2one" },
+              "02acc7f7-b282-4ce9-bf38-6abfb72be6aa": { "chain": "invoice_user_id", "type": "many2one" }
+            }
+          }
+        },
+        "1aeea7b2-900b-4067-b8ad-3e4772c54028": {
+          "figureId": "1aeea7b2-900b-4067-b8ad-3e4772c54028",
+          "chart": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": { "text": "Invoiced", "color": "#434343", "bold": true },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baseline": "Data!C11",
+            "baselineDescr": { "text": "unpaid" },
+            "keyValue": "Data!C1",
+            "humanize": false
+          }
+        },
+        "bdfb27d0-5902-4a2a-9b7e-514a6625578c": {
+          "figureId": "bdfb27d0-5902-4a2a-9b7e-514a6625578c",
+          "chart": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "text",
+            "title": { "text": "Average Invoice", "color": "#434343", "bold": true },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baseline": "Data!C3",
+            "baselineDescr": { "text": "Invoices" },
+            "keyValue": "Data!C2",
+            "humanize": false
+          }
+        },
+        "b1673523-d139-47fb-b5ea-9e4f969aacb6": {
+          "figureId": "b1673523-d139-47fb-b5ea-9e4f969aacb6",
+          "chart": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": { "text": "DSO", "color": "#434343", "bold": true },
+            "type": "scorecard",
+            "background": "#FEF2F2",
+            "baselineDescr": { "text": "in current year" },
+            "keyValue": "Data!C10",
+            "humanize": false
+          }
+        }
+      },
+      "carousels": {},
+      "images": {},
       "isVisible": true,
+      "areGridLinesVisible": true,
       "headerGroups": {
         "ROW": [],
         "COL": []
@@ -607,8 +623,11 @@
       "dataValidationRules": [],
       "figures": [],
       "tables": [],
-      "areGridLinesVisible": true,
+      "charts": {},
+      "carousels": {},
+      "images": {},
       "isVisible": true,
+      "areGridLinesVisible": true,
       "headerGroups": {
         "ROW": [],
         "COL": []
@@ -684,7 +703,11 @@
         ],
         "&",
         ["product_categ_id", "!=", false],
-        ["move_type", "in", ["out_invoice", "out_refund"]]
+        [
+          "move_type",
+          "in",
+          ["out_invoice", "out_refund"]
+        ]
       ],
       "id": "1",
       "measures": [
@@ -724,7 +747,11 @@
         ],
         "&",
         ["country_id", "!=", false],
-        ["move_type", "in", ["out_invoice", "out_refund"]]
+        [
+          "move_type",
+          "in",
+          ["out_invoice", "out_refund"]
+        ]
       ],
       "id": "2",
       "measures": [
@@ -764,7 +791,11 @@
         ],
         "&",
         ["product_id", "!=", false],
-        ["move_type", "in", ["out_invoice", "out_refund"]]
+        [
+          "move_type",
+          "in",
+          ["out_invoice", "out_refund"]
+        ]
       ],
       "id": "3",
       "measures": [
@@ -804,7 +835,11 @@
         ],
         "&",
         ["invoice_user_id", "!=", false],
-        ["move_type", "in", ["out_invoice", "out_refund"]]
+        [
+          "move_type",
+          "in",
+          ["out_invoice", "out_refund"]
+        ]
       ],
       "id": "4",
       "measures": [
