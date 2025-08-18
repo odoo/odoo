@@ -211,7 +211,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         this.zoomCleanup = [];
         // Zoom on hover (except on mobile)
         if (salePage.dataset.ecomZoomAuto && !uiUtils.isSmall()) {
-            const images = salePage.querySelectorAll("img[data-zoom]");
+            const images = this.el.querySelectorAll('img[data-zoom]');
             for (const image of images) {
                 const $image = $(image);
                 const callback = () => {
@@ -240,7 +240,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         // Zoom on click
         if (salePage.dataset.ecomZoomClick) {
             // In this case we want all the images not just the ones that are "zoomables"
-            const images = salePage.querySelectorAll(".product_detail_img");
+            const images = this.el.querySelectorAll('.product_detail_img');
             for (const image of images ) {
                 const handler = () => {
                     if (salePage.dataset.ecomZoomAuto) {
