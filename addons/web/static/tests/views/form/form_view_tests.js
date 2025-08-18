@@ -12660,6 +12660,84 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test(
+        "Redirect Warning full feature: additional context, action_id, leaving while dirty",
+        async function (assert) {
+            registry.category("services").add("error", errorService);
+
+            serverData.actions[1] = {
+                id: 1,
+                name: "Partner",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+                res_id: 1,
+            };
+            serverData.actions[2] = {
+                id: 2,
+                name: "Partner List",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                domain: "[['id', 'in', [active_id]]]",
+                views: [[false, "list"]],
+            };
+
+            serverData.views = {
+                "partner,false,list": `
+                    <tree>
+                        <field name="name"/>
+                    </tree>`,
+                "partner,false,form": `
+                    <form>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </form>`,
+                "partner,false,search": "<search></search>",
+            };
+
+            const webClient = await createWebClient({
+                serverData,
+                mockRPC(route, { method, kwargs }) {
+                    if (method === "web_save") {
+                        assert.step("web_save");
+                        throw makeServerError({
+                            type: `RedirectWarning`,
+                            args: [
+                                "The message",
+                                2,
+                                "Button Label",
+                                {
+                                    active_id: 4,
+                                },
+                            ],
+                            description: "Beep boop server stuff and technical string",
+                        });
+                    }
+                    if (method === "web_search_read") {
+                        assert.step("web_search_read");
+                        assert.deepEqual(kwargs.domain, [["id", "in", [4]]]);
+                    }
+                },
+            });
+            await doAction(webClient, 1);
+            await editInput(target, ".o_field_widget[name='name'] input", "aaa");
+            await click(target.querySelector(".o_form_button_save"));
+            assert.verifySteps(["web_save"]);
+            await nextTick();
+            assert.containsOnce(target, ".o_error_dialog");
+            assert.containsOnce(target, ".o_error_dialog .btn-primary");
+            assert.containsN(target, ".o_error_dialog .btn-secondary", 2);
+            await click(target.querySelector(".o_error_dialog .btn-secondary"));
+            await nextTick();
+            assert.verifySteps(["web_search_read"]);
+            assert.equal(
+                target.querySelector(".o_breadcrumb").textContent,
+                "first recordPartner List"
+            );
+        }
+    );
+
     QUnit.test("Auto save: save when action changed", async function (assert) {
         assert.expect(6);
 
