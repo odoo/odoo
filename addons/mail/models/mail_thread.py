@@ -808,10 +808,13 @@ class MailThread(models.AbstractModel):
             if bounced_record and not bounced_record_done and isinstance(bounced_record, self.pool['mail.thread']):
                 bounced_record._message_receive_bounce(bounced_email, bounced_partner)
 
-            if bounced_partner and bounced_message:
-                self.env['mail.notification'].sudo().search([
-                    ('mail_message_id', '=', bounced_message.id),
-                    ('res_partner_id', 'in', bounced_partner.ids)]
+            if bounced_message and (bounced_email or bounced_partner):
+                self.env['mail.notification'].sudo().search(Domain(
+                    'mail_message_id', '=', bounced_message.id
+                ) & Domain.OR([
+                    Domain('res_partner_id', 'in', bounced_partner.ids) if bounced_partner else [],
+                    Domain('mail_email_address', '=', bounced_email) if bounced_email else [],
+                ]),
                 ).write({
                     'failure_reason': html2plaintext(message_dict.get('body') or ''),
                     'failure_type': 'mail_bounce',
