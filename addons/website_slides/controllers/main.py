@@ -401,11 +401,10 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/all', '/slides/all/tag/<string:slug_tags>'], type='http', auth="public", website=True, sitemap=True, readonly=True)
     def slides_channel_all(self, slide_category=None, slug_tags=None, my=False, **post):
-        if slug_tags and slug_tags.count(',') > 0 and request.httprequest.method == 'GET' and not post.get('prevent_redirect'):
+        if slug_tags and slug_tags.count(',') > 0 and request.httprequest.method == 'GET':
             # Previously, the tags were searched using GET, which caused issues with crawlers (too many hits)
             # We replaced those with POST to avoid that, but it's not sufficient as bots "remember" crawled pages for a while
             # This permanent redirect is placed to instruct the bots that this page is no longer valid
-            # TODO: remove in a few stable versions (v19?), including the "prevent_redirect" param in templates
             # Note: We allow a single tag to be GET, to keep crawlers & indexes on those pages
             # What we really want to avoid is combinatorial explosions
             return request.redirect('/slides/all', code=301)

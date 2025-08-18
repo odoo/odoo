@@ -25,12 +25,12 @@
                 <nav class="navbar navbar-expand-lg navbar-light shadow-sm">
                     <t t-call="website.website_search_box_input">
                         <t t-set="_form_classes" t-valuef="o_wslides_nav_navbar_right order-lg-3"/>
+                        <t t-set="form_method" t-value="'post'"/>
                         <t t-set="search_type" t-valuef="slides"/>
                         <t t-set="action" t-valuef="/slides/all"/>
                         <t t-set="display_description" t-valuef="true"/>
                         <t t-set="display_detail" t-valuef="false"/>
                         <t t-set="placeholder">Search courses</t>
-                        <input type="hidden" name="prevent_redirect" value="True"/>
                     </t>
                     <button class="navbar-toggler px-2 order-1" type="button"
                         data-bs-toggle="collapse" data-bs-target="#navbarSlidesHomepage"
@@ -208,6 +208,7 @@
                     <t t-else="" t-call="website.website_search_box_input">
                         <!-- Search box (mobile)-->
                         <t t-set="_form_classes" t-valuef="o_wslides_nav_navbar_right d-md-none"/>
+                        <t t-set="form_method" t-value="'post'"/>
                         <t t-set="search_type" t-valuef="slides"/>
                         <!-- No action: remain on same URL -->
                         <t t-set="display_description" t-valuef="true"/>
@@ -216,7 +217,6 @@
                         <t t-set="search" t-value="original_search or search_term"/>
                         <input t-if="search_my" type="hidden" name="my" t-att-value="1"/>
                         <input t-if="search_slide_category" type="hidden" name="slide_category" t-att-value="search_slide_category" />
-                        <input type="hidden" name="prevent_redirect" value="True"/>
                     </t>
                     <button class="navbar-toggler px-1" type="button"
                         data-bs-toggle="collapse" data-bs-target="#navbarTagGroups"
@@ -238,7 +238,7 @@
                                     <div class="dropdown-menu" t-att-id="'navToogleTagGroup%s' % tag_group.id">
                                         <t t-foreach="group_frontend_tags" t-as="tag">
                                             <span t-att-class="'post_link cursor-pointer dropdown-item %s' % ('active' if tag in search_tags else '')"
-                                                t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
+                                                t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category)"
                                                 t-out="tag.name"/>
                                         </t>
                                     </div>
@@ -254,6 +254,7 @@
                         <!-- Search box (desktop) -->
                         <t t-call="website.website_search_box_input">
                             <t t-set="_form_classes" t-valuef="o_wslides_nav_navbar_right d-none d-md-flex"/>
+                            <t t-set="form_method" t-value="'post'"/>
                             <t t-set="search_type" t-valuef="slides"/>
                             <!-- No action: remain on same URL -->
                             <t t-set="display_description" t-valuef="true"/>
@@ -262,7 +263,6 @@
                             <t t-set="search" t-value="original_search or search_term"/>
                             <input t-if="search_my" type="hidden" name="my" t-att-value="1"/>
                             <input t-if="search_slide_category" type="hidden" name="slide_category" t-att-value="search_slide_category" />
-                            <input type="hidden" name="prevent_redirect" value="True"/>
                         </t>
                     </div>
                 </nav>
@@ -278,7 +278,7 @@
                       <span class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
                       <i class="fa fa-tag me-2 text-muted"/>
                       My Courses
-                      <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids), search=search_term, prevent_redirect=True)"
+                      <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids), search=search_term)"
                          class="post_link cursor-pointer btn border-0 py-1">&#215;</span>
                     </span>
                 </t>
@@ -286,7 +286,7 @@
                       <span class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
                       <i class="fa fa-tag me-2 text-muted"/>
                       <t t-out="search_term"/>
-                      <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids), my=search_my, slide_category=search_slide_category, prevent_redirect=True)"
+                      <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids), my=search_my, slide_category=search_slide_category)"
                          class="post_link cursor-pointer btn border-0 py-1">&#215;</span>
                     </span>
                 </t>
@@ -294,7 +294,7 @@
                     <span class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
                         <i class="fa fa-tag me-2 text-muted"/>
                         <t t-out="tag.display_name"/>
-                        <span t-att-data-post='slide_query_url(tag=slugify_tags(search_tags.ids, tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)'
+                        <span t-att-data-post='slide_query_url(tag=slugify_tags(search_tags.ids, tag.id), my=search_my, search=search_term, slide_category=search_slide_category)'
                             class="post_link cursor-pointer btn border-0 py-1">&#215;</span>
                     </span>
                 </t>
@@ -350,11 +350,11 @@
                 <div t-if="channel_frontend_tags" class="mt-auto pt-1 o_wslides_desc_truncate_2_badges">
                     <t t-foreach="channel_frontend_tags" t-as="tag">
                         <t t-if="search_tags">
-                            <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
+                            <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category)"
                                 t-attf-class="post_link cursor-pointer badge o_badge_clickable #{'o_color_'+str(tag.color) if tag in search_tags else 'o_wslides_channel_tag o_color_0'}" t-out="tag.name"/>
                         </t>
                         <t t-else="">
-                            <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
+                            <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category)"
                                 t-attf-class="post_link cursor-pointer badge o_badge_clickable o_wslides_channel_tag #{'o_color_'+str(tag.color)}" t-out="tag.name"/>
                         </t>
                     </t>

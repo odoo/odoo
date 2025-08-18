@@ -83,6 +83,7 @@
             <!-- 'Search Box' -->
             <t t-call="website.website_search_box_input">
                 <t t-set="_form_classes" t-valuef="#{not len(blogs) &gt; 1 and 'ms-auto'} flex-grow-1 flex-lg-grow-0"/>
+                <t t-set="form_method" t-value="'post'"/>
                 <t t-set="search_type" t-valuef="blogs"/>
                 <t t-set="action" t-value="blog_url(tag=tag,search=search)"/>
                 <t t-set="display_description" t-valuef="true"/>
