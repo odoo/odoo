@@ -27,6 +27,7 @@ export class OdooWaterfallChart extends OdooChart {
         this.firstValueAsSubtotal = definition.firstValueAsSubtotal ?? false;
         this.showSubTotals = definition.showSubTotals ?? false;
         this.axesDesign = definition.axesDesign;
+        this.zoomable = definition.zoomable ?? false;
     }
 
     getDefinition() {
@@ -40,6 +41,7 @@ export class OdooWaterfallChart extends OdooChart {
             negativeValuesColor: this.negativeValuesColor,
             subTotalValuesColor: this.subTotalValuesColor,
             axesDesign: this.axesDesign,
+            zoomable: this.zoomable,
         };
     }
 }
