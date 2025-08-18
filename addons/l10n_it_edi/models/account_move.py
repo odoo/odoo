@@ -962,7 +962,7 @@ class AccountMove(models.Model):
             'partner_country_code': partner_values.get('country_code', False),
             'simplified': self._l10n_it_edi_is_simplified(),
             'self_invoice': self.l10n_it_edi_is_self_invoice,
-            'tax_tags': {tag for tag in self.line_ids.tax_tag_ids.mapped(lambda x: (x.name or '').upper().replace("+", "").replace("-", "")) if tag},
+            'tax_tags': {tag for tag in self.line_ids.tax_tag_ids.mapped(lambda x: (x.name or '').upper()) if tag},
             'downpayment': self._is_downpayment(),
             'services_or_goods': services_or_goods,
             'goods_in_italy': services_or_goods == 'consu' and self._l10n_it_edi_goods_in_italy(),
@@ -1280,7 +1280,7 @@ class AccountMove(models.Model):
                 lambda tax: all(rep_line.factor_percent >= 0 for rep_line in tax.invoice_repartition_line_ids))
         else:
             # In case of reverse charge, the purchase tax has a negative repartition line.
-            domain += [('invoice_repartition_line_ids.tag_ids.name', '=', f'+{reversed_tax_tag.lower()}')]
+            domain += [('invoice_repartition_line_ids.tag_ids.name', '=', reversed_tax_tag.lower())]
             taxes = self.env['account.tax'].search(domain, order="amount desc").filtered(
                 lambda tax: any(rep_line.factor_percent < 0 for rep_line in tax.invoice_repartition_line_ids))
 

@@ -1215,7 +1215,6 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
         # check caba move
         partial_rec = invoice.mapped('line_ids.matched_credit_ids')
         caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
-        # all amls with tax_tag should all have tax_tag_invert at True since the caba move comes from a vendor refund
         expected_values = [
             {
                 'tax_line_id': False,
@@ -1225,7 +1224,6 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
                 'account_id': not_default_expense_account.id,
                 'debit': 800.0,
                 'credit': 0.0,
-                'tax_tag_invert': False,
             },
             {
                 'tax_line_id': False,
@@ -1235,7 +1233,6 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
                 'account_id': not_default_expense_account.id,
                 'debit': 0.0,
                 'credit': 800.0,
-                'tax_tag_invert': True,
             },
             {
                 'tax_line_id': False,
@@ -1245,7 +1242,6 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
                 'account_id': default_expense_account.id,
                 'debit': 0.0,
                 'credit': 300.0,
-                'tax_tag_invert': False,
             },
             {
                 'tax_line_id': False,
@@ -1255,7 +1251,6 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
                 'account_id': default_expense_account.id,
                 'debit': 300.0,
                 'credit': 0.0,
-                'tax_tag_invert': True,
             },
             {
                 'tax_line_id': False,
@@ -1265,7 +1260,6 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
                 'account_id': tax_waiting_account.id,
                 'debit': 50.0,
                 'credit': 0.0,
-                'tax_tag_invert': False,
             },
             {
                 'tax_line_id': tax.id,
@@ -1275,7 +1269,6 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
                 'account_id': tax_final_account.id,
                 'debit': 0.0,
                 'credit': 50.0,
-                'tax_tag_invert': True,
             },
         ]
         self.assertRecordValues(caba_move.line_ids, expected_values)

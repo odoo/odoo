@@ -1216,7 +1216,8 @@ class AccountChartTemplate(models.AbstractModel):
         def mapping_getter(*args):
             res = []
             for tag in args:
-                if re.match(r"^\w+\.\w+$", tag):
+                # make sure that it is a xmlid and not a random tag containing a `.` by checking the module name exists
+                if (match := re.match(r"^(?P<module>\w+)\.\w+$", tag)) and self.env['ir.module.module']._get(match.group('module')):
                     # xml_id => explicit data, doesn't need to be mapped
                     res.append(tag)
                 else:

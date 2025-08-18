@@ -47,11 +47,11 @@ class TestItEdiReverseCharge(TestItEdi):
             'amount_type': 'percent',
             'type_tax_use': 'purchase',
             'invoice_repartition_line_ids': cls.repartition_lines(
-                cls.RepartitionLine(100, 'base', ('+03', '+vj9')),
-                cls.RepartitionLine(100, 'tax', ('+5v',)),
-                cls.RepartitionLine(-100, 'tax', ('-4v',))),
+                cls.RepartitionLine(100, 'base', ('03', 'vj9')),
+                cls.RepartitionLine(100, 'tax', ('5v',)),
+                cls.RepartitionLine(-100, 'tax', ('4v',))),
             'refund_repartition_line_ids': cls.repartition_lines(
-                cls.RepartitionLine(100, 'base', ('-03', '-vj9')),
+                cls.RepartitionLine(100, 'base', ('03', 'vj9')),
                 cls.RepartitionLine(100, 'tax', False),
                 cls.RepartitionLine(-100, 'tax', False)),
         }
@@ -64,11 +64,11 @@ class TestItEdiReverseCharge(TestItEdi):
             **tax_data,
             'name': 'Tax 4% purchase Reverse Charge, in Italy',
             'invoice_repartition_line_ids': cls.repartition_lines(
-                cls.RepartitionLine(100, 'base', ('+03', '+vj3')),
-                cls.RepartitionLine(100, 'tax', ('+5v',)),
-                cls.RepartitionLine(-100, 'tax', ('-4v',))),
+                cls.RepartitionLine(100, 'base', ('03', 'vj3')),
+                cls.RepartitionLine(100, 'tax', ('5v',)),
+                cls.RepartitionLine(-100, 'tax', ('4v',))),
             'refund_repartition_line_ids': cls.repartition_lines(
-                cls.RepartitionLine(100, 'base', ('-03', '-vj3')),
+                cls.RepartitionLine(100, 'base', ('03', 'vj3')),
                 cls.RepartitionLine(100, 'tax', False),
                 cls.RepartitionLine(-100, 'tax', False)),
         })
@@ -80,11 +80,11 @@ class TestItEdiReverseCharge(TestItEdi):
             'name': '22% purchase RC Construction Subcontractors',
             'amount': 22.0,
             'invoice_repartition_line_ids': cls.repartition_lines(
-                cls.RepartitionLine(100, 'base', ('+03', '+vj12')),
-                cls.RepartitionLine(100, 'tax', ('+5v',)),
-                cls.RepartitionLine(-100, 'tax', ('-4v',))),
+                cls.RepartitionLine(100, 'base', ('03', 'vj12')),
+                cls.RepartitionLine(100, 'tax', ('5v',)),
+                cls.RepartitionLine(-100, 'tax', ('4v',))),
             'refund_repartition_line_ids': cls.repartition_lines(
-                cls.RepartitionLine(100, 'base', ('-03', '-vj12')),
+                cls.RepartitionLine(100, 'base', ('03', 'vj12')),
                 cls.RepartitionLine(100, 'tax', False),
                 cls.RepartitionLine(-100, 'tax', False)),
         })
@@ -289,7 +289,7 @@ class TestItEdiReverseCharge(TestItEdi):
             self.assertEqual(len(line.tax_ids), 1)
             rc_tax = line.tax_ids[0]
             self.assertEqual(rc_tax.amount, 22.0)
-            self.assertTrue('+vj12' in rc_tax.invoice_repartition_line_ids[0].tag_ids.mapped("name"))
+            self.assertTrue('vj12' in rc_tax.invoice_repartition_line_ids[0].tag_ids.mapped("name"))
 
     def test_credit_note_export_document_type(self):
         """Test that manually setting document type will be kept into account when exporting xml"""

@@ -890,7 +890,6 @@ class PosOrder(models.Model):
             'tax_tag_ids': update_base_line_vals['tax_tag_ids'],
             'amount_currency': amount_currency,
             'balance': balance,
-            'tax_tag_invert': not base_line_vals['is_refund'],
             'no_followup': False,
         }
 
@@ -914,10 +913,8 @@ class PosOrder(models.Model):
 
         # Create the tax lines
         for tax_line in tax_results['tax_lines_to_add']:
-            tax_rep = self.env['account.tax.repartition.line'].browse(tax_line['tax_repartition_line_id'])
             aml_vals_list_per_nature['tax'].append({
                 **tax_line,
-                'tax_tag_invert': tax_rep.document_type == 'invoice',
                 'display_type': 'tax',
             })
             total_amount_currency += tax_line['amount_currency']

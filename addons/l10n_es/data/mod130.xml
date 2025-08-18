@@ -119,7 +119,7 @@
                                 <record id="mod_130_casilla_06_balance" model="account.report.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">domain</field>
-                                    <field name="formula" eval="[('tax_tag_ids', '=', '-mod130[06]'), '|', ('partner_id.industry_id', '=', False), ('partner_id.industry_id.name', '!=', 'Agriculture')]"/>
+                                    <field name="formula" eval="[('tax_tag_ids', '=', 'mod130[06]'), '|', ('partner_id.industry_id', '=', False), ('partner_id.industry_id.name', '!=', 'Agriculture')]"/>
                                     <field name="subformula">sum</field>
                                     <field name="date_scope">from_fiscalyear</field>
                                 </record>
@@ -196,7 +196,7 @@
                                 <record id="mod_130_casilla_10_balance" model="account.report.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">domain</field>
-                                    <field name="formula" eval="[('tax_tag_ids', '=', '-mod130[06]'), ('partner_id.industry_id.name', '=', 'Agriculture')]"/>
+                                    <field name="formula" eval="[('tax_tag_ids', '=', 'mod130[06]'), ('partner_id.industry_id.name', '=', 'Agriculture')]"/>
                                     <field name="subformula">sum</field>
                                     <field name="date_scope">from_fiscalyear</field>
                                 </record>

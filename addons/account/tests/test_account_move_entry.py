@@ -964,9 +964,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         self.assertRecordValues(sale_move.line_ids.sorted(lambda x: -x.balance), [
             # pylint: disable=C0326
-            {'name': 'debit',  'debit': 115.0, 'credit':   0.0, 'account_id': test_account.id,                                  'tax_ids': [],           'tax_base_amount': 0,   'tax_tag_invert': False, 'tax_repartition_line_id': False},
-            {'name': '15%',    'debit':   0.0, 'credit':  15.0, 'account_id': self.company_data['default_account_tax_sale'].id, 'tax_ids': [],           'tax_base_amount': 100, 'tax_tag_invert': True,  'tax_repartition_line_id': sale_invoice_rep_line.id},
-            {'name': 'credit', 'debit':   0.0, 'credit': 100.0, 'account_id': test_account.id,                                  'tax_ids': sale_tax.ids, 'tax_base_amount': 0,   'tax_tag_invert': True,  'tax_repartition_line_id': False},
+            {'name': 'debit',  'debit': 115.0, 'credit':   0.0, 'account_id': test_account.id,                                  'tax_ids': [],           'tax_base_amount': 0,    'tax_repartition_line_id': False},
+            {'name': '15%',    'debit':   0.0, 'credit':  15.0, 'account_id': self.company_data['default_account_tax_sale'].id, 'tax_ids': [],           'tax_base_amount': -100, 'tax_repartition_line_id': sale_invoice_rep_line.id},
+            {'name': 'credit', 'debit':   0.0, 'credit': 100.0, 'account_id': test_account.id,                                  'tax_ids': sale_tax.ids, 'tax_base_amount': 0,    'tax_repartition_line_id': False},
         ])
 
         # Same with a purchase tax
@@ -991,9 +991,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
         purchase_invoice_rep_line = purchase_tax.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
         self.assertRecordValues(purchase_move.line_ids.sorted(lambda x: x.balance), [
             # pylint: disable=C0326
-            {'name': 'credit', 'credit': 115.0, 'debit':   0.0, 'account_id': test_account.id,                                      'tax_ids': [],               'tax_base_amount': 0,   'tax_tag_invert': False, 'tax_repartition_line_id': False},
-            {'name': '15%',    'credit':   0.0, 'debit':  15.0, 'account_id': self.company_data['default_account_tax_purchase'].id, 'tax_ids': [],               'tax_base_amount': 100, 'tax_tag_invert': False,  'tax_repartition_line_id': purchase_invoice_rep_line.id},
-            {'name': 'debit',  'credit':   0.0, 'debit': 100.0, 'account_id': test_account.id,                                      'tax_ids': purchase_tax.ids, 'tax_base_amount': 0,   'tax_tag_invert': False,  'tax_repartition_line_id': False},
+            {'name': 'credit', 'credit': 115.0, 'debit':   0.0, 'account_id': test_account.id,                                      'tax_ids': [],               'tax_base_amount': 0,    'tax_repartition_line_id': False},
+            {'name': '15%',    'credit':   0.0, 'debit':  15.0, 'account_id': self.company_data['default_account_tax_purchase'].id, 'tax_ids': [],               'tax_base_amount': 100,  'tax_repartition_line_id': purchase_invoice_rep_line.id},
+            {'name': 'debit',  'credit':   0.0, 'debit': 100.0, 'account_id': test_account.id,                                      'tax_ids': purchase_tax.ids, 'tax_base_amount': 0,    'tax_repartition_line_id': False},
         ])
 
     @freeze_time('2021-10-01 00:00:00')

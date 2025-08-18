@@ -13,7 +13,6 @@
                             <field name="active" invisible="1"/>
                             <field name="name"/>
                             <field name="applicability"/>
-                            <field name="tax_negate" readonly="1" invisible="applicability != 'taxes'"/>
                             <field name="country_id" options="{'no_open': True, 'no_create': True}" invisible="applicability != 'taxes'"/>
                         </group>
                     </sheet>
