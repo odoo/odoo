@@ -60,7 +60,12 @@ class TestImLivechatSessionViews(TestImLivechatCommon):
         channel2.message_post(
             body="Test Channel 2 Msg", message_type="comment", subtype_xmlid="mail.mt_comment"
         )
-        self.start_tour("/web", "im_livechat_session_history_open", login="operator")
+        action = self.env.ref("im_livechat.discuss_channel_action_from_livechat_channel")
+        self.start_tour(
+            f"/odoo/livechat/{self.livechat_channel.id}/action-{action.id}",
+            "im_livechat_session_history_open",
+            login="operator",
+        )
 
     def test_looking_for_help_real_time_update(self):
         bob = new_test_user(
