@@ -135,10 +135,9 @@
                 </div>
             </t>
             <t t-elif="props.type === 'text'">
-                <textarea
-                    class="o_input"
-                    t-att-value="propertyValue || ''"
-                    t-on-change="(event) => this.onValueChange(event.target.value)"
+                <PropertyText
+                    value="propertyValue || ''"
+                    updateProperty="(event) => this.onValueChange(event.target.value)"
                 />
             </t>
             <t t-else="">
