@@ -679,7 +679,10 @@ class HrAttendance(models.Model):
         if not self.env.user.has_group('hr_attendance.group_hr_attendance_manager'):
             employee_domain = AND([employee_domain, [('attendance_manager_id', '=', self.env.user.id)]])
         if not user_domain:
-            return self.env['hr.employee'].search(employee_domain)
+            # Workaround to make it work only for list view.
+            if 'gantt_start_date' in self.env.context:
+                return self.env['hr.employee'].search(employee_domain)
+            return resources & self.env['hr.employee'].search(employee_domain)
         else:
             employee_name_domain = []
             for leaf in user_domain:
