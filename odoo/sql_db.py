@@ -366,7 +366,7 @@ class Cursor(BaseCursor):
         self.connection.set_isolation_level(ISOLATION_LEVEL_REPEATABLE_READ)
         self.connection.set_session(readonly=pool.readonly)
 
-        if os.getenv('ODOO_FAKETIME_TEST_MODE') and self.dbname in tools.config['db_name'].split(','):
+        if os.getenv('ODOO_FAKETIME_TEST_MODE') and self.dbname in tools.config['db_name']:
             self.execute("SET search_path = public, pg_catalog;")
             self.commit()  # ensure that the search_path remains after a rollback
 
