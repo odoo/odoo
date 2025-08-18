@@ -1781,6 +1781,22 @@ class TestFlushSearch(TransactionCase):
             self.brussels.name = "Brüsel"
             self.model.search_fetch([('id', '=', self.brussels.id)], ['name'], order='name')
 
+    def test_search_fetch_prefetchable(self):
+        self.assertEqual(
+            {field.name for field in self.model._fields.values() if field.prefetch is True},
+            {'name', 'country_id', 'create_uid', 'create_date', 'write_uid', 'write_date'},
+        )
+
+        with self.assertQueries(['''
+            SELECT "test_orm_city"."id", "test_orm_city"."name", "test_orm_city"."country_id",
+                   "test_orm_city"."create_uid", "test_orm_city"."create_date",
+                   "test_orm_city"."write_uid", "test_orm_city"."write_date"
+            FROM "test_orm_city"
+            WHERE "test_orm_city"."id" IN %s
+            ORDER BY "test_orm_city"."id"
+        ''']):
+            self.model.search_fetch([('id', '=', self.brussels.id)], order='id')
+
     def test_depends_with_view_model(self):
         parent = self.env['test_orm.any.parent'].create({'name': 'parent'})
         child = self.env['test_orm.any.child'].create({
