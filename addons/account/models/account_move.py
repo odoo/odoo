@@ -2568,7 +2568,11 @@ class AccountMove(models.Model):
             and (
                 not reference_date
                 or not self.invoice_date
-                or reference_date <= fields.first(payment_terms).discount_date
+                or (
+                    (existing_discount_date := fields.first(payment_terms).discount_date)
+                    and
+                    reference_date <= existing_discount_date
+                )
             ) \
             and not (payment_terms.sudo().matched_debit_ids + payment_terms.sudo().matched_credit_ids)
 
