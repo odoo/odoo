@@ -1,4 +1,4 @@
-import { Component, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, useRef, useState } from "@odoo/owl";
 import {
     useVisibilityObserver,
     useApplyVisibility,
@@ -37,14 +37,12 @@ export class BuilderRow extends Component {
         }
 
         this.labelRef = useRef("label");
-        useEffect(
-            (labelEl) => {
-                if (!this.state.tooltip && labelEl && labelEl.clientWidth < labelEl.scrollWidth) {
-                    this.state.tooltip = this.props.label;
-                }
-            },
-            () => [this.labelRef.el]
-        );
+        onMounted(() => {
+            const labelEl = this.labelRef.el;
+            if (!this.state.tooltip && labelEl && labelEl.clientWidth < labelEl.scrollWidth) {
+                this.state.tooltip = this.props.label;
+            }
+        });
     }
 
     getLevelClass() {
