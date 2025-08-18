@@ -245,7 +245,7 @@
                                         readonly="state in ('purchase', 'to approve', 'done', 'cancel') or is_downpayment"
                                         required="not display_type and not is_downpayment"
                                         optional="show"
-                                        context="{'partner_id':parent.partner_id, 'quantity':product_qty, 'company_id': parent.company_id}"
+                                        context="{'quantity':product_qty, 'company_id': parent.company_id}"
                                         force_save="1" domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', 'parent_of', parent.company_id)]"/>
                                     <field name="name" widget="section_and_note_text" optional="show"/>
                                     <field name="date_planned" optional="hide" required="not display_type and not is_downpayment" force_save="1" readonly="is_downpayment"/>
