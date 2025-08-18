@@ -1102,32 +1102,67 @@ test("search value is cleared when reopening the menu", async () => {
     expect(".o_select_menu input").toHaveValue("");
 });
 
-test("Groups can be used without choices", async () => {
+test("Groups can be member of sections", async () => {
     class Parent extends Component {
         static props = ["*"];
         static components = { SelectMenu };
         static template = xml`
-            <SelectMenu choices="choices" groups="groups" />
+            <SelectMenu choices="choices" groups="groups" sections="sections" />
         `;
         setup() {
             this.choices = [{ label: "Hello", value: "hello" }];
+            this.sections = [
+                { label: "Group A", name: "sectionA" },
+                { label: "Group B", name: "sectionB" },
+            ];
             this.groups = [
-                { label: "Group A" },
                 {
                     label: "Subgroup 1",
                     choices: [
                         { label: "Option I", value: "optionI" },
                         { label: "Option II", value: "optionII" },
                     ],
+                    section: "sectionA",
                 },
-                { label: "Subgroup 2", choices: [] },
+                {
+                    label: "Subgroup 1B",
+                    choices: [{ label: "Option B.2", value: "optionB_2" }],
+                    section: "sectionB",
+                },
+                {
+                    label: "Subgroup 2",
+                    choices: [{ label: "Option 2.I", value: "option2_I" }],
+                    section: "sectionA",
+                },
             ];
         }
     }
     await mountSingleApp(Parent);
     await open();
-    expect(".o_select_menu_group").toHaveCount(2);
-    expect(".o_select_menu_item").toHaveCount(3);
+    expect(".o_select_menu_group").toHaveCount(5);
+    expect(".o_select_menu_item").toHaveCount(5);
+    expect(queryAllTexts(".o_select_menu_group")).toEqual([
+        "Group A",
+        "Subgroup 1",
+        "Subgroup 2",
+        "Group B",
+        "Subgroup 1B",
+    ]);
+    expect(queryAllTexts(".o_select_menu_item")).toEqual([
+        "Hello",
+        "Option I",
+        "Option II",
+        "Option 2.I",
+        "Option B.2",
+    ]);
+    await editInput("option 2");
+    expect(queryAllTexts(".o_select_menu_group")).toEqual([
+        "Group A",
+        "Subgroup 2",
+        "Group B",
+        "Subgroup 1B",
+    ]);
+    expect(queryAllTexts(".o_select_menu_item")).toEqual(["Option 2.I", "Option B.2"]);
 });
 
 test("Can add custom data to choices", async () => {
