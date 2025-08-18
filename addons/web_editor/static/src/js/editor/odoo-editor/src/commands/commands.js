@@ -339,7 +339,7 @@ export const editorCommands = {
                         const [left, right] = splitElement(currentNode.parentElement, offset);
                         if (isUnbreakable(nodeToInsert) && container.childNodes.length === 1) {
                             fillEmpty(right);
-                        } else if (isEmptyBlock(right)) {
+                        } else if (isEmptyBlock(right) && !insertBefore) {
                             right.remove();
                         }
                         currentNode = insertBefore ? right : left;

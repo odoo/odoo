@@ -340,6 +340,25 @@ describe('insert HTML', () => {
                 contentAfter: `<p><span class="a">TEST</span>[]</p>`,
             });
         });
+        it("Should properly insert two blocks content with selection in inline", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                                    <p>
+                                        <span class="display-4"></span>
+                                        <span class="h4-fs">[a]</span>
+                                    </p>`),
+                stepFunction: (editor) =>
+                    editor.execCommand("insert", parseHTML(editor.document, `<p></p><p></p>`)),
+                contentAfter: unformat(`<p>
+                                <span class="display-4"></span>
+                              </p>
+                              <p><br>[]</p>
+                              <p>
+                                <span class="h4-fs">\u200b</span>
+                                <br>
+                              </p>`),
+            });
+        });
     });
 });
 describe('insert text', () => {
