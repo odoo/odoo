@@ -21,3 +21,13 @@ class StockPackageHistory(models.Model):
     parent_dest_name = fields.Char('Destination Container Name')
     outermost_dest_id = fields.Many2one('stock.package', 'Outermost Destination Container')
     picking_ids = fields.Many2many('stock.picking', string='Transfers')
+
+    def _get_complete_dest_name_except_outermost(self):
+        self.ensure_one()
+        if not self.parent_dest_id:
+            return ''
+        elif self.parent_dest_id == self.outermost_dest_id:
+            return self.package_id.name
+
+        # Complete name without the first (outermost) package name
+        return ' > '.join(self.package_name.split(' > ')[1:])

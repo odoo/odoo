@@ -106,18 +106,20 @@
                         </tbody>
                     </table>
                     <table class="table table-sm table-borderless" t-elif="o.move_line_ids and o.state=='done'" name="stock_move_line_table">
+                        <t t-set="has_multi_level_packages" t-value="len(o.package_history_ids.filtered(lambda ph: ph.parent_dest_id)) > 0"/>
                         <t t-set="has_serial_number" t-value="False"/>
                         <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')" groups="stock.group_lot_on_delivery_slip"/>
                         <thead>
                             <tr>
-                                <th name="th_sml_product"><strong>Product</strong></th>
+                                <th name="th_sml_product">Product</th>
+                                <th name="th_sml_package" t-if="has_multi_level_packages">Package</th>
                                 <th name="th_sml_qty_ordered" class="text-end" t-if="not has_serial_number">
-                                    <strong>Ordered</strong>
+                                    Ordered
                                 </th>
                                 <th name="lot_serial" class="text-end" t-else="">
                                     Lot/Serial Number
                                 </th>
-                                <th name="th_sml_quantity" class="text-end"><strong>Delivered</strong></th>
+                                <th name="th_sml_quantity" class="text-end">Delivered</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -127,10 +129,10 @@
                                 2. If any packages are assigned => split products up by package (or non-package) and then apply use case 1 -->
                             <!-- If has destination packages => create sections of corresponding products -->
                             <t t-if="o.packages_count" name="has_packages">
-                                <t t-set="packages" t-value="o.move_line_ids.mapped('result_package_id')"/>
+                                <t t-set="packages" t-value="o.package_history_ids.filtered(lambda ph: not ph.parent_dest_id).package_id"/>
                                 <t t-foreach="packages" t-as="package">
                                     <t t-call="stock.stock_report_delivery_package_section_line"/>
-                                    <t t-set="package_move_lines" t-value="o.move_line_ids.filtered(lambda l: l.result_package_id == package)"/>
+                                    <t t-set="package_move_lines" t-value="o.move_line_ids.filtered(lambda l: l.result_package_id == package or l.package_history_id.outermost_dest_id == package).sorted('product_id')"/>
                                     <!-- If printing lots/serial numbers => keep products in original lines -->
                                     <t t-if="has_serial_number">
                                         <tr t-foreach="package_move_lines" t-as="move_line">
@@ -242,8 +244,14 @@
                 <span t-out="description" t-options="{'widget': 'text'}"/>
             </p>
         </td>
+        <td t-if="has_multi_level_packages">
+            <t t-if="move_line.result_package_id != package">
+                <span t-if="move_line.package_history_id" t-out="move_line.package_history_id._get_complete_dest_name_except_outermost()"/>
+                <span t-else="" t-field="move_line.result_package_id"/>
+            </t>
+        </td>
         <t t-if="has_serial_number" name="move_line_lot">
-            <td class="text-center"><span t-field="move_line.lot_id.name"/></td>
+            <td class="text-end"><span t-field="move_line.lot_id.name"/></td>
         </t>
         <td class="text-end" name="move_line_lot_quantity">
             <span t-out="format_number(move_line.quantity)"/>
@@ -257,6 +265,12 @@
                 <p t-if="aggregated_lines[line]['description']">
                     <span t-esc="aggregated_lines[line]['description']"  t-options="{'widget': 'text'}"/>
                 </p>
+            </td>
+            <td t-if="has_multi_level_packages">
+                <t t-if="aggregated_lines[line].get('package') and aggregated_lines[line]['package'] != package">
+                    <span t-if="aggregated_lines[line]['package_history']" t-out="aggregated_lines[line]['package_history']._get_complete_dest_name_except_outermost()"/>
+                    <span t-else="" t-out="aggregated_lines[line]['package'].name"/>
+                </t>
             </td>
             <td class="text-end" name="move_line_aggregated_qty_ordered">
                 <span t-out="format_number(aggregated_lines[line]['qty_ordered'])"/>
@@ -283,16 +297,16 @@
 
     <!-- package related "section lines" -->
     <template id="stock_report_delivery_package_section_line">
-        <tr t-att-class="'fw-bold o_line_section'">
-            <td colspan="99" name="package_info">
-                <span t-field="package.name"/>
+        <tr class="o_line_section">
+            <td colspan="99" class="bg-secondary" name="package_info">
+                <span class="ms-1" t-field="package.name"/>
             </td>
         </tr>
     </template>
     <template id="stock_report_delivery_no_package_section_line">
-        <tr t-att-class="'fw-bold o_line_section'">
-            <td colspan="99" name="no_package_info">
-                <span>Products with no package assigned</span>
+        <tr class="o_line_section">
+            <td colspan="99" class="bg-secondary" name="no_package_info">
+                <span class="ms-1">Products with no package assigned</span>
             </td>
         </tr>
     </template>
