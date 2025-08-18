@@ -724,3 +724,6 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_systray_items_disappear(self):
         self.start_tour("/", "website_systray_items_disappear", login="admin")
+
+    def test_editing_awaits_navigation(self):
+        self.start_tour("/", "website_editing_awaits_navigation", login="admin")
