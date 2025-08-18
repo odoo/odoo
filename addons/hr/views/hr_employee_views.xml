@@ -311,32 +311,38 @@
                             <page name="hr_settings" string="Settings" groups="hr.group_hr_user">
                                 <group name="settings_group">
                                     <group string="User" name="user">
-                                        <field name="user_id" string="User" placeholder="Not linked to an user"
-                                            domain="[('company_ids', 'in', company_id), ('share', '=', False)]"
-                                            context="{
-                                                'default_create_employee_id': id,
-                                                'default_name': name,
-                                                'default_phone': work_phone,
-                                                'default_mobile': mobile_phone,
-                                                'default_login': work_email,
-                                                'default_partner_id': work_contact_id,
-                                            }"
-                                            widget="many2one_avatar_user"
-                                            groups="base.group_erp_manager"/>
-                                        <field name="user_id" string="User" placeholder="Not linked to an user"
-                                            domain="[('company_ids', 'in', company_id), ('share', '=', False)]"
-                                            context="{
-                                                'default_create_employee_id': id,
-                                                'default_name': name,
-                                                'default_phone': work_phone,
-                                                'default_mobile': mobile_phone,
-                                                'default_login': work_email,
-                                                'default_partner_id': work_contact_id,
-                                            }"
-                                            widget="many2one_avatar_user"
-                                            groups="!base.group_erp_manager"
-                                            options="{'no_open': True}"/>
+                                        <label for="user_id"/>
+                                        <div class="o_row align-items-center">
+                                            <field name="user_id" string="User" placeholder="Not linked to an user"
+                                                domain="[('company_ids', 'in', company_id), ('share', '=', False)]"
+                                                context="{
+                                                    'default_create_employee_id': id,
+                                                    'default_name': name,
+                                                    'default_phone': work_phone,
+                                                    'default_mobile': mobile_phone,
+                                                    'default_login': work_email,
+                                                    'default_partner_id': work_contact_id,
+                                                }"
+                                                widget="many2one_avatar_user"
+                                                groups="base.group_erp_manager"/>
+                                            <field name="user_id" string="User" placeholder="Not linked to an user"
+                                                domain="[('company_ids', 'in', company_id), ('share', '=', False)]"
+                                                context="{
+                                                    'default_create_employee_id': id,
+                                                    'default_name': name,
+                                                    'default_phone': work_phone,
+                                                    'default_mobile': mobile_phone,
+                                                    'default_login': work_email,
+                                                    'default_partner_id': work_contact_id,
+                                                }"
+                                                widget="many2one_avatar_user"
+                                                groups="!base.group_erp_manager"
+                                                options="{'no_open': True}"/>
+                                            <span invisible="not user_id or is_user_active">
+                                                (User is Inactive)
+                                            </span>
                                             <field name="tz" required="id"/>
+                                        </div>
                                     </group>
                                     <group name="managers" string="Approvers">
                                         <field name="hr_responsible_id" widget="many2one_avatar_user"/>

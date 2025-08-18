@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from odoo import _, models
 
@@ -9,7 +9,7 @@ class HrDepartureWizard(models.TransientModel):
     _inherit = 'hr.departure.wizard'
 
     def action_register_departure(self):
-        super(HrDepartureWizard, self).action_register_departure()
+        action = super().action_register_departure()
         employee_leaves = self.env['hr.leave'].search([
             ('employee_id', 'in', self.employee_ids.ids),
             ('date_to', '>', self.departure_date),
@@ -49,7 +49,7 @@ class HrDepartureWizard(models.TransientModel):
                 ('date_to', '>', self.departure_date),
         ])
         if not employee_allocations:
-            return
+            return action
         to_delete = self.env['hr.leave.allocation']
         to_modify = self.env['hr.leave.allocation']
         allocation_msg = _('Validity End date has been updated because '
@@ -64,3 +64,5 @@ class HrDepartureWizard(models.TransientModel):
                 allocation.message_post(body=allocation_msg, subtype_xmlid='mail.mt_comment')
         to_delete.with_context(allocation_skip_state_check=True).unlink()
         to_modify.date_to = self.departure_date
+
+        return action
