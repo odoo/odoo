@@ -85,8 +85,11 @@ class PortalChatter(http.Controller):
         domain = expression.AND([
             self._setup_portal_message_fetch_extra_domain(kw),
             field.get_domain_list(model),
-            [('res_id', '=', thread_id), '|', ('body', '!=', ''), ('attachment_ids', '!=', False),
-             ("subtype_id", "=", request.env.ref("mail.mt_comment").id)]
+            self._get_non_empty_message_domain(),
+            [
+                ("res_id", "=", thread_id),
+                ("subtype_id", "=", request.env.ref("mail.mt_comment").id),
+            ],
         ])
 
         # Check access
@@ -108,6 +111,9 @@ class PortalChatter(http.Controller):
             "data": {"mail.message": messages.portal_message_format(options=kw)},
             "messages": Store.many_ids(messages),
         }
+
+    def _get_non_empty_message_domain(self):
+        return ["|", ("body", "!=", ""), ("attachment_ids", "!=", False)]
 
     def _setup_portal_message_fetch_extra_domain(self, data):
         return []
