@@ -339,6 +339,38 @@ test("toolbar works: can select font size", async () => {
     expect(inputEl).toHaveValue(oSmallSize);
 });
 
+<<<<<<< 1c21802cfb897ea71ae605b610cd64d89d6cc176
+||||||| 7d1b27e7ee7364591de47a25efb8a7bba64c734a
+test("should focus the editable area after selecting a font size item", async () => {
+    const { editor, el } = await setupEditor("<p>[test]</p>");
+    await expectElementCount(".o-we-toolbar", 1);
+    const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
+    const inputEl = iframeEl.contentWindow.document?.querySelector("input");
+    await contains(".o-we-toolbar [name='font-size'] .dropdown-toggle").click();
+    expect(getActiveElement()).toBe(inputEl);
+    await waitFor(".o_font_size_selector_menu .dropdown-item:contains('34')", { timeout: 1000 });
+    await contains(".o_font_size_selector_menu .dropdown-item:contains('34')").click();
+    expect(getActiveElement()).toBe(editor.editable);
+    expect(getActiveElement()).not.toBe(inputEl);
+    expect(getContent(el)).toBe(`<p><span class="h1-fs">[test]</span></p>`);
+});
+
+=======
+test("should focus the editable area after selecting a font size item", async () => {
+    const { editor, el } = await setupEditor("<p>[test]</p>");
+    await expectElementCount(".o-we-toolbar", 1);
+    const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
+    const inputEl = iframeEl.contentWindow.document?.querySelector("input");
+    await contains(".o-we-toolbar [name='font-size'] .dropdown-toggle").click();
+    expect(getActiveElement()).toBe(inputEl);
+    await waitFor(".o_font_size_selector_menu .dropdown-item:contains('21')");
+    await contains(".o_font_size_selector_menu .dropdown-item:contains('21')").click();
+    expect(getActiveElement()).toBe(editor.editable);
+    expect(getActiveElement()).not.toBe(inputEl);
+    expect(getContent(el)).toBe(`<p><span class="h2-fs">[test]</span></p>`);
+});
+
+>>>>>>> e995695c1faa697c988c242af96df61c39d4884a
 test.tags("desktop");
 test("toolbar works: display correct font size on select all", async () => {
     const { el } = await setupEditor("<p>test</p>");
