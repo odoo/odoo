@@ -289,9 +289,14 @@ class PaymentPortal(payment_portal.PaymentPortal):
         tx_sudo._process_pos_online_payment()
 
         rendering_context['state'] = 'success'
+        self._on_payment_successful(pos_order_sudo)
+
         if exit_route:
             return request.redirect(exit_route)
         return self._render_pay_confirmation(rendering_context)
+
+    def _on_payment_successful(self, pos_order):
+        return
 
     def _render_pay_confirmation(self, rendering_context):
         return request.render('pos_online_payment.pay_confirmation', rendering_context)
