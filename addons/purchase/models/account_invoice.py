@@ -18,7 +18,7 @@ class AccountMove(models.Model):
 
     purchase_vendor_bill_id = fields.Many2one('purchase.bill.union', store=False, readonly=False,
         string='Auto-complete',
-        help="Auto-complete from a past bill / purchase order.")
+        help="Auto-complete from a previous bill, refund, or purchase order.")
     purchase_id = fields.Many2one('purchase.order', store=False, readonly=False,
         string='Purchase Order',
         help="Auto-complete from a past purchase order.")

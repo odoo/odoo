@@ -611,7 +611,7 @@ class AccountMove(models.Model):
         store=False,
         check_company=True,
         string='Vendor Bill',
-        help="Auto-complete from a past bill.",
+        help="Auto-complete from a previous bill or refund.",
     )
     invoice_source_email = fields.Char(string='Source Email', tracking=True)
     invoice_partner_display_name = fields.Char(compute='_compute_invoice_partner_display_info', store=True)

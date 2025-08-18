@@ -498,7 +498,7 @@ class PurchaseOrderLine(models.Model):
             'name': self.env['account.move.line']._get_journal_items_full_name(self.name, self.product_id.display_name),
             'product_id': self.product_id.id,
             'product_uom_id': self.product_uom_id.id,
-            'quantity': self.qty_to_invoice,
+            'quantity': -self.qty_to_invoice if move and move.move_type == 'in_refund' else self.qty_to_invoice,
             'discount': self.discount,
             'price_unit': self.currency_id._convert(self.price_unit, aml_currency, self.company_id, date, round=False),
             'tax_ids': [(6, 0, self.tax_ids.ids)],
