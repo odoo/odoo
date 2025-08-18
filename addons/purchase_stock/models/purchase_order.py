@@ -39,16 +39,18 @@ class PurchaseOrder(models.Model):
             Green: On time")
     suggest_estimated_price = fields.Float(compute='_compute_suggest_estimated_price')
 
-    @api.depends_context("suggest_based_on", "suggest_percent", "suggest_days", "warehouse_id")
+    @api.depends_context("suggest_based_on", "suggest_percent", "suggest_days", "warehouse_id", "hashable_domain")
     def _compute_suggest_estimated_price(self):
-        ctx = self.env.context
         for purchase_order in self:
             estimated_price = 0
             seller_args = {
                 "partner_id": purchase_order.partner_id,
                 "params": {'order_id': purchase_order}
             }
-            products = self.env['product.product'].with_context(ctx).browse(ctx.get("suggest_product_ids"))
+            domain = [('type', '=', 'consu')]
+            if self.env.context.get('domain'):
+                domain = fields.Domain.AND([domain, self.env.context.get('domain')])
+            products = self.env['product.product'].search(domain)
             for product in products.filtered(lambda p: p.suggested_qty > 0):
                 # Get lowest price pricelist for suggested_qty or lowest min_qty pricelist
                 seller = product._select_seller(quantity=product.suggested_qty, **seller_args) or \
@@ -145,11 +147,14 @@ class PurchaseOrder(models.Model):
         }
 
     @api.model
-    def action_purchase_order_suggest(self, domain, suggest_ctx):
+    def action_purchase_order_suggest(self, suggest_ctx):
         """ Adds suggested products to PO, removing products with no suggested_qty, and
         collapsing existing po_lines into at most 1 orderline. Saves suggestion params
         (eg. number_of_days) to partner table. """
         po = self.browse(suggest_ctx.get("order_id")).ensure_one()
+        domain = [('type', '=', 'consu')]
+        if self.env.context.get('domain'):
+            domain = fields.Domain.AND([domain, self.env.context.get('domain')])
         products = self.env['product.product'].with_context(suggest_ctx).search(domain)
 
         po.partner_id.suggest_days = suggest_ctx.get('suggest_days')
