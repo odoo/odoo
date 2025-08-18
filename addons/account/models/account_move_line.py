@@ -1536,7 +1536,7 @@ class AccountMoveLine(models.Model):
         return super().invalidate_recordset(fnames, flush)
 
     @api.model
-    def search_fetch(self, domain, field_names, offset=0, limit=None, order=None):
+    def search_fetch(self, domain, field_names=None, offset=0, limit=None, order=None):
         def to_tuple(t):
             return tuple(map(to_tuple, t)) if isinstance(t, (list, tuple)) else t
         order = (order or self._order)

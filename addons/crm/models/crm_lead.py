@@ -877,7 +877,7 @@ class CrmLead(models.Model):
         return result
 
     @api.model
-    def search_fetch(self, domain, field_names, offset=0, limit=None, order=None):
+    def search_fetch(self, domain, field_names=None, offset=0, limit=None, order=None):
         """ Override to support ordering on my_activity_date_deadline.
 
         Ordering through web client calls search_read() with an order parameter
