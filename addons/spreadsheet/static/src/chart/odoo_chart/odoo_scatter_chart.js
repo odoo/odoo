@@ -22,6 +22,7 @@ export class OdooScatterChart extends OdooChart {
         super(definition, sheetId, getters);
         this.verticalAxisPosition = definition.verticalAxisPosition;
         this.axesDesign = definition.axesDesign;
+        this.zoomable = definition.zoomable;
     }
 
     getDefinition() {
@@ -29,6 +30,7 @@ export class OdooScatterChart extends OdooChart {
             ...super.getDefinition(),
             verticalAxisPosition: this.verticalAxisPosition,
             axesDesign: this.axesDesign,
+            zoomable: this.zoomable,
         };
     }
 }

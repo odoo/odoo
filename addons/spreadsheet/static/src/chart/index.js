@@ -7,18 +7,18 @@ import { chartOdooMenuPlugin } from "./odoo_menu/odoo_menu_chartjs_plugin";
 
 const { chartComponentRegistry, chartSubtypeRegistry, chartJsExtensionRegistry } =
     spreadsheet.registries;
-const { ChartJsComponent } = spreadsheet.components;
+const { ChartJsComponent, ZoomableChartJsComponent } = spreadsheet.components;
 
-chartComponentRegistry.add("odoo_bar", ChartJsComponent);
-chartComponentRegistry.add("odoo_line", ChartJsComponent);
+chartComponentRegistry.add("odoo_bar", ZoomableChartJsComponent);
+chartComponentRegistry.add("odoo_line", ZoomableChartJsComponent);
 chartComponentRegistry.add("odoo_pie", ChartJsComponent);
 chartComponentRegistry.add("odoo_radar", ChartJsComponent);
 chartComponentRegistry.add("odoo_sunburst", ChartJsComponent);
 chartComponentRegistry.add("odoo_treemap", ChartJsComponent);
-chartComponentRegistry.add("odoo_waterfall", ChartJsComponent);
+chartComponentRegistry.add("odoo_waterfall", ZoomableChartJsComponent);
 chartComponentRegistry.add("odoo_pyramid", ChartJsComponent);
-chartComponentRegistry.add("odoo_scatter", ChartJsComponent);
-chartComponentRegistry.add("odoo_combo", ChartJsComponent);
+chartComponentRegistry.add("odoo_scatter", ZoomableChartJsComponent);
+chartComponentRegistry.add("odoo_combo", ZoomableChartJsComponent);
 chartComponentRegistry.add("odoo_geo", ChartJsComponent);
 chartComponentRegistry.add("odoo_funnel", ChartJsComponent);
 
