@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 {
     'name': 'Italy - E-invoicing',
     'version': '0.4',
@@ -18,7 +15,6 @@ E-invoice implementation
     'data': [
         'security/ir.model.access.csv',
         'data/account.account.tag.csv',
-        'data/account_withholding_report_data.xml',
         'data/invoice_it_simplified_template.xml',
         'data/invoice_it_template.xml',
         'data/ir_cron.xml',
