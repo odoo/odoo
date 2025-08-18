@@ -115,6 +115,7 @@ class HrEmployee(models.Model):
     work_contact_id = fields.Many2one('res.partner', 'Work Contact', copy=False, index='btree_not_null')
     # private info
     legal_name = fields.Char(compute='_compute_legal_name', store=True, readonly=False, groups="hr.group_hr_user")
+    is_user_active = fields.Boolean(related='user_id.active', string="User's active", groups="hr.group_hr_user")
     private_phone = fields.Char(string="Private Phone", groups="hr.group_hr_user")
     private_email = fields.Char(string="Private Email", groups="hr.group_hr_user")
     lang = fields.Selection(selection=_lang_get, string="Lang", groups="hr.group_hr_user")
