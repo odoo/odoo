@@ -38,6 +38,7 @@ export class ImageTransformation extends Component {
         image: { validate: (p) => p.tagName === "IMG" },
         destroy: { type: Function },
         onChange: { type: Function },
+        onApply: { type: Function, optional: true },
         onComponentMounted: { type: Function, optional: true },
     };
     static defaultProps = {
@@ -65,20 +66,25 @@ export class ImageTransformation extends Component {
         }
         // When a character key is pressed and the image gets deleted,
         // close the image transform via selectionchange.
-        useExternalListener(this.document, "selectionchange", () => this.props.destroy());
+        useExternalListener(this.document, "selectionchange", () => this.destroy());
         // Backspace/Delete don’t trigger selectionchange on image
         // delete in Chrome, so we use keydown event.
         useExternalListener(this.document, "keydown", (ev) => {
             if (["Backspace", "Delete"].includes(ev.key)) {
-                this.props.destroy();
+                this.destroy();
             }
         });
-        useHotkey("escape", () => this.props.destroy());
+        useHotkey("escape", () => this.destroy());
         usePositionHook({ el: this.props.editable }, this.document, () => {
             if (!this.isCurrentlyTransforming) {
                 this.resetHandlers();
             }
         });
+    }
+
+    destroy() {
+        this.props.onApply?.();
+        this.props.destroy();
     }
 
     mouseMove(ev) {
@@ -197,6 +203,7 @@ export class ImageTransformation extends Component {
     mouseUp() {
         this.isCurrentlyTransforming = false;
         this.transfo.active = null;
+        this.props.onApply?.();
     }
 
     mouseDown(ev) {
