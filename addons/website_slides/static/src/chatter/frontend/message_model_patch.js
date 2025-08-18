@@ -11,7 +11,9 @@ const messagePatch = {
 
     async edit() {
         const data = await super.edit(...arguments);
-        this.store.env.bus.trigger("reload_rating_popup_composer", data);
+        if (data) {
+            this.store.env.bus.trigger("reload_rating_popup_composer", data);
+        }
         return data;
     },
 };
