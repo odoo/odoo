@@ -2608,15 +2608,6 @@ export class PosStore extends WithLazyGetterTrap {
         return makeAwaitable(this.env.services.dialog, ScaleScreen);
     }
 
-    /**
-     * Performs a faster order validation flow by mounting a lightweight payment screen,
-     * adding a new payment line using the specified payment method, and triggering order validation.
-     *
-     * @param {Object} paymentMethod - The payment method to be used for adding the new payment line.
-     *
-     * This method is typically used to speed up the payment process in scenarios where
-     * full payment screen functionality is not needed.
-     */
     async validateOrderFast(paymentMethod) {
         const validation = new OrderPaymentValidation({
             pos: this,

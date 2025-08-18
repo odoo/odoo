@@ -400,14 +400,6 @@ export class ProductScreen extends Component {
         }
     }
 
-    /**
-     * Initiates a fast validation process for the current order using the specified payment method.
-     *
-     * This method first sets a flag to indicate that fast payment is in progress,
-     * then depending on the printing configuration and order state,
-     * it either navigates directly to the feedback screen
-     * or performs fast order validation through a lightweight payment screen.
-     */
     async fastValidate(paymentMethod) {
         await this.pos.validateOrderFast(paymentMethod);
     }
