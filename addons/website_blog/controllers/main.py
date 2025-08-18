@@ -185,7 +185,8 @@ class WebsiteBlog(http.Controller):
 
         date_begin, date_end = opt.get('date_begin'), opt.get('date_end')
 
-        if tag and request.httprequest.method == 'GET':
+        has_group_designer = request.env.user.has_group('website.group_website_designer')
+        if tag and request.httprequest.method == 'GET' and not has_group_designer:
             # redirect get tag-1,tag-2 -> get tag-1
             tags = tag.split(',')
             if len(tags) > 1:

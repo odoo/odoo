@@ -44,7 +44,8 @@ class WebsiteEventController(http.Controller):
 
     @http.route(['/event', '/event/page/<int:page>', '/events', '/events/page/<int:page>', '/event/tags/<string:slug_tags>'], type='http', auth="public", website=True, sitemap=sitemap_event, list_as_website_content=_lt("Events"))
     def events(self, page=1, slug_tags=None, **searches):
-        if (slug_tags or searches.get('tags', '[]').count(',') > 0) and request.httprequest.method == 'GET':
+        has_group_designer = request.env.user.has_group('website.group_website_designer')
+        if (slug_tags or searches.get('tags', '[]').count(',') > 0) and request.httprequest.method == 'GET' and not has_group_designer:
             # Previously, the tags were searched using GET, which caused issues with crawlers (too many hits)
             # We replaced those with POST to avoid that, but it's not sufficient as bots "remember" crawled pages for a while
             # This permanent redirect is placed to instruct the bots that this page is no longer valid
