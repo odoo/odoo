@@ -5725,11 +5725,11 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, self.customer_location), 15)
 
         aggregate_values1 = picking.move_line_ids[0]._get_aggregated_product_quantities(strict=True)
-        aggregated_val = aggregate_values1[f'{self.productA.id}_{self.productA.name}__{self.productA.uom_id.id}']
+        aggregated_val = aggregate_values1[f'{self.productA.id}_{self.productA.name}__{self.productA.uom_id.id}_{picking.move_line_ids[0].result_package_id.id}']
         self.assertEqual(aggregated_val['qty_ordered'], 5)
 
         aggregate_values2 = picking.move_line_ids[1]._get_aggregated_product_quantities(strict=True)
-        aggregated_val = aggregate_values2[f'{self.productA.id}_{self.productA.name}__{self.productA.uom_id.id}']
+        aggregated_val = aggregate_values2[f'{self.productA.id}_{self.productA.name}__{self.productA.uom_id.id}_{picking.move_line_ids[1].result_package_id.id}']
         self.assertEqual(aggregated_val['qty_ordered'], 10)
 
     def test_move_line_aggregated_product_quantities_incomplete_package(self):
@@ -5755,6 +5755,7 @@ class TestStockMove(TestStockCommon):
         move1.quantity = 5
         move1.picked = True
         picking.action_put_in_pack()  # Create a package
+        package = picking.move_line_ids.result_package_id
 
         delivery_form = Form(picking)
         delivery = delivery_form.save()
@@ -5766,12 +5767,12 @@ class TestStockMove(TestStockCommon):
         picking.backorder_ids.action_cancel()
 
         aggregate_values = picking.move_line_ids._get_aggregated_product_quantities()
-        aggregated_val = aggregate_values[f'{self.productA.id}_{self.productA.name}__{self.productA.uom_id.id}']
+        aggregated_val = aggregate_values[f'{self.productA.id}_{self.productA.name}__{self.productA.uom_id.id}_{package.id}']
         self.assertEqual(aggregated_val['qty_ordered'], 15)
         self.assertEqual(aggregated_val['quantity'], 5)
 
         aggregate_values = picking.move_line_ids._get_aggregated_product_quantities(strict=True)
-        aggregated_val = aggregate_values[f'{self.productA.id}_{self.productA.name}__{self.productA.uom_id.id}']
+        aggregated_val = aggregate_values[f'{self.productA.id}_{self.productA.name}__{self.productA.uom_id.id}_{package.id}']
         self.assertEqual(aggregated_val['qty_ordered'], 5)
         self.assertEqual(aggregated_val['quantity'], 5)
 

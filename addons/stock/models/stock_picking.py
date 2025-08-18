@@ -641,6 +641,7 @@ class StockPicking(models.Model):
     )
     move_line_ids = fields.One2many('stock.move.line', 'picking_id', 'Operations')
     packages_count = fields.Integer('Packages Count', compute='_compute_packages_count')
+    package_history_ids = fields.Many2many('stock.package.history', string='Transfered Packages', copy=False)
     show_check_availability = fields.Boolean(
         compute='_compute_show_check_availability',
         help='Technical field used to compute whether the button "Check Availability" should be displayed.')
@@ -925,9 +926,8 @@ class StockPicking(models.Model):
             for picking in pack.picking_ids:
                 packages_by_pick[picking] += 1
 
-        histories_by_pick = self.env['stock.move.line']._read_group([
-            ('picking_id', 'in', done_pickings.ids), ('picking_id.state', '=', 'done')],
-            ['picking_id'], ['package_history_id:count_distinct'])
+        histories_by_pick = self.env['stock.package.history']._read_group([
+            ('picking_ids', 'in', done_pickings.ids)], ['picking_ids'], ['__count'])
         histories_by_pick = dict(histories_by_pick)
 
         for picking in done_pickings:
@@ -2058,6 +2058,15 @@ class StockPicking(models.Model):
                 clean_action(action, self.env)
                 report_actions.append(action)
         return report_actions
+
+    def _get_packages_for_print(self):
+        package_ids = OrderedSet()
+        for picking in self:
+            if picking.state == 'done':
+                package_ids.update(picking.package_history_ids.package_id.ids)
+            else:
+                package_ids.update(picking.move_line_ids.result_package_id._get_all_package_dest_ids())
+        return self.env['stock.package'].browse(package_ids)
 
     def _can_return(self):
         self.ensure_one()

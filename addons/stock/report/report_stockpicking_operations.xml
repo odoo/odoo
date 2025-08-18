@@ -130,7 +130,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-foreach="o.move_ids.filtered(lambda x: x.quantity)" t-as="move">
+                                    <t t-foreach="o.move_ids.filtered(lambda m: m.quantity and any(not ml.is_entire_pack for ml in m.move_line_ids))" t-as="move">
                                         <t t-set="move_lines_without_entire_pack" t-value="move.move_line_ids.filtered(lambda ml: not ml.is_entire_pack)"/>
                                         <!-- This flag is true if there are multiple move lines in a move, or if there is at least one tracked move line -->
                                         <t t-set="move_has_multiple_lines" t-value="len(move.move_line_ids) > 1 or any(move_line.lot_id or move_line.lot_name for move_line in move_lines_without_entire_pack)"/>
@@ -221,23 +221,44 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr t-foreach="o.move_line_ids.filtered(lambda ml: ml.is_entire_pack).package_id.sorted(key=lambda p: p.name)" t-as="package">
-                                        <td name="td_pk_barcode">
-                                            <t t-set="package" t-value="package.with_context(picking_id=o.id)" />
-                                            <div t-field="package.name" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 600, 'height': 100, 'img_style': 'width:300px;height:50px;margin-left: -50px;'}">
-                                                <div class="bg-light border-1 rounded d-flex flex-column align-items-center justify-content-center px-1 py-2  opacity-75 text-muted text-center">
-                                                    (package barcode)
+                                    <t t-if="o.state != 'done'">
+                                        <tr t-foreach="o.move_line_ids.filtered(lambda ml: ml.is_entire_pack).package_id.outermost_package_id.sorted(key=lambda p: p.name)" t-as="package">
+                                            <td name="td_pk_barcode">
+                                                <t t-set="package" t-value="package.with_context(picking_id=o.id)" />
+                                                <div t-field="package.name" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 600, 'height': 100, 'img_style': 'width:300px;height:50px;margin-left: -50px;'}">
+                                                    <div class="bg-light border-1 rounded d-flex flex-column align-items-center justify-content-center px-1 py-2  opacity-75 text-muted text-center">
+                                                        (package barcode)
+                                                    </div>
                                                 </div>
-                                            </div>
+                                                    <br/>
+                                            </td>
+                                            <td t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">
+                                                <span t-field="package.location_id"/>
+                                            </td>
+                                            <td t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
+                                                <span t-field="package.location_dest_id"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-else="">
+                                        <tr t-foreach="o.package_history_ids.filtered(lambda ph: not ph.parent_dest_id and all(ml.is_entire_pack for ml in ph.move_line_ids)).sorted(key=lambda ph: ph.package_id.name)" t-as="package_history">
+                                            <td name="td_pk_barcode">
+                                                <t t-set="package" t-value="package_history.package_id.with_context(picking_id=o.id)" />
+                                                <div t-field="package.name" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 600, 'height': 100, 'img_style': 'width:300px;height:50px;margin-left: -50px;'}">
+                                                    <div class="bg-light border-1 rounded d-flex flex-column align-items-center justify-content-center px-1 py-2  opacity-75 text-muted text-center">
+                                                        (package barcode)
+                                                    </div>
+                                                </div>
                                                 <br/>
-                                        </td>
-                                        <td t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">
-                                            <span t-field="package.location_id"/>
-                                        </td>
-                                        <td t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
-                                            <span t-field="package.location_dest_id"/>
-                                        </td>
-                                    </tr>
+                                            </td>
+                                            <td t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">
+                                                <span t-field="package_history.location_id"/>
+                                            </td>
+                                            <td t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
+                                                <span t-field="package_history.location_dest_id"/>
+                                            </td>
+                                        </tr>
+                                    </t>
                                 </tbody>
                             </table>
 
