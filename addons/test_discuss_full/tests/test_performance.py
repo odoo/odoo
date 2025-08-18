@@ -1570,6 +1570,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         last_message = channel._get_last_messages()
         if channel == self.channel_channel_public_1:
             return {
+                "mail_email_address": False,
                 "failure_type": False,
                 "id": last_message.notification_ids.id,
                 "mail_message_id": last_message.id,

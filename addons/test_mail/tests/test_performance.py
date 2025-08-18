@@ -499,7 +499,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 'default_template_id': test_template.id,
             }).create({})
 
-        with self.assertQueryCount(admin=55, employee=55), self.mock_mail_gateway():
+        with self.assertQueryCount(admin=77, employee=77), self.mock_mail_gateway():
             composer._action_send_mail()
 
         self.assertEqual(len(self._new_mails), 10)
@@ -1272,7 +1272,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         rec1 = rec.with_context(active_test=False)      # to see inactive records
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
 
-        with self.assertQueryCount(admin=31, employee=31):
+        with self.assertQueryCount(admin=34, employee=34):
             rec.write({
                 'name': 'Test2',
                 'customer_id': customer_id,
@@ -1557,6 +1557,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                             ],
                             "mail.notification": [
                                 {
+                                    "mail_email_address": False,
                                     "failure_type": False,
                                     "id": notif_1.id,
                                     "mail_message_id": message.id,
@@ -1565,6 +1566,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "res_partner_id": self.user_emp_inbox.partner_id.id,
                                 },
                                 {
+                                    "mail_email_address": False,
                                     "failure_type": False,
                                     "id": notif_2.id,
                                     "mail_message_id": message.id,
@@ -1660,6 +1662,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                             ],
                             "mail.notification": [
                                 {
+                                    "mail_email_address": False,
                                     "failure_type": False,
                                     "id": notif_1.id,
                                     "mail_message_id": message.id,
@@ -1668,6 +1671,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "res_partner_id": self.user_emp_inbox.partner_id.id,
                                 },
                                 {
+                                    "mail_email_address": False,
                                     "failure_type": False,
                                     "id": notif_2.id,
                                     "mail_message_id": message.id,

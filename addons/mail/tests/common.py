@@ -32,7 +32,7 @@ from odoo.addons.mail.tools.discuss import Store
 from odoo.tests import common, RecordCapturer, new_test_user
 from odoo.tools import mute_logger
 from odoo.tools.mail import (
-    email_normalize, email_split_and_format_normalize, formataddr
+    email_normalize, email_normalize_all, email_split, email_split_and_format_normalize, formataddr
 )
 from odoo.tools.translate import code_translations
 
@@ -553,6 +553,41 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             )
         return mail
 
+    def _find_mail_mail_wemails(self, email_to_all, status, mail_message=None, author=None, content=None, email_from=None):
+        """ Find a mail.mail record based on various parameters, notably a list
+        of email to (string emails).
+
+        :param email_to_all: comma-separated or python list of email addresses comprising either
+          all email_to addresses of the message, all emails of the recipients or all emails of both;
+
+        :return mail: a ``mail.mail`` record generated during the mock and matching
+          given parameters and filters;
+        """
+        filtered = self._filter_mail(status=status, mail_message=mail_message, author=author, content=content, email_from=email_from)
+
+        if isinstance(email_to_all, str):
+            email_to_all = email_split(email_to_all)
+        email_to = (
+            {email_normalize(email) or email for email in email_to_all or []} - {''}
+        ) or ([email_to_all] if email_to_all else set())
+
+        for mail in filtered:
+            mail_email_addrs = set(email_normalize_all(mail.email_to or '')) or ({mail.email_to} if mail.email_to else set())
+            mail_partner_email_addrs = {email_normalize(email) or email for email in mail.recipient_ids.mapped('email')}
+
+            if email_to == mail_email_addrs | mail_partner_email_addrs:
+                break
+        else:
+            debug_info = '\n'.join(
+                f'From: {mail.author_id} ({mail.email_from}) - To: {mail.email_to} / {sorted(mail.recipient_ids.mapped("email"))} (State: {mail.state})'
+                for mail in self._new_mails
+            )
+            raise AssertionError(
+                f'mail.mail not found for message {mail_message} / status {status} / email_to {email_to} / '
+                f'author {author} ({email_from})\n{debug_info}'
+            )
+        return mail
+
     def _find_mail_mail_wrecord(self, record, status=None, mail_message=None, author=None, content=None, email_from=None):
         """ Find a mail.mail record based on model / res_id of a record.
 
@@ -577,8 +612,9 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
     # ------------------------------------------------------------
 
     def _assertMailMail(self, mail, recipients_list, status,
-                        email_to_recipients=None, author=None,
-                        content=None, fields_values=None, email_values=None):
+                        email_to_all=None, email_to_recipients=None,
+                        author=None, content=None,
+                        fields_values=None, email_values=None):
         """ Assert mail.mail record values and maybe related emails. Allow
         asserting their content. Records to check are the one generated when
         using mock (mail.mail and outgoing emails).
@@ -594,6 +630,9 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
           being partners it nos easy (e.g. multi emails, ...);
         :param author: see ``_find_mail_mail_wpartners``;
         :param content: if given, check it is contained within mail html body;
+        :param email_to_all: list of email addresses used in email_to, checking
+        all of them are in the same email. This is in addition to checking recipients
+        individually.;
         :param fields_values: if given, should be a dictionary of field names /
           values allowing to check ``mail.mail`` additional values (subject,
           reply_to, ...);
@@ -663,9 +702,14 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                         recipient,
                         **(email_values or {})
                     )
+            if email_to_all:
+                self.assertSentEmail(
+                    email_values['email_from'] if email_values and email_values.get('email_from') else author,
+                    email_to_all,
+                    **(email_values or {}))
 
     def assertMailMail(self, recipients, status,
-                       email_to_recipients=None,
+                       email_to_recipients=None, email_to_all=None,
                        mail_message=None, author=None,
                        content=None, fields_values=None, email_values=None):
         """ Assert mail.mail records are created and maybe sent as emails. This
@@ -674,22 +718,23 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
 
         :param recipients: a ``res.partner`` recordset. See
           ``_find_mail_mail_wpartners``;
+        :param email_to_all: list of email addresses. See ``_find_mail_mail_wemail``;
         :param mail_message: used to find the related email;
 
         See '_assertMailMail' for more details about other parameters.
         """
-        found_mail = self._find_mail_mail_wpartners(
-            recipients, status, mail_message=mail_message,
-            author=author,
-            content=content,
-            email_from=(fields_values or {}).get('email_from')
-        )
+        email_from = (fields_values or {}).get('email_from')
+        if recipients:
+            found_mail = self._find_mail_mail_wpartners(recipients, status, mail_message=mail_message, author=author, content=content, email_from=email_from)
+        else:
+            found_mail = self._find_mail_mail_wemail(email_to_all, status, mail_message=mail_message, author=author, content=content, email_from=email_from)
+
         self.assertTrue(bool(found_mail))
         self._assertMailMail(
             found_mail, recipients, status,
             email_to_recipients=email_to_recipients,
             author=author, content=content,
-            fields_values=fields_values, email_values=email_values,
+            email_to_all=email_to_all, fields_values=fields_values, email_values=email_values,
         )
         return found_mail
 
@@ -805,14 +850,17 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                         f'Message: expected {fvalue} for {fname}, got {message[fname]}',
                     )
 
-    def assertNoMail(self, recipients, mail_message=None, author=None):
+    def assertNoMail(self, recipients, email_to=None, mail_message=None, author=None):
         """ Check no mail.mail and email was generated during gateway mock. """
         try:
-            self._find_mail_mail_wpartners(recipients, False, mail_message=mail_message, author=author)
+            if recipients:
+                self._find_mail_mail_wpartners(recipients, False, mail_message=mail_message, author=author)
+            elif email_to is not None:
+                self._find_mail_mail_wemail(email_to, False, mail_message=mail_message, author=author)
         except AssertionError:
             pass
         else:
-            raise AssertionError('mail.mail exists for message %s / recipients %s but should not exist' % (mail_message, recipients.ids))
+            raise AssertionError('mail.mail exists for message %s / recipients %s / emails %s but should not exist' % (mail_message, recipients.ids, email_to or '/'))
         finally:
             self.assertNotSentEmail(recipients)
 
@@ -1426,9 +1474,8 @@ class MailCase(common.TransactionCase, MockEmail):
             'notif': list of notified recipients: [
               {
                 'check_send': whether outgoing stuff has to be checked;
-                'email': NOT SUPPORTED YET,
+                'email_to': email if sent without partner,
                 'email_to_recipients': propagated to 'assertMailMail';
-                'failure_reason': failure_reason on mail.notification;
                 'failure_type': 'failure_type' on mail.notification;
                 'is_read': 'is_read' on mail.notification;
                 'partner': res.partner record (may be empty),
@@ -1446,7 +1493,8 @@ class MailCase(common.TransactionCase, MockEmail):
           and therefore we are able to check outgoing emails;
         """
         partners = self.env['res.partner'].sudo().concat(*list(p['partner'] for i in recipients_info for p in i['notif'] if p.get('partner')))
-        base_domain = [('res_partner_id', 'in', partners.ids)]
+        email_addrs = [email for i in recipients_info for p in i['notif'] for email in p.get('email_to', []) if not p.get('partner')]
+        base_domain = ['|', ('res_partner_id', 'in', partners.ids), ('mail_email_address', 'in', email_addrs)]
         if messages is not None:
             base_domain += [('mail_message_id', 'in', messages.ids)]
         notifications = self.env['mail.notification'].sudo().search(base_domain)
@@ -1474,13 +1522,14 @@ class MailCase(common.TransactionCase, MockEmail):
                 raise ValueError(f'Unsupported values: {extra_keys}')
 
             mbody, mtype = message_info.get('content', ''), message_info.get('message_type', 'comment')
+            message_values = message_info.get('message_values', {})
             msubtype = message_info.get('message_values', {}).get('subtype_id', self.env.ref(message_info.get('subtype', 'mail.mt_comment')))
 
             # find message
             if messages:
                 message = messages.filtered(lambda message: (
                     mbody in message.body and message.message_type == mtype and
-                    message.subtype_id == msubtype
+                    msubtype == message.subtype_id
                 ))
             else:
                 message = self.env['mail.message'].sudo().search([
@@ -1488,10 +1537,9 @@ class MailCase(common.TransactionCase, MockEmail):
                     ('message_type', '=', mtype),
                     ('subtype_id', '=', msubtype.id)
                 ], limit=1, order='id DESC')
-            self.assertTrue(message, 'Mail: not found message (content: %s, message_type: %s, subtype: %s)' % (mbody, mtype, msubtype.name))
+            self.assertTrue(message, 'Mail: not found message (content: %s, message_type: %s, subtype: %s)' % (mbody, mtype, msubtype and msubtype.name))
 
             # check message values
-            message_values = message_info.get('message_values', {})
             if message_values:
                 self.assertMessageFields(message, message_values)
 
@@ -1506,6 +1554,7 @@ class MailCase(common.TransactionCase, MockEmail):
                 # sanity check
                 extra_keys = set(recipient.keys()) - {
                     'check_send',
+                    'email_to',
                     'email_to_recipients',
                     'is_read',
                     'failure_reason',
@@ -1526,7 +1575,7 @@ class MailCase(common.TransactionCase, MockEmail):
 
                 if not ngroup:
                     ngroup = 'user'
-                    if partner and not partner.user_ids:
+                    if (partner and not partner.user_ids) or (not partner and email_to_lst):
                         ngroup = 'customer'
                     elif partner and partner.partner_share:
                         ngroup = 'portal'
@@ -1539,20 +1588,20 @@ class MailCase(common.TransactionCase, MockEmail):
                     }
 
                 # find notification
-                partner_notif = notifications.filtered(lambda n: (
-                    n.mail_message_id == message and
-                    n.res_partner_id == partner and
-                    n.notification_type == ntype
-                ))
-                self.assertEqual(len(partner_notif), 1,
-                                 f'Mail: not found notification for {partner} (type: {ntype}, message: {message.id})\n{debug_info}')
-                self.assertEqual(partner_notif.author_id, partner_notif.mail_message_id.author_id)
-                self.assertEqual(partner_notif.is_read, nis_read)
+                notif = notifications.filtered(
+                    lambda n: n.mail_message_id == message
+                    and ((partner and n.res_partner_id == partner) or n.mail_email_address in email_to_lst)
+                    and n.notification_type == ntype
+                )
+                self.assertEqual(len(notif), 1,
+                                 f'Mail: not found notification for {partner or email_to_lst} (type: {ntype}, message: {message.id})\n{debug_info}')
+                self.assertEqual(notif.author_id, notif.mail_message_id.author_id)
+                self.assertEqual(notif.is_read, nis_read)
                 if 'failure_reason' in recipient:
-                    self.assertEqual(partner_notif.failure_reason, recipient['failure_reason'])
+                    self.assertEqual(notif.failure_reason, recipient['failure_reason'])
                 if 'failure_type' in recipient:
-                    self.assertEqual(partner_notif.failure_type, recipient['failure_type'])
-                self.assertEqual(partner_notif.notification_status, nstatus)
+                    self.assertEqual(notif.failure_type, recipient['failure_type'])
+                self.assertEqual(notif.notification_status, nstatus)
 
                 # prepare further asserts
                 if ntype == 'email':
@@ -1579,7 +1628,7 @@ class MailCase(common.TransactionCase, MockEmail):
                     else:
                         raise NotImplementedError()
 
-                done_notifs |= partner_notif
+                done_notifs |= notif
             done_msgs |= message
 
             # check bus notifications that should be sent (hint: message author, multiple notifications)
@@ -1610,27 +1659,34 @@ class MailCase(common.TransactionCase, MockEmail):
                     mail_status = 'outgoing'
                 if email_to_lst and all(p in status_groups['outgoing']['email_lst'] for p in email_to_lst):
                     mail_status = 'outgoing'
-                if not self.mail_unlink_sent and partners:
+                if not self.mail_unlink_sent and (partners or email_to_lst):
                     self.assertMailMail(
                         partners,
                         mail_status,
                         author=message_info.get('mail_mail_values', {}).get('author_id', message.author_id),
                         content=mbody,
+                        email_to_all=email_to_lst,
                         email_to_recipients=group['email_to_recipients'] or None,
                         email_values=email_values,
                         fields_values=message_info.get('mail_mail_values'),
                         mail_message=message,
                     )
                 else:
-                    for recipient in partners:
+                    for partner in partners:
                         self.assertSentEmail(
                             message.author_id if message.author_id else message.email_from,
-                            [recipient],
+                            partner,
                             **email_values
+                        )
+                    if email_to_lst:
+                        self.assertSentEmail(
+                            message.author_id if message.author_id else message.email_from,
+                            email_to_lst,
+                            **email_values,
                         )
 
             if not any(p for recipients in email_groups.values() for p in recipients):
-                self.assertNoMail(partners, mail_message=message, author=message.author_id)
+                self.assertNoMail(partners, email_to=email_addrs, mail_message=message, author=message.author_id)
 
         return done_msgs, done_notifs
 
