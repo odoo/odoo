@@ -166,9 +166,28 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _postprocess_invoice_ubl_xml(self, invoice, invoice_data):
-        # Adding the PDF to the XML
+        """
+        Include the PDF in the UBL as an AdditionalDocumentReference element.
+
+        According to UBL 2.1 standard, the AdditionalDocumentReference element should be
+        placed above ProjectReference which isn't usually in xml files.
+        So usually it's set above AccountingSupplierParty. Here, we try to find a suitable anchor point among
+        the available element to insert our PDF attachment. If none of these are found, we
+        skip adding the attachment to avoid breaking the XML structure.
+        Inside CreditNote, the ProjectReference element is not used in xml.
+        So we look for OriginatorDocumentReference instead.
+        """
         tree = etree.fromstring(invoice_data['ubl_cii_xml_attachment_values']['raw'])
-        anchor_elements = tree.xpath("//*[local-name()='AccountingSupplierParty']")
+
+        localname = etree.QName(tree).localname
+        anchor_xpath = {
+            'Invoice': "//*[local-name()='ProjectReference' or local-name()='Signature' or local-name()='AccountingSupplierParty']",
+            'CreditNote': "//*[local-name()='StatementDocumentReference' or local-name()='OriginatorDocumentReference' or local-name()='Signature' or local-name()='AccountingSupplierParty']",
+            'DebitNote': "//*[local-name()='Signature' or local-name()='AccountingSupplierParty']",
+        }.get(localname)
+
+        anchor_elements = tree.xpath(anchor_xpath)
+
         if not anchor_elements:
             return
 
