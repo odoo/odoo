@@ -22,7 +22,7 @@ class ResConfigSettings(models.TransientModel):
     module_auth_oauth = fields.Boolean("Use external authentication providers (OAuth)")
     module_auth_ldap = fields.Boolean("LDAP Authentication")
     module_account_inter_company_rules = fields.Boolean("Manage Inter Company")
-    module_voip = fields.Boolean("VoIP")
+    module_voip = fields.Boolean("Phone")
     module_web_unsplash = fields.Boolean("Unsplash Image Library")
     module_sms = fields.Boolean("SMS")
     module_partner_autocomplete = fields.Boolean("Partner Autocomplete")
