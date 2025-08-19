@@ -17,13 +17,16 @@ def _configure_journals(env):
                 fname: value
                 for fname, value in full_data['template_data'].items()
                 if fname in [
-                    'property_stock_journal',
-                    'property_stock_account_input_categ_id',
-                    'property_stock_account_output_categ_id',
-                    'property_stock_valuation_account_id',
+                    'stock_journal',
+                    'stock_valuation_account_id',
                 ]
             }
         }
+        data['res.company'] = {company.id: {
+            'account_stock_journal_id': full_data['res.company'][company.id].get('account_stock_journal_id'),
+            'account_stock_valuation_id': full_data['res.company'][company.id].get('account_stock_valuation_id'),
+        }}
+
         template_data = data.pop('template_data')
         journal = env['account.journal'].search([
             ('code', '=', 'STJ'),

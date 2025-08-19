@@ -31,13 +31,10 @@
             <field name="model">product.category</field>
             <field name="inherit_id" ref="account.view_category_property_form"/>
             <field name="arch" type="xml">
-                <group name="account_property" position="inside">
-                    <group name="account_stock_property" string="Accounting Stock Valuation" groups="account.group_account_readonly">
-                        <field name="property_stock_valuation_account_id" string="Stock Account" options="{'no_create': True}" required="property_valuation == 'real_time'"/>
-                        <field name="property_cogs_account_id" string="Cost of Goods Sold Account" options="{'no_create': True}" invisible="not anglo_saxon_accounting"/>
-                        <field name="property_price_difference_account_id" options="{'no_create': True}" invisible="not (property_cost_method == 'standard' and property_valuation == 'real_time')"/>
-                    </group>
-                </group>
+                <field name="property_account_expense_categ_id" position="after">
+                    <field name="property_stock_valuation_account_id" string="Stock Account" options="{'no_create': True}"/>
+                    <field name="property_price_difference_account_id" options="{'no_create': True}" invisible="not (property_cost_method == 'standard' and property_valuation == 'real_time')"/>
+                </field>
             </field>
         </record>
 
