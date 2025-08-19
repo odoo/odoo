@@ -127,10 +127,11 @@ class HrEmployee(models.Model):
         ]
 
         if self.department_id:
+            department_ids = self.department_id.ids
             domain += [
                 '|',
                 ('department_ids', '=', False),
-                ('department_ids', 'parent_of', self.department_id.id),
+                ('department_ids', 'parent_of', department_ids),
             ]
         else:
             domain += [('department_ids', '=', False)]
