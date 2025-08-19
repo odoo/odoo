@@ -649,7 +649,7 @@ export class DiscussChannel extends models.ServerModel {
             })
         );
         return {
-            data: store.get_result(),
+            store_data: store.get_result(),
             sub_channel: subChannels[0].id,
         };
     }

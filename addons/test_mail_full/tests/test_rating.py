@@ -279,5 +279,10 @@ class TestRatingRoutes(TestRatingCommon):
                 "thread_model": "mail.test.rating.thread.read",
             },
         )
-        self.assertEqual(len(res["rating.rating"]), 1)
-        self.assertEqual(res["rating.rating"][0]["rating"], 5)
+        message = next(
+            m for m in res["store_data"]["mail.message"] if m["id"] == res["message_id"]
+        )
+        rating = next(
+            r for r in res["store_data"]["rating.rating"] if r["id"] == message["rating_id"]
+        )
+        self.assertEqual(rating["rating"], 5)

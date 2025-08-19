@@ -223,7 +223,7 @@ class TestDiscussChannelMember(MailCommon):
         self.public_channel._add_members(guests=guest)
         data = self.env["res.partner"].search_for_channel_invite(
             partner.name, channel_id=self.public_channel.id
-        )["data"]
+        )["store_data"]
         self.assertEqual(len(data["res.partner"]), 1)
         self.assertEqual(data["res.partner"][0]["id"], partner.id)
 

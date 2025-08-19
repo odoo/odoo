@@ -76,10 +76,11 @@ class LivechatChatbotScriptController(http.Controller):
         posted_message = next_step._process_step(discuss_channel)
         store = Store().add(posted_message)
         store.add(next_step)
+        chatbot_next_step_id = (next_step.id, posted_message.id)
         store.add_model_values(
             "ChatbotStep",
             {
-                "id": (next_step.id, posted_message.id),
+                "id": chatbot_next_step_id,
                 "isLast": next_step._is_last_step(discuss_channel),
                 "message": posted_message.id,
                 "operatorFound": next_step.is_forward_operator
@@ -91,13 +92,17 @@ class LivechatChatbotScriptController(http.Controller):
             "Chatbot",
             {
                 "currentStep": {
-                    "id": (next_step.id, posted_message.id),
+                    "id": chatbot_next_step_id,
                     "scriptStep": next_step.id,
                     "message": posted_message.id,
                 },
                 "id": (chatbot.id, discuss_channel.id),
                 "script": chatbot.id,
                 "thread": Store.One(discuss_channel, [], as_thread=True),
+                "steps": [("ADD", [{
+                    "scriptStep": chatbot_next_step_id[0],
+                    "message": chatbot_next_step_id[1]
+                }])],
             },
         )
         return store.get_result()
@@ -126,5 +131,9 @@ class LivechatChatbotScriptController(http.Controller):
         if last_user_message:
             result = chatbot._validate_email(last_user_message.body, discuss_channel)
             if posted_message := result.pop("posted_message"):
-                result["data"] = Store().add(posted_message).get_result()
+                store = Store().add(posted_message)
+                store.add(discuss_channel, {
+                    "messages": Store.Many(posted_message, mode="ADD")
+                })
+                result["data"] = store.get_result()
         return result

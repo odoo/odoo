@@ -492,14 +492,13 @@ test("receive new needaction messages", async () => {
         res_partner_id: serverState.partnerId,
     });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(
-        partner,
-        "mail.message/inbox",
-        new mailDataHelpers.Store(
+    pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
+        message_id: messageId_1,
+        store_data: new mailDataHelpers.Store(
             pyEnv["mail.message"].browse(messageId_1),
             makeKwArgs({ for_current_user: true, add_followers: true })
-        ).get_result()
-    );
+        ).get_result(),
+    });
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-content", { text: "not empty 1" });
@@ -517,14 +516,13 @@ test("receive new needaction messages", async () => {
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
-    pyEnv["bus.bus"]._sendone(
-        partner,
-        "mail.message/inbox",
-        new mailDataHelpers.Store(
+    pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
+        message_id: messageId_2,
+        store_data: new mailDataHelpers.Store(
             pyEnv["mail.message"].browse(messageId_2),
             makeKwArgs({ for_current_user: true, add_followers: true })
-        ).get_result()
-    );
+        ).get_result(),
+    });
     await contains("button", { text: "Inbox", contains: [".badge", { text: "2" }] });
     await contains(".o-mail-Message", { count: 2 });
     await contains(".o-mail-Message-content", { text: "not empty 1" });
@@ -552,14 +550,13 @@ test("receive a message that is not linked to thread", async () => {
         res_partner_id: serverState.partnerId,
     });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(
-        partner,
-        "mail.message/inbox",
-        new mailDataHelpers.Store(
+    pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
+        message_id: messageId_1,
+        store_data: new mailDataHelpers.Store(
             pyEnv["mail.message"].browse(messageId_1),
             makeKwArgs({ for_current_user: true, add_followers: true })
-        ).get_result()
-    );
+        ).get_result(),
+    });
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-content", { text: "needaction message" });

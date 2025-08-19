@@ -152,16 +152,15 @@ export class Chatbot extends Record {
             return;
         }
         if (this.steps.at(-1)?.eq(this.currentStep)) {
-            const storeData = await rpc("/chatbot/step/trigger", {
+            const res = await rpc("/chatbot/step/trigger", {
                 channel_id: this.thread.id,
                 chatbot_script_id: this.script.id,
             });
-            if (!storeData) {
+            if (!res) {
                 this.currentStep.isLast = true;
                 return;
             }
-            const { ChatbotStep: steps } = this.store.insert(storeData);
-            this.steps.push(steps[0]);
+            this.store.insert(res);
         } else {
             const nextStepIndex = this.steps.lastIndexOf(this.currentStep) + 1;
             this.currentStep = this.steps[nextStepIndex];
@@ -276,12 +275,7 @@ export class Chatbot extends Record {
         const { success, data } = await rpc("/chatbot/step/validate_email", {
             channel_id: this.thread.id,
         });
-        const { "mail.message": messages = [] } = this.store.insert(data);
-        /** @type {import("models").Message} */
-        const message = messages[0];
-        if (message) {
-            this.thread.messages.add(message);
-        }
+        this.store.insert(data);
         return success;
     }
 }

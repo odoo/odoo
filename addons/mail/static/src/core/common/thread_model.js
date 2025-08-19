@@ -837,9 +837,9 @@ export class Thread extends Record {
         if (!data) {
             return;
         }
-        const { "mail.message": messages = [] } = this.store.insert(data);
+        this.store.insert(data.store_data);
         /** @type {import("models").Message} */
-        const message = messages[0];
+        const message = this.store["mail.message"].get(data.message_id);
         this.addOrReplaceMessage(message, tmpMsg);
         this.onNewSelfMessage(message);
         // Only delete the temporary message now that seen_message_id is updated

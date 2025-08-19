@@ -175,7 +175,11 @@ class ChannelController(http.Controller):
             domain.append(["id", "<", before])
         # sudo: ir.attachment - reading attachments of a channel that the current user can access
         attachments = request.env["ir.attachment"].sudo().search(domain, limit=limit, order="id DESC")
-        return Store().add(attachments).get_result()
+        return {
+
+            "store_data": Store().add(attachments).get_result(),
+            "count": len(attachments),
+        }
 
     @http.route("/discuss/channel/join", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
@@ -192,7 +196,7 @@ class ChannelController(http.Controller):
         if not channel:
             raise NotFound()
         sub_channel = channel._create_sub_channel(from_message_id, name)
-        return {"data": Store().add(sub_channel).get_result(), "sub_channel": sub_channel.id}
+        return {"store_data": Store().add(sub_channel).get_result(), "sub_channel": sub_channel.id}
 
     @http.route("/discuss/channel/sub_channel/fetch", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
@@ -206,4 +210,7 @@ class ChannelController(http.Controller):
         if search_term:
             domain.append(("name", "ilike", search_term))
         sub_channels = request.env["discuss.channel"].search(domain, order="id desc", limit=limit)
-        return Store().add(sub_channels).add(sub_channels._get_last_messages()).get_result()
+        return {
+            "store_data": Store().add(sub_channels).add(sub_channels._get_last_messages()).get_result(),
+            "sub_channel_ids": sub_channels.ids,
+        }

@@ -333,13 +333,13 @@ export class ResPartner extends webModels.ResPartner {
     search_for_channel_invite(search_term, channel_id, limit = 30) {
         const kwargs = getKwArgs(arguments, "search_term", "channel_id", "limit");
         const store = new mailDataHelpers.Store();
-        const count = this._search_for_channel_invite(
+        const channel_invites = this._search_for_channel_invite(
             store,
             kwargs.search_term,
             kwargs.channel_id,
             kwargs.limit
         );
-        return { count: count, data: store.get_result() };
+        return { store_data: store.get_result(), ...channel_invites };
     }
 
     /**
@@ -392,11 +392,20 @@ export class ResPartner extends webModels.ResPartner {
                 }
                 return false;
             })
-            .map((user) => user.partner_id);
+            .map((user) => user.partner_id)
+            .reduce((ids, partnerId) => {
+                if (!ids.includes(partnerId)) {
+                    ids.push(partnerId);
+                }
+                return ids;
+            }, []);
         const count = matchingPartnersIds.length;
         matchingPartnersIds.length = Math.min(count, limit);
         this._search_for_channel_invite_to_store(matchingPartnersIds, store, channel_id);
-        return count;
+        return {
+            count,
+            partner_ids: matchingPartnersIds,
+        };
     }
 
     _search_for_channel_invite_to_store(ids, store, channel_id) {
