@@ -8,6 +8,7 @@ definePosModels();
 
 test("product_screen.js", async () => {
     const store = await setupPosEnv();
+    store.addNewOrder();
     const order = store.getOrder();
     const comp = await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
     await comp.addProductToOrder(store.models["product.template"].get(5));
