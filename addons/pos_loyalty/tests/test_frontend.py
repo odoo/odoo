@@ -1141,6 +1141,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'trigger': 'auto',
             'applies_on': 'both',
             'pos_ok': True,
+            'portal_visible': True,
             'pos_config_ids': [Command.link(self.main_pos_config.id)],
             'rule_ids': [(0, 0, {
                 'reward_point_mode': 'money',
