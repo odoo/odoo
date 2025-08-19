@@ -1147,3 +1147,47 @@ test("react to prop 'domain' changes", async function () {
     parent.state.domain = [["type", "=", "herbivorous"]];
     await animationFrame();
 });
+
+////////////////////////////////////////////////////////////////////////////
+// cache
+////////////////////////////////////////////////////////////////////////////
+
+test("Cache: refresh with debug mode", async () => {
+    const env = await makeMockEnv();
+
+    onRpc("get_views", ({ kwargs }) => {
+        expect.step("Fetch, debug = " + !!kwargs.options.debug);
+        return {
+            models: {
+                "res.partner": {
+                    fields: {},
+                },
+            },
+            views: {},
+        };
+    });
+
+    const services = env.services;
+
+    const context = {
+        context: {},
+        resModel: "res.partner",
+        views: [],
+    };
+
+    const expected = {
+        fields: {},
+        relatedModels: {
+            "res.partner": {
+                fields: {},
+            },
+        },
+        views: {},
+    };
+
+    env.debug = "";
+    expect(await services.view.loadViews(context)).toEqual(expected);
+    env.debug = "1";
+    expect(await services.view.loadViews(context)).toEqual(expected);
+    expect.verifySteps(["Fetch, debug = false", "Fetch, debug = true"]);
+});
