@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:08+0000\n"
-"PO-Revision-Date: 2025-08-15 23:11+0000\n"
+"PO-Revision-Date: 2025-08-19 14:34+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-s18-4/stock/pt_BR/>\n"
@@ -111,14 +111,21 @@ msgid ""
 " * Done: The transfer has been processed.\n"
 " * Cancelled: The transfer has been cancelled."
 msgstr ""
-" * Rascunho: a transferência ainda não foi confirmada. Reserva não aplicável.\n"
-" * Aguardando outra operação: esta transferência está aguardando por outra operação antes de estar pronta.\n"
-" * Aguardando: a transferência está aguardando pela disponibilidade de alguns produtos.\n"
-"(a) A política de envio é \"o mais breve possível\": nenhum produto pode ser reservado.\n"
-"(b) A política de envio é  \"quando todos os produtos estiverem prontos\": nem todos os produtos podem ser reservados.\n"
+" * Rascunho: a transferência ainda não foi confirmada. Reserva não aplicável."
+"\n"
+" * Aguardando outra operação: esta transferência está aguardando por outra "
+"operação antes de estar pronta.\n"
+" * Aguardando: a transferência está aguardando pela disponibilidade de "
+"alguns produtos.\n"
+"(a) A política de envio é \"o mais breve possível\": nenhum produto pode ser "
+"reservado.\n"
+"(b) A política de envio é \"quando todos os produtos estiverem prontos\": "
+"nem todos os produtos podem ser reservados.\n"
 " * Pronto: a transferência está pronta para ser processada.\n"
-"(a) A política de envio é \"o mais breve possível\": pelo menos um produto foi reservado.\n"
-"(b) A política de envio é \"quando todos os produtos estiverem prontos\": todos os produtos foram reservados.\n"
+"(a) A política de envio é \"o mais breve possível\": pelo menos um produto "
+"foi reservado.\n"
+"(b) A política de envio é \"quando todos os produtos estiverem prontos\": "
+"todos os produtos foram reservados.\n"
 " * Concluída: a transferência foi processada.\n"
 " * Cancelada: a transferência foi cancelada."
 
@@ -135,9 +142,8 @@ msgid ""
 " When different than 0, inventory count date for products stored at this "
 "location will be automatically set at the defined frequency."
 msgstr ""
-"Quando diferente de 0, a data de contagem de estoque dos produtos "
-"armazenados nesse local será automaticamente definida na frequência "
-"definida."
+" Quando diferente de 0, a data de contagem de estoque dos produtos "
+"armazenados nesse local será automaticamente definida na frequência definida."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__return_count
@@ -3782,7 +3788,7 @@ msgstr "Estoque livre em trânsito"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
 msgid "Free To Use Quantity "
-msgstr "Quantidade livre para uso"
+msgstr "Quantidade livre para uso "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -4299,7 +4305,7 @@ msgid ""
 "Numbers, so you can provide them in a text field. "
 msgstr ""
 "Se esta opção estiver marcada, será suposto que você deseja criar novos "
-"números de série/lote, para poder fornecê-los em um campo de texto."
+"números de série/lote, para poder fornecê-los em um campo de texto. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_type_use_existing_lots
@@ -6686,7 +6692,7 @@ msgstr "Separar"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__quant_id
 msgid "Pick From"
-msgstr "Separar de "
+msgstr "Separar de"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__pick_type_id
@@ -9061,7 +9067,7 @@ msgstr "Relatório de regra de estoque"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenishment_info
 msgid "Stock supplier replenishment information"
-msgstr "Informações do fornecedor para reposição de estoque "
+msgstr "Informações do fornecedor para reposição de estoque"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenishment_option
@@ -11683,7 +11689,7 @@ msgstr "ueps"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "minimum of"
-msgstr "mínimo de "
+msgstr "mínimo de"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -11774,5 +11780,5 @@ msgstr "unidades"
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-" Pedido de entrega de {{ object.company_id.name }} (Ref. {{ object.name or "
-"'n/d' }})"
+"Pedido de entrega de {{ object.company_id.name }} (Ref. {{ object.name or 'n/"
+"d' }})"

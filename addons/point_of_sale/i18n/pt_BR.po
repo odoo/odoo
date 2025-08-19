@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-16 18:37+0000\n"
-"PO-Revision-Date: 2025-08-18 23:11+0000\n"
+"PO-Revision-Date: 2025-08-19 14:34+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-s18-4/point_of_sale/pt_BR/>\n"
@@ -39,13 +39,14 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Referência legível por humanos para esse pedido.\n"
+"        Referência legível por humanos para esse pedido.\n"
 "* Formato: AALL-SSS-FOOOO\n"
 "* AA é o ano\n"
 "* LL é o número de login (proxy para o dispositivo)\n"
 "* SSS é o ID da sessão\n"
 "* F é 1 ou 0 (1 se o número de sequência for gerado pelo cliente)\n"
-"* OOOO é o número de sequência."
+"* OOOO é o número de sequência.\n"
+"    "
 
 #. module: point_of_sale
 #. odoo-python
@@ -61,20 +62,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid " (Refund)"
-msgstr "(Reembolso)"
+msgstr " (Reembolso)"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_picking.py:0
 msgid " - From \"%(uom_from)s\" to \"%(uom_to)s\""
-msgstr ""
-"De \"%(uom_from)s\"\n"
-"para \"%(uom_to)s\""
+msgstr " De \"%(uom_from)s\" para \"%(uom_to)s\""
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__printer_type__iot
 msgid " Use a printer connected to the IoT Box"
-msgstr "Usar uma impressora conectada à IoT Box"
+msgstr " Usar uma impressora conectada à IoT Box"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3436,8 +3435,8 @@ msgstr ""
 msgid ""
 "Flaky croissant filled with creamy cheese, a savory twist on a classic."
 msgstr ""
-"Croissant folheado recheado com queijo cremoso, um toque  a mais sabor para "
-"o clássico."
+"Croissant folheado recheado com queijo cremoso, um toque a mais sabor para o "
+"clássico."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5032,7 +5031,7 @@ msgstr "Nenhum vínculo a uma fatura para %s."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.js:0
 msgid "No more customer found for \"%s\"."
-msgstr " Nenhum outro cliente encontrado para ”%s”."
+msgstr "Nenhum outro cliente encontrado para ”%s”."
 
 #. module: point_of_sale
 #. odoo-python
@@ -5384,7 +5383,7 @@ msgstr "Abertura de caixa"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Opening control message: "
-msgstr "Mensagem de controle de abertura:"
+msgstr "Mensagem de controle de abertura: "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5974,8 +5973,8 @@ msgid ""
 "Please close all the point of sale sessions in this period before closing "
 "it. Open sessions are: %s "
 msgstr ""
-"Feche todas as sessões de ponto de venda neste período antes de fechá-lo. As"
-" sessões abertas são: %s"
+"Feche todas as sessões de ponto de venda neste período antes de fechá-lo. As "
+"sessões abertas são: %s "
 
 #. module: point_of_sale
 #. odoo-python
@@ -8087,7 +8086,7 @@ msgstr "Movimentação de estoque"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Stock input for %s"
-msgstr " Entrada de estoque para %s"
+msgstr "Entrada de estoque para %s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8596,7 +8595,7 @@ msgid ""
 "backend for the order: "
 msgstr ""
 "O pedido foi sincronizado anteriormente. Gere a fatura a partir do backend "
-"para o pedido:"
+"para o pedido: "
 
 #. module: point_of_sale
 #. odoo-python
@@ -9229,7 +9228,7 @@ msgid ""
 "accounting application. "
 msgstr ""
 "Para garantir o acompanhamento do saldo devedor, gere uma fatura ou faça o "
-"download do aplicativo de contabilidade."
+"download do aplicativo de contabilidade. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -10238,7 +10237,7 @@ msgstr "ex.: Política de devolução, agradecimento pela compra."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "e.g. Soft Drinks"
-msgstr "ex.: Bebidas não alcóolicas "
+msgstr "ex.: Bebidas não alcóolicas"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form

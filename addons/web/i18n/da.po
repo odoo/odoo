@@ -1,33 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* web
-# 
+# * web
+#
 # Translators:
 # lhmflexerp <lhm@flexerp.dk>, 2025
 # Sanne Kristensen <sanne@vkdata.dk>, 2025
 # Wil Odoo, 2025
 # Kira Petersen, 2025
-# 
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-16 18:39+0000\n"
-"PO-Revision-Date: 2025-07-01 13:07+0000\n"
-"Last-Translator: Kira Petersen, 2025\n"
-"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"PO-Revision-Date: 2025-08-19 21:55+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/web/da/"
+">\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: da\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
 #: code:addons/web/static/src/core/expression_editor/expression_editor.xml:0
 msgid "# Code editor"
-msgstr "# Kode editor"
+msgstr "# Kodeeditor"
 
 #. module: web
 #. odoo-python
@@ -81,7 +83,7 @@ msgstr "%s poster"
 #. odoo-javascript
 #: code:addons/web/static/src/core/l10n/dates.js:0
 msgid "'%s' is not a correct date or datetime"
-msgstr "'%s' er ikke en korrekt dato eller tidspunkt"
+msgstr "'%s' er ikke en korrekt dato eller et korrekt tidspunkt"
 
 #. module: web
 #. odoo-javascript
@@ -93,7 +95,7 @@ msgstr "(%(mbLoaded)s/%(mbTotal)sMB)"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_edition.xml:0
 msgid "(Community Edition)"
-msgstr "(Community version)"
+msgstr "(Community-version)"
 
 #. module: web
 #. odoo-javascript
@@ -155,7 +157,7 @@ msgstr "+ Tilføj %s"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 msgid "+ KEY"
-msgstr "+ KEY"
+msgstr "+ TASTE"
 
 #. module: web
 #. odoo-javascript
@@ -177,7 +179,7 @@ msgstr "08/07/2020"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/formatters.js:0
 msgid "1 record"
-msgstr "1 post"
+msgstr "1 datapost"
 
 #. module: web
 #. odoo-javascript
@@ -291,7 +293,7 @@ msgstr "1:30"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "1st place medal"
-msgstr "1. plads medalje"
+msgstr "Medalje for 1. plads"
 
 #. module: web
 #. odoo-javascript
@@ -315,7 +317,7 @@ msgstr "2:30"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "2nd place medal"
-msgstr "2. plads medalje"
+msgstr "Medalje for 2. plads"
 
 #. module: web
 #. odoo-javascript
@@ -339,7 +341,7 @@ msgstr "3:30"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "3rd place medal"
-msgstr "3. plads medalje"
+msgstr "Medalje for 3. plads"
 
 #. module: web
 #. odoo-javascript
@@ -465,27 +467,29 @@ msgstr "9:30"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/utils.js:0
 msgid ": not"
-msgstr ""
+msgstr ": ikke"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_oauth
 msgid "<em class=\"d-block my-3 small text-center text-muted\">- or -</em>"
-msgstr ""
+msgstr "<em class=\"d-block my-3 small text-center text-muted\">- eller -</em>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
+#, fuzzy
 msgid "<i class=\"fa fa-download\"/> (html)"
-msgstr ""
+msgstr "<i class=\"fa fa-download\"/> (html)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
+#, fuzzy
 msgid "<i class=\"fa fa-download\"/> (json)"
-msgstr ""
+msgstr "<i class=\"fa fa-download\"/> (json)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "<i class=\"fa fa-repeat\"/> Reset"
-msgstr "<i class=\"fa fa-repeat\"/>nulstil"
+msgstr "<i class=\"fa fa-repeat\"/> Nulstil"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
@@ -496,39 +500,55 @@ msgid ""
 "                            </select>\n"
 "                            <span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:none\"><b>Warning:</b> Temporal mode will merge all samples.<br/>It can lead to partially invalid result in case of concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" id="
+"\"profile_aggregation_mode\">\n"
+"                                <option value=\"tabs\">Separeret (én pr. "
+"tabulator)</option>\n"
+"                                <option value=\"temporal\">Temporær "
+"(eksperimentel)</option>\n"
+"                            </select>\n"
+"                            <span id=\"temporal_warning\" class="
+"\"alert alert-warning\" style=\"display:none\"><b>Advarsel:</b> Temporør "
+"tilstand fletter alle prøver.<br/>Dette kan føre til et delvist ugyldigt "
+"resultat i tilfælde af samtidige resultater.<br/>Bruges varsomt </span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+#, fuzzy
 msgid "<span class=\"text-nowrap\">$ 2,887.50</span>"
-msgstr "<span class=\"text-nowrap\">$ 2,887.50</span>"
+msgstr "<span class=\"text-nowrap\">2.887,50 $</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+#, fuzzy
 msgid ""
 "<span class=\"text-nowrap\">$ <span "
 "class=\"oe_currency_value\">11,750.00</span></span>"
 msgstr ""
-"<span class=\"text-nowrap\">DKK <span "
-"class=\"oe_currency_value\">1,750.00</span></span>"
+"<span class=\"text-nowrap\"><span class=\"oe_currency_value\">11.750,00</"
+"span> $</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+#, fuzzy
 msgid ""
 "<span class=\"text-nowrap\">$ <span "
 "class=\"oe_currency_value\">7,500.00</span></span>"
 msgstr ""
-"<span class=\"text-nowrap\">$ <span "
-"class=\"oe_currency_value\">7,500.00</span></span>"
+"<span class=\"text-nowrap\"><span class=\"oe_currency_value\">7.500,00</"
+"span> $</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+#, fuzzy
 msgid "<span class=\"text-nowrap\">1,500.00</span>"
-msgstr "<span class=\"text-nowrap\">1,500.00</span>"
+msgstr "<span class=\"text-nowrap\">1.500,00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+#, fuzzy
 msgid "<span class=\"text-nowrap\">2,350.00</span>"
-msgstr "<span class=\"text-nowrap\">2,350.00</span>"
+msgstr "<span class=\"text-nowrap\">2.350,00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -541,13 +561,16 @@ msgid ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
 "                                       Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 msgstr ""
-"<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                       Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
+"<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa "
+"Barbara\n"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/"
+">USA</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+#, fuzzy
 msgid "<span id=\"line_tax_ids\">15%</span>"
-msgstr ""
+msgstr "<span id=\"line_tax_ids\">15%</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -556,8 +579,9 @@ msgstr "<span itemprop=\"name\">Deco Addict</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+#, fuzzy
 msgid "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
-msgstr "<span>DKK <span class=\"oe_currency_value\">19,250.00</span></span>"
+msgstr "<span><span class=\"oe_currency_value\">19.250,00</span> $</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -586,7 +610,7 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>Payment terms: 30 Days</span>"
-msgstr "<span>Betalingsbetingelser: 30 Dage</span>"
+msgstr "<span>Betalingsbetingelser: 30 dage</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -601,7 +625,7 @@ msgstr "<span>Moms</span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>Unit Price</span>"
-msgstr "<span>Stk. pris</span>"
+msgstr "<span>Stykpris</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -610,7 +634,8 @@ msgid ""
 "                                       Four person modern office workstation</span>"
 msgstr ""
 "<span>[FURN_8220] Fire personers skrivebord<br/>\n"
-"                                       Fire personers moderne kontor arbejdsstation</span>"
+"                                       Moderne arbejdsplads til fire "
+"personer</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -618,15 +643,20 @@ msgid ""
 "<span>[FURN_8999] Three-Seat Sofa<br/>\n"
 "                                       Three Seater Sofa with Lounger in Steel Grey Colour</span>"
 msgstr ""
-"<span>[FURN_8999] Tre-sæders Sofa<br/>\n"
-"                                       Tre-sædet sofa med liggestol i stålgrå farve</span>"
+"<span>[FURN_8999] Sofa til tre personer<br/>\n"
+"                                       Sofa til tre personer med liggestol i "
+"stålgrå farve</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
+#, fuzzy
 msgid ""
 "<strong class=\"text-nowrap\">$ <span class=\"oe_currency_value\">\n"
 "                                                       22,137.50</span></strong>"
 msgstr ""
+"<strong class=\"text-nowrap\"><span class=\"oe_currency_value\">\n"
+"                                                       22.137,50</span> "
+"€</strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.address_layout
@@ -642,7 +672,7 @@ msgstr "<strong>Adresseblok</strong>"
 #: model_terms:ir.ui.view,arch_db:web.external_layout_striped
 #: model_terms:ir.ui.view,arch_db:web.external_layout_wave
 msgid "<strong>Company address block</strong>"
-msgstr "<strong>Virksomhed adresseblok</strong>"
+msgstr "<strong>Blok til virksomhedens adresse</strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_bold
@@ -653,7 +683,7 @@ msgstr "<strong>Virksomhed adresseblok</strong>"
 #: model_terms:ir.ui.view,arch_db:web.external_layout_striped
 #: model_terms:ir.ui.view,arch_db:web.external_layout_wave
 msgid "<strong>Company details block</strong>"
-msgstr "<strong>Virksomhed oplysningsblok</strong>"
+msgstr "<strong>Blok til oplysninger om virksomhed</strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -708,19 +738,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "A button (blood type)"
-msgstr "En knap (blodtype)"
+msgstr "A-knap (blodtype)"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.js:0
 msgid "A name for your favorite filter is required."
-msgstr "Et navn for dit favorit filter er påkrævet."
+msgstr "Et navn for dit favoritfilter er påkrævet."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 msgid "A name for your new action is required."
-msgstr ""
+msgstr "Et navn for din nye handling er påkrævet."
 
 #. module: web
 #. odoo-javascript
@@ -729,8 +759,8 @@ msgid ""
 "A popup window has been blocked. You may need to change your browser "
 "settings to allow popup windows for this page."
 msgstr ""
-"Et pop-up vindue blev blokkeret. Du skal muligvis ændre din browsers "
-"indstillinger for at tillade pop-up vinduer fra denne side."
+"Et pop op-vindue blev blokeret. Du skal muligvis justere dine "
+"browserindstillinger for at tillade pop op-vinduer på denne side."
 
 #. module: web
 #. odoo-javascript
@@ -742,7 +772,7 @@ msgstr "AB"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "AB button (blood type)"
-msgstr "AB knap (blodtype)"
+msgstr "AB-knap (blodtype)"
 
 #. module: web
 #. odoo-javascript
@@ -754,19 +784,19 @@ msgstr "ABCD"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "AM"
-msgstr "AM"
+msgstr "formiddag"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "ATM"
-msgstr "ATM"
+msgstr "pengeautomat"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "ATM sign"
-msgstr "ATM tegn"
+msgstr "tegn for pengeautomat"
 
 #. module: web
 #. odoo-javascript
@@ -774,7 +804,7 @@ msgstr "ATM tegn"
 #: code:addons/web/static/src/views/fields/image/image_field.js:0
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.js:0
 msgid "Accepted file extensions"
-msgstr "Accepteret file extensions"
+msgstr "Accepterede filendelser"
 
 #. module: web
 #. odoo-javascript
@@ -798,13 +828,13 @@ msgstr "Adgangsrettigheder"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 msgid "Access to all Enterprise Apps"
-msgstr "Adgang til alle Enterprise Apps"
+msgstr "Adgang til alle Enterprise-apps"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/ace/ace_field.js:0
 msgid "Ace Editor"
-msgstr "Ace redigering"
+msgstr "Ace-redigering"
 
 #. module: web
 #. odoo-javascript
@@ -816,7 +846,7 @@ msgstr "Handling"
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_button/view_button.xml:0
 msgid "Action ID:"
-msgstr "Aktion ID:"
+msgstr "Handlings-ID:"
 
 #. module: web
 #. odoo-javascript
@@ -829,19 +859,19 @@ msgstr "Handlinger"
 #. odoo-javascript
 #: code:addons/web/static/src/search/cog_menu/cog_menu.xml:0
 msgid "Actions menu"
-msgstr ""
+msgstr "Handlingsmenu"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu_items.js:0
 msgid "Activate Test Mode"
-msgstr ""
+msgstr "Aktivér testtilstand"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_providers.js:0
 msgid "Activate debug mode"
-msgstr ""
+msgstr "Aktivér fejlfindingsværktøj"
 
 #. module: web
 #. odoo-javascript
@@ -865,7 +895,7 @@ msgstr "Aktivér udviklertilstand (med aktiver)"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_dev_tool.xml:0
 msgid "Activate the developer mode (with tests assets)"
-msgstr "Aktiver udviklertilstand (med test aktiver)"
+msgstr "Aktivér udviklertilstand (med testaktiver)"
 
 #. module: web
 #. odoo-javascript
@@ -890,13 +920,13 @@ msgstr "Tilføj %s"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/contact_image/contact_image_field.xml:0
 msgid "Add Photo"
-msgstr ""
+msgstr "Tilføj foto"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_renderer.xml:0
 msgid "Add a"
-msgstr ""
+msgstr "Tilføj en/et"
 
 #. module: web
 #. odoo-javascript
@@ -908,13 +938,13 @@ msgstr "Tilføj en egenskab"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition_selection.xml:0
 msgid "Add a Value"
-msgstr "Tilføj en Værdi"
+msgstr "Tilføj en værdi"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/search_bar/search_bar.js:0
 msgid "Add a custom filter"
-msgstr ""
+msgstr "Tilføj et brugerdefineret filter"
 
 #. module: web
 #. odoo-javascript
@@ -939,13 +969,13 @@ msgstr "Tilføj betingelse"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.xml:0
 msgid "Add end date"
-msgstr "Tilføj slut dato"
+msgstr "Tilføj slutdato"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor.xml:0
 msgid "Add nested rule"
-msgstr ""
+msgstr "Tilføj indlejret regel"
 
 #. module: web
 #. odoo-javascript
@@ -957,13 +987,13 @@ msgstr "Tilføj qweb-direktivkontekst"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor.xml:0
 msgid "Add rule"
-msgstr ""
+msgstr "Tilføj regel"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.xml:0
 msgid "Add start date"
-msgstr "Tilføj start dato"
+msgstr "Tilføj startdato"
 
 #. module: web
 #. odoo-javascript
@@ -986,19 +1016,19 @@ msgstr "Adresse"
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 msgid "Adjust your filters or create a new record."
-msgstr ""
+msgstr "Tilføj dine filtre, eller opret en ny datapost."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/signature/signature_dialog.xml:0
 msgid "Adopt & Sign"
-msgstr "Indsæt & underskriv"
+msgstr "Indsæt og underskriv"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/signature/signature_dialog.xml:0
 msgid "Adopt Your Signature"
-msgstr "Indsæt din underskrift"
+msgstr "Tilføj din underskrift"
 
 #. module: web
 #. odoo-javascript
@@ -1009,12 +1039,12 @@ msgstr "Afrika"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Aggregate SQL"
-msgstr ""
+msgstr "Aggregér SQL"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Aggregation mode"
-msgstr ""
+msgstr "Aggregeringstilstand"
 
 #. module: web
 #. odoo-javascript
@@ -1034,7 +1064,7 @@ msgstr "Alle"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/navbar/navbar.xml:0
 msgid "All Apps"
-msgstr ""
+msgstr "Alle apps"
 
 #. module: web
 #. odoo-javascript
@@ -1052,13 +1082,13 @@ msgstr "Alle brugere"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/domain/domain_field.js:0
 msgid "Allow expressions"
-msgstr ""
+msgstr "Tillad udtryk"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/binary/binary_field.js:0
 msgid "Allowed file mimetype"
-msgstr ""
+msgstr "Tillad filmimetyper"
 
 #. module: web
 #. odoo-javascript
@@ -1070,7 +1100,7 @@ msgstr "Mandel"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/image/image_field.js:0
 msgid "Alternative text"
-msgstr ""
+msgstr "Alternativ tekst"
 
 #. module: web
 #. odoo-javascript
@@ -1082,7 +1112,7 @@ msgstr "Altid rækkevidde"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Americas"
-msgstr "Amerikas"
+msgstr "Amerika"
 
 #. module: web
 #. odoo-javascript
@@ -1091,18 +1121,20 @@ msgid ""
 "Among the %(total)s selected records, %(valid_count)s are valid for this "
 "update."
 msgstr ""
+"Blandt de %(total)s valgte dataposter, er %(valid_count)s gyldige for denne "
+"opdatering."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 msgid "An action with the same name already exists."
-msgstr ""
+msgstr "En handling med samme navn findes allerede."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/file_upload/file_upload_service.js:0
 msgid "An error occured while uploading."
-msgstr "Der opstod en fejl under upload"
+msgstr "Der opstod en fejl under upload."
 
 #. module: web
 #. odoo-javascript
@@ -1120,13 +1152,13 @@ msgstr "Vinkel"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Animals & Nature"
-msgstr "Dyr & Natur"
+msgstr "Dyr og natur"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/install_scoped_app/install_scoped_app.xml:0
 msgid "Application name"
-msgstr ""
+msgstr "Appnavn"
 
 #. module: web
 #. odoo-javascript
@@ -1138,7 +1170,7 @@ msgstr "Anvend"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Aquarius"
-msgstr "Vandmanden"
+msgstr "Vandmand"
 
 #. module: web
 #. odoo-javascript
@@ -1154,7 +1186,7 @@ msgstr "Arkivér"
 #. odoo-javascript
 #: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
 msgid "Are you sure that you want to archive all the selected records?"
-msgstr "Er du sikker på, at du vil arkivere alle valgte poster?"
+msgstr "Er du sikker på, at du vil arkivere alle valgte datasæt?"
 
 #. module: web
 #. odoo-javascript
@@ -1167,19 +1199,19 @@ msgstr "Er du sikker på, at du vil arkivere dette datasæt?"
 #. odoo-javascript
 #: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
 msgid "Are you sure that you want to duplicate all the selected records?"
-msgstr ""
+msgstr "Er du sikker på, at du vil duplikere alle valgte datasæt?"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 msgid "Are you sure that you want to remove this embedded action?"
-msgstr ""
+msgstr "Er du sikker på, at du vil fjerne denne indlejrede handling?"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_hook.js:0
 msgid "Are you sure you want to delete these records?"
-msgstr "Er du sikker på du vil slette disse datasæt?"
+msgstr "Er du sikker på, at du vil slette disse datasæt?"
 
 #. module: web
 #. odoo-javascript
@@ -1201,13 +1233,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.js:0
 msgid "Are you sure you want to update %(count)s records?"
-msgstr ""
+msgstr "Er du sikker på, at du vil opdatere %(count)s datasæt?"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Aries"
-msgstr "Vædderen"
+msgstr "Vædder"
 
 #. module: web
 #. odoo-javascript
@@ -1221,7 +1253,7 @@ msgstr "Pil"
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.xml:0
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.xml:0
 msgid "Arrow icon"
-msgstr "Pil ikon"
+msgstr "Pil-ikon"
 
 #. module: web
 #. odoo-javascript
@@ -1258,7 +1290,7 @@ msgstr "Vedhæftning"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/attachment_image/attachment_image_field.js:0
 msgid "Attachment Image"
-msgstr "Vedhæftning billede"
+msgstr "Vedhæftet billede"
 
 #. module: web
 #. odoo-javascript
@@ -1276,7 +1308,7 @@ msgstr "Australien"
 #. odoo-javascript
 #: code:addons/web/static/src/core/signature/name_and_signature.xml:0
 msgid "Auto"
-msgstr "Auto"
+msgstr "Automatisk"
 
 #. module: web
 #. odoo-javascript
@@ -1303,19 +1335,19 @@ msgstr "Avatar"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "B button (blood type)"
-msgstr "B knap (blodtype)"
+msgstr "B-knap (blodtype)"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "BACK"
-msgstr "Tilbage"
+msgstr "TILBAGE"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "BACK arrow"
-msgstr "Tilbage pil"
+msgstr "Tilbage-pil"
 
 #. module: web
 #. odoo-javascript
@@ -1327,13 +1359,13 @@ msgstr "Tilbage"
 #. odoo-javascript
 #: code:addons/web/static/src/search/breadcrumbs/breadcrumbs.js:0
 msgid "Back to “%s”"
-msgstr ""
+msgstr "Tilbage til \"%s\""
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/breadcrumbs/breadcrumbs.js:0
 msgid "Back to “%s” form"
-msgstr ""
+msgstr "Tilbage til \"%s\"-formularen"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -1349,13 +1381,13 @@ msgstr "Baggrundsbillede"
 #. odoo-javascript
 #: code:addons/web/static/src/views/widgets/ribbon/ribbon.js:0
 msgid "Background color"
-msgstr ""
+msgstr "Baggrundsfarve"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Bactrian"
-msgstr ""
+msgstr "Kamel"
 
 #. module: web
 #. odoo-javascript
@@ -1373,7 +1405,7 @@ msgstr "Badges"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/badge_selection_with_filter/badge_selection_field_with_filter.js:0
 msgid "Badges for Selection With Filter"
-msgstr ""
+msgstr "Badges til udvalg med filter"
 
 #. module: web
 #. odoo-javascript
@@ -1385,13 +1417,13 @@ msgstr "Søjlediagram"
 #. odoo-javascript
 #: code:addons/web/static/src/core/barcode/barcode_dialog.xml:0
 msgid "Barcode Scanner"
-msgstr "Stregkode scanner"
+msgstr "Stregkodescanner"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/barcode/barcode_video_scanner.js:0
 msgid "Barcode Video Scanner could not be mounted properly."
-msgstr ""
+msgstr "Stregkodevideoscanner kunne ikke installeres korrekt."
 
 #. module: web
 #: model:ir.model,name:web.model_base
@@ -1446,7 +1478,7 @@ msgid ""
 "Boolean field from the model used in the relation, which indicates whether "
 "the state is folded or not."
 msgstr ""
-"Boolesk felt fra modellen brugt i relationen, som angiver om tilstanden er "
+"Boolesk felt fra modellen brugt i relationen, som angiver, om tilstanden er "
 "foldet eller ej."
 
 #. module: web
@@ -1456,7 +1488,7 @@ msgid ""
 "Bootstrap classname to customize the style of the progress bar when the "
 "maximum value is exceeded"
 msgstr ""
-"Bootstrap klassenavn for at tilpasse stilen på statuslinjen, når den "
+"Bootstrap-klassenavn for at tilpasse stilen på statuslinjen, når den "
 "maksimale værdi overskrides"
 
 #. module: web
@@ -1469,7 +1501,7 @@ msgstr "Buddhist"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 msgid "Bugfixes guarantee"
-msgstr "Garanti på fejlrettelser "
+msgstr "Garanti på fejlrettelser"
 
 #. module: web
 #. odoo-javascript
@@ -1493,17 +1525,17 @@ msgid ""
 " all purposes when it is used on documents, including legally binding "
 "contracts."
 msgstr ""
-"Ved at klikke Vedtag & underskriv, accepterer jeg at den valgte "
-"underskrift/initialer vil blive en gyldig elektronisk repræsentation af min "
-"håndskrevne underskrift/initialer til alle formål når den bruges på "
-"dokumenter, inklusiv juridisk bindende kontrakter."
+"Ved at klikke på 'Vedtag & underskriv' accepterer jeg, at den valgte "
+"underskrift eller de valgte initialer fungerer som en gyldig elektronisk "
+"repræsentation af min håndskrevne underskrift/mine initialer til alle "
+"formål, herunder dokumenter og juridisk bindende kontrakter."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/calendar/calendar_controller.js:0
 #: code:addons/web/static/src/views/view_hook.js:0
 msgid "Bye-bye, record!"
-msgstr "Farvel, record!"
+msgstr "Farvel, datasæt!"
 
 #. module: web
 #. odoo-javascript
@@ -1527,19 +1559,19 @@ msgstr "CD"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "CL"
-msgstr "CL"
+msgstr "TOM"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "CL button"
-msgstr "CL knap"
+msgstr "CL-knap"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/search_panel/search_panel.xml:0
 msgid "CLEAR ALL"
-msgstr ""
+msgstr "RYD ALLE"
 
 #. module: web
 #. odoo-javascript
@@ -1557,7 +1589,7 @@ msgstr "COOL"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "COOL button"
-msgstr "COOL knap"
+msgstr "COOL-knap"
 
 #. module: web
 #. odoo-javascript
@@ -1581,7 +1613,7 @@ msgstr "Kan oprette"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/progress_bar/progress_bar_field.js:0
 msgid "Can edit max value"
-msgstr "Kan redigere maks. værdi"
+msgstr "Kan redigere maksimale værdi"
 
 #. module: web
 #. odoo-javascript
@@ -1604,13 +1636,13 @@ msgstr "Annullér"
 #. odoo-javascript
 #: code:addons/web/static/src/core/file_upload/file_upload_progress_bar.xml:0
 msgid "Cancel Upload"
-msgstr "Annuller upload"
+msgstr "Annullér upload"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Cancer"
-msgstr ""
+msgstr "Krebsen"
 
 #. module: web
 #. odoo-javascript
@@ -1622,19 +1654,19 @@ msgstr "Stenbukken"
 #. odoo-javascript
 #: code:addons/web/static/src/public/caps_lock_warning.xml:0
 msgid "Caps Lock is on!"
-msgstr ""
+msgstr "Caps Lock er aktiveret!"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/field_tooltip.xml:0
 msgid "Change default:"
-msgstr "Ret standard:"
+msgstr "Redigér standard:"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 msgid "Change graph"
-msgstr "Ændre graf"
+msgstr "Redigér graf"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.webclient_offline
@@ -1645,7 +1677,7 @@ msgstr "Tjek igen"
 #. odoo-javascript
 #: code:addons/web/static/src/core/barcode/barcode_dialog.js:0
 msgid "Check your browser permissions"
-msgstr ""
+msgstr "Tjek din browsers tilladelser"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.webclient_offline
@@ -1653,7 +1685,7 @@ msgid ""
 "Check your network connection and come back here. Odoo will load as soon as "
 "you're back online."
 msgstr ""
-"Tjek din netværksforbindelse og kom tilbage hertil. Odoo indlæses, så snart "
+"Tjek din netværksforbindelse, og kom tilbage hertil. Odoo indlæses, så snart "
 "du er online igen."
 
 #. module: web
@@ -1673,19 +1705,19 @@ msgstr "Afkrydsningsfejlter"
 #. odoo-javascript
 #: code:addons/web/static/src/core/file_input/file_input.xml:0
 msgid "Choose File"
-msgstr "Vælg Fil"
+msgstr "Vælg fil"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu.js:0
 msgid "Choose a debug command..."
-msgstr ""
+msgstr "Vælg en fejlfindingskommando ..."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/user_switch/user_switch.xml:0
 msgid "Choose a user"
-msgstr ""
+msgstr "Vælg en bruger"
 
 #. module: web
 #. odoo-javascript
@@ -1694,6 +1726,8 @@ msgid ""
 "Choose which maximal precision (days, months, ...) you want in the datetime "
 "picker."
 msgstr ""
+"Vælg den maksimale præcision (f.eks. dage, måneder osv.), du ønsker at bruge "
+"i valg af dato og klokkeslæt."
 
 #. module: web
 #. odoo-javascript
@@ -1702,12 +1736,14 @@ msgid ""
 "Choose which minimal precision (days, months, ...) you want in the datetime "
 "picker."
 msgstr ""
+"Vælg den minimale præcision (f.eks. dage, måneder osv.), du ønsker at bruge "
+"i valg af dato og klokkeslæt."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Christian"
-msgstr ""
+msgstr "Kristen"
 
 #. module: web
 #. odoo-javascript
@@ -1748,7 +1784,7 @@ msgstr "Ryd"
 #. odoo-javascript
 #: code:addons/web/static/src/search/search_panel/search_panel.xml:0
 msgid "Clear All"
-msgstr ""
+msgstr "Ryd alle"
 
 #. module: web
 #. odoo-javascript
@@ -1768,6 +1804,7 @@ msgstr "Klikbar"
 msgid ""
 "Clicking on a day or selecting an area will irrevocably delete its content"
 msgstr ""
+"Når du klikker på en dag eller vælger et område, slettes indholdet permanent"
 
 #. module: web
 #. odoo-javascript
@@ -1806,13 +1843,13 @@ msgstr "Luk menu"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/kanban_color_picker/kanban_color_picker_field.js:0
 msgid "Color Picker"
-msgstr ""
+msgstr "Farvevalg"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 msgid "Color field"
-msgstr "Farve felt"
+msgstr "Farvefelt"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -1841,12 +1878,12 @@ msgstr "Virksomhed"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__company_details
 msgid "Company Details"
-msgstr "Virksomhedsdetaljer"
+msgstr "Virksomhedsoplysninger"
 
 #. module: web
 #: model:ir.model,name:web.model_base_document_layout
 msgid "Company Document Layout"
-msgstr "Virksomhedsdokument layout"
+msgstr "Virksomhedens dokumentlayout"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__logo
@@ -1866,7 +1903,7 @@ msgstr "Virksomhedens slogan"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.frontend_layout
 msgid "Company name"
-msgstr "Firma navn"
+msgstr "Firmanavn"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_bold
@@ -1877,7 +1914,7 @@ msgstr "Firma navn"
 #: model_terms:ir.ui.view,arch_db:web.external_layout_striped
 #: model_terms:ir.ui.view,arch_db:web.external_layout_wave
 msgid "Company tagline"
-msgstr "Virksomhed slogan"
+msgstr "Virksomhedens slogan"
 
 #. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__report_header
@@ -1885,7 +1922,7 @@ msgid ""
 "Company tagline, which is included in a printed document's header or footer "
 "(depending on the selected layout)."
 msgstr ""
-"Virksomhed slogan, som er inkluderet i et udskrevet dokuments sidehoved "
+"Virksomhedens slogan, som er inkluderet i et udskrevet dokuments sidehoved "
 "eller sidefod (afhængigt af det valgte layout)."
 
 #. module: web
@@ -1893,13 +1930,13 @@ msgstr ""
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/views/debug_items.js:0
 msgid "Computed Arch"
-msgstr ""
+msgstr "Beregnede arkitektur"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Condensed display"
-msgstr ""
+msgstr "Komprimeret visning"
 
 #. module: web
 #. odoo-javascript
@@ -1915,7 +1952,7 @@ msgstr "Konfigurér indstillinger"
 #. module: web
 #: model:ir.actions.act_window,name:web.action_base_document_layout_configurator
 msgid "Configure your document layout"
-msgstr "Konfigurer dit dokument layout"
+msgstr "Konfigurér dit dokumentlayout"
 
 #. module: web
 #. odoo-javascript
@@ -1938,7 +1975,7 @@ msgstr "Bekræftelse"
 #. odoo-javascript
 #: code:addons/web/static/src/core/errors/error_handlers.js:0
 msgid "Connection lost. Trying to reconnect..."
-msgstr "Forbindelse afbrudt. Forsøger at genoprette forbindelsen..."
+msgstr "Forbindelse afbrudt. Forsøger at genoprette forbindelsen ..."
 
 #. module: web
 #. odoo-javascript
@@ -1949,7 +1986,7 @@ msgstr "Forbindelse genoprettet. Du er online igen."
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Constant Time"
-msgstr ""
+msgstr "Konstante tid"
 
 #. module: web
 #: model:ir.model,name:web.model_res_partner
@@ -1960,7 +1997,7 @@ msgstr "Kontakt"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/contact_statistics/contact_statistics.js:0
 msgid "Contact Statistics"
-msgstr ""
+msgstr "Kontaktstatistikker"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_bold
@@ -1971,7 +2008,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:web.external_layout_striped
 #: model_terms:ir.ui.view,arch_db:web.external_layout_wave
 msgid "Contains the company address."
-msgstr "Indeholder virksomhed adresse."
+msgstr "Indeholder virksomhedsadresse."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_bold
@@ -1982,7 +2019,7 @@ msgstr "Indeholder virksomhed adresse."
 #: model_terms:ir.ui.view,arch_db:web.external_layout_striped
 #: model_terms:ir.ui.view,arch_db:web.external_layout_wave
 msgid "Contains the company details."
-msgstr "Indeholder virksomhed detaljer."
+msgstr "Indeholder virksomhedsoplysninger."
 
 #. module: web
 #. odoo-javascript
@@ -2000,7 +2037,7 @@ msgstr "Fortsæt"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/x2many/x2many_field.xml:0
 msgid "Control panel buttons"
-msgstr "Kontrolpanel knapper"
+msgstr "Kontrolpanelknapper"
 
 #. module: web
 #. odoo-javascript
@@ -2009,14 +2046,14 @@ msgid ""
 "Control the number of minutes in the time selection. E.g. set it to 15 to "
 "work in quarters."
 msgstr ""
-"Styr antallet af minutter i tidsvalget. F.eks. sæt den til 15 for at fungere"
-" i kvartaler."
+"Angiv intervallet i minutter for tidsvalget. F.eks. kan du sætte det til 15 "
+"for at vælge tid i kvarter."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/image/image_field.js:0
 msgid "Convert to webp"
-msgstr ""
+msgstr "Konvertér til Webp"
 
 #. module: web
 #. odoo-javascript
@@ -2035,19 +2072,19 @@ msgstr "Kopiér"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 msgid "Copy Text to Clipboard"
-msgstr "Kopier tekst til udklipsholder"
+msgstr "Kopiér tekst til udklipsholder"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 msgid "Copy URL to Clipboard"
-msgstr "Kopier URL til udklipsholder"
+msgstr "Kopiér URL til udklipsholder"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 msgid "Copy to Clipboard"
-msgstr "Kopier til udklipsholder"
+msgstr "Kopiér til udklipsholder"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.frontend_layout
@@ -2070,13 +2107,13 @@ msgstr "Kunne ikke vise det valgte billede"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.js:0
 msgid "Could not display the selected pdf"
-msgstr "Kunne ikke vise den valgte pdf"
+msgstr "Kunne ikke vise den valgte PDF"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
 msgid "Could not display the selected spreadsheet"
-msgstr ""
+msgstr "Kunne ikke vise det valgte regneark"
 
 #. module: web
 #. odoo-javascript
@@ -2085,13 +2122,13 @@ msgid ""
 "Could not set the cover image: incorrect field (\"%s\") is provided in the "
 "view."
 msgstr ""
-"Kan ikke angive cover billede: ukorrekt felt (\"%s\") angivet i visningen."
+"Kan ikke angive coverbillede: Ukorrekt felt (\"%s\") angivet i visningen."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/barcode/barcode_video_scanner.js:0
 msgid "Could not start scanning. %(message)s"
-msgstr ""
+msgstr "Kunne ikke påbegynde scanning. %(message)s"
 
 #. module: web
 #. odoo-javascript
@@ -2104,7 +2141,7 @@ msgstr "Antal"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/domain/domain_field.js:0
 msgid "Count Limit"
-msgstr ""
+msgstr "Antalbegrænsning"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__country_id
@@ -2141,13 +2178,13 @@ msgstr "Opret en kunde"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 msgid "Create and edit..."
-msgstr "Opret og redigér..."
+msgstr "Opret og redigér ..."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 msgid "Create..."
-msgstr ""
+msgstr "Opret ..."
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__create_uid
@@ -2163,7 +2200,7 @@ msgstr "Oprettet den"
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 msgid "Creation Date:"
-msgstr "Oprettelse dato:"
+msgstr "Oprettelsedato:"
 
 #. module: web
 #. odoo-javascript
@@ -2187,7 +2224,7 @@ msgstr "Valuta"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/progress_bar/progress_bar_field.js:0
 msgid "Current value field"
-msgstr "Aktuelt værdi felt"
+msgstr "Aktuelle værdifelt"
 
 #. module: web
 #. odoo-javascript
@@ -2210,27 +2247,27 @@ msgstr "Tilpassede farver"
 #. odoo-javascript
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 msgid "Custom Embedded Action"
-msgstr ""
+msgstr "Brugerdefineret indlejret handling"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/search_bar/search_bar.js:0
 #: code:addons/web/static/src/search/search_model.js:0
 msgid "Custom Filter"
-msgstr ""
+msgstr "Brugerdefineret filter"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
 #: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
 msgid "Custom Filter..."
-msgstr ""
+msgstr "Brugerdefineret filter ..."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/custom_group_by_item/custom_group_by_item.xml:0
 msgid "Custom Group"
-msgstr ""
+msgstr "Brugerdefineret gruppe"
 
 #. module: web
 #. odoo-python
@@ -2242,7 +2279,7 @@ msgstr "Brugerdefineret visning %(view)s tilhører ikke brugeren %(user)s"
 #. odoo-javascript
 #: code:addons/web/static/src/core/colorlist/colorlist.js:0
 msgid "Cyan"
-msgstr "Cyan"
+msgstr "Cyanblå"
 
 #. module: web
 #. odoo-javascript
@@ -2266,7 +2303,7 @@ msgstr "Data"
 #. odoo-javascript
 #: code:addons/web/static/src/views/debug_items.js:0
 msgid "Data: %(model)s(%(id)s)"
-msgstr ""
+msgstr "Data: %(model)s%(id)s"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -2290,13 +2327,13 @@ msgstr "Dato"
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.js:0
 msgid "Date & Time"
-msgstr "Dato & tidspunkt"
+msgstr "Dato og klokkeslæt"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Date Range"
-msgstr "Dato spændevidde"
+msgstr "Datointerval"
 
 #. module: web
 #. odoo-javascript
@@ -2321,7 +2358,7 @@ msgstr "Dage"
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_providers.js:0
 msgid "Deactivate debug mode"
-msgstr "Deaktiver fejlretningstilstand"
+msgstr "Deaktivér fejlretningsværktøj"
 
 #. module: web
 #. odoo-javascript
@@ -4161,7 +4198,7 @@ msgstr "Layout Baggrund"
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu_items.js:0
 msgid "Leave Debug Mode"
-msgstr ""
+msgstr "Forlad fejlfindingsværktøj"
 
 #. module: web
 #. odoo-javascript
