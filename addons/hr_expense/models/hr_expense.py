@@ -812,6 +812,14 @@ class HrExpense(models.Model):
         base_line_data, to_update = tax_data['base_lines_to_update'][0]  # Add base line
         amount_currency = to_update['price_subtotal']
         expense_name = self.name.split("\n")[0][:64]
+        move_lines.append({  # Add outstanding payment line
+            'name': f'{self.employee_id.name}: {expense_name}',
+            'account_id': self.sheet_id._get_expense_account_destination(),
+            'balance': -self.total_amount,
+            'amount_currency': self.currency_id.round(-self.total_amount_currency),
+            'currency_id': self.currency_id.id,
+        })
+        expense_name = self.name.split("\n")[0][:64]
         base_move_line = {
             'name': f'{self.employee_id.name}: {expense_name}',
             'account_id': base_line_data['account'].id,
@@ -843,14 +851,6 @@ class HrExpense(models.Model):
             }
             move_lines.append(tax_line)
         base_move_line['balance'] = self.total_amount - total_tax_line_balance
-        expense_name = self.name.split("\n")[0][:64]
-        move_lines.append({  # Add outstanding payment line
-            'name': f'{self.employee_id.name}: {expense_name}',
-            'account_id': self.sheet_id._get_expense_account_destination(),
-            'balance': -self.total_amount,
-            'amount_currency': self.currency_id.round(-self.total_amount_currency),
-            'currency_id': self.currency_id.id,
-        })
         return {
             **self.sheet_id._prepare_move_vals(),
             'date': self.date,  # Overidden from self.sheet_id._prepare_move_vals() so we can use the expense date for the account move date
