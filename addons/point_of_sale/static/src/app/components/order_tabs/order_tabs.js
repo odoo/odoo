@@ -23,7 +23,6 @@ export class OrderTabs extends Component {
     async newFloatingOrder() {
         const order = this.pos.addNewOrder();
         this.pos.showScreen("ProductScreen");
-        this.dialog.closeAll();
         return order;
     }
     selectFloatingOrder(order) {
