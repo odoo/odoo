@@ -232,7 +232,9 @@ var VariantMixin = {
         $parent
             .find('option, input, label, .o_variant_pills')
             .removeClass('css_not_available')
+            .not(`#rental_product_start_date, #rental_product_end_date`)
             .removeAttr('disabled')
+            .end()
             .filter('option, input')
             .closest('li')
             .removeAttr('title')
