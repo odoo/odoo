@@ -76,9 +76,9 @@ class HrLeave(models.Model):
             available_hours = monthly_limit - used_hours
             # El mensaje de error es claro para el usuario
 
-            #Esto de abajo lo puedo poner por si quiero  mostrar las horasque quedan y las que tiene disponibles.
             # "Ha utilizado %.2f horas y solo te quedan %.2f horas disponibles."
-            
-            raise ValidationError(_(
-                "Usted ha utilizado el límite mensual de horas de permiso permitidas."
-            ) % (used_hours, available_hours if available_hours > 0 else 0))
+            #) % (used_hours, available_hours if available_hours > 0 else 0))
+
+            raise ValidationError(_("Usted ha utilizado el límite mensual de horas de permiso permitidas.")) 
+                
+                
