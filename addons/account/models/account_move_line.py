@@ -2345,7 +2345,7 @@ class AccountMoveLine(models.Model):
             amls_results, fully_reconciled_aml_ids = self._prepare_reconciliation_amls(
                 [
                     amls_values_map[aml]
-                    for aml in remaining_amls
+                    for aml in remaining_amls.sorted(lambda line: abs(line.balance))
                 ],
                 shadowed_aml_values=shadowed_aml_values,
             )
