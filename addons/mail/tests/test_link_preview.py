@@ -246,7 +246,8 @@ class TestLinkPreview(MailCommon):
             )
             self.assertEqual(link_preview_count, 2)
             self.test_partner._message_update_content(
-                message, Markup('<a href="https://www.odoo.com/odoo-experience">Nothing link</a>')
+                message,
+                body=Markup('<a href="https://www.odoo.com/odoo-experience">Nothing link</a>'),
             )
             self.env["mail.link.preview"]._create_from_message_and_notify(message)
             link_preview_count = self.env["mail.message.link.preview"].search_count(

@@ -11,9 +11,11 @@ class TestDiscussMessageUpdateController(MailControllerUpdateCommon):
             {"group_public_id": None, "name": "public channel"}
         )
         channel._add_members(guests=self.guest)
+        # sudo: discuss.channel: posting a message as guest in a test is acceptable
         message = (
             channel.with_user(self.user_public)
             .with_context(guest=self.guest)
+            .sudo()
             .message_post(body=self.message_body, message_type="comment")
         )
         self._execute_subtests(

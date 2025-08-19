@@ -612,7 +612,7 @@ export async function mail_message_post(request) {
     /** @type {import("mock_models").ResPartner} */
     const ResPartner = this.env["res.partner"];
 
-    const { context, post_data, thread_id, thread_model, partner_emails, canned_response_ids } =
+    const { context, post_data, thread_id, thread_model, canned_response_ids } =
         await parseRequestParams(request);
     if (canned_response_ids) {
         for (const cannedResponseId of canned_response_ids) {
@@ -621,9 +621,9 @@ export async function mail_message_post(request) {
             });
         }
     }
-    if (partner_emails) {
+    if (post_data.partner_emails) {
         post_data.partner_ids = post_data.partner_ids || [];
-        for (const email of partner_emails) {
+        for (const email of post_data.partner_emails) {
             const partner = ResPartner._filter([["email", "=", email]]);
             if (partner.length !== 0) {
                 post_data.partner_ids.push(partner[0].id);
@@ -701,17 +701,20 @@ async function mail_message_update_content(request) {
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
 
-    const { attachment_ids, body, message_id } = await parseRequestParams(request);
+    const { message_id, update_data } = await parseRequestParams(request);
     const [message] = MailMessage.browse(message_id);
     const msg_values = {};
-    if (body !== null) {
+    if (update_data.body !== null) {
         const edit_label = "<span class='o-mail-Message-edited'/>";
-        msg_values.body = body === "" && attachment_ids.length === 0 ? "" : body + edit_label;
+        msg_values.body =
+            update_data.body === "" && update_data.attachment_ids.length === 0
+                ? ""
+                : update_data.body + edit_label;
     }
-    if (attachment_ids.length === 0) {
+    if (update_data.attachment_ids.length === 0) {
         IrAttachment.unlink(message.attachment_ids);
     } else {
-        const attachments = IrAttachment.browse(attachment_ids).filter(
+        const attachments = IrAttachment.browse(update_data.attachment_ids).filter(
             (attachment) =>
                 attachment.res_model === "mail.compose.message" &&
                 attachment.create_uid === this.env.user?.id
@@ -723,9 +726,9 @@ async function mail_message_update_content(request) {
                 res_id: message.res_id,
             }
         );
-        msg_values.attachment_ids = attachment_ids;
+        msg_values.attachment_ids = update_data.attachment_ids;
     }
-    if (!body && attachment_ids.length === 0) {
+    if (!update_data.body && update_data.attachment_ids.length === 0) {
         msg_values.partner_ids = false;
         msg_values.parent_id = false;
     }

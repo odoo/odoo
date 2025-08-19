@@ -60,10 +60,10 @@ class TestMessageController(HttpCaseWithUserDemo):
                         "post_data": {
                             "body": "test",
                             "attachment_ids": [self.attachments[0].id],
+                            "attachment_tokens": ["wrong token"],
                         },
                     },
-                    "attachment_tokens": ["wrong token"],
-                }
+                },
             ),
             headers={"Content-Type": "application/json"},
         )
@@ -84,11 +84,11 @@ class TestMessageController(HttpCaseWithUserDemo):
                         "post_data": {
                             "body": "test",
                             "attachment_ids": [self.attachments[0].id],
+                            "attachment_tokens": [self.attachments[0]._get_ownership_token()],
                             "message_type": "comment",
                         },
-                        "attachment_tokens": [self.attachments[0]._get_ownership_token()],
                     },
-                }
+                },
             ),
             headers={"Content-Type": "application/json"},
         )
@@ -122,11 +122,13 @@ class TestMessageController(HttpCaseWithUserDemo):
                 {
                     "params": {
                         "message_id": data1["mail.message"][0]["id"],
-                        "body": "test",
-                        "attachment_ids": [self.attachments[1].id],
-                        "attachment_tokens": ["wrong token"],
+                        "update_data": {
+                            "body": "test",
+                            "attachment_ids": [self.attachments[1].id],
+                            "attachment_tokens": ["wrong token"],
+                        },
                     },
-                }
+                },
             ),
             headers={"Content-Type": "application/json"},
         )
@@ -143,11 +145,13 @@ class TestMessageController(HttpCaseWithUserDemo):
                 {
                     "params": {
                         "message_id": data1["mail.message"][0]["id"],
-                        "body": "test",
-                        "attachment_ids": [self.attachments[1].id],
-                        "attachment_tokens": [self.attachments[1]._get_ownership_token()],
+                        "update_data": {
+                            "body": "test",
+                            "attachment_ids": [self.attachments[1].id],
+                            "attachment_tokens": [self.attachments[1]._get_ownership_token()],
+                        },
                     },
-                }
+                },
             ),
             headers={"Content-Type": "application/json"},
         )
@@ -244,10 +248,10 @@ class TestMessageController(HttpCaseWithUserDemo):
                         "thread_id": self.channel.id,
                         "post_data": {
                             "body": "test",
+                            "partner_emails": ["john@test.be"],
                         },
-                        "partner_emails": ["john@test.be"],
                     },
-                }
+                },
             ),
             headers={"Content-Type": "application/json"},
         )

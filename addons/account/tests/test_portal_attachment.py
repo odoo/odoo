@@ -189,8 +189,9 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                     'post_data': {
                         'body': "test message 1",
                         'attachment_ids': [attachment.id],
+                        "attachment_tokens": ["false"],
                     },
-                    'attachment_tokens': ['false'],
+                    "token": self.out_invoice._portal_ensure_token(),
                 },
             },
         )
@@ -207,8 +208,11 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                 'params': {
                     'thread_model': self.out_invoice._name,
                     'thread_id': self.out_invoice.id,
-                    'post_data': {'body': "test message 1", 'attachment_ids': [attachment.id]},
-                    "attachment_tokens": [attachment._get_ownership_token()],
+                    "post_data": {
+                        "body": "test message 1",
+                        'attachment_ids': [attachment.id],
+                        "attachment_tokens": [attachment._get_ownership_token()],
+                    },
                 },
             },
         )
@@ -226,8 +230,11 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                 'params': {
                     'thread_model': self.out_invoice._name,
                     'thread_id': self.out_invoice.id,
-                    'post_data': {'body': "test message 1", 'attachment_ids': [attachment.id]},
-                    "attachment_tokens": [attachment._get_ownership_token()],
+                    "post_data": {
+                        "body": "test message 1",
+                        "attachment_ids": [attachment.id],
+                        "attachment_tokens": [attachment._get_ownership_token()],
+                    },
                     'token': self.out_invoice._portal_ensure_token(),
                 },
             },
@@ -248,8 +255,11 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                 'params': {
                     'thread_model': self.out_invoice._name,
                     'thread_id': self.out_invoice.id,
-                    'post_data': {'body': "test message 2", 'attachment_ids': [attachment.id]},
-                    "attachment_tokens": [attachment._get_ownership_token()],
+                    "post_data": {
+                        "body": "test message 2",
+                        "attachment_ids": [attachment.id],
+                        "attachment_tokens": [attachment._get_ownership_token()],
+                    },
                     'token': self.out_invoice._portal_ensure_token(),
                 },
             },
@@ -286,8 +296,11 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                 'params': {
                     'thread_model': self.out_invoice._name,
                     'thread_id': self.out_invoice.id,
-                    'post_data': {'body': "test message 3", 'attachment_ids': [create_res['id']]},
-                    "attachment_tokens": [create_res["ownership_token"]],
+                    "post_data": {
+                        "body": "test message 3",
+                        "attachment_ids": [create_res['id']],
+                        "attachment_tokens": [create_res["ownership_token"]],
+                    },
                     'token': self.out_invoice._portal_ensure_token(),
                 },
             },
