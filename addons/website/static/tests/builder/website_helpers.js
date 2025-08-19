@@ -104,7 +104,11 @@ export async function setupWebsiteBuilder(
     let originalIframeLoaded;
     let resolveIframeLoaded = () => {};
     const bodyHTML = `${beforeWrapwrapContent}
-        <div id="wrapwrap">${headerContent} <div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="${setupWebsiteBuilderOeId}" data-oe-field="arch">${websiteContent}</div></div>`;
+        <div id="wrapwrap">${headerContent} <div id="wrap" class="oe_structure oe_empty" ${
+        translateMode
+            ? ""
+            : `data-oe-model="ir.ui.view" data-oe-id="${setupWebsiteBuilderOeId}" data-oe-field="arch"`
+    }>${websiteContent}</div></div>`;
     const iframeLoaded = new Promise((resolve) => {
         resolveIframeLoaded = (el) => {
             const iframe = el;
