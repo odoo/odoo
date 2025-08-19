@@ -9,6 +9,7 @@ definePosModels();
 describe("payment_screen.js", () => {
     test("validateOrder", async () => {
         const store = await setupPosEnv();
+        store.addNewOrder();
         const orderUuid = store.getOrder().uuid;
         const comp = await mountWithCleanup(PaymentScreen, {
             props: { orderUuid },

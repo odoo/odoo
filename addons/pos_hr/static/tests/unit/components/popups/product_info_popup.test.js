@@ -9,6 +9,7 @@ definePosModels();
 describe("product_info_popup.js", () => {
     test("allowProductEdition", async () => {
         const store = await setupPosEnv();
+        store.addNewOrder();
         const admin = store.models["hr.employee"].get(2);
         store.setCashier(admin);
         const product = store.models["product.template"].get(5);

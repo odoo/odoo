@@ -11,7 +11,8 @@
                         class="btn btn-secondary btn-lg flex-shrink-0 border-0"
                         t-attf-class="{{`o_colorlist_item_color_${currentOrder.preset_id?.color}`}}"
                         t-on-click="() => this.pos.selectPreset()">
-                        <span t-esc="currentOrder.preset_id?.name" />
+                        <span t-if="currentOrder.preset_id?.name" t-esc="currentOrder.preset_id?.name" />
+                        <span t-else="">Preset</span>
                     </button>
                     <button class="button mobile-more-button btn btn-secondary btn-lg ms-auto" t-on-click="props.onClickMore">
                         <i class="oi oi-fw oi-ellipsis-v" aria-hidden="true" />

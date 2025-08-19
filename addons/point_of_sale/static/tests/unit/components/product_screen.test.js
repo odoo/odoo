@@ -9,6 +9,7 @@ definePosModels();
 describe("product_screen.js", () => {
     test("_getProductByBarcode", async () => {
         const store = await setupPosEnv();
+        store.addNewOrder();
         const order = store.getOrder();
         const comp = await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
         await comp.addProductToOrder(store.models["product.template"].get(5));
@@ -25,6 +26,7 @@ describe("product_screen.js", () => {
 
     test("fastValidate", async () => {
         const store = await setupPosEnv();
+        store.addNewOrder();
         const order = store.getOrder();
         const fastPaymentMethod = order.config.fast_payment_method_ids[0];
         const productScreen = await mountWithCleanup(ProductScreen, {

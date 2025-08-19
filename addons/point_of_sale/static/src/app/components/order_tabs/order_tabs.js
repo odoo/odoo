@@ -25,7 +25,6 @@ export class OrderTabs extends Component {
         this.pos.navigate("ProductScreen", {
             orderUuid: order.uuid,
         });
-        this.dialog.closeAll();
         return order;
     }
     selectFloatingOrder(order) {
