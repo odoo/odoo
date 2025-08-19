@@ -97,6 +97,22 @@ class IrAttachment extends models.Model {
             image_width: 256,
             image_height: 256,
         },
+        {
+            id: 456,
+            name: "gif image",
+            description: "",
+            mimetype: "image/gif",
+            checksum: false,
+            url: "/web/image/456/transparent.gif",
+            type: "url",
+            res_id: 0,
+            res_model: false,
+            public: true,
+            access_token: false,
+            image_src: "/web/image/456/transparent.gif",
+            image_width: 256,
+            image_height: 256,
+        },
     ];
 }
 
