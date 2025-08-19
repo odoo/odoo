@@ -633,6 +633,24 @@ describe("colorElement", () => {
             contentAfter: `<div style='background-image: url("https://example.com/image.png"), ${greenToBlueGradient};'>a</div>`,
         });
     });
+    test("should keep the background image when switching o_cc class", async () => {
+        await testEditor({
+            contentBefore: `<div style='background-image: url("https://example.com/image.png");'>a</div>`,
+            stepFunction: (editor) => {
+                editor.shared.color.colorElement(
+                    editor.editable.firstChild,
+                    "o_cc2",
+                    "backgroundColor"
+                );
+                editor.shared.color.colorElement(
+                    editor.editable.firstChild,
+                    "o_cc1",
+                    "backgroundColor"
+                );
+            },
+            contentAfter: `<div style='background-image: url("https://example.com/image.png");' class="o_cc o_cc1">a</div>`,
+        });
+    });
     test("should keep custom gradient when switching o_cc class", async () => {
         await testEditor({
             contentBefore: `<div class="">a</div>`,
