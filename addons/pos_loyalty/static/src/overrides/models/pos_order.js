@@ -663,9 +663,10 @@ patch(PosOrder.prototype, {
                                                 points: pointsPerUnit,
                                                 barcode: line._gift_barcode,
                                                 giftCardId: line._gift_card_id.id,
+                                                gift_code: line.gift_code,
                                             };
                                         }
-                                        return { points: pointsPerUnit };
+                                        return { points: pointsPerUnit, gift_code: line.gift_code };
                                     })
                                 );
                             }
