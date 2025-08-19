@@ -38,12 +38,12 @@
                     </a>
                 </div>
             </div>
-            <hr />
             <div
                 name="delivery_availability"
-                t-if="this.state.deliveryStockData"
+                t-if="Object.keys(this.state.deliveryStockData || {}).length !== 0"
                 class="flex-row cursor-default"
             >
+                <hr/>
                 <h6>
                     <i class="fa fa-fw fa-truck text-muted"/>
                     Delivery

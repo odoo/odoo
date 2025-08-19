@@ -27,6 +27,7 @@ class ProductTemplate(models.Model):
             available_delivery_methods_sudo = self.env['delivery.carrier'].sudo().search([
                 '|', ('website_id', '=', website.id), ('website_id', '=', False),
                 ('website_published', '=', True),
+                ('delivery_type', '!=', 'in_store'),
             ])
             if available_delivery_methods_sudo:
                 res['delivery_stock_data'] = utils.format_product_stock_values(
