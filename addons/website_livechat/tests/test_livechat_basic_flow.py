@@ -194,6 +194,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             {
                 "discuss.channel": self._filter_channels_fields(
                     {
+                        "ai_agent_id": False,
                         "channel_type": "livechat",
                         "country_id": False,
                         "create_uid": self.user_public.id,
@@ -219,7 +220,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "requested_by_operator": False,
                         "rtc_session_ids": [("ADD", [])],
                         "uuid": channel.uuid,
-                        'livechat_with_ai_agent': False,
                     }
                 ),
                 "discuss.channel.member": [
@@ -314,6 +314,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             data["discuss.channel"],
             self._filter_channels_fields(
                 {
+                    "ai_agent_id": False,
                     "channel_type": "livechat",
                     "country_id": False,
                     "create_uid": self.user_public.id,
@@ -332,7 +333,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                     "requested_by_operator": False,
                     "rtc_session_ids": [("ADD", [])],
                     "uuid": channel.uuid,
-                    'livechat_with_ai_agent': False,
                 },
             )
         )

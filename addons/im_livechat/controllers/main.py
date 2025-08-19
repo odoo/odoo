@@ -72,14 +72,16 @@ class LivechatController(http.Controller):
         info = channel.get_livechat_info(username=username)
         return request.render('im_livechat.loader', {'info': info}, headers=[('Content-Type', 'application/javascript')])
 
+    def _process_extra_channel_params(self, **kwargs):
+        # non_persisted_channel_params, persisted_channel_params
+        return {}, {}
+
     def _get_guest_name(self):
         return _("Visitor")
 
     @http.route('/im_livechat/get_session', methods=["POST"], type="jsonrpc", auth='public')
     @add_guest_to_context
-    def get_session(self, channel_id, previous_operator_id=None, chatbot_script_id=None, extra_operator_lookup_params=None, persisted=True):
-        if extra_operator_lookup_params is None:
-            extra_operator_lookup_params = {}
+    def get_session(self, channel_id, previous_operator_id=None, chatbot_script_id=None, persisted=True, **kwargs):
         channel = request.env["discuss.channel"]
         country = request.env["res.country"]
         guest = request.env["mail.guest"]
@@ -103,13 +105,14 @@ class LivechatController(http.Controller):
             chatbot_script_id=chatbot_script_id,
             country_id=country.id,
             lang=request.cookies.get("frontend_lang"),
-            **extra_operator_lookup_params
+            **kwargs
         )
         if not operator_info['operator_partner']:
             return False
 
         chatbot_script = operator_info['chatbot_script']
         is_chatbot_script = operator_info['operator_model'] == 'chatbot.script'
+        non_persisted_channel_params, persisted_channel_params = self._process_extra_channel_params(**kwargs)
 
         if not persisted:
             channel_id = -1  # only one temporary thread at a time, id does not matter.
@@ -122,17 +125,17 @@ class LivechatController(http.Controller):
                 }
                 store.add(chatbot_script)
                 store.add(welcome_steps)
-            operator_partner = operator_info['operator_partner']
             channel_info = {
                 "fetchChannelInfoState": "fetched",
                 "id": channel_id,
                 "isLoaded": True,
                 "livechat_operator_id": Store.One(
-                    operator_partner, self.env["discuss.channel"]._store_livechat_operator_id_fields(),
+                    operator_info["operator_partner"], self.env["discuss.channel"]._store_livechat_operator_id_fields(),
                 ),
                 "scrollUnread": False,
                 "channel_type": "livechat",
                 "chatbot": chatbot_data,
+                **non_persisted_channel_params,
             }
             store.add_model_values("discuss.channel", channel_info)
         else:
@@ -145,6 +148,7 @@ class LivechatController(http.Controller):
                 livechat_channel = livechat_channel.with_context(guest=guest)
                 request.update_context(guest=guest)
             channel_vals = livechat_channel._get_livechat_discuss_channel_vals(**operator_info)
+            channel_vals.update(**persisted_channel_params)
             lang = request.env["res.lang"].search(
                 [("code", "=", request.cookies.get("frontend_lang"))]
             )

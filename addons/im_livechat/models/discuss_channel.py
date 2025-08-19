@@ -818,7 +818,7 @@ class DiscussChannel(models.Model):
             channel_sudo._action_unfollow(partner=bot_partner_id, post_leave_message=False)
 
             # finally, rename the channel to include the operator's name
-            channel_sudo._update_channel_info(
+            channel_sudo._update_forwarded_channel_data(
                 livechat_failure="no_answer",
                 livechat_operator_id=human_operator.partner_id,
                 operator_name=human_operator.livechat_username if human_operator.livechat_username else human_operator.name,
@@ -861,7 +861,7 @@ class DiscussChannel(models.Model):
             member_params['partners'] = partners
         self._add_members(**member_params)
 
-    def _update_channel_info(self, livechat_failure, livechat_operator_id, operator_name):
+    def _update_forwarded_channel_data(self, /, *, livechat_failure, livechat_operator_id, operator_name):
         self.write(
             {
                 "livechat_failure": livechat_failure,
