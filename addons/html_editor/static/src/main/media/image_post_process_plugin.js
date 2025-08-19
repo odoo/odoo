@@ -232,7 +232,10 @@ export class ImagePostProcessPlugin extends Plugin {
     }
     async getProcessedImageSize(img) {
         const processed = await this._processImage({ img });
-        return getDataURLBinarySize(processed.url);
+        if (processed.url) {
+            return getDataURLBinarySize(processed.url);
+        }
+        return undefined;
     }
     async postProcessImage(url, newDataset, processContext) {
         for (const cb of this.getResource("process_image_post_handlers")) {
