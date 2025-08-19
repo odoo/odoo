@@ -56,6 +56,7 @@
                     <t t-foreach="state.displayedOptions" t-as="choice" t-key="choice_index">
                         <t t-call="{{ this.constructor.choiceItemTemplate }}">
                             <t t-set="choice" t-value="choice" />
+                            <t t-set="choice_index" t-value="choice_index" />
                         </t>
                     </t>
                     <t t-if="props.slots and props.slots.bottomArea" t-slot="bottomArea" data="state"/>
@@ -77,6 +78,7 @@
             t-if="!choice.isGroup"
             onSelected="() => this.onItemSelected(choice.value)"
             class="getItemClass(choice) + ' d-flex align-items-center'"
+            attrs="{ 'data-choice-index': choice_index }"
         >
             <t t-if="props.slots and props.slots.choice" t-slot="choice" data="choice"/>
             <t t-else="">

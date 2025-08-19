@@ -1,5 +1,5 @@
 import { Component, useState, onWillUpdateProps } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useCachedModel } from "@html_builder/core/cached_model_utils";
 import { _t } from "@web/core/l10n/translation";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
@@ -35,6 +35,8 @@ export class SelectMany2X extends Component {
             element: { type: Object, shape: { id: [Number, String], "*": true } },
         },
         select: Function,
+        preview: { type: Function, optional: true },
+        revert: { type: Function, optional: true },
         closeOnEnterKey: { type: Boolean, optional: true },
         message: { type: String, optional: true },
         create: { type: Function, optional: true },
@@ -61,6 +63,16 @@ export class SelectMany2X extends Component {
                 this.state.searchResults = [];
             }
         });
+        this.menuRef = useChildRef();
+        // NOTE: we cannot use `useRefListener` because the ref goes to a child in an overlay
+        this.onDropdownStateChanged = (open) => {
+            if (open) {
+                this.menuRef.el?.addEventListener("pointerleave", () => this.onNavigatedAway());
+                this.menuRef.el?.addEventListener("pointerenter", () => this.onNavigatedBack());
+            } else {
+                this.onNavigatedAway();
+            }
+        };
     }
     searchInvalidationKey(props) {
         return JSON.stringify([props.model, props.fields, props.domain]);
@@ -107,5 +119,31 @@ export class SelectMany2X extends Component {
     async onInput(searchValue) {
         this.search(searchValue);
         this.state.nameToCreate = (await this.canCreate(searchValue)) ? searchValue : "";
+    }
+
+    preview(value) {
+        if (this.previewed !== value) {
+            this.previewed = value;
+            this.props.preview?.(value);
+        }
+    }
+    revert() {
+        delete this.previewed;
+        this.props.revert?.();
+    }
+    onNavigated(choice) {
+        choice ? this.preview(choice.value) : this.revert();
+        delete this.lastPreviewed;
+    }
+    onNavigatedAway() {
+        if ("previewed" in this) {
+            this.lastPreviewed = this.previewed;
+            this.revert();
+        }
+    }
+    onNavigatedBack() {
+        if ("lastPreviewed" in this) {
+            this.preview(this.lastPreviewed);
+        }
     }
 }
