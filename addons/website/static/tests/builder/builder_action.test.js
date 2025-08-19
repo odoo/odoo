@@ -5,7 +5,14 @@ import { useState, xml } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    defineModels,
+    fields,
+    models,
+    onRpc,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { addPlugin, defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
@@ -243,6 +250,7 @@ describe("HTML builder tests", () => {
                     clean({ isPreviewing, editingElement }) {
                         expect.step(`clean ${isPreviewing}`);
                         editingElement.classList.remove("o_applied");
+                        delete editingElement.dataset.value;
                     }
                 },
             });
@@ -294,6 +302,43 @@ describe("HTML builder tests", () => {
             await contains("button:contains(Custom)").click();
             await contains("button[data-color='600']").click();
             expect.verifySteps(["apply true", "apply false"]);
+        });
+
+        test("BuilderMany2One", async () => {
+            class Test extends models.Model {
+                _name = "test";
+                _records = [
+                    { id: 1, name: "First" },
+                    { id: 2, name: "Second" },
+                    { id: 3, name: "Third" },
+                ];
+                name = fields.Char();
+            }
+            onRpc("test", "name_search", () => [
+                [1, "First"],
+                [2, "Second"],
+                [3, "Third"],
+            ]);
+
+            defineModels([Test]);
+
+            addBuilderOption({
+                selector: ".test-options-target",
+                template: xml`<BuilderMany2One action="'isPreviewing'" model="'test'" limit="10" allowUnselect="true"/>`,
+            });
+            await setupHTMLBuilder(`<section class="test-options-target">Homepage</section>`);
+            await contains(":iframe .test-options-target").click();
+
+            // apply
+            await contains(".o_select_menu button").click();
+            await contains(".o_select_menu button").click(); // issue with select menu + builder many2one in tests: does not load on first open
+            await contains(".o_select_menu button").click();
+            await contains(".o_select_menu_item[data-choice-index='0']").click();
+            expect.verifySteps(["apply true", "apply false"]);
+
+            // clean
+            await contains(".o_select_menu + button.fa-times").click();
+            expect.verifySteps(["clean true", "clean false"]);
         });
     });
 

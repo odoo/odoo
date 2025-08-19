@@ -35,6 +35,9 @@ test("many2one: async load", async () => {
     addActionOption({
         testAction: class extends BuilderAction {
             static id = "testAction";
+            setup() {
+                this.preview = false;
+            }
             async load({ value }) {
                 expect.step("load");
                 await defWillLoad;
