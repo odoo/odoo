@@ -44,6 +44,16 @@
             width: 0;
             height: 0;
         }
+
+        #oe_structure_website_sale_sidebar_top {
+            &:where(:not(:has(div.oe_dropzone))) .s_text_block p:only-child {
+                margin-bottom: 0;
+            }
+
+            &:where(:has(.s_text_block p:not(:only-child))) {
+                padding-top: map-get($spacers, 3);
+            }
+        }
     }
 
 
@@ -489,16 +499,6 @@
                 --_livechat-gap: calc(3vw + 80px);
 
                 right: calc(0px - calc(var(--_offset) - var(--_livechat-gap)));
-            }
-        }
-
-        & #oe_structure_website_sale_sidebar_top {
-            &:where(:not(:has(div.oe_dropzone))) .s_text_block p:only-child {
-                margin-bottom: 0;
-            }
-
-            &:where(:has(.s_text_block p:not(:only-child))) {
-                padding-top: map-get($spacers, 3);
             }
         }
     }
