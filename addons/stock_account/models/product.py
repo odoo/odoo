@@ -131,28 +131,32 @@ class ProductProduct(models.Model):
             product.avg_cost = product.total_value / qty_available if qty_available else 0.0
 
     def write(self, vals):
+        old_price = False
         if 'standard_price' in vals and not self.env.context.get('disable_auto_revaluation'):
-            self._change_standard_price(vals['standard_price'])
+            old_price = {product: product.standard_price for product in self}
         if 'lot_valuated' in vals:
             # lot_valuated must be updated from the ProductTemplate
             self.product_tmpl_id.write({'lot_valuated': vals.pop('lot_valuated')})
-        return super().write(vals)
+        res = super().write(vals)
+        if old_price:
+            self._change_standard_price(old_price)
+        return res
 
     # -------------------------------------------------------------------------
     # Private
     # -------------------------------------------------------------------------
 
-    def _change_standard_price(self, new_price):
+    def _change_standard_price(self, old_price):
         for product in self:
-            if product.cost_method != 'average' or product.standard_price == new_price:
+            if product.cost_method == 'fifo' or product.standard_price == old_price.get(product):
                 continue
             self.env['product.value'].create({
                 'product_id': product.id,
-                'value': new_price,
+                'value': product.standard_price,
                 'company_id': product.company_id or self.env.company.id,
                 'date': fields.Datetime.now(),
                 'description': _('Price update from %(old_price)s to %(new_price)s by %(user)s',
-                    old_price=product.standard_price, new_price=new_price, user=self.env.user.name)
+                    old_price=old_price, new_price=product.standard_price, user=self.env.user.name)
             })
         return
 
