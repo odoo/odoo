@@ -112,6 +112,7 @@ export function scrollTo(el, options = {}) {
         }
 
         el.classList.add("o_check_scroll_position");
+        el.style.transform = "";
         let offsetTop = el.getBoundingClientRect().top + window.scrollY;
         el.classList.remove("o_check_scroll_position");
         if (el.classList.contains("d-none")) {

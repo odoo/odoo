@@ -35,7 +35,7 @@ export class BackgroundPositionOverlay extends Component {
             // Make sure the editing element is visible
             // TODO: check; the overlay could fail to be visible if the editing
             // element is too big.
-            const rect = this.props.editingElement.getBoundingClientRect();
+            const rect = this.getRect();
             const isEditingElEntirelyVisible =
                 rect.top >= 0 &&
                 rect.bottom <= this.props.editingElement.ownerDocument.defaultView.innerHeight;
@@ -129,7 +129,7 @@ export class BackgroundPositionOverlay extends Component {
         this.backgroundOverlayRef.el.style.height = `${this.props.editable.clientHeight}px`;
 
         const overlayContentEl = this.overlayContentRef.el;
-        const targetRect = this.props.editingElement.getBoundingClientRect();
+        const targetRect = this.getRect();
         overlayContentEl.style.left = `${targetRect.left + window.scrollX}px`;
 
         this.bgDraggerEl.style.setProperty(
@@ -143,11 +143,7 @@ export class BackgroundPositionOverlay extends Component {
             "important"
         );
 
-        const topPos = Math.max(
-            0,
-            window.scrollY -
-                (this.props.editingElement.getBoundingClientRect().top + window.scrollY)
-        );
+        const topPos = Math.max(0, window.scrollY - (this.getRect().top + window.scrollY));
         overlayContentEl.querySelector(".o_we_overlay_buttons").style.top = `${topPos}px`;
     }
 
@@ -159,7 +155,7 @@ export class BackgroundPositionOverlay extends Component {
      */
     getBackgroundDelta() {
         const bgSize = getComputedStyle(this.props.editingElement).backgroundSize;
-        const editingElDimension = this.props.editingElement.getBoundingClientRect();
+        const editingElDimension = this.getRect();
         if (bgSize !== "cover") {
             let [width, height] = bgSize.split(" ");
             if (width === "auto" && (height === "auto" || !height)) {
@@ -198,5 +194,14 @@ export class BackgroundPositionOverlay extends Component {
                 editingElDimension.height -
                 Math.round(renderRatio * this.props.mockEditingElOnImg.naturalHeight),
         };
+    }
+
+    getRect() {
+        this.clearEditingElementTransform();
+        return this.props.editingElement.getBoundingClientRect();
+    }
+
+    clearEditingElementTransform() {
+        this.props.editingElement.style.transform = "";
     }
 }
