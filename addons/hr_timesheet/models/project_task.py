@@ -221,7 +221,7 @@ class ProjectTask(models.Model):
             'timesheets_per_task': timesheets_per_task,
         }
 
-    @api.depends_context('hr_timesheet_display_remaining_hours')
+    @api.depends_context('hr_timesheet_display_remaining_hours', 'formatted_display_name')
     def _compute_display_name(self):
         super()._compute_display_name()
         if self.env.context.get('hr_timesheet_display_remaining_hours'):
@@ -231,13 +231,16 @@ class ProjectTask(models.Model):
                     task.display_name = task.display_name + "\u00A0" + days_left
                 elif task.allow_timesheets and task.allocated_hours > 0:
                     hours, mins = (str(int(duration)).rjust(2, '0') for duration in divmod(abs(task.remaining_hours) * 60, 60))
-                    hours_left = _(
+                    hours_left = self.env._(
                         "(%(sign)s%(hours)s:%(minutes)s remaining)",
                         sign='-' if task.remaining_hours < 0 else '',
                         hours=hours,
                         minutes=mins,
                     )
-                    task.display_name = task.display_name + "\u00A0" + hours_left
+                    if self.env.context.get('formatted_display_name'):
+                        task.display_name = f"{task.display_name} \t --{hours_left}--"
+                    else:
+                        task.display_name = task.display_name + "\u00A0" + hours_left
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_contains_entries(self):
