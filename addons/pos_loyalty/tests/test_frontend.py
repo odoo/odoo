@@ -3047,3 +3047,30 @@ class TestUi(TestPointOfSaleHttpCommon):
             "test_multiple_reward_line_free_product",
             login="pos_user",
         )
+
+    def test_coupon_code_stays_set(self):
+        """
+        Tests that the custom code stays when reloading an order
+        after buying a physical gift card and setting a custom code.
+        Also tests that when reloading with a gift card that has just
+        a normal gift card with not code and no custom cost, custom
+        code is given to the right gift card.
+        """
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        LoyaltyProgram = self.env['loyalty.program']
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+
+        program_id = LoyaltyProgram.create_from_template('gift_card')['res_id']
+        gift_card_program = LoyaltyProgram.browse(program_id)
+        gift_card_program.write({'name': 'Test Gift Card Program'})
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_coupon_code_stays_set",
+            login="pos_user"
+        )
+        gift_cards = self.env['loyalty.card'].search([('program_id', '=', gift_card_program.id)], limit=2)
+        self.assertEqual(gift_cards[0].code, 'Card Name')
+        self.assertEqual(gift_cards[0].points, 20)
+        self.assertNotEqual(gift_cards[1].code, 'Card Name')
+        self.assertEqual(gift_cards[1].points, 50)

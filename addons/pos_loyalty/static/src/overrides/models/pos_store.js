@@ -195,15 +195,31 @@ patch(PosStore.prototype, {
                 );
             } else if (pointsAdded.length > oldChanges.length) {
                 const pointsCount = pointsAdded.reduce((acc, pointObj) => {
-                    const { points, barcode = "" } = pointObj;
-                    const key = barcode ? `${points}-${barcode}` : `${points}`;
+                    const { points, barcode = "", gift_code = "" } = pointObj;
+                    const key =
+                        barcode && gift_code
+                            ? `${points}-${barcode}-${gift_code}`
+                            : barcode
+                            ? `${points}-${barcode}`
+                            : gift_code
+                            ? `${points}--${gift_code}`
+                            : `${points}`;
+
                     acc[key] = (acc[key] || 0) + 1;
                     return acc;
                 }, {});
 
                 oldChanges.forEach((pointObj) => {
-                    const { points, barcode = "" } = pointObj;
-                    const key = barcode ? `${points}-${barcode}` : `${points}`;
+                    const { points, barcode = "", gift_code = "" } = pointObj;
+                    const key =
+                        barcode && gift_code
+                            ? `${points}-${barcode}-${gift_code}`
+                            : barcode
+                            ? `${points}-${barcode}`
+                            : gift_code
+                            ? `${points}--${gift_code}`
+                            : `${points}`;
+
                     if (pointsCount[key] && pointsCount[key] > 0) {
                         pointsCount[key]--;
                     }
@@ -212,13 +228,12 @@ patch(PosStore.prototype, {
                 // Get new points added which are not in oldChanges
                 const newPointsAdded = [];
                 Object.keys(pointsCount).forEach((key) => {
-                    const [points, barcode = ""] = key.split("-");
+                    const [points, barcode = "", gift_code = ""] = key.split("-");
                     while (pointsCount[key] > 0) {
-                        newPointsAdded.push({ points: Number(points), barcode });
+                        newPointsAdded.push({ points: Number(points), barcode, gift_code });
                         pointsCount[key]--;
                     }
                 });
-
                 for (const pa of newPointsAdded) {
                     const coupon = await this.couponForProgram(program);
                     const couponPointChange = {
@@ -234,7 +249,8 @@ patch(PosStore.prototype, {
                         couponPointChange.expiration_date = serializeDate(
                             luxon.DateTime.now().plus({ year: 1 })
                         );
-                        couponPointChange.code = order.get_selected_orderline()?.gift_code;
+                        couponPointChange.code =
+                            order.get_selected_orderline()?.gift_code || pa.gift_code;
                         couponPointChange.partner_id = order.get_partner()?.id;
                     }
 
