@@ -912,6 +912,8 @@ class Field(typing.Generic[T]):
             return True
 
         model = env[self.model_name]
+        if not model._has_field_access(self, 'read'):
+            return False
         query = model._as_query(ordered=False)
         try:
             model._order_field_to_sql(model._table, self.name, SQL(), SQL(), query)
@@ -1240,8 +1242,7 @@ class Field(typing.Generic[T]):
         given by the triple ``(field_expr, operator, value)`` with the given
         table alias, and in the context of the given query.
 
-        This method should use the model to resolve the SQL and check access
-        of the field.
+        Access to the field should be checked by the caller.
         """
         sql_expr = self._condition_to_sql(field_expr, operator, value, model, alias, query)
         if self.company_dependent:
