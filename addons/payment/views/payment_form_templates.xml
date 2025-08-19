@@ -419,14 +419,19 @@
                 <p t-else="">
                     No payment providers are configured.
                 </p>
+                <t
+                    t-set="onboarding_provider"
+                    t-value="request.env['res.config.settings'].sudo().new({}).onboarding_payment_module"
+                />
                 <a
-                    t-if="request.env.company.country_id.is_stripe_supported_country
-                          and not providers_sudo"
-                    name="activate_stripe"
-                    href="/odoo/action-payment.action_activate_stripe"
+                    t-if="onboarding_provider and not providers_sudo"
+                    name="start_payment_onboarding"
+                    href="/odoo/action-payment.action_start_payment_onboarding"
                     role="button"
                     class="btn btn-primary me-2"
-                > ACTIVATE STRIPE </a>
+                >
+                    ACTIVATE <t t-out="onboarding_provider.upper()"/>
+                </a>
                 <a
                     t-if="availability_report"
                     role="button"

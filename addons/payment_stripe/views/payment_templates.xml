@@ -7,10 +7,10 @@
         </xpath>
     </template>
 
-    <template id="no_pms_available_warning" inherit_id="payment.no_pms_available_warning">
-        <a name="activate_stripe" position="attributes">
+    <template id="no_pms_available_warning" inherit_id="payment.no_pms_available_warning" active="False">
+        <a name="start_payment_onboarding" position="attributes">
             <!-- Hide 'Activate Stripe' button when the `payment_stripe` module is installed. -->
-            <attribute name="class" separator=" " add="d-none"/>
+            <!--<attribute name="class" separator=" " add="d-none"/>-->
         </a>
     </template>
 

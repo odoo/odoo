@@ -111,7 +111,18 @@ test("portal_invoice_page_payment is started with #portal_pay", async () => {
                                                                 <p data-oe-model="ir.ui.view" data-oe-id="612" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/div[2]/p[2]">
                                                                     No payment providers are configured.
                                                                 </p>
-                                                                <a name="activate_stripe" href="/odoo/action-payment.action_activate_stripe" role="button" class="btn btn-primary me-2 d-none" data-oe-model="ir.ui.view" data-oe-id="612" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/div[2]/a[1]"> ACTIVATE STRIPE </a>
+                                                                <a
+                                                                    name="activate_payment_provider"
+                                                                    href="/odoo/action-payment.action_start_payment_onboarding"
+                                                                    role="button"
+                                                                    class="btn btn-primary me-2 d-none"
+                                                                    data-oe-model="ir.ui.view"
+                                                                    data-oe-id="612"
+                                                                    data-oe-field="arch"
+                                                                    data-oe-xpath="/t[1]/div[1]/div[2]/a[1]"
+                                                                 >
+                                                                     ACTIVATE <t t-out="onboarding_provider.upper()"/>
+                                                                </a>
                                                                 <a role="button" type="action" class="btn-link alert-warning me-2" href="/odoo/action-payment.action_payment_provider" data-oe-model="ir.ui.view" data-oe-id="612" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/div[2]/a[3]">
                                                                 <strong><i class="oi oi-arrow-right"></i> Payment Providers</strong>
                                                                 </a>
