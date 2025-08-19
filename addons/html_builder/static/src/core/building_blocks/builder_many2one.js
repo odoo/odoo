@@ -5,6 +5,7 @@ import {
     useBuilderComponent,
     useDependencyDefinition,
     useDomState,
+    useHasPreview,
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
 import { SelectMany2X } from "./select_many2x";
@@ -34,6 +35,7 @@ export class BuilderMany2One extends Component {
         const { getAllActions, callOperation } = getAllActionsAndOperations(this);
         this.cachedModel = useCachedModel();
         this.callOperation = callOperation;
+        this.hasPreview = useHasPreview(getAllActions);
         this.applyOperation = this.env.editor.shared.history.makePreviewableAsyncOperation(
             this.callApply.bind(this)
         );
@@ -77,11 +79,12 @@ export class BuilderMany2One extends Component {
             );
         }
     }
-    callApply(applySpecs) {
+    callApply(applySpecs, isPreviewing) {
         const proms = [];
         for (const applySpec of applySpecs) {
             if (applySpec.actionValue === undefined) {
                 applySpec.action.clean({
+                    isPreviewing,
                     editingElement: applySpec.editingElement,
                     params: applySpec.actionParam,
                     dependencyManager: this.env.dependencyManager,
@@ -89,6 +92,7 @@ export class BuilderMany2One extends Component {
             } else {
                 proms.push(
                     applySpec.action.apply({
+                        isPreviewing,
                         editingElement: applySpec.editingElement,
                         params: applySpec.actionParam,
                         value: applySpec.actionValue,
@@ -104,6 +108,21 @@ export class BuilderMany2One extends Component {
         this.callOperation(this.applyOperation.commit, {
             userInputValue: newSelected && JSON.stringify(newSelected),
         });
+    }
+    preview(newSelected) {
+        this.callOperation(this.applyOperation.preview, {
+            preview: true,
+            userInputValue: newSelected && JSON.stringify(newSelected),
+            operationParams: {
+                cancellable: true,
+                cancelPrevious: () => this.applyOperation.revert(),
+            },
+        });
+    }
+    revert() {
+        // The `next` will cancel the previous operation, which will revert
+        // the operation in case of a preview.
+        this.env.editor.shared.operation.next();
     }
     create(name) {
         const args = { editingElement: this.env.getEditingElement(), value: name };
