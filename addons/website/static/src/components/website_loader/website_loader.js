@@ -159,9 +159,6 @@ export class WebsiteLoader extends Component {
      * Initializes the progress bar.
      */
     initProgressBar() {
-        if (this.updateProgressInterval) {
-            return;
-        }
         // The progress speed decreases as it approaches its limit. This way,
         // users have the feeling that the website creation progressing is fast
         // and we prevent them from leaving the page too early (because they
