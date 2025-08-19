@@ -7,6 +7,10 @@
     <SelectMenu
         choices="this.filteredSearchResult().map(e => ({ value: e, label: e.display_name  }))"
         onSelect="props.select"
+        onNavigated.bind="onNavigated"
+        menuRef="menuRef"
+        onOpened.bind="onOpened"
+        onClosed.bind="onClosed"
         searchPlaceholder.translate="Search for records..."
         onInput.bind="onInput"
         class="'o-hb-selectMany2X-wrapper'"
