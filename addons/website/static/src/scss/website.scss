@@ -1940,7 +1940,7 @@ header {
         }
     }
 }
-.navbar-nav {
+:where(header#top) .navbar-nav:where([role="menu"]) {
     .nav-link:not(.o_nav-link_secondary) {
         @include media-breakpoint-up(lg) {
             @if o-website-value('header-links-style') == 'outline' {
