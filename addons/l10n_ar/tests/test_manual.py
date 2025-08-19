@@ -6,11 +6,11 @@ from odoo.tools.float_utils import float_split_str
 
 
 @tagged('post_install_l10n', '-at_install', 'post_install')
-class TestManual(common.TestAr):
+class TestArManual(common.TestArCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestManual, cls).setUpClass()
+        super().setUpClass()
         cls.journal = cls._create_journal(cls, 'preprinted')
         cls.partner = cls.res_partner_adhoc
         cls._create_test_invoices_like_demo(cls)
