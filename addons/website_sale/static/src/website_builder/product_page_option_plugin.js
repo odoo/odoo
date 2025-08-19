@@ -349,6 +349,10 @@ export class ProductPageImageGridColumnsAction extends BaseProductPageAction {
 }
 export class ProductReplaceMainImageAction extends BaseProductPageAction {
     static id = "productReplaceMainImage";
+    // setup() {
+    //     super.setup();
+    //     this.reload = false;
+    // }
     apply({ editingElement: productDetailMainEl }) {
         // Emulate click on the main image of the carousel.
         const image = productDetailMainEl.querySelector(
