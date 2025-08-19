@@ -8,6 +8,10 @@ const InstagramPageEdit = I => class extends I {
             "t-att-style": () => ({ "pointer-events": "none" }),
         };
     }
+
+    getConfigurationSnapshot() {
+        return this.el.dataset.instagramPage;
+    }
 }
 
 registry

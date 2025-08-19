@@ -4,6 +4,7 @@ import { Colibri } from "@web/public/colibri";
 import { Interaction } from "@web/public/interaction";
 import { patch } from "@web/core/utils/patch";
 import { setupIgnoreDOMMutations } from "@website/js/content/auto_hide_menu";
+import { omit } from "@web/core/utils/objects";
 
 export function buildEditableInteractions(builders) {
     const result = [];
@@ -172,7 +173,7 @@ registry.category("services").add("website_edit", {
                         // To be overloaded by edit-mode interactions that need
                         // something more specific.
                         // TODO Sort keys to improve comparison.
-                        const dataset = { ...this.el.dataset };
+                        const dataset = omit(this.el.dataset, "visibility");
                         const style = {};
                         for (const property of this.el.style) {
                             if (property.startsWith("animation")) {
