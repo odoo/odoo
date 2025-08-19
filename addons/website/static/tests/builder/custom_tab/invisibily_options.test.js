@@ -6,6 +6,8 @@ import {
     setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
 } from "../website_helpers";
+import { insertText, undo } from "@html_editor/../tests/_helpers/user_actions";
+import { setSelection } from "@html_editor/../tests/_helpers/selection";
 
 defineWebsiteModels();
 
@@ -168,4 +170,27 @@ test("Hide element conditionally", async () => {
     await contains("[data-label='Visibility'] button.dropdown").click();
     await contains("div[data-action-id='forceVisible']").click();
     expect(":iframe section").not.toHaveClass("o_snippet_invisible");
+});
+
+test("Show conditionally hidden elements should not be tracked in history", async () => {
+    const { getEditor } = await setupWebsiteBuilder(websiteContent);
+
+    await contains(":iframe section").click();
+    await contains("[data-label='Visibility'] button.dropdown").click();
+    await contains("div[data-action-id='forceVisible']:contains(Conditionally)").click();
+    expect(":iframe section").toHaveClass("o_snippet_invisible");
+    expect(".o_we_invisible_el_panel .o_we_invisible_entry").toHaveCount(1);
+    expect(".o_we_invisible_el_panel .o_we_invisible_entry i").toHaveClass("fa-eye");
+
+    await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
+    expect(":iframe section.o_snippet_invisible").toHaveClass("o_conditional_hidden");
+    expect(":iframe section").toHaveAttribute("data-invisible", "1");
+    expect(".o_we_invisible_el_panel .o_we_invisible_entry i").toHaveClass("fa-eye-slash");
+
+    setSelection({ anchorNode: queryOne(":iframe p"), anchorOffset: 1 });
+    await insertText(getEditor(), "x"); // something to undo
+    undo(getEditor());
+    expect(":iframe section.o_snippet_invisible").toHaveClass("o_conditional_hidden");
+    expect(":iframe section").toHaveAttribute("data-invisible", "1");
+    expect(".o_we_invisible_el_panel .o_we_invisible_entry i").toHaveClass("fa-eye-slash");
 });

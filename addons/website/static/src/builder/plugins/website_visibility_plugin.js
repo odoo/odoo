@@ -10,6 +10,7 @@ export class WebsiteVisibilityPlugin extends Plugin {
     static id = "websiteVisibilityPlugin";
 
     resources = {
+        system_classes: ["o_conditional_hidden"],
         target_show: this.onTargetShow.bind(this),
         target_hide: this.onTargetHide.bind(this),
     };
