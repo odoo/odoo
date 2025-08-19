@@ -1,5 +1,5 @@
 {
-  "version": "18.4.14",
+  "version": "18.5.10",
   "sheets": [
     {
       "id": "a7cd7db1-9407-4895-82f2-7657102c7688",
@@ -398,6 +398,7 @@
             "stacked": false,
             "cumulatedStart": false,
             "fillArea": true,
+            "chartId": "5ea5dd7f-9f83-4482-a2bb-2ec72ab35912",
             "fieldMatching": {
               "757a1b4b-e339-4879-beb6-9851050387cf": { "chain": "invoice_date", "type": "date", "offset": 0 },
               "8051befe-619f-4fe7-b788-d34584297bad": { "chain": "country_id", "type": "many2one" },
@@ -425,7 +426,8 @@
             "baseline": "Data!C11",
             "baselineDescr": { "text": "unpaid" },
             "keyValue": "Data!C1",
-            "humanize": false
+            "humanize": false,
+            "chartId": "1aeea7b2-900b-4067-b8ad-3e4772c54028"
           },
           "offset": { "x": 0, "y": 11 },
           "col": 0,
@@ -446,7 +448,8 @@
             "baseline": "Data!C3",
             "baselineDescr": { "text": "Invoices" },
             "keyValue": "Data!C2",
-            "humanize": false
+            "humanize": false,
+            "chartId": "bdfb27d0-5902-4a2a-9b7e-514a6625578c"
           },
           "offset": { "x": 210, "y": 11 },
           "col": 0,
@@ -466,7 +469,8 @@
             "background": "#FEF2F2",
             "baselineDescr": { "text": "in current year" },
             "keyValue": "Data!C10",
-            "humanize": false
+            "humanize": false,
+            "chartId": "b1673523-d139-47fb-b5ea-9e4f969aacb6"
           },
           "offset": { "x": 419, "y": 11 },
           "col": 0,
@@ -684,7 +688,11 @@
         ],
         "&",
         ["product_categ_id", "!=", false],
-        ["move_type", "in", ["out_invoice", "out_refund"]]
+        [
+          "move_type",
+          "in",
+          ["out_invoice", "out_refund"]
+        ]
       ],
       "id": "1",
       "measures": [
@@ -724,7 +732,11 @@
         ],
         "&",
         ["country_id", "!=", false],
-        ["move_type", "in", ["out_invoice", "out_refund"]]
+        [
+          "move_type",
+          "in",
+          ["out_invoice", "out_refund"]
+        ]
       ],
       "id": "2",
       "measures": [
@@ -764,7 +776,11 @@
         ],
         "&",
         ["product_id", "!=", false],
-        ["move_type", "in", ["out_invoice", "out_refund"]]
+        [
+          "move_type",
+          "in",
+          ["out_invoice", "out_refund"]
+        ]
       ],
       "id": "3",
       "measures": [
@@ -804,7 +820,11 @@
         ],
         "&",
         ["invoice_user_id", "!=", false],
-        ["move_type", "in", ["out_invoice", "out_refund"]]
+        [
+          "move_type",
+          "in",
+          ["out_invoice", "out_refund"]
+        ]
       ],
       "id": "4",
       "measures": [
