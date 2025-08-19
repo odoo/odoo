@@ -91,6 +91,9 @@ class PosOrder(models.Model):
 
         # Create the coupons that were awarded by the order.
         coupons_to_create = {k: v for k, v in coupon_data.items() if k < 0 and not v.get('giftCardId')}
+        for coupon in coupons_to_create.values():
+            if "gift_code" in coupon:
+                coupon["code"] = coupon.get("gift_code")
         coupon_create_vals = [{
             'program_id': p['program_id'],
             'partner_id': get_partner_id(p.get('partner_id', False)),
