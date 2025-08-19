@@ -299,6 +299,7 @@ class WebsiteProfile(http.Controller):
     def validate_email(self, token, user_id, email, **kwargs):
         done = request.env['res.users'].sudo().browse(int(user_id))._process_profile_validation_token(token, email)
         if done:
+            request.session['validation_email_sent'] = False
             request.session['validation_email_done'] = True
         url = kwargs.get('redirect_url', '/')
         return request.redirect(url)

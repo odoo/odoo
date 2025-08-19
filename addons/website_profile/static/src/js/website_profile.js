@@ -7,7 +7,7 @@ publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
     selector: '.o_wprofile_email_validation_container',
     read_events: {
         'click .send_validation_email': 'async _onSendValidationEmailClick',
-        'click .validated_email_close': '_onCloseValidatedEmailClick',
+        'click': '_onCloseValidatedEmailClick',
     },
 
     init() {
@@ -38,8 +38,9 @@ publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
     /**
      * @private
      */
-    _onCloseValidatedEmailClick: function () {
-        this.rpc('/profile/validate_email/close');
+    _onCloseValidatedEmailClick: function (ev) {
+        if (ev.target.classList.contains('validated_email_close'))
+            this.rpc('/profile/validate_email/close');
     },
 });
 
