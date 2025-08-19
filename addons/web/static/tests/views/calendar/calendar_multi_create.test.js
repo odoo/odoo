@@ -642,7 +642,12 @@ test("multi_create: delete", async () => {
     await drop(".fc-day[data-date='2019-04-03']");
     await animationFrame();
 
-    await click(".o_multi_selection_buttons .btn .fa-trash");
+    await contains(".o_multi_selection_buttons .btn .fa-trash").click();
+    await animationFrame();
+    expect(".o_dialog .modal-body").toHaveText(
+        "Are you sure you want to delete the 3 selected records?"
+    );
+    await contains(".o_dialog footer button:contains(Ok)").click();
     await animationFrame();
 
     expect.verifySteps([[2, 3, 5]]);

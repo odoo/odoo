@@ -1,7 +1,9 @@
 import { Component, onWillRender, reactive, toRaw, useEffect, useRef, useState } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { Time } from "@web/core/l10n/time";
+import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { parseXML } from "@web/core/utils/xml";
@@ -19,6 +21,7 @@ export class MultiSelectionButtons extends Component {
 
     setup() {
         this.viewService = useService("view");
+        this.dialogService = useService("dialog");
         this.state = useState({ isReady: false });
         onWillRender(() => {
             if (this.props.reactive.visible && !this.state.isReady) {
@@ -165,6 +168,18 @@ export class MultiSelectionButtons extends Component {
             return;
         }
         this.multiCreatePopover.open(this.addButtonRef.el, this.getMultiCreatePopoverProps());
+    }
+
+    onDelete() {
+        this.dialogService.add(ConfirmationDialog, {
+            body: _t("Are you sure you want to delete the %(nbSelected)s selected records?", {
+                nbSelected: this.props.reactive.nbSelected,
+            }),
+            confirm: async () => {
+                this.props.reactive.onDelete();
+            },
+            cancel: () => {},
+        });
     }
 }
 
