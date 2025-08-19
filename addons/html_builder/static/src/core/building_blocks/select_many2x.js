@@ -1,5 +1,5 @@
-import { Component, useState, onWillUpdateProps } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { Component, useState, onWillUpdateProps, onWillDestroy } from "@odoo/owl";
+import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useCachedModel } from "@html_builder/core/cached_model_utils";
 import { _t } from "@web/core/l10n/translation";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
@@ -35,6 +35,8 @@ export class SelectMany2X extends Component {
             element: { type: Object, shape: { id: [Number, String], "*": true } },
         },
         select: Function,
+        preview: { type: Function, optional: true },
+        revert: { type: Function, optional: true },
         closeOnEnterKey: { type: Boolean, optional: true },
         message: { type: String, optional: true },
         create: { type: Function, optional: true },
@@ -61,6 +63,27 @@ export class SelectMany2X extends Component {
                 this.state.searchResults = [];
             }
         });
+        this.menuRef = useChildRef();
+        onWillDestroy(() => this.removeListeners?.());
+    }
+    onOpened() {
+        const menuEl = this.menuRef.el;
+        if (menuEl) {
+            this.removeListeners?.();
+            const onNavigatedAway = this.onNavigatedAway.bind(this);
+            const onNavigatedBack = this.onNavigatedBack.bind(this);
+            menuEl.addEventListener("pointerleave", onNavigatedAway);
+            menuEl.addEventListener("pointerenter", onNavigatedBack);
+            this.removeListeners = () => {
+                delete this.removeListeners;
+                menuEl.removeEventListener("pointerleave", onNavigatedAway);
+                menuEl.removeEventListener("pointerenter", onNavigatedBack);
+            };
+        }
+    }
+    onClosed() {
+        this.removeListeners?.();
+        this.onNavigatedAway();
     }
     searchInvalidationKey(props) {
         return JSON.stringify([props.model, props.fields, props.domain]);
@@ -107,5 +130,31 @@ export class SelectMany2X extends Component {
     async onInput(searchValue) {
         this.search(searchValue);
         this.state.nameToCreate = (await this.canCreate(searchValue)) ? searchValue : "";
+    }
+
+    preview(value) {
+        if (this.previewed !== value) {
+            this.previewed = value;
+            this.props.preview?.(value);
+        }
+    }
+    revert() {
+        delete this.previewed;
+        this.props.revert?.();
+    }
+    onNavigated(choice) {
+        choice ? this.preview(choice.value) : this.revert();
+        delete this.lastPreviewed;
+    }
+    onNavigatedAway() {
+        if ("previewed" in this) {
+            this.lastPreviewed = this.previewed;
+            this.revert();
+        }
+    }
+    onNavigatedBack() {
+        if ("lastPreviewed" in this) {
+            this.preview(this.lastPreviewed);
+        }
     }
 }
