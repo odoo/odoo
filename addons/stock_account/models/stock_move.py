@@ -99,7 +99,6 @@ class StockMove(models.Model):
                 'value': move.value_manual,
                 'company_id': move.company_id.id,
             })
-            move._set_value()
 
     def action_adjust_valuation(self):
         action = self.env['ir.actions.act_window']._for_xml_id("stock_account.stock_move_revaluation_action")
