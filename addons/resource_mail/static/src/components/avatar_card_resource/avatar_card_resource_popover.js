@@ -8,6 +8,7 @@ export class AvatarCardResourcePopover extends AvatarCardPopover {
 
     static props = {
         ...AvatarCardPopover.props,
+        model: { type: String, optional: true },
         recordModel: {
             type: String,
             optional: true,

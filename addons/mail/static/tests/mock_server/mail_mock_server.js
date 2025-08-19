@@ -107,6 +107,37 @@ export function registerRoute(route, handler) {
 
 // RPC handlers
 
+registerRoute("/discuss/avatar_card", avatar_card);
+/** @type {RouteCallback}} */
+async function avatar_card(request) {
+    /** @type {import("mock_models").ResPartner} */
+    const ResPartner = this.env["res.partner"];
+    /** @type {import("mock_models").IrAttachment} */
+    const ResUsers = this.env["res.users"];
+
+    const { user_id, partner_id, fields } = await parseRequestParams(request);
+
+    let mainUserId;
+    if (!user_id && partner_id) {
+        const partner = ResPartner.browse(partner_id)[0];
+        const users = ResUsers.browse(partner.user_ids);
+        const internalUsers = users.filter((user) => !user.share);
+        if (internalUsers.length > 0) {
+            mainUserId = internalUsers[0].id;
+        } else if (users.length > 0) {
+            mainUserId = users[0].id;
+        } else {
+            return false;
+        }
+    }
+    ResUsers.write([user_id || mainUserId], {}); // manually triggering computes for related fields
+    const user = ResUsers.search_read([["id", "=", user_id || mainUserId]], fields);
+    if (user) {
+        return user[0];
+    }
+    return false;
+}
+
 registerRoute("/mail/attachment/upload", mail_attachment_upload);
 /** @type {RouteCallback}} */
 async function mail_attachment_upload(request) {
