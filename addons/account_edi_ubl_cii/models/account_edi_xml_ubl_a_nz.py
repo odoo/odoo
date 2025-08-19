@@ -38,6 +38,7 @@ class AccountEdiXmlUBLANZ(models.AbstractModel):
     def _get_partner_party_vals(self, partner, role):
         # EXTENDS account.edi.xml.ubl_bis3
         vals = super()._get_partner_party_vals(partner, role)
+        vals.setdefault('party_tax_scheme_vals', [])
 
         if partner.country_code == 'AU' and partner.vat:
             vals['endpoint_id'] = partner.vat.replace(" ", "")

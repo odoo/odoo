@@ -29,6 +29,7 @@ class AccountEdiXmlUBLPINTSG(models.AbstractModel):
     def _get_partner_party_vals(self, partner, role):
         # EXTENDS account_edi_ubl_cii
         vals = super()._get_partner_party_vals(partner, role)
+        vals.setdefault('party_tax_scheme_vals', [])
 
         for party_tax_scheme in vals['party_tax_scheme_vals']:
             party_tax_scheme['tax_scheme_vals'] = {'id': 'GST'}

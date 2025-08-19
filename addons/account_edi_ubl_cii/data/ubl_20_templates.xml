@@ -264,11 +264,9 @@
                 </cac:Address>
             </cac:DeliveryLocation>
             <cac:DeliveryParty>
-                <cac:Party>
-                    <t t-call="{{PartyType_template}}">
-                        <t t-set="vals" t-value="vals.get('delivery_party_vals', {}).get('party_vals', {})"/>
-                    </t>
-                </cac:Party>
+                <t t-call="{{PartyType_template}}">
+                    <t t-set="vals" t-value="vals.get('delivery_party_vals', {}).get('party_vals', {})"/>
+                </t>
             </cac:DeliveryParty>
         </t>
     </template>
