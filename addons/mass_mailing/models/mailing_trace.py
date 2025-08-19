@@ -99,6 +99,7 @@ class MailingTrace(models.Model):
         ("unknown", "Unknown error"),
         # mail
         ("mail_bounce", "Bounce"),
+        ("mail_spam", "Detected As Spam"),
         ("mail_email_invalid", "Invalid email address"),
         ("mail_email_missing", "Missing email address"),
         ("mail_from_invalid", "Invalid from address"),

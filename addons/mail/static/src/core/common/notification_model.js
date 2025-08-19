@@ -56,6 +56,8 @@ export class Notification extends Record {
                 return _t("Invalid from address");
             case "mail_from_missing":
                 return _t("Missing from address");
+            case "mail_spam":
+                return _t("Detected As Spam");
             default:
                 return _t("Exception");
         }
