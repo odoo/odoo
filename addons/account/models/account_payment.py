@@ -105,7 +105,7 @@ class AccountPayment(models.Model):
         ('customer', 'Customer'),
         ('supplier', 'Vendor'),
     ], default='customer', tracking=True, required=True)
-    memo = fields.Char(string="Memo", tracking=True)
+    memo = fields.Char(string="Memo", tracking=True, inverse='_inverse_memo')
     payment_reference = fields.Char(string="Payment Reference", copy=False, tracking=True,
         help="Reference of the document used to issue this payment. Eg. check number, file name, etc.")
     currency_id = fields.Many2one(
@@ -817,10 +817,15 @@ class AccountPayment(models.Model):
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
 
+    def _inverse_memo(self):
+        for payment in self:
+            move = payment.move_id
+            if move:
+                move.ref = payment.memo
+
     def _inverse_partner_id(self):
         # todo: remove in master
         pass
-
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
