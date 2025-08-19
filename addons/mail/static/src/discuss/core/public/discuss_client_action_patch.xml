@@ -2,7 +2,6 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.DiscussClientAction" t-inherit-mode="extension">
         <xpath expr="//Discuss" position="attributes">
-            <attribute name="hasSidebar">store.discuss.thread?.default_display_mode !==  "video_full_screen"</attribute>
             <attribute name="t-if">!publicState.welcome and store.discuss.hasRestoredThread </attribute>
         </xpath>
         <xpath expr="//Discuss" position="after">

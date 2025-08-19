@@ -27,7 +27,7 @@
             t-att-class="{
                 'bg-inherit': mailbox.notEq(store.discuss.thread),
                 'o-active': mailbox.eq(store.discuss.thread),
-                'justify-content-center position-relative o-compact': store.discuss.isSidebarCompact,
+                'justify-content-center position-relative o-compact py-2': store.discuss.isSidebarCompact,
                 'o-py-0_5': !store.discuss.isSidebarCompact,
                 'o-unread': mailbox.counter,
             }"
@@ -36,7 +36,7 @@
             t-on-click="(ev) => this.openThread(ev)"
             t-ref="root"
         >
-            <ThreadIcon className="'bg-inherit opacity-75 ' + (store.discuss.isSidebarCompact ? '' : 'mx-2 pt-1')" thread="mailbox" size="'medium'"/>
+            <ThreadIcon className="'bg-inherit opacity-75 ' + (store.discuss.isSidebarCompact ? '' : 'mx-2 pt-1')" thread="mailbox" size="store.discuss.isSidebarCompact ? 'large' : 'medium'"/>
             <t t-if="!store.discuss.isSidebarCompact">
                 <div class="me-2 text-truncate text-muted small" t-esc="mailbox.display_name"/>
                 <div t-attf-class="flex-grow-1 {{ mailbox.counter === 0 ? 'me-3': '' }}"/>
