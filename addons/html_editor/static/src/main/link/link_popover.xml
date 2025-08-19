@@ -3,7 +3,7 @@
     <t t-name="html_editor.linkPopover">
         <div class="o-we-linkpopover d-flex bg-light overflow-auto shadow" t-on-keydown="onKeydown">
             <div t-if="state.editing" class="container-fluid d-flex vertical-center p-2" t-ref="editing-wrapper">
-                <div t-if="state.isImage" class="col p-2" style="max-width: 250px;">
+                <div t-if="state.isImage" class="col p-2" style="max-width: 270px;">
                     <div class="input-group mb-1">
                         <input name="o_linkpopover_url_img" t-ref="url" class="o_we_href_input_link border-dark-subtle form-control form-control-sm" t-model="state.url" title="URL" placeholder="Type your URL"
                             t-on-keydown="onKeydownEnter"/>
@@ -11,7 +11,7 @@
                     </div>
                 </div>
                 <div t-else="" class="d-flex">
-                    <div class="col p-2" style="max-width: 250px;">
+                    <div class="col p-2" style="max-width: 270px;">
                         <div class="input-group mb-1" t-att-class="{'d-none': !state.showLabel}">
                             <input t-ref="label"
                                 class="o_we_label_link border-dark-subtle form-control form-control-sm"
@@ -62,9 +62,9 @@
                             </div>
                             <div class="d-flex mb-1 custom-border">
                                 <div class="input-group">
-                                    <input t-ref="customBoderSize" type="text" pattern="[0-9]*"
+                                    <input t-ref="customBorderSize" type="number" min="0"
                                            class="form-control form-control-sm custom-border-size" t-model="state.customBorderSize"
-                                           placeholder="Border Size"  t-on-keydown="onKeydownEnter"/>
+                                           placeholder="Border Size" t-on-keydown="onKeydownEnter" t-on-input="onInput"/>
                                     <span class="input-group-text">px</span>
                                 </div>
                                 <select name="link_style_border" class="form-select form-select-sm custom-border-style" t-model="state.customBorderStyle" t-on-change="onChange">
