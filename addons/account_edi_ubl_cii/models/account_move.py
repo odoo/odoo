@@ -1,6 +1,7 @@
-from contextlib import suppress
 from base64 import b64decode
+from contextlib import suppress
 import binascii
+
 from lxml import etree
 
 from odoo import _, api, fields, models, Command
@@ -21,6 +22,20 @@ class AccountMove(models.Model):
         string="UBL/CII File",
         copy=False,
     )
+    ubl_cii_xml_filename = fields.Char(
+        string="UBL/CII Filename",
+        compute='_compute_filename',
+    )
+
+    # -------------------------------------------------------------------------
+    # COMPUTE
+    # -------------------------------------------------------------------------
+
+    @api.depends('ubl_cii_xml_file')
+    def _compute_filename(self):
+        """ Compute the filename based on the uploaded file. """
+        for record in self:
+            record.ubl_cii_xml_filename = record.ubl_cii_xml_id.name
 
     # -------------------------------------------------------------------------
     # ACTIONS
