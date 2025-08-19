@@ -86,6 +86,9 @@ export const viewService = {
             if (env.isSmall) {
                 loadViewsOptions.mobile = true;
             }
+            if (env.debug) {
+                loadViewsOptions.debug = true;
+            }
             const filteredContext = Object.fromEntries(
                 Object.entries(context || {}).filter(
                     ([k, v]) => k == "lang" || k.endsWith("_view_ref")
