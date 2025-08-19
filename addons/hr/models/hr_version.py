@@ -402,7 +402,7 @@ class HrVersion(models.Model):
     def _get_whitelist_fields_from_template(self):
         # Add here any field that you want to copy from a contract template
         # Those fields should have tracking=True in hr.version to see the change
-        return ['job_id', 'department_id', 'contract_type_id', 'structure_type_id', 'wage', 'resource_calendar_id', 'hr_responsible_id']
+        return ['job_id', 'department_id', 'contract_type_id', 'structure_type_id', 'wage', 'resource_calendar_id', 'hr_responsible_id', 'sign_template_id', 'contract_update_template_id']
 
     def get_values_from_contract_template(self, contract_template_id):
         if not contract_template_id:
