@@ -7,17 +7,16 @@ import {
     localStorageNoDialogKey,
     TranslatorInfoDialog,
 } from "../translation_components/translatorInfoDialog";
+import { withSequence } from "@html_editor/utils/resource";
 
-export const translationSavableSelector =
-    "[data-oe-translation-source-sha], " +
-    "[data-oe-model][data-oe-id][data-oe-field], " +
+export const translationAttributeSelector =
     '[placeholder*="data-oe-translation-source-sha="], ' +
     '[title*="data-oe-translation-source-sha="], ' +
     '[value*="data-oe-translation-source-sha="], ' +
     '[alt*="data-oe-translation-source-sha="]';
 
-export function getTranslationEditableEls(rootEl) {
-    const translationSavableEls = rootEl.querySelectorAll(translationSavableSelector);
+export function getTranslationAttributeEls(rootEl) {
+    const translationSavableEls = rootEl.querySelectorAll(translationAttributeSelector);
     const textAreaEls = Array.from(rootEl.querySelectorAll("textarea")).find((el) =>
         el.textContent.includes("data-oe-translation-source-sha")
     );
@@ -31,16 +30,15 @@ export function getTranslationEditableEls(rootEl) {
  */
 function findOEditable(containerEl) {
     const isOEditable = (node) => {
-        while (node) {
-            if (node.className && typeof node.className === "string") {
-                if (node.className.includes("o_not_editable")) {
-                    return false;
-                }
-                if (node.className.includes("o_editable")) {
-                    return true;
-                }
-            }
-            node = node.parentNode;
+        // Ideally, we should entirely rely on the contenteditable mechanism.
+        // The problem is that the translatable attributes are not branded DOM
+        // nodes hence the o_editable_attribute hack.
+        if (
+            node.isContentEditable ||
+            (node.classList.contains("o_editable_attribute") &&
+                (!node.closest(".o_not_editable") || node.classList.contains("o_editable_media")))
+        ) {
+            return true;
         }
         return false;
     };
@@ -56,30 +54,24 @@ export class TranslationPlugin extends Plugin {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         get_dirty_els: this.getDirtyTranslations.bind(this),
         after_setup_editor_handlers: () => {
-            const translationSavableEls = getTranslationEditableEls(
+            const translationSavableEls = getTranslationAttributeEls(
                 this.services.website.pageDocument
             );
             for (const translationSavableEl of translationSavableEls) {
-                if (!translationSavableEl.hasAttribute("data-oe-readonly")) {
-                    translationSavableEl.classList.add("o_editable");
-                }
+                translationSavableEl.classList.add("o_editable_attribute");
             }
-            this.setupServicesIfNotSet();
-            this.prepareTranslation();
             return true;
         },
+        start_edition_handlers: withSequence(5, () => {
+            this.prepareTranslation();
+        }),
+        system_classes: ["o_editable_attribute"],
     };
 
     setup() {
-        this.setupServicesIfNotSet();
-    }
-
-    setupServicesIfNotSet() {
-        if (!this.websiteService) {
-            this.websiteService = this.services.website;
-            this.notificationService = this.services.notification;
-            this.dialogService = this.services.dialog;
-        }
+        this.websiteService = this.services.website;
+        this.notificationService = this.services.notification;
+        this.dialogService = this.services.dialog;
     }
 
     prepareTranslation() {
@@ -111,9 +103,12 @@ export class TranslationPlugin extends Plugin {
         }
 
         // Apply data-oe-readonly on nested data
-        const translationSavableEls = getTranslationEditableEls(this.websiteService.pageDocument);
+        const translatableElSelector = ".o_editable, .o_editable_attribute";
+        const translationSavableEls = [
+            ...this.websiteService.pageDocument.querySelectorAll(translatableElSelector),
+        ];
         for (const translationSavableEl of translationSavableEls) {
-            if (getTranslationEditableEls(translationSavableEl).length) {
+            if (translationSavableEl.querySelectorAll(translatableElSelector).length) {
                 translationSavableEl.setAttribute("data-oe-readonly", "true");
                 translationSavableEl.removeAttribute("contenteditable");
             }
@@ -136,10 +131,13 @@ export class TranslationPlugin extends Plugin {
             });
         };
         for (const translateEl of editableEls) {
-            if (translateEl.closest(".o_not_editable")) {
-                this.addDomListener(translateEl, "click", showNotification);
-            }
             this.handleToC(translateEl);
+        }
+        const savableInsideNotEditableEls = this.editable.querySelectorAll(
+            ".o_not_editable .o_editable, .o_not_editable .o_editable_attribute"
+        );
+        for (const savableInsideNotEditableEl of savableInsideNotEditableEls) {
+            this.addDomListener(savableInsideNotEditableEl, "click", showNotification);
         }
         // Keep the original values of elToTranslationInfoMap so that we know
         // which translations have been updated.
@@ -340,6 +338,9 @@ export class TranslationPlugin extends Plugin {
     }
 
     cleanForSave({ root }) {
+        root.querySelectorAll(".o_editable_attribute").forEach((el) => {
+            el.classList.remove("o_editable_attribute");
+        });
         // Remove the `.o_translation_select` temporary element
         const optionsEl = root.querySelector(".o_translation_select");
         if (optionsEl) {
