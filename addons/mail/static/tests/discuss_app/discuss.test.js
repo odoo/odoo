@@ -2306,8 +2306,10 @@ test("Read of unread chat where new message is deleted should mark as read", asy
     // simulate deleted message
     rpc("/mail/message/update_content", {
         message_id: messageId,
-        body: "",
-        attachment_ids: [],
+        update_data: {
+            body: "",
+            attachment_ids: [],
+        },
     });
     await click("button", { text: "Marc Demo" });
     await contains(".o-mail-DiscussSidebar-item", {

@@ -529,7 +529,7 @@ export class Message extends Record {
             mentionedRoles,
         });
         const hadLink = this.hasLink; // to remove old previews if message no longer contains any link
-        const data = await rpc("/mail/message/update_content", {
+        const updateData = {
             attachment_ids: attachments
                 .concat(this.attachment_ids)
                 .map((attachment) => attachment.id),
@@ -537,9 +537,13 @@ export class Message extends Record {
                 .concat(this.attachment_ids)
                 .map((attachment) => attachment.ownership_token),
             body: await prettifyMessageContent(body, { validMentions }),
-            message_id: this.id,
             partner_ids: validMentions?.partners?.map((partner) => partner.id),
             role_ids: validMentions?.roles?.map((role) => role.id),
+        };
+        this.store.fillPartnersMentionToken(updateData);
+        const data = await rpc("/mail/message/update_content", {
+            message_id: this.id,
+            update_data: updateData,
             ...this.thread.rpcParams,
         });
         this.store.insert(data);
@@ -601,12 +605,13 @@ export class Message extends Record {
 
     async remove() {
         await rpc("/mail/message/update_content", {
-            attachment_ids: [],
-            attachment_tokens: [],
-            body: "",
             message_id: this.id,
-            partner_ids: [],
-            ...this.thread.rpcParams,
+            update_data: {
+                attachment_ids: [],
+                attachment_tokens: [],
+                body: "",
+                partner_ids: [],
+            },
         });
         this.body = "";
         this.attachment_ids = [];

@@ -109,7 +109,8 @@ class TestWebPushNotification(SMSCommon):
                     channel_as_sender = channel.with_user(self.env.ref('base.public_user')).with_context(guest=sender)
                 else:
                     channel_as_sender = channel.with_user(self.user_email)
-                channel_as_sender.message_post(
+                # sudo: discuss.channel - guest can post as sudo in a test (simulating RPC without using network)
+                channel_as_sender.sudo().message_post(
                         body='Test Push',
                         message_type='comment',
                         subtype_xmlid='mail.mt_comment',

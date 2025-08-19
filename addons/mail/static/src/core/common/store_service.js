@@ -485,6 +485,16 @@ export class Store extends BaseStore {
         return chat;
     }
 
+    fillPartnersMentionToken(postData) {
+        postData.partner_ids_mention_token ||= {};
+        for (const pid of postData.partner_ids) {
+            const partner = this["res.partner"].get(pid);
+            if (partner?.mention_token) {
+                postData.partner_ids_mention_token[pid] = partner.mention_token;
+            }
+        }
+    }
+
     /** @returns {number} */
     getLastMessageId() {
         return Object.values(this["mail.message"].records).reduce(
@@ -561,6 +571,7 @@ export class Store extends BaseStore {
         }
         if (partner_ids.length) {
             Object.assign(postData, { partner_ids });
+            this.fillPartnersMentionToken(postData);
         }
         if (role_ids.length) {
             Object.assign(postData, { role_ids });
@@ -568,22 +579,22 @@ export class Store extends BaseStore {
         if (thread.model === "discuss.channel" && validMentions?.specialMentions.length) {
             postData.special_mentions = validMentions.specialMentions;
         }
+        if (attachments.length) {
+            postData.attachment_tokens = attachments.map(
+                (attachment) => attachment.ownership_token
+            );
+        }
+        if (recipientEmails.length) {
+            postData.partner_emails = recipientEmails;
+        }
         const params = {
             // Changed in 18.2+: finally get rid of autofollow, following should be done manually
             post_data: postData,
             thread_id: thread.id,
             thread_model: thread.model,
         };
-        if (attachments.length) {
-            params.attachment_tokens = attachments.map((attachment) => attachment.ownership_token);
-        }
         if (cannedResponseIds?.length) {
             params.canned_response_ids = cannedResponseIds;
-        }
-        if (recipientEmails.length) {
-            Object.assign(params, {
-                partner_emails: recipientEmails,
-            });
         }
         return params;
     }

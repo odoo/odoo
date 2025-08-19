@@ -2152,11 +2152,7 @@ class ProjectTask(models.Model):
         partners = self.env["res.partner"].sudo()._search_mention_suggestions(domain, limit)
         return (
             Store()
-            .add(
-                self,
-                {"limitedMentions": Store.Many(partners, ["email", "im_status", "name"])},
-                as_thread=True,
-            )
+            .add(partners, ["email", "im_status", "name", *partners._get_store_mention_fields()])
             .get_result()
         )
 

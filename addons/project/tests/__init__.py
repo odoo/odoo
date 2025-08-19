@@ -18,7 +18,6 @@ from . import test_project_tags_filter
 from . import test_project_task_type
 from . import test_project_template
 from . import test_project_template_ui
-from . import test_project_thread_controller
 from . import test_project_ui
 from . import test_project_update_access_rights
 from . import test_project_update_flow

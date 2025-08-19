@@ -93,7 +93,11 @@ class ResPartner(models.Model):
             Store.One("channel_id", [], as_thread=True),
             *self.env["discuss.channel.member"]._to_store_persona([]),
         ]
-        store = Store().add(members, member_fields).add(partners)
+        store = (
+            Store()
+            .add(members, member_fields)
+            .add(partners, extra_fields=partners._get_store_mention_fields())
+        )
         store.add(channel, "group_public_id")
         if allowed_group:
             for p in partners:

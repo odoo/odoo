@@ -4,9 +4,10 @@ from datetime import datetime
 from markupsafe import Markup
 from werkzeug.exceptions import NotFound
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import request
+from odoo.tools.misc import verify_limited_field_access_token
 from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 
 
@@ -150,40 +151,58 @@ class ThreadController(http.Controller):
             ).ids,
         }
 
-    def _prepare_post_data(self, post_data, thread, partner_emails=None, **kwargs):
-        partners = request.env["res.partner"].browse(post_data.pop("partner_ids", []))
+    def _prepare_message_data(self, post_data, *, thread, **kwargs):
+        res = {
+            key: value
+            for key, value in post_data.items()
+            if key in thread._get_allowed_message_params()
+        }
+        if (attachment_ids := post_data.get("attachment_ids")) is not None:
+            attachments = request.env["ir.attachment"].browse(map(int, attachment_ids))
+            if not attachments._has_attachments_ownership(post_data.get("attachment_tokens")):
+                msg = self.env._(
+                    "One or more attachments do not exist, or you do not have the rights to access them.",
+                )
+                raise UserError(msg)
+            res["attachment_ids"] = attachments.ids
         if "body" in post_data:
-            post_data["body"] = Markup(post_data["body"])  # contains HTML such as @mentions
-        if partner_emails:
-            partners |= thread._partner_find_from_emails_single(
-                partner_emails,
-                no_create=not request.env.user.has_group("base.group_partner_manager"),
-            )
-        if role_ids := post_data.pop("role_ids", []):
-            # sudo - res.users: getting partners linked to the role is allowed.
-            partners |= request.env["res.users"].sudo().search([("role_ids", "in", role_ids)]).partner_id
-        post_data["partner_ids"] = self._filter_message_post_partners(thread, partners).ids
-        return post_data
-
-    def _filter_message_post_partners(self, thread, partners):
-        if self.env.user._is_internal():
-            return partners
-        domain = [
-            ("res_model", "=", thread._name),
-            ("res_id", "=", thread.id),
-            ("partner_id", "in", partners.ids),
-        ]
-        # sudo: mail.followers - filtering partners that are followers is acceptable
-        return request.env["mail.followers"].sudo().search(domain).partner_id
+            # User input is HTML string, so it needs to be in a Markup.
+            # It will be sanitized by the field itself when writing on it.
+            res["body"] = Markup(post_data["body"]) if post_data["body"] else post_data["body"]
+        partner_ids = post_data.get("partner_ids")
+        partner_emails = post_data.get("partner_emails")
+        role_ids = post_data.get("role_ids")
+        if partner_ids is not None or partner_emails is not None or role_ids is not None:
+            partners = request.env["res.partner"].browse(map(int, partner_ids or []))
+            if partner_emails:
+                partners |= thread._partner_find_from_emails_single(
+                    partner_emails,
+                    no_create=not request.env.user.has_group("base.group_partner_manager"),
+                )
+            if role_ids:
+                # sudo - res.users: getting partners linked to the role is allowed.
+                partners |= (
+                    request.env["res.users"]
+                    .sudo()
+                    .search_fetch([("role_ids", "in", role_ids)], ["partner_id"])
+                    .partner_id
+                )
+            res["partner_ids"] = partners.filtered(
+                lambda p: (not self.env.user.share and p.has_access("read"))
+                or (
+                    verify_limited_field_access_token(
+                        p,
+                        "id",
+                        post_data.get("partner_ids_mention_token", {}).get(str(p.id), ""),
+                        scope="mail.message_mention",
+                    )
+                ),
+            ).ids
+        return res
 
     @http.route("/mail/message/post", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def mail_message_post(self, thread_model, thread_id, post_data, context=None, **kwargs):
-        attachments = request.env["ir.attachment"].browse(post_data.get("attachment_ids", []))
-        if not attachments._has_attachments_ownership(kwargs.get("attachment_tokens")):
-            raise UserError(
-                _("One or more attachments do not exist, or you do not have the rights to access them.")
-            )
         store = Store()
         request.update_context(message_post_store=store)
         if context:
@@ -207,43 +226,24 @@ class ThreadController(http.Controller):
             raise NotFound()
         if not self._get_thread_with_access(thread_model, thread_id, mode="write"):
             thread = thread.with_context(mail_post_autofollow_author_skip=True, mail_post_autofollow=False)
-        post_data = {
-                key: value
-                for key, value in post_data.items()
-                if key in thread._get_allowed_message_post_params()
-            }
         # sudo: mail.thread - users can post on accessible threads
-        message = thread.sudo().message_post(**self._prepare_post_data(post_data, thread, **kwargs))
+        message = thread.sudo().message_post(
+            **self._prepare_message_data(post_data, thread=thread, from_create=True, **kwargs),
+        )
         return store.add(message).get_result()
 
     @http.route("/mail/message/update_content", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
-    def mail_message_update_content(self, message_id, body, attachment_ids, attachment_tokens=None, partner_ids=None, **kwargs):
-        attachments = request.env["ir.attachment"].browse(attachment_ids)
-        if not attachments._has_attachments_ownership(attachment_tokens):
-            raise UserError(
-                _("One or more attachments do not exist, or you do not have the rights to access them.")
-            )
+    def mail_message_update_content(self, message_id, update_data, **kwargs):
         message = self._get_message_with_access(message_id, mode="create", **kwargs)
         if not message or not self._can_edit_message(message, **kwargs):
             raise NotFound()
         # sudo: mail.message - access is checked in _get_with_access and _can_edit_message
         message = message.sudo()
-        body = Markup(body) if body else body  # may contain HTML such as @mentions
         thread = request.env[message.model].browse(message.res_id)
-        update_data = {
-            "attachment_ids": attachment_ids,
-            "body": body,
-            "partner_ids": partner_ids,
-            **kwargs,
-        }
         thread._message_update_content(
             message,
-            **{
-                key: value
-                for key, value in update_data.items()
-                if key in thread._get_allowed_message_update_params()
-            }
+            **self._prepare_message_data(update_data, thread=thread, from_create=False, **kwargs),
         )
         return Store().add(message).get_result()
 

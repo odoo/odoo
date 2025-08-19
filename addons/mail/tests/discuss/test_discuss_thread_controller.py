@@ -45,7 +45,7 @@ class TestDiscussThreadController(MailControllerThreadCommon):
 
     def test_public_channel_message_post_partner_ids(self):
         """Test partner_ids of message_post on public channel.
-        Only members are allowed to be mentioned by non-internal users."""
+        Non-internal users cannot use mentions without mention_token."""
         channel = self.env["discuss.channel"].create(
             {"name": "Public Channel", "group_public_id": None}
         )
@@ -53,19 +53,18 @@ class TestDiscussThreadController(MailControllerThreadCommon):
         partners = (
             self.user_portal + self.user_employee + self.user_employee_nopartner + self.user_admin
         ).partner_id
-        members = self.user_employee_nopartner.partner_id
 
-        def test_partners(user, allowed, exp_partners, exp_author=None):
+        def test_partners(user, allowed, exp_partners):
             return MessagePostSubTestData(
-                user, allowed, partners=partners, exp_author=exp_author, exp_partners=exp_partners
+                user, allowed, partners=partners, exp_partners=exp_partners
             )
 
         self._execute_message_post_subtests(
             channel,
             (
-                test_partners(self.user_public, True, members),
-                test_partners(self.guest, True, members),
-                test_partners(self.user_portal, True, members),
+                test_partners(self.user_public, True, self.env["res.partner"]),
+                test_partners(self.guest, True, self.env["res.partner"]),
+                test_partners(self.user_portal, True, self.env["res.partner"]),
                 test_partners(self.user_employee, True, partners),
                 test_partners(self.user_employee_nopartner, True, partners),
                 test_partners(self.user_admin, True, partners),

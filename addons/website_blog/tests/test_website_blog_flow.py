@@ -78,10 +78,13 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
 
         with MockRequest(self.env):
             ThreadController().mail_message_post(
-                'blog.post',
+                "blog.post",
                 self.test_blog_post.id,
-                {'body': 'Test message blog post', 'attachment_ids': [attachment.id]},
-                attachment_tokens=[attachment._get_ownership_token()],
+                {
+                    "body": "Test message blog post",
+                    "attachment_ids": [attachment.id],
+                    "attachment_tokens": [attachment._get_ownership_token()],
+                },
             )
 
         self.assertTrue(self.env['mail.message'].sudo().search(
@@ -96,10 +99,13 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
 
         with self.assertRaises(UserError), MockRequest(self.env):
             ThreadController().mail_message_post(
-                'blog.post',
+                "blog.post",
                 self.test_blog_post.id,
-                {'body': 'Test message blog post', 'attachment_ids': [second_attachment.id]},
-                attachment_tokens=['wrong_token']
+                {
+                    "body": "Test message blog post",
+                    "attachment_ids": [second_attachment.id],
+                    "attachment_tokens": ["wrong_token"],
+                },
             )
 
         self.assertFalse(self.env['mail.message'].sudo().search(

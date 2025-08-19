@@ -109,7 +109,7 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
             body="Hello, how can I help you?",
             message_type="comment",
         )
-        channel._message_update_content(message, "")
+        channel._message_update_content(message, body="")
         self.env.invalidate_all()
         self.assertFalse(channel.lead_ids)
         channel.with_user(bob_operator).execute_command_lead(body="/lead BobLead")

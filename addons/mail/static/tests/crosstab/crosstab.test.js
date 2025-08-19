@@ -127,9 +127,11 @@ test("Adding attachments", async () => {
         mimetype: "text/plain",
     });
     rpc("/mail/message/update_content", {
-        body: "Hello world!",
-        attachment_ids: [attachmentId],
         message_id: messageId,
+        update_data: {
+            body: "Hello world!",
+            attachment_ids: [attachmentId],
+        },
     });
     await contains(".o-mail-AttachmentContainer", { target: env2, text: "test.txt" });
 });

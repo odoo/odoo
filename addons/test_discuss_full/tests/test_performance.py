@@ -1598,6 +1598,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "main_user_id": user.id,
+                "mention_token": user.partner_id._get_mention_token(),
                 "name": "Ernest Employee",
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
@@ -1624,6 +1625,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_public": False,
                 "main_user_id": user.id,
                 "name": "test1",
+                "mention_token": user.partner_id._get_mention_token(),
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
             if also_livechat:
@@ -1639,6 +1641,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "im_status": "offline",
                     "im_status_access_token": user.partner_id._get_im_status_access_token(),
                     "name": "test2",
+                    "mention_token": user.partner_id._get_mention_token(),
                     "write_date": fields.Datetime.to_string(user.partner_id.write_date),
                 }
             return {
@@ -1650,6 +1653,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "main_user_id": user.id,
+                "mention_token": user.partner_id._get_mention_token(),
                 "name": "test2",
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
@@ -1663,6 +1667,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "main_user_id": user.id,
+                "mention_token": user.partner_id._get_mention_token(),
                 "name": "test3",
                 "write_date": fields.Datetime.to_string(self.users[3].partner_id.write_date),
             }
@@ -1676,6 +1681,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "main_user_id": user.id,
+                "mention_token": user.partner_id._get_mention_token(),
                 "name": "test12",
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
@@ -1689,6 +1695,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "main_user_id": user.id,
+                "mention_token": user.partner_id._get_mention_token(),
                 "name": "test14",
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
@@ -1702,6 +1709,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "main_user_id": user.id,
+                "mention_token": user.partner_id._get_mention_token(),
                 "name": "test15",
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }

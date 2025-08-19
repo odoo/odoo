@@ -169,6 +169,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "im_status_access_token": self.test_partner._get_im_status_access_token(),
                                     "is_company": False,
                                     "main_user_id": self.test_user.id,
+                                    "mention_token": self.test_partner._get_mention_token(),
                                     "name": "Test Partner",
                                     "write_date": test_partner_write_date,
                                 },
@@ -216,6 +217,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "im_status_access_token": self.test_partner._get_im_status_access_token(),
                                     "is_company": False,
                                     "main_user_id": self.test_user.id,
+                                    "mention_token": self.test_partner._get_mention_token(),
                                     "name": "Test Partner",
                                     "write_date": test_partner_write_date,
                                 },
@@ -442,6 +444,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "id": self.user_admin.partner_id.id,
                                 "im_status": self.user_admin.im_status,
                                 "im_status_access_token": self.user_admin.partner_id._get_im_status_access_token(),
+                                "mention_token": self.user_admin.partner_id._get_mention_token(),
                                 "name": self.user_admin.partner_id.name,
                                 "write_date": fields.Datetime.to_string(
                                     self.user_admin.partner_id.write_date
@@ -905,7 +908,11 @@ class TestChannelInternals(MailCommon, HttpCase):
                 },
             ],
         ):
-            channel._message_update_content(message, Markup("<p>Test update</p>"), [])
+            channel._message_update_content(
+                message,
+                body=Markup("<p>Test update</p>"),
+                attachment_ids=[],
+            )
 
     def test_member_based_channel_naming(self):
         john = mail_new_test_user(self.env, groups="base.group_user", login="john")

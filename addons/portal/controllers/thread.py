@@ -1,15 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.http import request
-from odoo.addons.mail.controllers import thread
+from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.portal.utils import get_portal_partner
 
 
-class ThreadController(thread.ThreadController):
+class PortalThreadController(ThreadController):
 
-    def _prepare_post_data(self, post_data, thread, **kwargs):
-        post_data = super()._prepare_post_data(post_data, thread, **kwargs)
-        if request.env.user._is_public():
+    def _prepare_message_data(self, post_data, *, thread, **kwargs):
+        post_data = super()._prepare_message_data(post_data, thread=thread, **kwargs)
+        if kwargs.get("from_create") and request.env.user._is_public():
             if partner := get_portal_partner(
                 thread, kwargs.get("hash"), kwargs.get("pid"), kwargs.get("token")
             ):

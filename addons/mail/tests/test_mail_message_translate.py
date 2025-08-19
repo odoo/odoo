@@ -81,11 +81,16 @@ class TestTranslationController(HttpCaseWithUserDemo):
         self.assertEqual(self.env["mail.message.translation"].search_count([]), 1)
         # The translation records should not be discarded if the body did not change.
         self.make_jsonrpc_request(
-            "/mail/message/update_content", {"message_id": self.message.id, "body": None, "attachment_ids": []}
+            "/mail/message/update_content",
+            {"message_id": self.message.id, "update_data": {"body": None, "attachment_ids": []}},
         )
         self.assertEqual(self.env["mail.message.translation"].search_count([]), 1)
         self.make_jsonrpc_request(
-            "/mail/message/update_content", {"message_id": self.message.id, "body": "update", "attachment_ids": []}
+            "/mail/message/update_content",
+            {
+                "message_id": self.message.id,
+                "update_data": {"body": "update", "attachment_ids": []},
+            },
         )
         self.assertFalse(self.env["mail.message.translation"].search_count([]))
 
