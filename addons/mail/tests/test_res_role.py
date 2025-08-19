@@ -53,7 +53,8 @@ class TestResRole(MailCommon, HttpCase):
                     },
                 },
             )
+            message = next(filter(lambda m: m["id"] == data["message_id"], data["store_data"]["mail.message"]))
             self.assertEqual(
-                data["mail.message"][0]["partner_ids"],
+                message["partner_ids"],
                 expected_users.partner_id.ids
             )

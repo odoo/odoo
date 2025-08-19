@@ -756,14 +756,13 @@ test("Opening thread with needaction messages should mark all messages of thread
     });
     // simulate receiving a new needaction message
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(
-        partner,
-        "mail.message/inbox",
-        new mailDataHelpers.Store(
+    pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
+        message_id: messageId,
+        store_data: new mailDataHelpers.Store(
             pyEnv["mail.message"].browse(messageId),
             makeKwArgs({ for_current_user: true, add_followers: true })
-        ).get_result()
-    );
+        ).get_result(),
+    });
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
     await click("button", { text: "General" });
     await contains(".o-discuss-badge", { count: 0 });

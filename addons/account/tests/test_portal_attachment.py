@@ -64,7 +64,10 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                 files={"ufile": file},
             )
         self.assertEqual(res.status_code, 200)
-        create_res = json.loads(res.content.decode('utf-8'))['data']['ir.attachment'][0]
+        data = json.loads(res.content.decode('utf-8'))['data']
+        create_res = next(
+            filter(lambda a: a["id"] == data["attachment_id"], data["store_data"]["ir.attachment"])
+        )
         self.assertTrue(self.env['ir.attachment'].sudo().search([('id', '=', create_res['id'])]))
 
         # Test created attachment is private
@@ -91,7 +94,10 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             files={"ufile": ("test.svg", b'<svg></svg>', "image/svg+xml")},
         )
         self.assertEqual(res.status_code, 200)
-        create_res = json.loads(res.content.decode('utf-8'))['data']['ir.attachment'][0]
+        data = json.loads(res.content.decode('utf-8'))["data"]
+        create_res = next(
+            filter(lambda a: a["id"] == data["attachment_id"], data["store_data"]["ir.attachment"])
+        )
         self.assertEqual(create_res['mimetype'], 'text/plain')
 
         res_binary = self.url_open(
@@ -287,7 +293,10 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             files={"ufile": ("final attachment", b'test', "plain/text")},
         )
         self.assertEqual(res.status_code, 200)
-        create_res = json.loads(res.content.decode('utf-8'))['data']['ir.attachment'][0]
+        data = json.loads(res.content.decode('utf-8'))['data']
+        create_res = next(
+            filter(lambda a: a["id"] == data["attachment_id"], data["store_data"]["ir.attachment"])
+        )
         self.assertEqual(create_res['name'], "final attachment")
 
         res = self.url_open(

@@ -66,7 +66,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                 "persisted": True,
             },
         )
-        discuss_channel = self.env['discuss.channel'].browse(data["store_data"]["discuss.channel"][0]["id"])
+        discuss_channel = self.env['discuss.channel'].browse(data["channel_id"])
         self._post_answer_and_trigger_next_step(
             discuss_channel,
             self.step_dispatch_buy_software.name,

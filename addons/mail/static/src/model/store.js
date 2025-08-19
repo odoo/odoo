@@ -199,8 +199,7 @@ export class Store extends Record {
     insert(dataByModelName = {}, options = {}) {
         const store = this;
         const ctx = storeInsertFns.makeContext(store);
-        return Record.MAKE_UPDATE(function storeInsert() {
-            const res = {};
+        Record.MAKE_UPDATE(function storeInsert() {
             const recordsDataToDelete = [];
             for (const [pyOrJsModelName, data] of Object.entries(dataByModelName)) {
                 const modelName = storeInsertFns.getActualModelName(store, ctx, pyOrJsModelName);
@@ -224,20 +223,13 @@ export class Store extends Record {
                         insertData.push(vals);
                     }
                 }
-                const records = store[modelName].insert(insertData, options);
-                if (!res[modelName]) {
-                    res[modelName] = records;
-                } else {
-                    const knownRecordIds = new Set(res[modelName].map((r) => r.localId));
-                    res[modelName].push(...records.filter((r) => !knownRecordIds.has(r.localId)));
-                }
+                store[modelName].insert(insertData, options);
             }
             // Delete after all inserts to make sure a relation potentially registered before the
             // delete doesn't re-add the deleted record by mistake.
             for (const [modelName, vals] of recordsDataToDelete) {
                 store[modelName].get(vals)?.delete();
             }
-            return res;
         });
     }
     onChange(record, name, cb) {

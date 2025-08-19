@@ -390,10 +390,15 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         """Test livechat_visitor_id is sent with livechat channels data even when there is no
         visitor."""
         self.target_visitor = None
-        channel_info = self.make_jsonrpc_request(
+        channel_data = self.make_jsonrpc_request(
             "/im_livechat/get_session",
             {"channel_id": self.livechat_channel.id},
-        )["store_data"]["discuss.channel"][0]
+        )
+        channel_info = next(
+            c
+            for c in channel_data["store_data"]["discuss.channel"]
+            if c["id"] == channel_data["channel_id"]
+        )
         self.assertEqual(channel_info["livechat_visitor_id"], False)
 
 

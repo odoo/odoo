@@ -69,10 +69,14 @@ class AttachmentController(ThreadController):
             attachment = request.env["ir.attachment"].sudo().create(vals)
             attachment._post_add_create(**kwargs)
             res = {
-                "data": Store().add(
-                    attachment,
-                    extra_fields=request.env["ir.attachment"]._get_store_ownership_fields(),
-                ).get_result()
+                "data": {
+
+                    "store_data": Store().add(
+                        attachment,
+                        extra_fields=request.env["ir.attachment"]._get_store_ownership_fields(),
+                    ).get_result(),
+                    "attachment_id": attachment.id,
+                }
             }
         except AccessError:
             res = {"error": _("You are not allowed to upload an attachment here.")}

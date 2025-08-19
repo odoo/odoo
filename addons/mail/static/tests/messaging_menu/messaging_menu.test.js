@@ -1175,14 +1175,13 @@ test("messaging menu should show new needaction messages from chatter", async ()
         res_partner_id: serverState.partnerId,
     });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(
-        partner,
-        "mail.message/inbox",
-        new mailDataHelpers.Store(
+    pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
+        message_id: messageId,
+        store_data: new mailDataHelpers.Store(
             pyEnv["mail.message"].browse(messageId),
             makeKwArgs({ for_current_user: true, add_followers: true })
-        ).get_result()
-    );
+        ).get_result(),
+    });
     await contains(".o-mail-NotificationItem-text", { text: "Frodo Baggins: @Mitchel Admin" });
 });
 
