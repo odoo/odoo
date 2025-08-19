@@ -8,7 +8,6 @@ import {
     Many2OneField,
 } from "@web/views/fields/many2one/many2one_field";
 
-
 class PackageMany2One extends Many2One {
     static template = "stock.PackageMany2One";
 }
@@ -24,7 +23,7 @@ export class StockPackageMany2One extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.isDone = ['done', 'cancel'].includes(this.props.record?.data?.state)
+        this.isDone = ["done", "cancel"].includes(this.props.record?.data?.state);
 
         onWillStart(async () => {
             if (!this.props.record.data[this.props.name]?.id) {
@@ -39,7 +38,7 @@ export class StockPackageMany2One extends Component {
                         display_name: {},
                     },
                     context: { ...this.displayNameContext },
-                },
+                }
             );
             if (res.length) {
                 this.packageName = res[0].display_name;
@@ -61,7 +60,7 @@ export class StockPackageMany2One extends Component {
 
     get displayValue() {
         const displayVal = this.props.record.data[this.props.name];
-        if (this.isDone && this.packageName) {
+        if (this.packageName) {
             displayVal["display_name"] = this.packageName;
             // Should only be used at load. Context is correctly applied in further searches.
             this.packageName = false;
@@ -74,7 +73,7 @@ export class StockPackageMany2One extends Component {
             show_src_package: this.props.displaySource,
             show_dest_package: this.props.displayDestination,
             is_done: this.isDone,
-        }
+        };
     }
 }
 
