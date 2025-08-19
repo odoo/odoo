@@ -360,6 +360,8 @@
                     <separator/>
                     <filter string="Report Dates" name="date_between" domain="[('date', '&gt;=', context.get('date_from')), ('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
                     <filter string="Report Dates" name="date_before" domain="[('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
+                    <filter string="Report Dates" name="recon_date_between" domain="['|', ('reconciled_at_date', '&lt;=', context.get('recon_date')), '&amp;', ('date', '&gt;=', context.get('date_from')), ('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
+                    <filter string="Report Dates" name="recon_date_before" domain="['|', ('reconciled_at_date', '&lt;=', context.get('recon_date')), ('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
                     <separator/>
                     <filter string="Analytic Accounts" name="analytic_accounts" domain="[('analytic_distribution', 'in', context.get('analytic_ids'))]" invisible="1"/>
                     <group>
@@ -405,8 +407,8 @@
                     <field name="ref" readonly="False"/>
                     <field name="name" optional="show"/>
                     <field name="discount_amount_currency" string="Discount Amount" optional="show" invisible="not discount_amount_currency"/>
-                    <field name="amount_residual" sum="Total Residual" string="Residual" readonly="1" invisible="not is_account_reconcile"/>
-                    <field name="amount_residual_currency" string="Residual in Currency" optional="hide" readonly="1" invisible="is_same_currency or not is_account_reconcile" groups="base.group_multi_currency"/>
+                    <field name="amount_residual_at_date" sum="Total Residual at date" string="Residual" readonly="1" invisible="not is_account_reconcile"/>
+                    <field name="amount_residual_currency_at_date" string="Residual in Currency" optional="hide" readonly="1" invisible="is_same_currency or not is_account_reconcile" groups="base.group_multi_currency"/>
                     <field name="currency_id" groups="base.group_multi_currency" optional="hide" string="Currency" readonly="1" invisible="is_same_currency"/>
                     <field name="company_currency_id" column_invisible="True"/>
                     <field name="move_type" column_invisible="True"/>
@@ -437,6 +439,7 @@
                     <field name="journal_id"/>
                     <field name="currency_id" groups="base.group_multi_currency" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
+                    <field name="residual_at_date"/>
                     <separator/>
                     <filter string="Posted" name="posted" domain="[('parent_state', '=', 'posted')]" help="Posted Journal Items" invisible="1"/>
                     <separator/>
@@ -452,6 +455,8 @@
                     <separator/>
                     <filter string="Report Dates" name="date_between" domain="[('date', '&gt;=', context.get('date_from')), ('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
                     <filter string="Report Dates" name="date_before" domain="[('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
+                    <!-- <filter string="Report Dates" name="recon_date_between" domain="['|', ('reconciled_at_date', '&lt;=', context.get('recon_date')), '&amp;', ('date', '&gt;=', context.get('date_from')), ('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
+                    <filter string="Report Dates" name="recon_date_before" domain="['|', ('reconciled_at_date', '&lt;=', context.get('recon_date')), ('date', '&lt;=', context.get('date_to'))]" invisible="1"/> -->
                     <separator/>
                     <group>
                         <filter string="Currency" name="group_by_currencies" domain="[]" context="{'group_by': 'currency_id'}"/>
