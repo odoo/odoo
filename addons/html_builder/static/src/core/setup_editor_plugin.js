@@ -13,9 +13,6 @@ export class SetupEditorPlugin extends Plugin {
             "#wrap .o_homepage_editor_welcome_message"
         );
         welcomeMessageEl?.remove();
-        if (this.delegateTo("after_setup_editor_handlers")) {
-            return;
-        }
         let editableEls = this.getEditableElements("[data-oe-model]")
             .filter((el) => !el.matches("link, script"))
             .filter((el) => !el.hasAttribute("data-oe-readonly"))
@@ -30,6 +27,9 @@ export class SetupEditorPlugin extends Plugin {
             .filter((el) => !el.hasAttribute("data-oe-sanitize-prevent-edition"));
         editableEls.concat(Array.from(this.editable.querySelectorAll(".o_editable")));
         editableEls.forEach((el) => el.classList.add("o_editable"));
+        if (this.delegateTo("after_setup_editor_handlers")) {
+            return;
+        }
 
         // Add automatic editor message on the editables where we can drag and
         // drop elements.

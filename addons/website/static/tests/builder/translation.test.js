@@ -160,7 +160,7 @@ test("translate attribute", async () => {
 test("translate attribute history", async () => {
     const { getEditableContent } = await setupSidebarBuilderForTranslation({
         websiteContent: `
-            <img src="/web/image/website.s_text_image_default_image" class="img img-fluid o_editable" loading="lazy" title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>" style=""></img>
+            <img src="/web/image/website.s_text_image_default_image" class="img img-fluid" loading="lazy" title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>" style=""></img>
         `,
     });
     const editable = getEditableContent();
@@ -169,7 +169,7 @@ test("translate attribute history", async () => {
     await contains(".modal .modal-body input").edit("titre");
     await contains(".modal .btn:contains(Ok)").click();
     const getImg = ({ titleName, translated }) =>
-        `<img src="/web/image/website.s_text_image_default_image" class="img img-fluid o_editable o_translatable_attribute${
+        `<img src="/web/image/website.s_text_image_default_image" class="img img-fluid o_editable_attribute o_translatable_attribute${
             translated ? " oe_translated" : ""
         }" loading="lazy" title="${titleName}" style="" data-oe-translation-state="to_translate"></img>`;
     expect(editable).toHaveInnerHTML(getImg({ titleName: "titre", translated: true }));
@@ -293,9 +293,50 @@ test("table of content snippet headings' translation updates its navbar items", 
     );
 });
 
-function getTranslateEditable({ inWrap, oeId = "526", sourceSha = "sourceSha" }) {
+test("trying to translate an element inside a .o_not_editable should add a notification", async () => {
+    mockService("notification", {
+        add(message, options = {}) {
+            expect(message).toBe("This translation is not editable.");
+        },
+    });
+    await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable({
+            inWrap: "Hello",
+            oeId: 10,
+            containerEditable: false,
+        }),
+    });
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    await contains(":iframe [data-oe-id='10']").click();
+});
+
+test("trying to translate an attribute of an image even inside a .o_not_editable should not add a notification", async () => {
+    mockService("notification", {
+        add(message, options = {}) {
+            expect.step("Notification added");
+        },
+    });
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <div class="o_not_editable">
+                <img src="/web/image/website.s_text_image_default_image" class="img img-fluid mx-auto rounded o_editable" loading="lazy" title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>" style=""></img>
+            <div/>
+        `,
+    });
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    await contains(":iframe img").click();
+    expect(".modal .modal-body input").toHaveValue("title");
+    expect.verifySteps([]);
+});
+
+function getTranslateEditable({
+    inWrap,
+    oeId = "526",
+    sourceSha = "sourceSha",
+    containerEditable = true,
+}) {
     return `
-        <div class="container s_allow_columns">
+        <div class="container s_allow_columns${containerEditable ? "" : " o_not_editable"}">
             <p>
                 <span data-oe-model="ir.ui.view" data-oe-id="${oeId}" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="${sourceSha}" class="o_editable">${inWrap}</span>
             </p>
