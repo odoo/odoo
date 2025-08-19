@@ -308,6 +308,7 @@ export class Navigator {
         this.activeItem?.setInactive(false);
         this.activeItem = this.items[index];
         this.activeItemIndex = index;
+        this._options.onItemActivated?.(this.activeItem.el);
     }
 
     /**
@@ -329,6 +330,7 @@ export class Navigator {
  * @property {({{ navigator: Navigator, target: HTMLElement }}) => bool} isNavigationAvailable
  * @property {NavigationHotkeys} hotkeys
  * @property {Function} onUpdated
+ * @property {Function} onItemActivated
  * @property {Boolean} [virtualFocus=false] - If true, items are only visually
  * focused so the actual focus can be kept on another input.
  * @property {Boolean} [shouldFocusChildInput=false] - If true, elements like inputs or buttons
