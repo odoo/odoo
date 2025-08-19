@@ -91,7 +91,6 @@ export class DomPlugin extends Plugin {
         clipboard_content_processors: this.removeEmptyClassAndStyleAttributes.bind(this),
         functional_empty_node_predicates: [isSelfClosingElement, isEditorTab],
     };
-    contentEditableToRemove = new Set();
 
     // Shared
 
