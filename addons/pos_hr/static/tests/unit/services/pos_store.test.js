@@ -7,6 +7,7 @@ definePosModels();
 describe("pos_store.js", () => {
     test("createNewOrder", async () => {
         const store = await setupPosEnv();
+        store.addNewOrder();
         const order = store.getOrder();
         expect(order.employee_id.id).toBe(2);
     });
@@ -38,6 +39,7 @@ describe("pos_store.js", () => {
     });
     test("addLineToCurrentOrder", async () => {
         const store = await setupPosEnv();
+        store.addNewOrder();
         const admin = store.models["hr.employee"].get(2);
         store.setCashier(admin);
         const product_id = store.models["product.product"].get(5);

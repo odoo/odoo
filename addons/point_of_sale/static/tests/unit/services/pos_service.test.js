@@ -51,7 +51,7 @@ describe("pos_store.js", () => {
 
             const noSync = await store.syncAllOrders();
             expect(noSync).toBe(undefined);
-            expect(store.models["pos.order"].length).toBe(2); // One order created during setupPosEnv
+            expect(store.models["pos.order"].length).toBe(1);
         });
 
         test("sync specific order", async () => {
@@ -203,7 +203,7 @@ describe("pos_store.js", () => {
         await getFilledOrder(store);
         store.addNewOrder();
         let openOrders = store.getOpenOrders();
-        expect(openOrders.length).toBe(3);
+        expect(openOrders.length).toBe(2);
         const deletedOrders = await store.deleteOrders(openOrders);
         expect(deletedOrders).toBe(true);
         openOrders = store.getOpenOrders();

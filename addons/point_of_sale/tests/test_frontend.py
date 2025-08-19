@@ -2748,6 +2748,26 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_cross_exclusion_attribute_values')
 
+    def test_preset_customer_selection(self):
+        self.preset_delivery = self.env['pos.preset'].create({
+            'name': 'Delivery',
+            'identification': 'address',
+        })
+        self.env['res.partner'].create({
+            'name': 'Test Partner',
+            'street': '123 Test Street',
+            'city': 'Test City',
+            'zip': '12345',
+            'country_id': self.env['res.country'].search([], limit=1).id,
+        })
+        self.main_pos_config.write({
+            'use_presets': True,
+            'default_preset_id': self.preset_delivery.id,
+            'available_preset_ids': [(6, 0, [self.preset_delivery.id])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_preset_customer_selection')
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):

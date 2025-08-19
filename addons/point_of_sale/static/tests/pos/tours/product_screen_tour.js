@@ -972,3 +972,14 @@ registry.category("web_tour.tours").add("test_pos_ui_round_globally", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_preset_customer_selection", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PartnerList.clickPartner("Test Partner"),
+            ProductScreen.customerIsSelected("Test Partner"),
+            Chrome.endTour(),
+        ].flat(),
+});
