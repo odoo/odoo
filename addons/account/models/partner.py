@@ -796,7 +796,7 @@ class ResPartner(models.Model):
         if 'parent_id' in vals:
             partner2moves = self.sudo().env['account.move'].search([('partner_id', 'in', self.ids)]).grouped('partner_id')
             parent_vat = self.env['res.partner'].browse(vals['parent_id']).vat
-            if partner2moves and vals['parent_id'] and {parent_vat} != set(self.mapped('vat')):
+            if partner2moves and vals['parent_id'] and any((partner.vat or '') != (parent_vat or '') for partner in self):
                 raise UserError(_("You cannot set a partner as an invoicing address of another if they have a different %(vat_label)s.", vat_label=self.vat_label))
 
         res = super().write(vals)

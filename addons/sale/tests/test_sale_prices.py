@@ -1155,3 +1155,46 @@ class TestSalePrices(SaleCommon):
         self.assertEqual(show_discount_line.price_unit, 100)
         self.assertEqual(show_discount_line.price_subtotal, show_discount_line.price_unit * 0.81)
         self.assertEqual(show_discount_line.discount, 19)
+
+    def test_combo_product_discount(self):
+        """Ensure that pricelist discounts for combo products get applied to combo items"""
+        order = self.empty_order
+
+        product_a = self._create_product(name="Beefy burger")
+        product_b = self._create_product(name="Belgian fries")
+        combos = self.env['product.combo'].create([{
+            'name': "Burger",
+            'combo_item_ids': [Command.create({'product_id': product_a.id})],
+        }, {
+            'name': "Side",
+            'combo_item_ids': [Command.create({'product_id': product_b.id})],
+        }])
+        product_combo = self._create_product(
+            name="Meal Menu",
+            list_price=10.0,
+            type='combo',
+            combo_ids=[Command.set(combos.ids)],
+        )
+
+        self._create_discount_pricelist_rule(product_tmpl_id=product_combo.product_tmpl_id.id)
+        combo_line = self.env['sale.order.line'].create({
+            'order_id': order.id,
+            'product_id': product_combo.id,
+        })
+        item_lines = self.env['sale.order.line'].create([{
+            'order_id': order.id,
+            'product_id': product.id,
+            'combo_item_id': combo.combo_item_ids.id,
+            'linked_line_id': combo_line.id,
+        } for product, combo in zip(product_a + product_b, combos)])
+
+        self.assertEqual(
+            item_lines.mapped('discount'),
+            [self.discount, self.discount],
+            "Discount should apply to combo item lines",
+        )
+        self.assertAlmostEqual(
+            order.amount_untaxed,
+            order.amount_undiscounted * (100 - self.discount) / 100,
+            msg="Pricelist discount should be applied to quotation",
+        )

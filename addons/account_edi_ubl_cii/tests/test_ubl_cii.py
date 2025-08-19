@@ -501,3 +501,27 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             xml_tree = etree.fromstring(xml_attachment.raw)
             code = xml_tree.find('.//ram:SpecifiedTradeSettlementPaymentMeans/ram:TypeCode', self.namespaces)
             self.assertEqual(code.text, '59')
+
+    def test_oin_code(self):
+        partner = self.partner_a
+        partner.peppol_endpoint = '00000000001020304050'
+        partner.country_id = self.env.ref('base.nl').id
+        partner.bank_ids = [Command.create({'acc_number': "0123456789"})]
+        invoice = self.env['account.move'].create({
+            'partner_id': partner.id,
+            'move_type': 'out_invoice',
+            'invoice_date': "2024-12-01",
+            'invoice_date_due': "2024-12-31",
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+
+        invoice.partner_id.commercial_partner_id.invoice_edi_format = 'nlcius'
+        invoice.action_post()
+        invoice.invoice_date_due = fields.Date.from_string('2024-12-31')
+        builder = invoice.partner_id.commercial_partner_id._get_edi_builder('nlcius')
+        xml_content = builder._export_invoice(invoice)[0]
+        xml_tree = etree.fromstring(xml_content)
+        scheme_ID = xml_tree.find('.//cac:PartyLegalEntity/cbc:CompanyID[@schemeID]', {
+            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"})
+        self.assertEqual(scheme_ID.attrib.get("schemeID"), "0190")
