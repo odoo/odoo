@@ -1,4 +1,8 @@
+import { reactive } from "@odoo/owl";
+import { waitFor } from "@odoo/hoot-dom";
+
 import { registry } from "@web/core/registry";
+import { getOrigin } from "@web/core/utils/urls";
 import { contains, click, inputFiles } from "@web/../tests/utils";
 
 registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
@@ -52,11 +56,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             },
         },
         {
-            trigger: ".o-mail-AttachmentContainer:not(.o-isUploading)", // waiting the attachment to be uploaded
-        },
-        {
-            content: "Check the text attachment is listed",
-            trigger: '.o-mail-AttachmentContainer[title="text.txt"]',
+            trigger: '.o-mail-AttachmentContainer[title="text.txt"]:not(.o-isUploading)',
         },
         {
             content: "Add an image file in composer",
@@ -78,22 +78,37 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             },
         },
         {
-            trigger: ".o-mail-AttachmentContainer:not(.o-isUploading)",
-        },
-        {
-            content: "Check the image attachment is listed",
-            trigger: '.o-mail-AttachmentContainer[title="image.png"]',
+            trigger: '.o-mail-AttachmentContainer[title="image.png"]:not(.o-isUploading)',
             async run() {
                 /** @type {import("models").Store} */
                 const store = odoo.__WOWL_DEBUG__.root.env.services["mail.store"];
                 if (store.self.type === "guest") {
                     const src = this.anchor.querySelector("img").src;
-                    const token = store["ir.attachment"].get(
+                    const attachment = store["ir.attachment"].get(
                         (src.match("/web/image/([0-9]+)") || []).at(-1)
-                    )?.raw_access_token;
-                    if (!(token && src.includes(`access_token=${token}`))) {
-                        throw new Error("Access token of the attachment isn't correct.");
+                    );
+                    if (!attachment) {
+                        throw new Error(`Attachment was not found from src: ${src}`);
                     }
+                    if (!attachment.raw_access_token) {
+                        await new Promise((resolve) => {
+                            const proxy = reactive(attachment, () => {
+                                if (attachment.raw_access_token) {
+                                    resolve();
+                                } else {
+                                    void proxy.raw_access_token; // keep observing until a value is received
+                                }
+                            });
+                            void proxy.raw_access_token; // start observing
+                        });
+                    }
+                    await waitFor(
+                        `.o-mail-AttachmentContainer[title="image.png"] img[src="${getOrigin()}/web/image/${
+                            attachment.id
+                        }?access_token=${attachment.raw_access_token}&filename=image.png&unique=${
+                            attachment.checksum
+                        }"]`
+                    );
                 }
             },
         },
