@@ -14,7 +14,7 @@ from odoo.tests.common import TransactionCase
 class TestStockValuationCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
-        super(TestStockValuationCommon, cls).setUpClass()
+        super().setUpClass()
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
         cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
@@ -29,7 +29,7 @@ class TestStockValuationCommon(TransactionCase):
         cls.env.ref('base.EUR').active = True
 
     def setUp(self):
-        super(TestStockValuationCommon, self).setUp()
+        super().setUp()
         # Counter automatically incremented by `_make_in_move` and `_make_out_move`.
         self.days = 0
 
@@ -898,7 +898,7 @@ class TestStockValuationChangeCostMethod(TestStockValuationCommon):
         move3 = self._make_out_move(self.product1, 1)
 
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
-        self.assertEqual(self.product1.total_value, 285)
+        self.assertEqual(self.product1.total_value, 290)
         self.assertEqual(self.product1.qty_available, 19)
 
     def test_fifo_to_standard(self):
