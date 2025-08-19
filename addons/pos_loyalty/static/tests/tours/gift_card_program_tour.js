@@ -193,7 +193,7 @@ registry.category("web_tour.tours").add("test_physical_gift_card_invoiced", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner"),
+            ProductScreen.clickCustomer("AABBCC Test Partner"),
             ProductScreen.clickDisplayedProduct("Gift Card"),
             PosLoyalty.createManualGiftCard("test-card-1234", 125),
             ProductScreen.selectedOrderlineHas("Gift Card", "1.00", "125"),
