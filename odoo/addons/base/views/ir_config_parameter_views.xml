@@ -18,19 +18,6 @@
                 </list>
             </field>
         </record>
-        <record model="ir.ui.view" id="view_ir_config_form">
-            <field name="model">ir.config_parameter</field>
-            <field name="arch" type="xml">
-                <form string="System Parameters">
-                  <sheet>
-                    <group>
-                        <field name="key"/>
-                        <field name="value"/>
-                    </group>
-                  </sheet>
-                </form>
-            </field>
-        </record>
         <record id="ir_config_list_action" model="ir.actions.act_window">
             <field name="name">System Parameters</field>
             <field name="res_model">ir.config_parameter</field>
