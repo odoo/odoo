@@ -9,14 +9,7 @@ import { READONLY_MAIN_EMBEDDINGS } from "@html_editor/others/embedded_component
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import {
-    click,
-    press,
-    queryAll,
-    queryAllTexts,
-    queryOne,
-    waitFor,
-} from "@odoo/hoot-dom";
+import { click, press, queryAll, queryAllTexts, queryOne, waitFor } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockSendBeacon, tick } from "@odoo/hoot-mock";
 import { onWillDestroy, xml } from "@odoo/owl";
 import {
@@ -92,6 +85,22 @@ class IrAttachment extends models.Model {
             public: true,
             access_token: false,
             image_src: "/web/image/123/transparent.png",
+            image_width: 256,
+            image_height: 256,
+        },
+        {
+            id: 456,
+            name: "gif image",
+            description: "",
+            mimetype: "image/gif",
+            checksum: false,
+            url: "/web/image/456/transparent.gif",
+            type: "url",
+            res_id: 0,
+            res_model: false,
+            public: true,
+            access_token: false,
+            image_src: "/web/image/456/transparent.gif",
             image_width: 256,
             image_height: 256,
         },
