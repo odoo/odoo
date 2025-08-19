@@ -298,13 +298,18 @@ class ProductProduct(models.Model):
         external_location = location and location.is_valued_external
 
         fifo_cost = 0
-        fifo_stack, __ = self._run_fifo_get_stack(lot=lot, at_date=at_date, location=location)
-
+        fifo_stack, qty_on_first_move = self._run_fifo_get_stack(lot=lot, at_date=at_date, location=location)
         # Going up to get the quantity in the argument
         while quantity > 0 and fifo_stack:
             move = fifo_stack.pop(0)
-            in_qty = move._get_valued_qty()
-            in_value = move.value
+            if qty_on_first_move:
+                valued_qty = move._get_valued_qty()
+                in_qty = qty_on_first_move
+                in_value = move.value * in_qty / valued_qty
+                qty_on_first_move = 0
+            else:
+                in_qty = move._get_valued_qty()
+                in_value = move.value
             if at_date and not external_location:
                 in_value = move._get_value(at_date=at_date)[0]
             if in_qty > quantity:
