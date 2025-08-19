@@ -16,7 +16,7 @@ class SaleOrderLine(models.Model):
     timesheet_ids = fields.One2many('account.analytic.line', 'so_line', domain=[('project_id', '!=', False)], string='Timesheets', export_string_translation=False)
 
     @api.depends('remaining_hours_available', 'remaining_hours')
-    @api.depends_context('with_remaining_hours', 'company')
+    @api.depends_context('with_remaining_hours', 'company', 'formatted_display_name')
     def _compute_display_name(self):
         super()._compute_display_name()
         with_remaining_hours = self.env.context.get('with_remaining_hours')
@@ -39,7 +39,10 @@ class SaleOrderLine(models.Model):
                     elif is_day:
                         remaining_days = company.project_time_mode_id._compute_quantity(line.remaining_hours, encoding_uom, round=False)
                         remaining_time = f' ({remaining_days:.02f} {unit_label})'
-                    name = f'{line.display_name}{remaining_time}'
+                    if self.env.context.get('formatted_display_name'):
+                        name = f'{line.display_name} --{remaining_time}--'
+                    else:
+                        name = f'{line.display_name}{remaining_time}'
                     line.display_name = name
 
     @api.depends('product_id.service_policy')
