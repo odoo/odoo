@@ -83,13 +83,6 @@ class ProductTemplate(models.Model):
                 or AccountAccount
             )
         accounts['stock_variation'] = accounts['stock_valuation'].account_stock_variation_id
-        company = self.company_id or self.env.company
-        if self.is_storable:
-            accounts['expense'] = (
-                self.property_account_expense_id
-                or self.categ_id.property_cogs_account_id
-                or company.account_cogs_id
-            )
         return accounts
 
     def get_product_accounts(self, fiscal_pos=None):
@@ -363,10 +356,6 @@ class ProductCategory(models.Model):
         'account.account', 'Stock Valuation Account', company_dependent=True, ondelete='restrict',
         check_company=True,
         help="""When automated inventory valuation is enabled on a product, this account will hold the current value of the products.""")
-    property_cogs_account_id = fields.Many2one(
-        'account.account', 'Cost of Goods Sold Account', company_dependent=True, ondelete='restrict',
-        check_company=True,
-        help="""Expense account for cost of good sold. Only useful for storable products.""")
     property_price_difference_account_id = fields.Many2one(
         'account.account', 'Price Difference Account', company_dependent=True, ondelete='restrict',
         check_company=True,
