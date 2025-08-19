@@ -6,6 +6,7 @@ import {
     fillShrunkPhrasingParent,
     makeContentsInline,
     removeClass,
+    removeStyle,
     splitTextNode,
     unwrapContents,
     wrapInlinesInBlocks,
@@ -65,12 +66,20 @@ function getConnectedParents(nodes) {
  * @property { DomPlugin['canSetTag'] } canSetTag
  * @property { DomPlugin['setTag'] } setTag
  * @property { DomPlugin['setTagName'] } setTagName
+ * @property { DomPlugin['removeSystemProperties'] } removeSystemProperties
  */
 
 export class DomPlugin extends Plugin {
     static id = "dom";
     static dependencies = ["baseContainer", "selection", "history", "split", "delete", "lineBreak"];
-    static shared = ["insert", "copyAttributes", "canSetTag", "setTag", "setTagName"];
+    static shared = [
+        "insert",
+        "copyAttributes",
+        "canSetTag",
+        "setTag",
+        "setTagName",
+        "removeSystemProperties",
+    ];
     resources = {
         user_commands: [
             {
@@ -91,6 +100,17 @@ export class DomPlugin extends Plugin {
         clipboard_content_processors: this.removeEmptyClassAndStyleAttributes.bind(this),
         functional_empty_node_predicates: [isSelfClosingElement, isEditorTab],
     };
+
+    setup() {
+        this.systemClasses = this.getResource("system_classes");
+        this.systemAttributes = this.getResource("system_attributes");
+        this.systemStyleProperties = this.getResource("system_style_properties");
+        this.systemPropertiesSelector = [
+            ...this.systemClasses.map((className) => `.${className}`),
+            ...this.systemAttributes.map((attr) => `[${attr}]`),
+            ...this.systemStyleProperties.map((prop) => `[style*="${prop}"]`),
+        ].join(",");
+    }
 
     // Shared
 
@@ -518,6 +538,26 @@ export class DomPlugin extends Plugin {
             el.remove();
         }
         return newEl;
+    }
+
+    /**
+     * Remove system-specific classes, attributes, and style properties from a
+     * fragment or an element.
+     *
+     * @param {DocumentFragment|HTMLElement} root
+     */
+    removeSystemProperties(root) {
+        const clean = (element) => {
+            removeClass(element, ...this.systemClasses);
+            this.systemAttributes.forEach((attr) => element.removeAttribute(attr));
+            removeStyle(element, ...this.systemStyleProperties);
+        };
+        if (root.matches?.(this.systemPropertiesSelector)) {
+            clean(root);
+        }
+        for (const element of root.querySelectorAll(this.systemPropertiesSelector)) {
+            clean(element);
+        }
     }
 
     // --------------------------------------------------------------------------
