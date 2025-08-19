@@ -1740,7 +1740,7 @@ header {
         }
     }
 }
-.navbar-nav {
+:where(header#top) .navbar-nav:where([role="menu"]) {
     .nav-link:not(.o_nav-link_secondary) {
         @if o-website-value('header-links-style') == 'outline' {
             // Need to force the padding in this case so that it stays in mobile
