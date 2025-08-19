@@ -261,7 +261,7 @@ def convert_t(url, content):
             renamed_import = match_.group(0).replace("_t", "__not_defined__")
         else:
             renamed_import = match_.group(0).replace("_t", "appTranslateFn")
-        renamed_import += f"""\nconst _t = (str, ...args) => appTranslateFn(str, "{module_name}", ...args);"""
+        renamed_import += f"""const _t = (str, ...args) => appTranslateFn(str, "{module_name}", ...args);"""
         return renamed_import
 
     return GETTEXT_RE.sub(rename_gettext, content)
