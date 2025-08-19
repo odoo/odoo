@@ -592,8 +592,11 @@ class Users(models.Model):
     @api.constrains('action_id')
     def _check_action_id(self):
         action_open_website = self.env.ref('base.action_open_website', raise_if_not_found=False)
+        action_open_shop_floor = self.env.ref('mrp_workorder.action_mrp_display', raise_if_not_found=False)
         if action_open_website and any(user.action_id.id == action_open_website.id for user in self):
             raise ValidationError(_('The "App Switcher" action cannot be selected as home action.'))
+        if action_open_shop_floor and any(user.action_id.id == action_open_shop_floor.id for user in self):
+            raise ValidationError(_('The "Shop Floor" action cannot be selected as home action.'))
         # We use sudo() because  "Access rights" admins can't read action models
         for user in self.sudo():
             if user.action_id.type == "ir.actions.client":
