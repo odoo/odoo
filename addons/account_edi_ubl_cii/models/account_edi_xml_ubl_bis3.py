@@ -114,15 +114,30 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
 
     def _get_partner_party_vals(self, partner, role):
         # EXTENDS account.edi.xml.ubl_21
-        vals = super()._get_partner_party_vals(partner, role)
+        if (
+            role == 'delivery'
+            # If the user hasn't updated the module, we just don't render `DeliveryParty` because the UBL
+            # to avoid generating an invalid UBL.
+            and '<cac:Party>' not in self.env.ref('account_edi_ubl_cii.ubl_20_DeliveryType').arch
+        ):
+            return {
+                'party_vals': {
+                    'party_name_vals': [
+                        {
+                            'name': partner.display_name,
+                        }
+                    ],
+                }
+            }
+        else:
+            vals = super()._get_partner_party_vals(partner, role)
 
-        partner = partner.commercial_partner_id
-        vals.update({
-            'endpoint_id': partner.peppol_endpoint,
-            'endpoint_id_attrs': {'schemeID': partner.peppol_eas},
-        })
-
-        return vals
+            partner = partner.commercial_partner_id
+            vals.update({
+                'endpoint_id': partner.peppol_endpoint,
+                'endpoint_id_attrs': {'schemeID': partner.peppol_eas},
+            })
+            return vals
 
     def _get_partner_party_identification_vals_list(self, partner):
         # EXTENDS account.edi.xml.ubl_21
@@ -163,6 +178,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                 'delivery_location_vals': {
                     'delivery_address_vals': self._get_partner_address_vals(partner_shipping),
                 },
+                'delivery_party_vals': self._get_partner_party_vals(invoice.partner_shipping_id, 'delivery') if invoice.partner_shipping_id else {},
             }]
 
         return super()._get_delivery_vals_list(invoice)
@@ -518,18 +534,26 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         invoice = vals['invoice']
         customer = vals['customer']
         supplier = vals['supplier']
+        shipping_partner = vals['partner_shipping']
+
         intracom_delivery = (
             customer.country_id.code in (economic_area := self.env.ref('base.europe').country_ids.mapped('code') + ['NO'])
             and supplier.country_id.code in economic_area
             and supplier.country_id != customer.country_id
         )
-        if intracom_delivery:
-            document_node['cac:Delivery'] = {
-                'cbc:ActualDeliveryDate': {'_text': invoice.invoice_date},
-                'cac:DeliveryLocation': {
-                    'cac:Address': self._get_address_node({'partner': vals['partner_shipping']})
-                },
-            }
+        delivery_date = invoice.invoice_date if intracom_delivery else invoice.delivery_date
+
+        document_node['cac:Delivery'] = {
+            'cbc:ActualDeliveryDate': {'_text': delivery_date},
+            'cac:DeliveryParty': {
+                'cac:PartyName': {
+                    'cbc:Name': {'_text': shipping_partner.name or customer.name},
+                }
+            },
+            'cac:DeliveryLocation': {
+                'cac:Address': self._get_address_node({'partner': shipping_partner})
+            },
+        }
 
     def _add_invoice_payment_means_nodes(self, document_node, vals):
         super()._add_invoice_payment_means_nodes(document_node, vals)
