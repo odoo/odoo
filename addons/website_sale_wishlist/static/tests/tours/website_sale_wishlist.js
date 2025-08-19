@@ -1,6 +1,5 @@
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { clickOnElement } from '@website/js/tours/tour_utils';
 
 registry.category("web_tour.tours").add('shop_wishlist', {
     url: '/shop?search=Customizable Desk',
@@ -99,30 +98,6 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             trigger: ".my_wish_quantity:contains(1)",
         },
         {
-            content: "check B2B wishlist mode",
-            trigger: "input#b2b_wish",
-            run: "click",
-        },
-        {
-            content: "add item to cart",
-            trigger: '.o_wish_add:eq(1)',
-            run: "click",
-        },
-        clickOnElement('Continue Shopping', 'button:contains("Continue Shopping")'),
-        {
-            content: "check that cart contains 1 item",
-            trigger: ".my_cart_quantity:contains(1)",
-        },
-        {
-            content: "check that wishlist contains 1 item",
-            trigger: ".my_wish_quantity:contains(1)",
-        },
-        {
-            content: "remove B2B wishlist mode",
-            trigger: "input#b2b_wish",
-            run: "click",
-        },
-        {
             content: "add last item to cart",
             trigger: '.o_wish_add:eq(1)',
             run: "click",
@@ -138,8 +113,8 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             trigger: "#wrap #cart_products",
         },
         {
-            content: "check that cart contains 2 items",
-            trigger: ".my_cart_quantity:contains(2)",
+            content: "check that cart contains 1 item",
+            trigger: ".my_cart_quantity:contains(1)",
         },
         {
             content: "check that wishlist is empty and no more visible",

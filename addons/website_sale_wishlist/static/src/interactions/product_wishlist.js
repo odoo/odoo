@@ -44,7 +44,7 @@ export class ProductWishlist extends Interaction {
             showQuantity: showQuantity,
         }));
 
-        if (quantity > 0 && !document.getElementById('b2b_wish').checked) {
+        if (quantity > 0) {
             await this._removeProduct(button, '/shop/cart');
         }
     }
