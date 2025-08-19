@@ -58,9 +58,9 @@
                             <div class="d-flex mb-1 custom-border align-items-center">
                                 <label class="flex-shrink-0">Border</label>
                                 <div class="input-group me-1">
-                                    <input type="number" pattern="[0-9]*"
+                                    <input type="number" min="0"
                                         class="form-control form-control-sm custom-border-size flex-grow-0" t-model="state.customBorderSize"
-                                        placeholder="Border Size"  t-on-keydown="onKeydownEnter"/>
+                                        placeholder="Border Size" t-on-keydown="onKeydownEnter" t-on-input="onInput"/>
                                     <span class="input-group-text">px</span>
                                 </div>
                                 <div class="d-flex align-items-center" t-if="state.customBorderSize > 0">

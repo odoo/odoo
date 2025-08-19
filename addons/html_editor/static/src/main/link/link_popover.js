@@ -113,9 +113,7 @@ export class LinkPopover extends Component {
             imgSrc: "",
             type:
                 this.props.type ||
-                linkElement.className
-                    .match(/btn(-[a-z0-9_-]*)(primary|secondary|custom)/)
-                    ?.pop() ||
+                linkElement.className.match(/btn(-[a-z0-9_-]*)(primary|secondary|custom)/)?.pop() ||
                 "",
             linkTarget: linkElement.target === "_blank" ? "_blank" : "",
             directDownload: true,
@@ -170,6 +168,7 @@ export class LinkPopover extends Component {
                         },
                         applyColorPreview: (colorValue) => {
                             this[colorStateRef].selectedColor = colorValue;
+                            this.onChange();
                         },
                         applyColorResetPreview: () => {
                             this[colorStateRef].selectedColor = this[resetValueRef];
@@ -310,6 +309,10 @@ export class LinkPopover extends Component {
             ev.stopImmediatePropagation();
             this.onClickApply();
         }
+    }
+
+    onInput() {
+        this.onChange();
     }
 
     onClickReplaceTitle() {
@@ -527,8 +530,10 @@ export class LinkPopover extends Component {
 
     get classes() {
         let classes = [...this.props.linkElement.classList]
-            .filter((value) =>
-                !value.match(/^(btn.*|rounded-circle|flat|(text|bg)-(o-color-\d$|\d{3}$))$/))
+            .filter(
+                (value) =>
+                    !value.match(/^(btn.*|rounded-circle|flat|(text|bg)-(o-color-\d$|\d{3}$))$/)
+            )
             .join(" ");
 
         let stylePrefix = "";
