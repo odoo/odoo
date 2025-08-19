@@ -639,7 +639,7 @@ export class PosStore extends WithLazyGetterTrap {
             } else {
                 this.selectedOrderUuid = openOrders.length
                     ? openOrders[openOrders.length - 1].uuid
-                    : this.addNewOrder().uuid;
+                    : null;
             }
         }
 
@@ -2144,6 +2144,9 @@ export class PosStore extends WithLazyGetterTrap {
                 if (!(partner.street || partner.street2)) {
                     this.notification.add(_t("Customer address is required"), { type: "warning" });
                     await this.editPartner(partner);
+                    if (!(partner.street || partner.street2)) {
+                        return;
+                    }
                 }
             }
             if (preset.identification === "name") {

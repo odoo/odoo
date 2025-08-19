@@ -7,6 +7,7 @@ definePosModels();
 describe("pos_order.js", () => {
     test("getCashierName", async () => {
         const store = await setupPosEnv();
+        store.addNewOrder();
         const emp = store.models["hr.employee"].get(3);
         store.setCashier(emp);
         const posOrder = store.getOrder();
