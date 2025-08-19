@@ -76,6 +76,7 @@ class MailMail(models.Model):
         # generic
         ("unknown", "Unknown error"),
         # mail
+        ("mail_spam", "Detected As Spam"),
         ("mail_email_invalid", "Invalid email address"),
         ("mail_email_missing", "Missing email"),
         ("mail_from_invalid", "Invalid from address"),
@@ -840,6 +841,11 @@ class MailMail(models.Model):
                         failure_type = "mail_from_invalid"
                     elif error_code in (IrMailServer.NO_FOUND_FROM, IrMailServer.NO_FOUND_SMTP_FROM):
                         failure_type = "mail_from_missing"
+
+                if isinstance(e, MailDeliveryException) and "OutboundSpamException" in str(e):
+                    # OutboundSpamException: Outlook spam error
+                    failure_type = "mail_spam"
+
                 # generic (unknown) error as fallback
                 if not failure_reason:
                     failure_reason = tools.exception_to_unicode(e)
