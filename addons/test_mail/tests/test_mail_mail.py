@@ -764,9 +764,10 @@ class TestMailMail(MailCommon):
 
             # MailDeliveryException: should be catched; other issues are sub-catched under
             # a MailDeliveryException and are catched
-            for error, msg in [
-                    (MailDeliveryException("Some exception"), 'Some exception'),
-                    (ValueError("Unexpected issue"), 'Unexpected issue')]:
+            for error, msg, failure_type in [
+                    (MailDeliveryException("Some exception"), 'Some exception', 'unknown'),
+                    (MailDeliveryException("OutboundSpamException"), 'OutboundSpamException', 'mail_spam'),
+                    (ValueError("Unexpected issue"), 'Unexpected issue', 'unknown')]:
                 def _send_email(*args, **kwargs):
                     raise error
                 self.send_email_mocked.side_effect = _send_email
@@ -774,10 +775,10 @@ class TestMailMail(MailCommon):
                 self._reset_data()
                 mail.send(raise_exception=False)
                 self.assertEqual(mail.failure_reason, msg)
-                self.assertEqual(mail.failure_type, 'unknown', 'Mail: unlogged failure type to fix')
+                self.assertEqual(mail.failure_type, failure_type)
                 self.assertEqual(mail.state, 'exception')
                 self.assertEqual(notification.failure_reason, msg)
-                self.assertEqual(notification.failure_type, 'unknown', 'Mail: generic failure type')
+                self.assertEqual(notification.failure_type, failure_type)
                 self.assertEqual(notification.notification_status, 'exception')
 
             self.send_email_mocked.side_effect = _send_current
