@@ -31,9 +31,12 @@ test("avatar card preview with hr", async () => {
         employee_id: employeeId,
     });
     env["m2x.avatar.user"].create({ user_id: userId });
-    onRpc("res.users", "read", (request) => {
-        expect.step("user read");
-        expect(request.args[1]).toEqual([
+    onRpc("/discuss/avatar_card", async (request) => {
+        expect.step("/discuss/avatar_card");
+        const args = Object.values((await request.json()).params);
+        expect(args[0]).toEqual(userId);
+        expect(args[1]).toEqual(false);
+        expect(args[2]).toEqual([
             "name",
             "email",
             "phone",
@@ -61,7 +64,7 @@ test("avatar card preview with hr", async () => {
         </kanban>`,
     });
     await contains(".o_m2o_avatar > img").click();
-    expect.verifySteps(["user read"]);
+    expect.verifySteps(["/discuss/avatar_card"]);
     expect(".o_avatar_card").toHaveCount(1);
     expect(".o_avatar_card span[data-tooltip='Work Location'] .fa-building-o").toHaveCount(1);
     expect(queryAllTexts(".o_card_user_infos > *:not(.o_avatar_card_buttons)")).toEqual([

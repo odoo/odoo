@@ -6,7 +6,7 @@
                 <div class="d-flex align-items-start gap-2 bg-inherit">
                     <span class="o_avatar pt-1 position-relative o_card_avatar bg-inherit">
                         <img t-if="props.id"
-                            t-attf-src="/web/image/res.users/{{props.id}}/avatar_128"
+                            t-attf-src="/web/image/{{props.model}}/{{props.id}}/avatar_128"
                             class="rounded"
                         />
                         <span t-if="user.im_status" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center bg-inherit">

@@ -29,12 +29,13 @@ const WithUserChatter = (T) =>
         }
 
         displayAvatarCard(record) {
-            return this.relation === "res.users";
+            return ["res.users", "res.partner"].includes(this.relation);
         }
 
         getAvatarCardProps(record) {
             return {
                 id: record.resId,
+                model: this.relation,
             };
         }
 
