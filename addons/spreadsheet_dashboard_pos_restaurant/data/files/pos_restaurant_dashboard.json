@@ -45,7 +45,7 @@
         "82": { "size": 26 }
       },
       "cols": {
-        "0": { "isHidden": true, "size": 40 },
+        "0": { "size": 16 },
         "1": { "size": 288 },
         "2": { "size": 99 },
         "3": { "size": 76 },
@@ -71,170 +71,20 @@
         "H78:I78"
       ],
       "cells": {
-        "A50": "#",
-        "A51": "1",
-        "A52": "2",
-        "A53": "3",
-        "A54": "4",
-        "A55": "5",
-        "A56": "6",
-        "A57": "7",
-        "A58": "8",
-        "A59": "9",
-        "A60": "10",
-        "A61": "11",
-        "A62": "12",
-        "A63": "13",
-        "A64": "14",
-        "A65": "15",
-        "A68": "#",
-        "A69": "1",
-        "A70": "2",
-        "A71": "3",
-        "A72": "4",
-        "A73": "5",
-        "A74": "6",
-        "A75": "7",
-        "A76": "8",
-        "A77": "9",
-        "A78": "10",
-        "A79": "11",
-        "A80": "12",
-        "A81": "13",
-        "A82": "14",
-        "A83": "15",
         "B12": "=_t(\"Hourly Total Revenue\")",
         "B30": "=_t(\"Daily Total Revenue\")",
         "B49": "=_t(\"Top 15 Products per Margin\") ",
         "B50": "=_t(\"Product \")",
-        "B51": "=PIVOT.HEADER(6,\"#product_id\",A51)",
-        "B52": "=PIVOT.HEADER(6,\"#product_id\",A52)",
-        "B53": "=PIVOT.HEADER(6,\"#product_id\",A53)",
-        "B54": "=PIVOT.HEADER(6,\"#product_id\",A54)",
-        "B55": "=PIVOT.HEADER(6,\"#product_id\",A55)",
-        "B56": "=PIVOT.HEADER(6,\"#product_id\",A56)",
-        "B57": "=PIVOT.HEADER(6,\"#product_id\",A57)",
-        "B58": "=PIVOT.HEADER(6,\"#product_id\",A58)",
-        "B59": "=PIVOT.HEADER(6,\"#product_id\",A59)",
-        "B60": "=PIVOT.HEADER(6,\"#product_id\",A60)",
-        "B61": "=PIVOT.HEADER(6,\"#product_id\",A61)",
-        "B62": "=PIVOT.HEADER(6,\"#product_id\",A62)",
-        "B63": "=PIVOT.HEADER(6,\"#product_id\",A63)",
-        "B64": "=PIVOT.HEADER(6,\"#product_id\",A64)",
-        "B65": "=PIVOT.HEADER(6,\"#product_id\",A65)",
+        "B51": "=PIVOT(11,15,false,false,,false)",
         "B67": "=_t(\"Top 15 Tables per Revenue\")",
         "B68": "=_t(\"Table\")",
-        "B69": "=PIVOT.HEADER(7,\"#table_id\",A69)",
-        "B70": "=PIVOT.HEADER(7,\"#table_id\",A70)",
-        "B71": "=PIVOT.HEADER(7,\"#table_id\",A71)",
-        "B72": "=PIVOT.HEADER(7,\"#table_id\",A72)",
-        "B73": "=PIVOT.HEADER(7,\"#table_id\",A73)",
-        "B74": "=PIVOT.HEADER(7,\"#table_id\",A74)",
-        "B75": "=PIVOT.HEADER(7,\"#table_id\",A75)",
-        "B76": "=PIVOT.HEADER(7,\"#table_id\",A76)",
-        "B77": "=PIVOT.HEADER(7,\"#table_id\",A77)",
-        "B78": "=PIVOT.HEADER(7,\"#table_id\",A78)",
-        "B79": "=PIVOT.HEADER(7,\"#table_id\",A79)",
-        "B80": "=PIVOT.HEADER(7,\"#table_id\",A80)",
-        "B81": "=PIVOT.HEADER(7,\"#table_id\",A81)",
-        "B82": "=PIVOT.HEADER(7,\"#table_id\",A82)",
-        "B83": "=PIVOT.HEADER(7,\"#table_id\",A83)",
+        "B69": "=PIVOT(12,15,false,false,,false)",
         "C50": "=_t(\"Quantity Sold\")",
-        "C51": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A51)",
-        "C52": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A52)",
-        "C53": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A53)",
-        "C54": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A54)",
-        "C55": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A55)",
-        "C56": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A56)",
-        "C57": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A57)",
-        "C58": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A58)",
-        "C59": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A59)",
-        "C60": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A60)",
-        "C61": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A61)",
-        "C62": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A62)",
-        "C63": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A63)",
-        "C64": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A64)",
-        "C65": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A65)",
         "C68": "=_t(\"Orders\")",
-        "C69": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A69)",
-        "C70": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A70)",
-        "C71": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A71)",
-        "C72": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A72)",
-        "C73": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A73)",
-        "C74": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A74)",
-        "C75": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A75)",
-        "C76": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A76)",
-        "C77": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A77)",
-        "C78": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A78)",
-        "C79": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A79)",
-        "C80": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A80)",
-        "C81": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A81)",
-        "C82": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A82)",
-        "C83": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A83)",
         "D50": "=_t(\"Revenue\")",
-        "D51": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A51)",
-        "D52": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A52)",
-        "D53": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A53)",
-        "D54": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A54)",
-        "D55": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A55)",
-        "D56": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A56)",
-        "D57": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A57)",
-        "D58": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A58)",
-        "D59": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A59)",
-        "D60": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A60)",
-        "D61": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A61)",
-        "D62": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A62)",
-        "D63": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A63)",
-        "D64": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A64)",
-        "D65": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A65)",
         "D68": "=_t(\"Revenue\")",
-        "D69": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A69)",
-        "D70": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A70)",
-        "D71": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A71)",
-        "D72": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A72)",
-        "D73": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A73)",
-        "D74": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A74)",
-        "D75": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A75)",
-        "D76": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A76)",
-        "D77": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A77)",
-        "D78": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A78)",
-        "D79": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A79)",
-        "D80": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A80)",
-        "D81": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A81)",
-        "D82": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A82)",
-        "D83": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A83)",
         "E50": "=_t(\"Margin\")",
-        "E51": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A51)",
-        "E52": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A52)",
-        "E53": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A53)",
-        "E54": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A54)",
-        "E55": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A55)",
-        "E56": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A56)",
-        "E57": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A57)",
-        "E58": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A58)",
-        "E59": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A59)",
-        "E60": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A60)",
-        "E61": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A61)",
-        "E62": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A62)",
-        "E63": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A63)",
-        "E64": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A64)",
-        "E65": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A65)",
         "E68": "=_t(\"Tip\")",
-        "E69": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A69)",
-        "E70": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A70)",
-        "E71": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A71)",
-        "E72": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A72)",
-        "E73": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A73)",
-        "E74": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A74)",
-        "E75": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A75)",
-        "E76": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A76)",
-        "E77": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A77)",
-        "E78": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A78)",
-        "E79": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A79)",
-        "E80": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A80)",
-        "E81": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A81)",
-        "E82": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A82)",
-        "E83": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A83)",
         "G50": "#",
         "G51": "1",
         "G52": "2",
@@ -356,8 +206,12 @@
         "A68": 1,
         "G50": 1,
         "H69:K78": 1,
-        "A51:E65": 2,
-        "A69:E83": 2,
+        "A51:A65": 2,
+        "A69:A83": 2,
+        "B52:B65": 2,
+        "B70:B83": 2,
+        "C69:D83": 2,
+        "C51:E65": 2,
         "G51:K65": 2,
         "B12": 3,
         "B30": 3,
@@ -372,7 +226,8 @@
         "C68:E68": 5,
         "I50:K50": 5,
         "J68:K68": 5,
-        "H67": 6
+        "E69:E83": 6,
+        "H67": 7
       },
       "formats": {},
       "borders": {
@@ -464,13 +319,13 @@
             "chartId": "fdceb3b9-643f-4d30-a572-2d9b0b684f17"
           },
           "offset": { "x": 0, "y": 289 },
-          "col": 0,
+          "col": 1,
           "row": 0
         },
         {
           "id": "1ebdd3d0-8af0-4922-9223-2da0d6ec024c",
           "width": 1029,
-          "height": 416,
+          "height": 413,
           "tag": "chart",
           "data": {
             "type": "combo",
@@ -498,9 +353,9 @@
             },
             "chartId": "1ebdd3d0-8af0-4922-9223-2da0d6ec024c"
           },
-          "offset": { "x": 0, "y": 721 },
-          "col": 0,
-          "row": 0
+          "offset": { "x": 0, "y": 0 },
+          "col": 1,
+          "row": 30
         },
         {
           "id": "49b3e330-3a31-4d43-9930-c42f2805c0c3",
@@ -519,87 +374,7 @@
             "chartId": "49b3e330-3a31-4d43-9930-c42f2805c0c3"
           },
           "offset": { "x": 620, "y": 10 },
-          "col": 0,
-          "row": 0
-        },
-        {
-          "id": "d96a0fa5-e91b-455c-8004-9f39eeb09ee2",
-          "width": 200,
-          "height": 108,
-          "tag": "chart",
-          "data": {
-            "baselineColorDown": "#EA6175",
-            "baselineColorUp": "#43C5B1",
-            "baselineMode": "difference",
-            "title": { "text": "Total revenue", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#FFF7ED",
-            "keyValue": "Data!B3",
-            "humanize": false,
-            "chartId": "d96a0fa5-e91b-455c-8004-9f39eeb09ee2"
-          },
-          "offset": { "x": 0, "y": 127 },
-          "col": 0,
-          "row": 0
-        },
-        {
-          "id": "6b97f89c-8416-43db-a32e-d0ab5cf9051e",
-          "width": 200,
-          "height": 108,
-          "tag": "chart",
-          "data": {
-            "baselineColorDown": "#EA6175",
-            "baselineColorUp": "#43C5B1",
-            "baselineMode": "difference",
-            "title": { "text": "Untaxed revenue", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#FFF7ED",
-            "keyValue": "Data!B4",
-            "humanize": false,
-            "chartId": "6b97f89c-8416-43db-a32e-d0ab5cf9051e"
-          },
-          "offset": { "x": 0, "y": 10 },
-          "col": 0,
-          "row": 0
-        },
-        {
-          "id": "cd102569-7656-4986-bf87-6e87b3ea493a",
-          "width": 200,
-          "height": 108,
-          "tag": "chart",
-          "data": {
-            "baselineColorDown": "#EA6175",
-            "baselineColorUp": "#43C5B1",
-            "baselineMode": "difference",
-            "title": { "text": "Untaxed revenue per order", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#FFF7ED",
-            "keyValue": "Data!B5",
-            "humanize": false,
-            "chartId": "cd102569-7656-4986-bf87-6e87b3ea493a"
-          },
-          "offset": { "x": 207, "y": 10 },
-          "col": 0,
-          "row": 0
-        },
-        {
-          "id": "7b541ea8-8f93-44f4-9626-67073e540f16",
-          "width": 200,
-          "height": 108,
-          "tag": "chart",
-          "data": {
-            "baselineColorDown": "#EA6175",
-            "baselineColorUp": "#43C5B1",
-            "baselineMode": "difference",
-            "title": { "text": "Untaxed revenue per guest", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#FFF7ED",
-            "keyValue": "Data!B7",
-            "humanize": false,
-            "chartId": "7b541ea8-8f93-44f4-9626-67073e540f16"
-          },
-          "offset": { "x": 414, "y": 10 },
-          "col": 0,
+          "col": 1,
           "row": 0
         },
         {
@@ -619,53 +394,332 @@
             "chartId": "150978db-0307-4a65-a70a-e3a634dcfd48"
           },
           "offset": { "x": 620, "y": 127 },
-          "col": 0,
+          "col": 1,
           "row": 0
         },
         {
-          "id": "77f395fa-f25d-4ba8-a99d-405a99ebeef7",
-          "width": 200,
+          "id": "3c376227-c736",
+          "col": 1,
+          "row": 0,
+          "offset": { "x": 0, "y": 10 },
+          "width": 614,
           "height": 108,
-          "tag": "chart",
+          "tag": "carousel",
           "data": {
-            "baselineColorDown": "#EA6175",
-            "baselineColorUp": "#43C5B1",
-            "baselineMode": "difference",
-            "title": { "text": "Total revenue per order", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#FFF7ED",
-            "keyValue": "Data!B6",
-            "humanize": false,
-            "chartId": "77f395fa-f25d-4ba8-a99d-405a99ebeef7"
-          },
-          "offset": { "x": 207, "y": 127 },
-          "col": 0,
-          "row": 0
+            "chartDefinitions": {
+              "cd102569-7656-4986-bf87-6e87b3ea493a": {
+                "baselineColorDown": "#EA6175",
+                "baselineColorUp": "#43C5B1",
+                "baselineMode": "difference",
+                "title": {
+                  "text": "Untaxed revenue per order (Avg)",
+                  "bold": true,
+                  "color": "#434343"
+                },
+                "type": "scorecard",
+                "background": "#FFF7ED",
+                "keyValue": "Data!B5",
+                "humanize": false
+              },
+              "7b541ea8-8f93-44f4-9626-67073e540f16": {
+                "baselineColorDown": "#EA6175",
+                "baselineColorUp": "#43C5B1",
+                "baselineMode": "difference",
+                "title": {
+                  "text": "Untaxed revenue per guest (Avg)",
+                  "bold": true,
+                  "color": "#434343"
+                },
+                "type": "scorecard",
+                "background": "#FFF7ED",
+                "keyValue": "Data!B7",
+                "humanize": false
+              },
+              "6b97f89c-8416-43db-a32e-d0ab5cf9051e": {
+                "baselineColorDown": "#EA6175",
+                "baselineColorUp": "#43C5B1",
+                "baselineMode": "difference",
+                "title": { "text": "Untaxed revenue", "bold": true, "color": "#434343" },
+                "type": "scorecard",
+                "background": "#FFF7ED",
+                "keyValue": "Data!B4",
+                "humanize": false
+              }
+            },
+            "items": [
+              {
+                "type": "chart",
+                "chartId": "6b97f89c-8416-43db-a32e-d0ab5cf9051e",
+                "title": "Total"
+              },
+              {
+                "type": "chart",
+                "chartId": "cd102569-7656-4986-bf87-6e87b3ea493a",
+                "title": "per order"
+              },
+              {
+                "type": "chart",
+                "chartId": "7b541ea8-8f93-44f4-9626-67073e540f16",
+                "title": "per guest"
+              }
+            ],
+            "fieldMatching": {}
+          }
         },
         {
-          "id": "87cda1aa-ba42-4865-8f56-912dd9e323a7",
-          "width": 200,
+          "id": "c47bf65c-c0b3",
+          "col": 1,
+          "row": 5,
+          "offset": { "x": 0, "y": 12 },
+          "width": 614,
           "height": 108,
-          "tag": "chart",
+          "tag": "carousel",
           "data": {
-            "baselineColorDown": "#EA6175",
-            "baselineColorUp": "#43C5B1",
-            "baselineMode": "difference",
-            "title": { "text": "Total revenue per guest", "bold": true, "color": "#434343" },
-            "type": "scorecard",
-            "background": "#FFF7ED",
-            "keyValue": "Data!B8",
-            "humanize": false,
-            "chartId": "87cda1aa-ba42-4865-8f56-912dd9e323a7"
-          },
-          "offset": { "x": 414, "y": 127 },
+            "chartDefinitions": {
+              "77f395fa-f25d-4ba8-a99d-405a99ebeef7": {
+                "baselineColorDown": "#EA6175",
+                "baselineColorUp": "#43C5B1",
+                "baselineMode": "difference",
+                "title": {
+                  "text": "Total revenue per order (Avg)",
+                  "bold": true,
+                  "color": "#434343"
+                },
+                "type": "scorecard",
+                "background": "#FFF7ED",
+                "keyValue": "Data!B6",
+                "humanize": false
+              },
+              "87cda1aa-ba42-4865-8f56-912dd9e323a7": {
+                "baselineColorDown": "#EA6175",
+                "baselineColorUp": "#43C5B1",
+                "baselineMode": "difference",
+                "title": {
+                  "text": "Total revenue per guest (Avg)",
+                  "bold": true,
+                  "color": "#434343"
+                },
+                "type": "scorecard",
+                "background": "#FFF7ED",
+                "keyValue": "Data!B8",
+                "humanize": false
+              },
+              "d96a0fa5-e91b-455c-8004-9f39eeb09ee2": {
+                "baselineColorDown": "#EA6175",
+                "baselineColorUp": "#43C5B1",
+                "baselineMode": "difference",
+                "title": { "text": "Total revenue", "bold": true, "color": "#434343" },
+                "type": "scorecard",
+                "background": "#FFF7ED",
+                "keyValue": "Data!B3",
+                "humanize": false
+              }
+            },
+            "items": [
+              {
+                "type": "chart",
+                "chartId": "d96a0fa5-e91b-455c-8004-9f39eeb09ee2",
+                "title": "Total"
+              },
+              {
+                "type": "chart",
+                "chartId": "77f395fa-f25d-4ba8-a99d-405a99ebeef7",
+                "title": "per order"
+              },
+              {
+                "type": "chart",
+                "chartId": "87cda1aa-ba42-4865-8f56-912dd9e323a7",
+                "title": "per guest"
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "8a5bfa43-4f11",
           "col": 0,
-          "row": 0
+          "row": 47,
+          "offset": { "x": 0, "y": 21 },
+          "width": 543,
+          "height": 464,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "6cf119a4-92f9": {
+                "type": "treemap",
+                "dataSetsHaveTitle": false,
+                "dataSets": [
+                  { "dataRange": "B51:B65" }
+                ],
+                "legendPosition": "top",
+                "labelRange": "E51:E65",
+                "title": {
+                  "text": "Top 15 Products per Margin",
+                  "fontSize": 21,
+                  "color": "#01666B",
+                  "bold": true
+                }
+              },
+              "d7ba9f65-17ba": {
+                "type": "bar",
+                "dataSetsHaveTitle": true,
+                "dataSets": [
+                  { "dataRange": "E50:E65" },
+                  { "dataRange": "F50:F65" }
+                ],
+                "legendPosition": "none",
+                "labelRange": "B50:B65",
+                "title": {
+                  "text": "Top 15 Products per Margin",
+                  "fontSize": 21,
+                  "color": "#01666B",
+                  "bold": true
+                },
+                "stacked": false,
+                "aggregated": false,
+                "axesDesign": {
+                  "x": {
+                    "title": { "text": "Margin" }
+                  },
+                  "y": {
+                    "title": { "text": "Products" }
+                  }
+                },
+                "horizontal": true
+              }
+            },
+            "items": [
+              { "type": "chart", "chartId": "d7ba9f65-17ba" },
+              { "type": "chart", "chartId": "6cf119a4-92f9" },
+              { "type": "carouselDataView", "title": "Top 15" }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "bfeddcd8-72c1",
+          "col": 5,
+          "row": 47,
+          "offset": { "x": 12, "y": 21 },
+          "width": 489,
+          "height": 464,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "4dd054d9-ad5b": {
+                "type": "treemap",
+                "dataSetsHaveTitle": true,
+                "dataSets": [
+                  { "dataRange": "I50:I65" }
+                ],
+                "legendPosition": "top",
+                "labelRange": "K50:K65",
+                "title": {
+                  "text": "Top 15 Products per Category",
+                  "fontSize": 21,
+                  "color": "#01666B",
+                  "bold": true
+                }
+              },
+              "8aa46cf6-a1e2": {
+                "type": "bar",
+                "dataSetsHaveTitle": true,
+                "dataSets": [
+                  { "dataRange": "K50:K65" }
+                ],
+                "legendPosition": "none",
+                "labelRange": "I50:I65",
+                "title": {
+                  "text": "Top 15 Products per Category",
+                  "fontSize": 21,
+                  "bold": true,
+                  "color": "#01666B"
+                },
+                "stacked": false,
+                "aggregated": false,
+                "axesDesign": {
+                  "x": {
+                    "title": { "text": "Category revenue" }
+                  },
+                  "y": {
+                    "title": { "text": "Products" }
+                  }
+                },
+                "horizontal": true
+              }
+            },
+            "items": [
+              { "type": "chart", "chartId": "8aa46cf6-a1e2" },
+              { "type": "chart", "chartId": "4dd054d9-ad5b" },
+              { "type": "carouselDataView", "title": "Top 15" }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "7f8c8784-1ba3",
+          "col": 0,
+          "row": 65,
+          "offset": { "x": 0, "y": 21 },
+          "width": 543,
+          "height": 465,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "b694d876-bcd8": {
+                "type": "bar",
+                "dataSetsHaveTitle": true,
+                "dataSets": [
+                  { "dataRange": "D68:D83" }
+                ],
+                "legendPosition": "none",
+                "labelRange": "B68:B83",
+                "title": {
+                  "text": "Top 15 Tables per Revenue",
+                  "color": "#01666B",
+                  "fontSize": 21,
+                  "bold": true
+                },
+                "stacked": false,
+                "aggregated": false,
+                "axesDesign": {
+                  "x": {
+                    "title": { "text": "Revenue" }
+                  },
+                  "y": {
+                    "title": { "text": "Tables" }
+                  }
+                },
+                "horizontal": true
+              },
+              "b060bc0e-34ca": {
+                "type": "treemap",
+                "dataSetsHaveTitle": true,
+                "dataSets": [
+                  { "dataRange": "B68:B83" }
+                ],
+                "legendPosition": "none",
+                "labelRange": "D68:D83",
+                "title": {
+                  "text": "Top 15 Tables per Revenue",
+                  "color": "#01666B",
+                  "fontSize": 21,
+                  "bold": true
+                }
+              }
+            },
+            "items": [
+              { "type": "chart", "chartId": "b694d876-bcd8" },
+              { "type": "chart", "chartId": "b060bc0e-34ca" },
+              { "type": "carouselDataView", "title": "Top 15" }
+            ],
+            "fieldMatching": {}
+          }
         }
       ],
       "tables": [
         {
-          "range": "A49:E65",
+          "range": "B49:E65",
           "type": "static",
           "config": {
             "hasFilters": false,
@@ -680,7 +734,7 @@
           }
         },
         {
-          "range": "A67:E83",
+          "range": "B67:E83",
           "type": "static",
           "config": {
             "hasFilters": false,
@@ -722,6 +776,46 @@
             "bandedColumns": false,
             "automaticAutofill": true,
             "styleId": "None"
+          }
+        }
+      ],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "4733f3c4-c9b0",
+      "name": "PoS Orders by Table (copy) (Pivot #12)",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {},
+      "cols": {},
+      "merges": [],
+      "cells": { "A1": "=PIVOT(12,15,false,false,,false)" },
+      "styles": {},
+      "formats": {},
+      "borders": {},
+      "conditionalFormats": [],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [
+        {
+          "range": "A1",
+          "type": "dynamic",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 0,
+            "bandedRows": false,
+            "bandedColumns": false,
+            "styleId": "TableStyleMedium6",
+            "automaticAutofill": false
           }
         }
       ],
@@ -911,7 +1005,7 @@
         "J19": "=PIVOT.VALUE(3,\"Average amount per table:sum\",\"date_order:day_of_week\",F19)",
         "J20": "=PIVOT.VALUE(3,\"Average amount per table:sum\",\"date_order:day_of_week\",F20)"
       },
-      "styles": { "A1:B1": 7, "A12": 8, "F12": 8 },
+      "styles": { "A1:B1": 8, "A12": 9, "F12": 9 },
       "formats": {},
       "borders": {},
       "conditionalFormats": [],
@@ -969,9 +1063,14 @@
       "fontSize": 11,
       "align": "center"
     },
-    "6": { "textColor": "#01666b", "fontSize": 16, "bold": true },
-    "7": { "fillColor": "#01666B", "textColor": "#FFFFFF", "bold": true },
-    "8": { "bold": true, "textColor": "#01666B" }
+    "6": {
+      "textColor": "#434343",
+      "verticalAlign": "middle",
+      "fillColor": "#FFFFFF"
+    },
+    "7": { "textColor": "#01666b", "fontSize": 16, "bold": true },
+    "8": { "fillColor": "#01666B", "textColor": "#FFFFFF", "bold": true },
+    "9": { "bold": true, "textColor": "#01666B" }
   },
   "formats": {},
   "borders": {
@@ -1430,9 +1529,110 @@
         "6cb73c89-2591-456e-a7bc-8eb76e321b9e": { "chain": "product_tmpl_id", "type": "many2one" },
         "7674d2c1-e82b-4199-a991-6fae2268676b": { "chain": "employee_id", "type": "many2one" }
       }
+    },
+    "f35931bf-e762": {
+      "type": "ODOO",
+      "domain": [
+        ["config_id.module_pos_restaurant", "=", true]
+      ],
+      "context": {
+        "group_by": []
+      },
+      "measures": [
+        {
+          "id": "product_qty:sum",
+          "fieldName": "product_qty",
+          "aggregator": "sum"
+        },
+        {
+          "id": "price_total:sum",
+          "fieldName": "price_total",
+          "aggregator": "sum",
+          "format": ""
+        },
+        {
+          "id": "margin:sum",
+          "fieldName": "margin",
+          "aggregator": "sum",
+          "format": ""
+        }
+      ],
+      "model": "report.pos.order",
+      "columns": [],
+      "rows": [
+        { "fieldName": "product_id" }
+      ],
+      "name": "Point of Sale Analysis by Product (copy)",
+      "actionXmlId": "point_of_sale.action_report_pos_order_all",
+      "formulaId": "11",
+      "fieldMatching": {
+        "4b44fd69-5c22-4402-be22-636d52226a76": { "chain": "date", "type": "datetime" },
+        "31b1d5d4-6549-4dbe-9c8e-57d6e6e0889d": { "chain": "pos_categ_id", "type": "many2one" },
+        "6cb73c89-2591-456e-a7bc-8eb76e321b9e": { "chain": "product_tmpl_id", "type": "many2one" },
+        "7674d2c1-e82b-4199-a991-6fae2268676b": { "chain": "employee_id", "type": "many2one" }
+      },
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "margin:sum"
+      }
+    },
+    "c4cecc8e-4564": {
+      "type": "ODOO",
+      "domain": [
+        ["config_id.module_pos_restaurant", "=", true]
+      ],
+      "context": {
+        "params": {
+          "debug": 1,
+          "actionStack": [
+            { "displayName": "Orders", "action": "pos-orders", "view_type": "pivot" }
+          ],
+          "action": "pos-orders",
+          "view_type": "pivot",
+          "globalState": {
+            "useSampleModel": false,
+            "searchModel": "{\"nextGroupId\":14,\"nextGroupNumber\":15,\"nextId\":22,\"query\":[],\"searchItems\":{\"1\":{\"type\":\"field\",\"fieldName\":\"name\",\"fieldType\":\"char\",\"description\":\"Order Ref\",\"groupId\":1,\"id\":1},\"2\":{\"type\":\"field\",\"fieldName\":\"pos_reference\",\"fieldType\":\"char\",\"description\":\"Receipt Number\",\"groupId\":2,\"id\":2},\"3\":{\"type\":\"field\",\"fieldName\":\"date_order\",\"fieldType\":\"datetime\",\"description\":\"Date\",\"groupId\":3,\"id\":3},\"4\":{\"type\":\"field\",\"fieldName\":\"tracking_number\",\"fieldType\":\"char\",\"description\":\"Order Number\",\"groupId\":4,\"id\":4},\"5\":{\"type\":\"field\",\"fieldName\":\"cashier\",\"fieldType\":\"char\",\"description\":\"Cashier name\",\"groupId\":5,\"id\":5},\"6\":{\"type\":\"field\",\"fieldName\":\"partner_id\",\"fieldType\":\"many2one\",\"description\":\"Customer\",\"groupId\":6,\"id\":6},\"7\":{\"type\":\"field\",\"fieldName\":\"session_id\",\"fieldType\":\"many2one\",\"description\":\"Session\",\"groupId\":7,\"id\":7},\"8\":{\"type\":\"field\",\"fieldName\":\"config_id\",\"fieldType\":\"many2one\",\"description\":\"Point of Sale\",\"groupId\":8,\"id\":8},\"9\":{\"type\":\"field\",\"filterDomain\":\"[('lines.product_id', 'ilike', self)]\",\"fieldName\":\"lines\",\"fieldType\":\"one2many\",\"description\":\"Product\",\"groupId\":9,\"id\":9},\"10\":{\"type\":\"filter\",\"domain\":\"[('state', '=', 'invoiced')]\",\"groupNumber\":10,\"name\":\"invoiced\",\"description\":\"Invoiced\",\"groupId\":10,\"id\":10},\"11\":{\"type\":\"filter\",\"domain\":\"[('state', '=', 'done')]\",\"groupNumber\":10,\"name\":\"posted\",\"description\":\"Posted\",\"groupId\":10,\"id\":11},\"12\":{\"type\":\"filter\",\"domain\":\"[('state', '=', 'cancel')]\",\"groupNumber\":10,\"name\":\"cancelled\",\"description\":\"Cancelled\",\"groupId\":10,\"id\":12},\"13\":{\"type\":\"dateFilter\",\"fieldName\":\"date_order\",\"fieldType\":\"datetime\",\"defaultGeneratorIds\":[\"month\"],\"optionsParams\":{\"startYear\":-2,\"endYear\":0,\"startMonth\":-2,\"endMonth\":0,\"customOptions\":[]},\"domain\":\"[]\",\"groupNumber\":12,\"name\":\"order_date\",\"description\":\"Order Date\",\"groupId\":11,\"id\":13},\"14\":{\"type\":\"groupBy\",\"fieldName\":\"session_id\",\"fieldType\":\"many2one\",\"groupNumber\":14,\"name\":\"session\",\"description\":\"Session\",\"groupId\":12,\"id\":14},\"15\":{\"type\":\"groupBy\",\"fieldName\":\"cashier\",\"fieldType\":\"char\",\"groupNumber\":14,\"name\":\"by_cashier\",\"description\":\"Cashier\",\"groupId\":12,\"id\":15},\"16\":{\"type\":\"groupBy\",\"fieldName\":\"config_id\",\"fieldType\":\"many2one\",\"groupNumber\":14,\"name\":\"config_id\",\"description\":\"Point of Sale\",\"groupId\":12,\"id\":16},\"17\":{\"type\":\"groupBy\",\"fieldName\":\"partner_id\",\"fieldType\":\"many2one\",\"groupNumber\":14,\"name\":\"customer\",\"description\":\"Customer\",\"groupId\":12,\"id\":17},\"18\":{\"type\":\"groupBy\",\"fieldName\":\"state\",\"fieldType\":\"selection\",\"groupNumber\":14,\"name\":\"status\",\"description\":\"Status\",\"groupId\":12,\"id\":18},\"19\":{\"type\":\"dateGroupBy\",\"fieldName\":\"date_order\",\"fieldType\":\"datetime\",\"defaultIntervalId\":\"month\",\"groupNumber\":14,\"name\":\"order_month\",\"description\":\"Order Date\",\"groupId\":12,\"id\":19},\"20\":{\"type\":\"comparison\",\"comparisonOptionId\":\"previous_period\",\"description\":\"Order Date: Previous Period\",\"dateFilterId\":13,\"groupId\":13,\"id\":20},\"21\":{\"type\":\"comparison\",\"comparisonOptionId\":\"previous_year\",\"description\":\"Order Date: Previous Year\",\"dateFilterId\":13,\"groupId\":13,\"id\":21}},\"searchPanelInfo\":{\"className\":\"\",\"fold\":false,\"viewTypes\":[\"kanban\",\"list\"],\"loaded\":false,\"shouldReload\":true},\"sections\":[]}"
+          }
+        }
+      },
+      "measures": [
+        { "id": "__count", "fieldName": "__count" },
+        {
+          "id": "amount_total:sum",
+          "fieldName": "amount_total",
+          "aggregator": "sum",
+          "format": ""
+        },
+        {
+          "id": "tip_amount:sum",
+          "fieldName": "tip_amount",
+          "aggregator": "sum",
+          "format": ""
+        }
+      ],
+      "model": "pos.order",
+      "columns": [],
+      "rows": [
+        { "fieldName": "table_id" }
+      ],
+      "name": "PoS Orders by Table (copy)",
+      "actionXmlId": "point_of_sale.action_pos_pos_form",
+      "formulaId": "12",
+      "fieldMatching": {
+        "4b44fd69-5c22-4402-be22-636d52226a76": { "chain": "date_order", "type": "datetime" },
+        "31b1d5d4-6549-4dbe-9c8e-57d6e6e0889d": { "chain": "lines.product_id.pos_categ_ids", "type": "many2many" },
+        "6cb73c89-2591-456e-a7bc-8eb76e321b9e": { "chain": "lines.product_id.product_tmpl_id", "type": "many2one" },
+        "7674d2c1-e82b-4199-a991-6fae2268676b": { "chain": "employee_id", "type": "many2one" }
+      },
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "__count"
+      }
     }
   },
-  "pivotNextId": 11,
+  "pivotNextId": 13,
   "customTableStyles": {},
   "globalFilters": [
     {
