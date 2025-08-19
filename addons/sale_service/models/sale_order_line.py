@@ -39,6 +39,19 @@ class SaleOrderLine(models.Model):
         for so_line in self:
             so_line.is_service = so_line.product_id.type == 'service'
 
+    @api.depends('is_service')
+    @api.depends_context('formatted_display_name')
+    def _compute_display_name(self):
+        sol = self.browse()
+        if self.env.context.get('formatted_display_name'):
+            for line in self:
+                if line.is_service:
+                    name = f"{line.order_id.name} - {line.product_id.display_name}"
+                    formatted_price = format_amount(self.env, line.product_id.lst_price, line.currency_id)
+                    line.display_name = f"{name} --({line.order_partner_id.name})-- --({formatted_price})--"
+                    sol |= line
+        super(SaleOrderLine, self - sol)._compute_display_name()
+
     def _auto_init(self):
         """
         Create column to stop ORM from computing it himself (too slow)
