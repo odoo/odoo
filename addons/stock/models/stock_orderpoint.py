@@ -262,11 +262,7 @@ class StockWarehouseOrderpoint(models.Model):
         now = self.env.cr.now()
         if force_to_max:
             for orderpoint in self:
-                orderpoint.qty_to_order = orderpoint.product_max_qty - orderpoint.qty_forecast
-                replenishment_multiple = orderpoint.replenishment_uom_id or orderpoint._get_replenishment_multiple_alternative(orderpoint.qty_to_order)
-                remainder = replenishment_multiple and orderpoint.qty_to_order % replenishment_multiple.factor or 0.0
-                if not orderpoint.product_uom.is_zero(remainder):
-                    orderpoint.qty_to_order += orderpoint.replenishment_uom_id - remainder
+                orderpoint.qty_to_order = orderpoint._get_multiple_rounded_qty(orderpoint.product_max_qty - orderpoint.qty_forecast)
         try:
             self._procure_orderpoint_confirm(company_id=self.env.company)
         except UserError as e:
@@ -378,12 +374,7 @@ class StockWarehouseOrderpoint(models.Model):
             product_context = self._get_product_context(visibility_days=visibility_days)
             qty_forecast_with_visibility = self.product_id.with_context(product_context).read(['virtual_available'])[0]['virtual_available'] + qty_in_progress
             qty_to_order = max(self.product_min_qty, self.product_max_qty) - qty_forecast_with_visibility
-            replenishment_multiple = self.replenishment_uom_id or self._get_replenishment_multiple_alternative(qty_to_order)
-            qty_multiple = replenishment_multiple._compute_quantity(1, self.product_uom) if replenishment_multiple else 0.0
-            remainder = (qty_multiple > 0.0 and qty_to_order % qty_multiple) or 0.0
-            if (float_compare(remainder, 0.0, precision_rounding=rounding) > 0
-                    and float_compare(qty_multiple - remainder, 0.0, precision_rounding=rounding) > 0):
-                qty_to_order += qty_multiple - remainder
+            qty_to_order = self._get_multiple_rounded_qty(qty_to_order)
         return qty_to_order
 
     def _set_default_route_id(self):
@@ -720,6 +711,15 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _get_orderpoint_locations(self):
         return self.env['stock.location'].search([('replenish_location', '=', True)])
+
+    def _get_multiple_rounded_qty(self, qty_to_order):
+        replenishment_multiple = self.replenishment_uom_id or self._get_replenishment_multiple_alternative(qty_to_order)
+        if replenishment_multiple and replenishment_multiple != self.product_id.uom_id:
+            # Replace the UP by DOWN if we don't want to order more quantity than product_max_qty
+            qty_to_order = self.product_id.uom_id._compute_quantity(qty_to_order, replenishment_multiple)
+            qty_to_order = fields.Float.round(qty_to_order, precision_digits=0, rounding_method="UP")
+            qty_to_order = replenishment_multiple._compute_quantity(qty_to_order, self.product_id.uom_id)
+        return qty_to_order
 
     @api.model
     def get_visibility_days(self):
