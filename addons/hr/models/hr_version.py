@@ -619,3 +619,16 @@ class HrVersion(models.Model):
                 'version_id': self.id,
             },
         }
+
+    def action_open_version_form_view(self):
+        self.ensure_one()
+        view_id = self.env.ref('hr.hr_contract_template_form_view').id
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'hr.version',
+            'res_id': self.id,
+            'views': [[view_id, "form"]],
+            'target': 'current',
+            'context': self.env.context
+        }
