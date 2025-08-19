@@ -144,7 +144,10 @@
         <div data-js="WebsiteFormFieldRequired" data-selector=".s_website_form .s_website_form_model_required">
             <!-- Disable the delete option of model required fields and show
             alert and tooltip on delete buttons -->
-            <we-alert class="mt-2"></we-alert>
+        </div>
+
+        <div data-js="WebsiteFormModelExist" data-selector=".s_website_form .s_website_form_field">
+            <!-- Show alert if model does not exist in DB -->
         </div>
 
         <div data-js='WebsiteFieldEditor' data-selector=".s_website_form_field"

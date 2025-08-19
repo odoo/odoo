@@ -51,6 +51,8 @@ class website_form_model(models.Model):
     @api.model
     def get_authorized_fields(self, model_name, property_origins):
         """ Return the fields of the given model name as a mapping like method `fields_get`. """
+        if model_name not in self.env:
+            return {}
         model = self.env[model_name]
         fields_get = model.fields_get()
 
@@ -155,7 +157,7 @@ class website_form_model_fields(models.Model):
         :return: nothing of import
         """
         # postgres does *not* like ``in [EMPTY TUPLE]`` queries
-        if not fields:
+        if not fields or model not in self.env:
             return False
 
         # only allow users who can change the website structure

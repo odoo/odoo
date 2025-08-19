@@ -102,6 +102,7 @@ import wUtils from '@website/js/utils';
         start: function () {
             // Reset the form first, as it is still filled when coming back
             // after a redirect.
+            this.validateFormModel();
             this.resetForm();
 
             // Prepare visibility data and update field visibilities
@@ -489,6 +490,39 @@ import wUtils from '@website/js/utils';
                     'error',
                     error.status && error.status === 413 ? _t("Uploaded file is too large.") : "",
                 );
+            });
+        },
+
+        validateFormModel: async function () {
+            if (!await user.hasGroup("website.group_website_designer")) {
+                return;
+            }
+
+            let exists = false;
+            const modelName = this.el.dataset.model_name;
+
+            try {
+                exists = await this.orm.searchCount('ir.model', [['model', '=', modelName]]) > 0;
+            } catch {
+                exists = false;
+            }
+
+            this.__started.then(() => {
+                const container = this.el.closest('.s_title_form');
+                if (!container) {
+                    return;
+                }
+
+                const oldBanner = container.querySelector('.o_website_form_model_not_found_banner');
+                if (!exists && !oldBanner) {
+                    const newNode = renderToElement('website.website_form_model_not_found_banner', {
+                        modelName: modelName,
+                    });
+                    container.insertBefore(newNode, container.firstChild);
+                }
+                else if (exists && oldBanner) {
+                    oldBanner.remove();
+                }
             });
         },
 
