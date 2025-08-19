@@ -28,11 +28,11 @@
                         domain="[('activity_user_id', '=', uid)]"/>
                     <separator invisible="1"/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
-                        domain="[('activity_date_deadline', '&lt;', 'today')]"/>
+                        domain="[('my_activity_date_deadline', '&lt;', 'today')]"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
-                        domain="[('activity_date_deadline', '=', 'today')]"/>
+                        domain="[('my_activity_date_deadline', '=', 'today')]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_date_deadline', '&gt;', 'today')]"/>
+                        domain="[('my_activity_date_deadline', '&gt;', 'today')]"/>
                     <separator/>
                     <filter name="my_team" string="My Team" domain="[('parent_id.user_id', '=', uid)]"/>
                     <filter name="my_department" string="My Department" domain="[('member_of_department', '=', True)]"/>

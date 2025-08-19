@@ -179,12 +179,12 @@
                         domain="[('activity_user_id', '=', uid)]"/>
                     <separator invisible="1"/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
-                        domain="[('activity_date_deadline', '&lt;', 'today')]"
+                        domain="[('my_activity_date_deadline', '&lt;', 'today')]"
                         help="Show all records whose next activity date is past"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
-                        domain="[('activity_date_deadline', '=', 'today')]"/>
+                        domain="[('my_activity_date_deadline', '=', 'today')]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_date_deadline', '&gt;', 'today')]"/>
+                        domain="[('my_activity_date_deadline', '&gt;', 'today')]"/>
                     <group>
                         <filter string="Purchase Representative" name="representative" domain="[]" context="{'group_by': 'user_id'}"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
