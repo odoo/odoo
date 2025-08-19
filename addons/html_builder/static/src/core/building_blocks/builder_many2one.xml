@@ -10,11 +10,23 @@
             domain="props.domain"
             selected="domState.selected ? [domState.selected] : []"
             select="select.bind(this)"
+            preview="hasPreview ? preview.bind(this) : undefined"
+            revert.bind="revert"
             create="props.createAction ? create.bind(this) : undefined"
 
             message="domState.selected?.display_name || props.defaultMessage"
         />
-        <button t-if="domState.selected and props.allowUnselect" type="button" class="btn btn-primary fa fa-fw fa-times" style="min-width: min-content;" t-on-click="() => this.select()"/>
+        <button
+            t-if="domState.selected and props.allowUnselect"
+            type="button"
+            class="btn btn-primary fa fa-fw fa-times"
+            style="min-width: min-content;"
+            t-on-click="() => this.select()"
+            t-on-pointerenter="hasPreview ? () => this.preview() : undefined"
+            t-on-pointerleave="revert"
+            t-on-focusin="hasPreview ? () => this.preview() : undefined"
+            t-on-focusout="revert"
+        />
     </BuilderComponent>
 </t>
 
