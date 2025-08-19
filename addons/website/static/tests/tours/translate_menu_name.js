@@ -3,6 +3,8 @@ import {
     clickOnSave,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
+import { stepUtils } from "@web_tour/tour_utils";
+import { translationIsReady } from "@web/core/l10n/translation";
 
 registerWebsitePreviewTour('translate_menu_name', {
     url: '/pa_GB',
@@ -30,4 +32,19 @@ registerWebsitePreviewTour('translate_menu_name', {
         run: "editor value pa-GB",
     },
     ...clickOnSave(),
+    {
+        content: "Back to preview mode",
+        trigger: ".o_edit_website_container button",
+    }, {
+        trigger: "body:not(.o_builder_open)",
+        noPrepend: true,
+    },
+    stepUtils.waitIframeIsReady(),
+    {
+        content: "Await translationIsReady",
+        trigger: "body",
+        run: async () => {
+            await translationIsReady;
+        },
+    },
 ]);
