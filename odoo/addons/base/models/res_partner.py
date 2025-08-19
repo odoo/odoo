@@ -533,6 +533,12 @@ class ResPartner(models.Model):
             if company != company.partner_id.company_id:
                 raise ValidationError(_('The company assigned to this partner does not match the company this partner represents.'))
 
+    @api.constrains('company_id', 'parent_id')
+    def _check_child_contact_company(self):
+        for rec in self:
+            if rec.parent_id.id and rec.parent_id.company_id.id and rec.company_id != rec.parent_id.company_id:
+                raise ValidationError(_("Contacts must inherit the company of their parent."))
+
     def copy_data(self, default=None):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)

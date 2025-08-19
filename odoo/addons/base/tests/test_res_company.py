@@ -54,3 +54,32 @@ class TestCompany(TransactionCase):
     def test_create_branch_with_default_parent_id(self):
         branch = self.env['res.company'].with_context(default_parent_id=self.env.company.id).create({'name': 'Branch Company'})
         self.assertFalse(branch.partner_id.parent_id)
+
+    def test_update_partner_company_id(self):
+        # Create a company (parent) partner
+        parent_company_partner = self.env['res.partner'].create({'name': 'Test Partner 1'})
+        # Create a company object linked to the parent partner
+        parent_company = self.env['res.company'].create({
+            'name': 'Test Company',
+            'partner_id': parent_company_partner.id,
+        })
+
+        # Link the partner to the company
+        parent_company_partner.company_id = parent_company.id
+
+        # Create a child contact with a parent (inherits company)
+        child_partner = self.env['res.partner'].create({
+            'name': 'Child Contact',
+            'company_id': parent_company.id,
+            'parent_id': parent_company_partner.id,
+        })
+
+        # Try to update the child's company_id to something else
+        another_company = self.env['res.company'].create({
+            'name': 'Another Company',
+        })
+
+        with self.assertRaises(ValidationError):
+            child_partner.write({
+                'company_id': another_company.id,
+            })
