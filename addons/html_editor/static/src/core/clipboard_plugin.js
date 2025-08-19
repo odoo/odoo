@@ -1,13 +1,7 @@
 import { isTextNode, isParagraphRelatedElement } from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
-import {
-    removeClass,
-    removeStyle,
-    unwrapContents,
-    wrapInlinesInBlocks,
-    splitTextNode,
-} from "../utils/dom";
+import { unwrapContents, wrapInlinesInBlocks, splitTextNode } from "../utils/dom";
 import { childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
 import {
@@ -121,15 +115,6 @@ export class ClipboardPlugin extends Plugin {
         this.addDomListener(this.editable, "paste", this.onPaste);
         this.addDomListener(this.editable, "dragstart", this.onDragStart);
         this.addDomListener(this.editable, "drop", this.onDrop);
-
-        this.systemClasses = this.getResource("system_classes");
-        this.systemAttributes = this.getResource("system_attributes");
-        this.systemStyleProperties = this.getResource("system_style_properties");
-        this.systemPropertiesSelector = [
-            ...this.systemClasses.map((className) => `.${className}`),
-            ...this.systemAttributes.map((attr) => `[${attr}]`),
-            ...this.systemStyleProperties.map((prop) => `[style*="${prop}"]`),
-        ].join(",");
     }
 
     onCut(ev) {
@@ -161,7 +146,7 @@ export class ClipboardPlugin extends Plugin {
         for (const processor of this.getResource("clipboard_content_processors")) {
             clonedContents = processor(clonedContents, selection) || clonedContents;
         }
-        this.removeSystemProperties(clonedContents);
+        this.dependencies.dom.removeSystemProperties(clonedContents);
         const dataHtmlElement = this.document.createElement("data");
         dataHtmlElement.append(clonedContents);
         prependOriginToImages(dataHtmlElement, window.location.origin);
@@ -668,20 +653,6 @@ export class ClipboardPlugin extends Plugin {
         fragment.append(...nodes);
         return fragment;
     }
-
-    /**
-     * Remove system-specific classes, attributes, and style properties from a
-     * fragment.
-     *
-     * @param {DocumentFragment} fragment
-     */
-    removeSystemProperties(fragment) {
-        for (const element of fragment.querySelectorAll(this.systemPropertiesSelector)) {
-            removeClass(element, ...this.systemClasses);
-            this.systemAttributes.forEach((attr) => element.removeAttribute(attr));
-            removeStyle(element, ...this.systemStyleProperties);
-        }
-    }
 }
 
 /**
@@ -708,7 +679,6 @@ function getImageUrl(file) {
         };
     });
 }
-
 
 /**
  * Add origin to relative img src.
