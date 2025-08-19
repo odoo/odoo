@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import json
 import logging
-import requests
 
 from werkzeug.exceptions import Forbidden
 
@@ -87,25 +87,26 @@ class MicrosoftOutlookController(http.Controller):
         return record
 
     def _check_email_and_redirect_to_outlook_record(self, access_token, expiration, refresh_token, record):
-        # Verify the token information (that the email set on the
-        # server is the email used to login on Outlook)
         if (record._name == 'ir.mail_server' and (record.owner_user_id or not request.env.user.has_group('base.group_system'))):
-            response = requests.get(
-                "https://outlook.office.com/api/v2.0/me",
-                headers={"Authorization": f"Bearer {access_token}"},
-                timeout=5,
-            )
-            if not response.ok:
-                _logger.error('Microsoft Outlook: Could not verify the token information: %s.', response.text)
-                raise Forbidden()
+            # Verify the token information (that the email set on the
+            # server is the email used to login on Outlook)
+            # We can not directly get the id_token from the response, even if we verify the signature
+            # because it comes from the user's browser redirection, and he could give an id_token of one account
+            # and the refresh_token of a different account.
+            # So we ask a new token to the outlook API to check the email address
+            # Because we received the JWT token from the API (or from IAP, with a direct HTTP request),
+            # we don't even need to check the signature
+            refresh_token, access_token, id_token, expiration = record._fetch_outlook_access_token(refresh_token)
+            id_token_data = id_token.split(".")[1]
+            id_token_data += '=' * (-len(id_token_data) % 4)  # `=` padding can be missing
+            email = json.loads(base64.b64decode(id_token_data)).get('email')
 
-            response = response.json()
-            if response.get('EmailAddress') != record[record._email_field]:
-                _logger.error('Microsoft Outlook: Invalid email address: %r != %s.', response, record[record._email_field])
+            if email != record[record._email_field]:
+                _logger.error('Microsoft Outlook: Invalid email address: %r != %s.', email, record[record._email_field])
                 return request.render('microsoft_outlook.microsoft_outlook_oauth_error', {
                     'error': _(
                         "Oops, you're creating an authorization to send from %(email_login)s but your address is %(email_server)s. Make sure your addresses match!",
-                        email_login=response.get('EmailAddress'),
+                        email_login=email,
                         email_server=record[record._email_field],
                     ),
                     'redirect_url': self._get_redirect_url(record),
