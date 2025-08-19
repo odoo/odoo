@@ -1071,3 +1071,44 @@ class TestUnbuild(TestMrpCommon):
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p1, self.stock_location), 7)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p1, self.stock_location, owner_id=consigned_partner), 4)
+
+    def test_unbuild_non_storable_product(self):
+        """Check the data of the unbuild of a non-storable product.
+        """
+        self.product_4.type = 'consu'
+        self.product_3.type = 'consu'
+
+        self.env['mrp.bom.byproduct'].create({
+            'bom_id': self.bom_1.id,
+            'product_id': self.product_3.id,
+            'product_qty': 1,
+            'product_uom_id': self.product_3.uom_id.id
+        })
+
+        # Create mo
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_4
+        mo_form.bom_id = self.bom_1
+        mo_form.product_uom_id = self.product_4.uom_id
+        mo_form.product_qty = 4.0
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        # Produce the final product
+        mo_form = Form(mo)
+        mo_form.qty_producing = 4.0
+        mo_form.save()
+
+        mo.button_mark_done()
+
+        unbuild_wizard = Form(self.env['mrp.unbuild'])
+        unbuild_wizard.mo_id = mo
+        unbuild = unbuild_wizard.save()
+        unbuild.action_unbuild()
+
+        self.assertRecordValues(unbuild.produce_line_ids, [
+                    {'product_id': self.product_4.id, 'quantity': 4, 'state': 'done'},   # Stick
+                    {'product_id': self.product_3.id, 'quantity': 12, 'state': 'done'},  # Stone
+                    {'product_id': self.product_2.id, 'quantity': 24, 'state': 'done'},  # Wood
+                    {'product_id': self.product_1.id, 'quantity': 48, 'state': 'done'},  # Courage
+                ])
