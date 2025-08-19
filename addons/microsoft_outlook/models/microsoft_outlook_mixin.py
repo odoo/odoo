@@ -53,7 +53,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
                 'redirect_uri': url_join(base_url, '/microsoft_outlook/confirm'),
                 'response_mode': 'query',
                 # offline_access is needed to have the refresh_token
-                'scope': f'offline_access https://outlook.office.com/User.read {self._OUTLOOK_SCOPE}',
+                'scope': f'openid email offline_access https://outlook.office.com/User.read {self._OUTLOOK_SCOPE}',
                 'state': json.dumps({
                     'model': record._name,
                     'id': record.id,
@@ -131,7 +131,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         """Request the refresh token and the initial access token from the authorization code.
 
         :return:
-            refresh_token, access_token, access_token_expiration
+            refresh_token, access_token, id_token, access_token_expiration
         """
         response = self._fetch_outlook_token('authorization_code', code=authorization_code)
         return (
@@ -156,6 +156,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         return (
             response['refresh_token'],
             response['access_token'],
+            response['id_token'],
             int(time.time()) + int(response['expires_in']),
         )
 
@@ -177,7 +178,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
             data={
                 'client_id': microsoft_outlook_client_id,
                 'client_secret': microsoft_outlook_client_secret,
-                'scope': f'offline_access https://outlook.office.com/User.read {self._OUTLOOK_SCOPE}',
+                'scope': f'openid email offline_access https://outlook.office.com/User.read {self._OUTLOOK_SCOPE}',
                 'redirect_uri': url_join(base_url, '/microsoft_outlook/confirm'),
                 'grant_type': grant_type,
                 **values,
@@ -248,6 +249,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
             (
                 self.microsoft_outlook_refresh_token,
                 self.microsoft_outlook_access_token,
+                _id_token,
                 self.microsoft_outlook_access_token_expiration,
             ) = self._fetch_outlook_access_token(self.microsoft_outlook_refresh_token)
             _logger.info(
