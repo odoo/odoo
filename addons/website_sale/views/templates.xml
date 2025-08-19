@@ -2809,11 +2809,11 @@
          description_sale. Called in `website_sale.cart_lines`. -->
     <template id="cart_line_description_following_lines" name="Shopping Cart Line Description Following Lines">
         <t t-set="description_lines" t-value="line.get_description_following_lines()"/>
-        <div t-if="description_lines" t-attf-class="text-muted small">
+        <div t-if="description_lines" class="text-muted small">
             <t t-foreach="description_lines" t-as="name_line">
                 <span
                     t-if="name_line"
-                    t-attf-class="o_description_line o_line_clamp #{not name_line_last and 'mb-1'}"
+                    t-attf-class="d-block #{not name_line_last and 'mb-1'}"
                     t-out="name_line"
                 />
             </t>
@@ -3063,7 +3063,7 @@
                 <t t-foreach="description_lines" t-as="description_line">
                     <span
                         t-if="description_line"
-                        class="o_description_line o_line_clamp"
+                        class="d-block"
                         t-out="description_line"
                     />
                 </t>
@@ -3294,7 +3294,7 @@
                                     />
                                 </a>
                                 <div
-                                    class="o_description_line o_line_clamp mb-2 small text-muted"
+                                    class="mb-2 small text-muted"
                                     t-field="product.description_sale"
                                 />
                             </div>
