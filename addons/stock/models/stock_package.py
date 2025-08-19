@@ -116,8 +116,9 @@ class StockPackage(models.Model):
 
         display_uom = self.env.user.has_group('uom.group_uom')
         for package in self:
-            package_content = package.contained_quant_ids.mapped(lambda q: (q.quantity, q.product_uom_id.name, q.product_id.display_name))
-            package.content_description = format_list(self.env, [format_content(qty, uom_name, product_name, display_uom) for (qty, uom_name, product_name) in package_content])
+            package_content = package.contained_quant_ids.grouped(lambda q: (q.product_uom_id, q.product_id))
+            package_content = [(uom.name, product.display_name, sum(quants.mapped('quantity'))) for ((uom, product), quants) in package_content.items()]
+            package.content_description = format_list(self.env, [format_content(qty, uom_name, product_name, display_uom) for (uom_name, product_name, qty) in package_content])
 
     def _compute_json_popover(self):
         for package in self:
