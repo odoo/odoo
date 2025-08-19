@@ -12,6 +12,7 @@ import { rpc } from "@web/core/network/rpc";
 import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
+import { FONT_SIZE_CLASSES } from "@html_editor/utils/formatting";
 
 /**
  * @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection
@@ -422,11 +423,55 @@ export class LinkPlugin extends Plugin {
                 }
             } else if (url) {
                 // prevent the link creation if the url field was empty
-
-                // create a new link with current selection as a content
-                if ((selectionTextContent && selectionTextContent === label) || isImage) {
+                const fontSizeWrapper = closestElement(
+                    selection.commonAncestorContainer,
+                    (el) =>
+                        el.tagName === "SPAN" &&
+                        (FONT_SIZE_CLASSES.some((cls) => el.classList.contains(cls)) ||
+                            el.style?.fontSize)
+                );
+                const sameTextOrImage =
+                    (selectionTextContent && selectionTextContent === label) || isImage;
+                if (sameTextOrImage || label) {
+                    // Create a new link with current selection as a content.
                     const link = this.createLink(url);
-                    const content = this.dependencies.selection.extractContent(selection);
+                    let content;
+
+                    // Split selection to include font-size <span>
+                    // inside <a> to preserve styling.
+                    if (fontSizeWrapper) {
+                        this.dependencies.split.splitSelection();
+                        const selectedNodes = this.dependencies.selection.getSelectedNodes();
+                        content = this.dependencies.split.splitAroundUntil(
+                            selectedNodes,
+                            fontSizeWrapper
+                        );
+                        const [anchorNode, anchorOffset] = leftPos(content);
+                        // Force selection to correct spot after split to prevent wrong link placement.
+                        this.dependencies.selection.setSelection(
+                            { anchorNode, anchorOffset },
+                            { normalize: false }
+                        );
+                        if (!sameTextOrImage) {
+                            // If label changed, clear existing content and set new text.
+                            content.textContent = label;
+                        }
+                    } else if (sameTextOrImage) {
+                        content = this.dependencies.selection.extractContent(selection);
+                        selection = this.dependencies.selection.getEditableSelection();
+                        const anchorClosestElement = closestElement(selection.anchorNode);
+                        if (commonAncestor !== anchorClosestElement && !fontSizeWrapper) {
+                            // We force the cursor after the anchorClosestElement
+                            // To be sure the link is inserted in the correct place in the dom.
+                            const [anchorNode, anchorOffset] = rightPos(anchorClosestElement);
+                            this.dependencies.selection.setSelection(
+                                { anchorNode, anchorOffset },
+                                { normalize: false }
+                            );
+                        }
+                    } else {
+                        content = this.document.createTextNode(label);
+                    }
                     link.append(content);
                     if (classes) {
                         link.className = classes;
@@ -434,25 +479,7 @@ export class LinkPlugin extends Plugin {
                     link.normalize();
                     this.linkInDocument = link;
                     cursorsToRestore = null;
-                    selection = this.dependencies.selection.getEditableSelection();
-                    const anchorClosestElement = closestElement(selection.anchorNode);
-                    if (commonAncestor !== anchorClosestElement) {
-                        // We force the cursor after the anchorClosestElement
-                        // To be sure the link is inserted in the correct place in the dom.
-                        const [anchorNode, anchorOffset] = rightPos(anchorClosestElement);
-                        this.dependencies.selection.setSelection(
-                            { anchorNode, anchorOffset },
-                            { normalize: false }
-                        );
-                    }
-                    this.dependencies.dom.insert(link);
-                } else if (label) {
-                    const link = this.createLink(url, label);
-                    if (classes) {
-                        link.className = classes;
-                    }
-                    this.linkInDocument = link;
-                    cursorsToRestore = null;
+
                     this.dependencies.dom.insert(link);
                 }
             }
