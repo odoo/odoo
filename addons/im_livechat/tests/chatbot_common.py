@@ -159,7 +159,7 @@ class ChatbotCase(common.HttpCase):
                 "/chatbot/step/validate_email", {"channel_id": discuss_channel.id}
             )
         if chatbot_script_answer:
-            message = self.env["mail.message"].browse(data["mail.message"][0]["id"])
+            message = self.env["mail.message"].browse(data["message_id"])
             self.make_jsonrpc_request(
                 "/chatbot/answer/save",
                 {

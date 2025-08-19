@@ -481,10 +481,13 @@ export class MailThread extends models.ServerModel {
                         notifications.push([
                             partner,
                             "mail.message/inbox",
-                            new mailDataHelpers.Store(
-                                MailMessage.browse(message.id),
-                                makeKwArgs({ for_current_user: true, add_followers: true })
-                            ).get_result(),
+                            {
+                                message_id: message.id,
+                                store_data: new mailDataHelpers.Store(
+                                    MailMessage.browse(message.id),
+                                    makeKwArgs({ for_current_user: true, add_followers: true })
+                                ).get_result(),
+                            },
                         ]);
                     }
                 }

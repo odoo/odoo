@@ -230,7 +230,10 @@ class ThreadController(http.Controller):
         message = thread.sudo().message_post(
             **self._prepare_message_data(post_data, thread=thread, from_create=True, **kwargs),
         )
-        return store.add(message).get_result()
+        return {
+            "store_data": store.add(message).get_result(),
+            "message_id": message.id,
+        }
 
     @http.route("/mail/message/update_content", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context

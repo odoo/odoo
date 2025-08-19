@@ -3316,12 +3316,19 @@ class MailThread(models.AbstractModel):
                 ]
             )
             for user in users:
-                Store(bus_channel=user).add(
+                store = Store(bus_channel=user).add(
                     message.with_user(user).with_context(allowed_company_ids=[]),
                     msg_vals=msg_vals,
                     add_followers=True,
                     followers=followers,
-                ).bus_send("mail.message/inbox")
+                )
+                user._bus_send(
+                    "mail.message/inbox",
+                    {
+                        "message_id": message.id,
+                        "store_data": store.get_result(),
+                    }
+                )
 
     def _notify_thread_by_email(self, message, recipients_data, *, msg_vals=False,
                                 mail_auto_delete=True,  # mail.mail

@@ -133,7 +133,10 @@ async function mail_attachment_upload(request) {
         DiscussVoiceMetadata.create({ attachment_id: attachmentId });
     }
     return {
-        data: new mailDataHelpers.Store(IrAttachment.browse(attachmentId)).get_result(),
+        data: {
+            attachment_id: attachmentId,
+            store_data: new mailDataHelpers.Store(IrAttachment.browse(attachmentId)).get_result(),
+        },
     };
 }
 
@@ -175,7 +178,10 @@ async function load_attachments(request) {
         .sort()
         .slice(0, limit)
         .map(({ id }) => id);
-    return new mailDataHelpers.Store(IrAttachment.browse(attachmentIds)).get_result();
+    return {
+        count: attachmentIds.length,
+        store_data: new mailDataHelpers.Store(IrAttachment.browse(attachmentIds)).get_result(),
+    };
 }
 
 registerRoute("/mail/rtc/channel/join_call", channel_call_join);
@@ -340,7 +346,10 @@ async function discuss_channel_sub_channel_fetch(request) {
         }
     }
     store.add(MailMessage.browse(lastMessageIds));
-    return store.get_result();
+    return {
+        store_data: store.get_result(),
+        sub_channel_ids: subChannels,
+    };
 }
 
 registerRoute("/discuss/settings/mute", discuss_settings_mute);
@@ -668,10 +677,13 @@ export async function mail_message_post(request) {
             model: thread_model,
         });
     }
-    return new mailDataHelpers.Store(
-        MailMessage.browse(messageIds[0]),
-        makeKwArgs({ for_current_user: true })
-    ).get_result();
+    return {
+        message_id: messageIds[0],
+        store_data: new mailDataHelpers.Store(
+            MailMessage.browse(messageIds[0]),
+            makeKwArgs({ for_current_user: true })
+        ).get_result(),
+    };
 }
 
 registerRoute("/mail/message/reaction", mail_message_reaction);

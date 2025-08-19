@@ -95,7 +95,7 @@ class TestMessageController(HttpCaseWithUserDemo):
         self.assertEqual(res2.status_code, 200)
         data1 = res2.json()["result"]
         self.assertEqual(
-            data1["ir.attachment"],
+            data1["store_data"]["ir.attachment"],
             [
                 {
                     "checksum": False,
@@ -121,7 +121,7 @@ class TestMessageController(HttpCaseWithUserDemo):
             data=json.dumps(
                 {
                     "params": {
-                        "message_id": data1["mail.message"][0]["id"],
+                        "message_id": data1["message_id"],
                         "update_data": {
                             "body": "test",
                             "attachment_ids": [self.attachments[1].id],
@@ -144,7 +144,7 @@ class TestMessageController(HttpCaseWithUserDemo):
             data=json.dumps(
                 {
                     "params": {
-                        "message_id": data1["mail.message"][0]["id"],
+                        "message_id": data1["message_id"],
                         "update_data": {
                             "body": "test",
                             "attachment_ids": [self.attachments[1].id],

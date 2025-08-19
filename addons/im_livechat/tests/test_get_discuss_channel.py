@@ -301,7 +301,14 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             data = self.make_jsonrpc_request(
                 "/im_livechat/get_session", {"channel_id": self.livechat_channel.id}
             )
-            discuss_channels.append(data["store_data"]["discuss.channel"][0])
+            discuss_channels.append(
+                next(
+                    filter(
+                        lambda c: c["id"] == data["channel_id"],
+                        data["store_data"]["discuss.channel"],
+                    )
+                )
+            )
             # send a message to mark this channel as 'active'
             self.env["discuss.channel"].browse(data["channel_id"]).message_post(body="cc")
         return discuss_channels

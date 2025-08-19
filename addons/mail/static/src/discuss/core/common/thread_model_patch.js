@@ -322,8 +322,8 @@ const threadPatch = {
                 channel_id: this.id,
                 limit,
             });
-            const { "ir.attachment": attachments = [] } = this.store.insert(data);
-            if (attachments.length < limit) {
+            this.store.insert(data.store_data);
+            if (data.count < limit) {
                 this.areAttachmentsLoaded = true;
             }
         } finally {

@@ -148,7 +148,12 @@ class MailControllerAttachmentCommon(MailControllerCommon):
                 files={"ufile": file},
             )
             res.raise_for_status()
-            return json.loads(res.content.decode("utf-8"))["data"]["ir.attachment"][0]["id"]
+            data = json.loads(res.content.decode("utf-8"))["data"]
+            self.assertIn(
+                data["attachment_id"],
+                [a["id"] for a in data["store_data"]["ir.attachment"]]
+            )
+            return data["attachment_id"]
 
     def _delete_attachment(self, attachment, token):
         with mute_logger("odoo.http"):

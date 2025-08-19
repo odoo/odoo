@@ -35,8 +35,11 @@ class ResPartner(models.Model):
         are returned (not already members, and in accordance to the channel configuration).
         """
         store = Store()
-        count = self._search_for_channel_invite(store, search_term, channel_id, limit)
-        return {"count": count, "data": store.get_result()}
+        channel_invites = self._search_for_channel_invite(store, search_term, channel_id, limit)
+        return {
+            **channel_invites,
+            "store_data": store.get_result(),
+        }
 
     @api.readonly
     @api.model
@@ -60,8 +63,12 @@ class ResPartner(models.Model):
         query = self._search(domain, limit=limit)
         # bypass lack of support for case insensitive order in search()
         query.order = SQL('LOWER(%s), "res_partner"."id"', self._field_to_sql(self._table, "name"))
-        self.env["res.partner"].browse(query)._search_for_channel_invite_to_store(store, channel)
-        return self.env["res.partner"].search_count(domain)
+        selectable_partners = self.env["res.partner"].browse(query)
+        selectable_partners._search_for_channel_invite_to_store(store, channel)
+        return {
+            "count": self.env["res.partner"].search_count(domain),
+            "partner_ids": selectable_partners.ids,
+        }
 
     def _search_for_channel_invite_to_store(self, store: Store, channel):
         store.add(self)

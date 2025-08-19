@@ -121,7 +121,10 @@ export class ChannelInvitation extends Component {
         if (!results) {
             return;
         }
-        const { "res.partner": selectablePartners = [] } = this.store.insert(results.data);
+        this.store.insert(results.store_data);
+        const selectablePartners = results.partner_ids.map((id) =>
+            this.store["res.partner"].get(id)
+        );
         this.selectablePartners = this.suggestionService.sortPartnerSuggestions(
             selectablePartners,
             this.searchStr,

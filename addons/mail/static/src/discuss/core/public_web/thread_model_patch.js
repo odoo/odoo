@@ -84,12 +84,12 @@ const threadPatch = {
      * @param {string} [param0.name]
      */
     async createSubChannel({ initialMessage, name } = {}) {
-        const { data, sub_channel } = await rpc("/discuss/channel/sub_channel/create", {
+        const { store_data, sub_channel } = await rpc("/discuss/channel/sub_channel/create", {
             parent_channel_id: this.parent_channel_id?.id || this.id,
             from_message_id: initialMessage?.id,
             name,
         });
-        this.store.insert(data);
+        this.store.insert(store_data);
         this.store.Thread.get({ model: "discuss.channel", id: sub_channel }).open({ focus: true });
     },
     /**
@@ -102,13 +102,17 @@ const threadPatch = {
             return;
         }
         const limit = 30;
-        const data = await rpc("/discuss/channel/sub_channel/fetch", {
+        const { store_data, sub_channel_ids } = await rpc("/discuss/channel/sub_channel/fetch", {
             before: this.lastSubChannelLoaded?.id,
             limit,
             parent_channel_id: this.id,
             search_term: searchTerm,
         });
-        const { Thread: threads = [] } = this.store.insert(data);
+        this.store.insert(store_data);
+        const threads = sub_channel_ids.map((subChannelId) =>
+            this.store.Thread.get({ model: "discuss.channel", id: subChannelId })
+        );
+
         if (searchTerm) {
             // Ignore holes in the sub-channel list that may arise when
             // searching for a specific term.

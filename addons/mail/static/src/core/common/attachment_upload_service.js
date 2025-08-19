@@ -85,9 +85,10 @@ export class AttachmentUploadService {
     }
 
     _processLoaded(thread, composer, { data }, tmpId, def) {
-        const { "ir.attachment": attachments } = this.store.insert(data);
+        const { store_data, attachment_id } = data;
+        this.store.insert(store_data);
         /** @type {import("models").Attachment} */
-        const attachment = attachments[0];
+        const attachment = this.store["ir.attachment"].get(attachment_id);
         if (composer) {
             const index = composer.attachments.findIndex(({ id }) => id === tmpId);
             if (index >= 0) {

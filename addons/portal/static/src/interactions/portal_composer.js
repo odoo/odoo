@@ -122,7 +122,10 @@ export class PortalComposer extends Interaction {
                             }
                             this.waitFor(post("/mail/attachment/upload", data))
                                 .then((res) => {
-                                    const attachment = res.data["ir.attachment"][0];
+                                    const attachmentId = res.data["attachment_id"];
+                                    const attachment = res.data["store_data"]["ir.attachment"].find(
+                                        (att) => att.id === attachmentId
+                                    );
                                     attachment.state = "pending";
                                     this.attachments.push(attachment);
                                     this.updateAttachments();
@@ -207,8 +210,9 @@ export class PortalComposer extends Interaction {
      */
     async chatterPostMessage(route) {
         const result = await this.waitFor(rpc(route, this.prepareMessageData()));
-        Component.env.bus.trigger("reload_chatter_content", result);
-        return result;
+        const res = result.store_data || result;
+        Component.env.bus.trigger("reload_chatter_content", res);
+        return res;
     }
 }
 
