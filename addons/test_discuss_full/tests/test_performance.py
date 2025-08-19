@@ -848,6 +848,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_livechat_1:
             return {
+                "ai_agent_id": False,
                 "channel_type": "livechat",
                 "country_id": self.env.ref("base.in").id,
                 "create_uid": self.users[1].id,
@@ -872,10 +873,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "requested_by_operator": False,
                 "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
-                'livechat_with_ai_agent': False,
             }
         if channel == self.channel_livechat_2:
             return {
+                "ai_agent_id": False,
                 "channel_type": "livechat",
                 "country_id": self.env.ref("base.be").id,
                 "create_uid": self.env.ref("base.public_user").id,
@@ -900,7 +901,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "requested_by_operator": False,
                 "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
-                'livechat_with_ai_agent': False,
             }
         return {}
 

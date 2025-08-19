@@ -2012,10 +2012,10 @@ class MailCommon(MailCase):
         """ Remove store channel data dependant on other modules if they are not not installed.
         Not written in a modular way to avoid complex override for a simple test tool.
         """
+        ai_livechat_installed = self.env['ir.module.module']._get('ai_livechat').state == 'installed'
         for data in channels_data:
-            # if 'ai_livechat' module is not installed
-            if "livechat_with_ai_agent" not in self.env["discuss.channel"]._fields:
-                data.pop("livechat_with_ai_agent", None)
+            if "ai.agent" not in self.env or data.get("channel_type") == "livechat" and not ai_livechat_installed:
+                data.pop("ai_agent_id", None)
         return list(channels_data)
 
     def _filter_messages_fields(self, /, *messages_data):
