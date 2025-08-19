@@ -597,7 +597,6 @@ function removePresetGradient(element) {
     } else {
         delete parts.gradient;
         const withoutGradient = backgroundImagePartsToCss(parts);
-        element.style["background-image"] =
-            styleWithoutGradient.backgroundImage === "none" ? "" : withoutGradient;
+        element.style["background-image"] = withoutGradient === "none" ? "" : withoutGradient;
     }
 }
