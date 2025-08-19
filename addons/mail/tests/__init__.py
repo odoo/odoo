@@ -15,6 +15,7 @@ from . import test_mail_presence
 from . import test_mail_render
 from . import test_mail_template
 from . import test_mail_tools
+from . import test_notification
 from . import test_res_partner
 from . import test_res_role
 from . import test_res_users

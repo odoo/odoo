@@ -84,5 +84,14 @@
             <field name="code">model._cleanup_expired_mutes()</field>
             <field name="state">code</field>
         </record>
+
+        <record id="ir_cron_missed_message_cron" model="ir.cron">
+            <field name="name">discuss: send missed message notification</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="model_id" ref="model_discuss_channel"/>
+            <field name="code">model._missed_message_cron()</field>
+            <field name="state">code</field>
+        </record>
     </data>
 </odoo>

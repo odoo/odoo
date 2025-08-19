@@ -1278,14 +1278,17 @@ class MailMessage(models.Model):
     # TOOLS
     # ------------------------------------------------------
 
+    def _is_empty(self):
+        self.ensure_one()
+        return ((not self.body or tools.is_html_empty(self.body)) and
+                (not self.subtype_id or not self.subtype_id.description) and
+                not self.attachment_ids and
+                not (self._has_field_access(self._fields['tracking_value_ids'], 'read') and self.tracking_value_ids))
+
     def _filter_empty(self):
         """ Return subset of "void" messages """
         return self.filtered(
-            lambda msg:
-                (not msg.body or tools.is_html_empty(msg.body)) and
-                (not msg.subtype_id or not msg.subtype_id.description) and
-                not msg.attachment_ids and
-                not (msg._has_field_access(msg._fields['tracking_value_ids'], 'read') and msg.tracking_value_ids)
+            lambda msg: msg._is_empty()
         )
 
     @api.model

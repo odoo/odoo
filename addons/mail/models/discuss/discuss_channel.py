@@ -13,7 +13,7 @@ from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_TYPE
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import format_list, get_lang, html_escape
+from odoo.tools import format_list, get_lang, html_escape, email_normalize
 from odoo.tools.misc import OrderedSet
 from odoo.tools.sql import SQL
 
@@ -1549,3 +1549,49 @@ class DiscussChannel(models.Model):
         else:
             msg = _("You are alone in this channel.")
         self.env.user._bus_send_transient_message(self, msg)
+
+    def _missed_message_cron(self):
+        unread_notifications = self.env["mail.notification"].search([
+            ("is_read", "=", False),
+            ("notification_type", "=", "inbox"),
+            ("mail_message_id.model", "=", "discuss.channel"),
+        ])
+        message_by_channel = {}
+        odoobot = self.env.ref('base.partner_root')
+        for unread in unread_notifications:
+            offline_threshold = unread.res_partner_id.offline_since + timedelta(hours=12)
+            if not unread.mail_message_id._is_empty() and fields.Datetime.now() > offline_threshold:
+                message = unread.mail_message_id
+                channel_id = self.env["discuss.channel"].browse(message.res_id)
+                channel_messages = message_by_channel.get(channel_id, {
+                    "email": email_normalize(unread.res_partner_id.email),
+                    "messages": self.env["mail.message"]
+                })
+                channel_messages["messages"] += message
+                message_by_channel.update({
+                    channel_id: channel_messages
+                })
+        mail_to_create = []
+        for channel, emailAndMessages in message_by_channel.items():
+            email = emailAndMessages["email"]
+            messages = emailAndMessages["messages"]
+            body = self.env["ir.qweb"]._render(
+                "mail.discuss_channel_missed_message",
+                {
+                    "channel": channel,
+                    "messages": messages
+                },
+                minimal_qcontext=True,
+            )
+            mail_to_create.append(
+                {
+                    "subject": self.env._("WOLOLO"),
+                    "email_from": odoobot.email_formatted,
+                    "references": f"channel_invite_{self.id}",
+                    "email_to": email,
+                    "body_html": body,
+                },
+            )
+        if mail_to_create:
+            self.env["mail.mail"].sudo().create(mail_to_create).send()
+        # return message_by_channel
