@@ -12,8 +12,6 @@ class ResCompany(models.Model):
     account_stock_journal_id = fields.Many2one('account.journal', string='Stock Journal', check_company=True)
 
     account_stock_valuation_id = fields.Many2one('account.account', string='Stock Valuation Account', check_company=True)
-    # COGS account is the default expense account for storable products
-    account_cogs_id = fields.Many2one('account.account', string='COGS Account', check_company=True)
 
     account_production_wip_account_id = fields.Many2one('account.account', string='Production WIP Account', check_company=True)
     account_production_wip_overhead_account_id = fields.Many2one('account.account', string='Production WIP Overhead Account', check_company=True)
@@ -214,14 +212,19 @@ class ResCompany(models.Model):
 
         accounts = inventory_data.keys() | accounting_data.keys()
         for account in accounts:
-            if not account.account_stock_variation_id:
+            account_variation = False
+            if account.account_stock_variation_id:
+                account_variation = account.account_stock_variation_id
+            if not account_variation and account.account_stock_expense_id:
+                account_variation = account.account_stock_expense_id
+            if not account_variation:
                 continue
             balance = inventory_data.get(account, 0) - accounting_data.get(account, 0)
             balance -= extra_balance.get(account.id, 0)
 
             amls_vals = self._prepare_inventory_aml_vals(
                 account,
-                account.account_stock_variation_id,
+                account_variation,
                 balance,
                 _('Closing: Stock Variation Global for company [%(company)s]', company=self.display_name),
             )
@@ -263,8 +266,8 @@ class ResCompany(models.Model):
             ]).mapped('balance'))
 
             amls_vals = self._prepare_inventory_aml_vals(
-                variation_acc,
                 expense_acc,
+                variation_acc,
                 balance_over_period - existing_balance,
                 _('Closing: Stock Variation Over Period'),
             )
@@ -298,4 +301,3 @@ class ResCompany(models.Model):
             self.env['ir.default'].set('product.category', 'property_cost_method', company.cost_method, company_id=company.id)
             self.env['ir.default'].set('product.category', 'property_stock_journal', company.account_stock_journal_id.id, company_id=company.id)
             self.env['ir.default'].set('product.category', 'property_stock_valuation_account_id', company.account_stock_valuation_id.id, company_id=company.id)
-            self.env['ir.default'].set('product.category', 'property_cogs_account_id', company.account_cogs_id.id, company_id=company.id)
