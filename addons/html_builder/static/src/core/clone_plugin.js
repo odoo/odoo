@@ -14,7 +14,7 @@ export function isClonable(el) {
 
 export class ClonePlugin extends Plugin {
     static id = "clone";
-    static dependencies = ["history", "builderOptions"];
+    static dependencies = ["history", "builderOptions", "dom"];
     static shared = ["cloneElement"];
 
     resources = {
@@ -40,8 +40,6 @@ export class ClonePlugin extends Plugin {
 
     setup() {
         this.overlayTarget = null;
-        this.ignoredClasses = new Set(this.getResource("system_classes"));
-        this.ignoredAttrs = new Set(this.getResource("system_attributes"));
     }
 
     getActiveOverlayButtons(target) {
@@ -83,7 +81,7 @@ export class ClonePlugin extends Plugin {
     ) {
         this.dispatchTo("on_will_clone_handlers", { originalEl: el });
         const cloneEl = el.cloneNode(true);
-        this.cleanElement(cloneEl); // TODO check that
+        this.dependencies.dom.removeSystemProperties(cloneEl); // TODO check that
         el.insertAdjacentElement(position, cloneEl);
 
         // Update the containers if required.
@@ -101,19 +99,6 @@ export class ClonePlugin extends Plugin {
         }
 
         return cloneEl;
-    }
-
-    cleanElement(toCleanEl) {
-        this.ignoredClasses.forEach((ignoredClass) => {
-            [toCleanEl, ...toCleanEl.querySelectorAll(`.${ignoredClass}`)].forEach((el) =>
-                el.classList.remove(ignoredClass)
-            );
-        });
-        this.ignoredAttrs.forEach((ignoredAttr) => {
-            [toCleanEl, ...toCleanEl.querySelectorAll(`[${ignoredAttr}]`)].forEach((el) =>
-                el.removeAttribute(ignoredAttr)
-            );
-        });
     }
 }
 
