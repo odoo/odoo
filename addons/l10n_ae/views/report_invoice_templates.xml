@@ -104,14 +104,6 @@
             </td>
         </xpath>
 
-        <xpath expr="//td[@name='td_subtotal']/span" position="attributes">
-            <attribute name="t-if">o.company_id.country_id.code != 'AE' or o.company_price_include == 'tax_excluded'</attribute>
-        </xpath>
-        
-        <xpath expr="//td[@name='td_subtotal']/span" position="after">
-            <span t-if="o.company_id.country_id.code == 'AE' and o.company_price_include == 'tax_included'" class="text-nowrap" t-field="line.price_total">31.05</span>
-        </xpath>
-
         <xpath expr="//th[@name='th_subtotal']" position="after">
             <th class="text-end" t-if="o.company_id.country_id.code == 'AE' and o.currency_id != o.company_currency_id">
                 <span>Amount (<span t-field="o.company_currency_id"/>)</span>
