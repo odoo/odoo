@@ -62,13 +62,17 @@ class TestMessageValues(MailCommon):
         self.assertFalse(message.sudo().tracking_value_ids)
 
         # Reset body case
-        record._message_update_content(message, Markup('<p><br /></p>'), attachment_ids=message.attachment_ids.ids)
+        record._message_update_content(
+            message,
+            body=Markup("<p><br /></p>"),
+            attachment_ids=message.attachment_ids.ids,
+        )
         self.assertTrue(is_html_empty(message.body))
         self.assertFalse(message.sudo()._filter_empty(), 'Still having attachments')
 
         # Subtype content
         note_subtype.sudo().write({'description': 'Very important discussions'})
-        record._message_update_content(message, '', [])
+        record._message_update_content(message, body="", attachment_ids=[])
         self.assertFalse(message.attachment_ids)
         self.assertEqual(message.notified_partner_ids, self.partner_admin)
         self.assertEqual(message.starred_partner_ids, self.partner_admin)
@@ -77,7 +81,7 @@ class TestMessageValues(MailCommon):
         # Completely emptied now
         note_subtype.sudo().write({'description': ''})
         self.assertEqual(message.sudo()._filter_empty(), message)
-        record._message_update_content(message, '', [])
+        record._message_update_content(message, body="", attachment_ids=[])
         self.assertEqual(message.notified_partner_ids, self.partner_admin)  # message still notified (albeit content is removed)
         self.assertEqual(message.starred_partner_ids, self.partner_admin)  # starred messages stay (albeit content is removed)
 
@@ -90,7 +94,7 @@ class TestMessageValues(MailCommon):
         self.assertFalse(tracking_message.subtype_id.description)
         self.assertFalse(tracking_message.sudo()._filter_empty(), 'Has tracking values')
         with self.assertRaises(UserError, msg='Tracking values prevent from updating content'):
-            record._message_update_content(tracking_message, '', [])
+            record._message_update_content(tracking_message, body="", attachment_ids=[])
 
     @mute_logger('odoo.models.unlink')
     def test_mail_message_to_store_access(self):

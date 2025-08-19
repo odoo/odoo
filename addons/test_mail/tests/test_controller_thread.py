@@ -102,8 +102,8 @@ class TestMessageController(MailControllerThreadCommon):
                         "thread_id": self.test_public_record.id,
                         "post_data": {
                             "body": "test",
+                            "partner_emails": ["john2@test.be"],
                         },
-                        "partner_emails": ["john2@test.be"],
                     },
                 }
             ),
@@ -125,8 +125,8 @@ class TestMessageController(MailControllerThreadCommon):
                         "thread_id": self.test_public_record.id,
                         "post_data": {
                             "body": "test",
+                            "partner_emails": ["john2@test.be"],
                         },
-                        "partner_emails": ["john2@test.be"],
                     },
                 }
             ),

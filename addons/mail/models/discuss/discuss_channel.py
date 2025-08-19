@@ -744,7 +744,8 @@ class DiscussChannel(models.Model):
             email_from = tools.email_normalize(msg_vals.get('email_from') or message.email_from)
             self.env['res.partner'].flush_model(['active', 'email', 'partner_share'])
             self.env['res.users'].flush_model(['notification_type', 'partner_id'])
-            sql_query = """
+            sql_query = SQL(
+                """
                 SELECT DISTINCT ON (partner.id) partner.id,
                        partner.email_normalized,
                        partner.lang,
@@ -756,12 +757,14 @@ class DiscussChannel(models.Model):
                   FROM res_partner partner
              LEFT JOIN res_users users on partner.id = users.partner_id
                  WHERE partner.active IS TRUE
-                       AND partner.email != %s
-                       AND partner.id = ANY(%s) AND partner.id != ANY(%s)"""
-            self.env.cr.execute(
-                sql_query,
-                (email_from or '', list(pids), [author_id] if author_id else [], )
+                       AND partner.email != %(email)s
+                       AND partner.id IN %(partner_ids)s AND partner.id != %(author_id)s
+                """,
+                email=email_from or "",
+                partner_ids=tuple(pids),
+                author_id=author_id or 0,
             )
+            self.env.cr.execute(sql_query)
             for partner_id, email_normalized, lang, name, partner_share, uid, notif, ushare in self.env.cr.fetchall():
                 # ocn_client: will add partners to recipient recipient_data. more ocn notifications. We neeed to filter them maybe
                 recipients_data.append({
@@ -903,19 +906,35 @@ class DiscussChannel(models.Model):
              ('res_id', '=', self.id)
             ]).id
 
-    def _get_allowed_message_post_params(self):
-        return super()._get_allowed_message_post_params() | {"special_mentions", "parent_id"}
+    def _get_allowed_message_params(self):
+        return super()._get_allowed_message_params() | {"special_mentions", "parent_id"}
 
-    def message_post(self, *, message_type='notification', **kwargs):
-        if (not self.env.user or self.env.user._is_public()) and self.is_member:
-            # sudo: discuss.channel - guests don't have access for creating mail.message
-            self = self.sudo()
+    def _get_allowed_message_partner_ids(self, partner_ids):
+        """Ensure only partners having access to the channel can be mentioned."""
+        partners = self.env["res.partner"].browse(partner_ids)
+        if self.channel_type == "channel":
+            if self.group_public_id:
+                partners = partners.filtered(
+                    lambda p: p.user_ids.all_group_ids & self.group_public_id,
+                )
+        else:
+            partners = (
+                self.env["discuss.channel.member"]
+                .search_fetch(
+                    [("channel_id", "=", self.id), ("partner_id", "in", partner_ids)],
+                    ["partner_id"],
+                )
+                .partner_id
+            )
+        return partners.ids
+
+    def message_post(self, *, message_type="notification", partner_ids=None, **kwargs):
         # sudo: discuss.channel - write to discuss.channel is not accessible for most users
         self.sudo().last_interest_dt = fields.Datetime.now()
         if "everyone" in kwargs.pop("special_mentions", []):
-            kwargs["partner_ids"] = list(
-                set(kwargs["partner_ids"] + self.channel_member_ids.partner_id.ids)
-            )
+            partner_ids = list(OrderedSet(partner_ids + self.channel_member_ids.partner_id.ids))
+        if partner_ids:
+            kwargs["partner_ids"] = self._get_allowed_message_partner_ids(partner_ids)
         # mail_post_autofollow=False is necessary to prevent adding followers
         # when using mentions in channels. Followers should not be added to
         # channels, and especially not automatically (because channel membership
@@ -923,16 +942,22 @@ class DiscussChannel(models.Model):
         # The current client code might be setting the key to True on sending
         # message but it is only useful when targeting customers in chatter.
         # This value should simply be set to False in channels no matter what.
-        return super(DiscussChannel, self.with_context(mail_post_autofollow_author_skip=True, mail_post_autofollow=False)).message_post(message_type=message_type, **kwargs)
+        return super(
+            DiscussChannel,
+            self.with_context(mail_post_autofollow_author_skip=True, mail_post_autofollow=False),
+        ).message_post(message_type=message_type, **kwargs)
 
     def _message_post_after_hook(self, message, msg_vals):
         # Automatically set the message posted by the current user as seen for themselves.
-        if (current_channel_member := self.env["discuss.channel.member"].search([
-            ("channel_id", "=", self.id), ("is_self", "=", True)
-        ])) and message.is_current_user_or_guest_author:
-            current_channel_member._set_last_seen_message(message, notify=False)
-            current_channel_member._set_new_message_separator(message.id + 1)
+        if self.self_member_id and message.is_current_user_or_guest_author:
+            self.self_member_id._set_last_seen_message(message, notify=False)
+            self.self_member_id._set_new_message_separator(message.id + 1)
         return super()._message_post_after_hook(message, msg_vals)
+
+    def _message_update_content(self, message, /, *, partner_ids=None, **kwargs):
+        if partner_ids:
+            kwargs["partner_ids"] = self._get_allowed_message_partner_ids(partner_ids)
+        super()._message_update_content(message, **kwargs)
 
     def _check_can_update_message_content(self, message):
         # Don't call super in this override as we want to ignore the mail.thread behavior completely

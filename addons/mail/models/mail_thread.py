@@ -4712,7 +4712,7 @@ class MailThread(models.AbstractModel):
         msg_not_comment.sudo().write(msg_vals)
         return True
 
-    def _message_update_content(self, message, body, attachment_ids=None, partner_ids=None,
+    def _message_update_content(self, message, /, *, body, attachment_ids=None, partner_ids=None,
                                 strict=True, **kwargs):
         """ Update message content. Currently does not support attachments
         specific code (see ``_process_attachments_for_post``), to be added
@@ -4876,20 +4876,12 @@ class MailThread(models.AbstractModel):
     # CONTROLLERS SECURITY HELPERS
     # ------------------------------------------------------
 
-    def _get_allowed_message_post_params(self):
-        return {
-            "attachment_ids",
-            "body",
-            "email_add_signature",
-            "message_type",
-            "partner_ids",
-            "role_ids",
-            "subtype_xmlid",
-        }
-
-    @api.model
-    def _get_allowed_message_update_params(self):
-        return {"attachment_ids", "body", "partner_ids"}
+    def _get_allowed_message_params(self):
+        """Set of parameters that are forwarded without control to sudo().message_post() and
+        sudo()._message_update_content(), which means these parameters should be either inoffensive
+        or safely handled by these methods. Parameters requiring special processing need to be
+        manually handled in _prepare_message_data."""
+        return {"email_add_signature", "message_type", "subtype_xmlid"}
 
     @api.model
     def _get_allowed_access_params(self):

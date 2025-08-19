@@ -52,16 +52,20 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
         ])
 
     def test_mention_suggestions(self):
-        suggestion_ids = {
-            partner.get("id")
-            for partner in self.task_portal.with_user(self.user_portal)
-            .get_mention_suggestions(search="")
-            .get("res.partner")
-        }
+        data = self.task_portal.with_user(self.user_portal).get_mention_suggestions(search="")
+        suggestion_ids = {partner.get("id") for partner in data.get("res.partner")}
         self.assertEqual(
             suggestion_ids,
             {self.user_projectuser.partner_id.id, self.user_portal.partner_id.id},
             "Portal user as a project collaborator should have access to mention suggestions",
+        )
+        self.assertEqual(
+            data["res.partner"][0]["mention_token"],
+            self.user_projectuser.partner_id._get_mention_token(),
+        )
+        self.assertEqual(
+            data["res.partner"][1]["mention_token"],
+            self.user_portal.partner_id._get_mention_token(),
         )
         # remove portal user from the project collaborators
         self.project_portal.collaborator_ids.filtered(

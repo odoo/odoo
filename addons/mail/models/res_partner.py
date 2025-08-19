@@ -244,6 +244,18 @@ class ResPartner(models.Model):
         self.ensure_one()
         return limited_field_access_token(self, "im_status", scope="mail.presence")
 
+    def _get_mention_token(self):
+        """Return a scoped limited access token that indicates the current partner
+        can be mentioned in messages.
+
+        :rtype: str
+        """
+        self.ensure_one()
+        return limited_field_access_token(self, "id", scope="mail.message_mention")
+
+    def _get_store_mention_fields(self):
+        return [Store.Attr("mention_token", lambda p: p._get_mention_token())]
+
     def _field_store_repr(self, field_name):
         if field_name == "avatar_128":
             return [
@@ -279,7 +291,7 @@ class ResPartner(models.Model):
         """
         domain = self._get_mention_suggestions_domain(search)
         partners = self._search_mention_suggestions(domain, limit)
-        store = Store().add(partners)
+        store = Store().add(partners, extra_fields=partners._get_store_mention_fields())
         try:
             roles = self.env["res.role"].search([("name", "ilike", search)], limit=8)
             store.add(roles, "name")

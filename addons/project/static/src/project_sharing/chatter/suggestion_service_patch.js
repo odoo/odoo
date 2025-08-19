@@ -18,11 +18,4 @@ patch(SuggestionService.prototype, {
         }
         return super.fetchPartnersRoles(...arguments);
     },
-
-    getPartnerSuggestions(thread) {
-        if (thread.model === "project.task") {
-            return thread.limitedMentions;
-        }
-        return super.getPartnerSuggestions(...arguments);
-    },
 });
