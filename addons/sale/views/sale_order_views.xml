@@ -869,6 +869,7 @@
                                         confirm="This will update all taxes based on the currently selected fiscal position."
                                         invisible="not show_update_fpos or state in ['sale', 'cancel']"/>
                                 </div>
+                                <field name="preferred_payment_method_line_id"/>
                                 <field name="partner_invoice_id" groups="!account.group_delivery_invoice_address" invisible="1"/>
                                 <field name="journal_id" groups="base.group_no_one" readonly="invoice_count != 0 and state == 'sale'"/>
                                 <field name="invoice_status" invisible="state != 'sale'" groups="base.group_no_one"/>
@@ -938,6 +939,7 @@
                     <filter name="salesperson" string="Salesperson" context="{'group_by': 'user_id'}"/>
                     <filter name="customer" string="Customer" context="{'group_by': 'partner_id'}"/>
                     <filter name="order_month" string="Order Date" context="{'group_by': 'date_order'}"/>
+                    <filter name="preferred_payment_method_line_groupby" string="Payment Method" context="{'group_by': 'preferred_payment_method_line_id'}"/>
                 </group>
             </search>
         </field>
