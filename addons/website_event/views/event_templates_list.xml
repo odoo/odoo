@@ -60,13 +60,13 @@
                             class="badge bg-primary ms-1"/>
                     </button>
                     <div class="dropdown-menu">
-                        <span t-att-data-post="keep_event_url(tags=slugify_tags((search_tags - searched_category_tags).ids), prevent_redirect=True)"
+                        <span t-att-data-post="keep_event_url(tags=slugify_tags((search_tags - searched_category_tags).ids))"
                             t-attf-class="post_link cursor-pointer dropdown-item d-flex align-items-center justify-content-between #{'active' if not searched_category_tags else ''}">
                             All
                         </span>
                         <t t-foreach="category.tag_ids" t-as="tag">
                             <span t-if="tag.color"
-                                t-att-data-post="keep_event_url(tags=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), prevent_redirect=True)"
+                                t-att-data-post="keep_event_url(tags=slugify_tags(search_tags.ids, toggle_tag_id=tag.id))"
                                 t-attf-class="post_link cursor-pointer dropdown-item d-flex align-items-center justify-content-between #{'active' if tag in search_tags else ''}">
                                 <t t-out="tag.name"/>
                             </span>
@@ -78,6 +78,7 @@
                 <t t-call="website.website_search_box_input">
                     <t t-set="_form_classes" t-valuef="flex-grow-1"/>
                     <t t-set="_classes" t-valuef="o_wevent_event_searchbar_form"/>
+                    <t t-set="form_method" t-value="'post'"/>
                     <t t-set="search_type">events</t>
                     <t t-set="action" t-value="'/event/'"/>
                     <t t-set="display_description" t-valuef="true"/>
@@ -121,7 +122,7 @@
                                 <ul class="list-group list-group-flush">
                                     <t t-if="category.is_published and category.tag_ids and any(tag.color for tag in category.tag_ids)" t-foreach="category.tag_ids" t-as="tag">
                                         <li t-if="tag.color" class="list-group-item border-0 px-0">
-                                            <span t-att-data-post="keep_event_url(tags=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), prevent_redirect=True)"
+                                            <span t-att-data-post="keep_event_url(tags=slugify_tags(search_tags.ids, toggle_tag_id=tag.id))"
                                                 class="post_link text-reset cursor-pointer" t-att-title="tag.name">
                                                 <div class="form-check">
                                                     <input class="form-check-input pe-none" type="checkbox" t-attf-name="#{tag.color}" t-att-checked="tag in search_tags"/>
@@ -145,7 +146,7 @@
         <t t-foreach="search_tags" t-as="tag">
             <span t-attf-class="o_filter_tag d-inline-flex align-items-baseline rounded ps-2 #{'o_color_%s' % tag.color if tag.color else ''}">
                 <t t-out="tag.display_name"/>
-                <span t-att-data-post="keep_event_url(tags=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), prevent_redirect=True)"
+                <span t-att-data-post="keep_event_url(tags=slugify_tags(search_tags.ids, toggle_tag_id=tag.id))"
                     class="post_link cursor-pointer btn border-0 py-1 px-2 text-reset opacity-75-hover">
                     <i class="oi oi-close" role="img"/>
                 </span>

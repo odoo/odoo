@@ -55,6 +55,7 @@
             <div class="o_wevent_search d-flex w-100 w-lg-auto">
                 <t t-call="website.website_search_box_input">
                     <t t-set="_classes" t-valuef="o_wevent_event_track_searchbar_form flex-grow-1"/>
+                    <t t-set="form_method" t-value="'post'"/>
                     <t t-set="search_type">track</t>
                     <t t-set="action" t-value="'/event/%s/track' % (slug(event))"/>
                     <t t-set="display_detail" t-valuef="false"/>
@@ -124,7 +125,7 @@
                                             <span t-if="tag.color"
                                                 t-att-data-post="'/event/%s/track?%s' % (
                                                     slug(event),
-                                                    keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids), prevent_redirect=True)
+                                                    keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))
                                                 )"
                                                 t-attf-class="post_link cursot-pointer d-flex align-items-center justify-content-between text-reset #{'active' if tag in search_tags else ''}">
                                                 <t t-out="tag.name"/>
@@ -157,7 +158,7 @@
                     <t t-foreach="tag_category.tag_ids" t-as="tag">
                         <span t-att-data-post="'/event/%s/track?%s' % (
                                 slug(event),
-                                keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids), prevent_redirect=True)
+                                keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))
                             )"
                             t-if="tag.color"
                             t-attf-class="post_link cursor-pointer dropdown-item d-flex align-items-center justify-content-between #{'active' if tag in search_tags else ''}">
@@ -439,7 +440,7 @@
             <span class="align-items-baseline border d-inline-flex rounded">
                 <i class="fa fa-tag mx-2 text-muted"/>
                 <t t-out="tag.display_name"/>
-                <span t-att-data-post="'/event/%s/track?%s' % (slug(event), keep_query('*', tags=str((search_tags - tag).ids), prevent_redirect=True))"
+                <span t-att-data-post="'/event/%s/track?%s' % (slug(event), keep_query('*', tags=str((search_tags - tag).ids)))"
                     class="post_link cursor-pointer btn border-0 py-1">
                     &#215;
                 </span>
@@ -456,14 +457,14 @@
     <span t-if="search_tags"
         t-att-data-post="'/event/%s/track?%s'% (
             slug(event),
-            keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids), prevent_redirect=True)
+            keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))
         )"
         t-att-class="'post_link cursor-pointer badge rounded-pill text-decoration-none %s' % ('text-bg-primary opacity-75-hover' if tag in search_tags else 'o_badge o_badge_clickable o_color_0')"
         t-out="tag.name"/>
     <span t-else=""
         t-att-data-post="'/event/%s/track?%s'% (
             slug(event),
-            keep_query('*', tags=str(tag.ids), prevent_redirect=True)
+            keep_query('*', tags=str(tag.ids))
         )"
         t-att-class="'post_link cursor-pointer badge rounded-pill text-decoration-none o_badge o_badge_clickable o_color_%s' % (tag.color)"
         t-out="tag.name"/>
