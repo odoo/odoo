@@ -30,18 +30,6 @@ export class ModalRegistration extends Interaction {
 
     async willStart() {
         await this.recaptcha.loadLibs();
-        this.recaptchaToken = await this.recaptcha.getToken("website_event_registration");
-
-        if (this.recaptchaToken.error) {
-            this.services.notification.add(this.recaptchaToken.error, {
-                type: "danger",
-                sticky: true,
-            });
-            this.enableRegistrationFormSubmit();
-
-            this.el.remove();
-            this.services["public.interactions"].stopInteractions(this.el);
-        }
     }
 
     start() {
@@ -92,14 +80,30 @@ export class ModalRegistration extends Interaction {
     /**
      * @param {SubmitEvent} ev
      */
-    onSubmit(ev) {
+    async onSubmit(ev) {
+        ev.preventDefault();
+
+        const form = ev.currentTarget;
+        this.recaptchaToken = await this.recaptcha.getToken("website_event_registration");
+        if (this.recaptchaToken.error) {
+            this.services.notification.add(this.recaptchaToken.error, {
+                type: "danger",
+                sticky: true,
+            });
+            this.enableRegistrationFormSubmit();
+
+            this.el.remove();
+            this.services["public.interactions"].stopInteractions(this.el);
+            return;
+        }
         if (this.recaptchaToken.token) {
             const tokenInput = document.createElement("input");
             tokenInput.setAttribute("name", "recaptcha_token_response");
             tokenInput.setAttribute("type", "hidden");
             tokenInput.setAttribute("value", this.recaptchaToken.token);
-            this.insert(tokenInput, ev.currentTarget);
+            this.insert(tokenInput, form);
         }
+        form.submit();
     }
 }
 
