@@ -35,7 +35,14 @@
         <function model="account.chart.template" name="try_loading">
             <value eval="[]"/>
             <value>generic_coa</value>
-            <value model="res.company" search="[('partner_id.country_id.code', 'in', ['US', False])]"/>
+            <value model="res.company" search="[('partner_id.country_id.code', '=', False)]"/>
+            <value name="install_demo" eval="True"/>
+        </function>
+
+        <function model="account.chart.template" name="try_loading">
+            <value eval="[]"/>
+            <value>generic_coa</value>
+            <value model="res.company" eval="obj().env.ref('base.main_company')"/>
             <value name="install_demo" eval="True"/>
         </function>
 
