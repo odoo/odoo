@@ -137,7 +137,7 @@ class PaymentProvider(models.Model):
         available_payment_method_codes = self.payment_method_ids.mapped('code')
         sorted_gateways_data = sorted(
             paymob_gateways_data,
-            key=lambda x: datetime.strptime((x['created_at']), "%Y-%m-%dT%H:%M:%S.%f"),
+            key=lambda pm: datetime.fromisoformat(pm['created_at']),
             reverse=True,
         )
         matched_gateways_data = []
