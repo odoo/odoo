@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_restaurant
-# 
+#
 # Translators:
 # Deniz Guvener_Odoo <degu@odoo.com>, 2025
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-03 12:08+0000\n"
+"POT-Creation-Date: 2025-08-18 18:36+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: pos_restaurant
@@ -65,10 +65,12 @@ msgstr "<strong>Satış Noktası:</strong>"
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid ""
-"A restaurant floor represents the place where customers are served, this is where you can\n"
+"A restaurant floor represents the place where customers are served, this is "
+"where you can\n"
 "                define and position the tables."
 msgstr ""
-"Bir restoran katı, müşterilerin hizmet edildiği yeri temsil eder, burası masaları\n"
+"Bir restoran katı, müşterilerin hizmet edildiği yeri temsil eder, burası "
+"masaları\n"
 "                 tanımlayıp konumlandırabileceğiniz yerdir."
 
 #. module: pos_restaurant
@@ -148,7 +150,7 @@ msgid "Allows to print the Bill before payment."
 msgstr "Ödemeden önce fatura yazdırılmasına izin ver."
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_anchovy
+#: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_anchovy
 msgid "Anchovy"
 msgstr "Ançüez"
 
@@ -202,7 +204,7 @@ msgid "Bacon Burger"
 msgstr "Pastırmalı Burger"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_fries
+#: model:product.attribute.value,name:pos_restaurant.pav_sides_fries
 msgid "Belgian fresh homemade fries"
 msgstr "Belçika usulü taze ev yapımı patates kızartması"
 
@@ -225,7 +227,7 @@ msgid "Bill Splitting"
 msgstr "Fiş Bölme"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_black_olives
+#: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_black_olives
 msgid "Black olives"
 msgstr "Siyah zeytin"
 
@@ -492,14 +494,12 @@ msgid "Espresso"
 msgstr "Espresso"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_extra_cheese
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_extra_cheese_pasta
+#: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_extra_cheese
 msgid "Extra cheese"
 msgstr "Ekstra peynir"
 
 #. module: pos_restaurant
-#: model:product.attribute,name:pos_restaurant.product_extra_pasta
-#: model:product.attribute,name:pos_restaurant.product_extra_pizza
+#: model:product.attribute,name:pos_restaurant.pa_extras_pizza
 msgid "Extras"
 msgstr "Ekstralar"
 
@@ -619,7 +619,7 @@ msgid "Green Tea"
 msgstr "Yeşil Çay"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_grilled_vegetables
+#: model:product.attribute.value,name:pos_restaurant.pav_sides_grilled_vegetables
 msgid "Grilled vegetables"
 msgstr "Izgara sebzeler"
 
@@ -667,8 +667,8 @@ msgstr "Ice Tea"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__active
 msgid ""
-"If false, the table is deactivated and will not be available in the point of"
-" sale"
+"If false, the table is deactivated and will not be available in the point of "
+"sale"
 msgstr ""
 "Eğer yanlışsa, masa iptal etkin değildir ve satış noktası için erişilebilir "
 "olmayacaktır"
@@ -788,8 +788,7 @@ msgid "Mozzarella Sandwich"
 msgstr "Mozzarellalı Sandviç"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_mushroom
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_mushroom_pasta
+#: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_mushroom
 msgid "Mushroom"
 msgstr "Mantar"
 
@@ -928,7 +927,7 @@ msgid "Pepe, latte, gorgonzola dolce, taleggio, parmigiano reggiano"
 msgstr "Pepe, latte, gorgonzola dolce, taleggio, parmigiano reggiano"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_peperoni
+#: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_pepperoni
 msgid "Pepperoni"
 msgstr "Pepperoni"
 
@@ -964,7 +963,8 @@ msgstr "Planla"
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid ""
-"Please close and validate the following open PoS Session before modifying this floor.\n"
+"Please close and validate the following open PoS Session before modifying "
+"this floor.\n"
 "Open session: %(session_names)s"
 msgstr ""
 
@@ -1014,7 +1014,7 @@ msgid "Pos Set Tip After Payment"
 msgstr "Ödeme Sonrası Pos Bahşişi Ayarla"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_potato_thyme
+#: model:product.attribute.value,name:pos_restaurant.pav_sides_potato_thyme
 msgid "Potatoes with thyme"
 msgstr "Kekikli patates"
 
@@ -1194,7 +1194,7 @@ msgid "Shape"
 msgstr "Şekil"
 
 #. module: pos_restaurant
-#: model:product.attribute,name:pos_restaurant.product_sides_buns_pizza
+#: model:product.attribute,name:pos_restaurant.pa_sides
 msgid "Sides"
 msgstr "Garnitürler"
 
@@ -1205,7 +1205,7 @@ msgid "Signature"
 msgstr "İmza"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_smashed_sweet_potatoes
+#: model:product.attribute.value,name:pos_restaurant.pav_sides_smashed_sweet_potato
 msgid "Smashed sweet potatoes"
 msgstr "Ezilmiş tatlı patates"
 
@@ -1259,7 +1259,7 @@ msgid "Sushi Lunch Combo"
 msgstr ""
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_sweet_potato
+#: model:product.attribute.value,name:pos_restaurant.pav_sides_sweet_potato
 msgid "Sweet potato fries"
 msgstr "Tatlı patates kızartması"
 
@@ -1350,8 +1350,7 @@ msgstr "Bu siparişin servis edildiği masa"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__color
-msgid ""
-"The table's color, expressed as a valid 'background' CSS property value"
+msgid "The table's color, expressed as a valid 'background' CSS property value"
 msgstr ""
 "Geçerli bir 'arka plan' CSS özellik değeri olarak ifade edilen masanın rengi"
 
@@ -1363,8 +1362,8 @@ msgstr "Masanın piksel olarak yüksekliği"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_h
 msgid ""
-"The table's horizontal position from the left side to the table's center, in"
-" pixels"
+"The table's horizontal position from the left side to the table's center, in "
+"pixels"
 msgstr "Masanın piksel olarak yatay olarak sol tarafından merkezine konumu"
 
 #. module: pos_restaurant
@@ -1385,8 +1384,8 @@ msgid ""
 "This order is not yet synced to server. Make sure it is synced then try "
 "again."
 msgstr ""
-"Bu sipariş henüz sunucuyla senkronize edilmedi. Senkronize edildiğinden emin"
-" olun ve tekrar deneyin."
+"Bu sipariş henüz sunucuyla senkronize edilmedi. Senkronize edildiğinden emin "
+"olun ve tekrar deneyin."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1510,8 +1509,7 @@ msgstr "Viski, limon suyu, şeker ve biraz yumurta akı."
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_pina_colada_product_template
 msgid "White rhum, Malibu, Batida de coco, coconut liqueur, pineapple juice"
-msgstr ""
-"Beyaz rom, Malibu, Batida de coco, hindistancevizi likörü, ananas suyu"
+msgstr "Beyaz rom, Malibu, Batida de coco, hindistancevizi likörü, ananas suyu"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_mojito_product_template
@@ -1522,6 +1520,12 @@ msgstr "Beyaz rom, şeker, lime suyu, soda ve nane."
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__width
 msgid "Width"
 msgstr "Genişlik"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You are currently transferring the order %s"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1565,8 +1569,8 @@ msgid ""
 "You cannot remove a floor that is used in a PoS session, close the "
 "session(s) first: \n"
 msgstr ""
-"PoS oturumunda kullanılan bir katı kaldıramazsınız, önce oturumları kapatın:"
-" \n"
+"PoS oturumunda kullanılan bir katı kaldıramazsınız, önce oturumları "
+"kapatın: \n"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1577,6 +1581,12 @@ msgid ""
 msgstr ""
 "PoS oturumunda kullanılan bir masayı kaldıramazsınız, önce oturumları "
 "kapatın."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You cannot transfer an order to itself"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript

@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* html_editor
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Kira Petersen, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-08-18 18:37+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Kira Petersen, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: html_editor
@@ -88,8 +88,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Action %s not found, link preview is not available, please check your url is"
-" correct"
+"Action %s not found, link preview is not available, please check your url is "
+"correct"
 msgstr ""
 
 #. module: html_editor
@@ -248,6 +248,12 @@ msgstr "Vedhæftning"
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__local_url
 msgid "Attachment URL"
 msgstr "Vedhæftet URL"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Autoconvert to relative link"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -535,6 +541,7 @@ msgstr ""
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__display_name
 msgid "Display Name"
 msgstr "Vis navn"
 
@@ -567,12 +574,6 @@ msgstr "Rediger"
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit Link"
 msgstr "Redigér link"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/navbar_link_popover.xml:0
-msgid "Edit Menu"
-msgstr "Redigér menu"
 
 #. module: html_editor
 #. odoo-javascript
@@ -676,6 +677,11 @@ msgstr "Vend vertikalt"
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Format"
 msgstr "Format"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -805,6 +811,7 @@ msgstr "Html"
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__id
 msgid "ID"
 msgstr "ID"
 
@@ -1002,8 +1009,7 @@ msgstr "Link kopieret til udklipsholder."
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Link preview is not available because %s, please check if your url is "
-"correct"
+"Link preview is not available because %s, please check if your url is correct"
 msgstr ""
 
 #. module: html_editor
@@ -1637,9 +1643,8 @@ msgid ""
 "This type of image is not supported for cropping.<br/>If you want to crop "
 "it, please first download it from the original source and upload it in Odoo."
 msgstr ""
-"Dette type billede understøtter ikke beskæring.<br/>Hvis du vil beskære det,"
-" bedes du først hente det fra dets oprindelige kilde, og lægge det op i "
-"Odoo."
+"Dette type billede understøtter ikke beskæring.<br/>Hvis du vil beskære det, "
+"bedes du først hente det fra dets oprindelige kilde, og lægge det op i Odoo."
 
 #. module: html_editor
 #. odoo-javascript
@@ -1969,3 +1974,6 @@ msgstr "px"
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "videos"
 msgstr "videoer"
+
+#~ msgid "Edit Menu"
+#~ msgstr "Redigér menu"

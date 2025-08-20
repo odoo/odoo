@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_picking_batch
-# 
+#
 # Translators:
 # Marta Wacławek, 2025
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-08-18 18:38+0000\n"
 "PO-Revision-Date: 2025-07-01 13:07+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pl\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -93,19 +95,23 @@ msgstr "<strong>→</strong> "
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_lines
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"Przekaz nie zostanie automatycznie dodany do partii, które przekroczą tę liczbę linii, jeśli zostanie do nich dodany.\n"
+"Przekaz nie zostanie automatycznie dodany do partii, które przekroczą tę "
+"liczbę linii, jeśli zostanie do nich dodany.\n"
 "Pozostaw tę wartość jako \"0\", jeśli nie ma limitu linii."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
-"Przekaz nie zostanie automatycznie dodany do partii, które przekroczą tę liczbę przekazów.\n"
+"Przekaz nie zostanie automatycznie dodany do partii, które przekroczą tę "
+"liczbę przekazów.\n"
 "Pozostaw tę wartość jako \"0\", jeśli nie ma limitu przekazów."
 
 #. module: stock_picking_batch
@@ -225,8 +231,8 @@ msgstr "Automatycznie grupuj partie według ich lokalizacji źródłowej."
 msgid ""
 "Automatically put pickings into batches as they are confirmed when possible."
 msgstr ""
-"Automatyczne umieszczanie pobrań w partiach w miarę ich potwierdzania, jeśli"
-" to możliwe."
+"Automatyczne umieszczanie pobrań w partiach w miarę ich potwierdzania, jeśli "
+"to możliwe."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -557,8 +563,8 @@ msgid ""
 "If the Automatic Batches feature is enabled, at least one 'Group by' option "
 "must be selected."
 msgstr ""
-"Jeśli funkcja automatycznych partii jest włączona, należy wybrać co najmniej"
-" jedną opcję \"Grupuj według\"."
+"Jeśli funkcja automatycznych partii jest włączona, należy wybrać co najmniej "
+"jedną opcję \"Grupuj według\"."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -782,6 +788,12 @@ msgid "Picking Type"
 msgstr "Typ pobrania"
 
 #. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+msgid "Please select at least two batch/wave transfers to merge."
+msgstr ""
+
+#. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
 msgid "Prepare Batch"
 msgstr ""
@@ -861,8 +873,7 @@ msgstr "Oceny"
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid ""
-"Regroup multiple orders into one picking and consolidate at the packing "
-"zone."
+"Regroup multiple orders into one picking and consolidate at the packing zone."
 msgstr ""
 
 #. module: stock_picking_batch
@@ -898,14 +909,20 @@ msgstr "Zaplanowana data"
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__scheduled_date
 msgid ""
 "Scheduled date for the transfers to be processed.\n"
-"              - If manually set then scheduled date for all transfers in batch will automatically update to this date.\n"
-"              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
-"                but this scheduled date will not be set for all transfers in batch."
+"              - If manually set then scheduled date for all transfers in "
+"batch will automatically update to this date.\n"
+"              - If not manually changed and transfers are added/removed/"
+"updated then this will be their earliest scheduled date\n"
+"                but this scheduled date will not be set for all transfers in "
+"batch."
 msgstr ""
 "Zaplanowana data przetworzenia przekazów.\n"
-"- Jeśli zostanie ustawiona ręcznie, zaplanowana data dla wszystkich przekazów w partii zostanie automatycznie zaktualizowana do tej daty.\n"
-"- Jeśli nie zostanie zmieniona ręcznie, a przelewy zostaną dodane/usunięte/zaktualizowane, będzie to ich najwcześniejsza zaplanowana data.\n"
-"ale ta zaplanowana data nie zostanie ustawiona dla wszystkich przekazów w partii."
+"- Jeśli zostanie ustawiona ręcznie, zaplanowana data dla wszystkich "
+"przekazów w partii zostanie automatycznie zaktualizowana do tej daty.\n"
+"- Jeśli nie zostanie zmieniona ręcznie, a przelewy zostaną dodane/usunięte/"
+"zaktualizowane, będzie to ich najwcześniejsza zaplanowana data.\n"
+"ale ta zaplanowana data nie zostanie ustawiona dla wszystkich przekazów w "
+"partii."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -962,8 +979,8 @@ msgstr ""
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_category
 msgid ""
-"Split transfers by product category, then group transfers that have the same"
-" product category."
+"Split transfers by product category, then group transfers that have the same "
+"product category."
 msgstr ""
 
 #. module: stock_picking_batch
@@ -1044,7 +1061,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid ""
-"The following transfers cannot be added to batch transfer %(batch)s. Please check their states and operation types.\n"
+"The following transfers cannot be added to batch transfer %(batch)s. Please "
+"check their states and operation types.\n"
 "\n"
 "Incompatibilities: %(incompatible_transfers)s"
 msgstr ""
@@ -1206,8 +1224,7 @@ msgstr "Historia komunikacji"
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_to_batch__is_create_draft
 msgid "When checked, create the batch in draft status"
 msgstr ""
-"Zaznaczenie tej opcji spowoduje utworzenie partii w statusie wersji "
-"roboczej."
+"Zaznaczenie tej opcji spowoduje utworzenie partii w statusie wersji roboczej."
 
 #. module: stock_picking_batch
 #. odoo-python

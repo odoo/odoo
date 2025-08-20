@@ -1,23 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* html_editor
-# 
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-08-18 18:37+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
+"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lt\n"
-"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
+"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
+"1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: html_editor
 #. odoo-javascript
@@ -88,8 +90,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Action %s not found, link preview is not available, please check your url is"
-" correct"
+"Action %s not found, link preview is not available, please check your url is "
+"correct"
 msgstr ""
 
 #. module: html_editor
@@ -248,6 +250,12 @@ msgstr "Prisegtukas"
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__local_url
 msgid "Attachment URL"
 msgstr "Prisegtuko URL"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Autoconvert to relative link"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -533,6 +541,7 @@ msgstr ""
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__display_name
 msgid "Display Name"
 msgstr "Rodomas pavadinimas"
 
@@ -565,12 +574,6 @@ msgstr "Redaguoti"
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit Link"
 msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/navbar_link_popover.xml:0
-msgid "Edit Menu"
-msgstr "Redaguoti meniu"
 
 #. module: html_editor
 #. odoo-javascript
@@ -674,6 +677,11 @@ msgstr "Apversti vertikaliai"
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Format"
 msgstr "Formatas"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -803,6 +811,7 @@ msgstr ""
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__id
 msgid "ID"
 msgstr "ID"
 
@@ -1000,8 +1009,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Link preview is not available because %s, please check if your url is "
-"correct"
+"Link preview is not available because %s, please check if your url is correct"
 msgstr ""
 
 #. module: html_editor
@@ -1965,3 +1973,6 @@ msgstr "px"
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "videos"
 msgstr "vaizdo įrašai"
+
+#~ msgid "Edit Menu"
+#~ msgstr "Redaguoti meniu"

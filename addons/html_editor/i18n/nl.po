@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-08-18 18:37+0000\n"
 "PO-Revision-Date: 2025-08-14 23:11+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -39,8 +39,8 @@ msgstr ""
 #: code:addons/html_editor/static/src/main/media/image_description.xml:0
 msgid "'Title tag' is shown as a tooltip when you hover the picture."
 msgstr ""
-"'Title tag' wordt weergegeven als een tooltip wanneer je met je muis over de"
-" afbeelding beweegt."
+"'Title tag' wordt weergegeven als een tooltip wanneer je met je muis over de "
+"afbeelding beweegt."
 
 #. module: html_editor
 #. odoo-javascript
@@ -94,8 +94,8 @@ msgstr "Actie %s is geen vensteractie, linkvoorbeeld is niet beschikbaar"
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Action %s not found, link preview is not available, please check your url is"
-" correct"
+"Action %s not found, link preview is not available, please check your url is "
+"correct"
 msgstr ""
 "Actie %s niet gevonden, linkvoorbeeld is niet beschikbaar, controleer of je "
 "url correct is"
@@ -256,6 +256,12 @@ msgstr "Bijlage"
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__local_url
 msgid "Attachment URL"
 msgstr "URL bijlage"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Autoconvert to relative link"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -543,6 +549,7 @@ msgstr ""
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__display_name
 msgid "Display Name"
 msgstr "Schermnaam"
 
@@ -575,12 +582,6 @@ msgstr "Bewerken"
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit Link"
 msgstr "Link bewerken"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/navbar_link_popover.xml:0
-msgid "Edit Menu"
-msgstr "Wijzig menu"
 
 #. module: html_editor
 #. odoo-javascript
@@ -684,6 +685,11 @@ msgstr "Verticaal omdraaien"
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Format"
 msgstr "Formatteer"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -813,6 +819,7 @@ msgstr "HTML"
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__id
 msgid "ID"
 msgstr "ID"
 
@@ -1010,8 +1017,7 @@ msgstr "Link gekopieerd naar klembord."
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Link preview is not available because %s, please check if your url is "
-"correct"
+"Link preview is not available because %s, please check if your url is correct"
 msgstr ""
 "Link preview is niet beschikbaar omdat %s, controleer of je url correct is"
 
@@ -1791,8 +1797,8 @@ msgstr "Afbeelding uploaden"
 #: code:addons/html_editor/controllers/main.py:0
 msgid "Uploaded image's format is not supported. Try with: %s"
 msgstr ""
-"Het formaat van de geüploade afbeelding wordt niet ondersteund. Probeer met:"
-" %s"
+"Het formaat van de geüploade afbeelding wordt niet ondersteund. Probeer met: "
+"%s"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1871,8 +1877,8 @@ msgid ""
 "You can not replace a field by this image. If you want to use this image, "
 "first save it on your computer and then upload it here."
 msgstr ""
-"Je kunt een veld niet vervangen door deze afbeelding. Als je deze afbeelding"
-" wilt gebruiken, sla deze dan eerst op je computer op en upload deze "
+"Je kunt een veld niet vervangen door deze afbeelding. Als je deze afbeelding "
+"wilt gebruiken, sla deze dan eerst op je computer op en upload deze "
 "vervolgens hier."
 
 #. module: html_editor
@@ -1888,8 +1894,7 @@ msgid ""
 "You can upload documents with the button located in the top left of the "
 "screen."
 msgstr ""
-"Je kunt documenten uploaden met de knop in de linkerbovenhoek van het "
-"scherm."
+"Je kunt documenten uploaden met de knop in de linkerbovenhoek van het scherm."
 
 #. module: html_editor
 #. odoo-python
@@ -1898,8 +1903,8 @@ msgid ""
 "You have reached the maximum number of requests for this service. Try again "
 "later."
 msgstr ""
-"Je hebt het maximale aantal aanvragen voor deze service bereikt. Probeer het"
-" later nog eens."
+"Je hebt het maximale aantal aanvragen voor deze service bereikt. Probeer het "
+"later nog eens."
 
 #. module: html_editor
 #. odoo-javascript
@@ -1993,3 +1998,6 @@ msgstr "px"
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "videos"
 msgstr "videos"
+
+#~ msgid "Edit Menu"
+#~ msgstr "Wijzig menu"

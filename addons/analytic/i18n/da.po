@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* analytic
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Kira Petersen, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-03 12:09+0000\n"
+"POT-Creation-Date: 2025-08-18 18:37+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Kira Petersen, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: analytic
@@ -25,6 +25,12 @@ msgstr ""
 #: code:addons/analytic/models/analytic_account.py:0
 msgid "%s (copy)"
 msgstr "%s (kopi)"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_line.py:0
+msgid "%s analytic lines created"
+msgstr ""
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
@@ -141,6 +147,7 @@ msgstr "Antal omkostningssteder"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__analytic_distribution
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution
 msgid "Analytic Distribution"
 msgstr "Omkostningsfordeling"
@@ -212,6 +219,7 @@ msgstr "Omkostningsplaner"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_precision
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__analytic_precision
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_precision
 msgid "Analytic Precision"
 msgstr "Analytisk præcision"
@@ -486,6 +494,12 @@ msgid "Domain"
 msgstr "Domæne"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Don't update"
+msgstr ""
+
+#. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_rd_finance
 msgid "Finance"
 msgstr "Finans"
@@ -555,11 +569,13 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sales orders and projects are implemented using\n"
-"                analytic accounts. You can track costs and revenues to analyse\n"
+"                analytic accounts. You can track costs and revenues to "
+"analyse\n"
 "                your margins easily."
 msgstr ""
 "I Odoo kan salgsordrer og projekter knyttes til,\n"
-"                hvilket giver et klart overblik over omkostninger og indtægter og dermed gør det lettere\n"
+"                hvilket giver et klart overblik over omkostninger og "
+"indtægter og dermed gør det lettere\n"
 "                at analysere dækningsbidraget."
 
 #. module: analytic
@@ -630,6 +646,12 @@ msgstr "Millennium Industries"
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__business_domain__general
 msgid "Miscellaneous"
 msgstr "Diverse"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Multi edit"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__name
@@ -793,13 +815,16 @@ msgstr "Forskning og udvikling"
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sales orders\n"
-"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                invoices. Customer invoices can be created based on sales "
+"orders\n"
+"                (fixed price invoices), on timesheets (based on the work "
+"done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 "Omsætning registreres automatisk når du opretter kundefakturaer.\n"
 "                Kundefakturaer kan oprettes på baggrund af salgsordrer\n"
-"                (fastprisfakturering), timesedler (baseret på udført arbejde) eller\n"
+"                (fastprisfakturering), timesedler (baseret på udført "
+"arbejde) eller\n"
 "                udgifter (f.eks. viderefakturering af rejseomkostninger)."
 
 #. module: analytic
@@ -841,9 +866,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this company, it "
 "will automatically take this as an analytic account)"
 msgstr ""
-"Vælg en virksomhed, der skal anvende det omkostningsfordeling (Når du f.eks."
-" opretter en kundefaktura eller salgsordre og vælger en virksomhed fra denne"
-" kategori, vil det pågældende omkostningssted automatisk blive anvendt)"
+"Vælg en virksomhed, der skal anvende det omkostningsfordeling (Når du f.eks. "
+"opretter en kundefaktura eller salgsordre og vælger en virksomhed fra denne "
+"kategori, vil det pågældende omkostningssted automatisk blive anvendt)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
@@ -853,9 +878,8 @@ msgid ""
 "it will automatically take this as an analytic account)"
 msgstr ""
 "Vælg en partnerkategori, der skal anvende det omkostningsfordeling (Når du "
-"f.eks. opretter en kundefaktura eller salgsordre og vælger denne partner fra"
-" denne kategori, vil det pågældende omkostningssted automatisk blive "
-"anvendt)"
+"f.eks. opretter en kundefaktura eller salgsordre og vælger denne partner fra "
+"denne kategori, vil det pågældende omkostningssted automatisk blive anvendt)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
@@ -906,6 +930,12 @@ msgid "Unit"
 msgstr "Enhed"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Update"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
 msgid "User"
 msgstr "Bruger"
@@ -922,11 +952,11 @@ msgstr "Kan ses af alle"
 #. odoo-python
 #: code:addons/analytic/models/analytic_account.py:0
 msgid ""
-"Whoa there! Making this change would wipe out your current data. Let's avoid"
-" that, shall we?"
+"Whoa there! Making this change would wipe out your current data. Let's avoid "
+"that, shall we?"
 msgstr ""
-"Vent et øjeblik! Hvis du foretager denne ændring, bliver dine nuværende data"
-" slettet. Og det vil vi helst undgå, ikke?"
+"Vent et øjeblik! Hvis du foretager denne ændring, bliver dine nuværende data "
+"slettet. Og det vil vi helst undgå, ikke?"
 
 #. module: analytic
 #. odoo-python

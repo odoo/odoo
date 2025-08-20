@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-08-18 18:38+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
 "Last-Translator: ExcaliberX <excaliberx@gmail.com>, 2022\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
@@ -23,16 +23,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % "
 "1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
-
-#. module: website_sale_comparison
-#: model:product.attribute.value,name:website_sale_comparison.product_attribute_value_8
-msgid "134.7 x 200 x 7.2 mm"
-msgstr "134.7 x 200 x 7.2 מ\"מ"
-
-#. module: website_sale_comparison
-#: model:product.attribute.value,name:website_sale_comparison.product_attribute_value_7
-msgid "308 g"
-msgstr "308 גרם"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
@@ -51,6 +41,13 @@ msgid ""
 msgstr ""
 
 #. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
+msgid ""
+"<i class=\"fa fa-fw fa-exchange\"/>\n"
+"            Compare"
+msgstr ""
+
+#. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "<i class=\"fa fa-shopping-cart me-2\"/>Add to Cart"
 msgstr ""
@@ -61,12 +58,6 @@ msgid "<i class=\"fa fa-trash\" role=\"img\" aria-label=\"Remove\"/>"
 msgstr "<i class=\"fa fa-trash\" role=\"img\" aria-label=\"Remove\"/>"
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
-msgid "<span class=\"fa fa-exchange me-2\"/>Compare"
-msgstr ""
-
-#. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "<span>Tags</span>"
 msgstr ""
@@ -82,9 +73,14 @@ msgid "<strong>x</strong>"
 msgstr "<strong>x</strong>"
 
 #. module: website_sale_comparison
-#: model:product.attribute.value,name:website_sale_comparison.product_attribute_value_1
-msgid "Apple"
-msgstr "Apple"
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
+msgid "Add to Compare"
+msgstr ""
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
+msgid "Add to compare"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.actions.act_window,name:website_sale_comparison.product_attribute_category_action
@@ -93,6 +89,8 @@ msgid "Attribute Categories"
 msgstr "קטגוריות תכונות"
 
 #. module: website_sale_comparison
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/website_builder/product_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
 msgid "Bottom of Page"
 msgstr ""
@@ -104,9 +102,10 @@ msgstr "שם קטגוריה"
 
 #. module: website_sale_comparison
 #. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/website_builder/product_page_list_option.xml:0
+#: code:addons/website_sale_comparison/static/src/website_builder/product_page_option.xml:0
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.add_to_compare
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
 msgid "Compare"
 msgstr "השווה"
@@ -139,13 +138,20 @@ msgid "Created on"
 msgstr "נוצר ב-"
 
 #. module: website_sale_comparison
-#: model:product.attribute,name:website_sale_comparison.product_attribute_8
-#: model:product.attribute.category,name:website_sale_comparison.product_attribute_category_2
+#: model:product.attribute.category,name:website_sale_comparison.product_attribute_category_design
+msgid "Design"
+msgstr ""
+
+#. module: website_sale_comparison
+#: model:product.attribute.category,name:website_sale_comparison.product_attribute_category_dimensions
 msgid "Dimensions"
 msgstr "מימדים"
 
 #. module: website_sale_comparison
+#: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute__display_name
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__display_name
+#: model:ir.model.fields,field_description:website_sale_comparison.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale_comparison.field_product_template_attribute_line__display_name
 msgid "Display Name"
 msgstr "שם לתצוגה"
 
@@ -167,9 +173,19 @@ msgid ""
 msgstr ""
 
 #. module: website_sale_comparison
+#: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute__id
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__id
+#: model:ir.model.fields,field_description:website_sale_comparison.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale_comparison.field_product_template_attribute_line__id
 msgid "ID"
 msgstr "מזהה"
+
+#. module: website_sale_comparison
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/website_builder/product_page_option.xml:0
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
+msgid "In accordion"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__write_uid
@@ -182,9 +198,22 @@ msgid "Last Updated on"
 msgstr "עדכון אחרון ב"
 
 #. module: website_sale_comparison
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/website_builder/product_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
 msgid "None"
 msgstr "אף אחד"
+
+#. module: website_sale_comparison
+#: model:product.attribute.category,name:website_sale_comparison.product_attribute_category_options
+msgid "Options"
+msgstr ""
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.accordion_specs_item
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.specifications_table
+msgid "Others"
+msgstr ""
 
 #. module: website_sale_comparison
 #. odoo-javascript
@@ -247,17 +276,19 @@ msgid "Shop Comparator"
 msgstr "משווה חנות"
 
 #. module: website_sale_comparison
+#. odoo-javascript
+#: code:addons/website_sale_comparison/static/src/website_builder/product_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
 msgid "Specification"
 msgstr ""
 
 #. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.accordion_specs_item
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 msgid "Specifications"
 msgstr "מפרט"
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "Uncategorized"
 msgstr "ללא קטגוריה"
@@ -267,11 +298,6 @@ msgstr "ללא קטגוריה"
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 msgid "Warning"
 msgstr "אזהרה"
-
-#. module: website_sale_comparison
-#: model:product.attribute,name:website_sale_comparison.product_attribute_7
-msgid "Weight"
-msgstr "משקל"
 
 #. module: website_sale_comparison
 #. odoo-javascript
@@ -284,7 +310,17 @@ msgstr "אתה יכול להשוות מקסימום 4 מוצרים."
 msgid "eCommerce Category"
 msgstr ""
 
-#. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
-msgid "or"
-msgstr "או"
+#~ msgid "134.7 x 200 x 7.2 mm"
+#~ msgstr "134.7 x 200 x 7.2 מ\"מ"
+
+#~ msgid "308 g"
+#~ msgstr "308 גרם"
+
+#~ msgid "Apple"
+#~ msgstr "Apple"
+
+#~ msgid "Weight"
+#~ msgstr "משקל"
+
+#~ msgid "or"
+#~ msgstr "או"

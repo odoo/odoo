@@ -1,38 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_self_order
-# 
+#
 # Translators:
 # Daye Jeong, 2025
 # Wil Odoo, 2025
 # Sarah Park, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-08-18 18:37+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
 msgid "\"QR codes\""
 msgstr "\"QR 코드\""
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
-msgid ""
-"%s is not available anymore, it has thus been removed from your order. "
-"Please review your order and validate it again."
-msgstr "%s 항목은 더 이상 사용할 수 없습니다 주문에서 삭제되었습니다. 주문을 검토 후 다시 확인하시기 바랍니다."
 
 #. module: pos_self_order
 #. odoo-python
@@ -62,18 +54,31 @@ msgid ""
 "                    <t t-set=\"client\" t-value=\"object.partner_id\"/>\n"
 "                    <t t-set=\"client_name\" t-value=\"client.name\"/>\n"
 "                    <t t-set=\"street\" t-value=\"client.street or ''\"/>\n"
-"                    <t t-set=\"state\" t-value=\"client.state_id.name or ''\"/>\n"
+"                    <t t-set=\"state\" t-value=\"client.state_id.name or "
+"''\"/>\n"
 "                    <t t-set=\"city\" t-value=\"client.city or ''\"/>\n"
-"                    <t t-set=\"country\" t-value=\"client.country_id.name or ''\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"country\" t-value=\"client.country_id.name or "
+"''\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Hello <t t-out=\"client_name\">Client name</t>,</t>\n"
+"                        <t t-if=\"client_name\">Hello <t t-"
+"out=\"client_name\">Client name</t>,</t>\n"
 "                        <t t-else=\"\">Hello,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Your order <t t-out=\"object.tracking_number\">...</t> amounting in <t t-out=\"object.amount_total\">$xx.xx</t> has been confirmed. <span t-if=\"object.preset_time or client.street\">It will be ready</span> <span t-if=\"object.preset_time\">at <t t-out=\"format_time(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00 pm</t></span> <span t-if=\"client.street\">at <t t-out=\"street\">street</t>, <t t-out=\"state\">state</t>, <t t-out=\"client.zip or ''\">zip</t>, <t t-out=\"city\">city</t>, <t t-out=\"country\">country</t></span></div>\n"
+"                    <div>Your order <t t-out=\"object.tracking_number\">...</"
+"t> amounting in <t t-out=\"object.amount_total\">$xx.xx</t> has been "
+"confirmed. <span t-if=\"object.preset_time or client.street\">It will be "
+"ready</span> <span t-if=\"object.preset_time\">at <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 pm</t></span> <span t-if=\"client.street\">at <t t-"
+"out=\"street\">street</t>, <t t-out=\"state\">state</t>, <t t-"
+"out=\"client.zip or ''\">zip</t>, <t t-out=\"city\">city</t>, <t t-"
+"out=\"country\">country</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>Thank you,</div>\n"
 "                    <br/>\n"
@@ -89,18 +94,31 @@ msgstr ""
 "                    <t t-set=\"client\" t-value=\"object.partner_id\"/>\n"
 "                    <t t-set=\"client_name\" t-value=\"client.name\"/>\n"
 "                    <t t-set=\"street\" t-value=\"client.street or ''\"/>\n"
-"                    <t t-set=\"state\" t-value=\"client.state_id.name or ''\"/>\n"
+"                    <t t-set=\"state\" t-value=\"client.state_id.name or "
+"''\"/>\n"
 "                    <t t-set=\"city\" t-value=\"client.city or ''\"/>\n"
-"                    <t t-set=\"country\" t-value=\"client.country_id.name or ''\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"country\" t-value=\"client.country_id.name or "
+"''\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">안녕하세요 <t t-out=\"client_name\">Client name</t> 고객님,</t>\n"
+"                        <t t-if=\"client_name\">안녕하세요 <t t-"
+"out=\"client_name\">Client name</t> 고객님,</t>\n"
 "                        <t t-else=\"\">안녕하세요,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>주문 번호 <t t-out=\"object.tracking_number\">...</t> 주문 금액 <t t-out=\"object.amount_total\">$xx.xx</t> 주문 항목이 확인되었습니다. <span t-if=\"object.preset_time or client.street\">해당 주문 세부 안내: </span> <span t-if=\"object.preset_time\">예상 준비 완료 시간-<t t-out=\"format_time(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00 pm</t></span>, <span t-if=\"client.street\">예상 준비 장소-<t t-out=\"street\">street</t>, <t t-out=\"state\">state</t>, <t t-out=\"client.zip or ''\">zip</t>, <t t-out=\"city\">city</t>, <t t-out=\"country\">country</t></span></div>\n"
+"                    <div>주문 번호 <t t-out=\"object.tracking_number\">...</"
+"t> 주문 금액 <t t-out=\"object.amount_total\">$xx.xx</t> 주문 항목이 확인되었"
+"습니다. <span t-if=\"object.preset_time or client.street\">해당 주문 세부 안"
+"내: </span> <span t-if=\"object.preset_time\">예상 준비 완료 시간-<t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 pm</t></span>, <span t-if=\"client.street\">예상 준비 "
+"장소-<t t-out=\"street\">street</t>, <t t-out=\"state\">state</t>, <t t-"
+"out=\"client.zip or ''\">zip</t>, <t t-out=\"city\">city</t>, <t t-"
+"out=\"country\">country</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>감사합니다.</div>\n"
 "                    <br/>\n"
@@ -116,15 +134,22 @@ msgstr ""
 #: model:mail.template,body_html:pos_self_order.takeout_email_template
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Hello <t t-out=\"client_name\">Client name</t>,</t>\n"
+"                        <t t-if=\"client_name\">Hello <t t-"
+"out=\"client_name\">Client name</t>,</t>\n"
 "                        <t t-else=\"\">Hello,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Your order <t t-out=\"object.tracking_number\">...</t> amounting in <t t-out=\"object.amount_total\">$xx.xx</t> has been confirmed. <span t-if=\"object.preset_time\">It will be ready at <t t-out=\"format_time(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00 pm</t></span></div>\n"
+"                    <div>Your order <t t-out=\"object.tracking_number\">...</"
+"t> amounting in <t t-out=\"object.amount_total\">$xx.xx</t> has been "
+"confirmed. <span t-if=\"object.preset_time\">It will be ready at <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 pm</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>Thank you,</div>\n"
 "                    <br/>\n"
@@ -137,15 +162,22 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">안녕하세요 <t t-out=\"client_name\">고객명</t>님,</t>\n"
+"                        <t t-if=\"client_name\">안녕하세요 <t t-"
+"out=\"client_name\">고객명</t>님,</t>\n"
 "                        <t t-else=\"\">안녕하세요,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>주문 번호 <t t-out=\"object.tracking_number\">...</t> 주문 금액 <t t-out=\"object.amount_total\">$xx.xx</t> 에 대한 주문이 확정되었습니다. <span t-if=\"object.preset_time\">준비가 <t t-out=\"format_time(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00 pm</t>에 완료될 예정입니다.</span></div>\n"
+"                    <div>주문 번호 <t t-out=\"object.tracking_number\">...</"
+"t> 주문 금액 <t t-out=\"object.amount_total\">$xx.xx</t> 에 대한 주문이 확정"
+"되었습니다. <span t-if=\"object.preset_time\">준비가 <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 pm</t>에 완료될 예정입니다.</span></div>\n"
 "                    <br/>\n"
 "                    <div>감사합니다.</div>\n"
 "                    <br/>\n"
@@ -163,7 +195,9 @@ msgstr ""
 msgid ""
 "Access rights of this user will be used when visiting self order website "
 "when no session is open."
-msgstr "이 사용자의 액세스 권한은 열려 있는 세션이 없는 경우 셀프 주문 웹사이트를 방문할 때만 사용합니다."
+msgstr ""
+"이 사용자의 액세스 권한은 열려 있는 세션이 없는 경우 셀프 주문 웹사이트를 방"
+"문할 때만 사용합니다."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__active
@@ -281,6 +315,12 @@ msgstr "주문 취소"
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 msgid "Cancel order"
 msgstr "주문 취소"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
+msgid "Cancelled"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -534,11 +574,15 @@ msgstr "개별 주문"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Each table in your floor plan is assigned a unique QR code based on your configuration. For security reasons,\n"
-"                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:."
+"Each table in your floor plan is assigned a unique QR code based on your "
+"configuration. For security reasons,\n"
+"                    both the point of sale and table names are encrypted in "
+"the generated URL, as shown in the example below:."
 msgstr ""
-"도면의 각 테이블에는 설정에 따라 고유한 QR 코드가 부여됩니다. 보안 상의 이유로,\n"
-"                    아래의 예시와 같이 POS 및 테이블 이름은 모두 생성된 URL 하에서 암호화되어 있습니다."
+"도면의 각 테이블에는 설정에 따라 고유한 QR 코드가 부여됩니다. 보안 상의 이유"
+"로,\n"
+"                    아래의 예시와 같이 POS 및 테이블 이름은 모두 생성된 URL "
+"하에서 암호화되어 있습니다."
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_preset
@@ -563,6 +607,13 @@ msgstr "이메일 양식"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+msgid ""
+"Enable QR menu in the Restaurant settings to get QR codes for free on tables."
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
 msgid "Enter your custom value"
 msgstr "사용자 지정 값을 입력합니다."
@@ -576,8 +627,8 @@ msgstr "조회 번호 입력"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Feel free to use and print this QR code as many times as needed according to"
-" your requirements."
+"Feel free to use and print this QR code as many times as needed according to "
+"your requirements."
 msgstr "이 QR 코드는 필요한 만큼 자유롭게 사용하고 인쇄할 수 있습니다."
 
 #. module: pos_self_order
@@ -598,6 +649,18 @@ msgid "Generic"
 msgstr "범용"
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.xml:0
+msgid "Get QR Codes"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+msgid "Get QR codes"
+msgstr ""
+
+#. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP 라우팅"
@@ -613,7 +676,9 @@ msgstr "페이퍼"
 msgid ""
 "Hey, looks like you forgot to create products or add them to pos_config. "
 "Please add them before using the Self Order"
-msgstr "품목을 생성하거나 pos_config에 추가하지 않았습니다. 셀프 주문을 사용하기 전에 추가해 주세요."
+msgstr ""
+"품목을 생성하거나 pos_config에 추가하지 않았습니다. 셀프 주문을 사용하기 전"
+"에 추가해 주세요."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -669,11 +734,15 @@ msgstr "셀프 주문 화면에서 해당 품목을 사용할 수 있는 경우"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"If you need customized QR codes, start by scanning the relevant QR code to acquire the URL. Then, make\n"
-"                use of a QR code generator like https://www.qrcode-monkey.com or https://www.qr-code-generator.com"
+"If you need customized QR codes, start by scanning the relevant QR code to "
+"acquire the URL. Then, make\n"
+"                use of a QR code generator like https://www.qrcode-"
+"monkey.com or https://www.qr-code-generator.com"
 msgstr ""
-"사용자 지정 QR 코드가 필요한 경우, 먼저 QR 코드를 스캔하여 URL을 가져오세요. 그런 다음\n"
-"                https://www.qrcode-monkey.com 또는 https://www.qr-code-generator.com 와 같은 QR코드 생성기를 사용할 수 있습니다."
+"사용자 지정 QR 코드가 필요한 경우, 먼저 QR 코드를 스캔하여 URL을 가져오세요. "
+"그런 다음\n"
+"                https://www.qrcode-monkey.com 또는 https://www.qr-code-"
+"generator.com 와 같은 QR코드 생성기를 사용할 수 있습니다."
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_background_ids
@@ -694,7 +763,8 @@ msgstr "셀프 주문 화면에 표시할 이미지"
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid ""
 "In Self-Order mode, you must have at least one table to generate QR codes"
-msgstr "셀프 주문 모드에서 QR 코드를 생성하려면 테이블이 하나 이상 있어야 합니다."
+msgstr ""
+"셀프 주문 모드에서 QR 코드를 생성하려면 테이블이 하나 이상 있어야 합니다."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__inactive
@@ -705,6 +775,18 @@ msgstr "비활성"
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__info
 msgid "Info"
 msgstr "정보"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
+msgid "Invoiced"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
+msgid "It seems that"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-python
@@ -875,15 +957,33 @@ msgstr "셀프로 이용 불가"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
+msgid "OK"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Ok"
 msgstr "확인"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
+msgid "Ongoing"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid "Only pay after each is available with kiosk mode."
 msgstr "키오스크 모드에서는 각각에 대한 결제만 가능합니다."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
+msgid "Oops..."
+msgstr ""
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
@@ -918,6 +1018,12 @@ msgstr "품절"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
+msgid "Paid"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.js:0
@@ -945,7 +1051,9 @@ msgstr "키오스크 배경 개인 설정하기"
 msgid ""
 "Personalize your splash screen by adding one or multiple images to create a "
 "slideshow"
-msgstr "하나 또는 여러 개의 이미지를 추가하여 슬라이드쇼를 만들고 스플래시 화면을 맞춤 설정하세요."
+msgstr ""
+"하나 또는 여러 개의 이미지를 추가하여 슬라이드쇼를 만들고 스플래시 화면을 맞"
+"춤 설정하세요."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1154,11 +1262,11 @@ msgstr "테이블 선택"
 #: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
 msgid ""
 "Select for which points of sale you want to display this link. Leave empty "
-"to display it for all points of sale. You have to select among the points of"
-" sale that have the 'QR Code Menu' feature enabled."
+"to display it for all points of sale. You have to select among the points of "
+"sale that have the 'QR Code Menu' feature enabled."
 msgstr ""
-"이 링크를 표시할 POS를 선택하세요. 전체 POS에서 표시되게 하려면 비워 둡니다. 'QR 코드 메뉴' 기능이 활성화되어 있는 POS "
-"중에서 선택해야 합니다."
+"이 링크를 표시할 POS를 선택하세요. 전체 POS에서 표시되게 하려면 비워 둡니다. "
+"'QR 코드 메뉴' 기능이 활성화되어 있는 POS 중에서 선택해야 합니다."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1228,6 +1336,12 @@ msgstr "셀프 주문 서비스 모드"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_url
 msgid "Self Ordering Url"
 msgstr "셀프 주문 Url"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
+msgid "Self-Order T %s"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1546,6 +1660,12 @@ msgstr "우편번호"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
+msgid "are"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "at the counter"
 msgstr "카운터에서"
@@ -1579,6 +1699,25 @@ msgid "included"
 msgstr "포함 사항"
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
+msgid "is"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
+msgid "no longer available. Please go back and edit your order."
+msgstr ""
+
+#. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "odoo"
 msgstr "odoo"
+
+#~ msgid ""
+#~ "%s is not available anymore, it has thus been removed from your order. "
+#~ "Please review your order and validate it again."
+#~ msgstr ""
+#~ "%s 항목은 더 이상 사용할 수 없습니다 주문에서 삭제되었습니다. 주문을 검토 "
+#~ "후 다시 확인하시기 바랍니다."

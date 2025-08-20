@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:30+0000\n"
-"PO-Revision-Date: 2025-08-13 09:22+0000\n"
+"PO-Revision-Date: 2025-08-20 07:53+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s18-4/"
 "base/id/>\n"
@@ -1638,6 +1638,9 @@ msgid ""
 "Accounting reports for China\n"
 "============================\n"
 msgstr ""
+"\n"
+"Laporan akuntansi untuk Tiongkok\n"
+"============================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_co_reports
@@ -2473,6 +2476,9 @@ msgid ""
 "Accounting reports:\n"
 "- Corporate Tax Report\n"
 msgstr ""
+"\n"
+"Laporan akuntansi:\n"
+"- Laporan Pajak Korporat\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_account_enterprise
@@ -2587,6 +2593,20 @@ msgid ""
 "- the company linked to the website is mexican\n"
 "- the option 'automatic_invoice' is enabled in the website settings (\"Generate the invoice automatically when the online payment is confirmed\")\n"
 msgstr ""
+"\n"
+"Tambahkan tab ekstra di proses checkout website/eCommerce dengan field "
+"Meksiko:\n"
+"\n"
+"- l10n_mx_edi_cfdi_to_public (sale.order/account.move)\n"
+"- l10n_mx_edi_fiscal_regime (res.partner)\n"
+"- l10n_mx_edi_usage (sale.order/account.move)\n"
+"- l10n_mx_edi_ieps_breakdown (res.partner)\n"
+"\n"
+"Tab ekstra hanya muncul bila:\n"
+"\n"
+"- perusahaan yang terhubung ke website adalah perusahaan Meksiko\n"
+"- opsi 'automatic_invoice' diaktifkan di pengaturan website ("
+"\"Buat faktur secara otomatis saat pembayaran online dikonfirmasi\")\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm
@@ -3145,6 +3165,9 @@ msgid ""
 "\n"
 "Allows using a compatible printer to print Event badges upon checking in.\n"
 msgstr ""
+"\n"
+"Izinkan menggunakan printer yang kompatibel untuk mencetak lencana-lencana "
+"Acara setelah check in.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_delivery
@@ -4114,6 +4137,9 @@ msgid ""
 "\n"
 "Bridge module for Event/Sale/IoT. Only used to prevent auto-printing if a registration is not yet sold.\n"
 msgstr ""
+"\n"
+"Modul penghubung untuk Acara/Sale/IoT. Hanya digunakan untuk mencegah "
+"pencetakan-otomatis bila pendaftaran belum dijual.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_event_iot
@@ -4121,6 +4147,9 @@ msgid ""
 "\n"
 "Bridge module for PoS/Event/IoT. Used to print with IoT upon selling an event ticket.\n"
 msgstr ""
+"\n"
+"Modul penghubung untuk PoS/Acara/IoT. Digunakan untuk mencetak dengan IoT "
+"setelah menjual tiket acara.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_enterprise
@@ -8507,6 +8536,16 @@ msgid ""
 "- Fiscal Positions\n"
 "- States\n"
 msgstr ""
+"\n"
+"Modul Akuntansi Oman\n"
+"=================================================================\n"
+"Bagan standar akuntansi dan lokalisasi Oman.\n"
+"Mengaktifkan:\n"
+"- Bagan Akun\n"
+"- Pajak-Pajak\n"
+"- Pengembalian PPN\n"
+"- Posisi-Posisi Fiskal\n"
+"- States\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_org_chart
@@ -9972,6 +10011,9 @@ msgid ""
 "This addon contains a generic html builder application. It is designed to be\n"
 "used by the website builder and mass mailing editor.\n"
 msgstr ""
+"\n"
+"Addon ini memiliki aplikasi pembangun html umum. Dirancang untuk\n"
+"digunakan oleh pembangun website dan editor mass mailing.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_purchase
@@ -11342,6 +11384,17 @@ msgid ""
 "-----------------\n"
 "Three layouts copied from the US check printing module, adjusted for DO\n"
 msgstr ""
+"\n"
+"Modul ini memungkinkan untuk mencetak pembayaran Anda di halaman cek yang "
+"dicetak sebelumnya.\n"
+"Anda dapat mengonfigurasi output (layout, informasi stub, dsb.) di "
+"pengaturan perusahaan, dan mengelola\n"
+"penomoran cek (bila Anda menggunakan cek yang dicetak sebelumnya tanpa angka)"
+" di pengaturan jurnal.\n"
+"\n"
+"Format-format yang didukung\n"
+"-----------------\n"
+"Tiga layout disalin dari modul pencetakan cek AS, disesuaikan untuk DO\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ph_check_printing
@@ -14167,6 +14220,11 @@ msgid ""
 "                                <span colspan=\"2\">ISO 8601 Week Year without Century: %(isoy)s</span>\n"
 "                                <span colspan=\"2\">ISO 8601 Week Number: %(isoweek)s</span>"
 msgstr ""
+"<span colspan=\"2\">ISO 8601 Minggu Tahun dengan Abad: %(isoyear)s</span>\n"
+"                                <span colspan=\"2\">ISO 8601 Minggu Tahun "
+"tanpa Abad: %(isoy)s</span>\n"
+"                                <span colspan=\"2\">ISO 8601 Minggu Angka: "
+"%(isoweek)s</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -14174,6 +14232,10 @@ msgid ""
 "<span invisible=\"evaluation_type != 'value' or update_field_type in ['one2many', 'many2many']\">to</span>\n"
 "                                <span invisible=\"evaluation_type != 'sequence'\">with</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value' or update_field_type in "
+"['one2many', 'many2many']\">to</span>\n"
+"                                <span invisible="
+"\"evaluation_type != 'sequence'\">dengan</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -14208,6 +14270,12 @@ msgid ""
 "                                    to this Python expression:\n"
 "                                </span>"
 msgstr ""
+"<span invisible=\"update_field_id != False or evaluation_type != 'value'\" "
+"class=\"o_actions_server_set_a_value text-muted\">Tetapkan value...</span>\n"
+"                                <span invisible="
+"\"evaluation_type != 'equation'\">\n"
+"                                    ke expression Python ini:\n"
+"                                </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -14661,7 +14729,7 @@ msgstr "Modul untuk menguji kode Odoo dengan beragam linters."
 #. module: base
 #: model:ir.module.module,description:base.module_test_orm
 msgid "A module to test the ORM."
-msgstr ""
+msgstr "Modul untuk menguji ORM."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_rpc
@@ -14773,7 +14841,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "A sequence must only be used with character fields."
-msgstr ""
+msgstr "Urutan harus hanya digunakan dengan field karakter."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_contact
@@ -15584,7 +15652,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_account_withholding_tax_pos
 msgid "Add support for the withholding tax module in the PoS."
-msgstr ""
+msgstr "Tambahkan bantuan untuk modul pemotongan pajak di PoS."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_picking_batch
@@ -15984,7 +16052,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_odoo_experts
 msgid "Advisor, Corporate, Service, Business, Finance, IT"
-msgstr ""
+msgstr "Advisor, Corporate, Service, Business, Finance, IT"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__agpl-3
@@ -16504,6 +16572,8 @@ msgid ""
 "Allows to register withholding taxes during the payment of an invoice or "
 "bill."
 msgstr ""
+"Izinkan untuk mendaftarkan pemotongan pajak-pajak pada pembayaran faktur "
+"atau tagihan."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_withholding
@@ -17445,7 +17515,7 @@ msgstr "Penyedia pembayaran Amerika untuk pembayaran online di seluruh dunia."
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_paymob
 msgid "An Egyptian payment provider for the Middle East."
-msgstr ""
+msgstr "Provider pembayaran Mesir untuk Timur Tengah."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_stripe
@@ -17560,12 +17630,12 @@ msgstr "Andora"
 #. module: base
 #: model:ir.module.module,description:base.module_theme_anelusia
 msgid "Anelusia Fashion Theme"
-msgstr ""
+msgstr "Tema Fashion Anelusia"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_anelusia
 msgid "Anelusia Theme"
-msgstr ""
+msgstr "Tema Anelusia"
 
 #. module: base
 #: model:res.country,name:base.ao
@@ -17807,7 +17877,7 @@ msgstr "Arch To Compare To"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_enark
 msgid "Architect, Corporate, Business, Finance, Services"
-msgstr ""
+msgstr "Architect, Corporate, Business, Finance, Services"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
@@ -17886,7 +17956,7 @@ msgstr "Argentinean - Point of Sale with AR Doc"
 #: model:ir.module.module,description:base.module_l10n_ar_stock
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_stock
 msgid "Argentinean - Stock"
-msgstr ""
+msgstr "Argentina - Stok"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_reports
@@ -17923,16 +17993,17 @@ msgstr "Armenia"
 msgid ""
 "Artist, Arts, Galleries, Creative, Paintings, Photography, Shows, Stores"
 msgstr ""
+"Artist, Arts, Galleries, Creative, Paintings, Photography, Shows, Stores"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_artists
 msgid "Artists Theme"
-msgstr ""
+msgstr "Tema Artis"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_artists
 msgid "Artists Theme - Art Galleries, Photography, Painting"
-msgstr ""
+msgstr "Tema Artis - Galleri Seni, Fotografi, Lukisan"
 
 #. module: base
 #: model:res.country,name:base.aw
@@ -18937,12 +19008,12 @@ msgstr "Model-Model tersedia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_avantgarde
 msgid "Avantgarde Theme"
-msgstr ""
+msgstr "Tema Avantgarde"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_avantgarde
 msgid "Avantgarde is a sophisticated theme to inspire and impress"
-msgstr ""
+msgstr "Avantgarde adalah tema berkelas yang berkesan dan menginspirasi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__avatar_1920
@@ -19018,12 +19089,12 @@ msgstr "Avatax untuk geo lokalisasi"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_aviato
 msgid "Aviato Theme"
-msgstr ""
+msgstr "Tema Aviato"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_aviato
 msgid "Aviato Theme - Responsive Bootstrap Theme for Odoo CMS"
-msgstr ""
+msgstr "Tema Aviato - Tema Bootstrap Responsif untuk CMS Odoo"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_fsm
@@ -19163,7 +19234,7 @@ msgstr "Ban"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_notes
 msgid "Band, Musics, Sound, Concerts, Artists, Records, Event, Food, Stores"
-msgstr ""
+msgstr "Band, Musics, Sound, Concerts, Artists, Records, Event, Food, Stores"
 
 #. module: base
 #: model:res.country,name:base.bd
@@ -19430,7 +19501,7 @@ msgstr "Transfer Batch, Carrier"
 #: model:ir.module.module,description:base.module_theme_bewise
 #: model:ir.module.module,shortdesc:base.module_theme_bewise
 msgid "Be Wise Theme"
-msgstr ""
+msgstr "Tema Be Wise"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
@@ -19444,17 +19515,17 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_beauty
 msgid "Beauty Theme"
-msgstr ""
+msgstr "Tema Beauty"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_beauty
 msgid "Beauty Theme - Cosmetics, Beauty, Make Up, Hairdresser"
-msgstr ""
+msgstr "Tema Beauty - Kosmetik, Beauty, Make Up, Hairdresser"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_beauty
 msgid "Beauty, Health, Care, Make Up, Cosmetics, Hair Dressers, Stores"
-msgstr ""
+msgstr "Beauty, Health, Care, Make Up, Cosmetics, Hair Dressers, Stores"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__before
@@ -19687,17 +19758,17 @@ msgstr "Birr"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_bistro
 msgid "Bistro Theme"
-msgstr ""
+msgstr "Tema Bistro"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_bistro
 msgid "Bistro Theme - Restaurant, Food/Drink, Catering, Food trucks"
-msgstr ""
+msgstr "Tema Bistro - Restoran, Makanan/Minuman, Catering, Truk makanan"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_bistro
 msgid "Bistro, Restaurant, Bar, Pub, Cafe, Food, Catering"
-msgstr ""
+msgstr "Bistro, Restaurant, Bar, Pub, Cafe, Food, Catering"
 
 #. module: base
 #. odoo-python
@@ -19752,12 +19823,12 @@ msgstr "Bonaire, Sint Eustatius and Saba"
 #. module: base
 #: model:ir.module.module,description:base.module_theme_bookstore
 msgid "Books, Magazines, Music"
-msgstr ""
+msgstr "Books, Magazines, Music"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_bookstore
 msgid "Bookstore Theme"
-msgstr ""
+msgstr "Tema Toko Buku"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__update_boolean_value
@@ -19892,7 +19963,7 @@ msgstr "Akuntansi EDI Brasil untuk stock"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_website_sale
 msgid "Bridge Website Sale for Argentina"
-msgstr ""
+msgstr "Bridge Website Sale untuk Argentina"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br_website_sale
@@ -20173,12 +20244,12 @@ msgstr "Butut"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_buzzy
 msgid "Buzzy Theme"
-msgstr ""
+msgstr "Tema Buzzy"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_buzzy
 msgid "Buzzy Theme - Responsive Bootstrap Theme for Odoo CMS"
-msgstr ""
+msgstr "Tema Buzzy - Tema Bootstrap Responsif untuk CMS Odoo"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -20229,12 +20300,12 @@ msgstr "CPA005 Payments"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__cpu_duration
 msgid "CPU Duration"
-msgstr ""
+msgstr "Durasi CPU"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_profile__cpu_duration
 msgid "CPU clock (not including other processes or SQL)"
-msgstr ""
+msgstr "CPU clock (tidak termasuk proses-proses atau SQL lain)"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_crm
@@ -20308,7 +20379,7 @@ msgstr "CUIT"
 msgid ""
 "Calculate and report your company's Environmental, Social, and Governance "
 "impact."
-msgstr ""
+msgstr "Hitung dan laporkan dampak ESG perusahaan Anda."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__calendar
@@ -20936,7 +21007,7 @@ msgstr "China - Accounting"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cn_reports
 msgid "China - Accounting Reports"
-msgstr ""
+msgstr "Tiongkok - Laporan Akuntansi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cn_city
@@ -21017,13 +21088,13 @@ msgstr "Kota"
 #: model:ir.module.module,description:base.module_theme_clean
 #: model:ir.module.module,shortdesc:base.module_theme_clean
 msgid "Clean Theme"
-msgstr ""
+msgstr "Tema Clean"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_cobalt
 #: model:ir.module.module,description:base.module_theme_paptic
 msgid "Clean and sharp design."
-msgstr ""
+msgstr "Desin yang bersih dan rapih."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__clearing_number
@@ -21094,7 +21165,7 @@ msgstr "Cloudflare Turnstile"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_cobalt
 msgid "Cobalt Theme"
-msgstr ""
+msgstr "Tema Cobalt"
 
 #. module: base
 #: model:res.country,name:base.cc
@@ -21742,7 +21813,7 @@ msgstr "Konstruksi"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_paptic
 msgid "Consultancy, Design, Tech, Computers, IT, Blogs"
-msgstr ""
+msgstr "Consultancy, Design, Tech, Computers, IT, Blogs"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_8
@@ -21895,7 +21966,7 @@ msgstr "Korporat"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_buzzy
 msgid "Corporate, Services, Technology, Shapes, Illustrations"
-msgstr ""
+msgstr "Corporate, Services, Technology, Shapes, Illustrations"
 
 #. module: base
 #: model:res.country,name:base.cr
@@ -22137,7 +22208,7 @@ msgstr "Buat vendor baru di buku alamat Anda"
 #. module: base
 #: model:ir.module.module,summary:base.module_test_themes
 msgid "Create a new website for each Odoo theme for an easy preview."
-msgstr ""
+msgstr "Buat website baru untuk setiap tema Odoo untuk pratinjau yang mudah."
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.res_partner_industry_action
@@ -22643,7 +22714,7 @@ msgstr "Shortcut Kustom"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_test_custo
 msgid "Custom Theme (Testing suite)"
-msgstr ""
+msgstr "Tema Kustom (suite Testing)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__selection_value
@@ -22842,7 +22913,7 @@ msgstr "Dashboard"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__cache
 msgid "Data Caching"
-msgstr ""
+msgstr "Caching Data"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_data_cleaning
@@ -23343,6 +23414,8 @@ msgid ""
 "Design, Fine Art, Artwork, Creative, Creativity, Galleries, Trends, Shows, "
 "Magazines, Blogs"
 msgstr ""
+"Design, Fine Art, Artwork, Creative, Creativity, Galleries, Trends, Shows, "
+"Magazines, Blogs"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_sms
@@ -23405,7 +23478,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_cobalt
 msgid "Development, IT development, Design, Tech, Computers, IT, Blogs"
-msgstr ""
+msgstr "Development, IT development, Design, Tech, Computers, IT, Blogs"
 
 #. module: base
 #: model:ir.model,name:base.model_res_device_log
@@ -23441,6 +23514,8 @@ msgid ""
 "Digital, Marketing, Copywriting, Media, Events, Non Profit, NGO, Corporate, "
 "Business, Services"
 msgstr ""
+"Digital, Marketing, Copywriting, Media, Events, Non Profit, NGO, Corporate, "
+"Business, Services"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_extract
@@ -23762,7 +23837,7 @@ msgstr "Field yang ditampilkan"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_anelusia
 msgid "Diversity, Fashions, Trends, Clothes, Shoes, Sports, Fitness, Stores"
-msgstr ""
+msgstr "Diversity, Fashions, Trends, Clothes, Shoes, Sports, Fitness, Stores"
 
 #. module: base
 #: model:res.country,name:base.dj
@@ -23981,7 +24056,7 @@ msgstr "Republik Dominika - Laporan Akuntansi"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_do_check_printing
 msgid "Dominican Republic - Checks Layout"
-msgstr ""
+msgstr "Republik Dominika - Layout Cek"
 
 #. module: base
 #. odoo-python
@@ -24580,7 +24655,7 @@ msgstr "Aktifkan kompatibilats VoIP dengan OnSIP."
 #: model:ir.module.module,description:base.module_theme_enark
 #: model:ir.module.module,shortdesc:base.module_theme_enark
 msgid "Enark Theme"
-msgstr ""
+msgstr "Tema Enark"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_D
@@ -24686,6 +24761,8 @@ msgid ""
 "Environment, Nature, Ecology, Sustainable Development, Non Profit, NGO, "
 "Travels"
 msgstr ""
+"Environment, Nature, Ecology, Sustainable Development, Non Profit, NGO, "
+"Travels"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_epson_printer
@@ -25385,6 +25462,8 @@ msgid ""
 "Event, Restaurants, Bars, Pubs, Cafes, Catering, Food, Drinks, Concerts, "
 "Shows, Musics, Dance, Party"
 msgstr ""
+"Event, Restaurants, Bars, Pubs, Cafes, Catering, Food, Drinks, Concerts, "
+"Shows, Musics, Dance, Party"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_exhibitor
@@ -25543,12 +25622,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_theme_odoo_experts
 msgid "Experts Business Theme"
-msgstr ""
+msgstr "Tema Expert Business"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_odoo_experts
 msgid "Experts Theme"
-msgstr ""
+msgstr "Tema Experts"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys__expiration_date
@@ -26381,7 +26460,7 @@ msgstr "Armada dari dokumen"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_orchid
 msgid "Florist, Gardens, Flowers, Nature, Green, Beauty, Stores"
-msgstr ""
+msgstr "Florist, Gardens, Flowers, Nature, Green, Beauty, Stores"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_4
@@ -26740,7 +26819,7 @@ msgstr "Fungsi"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_loftspace
 msgid "Furniture, Toys, Games, Kids, Boys, Girls, Stores"
-msgstr ""
+msgstr "Furniture, Toys, Games, Kids, Boys, Girls, Stores"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_G
@@ -26970,7 +27049,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_html_builder
 msgid "Generic html builder"
-msgstr ""
+msgstr "Pembangun html umum"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__partner_latitude
@@ -27189,7 +27268,7 @@ msgstr "Grafik"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_graphene
 msgid "Graphene Theme"
-msgstr ""
+msgstr "Tema Graphene"
 
 #. module: base
 #: model:res.country,name:base.gr
@@ -27503,7 +27582,7 @@ msgstr "HTML"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_html_builder
 msgid "HTML Builder"
-msgstr ""
+msgstr "Pembangun HTML"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_html_editor
@@ -28227,6 +28306,9 @@ msgid ""
 "If enabled, this action will cache the related data used in list, Kanban and"
 " form views with the aim to increase the loading speed"
 msgstr ""
+"Bila diaktifkan, tindakan ini akan cache data terkait yang digunakan di "
+"tampilan list, Kanban dan form dengan tujuan untuk meningkatkan kecepatan "
+"memuat"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_rule__global
@@ -29502,12 +29584,12 @@ msgstr "IoT untuk Pengiriman"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_sale_iot
 msgid "IoT for Event/Sale"
-msgstr ""
+msgstr "IoT untuk Acara/Sale"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_iot
 msgid "IoT for Events"
-msgstr ""
+msgstr "IoT untuk Acara"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_iot
@@ -29517,7 +29599,7 @@ msgstr "IoT untuk POS"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_event_iot
 msgid "IoT for PoS/Event"
-msgstr ""
+msgstr "IoT untuk PoS/Acara"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_self_order_iot
@@ -29907,7 +29989,7 @@ msgstr "Kazakhstan - Accounting Reports"
 #: model:ir.module.module,description:base.module_theme_kea
 #: model:ir.module.module,shortdesc:base.module_theme_kea
 msgid "Kea Theme"
-msgstr ""
+msgstr "Tema Kea"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__password
@@ -29998,12 +30080,12 @@ msgstr "Khoums"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_kiddo
 msgid "Kiddo Theme"
-msgstr ""
+msgstr "Tema Kiddo"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_kiddo
 msgid "Kiddo theme for Odoo Website"
-msgstr ""
+msgstr "Tema Kiddo untuk Website Odoo"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.PGK
@@ -30566,7 +30648,7 @@ msgstr "Legal 3 8,5 x 14 inci, 215,9 x 355,6 mm"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_clean
 msgid "Legal, Corporate, Business, Tech, Services"
-msgstr ""
+msgstr "Legal, Corporate, Business, Tech, Services"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -30654,7 +30736,7 @@ msgstr "Liberia"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_bookstore
 msgid "Library, Books, Magazines, Literature, Musics, Media, Store"
-msgstr ""
+msgstr "Library, Books, Magazines, Literature, Musics, Media, Store"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__libya
@@ -30675,12 +30757,12 @@ msgstr "Liechtenstein"
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_lifestyle
 msgid "Lifestyle"
-msgstr ""
+msgstr "Lifestyle"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_graphene
 msgid "Light colours, thin text, clean and sharp design."
-msgstr ""
+msgstr "Warna-warna yang ringan, teks tipis, design bersih dan rapih."
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.SZL
@@ -30946,12 +31028,12 @@ msgstr "Lokalisasi"
 #. module: base
 #: model:ir.module.module,description:base.module_theme_loftspace
 msgid "Loftspace Fashion Theme"
-msgstr ""
+msgstr "Tema Fashion Loftspace"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_loftspace
 msgid "Loftspace Theme"
-msgstr ""
+msgstr "Tema Loftspace"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
@@ -31233,7 +31315,7 @@ msgstr "Penomoran Utama"
 #: model:ir.model.fields,field_description:base.field_res_partner__main_user_id
 #: model:ir.model.fields,field_description:base.field_res_users__main_user_id
 msgid "Main User"
-msgstr ""
+msgstr "User Utama"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window__target__main
@@ -31270,7 +31352,7 @@ msgstr "Buat dan terima panggilan telepon dari dalam Odoo."
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_nano
 msgid "Maker, Agencies, Creative, Design, IT, Services, Fancy"
-msgstr ""
+msgstr "Maker, Agencies, Creative, Design, IT, Services, Fancy"
 
 #. module: base
 #: model:res.country,name:base.mw
@@ -32458,6 +32540,8 @@ msgid ""
 "Modifications to the forecast widget on SO lines to show fresh stock, i.e. "
 "ignoring stock to be removed due to expiration."
 msgstr ""
+"Modifikasi ke widget forecast di baris SO untuk menunjukkan stok baru, "
+"contoh mengabaikan stok untuk dihapus oleh karena habis masa berlaku."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_updated
@@ -32612,12 +32696,12 @@ msgstr "Senin"
 #. module: base
 #: model:ir.module.module,description:base.module_theme_monglia
 msgid "Monglia Catering Theme"
-msgstr ""
+msgstr "Tema Katering Mongolia"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_monglia
 msgid "Monglia Theme"
-msgstr ""
+msgstr "Tema Mongolia"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.MNT
@@ -32897,12 +32981,12 @@ msgstr "Namibia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_nano
 msgid "Nano Theme"
-msgstr ""
+msgstr "Tema Nano"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_nano
 msgid "Nano Theme - Responsive Bootstrap Theme for Odoo CMS"
-msgstr ""
+msgstr "Tema Nano - Tema Bootstrap Responsif untuk CMS Odoo"
 
 #. module: base
 #. odoo-python
@@ -33202,7 +33286,7 @@ msgstr "Tidak ada spasi yang diizinkan di view_mode: “%s”"
 #. odoo-python
 #: code:addons/translate.py:0
 msgid "No translatable terms were found in %s."
-msgstr ""
+msgstr "Tidak ada istilah yang dapat diterjemahkan di %s."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__noupdate
@@ -33331,7 +33415,7 @@ msgstr "Catatan"
 #: model:ir.module.module,description:base.module_theme_notes
 #: model:ir.module.module,shortdesc:base.module_theme_notes
 msgid "Notes & Play Theme"
-msgstr ""
+msgstr "Tema Notes & Play"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_stock_wishlist
@@ -33376,7 +33460,7 @@ msgstr "Jumlah user yang memiliki kelompok ini (tersirat atau eksplisit)"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_kiddo
 msgid "Nursery, Toys, Games, Kids, Boys, Girls, Stores"
-msgstr ""
+msgstr "Nursery, Toys, Games, Kids, Boys, Girls, Stores"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_O
@@ -35330,7 +35414,7 @@ msgstr "Oman"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_om
 msgid "Oman - Accounting"
-msgstr ""
+msgstr "Akuntansi - Oman"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__on_delete
@@ -35601,12 +35685,12 @@ msgstr "Opsi"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_orchid
 msgid "Orchid Theme"
-msgstr ""
+msgstr "Tema Orchid"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_orchid
 msgid "Orchid Theme - Flowers, Beauty"
-msgstr ""
+msgstr "Tema Orchid - Bunga, Beauty"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__order
@@ -36649,7 +36733,7 @@ msgstr "Ukuran kertas"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_paptic
 msgid "Paptic Theme"
-msgstr ""
+msgstr "Tema Paptic"
 
 #. module: base
 #: model:res.country,name:base.pg
@@ -36989,7 +37073,7 @@ msgstr "Provider Pembayaran: Nuvei"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_paymob
 msgid "Payment Provider: Paymob"
-msgstr ""
+msgstr "Provider Pembayaran: Paymob"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_paypal
@@ -37083,7 +37167,7 @@ msgstr "Orang"
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_personal
 msgid "Personal"
-msgstr ""
+msgstr "Pribadi"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_2
@@ -37596,7 +37680,7 @@ msgstr "Cetak Cek Kanada"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_do_check_printing
 msgid "Print Dominican Republic Checks"
-msgstr ""
+msgstr "Cetak Cek Republik Dominika"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ph_check_printing
@@ -38638,12 +38722,12 @@ msgstr "Real Estate"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_real_estate
 msgid "Real Estate Theme"
-msgstr ""
+msgstr "Tema Real Estate"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_real_estate
 msgid "Real Estate Theme - Houses, Appartments, Real Estate Agencies"
-msgstr ""
+msgstr "Tema Real Estate - Rumah, Apartemen, Agensi Real Estate"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_real_estate
@@ -38651,11 +38735,13 @@ msgid ""
 "Real Estate, Agencies, Construction, Services, Accomodations, Lodging, "
 "Hosting, Houses, Appartments, Vacations, Holidays, Travels"
 msgstr ""
+"Real Estate, Agencies, Construction, Services, Accomodations, Lodging, "
+"Hosting, Houses, Appartments, Vacations, Holidays, Travels"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_profile__duration
 msgid "Real elapsed time"
-msgstr ""
+msgstr "Waktu asli yang berlangsung"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__resource_ref
@@ -39743,7 +39829,7 @@ msgstr "Sale Stock Margin"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_stock_product_expiry
 msgid "Sale Stock Product Expiry"
-msgstr ""
+msgstr "Penjualan Stok Produk Kadaluwarsa"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_stock
@@ -40194,7 +40280,7 @@ msgstr "Pilih field untuk menghubungkan record ke"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Select a sequence..."
-msgstr ""
+msgstr "Pilih urutan..."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -40296,6 +40382,7 @@ msgstr "Jual produk rental pada eCommerce Anda dan kelola stok"
 msgid ""
 "Sell rental products on your eCommerce and plan your material resources"
 msgstr ""
+"Jual produk rental di eCommerce Anda dan renccakana sumber daya material Anda"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_subscription
@@ -40352,7 +40439,7 @@ msgstr "Kirim Notifikasi Webhook"
 #. module: base
 #: model:ir.module.module,summary:base.module_sign
 msgid "Send and request electronic signatures."
-msgstr ""
+msgstr "Kirim dan minta tanda-tangan elektronik."
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_push_notifications
@@ -40550,7 +40637,7 @@ msgstr "Ukuran Sequence"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__sequence_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__sequence_id
 msgid "Sequence to use"
-msgstr ""
+msgstr "Urutan untuk digunakan"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_form
@@ -40639,7 +40726,7 @@ msgstr "Margin Layanan di Sale Order"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_graphene
 msgid "Service, Corporate, Design, Technology, Robotics, Computers, IT, Blogs"
-msgstr ""
+msgstr "Service, Corporate, Design, Technology, Robotics, Computers, IT, Blogs"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services
@@ -41027,12 +41114,12 @@ msgstr "Snail Mail Tindak-Lanjut"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_common
 msgid "Snippets Library"
-msgstr ""
+msgstr "Pustaka Snippet"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_common
 msgid "Snippets library containing snippets to be styled in themes."
-msgstr ""
+msgstr "Pustaka snippet yang memiliki snippet untuk menjadi style di tema."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_social
@@ -41974,7 +42061,7 @@ msgstr "Switzerland - Payroll with Accounting"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch_hr_payroll
 msgid "Switzerland - Swissdec Certified ELM 5.0 - Payroll"
-msgstr ""
+msgstr "Swiss - Swissdec Certified ELM 5.0 - Payroll"
 
 #. module: base
 #: model:res.country.group,name:base.ch_and_li
@@ -42082,7 +42169,7 @@ msgstr "TPIN"
 #. module: base
 #: model:res.country,vat_label:base.ae
 msgid "TRN"
-msgstr ""
+msgstr "TRN"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__tabloid
@@ -42300,7 +42387,7 @@ msgstr "Technology"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_kea
 msgid "Technology, Tech, IT, Computers, Stores, Virtual Reality"
-msgstr ""
+msgstr "Technology, Tech, IT, Computers, Stores, Virtual Reality"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_name
@@ -42437,7 +42524,7 @@ msgstr "Test Alur Utama"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_orm
 msgid "Test ORM"
-msgstr ""
+msgstr "Tes ORM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_rpc
@@ -43400,7 +43487,7 @@ msgstr "Tema"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_common
 msgid "Theme Common"
-msgstr ""
+msgstr "Tema Common"
 
 #. module: base
 #: model:ir.actions.act_url,name:base.action_theme_store
@@ -43412,7 +43499,7 @@ msgstr "Toko Tema"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_themes
 msgid "Themes Testing Module"
-msgstr ""
+msgstr "Tema Modul Testing"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -43426,6 +43513,8 @@ msgid ""
 "There can be several users related to the same partner. When a single user "
 "is needed, this field attempts to find the most appropriate one."
 msgstr ""
+"Terdapat beberapa user terkait ke partner yang sama. Saat satu user "
+"dibutuhkan, field ini akan mencoba mencari yang paling sesuai."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_latam_check
@@ -43572,6 +43661,9 @@ msgid ""
 "         Please install the new \"DHL Express Shipping\" module and "
 "uninstall this one as soon as possible."
 msgstr ""
+"Ini adalah integrasi legacy dengan DHL Express yang tidak lagi "
+"digunakan.         Silakan instal modul \"DHL Express Shipping\" baru dan "
+"uninstal modul ini secepat mungkin."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex
@@ -43709,6 +43801,8 @@ msgid ""
 "This module allows to publish your available job positions on your website "
 "and keep track of application submissions easily."
 msgstr ""
+"Modul ini memungkinkan publikasi lowongan kerja yang tersedia di website "
+"Anda dan tetap melacak lamaran dengan mudah."
 
 #. module: base
 #: model:ir.module.module,description:base.module_iot_box_image
@@ -44078,6 +44172,11 @@ msgid ""
 "    It will simply create a new website for each Odoo theme and install every\n"
 "    theme on one website."
 msgstr ""
+"Modul ini akan membantu Anda untuk dengan cepat menguji semua tema-tema\n"
+"    Odoo tanpa harus mengganti dari satu tema ke yang lain di website Anda.\n"
+"    Ini akan membuat website baru untuk setiap tema Odoo dan menginstal "
+"semua\n"
+"    tema di satu website."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -44504,17 +44603,17 @@ msgstr "Transportasi/Logistik"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_aviato
 msgid "Travel, Excursion, Plane, Tour, Agency "
-msgstr ""
+msgstr "Travel, Excursion, Plane, Tour, Agency "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_treehouse
 msgid "Treehouse Theme"
-msgstr ""
+msgstr "Tema Treehouse"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_treehouse
 msgid "Treehouse Theme - Responsive Bootstrap Theme for Odoo CMS"
-msgstr ""
+msgstr "Tema Treehouse - Tema Bootstrap Responsif untuk CMS Odoo"
 
 #. module: base
 #. odoo-python
@@ -45122,7 +45221,7 @@ msgstr "Universal"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_bewise
 msgid "University, Education, Schools, Young, Play, Kids"
-msgstr ""
+msgstr "University, Education, Schools, Young, Play, Kids"
 
 #. module: base
 #. odoo-python
@@ -45348,7 +45447,7 @@ msgstr "Gunakan Perangkat IoT di POS"
 #: model:ir.module.module,summary:base.module_event_sale_iot
 #: model:ir.module.module,summary:base.module_pos_event_iot
 msgid "Use IoT device integrations for events"
-msgstr ""
+msgstr "Gunakan integrasi perangkat IoT untuk acara"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_iot
@@ -45483,6 +45582,8 @@ msgid ""
 "Use your employee data to measure important ESG metrics (e.g. employee "
 "commuting, sex parity)."
 msgstr ""
+"Gunakan data karyawan Anda untuk mengukur metrik ESG yang penting (contoh. "
+"pulang pergi karyawan, keseimbangan gender)."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__relation_table
@@ -45796,12 +45897,12 @@ msgstr "Vatu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_vehicle
 msgid "Vehicle Theme"
-msgstr ""
+msgstr "Tema Kendaraan"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_vehicle
 msgid "Vehicle Theme - Cars, Motorbikes, Bikes, Tires"
-msgstr ""
+msgstr "Tema Kendaraan - Mobil, Sepeda Motor, Sepeda, Roda"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_vehicle
@@ -45809,6 +45910,8 @@ msgid ""
 "Vehicle, Cars, Motorbikes, Bikes, Tires, Transports, Repair, Mechanics, "
 "Garages, Sports, Services"
 msgstr ""
+"Vehicle, Cars, Motorbikes, Bikes, Tires, Transports, Repair, Mechanics, "
+"Garages, Sports, Services"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_0
@@ -46369,7 +46472,7 @@ msgstr "Profil website"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_yes
 msgid "Wedding, Love, Photography, Services"
-msgstr ""
+msgstr "Wedding, Love, Photography, Services"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__3
@@ -46598,12 +46701,12 @@ msgstr "Aksi Jendela"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_account_withholding_tax
 msgid "Withholding Tax on Payment"
-msgstr ""
+msgstr "Pemotongan Pajak di Pembayaran"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_account_withholding_tax_pos
 msgid "Withholding Tax on Payment - PoS"
-msgstr ""
+msgstr "Pemotongan Pajak di Pembayaran - PoS"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_line__wizard_id
@@ -46671,7 +46774,7 @@ msgstr "Entri Kerja - Absensi"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_enterprise
 msgid "Work Entries - Enterprise"
-msgstr ""
+msgstr "Entri-Entri Kerja - Enterprise"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_planning
@@ -46774,12 +46877,12 @@ msgstr "Yes (True)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_yes
 msgid "Yes Theme"
-msgstr ""
+msgstr "Tema YEs"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_yes
 msgid "Yes Theme - Wedding"
-msgstr ""
+msgstr "Tema Yes - Pernikahan"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -46994,6 +47097,8 @@ msgid ""
 "You cannot create two date ranges for the same sequence with the same date "
 "range."
 msgstr ""
+"Anda tidak dapat membuat dua rentang tanggal untuk urutan yang sama dengan "
+"rentang tanggal yang sama."
 
 #. module: base
 #. odoo-python
@@ -47229,12 +47334,12 @@ msgstr "Zambia - Accounting Reports"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_zap
 msgid "Zap Theme"
-msgstr ""
+msgstr "Tema Zap"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_zap
 msgid "Zap Theme - Corporate, Business, Marketing, Copywriting"
-msgstr ""
+msgstr "Tema Zap - Korporat, Bisnis, Marketing, Copywriting"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.ZIG
@@ -47503,7 +47608,7 @@ msgstr "eCommerce Rental"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_renting_planning
 msgid "eCommerce Rental with Planning"
-msgstr ""
+msgstr "Rental eCommerce dengan Planning"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock_renting
@@ -47815,7 +47920,7 @@ msgstr "selection_value"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__sequence_id
 msgid "sequence_id"
-msgstr ""
+msgstr "sequence_id"
 
 #. module: base
 #. odoo-python

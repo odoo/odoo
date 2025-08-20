@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-08-18 18:38+0000\n"
 "PO-Revision-Date: 2025-08-18 23:11+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -31,7 +31,8 @@ msgid ""
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
 "                    No milestones found. Let's create one!\n"
 "                </p><p>\n"
-"                    Track major progress points that must be reached to achieve success.\n"
+"                    Track major progress points that must be reached to "
+"achieve success.\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -39,7 +40,8 @@ msgstr ""
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
 "                    マイルストンが見つかりませんでした。作成しましょう!\n"
 "                </p><p>\n"
-"                    成功するために到達すべき重要な進捗ポイントを管理しましょう。\n"
+"                    成功するために到達すべき重要な進捗ポイントを管理しましょ"
+"う。\n"
 "                </p>\n"
 "            "
 
@@ -89,14 +91,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid ""
 "<span class=\"o_stat_text\">\n"
-"                            <span class=\"o_stat_value\">0</span> Sales Order\n"
+"                            <span class=\"o_stat_value\">0</span> Sales "
+"Order\n"
 "                        </span>\n"
 "                        <span class=\"o_stat_text\">\n"
 "                            Make Billable\n"
 "                        </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                            <span class=\"o_stat_value\">0</span>販売オーダ \n"
+"                            <span class=\"o_stat_value\">0</span>販売オー"
+"ダ \n"
 "                        </span>\n"
 "                        <span class=\"o_stat_text\">\n"
 "                            請求可能にする\n"
@@ -143,11 +147,15 @@ msgstr "<span>)</span>"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid ""
-"A project must be defined on the quotation %(order)s or on the form of products creating a task on order.\n"
-"The following product need a project in which to put its task: %(product_name)s"
+"A project must be defined on the quotation %(order)s or on the form of "
+"products creating a task on order.\n"
+"The following product need a project in which to put its task: %"
+"(product_name)s"
 msgstr ""
-"プロジェクトは、見積書またはオーダ%(order)sでタスクを作成するプロダクトのフォーム上で定義する必要があります。\n"
-"以下のプロダクトには、タスクを配置するプロジェクトが必要です: %(product_name)s"
+"プロジェクトは、見積書またはオーダ%(order)sでタスクを作成するプロダクトの"
+"フォーム上で定義する必要があります。\n"
+"以下のプロダクトには、タスクを配置するプロジェクトが必要です: %"
+"(product_name)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -156,21 +164,28 @@ msgid ""
 "analytic distribution of this project will also serve as a reference for "
 "newly created sales order items."
 msgstr ""
-"販売オーダが確定した時点で、プロジェクト用のタスクが作成されます。このプロジェクトの分析的な分布は、新たに作成された販売オーダ項目に関する参考情報としても役立ちます。"
+"販売オーダが確定した時点で、プロジェクト用のタスクが作成されます。このプロ"
+"ジェクトの分析的な分布は、新たに作成された販売オーダ項目に関する参考情報とし"
+"ても役立ちます。"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"プロダクト構成に応じて、配送済数量はメカニズムによって自動的に計算されます: \n"
+"プロダクト構成に応じて、配送済数量はメカニズムによって自動的に計算されま"
+"す: \n"
 "  - 手動: 数量を明細上で手動で設定します\n"
 "  - 費用からの分析: 数量は計上された費用からの合計数量です\n"
-"  - タイムシート:数量は、この売上明細にリンクされたタスクに記録された時間の合計です\n"
+"  - タイムシート:数量は、この売上明細にリンクされたタスクに記録された時間の合"
+"計です\n"
 "  - 在庫移動: 数量は確定したピッキングに由来します\n"
 
 #. module: sale_project
@@ -214,7 +229,9 @@ msgstr "確定して閉じる"
 msgid ""
 "Converting this template to a regular project will unlink it from its "
 "associated products."
-msgstr "このテンプレートを通常のプロジェクトに変換すると、関連付けられているプロダクトとのリンクが解除されます。"
+msgstr ""
+"このテンプレートを通常のプロジェクトに変換すると、関連付けられているプロダク"
+"トとのリンクが解除されます。"
 
 #. module: sale_project
 #. odoo-python
@@ -282,7 +299,9 @@ msgstr "オーダ用に空のプロジェクトを作成し費やした時間を
 msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
-msgstr "請求書を作成したり、支払登録したり、顧客とのコミュニケーションを管理したりします。"
+msgstr ""
+"請求書を作成したり、支払登録したり、顧客とのコミュニケーションを管理したりし"
+"ます。"
 
 #. module: sale_project
 #. odoo-python
@@ -290,7 +309,9 @@ msgstr "請求書を作成したり、支払登録したり、顧客とのコミ
 msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your vendors."
-msgstr "請求書を作成したり、支払を登録したり、仕入先とのコミュニケーションを管理したりします。"
+msgstr ""
+"請求書を作成したり、支払を登録したり、仕入先とのコミュニケーションを管理した"
+"りします。"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
@@ -304,7 +325,9 @@ msgstr "オーダで作成"
 msgid ""
 "Create projects or tasks later, and link them to order to track the time "
 "spent."
-msgstr "プロジェクトまたはタスクを後で作成し、それらをオーダにリンクして費やした時間を追跡します。"
+msgstr ""
+"プロジェクトまたはタスクを後で作成し、それらをオーダにリンクして費やした時間"
+"を追跡します。"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__partner_id
@@ -468,13 +491,18 @@ msgstr "もっと読み込む"
 #: model:ir.model.fields,help:sale_project.field_product_product__service_type
 #: model:ir.model.fields,help:sale_project.field_product_template__service_type
 msgid ""
-"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
-"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
-"Create a task and track hours: Create a task on the sales order validation and track the work hours."
+"Manually set quantities on order: Invoice based on the manually entered "
+"quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related "
+"timesheet.\n"
+"Create a task and track hours: Create a task on the sales order validation "
+"and track the work hours."
 msgstr ""
-"注文時に手動で数量を設定:分析アカウントを作成せずに、手動で入力した数量に基づいて請求します。\n"
+"注文時に手動で数量を設定:分析アカウントを作成せずに、手動で入力した数量に基づ"
+"いて請求します。\n"
 "契約上のタイムシート:関連するタイムシートで追跡対象時間に基づく請求書。\n"
-"タスクを作成して時間を追跡する:販売注文の検証でタスクを作成し、労働時間を追跡します。"
+"タスクを作成して時間を追跡する:販売注文の検証でタスクを作成し、労働時間を追跡"
+"します。"
 
 #. module: sale_project
 #. odoo-python
@@ -537,8 +565,8 @@ msgstr "取引先"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
 msgid ""
-"Percentage of the ordered quantity that will automatically be delivered once"
-" the milestone is reached."
+"Percentage of the ordered quantity that will automatically be delivered once "
+"the milestone is reached."
 msgstr "マイルストンに達すると自動的に配送されるオーダ数量の割合。"
 
 #. module: sale_project
@@ -572,10 +600,12 @@ msgstr "プロダクトバリアント"
 #: model:ir.model.fields,help:sale_project.field_project_project__reinvoiced_sale_order_id
 msgid ""
 "Products added to stock pickings, whose operation type is configured to "
-"generate analytic costs, will be re-invoiced in this sales order if they are"
-" set up for it."
+"generate analytic costs, will be re-invoiced in this sales order if they are "
+"set up for it."
 msgstr ""
-"分析原価を生成するようにオペレーションタイプが設定されている在庫ピッキングに追加されたプロダクトは、そのように設定されていれば、この販売オーダで再請求されます。"
+"分析原価を生成するようにオペレーションタイプが設定されている在庫ピッキングに"
+"追加されたプロダクトは、そのように設定されていれば、この販売オーダで再請求さ"
+"れます。"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_project
@@ -688,13 +718,20 @@ msgstr "マイルストンに達すると販売オーダ項目は更新されま
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
 msgid ""
-"Sales Order Item to which the time spent on this task will be added in order to be invoiced to your customer.\n"
-"By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
-"Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
+"Sales Order Item to which the time spent on this task will be added in order "
+"to be invoiced to your customer.\n"
+"By default the sales order item set on the project will be selected. In the "
+"absence of one, the last prepaid sales order item that has time remaining "
+"will be used.\n"
+"Remove the sales order item in order to make this task non billable. You can "
+"also change or remove the sales order item of each timesheet entry "
+"individually."
 msgstr ""
 "顧客に請求するために、このタスクの消費時間を追加する販売オーダ項目。\n"
-"デフォルトでは、プロジェクトに設定された販売オーダ項目が選択されます。この項目がない場合、残り時間がある最後の前払販売オーダ項目が使用されます。\n"
-"このタスクを請求不可にするには、販売オーダ項目を削除します。各タイムシートの販売オーダ項目を個別に変更または削除することもできます。"
+"デフォルトでは、プロジェクトに設定された販売オーダ項目が選択されます。この項"
+"目がない場合、残り時間がある最後の前払販売オーダ項目が使用されます。\n"
+"このタスクを請求不可にするには、販売オーダ項目を削除します。各タイムシートの"
+"販売オーダ項目を個別に変更または削除することもできます。"
 
 #. module: sale_project
 #. odoo-javascript
@@ -720,10 +757,15 @@ msgstr "販売オーダ"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
 msgid ""
-"Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
-"It can be modified on each task and timesheet entry individually if necessary."
+"Sales order item that will be selected by default on the tasks and "
+"timesheets of this project, except if the employee set on the timesheets is "
+"explicitely linked to another sales order item on the project.\n"
+"It can be modified on each task and timesheet entry individually if "
+"necessary."
 msgstr ""
-"このプロジェクトのタスクとタイムシートでデフォルトで選択される販売オーダ項目。ただし、タイムシートに設定された従業員がプロジェクトの別の販売オーダ項目に明確にリンクされている場合を除きます。\n"
+"このプロジェクトのタスクとタイムシートでデフォルトで選択される販売オーダ項"
+"目。ただし、タイムシートに設定された従業員がプロジェクトの別の販売オーダ項目"
+"に明確にリンクされている場合を除きます。\n"
 "必要であれば、各タスクやタイムシートで個別に変更することができます。"
 
 #. module: sale_project
@@ -810,7 +852,9 @@ msgstr "販売オーダには、少なくとも1つのサービスプロダク�
 msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
-msgstr "プロジェクトが生成されるので、プロダクト%sにグローバル・プロジェクトがあってはいけません。"
+msgstr ""
+"プロジェクトが生成されるので、プロダクト%sにグローバル・プロジェクトがあって"
+"はいけません。"
 
 #. module: sale_project
 #. odoo-python
@@ -818,7 +862,9 @@ msgstr "プロジェクトが生成されるので、プロダクト%sにグロ�
 msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
-msgstr "プロジェクトは生成されないので、プロダクト%sにプロジェクトもプロジェクト・テンプレートもあってはいけません。"
+msgstr ""
+"プロジェクトは生成されないので、プロダクト%sにプロジェクトもプロジェクト・テ"
+"ンプレートもあってはいけません。"
 
 #. module: sale_project
 #. odoo-python
@@ -826,7 +872,9 @@ msgstr "プロジェクトは生成されないので、プロダクト%sにプ�
 msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
-msgstr "グローバル・プロジェクトでタスクを生成するので、プロダクト%sにプロジェクト・テンプレートがあってはいけません。"
+msgstr ""
+"グローバル・プロジェクトでタスクを生成するので、プロダクト%sにプロジェクト・"
+"テンプレートがあってはいけません。"
 
 #. module: sale_project
 #. odoo-python
@@ -834,7 +882,9 @@ msgstr "グローバル・プロジェクトでタスクを生成するので、
 msgid ""
 "The project couldn't be created as the Sales Order must be confirmed or is "
 "already linked to a project."
-msgstr "販売オーダが確定されているか、すでにプロジェクトにリンクされているため、プロジェクトを作成できませんでした。"
+msgstr ""
+"販売オーダが確定されているか、すでにプロジェクトにリンクされているため、プロ"
+"ジェクトを作成できませんでした。"
 
 #. module: sale_project
 #. odoo-python
@@ -867,18 +917,13 @@ msgid ""
 "        30h Allocate 30 hours to the task\n"
 "        #tags Set tags on the task\n"
 "        @user Assign the task to a user\n"
-"        ! Set the task a high priority\n"
+"        ! Set the task a medium priority\n"
+"        !! Set the task a high priority\n"
+"        !!! Set the task a urgent priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
-"新しいタスクを設定するのにこれらのキーワードを使いましょう:\n"
-"\n"
-"       30h タスクに30時間を割り当てる\n"
-"      #タグ タスクにタグを設定する\n"
-"        @ユーザ タスクをユーザーに割り当てる \n"
-"        ! タスクに高い優先順位を設定\n"
-"\n"
-"        正しいフォーマットと順序を使うようにしましょう。 例: 設定画面の改善 5h #feature #v16 @Mitchell !"
 
 #. module: sale_project
 #. odoo-python
@@ -909,7 +954,9 @@ msgstr "配線サービス"
 msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
-msgstr "オーダ項目%(order_id)s-%(product_id)sは再請求された費用であるため、このタスクにリンクすることはできません。"
+msgstr ""
+"オーダ項目%(order_id)s-%(product_id)sは再請求された費用であるため、このタスク"
+"にリンクすることはできません。"
 
 #. module: sale_project
 #. odoo-python
@@ -934,3 +981,24 @@ msgstr "sale_line_id"
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "sale_order_id"
 msgstr "sale_order_id"
+
+#~ msgid ""
+#~ "Use these keywords in the title to set new tasks:\n"
+#~ "\n"
+#~ "        30h Allocate 30 hours to the task\n"
+#~ "        #tags Set tags on the task\n"
+#~ "        @user Assign the task to a user\n"
+#~ "        ! Set the task a high priority\n"
+#~ "\n"
+#~ "        Make sure to use the right format and order e.g. Improve the "
+#~ "configuration screen 5h #feature #v16 @Mitchell !"
+#~ msgstr ""
+#~ "新しいタスクを設定するのにこれらのキーワードを使いましょう:\n"
+#~ "\n"
+#~ "       30h タスクに30時間を割り当てる\n"
+#~ "      #タグ タスクにタグを設定する\n"
+#~ "        @ユーザ タスクをユーザーに割り当てる \n"
+#~ "        ! タスクに高い優先順位を設定\n"
+#~ "\n"
+#~ "        正しいフォーマットと順序を使うようにしましょう。 例: 設定画面の改"
+#~ "善 5h #feature #v16 @Mitchell !"

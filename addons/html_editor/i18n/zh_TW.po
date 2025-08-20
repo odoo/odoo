@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* html_editor
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Tony Ng, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-08-18 18:37+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: html_editor
@@ -26,7 +27,9 @@ msgstr ""
 msgid ""
 "'Alt tag' specifies an alternate text for an image, if the image cannot be "
 "displayed (slow connection, missing image, screen reader ...)."
-msgstr "如果無法顯示圖像，則「Alt tag」指定圖像的替代文本（連接速度慢，圖像遺失，螢幕閱讀器......）。"
+msgstr ""
+"如果無法顯示圖像，則「Alt tag」指定圖像的替代文本（連接速度慢，圖像遺失，螢幕"
+"閱讀器......）。"
 
 #. module: html_editor
 #. odoo-javascript
@@ -86,8 +89,8 @@ msgstr "動作 %s 不是視窗動作，連結預覽未能提供"
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Action %s not found, link preview is not available, please check your url is"
-" correct"
+"Action %s not found, link preview is not available, please check your url is "
+"correct"
 msgstr "找不到操作 %s，無法預覽連結，請檢查網址是否正確"
 
 #. module: html_editor
@@ -246,6 +249,12 @@ msgstr "附件"
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__local_url
 msgid "Attachment URL"
 msgstr "附件網址"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Autoconvert to relative link"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -527,10 +536,12 @@ msgstr "捨棄"
 msgid ""
 "Discover a world of awesomeness in our copyright-free image haven. No legal "
 "drama, just nice images!"
-msgstr "在我們的無版權費圖片天堂，發現精彩世界！沒有法律糾紛，只有美麗動人的圖片！"
+msgstr ""
+"在我們的無版權費圖片天堂，發現精彩世界！沒有法律糾紛，只有美麗動人的圖片！"
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
@@ -563,12 +574,6 @@ msgstr "編輯"
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit Link"
 msgstr "編輯連結"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/navbar_link_popover.xml:0
-msgid "Edit Menu"
-msgstr "編輯選單"
 
 #. module: html_editor
 #. odoo-javascript
@@ -672,6 +677,11 @@ msgstr "垂直翻轉"
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Format"
 msgstr "文字格式"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -801,6 +811,7 @@ msgstr "Html"
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__id
 msgid "ID"
 msgstr "識別碼"
 
@@ -998,8 +1009,7 @@ msgstr "連結已複製至剪貼簿。"
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Link preview is not available because %s, please check if your url is "
-"correct"
+"Link preview is not available because %s, please check if your url is correct"
 msgstr "無法預覽連結，原因是 %s，請檢查網址是否正確"
 
 #. module: html_editor
@@ -1632,7 +1642,9 @@ msgstr "這個圖像是一個外部圖像"
 msgid ""
 "This type of image is not supported for cropping.<br/>If you want to crop "
 "it, please first download it from the original source and upload it in Odoo."
-msgstr "不支援裁剪這種類型的圖片。<br/>如果您想裁剪它，請先從原始來源下載並在Odoo中上傳。"
+msgstr ""
+"不支援裁剪這種類型的圖片。<br/>如果您想裁剪它，請先從原始來源下載並在Odoo中上"
+"傳。"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1847,7 +1859,9 @@ msgstr "是"
 msgid ""
 "You can not replace a field by this image. If you want to use this image, "
 "first save it on your computer and then upload it here."
-msgstr "你不可使用此圖片取代欄位。如果想使用此圖片，請先將它儲存至你的電腦上，然後上載至此處。"
+msgstr ""
+"你不可使用此圖片取代欄位。如果想使用此圖片，請先將它儲存至你的電腦上，然後上"
+"載至此處。"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1961,3 +1975,6 @@ msgstr "px"
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "videos"
 msgstr "影片"
+
+#~ msgid "Edit Menu"
+#~ msgstr "編輯選單"

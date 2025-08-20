@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_holidays
-# 
+#
 # Translators:
 # Tiffany Chang, 2025
 # Wil Odoo, 2025
 # Abe Manyo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:37+0000\n"
+"POT-Creation-Date: 2025-08-18 18:36+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
+"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_holidays
@@ -30,7 +30,8 @@ msgid ""
 "                    No Balance yet!\n"
 "                </p>\n"
 "                <p>\n"
-"                    Why don't you start by <a type=\"action\" class=\"text-link\" name=\"%d\">Allocating Time off</a> ?\n"
+"                    Why don't you start by <a type=\"action\" class=\"text-"
+"link\" name=\"%d\">Allocating Time off</a> ?\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -39,7 +40,8 @@ msgstr ""
 "                    Belum ada Saldo!\n"
 "                </p>\n"
 "                <p>\n"
-"                    Bagimana bila Anda memulai dengan <a type=\"action\" class=\"text-link\" name=\"%d\">Mengalokasikan Cuti</a> ?\n"
+"                    Bagimana bila Anda memulai dengan <a type=\"action\" "
+"class=\"text-link\" name=\"%d\">Mengalokasikan Cuti</a> ?\n"
 "                </p>\n"
 "            "
 
@@ -211,11 +213,9 @@ msgstr "&lt;/th&gt;"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid ""
-"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-"
-"color:"
+"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-color:"
 msgstr ""
-"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-"
-"color:"
+"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-color:"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -262,6 +262,12 @@ msgid ", back on "
 msgstr ", kembali pada"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid "- '%(version)s' from %(start_date)s to %(end_date)s"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "00:00"
 msgstr "00:00"
@@ -301,19 +307,23 @@ msgstr "<i class=\"fa fa-long-arrow-right\" title=\"ke\"/>"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid ""
 "<span class=\"ml8\" invisible=\"request_unit == 'hour'\">Days</span>\n"
-"                            <span class=\"ml8\" invisible=\"request_unit != 'hour'\">Hours</span>"
+"                            <span class=\"ml8\" invisible=\"request_unit != "
+"'hour'\">Hours</span>"
 msgstr ""
 "<span class=\"ml8\" invisible=\"request_unit == 'hour'\">Hari</span>\n"
-"                            <span class=\"ml8\" invisible=\"request_unit != 'hour'\">Jam</span>"
+"                            <span class=\"ml8\" invisible=\"request_unit != "
+"'hour'\">Jam</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 msgid ""
 "<span class=\"ml8\" invisible=\"type_request_unit == 'hour'\">Days</span>\n"
-"                                <span class=\"ml8\" invisible=\"type_request_unit != 'hour'\">Hours</span>"
+"                                <span class=\"ml8\" "
+"invisible=\"type_request_unit != 'hour'\">Hours</span>"
 msgstr ""
 "<span class=\"ml8\" invisible=\"type_request_unit == 'hour'\">Hari</span>\n"
-"                                <span class=\"ml8\" invisible=\"type_request_unit != 'hour'\">Jam</span>"
+"                                <span class=\"ml8\" "
+"invisible=\"type_request_unit != 'hour'\">Jam</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -324,10 +334,12 @@ msgstr "<span class=\"mx-1\">-</span>"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid ""
 "<span class=\"mx-2\" invisible=\"request_unit == 'hour'\">days</span>\n"
-"                                    <span class=\"mx-2\" invisible=\"request_unit != 'hour'\">hours</span>"
+"                                    <span class=\"mx-2\" "
+"invisible=\"request_unit != 'hour'\">hours</span>"
 msgstr ""
 "<span class=\"mx-2\" invisible=\"request_unit == 'hour'\">hari</span>\n"
-"                                    <span class=\"mx-2\" invisible=\"request_unit != 'hour'\">jam</span>"
+"                                    <span class=\"mx-2\" "
+"invisible=\"request_unit != 'hour'\">jam</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -428,10 +440,12 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid ""
-"<span>The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone</span>\n"
+"<span>The employee has a different timezone than yours! Here dates and times "
+"are displayed in the employee's timezone</span>\n"
 "                    ("
 msgstr ""
-"<span>Karyawan memiliki zona waktu yang berbeda dari Anda! Berikut tanggal dan waktu yang ditampilkan di zona waktu karyawan</span>\n"
+"<span>Karyawan memiliki zona waktu yang berbeda dari Anda! Berikut tanggal "
+"dan waktu yang ditampilkan di zona waktu karyawan</span>\n"
 "                    ("
 
 #. module: hr_holidays
@@ -454,8 +468,7 @@ msgstr "Cuti yang dibatalkan tidak dapat dimodifikasi."
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_holiday_allocation_id
 msgid ""
-"A great way to keep track on employee’s PTOs, sick days, and approval "
-"status."
+"A great way to keep track on employee’s PTOs, sick days, and approval status."
 msgstr ""
 "Cara bagus untuk melacak Cuti, hari sakit, dan status persetujuan karyawan."
 
@@ -471,35 +484,26 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_my
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_new_request
 msgid ""
-"A great way to keep track on your time off requests, sick days, and approval"
-" status."
+"A great way to keep track on your time off requests, sick days, and approval "
+"status."
 msgstr ""
-"Cara bagus untuk melacak permintaan cuti, sakit, dan status persetujuan "
-"Anda."
+"Cara bagus untuk melacak permintaan cuti, sakit, dan status persetujuan Anda."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
-"A leave cannot be set across multiple contracts with different working schedules.\n"
+"A leave cannot be set across multiple versions with different working "
+"schedules.\n"
 "\n"
-"Please create one time off for each contract.\n"
+"Please create one time off for each version period.\n"
 "\n"
 "Time off:\n"
 "%(time_off)s\n"
 "\n"
-"Contracts:\n"
-"%(contracts)s"
+"Versions:\n"
+"%(versions)s"
 msgstr ""
-"Cuti tidak dapat ditetapkan di lebih dari satu kontrak dengan jadwal kerja yang berbeda.\n"
-"\n"
-"Silakan buat satu cuti untuk setiap kontrak.\n"
-"\n"
-"Cuti:\n"
-"%(time_off)s\n"
-"\n"
-"Kontrak:\n"
-"%(contracts)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -562,13 +566,13 @@ msgstr "Cuti kecelakaan"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
-"According to your working schedule you are expected to work %(days)s days in"
-" this period, but %(nb_days)s days will be used because this leave "
-"%(leave_type_name)s can only be taken by days."
+"According to your working schedule you are expected to work %(days)s days in "
+"this period, but %(nb_days)s days will be used because this leave %"
+"(leave_type_name)s can only be taken by days."
 msgstr ""
 "Menurut jadwal kerja Anda, Anda diharapkan masuk kerja %(days)s hari di "
-"periode ini, tapi %(nb_days)s hari akan digunakan karena cuti ini "
-"%(leave_type_name)s hanya dapat diambil dalam hitungan hari."
+"periode ini, tapi %(nb_days)s hari akan digunakan karena cuti ini %"
+"(leave_type_name)s hanya dapat diambil dalam hitungan hari."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -912,7 +916,8 @@ msgstr ""
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Allocation state must be \"Refused\" in order to be reset to \"To Approve\"."
+msgid ""
+"Allocation state must be \"Refused\" in order to be reset to \"To Approve\"."
 msgstr ""
 "Status alokasi harus \"Ditolak\" agar dapat direset menjadi \"Untuk "
 "Disetujui\"."
@@ -1149,10 +1154,12 @@ msgstr "Agustus"
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
 msgid ""
-"Automatic time off spliting during batch generation is not managed for ovelapping time off declared in hours. Conflicting time off:\n"
+"Automatic time off spliting during batch generation is not managed for "
+"ovelapping time off declared in hours. Conflicting time off:\n"
 "%s"
 msgstr ""
-"Pemisahan cuti otomatis selama batch generation tidak dikelola untuk cuti yang tumpang tindih ditunjukkan dalam jam. Cuti yang konflik:\n"
+"Pemisahan cuti otomatis selama batch generation tidak dikelola untuk cuti "
+"yang tumpang tindih ditunjukkan dalam jam. Cuti yang konflik:\n"
 "%s"
 
 #. module: hr_holidays
@@ -1302,11 +1309,13 @@ msgstr "Dapat Memvalidasi"
 msgid ""
 "Can manage and configure all holidays and leave requests.\n"
 "\n"
-"A user without any rights on Time Off will be able to see the application, create his own holidays and manage the requests of the users he's manager of."
+"A user without any rights on Time Off will be able to see the application, "
+"create his own holidays and manage the requests of the users he's manager of."
 msgstr ""
 "Dapat mengelola dan mengonfigurasi semua hari merah dan permintaan cuti.\n"
 "\n"
-"User tanpa hak apapun pada Cuti akan dapat melihat aplikasi, membuat dan mengelola cuti untuk diri sendiri dan orang yang merupakan bawahannya."
+"User tanpa hak apapun pada Cuti akan dapat melihat aplikasi, membuat dan "
+"mengelola cuti untuk diri sendiri dan orang yang merupakan bawahannya."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -1396,8 +1405,8 @@ msgid ""
 msgstr ""
 "Mengubah jadwal kerja ini berarti karyawan yang terdampak tidak akan "
 "memiliki cuti yang mencukupi untuk mengakomodasi cuti yang sudah mereka "
-"ambil untuk masa depan. Mohon tinjau cuti karyawan ini dan sesuaikan alokasi"
-" cuti."
+"ambil untuk masa depan. Mohon tinjau cuti karyawan ini dan sesuaikan alokasi "
+"cuti."
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_hr_leave_report
@@ -1509,12 +1518,6 @@ msgstr "Selamat, kami melihat bahwa permintaan Anda telah divalidasi."
 #: model:ir.model,name:hr_holidays.model_res_partner
 msgid "Contact"
 msgstr "Kontak"
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "Contract %(contract)s from %(start_date)s to %(end_date)s"
-msgstr "Kontrak %(contract)s dari %(start_date)s sampai %(end_date)s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1859,18 +1862,18 @@ msgid ""
 "Do you want to save the changes made to the accrual plan before creating a "
 "new milestone?"
 msgstr ""
-"Apakah Anda ingin menyimpan perubahan yang dibuat ke rencana accrual sebelum"
-" membuat milestone baru?"
+"Apakah Anda ingin menyimpan perubahan yang dibuat ke rencana accrual sebelum "
+"membuat milestone baru?"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
 msgid ""
-"Do you want to save the changes made to the accrual plan before editing this"
-" milestone?"
+"Do you want to save the changes made to the accrual plan before editing this "
+"milestone?"
 msgstr ""
-"Apakah Anda ingin menyimpan perubahan yang dibuat ke rencana accrual sebelum"
-" mengedit milestone ini?"
+"Apakah Anda ingin menyimpan perubahan yang dibuat ke rencana accrual sebelum "
+"mengedit milestone ini?"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2019,8 +2022,8 @@ msgstr "Tanggal Berakhir"
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_departure_wizard.py:0
 msgid ""
-"End date has been updated because the employee will leave the company on "
-"%(departure_date)s."
+"End date has been updated because the employee will leave the company on %"
+"(departure_date)s."
 msgstr ""
 "Tanggal akhir harus diupdate karena karyawan akan keluar dari perusahaan "
 "pada tanggal %(departure_date)s./"
@@ -2037,7 +2040,8 @@ msgid ""
 "\n"
 "        Not Allowed: User cannot request an allocation."
 msgstr ""
-"Permintaan Tambahan Hari Diizinkan: User dapat meminta alokasi untuk diri sendiri.\n"
+"Permintaan Tambahan Hari Diizinkan: User dapat meminta alokasi untuk diri "
+"sendiri.\n"
 "\n"
 "        Tidak Diizinkan: User tidak dapat meminta alokasi."
 
@@ -2109,8 +2113,8 @@ msgstr "Ikon font awesome, misalnya fa-tasks"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_hours_display
 msgid ""
 "For an Accrual Allocation, this field contains the theorical amount of time "
-"given to the employee, due to a previous start date, on the first run of the"
-" plan. This can be manually edited."
+"given to the employee, due to a previous start date, on the first run of the "
+"plan. This can be manually edited."
 msgstr ""
 "Untuk Alokasi Akrual, field ini memiliki jumlah teoretis waktu yang "
 "diberikan ke karyawan, oleh karena tanggal mulai yang sebelumnya, pada "
@@ -2457,8 +2461,8 @@ msgid ""
 "If checked, users request can exceed the allocated days and balance can go "
 "in negative."
 msgstr ""
-"Bila dicentang, permintaan user dapat melebihi hari yang dialokasi dan saldo"
-" dapat menjadi negatif."
+"Bila dicentang, permintaan user dapat melebihi hari yang dialokasi dan saldo "
+"dapat menjadi negatif."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__active_employee
@@ -2783,8 +2787,7 @@ msgstr "Jumlah Hari Libur Maksimum"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
 msgid ""
-"Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting "
-"Approval"
+"Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting Approval"
 msgstr ""
 "Maksimal Cuti yang Diizinkan - Cuti yang Sudah Diambil - Cuti yang Menunggu "
 "Persetujuan"
@@ -2982,11 +2985,11 @@ msgstr "Permintaan Alokasi Baru"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"New Allocation Request created by %(user)s: %(count)s Days of "
-"%(allocation_type)s"
+"New Allocation Request created by %(user)s: %(count)s Days of %"
+"(allocation_type)s"
 msgstr ""
-"Permintaan Alokasi Baru dibuat oleh %(user)s: %(count)s Hari "
-"%(allocation_type)s"
+"Permintaan Alokasi Baru dibuat oleh %(user)s: %(count)s Hari %"
+"(allocation_type)s"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_allocation_generate_multi_wizard
@@ -3682,13 +3685,18 @@ msgstr "Pilih Tipe Cuti"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__allocation_validation_type
 msgid ""
 "Select the level of approval needed in case of request by employee\n"
-"            #     - No validation needed: The employee's request is automatically approved.\n"
-"            #     - Approved by Time Off Officer: The employee's request need to be manually approved\n"
+"            #     - No validation needed: The employee's request is "
+"automatically approved.\n"
+"            #     - Approved by Time Off Officer: The employee's request "
+"need to be manually approved\n"
 "            #       by the Time Off Officer, Employee's Approver or both."
 msgstr ""
-"Pilih level persetujuan yang dibutuhkan pada kasus permintaan berdasarkan karyawan\n"
-"            #     - Tidak membutuhkan validasi: Permintaan karyawan secara otomatis disetujui.\n"
-"            #     - Disetujui oleh Petugas Cuti: Permintaan karyawan harus disetujui secara manual oleh Petugas Cuti\n"
+"Pilih level persetujuan yang dibutuhkan pada kasus permintaan berdasarkan "
+"karyawan\n"
+"            #     - Tidak membutuhkan validasi: Permintaan karyawan secara "
+"otomatis disetujui.\n"
+"            #     - Disetujui oleh Petugas Cuti: Permintaan karyawan harus "
+"disetujui secara manual oleh Petugas Cuti\n"
 "            #       oleh Petugas Cuti, Penyetuju Karyawan atua keduanya."
 
 #. module: hr_holidays
@@ -3704,10 +3712,12 @@ msgstr "Pilih permintaan yang baru saja Anda buat"
 #: model:ir.model.fields,help:hr_holidays.field_res_users__leave_manager_id
 msgid ""
 "Select the user responsible for approving \"Time Off\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
+"If empty, the approval is done by an Administrator or Approver (determined "
+"in settings/users)."
 msgstr ""
 "Pilih user yang bertanggung jawab untuk menyetujui \"Cuti\" karyawan ini.\n"
-"Bila kosong, persetujuan dilakukan oleh Administrator atau Approver (ditentukan di pengaturan/user)."
+"Bila kosong, persetujuan dilakukan oleh Administrator atau Approver "
+"(ditentukan di pengaturan/user)."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__9
@@ -3796,8 +3806,7 @@ msgid ""
 "allocation. Delete or cancel them first."
 msgstr ""
 "Beberapa rencana akrual yang Anda sedang ingin hapus terhubung ke alokasi "
-"yang tersedia saat ini. Hapus atau batalkan alokasi tersebut terlebih "
-"dahulu."
+"yang tersedia saat ini. Hapus atau batalkan alokasi tersebut terlebih dahulu."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_unit_hours
@@ -3808,10 +3817,12 @@ msgstr "Waktu Spesifik"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
 msgid ""
 "Specify if this accrual plan can only be used with this Time Off Type.\n"
-"                Leave empty if this accrual plan can be used with any Time Off Type."
+"                Leave empty if this accrual plan can be used with any Time "
+"Off Type."
 msgstr ""
 "Tentukan bila rencana akrual hanya dapat digunakan dengan Tipe Cuti ini.\n"
-"                Biarkan kosong bila rencana akrual ini dapat digunakan dengan Tipe Cuti apapun."
+"                Biarkan kosong bila rencana akrual ini dapat digunakan "
+"dengan Tipe Cuti apapun."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_list
@@ -3950,8 +3961,7 @@ msgstr ""
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid ""
-"The Start Date of the Validity Period must be anterior to the End Date."
+msgid "The Start Date of the Validity Period must be anterior to the End Date."
 msgstr ""
 "Tanggal Mulai dari Periode Validitas harus lebih awal dari Tanggal Akhir."
 
@@ -3963,8 +3973,8 @@ msgid ""
 "is used."
 msgstr ""
 "Akrual dimulai setelah periode yang didefinisikan dari tanggal mulai "
-"alokasi. Field ini mendefinisikan jumlah hari, bulan atau tahun setelah mana"
-" akrual digunakan."
+"alokasi. Field ini mendefinisikan jumlah hari, bulan atau tahun setelah mana "
+"akrual digunakan."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4029,7 +4039,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid ""
-"The leaves planned in the future are exceeding the maximum value of the allocation.\n"
+"The leaves planned in the future are exceeding the maximum value of the "
+"allocation.\n"
 "                It will not be possible to take all of them."
 msgstr ""
 "Cuti yang direncanakan di masa depan melebihi jumlah maksimum alokasi.\n"
@@ -4060,8 +4071,7 @@ msgstr "Rencana akan dihentikan sementara bila saldo mencapai"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check3
-msgid ""
-"The request start date must be before or equal to the request end date."
+msgid "The request start date must be before or equal to the request end date."
 msgstr ""
 "Tanggal mulai permintaan harus sebelum atau sama dengan tanggal akhir "
 "permintaan."
@@ -4130,21 +4140,20 @@ msgid ""
 "to the days allocated to the employee. If you need to change the "
 "configuration of the allocation, delete and create a new one."
 msgstr ""
-"Alokasi ini sudah dijalankan sekali, modifikasi apapun tidak akan efektif ke"
-" hari yang dialokasikan ke karyawan. Jika Anda harus merubah konfigurasi "
+"Alokasi ini sudah dijalankan sekali, modifikasi apapun tidak akan efektif ke "
+"hari yang dialokasikan ke karyawan. Jika Anda harus merubah konfigurasi "
 "alokasi, hapus dan buat yang baru."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
-msgid ""
-"This area is automatically filled by the user who validate the time off"
+msgid "This area is automatically filled by the user who validate the time off"
 msgstr "Area ini secara otomatis diisi oleh user yang memvalidasi cuti"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__second_approver_id
 msgid ""
-"This area is automatically filled by the user who validate the time off with"
-" second level (If time off type need second validation)"
+"This area is automatically filled by the user who validate the time off with "
+"second level (If time off type need second validation)"
 msgstr ""
 "Area ini secara otomatis diisi oleh user yang memvalidasi cuti dengan level "
 "kedua (bila tipe cuti membutuhkan validasi kedua)"
@@ -4534,8 +4543,8 @@ msgid ""
 "Try to add some records, or make sure that there is no active filter in the "
 "search bar."
 msgstr ""
-"Coba untuk menambahkan beberapa record, atau pastikan tidak ada filter aktif"
-" di kolom pencarian."
+"Coba untuk menambahkan beberapa record, atau pastikan tidak ada filter aktif "
+"di kolom pencarian."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__1
@@ -4954,8 +4963,8 @@ msgstr "Anda tidak diizinkan untuk meminta cuti pada Hari Wajib Libur"
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_my
 msgid ""
-"You can create a new allocation or follow the approval status of the current"
-" ones."
+"You can create a new allocation or follow the approval status of the current "
+"ones."
 msgstr ""
 "Anda dapat membuat alokasi baru atau mengikuti status persetujuan yang ada "
 "saat ini."
@@ -4963,11 +4972,10 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_count
 msgid ""
-"You can define a period of time where the days carried over will be "
-"available"
+"You can define a period of time where the days carried over will be available"
 msgstr ""
-"Anda dapat mendefinisikan periode waktu di mana hari yang di-carry over akan"
-" tersedia"
+"Anda dapat mendefinisikan periode waktu di mana hari yang di-carry over akan "
+"tersedia"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__carryover_options
@@ -5105,8 +5113,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
-"You cannot first approve a time off for %s, because you are not his time off"
-" manager"
+"You cannot first approve a time off for %s, because you are not his time off "
+"manager"
 msgstr ""
 "Anda tidak dapat menyetujui cuti untuk %s, karena Anda bukan merupakan "
 "manajer cuti mereka"
@@ -5159,8 +5167,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"You cannot reduce the duration below the duration of leaves already taken by"
-" the employee."
+"You cannot reduce the duration below the duration of leaves already taken by "
+"the employee."
 msgstr ""
 "Anda tidak dapat mengurangi durasi di bawah durasi cuti yang sudah diambil "
 "oleh karyawan."
@@ -5194,8 +5202,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
-"You must have manager rights to modify/validate a time off that already "
-"begun"
+"You must have manager rights to modify/validate a time off that already begun"
 msgstr ""
 "Anda harus memiliki hak manajer untuk memodifikasi/memvalidasi cuti yang "
 "sudah dimulai"
@@ -5507,3 +5514,29 @@ msgstr "valid sampai"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "validasi"
+
+#~ msgid ""
+#~ "A leave cannot be set across multiple contracts with different working "
+#~ "schedules.\n"
+#~ "\n"
+#~ "Please create one time off for each contract.\n"
+#~ "\n"
+#~ "Time off:\n"
+#~ "%(time_off)s\n"
+#~ "\n"
+#~ "Contracts:\n"
+#~ "%(contracts)s"
+#~ msgstr ""
+#~ "Cuti tidak dapat ditetapkan di lebih dari satu kontrak dengan jadwal "
+#~ "kerja yang berbeda.\n"
+#~ "\n"
+#~ "Silakan buat satu cuti untuk setiap kontrak.\n"
+#~ "\n"
+#~ "Cuti:\n"
+#~ "%(time_off)s\n"
+#~ "\n"
+#~ "Kontrak:\n"
+#~ "%(contracts)s"
+
+#~ msgid "Contract %(contract)s from %(start_date)s to %(end_date)s"
+#~ msgstr "Kontrak %(contract)s dari %(start_date)s sampai %(end_date)s"

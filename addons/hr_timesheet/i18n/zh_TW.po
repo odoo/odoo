@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_timesheet
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Tony Ng, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"POT-Creation-Date: 2025-08-18 18:36+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_timesheet
@@ -84,9 +85,11 @@ msgstr "%(project_name)s（%(hours)s 小時）"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
-"'%(missing_plan_names)s' analytic plan(s) required on the project "
-"'%(project_name)s' linked to the timesheet."
-msgstr "缺漏「%(missing_plan_names)s」。已連結至工時表的專案「%(project_name)s」，需要此分析計劃。"
+"'%(missing_plan_names)s' analytic plan(s) required on the project '%"
+"(project_name)s' linked to the timesheet."
+msgstr ""
+"缺漏「%(missing_plan_names)s」。已連結至工時表的專案「%(project_name)s」，需"
+"要此分析計劃。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -128,8 +131,12 @@ msgstr "<b class=\"tip_title\">提示: 更快的紀錄您的工時表</b>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
-msgid "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"日期\" title=\"日期\"/>"
+msgid ""
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
+"title=\"Date\"/>"
+msgstr ""
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"日期\" title=\"日"
+"期\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -151,11 +158,14 @@ msgstr "<span class=\"text-nowrap\">子任務所用工時：</span>"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid ""
 "<span invisible=\"not has_timesheet\">\n"
-"                        Uh-oh! The employee you’re trying to delete still has some timesheets hanging around and can’t be deleted.\n"
+"                        Uh-oh! The employee you’re trying to delete still "
+"has some timesheets hanging around and can’t be deleted.\n"
 "                        <span invisible=\"not has_active_employee\">\n"
-"                            So here are your two options: either delete those timesheets or consider archiving the employee instead.\n"
+"                            So here are your two options: either delete "
+"those timesheets or consider archiving the employee instead.\n"
 "                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                        <span invisible=\"has_active_employee\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
 "                            Please first delete all of their timesheets.\n"
 "                        </span>\n"
 "                    </span>\n"
@@ -164,11 +174,14 @@ msgid ""
 "                    </span>"
 msgstr ""
 "<span invisible=\"not has_timesheet\">\n"
-"                        哎唷！你正在嘗試刪除的員工，仍有一些工時記錄，故此無法刪除。\n"
+"                        哎唷！你正在嘗試刪除的員工，仍有一些工時記錄，故此無"
+"法刪除。\n"
 "                        <span invisible=\"not has_active_employee\">\n"
-"                            此情況有兩個選擇：你可刪除相關工時表，或將該員工封存。\n"
+"                            此情況有兩個選擇：你可刪除相關工時表，或將該員工"
+"封存。\n"
 "                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                        <span invisible=\"has_active_employee\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
 "                            請先刪除他們的所有工時表。\n"
 "                        </span>\n"
 "                    </span>\n"
@@ -291,7 +304,8 @@ msgstr "分析計劃的適用性"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid ""
-"Analyze the projects and tasks on which your employees spend their time.<br>\n"
+"Analyze the projects and tasks on which your employees spend their time."
+"<br>\n"
 "                Evaluate which part is billable and what costs it represents."
 msgstr ""
 "分析員工花費時間的專案和任務。<br>\n"
@@ -472,7 +486,8 @@ msgstr "刪除員工"
 msgid ""
 "Deliver your services automatically when a milestone is reached by linking "
 "it to a sales order item."
-msgstr "將里程碑連結至銷售訂單項目，當達到里程碑時，可以自動執行和提供你的服務。"
+msgstr ""
+"將里程碑連結至銷售訂單項目，當達到里程碑時，可以自動執行和提供你的服務。"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__department_id
@@ -585,8 +600,7 @@ msgstr "可按指定員工篩選記錄，只查看相關員工的工時表"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
-msgid ""
-"Generate timesheets for validated time off requests and public holidays"
+msgid "Generate timesheets for validated time off requests and public holidays"
 msgstr "為有效的請假申請和公眾假期生成工時表"
 
 #. module: hr_timesheet
@@ -857,7 +871,8 @@ msgstr "記錄新活動"
 msgid ""
 "Record your timesheets in an instant by pressing Shift + the corresponding "
 "hotkey to add 15min to your projects."
-msgstr "通過按 Shift + 相應的快速鍵為您的專案添加 15 分鐘，立即記錄您的工時表。"
+msgstr ""
+"通過按 Shift + 相應的快速鍵為您的專案添加 15 分鐘，立即記錄您的工時表。"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_kanban_inherit_project_task_view_kanban
@@ -997,8 +1012,8 @@ msgstr "該公司的休假用內部專案應該在這家公司。"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
-"The project, the task and the analytic accounts of the timesheet must belong"
-" to the same company."
+"The project, the task and the analytic accounts of the timesheet must belong "
+"to the same company."
 msgstr "工時表的專案、任務及分析賬戶，必須全部屬於同一間公司。"
 
 #. module: hr_timesheet
@@ -1010,9 +1025,11 @@ msgstr "沒有工時表。"
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid ""
-"These projects have some timesheet entries referencing them. Before removing"
-" these projects, you have to remove these timesheet entries."
-msgstr "這些專案有一些引用它們的工時表項目。在刪除這些專案之前，您必須刪除這些工時表。"
+"These projects have some timesheet entries referencing them. Before removing "
+"these projects, you have to remove these timesheet entries."
+msgstr ""
+"這些專案有一些引用它們的工時表項目。在刪除這些專案之前，您必須刪除這些工時"
+"表。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1043,9 +1060,10 @@ msgstr "今年"
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid ""
-"This project has some timesheet entries referencing it. Before removing this"
-" project, you have to remove these timesheet entries."
-msgstr "該專案有一些引用它的工時表項目。在刪除此專案之前，您必須刪除這些工時表項目。"
+"This project has some timesheet entries referencing it. Before removing this "
+"project, you have to remove these timesheet entries."
+msgstr ""
+"該專案有一些引用它的工時表項目。在刪除此專案之前，您必須刪除這些工時表項目。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1058,17 +1076,20 @@ msgstr "該任務不能設為私密，因為有一些工時表已連結至它。
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_task.py:0
 msgid ""
-"This task can’t be deleted because it’s linked to timesheets. Please contact"
-" someone with higher access to remove the timesheets first, and then you’ll "
+"This task can’t be deleted because it’s linked to timesheets. Please contact "
+"someone with higher access to remove the timesheets first, and then you’ll "
 "be able to delete the task."
-msgstr "此任務不可刪除，因為它已連結至工時表。請先聯絡擁有更高存取權限的人員，要求他們移除工時表，然後你才可刪除此任務。"
+msgstr ""
+"此任務不可刪除，因為它已連結至工時表。請先聯絡擁有更高存取權限的人員，要求他"
+"們移除工時表，然後你才可刪除此任務。"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__project_time_mode_id
 #: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__project_time_mode_id
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
+"If you use the timesheet linked to projects, don't forget to setup the right "
+"unit of measure in your employees."
 msgstr ""
 "這設定了專案和任務所使用的度量單位。\n"
 " 如果您使用連結到專案的工時表，請不要忘記在員工中設定正確的度量單位。"
@@ -1298,8 +1319,7 @@ msgstr "不能在私人任務上建立工時表。"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
-"Timesheets must be created with an active employee in the selected "
-"companies."
+"Timesheets must be created with an active employee in the selected companies."
 msgstr "必須使用所選公司的在職員工創建工時表。"
 
 #. module: hr_timesheet
@@ -1328,7 +1348,9 @@ msgid ""
 "To use the timesheets feature, you need an analytic account for your "
 "project. Please set one up in the plan '%(plan_name)s' or turn off the "
 "timesheets feature."
-msgstr "要使用工時表功能，專案需要有一個分析賬戶。請為計劃「%(plan_name)s」設定一個分析賬戶，或關閉工時表功能。"
+msgstr ""
+"要使用工時表功能，專案需要有一個分析賬戶。請為計劃「%(plan_name)s」設定一個分"
+"析賬戶，或關閉工時表功能。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1374,8 +1396,8 @@ msgstr "總計:"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid ""
-"Track your working hours by projects every day and invoice this time to your"
-" customers."
+"Track your working hours by projects every day and invoice this time to your "
+"customers."
 msgstr "每天按專案追踪您的工作時間，並在這次向您的客戶開立應收憑單。"
 
 #. module: hr_timesheet
@@ -1392,18 +1414,13 @@ msgid ""
 "        30h Allocate 30 hours to the task\n"
 "        #tags Set tags on the task\n"
 "        @user Assign the task to a user\n"
-"        ! Set the task a high priority\n"
+"        ! Set the task a medium priority\n"
+"        !! Set the task a high priority\n"
+"        !!! Set the task a urgent priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
-"在新任務標題中，使用這些關鍵字進行設定：\n"
-"\n"
-"        30h：向任務分配 30 小時\n"
-"        #標籤名稱：對任務設定標籤\n"
-"        @用戶名稱：將任務指派給用戶\n"
-"        !：將任務設為高優先級別\n"
-"\n"
-"        記得使用正確格式和順序，例如：改進配置畫面 5h #特色功能 #v16 @志明 !"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
@@ -1430,7 +1447,8 @@ msgstr "查看詳情"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_from_employee
 msgid ""
 "You can register and track your workings hours by project every\n"
-"                    day. Every time spent on a project will become a cost and can be re-invoiced to\n"
+"                    day. Every time spent on a project will become a cost "
+"and can be re-invoiced to\n"
 "                    customers if required."
 msgstr ""
 "你可按不同專案項目，登記並追蹤每天的工作時間。\n"
@@ -1452,19 +1470,24 @@ msgstr "不能刪除有工時表的員工。"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid ""
-"You cannot log timesheets on this project since it is linked to an inactive analytic account.<br/>\n"
-"                            Please switch to another account, or reactivate the current one to timesheet on the project."
+"You cannot log timesheets on this project since it is linked to an inactive "
+"analytic account.<br/>\n"
+"                            Please switch to another account, or reactivate "
+"the current one to timesheet on the project."
 msgstr ""
 "你不可為此專案記錄工時表，因為它連結至非運作的分析帳戶。<br/>\n"
-"                            請切換至另一帳戶，或重新啟動此帳戶，以在專案中記錄工時表。"
+"                            請切換至另一帳戶，或重新啟動此帳戶，以在專案中記"
+"錄工時表。"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid ""
 "You cannot log timesheets on this project since it is linked to an inactive "
-"analytic account.<br/> Please change this account, or reactivate the current"
-" one to timesheet on the project."
-msgstr "你不可為此專案記錄工時表，因為它連結至非運作的分析帳戶。<br/> 請更改此帳戶設定，或重新啟動此帳戶，以在專案中記錄工時表。"
+"analytic account.<br/> Please change this account, or reactivate the current "
+"one to timesheet on the project."
+msgstr ""
+"你不可為此專案記錄工時表，因為它連結至非運作的分析帳戶。<br/> 請更改此帳戶設"
+"定，或重新啟動此帳戶，以在專案中記錄工時表。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1497,7 +1520,8 @@ msgstr "因"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid ""
 "on\n"
-"                            <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
+"                            <span class=\"fw-bold text-dark\"> Sub-tasks</"
+"span>)"
 msgstr ""
 "在\n"
 "                            <span class=\"fw-bold text-dark\">子任務</span>）"
@@ -1510,3 +1534,24 @@ msgid ""
 msgstr ""
 "在\n"
 "                        <span class=\"fw-bold text-dark\">子任務</span>）"
+
+#~ msgid ""
+#~ "Use these keywords in the title to set new tasks:\n"
+#~ "\n"
+#~ "        30h Allocate 30 hours to the task\n"
+#~ "        #tags Set tags on the task\n"
+#~ "        @user Assign the task to a user\n"
+#~ "        ! Set the task a high priority\n"
+#~ "\n"
+#~ "        Make sure to use the right format and order e.g. Improve the "
+#~ "configuration screen 5h #feature #v16 @Mitchell !"
+#~ msgstr ""
+#~ "在新任務標題中，使用這些關鍵字進行設定：\n"
+#~ "\n"
+#~ "        30h：向任務分配 30 小時\n"
+#~ "        #標籤名稱：對任務設定標籤\n"
+#~ "        @用戶名稱：將任務指派給用戶\n"
+#~ "        !：將任務設為高優先級別\n"
+#~ "\n"
+#~ "        記得使用正確格式和順序，例如：改進配置畫面 5h #特色功能 #v16 @志"
+#~ "明 !"

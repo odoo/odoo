@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"POT-Creation-Date: 2025-08-18 18:36+0000\n"
 "PO-Revision-Date: 2025-08-06 06:31+0000\n"
 "Last-Translator: \"Rasareeyar Lappiam (rlap)\" <rlap@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -86,11 +86,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
-"'%(missing_plan_names)s' analytic plan(s) required on the project "
-"'%(project_name)s' linked to the timesheet."
+"'%(missing_plan_names)s' analytic plan(s) required on the project '%"
+"(project_name)s' linked to the timesheet."
 msgstr ""
-"จำเป็นต้องมีแผนวิเคราะห์ '%(missing_plan_names)s' สำหรับโปรเจ็กต์ "
-"'%(project_name)s' ที่เชื่อมโยงกับตารางเวลา"
+"จำเป็นต้องมีแผนวิเคราะห์ '%(missing_plan_names)s' สำหรับโปรเจ็กต์ '%(project_name)s' "
+"ที่เชื่อมโยงกับตารางเวลา"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -132,7 +132,9 @@ msgstr "<b class=\"tip_title\">เคล็ดลับ: บันทึกใ�
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
-msgid "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgid ""
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
+"title=\"Date\"/>"
 msgstr ""
 "<i class=\"fa fa-calendar me-1\" role=\"รูปภาพ\" aria-label=\"วันที่\" "
 "title=\"วันที่\"/>"
@@ -157,11 +159,14 @@ msgstr "<span class=\"text-nowrap\">เวลาที่ใช้ในงา�
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid ""
 "<span invisible=\"not has_timesheet\">\n"
-"                        Uh-oh! The employee you’re trying to delete still has some timesheets hanging around and can’t be deleted.\n"
+"                        Uh-oh! The employee you’re trying to delete still "
+"has some timesheets hanging around and can’t be deleted.\n"
 "                        <span invisible=\"not has_active_employee\">\n"
-"                            So here are your two options: either delete those timesheets or consider archiving the employee instead.\n"
+"                            So here are your two options: either delete "
+"those timesheets or consider archiving the employee instead.\n"
 "                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                        <span invisible=\"has_active_employee\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
 "                            Please first delete all of their timesheets.\n"
 "                        </span>\n"
 "                    </span>\n"
@@ -170,14 +175,14 @@ msgid ""
 "                    </span>"
 msgstr ""
 "<span invisible=\"not has_timesheet\">\n"
-"                        ขออภัย! ไม่สามารถลบพนักงานคนนี้ได้ เนื่องจากยังมีข้อมูลบันทึ"
-"กเวลาการทำงาน (Timesheet) คงค้างอยู่\n"
+"                        ขออภัย! ไม่สามารถลบพนักงานคนนี้ได้ "
+"เนื่องจากยังมีข้อมูลบันทึกเวลาการทำงาน (Timesheet) คงค้างอยู่\n"
 "                        <span invisible=\"not has_active_employee\">\n"
 "                            ดังนั้น คุณมี 2 ทางเลือก คือ ลบข้อมูล ใบบันทึกเวลาเหล่านั้นออก "
 "หรือพิจารณาเก็บข้อมูลพนักงานรายนี้ไว้ในสถานะ “เก็บถาวร” แทน\n"
 "                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups="
-"\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                        <span invisible=\"has_active_employee\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
 "                            กรุณาใบบันทึกเวลาทั้งหมดออกก่อน\n"
 "                        </span>\n"
 "                    </span>\n"
@@ -300,7 +305,8 @@ msgstr "การประยุกต์ใช้แผนการวิเค
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid ""
-"Analyze the projects and tasks on which your employees spend their time.<br>\n"
+"Analyze the projects and tasks on which your employees spend their time."
+"<br>\n"
 "                Evaluate which part is billable and what costs it represents."
 msgstr ""
 "วิเคราะห์โปรเจ็กต์และงานที่พนักงานของคุณได้ใช้เวลาไป<br>\n"
@@ -481,9 +487,7 @@ msgstr "ลบพนักงาน"
 msgid ""
 "Deliver your services automatically when a milestone is reached by linking "
 "it to a sales order item."
-msgstr ""
-"ส่งมอบบริการของคุณโดยอัตโนมัติ "
-"เมื่อเสร็จตามไมล์สโตนโดยเชื่อมโยงกับรายการในใบสั่งขาย"
+msgstr "ส่งมอบบริการของคุณโดยอัตโนมัติ เมื่อเสร็จตามไมล์สโตนโดยเชื่อมโยงกับรายการในใบสั่งขาย"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__department_id
@@ -596,10 +600,8 @@ msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
-msgid ""
-"Generate timesheets for validated time off requests and public holidays"
-msgstr ""
-"สร้างใบบันทึกเวลาสำหรับคำขอลาหยุดและวันหยุดนักขัตฤกษ์ที่ผ่านการตรวจสอบแล้ว"
+msgid "Generate timesheets for validated time off requests and public holidays"
+msgstr "สร้างใบบันทึกเวลาสำหรับคำขอลาหยุดและวันหยุดนักขัตฤกษ์ที่ผ่านการตรวจสอบแล้ว"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_ir_http
@@ -870,8 +872,8 @@ msgid ""
 "Record your timesheets in an instant by pressing Shift + the corresponding "
 "hotkey to add 15min to your projects."
 msgstr ""
-"บันทึกใบบันทึกเวลาของคุณในทันทีโดยกด Shift + ปุ่มลัดที่เกี่ยวข้องเพื่อเพิ่ม "
-"15 นาทีให้กับโปรเจ็กต์ของคุณ"
+"บันทึกใบบันทึกเวลาของคุณในทันทีโดยกด Shift + ปุ่มลัดที่เกี่ยวข้องเพื่อเพิ่ม 15 "
+"นาทีให้กับโปรเจ็กต์ของคุณ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_kanban_inherit_project_task_view_kanban
@@ -946,16 +948,14 @@ msgstr "ดูรายการใบบันทึกเวลา"
 msgid ""
 "Send a periodical email reminder to timesheets approvers that still have "
 "timesheets to validate"
-msgstr ""
-"ส่งการแจ้งเตือนทางอีเมลเป็นระยะไปยังผู้อนุมัติใบบันทึกเวลาที่ยังมีใบบันทึกเวลาที่ต้องตรวจสอบ"
+msgstr "ส่งการแจ้งเตือนทางอีเมลเป็นระยะไปยังผู้อนุมัติใบบันทึกเวลาที่ยังมีใบบันทึกเวลาที่ต้องตรวจสอบ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid ""
 "Send a periodical email reminder to timesheets users that still have "
 "timesheets to encode"
-msgstr ""
-"ส่งการแจ้งเตือนทางอีเมลเป็นระยะไปยังผู้ใช้ระบบบันทึกเวลาที่ยังมีใบบันทึกเวลาให้เข้ารหัส"
+msgstr "ส่งการแจ้งเตือนทางอีเมลเป็นระยะไปยังผู้ใช้ระบบบันทึกเวลาที่ยังมีใบบันทึกเวลาให้เข้ารหัส"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
@@ -1013,10 +1013,9 @@ msgstr "โปรเจ็กต์ภายในของบริษัทค
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
-"The project, the task and the analytic accounts of the timesheet must belong"
-" to the same company."
-msgstr ""
-"โปรเจ็กต์ งาน และบัญชีวิเคราะห์ของตารางเวลาจะต้องเป็นของบริษัทเดียวกัน"
+"The project, the task and the analytic accounts of the timesheet must belong "
+"to the same company."
+msgstr "โปรเจ็กต์ งาน และบัญชีวิเคราะห์ของตารางเวลาจะต้องเป็นของบริษัทเดียวกัน"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -1027,8 +1026,8 @@ msgstr "ไม่มีใบบันทึกเวลา"
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid ""
-"These projects have some timesheet entries referencing them. Before removing"
-" these projects, you have to remove these timesheet entries."
+"These projects have some timesheet entries referencing them. Before removing "
+"these projects, you have to remove these timesheet entries."
 msgstr ""
 "โปรเจ็กต์เหล่านี้มีรายการใบบันทึกเวลาอ้างอิง ก่อนลบโปรเจ็กต์เหล่านี้ "
 "คุณต้องลบรายการใบบันทึกเวลาเหล่านี้ก่อน"
@@ -1062,26 +1061,24 @@ msgstr "ปีนี้"
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid ""
-"This project has some timesheet entries referencing it. Before removing this"
-" project, you have to remove these timesheet entries."
+"This project has some timesheet entries referencing it. Before removing this "
+"project, you have to remove these timesheet entries."
 msgstr ""
-"โปรเจ็กต์นี้มีรายการใบบันทึกเวลาที่อ้างอิง ก่อนลบโปรเจ็กต์นี้ "
-"คุณต้องลบรายการใบบันทึกเวลาหล่านี้ก่อน"
+"โปรเจ็กต์นี้มีรายการใบบันทึกเวลาที่อ้างอิง ก่อนลบโปรเจ็กต์นี้ คุณต้องลบรายการใบบันทึกเวลาหล่านี้ก่อน"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_task.py:0
 msgid ""
 "This task cannot be private because there are some timesheets linked to it."
-msgstr ""
-"งานนี้ไม่สามารถเป็นแบบส่วนตัวได้เนื่องจากมีใบบันทึกเวลาบางรายการเชื่อมโยงอยู่"
+msgstr "งานนี้ไม่สามารถเป็นแบบส่วนตัวได้เนื่องจากมีใบบันทึกเวลาบางรายการเชื่อมโยงอยู่"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_task.py:0
 msgid ""
-"This task can’t be deleted because it’s linked to timesheets. Please contact"
-" someone with higher access to remove the timesheets first, and then you’ll "
+"This task can’t be deleted because it’s linked to timesheets. Please contact "
+"someone with higher access to remove the timesheets first, and then you’ll "
 "be able to delete the task."
 msgstr ""
 
@@ -1090,7 +1087,8 @@ msgstr ""
 #: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__project_time_mode_id
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
+"If you use the timesheet linked to projects, don't forget to setup the right "
+"unit of measure in your employees."
 msgstr ""
 "ซึ่งจะกำหนดหน่วยวัดที่ใช้ในโปรเจ็กต์และงานต่าง ๆ\n"
 "หากคุณใช้ใบบันทึกเวลาที่เชื่อมโยงกับโปรเจ็กต์ อย่าลืมตั้งค่าหน่วยวัดที่เหมาะสมให้กับพนักงานของคุณ"
@@ -1320,8 +1318,7 @@ msgstr "ไม่สามารถสร้างใบบันทึกเว
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
-"Timesheets must be created with an active employee in the selected "
-"companies."
+"Timesheets must be created with an active employee in the selected companies."
 msgstr "ต้องสร้างใบบันทึกเวลาโดยมีพนักงานที่ใช้งานอยู่ในบริษัทที่เลือก"
 
 #. module: hr_timesheet
@@ -1331,8 +1328,8 @@ msgid ""
 "Timesheets must be created with at least an active analytic account defined "
 "in the plan '%(plan_name)s'."
 msgstr ""
-"ต้องสร้างตารางเวลาโดยมีบัญชีวิเคราะห์ที่ใช้งานอยู่เป็นอย่างน้อยตามที่กำหนดไว้ในแผน"
-" '%(plan_name)s'"
+"ต้องสร้างตารางเวลาโดยมีบัญชีวิเคราะห์ที่ใช้งานอยู่เป็นอย่างน้อยตามที่กำหนดไว้ในแผน '%"
+"(plan_name)s'"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1353,9 +1350,8 @@ msgid ""
 "project. Please set one up in the plan '%(plan_name)s' or turn off the "
 "timesheets feature."
 msgstr ""
-"หากต้องการใช้ฟีเจอร์ตารางเวลาการทำงาน "
-"คุณต้องมีบัญชีวิเคราะห์สำหรับโปรเจ็กต์ของคุณ โปรดตั้งค่าบัญชีในแผน "
-"'%(plan_name)s' หรือปิดใช้งานฟีเจอร์ตารางเวลาการทำงาน"
+"หากต้องการใช้ฟีเจอร์ตารางเวลาการทำงาน คุณต้องมีบัญชีวิเคราะห์สำหรับโปรเจ็กต์ของคุณ "
+"โปรดตั้งค่าบัญชีในแผน '%(plan_name)s' หรือปิดใช้งานฟีเจอร์ตารางเวลาการทำงาน"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1401,11 +1397,9 @@ msgstr "ทั้งหมด:"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid ""
-"Track your working hours by projects every day and invoice this time to your"
-" customers."
-msgstr ""
-"ติดตามชั่วโมงทำงานของคุณตามโปรเจ็กต์ทุกวัน "
-"และออกใบแจ้งหนี้ตามเวลานี้ให้กับลูกค้าของคุณ"
+"Track your working hours by projects every day and invoice this time to your "
+"customers."
+msgstr "ติดตามชั่วโมงทำงานของคุณตามโปรเจ็กต์ทุกวัน และออกใบแจ้งหนี้ตามเวลานี้ให้กับลูกค้าของคุณ"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1421,18 +1415,13 @@ msgid ""
 "        30h Allocate 30 hours to the task\n"
 "        #tags Set tags on the task\n"
 "        @user Assign the task to a user\n"
-"        ! Set the task a high priority\n"
+"        ! Set the task a medium priority\n"
+"        !! Set the task a high priority\n"
+"        !!! Set the task a urgent priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
-"ใช้คำสำคัญเหล่านี้ในชื่อเรื่องเพื่อกำหนดงานใหม่:\n"
-"\n"
-"        30 ชม. จัดสรรเวลา 30 ชั่วโมงให้กับงาน\n"
-"        #แท็ก ตั้งค่าแท็กในงาน\n"
-"        @ผู้ใช้ มอบหมายงานให้กับผู้ใช้\n"
-"        ! กำหนดให้งานมีลำดับความสำคัญสูง\n"
-"\n"
-"        ตรวจสอบให้แน่ใจว่าใช้รูปแบบและลำดับที่ถูกต้อง เช่น ปรับหน้าจอของการกำหนดค่า 5 ชม #feature #v16 @Mitchell !"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
@@ -1459,11 +1448,13 @@ msgstr "ดูรายละเอียด"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_from_employee
 msgid ""
 "You can register and track your workings hours by project every\n"
-"                    day. Every time spent on a project will become a cost and can be re-invoiced to\n"
+"                    day. Every time spent on a project will become a cost "
+"and can be re-invoiced to\n"
 "                    customers if required."
 msgstr ""
 "คุณสามารถลงทะเบียนและติดตามชั่วโมงการทำงานของคุณตามโปรเจ็กต์ได้\n"
-"                    ทุกวัน เวลาที่ใช้ในโปรเจ็กต์ทุกครั้งจะกลายเป็นต้นทุนและสามารถออกใบแจ้งหนี้ให้กับ\n"
+"                    ทุกวัน "
+"เวลาที่ใช้ในโปรเจ็กต์ทุกครั้งจะกลายเป็นต้นทุนและสามารถออกใบแจ้งหนี้ให้กับ\n"
 "                    ลูกค้าได้ หากจำเป็น"
 
 #. module: hr_timesheet
@@ -1481,22 +1472,24 @@ msgstr "คุณไม่สามารถลบพนักงานที่
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid ""
-"You cannot log timesheets on this project since it is linked to an inactive analytic account.<br/>\n"
-"                            Please switch to another account, or reactivate the current one to timesheet on the project."
+"You cannot log timesheets on this project since it is linked to an inactive "
+"analytic account.<br/>\n"
+"                            Please switch to another account, or reactivate "
+"the current one to timesheet on the project."
 msgstr ""
-"คุณไม่สามารถบันทึกใบบันทึกเวลาในโปรเจ็กต์นี้ได้เนื่องจากโปรเจ็กต์เชื่อมโยงกับบัญชีการวิเคราะห์ที่ไม่ได้ใช้งาน<br/>\n"
+"คุณไม่สามารถบันทึกใบบันทึกเวลาในโปรเจ็กต์นี้ได้เนื่องจากโปรเจ็กต์เชื่อมโยงกับบัญชีการวิเคราะห์ที่ไม่ได้ใช้งาน<br/"
+">\n"
 "                            โปรดเปลี่ยนไปใช้บัญชีอื่นหรือเปิดใช้งานบัญชีปัจจุบันอีกครั้งเพื่อใช้ใบบันทึกเวลาของโปรเจ็กต์"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid ""
 "You cannot log timesheets on this project since it is linked to an inactive "
-"analytic account.<br/> Please change this account, or reactivate the current"
-" one to timesheet on the project."
+"analytic account.<br/> Please change this account, or reactivate the current "
+"one to timesheet on the project."
 msgstr ""
-"คุณไม่สามารถบันทึกใบบันทึกเวลาในโปรเจ็กต์นี้ได้เนื่องจากโปรเจ็กต์เชื่อมโยงกับบัญชีการวิเคราะห์ที่ไม่ได้ใช้งาน"
-" <br/> "
-"โปรดเปลี่ยนบัญชีนี้หรือเปิดใช้งานบัญชีปัจจุบันอีกครั้งเป็นใบบันทึกเวลาของโปรเจ็กต์"
+"คุณไม่สามารถบันทึกใบบันทึกเวลาในโปรเจ็กต์นี้ได้เนื่องจากโปรเจ็กต์เชื่อมโยงกับบัญชีการวิเคราะห์ที่ไม่ได้ใช้งาน "
+"<br/> โปรดเปลี่ยนบัญชีนี้หรือเปิดใช้งานบัญชีปัจจุบันอีกครั้งเป็นใบบันทึกเวลาของโปรเจ็กต์"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1529,7 +1522,8 @@ msgstr "สำหรับ"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid ""
 "on\n"
-"                            <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
+"                            <span class=\"fw-bold text-dark\"> Sub-tasks</"
+"span>)"
 msgstr ""
 "บน\n"
 "                            <span class=\"fw-bold text-dark\"> งานย่อย</span>)"
@@ -1542,3 +1536,24 @@ msgid ""
 msgstr ""
 "บน\n"
 "                        <span class=\"fw-bold text-dark\"> งานย่อย</span>)"
+
+#~ msgid ""
+#~ "Use these keywords in the title to set new tasks:\n"
+#~ "\n"
+#~ "        30h Allocate 30 hours to the task\n"
+#~ "        #tags Set tags on the task\n"
+#~ "        @user Assign the task to a user\n"
+#~ "        ! Set the task a high priority\n"
+#~ "\n"
+#~ "        Make sure to use the right format and order e.g. Improve the "
+#~ "configuration screen 5h #feature #v16 @Mitchell !"
+#~ msgstr ""
+#~ "ใช้คำสำคัญเหล่านี้ในชื่อเรื่องเพื่อกำหนดงานใหม่:\n"
+#~ "\n"
+#~ "        30 ชม. จัดสรรเวลา 30 ชั่วโมงให้กับงาน\n"
+#~ "        #แท็ก ตั้งค่าแท็กในงาน\n"
+#~ "        @ผู้ใช้ มอบหมายงานให้กับผู้ใช้\n"
+#~ "        ! กำหนดให้งานมีลำดับความสำคัญสูง\n"
+#~ "\n"
+#~ "        ตรวจสอบให้แน่ใจว่าใช้รูปแบบและลำดับที่ถูกต้อง เช่น ปรับหน้าจอของการกำหนดค่า 5 "
+#~ "ชม #feature #v16 @Mitchell !"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-08-18 18:38+0000\n"
 "PO-Revision-Date: 2025-08-19 14:34+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -100,19 +100,23 @@ msgstr "<strong>→</strong>"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_lines
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"Ein Transfer wird nicht automatisch zum Stapel hinzugefügt, die diese Zeilenanzahl überschreitet, wenn der Transfer zu ihnen hinzugefügt wird.\n"
+"Ein Transfer wird nicht automatisch zum Stapel hinzugefügt, die diese "
+"Zeilenanzahl überschreitet, wenn der Transfer zu ihnen hinzugefügt wird.\n"
 "Belassen Sie diesen Wert bei „0“, wenn keine Zeilenbeschränkung besteht."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
-"Ein Transfer wird nicht automatisch zum Stapel hinzugefügt, der diese Anzahl Transfers überschreitet.\n"
+"Ein Transfer wird nicht automatisch zum Stapel hinzugefügt, der diese Anzahl "
+"Transfers überschreitet.\n"
 "Belassen Sie diesen Wert bei „0“, wenn kein Transferlimit besteht."
 
 #. module: stock_picking_batch
@@ -560,8 +564,7 @@ msgstr "Falls markiert, erfordern neue Nachrichten Ihre Aufmerksamkeit."
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_error
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Falls markiert, weisen einige Nachrichten einen Zustellungsfehler auf."
+msgstr "Falls markiert, weisen einige Nachrichten einen Zustellungsfehler auf."
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -785,9 +788,9 @@ msgid ""
 "Pick multiple orders in one trip and prepare orders as you pick. This "
 "reduces packing time and is ideal for small products."
 msgstr ""
-"Wählen Sie mehrere Aufträge für eine Fahrt aus und bereiten Sie die Aufträge"
-" während der Kommissionierung vor. Dies verkürzt die Verpackungszeit und ist"
-" ideal für kleine Produkte."
+"Wählen Sie mehrere Aufträge für eine Fahrt aus und bereiten Sie die Aufträge "
+"während der Kommissionierung vor. Dies verkürzt die Verpackungszeit und ist "
+"ideal für kleine Produkte."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__picking_ids
@@ -798,6 +801,12 @@ msgstr "Kommissionierung"
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_type
 msgid "Picking Type"
 msgstr "Kommissionierart"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+msgid "Please select at least two batch/wave transfers to merge."
+msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -879,8 +888,7 @@ msgstr "Bewertungen"
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid ""
-"Regroup multiple orders into one picking and consolidate at the packing "
-"zone."
+"Regroup multiple orders into one picking and consolidate at the packing zone."
 msgstr ""
 "Gruppieren Sie mehrere Aufträge in einer Kommissionierung neu und "
 "konsolidieren Sie in der Verpackungszone."
@@ -918,14 +926,20 @@ msgstr "Geplantes Datum"
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__scheduled_date
 msgid ""
 "Scheduled date for the transfers to be processed.\n"
-"              - If manually set then scheduled date for all transfers in batch will automatically update to this date.\n"
-"              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
-"                but this scheduled date will not be set for all transfers in batch."
+"              - If manually set then scheduled date for all transfers in "
+"batch will automatically update to this date.\n"
+"              - If not manually changed and transfers are added/removed/"
+"updated then this will be their earliest scheduled date\n"
+"                but this scheduled date will not be set for all transfers in "
+"batch."
 msgstr ""
 "Geplantes Datum, an dem die Transfers bearbeitet werden sollen.\n"
-"              - Wenn manuell eingestellt, wird das geplante Datum für alle Stapeltransfers automatisch auf dieses Datum aktualisiert.\n"
-"              - Wenn nicht manuell geändert und Transfers hinzugefügt/entfernt/aktualisiert, ist dies ihr frühestes geplantes Datum, \n"
-"                aber dieses geplante Datum wird nicht für alle Stapeltransfers festgelegt."
+"              - Wenn manuell eingestellt, wird das geplante Datum für alle "
+"Stapeltransfers automatisch auf dieses Datum aktualisiert.\n"
+"              - Wenn nicht manuell geändert und Transfers hinzugefügt/"
+"entfernt/aktualisiert, ist dies ihr frühestes geplantes Datum, \n"
+"                aber dieses geplante Datum wird nicht für alle "
+"Stapeltransfers festgelegt."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -986,8 +1000,8 @@ msgstr ""
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_category
 msgid ""
-"Split transfers by product category, then group transfers that have the same"
-" product category."
+"Split transfers by product category, then group transfers that have the same "
+"product category."
 msgstr ""
 "Teilen Sie die Transfers nach Produktkategorie auf und gruppieren Sie dann "
 "Transfers mit derselben Produktkategorie."
@@ -1072,11 +1086,13 @@ msgstr "Der folgende Stapel-Transfer wurde aktualisiert"
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid ""
-"The following transfers cannot be added to batch transfer %(batch)s. Please check their states and operation types.\n"
+"The following transfers cannot be added to batch transfer %(batch)s. Please "
+"check their states and operation types.\n"
 "\n"
 "Incompatibilities: %(incompatible_transfers)s"
 msgstr ""
-"Die folgenden Transfers können nicht zum Stapeltransfer %(batch)s hinzugefügt werden. Bitte überprüfen Sie Status und Vorgangsarten.\n"
+"Die folgenden Transfers können nicht zum Stapeltransfer %(batch)s "
+"hinzugefügt werden. Bitte überprüfen Sie Status und Vorgangsarten.\n"
 "\n"
 "Inkompatibilitäten: %(incompatible_transfers)s"
 

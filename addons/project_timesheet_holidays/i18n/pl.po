@@ -1,23 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* project_timesheet_holidays
-# 
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-08-18 18:37+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pl\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_account_analytic_line
@@ -155,18 +157,13 @@ msgid ""
 "        30h Allocate 30 hours to the task\n"
 "        #tags Set tags on the task\n"
 "        @user Assign the task to a user\n"
-"        ! Set the task a high priority\n"
+"        ! Set the task a medium priority\n"
+"        !! Set the task a high priority\n"
+"        !!! Set the task a urgent priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
-"Użyj tych słów kluczowych w tytule, aby ustawić nowe zadania:\n"
-"\n"
-"30h Przydziel 30 godzin do zadania\n"
-"#tags Ustawienie tagów dla zadania\n"
-"@user Przypisz zadanie do użytkownika\n"
-"Ustaw wysoki priorytet zadania\n"
-"\n"
-"Ulepsz ekran konfiguracji 5h #feature #v16 @Mitchell !"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -198,8 +195,8 @@ msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
 msgstr ""
-"Nie można usunąć arkuszy czasu, które są powiązane z wnioskami o czas wolny."
-" Zamiast tego proszę anulować wniosek o czas wolny z aplikacji Czas wolny."
+"Nie można usunąć arkuszy czasu, które są powiązane z wnioskami o czas wolny. "
+"Zamiast tego proszę anulować wniosek o czas wolny z aplikacji Czas wolny."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -208,8 +205,8 @@ msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
 msgstr ""
-"Nie można modyfikować arkuszy czasu, które są powiązane z wnioskami o wolne."
-" Zamiast tego należy użyć aplikacji Czas wolny do modyfikacji wniosków o "
+"Nie można modyfikować arkuszy czasu, które są powiązane z wnioskami o wolne. "
+"Zamiast tego należy użyć aplikacji Czas wolny do modyfikacji wniosków o "
 "wolne."
 
 #. module: project_timesheet_holidays
@@ -217,3 +214,23 @@ msgstr ""
 #: code:addons/project_timesheet_holidays/__init__.py:0
 msgid "allow_timesheets"
 msgstr ""
+
+#~ msgid ""
+#~ "Use these keywords in the title to set new tasks:\n"
+#~ "\n"
+#~ "        30h Allocate 30 hours to the task\n"
+#~ "        #tags Set tags on the task\n"
+#~ "        @user Assign the task to a user\n"
+#~ "        ! Set the task a high priority\n"
+#~ "\n"
+#~ "        Make sure to use the right format and order e.g. Improve the "
+#~ "configuration screen 5h #feature #v16 @Mitchell !"
+#~ msgstr ""
+#~ "Użyj tych słów kluczowych w tytule, aby ustawić nowe zadania:\n"
+#~ "\n"
+#~ "30h Przydziel 30 godzin do zadania\n"
+#~ "#tags Ustawienie tagów dla zadania\n"
+#~ "@user Przypisz zadanie do użytkownika\n"
+#~ "Ustaw wysoki priorytet zadania\n"
+#~ "\n"
+#~ "Ulepsz ekran konfiguracji 5h #feature #v16 @Mitchell !"

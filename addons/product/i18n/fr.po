@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* product
-# 
+#
 # Translators:
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2025
 # Wil Odoo, 2025
 # Manon Rondou, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-08-18 18:37+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: product
 #. odoo-python
@@ -31,7 +32,8 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Attention : les produits auxquels vous n'avez pas accès ne seront pas affichés ci-dessus."
+"Attention : les produits auxquels vous n'avez pas accès ne seront pas "
+"affichés ci-dessus."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_variant_count
@@ -59,21 +61,25 @@ msgstr "15,00 $"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
-"%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra fee\n"
-"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
+"%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra "
+"fee\n"
+"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 msgstr ""
-"%(base)s avec une remise de %(discount)s %% %(discount_type)s et %(surcharge)s des frais supplémentaires\n"
-"Exemple : %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
+"%(base)s avec une remise de %(discount)s %% %(discount_type)s et %"
+"(surcharge)s des frais supplémentaires\n"
+"Exemple : %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
-"%(item_name)s: end date (%(end_date)s) should be after start date "
-"(%(start_date)s)"
+"%(item_name)s: end date (%(end_date)s) should be after start date (%"
+"(start_date)s)"
 msgstr ""
-" %(item_name)s: la date de fin (%(end_date)s) doit être antérieure à la date"
-" de début (%(start_date)s)"
+" %(item_name)s: la date de fin (%(end_date)s) doit être antérieure à la date "
+"de début (%(start_date)s)"
 
 #. module: product
 #. odoo-python
@@ -136,33 +142,39 @@ msgstr "- %(amount)s de rabais"
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
-msgid "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
+msgid ""
+"- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
 msgstr ""
-"- Code-barres \"%(barcode)s\" déjà attribué au(x) produit(s) "
-":%(product_list)s"
+"- Code-barres \"%(barcode)s\" déjà attribué au(x) produit(s) :%"
+"(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
 msgid ""
-"- Instantly: All possible variants are created as soon as the attribute and its values are added to a product.\n"
-"        - Dynamically: Each variant is created only when its corresponding attributes and values are added to a sales order.\n"
+"- Instantly: All possible variants are created as soon as the attribute and "
+"its values are added to a product.\n"
+"        - Dynamically: Each variant is created only when its corresponding "
+"attributes and values are added to a sales order.\n"
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: this cannot be changed once the attribute is used on a product."
 msgstr ""
-"- Instantanément : toutes les variantes possibles sont créées dès que l'attribut et ses valeurs sont ajoutés à un produit.\n"
-"        - Dynamiquement : chaque variante est créée uniquement lorsque ses attributs et valeurs correspondants sont ajoutés à une commande.\n"
+"- Instantanément : toutes les variantes possibles sont créées dès que "
+"l'attribut et ses valeurs sont ajoutés à un produit.\n"
+"        - Dynamiquement : chaque variante est créée uniquement lorsque ses "
+"attributs et valeurs correspondants sont ajoutés à une commande.\n"
 "     - Jamais : les variantes ne sont jamais créées pour l'attribut.\n"
-"      Remarque : il ne peut pas être modifié une fois que l'attribut est utilisé sur un produit."
+"      Remarque : il ne peut pas être modifié une fois que l'attribut est "
+"utilisé sur un produit."
 
 #. module: product
-#: model:product.attribute.value,name:product.product_attribute_value_5
+#: model:product.attribute.value,name:product.pav_duration_month_1
+msgid "1 month"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_duration_year_1
 msgid "1 year"
 msgstr "1 an"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_warranty
-msgid "1 year warranty extension"
-msgstr "Extension de la garantie d'1 an"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -175,9 +187,29 @@ msgid "10 Units"
 msgstr "10 unités"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_height_100
+msgid "100"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_length_120
+msgid "120"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "123456789012"
 msgstr "123456789012"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_length_140
+msgid "140"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_length_160
+msgid "160"
+msgstr ""
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
@@ -190,9 +222,29 @@ msgid "2 x 7 with price"
 msgstr "2 x 7 avec le prix"
 
 #. module: product
-#: model:product.attribute.value,name:product.product_attribute_value_6
-msgid "2 year"
-msgstr "2 ans"
+#: model:product.attribute.value,name:product.pav_duration_year_2
+msgid "2 years"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_2xl
+msgid "2XL"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_duration_year_3
+msgid "3 years"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_shoe_size_39
+msgid "39"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_3xl
+msgid "3XL"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12
@@ -208,6 +260,51 @@ msgstr "4 x 12 avec le prix"
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x7xprice
 msgid "4 x 7 with price"
 msgstr "4 x 7 avec le prix"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_shoe_size_40
+msgid "40"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_shoe_size_41
+msgid "41"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_shoe_size_42
+msgid "42"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_shoe_size_43
+msgid "43"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_height_45
+msgid "45"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_4xl
+msgid "4XL"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_5xl
+msgid "5XL"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_duration_month_6
+msgid "6 months"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_height_85
+msgid "85"
+msgstr ""
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -234,8 +331,12 @@ msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
-msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
-msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Monnaie\" title=\"Monnaie\"/>"
+msgid ""
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"title=\"Currency\"/>"
+msgstr ""
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Monnaie\" "
+"title=\"Monnaie\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -260,8 +361,7 @@ msgstr "<span>%</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>All general settings about this product are managed on</span>"
-msgstr ""
-"<span>Tous les paramètres généraux de ce produit sont gérés sur</span>"
+msgstr "<span>Tous les paramètres généraux de ce produit sont gérés sur</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -281,7 +381,8 @@ msgid ""
 "                        to the loss of their possible customizations."
 msgstr ""
 "<strong>Avertissement</strong>: l'ajout ou la suppression des attributs\n"
-"                        supprimeront ou recréeront des variantes existantes et entraîneront \n"
+"                        supprimeront ou recréeront des variantes existantes "
+"et entraîneront \n"
 "la perte de leurs éventuelles personnalisations."
 
 #. module: product
@@ -317,8 +418,8 @@ msgstr "Un produit combo doit contenir au moins un choix combo."
 #: model:ir.model.fields,help:product.field_product_product__description_sale
 #: model:ir.model.fields,help:product.field_product_template__description_sale
 msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sales Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
 "Une description du produit que vous souhaitez communiquer à vos clients. "
@@ -334,11 +435,17 @@ msgstr "Un conditionnement utilise déjà le code-barres"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
-"A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
-"            This is the perfect tool to handle several pricings, seasonal discounts, etc."
+"A price is a set of sales prices or rules to compute the price of sales "
+"order lines based on products, product categories, dates and ordered "
+"quantities.\n"
+"            This is the perfect tool to handle several pricings, seasonal "
+"discounts, etc."
 msgstr ""
-"Un prix est un ensemble de prix de vente ou de règles permettant de calculer le prix des lignes de commande en fonction des produits, des catégories de produits, des dates et des quantités commandées.\n"
-"                C'est l'outil parfait pour gérer plusieurs prix, remises saisonnières, etc."
+"Un prix est un ensemble de prix de vente ou de règles permettant de calculer "
+"le prix des lignes de commande en fonction des produits, des catégories de "
+"produits, des dates et des quantités commandées.\n"
+"                C'est l'outil parfait pour gérer plusieurs prix, remises "
+"saisonnières, etc."
 
 #. module: product
 #. odoo-python
@@ -350,8 +457,7 @@ msgstr "Un produit utilise déjà le code-barres"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A sellable combo product can only contain sellable products."
-msgstr ""
-"Un produit combo vendable ne peut contenir que des produits vendables."
+msgstr "Un produit combo vendable ne peut contenir que des produits vendables."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
@@ -465,7 +571,8 @@ msgid ""
 "Add products using the \"Add Products\" button at the top right to\n"
 "                                include them in the report."
 msgstr ""
-"Ajoutez des produits en utilisant le bouton \"Ajouter des produits\" button en haut à droite pour\n"
+"Ajoutez des produits en utilisant le bouton \"Ajouter des produits\" button "
+"en haut à droite pour\n"
 "                                les inclure dans le rapport."
 
 #. module: product
@@ -493,9 +600,9 @@ msgstr ""
 "ventes"
 
 #. module: product
-#: model:res.groups,name:product.group_product_manager
-msgid "Admin en Products / Create"
-msgstr "Admin et Produits / Créer"
+#: model:product.attribute.value,name:product.pav_brand_adidas
+msgid "Adidas"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
@@ -559,9 +666,14 @@ msgid "Allow customers to set their own value"
 msgstr "Permettre aux clients de fixer leur propre montant"
 
 #. module: product
-#: model:product.attribute.value,name:product.product_attribute_value_2
+#: model:product.attribute.value,name:product.pav_legs_aluminium
 msgid "Aluminium"
 msgstr "Aluminium"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_apple
+msgid "Apple"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
@@ -596,6 +708,11 @@ msgstr "Appliquer sur"
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Archived"
 msgstr "Archivé"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_ariel
+msgid "Ariel"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__sequence
@@ -731,7 +848,8 @@ msgstr ""
 "Prix de base pour le calcul.\n"
 "Prix de vente : Le prix de base sera le prix de vente. \n"
 "Prix de revient : Le prix de base sera le prix de revient. \n"
-"Autre liste de prix : Calcul du prix de base en fonction d'une autre liste de prix."
+"Autre liste de prix : Calcul du prix de base en fonction d'une autre liste "
+"de prix."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
@@ -749,9 +867,29 @@ msgid "Basic Pricelists"
 msgstr "Listes de prix de base"
 
 #. module: product
-#: model:product.attribute.value,name:product.product_attribute_value_4
+#: model:product.attribute.value,name:product.pav_color_beige
+msgid "Beige"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_black
 msgid "Black"
 msgstr "Noir"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_blue
+msgid "Blue"
+msgstr ""
+
+#. module: product
+#: model:product.attribute,name:product.pa_brand
+msgid "Brand"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_brown
+msgid "Brown"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -781,6 +919,11 @@ msgid "Cancel"
 msgstr "Annuler"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_canon
+msgid "Canon"
+msgstr ""
+
+#. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
 msgid "Categories"
 msgstr "Catégories"
@@ -804,11 +947,16 @@ msgstr "Catégorie : %s"
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 msgid ""
-"Changing the unit of measure for your product will apply a conversion 1 %(old_uom_name)s = 1 %(new_uom_name)s.\n"
-"All existing records (Sales orders, Purchase orders, etc.) using this product will be updated by replacing the unit name."
+"Changing the unit of measure for your product will apply a conversion 1 %"
+"(old_uom_name)s = 1 %(new_uom_name)s.\n"
+"All existing records (Sales orders, Purchase orders, etc.) using this "
+"product will be updated by replacing the unit name."
 msgstr ""
-"La modification de l'unité de mesure de votre produit appliquera une conversion 1 %(old_uom_name)s = 1 %(new_uom_name)s.\n"
-"Tous les enregistrements existants (commandes clients, commandes fournisseurs, etc.) contenant ce produit seront mis à jour avec le nouveau nom de l'unité."
+"La modification de l'unité de mesure de votre produit appliquera une "
+"conversion 1 %(old_uom_name)s = 1 %(new_uom_name)s.\n"
+"Tous les enregistrements existants (commandes clients, commandes "
+"fournisseurs, etc.) contenant ce produit seront mis à jour avec le nouveau "
+"nom de l'unité."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__checksum
@@ -831,9 +979,9 @@ msgid "Choose the sheet layout to print the labels"
 msgstr "Choisir le modèle pour imprimer les étiquettes"
 
 #. module: product
-#: model:product.attribute.value,name:product.pav_cleaning_kit
-msgid "Cleaning kit"
-msgstr "Kit de nettoyage"
+#: model:product.attribute.value,name:product.pav_brand_cocacola
+msgid "Coca-Cola"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -841,11 +989,16 @@ msgid "Codes"
 msgstr "Codes"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_colgate
+msgid "Colgate"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__html_color
 #: model:ir.model.fields,field_description:product.field_product_tag__color
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__color
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__color
-#: model:product.attribute,name:product.product_attribute_2
+#: model:product.attribute,name:product.pa_color
 msgid "Color"
 msgstr "Couleur"
 
@@ -909,8 +1062,8 @@ msgid ""
 "Combos allow to choose one product amongst a selection of choices per "
 "category."
 msgstr ""
-"Les combos permettent de choisir un produit parmi une sélection de choix par"
-" catégorie."
+"Les combos permettent de choisir un produit parmi une sélection de choix par "
+"catégorie."
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -1008,6 +1161,11 @@ msgstr "Groupe de pays"
 #: model:ir.model.fields,field_description:product.field_product_pricelist__country_group_ids
 msgid "Country Groups"
 msgstr "Groupes de pays"
+
+#. module: product
+#: model:res.groups,name:product.group_product_manager
+msgid "Create"
+msgstr ""
 
 #. module: product
 #: model:ir.model,website_form_label:product.model_res_partner
@@ -1119,7 +1277,9 @@ msgid "Currency"
 msgstr "Devise"
 
 #. module: product
-#: model:product.attribute.value,name:product.fabric_attribute_custom
+#: model:product.attribute.value,name:product.pav_custom
+#: model:product.attribute.value,name:product.pav_legs_custom
+#: model:product.attribute.value,name:product.pav_length_custom
 msgid "Custom"
 msgstr "Personnalisé"
 
@@ -1137,6 +1297,16 @@ msgstr "Réf. client"
 #: model:product.template,name:product.product_product_4_product_template
 msgid "Customizable Desk"
 msgstr "Bureau personnalisable"
+
+#. module: product
+#: model:product.attribute,name:product.pa_customization
+msgid "Customization"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_cyan
+msgid "Cyan"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__db_datas
@@ -1192,6 +1362,11 @@ msgstr "Supprimer"
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
 msgid "Delivery Lead Time"
 msgstr "Délai de livraison"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_dell
+msgid "Dell"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__description
@@ -1327,6 +1502,11 @@ msgid "Documents of this variant"
 msgstr "Documents de cette variante"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_dove
+msgid "Dove"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "Download"
 msgstr "Télécharger"
@@ -1353,7 +1533,12 @@ msgid "Drawer with two routing possiblities."
 msgstr "Tiroir avec deux possibilités de routage."
 
 #. module: product
-#: model:product.attribute,name:product.product_attribute_3
+#: model:product.attribute.value,name:product.pav_options_drawers
+msgid "Drawers"
+msgstr ""
+
+#. module: product
+#: model:product.attribute,name:product.pa_duration
 msgid "Duration"
 msgstr "Durée"
 
@@ -1366,6 +1551,11 @@ msgstr "Dymo"
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
 msgid "Dynamically"
 msgstr "Dynamique"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_dyson
+msgid "Dyson"
+msgstr ""
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
@@ -1443,11 +1633,6 @@ msgid "Extra Info"
 msgstr "Infos supplémentaires"
 
 #. module: product
-#: model:product.attribute,name:product.pa_extra_options
-msgid "Extra Options"
-msgstr "Options supplémentaires"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo_item__extra_price
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
 msgid "Extra Price"
@@ -1456,14 +1641,14 @@ msgstr "Prix supplémentaire"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
 msgid ""
-"Extra price for the variant with this attribute value on sale price. eg. 200"
-" price extra, 1000 + 200 = 1200."
+"Extra price for the variant with this attribute value on sale price. eg. 200 "
+"price extra, 1000 + 200 = 1200."
 msgstr ""
 "Prix supplémentaire pour la variante avec cette valeur d'attribut sur le "
 "prix de vente. par exemple. 200 prix supplémentaire, 1000 + 200 = 1200."
 
 #. module: product
-#: model:product.attribute,name:product.fabric_attribute
+#: model:product.attribute,name:product.pa_fabric
 msgid "Fabric"
 msgstr "Tissu"
 
@@ -1493,6 +1678,11 @@ msgstr "Contenu du fichier (brut)"
 #: model:ir.model.fields,field_description:product.field_product_document__file_size
 msgid "File Size"
 msgstr "Taille de fichier"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_options_file_cabinets
+msgid "File cabinets"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__fixed_price
@@ -1531,10 +1721,12 @@ msgstr "Icône Font Awesome par ex. fa-tasks"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
 msgid ""
-"For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
+"For the rule to apply, bought/sold quantity must be greater than or equal to "
+"the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
-"Pour que la règle s'applique, la quantité achetée/vendue doit être supérieure ou égale à la quantité minimum spécifiée dans ce champ.\n"
+"Pour que la règle s'applique, la quantité achetée/vendue doit être "
+"supérieure ou égale à la quantité minimum spécifiée dans ce champ.\n"
 "Exprimée dans l'unité de mesure par défaut du produit."
 
 #. module: product
@@ -1579,11 +1771,25 @@ msgid "General Information"
 msgstr "Informations générales"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_gillette
+msgid "Gillette"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product__sequence
 #: model:ir.model.fields,help:product.field_product_template__sequence
 msgid "Gives the sequence order when displaying a product list"
+msgstr "Indique l'ordre d'affichage lorsqu'une liste de produits est affichée."
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_fabric_glass
+msgid "Glass"
 msgstr ""
-"Indique l'ordre d'affichage lorsqu'une liste de produits est affichée."
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_gold
+msgid "Gold"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
@@ -1604,8 +1810,19 @@ msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Les biens sont des matériaux tangibles et des marchandises que vous fournissez.\n"
+"Les biens sont des matériaux tangibles et des marchandises que vous "
+"fournissez.\n"
 "Un service est un produit non matériel que vous fournissez."
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_gray
+msgid "Gray"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_green
+msgid "Green"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
@@ -1614,6 +1831,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Group By"
 msgstr "Regrouper par"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_h_m
+msgid "H&M"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__html_color
@@ -1627,6 +1849,16 @@ msgstr "Couleur HTML"
 #: model:ir.model.fields,field_description:product.field_product_template__has_message
 msgid "Has Message"
 msgstr "A un message"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_head_shoulders
+msgid "Head & Shoulders"
+msgstr ""
+
+#. module: product
+#: model:product.attribute,name:product.pa_height
+msgid "Height"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__html_color
@@ -1912,6 +2144,16 @@ msgid "Kilograms (kg)"
 msgstr "Kilogrammes (kg)"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_loreal
+msgid "L'Oréal"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_LG
+msgid "LG"
+msgstr ""
+
+#. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
@@ -1993,18 +2235,38 @@ msgid ""
 "automatic computation of the purchase order planning."
 msgstr ""
 "Délai (en jours) entre la confirmation du bon de commande et la réception "
-"des produits dans votre entrepôt. Utilisé par le planificateur pour calculer"
-" le planning des bons de commande automatiquement."
+"des produits dans votre entrepôt. Utilisé par le planificateur pour calculer "
+"le planning des bons de commande automatiquement."
 
 #. module: product
-#: model:product.attribute.value,name:product.fabric_attribute_leather
+#: model:product.attribute.value,name:product.pav_fabric_leather
 msgid "Leather"
 msgstr "Cuir"
 
 #. module: product
-#: model:product.attribute,name:product.product_attribute_1
+#: model:product.attribute,name:product.pa_legs
 msgid "Legs"
 msgstr "Pieds"
+
+#. module: product
+#: model:product.attribute,name:product.pa_length
+msgid "Length"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_lenovo
+msgid "Lenovo"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_levis
+msgid "Levi's"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_fabric_linen
+msgid "Linen"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__attribute_line_ids
@@ -2045,8 +2307,8 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
 msgid ""
-"Make this attribute value not compatible with other values of the product or"
-" some attribute values of optional and accessory products."
+"Make this attribute value not compatible with other values of the product or "
+"some attribute values of optional and accessory products."
 msgstr ""
 "Rendre cette valeur d'attribut non compatible avec d'autres valeurs du "
 "produit ou certaines valeurs d'attribut de produits optionnels et "
@@ -2069,6 +2331,11 @@ msgid "Markup"
 msgstr "Marge commerciale"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_color_maroon
+msgid "Maroon"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Max. Margin"
 msgstr "Marge maximale"
@@ -2077,6 +2344,11 @@ msgstr "Marge maximale"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_max_margin
 msgid "Max. Price Margin"
 msgstr "Marge de prix maximale"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_maybelline
+msgid "Maybelline"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__message
@@ -2098,6 +2370,11 @@ msgstr "Erreur d'envoi du message"
 #: model:ir.model.fields,field_description:product.field_product_template__message_ids
 msgid "Messages"
 msgstr "Messages"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_fabric_metal
+msgid "Metal"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__mimetype
@@ -2133,6 +2410,11 @@ msgstr "Mode"
 #: model:product.template,name:product.monitor_stand_product_template
 msgid "Monitor Stand"
 msgstr "Support d'écran"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_montblanc
+msgid "Montblanc"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__multi
@@ -2172,6 +2454,16 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_color_navy
+msgid "Navy"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_nestle
+msgid "Nestlé"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__no_variant
 msgid "Never"
 msgstr "Jamais"
@@ -2181,6 +2473,11 @@ msgstr "Jamais"
 #: code:addons/product/models/product_pricelist.py:0
 msgid "New"
 msgstr "Nouveau"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_new_balance
+msgid "New Balance"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_calendar_event_id
@@ -2209,6 +2506,21 @@ msgstr "Résumé de l'activité suivante"
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_id
 msgid "Next Activity Type"
 msgstr "Type d'activités à venir"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_nike
+msgid "Nike"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_nikon
+msgid "Nikon"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_nivea
+msgid "Nivea"
+msgstr ""
 
 #. module: product
 #. odoo-python
@@ -2318,24 +2630,34 @@ msgid "Office Lamp"
 msgstr "Lampe de bureau"
 
 #. module: product
-#. odoo-python
-#: code:addons/product/models/product_template_attribute_line.py:0
-msgid ""
-"On the product %(product)s you cannot associate the value %(value)s with the"
-" attribute %(attribute)s because they do not match."
+#: model:product.attribute.value,name:product.pav_brand_olay
+msgid "Olay"
 msgstr ""
-"Sur le produit %(product)s vous ne pouvez pas associer la valeur %(value)s à"
-" l'attribut %(attribute)s, car ils ne correspondent pas."
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_olive
+msgid "Olive"
+msgstr ""
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"On the product %(product)s you cannot transform the attribute "
-"%(attribute_src)s into the attribute %(attribute_dest)s."
+"On the product %(product)s you cannot associate the value %(value)s with the "
+"attribute %(attribute)s because they do not match."
 msgstr ""
-"Sur le produit %(product)s vous ne pouvez pas transformer l'attribut "
-"%(attribute_src)s en %(attribute_dest)s."
+"Sur le produit %(product)s vous ne pouvez pas associer la valeur %(value)s à "
+"l'attribut %(attribute)s, car ils ne correspondent pas."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template_attribute_line.py:0
+msgid ""
+"On the product %(product)s you cannot transform the attribute %"
+"(attribute_src)s into the attribute %(attribute_dest)s."
+msgstr ""
+"Sur le produit %(product)s vous ne pouvez pas transformer l'attribut %"
+"(attribute_src)s en %(attribute_dest)s."
 
 #. module: product
 #. odoo-javascript
@@ -2344,6 +2666,21 @@ msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
 msgstr ""
 "Oups ! '%(fileName)s' n'a pas été téléchargé car son format n'est pas "
 "autorisé."
+
+#. module: product
+#: model:product.attribute,name:product.pa_options
+msgid "Options"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_oral_b
+msgid "Oral-B"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_orange
+msgid "Orange"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -2366,6 +2703,11 @@ msgstr "Autre liste de prix"
 #: model:product.template,name:product.product_template_dining_table
 msgid "Outdoor dining table"
 msgstr "Table extérieure"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_options_overhead_shelves
+msgid "Overhead shelves"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -2391,6 +2733,16 @@ msgid "Packagings"
 msgstr "Conditionnements"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_panasonic
+msgid "Panasonic"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_pantene
+msgid "Pantene"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_id
 msgid "Parent Category"
 msgstr "Catégorie parente"
@@ -2406,9 +2758,19 @@ msgid "Pedal Bin"
 msgstr "Poubelle à pédale"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_pepsi
+msgid "Pepsi"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__percent_price
 msgid "Percentage Price"
 msgstr "Pourcentage du prix"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_philips
+msgid "Philips"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__pills
@@ -2416,9 +2778,9 @@ msgid "Pills"
 msgstr "Boutons carrés"
 
 #. module: product
-#: model:product.attribute.value,name:product.fabric_attribute_plastic
-msgid "Plastic"
-msgstr "Plastique"
+#: model:product.attribute.value,name:product.pav_color_pink
+msgid "Pink"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -2466,8 +2828,8 @@ msgstr ""
 msgid ""
 "Please specify the product variant for which this rule should be applied"
 msgstr ""
-"Veuillez préciser la variante de produit pour laquelle cette règle doit être"
-" appliquée"
+"Veuillez préciser la variante de produit pour laquelle cette règle doit être "
+"appliquée"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__1
@@ -2480,8 +2842,8 @@ msgid ""
 "Press a button and watch your desk glide effortlessly from sitting to "
 "standing height in seconds."
 msgstr ""
-"Appuyez sur un bouton et regardez votre bureau aller d'une position assise à"
-" la position debout en quelques secondes, sans le moindre effort."
+"Appuyez sur un bouton et regardez votre bureau aller d'une position assise à "
+"la position debout en quelques secondes, sans le moindre effort."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
@@ -2916,8 +3278,7 @@ msgstr "Produits : %(category)s"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_loyalty
 msgid "Promotions, Coupons, Gift Card & Loyalty Program"
-msgstr ""
-"Promotions, bons de réduction, cartes-cadeaux & programmes de fidélité"
+msgstr "Promotions, bons de réduction, cartes-cadeaux & programmes de fidélité"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_properties
@@ -2926,9 +3287,9 @@ msgid "Properties"
 msgstr "Propriétés"
 
 #. module: product
-#: model:product.attribute.value,name:product.pav_protection_kit
-msgid "Protection kit"
-msgstr "Kit de protection"
+#: model:product.attribute.value,name:product.pav_brand_puma
+msgid "Puma"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__purchase_ok
@@ -2943,6 +3304,11 @@ msgstr "Achats"
 #: model:ir.model.fields,field_description:product.field_product_template__description_purchase
 msgid "Purchase Description"
 msgstr "Description des achats"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_purple
+msgid "Purple"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -2984,6 +3350,21 @@ msgid "Radio"
 msgstr "Radio"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_rayban
+msgid "Ray-Ban"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_red
+msgid "Red"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_reebok
+msgid "Reebok"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__code
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Reference"
@@ -2992,11 +3373,11 @@ msgstr "Référence"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid ""
-"Register the prices requested by your vendors for each product, based on the"
-" quantity and the period."
+"Register the prices requested by your vendors for each product, based on the "
+"quantity and the period."
 msgstr ""
-"Enregistrer les prix demandés par vos fournisseurs pour chaque produit, avec"
-" la quantité et la période."
+"Enregistrer les prix demandés par vos fournisseurs pour chaque produit, avec "
+"la quantité et la période."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__product_tmpl_ids
@@ -3058,6 +3439,11 @@ msgid "Restaurant Expenses"
 msgstr "Frais de restaurant"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_rolex
+msgid "Rolex"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Round off to"
 msgstr "Arrondir à"
@@ -3108,6 +3494,11 @@ msgid "Sales Price"
 msgstr "Prix de vente"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_samsung
+msgid "Samsung"
+msgstr ""
+
+#. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_name_and_description/product_name_and_description.js:0
 msgid "Search a product"
@@ -3152,7 +3543,13 @@ msgid ""
 msgstr ""
 "Le prix est fixé comme un multiple de cette valeur.\n"
 "L'arrondi sera appliqué après la remise et avant le supplément.\n"
-"Pour avoir un prix qui se termine par 9.99, arrondissez à 10 et ajoutez un supplément de -0.01"
+"Pour avoir un prix qui se termine par 9.99, arrondissez à 10 et ajoutez un "
+"supplément de -0.01"
+
+#. module: product
+#: model:product.attribute,name:product.pa_shoe_size
+msgid "Shoes size"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -3168,9 +3565,19 @@ msgstr ""
 "dépassée"
 
 #. module: product
-#: model:product.attribute,name:product.size_attribute
+#: model:product.attribute.value,name:product.pav_color_silver
+msgid "Silver"
+msgstr ""
+
+#. module: product
+#: model:product.attribute,name:product.pa_size
 msgid "Size"
 msgstr "Taille"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_sony
+msgid "Sony"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_partner__specific_property_product_pricelist
@@ -3260,7 +3667,7 @@ msgstr ""
 "Planifiée : activités futures"
 
 #. module: product
-#: model:product.attribute.value,name:product.product_attribute_value_1
+#: model:product.attribute.value,name:product.pav_legs_steel
 msgid "Steel"
 msgstr "Acier"
 
@@ -3299,6 +3706,16 @@ msgstr ""
 "Les étiquettes sont utilisées pour chercher un produit d'un thème précis."
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_color_tan
+msgid "Tan"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_teal
+msgid "Teal"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__template_value_ids
 msgid "Template Values"
 msgstr "Valeurs de modèle"
@@ -3319,11 +3736,11 @@ msgstr "La référence '%s' existe déjà."
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"The attribute %(attribute)s must have at least one value for the product "
-"%(product)s."
+"The attribute %(attribute)s must have at least one value for the product %"
+"(product)s."
 msgstr ""
-"L'attribut %(attribute)s doit avoir au moins une valeur pour le produit "
-"%(product)s."
+"L'attribut %(attribute)s doit avoir au moins une valeur pour le produit %"
+"(product)s."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -3379,8 +3796,8 @@ msgstr "La marge minimale doit être plus petite que la marge maximale. "
 msgid ""
 "The minimum price among the products in this combo. This value will be used "
 "to prorate the price of this combo with respect to the other combos in a "
-"combo product. This heuristic ensures that whatever product the user chooses"
-" in a combo, it will always be the same price."
+"combo product. This heuristic ensures that whatever product the user chooses "
+"in a combo, it will always be the same price."
 msgstr ""
 "Le prix minimum parmi les produits de ce combo. Cette valeur sera utilisée "
 "pour calculer au prorata le prix de ce combo par rapport aux autres combos "
@@ -3400,8 +3817,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid ""
-"The number of variants to generate is above allowed limit. You should either"
-" not generate variants for each combination or generate them on demand from "
+"The number of variants to generate is above allowed limit. You should either "
+"not generate variants for each combination or generate them on demand from "
 "the sales order. To do so, open the form view of attributes and change the "
 "mode of *Create Variants*."
 msgstr ""
@@ -3426,8 +3843,8 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
 msgid ""
-"The quantity to purchase from this vendor to benefit from the unit price. If"
-" a vendor unit is set, quantity should be specified in this unit, otherwise "
+"The quantity to purchase from this vendor to benefit from the unit price. If "
+"a vendor unit is set, quantity should be specified in this unit, otherwise "
 "it should be specified in the default unit of the product."
 msgstr ""
 "Quantité à acheter auprès de ce fournisseur pour bénéficier du prix "
@@ -3445,8 +3862,8 @@ msgstr "La méthode d'arrondi doit être strictement positive."
 #: model:ir.model.fields,help:product.field_product_combo_item__lst_price
 #: model:ir.model.fields,help:product.field_product_product__lst_price
 msgid ""
-"The sale price is managed from the product template. Click on the 'Configure"
-" Variants' button to set the extra attribute prices."
+"The sale price is managed from the product template. Click on the 'Configure "
+"Variants' button to set the extra attribute prices."
 msgstr ""
 "Le prix de vente est géré à partir du modèle de produit. Cliquez sur le "
 "bouton 'Configurer les variantes' pour définir les prix des attributs "
@@ -3537,19 +3954,24 @@ msgstr ""
 "interne."
 
 #. module: product
-#: model:product.template,description_sale:product.consu_delivery_01_product_template
-msgid "Three Seater Sofa with Lounger in Steel Grey Colour"
-msgstr "Canapé trois places avec chaise longue de couleur gris acier"
-
-#. module: product
-#: model:product.template,name:product.consu_delivery_01_product_template
-msgid "Three-Seat Sofa"
-msgstr "Canapé trois places"
+#: model:product.attribute.value,name:product.pav_brand_tide
+msgid "Tide"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Today Activities"
 msgstr "Activités du jour"
+
+#. module: product
+#: model:product.template,name:product.consu_delivery_01_product_template
+msgid "Two-Seat Sofa"
+msgstr ""
+
+#. module: product
+#: model:product.template,description_sale:product.consu_delivery_01_product_template
+msgid "Two-Seater Sofa with Oak Wood Frame"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__type
@@ -3575,6 +3997,21 @@ msgstr "UdM"
 #: code:addons/product/wizard/product_label_layout.py:0
 msgid "Unable to find report template for %s format"
 msgstr "Impossible de trouver le modèle de rapport pour le format %s"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_underarmour
+msgid "Under Armour"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_options_under_desk_pedestals
+msgid "Under-desk pedestals"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_uniqlo
+msgid "Uniqlo"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__uom_id
@@ -3730,11 +4167,13 @@ msgstr "Nombre de valeurs"
 #: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "Value of the product (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
+"        Used to value the product when the purchase cost is not known (e.g. "
+"inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
 "Valeur du produit (calculée automatiquement en AVCO).\n"
-"        Utilisée pour estimer le produit quand le coût d'achat n'est pas connu (par ex. ajustement d'inventaire).\n"
+"        Utilisée pour estimer le produit quand le coût d'achat n'est pas "
+"connu (par ex. ajustement d'inventaire).\n"
 "        Utilisée pour calculer les marges sur les commandes clients."
 
 #. module: product
@@ -3826,6 +4265,11 @@ msgstr "Variante : %s"
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Variants"
 msgstr "Variantes"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_fabric_velvet
+msgid "Velvet"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__partner_id
@@ -3922,8 +4366,8 @@ msgstr "Avertissements"
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
-"We pay special attention to detail, which is why our desks are of a superior"
-" quality."
+"We pay special attention to detail, which is why our desks are of a superior "
+"quality."
 msgstr ""
 "Nous accordons une attention particulière aux détails et c'est pourquoi nos "
 "bureaux sont d'une qualité supérieure."
@@ -3959,12 +4403,18 @@ msgid "Whether the tag is displayed to customers."
 msgstr "Indique si le tag est affiché aux clients."
 
 #. module: product
-#: model:product.attribute.value,name:product.product_attribute_value_3
+#: model:product.attribute.value,name:product.pav_brand_whirlpool
+msgid "Whirlpool"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_white
 msgid "White"
 msgstr "Blanc"
 
 #. module: product
-#: model:product.attribute.value,name:product.product_attribute_value_color_wood
+#: model:product.attribute.value,name:product.pav_fabric_wood
+#: model:product.attribute.value,name:product.pav_legs_wood
 msgid "Wood"
 msgstr "Bois"
 
@@ -3974,14 +4424,29 @@ msgid "Write Date"
 msgstr "Date de rédaction"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_size_xl
+msgid "XL"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_xs
+msgid "XS"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_yellow
+msgid "Yellow"
+msgstr ""
+
+#. module: product
 #. odoo-python
 #: code:addons/product/wizard/update_product_attribute_value.py:0
 msgid ""
 "You are about to add the value \"%(attribute_value)s\" to %(product_count)s "
 "products."
 msgstr ""
-"Vous êtes sur le point d'ajouter la valeur \"%(attribute_value)s\" à "
-"%(product_count)s produits."
+"Vous êtes sur le point d'ajouter la valeur \"%(attribute_value)s\" à %"
+"(product_count)s produits."
 
 #. module: product
 #. odoo-python
@@ -3998,8 +4463,8 @@ msgid ""
 "You are deactivating the pricelist feature. Every active pricelist will be "
 "archived."
 msgstr ""
-"Vous êtes sur le point de désactiver la fonctionnalité liste de prix. Toutes"
-" les listes de prix actives seront archivées."
+"Vous êtes sur le point de désactiver la fonctionnalité liste de prix. Toutes "
+"les listes de prix actives seront archivées."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price
@@ -4020,8 +4485,8 @@ msgid ""
 "You can assign pricelists to your customers or select one when creating a "
 "new sales quotation."
 msgstr ""
-"Vous pouvez assigner des listes de prix à vos clients ou en sélectionnez une"
-" quand vous créez un nouveau devis de vente. "
+"Vous pouvez assigner des listes de prix à vos clients ou en sélectionnez une "
+"quand vous créez un nouveau devis de vente. "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_document__type
@@ -4029,8 +4494,8 @@ msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
 msgstr ""
-"Vous pouvez soit charger un fichier depuis votre ordinateur, soit "
-"copier/coller une adresse internet qui y renvoie."
+"Vous pouvez soit charger un fichier depuis votre ordinateur, soit copier/"
+"coller une adresse internet qui y renvoie."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__image
@@ -4069,18 +4534,20 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 msgid ""
-"You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
+"You cannot change the Variants Creation Mode of the attribute %(attribute)s "
+"because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
-"Vous ne pouvez pas modifier le mode de création des variantes de l'attribut %(attribute)s, car il est utilisé sur les produits suivants :\n"
+"Vous ne pouvez pas modifier le mode de création des variantes de l'attribut %"
+"(attribute)s, car il est utilisé sur les produits suivants :\n"
 "%(products)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid ""
-"You cannot change the attribute of the value %(value)s because it is used on"
-" the following products: %(products)s"
+"You cannot change the attribute of the value %(value)s because it is used on "
+"the following products: %(products)s"
 msgstr ""
 "Vous ne pouvez pas modifier l'attribut de la valeur %(value)s, car il est "
 "utilisé sur les produits suivants : %(products)s"
@@ -4089,18 +4556,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 msgid ""
-"You cannot change the product of the value %(value)s set on product "
-"%(product)s."
+"You cannot change the product of the value %(value)s set on product %"
+"(product)s."
 msgstr ""
-"Vous ne pouvez pas modifier le produit de la valeur %(value)s définie sur le"
-" produit %(product)s."
+"Vous ne pouvez pas modifier le produit de la valeur %(value)s définie sur le "
+"produit %(product)s."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 msgid ""
-"You cannot change the value of the value %(value)s set on product "
-"%(product)s."
+"You cannot change the value of the value %(value)s set on product %"
+"(product)s."
 msgstr ""
 "Vous ne pouvez pas modifier la valeur de la valeur %(value)s définie sur le "
 "produit %(product)s."
@@ -4129,31 +4596,35 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 msgid ""
-"You cannot delete the attribute %(attribute)s because it is used on the following products:\n"
+"You cannot delete the attribute %(attribute)s because it is used on the "
+"following products:\n"
 "%(products)s"
 msgstr ""
-"Vous ne pouvez pas supprimer l'attribut %(attribute)s, car il est utilisé sur les produits suivants :\n"
+"Vous ne pouvez pas supprimer l'attribut %(attribute)s, car il est utilisé "
+"sur les produits suivants :\n"
 "%(products)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid ""
-"You cannot delete the value %(value)s because it is used on the following products:\n"
+"You cannot delete the value %(value)s because it is used on the following "
+"products:\n"
 "%(products)s\n"
 msgstr ""
-"Vous ne pouvez pas supprimer la valeur %(value)s car elle est utilisée sur les produits suivants :\n"
+"Vous ne pouvez pas supprimer la valeur %(value)s car elle est utilisée sur "
+"les produits suivants :\n"
 "%(products)s\n"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"You cannot move the attribute %(attribute)s from the product %(product_src)s"
-" to the product %(product_dest)s."
+"You cannot move the attribute %(attribute)s from the product %(product_src)s "
+"to the product %(product_dest)s."
 msgstr ""
-"Vous ne pouvez pas déplacer l'attribut %(attribute)s du produit "
-"%(product_src)s vers le produit %(product_dest)s."
+"Vous ne pouvez pas déplacer l'attribut %(attribute)s du produit %"
+"(product_src)s vers le produit %(product_dest)s."
 
 #. module: product
 #. odoo-python
@@ -4170,7 +4641,8 @@ msgstr ""
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
-"                            whether it's a storable product, a consumable or a service."
+"                            whether it's a storable product, a consumable or "
+"a service."
 msgstr ""
 "Vous devez définir un produit pour tout ce que vous vendez ou achetez, \n"
 "que ce soit un produit stockable, consommable ou un service."
@@ -4190,26 +4662,37 @@ msgstr ""
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service.\n"
-"                The product form contains information to simplify the sale process:\n"
-"                price, notes in the quotation, accounting data, procurement methods, etc."
+"                The product form contains information to simplify the sale "
+"process:\n"
+"                price, notes in the quotation, accounting data, procurement "
+"methods, etc."
 msgstr ""
 "Vous devez définir un produit pour tout ce que vous vendez ou achetez,\n"
-"                qu'il s'agisse d'un produit stockable, d'un consommable ou d'un service.\n"
-"                Le formulaire produit contient des informations pour simplifier le processus de vente :\n"
-"                prix, notes dans le devis, données comptables, méthodes d'approvisionnement, etc."
+"                qu'il s'agisse d'un produit stockable, d'un consommable ou "
+"d'un service.\n"
+"                Le formulaire produit contient des informations pour "
+"simplifier le processus de vente :\n"
+"                prix, notes dans le devis, données comptables, méthodes "
+"d'approvisionnement, etc."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
 msgid ""
-"You must define a product for everything you sell, whether it's a physical product,\n"
+"You must define a product for everything you sell, whether it's a physical "
+"product,\n"
 "                a consumable or a service you offer to customers.\n"
-"                The product form contains information to simplify the sale process:\n"
-"                price, notes in the quotation, accounting data, procurement methods, etc."
+"                The product form contains information to simplify the sale "
+"process:\n"
+"                price, notes in the quotation, accounting data, procurement "
+"methods, etc."
 msgstr ""
-"Vous devez définir un produit pour tout ce que vous vendez, que ce soit un produit physique,\n"
+"Vous devez définir un produit pour tout ce que vous vendez, que ce soit un "
+"produit physique,\n"
 "                un consommable ou un service que vous offrez à vos clients.\n"
-"                Le formulaire de produit contient des informations permettant de simpflifier le processus de vente:\n"
-"                le prix, les notes dans le devis, les données comptables, les méthodes d'approvisionnement, etc."
+"                Le formulaire de produit contient des informations "
+"permettant de simpflifier le processus de vente:\n"
+"                le prix, les notes dans le devis, les données comptables, "
+"les méthodes d'approvisionnement, etc."
 
 #. module: product
 #. odoo-javascript
@@ -4222,6 +4705,11 @@ msgstr "Vous devez laisser au moins une quantité."
 #: code:addons/product/wizard/product_label_layout.py:0
 msgid "You need to set a positive quantity."
 msgstr "Vous devez saisir une quantité positive."
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_zara
+msgid "Zara"
+msgstr ""
 
 #. module: product
 #. odoo-python
@@ -4352,3 +4840,30 @@ msgstr "au"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid "1 year warranty extension"
+#~ msgstr "Extension de la garantie d'1 an"
+
+#~ msgid "2 year"
+#~ msgstr "2 ans"
+
+#~ msgid "Admin en Products / Create"
+#~ msgstr "Admin et Produits / Créer"
+
+#~ msgid "Cleaning kit"
+#~ msgstr "Kit de nettoyage"
+
+#~ msgid "Extra Options"
+#~ msgstr "Options supplémentaires"
+
+#~ msgid "Plastic"
+#~ msgstr "Plastique"
+
+#~ msgid "Protection kit"
+#~ msgstr "Kit de protection"
+
+#~ msgid "Three Seater Sofa with Lounger in Steel Grey Colour"
+#~ msgstr "Canapé trois places avec chaise longue de couleur gris acier"
+
+#~ msgid "Three-Seat Sofa"
+#~ msgstr "Canapé trois places"

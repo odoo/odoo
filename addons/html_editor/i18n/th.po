@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* html_editor
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Rasareeyar Lappiam, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-08-18 18:37+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: html_editor
@@ -27,8 +27,8 @@ msgid ""
 "'Alt tag' specifies an alternate text for an image, if the image cannot be "
 "displayed (slow connection, missing image, screen reader ...)."
 msgstr ""
-"'แท็ก Alt' ระบุข้อความสำรองสำหรับรูปภาพ หากไม่สามารถแสดงรูปภาพได้ "
-"(การเชื่อมต่อช้า รูปภาพหายไป โปรแกรมอ่านหน้าจอ ...)"
+"'แท็ก Alt' ระบุข้อความสำรองสำหรับรูปภาพ หากไม่สามารถแสดงรูปภาพได้ (การเชื่อมต่อช้า "
+"รูปภาพหายไป โปรแกรมอ่านหน้าจอ ...)"
 
 #. module: html_editor
 #. odoo-javascript
@@ -82,18 +82,15 @@ msgstr "ยอมรับ"
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid "Action %s is not a window action, link preview is not available"
-msgstr ""
-"การดำเนินการ %s ไม่ใช่การดำเนินการของหน้าต่าง ไม่สามารถดูตัวอย่างลิงก์ได้"
+msgstr "การดำเนินการ %s ไม่ใช่การดำเนินการของหน้าต่าง ไม่สามารถดูตัวอย่างลิงก์ได้"
 
 #. module: html_editor
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Action %s not found, link preview is not available, please check your url is"
-" correct"
-msgstr ""
-"ไม่พบการดำเนินการ %s ไม่สามารถดูตัวอย่างลิงก์ได้ โปรดตรวจสอบว่า URL "
-"ของคุณถูกต้อง"
+"Action %s not found, link preview is not available, please check your url is "
+"correct"
+msgstr "ไม่พบการดำเนินการ %s ไม่สามารถดูตัวอย่างลิงก์ได้ โปรดตรวจสอบว่า URL ของคุณถูกต้อง"
 
 #. module: html_editor
 #. odoo-javascript
@@ -251,6 +248,12 @@ msgstr "การแนบ"
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__local_url
 msgid "Attachment URL"
 msgstr "แนบไฟล์ URL"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Autoconvert to relative link"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -532,12 +535,11 @@ msgstr "ละทิ้ง"
 msgid ""
 "Discover a world of awesomeness in our copyright-free image haven. No legal "
 "drama, just nice images!"
-msgstr ""
-"ค้นพบคลังรูปภาพที่ปลอดลิขสิทธิ์ของเรา ไม่มีดราม่าทางกฎหมาย "
-"มีแต่ภาพสวยๆเท่านั้น!"
+msgstr "ค้นพบคลังรูปภาพที่ปลอดลิขสิทธิ์ของเรา ไม่มีดราม่าทางกฎหมาย มีแต่ภาพสวยๆเท่านั้น!"
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__display_name
 msgid "Display Name"
 msgstr "แสดงชื่อ"
 
@@ -570,12 +572,6 @@ msgstr "แก้ไข"
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit Link"
 msgstr "แก้ไขลิงก์"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/navbar_link_popover.xml:0
-msgid "Edit Menu"
-msgstr "แก้ไขเมนู"
 
 #. module: html_editor
 #. odoo-javascript
@@ -679,6 +675,11 @@ msgstr "พลิกแนวตั้ง"
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Format"
 msgstr "รูปแบบ"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -808,6 +809,7 @@ msgstr "Html"
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__id
 msgid "ID"
 msgstr "ไอดี"
 
@@ -1005,11 +1007,8 @@ msgstr "คัดลอกลิงก์ไปยังคลิปบอร์
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Link preview is not available because %s, please check if your url is "
-"correct"
-msgstr ""
-"ไม่สามารถดูตัวอย่างลิงก์ได้ เนื่องจาก %s โปรดตรวจสอบว่า URL "
-"ของคุณถูกต้องหรือไม่"
+"Link preview is not available because %s, please check if your url is correct"
+msgstr "ไม่สามารถดูตัวอย่างลิงก์ได้ เนื่องจาก %s โปรดตรวจสอบว่า URL ของคุณถูกต้องหรือไม่"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1170,8 +1169,7 @@ msgstr "อุปส์ ดูเหมือนว่า AI ของเรา�
 msgid ""
 "Oops, the file %s could not be found. Please replace this file box by a new "
 "one to re-upload the file."
-msgstr ""
-"อ๊ะ ไม่พบไฟล์ %s โปรดแทนที่กล่องไฟล์นี้ด้วยกล่องใหม่เพื่ออัปโหลดไฟล์อีกครั้ง"
+msgstr "อ๊ะ ไม่พบไฟล์ %s โปรดแทนที่กล่องไฟล์นี้ด้วยกล่องใหม่เพื่ออัปโหลดไฟล์อีกครั้ง"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1860,8 +1858,8 @@ msgid ""
 "You can not replace a field by this image. If you want to use this image, "
 "first save it on your computer and then upload it here."
 msgstr ""
-"คุณไม่สามารถแทนที่ฟิลด์ด้วยภาพนี้ได้ หากคุณต้องการใช้ภาพนี้ "
-"โปรดบันทึกลงในคอมพิวเตอร์ของคุณก่อน จากนั้นให้อัปโหลดที่นี่"
+"คุณไม่สามารถแทนที่ฟิลด์ด้วยภาพนี้ได้ หากคุณต้องการใช้ภาพนี้ โปรดบันทึกลงในคอมพิวเตอร์ของคุณก่อน "
+"จากนั้นให้อัปโหลดที่นี่"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1975,3 +1973,6 @@ msgstr "px"
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "videos"
 msgstr "วิดีโอ"
+
+#~ msgid "Edit Menu"
+#~ msgstr "แก้ไขเมนู"

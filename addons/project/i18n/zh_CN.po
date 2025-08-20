@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* project
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Chloe Wang, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-03 12:08+0000\n"
+"POT-Creation-Date: 2025-08-18 18:36+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Chloe Wang, 2025\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: project
@@ -159,55 +160,71 @@ msgstr "<b>拖放</b> 卡片以改变您的任务阶段。"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid ""
-"<b>Log internal notes</b> and use @<b>mentions</b> to notify your "
-"colleagues."
+"<b>Log internal notes</b> and use @<b>mentions</b> to notify your colleagues."
 msgstr "<b>记录内部备注</b>，使用 @<b>提及</b> 以通知您的同事。"
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
 msgid ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
+">\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
-"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                Hello <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"                Hello <t t-out=\"partner.name or ''\">Brandon Freeman</t>,"
+"<br/><br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Hello,<br/><br/>\n"
 "            </t>\n"
-"            Please take a moment to rate our services related to the <strong t-out=\"object.name or ''\">Planning and budget</strong> task\n"
+"            Please take a moment to rate our services related to the <strong "
+"t-out=\"object.name or ''\">Planning and budget</strong> task\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                assigned to <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/>\n"
+"                assigned to <strong t-"
+"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/"
+">\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br/>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"text-align: center;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-table;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-"
+"table;\">\n"
 "                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
-"                    <strong>Tell us how you feel about our services</strong><br/>\n"
-"                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(click on one of these smileys)</span>\n"
+"                    <strong>Tell us how you feel about our services</"
+"strong><br/>\n"
+"                    <span style=\"font-size: 12px; opacity: 0.5; color: "
+"#454748;\">(click on one of these smileys)</span>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
-"                    <table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
+"                    <table style=\"width:100%;text-align:center;margin-"
+"top:2rem;\">\n"
 "                        <tr>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Happy\" src=\"/rating/static/src/img/rating_5.png\" title=\"Happy\"/>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Happy\" src=\"/rating/static/"
+"src/img/rating_5.png\" title=\"Happy\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Neutral\" src=\"/rating/static/src/img/rating_3.png\" title=\"Neutral\"/>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Neutral\" src=\"/rating/"
+"static/src/img/rating_3.png\" title=\"Neutral\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Unhappy\" src=\"/rating/static/src/img/rating_1.png\" title=\"Unhappy\"/>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Unhappy\" src=\"/rating/"
+"static/src/img/rating_1.png\" title=\"Unhappy\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -218,23 +235,38 @@ msgid ""
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            We appreciate your feedback. It helps us improve continuously.\n"
 "            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
-"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">This satisfaction survey has been sent because your task has been moved to the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage</span>\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
+"color: #454748;\">This satisfaction survey has been sent because your task "
+"has been moved to the <b t-out=\"object.stage_id.name or ''\">In progress</"
+"b> stage</span>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
-"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">This satisfaction survey is sent <b t-out=\"object.project_id.rating_status_period or ''\">weekly</b> as long as the task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage.</span>\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
+"color: #454748;\">This satisfaction survey is sent <b t-"
+"out=\"object.project_id.rating_status_period or ''\">weekly</b> as long as "
+"the task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> "
+"stage.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td><br/>Best regards,</td></tr>\n"
 "        <tr><td>\n"
-"           <t t-out=\"object.project_id.company_id.name or ''\">YourCompany</t>\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\">YourCompany</"
+"t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
-"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-4567</t>\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
+"650-123-4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:"
+"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.email or "
+"''\">info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
-"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.website or ''\">http://www.example.com</a>\n"
+"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
+"\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
+"a>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -243,47 +275,63 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
+">\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
-"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                <t t-out=\"partner.name or ''\">Brandon Freeman</t> 您好！<br/><br/>\n"
+"                <t t-out=\"partner.name or ''\">Brandon Freeman</t> 您好！"
+"<br/><br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                您好！<br/><br/>\n"
 "            </t>\n"
-"            请抽少许时间，对我们处理 “<strong t-out=\"object.name or ''\">工作规划及财政预算</strong>” 任务的表现评分。\n"
+"            请抽少许时间，对我们处理 “<strong t-out=\"object.name or ''\">工"
+"作规划及财政预算</strong>” 任务的表现评分。\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                该项任务分派给 <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong> 处理。<br/>\n"
+"                该项任务分派给 <strong t-"
+"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong> 处"
+"理。<br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                <br/>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"text-align: center;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-table;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-"
+"table;\">\n"
 "                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
 "                    <strong>享用我们的服务后，您的感受是：</strong><br/>\n"
-"                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">（请选择下列一个表情）</span>\n"
+"                    <span style=\"font-size: 12px; opacity: 0.5; color: "
+"#454748;\">（请选择下列一个表情）</span>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
-"                    <table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
+"                    <table style=\"width:100%;text-align:center;margin-"
+"top:2rem;\">\n"
 "                        <tr>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Happy\" src=\"/rating/static/src/img/rating_5.png\" title=\"Happy\"/>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Happy\" src=\"/rating/static/"
+"src/img/rating_5.png\" title=\"Happy\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Neutral\" src=\"/rating/static/src/img/rating_3.png\" title=\"Neutral\"/>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Neutral\" src=\"/rating/"
+"static/src/img/rating_3.png\" title=\"Neutral\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Unhappy\" src=\"/rating/static/src/img/rating_1.png\" title=\"Unhappy\"/>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Unhappy\" src=\"/rating/"
+"static/src/img/rating_1.png\" title=\"Unhappy\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -294,23 +342,38 @@ msgstr ""
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            感谢反馈。您的宝贵意见，将协助我们持续改进。\n"
 "            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
-"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">注：本次客户意见调查，是因应有关任务已在<b t-out=\"object.stage_id.name or ''\">“进行中”</b>阶段，由系统自动发出。</span>\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
+"color: #454748;\">注：本次客户意见调查，是因应有关任务已在<b t-"
+"out=\"object.stage_id.name or ''\">“进行中”</b>阶段，由系统自动发出。</"
+"span>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
-"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">任务状态为<b t-out=\"object.stage_id.name or ''\">“进行中”</b>期间，以上客户意见调查会<b t-out=\"object.project_id.rating_status_period or ''\">每星期</b>自动发出。</span>\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
+"color: #454748;\">任务状态为<b t-out=\"object.stage_id.name or ''\">“进行"
+"中”</b>期间，以上客户意见调查会<b t-"
+"out=\"object.project_id.rating_status_period or ''\">每星期</b>自动发出。</"
+"span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td><br/>顺祝 安康</td></tr>\n"
 "        <tr><td>\n"
-"           <t t-out=\"object.project_id.company_id.name or ''\">YourCompany</t>\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\">YourCompany</"
+"t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
-"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-4567</t>\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
+"650-123-4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:"
+"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.email or "
+"''\">info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
-"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.website or ''\">http://www.example.com</a>\n"
+"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
+"\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
+"a>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -322,46 +385,66 @@ msgstr ""
 #: model:mail.template,body_html:project.project_done_email_template
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
-"    It is my pleasure to let you know that we have successfully completed the project \"<strong t-out=\"object.name or ''\">Renovations</strong>\".\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</"
+"t>,<br/>\n"
+"    It is my pleasure to let you know that we have successfully completed "
+"the project \"<strong t-out=\"object.name or ''\">Renovations</strong>\".\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
-"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "    </t>\n"
 "</div>\n"
-"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
+"color: #454748;\" groups=\"project.group_project_stages\">You are receiving "
+"this email because your project has been moved to the stage <b t-"
+"out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t> 您好！<br/>\n"
-"    很高兴通知您，“<strong t-out=\"object.name or ''\">翻新</strong>” 项目已经成功完成！\n"
+"    <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t> 您"
+"好！<br/>\n"
+"    很高兴通知您，“<strong t-out=\"object.name or ''\">翻新</strong>” 项目已"
+"经成功完成！\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
-"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/></t>Mitchell Admin</t></div>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/></"
+"t>Mitchell Admin</t></div>\n"
 "    </t>\n"
 "</div>\n"
-"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">您收到这封电子邮件，是因为项目已移至 “<b t-out=\"object.stage_id.name or ''\">完成</b>” 阶段。</span>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
+"color: #454748;\" groups=\"project.group_project_stages\">您收到这封电子邮"
+"件，是因为项目已移至 “<b t-out=\"object.stage_id.name or ''\">完成</b>” 阶"
+"段。</span>\n"
 "            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/><br/>\n"
-"    Thank you for contacting us. We appreciate your interest in our products/services.<br/>\n"
-"    Our team is currently reviewing your inquiry and will respond to your email as soon as possible.<br/>\n"
-"    If you have any further questions or concerns in the meantime, please do not hesitate to let us know. We are here to help.<br/><br/>\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</"
+"t>,<br/><br/>\n"
+"    Thank you for contacting us. We appreciate your interest in our products/"
+"services.<br/>\n"
+"    Our team is currently reviewing your inquiry and will respond to your "
+"email as soon as possible.<br/>\n"
+"    If you have any further questions or concerns in the meantime, please do "
+"not hesitate to let us know. We are here to help.<br/><br/>\n"
 "    Thank you for your patience.<br/>\n"
 "    Best regards,\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
-"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "    </t>\n"
 "</div>\n"
 "        "
 msgstr ""
 "<div>\n"
-"    <t t-out=\"object.partner_id.name or '客戶'\">Brandon Freeman</t> 您好！<br/><br/>\n"
+"    <t t-out=\"object.partner_id.name or '客戶'\">Brandon Freeman</t> 您好！"
+"<br/><br/>\n"
 "    谢谢联络我们，感谢您对我们的产品/服务感兴趣。<br/>\n"
 "    我们的团队目前正在处理您的查询，会尽快回复您的电邮。<br/>\n"
 "   期间如果您有任何问题或疑虑，欢迎随时告诉我们，我们乐意协助。<br/><br/>\n"
@@ -369,7 +452,8 @@ msgstr ""
 "    顺祝  安康\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
-"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin<t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\"></div>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell "
+"Admin<t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\"></div>\n"
 "    </t>\n"
 "</div>\n"
 "        "
@@ -377,13 +461,21 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid ""
-"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" invisible=\"rating_avg &lt; 3.66\" title=\"Happy\"/>\n"
-"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"Neutral\"/>\n"
-"                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Unhappy\"/>"
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" "
+"invisible=\"rating_avg &lt; 3.66\" title=\"Happy\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-"
+"warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" "
+"title=\"Neutral\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o "
+"text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Unhappy\"/>"
 msgstr ""
-"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" invisible=\"rating_avg < 3.66\" title=\"满意\"/>\n"
-"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg < 2.33 or rating_avg >= 3.66\" title=\"中性\"/>\n"
-"                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg >= 2.33\" title=\"不满意\"/>"
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" "
+"invisible=\"rating_avg < 3.66\" title=\"满意\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-"
+"warning\" invisible=\"rating_avg < 2.33 or rating_avg >= 3.66\" title=\"中性"
+"\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o "
+"text-danger\" invisible=\"rating_avg >= 2.33\" title=\"不满意\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -406,8 +498,8 @@ msgid ""
 "<i class=\"fa fa-warning\" title=\"Customer disabled on projects\"/><b> "
 "Customer Ratings</b> are disabled on the following project(s) : <br/>"
 msgstr ""
-"<i class=\"fa fa-warning\" title=\"Customer disabled on projects\"/><b> "
-"客户评分</b> 在以下项目里被禁用： <br/>"
+"<i class=\"fa fa-warning\" title=\"Customer disabled on projects\"/><b> 客户"
+"评分</b> 在以下项目里被禁用： <br/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -450,8 +542,10 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-msgid "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
-msgstr "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
+msgid ""
+"<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
+msgstr ""
+"<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
@@ -486,22 +580,35 @@ msgstr "<span class=\"o_stat_text\">子任务</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid "<span class=\"text-muted o_row ps-1 pb-3\">Send a rating request:</span>"
+msgid ""
+"<span class=\"text-muted o_row ps-1 pb-3\">Send a rating request:</span>"
 msgstr "<span class=\"text-muted o_row ps-1 pb-3\">发送评价请求：</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
 "<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
-"                                                    <i class=\"fa fa-lightbulb-o pe-2\"/>\n"
-"                                                    <span invisible=\"rating_status == 'periodic'\">A rating request will be sent as soon as the task reaches a stage on which a Rating Email Template is defined.</span>\n"
-"                                                    <span invisible=\"rating_status == 'stage'\">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>\n"
+"                                                    <i class=\"fa fa-"
+"lightbulb-o pe-2\"/>\n"
+"                                                    <span "
+"invisible=\"rating_status == 'periodic'\">A rating request will be sent as "
+"soon as the task reaches a stage on which a Rating Email Template is defined."
+"</span>\n"
+"                                                    <span "
+"invisible=\"rating_status == 'stage'\">Rating requests will be sent as long "
+"as the task remains in a stage on which a Rating Email Template is defined.</"
+"span>\n"
 "                                                </span>"
 msgstr ""
 "<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
-"                                                    <i class=\"fa fa-lightbulb-o pe-2\"/>\n"
-"                                                    <span invisible=\"rating_status == 'periodic'\">一旦任务到达定义了评级电子邮件模板的阶段，就会立即发送评级请求。</span>\n"
-"                                                    <span invisible=\"rating_status == 'stage'\">只要任务仍处于定义了评级电子邮件模板的阶段，就会发送评级请求。</span>\n"
+"                                                    <i class=\"fa fa-"
+"lightbulb-o pe-2\"/>\n"
+"                                                    <span "
+"invisible=\"rating_status == 'periodic'\">一旦任务到达定义了评级电子邮件模板"
+"的阶段，就会立即发送评级请求。</span>\n"
+"                                                    <span "
+"invisible=\"rating_status == 'stage'\">只要任务仍处于定义了评级电子邮件模板的"
+"阶段，就会发送评级请求。</span>\n"
 "                                                </span>"
 
 #. module: project
@@ -584,8 +691,8 @@ msgstr "已创建新任务，它属于项目“%(project_name)s”。"
 #. odoo-python
 #: code:addons/project/models/project_task_type.py:0
 msgid ""
-"A personal stage cannot be linked to a project because it is only visible to"
-" its corresponding user."
+"A personal stage cannot be linked to a project because it is only visible to "
+"its corresponding user."
 msgstr "个人阶段无法链接到项目，因为它只对其相应的用户可见。"
 
 #. module: project
@@ -1038,9 +1145,12 @@ msgstr "自动看板状态"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__auto_validation_state
 msgid ""
-"Automatically modify the state when the customer replies to the feedback for this stage.\n"
-" * Good feedback from the customer will update the state to 'Approved' (green bullet).\n"
-" * Neutral or bad feedback will set the kanban state to 'Changes Requested' (orange bullet).\n"
+"Automatically modify the state when the customer replies to the feedback for "
+"this stage.\n"
+" * Good feedback from the customer will update the state to 'Approved' "
+"(green bullet).\n"
+" * Neutral or bad feedback will set the kanban state to 'Changes Requested' "
+"(orange bullet).\n"
 msgstr ""
 "当客户回复此阶段的反馈时，自动修改状态。\n"
 " * 客户的良好反馈会将状态更新为 \"已批准\" （绿色标记）。\n"
@@ -1192,9 +1302,10 @@ msgstr "请求变更"
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid ""
 "Choose a <b>name</b> for your project. <i>It can be anything you want: the "
-"name of a customer, of a product, of a team, of a construction site, "
-"etc.</i>"
-msgstr "为您的项目选择 1 个<b>名称</b>。<i>可以是任何您想要的名称：客户名称、产品名称、团队名称、建筑工地名称等。</i>"
+"name of a customer, of a product, of a team, of a construction site, etc.</i>"
+msgstr ""
+"为您的项目选择 1 个<b>名称</b>。<i>可以是任何您想要的名称：客户名称、产品名"
+"称、团队名称、建筑工地名称等。</i>"
 
 #. module: project
 #. odoo-javascript
@@ -1275,11 +1386,17 @@ msgstr "项目中的合作者共享"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_status
 msgid ""
-"Collect feedback from your customers by sending them a rating request when a task enters a certain stage. To do so, define a rating email template on the corresponding stages.\n"
-"Rating when changing stage: an email will be automatically sent when the task reaches the stage on which the rating email template is set.\n"
-"Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage in which the rating email template is set."
+"Collect feedback from your customers by sending them a rating request when a "
+"task enters a certain stage. To do so, define a rating email template on the "
+"corresponding stages.\n"
+"Rating when changing stage: an email will be automatically sent when the "
+"task reaches the stage on which the rating email template is set.\n"
+"Periodic rating: an email will be automatically sent at regular intervals as "
+"long as the task remains in the stage in which the rating email template is "
+"set."
 msgstr ""
-"当任务进入某个阶段时，通过向客户发送评分请求来收集他们的反馈。为此，在相应的阶段上定义一个评级电子邮件模板。\n"
+"当任务进入某个阶段时，通过向客户发送评分请求来收集他们的反馈。为此，在相应的"
+"阶段上定义一个评级电子邮件模板。\n"
 "分级分级:当任务到达分级邮件模板设置的分级阶段时，会自动发送邮件。\n"
 "周期评级:只要任务处于邮件评级模板设置的阶段，邮件就会定期自动发送。"
 
@@ -1293,7 +1410,8 @@ msgstr "颜色"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid ""
-"Communicate with customers on the task using the email gateway. Attach logo designs to the task, so that information flows from\n"
+"Communicate with customers on the task using the email gateway. Attach logo "
+"designs to the task, so that information flows from\n"
 "      designers to the workers who print the t-shirt."
 msgstr ""
 "通过电子邮件网关与客户沟通任务。将徽标设计附加到任务上，以便信息\n"
@@ -1484,8 +1602,8 @@ msgstr "创建项目来组织你的任务，并为每个项目定义不同的工
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
 msgid ""
-"Create projects to organize your tasks. Define a different workflow for each"
-" project."
+"Create projects to organize your tasks. Define a different workflow for each "
+"project."
 msgstr "创建项目来组织你的任务。为每个项目定义不同的工作流程。"
 
 #. module: project
@@ -1607,7 +1725,8 @@ msgstr "客户评价状态"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid ""
-"Customers propose feedbacks by email; Odoo creates tasks automatically, and you can\n"
+"Customers propose feedbacks by email; Odoo creates tasks automatically, and "
+"you can\n"
 "      communicate on the task directly."
 msgstr ""
 "客户通过电子邮件提出反馈意见；Odoo 自动创建任务，您可以\n"
@@ -1645,10 +1764,13 @@ msgstr "日期"
 #: model:ir.model.fields,help:project.field_project_task__date_last_stage_update
 msgid ""
 "Date on which the state of your task has last been modified.\n"
-"Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another."
+"Based on this information you can identify tasks that are stalling and get "
+"statistics on the time it usually takes to move tasks from one stage/state "
+"to another."
 msgstr ""
 "任务状态最后一次被修改的日期。\n"
-"根据这些信息，您可以确定停滞的任务，并统计将任务从一个阶段/状态转移到另一个阶段/状态通常需要的时间。"
+"根据这些信息，您可以确定停滞的任务，并统计将任务从一个阶段/状态转移到另一个阶"
+"段/状态通常需要的时间。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__date
@@ -1662,7 +1784,8 @@ msgstr "该项目结束的日期。在查看项目的计划时，会考虑到项
 msgid ""
 "Date on which this task was last assigned (or unassigned). Based on this, "
 "you can get statistics on the time it usually takes to assign tasks."
-msgstr "该任务上次指派（或未指派）的日期。据此，您可以统计出指派任务通常所需的时间。"
+msgstr ""
+"该任务上次指派（或未指派）的日期。据此，您可以统计出指派任务通常所需的时间。"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__day
@@ -1702,10 +1825,13 @@ msgstr "默认值"
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
 msgid ""
 "Define the steps that will be used in the project from the\n"
-"                creation of the task, up to the closing of the task or issue.\n"
+"                creation of the task, up to the closing of the task or "
+"issue.\n"
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue."
-msgstr "定义在项目里的步骤有创建任务，更新已结束的任务或议题。可使用这些阶段来跟踪解决任务或议题。"
+msgstr ""
+"定义在项目里的步骤有创建任务，更新已结束的任务或议题。可使用这些阶段来跟踪解"
+"决任务或议题。"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
@@ -1842,6 +1968,7 @@ msgstr "丢弃"
 #: model:ir.model.fields,field_description:project.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:project.field_ir_ui_menu__display_name
 #: model:ir.model.fields,field_description:project.field_mail_message__display_name
+#: model:ir.model.fields,field_description:project.field_portal_share__display_name
 #: model:ir.model.fields,field_description:project.field_project_collaborator__display_name
 #: model:ir.model.fields,field_description:project.field_project_milestone__display_name
 #: model:ir.model.fields,field_description:project.field_project_project__display_name
@@ -1912,7 +2039,9 @@ msgstr "复制"
 msgid ""
 "Each user should have at least one personal stage. Create a new stage to "
 "which the tasks can be transferred after the selected ones are deleted."
-msgstr "每个用户至少应有一个个人阶段。创建一个新阶段，删除选定任务后可将任务转移到该阶段。"
+msgstr ""
+"每个用户至少应有一个个人阶段。创建一个新阶段，删除选定任务后可将任务转移到该"
+"阶段。"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__edit
@@ -1943,7 +2072,9 @@ msgstr "编辑权限受限：协作者可以在看板视图中查看和编辑他
 msgid ""
 "Edit: collaborators can view and edit all tasks in the Kanban view. "
 "Additionally, they can choose which tasks they want to follow."
-msgstr "编辑：协作者可以查看和编辑看板视图中的所有任务。此外，他们还可以选择要关注哪些任务。"
+msgstr ""
+"编辑：协作者可以查看和编辑看板视图中的所有任务。此外，他们还可以选择要关注哪"
+"些任务。"
 
 #. module: project
 #. odoo-javascript
@@ -2136,8 +2267,8 @@ msgstr "未来活动"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_update_all_action
 msgid ""
-"Get a snapshot of the status of your project and share its progress with key"
-" stakeholders."
+"Get a snapshot of the status of your project and share its progress with key "
+"stakeholders."
 msgstr "获取您的项目状态的快照，并与关键利益相关者分享其进展。"
 
 #. module: project
@@ -2166,9 +2297,11 @@ msgstr "授予门户访问权限"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid ""
-"Grant employees access to your project or tasks by adding them as followers."
-" Employees automatically get access to the tasks they are assigned to."
-msgstr "将员工添加为关注者，授予访问项目或任务的权限。员工会自动获得访问权限，查看被指派的任务。"
+"Grant employees access to your project or tasks by adding them as followers. "
+"Employees automatically get access to the tasks they are assigned to."
+msgstr ""
+"将员工添加为关注者，授予访问项目或任务的权限。员工会自动获得访问权限，查看被"
+"指派的任务。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
@@ -2182,8 +2315,8 @@ msgstr "分组方式"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid ""
-"Handle your idea gathering within Tasks of your new Project and discuss them"
-" in the chatter of the tasks."
+"Handle your idea gathering within Tasks of your new Project and discuss them "
+"in the chatter of the tasks."
 msgstr "在新项目的任务中收集想法，并在任务聊天中进行讨论。"
 
 #. module: project
@@ -2269,6 +2402,7 @@ msgstr "这个项目进展如何？"
 #: model:ir.model.fields,field_description:project.field_digest_digest__id
 #: model:ir.model.fields,field_description:project.field_ir_ui_menu__id
 #: model:ir.model.fields,field_description:project.field_mail_message__id
+#: model:ir.model.fields,field_description:project.field_portal_share__id
 #: model:ir.model.fields,field_description:project.field_project_collaborator__id
 #: model:ir.model.fields,field_description:project.field_project_milestone__id
 #: model:ir.model.fields,field_description:project.field_project_project__id
@@ -2297,8 +2431,8 @@ msgstr "ID"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
 msgstr "上级记录ID支持别名(例如:项目支持任务创建别名)"
 
 #. module: project
@@ -2346,14 +2480,19 @@ msgstr "如果勾选此项， 某些消息将出现发送错误。"
 msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban view of "
 "your projects. Projects in a folded stage are considered as closed."
-msgstr "如果启用，此阶段将在项目的看板视图中显示为折叠的。 处于折叠的阶段的项目被视为已关闭。"
+msgstr ""
+"如果启用，此阶段将在项目的看板视图中显示为折叠的。 处于折叠的阶段的项目被视为"
+"已关闭。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
 msgid ""
-"If set, a rating request will automatically be sent by email to the customer when the task reaches this stage. \n"
-"Alternatively, it will be sent at a regular interval as long as the task remains in this stage, depending on the configuration of your project. \n"
-"To use this feature make sure that the 'Customer Ratings' option is enabled on your project."
+"If set, a rating request will automatically be sent by email to the customer "
+"when the task reaches this stage. \n"
+"Alternatively, it will be sent at a regular interval as long as the task "
+"remains in this stage, depending on the configuration of your project. \n"
+"To use this feature make sure that the 'Customer Ratings' option is enabled "
+"on your project."
 msgstr ""
 "如果设置，当任务到达此阶段时，评价请求将自动通过电子邮件发送给客户。\n"
 "或者，只要任务保持在此阶段，它将定期发送，具体取决于项目的配置。\n"
@@ -2362,8 +2501,8 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
 msgid ""
-"If set, an email will be automatically sent to the customer when the project"
-" reaches this stage."
+"If set, an email will be automatically sent to the customer when the project "
+"reaches this stage."
 msgstr "如果设置，当项目达到这个阶段时，一封电子邮件将被自动发送给客户。"
 
 #. module: project
@@ -2422,7 +2561,9 @@ msgid ""
 "Internal email associated with this project. Incoming emails are "
 "automatically synchronized with Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
-msgstr "和这个项目相关的内部邮件。收件会自动同步为任务（或者是议题，如果问题模块已经安装过）"
+msgstr ""
+"和这个项目相关的内部邮件。收件会自动同步为任务（或者是议题，如果问题模块已经"
+"安装过）"
 
 #. module: project
 #. odoo-javascript
@@ -2489,7 +2630,8 @@ msgstr "将 many2one 字段中的 id 映射到所用秒数的 JSON 文件"
 #: model_terms:ir.actions.act_window,help:project.project_task_action_sub_task
 msgid ""
 "Keep track of the progress of your tasks from creation to completion.<br>\n"
-"                    Collaborate efficiently by chatting in real-time or via email."
+"                    Collaborate efficiently by chatting in real-time or via "
+"email."
 msgstr ""
 "跟踪你的任务从创建到完成的进度。<br>\n"
 "                    通过实时聊天或电子邮件进行高效协作。"
@@ -2499,7 +2641,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_recurring_tasks_action
 msgid ""
 "Keep track of the progress of your tasks from creation to completion.<br>\n"
-"                Collaborate efficiently by chatting in real-time or via email."
+"                Collaborate efficiently by chatting in real-time or via "
+"email."
 msgstr ""
 "跟踪你的任务从创建到完成的进度。<br>\n"
 "                通过实时聊天或电子邮件进行高效协作。"
@@ -2680,7 +2823,8 @@ msgstr "低优先级"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid ""
-"Manage the lifecycle of your project using the kanban view. Add newly acquired projects,\n"
+"Manage the lifecycle of your project using the kanban view. Add newly "
+"acquired projects,\n"
 "      assign them and use the"
 msgstr ""
 "使用看板视图管理你的项目的生命周期。添加新获得的项目。\n"
@@ -3186,7 +3330,9 @@ msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr "无论是否回复，所有的接收的邮件都将附上一条线索（记录）选配的ID。如果设置了，这个将完全阻止新记录的创建。"
+msgstr ""
+"无论是否回复，所有的接收的邮件都将附上一条线索（记录）选配的ID。如果设置了，"
+"这个将完全阻止新记录的创建。"
 
 #. module: project
 #. odoo-javascript
@@ -3200,7 +3346,8 @@ msgstr "在订单中组织优先级，使用"
 #: model_terms:ir.actions.act_window,help:project.project_task_action_from_partner
 msgid ""
 "Organize your tasks by dispatching them across the pipeline.<br>\n"
-"                    Collaborate efficiently by chatting in real-time or via email."
+"                    Collaborate efficiently by chatting in real-time or via "
+"email."
 msgstr ""
 "通过跨管道分派任务来组织任务。<br>\n"
 "                    通过实时或通过电子邮件聊天高效协作。"
@@ -3243,18 +3390,17 @@ msgstr "上级任务"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"拥有别名的母项模型。拥有别名参考的模型不一定是alias_model_id给出的模型（例如：project(parent_model) 和任务 "
-"(模型)）"
+"拥有别名的母项模型。拥有别名参考的模型不一定是alias_model_id给出的模型（例"
+"如：project(parent_model) 和任务 (模型)）"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/res_partner.py:0
-msgid ""
-"Partner company cannot be different from its assigned projects' company"
+msgid "Partner company cannot be different from its assigned projects' company"
 msgstr "合作伙伴公司不得与其分配的项目公司不同"
 
 #. module: project
@@ -3280,33 +3426,52 @@ msgstr "受邀参与项目合作的人员将拥有门户访问权限。"
 msgid ""
 "People to whom this project and its tasks will be visible.\n"
 "\n"
-"- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n"
-" A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n"
+"- Invited internal users: when following a project, internal users will get "
+"access to all of its tasks without distinction. Otherwise, they will only "
+"get access to the specific tasks they are following.\n"
+" A user with the project > administrator access right level can still access "
+"this project and its tasks, even if they are not explicitly part of the "
+"followers.\n"
 "\n"
-"- All internal users: all internal users can access the project and all of its tasks without distinction.\n"
+"- All internal users: all internal users can access the project and all of "
+"its tasks without distinction.\n"
 "\n"
-"- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
-"When following a project, portal users will only get access to the specific tasks they are following.\n"
+"- Invited portal users and all internal users: all internal users can access "
+"the project and all of its tasks without distinction.\n"
+"When following a project, portal users will only get access to the specific "
+"tasks they are following.\n"
 "\n"
-"When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks they are following, but not edit them.\n"
-"When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n"
+"When a project is shared in read-only, the portal user is redirected to "
+"their portal. They can view the tasks they are following, but not edit "
+"them.\n"
+"When a project is shared in edit, the portal user is redirected to the "
+"kanban and list views of the tasks. They can modify a selected number of "
+"fields on the tasks.\n"
 "\n"
-"In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
+"In any case, an internal user with no project access rights can still access "
+"a task, provided that they are given the corresponding URL (and that they "
+"are part of the followers if the project is private)."
 msgstr ""
 "可查看此项目及其任务的人员。\n"
 "\n"
-"- 受邀内部用户：关注项目时，内部用户将无差别地访问其所有任务。否则，他们只能访问正在关注的特定任务。\n"
-" 具有“项目 > 管理员”访问权限等级的用户，仍然可以访问此项目及其任务，即使未有明确列为关注者。\n"
+"- 受邀内部用户：关注项目时，内部用户将无差别地访问其所有任务。否则，他们只能"
+"访问正在关注的特定任务。\n"
+" 具有“项目 > 管理员”访问权限等级的用户，仍然可以访问此项目及其任务，即使未有"
+"明确列为关注者。\n"
 "\n"
 "- 所有内部用户：所有内部用户都可以无差别地访问项目及其所有任务。\n"
 "\n"
-"- 受邀窗口网站用户及所有内部用户：所有内部用户都可以无差別地访问项目及其所有任务。\n"
+"- 受邀窗口网站用户及所有内部用户：所有内部用户都可以无差別地访问项目及其所有"
+"任务。\n"
 "关注项目时，窗口用户只能访问他们正在关注的特定任务。\n"
 "\n"
-"如项目以仅读方式共享，窗口用户将被重新导向至自己的窗口网页。他们可以查看正在关注的任务，但不能编辑任务。\n"
-"如以编辑模式共享项目，窗口用户将被重新导向至任务的看板及列表视图画面。他们可修改任务的部份特定字段。\n"
+"如项目以仅读方式共享，窗口用户将被重新导向至自己的窗口网页。他们可以查看正在"
+"关注的任务，但不能编辑任务。\n"
+"如以编辑模式共享项目，窗口用户将被重新导向至任务的看板及列表视图画面。他们可"
+"修改任务的部份特定字段。\n"
 "\n"
-"在任何情況下，没有项目访问权限的内部用户，仍然可以访问任务，只要他们有相应的 URL 网址。如果项目是私密的，而他们是关注者，也可访问任务。"
+"在任何情況下，没有项目访问权限的内部用户，仍然可以访问任务，只要他们有相应的 "
+"URL 网址。如果项目是私密的，而他们是关注者，也可访问任务。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -3351,7 +3516,8 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
 msgstr ""
 "使用邮件网关在文档中发布消息的政策：\n"
 "- 所有人：任何人都可以发布\n"
@@ -3365,11 +3531,15 @@ msgid "Portal Access URL"
 msgstr "门户网站访问网址"
 
 #. module: project
+#: model:ir.model,name:project.model_portal_share
+msgid "Portal Sharing"
+msgstr ""
+
+#. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid ""
-"Portal users will be removed from the followers of the project and its "
-"tasks."
+"Portal users will be removed from the followers of the project and its tasks."
 msgstr "门户用户将从项目及其任务的关注者中删除。"
 
 #. module: project
@@ -3686,10 +3856,12 @@ msgstr "项目包括相同主题的任务，并且每个都有其仪表板。"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__project_ids
 msgid ""
-"Projects in which this stage is present. If you follow a similar workflow in"
-" several projects, you can share this stage among them and get consolidated "
+"Projects in which this stage is present. If you follow a similar workflow in "
+"several projects, you can share this stage among them and get consolidated "
 "information this way."
-msgstr "存在此阶段的项目。如果您在多个项目中遵循类似的工作流，则可以在它们之间共享此阶段并以这种方式获取合并信息。"
+msgstr ""
+"存在此阶段的项目。如果您在多个项目中遵循类似的工作流，则可以在它们之间共享此"
+"阶段并以这种方式获取合并信息。"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__task_properties
@@ -3726,7 +3898,9 @@ msgid ""
 "Quickly check the status of tasks for approvals or change requests and "
 "identify those on hold until dependencies are resolved with the hourglass "
 "icon."
-msgstr "使用沙漏图标，快速检查待批准或变更请求的任务状态，并标识那些在依赖关系解决之前被暂停的任务。"
+msgstr ""
+"使用沙漏图标，快速检查待批准或变更请求的任务状态，并标识那些在依赖关系解决之"
+"前被暂停的任务。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
@@ -3820,12 +3994,15 @@ msgstr "只读：协作者可以查看任务，但无法编辑任务。"
 #: model:ir.model.fields,help:project.field_project_share_collaborator_wizard__access_mode
 msgid ""
 "Read: collaborators can view tasks but cannot edit them.\n"
-"Edit with limited access: collaborators can view and edit tasks they follow in the Kanban view.\n"
-"Edit: collaborators can view and edit all tasks in the Kanban view. Additionally, they can choose which tasks they want to follow."
+"Edit with limited access: collaborators can view and edit tasks they follow "
+"in the Kanban view.\n"
+"Edit: collaborators can view and edit all tasks in the Kanban view. "
+"Additionally, they can choose which tasks they want to follow."
 msgstr ""
 "读取：协作者可以查看任务，但不能编辑任务。\n"
 "有限制访问权限的编辑：协作者可以在看板视图中查看和编辑所关注的任务。\n"
-"编辑：协作者可以查看和编辑看板视图中的所有任务。此外，他们还可以选择要关注的任务。"
+"编辑：协作者可以查看和编辑看板视图中的所有任务。此外，他们还可以选择要关注的"
+"任务。"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -4028,7 +4205,8 @@ msgstr "保存任务，以便在描述中粘贴图片"
 #: model_terms:ir.actions.act_window,help:project.project_templates_action
 msgid ""
 "Save time by using project templates with pre-filled details.<br>\n"
-"                    Standardize workflows and ensure consistency across projects."
+"                    Standardize workflows and ensure consistency across "
+"projects."
 msgstr ""
 "使用预填详情的项目模板可节省时间。<br>\n"
 "标准化工作流程，确保项目一致性。"
@@ -4037,7 +4215,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:project.project_task_templates_action
 msgid ""
 "Save time by using task templates with pre-filled details.<br>\n"
-"                    Standardize workflows and ensure consistency across tasks."
+"                    Standardize workflows and ensure consistency across "
+"tasks."
 msgstr ""
 "运用预先填写详细资料的任务模板，节省时间。<br>\n"
 "                    模板可帮助您将工作流程标准化，确保不同任务保持一致。"
@@ -4162,8 +4341,7 @@ msgstr "设置阶段的评分邮件模版"
 #. module: project
 #: model:mail.template,description:project.project_done_email_template
 msgid ""
-"Set on project's stages to inform customers when a project reaches that "
-"stage"
+"Set on project's stages to inform customers when a project reaches that stage"
 msgstr "设置在项目的阶段，以便在项目到达该阶段时通知客户"
 
 #. module: project
@@ -4262,7 +4440,8 @@ msgid ""
 "Some of the selected analytic accounts are associated with a project:\n"
 "%(accountList)s\n"
 "\n"
-"Archiving these accounts will remove the option to log timesheets for their respective projects.\n"
+"Archiving these accounts will remove the option to log timesheets for their "
+"respective projects.\n"
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
@@ -4288,7 +4467,9 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
-"使用里程碑、标签或专用属性，按冲刺阶段对任务进行分类。在每个冲刺阶段结束时，只需选择清单中的剩余任务，然后编辑里程碑、标签或属性，将它们一次性移到下一个冲刺阶段。"
+"使用里程碑、标签或专用属性，按冲刺阶段对任务进行分类。在每个冲刺阶段结束时，"
+"只需选择清单中的剩余任务，然后编辑里程碑、标签或属性，将它们一次性移到下一个"
+"冲刺阶段。"
 
 #. module: project
 #. odoo-javascript
@@ -4426,7 +4607,9 @@ msgid ""
 "Sum of the hours allocated for all the sub-tasks (and their own sub-tasks) "
 "linked to this task. Usually less than or equal to the allocated hours of "
 "this task."
-msgstr "为链接到此任务的所有子任务（及其自己的子任务）分配的小时数合计。 通常小于或等于此任务的分配小时数。"
+msgstr ""
+"为链接到此任务的所有子任务（及其自己的子任务）分配的小时数合计。 通常小于或等"
+"于此任务的分配小时数。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4749,8 +4932,7 @@ msgstr "当前用户的个人任务阶段。"
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
-msgid ""
-"The document does not exist or you do not have the rights to access it."
+msgid "The document does not exist or you do not have the rights to access it."
 msgstr "该文档不存在或您无权访问。"
 
 #. module: project
@@ -4778,18 +4960,21 @@ msgstr "间隔应大于0"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
 msgstr ""
-"相应于这个别名对应的模型(Odoo单据种类)。任何一封不属于对某个已存在的记录的到来邮件，将导致此模块中新记录的创建(例如：一个新的项目任务)。"
+"相应于这个别名对应的模型(Odoo单据种类)。任何一封不属于对某个已存在的记录的到"
+"来邮件，将导致此模块中新记录的创建(例如：一个新的项目任务)。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_name
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr "邮件别名的名称，例如：如果您要收取 <jobs@example.odoo.com> 的EMail,别名就要设为：\"jobs\""
+msgstr ""
+"邮件别名的名称，例如：如果您要收取 <jobs@example.odoo.com> 的EMail,别名就要设"
+"为：\"jobs\""
 
 #. module: project
 #. odoo-python
@@ -4802,9 +4987,10 @@ msgstr "项目和相关合作伙伴必须与同一家公司有关联。"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid ""
-"The project's company cannot be changed if its analytic account has analytic"
-" lines or if more than one project is linked to it."
-msgstr "如果项目的分析账户有分析项目，或者有多个项目与之关联，则不能更改项目的公司。"
+"The project's company cannot be changed if its analytic account has analytic "
+"lines or if more than one project is linked to it."
+msgstr ""
+"如果项目的分析账户有分析项目，或者有多个项目与之关联，则不能更改项目的公司。"
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
@@ -4816,15 +5002,16 @@ msgstr "项目的开始时间必须在结束时间之前。"
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
 msgid ""
 "The report should be grouped either by \"Stage\" to represent a Burndown "
-"Chart or by \"Is Closed\" to represent a Burn-up chart. Without one of these"
-" groupings applied, the report will not provide relevant information."
-msgstr "报告应按“阶段”分组，以代表燃尽图，或按照“已关闭”分组，以代表燃起图。如果不采用这些分组之一，报告将无法提供相关信息。"
+"Chart or by \"Is Closed\" to represent a Burn-up chart. Without one of these "
+"groupings applied, the report will not provide relevant information."
+msgstr ""
+"报告应按“阶段”分组，以代表燃尽图，或按照“已关闭”分组，以代表燃起图。如果不采"
+"用这些分组之一，报告将无法提供相关信息。"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
-msgid ""
-"The task and the associated partner must be linked to the same company."
+msgid "The task and the associated partner must be linked to the same company."
 msgstr "任务和相关合作伙伴必须链接到同一家公司。"
 
 #. module: project
@@ -4832,9 +5019,11 @@ msgstr "任务和相关合作伙伴必须链接到同一家公司。"
 #: code:addons/project/models/project_task.py:0
 msgid ""
 "The task cannot be shared with the recipient(s) because the privacy of the "
-"project is too restricted. Set the privacy of the project to "
-"'%(visibility)s' in order to make it accessible by the recipient(s)."
-msgstr "无法与接收者共享任务，因为项目的隐私受到太多限制。将项目隐私设置为'%(visibility)s'，以便收件人可以访问。"
+"project is too restricted. Set the privacy of the project to '%"
+"(visibility)s' in order to make it accessible by the recipient(s)."
+msgstr ""
+"无法与接收者共享任务，因为项目的隐私受到太多限制。将项目隐私设置为'%"
+"(visibility)s'，以便收件人可以访问。"
 
 #. module: project
 #. odoo-javascript
@@ -4876,9 +5065,11 @@ msgstr "没有什么要报表。"
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
 msgid ""
 "They can edit shared project tasks and view specific documents in read mode "
-"on your website. This includes leads/opportunities, quotations/sales orders,"
-" purchase orders, invoices and bills, timesheets, and tickets."
-msgstr "他们可以编辑共享项目任务并在您的网站上以阅读模式查看特定文档。这包括潜在客户/商机、报价/销售订单、采购订单、发票和账单、时间表和票据。"
+"on your website. This includes leads/opportunities, quotations/sales orders, "
+"purchase orders, invoices and bills, timesheets, and tickets."
+msgstr ""
+"他们可以编辑共享项目任务并在您的网站上以阅读模式查看特定文档。这包括潜在客户/"
+"商机、报价/销售订单、采购订单、发票和账单、时间表和票据。"
 
 #. module: project
 #. odoo-python
@@ -4905,7 +5096,8 @@ msgid ""
 "This analytic account is associated with the following projects:\n"
 "%(projectList)s\n"
 "\n"
-"Archiving the account will remove the option to log timesheets for these projects.\n"
+"Archiving the account will remove the option to log timesheets for these "
+"projects.\n"
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
@@ -4920,9 +5112,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/core/web/follower_list_patch.js:0
 msgid ""
-"This follower is currently a project collaborator. Removing them will revoke"
-" their portal access to the project. Are you sure you want to proceed?"
-msgstr "该关注者目前是项目合作者。若将其删除，将取消其对项目的门户访问权。您确定要继续吗？"
+"This follower is currently a project collaborator. Removing them will revoke "
+"their portal access to the project. Are you sure you want to proceed?"
+msgstr ""
+"该关注者目前是项目合作者。若将其删除，将取消其对项目的门户访问权。您确定要继"
+"续吗？"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -4937,18 +5131,20 @@ msgstr "项目与客户共享后预览如下，客户有编辑权限。"
 msgid ""
 "This project is associated with %(project_company)s, whereas the selected "
 "stage belongs to %(stage_company)s. There are a couple of options to "
-"consider: either remove the company designation from the project or from the"
-" stage. Alternatively, you can update the company information for these "
+"consider: either remove the company designation from the project or from the "
+"stage. Alternatively, you can update the company information for these "
 "records to align them under the same company."
 msgstr ""
-"该项目与%(project_company)s相关联，而所选阶段属于%(stage_company)s。有几个选项可以考虑：要么从项目或阶段中删除公司名称。或者，可以更新这些记录的公司信息，使它们归属于同一个公司。"
+"该项目与%(project_company)s相关联，而所选阶段属于%(stage_company)s。有几个选"
+"项可以考虑：要么从项目或阶段中删除公司名称。或者，可以更新这些记录的公司信"
+"息，使它们归属于同一个公司。"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid ""
-"This project is currently a template. Would you like to convert it back into"
-" a regular project?"
+"This project is currently a template. Would you like to convert it back into "
+"a regular project?"
 msgstr "当前为模板项目，是否转为普通项目？"
 
 #. module: project
@@ -4958,17 +5154,21 @@ msgid ""
 "This project is currently restricted to \"Invited internal users\". The "
 "project's visibility will be changed to \"invited portal users and all "
 "internal users (public)\" in order to make it accessible to the recipients."
-msgstr "该项目目前仅限于 \"受邀的内部用户\"。项目的可见性将改为 \"受邀的门户用户和所有内部用户（公开）\"，以便让接受者都能访问。"
+msgstr ""
+"该项目目前仅限于 \"受邀的内部用户\"。项目的可见性将改为 \"受邀的门户用户和所"
+"有内部用户（公开）\"，以便让接受者都能访问。"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid ""
 "This project is not associated with any company, while the stage is "
-"associated with %s. There are a couple of options to consider: either change"
-" the project's company to align with the stage's company or remove the "
+"associated with %s. There are a couple of options to consider: either change "
+"the project's company to align with the stage's company or remove the "
 "company designation from the stage"
-msgstr "该项目与任何公司都没有关联，而该阶段与%s关联。有几个方案可以考虑：要么更改项目的公司，使其与阶段的公司一致，要么删除阶段的公司名称"
+msgstr ""
+"该项目与任何公司都没有关联，而该阶段与%s关联。有几个方案可以考虑：要么更改项"
+"目的公司，使其与阶段的公司一致，要么删除阶段的公司名称"
 
 #. module: project
 #. odoo-python
@@ -5008,7 +5208,8 @@ msgstr "这将存档以下项目中的阶段及其包含的所有任务："
 msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Send email\")."
-msgstr "这些代表了你必须做的不同类别的事情（例如：\"打电话 \"或 \"发送电子邮件\"）"
+msgstr ""
+"这些代表了你必须做的不同类别的事情（例如：\"打电话 \"或 \"发送电子邮件\"）"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5086,9 +5287,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid ""
-"To give portal users access to your project, add them as followers. For task"
-" access, add them as followers for each task."
-msgstr "要让门户用户访问项目，可将他们添加为关注者。要访问任务，可将他们添加为每个任务的关注者。"
+"To give portal users access to your project, add them as followers. For task "
+"access, add them as followers for each task."
+msgstr ""
+"要让门户用户访问项目，可将他们添加为关注者。要访问任务，可将他们添加为每个任"
+"务的关注者。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
@@ -5096,7 +5299,9 @@ msgid ""
 "To transform a task into a sub-task, select a parent task. Alternatively, "
 "leave the parent task field blank to convert a sub-task into a standalone "
 "task."
-msgstr "要将任务转换为子任务，请选择母任务。或者，将母任务字段留空，将子任务转换为独立任务。"
+msgstr ""
+"要将任务转换为子任务，请选择母任务。或者，将母任务字段留空，将子任务转换为独"
+"立任务。"
 
 #. module: project
 #. odoo-python
@@ -5334,7 +5539,9 @@ msgid ""
 "Use the chatter to <b>send emails</b> and communicate efficiently with your "
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
-msgstr "利用聊天工具<b>发送电子邮件</b> ，与客户进行高效沟通。将新人添加到关注者列表中，让他们了解有关这项任务的主要变化。"
+msgstr ""
+"利用聊天工具<b>发送电子邮件</b> ，与客户进行高效沟通。将新人添加到关注者列表"
+"中，让他们了解有关这项任务的主要变化。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
@@ -5344,18 +5551,13 @@ msgid ""
 "        30h Allocate 30 hours to the task\n"
 "        #tags Set tags on the task\n"
 "        @user Assign the task to a user\n"
-"        ! Set the task a high priority\n"
+"        ! Set the task a medium priority\n"
+"        !! Set the task a high priority\n"
+"        !!! Set the task a urgent priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
-"在标题中使用这些关键字来设置新任务：\n"
-"\n"
-"        30h 为任务指派 30 小时\n"
-"        #tags 为任务设置标签\n"
-"        @user 将任务指派给某个用户\n"
-"        ! 为任务设置高优先级\n"
-"\n"
-"        确保格式和顺序正确 例如：改进配置屏幕，5h #feature #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model,name:project.model_res_users
@@ -5490,8 +5692,8 @@ msgstr "结束的工作时间"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_unarchive_wizard
 msgid ""
-"Would you like to unarchive all of the projects contained in these stages as"
-" well?"
+"Would you like to unarchive all of the projects contained in these stages as "
+"well?"
 msgstr "您是否也希望取消存档这些阶段中的所有项目？"
 
 #. module: project
@@ -5529,12 +5731,13 @@ msgstr "年"
 #: code:addons/project/models/project_project_stage.py:0
 msgid ""
 "You are not able to switch the company of this stage to %(company_name)s "
-"since it currently includes projects associated with "
-"%(project_company_name)s. Please ensure that this stage exclusively consists"
-" of projects linked to %(company_name)s."
+"since it currently includes projects associated with %"
+"(project_company_name)s. Please ensure that this stage exclusively consists "
+"of projects linked to %(company_name)s."
 msgstr ""
-"您无法将该阶段的公司更改为 %(company_name)s，因为它目前包括与 %(project_company_name)s "
-"相关的项目。请确保该阶段只包含与 %(company_name)s 相关的项目。"
+"您无法将该阶段的公司更改为 %(company_name)s，因为它目前包括与 %"
+"(project_company_name)s 相关的项目。请确保该阶段只包含与 %(company_name)s 相"
+"关的项目。"
 
 #. module: project
 #. odoo-javascript
@@ -5562,15 +5765,15 @@ msgstr "您不能将此任务转换为子任务，因为它是经常性任务。
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 msgid ""
-"You cannot delete stages containing projects. You can either archive them or"
-" first delete all of their projects."
+"You cannot delete stages containing projects. You can either archive them or "
+"first delete all of their projects."
 msgstr "不能删除包含项目的阶段。您可以将阶段存档，或者先删除阶段内的所有项目。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 msgid ""
-"You cannot delete stages containing projects. You should first delete all of"
-" their projects."
+"You cannot delete stages containing projects. You should first delete all of "
+"their projects."
 msgstr "不能删除包含项目的阶段。您应首先删除阶段内的所有项目。"
 
 #. module: project
@@ -5578,14 +5781,16 @@ msgstr "不能删除包含项目的阶段。您应首先删除阶段内的所有
 msgid ""
 "You cannot delete stages containing tasks. You can either archive them or "
 "first delete all of their tasks."
-msgstr "您不能删除包含任务的阶段。 您可以存档它们，也可以先删除它们的所有任务。"
+msgstr ""
+"您不能删除包含任务的阶段。 您可以存档它们，也可以先删除它们的所有任务。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid ""
 "You cannot delete stages containing tasks. You should first delete all of "
 "their tasks."
-msgstr "您不能删除包含任务的阶段。 您可以存档它们，也可以先删除它们的所有任务。"
+msgstr ""
+"您不能删除包含任务的阶段。 您可以存档它们，也可以先删除它们的所有任务。"
 
 #. module: project
 #. odoo-python
@@ -5612,8 +5817,8 @@ msgstr "您已受邀关注任务文件 ："
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
 msgid ""
-"You have full control and can revoke portal access anytime. Are you ready to"
-" proceed?"
+"You have full control and can revoke portal access anytime. Are you ready to "
+"proceed?"
 msgstr "您拥有完全控制权，可以随时取消门户访问权。准备好了吗？"
 
 #. module: project
@@ -5624,8 +5829,8 @@ msgid ""
 "you navigate.<br/> You can discard these changes from here or manually save "
 "your task.<br/>Let's save it manually."
 msgstr ""
-"你有未保存的变化-不用担心！ "
-"Odoo将在您切换浏览页面时自动保存它。<br/>您可以从此处放弃这些更改或手动保存您的任务。<br/>让我们手动保存它吧。"
+"你有未保存的变化-不用担心！ Odoo将在您切换浏览页面时自动保存它。<br/>您可以从"
+"此处放弃这些更改或手动保存您的任务。<br/>让我们手动保存它吧。"
 
 #. module: project
 #. odoo-javascript
@@ -5744,7 +5949,9 @@ msgstr "图标来组织你的日常活动。"
 msgid ""
 "icon to see tasks waiting on other ones. Once a task is marked as complete "
 "or cancelled, all of its dependencies will be unblocked."
-msgstr "图标，以查看正在等待其他任务的任务。一旦任务被标记为已完成或已取消，其所有依赖任务都将解除阻塞。"
+msgstr ""
+"图标，以查看正在等待其他任务的任务。一旦任务被标记为已完成或已取消，其所有依"
+"赖任务都将解除阻塞。"
 
 #. module: project
 #. odoo-javascript
@@ -5875,3 +6082,24 @@ msgstr "👤 未指派"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 私密"
+
+#~ msgid ""
+#~ "Use these keywords in the title to set new tasks:\n"
+#~ "\n"
+#~ "        30h Allocate 30 hours to the task\n"
+#~ "        #tags Set tags on the task\n"
+#~ "        @user Assign the task to a user\n"
+#~ "        ! Set the task a high priority\n"
+#~ "\n"
+#~ "        Make sure to use the right format and order e.g. Improve the "
+#~ "configuration screen 5h #feature #v16 @Mitchell !"
+#~ msgstr ""
+#~ "在标题中使用这些关键字来设置新任务：\n"
+#~ "\n"
+#~ "        30h 为任务指派 30 小时\n"
+#~ "        #tags 为任务设置标签\n"
+#~ "        @user 将任务指派给某个用户\n"
+#~ "        ! 为任务设置高优先级\n"
+#~ "\n"
+#~ "        确保格式和顺序正确 例如：改进配置屏幕，5h #feature #v16 "
+#~ "@Mitchell !"

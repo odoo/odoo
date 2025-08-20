@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:36+0000\n"
-"PO-Revision-Date: 2025-08-19 14:34+0000\n"
+"POT-Creation-Date: 2025-08-18 18:36+0000\n"
+"PO-Revision-Date: 2025-08-20 14:14+0000\n"
 "Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-4/"
 "website/fi/>\n"
@@ -179,8 +179,8 @@ msgid ""
 "custom page."
 msgstr ""
 "\"URL-osoite\" ei voi olla \"/\". Jos haluat muuttaa kotisivun sisältöä, "
-"käytä \"Kotisivun URL-osoite\"-kenttää verkkosivuston asetuksissa tai minkä "
-"tahansa mukautetun sivun ominaisuuksissa."
+"käytä \"Aloitussivun URL-osoite\"-kenttää verkkosivuston asetuksissa tai "
+"minkä tahansa mukautetun sivun ominaisuuksissa."
 
 #. module: website
 #. odoo-python
@@ -1097,7 +1097,7 @@ msgstr "<b>Klikkaa \"Muokkaa\"</b>-valintaluetteloa"
 #. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 msgid "<b>Click Edit</b> to start designing your homepage."
-msgstr "<b>Klikkaa Muokkaa</b> alkaaksesi kotisivun suunnittelun."
+msgstr "<b>Klikkaa Muokkaa</b> alkaaksesi aloitussivun suunnittelun."
 
 #. module: website
 #. odoo-javascript
@@ -1577,13 +1577,13 @@ msgstr ""
 "                      yourcompany@example.com\n"
 "                    <br/>\n"
 "                    <br/>\n"
-"                    <i class=\"fa fa-fw fa-phone o_not-animable\" role="
-"\"img\"/>\n"
+"                    <i class=\"fa fa-fw fa-phone o_not-animable\" "
+"role=\"img\"/>\n"
 "                       +32(0)499 123 456\n"
 "                    <br/>\n"
 "                    <br/>\n"
-"                    <i class=\"fa fa-fw fa-map-marker o_not-animable\" role="
-"\"img\"/>\n"
+"                    <i class=\"fa fa-fw fa-map-marker o_not-animable\" "
+"role=\"img\"/>\n"
 "                      Bryssel, Belgia"
 
 #. module: website
@@ -2867,8 +2867,8 @@ msgid ""
 "span>"
 msgstr ""
 "<strong>Daniella Clarke</strong><br/>\n"
-"                                <span class=\"text-muted\">Senior "
-"Manager</span>"
+"                                <span class=\"text-muted\">Senior Manager</"
+"span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_reviews_wall
@@ -3206,6 +3206,12 @@ msgstr "Luettelo pilkuilla erotetuista kenttien nimistä"
 #: model:website.configurator.feature,description:website.feature_module_stores_locator
 msgid "A map and a listing of your stores"
 msgstr "Kartta ja luettelo myymälöistäsi"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_menu.py:0
+msgid "A mega menu cannot have a parent or child menu."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -3749,8 +3755,8 @@ msgid ""
 "Add your own title or leave empty to use \"%(defaultTitle)s\". Your page "
 "title should contain max 65 characters."
 msgstr ""
-"Lisää oma otsikko tai jätä tyhjäksi käyttääksesi otsikkoa "
-"\"%(defaultTitle)s\". Sivusi otsikon enimmäispituus on 65 merkkiä."
+"Lisää oma otsikko tai jätä tyhjäksi käyttääksesi otsikkoa \"%"
+"(defaultTitle)s\". Sivusi otsikon enimmäispituus on 65 merkkiä."
 
 #. module: website
 #. odoo-javascript
@@ -3854,6 +3860,13 @@ msgstr "Mainonta ja markkinointi<br/>(valinnainen)"
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__after
 msgid "After"
 msgstr "Jälkeen"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
+msgid "After First Hover"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -4176,6 +4189,13 @@ msgid ""
 msgstr ""
 "Vaikka tämä verkkosivu voi olla linkitetty muihin verkkosivuihin, emme "
 "suoraan tai epäsuorasti tarkoita, että linkitys johtaa hyväksyntään."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
+msgid "Always"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -4572,6 +4592,7 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_carousel
 msgid "Autoplay"
 msgstr "Automaattinen toisto"
@@ -5196,6 +5217,7 @@ msgstr "Reunuksen säde"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5226,6 +5248,7 @@ msgstr "Reunan säde pieni"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -5339,6 +5362,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/floating_blocks/floating_blocks_option.xml:0
 #: code:addons/website/static/src/builder/plugins/layout_option/add_element_option.xml:0
+#: code:addons/website/static/src/builder/plugins/layout_option/add_element_option_plugin.js:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_colors_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
@@ -6150,6 +6174,7 @@ msgstr "Kahvit"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/font_awesome_option.xml:0
 #: code:addons/website/static/src/builder/plugins/highlight/highlight_configurator.xml:0
+#: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/social_media_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
@@ -6500,11 +6525,6 @@ msgstr ""
 "nopeat."
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_search_console
-msgid "Google Search Console"
-msgstr "Google Search Console"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_features
 msgid "Consulting"
 msgstr "Konsultointi"
@@ -6601,7 +6621,7 @@ msgstr "Yhteystiedot"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/image/image_grid_option.xml:0
+#: code:addons/website/static/src/builder/plugins/image/grid_image_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Contain"
 msgstr "Sisältö"
@@ -6865,7 +6885,7 @@ msgstr "Kurssi"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/background_option/background_position_option.xml:0
-#: code:addons/website/static/src/builder/plugins/image/image_grid_option.xml:0
+#: code:addons/website/static/src/builder/plugins/image/grid_image_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.record_cover
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -6889,7 +6909,7 @@ msgstr "Kansikuva"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_cover_properties_mixin__cover_properties
 msgid "Cover Properties"
-msgstr "Etusivun ominaisuudet"
+msgstr "Aloitussivun ominaisuudet"
 
 #. module: website
 #: model:ir.model,name:website.model_website_cover_properties_mixin
@@ -7835,7 +7855,7 @@ msgstr "Kiekko"
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -8038,6 +8058,8 @@ msgid "Doesn't contain"
 msgstr "Ei sisällä"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Dolly Zoom"
 msgstr "Dolly Zoom"
@@ -8319,6 +8341,7 @@ msgstr "Muokkaa ylätunnisteen (head) ja rungon koodia"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/navbar_link_popover/navbar_link_popover.xml:0
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #: model:ir.ui.menu,name:website.custom_menu_edit_menu
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_base_view_form
@@ -9002,6 +9025,7 @@ msgstr "Facebook-tili"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/accordion_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_carousel
@@ -9165,7 +9189,7 @@ msgstr "Tiedoston suoratoistomalli ohjaimille"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/header_navbar_option.xml:0
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Fill"
 msgstr "Täytä"
@@ -9334,7 +9358,7 @@ msgstr "Vilkkuva"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Flat"
@@ -9404,6 +9428,8 @@ msgstr "Kirjasinlaji"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Font Family"
@@ -9411,6 +9437,8 @@ msgstr "Fonttiperhe"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Font Size"
@@ -9861,7 +9889,7 @@ msgstr "Siirry"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
 msgid "Go to Homepage"
-msgstr "Siirry Kotisivulle"
+msgstr "Siirry Aloitussivulle"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
@@ -9950,8 +9978,13 @@ msgid "Google Play"
 msgstr "Google Play"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings__google_search_console
+#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_search_console
 #: model:ir.model.fields,field_description:website.field_website__google_search_console
+msgid "Google Search Console"
+msgstr "Google Search Console"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__google_search_console
 msgid "Google Search Console Key"
 msgstr "Google Search Consolen avain"
 
@@ -10249,14 +10282,14 @@ msgstr "Ylätunnisteen elementit"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Heading"
 msgstr "Otsikko"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Heading 1"
 msgstr "Väliotsikko 1"
@@ -10446,6 +10479,7 @@ msgstr "Korosta aktiivisia"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/emphasize_animated_text.xml:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "Highlight Animated Text"
 msgstr "Korosta animoitua tekstiä"
@@ -10495,7 +10529,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
 msgid "Home"
-msgstr "Etusivu"
+msgstr "Aloitussivu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -10512,7 +10546,7 @@ msgstr "Äänentoisto kotona"
 #: code:addons/website/static/src/components/views/page_list.xml:0
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "Home page of the current website"
-msgstr "Nykyisen verkkosivuston etusivu"
+msgstr "Nykyisen verkkosivuston aloitussivu"
 
 #. module: website
 #. odoo-javascript
@@ -10524,13 +10558,13 @@ msgstr "Nykyisen verkkosivuston etusivu"
 #: model:ir.model.fields,field_description:website.field_website_page_properties_base__is_homepage
 #: model:ir.ui.menu,name:website.menu_website_preview
 msgid "Homepage"
-msgstr "Kotisivullesi"
+msgstr "Aloitussivullesi"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_homepage_url
 #: model:ir.model.fields,field_description:website.field_website__homepage_url
 msgid "Homepage Url"
-msgstr "Kotisivun Url"
+msgstr "Aloitussivun URL"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -11508,7 +11542,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_base_view_form
 msgid "Is Homepage"
-msgstr "Onko Kotisivu"
+msgstr "Aloitussivu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_tree_view
@@ -11935,6 +11969,7 @@ msgstr "Kannettavat tietokoneet"
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/scroll_button_option.xml:0
 #: code:addons/website/static/src/builder/plugins/size_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
@@ -12304,6 +12339,7 @@ msgstr "Rivi"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Line Height"
@@ -12599,6 +12635,7 @@ msgstr "Margherita"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Margins"
@@ -12864,6 +12901,18 @@ msgid "Menus"
 msgstr "Valikot"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website_menu.py:0
+msgid "Menus cannot have more than two levels of hierarchy."
+msgstr ""
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_menu.py:0
+msgid "Menus with child menus cannot be added as a submenu."
+msgstr ""
+
+#. module: website
 #: model:ir.model,name:website.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
 msgstr "Ohjattu kumppanin yhdistäminen"
@@ -12968,6 +13017,8 @@ msgid "Minutes"
 msgstr "Minuutit"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Mirror Blur"
 msgstr "Peilattu sumennus"
@@ -13390,6 +13441,13 @@ msgstr "Neutraloitu"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
+msgid "Never"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/new_content_systray_item.xml:0
 msgid "New"
 msgstr "Uusi"
@@ -13619,10 +13677,12 @@ msgstr "Ei, pidä se"
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/footer_copyright_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/navbar_logo_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/parallax_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/scroll_button_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/social_media_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.column_count_option
 #: model_terms:ir.ui.view,arch_db:website.s_accordion_options
@@ -13866,7 +13926,7 @@ msgstr "Kun klikataan (linkin kautta)"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "On Click Effect"
 msgstr "Klikkauksen vaikutuksesta"
@@ -14439,7 +14499,8 @@ msgstr "Pois"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/header_navbar_option.xml:0
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Outline"
@@ -14480,12 +14541,15 @@ msgid "Over The Content"
 msgstr "Sisällön yli"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Overlay"
 msgstr "Peite"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Padding"
@@ -15003,7 +15067,7 @@ msgstr "Portfolio"
 #: code:addons/website/static/src/builder/plugins/background_option/background_position_option.xml:0
 #: code:addons/website/static/src/builder/plugins/carousel_cards_option.xml:0
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
-#: code:addons/website/static/src/builder/plugins/image/image_grid_option.xml:0
+#: code:addons/website/static/src/builder/plugins/image/grid_image_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/accordion_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/table_of_content_option.xml:0
@@ -15150,7 +15214,7 @@ msgstr "Ensisijaiset painikkeet"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Primary Style"
 msgstr "Ensisijainen tyyli"
@@ -15891,17 +15955,22 @@ msgstr "Nollaa mallipohjat"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
+msgid "Reset to Default Font Family"
+msgstr "Palauta oletusfonttiperheeseen"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Reset to Headings Font Family"
 msgstr "Nollaa otsikoiden kirjasinperheksi"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "Reset to Default Font Family"
-msgstr "Palauta oletusfonttiperheeseen"
+msgid "Reset to Paragraph Font Family"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
@@ -16021,7 +16090,7 @@ msgstr "Oikea valikko"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Ripple"
 msgstr "Heijastus"
@@ -16070,7 +16139,7 @@ msgstr "Kierrä"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/accordion_option.xml:0
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_border_widgets
@@ -16449,7 +16518,7 @@ msgstr "Toissijaiset painikkeet"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Secondary Style"
 msgstr "Toissijainen tyyli"
@@ -16982,6 +17051,7 @@ msgstr "Sivusto"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/font_awesome_option.xml:0
+#: code:addons/website/static/src/builder/plugins/image/image_size.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/mega_menu_option.xml:0
@@ -17049,6 +17119,7 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/navtabs_style_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_carousel
@@ -17148,6 +17219,7 @@ msgstr "Diaesitys"
 #: code:addons/website/static/src/builder/plugins/options/scroll_button_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/social_media_option.xml:0
 #: code:addons/website/static/src/builder/plugins/size_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
@@ -17533,6 +17605,8 @@ msgid "Striped section"
 msgstr "Raidallinen osa"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Stroke Width"
 msgstr "Iskun leveys"
@@ -18053,7 +18127,7 @@ msgstr "Koko relatiivinen URL-osoite asiakirjan avaamiseen verkkosivun kautta."
 #: code:addons/website/models/website.py:0
 msgid "The homepage URL should be relative and start with '/'."
 msgstr ""
-"Kotisivun URL-osoitteen tulisi olla suhteellinen ja alkaa '/'-merkillä."
+"Aloitussivun URL-osoitteen tulisi olla suhteellinen ja alkaa '/'-merkillä."
 
 #. module: website
 #. odoo-javascript
@@ -18435,7 +18509,7 @@ msgstr "Tämä on verkkosivuston yhteydenottosivu"
 #. module: website
 #: model:ir.ui.view,website_meta_description:website.homepage
 msgid "This is the homepage of the website"
-msgstr "Tämä on verkkosivuston etusivu"
+msgstr "Tämä on verkkosivun aloitussivu"
 
 #. module: website
 #. odoo-python
@@ -18767,6 +18841,7 @@ msgstr "Työkaluvinkki"
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/social_media_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/table_of_content_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_card_options
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -18882,6 +18957,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/accordion_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_carousel
 msgid "Transition"
@@ -21075,6 +21151,7 @@ msgstr "Zoomaa"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/parallax_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
@@ -21083,6 +21160,7 @@ msgstr "Lähennä"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/parallax_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
@@ -21570,7 +21648,7 @@ msgstr "esim. Grand Place, Brussels"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
 msgid "e.g. Home Page"
-msgstr "esim. etusivu"
+msgstr "esim. aloitussivu"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_dashboard
@@ -21791,7 +21869,7 @@ msgid ""
 "spotlight, main, landing, presentation, top, splash, parallax"
 msgstr ""
 "hero, jumbotron, ylätunniste, otsake, brändäys, esittely, koti, esittelyssä, "
-"valokeila, pää, etusivu, esitys, top, splash, rinnakkainen"
+"valokeila, pää, aloitussivu, esitys, top, splash, rinnakkainen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets

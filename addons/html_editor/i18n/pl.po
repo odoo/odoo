@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* html_editor
-# 
+#
 # Translators:
 # Marta Wacławek, 2025
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-08-18 18:37+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pl\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: html_editor
 #. odoo-javascript
@@ -27,8 +29,8 @@ msgid ""
 "'Alt tag' specifies an alternate text for an image, if the image cannot be "
 "displayed (slow connection, missing image, screen reader ...)."
 msgstr ""
-"\"Alt tag\" określa tekst alternatywny dla obrazka, w przypadku gdy nie może"
-" być on wyświetlony (wolne połączenie internetowe, brakujący obraz, czytnik "
+"\"Alt tag\" określa tekst alternatywny dla obrazka, w przypadku gdy nie może "
+"być on wyświetlony (wolne połączenie internetowe, brakujący obraz, czytnik "
 "ekranu...)."
 
 #. module: html_editor
@@ -89,8 +91,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Action %s not found, link preview is not available, please check your url is"
-" correct"
+"Action %s not found, link preview is not available, please check your url is "
+"correct"
 msgstr ""
 
 #. module: html_editor
@@ -249,6 +251,12 @@ msgstr "Załącznik"
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__local_url
 msgid "Attachment URL"
 msgstr "Adres załącznika"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Autoconvert to relative link"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -536,6 +544,7 @@ msgstr ""
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__display_name
 msgid "Display Name"
 msgstr "Nazwa wyświetlana"
 
@@ -569,12 +578,6 @@ msgstr "Edytuj"
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit Link"
 msgstr "Edytuj link"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/navbar_link_popover.xml:0
-msgid "Edit Menu"
-msgstr "Modyfikowanie menu"
 
 #. module: html_editor
 #. odoo-javascript
@@ -678,6 +681,11 @@ msgstr "Odwróć w pionie"
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Format"
 msgstr "Format"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -807,6 +815,7 @@ msgstr "Html"
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__id
 msgid "ID"
 msgstr "ID"
 
@@ -1004,8 +1013,7 @@ msgstr "Link skopiowany do schowka."
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Link preview is not available because %s, please check if your url is "
-"correct"
+"Link preview is not available because %s, please check if your url is correct"
 msgstr ""
 
 #. module: html_editor
@@ -1860,8 +1868,8 @@ msgid ""
 "You can not replace a field by this image. If you want to use this image, "
 "first save it on your computer and then upload it here."
 msgstr ""
-"Nie można zastąpić pola tym obrazem. Jeśli chcesz użyć tego obrazu, najpierw"
-" go zapisz na swoim komputerze, a następnie prześlij go tutaj."
+"Nie można zastąpić pola tym obrazem. Jeśli chcesz użyć tego obrazu, najpierw "
+"go zapisz na swoim komputerze, a następnie prześlij go tutaj."
 
 #. module: html_editor
 #. odoo-javascript
@@ -1886,8 +1894,7 @@ msgid ""
 "You have reached the maximum number of requests for this service. Try again "
 "later."
 msgstr ""
-"Osiągnąłeś maksymalną ilość zapytań dla tej usługi, spróbuj ponownie "
-"później."
+"Osiągnąłeś maksymalną ilość zapytań dla tej usługi, spróbuj ponownie później."
 
 #. module: html_editor
 #. odoo-javascript
@@ -1981,3 +1988,6 @@ msgstr "px"
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "videos"
 msgstr "filmy wideo"
+
+#~ msgid "Edit Menu"
+#~ msgstr "Modyfikowanie menu"

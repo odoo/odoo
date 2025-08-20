@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:36+0000\n"
+"POT-Creation-Date: 2025-08-18 18:36+0000\n"
 "PO-Revision-Date: 2025-08-18 23:12+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -99,7 +99,8 @@ msgstr "\"%(keyword)s\" est utilisé dans le titre de premier niveau de la page"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.js:0
 msgid "\"%(keyword)s\" is used in page second level heading"
-msgstr "\"%(keyword)s\" est utilisé dans le titre de deuxième niveau de la page"
+msgstr ""
+"\"%(keyword)s\" est utilisé dans le titre de deuxième niveau de la page"
 
 #. module: website
 #. odoo-javascript
@@ -3229,6 +3230,12 @@ msgid "A map and a listing of your stores"
 msgstr "Une carte et une liste de vos boutiques"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website_menu.py:0
+msgid "A mega menu cannot have a parent or child menu."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid ""
 "A moist, red-hued cake with layers of cream cheese frosting, perfect for any "
@@ -3774,8 +3781,9 @@ msgid ""
 "Add your own title or leave empty to use \"%(defaultTitle)s\". Your page "
 "title should contain max 65 characters."
 msgstr ""
-"Ajoutez votre propre titre ou laissez vide pour utiliser \"%(defaultTitle)s\""
-". Le titre de votre page doit contenir au maximum 65 caractères."
+"Ajoutez votre propre titre ou laissez vide pour utiliser \"%"
+"(defaultTitle)s\". Le titre de votre page doit contenir au maximum 65 "
+"caractères."
 
 #. module: website
 #. odoo-javascript
@@ -3880,6 +3888,13 @@ msgstr "Publicité & marketing <br/>(optionnel)"
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__after
 msgid "After"
 msgstr "Après"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
+msgid "After First Hover"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -4202,6 +4217,13 @@ msgid ""
 msgstr ""
 "Bien que ce site web puisse être lié à d'autres sites web, nous n'impliquons "
 "pas, directement ou indirectement, une quelconque validation."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
+msgid "Always"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -4599,6 +4621,7 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_carousel
 msgid "Autoplay"
 msgstr "Lecture automatique"
@@ -5223,6 +5246,7 @@ msgstr "Rayon bordure"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5253,6 +5277,7 @@ msgstr "Bordure fine"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -5368,6 +5393,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/floating_blocks/floating_blocks_option.xml:0
 #: code:addons/website/static/src/builder/plugins/layout_option/add_element_option.xml:0
+#: code:addons/website/static/src/builder/plugins/layout_option/add_element_option_plugin.js:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_colors_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
@@ -6184,6 +6210,7 @@ msgstr "Cafés"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/font_awesome_option.xml:0
 #: code:addons/website/static/src/builder/plugins/highlight/highlight_configurator.xml:0
+#: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/social_media_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
@@ -6535,11 +6562,6 @@ msgstr ""
 "rapides."
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_search_console
-msgid "Google Search Console"
-msgstr "Console Google Search"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_features
 msgid "Consulting"
 msgstr "Consultance"
@@ -6637,7 +6659,7 @@ msgstr "Contacts"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/image/image_grid_option.xml:0
+#: code:addons/website/static/src/builder/plugins/image/grid_image_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Contain"
 msgstr "Contient"
@@ -6901,7 +6923,7 @@ msgstr "Cours"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/background_option/background_position_option.xml:0
-#: code:addons/website/static/src/builder/plugins/image/image_grid_option.xml:0
+#: code:addons/website/static/src/builder/plugins/image/grid_image_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.record_cover
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -7874,7 +7896,7 @@ msgstr "Disque"
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -8079,6 +8101,8 @@ msgid "Doesn't contain"
 msgstr "Ne contient pas"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Dolly Zoom"
 msgstr "Dolly Zoom"
@@ -8092,7 +8116,8 @@ msgstr "Domaine"
 #. module: website
 #: model:ir.model.fields,help:website.field_website_controller_page__record_domain
 msgid "Domain to restrict records that can be viewed publicly"
-msgstr "Domaine pour restreindre les enregistrements consultables par le public"
+msgstr ""
+"Domaine pour restreindre les enregistrements consultables par le public"
 
 #. module: website
 #. odoo-javascript
@@ -8360,6 +8385,7 @@ msgstr "Modifier le code de l'en-tête et du corps"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/navbar_link_popover/navbar_link_popover.xml:0
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #: model:ir.ui.menu,name:website.custom_menu_edit_menu
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_base_view_form
@@ -9045,6 +9071,7 @@ msgstr "Compte Facebook"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/accordion_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_carousel
@@ -9208,7 +9235,7 @@ msgstr "Modèle d'aide au contrôleur - Streaming de fichier"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/header_navbar_option.xml:0
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Fill"
 msgstr "Remplir"
@@ -9377,7 +9404,7 @@ msgstr "Flash"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Flat"
@@ -9447,6 +9474,8 @@ msgstr "Police"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Font Family"
@@ -9454,6 +9483,8 @@ msgstr "Font Family"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Font Size"
@@ -9996,8 +10027,13 @@ msgid "Google Play"
 msgstr "Google Play"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings__google_search_console
+#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_search_console
 #: model:ir.model.fields,field_description:website.field_website__google_search_console
+msgid "Google Search Console"
+msgstr "Console Google Search"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__google_search_console
 msgid "Google Search Console Key"
 msgstr "Clé Google Search Console"
 
@@ -10299,14 +10335,14 @@ msgstr "Éléments d’en-tête"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Heading"
 msgstr "Titre"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Heading 1"
 msgstr "Titre 1"
@@ -10496,6 +10532,7 @@ msgstr "Mise en évidence activée"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/emphasize_animated_text.xml:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "Highlight Animated Text"
 msgstr "Mettre en évidence le texte animé"
@@ -11991,6 +12028,7 @@ msgstr "Ordinateurs portables"
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/scroll_button_option.xml:0
 #: code:addons/website/static/src/builder/plugins/size_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
@@ -12357,6 +12395,7 @@ msgstr "Ligne"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Line Height"
@@ -12656,6 +12695,7 @@ msgstr "Margherita"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Margins"
@@ -12920,6 +12960,18 @@ msgid "Menus"
 msgstr "Menus"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website_menu.py:0
+msgid "Menus cannot have more than two levels of hierarchy."
+msgstr ""
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_menu.py:0
+msgid "Menus with child menus cannot be added as a submenu."
+msgstr ""
+
+#. module: website
 #: model:ir.model,name:website.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
 msgstr "Assistant de fusion des partenaires"
@@ -13024,6 +13076,8 @@ msgid "Minutes"
 msgstr "Minutes"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Mirror Blur"
 msgstr "Flou de miroir"
@@ -13449,6 +13503,13 @@ msgstr "Neutralisé"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
+msgid "Never"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/new_content_systray_item.xml:0
 msgid "New"
 msgstr "Nouveau"
@@ -13676,10 +13737,12 @@ msgstr "Non, laissez comme ça"
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/footer_copyright_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/navbar_logo_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/parallax_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/scroll_button_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/social_media_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.column_count_option
 #: model_terms:ir.ui.view,arch_db:website.s_accordion_options
@@ -13926,7 +13989,7 @@ msgstr "Sur clic (via lien)"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "On Click Effect"
 msgstr "Effet sur clic"
@@ -14503,7 +14566,8 @@ msgstr "Sortie"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/header_navbar_option.xml:0
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Outline"
@@ -14544,12 +14608,15 @@ msgid "Over The Content"
 msgstr "Sur le contenu"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Overlay"
 msgstr "Overlay"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Padding"
@@ -14739,8 +14806,8 @@ msgid ""
 "Paragraph with <strong>bold</strong>, <span class=\"text-muted\">muted</"
 "span> and <em>italic</em> texts"
 msgstr ""
-"Paragraphe avec textes <strong>gras</strong>, <span class=\"text-muted\""
-">muet</span> et <em>italique</em>"
+"Paragraphe avec textes <strong>gras</strong>, <span class=\"text-"
+"muted\">muet</span> et <em>italique</em>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
@@ -15067,7 +15134,7 @@ msgstr "Portfolio"
 #: code:addons/website/static/src/builder/plugins/background_option/background_position_option.xml:0
 #: code:addons/website/static/src/builder/plugins/carousel_cards_option.xml:0
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
-#: code:addons/website/static/src/builder/plugins/image/image_grid_option.xml:0
+#: code:addons/website/static/src/builder/plugins/image/grid_image_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/accordion_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/table_of_content_option.xml:0
@@ -15214,7 +15281,7 @@ msgstr "Boutons principaux"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Primary Style"
 msgstr "Style primaire"
@@ -15956,17 +16023,22 @@ msgstr "Réinitialiser les modèles"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
+msgid "Reset to Default Font Family"
+msgstr "Réinitialiser Font family par défaut"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Reset to Headings Font Family"
 msgstr "Réinitialiser Font Family Titres"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-msgid "Reset to Default Font Family"
-msgstr "Réinitialiser Font family par défaut"
+msgid "Reset to Paragraph Font Family"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
@@ -16086,7 +16158,7 @@ msgstr "Menu de droite"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Ripple"
 msgstr "Ondulation"
@@ -16135,7 +16207,7 @@ msgstr "Rotation"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/accordion_option.xml:0
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_border_widgets
@@ -16515,7 +16587,7 @@ msgstr "Boutons secondaires"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Secondary Style"
 msgstr "Style secondaire"
@@ -17049,6 +17121,7 @@ msgstr "Site"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/font_awesome_option.xml:0
+#: code:addons/website/static/src/builder/plugins/image/image_size.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/mega_menu_option.xml:0
@@ -17116,6 +17189,7 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/navtabs_style_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_carousel
@@ -17215,6 +17289,7 @@ msgstr "Diaporama"
 #: code:addons/website/static/src/builder/plugins/options/scroll_button_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/social_media_option.xml:0
 #: code:addons/website/static/src/builder/plugins/size_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
@@ -17601,6 +17676,8 @@ msgid "Striped section"
 msgstr "Section rayée"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Stroke Width"
 msgstr "Largeur du trait"
@@ -18840,6 +18917,7 @@ msgstr "Infobulle"
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/social_media_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/table_of_content_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_card_options
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -18955,6 +19033,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/accordion_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_carousel
 msgid "Transition"
@@ -21166,6 +21245,7 @@ msgstr "Zoom"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/parallax_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
@@ -21174,6 +21254,7 @@ msgstr "Agrandir"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/parallax_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options

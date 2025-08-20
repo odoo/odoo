@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* project_timesheet_holidays
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Anastasiia Koroleva, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-08-18 18:37+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Anastasiia Koroleva, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_account_analytic_line
@@ -107,8 +109,8 @@ msgid ""
 "off requests. You can specify another project on each time off type "
 "individually."
 msgstr ""
-"Проект по умолчанию, используемый при автоматической генерации табелей учета"
-" рабочего времени через запросы на отгулы. Вы можете указать другой проект "
+"Проект по умолчанию, используемый при автоматической генерации табелей учета "
+"рабочего времени через запросы на отгулы. Вы можете указать другой проект "
 "для каждого типа отгулов отдельно."
 
 #. module: project_timesheet_holidays
@@ -156,18 +158,13 @@ msgid ""
 "        30h Allocate 30 hours to the task\n"
 "        #tags Set tags on the task\n"
 "        @user Assign the task to a user\n"
-"        ! Set the task a high priority\n"
+"        ! Set the task a medium priority\n"
+"        !! Set the task a high priority\n"
+"        !!! Set the task a urgent priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
-"Используйте ключевые слова в заголовке для создания задач:\n"
-"\n"
-"        30ч – назначить задаче 30 часов\n"
-"        #теги – установить теги\n"
-"        @пользователь – назначить ответственного за задачу\n"
-"        ! – установить высокий приоритет\n"
-"\n"
-"        Убедитесь, что используете правильный формат и порядок. Пример: Улучшить экран конфигурации 5ч #функция #версия16 @Митчелл !"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -211,11 +208,32 @@ msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
 msgstr ""
-"Вы не можете изменять временные таблицы, связанные с заявками на отгулы. Для"
-" изменения заявок на отгулы используйте приложение \"Отгулы\"."
+"Вы не можете изменять временные таблицы, связанные с заявками на отгулы. Для "
+"изменения заявок на отгулы используйте приложение \"Отгулы\"."
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/__init__.py:0
 msgid "allow_timesheets"
 msgstr ""
+
+#~ msgid ""
+#~ "Use these keywords in the title to set new tasks:\n"
+#~ "\n"
+#~ "        30h Allocate 30 hours to the task\n"
+#~ "        #tags Set tags on the task\n"
+#~ "        @user Assign the task to a user\n"
+#~ "        ! Set the task a high priority\n"
+#~ "\n"
+#~ "        Make sure to use the right format and order e.g. Improve the "
+#~ "configuration screen 5h #feature #v16 @Mitchell !"
+#~ msgstr ""
+#~ "Используйте ключевые слова в заголовке для создания задач:\n"
+#~ "\n"
+#~ "        30ч – назначить задаче 30 часов\n"
+#~ "        #теги – установить теги\n"
+#~ "        @пользователь – назначить ответственного за задачу\n"
+#~ "        ! – установить высокий приоритет\n"
+#~ "\n"
+#~ "        Убедитесь, что используете правильный формат и порядок. Пример: "
+#~ "Улучшить экран конфигурации 5ч #функция #версия16 @Митчелл !"

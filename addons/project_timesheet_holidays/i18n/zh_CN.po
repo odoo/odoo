@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* project_timesheet_holidays
-# 
+#
 # Translators:
 # Chloe Wang, 2025
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-08-18 18:37+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: project_timesheet_holidays
@@ -106,14 +107,18 @@ msgid ""
 "The default project used when automatically generating timesheets via time "
 "off requests. You can specify another project on each time off type "
 "individually."
-msgstr "通过休假请求自动生成工时表时使用的默认项目。 您可以在每个休假类型上单独指定另一个项目。"
+msgstr ""
+"通过休假请求自动生成工时表时使用的默认项目。 您可以在每个休假类型上单独指定另"
+"一个项目。"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid ""
 "The default task used when automatically generating timesheets via time off "
 "requests. You can specify another task on each time off type individually."
-msgstr "通过休假请求自动生成工时表时使用的默认任务。 您可以在每个休假类型上单独指定另一个任务。"
+msgstr ""
+"通过休假请求自动生成工时表时使用的默认任务。 您可以在每个休假类型上单独指定另"
+"一个任务。"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -150,18 +155,13 @@ msgid ""
 "        30h Allocate 30 hours to the task\n"
 "        #tags Set tags on the task\n"
 "        @user Assign the task to a user\n"
-"        ! Set the task a high priority\n"
+"        ! Set the task a medium priority\n"
+"        !! Set the task a high priority\n"
+"        !!! Set the task a urgent priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
-"在标题中使用这些关键字来设置新任务：\n"
-"\n"
-"        30h 为任务指派 30 小时\n"
-"        #tags 为任务设置标签\n"
-"        @user 将任务指派给某个用户\n"
-"        ! 为任务设置高优先级\n"
-"\n"
-"        确保格式和顺序正确 例如：改进配置屏幕，5h #feature #v16 @Mitchell !"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -175,7 +175,9 @@ msgstr "查看休假"
 msgid ""
 "You cannot create timesheets for a task that is linked to a time off type. "
 "Please use the Time Off application to request new time off instead."
-msgstr "您不能为已链接到休假类型的任务创建时间表。请使用 \"休假 \"应用程序申请新的休假。"
+msgstr ""
+"您不能为已链接到休假类型的任务创建时间表。请使用 \"休假 \"应用程序申请新的休"
+"假。"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -197,10 +199,32 @@ msgstr "您不能删除链接到休假请求的工时表，请从休假应用程
 msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
-msgstr "您不能修改链接到休假请求的工时表，请使用休假应用程序来修改您的休假请求."
+msgstr ""
+"您不能修改链接到休假请求的工时表，请使用休假应用程序来修改您的休假请求."
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/__init__.py:0
 msgid "allow_timesheets"
 msgstr "allow_timesheets"
+
+#~ msgid ""
+#~ "Use these keywords in the title to set new tasks:\n"
+#~ "\n"
+#~ "        30h Allocate 30 hours to the task\n"
+#~ "        #tags Set tags on the task\n"
+#~ "        @user Assign the task to a user\n"
+#~ "        ! Set the task a high priority\n"
+#~ "\n"
+#~ "        Make sure to use the right format and order e.g. Improve the "
+#~ "configuration screen 5h #feature #v16 @Mitchell !"
+#~ msgstr ""
+#~ "在标题中使用这些关键字来设置新任务：\n"
+#~ "\n"
+#~ "        30h 为任务指派 30 小时\n"
+#~ "        #tags 为任务设置标签\n"
+#~ "        @user 将任务指派给某个用户\n"
+#~ "        ! 为任务设置高优先级\n"
+#~ "\n"
+#~ "        确保格式和顺序正确 例如：改进配置屏幕，5h #feature #v16 "
+#~ "@Mitchell !"

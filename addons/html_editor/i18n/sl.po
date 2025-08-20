@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* html_editor
-# 
+#
 # Translators:
 # Aleš Pipan, 2025
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-08-18 18:37+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sl\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3);\n"
 
 #. module: html_editor
 #. odoo-javascript
@@ -89,8 +90,8 @@ msgstr "Dejanje%s ni dejanje okna, predogled povezave ni na voljo"
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Action %s not found, link preview is not available, please check your url is"
-" correct"
+"Action %s not found, link preview is not available, please check your url is "
+"correct"
 msgstr ""
 "Dejanja %s ni bilo mogoče najti, predogled povezave ni na voljo, preverite, "
 "ali je vaš URL pravilen."
@@ -251,6 +252,12 @@ msgstr "Priponka"
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__local_url
 msgid "Attachment URL"
 msgstr "URL priloge"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Autoconvert to relative link"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -533,11 +540,12 @@ msgid ""
 "Discover a world of awesomeness in our copyright-free image haven. No legal "
 "drama, just nice images!"
 msgstr ""
-"Odkrijte svet čudovitih stvari v našem raju slik brez avtorskih pravic. Brez"
-" pravne drame, samo lepe slike!"
+"Odkrijte svet čudovitih stvari v našem raju slik brez avtorskih pravic. Brez "
+"pravne drame, samo lepe slike!"
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__display_name
 msgid "Display Name"
 msgstr "Prikazani naziv"
 
@@ -571,12 +579,6 @@ msgstr "Uredi"
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit Link"
 msgstr "Uredi povezavo"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/navbar_link_popover.xml:0
-msgid "Edit Menu"
-msgstr "Uredi meni"
 
 #. module: html_editor
 #. odoo-javascript
@@ -680,6 +682,11 @@ msgstr "Obrni navpično"
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Format"
 msgstr "Format"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -809,6 +816,7 @@ msgstr "Html"
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__id
 msgid "ID"
 msgstr "ID"
 
@@ -1006,11 +1014,9 @@ msgstr "Povezava je bila kopirana v odložišče."
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Link preview is not available because %s, please check if your url is "
-"correct"
+"Link preview is not available because %s, please check if your url is correct"
 msgstr ""
-"Predogled povezave ni na voljo, ker je %s, preverite, ali je vaš URL "
-"pravilen"
+"Predogled povezave ni na voljo, ker je %s, preverite, ali je vaš URL pravilen"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1841,8 +1847,7 @@ msgstr "Pripomoček"
 msgid ""
 "Wow, it feels a bit empty in here. Upload from the button in the top right "
 "corner!"
-msgstr ""
-"Vau, tukaj se zdi malo prazno. Naloži z gumbom v zgornjem desnem kotu!"
+msgstr "Vau, tukaj se zdi malo prazno. Naloži z gumbom v zgornjem desnem kotu!"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1981,3 +1986,6 @@ msgstr ""
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "videos"
 msgstr "videoposnetki"
+
+#~ msgid "Edit Menu"
+#~ msgstr "Uredi meni"

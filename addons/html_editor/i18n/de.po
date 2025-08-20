@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
-"PO-Revision-Date: 2025-08-19 14:34+0000\n"
+"POT-Creation-Date: 2025-08-18 18:37+0000\n"
+"PO-Revision-Date: 2025-08-20 09:54+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s18-4/"
 "html_editor/de/>\n"
@@ -31,8 +31,8 @@ msgid ""
 "displayed (slow connection, missing image, screen reader ...)."
 msgstr ""
 "„Alt-Tag“ gibt einen alternativen Text für ein Bild an, wenn das Bild nicht "
-"angezeigt werden kann (langsame Verbindung, fehlendes Bild, Bildschirmleser "
-"...)."
+"angezeigt werden kann (langsame Verbindung, fehlendes Bild, "
+"Bildschirmleser ...)."
 
 #. module: html_editor
 #. odoo-javascript
@@ -94,11 +94,11 @@ msgstr "Aktion %s ist keine Fensteraktion, Linkvorschau ist nicht verfügbar"
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Action %s not found, link preview is not available, please check your url is"
-" correct"
+"Action %s not found, link preview is not available, please check your url is "
+"correct"
 msgstr ""
-"Aktion %s nicht gefunden, Linkvorschau ist nicht verfügbar, bitte überprüfen"
-" Sie, ob Ihre URL korrekt ist"
+"Aktion %s nicht gefunden, Linkvorschau ist nicht verfügbar, bitte überprüfen "
+"Sie, ob Ihre URL korrekt ist"
 
 #. module: html_editor
 #. odoo-javascript
@@ -256,6 +256,12 @@ msgstr "Dateianhang"
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__local_url
 msgid "Attachment URL"
 msgstr "URL des Dateianhangs"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Autoconvert to relative link"
+msgstr "Automatisch in einen relativen Link konvertieren"
 
 #. module: html_editor
 #. odoo-javascript
@@ -543,6 +549,7 @@ msgstr ""
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
 
@@ -576,12 +583,6 @@ msgstr "Bearbeiten"
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit Link"
 msgstr "Link bearbeiten"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/navbar_link_popover.xml:0
-msgid "Edit Menu"
-msgstr "Menü bearbeiten"
 
 #. module: html_editor
 #. odoo-javascript
@@ -685,6 +686,11 @@ msgstr "Vertikal drehen"
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Format"
 msgstr "Format"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -814,6 +820,7 @@ msgstr "HTML"
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__id
 msgid "ID"
 msgstr "ID"
 
@@ -1011,11 +1018,10 @@ msgstr "Link in Zwischenablage kopiert."
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Link preview is not available because %s, please check if your url is "
-"correct"
+"Link preview is not available because %s, please check if your url is correct"
 msgstr ""
-"Linkvorschau ist nicht verfügbar, weil %s, bitte überprüfen Sie, ob Ihre URL"
-" korrekt ist"
+"Linkvorschau ist nicht verfügbar, weil %s, bitte überprüfen Sie, ob Ihre URL "
+"korrekt ist"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1796,8 +1802,8 @@ msgstr "Bild hochladen"
 #: code:addons/html_editor/controllers/main.py:0
 msgid "Uploaded image's format is not supported. Try with: %s"
 msgstr ""
-"Das Format des hochgeladenen Bildes wird nicht unterstützt. Versuchen Sie es"
-" mit: %s"
+"Das Format des hochgeladenen Bildes wird nicht unterstützt. Versuchen Sie es "
+"mit: %s"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2000,3 +2006,6 @@ msgstr "px"
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "videos"
 msgstr "Videos"
+
+#~ msgid "Edit Menu"
+#~ msgstr "Menü bearbeiten"

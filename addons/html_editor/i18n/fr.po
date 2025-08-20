@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* html_editor
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Manon Rondou, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-08-18 18:37+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: html_editor
 #. odoo-javascript
@@ -92,8 +93,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Action %s not found, link preview is not available, please check your url is"
-" correct"
+"Action %s not found, link preview is not available, please check your url is "
+"correct"
 msgstr ""
 "Action %s introuvable, l’aperçu du lien n’est pas disponible, veuillez "
 "vérifier que votre URL est correcte."
@@ -254,6 +255,12 @@ msgstr "Pièce jointe"
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__local_url
 msgid "Attachment URL"
 msgstr "Lien de la pièce jointe"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Autoconvert to relative link"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -541,6 +548,7 @@ msgstr ""
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__display_name
 msgid "Display Name"
 msgstr "Nom d'affichage"
 
@@ -575,12 +583,6 @@ msgstr "Modifier"
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit Link"
 msgstr "Modifier le lien"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/navbar_link_popover.xml:0
-msgid "Edit Menu"
-msgstr "Modifier le menu"
 
 #. module: html_editor
 #. odoo-javascript
@@ -684,6 +686,11 @@ msgstr "Pivoter verticalement"
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Format"
 msgstr "Format"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -813,6 +820,7 @@ msgstr "Html"
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__id
 msgid "ID"
 msgstr "ID"
 
@@ -1010,11 +1018,10 @@ msgstr "Lien copié dans votre presse-papiers."
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Link preview is not available because %s, please check if your url is "
-"correct"
+"Link preview is not available because %s, please check if your url is correct"
 msgstr ""
-"L’aperçu du lien n’est pas disponible car %s, veuillez vérifier si votre URL"
-" est correcte."
+"L’aperçu du lien n’est pas disponible car %s, veuillez vérifier si votre URL "
+"est correcte."
 
 #. module: html_editor
 #. odoo-javascript
@@ -1526,8 +1533,7 @@ msgstr "Petit titre de section"
 #: code:addons/html_editor/controllers/main.py:0
 msgid "Sorry, we could not generate a response. Please try again later."
 msgstr ""
-"Désolé, nous n'avons pas pu générer de réponse. Veuillez réessayer plus "
-"tard."
+"Désolé, nous n'avons pas pu générer de réponse. Veuillez réessayer plus tard."
 
 #. module: html_editor
 #. odoo-python
@@ -1653,8 +1659,8 @@ msgid ""
 "it, please first download it from the original source and upload it in Odoo."
 msgstr ""
 "Ce type d'image n'est pas pris en charge pour le recadrage. <br/>Si vous "
-"souhaitez le recadrer, veuillez d'abord le télécharger à partir de la source"
-" d'origine et le télécharger dans Odoo."
+"souhaitez le recadrer, veuillez d'abord le télécharger à partir de la source "
+"d'origine et le télécharger dans Odoo."
 
 #. module: html_editor
 #. odoo-javascript
@@ -1831,8 +1837,7 @@ msgstr "Vidéos"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
 msgid "Videos are muted when autoplay is enabled"
-msgstr ""
-"Le son des vidéos est coupé lorsque la lecture automatique est activée"
+msgstr "Le son des vidéos est coupé lorsque la lecture automatique est activée"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1911,8 +1916,8 @@ msgstr ""
 msgid ""
 "You need to select a model before opening the dynamic placeholder selector."
 msgstr ""
-"Vous devez sélectionner un modèle avant d'ouvrir le sélecteur de placeholder"
-" dynamique."
+"Vous devez sélectionner un modèle avant d'ouvrir le sélecteur de placeholder "
+"dynamique."
 
 #. module: html_editor
 #. odoo-python
@@ -1998,3 +2003,6 @@ msgstr "px"
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "videos"
 msgstr "vidéos"
+
+#~ msgid "Edit Menu"
+#~ msgstr "Modifier le menu"

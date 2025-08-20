@@ -1,24 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* html_editor
-# 
+# * html_editor
+#
 # Translators:
 # Wil Odoo, 2025
 # Maitê Dietze, 2025
-# 
+#
+# "Maitê Dietze (madi)" <madi@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Maitê Dietze, 2025\n"
-"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"POT-Creation-Date: 2025-08-18 18:37+0000\n"
+"PO-Revision-Date: 2025-08-20 16:34+0000\n"
+"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
+"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
+"odoo-s18-4/html_editor/pt_BR/>\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt_BR\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: html_editor
 #. odoo-javascript
@@ -92,8 +96,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Action %s not found, link preview is not available, please check your url is"
-" correct"
+"Action %s not found, link preview is not available, please check your url is "
+"correct"
 msgstr ""
 "Ação %s não encontrada. A visualização do link não está disponível, "
 "verifique se o URL está correto"
@@ -254,6 +258,12 @@ msgstr "Anexo"
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__local_url
 msgid "Attachment URL"
 msgstr "URL de anexos"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Autoconvert to relative link"
+msgstr "Autoconverter para link relativo"
 
 #. module: html_editor
 #. odoo-javascript
@@ -541,6 +551,7 @@ msgstr ""
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__display_name
 msgid "Display Name"
 msgstr "Nome exibido"
 
@@ -560,8 +571,7 @@ msgstr "Marcador de posição dinâmico"
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid "ERROR: couldn't get download urls from media library."
-msgstr ""
-"ERRO: Não é possível fazer download de URLs pela biblioteca de mídias."
+msgstr "ERRO: Não é possível fazer download de URLs pela biblioteca de mídias."
 
 #. module: html_editor
 #. odoo-javascript
@@ -574,12 +584,6 @@ msgstr "Editar"
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit Link"
 msgstr "Editar link"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/navbar_link_popover.xml:0
-msgid "Edit Menu"
-msgstr "Editar menu"
 
 #. module: html_editor
 #. odoo-javascript
@@ -683,6 +687,11 @@ msgstr "Inverter na vertical"
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Format"
 msgstr "Formato"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_http
+msgid "HTTP Routing"
+msgstr "Roteamento HTTP"
 
 #. module: html_editor
 #. odoo-javascript
@@ -812,6 +821,7 @@ msgstr "Html"
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__id
 msgid "ID"
 msgstr "ID"
 
@@ -1009,8 +1019,7 @@ msgstr "Link copiado para a área de transferência."
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Link preview is not available because %s, please check if your url is "
-"correct"
+"Link preview is not available because %s, please check if your url is correct"
 msgstr ""
 "A visualização do link não está disponível porque %s, verifique se o URL "
 "está correto"
@@ -1650,8 +1659,8 @@ msgid ""
 "This type of image is not supported for cropping.<br/>If you want to crop "
 "it, please first download it from the original source and upload it in Odoo."
 msgstr ""
-"O corte deste tipo de imagem não é suportado.<br/>Se você quiser recortá-la,"
-" primeiro faça download da fonte original e carregue-a no Odoo."
+"O corte deste tipo de imagem não é suportado.<br/>Se você quiser recortá-la, "
+"primeiro faça download da fonte original e carregue-a no Odoo."
 
 #. module: html_editor
 #. odoo-javascript
@@ -1717,8 +1726,7 @@ msgstr "Monitore tarefas com listas de controle"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/image_plugin.js:0
 msgid "Transform the picture (click twice to reset transformation)"
-msgstr ""
-"Transforme a imagem (clique duas vezes para redefinir a transformação)"
+msgstr "Transforme a imagem (clique duas vezes para redefinir a transformação)"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1991,3 +1999,6 @@ msgstr "px"
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "videos"
 msgstr "vídeos"
+
+#~ msgid "Edit Menu"
+#~ msgstr "Editar menu"

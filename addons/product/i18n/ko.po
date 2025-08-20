@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-08-18 18:37+0000\n"
 "PO-Revision-Date: 2025-08-14 23:11+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -62,8 +62,10 @@ msgstr "$15.00"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
-"%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra fee\n"
-"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
+"%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra "
+"fee\n"
+"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 msgstr ""
 "%(base)s에 %(discount)s과 %% %(discount_type)s 및 %(surcharge)s 추가 요금\n"
 "예: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
@@ -72,9 +74,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
-"%(item_name)s: end date (%(end_date)s) should be after start date "
-"(%(start_date)s)"
-msgstr "%(item_name)s: 종료 날짜 (%(end_date)s)는 시작 날짜 (%(start_date)s) 이후여야 합니다."
+"%(item_name)s: end date (%(end_date)s) should be after start date (%"
+"(start_date)s)"
+msgstr ""
+"%(item_name)s: 종료 날짜 (%(end_date)s)는 시작 날짜 (%(start_date)s) 이후여"
+"야 합니다."
 
 #. module: product
 #. odoo-python
@@ -137,31 +141,37 @@ msgstr "- %(amount)s 리베이트"
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
-msgid "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
-msgstr "- 바코드 \"%(barcode)s\"가 이미 제품에 할당되었습니다: %(product_list)s"
+msgid ""
+"- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
+msgstr ""
+"- 바코드 \"%(barcode)s\"가 이미 제품에 할당되었습니다: %(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
 msgid ""
-"- Instantly: All possible variants are created as soon as the attribute and its values are added to a product.\n"
-"        - Dynamically: Each variant is created only when its corresponding attributes and values are added to a sales order.\n"
+"- Instantly: All possible variants are created as soon as the attribute and "
+"its values are added to a product.\n"
+"        - Dynamically: Each variant is created only when its corresponding "
+"attributes and values are added to a sales order.\n"
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: this cannot be changed once the attribute is used on a product."
 msgstr ""
 " - 즉시: 모든 가능한 사양은 속성과 그 값이 품목에 추가되는 즉시 생성됩니다.\n"
-"        - 동적: 각 사양은 해당 속성과 값이 판매 주문서에 추가될 때만 생성됩니다.\n"
+"        - 동적: 각 사양은 해당 속성과 값이 판매 주문서에 추가될 때만 생성됩니"
+"다.\n"
 "        - 사용 안함: 사양에 대한 변형은 생성되지 않습니다\n"
-"         참고: 하나 이상의 품목에서 특성을 사용한 후에는 파생 품목 생성 모드를 변경할 수 없습니다."
+"         참고: 하나 이상의 품목에서 특성을 사용한 후에는 파생 품목 생성 모드"
+"를 변경할 수 없습니다."
 
 #. module: product
-#: model:product.attribute.value,name:product.product_attribute_value_5
+#: model:product.attribute.value,name:product.pav_duration_month_1
+msgid "1 month"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_duration_year_1
 msgid "1 year"
 msgstr "1년"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_warranty
-msgid "1 year warranty extension"
-msgstr "보증 기간 1년 연장"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -174,9 +184,29 @@ msgid "10 Units"
 msgstr "10 단위"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_height_100
+msgid "100"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_length_120
+msgid "120"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "123456789012"
 msgstr "123456789012"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_length_140
+msgid "140"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_length_160
+msgid "160"
+msgstr ""
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
@@ -189,9 +219,29 @@ msgid "2 x 7 with price"
 msgstr "2 x 7, 가격 표시"
 
 #. module: product
-#: model:product.attribute.value,name:product.product_attribute_value_6
-msgid "2 year"
-msgstr "2년"
+#: model:product.attribute.value,name:product.pav_duration_year_2
+msgid "2 years"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_2xl
+msgid "2XL"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_duration_year_3
+msgid "3 years"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_shoe_size_39
+msgid "39"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_3xl
+msgid "3XL"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12
@@ -209,13 +259,58 @@ msgid "4 x 7 with price"
 msgstr "4 x 7, 가격 표시"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_shoe_size_40
+msgid "40"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_shoe_size_41
+msgid "41"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_shoe_size_42
+msgid "42"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_shoe_size_43
+msgid "43"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_height_45
+msgid "45"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_4xl
+msgid "4XL"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_5xl
+msgid "5XL"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_duration_month_6
+msgid "6 months"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_height_85
+msgid "85"
+msgstr ""
+
+#. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
 "<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
 "o_translate_inline\">Contact Us</a>"
 msgstr ""
-"<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
-"o_translate_inline\">문의하기</a>"
+"<a href=\"/contactus\" class=\"mb-2 btn btn-primary o_translate_inline\">문의"
+"하기</a>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -228,13 +323,17 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
 "icon\" title=\"Arrow\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"화살표 아이콘\""
-" title=\"화살표\"/>"
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"화살표 아"
+"이콘\" title=\"화살표\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
-msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
-msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
+msgid ""
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"title=\"Currency\"/>"
+msgstr ""
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
+"title=\"Currency\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -315,10 +414,12 @@ msgstr "콤보 품목에는 콤보 선택 품목이 최소 1개 이상 포함되
 #: model:ir.model.fields,help:product.field_product_product__description_sale
 #: model:ir.model.fields,help:product.field_product_template__description_sale
 msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sales Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
-msgstr "고객에게 전달하고자 하는 품목 설명. 이 설명은 모든 판매 주문, 배송 주문 및 고객 청구서/신용전표에 복사됩니다"
+msgstr ""
+"고객에게 전달하고자 하는 품목 설명. 이 설명은 모든 판매 주문, 배송 주문 및 고"
+"객 청구서/신용전표에 복사됩니다"
 
 #. module: product
 #. odoo-python
@@ -329,11 +430,15 @@ msgstr "이미 바코드가 사용되고 있는 포장입니다"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
-"A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
-"            This is the perfect tool to handle several pricings, seasonal discounts, etc."
+"A price is a set of sales prices or rules to compute the price of sales "
+"order lines based on products, product categories, dates and ordered "
+"quantities.\n"
+"            This is the perfect tool to handle several pricings, seasonal "
+"discounts, etc."
 msgstr ""
-"가격은 품목, 품목 카테고리, 날짜 및 주문 수량을 기반으로 판매 주문 내역의 가격을 계산하기 위한 판매 가격 또는 규칙의 모음입니다. "
-"여러 가격, 계절 할인 등을 처리 할 수 있는 완벽한 도구입니다."
+"가격은 품목, 품목 카테고리, 날짜 및 주문 수량을 기반으로 판매 주문 내역의 가"
+"격을 계산하기 위한 판매 가격 또는 규칙의 모음입니다. 여러 가격, 계절 할인 등"
+"을 처리 할 수 있는 완벽한 도구입니다."
 
 #. module: product
 #. odoo-python
@@ -485,9 +590,9 @@ msgid "Additional packagings for this product which can be used for sales"
 msgstr "판매에 사용할 수 있는 이 품목의 추가 포장 옵션"
 
 #. module: product
-#: model:res.groups,name:product.group_product_manager
-msgid "Admin en Products / Create"
-msgstr "품목 관리 / 생성"
+#: model:product.attribute.value,name:product.pav_brand_adidas
+msgid "Adidas"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
@@ -551,9 +656,14 @@ msgid "Allow customers to set their own value"
 msgstr "고객이 직접 가치를 설정할 수 있도록 허용"
 
 #. module: product
-#: model:product.attribute.value,name:product.product_attribute_value_2
+#: model:product.attribute.value,name:product.pav_legs_aluminium
 msgid "Aluminium"
 msgstr "알루미늄"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_apple
+msgid "Apple"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
@@ -590,6 +700,11 @@ msgid "Archived"
 msgstr "보관됨"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_ariel
+msgid "Ariel"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__sequence
 msgid "Assigns the priority to the list of product vendor."
 msgstr "품목 공급업체 목록에 우선 순위를 지정합니다."
@@ -600,7 +715,9 @@ msgstr "품목 공급업체 목록에 우선 순위를 지정합니다."
 msgid ""
 "At most %s quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
-msgstr "최대 %s 수량을 동시에 표시할 수 있습니다. 다른 항목을 추가하려면 선택한 수량을 삭제하시기 바랍니다."
+msgstr ""
+"최대 %s 수량을 동시에 표시할 수 있습니다. 다른 항목을 추가하려면 선택한 수량"
+"을 삭제하시기 바랍니다."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -739,9 +856,29 @@ msgid "Basic Pricelists"
 msgstr "기본 가격표"
 
 #. module: product
-#: model:product.attribute.value,name:product.product_attribute_value_4
+#: model:product.attribute.value,name:product.pav_color_beige
+msgid "Beige"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_black
 msgid "Black"
 msgstr "검정색"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_blue
+msgid "Blue"
+msgstr ""
+
+#. module: product
+#: model:product.attribute,name:product.pa_brand
+msgid "Brand"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_brown
+msgid "Brown"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -771,6 +908,11 @@ msgid "Cancel"
 msgstr "취소"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_canon
+msgid "Canon"
+msgstr ""
+
+#. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
 msgid "Categories"
 msgstr "카테고리"
@@ -794,11 +936,15 @@ msgstr "범주 : %s"
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 msgid ""
-"Changing the unit of measure for your product will apply a conversion 1 %(old_uom_name)s = 1 %(new_uom_name)s.\n"
-"All existing records (Sales orders, Purchase orders, etc.) using this product will be updated by replacing the unit name."
+"Changing the unit of measure for your product will apply a conversion 1 %"
+"(old_uom_name)s = 1 %(new_uom_name)s.\n"
+"All existing records (Sales orders, Purchase orders, etc.) using this "
+"product will be updated by replacing the unit name."
 msgstr ""
-"품목 단위를 변경하면 %(old_uom_name)s 1개 = 1 %(new_uom_name)s로 변환하여 적용됩니다.\n"
-"이 품목을 사용하고 있는 모든 기존 레코드(판매주문서, 구매발주서 등)는 단위 이름을 교체하여 업데이트됩니다."
+"품목 단위를 변경하면 %(old_uom_name)s 1개 = 1 %(new_uom_name)s로 변환하여 적"
+"용됩니다.\n"
+"이 품목을 사용하고 있는 모든 기존 레코드(판매주문서, 구매발주서 등)는 단위 이"
+"름을 교체하여 업데이트됩니다."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__checksum
@@ -821,9 +967,9 @@ msgid "Choose the sheet layout to print the labels"
 msgstr "라벨 인쇄용 시트 레이아웃 선택"
 
 #. module: product
-#: model:product.attribute.value,name:product.pav_cleaning_kit
-msgid "Cleaning kit"
-msgstr "클리닝 키트"
+#: model:product.attribute.value,name:product.pav_brand_cocacola
+msgid "Coca-Cola"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -831,11 +977,16 @@ msgid "Codes"
 msgstr "코드"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_colgate
+msgid "Colgate"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__html_color
 #: model:ir.model.fields,field_description:product.field_product_tag__color
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__color
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__color
-#: model:product.attribute,name:product.product_attribute_2
+#: model:product.attribute,name:product.pa_color
 msgid "Color"
 msgstr "색상"
 
@@ -898,7 +1049,9 @@ msgstr "콤보 제품에는 속성을 추가할 수 없습니다."
 msgid ""
 "Combos allow to choose one product amongst a selection of choices per "
 "category."
-msgstr "콤보를 사용하면 카테고리별 여러 가지 항목 중에서 하나의 품목을 선택할 수 있습니다."
+msgstr ""
+"콤보를 사용하면 카테고리별 여러 가지 항목 중에서 하나의 품목을 선택할 수 있습"
+"니다."
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -996,6 +1149,11 @@ msgstr "국가 그룹"
 #: model:ir.model.fields,field_description:product.field_product_pricelist__country_group_ids
 msgid "Country Groups"
 msgstr "국가 그룹"
+
+#. module: product
+#: model:res.groups,name:product.group_product_manager
+msgid "Create"
+msgstr ""
 
 #. module: product
 #: model:ir.model,website_form_label:product.model_res_partner
@@ -1107,7 +1265,9 @@ msgid "Currency"
 msgstr "통화"
 
 #. module: product
-#: model:product.attribute.value,name:product.fabric_attribute_custom
+#: model:product.attribute.value,name:product.pav_custom
+#: model:product.attribute.value,name:product.pav_legs_custom
+#: model:product.attribute.value,name:product.pav_length_custom
 msgid "Custom"
 msgstr "사용자 지정"
 
@@ -1125,6 +1285,16 @@ msgstr "고객 참조"
 #: model:product.template,name:product.product_product_4_product_template
 msgid "Customizable Desk"
 msgstr "맞춤형 책상"
+
+#. module: product
+#: model:product.attribute,name:product.pa_customization
+msgid "Customization"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_cyan
+msgid "Cyan"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__db_datas
@@ -1179,6 +1349,11 @@ msgstr "삭제"
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
 msgid "Delivery Lead Time"
 msgstr "배송 리드타임"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_dell
+msgid "Dell"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__description
@@ -1314,6 +1489,11 @@ msgid "Documents of this variant"
 msgstr "이 세부 옵션 관련 문서"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_dove
+msgid "Dove"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "Download"
 msgstr "다운로드"
@@ -1340,7 +1520,12 @@ msgid "Drawer with two routing possiblities."
 msgstr "두 가지 라우팅 가능성이 있는 서랍."
 
 #. module: product
-#: model:product.attribute,name:product.product_attribute_3
+#: model:product.attribute.value,name:product.pav_options_drawers
+msgid "Drawers"
+msgstr ""
+
+#. module: product
+#: model:product.attribute,name:product.pa_duration
 msgid "Duration"
 msgstr "소요시간"
 
@@ -1353,6 +1538,11 @@ msgstr "Dymo 라벨"
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
 msgid "Dynamically"
 msgstr "동적"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_dyson
+msgid "Dyson"
+msgstr ""
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
@@ -1428,11 +1618,6 @@ msgid "Extra Info"
 msgstr "추가 정보"
 
 #. module: product
-#: model:product.attribute,name:product.pa_extra_options
-msgid "Extra Options"
-msgstr "추가 옵션"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo_item__extra_price
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
 msgid "Extra Price"
@@ -1441,12 +1626,14 @@ msgstr "추가 요금"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
 msgid ""
-"Extra price for the variant with this attribute value on sale price. eg. 200"
-" price extra, 1000 + 200 = 1200."
-msgstr "판매 가격에 이 속성 값이 있는 파생품의 추가 가격입니다. 예. 추가 가격 200, 1000 + 200 = 1200."
+"Extra price for the variant with this attribute value on sale price. eg. 200 "
+"price extra, 1000 + 200 = 1200."
+msgstr ""
+"판매 가격에 이 속성 값이 있는 파생품의 추가 가격입니다. 예. 추가 가격 200, "
+"1000 + 200 = 1200."
 
 #. module: product
-#: model:product.attribute,name:product.fabric_attribute
+#: model:product.attribute,name:product.pa_fabric
 msgid "Fabric"
 msgstr "구조"
 
@@ -1476,6 +1663,11 @@ msgstr "파일 콘텐츠 (raw)"
 #: model:ir.model.fields,field_description:product.field_product_document__file_size
 msgid "File Size"
 msgstr "파일 크기"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_options_file_cabinets
+msgid "File cabinets"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__fixed_price
@@ -1514,10 +1706,12 @@ msgstr "멋진 아이콘 폰트 예: fa-tasks"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
 msgid ""
-"For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
+"For the rule to apply, bought/sold quantity must be greater than or equal to "
+"the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
-"규칙을 적용하려면 구매/판매 수량이 이 필드에 지정된 최소 수량 이상이어야 합니다.\n"
+"규칙을 적용하려면 구매/판매 수량이 이 필드에 지정된 최소 수량 이상이어야 합니"
+"다.\n"
 "품목의 기본 단위로 표현됩니다."
 
 #. module: product
@@ -1562,10 +1756,25 @@ msgid "General Information"
 msgstr "일반 정보"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_gillette
+msgid "Gillette"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product__sequence
 #: model:ir.model.fields,help:product.field_product_template__sequence
 msgid "Gives the sequence order when displaying a product list"
 msgstr "품목 목록을 표시할 때 주문 순서를 제공합니다"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_fabric_glass
+msgid "Glass"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_gold
+msgid "Gold"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
@@ -1585,7 +1794,19 @@ msgstr "제품"
 msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
-msgstr "상품이란 상대에게 제공하는 유형적인 자재와 물품을 말합니다. 서비스는 상대에게 제공하는 비물질적 상품입니다."
+msgstr ""
+"상품이란 상대에게 제공하는 유형적인 자재와 물품을 말합니다. 서비스는 상대에"
+"게 제공하는 비물질적 상품입니다."
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_gray
+msgid "Gray"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_green
+msgid "Green"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
@@ -1594,6 +1815,11 @@ msgstr "상품이란 상대에게 제공하는 유형적인 자재와 물품을 
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Group By"
 msgstr "그룹별"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_h_m
+msgid "H&M"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__html_color
@@ -1609,12 +1835,24 @@ msgid "Has Message"
 msgstr "메시지가 있습니다"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_head_shoulders
+msgid "Head & Shoulders"
+msgstr ""
+
+#. module: product
+#: model:product.attribute,name:product.pa_height
+msgid "Height"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__html_color
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__html_color
 msgid ""
 "Here you can set a specific HTML color index (e.g. #ff0000) to display the "
 "color if the attribute type is 'Color'."
-msgstr "속성 유형이 '색깔'인 경우, 특정한 HTML 색 색인(예를 들어 #ff0000)을 설정할 수 있습니다."
+msgstr ""
+"속성 유형이 '색깔'인 경우, 특정한 HTML 색 색인(예를 들어 #ff0000)을 설정할 "
+"수 있습니다."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -1697,7 +1935,9 @@ msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합�
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_id
 msgid ""
 "If not set, the vendor price will apply to all variants of this product."
-msgstr "설정하지 않는 경우, 공급업체 가격은 해당 제품의 모든 세부선택사항에 적용됩니다."
+msgstr ""
+"설정하지 않는 경우, 공급업체 가격은 해당 제품의 모든 세부선택사항에 적용됩니"
+"다."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__active
@@ -1883,6 +2123,16 @@ msgid "Kilograms (kg)"
 msgstr "킬로그램 (kg)"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_loreal
+msgid "L'Oréal"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_LG
+msgid "LG"
+msgstr ""
+
+#. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
@@ -1961,17 +2211,38 @@ msgid ""
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
 msgstr ""
-"구매주문 확인 후 창고로 제품이 입고될 때까지의 리드타임입니다. 계획서에서 구매 주문 계획을 자동으로 계산하는 데 사용됩니다."
+"구매주문 확인 후 창고로 제품이 입고될 때까지의 리드타임입니다. 계획서에서 구"
+"매 주문 계획을 자동으로 계산하는 데 사용됩니다."
 
 #. module: product
-#: model:product.attribute.value,name:product.fabric_attribute_leather
+#: model:product.attribute.value,name:product.pav_fabric_leather
 msgid "Leather"
 msgstr "가죽"
 
 #. module: product
-#: model:product.attribute,name:product.product_attribute_1
+#: model:product.attribute,name:product.pa_legs
 msgid "Legs"
 msgstr "다리"
+
+#. module: product
+#: model:product.attribute,name:product.pa_length
+msgid "Length"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_lenovo
+msgid "Lenovo"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_levis
+msgid "Levi's"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_fabric_linen
+msgid "Linen"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__attribute_line_ids
@@ -2005,14 +2276,18 @@ msgstr "물류"
 msgid ""
 "Looking for a custom bamboo stain to match existing furniture? Contact us "
 "for a quote."
-msgstr "기존 가구와 어울리는 맞춤형 대나무색 염료를 찾고 있으신가요? 견적 관련하여 연락주시기 바랍니다."
+msgstr ""
+"기존 가구와 어울리는 맞춤형 대나무색 염료를 찾고 있으신가요? 견적 관련하여 연"
+"락주시기 바랍니다."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
 msgid ""
-"Make this attribute value not compatible with other values of the product or"
-" some attribute values of optional and accessory products."
-msgstr "이 속성 값을 품목의 다른 값 또는 선택 사항 및 액세서리 품목의 일부 속성 값과 호환되지 않도록 하십시오."
+"Make this attribute value not compatible with other values of the product or "
+"some attribute values of optional and accessory products."
+msgstr ""
+"이 속성 값을 품목의 다른 값 또는 선택 사항 및 액세서리 품목의 일부 속성 값과 "
+"호환되지 않도록 하십시오."
 
 #. module: product
 #: model:res.groups,name:product.group_product_variant
@@ -2031,6 +2306,11 @@ msgid "Markup"
 msgstr "인상"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_color_maroon
+msgid "Maroon"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Max. Margin"
 msgstr "최대 마진"
@@ -2039,6 +2319,11 @@ msgstr "최대 마진"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_max_margin
 msgid "Max. Price Margin"
 msgstr "최대 가격 마진"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_maybelline
+msgid "Maybelline"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__message
@@ -2060,6 +2345,11 @@ msgstr "메시지 전송 오류"
 #: model:ir.model.fields,field_description:product.field_product_template__message_ids
 msgid "Messages"
 msgstr "메시지"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_fabric_metal
+msgid "Metal"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__mimetype
@@ -2097,6 +2387,11 @@ msgid "Monitor Stand"
 msgstr "모니터 스탠드"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_montblanc
+msgid "Montblanc"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__multi
 msgid "Multi-checkbox"
 msgstr "멀티 체크박스"
@@ -2132,6 +2427,16 @@ msgid "Name"
 msgstr "이름"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_color_navy
+msgid "Navy"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_nestle
+msgid "Nestlé"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__no_variant
 msgid "Never"
 msgstr "전혀 그렇지 않음"
@@ -2141,6 +2446,11 @@ msgstr "전혀 그렇지 않음"
 #: code:addons/product/models/product_pricelist.py:0
 msgid "New"
 msgstr "신규"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_new_balance
+msgid "New Balance"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_calendar_event_id
@@ -2171,12 +2481,29 @@ msgid "Next Activity Type"
 msgstr "다음 활동 유형"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_nike
+msgid "Nike"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_nikon
+msgid "Nikon"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_nivea
+msgid "Nivea"
+msgstr ""
+
+#. module: product
 #. odoo-python
 #: code:addons/product/wizard/product_label_layout.py:0
 msgid ""
 "No product to print, if the product is archived please unarchive it before "
 "printing its label."
-msgstr "인쇄할 품목이 없습니다. 품목이 보관 처리된 경우, 라벨을 인쇄하기 전에 보관 취소해야 합니다."
+msgstr ""
+"인쇄할 품목이 없습니다. 품목이 보관 처리된 경우, 라벨을 인쇄하기 전에 보관 취"
+"소해야 합니다."
 
 #. module: product
 #. odoo-javascript
@@ -2276,28 +2603,56 @@ msgid "Office Lamp"
 msgstr "사무용 스탠드조명"
 
 #. module: product
-#. odoo-python
-#: code:addons/product/models/product_template_attribute_line.py:0
-msgid ""
-"On the product %(product)s you cannot associate the value %(value)s with the"
-" attribute %(attribute)s because they do not match."
+#: model:product.attribute.value,name:product.pav_brand_olay
+msgid "Olay"
 msgstr ""
-"%(product)s 품목에서 %(value)s 값이 일치하지 않기 때문에 %(attribute)s 속성과 연결할 수 없습니다."
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_olive
+msgid "Olive"
+msgstr ""
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"On the product %(product)s you cannot transform the attribute "
-"%(attribute_src)s into the attribute %(attribute_dest)s."
+"On the product %(product)s you cannot associate the value %(value)s with the "
+"attribute %(attribute)s because they do not match."
 msgstr ""
-"%(product)s 품목에서 %(attribute_src)s 속성을 %(attribute_dest)s 속성으로 변경할 수 없습니다."
+"%(product)s 품목에서 %(value)s 값이 일치하지 않기 때문에 %(attribute)s 속성"
+"과 연결할 수 없습니다."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template_attribute_line.py:0
+msgid ""
+"On the product %(product)s you cannot transform the attribute %"
+"(attribute_src)s into the attribute %(attribute_dest)s."
+msgstr ""
+"%(product)s 품목에서 %(attribute_src)s 속성을 %(attribute_dest)s 속성으로 변"
+"경할 수 없습니다."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
 msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
-msgstr "이런! '%(fileName)s'  형식은 허용되지 않으므로 업로드를 하지 못했습니다."
+msgstr ""
+"이런! '%(fileName)s'  형식은 허용되지 않으므로 업로드를 하지 못했습니다."
+
+#. module: product
+#: model:product.attribute,name:product.pa_options
+msgid "Options"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_oral_b
+msgid "Oral-B"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_orange
+msgid "Orange"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -2320,6 +2675,11 @@ msgstr "기타 가격표"
 #: model:product.template,name:product.product_template_dining_table
 msgid "Outdoor dining table"
 msgstr "야외용 식탁"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_options_overhead_shelves
+msgid "Overhead shelves"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -2345,6 +2705,16 @@ msgid "Packagings"
 msgstr "패키지"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_panasonic
+msgid "Panasonic"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_pantene
+msgid "Pantene"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_id
 msgid "Parent Category"
 msgstr "상위 카테고리"
@@ -2360,9 +2730,19 @@ msgid "Pedal Bin"
 msgstr "페달이 달린 쓰레기통"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_pepsi
+msgid "Pepsi"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__percent_price
 msgid "Percentage Price"
 msgstr "가격 요율"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_philips
+msgid "Philips"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__pills
@@ -2370,9 +2750,9 @@ msgid "Pills"
 msgstr "필"
 
 #. module: product
-#: model:product.attribute.value,name:product.fabric_attribute_plastic
-msgid "Plastic"
-msgstr "플라스틱"
+#: model:product.attribute.value,name:product.pav_color_pink
+msgid "Pink"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -2873,9 +3253,9 @@ msgid "Properties"
 msgstr "속성"
 
 #. module: product
-#: model:product.attribute.value,name:product.pav_protection_kit
-msgid "Protection kit"
-msgstr "보호 키트"
+#: model:product.attribute.value,name:product.pav_brand_puma
+msgid "Puma"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__purchase_ok
@@ -2890,6 +3270,11 @@ msgstr "매입"
 #: model:ir.model.fields,field_description:product.field_product_template__description_purchase
 msgid "Purchase Description"
 msgstr "구매 설명"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_purple
+msgid "Purple"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -2931,6 +3316,21 @@ msgid "Radio"
 msgstr "라디오 버튼"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_rayban
+msgid "Ray-Ban"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_red
+msgid "Red"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_reebok
+msgid "Reebok"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__code
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Reference"
@@ -2939,9 +3339,11 @@ msgstr "참조"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid ""
-"Register the prices requested by your vendors for each product, based on the"
-" quantity and the period."
-msgstr "공급업체로부터 요청받은 각각의 품목에 대한 단가를, 수량과 기간에 맞춰 등록합니다. "
+"Register the prices requested by your vendors for each product, based on the "
+"quantity and the period."
+msgstr ""
+"공급업체로부터 요청받은 각각의 품목에 대한 단가를, 수량과 기간에 맞춰 등록합"
+"니다. "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__product_tmpl_ids
@@ -3003,6 +3405,11 @@ msgid "Restaurant Expenses"
 msgstr "식당 경비"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_rolex
+msgid "Rolex"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Round off to"
 msgstr "반올림하여"
@@ -3053,6 +3460,11 @@ msgid "Sales Price"
 msgstr "판매 가격"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_brand_samsung
+msgid "Samsung"
+msgstr ""
+
+#. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_name_and_description/product_name_and_description.js:0
 msgid "Search a product"
@@ -3097,7 +3509,13 @@ msgid ""
 msgstr ""
 "가격을 이 값의 배수로 설정합니다.\n"
 "반올림은 할인 후와 추가 요금 전에 적용됩니다.\n"
-"9.99로 끝나는 가격의 경우 10.00으로 반올림하고 -0.01의 추가 할인을 적용합니다."
+"9.99로 끝나는 가격의 경우 10.00으로 반올림하고 -0.01의 추가 할인을 적용합니"
+"다."
+
+#. module: product
+#: model:product.attribute,name:product.pa_shoe_size
+msgid "Shoes size"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -3111,9 +3529,19 @@ msgid "Show all records whose next activity date is past"
 msgstr "다음 활동할 날짜가 이미 지난 모든 레코드 표시"
 
 #. module: product
-#: model:product.attribute,name:product.size_attribute
+#: model:product.attribute.value,name:product.pav_color_silver
+msgid "Silver"
+msgstr ""
+
+#. module: product
+#: model:product.attribute,name:product.pa_size
 msgid "Size"
 msgstr "사이즈"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_sony
+msgid "Sony"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_partner__specific_property_product_pricelist
@@ -3127,29 +3555,34 @@ msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
 msgstr ""
-"이 규칙이 이 카테고리 또는 해당 하위 카테고리에 속하는 품목에만 적용되는 경우 품목 카테고리를 지정하십시오. 그렇지 않으면 비워 "
-"두십시오."
+"이 규칙이 이 카테고리 또는 해당 하위 카테고리에 속하는 품목에만 적용되는 경"
+"우 품목 카테고리를 지정하십시오. 그렇지 않으면 비워 두십시오."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_id
 msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
-msgstr "이 규칙이 하나의 품목에만 적용되는 경우 품목을 지정하십시오. 그렇지 않으면 비워 두십시오."
+msgstr ""
+"이 규칙이 하나의 품목에만 적용되는 경우 품목을 지정하십시오. 그렇지 않으면 비"
+"워 두십시오."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_tmpl_id
 msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
-msgstr "이 규칙이 하나의 품목 양식에만 적용되는 경우 양식을 지정하십시오. 그렇지 않으면 비워 두십시오."
+msgstr ""
+"이 규칙이 하나의 품목 양식에만 적용되는 경우 양식을 지정하십시오. 그렇지 않으"
+"면 비워 두십시오."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
 msgid ""
 "Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
-msgstr "할인 계산 금액을 더하거나 뺄 경우 (음수인 경우)의 고정 금액을 지정하십시오."
+msgstr ""
+"할인 계산 금액을 더하거나 뺄 경우 (음수인 경우)의 고정 금액을 지정하십시오."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -3197,7 +3630,7 @@ msgstr ""
 "예정: 향후 계획된 활동입니다."
 
 #. module: product
-#: model:product.attribute.value,name:product.product_attribute_value_1
+#: model:product.attribute.value,name:product.pav_legs_steel
 msgid "Steel"
 msgstr "철제"
 
@@ -3235,6 +3668,16 @@ msgid "Tags are used to search product for a given theme."
 msgstr "태그는 해당 테마별로 품목을 검색하는데 사용됩니다."
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_color_tan
+msgid "Tan"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_teal
+msgid "Teal"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__template_value_ids
 msgid "Template Values"
 msgstr "서식 파일 값"
@@ -3255,9 +3698,11 @@ msgstr "참조 '%s'가 이미 존재합니다."
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"The attribute %(attribute)s must have at least one value for the product "
-"%(product)s."
-msgstr "%(attribute)s 속성에는 %(product)s 품목에 해당하는 값이 하나 이상 있어야 합니다."
+"The attribute %(attribute)s must have at least one value for the product %"
+"(product)s."
+msgstr ""
+"%(attribute)s 속성에는 %(product)s 품목에 해당하는 값이 하나 이상 있어야 합니"
+"다."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -3280,8 +3725,9 @@ msgid ""
 "since the 5 boxes are loose, you can move and place them in the way that "
 "suits you and your things best."
 msgstr ""
-"책상 정리대는 어떤 종류든 작은 물품들을 보관하기에 알맞으며 5개의 상자가 느슨하게 연결되어 있어서 사용자가 물품에 가장 적합한 방식으로"
-" 옮기며 정리할 수 있습니다."
+"책상 정리대는 어떤 종류든 작은 물품들을 보관하기에 알맞으며 5개의 상자가 느슨"
+"하게 연결되어 있어서 사용자가 물품에 가장 적합한 방식으로 옮기며 정리할 수 있"
+"습니다."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__display_type
@@ -3295,7 +3741,8 @@ msgstr "품목 구성기에서 사용되는 디스플레이 유형입니다."
 msgid ""
 "The minimum height is 65 cm, and for standing work the maximum height "
 "position is 125 cm."
-msgstr "최소 높이는 65 cm 이고, 스탠딩으로 바꿀 경우에는 최대 높이는 125 cm 입니다."
+msgstr ""
+"최소 높이는 65 cm 이고, 스탠딩으로 바꿀 경우에는 최대 높이는 125 cm 입니다."
 
 #. module: product
 #. odoo-python
@@ -3308,11 +3755,12 @@ msgstr "최소 마진은 최대 마진보다 낮아야 합니다."
 msgid ""
 "The minimum price among the products in this combo. This value will be used "
 "to prorate the price of this combo with respect to the other combos in a "
-"combo product. This heuristic ensures that whatever product the user chooses"
-" in a combo, it will always be the same price."
+"combo product. This heuristic ensures that whatever product the user chooses "
+"in a combo, it will always be the same price."
 msgstr ""
-"이 콤보의 제품 중 최저 가격은 콤보 제품 내의 다른 콤보와 비교하여 콤보의 가격을 비례 배분하는 데 활용됩니다. 이 방식은 사용자가 "
-"콤보에서 어떤 제품을 선택하든 가격이 일관되게 유지되도록 보장합니다."
+"이 콤보의 제품 중 최저 가격은 콤보 제품 내의 다른 콤보와 비교하여 콤보의 가격"
+"을 비례 배분하는 데 활용됩니다. 이 방식은 사용자가 콤보에서 어떤 제품을 선택"
+"하든 가격이 일관되게 유지되도록 보장합니다."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
@@ -3325,13 +3773,14 @@ msgstr "이 카테고리에 속하는 품목 수 (하위 카테고리는 고려�
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid ""
-"The number of variants to generate is above allowed limit. You should either"
-" not generate variants for each combination or generate them on demand from "
+"The number of variants to generate is above allowed limit. You should either "
+"not generate variants for each combination or generate them on demand from "
 "the sales order. To do so, open the form view of attributes and change the "
 "mode of *Create Variants*."
 msgstr ""
-"생성할 파생 상품 수가 허용 한도를 초과합니다. 각 조합에 대한 파생 상품을 생성하지 않거나 판매 주문의 요청에 따라 생성해야 합니다. "
-"이렇게 하려면 속성의 양식 보기를 열고 *파생 상품 만들기* 모드를 변경합니다."
+"생성할 파생 상품 수가 허용 한도를 초과합니다. 각 조합에 대한 파생 상품을 생성"
+"하지 않거나 판매 주문의 요청에 따라 생성해야 합니다. 이렇게 하려면 속성의 양"
+"식 보기를 열고 *파생 상품 만들기* 모드를 변경합니다."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
@@ -3347,12 +3796,13 @@ msgstr "품목 양식이 보관되어 있어서 조합할 수 없습니다."
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
 msgid ""
-"The quantity to purchase from this vendor to benefit from the unit price. If"
-" a vendor unit is set, quantity should be specified in this unit, otherwise "
+"The quantity to purchase from this vendor to benefit from the unit price. If "
+"a vendor unit is set, quantity should be specified in this unit, otherwise "
 "it should be specified in the default unit of the product."
 msgstr ""
-"단가를 활용하기 위해 이 공급업체로부터 구매할 수량입니다. 공급업체 단위를 설정한 경우, 수량은 해당 단위로 지정해야 하며, 그렇지 않은"
-" 경우에는 제품의 기본 단위로 입력해야 합니다."
+"단가를 활용하기 위해 이 공급업체로부터 구매할 수량입니다. 공급업체 단위를 설"
+"정한 경우, 수량은 해당 단위로 지정해야 하며, 그렇지 않은 경우에는 제품의 기"
+"본 단위로 입력해야 합니다."
 
 #. module: product
 #. odoo-python
@@ -3364,9 +3814,11 @@ msgstr "올림 방법은 반드시 양수여야 합니다."
 #: model:ir.model.fields,help:product.field_product_combo_item__lst_price
 #: model:ir.model.fields,help:product.field_product_product__lst_price
 msgid ""
-"The sale price is managed from the product template. Click on the 'Configure"
-" Variants' button to set the extra attribute prices."
-msgstr "판매 가격은 품목 양식에서 관리합니다. 추가 속성별 가격을 설정하려면 '세부 품목 설정' 버튼을 클릭하세요."
+"The sale price is managed from the product template. Click on the 'Configure "
+"Variants' button to set the extra attribute prices."
+msgstr ""
+"판매 가격은 품목 양식에서 관리합니다. 추가 속성별 가격을 설정하려면 '세부 품"
+"목 설정' 버튼을 클릭하세요."
 
 #. module: product
 #. odoo-python
@@ -3374,7 +3826,9 @@ msgstr "판매 가격은 품목 양식에서 관리합니다. 추가 속성별 �
 msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
-msgstr "%(value)s 값이 %(product)s 품목의 %(attribute)s 속성에 대해 정의되지 않았습니다."
+msgstr ""
+"%(value)s 값이 %(product)s 품목의 %(attribute)s 속성에 대해 정의되지 않았습니"
+"다."
 
 #. module: product
 #. odoo-python
@@ -3402,8 +3856,8 @@ msgid ""
 "to no possible variant. Please archive or delete your product directly if "
 "intended."
 msgstr ""
-"이러한 품목 속성과 값 및 예외 사항에 대한 구성 때문에 사용할 수 있는 세부 사양이 없습니다. 필요한 경우, 품목을 직접 보관 "
-"처리하거나 삭제하십시오."
+"이러한 품목 속성과 값 및 예외 사항에 대한 구성 때문에 사용할 수 있는 세부 사"
+"양이 없습니다. 필요한 경우, 품목을 직접 보관 처리하거나 삭제하십시오."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
@@ -3425,36 +3879,46 @@ msgstr "이 메모는 내부 용도로 사용됩니다."
 #: code:addons/product/models/product_template.py:0
 msgid ""
 "This product is part of a combo, so its type can't be changed to \"combo\"."
-msgstr "이 제품은 콤보 메뉴의 일부이므로 유형을 \"콤보\"로 변경할 수 없습니다. "
+msgstr ""
+"이 제품은 콤보 메뉴의 일부이므로 유형을 \"콤보\"로 변경할 수 없습니다. "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
 msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr "이 공급업체의 품목 코드는 견적요청서를 인쇄할 때 사용됩니다. 내부용으로 사용하려면 비워 두십시오."
+msgstr ""
+"이 공급업체의 품목 코드는 견적요청서를 인쇄할 때 사용됩니다. 내부용으로 사용"
+"하려면 비워 두십시오."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_name
 msgid ""
 "This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr "이 공급업체의 품목명은 견적요청서를 인쇄할 때 사용됩니다. 내부용으로 사용하려면 비워 두십시오."
+msgstr ""
+"이 공급업체의 품목명은 견적요청서를 인쇄할 때 사용됩니다. 내부용으로 사용하려"
+"면 비워 두십시오."
 
 #. module: product
-#: model:product.template,description_sale:product.consu_delivery_01_product_template
-msgid "Three Seater Sofa with Lounger in Steel Grey Colour"
-msgstr "스틸 소재의 3인용 회색 소파 및 라운저"
-
-#. module: product
-#: model:product.template,name:product.consu_delivery_01_product_template
-msgid "Three-Seat Sofa"
-msgstr "3인용 소파"
+#: model:product.attribute.value,name:product.pav_brand_tide
+msgid "Tide"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Today Activities"
 msgstr "오늘 활동"
+
+#. module: product
+#: model:product.template,name:product.consu_delivery_01_product_template
+msgid "Two-Seat Sofa"
+msgstr ""
+
+#. module: product
+#: model:product.template,description_sale:product.consu_delivery_01_product_template
+msgid "Two-Seater Sofa with Oak Wood Frame"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__type
@@ -3480,6 +3944,21 @@ msgstr "단위"
 #: code:addons/product/wizard/product_label_layout.py:0
 msgid "Unable to find report template for %s format"
 msgstr "%s 형식의 보고서 서식을 찾을 수 없습니다."
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_underarmour
+msgid "Under Armour"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_options_under_desk_pedestals
+msgid "Under-desk pedestals"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_uniqlo
+msgid "Uniqlo"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__uom_id
@@ -3631,11 +4110,13 @@ msgstr "값 수"
 #: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "Value of the product (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
+"        Used to value the product when the purchase cost is not known (e.g. "
+"inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
 "품목 가치입니다 (AVCO에서 자동 계산). \n"
-"          매입가를 모를 경우 품목 가치 평가를 하기 위해 사용합니다 (예: 재고 조정 시). \n"
+"          매입가를 모를 경우 품목 가치 평가를 하기 위해 사용합니다 (예: 재고 "
+"조정 시). \n"
 "           판매주문서에서 마진을 계산할 때 사용합니다."
 
 #. module: product
@@ -3727,6 +4208,11 @@ msgstr "세부선택사항 : %s"
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Variants"
 msgstr "세부선택"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_fabric_velvet
+msgid "Velvet"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__partner_id
@@ -3823,9 +4309,11 @@ msgstr "주의"
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid ""
-"We pay special attention to detail, which is why our desks are of a superior"
-" quality."
-msgstr "세부 디테일을 꼼꼼하게 따져 만들어진 저희 책상 제품은 최고의 품질을 자랑합니다."
+"We pay special attention to detail, which is why our desks are of a superior "
+"quality."
+msgstr ""
+"세부 디테일을 꼼꼼하게 따져 만들어진 저희 책상 제품은 최고의 품질을 자랑합니"
+"다."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
@@ -3858,12 +4346,18 @@ msgid "Whether the tag is displayed to customers."
 msgstr "고객에게 태그를 표시할지 여부를 선택하세요."
 
 #. module: product
-#: model:product.attribute.value,name:product.product_attribute_value_3
+#: model:product.attribute.value,name:product.pav_brand_whirlpool
+msgid "Whirlpool"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_white
 msgid "White"
 msgstr "흰색"
 
 #. module: product
-#: model:product.attribute.value,name:product.product_attribute_value_color_wood
+#: model:product.attribute.value,name:product.pav_fabric_wood
+#: model:product.attribute.value,name:product.pav_legs_wood
 msgid "Wood"
 msgstr "목재"
 
@@ -3873,12 +4367,28 @@ msgid "Write Date"
 msgstr "날짜 쓰기"
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_size_xl
+msgid "XL"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_xs
+msgid "XS"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_color_yellow
+msgid "Yellow"
+msgstr ""
+
+#. module: product
 #. odoo-python
 #: code:addons/product/wizard/update_product_attribute_value.py:0
 msgid ""
 "You are about to add the value \"%(attribute_value)s\" to %(product_count)s "
 "products."
-msgstr "%(product_count)s 품목에 \"%(attribute_value)s\" 값을 추가하려고 합니다."
+msgstr ""
+"%(product_count)s 품목에 \"%(attribute_value)s\" 값을 추가하려고 합니다."
 
 #. module: product
 #. odoo-python
@@ -3892,7 +4402,8 @@ msgstr "%s 품목의 추가 가격을 업데이트하려고 합니다."
 msgid ""
 "You are deactivating the pricelist feature. Every active pricelist will be "
 "archived."
-msgstr "가격표 기능이 비활성화된 상태입니다. 모든 사용 중인 가격표 보관 처리됩니다."
+msgstr ""
+"가격표 기능이 비활성화된 상태입니다. 모든 사용 중인 가격표 보관 처리됩니다."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price
@@ -3910,14 +4421,18 @@ msgstr "비용에 가격 인상을 적용할 수 있습니다."
 msgid ""
 "You can assign pricelists to your customers or select one when creating a "
 "new sales quotation."
-msgstr "고객에게 가격표를 배정하거나 새 판매 견적을 작성할 때 가격표를 선택할 수 있습니다."
+msgstr ""
+"고객에게 가격표를 배정하거나 새 판매 견적을 작성할 때 가격표를 선택할 수 있습"
+"니다."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_document__type
 msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
-msgstr "컴퓨터에서 파일을 업로드하거나 인터넷 링크를 복사하여 파일에 붙여넣기 할 수 있습니다."
+msgstr ""
+"컴퓨터에서 파일을 업로드하거나 인터넷 링크를 복사하여 파일에 붙여넣기 할 수 "
+"있습니다."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__image
@@ -3951,34 +4466,39 @@ msgstr "가격표 항목에서 주 가격표를 다른 가격표로 지정할 �
 #. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 msgid ""
-"You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
+"You cannot change the Variants Creation Mode of the attribute %(attribute)s "
+"because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
-"다음 품목에서 사용되고 있으므로 %(attribute)s 속성의 세부 사양 생성 모드를 변경할 수 없습니다:\n"
+"다음 품목에서 사용되고 있으므로 %(attribute)s 속성의 세부 사양 생성 모드를 변"
+"경할 수 없습니다:\n"
 "%(products)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid ""
-"You cannot change the attribute of the value %(value)s because it is used on"
-" the following products: %(products)s"
-msgstr "다음 품목에서 사용되고 있으므로 %(value)s 값의 속성을 변경할 수 없습니다: %(products)s"
+"You cannot change the attribute of the value %(value)s because it is used on "
+"the following products: %(products)s"
+msgstr ""
+"다음 품목에서 사용되고 있으므로 %(value)s 값의 속성을 변경할 수 없습니다: %"
+"(products)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 msgid ""
-"You cannot change the product of the value %(value)s set on product "
-"%(product)s."
-msgstr "%(product)s 품목에 설정되어 있는 %(value)s 값의 품목은 변경할 수 없습니다. "
+"You cannot change the product of the value %(value)s set on product %"
+"(product)s."
+msgstr ""
+"%(product)s 품목에 설정되어 있는 %(value)s 값의 품목은 변경할 수 없습니다. "
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_value.py:0
 msgid ""
-"You cannot change the value of the value %(value)s set on product "
-"%(product)s."
+"You cannot change the value of the value %(value)s set on product %"
+"(product)s."
 msgstr "%(product)s 품목에 설정되어 있는 %(value)s 값은 변경할 수 없습니다."
 
 #. module: product
@@ -4005,7 +4525,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 msgid ""
-"You cannot delete the attribute %(attribute)s because it is used on the following products:\n"
+"You cannot delete the attribute %(attribute)s because it is used on the "
+"following products:\n"
 "%(products)s"
 msgstr ""
 "다음 품목에서 사용되고 있으므로 %(attribute)s 속성을 삭제할 수 없습니다:\n"
@@ -4015,7 +4536,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid ""
-"You cannot delete the value %(value)s because it is used on the following products:\n"
+"You cannot delete the value %(value)s because it is used on the following "
+"products:\n"
 "%(products)s\n"
 msgstr ""
 "다음 품목에서 사용되고 있으므로 %(value)s 값을 삭제할 수 없습니다:\n"
@@ -4025,10 +4547,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
-"You cannot move the attribute %(attribute)s from the product %(product_src)s"
-" to the product %(product_dest)s."
+"You cannot move the attribute %(attribute)s from the product %(product_src)s "
+"to the product %(product_dest)s."
 msgstr ""
-"%(product_src)s 품목에서 %(product_dest)s 품목으로 %(attribute)s 속성을 이동할 수 없습니다."
+"%(product_src)s 품목에서 %(product_dest)s 품목으로 %(attribute)s 속성을 이동"
+"할 수 없습니다."
 
 #. module: product
 #. odoo-python
@@ -4036,17 +4559,20 @@ msgstr ""
 msgid ""
 "You cannot update related variants from the values. Please update related "
 "values from the variants."
-msgstr "값에서 관련 파생을 갱신할 수 없습니다. 파생에서 관련 값을 갱신하십시오."
+msgstr ""
+"값에서 관련 파생을 갱신할 수 없습니다. 파생에서 관련 값을 갱신하십시오."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
-"                            whether it's a storable product, a consumable or a service."
+"                            whether it's a storable product, a consumable or "
+"a service."
 msgstr ""
 "판매 또는 구매할 품목을 모두 정의해야 합니다.\n"
-"                           저장 가능 품목, 소모품, 서비스 등 모든 품목에 대해 지정하세요."
+"                           저장 가능 품목, 소모품, 서비스 등 모든 품목에 대"
+"해 지정하세요."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
@@ -4063,25 +4589,32 @@ msgstr ""
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service.\n"
-"                The product form contains information to simplify the sale process:\n"
-"                price, notes in the quotation, accounting data, procurement methods, etc."
+"                The product form contains information to simplify the sale "
+"process:\n"
+"                price, notes in the quotation, accounting data, procurement "
+"methods, etc."
 msgstr ""
 "판매 또는 구매할 품목을 반드시 모두 지정해야 합니다.\n"
 "                 저장 가능 품목이나 소모품, 서비스 중에서 지정하세요. \n"
-"                 판매 프로세스를 간소화할 수 있는 품목 양식 정보는 다음과 같습니다: \n"
+"                 판매 프로세스를 간소화할 수 있는 품목 양식 정보는 다음과 같"
+"습니다: \n"
 "                 가격, 견적서 메모, 회계 정보, 조달 방식 등을 활용해 보세요."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
 msgid ""
-"You must define a product for everything you sell, whether it's a physical product,\n"
+"You must define a product for everything you sell, whether it's a physical "
+"product,\n"
 "                a consumable or a service you offer to customers.\n"
-"                The product form contains information to simplify the sale process:\n"
-"                price, notes in the quotation, accounting data, procurement methods, etc."
+"                The product form contains information to simplify the sale "
+"process:\n"
+"                price, notes in the quotation, accounting data, procurement "
+"methods, etc."
 msgstr ""
 "저장 가능한 폼목, 소모품, 고객에게 제공하는 서비스 등 \n"
 "                 판매하는 모든 품목에 대해 정의해야 합니다.\n"
-"                 품목 양식에는 가격, 견적서의 참고 사항, 회계 데이터, 조달 방법 등\n"
+"                 품목 양식에는 가격, 견적서의 참고 사항, 회계 데이터, 조달 방"
+"법 등\n"
 "                  판매 절차를 단순화하는 정보가 포함되어 있습니다."
 
 #. module: product
@@ -4095,6 +4628,11 @@ msgstr "하나 이상 수량을 유지해야 합니다."
 #: code:addons/product/wizard/product_label_layout.py:0
 msgid "You need to set a positive quantity."
 msgstr "수량은 양수로 설정해야 합니다."
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_brand_zara
+msgid "Zara"
+msgstr ""
 
 #. module: product
 #. odoo-python
@@ -4225,3 +4763,30 @@ msgstr "부터"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid "1 year warranty extension"
+#~ msgstr "보증 기간 1년 연장"
+
+#~ msgid "2 year"
+#~ msgstr "2년"
+
+#~ msgid "Admin en Products / Create"
+#~ msgstr "품목 관리 / 생성"
+
+#~ msgid "Cleaning kit"
+#~ msgstr "클리닝 키트"
+
+#~ msgid "Extra Options"
+#~ msgstr "추가 옵션"
+
+#~ msgid "Plastic"
+#~ msgstr "플라스틱"
+
+#~ msgid "Protection kit"
+#~ msgstr "보호 키트"
+
+#~ msgid "Three Seater Sofa with Lounger in Steel Grey Colour"
+#~ msgstr "스틸 소재의 3인용 회색 소파 및 라운저"
+
+#~ msgid "Three-Seat Sofa"
+#~ msgstr "3인용 소파"

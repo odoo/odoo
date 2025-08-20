@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:08+0000\n"
-"PO-Revision-Date: 2025-08-18 23:11+0000\n"
+"PO-Revision-Date: 2025-08-20 09:55+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-4/mrp/"
 "ja/>\n"
@@ -61,7 +61,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
 msgid " When all components are available"
-msgstr "全ての構成品が利用可能なとき"
+msgstr " すべての構成品が利用可能なとき"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__bom_count
@@ -710,7 +710,7 @@ msgstr "変更後"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "All"
-msgstr "全て"
+msgstr "すべて"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__all_move_ids
@@ -734,9 +734,10 @@ msgid ""
 "Lines with 0 quantities can be used as optional lines. \n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs!"
 msgstr ""
-"全てのプロダクトの数量は0以上である必要があります。\n"
+"すべてのプロダクトの数量は0以上である必要があります。\n"
 "数量0の明細はオプション明細として使用できます。\n"
-"部品表で追加で商品を管理したい場合は、mrp_byproductモジュールをインストールして下さい。"
+"部品表で追加で商品を管理したい場合は、mrp_byproductモジュールをインストールし"
+"て下さい。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1425,7 +1426,8 @@ msgstr "生産数量を変更"
 msgid ""
 "Changing the product or variant will permanently reset all previously "
 "encoded variant-related data."
-msgstr "プロダクトまたはバリアントを変更すると、それまでにエンコードされたバリアント関連のデータは全て恒久的にリセットされます。"
+msgstr "プロダクトまたはバリアントを変更すると、それまでにエンコードされたバリアント"
+"関連のデータはすべて恒久的にリセットされます。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2006,12 +2008,15 @@ msgid ""
 "  Note that in the case of component Highlight Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
 "  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected."
 msgstr ""
-"部品表に定義された数量より多く、もしくはま少なく構成品を消費できるかどうかを定義:\n"
-"  * 許可: 全ての製造ユーザに対して許可\n"
-"  * 警告付き許可: 全ての製造ユーザに対して許可され、製造オーダをクローズする際に消費量の差の概要を表示\n"
-"   構成品ハイライト消費の場合、消費は手動でのみ登録され、消費警告は適宜適切な場合に発行\n"
-"* ブロック: 部品表の消費数量と異なる場合、マネージャのみが製造オーダーを完了できる\n"
-" "
+"部品表に定義された数量より多く、もしくはま少なく構成品を消費できるかどうかを"
+"定義:\n"
+"  * 許可: すべての製造ユーザに対して許可\n"
+"  * 警告付き許可: すべての製造ユーザに対して許可され、"
+"製造オーダをクローズする際に消費量の差の概要を表示\n"
+"   構成品ハイライト消費の場合、消費は手動でのみ登録され、"
+"消費警告は適宜適切な場合に発行\n"
+"* ブロック: "
+"部品表の消費数量と異なる場合、マネージャのみが製造オーダーを完了できる"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert_date
@@ -4361,7 +4366,7 @@ msgstr "生産"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Produce All"
-msgstr "全て生産"
+msgstr "すべて生産"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_batch_produce
@@ -5120,7 +5125,7 @@ msgstr "生産を表示"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_produce_all
 msgid "Show Produce All"
-msgstr "全て生産を表示"
+msgstr "すべて生産を表示"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__show_time_total
@@ -5418,7 +5423,7 @@ msgstr "作業区ビュー用の技術フィールド"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce_all
 msgid "Technical field to check if produce all button can be shown"
-msgstr "全て生産ボタンが表示されるかを確認するための技術フィールド"
+msgstr "すべて生産ボタンが表示されるかを確認するための技術フィールド"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce
@@ -5500,7 +5505,8 @@ msgid ""
 "The percentage of the final production cost for this by-product line "
 "(divided between the quantity produced).The total of all by-products' cost "
 "share must be less than or equal to 100."
-msgstr "この副産品の最終生産原価に占める割合(生産数量で割ったもの)。全ての副産品の原価割合の合計は100以下である必要があります。"
+msgstr "この副産品の最終生産原価に占める割合(生産数量で割ったもの)。すべての副産品の"
+"原価割合の合計は100以下である必要があります。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__cost_share
@@ -5658,8 +5664,10 @@ msgid ""
 "This menu gives you the full traceability of inventory operations on a specific product.\n"
 "                You can filter on the product to see all the past movements for the product."
 msgstr ""
-"このメニューにより、特定のプロダクトの在庫処理を全て追跡することができます。\n"
-"プロダクトを絞り込むことで、プロダクトの過去の動きを全て見ることができます。"
+"このメニューにより、特定のプロダクトの在庫処理をすべて追跡することができます"
+"。\n"
+"プロダクトを絞り込むことで、プロダクトの過去の動きをすべて見ることができます"
+"。"
 
 #. module: mrp
 #. odoo-python

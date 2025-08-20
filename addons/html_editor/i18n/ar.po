@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* html_editor
-# 
+#
 # Translators:
 # Malaz Abuidris <msea@odoo.com>, 2025
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-08-18 18:37+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: html_editor
 #. odoo-javascript
@@ -27,8 +28,8 @@ msgid ""
 "'Alt tag' specifies an alternate text for an image, if the image cannot be "
 "displayed (slow connection, missing image, screen reader ...)."
 msgstr ""
-"تحدد 'علامة التصنيف البديلة' نصاً بديلاً للصورة، إذا تعذّر عرض الصورة (بسبب "
-"بطء الاتصال، أو فقدان الصورة، أو مشكلة في مسح الشاشة،...). "
+"تحدد 'علامة التصنيف البديلة' نصاً بديلاً للصورة، إذا تعذّر عرض الصورة (بسبب بطء "
+"الاتصال، أو فقدان الصورة، أو مشكلة في مسح الشاشة،...). "
 
 #. module: html_editor
 #. odoo-javascript
@@ -89,8 +90,8 @@ msgstr "الإجراء %s ليس إجراء نافذة. لا تتوفر معاي
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Action %s not found, link preview is not available, please check your url is"
-" correct"
+"Action %s not found, link preview is not available, please check your url is "
+"correct"
 msgstr ""
 "لم يتم العثور على الإجراء%s ، لا تتوفر معاينة للرابط، يرجى التحقق من صحة "
 "عنوان url الخاص بك "
@@ -251,6 +252,12 @@ msgstr "مرفق"
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__local_url
 msgid "Attachment URL"
 msgstr "رابط URL للمرفق "
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Autoconvert to relative link"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -533,11 +540,12 @@ msgid ""
 "Discover a world of awesomeness in our copyright-free image haven. No legal "
 "drama, just nice images!"
 msgstr ""
-"اكتشف عالماَ من الروعة في ملاذ من الصور الخالية من حقوق الطبع والنشر. لا "
-"توجد أي مشاكل قانونية، فقط صور رائعة! "
+"اكتشف عالماَ من الروعة في ملاذ من الصور الخالية من حقوق الطبع والنشر. لا توجد "
+"أي مشاكل قانونية، فقط صور رائعة! "
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__display_name
 msgid "Display Name"
 msgstr "اسم العرض "
 
@@ -570,12 +578,6 @@ msgstr "تحرير"
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit Link"
 msgstr "تحرير الرابط "
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/navbar_link_popover.xml:0
-msgid "Edit Menu"
-msgstr "تحرير القائمة"
 
 #. module: html_editor
 #. odoo-javascript
@@ -679,6 +681,11 @@ msgstr "القلب رأسياً "
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Format"
 msgstr "التنسيق "
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -808,6 +815,7 @@ msgstr "Html"
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__id
 msgid "ID"
 msgstr "المُعرف"
 
@@ -1005,8 +1013,7 @@ msgstr "تم نسخ الرابط إلى الحافظة. "
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Link preview is not available because %s, please check if your url is "
-"correct"
+"Link preview is not available because %s, please check if your url is correct"
 msgstr ""
 "معاينة الرابط غير متوفرة بسبب %s، يرجى التحقق من صحة عنوان url الخاص بك "
 
@@ -1643,8 +1650,8 @@ msgid ""
 "This type of image is not supported for cropping.<br/>If you want to crop "
 "it, please first download it from the original source and upload it in Odoo."
 msgstr ""
-"هذا النوع من الصور لا يدعم خاصية القص.<br/> إذا أردت قصها، يرجى تنزيلها "
-"أولاً من المصدر الأصلي ثم رفعها في أودو. "
+"هذا النوع من الصور لا يدعم خاصية القص.<br/> إذا أردت قصها، يرجى تنزيلها أولاً "
+"من المصدر الأصلي ثم رفعها في أودو. "
 
 #. module: html_editor
 #. odoo-javascript
@@ -1979,3 +1986,6 @@ msgstr "بيكسل "
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "videos"
 msgstr "مقاطع الفيديو"
+
+#~ msgid "Edit Menu"
+#~ msgstr "تحرير القائمة"

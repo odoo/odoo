@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_picking_batch
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Marianna Ciofani, 2025
 # Sergio Zanchetta <primes2h@gmail.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-08-18 18:38+0000\n"
 "PO-Revision-Date: 2025-07-01 13:07+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: it\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -98,19 +99,23 @@ msgstr "<strong>→</strong>"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_lines
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"Un trasferimento non verrà aggiunto automaticamente ai lotti che supereranno il numero di righe se il trasferimento viene aggiunto.\n"
+"Un trasferimento non verrà aggiunto automaticamente ai lotti che supereranno "
+"il numero di righe se il trasferimento viene aggiunto.\n"
 "Il valore può essere pari a \"0\" se non vi è alcun limite."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
-"Un trasferimento non verrà aggiunto automaticamente ai lotti che supereranno il numero di trasferimenti.\n"
+"Un trasferimento non verrà aggiunto automaticamente ai lotti che supereranno "
+"il numero di trasferimenti.\n"
 "Il valore può essere pari a \"0\" se non vi è alcun limte."
 
 #. module: stock_picking_batch
@@ -800,6 +805,12 @@ msgid "Picking Type"
 msgstr "Tipologia prelievo"
 
 #. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+msgid "Please select at least two batch/wave transfers to merge."
+msgstr ""
+
+#. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
 msgid "Prepare Batch"
 msgstr "Prepara batch"
@@ -879,8 +890,7 @@ msgstr "Valutazioni"
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid ""
-"Regroup multiple orders into one picking and consolidate at the packing "
-"zone."
+"Regroup multiple orders into one picking and consolidate at the packing zone."
 msgstr ""
 "Raggruppa più ordini in un solo prelievo e consolidali nella zona di "
 "imballaggio."
@@ -918,14 +928,22 @@ msgstr "Data programmata"
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__scheduled_date
 msgid ""
 "Scheduled date for the transfers to be processed.\n"
-"              - If manually set then scheduled date for all transfers in batch will automatically update to this date.\n"
-"              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
-"                but this scheduled date will not be set for all transfers in batch."
+"              - If manually set then scheduled date for all transfers in "
+"batch will automatically update to this date.\n"
+"              - If not manually changed and transfers are added/removed/"
+"updated then this will be their earliest scheduled date\n"
+"                but this scheduled date will not be set for all transfers in "
+"batch."
 msgstr ""
 "Data programmata per i trasferimenti da elaborare.\n"
-"              - Se impostata in modo manuale, la data programmata per tutti i trasferimenti raggruppati viene aggiornata a questa data in modo automatico.\n"
-"              - Se non viene cambiata manualmente e i trasferimenti sono aggiunti/rimossi/aggiornati, corrisponde alla loro prima data utile programmata.\n"
-"                Non viene però impostata per tutti i trasferimenti raggruppati."
+"              - Se impostata in modo manuale, la data programmata per tutti "
+"i trasferimenti raggruppati viene aggiornata a questa data in modo "
+"automatico.\n"
+"              - Se non viene cambiata manualmente e i trasferimenti sono "
+"aggiunti/rimossi/aggiornati, corrisponde alla loro prima data utile "
+"programmata.\n"
+"                Non viene però impostata per tutti i trasferimenti "
+"raggruppati."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -984,8 +1002,8 @@ msgstr ""
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_category
 msgid ""
-"Split transfers by product category, then group transfers that have the same"
-" product category."
+"Split transfers by product category, then group transfers that have the same "
+"product category."
 msgstr ""
 "Dividi i trasferimenti per categoria prodotto, in seguito raggruppa i "
 "trasferimenti con la stessa categoria prodotto."
@@ -1070,11 +1088,13 @@ msgstr "Il seguente trasferimento raggruppato è stato aggiornato"
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid ""
-"The following transfers cannot be added to batch transfer %(batch)s. Please check their states and operation types.\n"
+"The following transfers cannot be added to batch transfer %(batch)s. Please "
+"check their states and operation types.\n"
 "\n"
 "Incompatibilities: %(incompatible_transfers)s"
 msgstr ""
-"I seguenti trasferimenti non possono essere aggiunti al trasferimento raggruppato %(batch)s. Controlla lo stato e i tipi di operazione.\n"
+"I seguenti trasferimenti non possono essere aggiunti al trasferimento "
+"raggruppato %(batch)s. Controlla lo stato e i tipi di operazione.\n"
 "\n"
 "Incompatibilità: %(incompatible_transfers)s"
 

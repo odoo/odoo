@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"POT-Creation-Date: 2025-08-18 18:37+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>, 2023\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
@@ -21,17 +21,35 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: product_matrix
-#: model:product.attribute.value,name:product_matrix.product_attribute_value_color_1
-msgid "Blue"
-msgstr "Plava"
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid ""
+"<small>Switch to the \"else\" condition of this block to view or edit the "
+"table.</small>"
+msgstr ""
+
+#. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid "<strong>Product matrix block</strong>"
+msgstr ""
+
+#. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid "Cell name"
+msgstr ""
 
 #. module: product_matrix
 #. odoo-javascript
-#: code:addons/product_matrix/static/src/js/product_matrix_dialog.js:0
+#: code:addons/product_matrix/static/src/xml/product_matrix_dialog.xml:0
 msgid "Choose Product Variants"
+msgstr ""
+
+#. module: product_matrix
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid "Column name"
 msgstr ""
 
 #. module: product_matrix
@@ -47,14 +65,16 @@ msgid "Discard"
 msgstr ""
 
 #. module: product_matrix
-#: model:product.attribute,name:product_matrix.product_attribute_gender
-msgid "Gender"
-msgstr "Spol"
+#: model:ir.model.fields,field_description:product_matrix.field_product_template__display_name
+#: model:ir.model.fields,field_description:product_matrix.field_product_template_attribute_value__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: product_matrix
-#: model:product.attribute.value,name:product_matrix.product_attribute_value_m
-msgid "Men"
-msgstr "Muški"
+#: model:ir.model.fields,field_description:product_matrix.field_product_template__id
+#: model:ir.model.fields,field_description:product_matrix.field_product_template_attribute_value__id
+msgid "ID"
+msgstr ""
 
 #. module: product_matrix
 #: model:product.template,name:product_matrix.matrix_product_template_shirt
@@ -68,11 +88,6 @@ msgid "Not available"
 msgstr "Nije dostupno"
 
 #. module: product_matrix
-#: model:product.attribute.value,name:product_matrix.product_attribute_value_color_2
-msgid "Pink"
-msgstr "Pink"
-
-#. module: product_matrix
 #: model:ir.model,name:product_matrix.model_product_template
 msgid "Product"
 msgstr "Proizvod"
@@ -83,36 +98,48 @@ msgid "Product Template Attribute Value"
 msgstr "Vrijednost atributa predloška proizvoda"
 
 #. module: product_matrix
-#: model:product.attribute.value,name:product_matrix.product_attribute_value_color_4
-msgid "Rainbow"
-msgstr "Duga"
-
-#. module: product_matrix
 #: model:product.template,description_sale:product_matrix.matrix_product_template_shirt
 msgid "Show your company love around you =)."
 msgstr "Proširite ljubav svoje tvrtke oko sebe :)"
 
 #. module: product_matrix
-#: model:product.attribute,name:product_matrix.product_attribute_size
-msgid "Size"
-msgstr "Veličina"
+#: model_terms:ir.ui.view,arch_db:product_matrix.matrix
+msgid ""
+"The matrix of product variants of this order will be displayed here, if "
+"there are any."
+msgstr ""
 
 #. module: product_matrix
-#: model:product.attribute.value,name:product_matrix.product_attribute_value_w
-msgid "Women"
-msgstr "Žensko"
+#: model_terms:ir.ui.view,arch_db:product_matrix.extra_price
+msgid "Variant price"
+msgstr ""
 
-#. module: product_matrix
-#: model:product.attribute.value,name:product_matrix.product_attribute_value_size_xl
-msgid "XL"
-msgstr "XL"
+#~ msgid "Blue"
+#~ msgstr "Plava"
 
-#. module: product_matrix
-#: model:product.attribute.value,name:product_matrix.product_attribute_value_size_xs
-msgid "XS"
-msgstr "XS"
+#~ msgid "Gender"
+#~ msgstr "Spol"
 
-#. module: product_matrix
-#: model:product.attribute.value,name:product_matrix.product_attribute_value_color_3
-msgid "Yellow"
-msgstr "Žuta"
+#~ msgid "Men"
+#~ msgstr "Muški"
+
+#~ msgid "Pink"
+#~ msgstr "Pink"
+
+#~ msgid "Rainbow"
+#~ msgstr "Duga"
+
+#~ msgid "Size"
+#~ msgstr "Veličina"
+
+#~ msgid "Women"
+#~ msgstr "Žensko"
+
+#~ msgid "XL"
+#~ msgstr "XL"
+
+#~ msgid "XS"
+#~ msgstr "XS"
+
+#~ msgid "Yellow"
+#~ msgstr "Žuta"

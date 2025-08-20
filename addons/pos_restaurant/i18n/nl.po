@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_restaurant
-# 
+#
 # Translators:
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # Manon Rondou, 2025
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-03 12:08+0000\n"
+"POT-Creation-Date: 2025-08-18 18:36+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_restaurant
@@ -66,7 +66,8 @@ msgstr "<strong>Verkooppunt:</strong>"
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid ""
-"A restaurant floor represents the place where customers are served, this is where you can\n"
+"A restaurant floor represents the place where customers are served, this is "
+"where you can\n"
 "                define and position the tables."
 msgstr ""
 "Een zaal stelt de plaats voor waarde klanten worden bediend, dit is waar je\n"
@@ -130,8 +131,8 @@ msgid ""
 "Adjust the amount authorized by payment terminals to add a tip after the "
 "customers left or at the end of the day."
 msgstr ""
-"Pas het bedrag aan dat is geautoriseerd door betaalterminals om een fooi toe"
-" te voegen nadat de klanten zijn vertrokken of aan het einde van de dag."
+"Pas het bedrag aan dat is geautoriseerd door betaalterminals om een fooi toe "
+"te voegen nadat de klanten zijn vertrokken of aan het einde van de dag."
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -149,7 +150,7 @@ msgid "Allows to print the Bill before payment."
 msgstr "Sta het afdrukken van de factuur toe, voordat er betaald wordt."
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_anchovy
+#: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_anchovy
 msgid "Anchovy"
 msgstr "Ansjovis"
 
@@ -203,7 +204,7 @@ msgid "Bacon Burger"
 msgstr "Bacon Burger"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_fries
+#: model:product.attribute.value,name:pos_restaurant.pav_sides_fries
 msgid "Belgian fresh homemade fries"
 msgstr "Huisgemaakte frietjes"
 
@@ -226,7 +227,7 @@ msgid "Bill Splitting"
 msgstr "Rekening splitsen"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_black_olives
+#: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_black_olives
 msgid "Black olives"
 msgstr "Zwarte olijven"
 
@@ -494,14 +495,12 @@ msgid "Espresso"
 msgstr "Espresso"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_extra_cheese
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_extra_cheese_pasta
+#: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_extra_cheese
 msgid "Extra cheese"
 msgstr "Extra kaas"
 
 #. module: pos_restaurant
-#: model:product.attribute,name:pos_restaurant.product_extra_pasta
-#: model:product.attribute,name:pos_restaurant.product_extra_pizza
+#: model:product.attribute,name:pos_restaurant.pa_extras_pizza
 msgid "Extras"
 msgstr "Extra's"
 
@@ -623,7 +622,7 @@ msgid "Green Tea"
 msgstr "Groene thee"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_grilled_vegetables
+#: model:product.attribute.value,name:pos_restaurant.pav_sides_grilled_vegetables
 msgid "Grilled vegetables"
 msgstr "Gegrilde groenten"
 
@@ -671,8 +670,8 @@ msgstr "Ice Tea"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__active
 msgid ""
-"If false, the table is deactivated and will not be available in the point of"
-" sale"
+"If false, the table is deactivated and will not be available in the point of "
+"sale"
 msgstr ""
 "Indien onwaar wordt de tafel gedeactiveerd en is deze niet meer beschikbaar "
 "in de kassa"
@@ -794,8 +793,7 @@ msgid "Mozzarella Sandwich"
 msgstr "Mozzarella Sandwich"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_mushroom
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_mushroom_pasta
+#: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_mushroom
 msgid "Mushroom"
 msgstr "Paddenstoel"
 
@@ -935,7 +933,7 @@ msgid "Pepe, latte, gorgonzola dolce, taleggio, parmigiano reggiano"
 msgstr "Pepe, latte, gorgonzola dolce, taleggio, parmigiano reggiano"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_peperoni
+#: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_pepperoni
 msgid "Pepperoni"
 msgstr "Pepperoni"
 
@@ -971,10 +969,12 @@ msgstr "Plan"
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid ""
-"Please close and validate the following open PoS Session before modifying this floor.\n"
+"Please close and validate the following open PoS Session before modifying "
+"this floor.\n"
 "Open session: %(session_names)s"
 msgstr ""
-"Sluit en valideer eerst de volgende openstaande Kassasessie voordat je deze zaal wijzigt.\n"
+"Sluit en valideer eerst de volgende openstaande Kassasessie voordat je deze "
+"zaal wijzigt.\n"
 "Open sessie: %(session_names)s"
 
 #. module: pos_restaurant
@@ -1023,7 +1023,7 @@ msgid "Pos Set Tip After Payment"
 msgstr "Kassa stelt fooi in na betaling"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_potato_thyme
+#: model:product.attribute.value,name:pos_restaurant.pav_sides_potato_thyme
 msgid "Potatoes with thyme"
 msgstr "Aardappelen met tijm"
 
@@ -1060,8 +1060,8 @@ msgstr "Tafel vrijgeven"
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
 msgid "Removing a floor cannot be undone. Do you still want to remove %s?"
 msgstr ""
-"Het verwijderen van een zaal kan niet worden ongedaan gemaakt. Wil je %s nog"
-" steeds verwijderen?"
+"Het verwijderen van een zaal kan niet worden ongedaan gemaakt. Wil je %s nog "
+"steeds verwijderen?"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1167,8 +1167,7 @@ msgstr "Selecteer een tafel om de order te verplaatsen"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Select the table first or after registering the order"
-msgstr ""
-"Selecteer eerst de tafel, of doe dit na het opnemen van de bestelling."
+msgstr "Selecteer eerst de tafel, of doe dit na het opnemen van de bestelling."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__sequence
@@ -1205,7 +1204,7 @@ msgid "Shape"
 msgstr "Vorm"
 
 #. module: pos_restaurant
-#: model:product.attribute,name:pos_restaurant.product_sides_buns_pizza
+#: model:product.attribute,name:pos_restaurant.pa_sides
 msgid "Sides"
 msgstr "Bijgerecht"
 
@@ -1216,7 +1215,7 @@ msgid "Signature"
 msgstr "Handtekening"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_value_smashed_sweet_potatoes
+#: model:product.attribute.value,name:pos_restaurant.pav_sides_smashed_sweet_potato
 msgid "Smashed sweet potatoes"
 msgstr "Gestampte zoete aardappelen"
 
@@ -1270,7 +1269,7 @@ msgid "Sushi Lunch Combo"
 msgstr "Sushi Lunchcombo"
 
 #. module: pos_restaurant
-#: model:product.attribute.value,name:pos_restaurant.product_attribute_sweet_potato
+#: model:product.attribute.value,name:pos_restaurant.pav_sides_sweet_potato
 msgid "Sweet potato fries"
 msgstr "Zoete aardappelfrietjes"
 
@@ -1362,8 +1361,7 @@ msgstr "De tafel waar deze order geserveerd is"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__color
-msgid ""
-"The table's color, expressed as a valid 'background' CSS property value"
+msgid "The table's color, expressed as a valid 'background' CSS property value"
 msgstr ""
 "De tafelkleur, voorgesteld als een valide 'background' CSS eigenschap waarde"
 
@@ -1375,8 +1373,8 @@ msgstr "De tafel zijn hoogte in pixels"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_h
 msgid ""
-"The table's horizontal position from the left side to the table's center, in"
-" pixels"
+"The table's horizontal position from the left side to the table's center, in "
+"pixels"
 msgstr ""
 "De tafel zijn horizontale positie van de linkse kant van de tafel naar het "
 "midden van de tafel, in pixels"
@@ -1539,6 +1537,12 @@ msgid "Width"
 msgstr "Breedte"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You are currently transferring the order %s"
+msgstr ""
+
+#. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid ""
@@ -1594,6 +1598,12 @@ msgid ""
 msgstr ""
 "Je kunt een tafel die wordt gebruikt in een Kassa-sessie niet verwijderen, "
 "sluit eerst de sessie(s)."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You cannot transfer an order to itself"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript

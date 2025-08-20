@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_project
-# 
+#
 # Translators:
 # Deniz Guvener_Odoo <degu@odoo.com>, 2025
 # Ediz Duman <neps1192@gmail.com>, 2025
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-08-18 18:38+0000\n"
 "PO-Revision-Date: 2025-07-01 13:07+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: sale_project
@@ -29,7 +29,8 @@ msgid ""
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
 "                    No milestones found. Let's create one!\n"
 "                </p><p>\n"
-"                    Track major progress points that must be reached to achieve success.\n"
+"                    Track major progress points that must be reached to "
+"achieve success.\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -37,7 +38,8 @@ msgstr ""
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
 "                    Hiçbir kilometre taşı bulunamadı!\n"
 "                </p><p>\n"
-"                   Başarıya ulaşmak için ulaşılması gereken önemli ilerleme noktalarını izleyin.\n"
+"                   Başarıya ulaşmak için ulaşılması gereken önemli ilerleme "
+"noktalarını izleyin.\n"
 "                </p>\n"
 "            "
 
@@ -77,7 +79,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid ""
 "<span class=\"o_stat_text\">\n"
-"                            <span class=\"o_stat_value\">0</span> Sales Order\n"
+"                            <span class=\"o_stat_value\">0</span> Sales "
+"Order\n"
 "                        </span>\n"
 "                        <span class=\"o_stat_text\">\n"
 "                            Make Billable\n"
@@ -120,8 +123,10 @@ msgstr "<span>)</span>"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid ""
-"A project must be defined on the quotation %(order)s or on the form of products creating a task on order.\n"
-"The following product need a project in which to put its task: %(product_name)s"
+"A project must be defined on the quotation %(order)s or on the form of "
+"products creating a task on order.\n"
+"The following product need a project in which to put its task: %"
+"(product_name)s"
 msgstr ""
 
 #. module: sale_project
@@ -135,10 +140,13 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 
@@ -441,13 +449,19 @@ msgstr "Daha fazla yükle"
 #: model:ir.model.fields,help:sale_project.field_product_product__service_type
 #: model:ir.model.fields,help:sale_project.field_product_template__service_type
 msgid ""
-"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
-"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
-"Create a task and track hours: Create a task on the sales order validation and track the work hours."
+"Manually set quantities on order: Invoice based on the manually entered "
+"quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related "
+"timesheet.\n"
+"Create a task and track hours: Create a task on the sales order validation "
+"and track the work hours."
 msgstr ""
-"Siparişte Miktarları Elle Belirle: Faturayı oluştururken, analitik hesap oluşturmadan, elle belirlenmiş miktarları kullan\n"
-"Sözleşmelerde Çalışma Çizelgesi: Çalışma çizelgesine girilmiş olan saatlere göre faturalandırma yap.\n"
-"Görev oluştur ve süreyi izle: Müşteri siparişi doğrulaması hakkında bir görev oluşturun ve çalışma saatlerini izleyin."
+"Siparişte Miktarları Elle Belirle: Faturayı oluştururken, analitik hesap "
+"oluşturmadan, elle belirlenmiş miktarları kullan\n"
+"Sözleşmelerde Çalışma Çizelgesi: Çalışma çizelgesine girilmiş olan saatlere "
+"göre faturalandırma yap.\n"
+"Görev oluştur ve süreyi izle: Müşteri siparişi doğrulaması hakkında bir "
+"görev oluşturun ve çalışma saatlerini izleyin."
 
 #. module: sale_project
 #. odoo-python
@@ -510,8 +524,8 @@ msgstr "İş Ortağı"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
 msgid ""
-"Percentage of the ordered quantity that will automatically be delivered once"
-" the milestone is reached."
+"Percentage of the ordered quantity that will automatically be delivered once "
+"the milestone is reached."
 msgstr ""
 "Kilometre taşına ulaşıldığında otomatik olarak teslim edilecek sipariş "
 "edilen miktarın yüzdesi."
@@ -547,8 +561,8 @@ msgstr "Ürün Varyantı"
 #: model:ir.model.fields,help:sale_project.field_project_project__reinvoiced_sale_order_id
 msgid ""
 "Products added to stock pickings, whose operation type is configured to "
-"generate analytic costs, will be re-invoiced in this sales order if they are"
-" set up for it."
+"generate analytic costs, will be re-invoiced in this sales order if they are "
+"set up for it."
 msgstr ""
 
 #. module: sale_project
@@ -663,13 +677,23 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
 msgid ""
-"Sales Order Item to which the time spent on this task will be added in order to be invoiced to your customer.\n"
-"By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
-"Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
+"Sales Order Item to which the time spent on this task will be added in order "
+"to be invoiced to your customer.\n"
+"By default the sales order item set on the project will be selected. In the "
+"absence of one, the last prepaid sales order item that has time remaining "
+"will be used.\n"
+"Remove the sales order item in order to make this task non billable. You can "
+"also change or remove the sales order item of each timesheet entry "
+"individually."
 msgstr ""
-"Müşterinize fatura edilmek üzere bu görev için harcanan zamanın ekleneceği Müşteri Siparişi Kalemi.\n"
-"Varsayılan olarak, projede ayarlanan satış siparişi kalemi seçilecektir. Birinin olmaması durumunda, kalan süresi olan son ön ödemeli müşteri siparişi kalemi kullanılacaktır.\n"
-"Bu görevi faturalanamaz yapmak için satış siparişi kalemini kaldırın. Ayrıca, her bir çalışma çizelgesi girişinin satış siparişi kalemini ayrı ayrı değiştirebilir veya kaldırabilirsiniz."
+"Müşterinize fatura edilmek üzere bu görev için harcanan zamanın ekleneceği "
+"Müşteri Siparişi Kalemi.\n"
+"Varsayılan olarak, projede ayarlanan satış siparişi kalemi seçilecektir. "
+"Birinin olmaması durumunda, kalan süresi olan son ön ödemeli müşteri "
+"siparişi kalemi kullanılacaktır.\n"
+"Bu görevi faturalanamaz yapmak için satış siparişi kalemini kaldırın. "
+"Ayrıca, her bir çalışma çizelgesi girişinin satış siparişi kalemini ayrı "
+"ayrı değiştirebilir veya kaldırabilirsiniz."
 
 #. module: sale_project
 #. odoo-javascript
@@ -695,10 +719,15 @@ msgstr "Satış Siparişleri"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
 msgid ""
-"Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
-"It can be modified on each task and timesheet entry individually if necessary."
+"Sales order item that will be selected by default on the tasks and "
+"timesheets of this project, except if the employee set on the timesheets is "
+"explicitely linked to another sales order item on the project.\n"
+"It can be modified on each task and timesheet entry individually if "
+"necessary."
 msgstr ""
-"Zaman çizelgelerinde ayarlanan çalışanın projedeki başka bir satış siparişi kalemine açıkça bağlı olması dışında, bu projenin görevlerinde ve zaman çizelgelerinde varsayılan olarak seçilecek satış siparişi kalemi.\n"
+"Zaman çizelgelerinde ayarlanan çalışanın projedeki başka bir satış siparişi "
+"kalemine açıkça bağlı olması dışında, bu projenin görevlerinde ve zaman "
+"çizelgelerinde varsayılan olarak seçilecek satış siparişi kalemi.\n"
 "Gerekirse her görev ve zaman çizelgesi girişinde ayrı ayrı değiştirilebilir."
 
 #. module: sale_project
@@ -846,18 +875,13 @@ msgid ""
 "        30h Allocate 30 hours to the task\n"
 "        #tags Set tags on the task\n"
 "        @user Assign the task to a user\n"
-"        ! Set the task a high priority\n"
+"        ! Set the task a medium priority\n"
+"        !! Set the task a high priority\n"
+"        !!! Set the task a urgent priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
-"Yeni görevler oluşturmak için başlıkta bu anahtar kelimeleri kullanın:\n"
-"\n"
-"        30s Göreve 30 saat ayırın \n"
-"        #etiketler Görev üzerinde etiketler oluşturun\n"
-"        @kullanıcı Görevi bir kullanıcıya atayın\n"
-"        ! Görevi yüksek önem derecesine sahip olarak ayarlayın\n"
-"\n"
-"        Doğru formatı ve sırayı kullandığınızdan emin olun örn. Yapılandırma ekranını iyileştirin 5s #özellik #v16 @Mitchell !"
 
 #. module: sale_project
 #. odoo-python
@@ -889,8 +913,8 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
-"%(product_id)syeniden faturalanan bir gider olduğu için %(order_id)sgörevine"
-" bağlayamazsınız."
+"%(product_id)syeniden faturalanan bir gider olduğu için %(order_id)sgörevine "
+"bağlayamazsınız."
 
 #. module: sale_project
 #. odoo-python
@@ -915,3 +939,24 @@ msgstr ""
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "sale_order_id"
 msgstr ""
+
+#~ msgid ""
+#~ "Use these keywords in the title to set new tasks:\n"
+#~ "\n"
+#~ "        30h Allocate 30 hours to the task\n"
+#~ "        #tags Set tags on the task\n"
+#~ "        @user Assign the task to a user\n"
+#~ "        ! Set the task a high priority\n"
+#~ "\n"
+#~ "        Make sure to use the right format and order e.g. Improve the "
+#~ "configuration screen 5h #feature #v16 @Mitchell !"
+#~ msgstr ""
+#~ "Yeni görevler oluşturmak için başlıkta bu anahtar kelimeleri kullanın:\n"
+#~ "\n"
+#~ "        30s Göreve 30 saat ayırın \n"
+#~ "        #etiketler Görev üzerinde etiketler oluşturun\n"
+#~ "        @kullanıcı Görevi bir kullanıcıya atayın\n"
+#~ "        ! Görevi yüksek önem derecesine sahip olarak ayarlayın\n"
+#~ "\n"
+#~ "        Doğru formatı ve sırayı kullandığınızdan emin olun örn. "
+#~ "Yapılandırma ekranını iyileştirin 5s #özellik #v16 @Mitchell !"

@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* analytic
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Thi Huong Nguyen, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-03 12:09+0000\n"
+"POT-Creation-Date: 2025-08-18 18:37+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: analytic
@@ -25,6 +25,12 @@ msgstr ""
 #: code:addons/analytic/models/analytic_account.py:0
 msgid "%s (copy)"
 msgstr "%s (sao chép)"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_line.py:0
+msgid "%s analytic lines created"
+msgstr ""
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
@@ -141,6 +147,7 @@ msgstr "Số tài khoản phân tích"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__analytic_distribution
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution
 msgid "Analytic Distribution"
 msgstr "Phân bổ phân tích"
@@ -212,6 +219,7 @@ msgstr "Kế hoạch phân tích"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_precision
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__analytic_precision
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_precision
 msgid "Analytic Precision"
 msgstr "Độ chính xác phân tích"
@@ -486,6 +494,12 @@ msgid "Domain"
 msgstr "Miền"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Don't update"
+msgstr ""
+
+#. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_rd_finance
 msgid "Finance"
 msgstr "Tài chính"
@@ -554,11 +568,13 @@ msgstr "Nếu chọn, một số tin nhắn sẽ có lỗi gửi."
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sales orders and projects are implemented using\n"
-"                analytic accounts. You can track costs and revenues to analyse\n"
+"                analytic accounts. You can track costs and revenues to "
+"analyse\n"
 "                your margins easily."
 msgstr ""
 "Trong Odoo, các dự án và đơn bán hàng được thực hiện bằng cách sử dụng\n"
-"                tài khoản phân tích. Bạn có thể theo dõi chi phí và doanh thu để phân tích\n"
+"                tài khoản phân tích. Bạn có thể theo dõi chi phí và doanh "
+"thu để phân tích\n"
 "                lợi nhuận một cách dễ dàng. "
 
 #. module: analytic
@@ -629,6 +645,12 @@ msgstr "Millennium Industries"
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__business_domain__general
 msgid "Miscellaneous"
 msgstr "Thông tin khác"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Multi edit"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__name
@@ -792,13 +814,17 @@ msgstr "Nghiên cứu & Phát triển"
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sales orders\n"
-"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                invoices. Customer invoices can be created based on sales "
+"orders\n"
+"                (fixed price invoices), on timesheets (based on the work "
+"done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 "Doanh thu sẽ được tạo tự động khi bạn tạo hóa đơn bán\n"
-"                hàng. Hóa đơn bán hàng có thể được tạo dựa trên đơn bán hàng\n"
-"                (hóa đơn giá cố định), bảng chấm công (dựa trên công việc đã hoàn thành) hoặc\n"
+"                hàng. Hóa đơn bán hàng có thể được tạo dựa trên đơn bán "
+"hàng\n"
+"                (hóa đơn giá cố định), bảng chấm công (dựa trên công việc đã "
+"hoàn thành) hoặc\n"
 "                chi phí (ví dụ: tái lập hóa đơn chi phí đi lại)."
 
 #. module: analytic
@@ -841,8 +867,8 @@ msgid ""
 "will automatically take this as an analytic account)"
 msgstr ""
 "Chọn một công ty mà phân phối phân tích sẽ được sử dụng (ví dụ: tạo hóa đơn "
-"bán hàng mới hoặc Đơn bán hàng nếu chọn công ty này, công ty sẽ được tự động"
-" chọn làm tài khoản phân tích)"
+"bán hàng mới hoặc Đơn bán hàng nếu chọn công ty này, công ty sẽ được tự động "
+"chọn làm tài khoản phân tích)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
@@ -851,9 +877,9 @@ msgid ""
 "(e.g. create new customer invoice or Sales order if we select this partner, "
 "it will automatically take this as an analytic account)"
 msgstr ""
-"Chọn danh mục đối tác mà phân phối phân tích sẽ được sử dụng (ví dụ: tạo hóa"
-" đơn bán hàng mới hoặc Đơn bán hàng nếu chọn đối tác này, danh mục đối tác "
-"sẽ được tự động chọn làm tài khoản phân tích)"
+"Chọn danh mục đối tác mà phân phối phân tích sẽ được sử dụng (ví dụ: tạo hóa "
+"đơn bán hàng mới hoặc Đơn bán hàng nếu chọn đối tác này, danh mục đối tác sẽ "
+"được tự động chọn làm tài khoản phân tích)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
@@ -904,6 +930,12 @@ msgid "Unit"
 msgstr "Đơn vị"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Update"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
 msgid "User"
 msgstr "Người dùng"
@@ -920,8 +952,8 @@ msgstr "Hiển thị với tất cả"
 #. odoo-python
 #: code:addons/analytic/models/analytic_account.py:0
 msgid ""
-"Whoa there! Making this change would wipe out your current data. Let's avoid"
-" that, shall we?"
+"Whoa there! Making this change would wipe out your current data. Let's avoid "
+"that, shall we?"
 msgstr ""
 "Khoan đã! Thay đổi này sẽ xóa toàn bộ dữ liệu hiện tại của bạn. Hãy tránh "
 "điều đó nhé!"
@@ -950,8 +982,8 @@ msgid ""
 "company but a model shared between companies or with a different company"
 msgstr ""
 "Bạn đã xác định một phân bổ với (các) tài khoản phân tích thuộc về một công "
-"ty xác định nhưng mô hình đã được chia sẻ giữa các công ty hoặc với một công"
-" ty khác"
+"ty xác định nhưng mô hình đã được chia sẻ giữa các công ty hoặc với một công "
+"ty khác"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form

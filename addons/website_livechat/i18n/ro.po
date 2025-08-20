@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-08-18 18:38+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Cozmin Candea <office@terrabit.ro>, 2023\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
@@ -35,18 +35,14 @@ msgstr "# Sesiuni"
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
 msgid ""
-"%s started a conversation with %s.\n"
-"                        The chat request has been canceled."
+"%(visitor)s started a conversation with %(operator)s.\n"
+"The chat request has been cancelled"
 msgstr ""
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "<small>%</small>"
-msgstr ""
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "<span>Livechat Channel</span>"
+#. odoo-javascript
+#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.js:0
+msgid "(closed on: %(date)s)"
 msgstr ""
 
 #. module: website_livechat
@@ -61,16 +57,6 @@ msgid "Avatar"
 msgstr "Avatar"
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "Bad"
-msgstr "Rău"
-
-#. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__can_publish
-msgid "Can Publish"
-msgstr "Poate Publica"
-
-#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
 msgid "Channel"
 msgstr "Canal"
@@ -79,6 +65,12 @@ msgstr "Canal"
 #: model_terms:ir.ui.view,arch_db:website_livechat.im_livechat_channel_view_form_add
 msgid "Channel Name"
 msgstr "Nume canal"
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/models/im_livechat_channel.py:0
+msgid "Channel created: %(name)s"
+msgstr ""
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
@@ -108,19 +100,21 @@ msgid "Config Settings"
 msgstr "Setări de configurare"
 
 #. module: website_livechat
-#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_description
-msgid "Description of the channel displayed on the website page"
-msgstr "Descrierea canalului afișat pe pagina site-ului"
-
-#. module: website_livechat
 #: model:ir.model,name:website_livechat.model_discuss_channel
 msgid "Discussion Channel"
 msgstr "Canal Discuții"
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "Great"
-msgstr "Grozav"
+#: model:ir.model.fields,field_description:website_livechat.field_chatbot_script__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_chatbot_script_step__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_discuss_channel__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_ir_http__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_website__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_ir_http
@@ -128,25 +122,21 @@ msgid "HTTP Routing"
 msgstr "Rutare HTTP"
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "Happy face"
-msgstr "Față fericită"
-
-#. module: website_livechat
-#. odoo-javascript
-#: code:addons/website_livechat/static/src/web/thread_patch.xml:0
-msgid "History"
-msgstr "Istoric"
+#: model:ir.model.fields,field_description:website_livechat.field_chatbot_script__id
+#: model:ir.model.fields,field_description:website_livechat.field_chatbot_script_step__id
+#: model:ir.model.fields,field_description:website_livechat.field_discuss_channel__id
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__id
+#: model:ir.model.fields,field_description:website_livechat.field_ir_http__id
+#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_livechat.field_website__id
+#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__id
+msgid "ID"
+msgstr ""
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
 msgid "In Conversation"
 msgstr "În conversație"
-
-#. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__is_published
-msgid "Is Published"
-msgstr "Este Publicat"
 
 #. module: website_livechat
 #. odoo-javascript
@@ -155,25 +145,9 @@ msgid "Lang"
 msgstr "Limbă"
 
 #. module: website_livechat
-#. odoo-python
-#: code:addons/website_livechat/models/website.py:0
-msgid "Live Support"
-msgstr "Suport în timp real"
-
-#. module: website_livechat
 #: model:ir.model,name:website_livechat.model_im_livechat_channel
 msgid "Livechat Channel"
 msgstr "Canal Livechat"
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_list_page
-msgid "Livechat Support Channels"
-msgstr ""
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "Neutral face"
-msgstr "Față neutră"
 
 #. module: website_livechat
 #: model:ir.actions.act_window,name:website_livechat.im_livechat_channel_action_add
@@ -187,16 +161,6 @@ msgid "No Livechat Channel allows you to send a chat request for website %s."
 msgstr ""
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "Not rated yet"
-msgstr "Neevaluat inca"
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "Okay"
-msgstr "Ok"
-
-#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
 msgid "Operator Avatar"
 msgstr ""
@@ -207,6 +171,18 @@ msgid "Operator Name"
 msgstr "Nume operator"
 
 #. module: website_livechat
+#. odoo-javascript
+#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
+msgid "Recent conversations"
+msgstr ""
+
+#. module: website_livechat
+#. odoo-javascript
+#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
+msgid "Recent page views"
+msgstr ""
+
+#. module: website_livechat
 #. odoo-python
 #: code:addons/website_livechat/models/website_visitor.py:0
 msgid ""
@@ -215,11 +191,6 @@ msgid ""
 msgstr ""
 "Destinatarii nu sunt disponibili. Reîmprospătați pagina pentru a obține "
 "statutul de vizitator cel mai recent."
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "Sad face"
-msgstr "Față tristă"
 
 #. module: website_livechat
 #: model:ir.actions.server,name:website_livechat.website_livechat_send_chat_request_action_server
@@ -242,30 +213,9 @@ msgid "Speaking with"
 msgstr "Vorbind cu"
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "Statistics"
-msgstr "Statistica"
-
-#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.chatbot_script_view_form
 msgid "Test"
 msgstr "Test"
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "The"
-msgstr "-"
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "The Team"
-msgstr "Echipa"
-
-#. module: website_livechat
-#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_url
-msgid "The full URL to access the document through the website."
-msgstr ""
-"URL-ul complet pentru accesarea documentului prin intermediul site-ului web."
 
 #. module: website_livechat
 #. odoo-python
@@ -274,24 +224,15 @@ msgid "The visitor"
 msgstr "Vizitatorul"
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_list_page
-msgid "There are no public livechat channels to show."
-msgstr ""
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "There are no ratings for this channel for now."
-msgstr "Nu există evaluări pentru acest canal deocamdată."
-
-#. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_published
-msgid "Visible on current website"
-msgstr "Vizibil pe site-ul curent"
-
-#. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_discuss_channel__livechat_visitor_id
 msgid "Visitor"
 msgstr "Vizitator"
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/models/discuss_channel.py:0
+msgid "Visitor #%(id)d left the conversation."
+msgstr ""
 
 #. module: website_livechat
 #. odoo-python
@@ -302,16 +243,14 @@ msgstr ""
 
 #. module: website_livechat
 #. odoo-python
-#. odoo-javascript
 #: code:addons/website_livechat/controllers/main.py:0
-#: code:addons/website_livechat/static/src/web/persona_model_patch.js:0
 msgid "Visitor #%s"
 msgstr ""
 
 #. module: website_livechat
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
-msgid "Visitor %s left the conversation."
+msgid "Visitor left the conversation."
 msgstr ""
 
 #. module: website_livechat
@@ -331,7 +270,7 @@ msgstr "Vizitatori"
 
 #. module: website_livechat
 #. odoo-javascript
-#: code:addons/website_livechat/static/src/web/thread_patch.xml:0
+#: code:addons/website_livechat/static/src/web/livechat_channel_info_list_patch.xml:0
 #: model:ir.model,name:website_livechat.model_website
 msgid "Website"
 msgstr "Pagină web"
@@ -347,11 +286,6 @@ msgid "Website Live Chat Channel"
 msgstr ""
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_url
-msgid "Website URL"
-msgstr "URL website"
-
-#. module: website_livechat
 #. odoo-python
 #: code:addons/website_livechat/tests/test_livechat_basic_flow.py:0
 #: model:ir.model,name:website_livechat.model_website_visitor
@@ -359,9 +293,11 @@ msgid "Website Visitor"
 msgstr "Vizitator al sitului"
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_description
-msgid "Website description"
-msgstr "Descriere website"
+#: model:ir.model.fields,field_description:website_livechat.field_discuss_channel__is_pending_chat_request
+msgid ""
+"When created from an operator, whether the channel is yet to be opened on "
+"the visitor side."
+msgstr ""
 
 #. module: website_livechat
 #. odoo-python
@@ -369,7 +305,67 @@ msgstr "Descriere website"
 msgid "an operator"
 msgstr "un operator"
 
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "last feedbacks"
-msgstr "ultimele feedback-uri"
+#~ msgid "Bad"
+#~ msgstr "Rău"
+
+#~ msgid "Can Publish"
+#~ msgstr "Poate Publica"
+
+#~ msgid "Description of the channel displayed on the website page"
+#~ msgstr "Descrierea canalului afișat pe pagina site-ului"
+
+#~ msgid "Great"
+#~ msgstr "Grozav"
+
+#~ msgid "Happy face"
+#~ msgstr "Față fericită"
+
+#~ msgid "History"
+#~ msgstr "Istoric"
+
+#~ msgid "Is Published"
+#~ msgstr "Este Publicat"
+
+#~ msgid "Live Support"
+#~ msgstr "Suport în timp real"
+
+#~ msgid "Neutral face"
+#~ msgstr "Față neutră"
+
+#~ msgid "Not rated yet"
+#~ msgstr "Neevaluat inca"
+
+#~ msgid "Okay"
+#~ msgstr "Ok"
+
+#~ msgid "Sad face"
+#~ msgstr "Față tristă"
+
+#~ msgid "Statistics"
+#~ msgstr "Statistica"
+
+#~ msgid "The"
+#~ msgstr "-"
+
+#~ msgid "The Team"
+#~ msgstr "Echipa"
+
+#~ msgid "The full URL to access the document through the website."
+#~ msgstr ""
+#~ "URL-ul complet pentru accesarea documentului prin intermediul site-ului "
+#~ "web."
+
+#~ msgid "There are no ratings for this channel for now."
+#~ msgstr "Nu există evaluări pentru acest canal deocamdată."
+
+#~ msgid "Visible on current website"
+#~ msgstr "Vizibil pe site-ul curent"
+
+#~ msgid "Website URL"
+#~ msgstr "URL website"
+
+#~ msgid "Website description"
+#~ msgstr "Descriere website"
+
+#~ msgid "last feedbacks"
+#~ msgstr "ultimele feedback-uri"

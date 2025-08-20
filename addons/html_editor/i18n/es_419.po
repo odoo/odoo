@@ -7,12 +7,13 @@
 # Wil Odoo, 2025
 # Fernanda Alvarez, 2025
 # "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
-"PO-Revision-Date: 2025-08-15 23:11+0000\n"
+"POT-Creation-Date: 2025-08-18 18:37+0000\n"
+"PO-Revision-Date: 2025-08-20 20:42+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s18-4/html_editor/es_419/>\n"
@@ -90,15 +91,15 @@ msgstr "Acepta"
 #: code:addons/html_editor/controllers/main.py:0
 msgid "Action %s is not a window action, link preview is not available"
 msgstr ""
-"La acción %s no es una acción de ventana, la vista previa del enlace no está"
-" disponible"
+"La acción %s no es una acción de ventana, la vista previa del enlace no está "
+"disponible"
 
 #. module: html_editor
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Action %s not found, link preview is not available, please check your url is"
-" correct"
+"Action %s not found, link preview is not available, please check your url is "
+"correct"
 msgstr ""
 "No se encontró la acción %s, la vista previa del enlace no está disponible, "
 "compruebe que su URL es correcta"
@@ -259,6 +260,12 @@ msgstr "Archivos adjuntos"
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__local_url
 msgid "Attachment URL"
 msgstr "URL del archivo adjunto"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Autoconvert to relative link"
+msgstr "Convertir de forma automática a un enlace relativo"
 
 #. module: html_editor
 #. odoo-javascript
@@ -544,6 +551,7 @@ msgstr "Le ofrecemos una amplia gama de imágenes libres de derecho de autor."
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__display_name
 msgid "Display Name"
 msgstr "Nombre en pantalla"
 
@@ -564,8 +572,7 @@ msgstr "Marcador de posición dinámico"
 #: code:addons/html_editor/controllers/main.py:0
 msgid "ERROR: couldn't get download urls from media library."
 msgstr ""
-"ERROR: no se pudieron obtener los URL de descarga de la biblioteca de "
-"medios."
+"ERROR: no se pudieron obtener los URL de descarga de la biblioteca de medios."
 
 #. module: html_editor
 #. odoo-javascript
@@ -578,12 +585,6 @@ msgstr "Editar"
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit Link"
 msgstr "Editar enlace"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/navbar_link_popover.xml:0
-msgid "Edit Menu"
-msgstr "Editar menú"
 
 #. module: html_editor
 #. odoo-javascript
@@ -687,6 +688,11 @@ msgstr "Voltear verticalmente"
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Format"
 msgstr "Formato"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_http
+msgid "HTTP Routing"
+msgstr "Enrutamiento HTTP"
 
 #. module: html_editor
 #. odoo-javascript
@@ -816,6 +822,7 @@ msgstr "HTML"
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__id
 msgid "ID"
 msgstr "ID"
 
@@ -1013,8 +1020,7 @@ msgstr "Enlace copiado al portapapeles."
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Link preview is not available because %s, please check if your url is "
-"correct"
+"Link preview is not available because %s, please check if your url is correct"
 msgstr ""
 "La vista previa del enlace no está disponible debido a %s, compruebe que su "
 "URL es correcta"
@@ -1720,8 +1726,7 @@ msgstr "Llevar el seguimiento de las  tareas con una lista de pendientes."
 #: code:addons/html_editor/static/src/main/media/image_plugin.js:0
 msgid "Transform the picture (click twice to reset transformation)"
 msgstr ""
-"Transforme la imagen (haga clic dos veces para restablecer la "
-"transformación)"
+"Transforme la imagen (haga clic dos veces para restablecer la transformación)"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1890,8 +1895,8 @@ msgid ""
 "You can upload documents with the button located in the top left of the "
 "screen."
 msgstr ""
-"Puede subir documentos con el botón ubicado en la esquina superior izquierda"
-" de la pantalla."
+"Puede subir documentos con el botón ubicado en la esquina superior izquierda "
+"de la pantalla."
 
 #. module: html_editor
 #. odoo-python
@@ -1995,3 +2000,6 @@ msgstr "px"
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "videos"
 msgstr "videos"
+
+#~ msgid "Edit Menu"
+#~ msgstr "Editar menú"

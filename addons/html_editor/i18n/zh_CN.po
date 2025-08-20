@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2025-08-18 18:37+0000\n"
 "PO-Revision-Date: 2025-08-18 23:11+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -29,7 +29,9 @@ msgstr ""
 msgid ""
 "'Alt tag' specifies an alternate text for an image, if the image cannot be "
 "displayed (slow connection, missing image, screen reader ...)."
-msgstr "如果无法显示图像，则'Alt tag' 指定图像的替代文本（连接速度慢，图像丢失，屏幕阅读器......）。"
+msgstr ""
+"如果无法显示图像，则'Alt tag' 指定图像的替代文本（连接速度慢，图像丢失，屏幕"
+"阅读器......）。"
 
 #. module: html_editor
 #. odoo-javascript
@@ -89,8 +91,8 @@ msgstr "动作 %s 不是窗口操作，无法提供链接预览"
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Action %s not found, link preview is not available, please check your url is"
-" correct"
+"Action %s not found, link preview is not available, please check your url is "
+"correct"
 msgstr "操作 %s 未找到，链接预览不可用，请检查您的网址是否正确"
 
 #. module: html_editor
@@ -249,6 +251,12 @@ msgstr "附件"
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__local_url
 msgid "Attachment URL"
 msgstr "附件网址"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Autoconvert to relative link"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -534,6 +542,7 @@ msgstr "在我们的无版权图片天堂，发现精彩世界。没有法律纠
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
@@ -566,12 +575,6 @@ msgstr "编辑"
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Edit Link"
 msgstr "编辑链接"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/navbar_link_popover.xml:0
-msgid "Edit Menu"
-msgstr "编辑菜单"
 
 #. module: html_editor
 #. odoo-javascript
@@ -675,6 +678,11 @@ msgstr "垂直翻转"
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Format"
 msgstr "格式"
+
+#. module: html_editor
+#: model:ir.model,name:html_editor.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -804,6 +812,7 @@ msgstr "HTML"
 
 #. module: html_editor
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__id
+#: model:ir.model.fields,field_description:html_editor.field_ir_http__id
 msgid "ID"
 msgstr "ID"
 
@@ -1001,8 +1010,7 @@ msgstr "链接已复制到剪贴板。"
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
-"Link preview is not available because %s, please check if your url is "
-"correct"
+"Link preview is not available because %s, please check if your url is correct"
 msgstr "因为 %s，无法提供链接预览，请检查您的网址是否正确"
 
 #. module: html_editor
@@ -1635,7 +1643,9 @@ msgstr "这个图像是一个外部图像"
 msgid ""
 "This type of image is not supported for cropping.<br/>If you want to crop "
 "it, please first download it from the original source and upload it in Odoo."
-msgstr "这种类型的图像不支持裁剪。<br/>如果您想裁剪，请先从原始来源下载并在Odoo中上传。"
+msgstr ""
+"这种类型的图像不支持裁剪。<br/>如果您想裁剪，请先从原始来源下载并在Odoo中上"
+"传。"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1850,7 +1860,9 @@ msgstr "是"
 msgid ""
 "You can not replace a field by this image. If you want to use this image, "
 "first save it on your computer and then upload it here."
-msgstr "您不能用该图片替换字段。如果您想使用该图片，请先将其保存在电脑上，然后上传到这里。"
+msgstr ""
+"您不能用该图片替换字段。如果您想使用该图片，请先将其保存在电脑上，然后上传到"
+"这里。"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1964,3 +1976,6 @@ msgstr "px"
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "videos"
 msgstr "视频"
+
+#~ msgid "Edit Menu"
+#~ msgstr "编辑菜单"

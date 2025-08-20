@@ -1,24 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_picking_batch
-# 
+# * stock_picking_batch
+#
 # Translators:
 # Wil Odoo, 2025
 # Fernanda Alvarez, 2025
-# 
+#
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
-"PO-Revision-Date: 2025-07-01 13:07+0000\n"
-"Last-Translator: Fernanda Alvarez, 2025\n"
-"Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
+"POT-Creation-Date: 2025-08-18 18:38+0000\n"
+"PO-Revision-Date: 2025-08-20 16:34+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
+"odoo-s18-4/stock_picking_batch/es_419/>\n"
+"Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es_419\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -51,8 +55,8 @@ msgid ""
 "<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Batch "
 "Grouping</span>"
 msgstr ""
-"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Agrupación"
-" por lotes</span>"
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Agrupación "
+"por lotes</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -97,19 +101,23 @@ msgstr "<strong>→</strong>"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_lines
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"Si el lote excede el número de líneas, no se agregará el traslado de forma automática.\n"
+"Si el lote excede el número de líneas, no se agregará el traslado de forma "
+"automática.\n"
 "Deje este valor como \"0\" si no hay límite de líneas."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
-"Si el lote excede el número de traslados, no se hará el traslado de forma automática.\n"
+"Si el lote excede el número de traslados, no se hará el traslado de forma "
+"automática.\n"
 "Deje este valor como \"0\" si no hay un límite de peso."
 
 #. module: stock_picking_batch
@@ -328,8 +336,7 @@ msgstr ""
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "Batch/Wave transfers with different states cannot be merged."
 msgstr ""
-"No es posible fusionar los traslados por lotes u olas con diferentes "
-"estados."
+"No es posible fusionar los traslados por lotes u olas con diferentes estados."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -795,6 +802,12 @@ msgid "Picking Type"
 msgstr "Tipo de recolección"
 
 #. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+msgid "Please select at least two batch/wave transfers to merge."
+msgstr "Selecciona al menos dos traslados por lote u onda para fusionarlos."
+
+#. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
 msgid "Prepare Batch"
 msgstr "Preparar lote"
@@ -874,8 +887,7 @@ msgstr "Calificaciones"
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid ""
-"Regroup multiple orders into one picking and consolidate at the packing "
-"zone."
+"Regroup multiple orders into one picking and consolidate at the packing zone."
 msgstr ""
 "Reagrupe varias órdenes en una sola recolección y unifíquelas en la zona de "
 "embalaje."
@@ -913,14 +925,21 @@ msgstr "Fecha programada"
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__scheduled_date
 msgid ""
 "Scheduled date for the transfers to be processed.\n"
-"              - If manually set then scheduled date for all transfers in batch will automatically update to this date.\n"
-"              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
-"                but this scheduled date will not be set for all transfers in batch."
+"              - If manually set then scheduled date for all transfers in "
+"batch will automatically update to this date.\n"
+"              - If not manually changed and transfers are added/removed/"
+"updated then this will be their earliest scheduled date\n"
+"                but this scheduled date will not be set for all transfers in "
+"batch."
 msgstr ""
 "Fecha programada en la que se procesarán los traslados.\n"
-"              - Si se configura manualmente, la fecha programada para todos los traslados en lote se actualizará automáticamente a esta fecha.\n"
-"              - Si no se configura manualmente, y se agregan, remueven o actualizan los traslados, entonces esta será la fecha programada más temprana\n"
-"                pero esta fecha programada no se establecerá en todos los traslados por lote."
+"              - Si se configura manualmente, la fecha programada para todos "
+"los traslados en lote se actualizará automáticamente a esta fecha.\n"
+"              - Si no se configura manualmente, y se agregan, remueven o "
+"actualizan los traslados, entonces esta será la fecha programada más "
+"temprana\n"
+"                pero esta fecha programada no se establecerá en todos los "
+"traslados por lote."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -979,8 +998,8 @@ msgstr ""
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_category
 msgid ""
-"Split transfers by product category, then group transfers that have the same"
-" product category."
+"Split transfers by product category, then group transfers that have the same "
+"product category."
 msgstr ""
 "Separe los traslados por categoría de producto y luego agrupe los que "
 "comparten la misma categoría de producto."
@@ -1065,11 +1084,13 @@ msgstr "Actualizaste el siguiente traslado por lote"
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid ""
-"The following transfers cannot be added to batch transfer %(batch)s. Please check their states and operation types.\n"
+"The following transfers cannot be added to batch transfer %(batch)s. Please "
+"check their states and operation types.\n"
 "\n"
 "Incompatibilities: %(incompatible_transfers)s"
 msgstr ""
-"Los siguientes traslados no se pueden agregar al traslado por lote %(batch)s,  revise sus estados y tipos de operación.\n"
+"Los siguientes traslados no se pueden agregar al traslado por lote %"
+"(batch)s,  revise sus estados y tipos de operación.\n"
 "\n"
 "Incompatibilidades: %(incompatible_transfers)s"
 

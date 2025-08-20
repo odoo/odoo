@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
-"PO-Revision-Date: 2025-08-13 14:26+0000\n"
+"POT-Creation-Date: 2025-08-18 18:38+0000\n"
+"PO-Revision-Date: 2025-08-20 12:20+0000\n"
 "Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-4/"
 "stock_picking_batch/fi/>\n"
@@ -100,19 +100,23 @@ msgstr "<strong>→</strong>"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_lines
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"Siirtoa ei lisätä automaattisesti eriin, jotka ylittävät tämän rivimäärän, jos siirto lisätään siihen.\n"
+"Siirtoa ei lisätä automaattisesti eriin, jotka ylittävät tämän rivimäärän, "
+"jos siirto lisätään siihen.\n"
 "Jätä tämä arvo arvoksi \"0\", jos rivirajoitusta ei ole."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid ""
-"A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
+"A transfer will not be automatically added to batches that will exceed this "
+"number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
-"Siirtoa ei lisätä automaattisesti eriin, jotka ylittävät tämän siirtojen määrän.\n"
+"Siirtoa ei lisätä automaattisesti eriin, jotka ylittävät tämän siirtojen "
+"määrän.\n"
 "Jätä tämä arvo arvoksi \"0\", jos siirtorajoitusta ei ole."
 
 #. module: stock_picking_batch
@@ -617,8 +621,8 @@ msgid ""
 "Launch picking orders by aisle or area and regroup at packing zone. Ideal "
 "for large warehouses."
 msgstr ""
-"Käynnistä poimintatilaukset käytävittäin tai alueittain ja ryhmitä uudelleen"
-" pakkausvyöhykkeellä. Ihanteellinen suuriin varastoihin."
+"Käynnistä poimintatilaukset käytävittäin tai alueittain ja ryhmitä uudelleen "
+"pakkausvyöhykkeellä. Ihanteellinen suuriin varastoihin."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__line_ids
@@ -792,6 +796,12 @@ msgid "Picking Type"
 msgstr "Keräilyn tyyppi"
 
 #. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+msgid "Please select at least two batch/wave transfers to merge."
+msgstr "Valitse ainakin kaksi erä-/aaltosiirtoa yhdistääksesi."
+
+#. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
 msgid "Prepare Batch"
 msgstr "Valmistele erä"
@@ -871,8 +881,7 @@ msgstr "Arviointi"
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid ""
-"Regroup multiple orders into one picking and consolidate at the packing "
-"zone."
+"Regroup multiple orders into one picking and consolidate at the packing zone."
 msgstr ""
 "Ryhmittele useat tilaukset yhdeksi poiminnaksi ja konsolidoi ne "
 "pakkausvyöhykkeellä."
@@ -910,14 +919,20 @@ msgstr "Suunniteltu päivämäärä"
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__scheduled_date
 msgid ""
 "Scheduled date for the transfers to be processed.\n"
-"              - If manually set then scheduled date for all transfers in batch will automatically update to this date.\n"
-"              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
-"                but this scheduled date will not be set for all transfers in batch."
+"              - If manually set then scheduled date for all transfers in "
+"batch will automatically update to this date.\n"
+"              - If not manually changed and transfers are added/removed/"
+"updated then this will be their earliest scheduled date\n"
+"                but this scheduled date will not be set for all transfers in "
+"batch."
 msgstr ""
 "Siirtojen käsittelyn suunniteltu päivämäärä.\n"
-"              - Jos se asetetaan manuaalisesti, kaikkien erän siirtojen suunniteltu päivämäärä päivittyy automaattisesti tähän päivämäärään.\n"
-"              - Jos sitä ei muuteta manuaalisesti ja siirtoja lisätään/poistetaan/päivitetään, tämä on niiden varhaisin suunniteltu päivämäärä\n"
-"                mutta tätä aikataulun mukaista päivämäärää ei aseteta kaikille erän siirroille."
+"              - Jos se asetetaan manuaalisesti, kaikkien erän siirtojen "
+"suunniteltu päivämäärä päivittyy automaattisesti tähän päivämäärään.\n"
+"              - Jos sitä ei muuteta manuaalisesti ja siirtoja lisätään/"
+"poistetaan/päivitetään, tämä on niiden varhaisin suunniteltu päivämäärä\n"
+"                mutta tätä aikataulun mukaista päivämäärää ei aseteta "
+"kaikille erän siirroille."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -978,8 +993,8 @@ msgstr ""
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_category
 msgid ""
-"Split transfers by product category, then group transfers that have the same"
-" product category."
+"Split transfers by product category, then group transfers that have the same "
+"product category."
 msgstr ""
 "Jaa siirrot tuoteryhmittäin ja ryhmittele sitten siirrot, joilla on sama "
 "tuoteryhmä."
@@ -1063,11 +1078,13 @@ msgstr "Seuraava eräsiirto on päivitetty"
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid ""
-"The following transfers cannot be added to batch transfer %(batch)s. Please check their states and operation types.\n"
+"The following transfers cannot be added to batch transfer %(batch)s. Please "
+"check their states and operation types.\n"
 "\n"
 "Incompatibilities: %(incompatible_transfers)s"
 msgstr ""
-"Seuraavia siirtoja ei voi lisätä eräsiirtoon %(batch)s. Tarkista niiden tilat ja toimintatyypit.\n"
+"Seuraavia siirtoja ei voi lisätä eräsiirtoon %(batch)s. Tarkista niiden "
+"tilat ja toimintatyypit.\n"
 "\n"
 "Yhteensopimattomuudet: %(incompatible_transfers)s"
 
