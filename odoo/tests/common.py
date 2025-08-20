@@ -369,7 +369,7 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
                 patcher.stop()
         cls.addClassCleanup(check_remaining_patchers)
         super().setUpClass()
-        if 'standard' in cls.test_tags:
+        if 'standard' in cls.test_tags or 'click_all' in cls.test_tags:
             # if the method is passed directly `patch` discards the session
             # object which we need
             # pylint: disable=unnecessary-lambda
