@@ -2382,7 +2382,9 @@ class AccountMoveLine(models.Model):
         all_results = []
 
         def process_amls(amls):
-            remaining_amls = amls.filtered(lambda aml: aml.id not in all_fully_reconciled_aml_ids)
+            remaining_amls = amls.filtered(lambda aml: aml.id not in all_fully_reconciled_aml_ids).sorted(
+                lambda aml: (aml.partner_id and aml.partner_id.id) or False
+            )
             amls_results, fully_reconciled_aml_ids = self._prepare_reconciliation_amls(
                 [
                     amls_values_map[aml]
