@@ -1,9 +1,9 @@
 import { getBgImageURLFromEl } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
-import { markup } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { BackgroundPositionOverlay } from "./background_position_overlay";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { loadImage } from "@html_editor/utils/image_processing";
 
 const getBgSizeValue = function ({ editingElement, params: { mainParam: styleName } }) {
     const backgroundSize = editingElement.style.backgroundSize;
@@ -66,52 +66,39 @@ export class SetBackgroundSizeAction extends BuilderAction {
 
 export class BackgroundPositionOverlayAction extends BuilderAction {
     static id = "backgroundPositionOverlay";
-    static dependencies = ["overlayButtons", "overlay"];
+    static dependencies = ["overlayButtons", "history"];
+    setup() {
+        this.withLoadingEffect = false;
+    }
     async load({ editingElement }) {
-        let imgEl;
-        await new Promise((resolve) => {
-            imgEl = document.createElement("img");
-            imgEl.addEventListener("load", () => resolve());
-            imgEl.src = getBgImageURLFromEl(editingElement);
-        });
-        const copyEl = editingElement.cloneNode(false);
-        copyEl.classList.remove("o_editable");
-        // Hide the builder overlay buttons when the user changes
-        // the background position.
+        const imgEl = await loadImage(getBgImageURLFromEl(editingElement));
         return new Promise((resolve) => {
+            // Hide the builder overlay buttons when the user changes
+            // the background position.
             this.dependencies.overlayButtons.hideOverlayButtonsUi();
             let appliedBgPosition = "";
             const onRemove = () => {
                 this.dependencies.overlayButtons.showOverlayButtonsUi();
                 resolve(appliedBgPosition);
             };
-            const overlay = this.dependencies.overlay.createOverlay(
+            const removeOverlay = this.services.overlay.add(
                 BackgroundPositionOverlay,
-                { positionOptions: { position: "over-fit", flip: false } },
-                { onRemove: onRemove }
-            );
-            const applyPosition = (bgPosition) => {
-                appliedBgPosition = bgPosition;
-                overlay.close();
-            };
-            overlay.open({
-                target: editingElement,
-                props: {
-                    outerHtmlEditingElement: markup(this.safeCloneOuterHTML(copyEl)),
+                {
                     editingElement: editingElement,
                     mockEditingElOnImg: imgEl,
-                    applyPosition: applyPosition,
-                    discardPosition: () => overlay.close(),
+                    applyPosition: (bgPosition) => {
+                        appliedBgPosition = bgPosition;
+                        removeOverlay();
+                    },
+                    discardPosition: () => removeOverlay(),
                     editable: this.editable,
+                    history: {
+                        makeSavePoint: this.dependencies.history.makeSavePoint,
+                    },
                 },
-            });
+                { onRemove }
+            );
         });
-    }
-    safeCloneOuterHTML(el) {
-        const copyEl = document.createElement(el.tagName);
-        copyEl.style.cssText = el.style.cssText;
-        copyEl.className = el.className;
-        return copyEl.outerHTML;
     }
     apply({ editingElement, loadResult: bgPosition }) {
         if (bgPosition) {
