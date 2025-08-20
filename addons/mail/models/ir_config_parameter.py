@@ -35,6 +35,9 @@ class IrConfig_Parameter(models.Model):
     #    50 by default;
     # * 'mail.render.cron.limit': used in cron involving rendering of content
     #   and/or templates, like event mail scheduler cron. Defaults to 1000;
+    # * 'mail.server.personal.limit.minutes': used when sending email using
+    #   personal mail servers, maximum number of emails that can be sent in
+    #   one minute
 
     # Mail Gateway
     #   * 'mail.gateway.loop.minutes' and 'mail.gateway.loop.threshold': block
