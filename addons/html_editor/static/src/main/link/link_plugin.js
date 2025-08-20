@@ -767,8 +767,9 @@ export class LinkPlugin extends Plugin {
             }
         } else {
             const closestLinkElement = closestElement(selection.anchorNode, "A");
-            const isLinkEditable =
-                this.delegateTo("is_link_editable_predicates", closestLinkElement) || false;
+            const isLinkEditable = this.delegateTo(
+                "is_link_editable_predicates",
+                closestLinkElement) || false;
             if (closestLinkElement && closestLinkElement.isContentEditable) {
                 if (closestLinkElement !== this.linkInDocument || !this.currentOverlay.isOpen) {
                     this.openLinkTools(closestLinkElement);
@@ -816,10 +817,7 @@ export class LinkPlugin extends Plugin {
             return;
         }
         const cursors = this.dependencies.selection.preserveSelection();
-        if (
-            link &&
-            (link.isContentEditable || this.delegateTo("is_element_editable_predicates", link))
-        ) {
+        if (link && link.isContentEditable) {
             cursors.update(callbacksForCursorUpdate.unwrap(link));
             unwrapContents(link);
         }
