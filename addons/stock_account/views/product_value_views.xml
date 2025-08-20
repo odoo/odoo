@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_value_form_view" model="ir.ui.view">
+        <field name="name">product.value.form.view</field>
+        <field name="model">product.value</field>
+        <field name="arch" type="xml">
+            <form string="Adjust Valuation">
+                <sheet>
+                <field name="move_id" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <group>
+                    <label for="current_value" class="oe_inline"/>
+                    <div class="d-flex gap-2 align-items-baseline hover-show">
+                        <field name="current_value" style="width: 100px;" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                        <span><field name="current_value_details" class="oe_inline me-5"/></span>
+                    </div>
+                    <field name="value" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                    <field name="description"/>
+                </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_value_action" model="ir.actions.act_window">
+        <field name="name">Adjust Valuation</field>
+        <field name="res_model">product.value</field>
+        <field name="view_mode">form</field>
+    </record>
+</odoo>

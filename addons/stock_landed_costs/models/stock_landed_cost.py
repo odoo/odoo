@@ -166,7 +166,7 @@ class StockLandedCost(models.Model):
                 'product_id': move.product_id.id,
                 'move_id': move.id,
                 'quantity': qty,
-                'former_cost': move._get_value()[0],
+                'former_cost': move._get_value(),
                 'weight': move.product_id.weight * qty,
                 'volume': move.product_id.volume * qty
             }
