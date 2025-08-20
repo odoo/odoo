@@ -24,6 +24,11 @@
         <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
     </record>
 
+    <record id="group_hr_responsible" model="res.groups">
+        <field name="name">HR Responsible</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
 <data noupdate="1">
     <record id="hr_employee_comp_rule" model="ir.rule">
         <field name="name">Employee multi company rule</field>

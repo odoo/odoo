@@ -4,7 +4,8 @@
         <record id="base.user_demo" model="res.users">
             <field name="group_ids" eval="[
                 (3, ref('hr.group_hr_user')),
-                (3, ref('hr.group_hr_manager'))]"/>
+                (3, ref('hr.group_hr_manager')),
+                (4, ref('hr.group_hr_responsible'))]"/>
         </record>
 
         <record id="base.default_user_group" model="res.groups">

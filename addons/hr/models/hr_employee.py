@@ -1124,6 +1124,10 @@ class HrEmployee(models.Model):
             )) % url
         employees._message_log_batch(onboarding_notes_bodies)
         employees.invalidate_recordset()
+        managers = employees.mapped('parent_id').user_id
+        if managers:
+            responsible_group = self.env.ref('hr.group_hr_responsible', raise_if_not_found=False)
+            managers.sudo().write({'group_ids': [(4, responsible_group.id)]})
         return employees
 
     def write(self, vals):
@@ -1181,6 +1185,11 @@ class HrEmployee(models.Model):
                     resources_per_calendar_id[employee.resource_calendar_id.id] += employee.resource_id
             for calendar_id, resources in resources_per_calendar_id.items():
                 resources.write({'calendar_id': calendar_id})
+        if 'parent_id' in vals:
+            manager = self.env['hr.employee'].browse(vals['parent_id']).user_id
+            if manager:
+                responsible_group = self.env.ref('hr.group_hr_responsible', raise_if_not_found=False)
+                manager.sudo().write({'group_ids': [(4, responsible_group.id)]})
         return res
 
     def unlink(self):
