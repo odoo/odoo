@@ -52,11 +52,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             },
         },
         {
-            trigger: ".o-mail-AttachmentCard:not(.o-isUploading)", // waiting the attachment to be uploaded
-        },
-        {
-            content: "Check the text attachment is listed",
-            trigger: '.o-mail-AttachmentCard[title="text.txt"]',
+            trigger: ".o-mail-AttachmentCard:not(.o-isUploading):contains(text.txt)",
         },
         {
             content: "Add an image file in composer",
@@ -78,11 +74,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             },
         },
         {
-            trigger: ".o-mail-AttachmentImage:not(.o-isUploading)",
-        },
-        {
-            content: "Check the image attachment is listed",
-            trigger: '.o-mail-AttachmentImage[title="image.png"]',
+            trigger: '.o-mail-AttachmentImage:not(.o-isUploading)[title="image.png"]',
             async run() {
                 /** @type {import("models").Store} */
                 const store = odoo.__WOWL_DEBUG__.root.env.services["mail.store"];
@@ -160,11 +152,8 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             },
         },
         {
-            trigger: ".o-mail-Message .o-mail-Composer .o-mail-AttachmentCard:not(.o-isUploading)", // waiting the attachment to be uploaded
-        },
-        {
-            content: "Check the earlier provided extra attachment is listed",
-            trigger: '.o-mail-Message .o-mail-Composer .o-mail-AttachmentCard[title="extra.txt"]',
+            trigger:
+                ".o-mail-Message .o-mail-Composer .o-mail-AttachmentCard:not(.o-isUploading):contains(extra.txt)",
         },
         {
             content: "Save edited message",

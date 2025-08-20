@@ -218,11 +218,11 @@ test("chatter: drop attachments", async () => {
     await contains(".o-Dropzone");
     await contains(".o-mail-AttachmentCard", { count: 0 });
     await dropFiles(".o-Dropzone", files);
-    await contains(".o-mail-AttachmentCard", { count: 2 });
+    await contains(".o-mail-AttachmentCard:not(.o-isUploading)", { count: 2 });
     const extraFiles = [text3];
     await dragenterFiles(".o-mail-Chatter", extraFiles);
     await dropFiles(".o-Dropzone", extraFiles);
-    await contains(".o-mail-AttachmentCard", { count: 3 });
+    await contains(".o-mail-AttachmentCard:not(.o-isUploading)", { count: 3 });
 });
 
 test("chatter: drop attachment should refresh thread data with hasParentReloadOnAttachmentsChange prop", async () => {
@@ -583,7 +583,7 @@ test("chatter message actions appear only after saving the form", async () => {
     await click(".o_form_button_save");
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "hey");
-    await click(".o-mail-Composer-send");
+    await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message-actions");
 });
 
