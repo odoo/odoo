@@ -15,6 +15,9 @@
         'data/tax_report.xml',
         'data/uom_data.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
     'installable': True,
     'auto_install': ['account'],
     'author': 'Odoo S.A.',
