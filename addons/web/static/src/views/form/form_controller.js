@@ -465,7 +465,7 @@ export class FormController extends Component {
     }
 
     beforeVisibilityChange() {
-        if (document.visibilityState === "hidden" && this.formInDialog === 0) {
+        if (document.visibilityState === "hidden" && this.formInDialog === 0 && this.model.root.dirty) {
             return this.model.root.save();
         }
     }
