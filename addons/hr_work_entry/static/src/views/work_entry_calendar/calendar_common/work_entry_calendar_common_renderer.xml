@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates>
+    <t t-name="hr_work_entry.WorkEntryCalendarCommonRenderer.event" t-inherit="web.CalendarCommonRenderer.event" t-inherit-mode="primary">
+        <div t-out="title" position="after">
+            <i t-if="rawRecord.state === 'validated'" class="fa fa-lock position-absolute top-0 end-0" style="font-size: x-small"/>
+        </div>
+    </t>
+</templates>

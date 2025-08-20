@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="hr_work_entry.WorkEntryCalendarMultiSelectionButtons" t-inherit="web.MultiSelectionButtons" t-inherit-mode="primary">
+        <button data-tooltip="Delete" position="replace">
+            <button class="btn btn-secondary" data-tooltip="Reset Selected Work Entries" t-on-click="() => this.props.reactive.onQuickReset()">
+                <i class="fa fa-undo"/>
+            </button>
+        </button>
+        <button t-ref="addButton" position="after">
+            <t t-foreach="favoritesWorkEntries" t-as="workEntry" t-key="workEntry.id">
+                <button class="small btn btn-secondary rounded-1"
+                        t-attf-class="o_gantt_color_#{workEntry.color}"
+                        t-attf-data-tooltip="Replace by #{workEntry.display_name}"
+                        t-on-click="() => this.onQuickReplace(workEntry)">
+                    <t t-if="workEntry.display_code" t-out="workEntry.display_code"/>
+                    <t t-else="" t-out="workEntry.display_name"/>
+                </button>
+            </t>
+        </button>
+    </t>
+</templates>

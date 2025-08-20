@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 from contextlib import contextmanager
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 from itertools import chain
 
 import pytz
@@ -17,9 +17,9 @@ from odoo.tools.intervals import Intervals
 class HrWorkEntry(models.Model):
     _name = 'hr.work.entry'
     _description = 'HR Work Entry'
-    _order = 'conflict desc,state,date'
+    _order = 'create_date'
 
-    name = fields.Char(required=True, compute='_compute_name', store=True, readonly=False, precompute=True)
+    name = fields.Char()
     active = fields.Boolean(default=True)
     employee_id = fields.Many2one('hr.employee', required=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", index=True)
     version_id = fields.Many2one('hr.version', string="Employee Record", required=True)
@@ -27,13 +27,14 @@ class HrWorkEntry(models.Model):
     date = fields.Date(required=True)
     duration = fields.Float(string="Duration", default=8)
     work_entry_type_id = fields.Many2one('hr.work.entry.type', index=True, default=lambda self: self.env['hr.work.entry.type'].search([], limit=1), domain="['|', ('country_id', '=', False), ('country_id', '=', country_id)]")
+    display_code = fields.Char(related='work_entry_type_id.display_code')
     code = fields.Char(related='work_entry_type_id.code')
     external_code = fields.Char(related='work_entry_type_id.external_code')
     color = fields.Integer(related='work_entry_type_id.color', readonly=True)
     state = fields.Selection([
-        ('draft', 'Draft'),
-        ('validated', 'Validated'),
-        ('conflict', 'Conflict'),
+        ('draft', 'New'),
+        ('conflict', 'In Conflict'),
+        ('validated', 'In Payslip'),
         ('cancelled', 'Cancelled')
     ], default='draft')
     company_id = fields.Many2one('res.company', string='Company', readonly=True, required=True,
@@ -70,6 +71,12 @@ class HrWorkEntry(models.Model):
                 ) AS result
                 WHERE _hwe.id = ANY(result.entry_ids)
             """)
+
+    @api.depends('display_code', 'duration')
+    def _compute_display_name(self):
+        for work_entry in self:
+            duration = str(timedelta(hours=work_entry.duration)).split(":")
+            work_entry.display_name = "%s - %sh%s" % (work_entry.work_entry_type_id.name, duration[0], duration[1])
 
     @api.depends('work_entry_type_id', 'employee_id')
     def _compute_name(self):
@@ -120,6 +127,14 @@ class HrWorkEntry(models.Model):
             return dict(vals, version_id=contracts[0].id)
         return vals
 
+    @api.model
+    def get_unusual_days(self, date_from, date_to=None):
+        return self.env.company.resource_calendar_id._get_unusual_days(
+            datetime.combine(fields.Date.from_string(date_from), time.min).replace(tzinfo=pytz.utc),
+            datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=pytz.utc),
+            self.company_id,
+        )
+
     def action_validate(self):
         """
         Try to validate work entries.
@@ -132,6 +147,14 @@ class HrWorkEntry(models.Model):
             work_entries.write({'state': 'validated'})
             return True
         return False
+
+    def action_split(self):
+        self.ensure_one()
+        if self.duration < 1:
+            raise UserError(self.env._("You can't split a work entry with less than 1 hour."))
+        self.duration /= 2
+        split_work_entry = self.copy()
+        return split_work_entry.id
 
     def _check_if_error(self):
         if not self:
