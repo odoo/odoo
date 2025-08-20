@@ -75,7 +75,7 @@ class MicrosoftOutlookController(http.Controller):
     def _check_email_and_redirect_to_outlook_record(self, access_token, expiration, refresh_token, record):
         # Verify the token information (that the email set on the
         # server is the email used to login on Outlook)
-        if record.owner_user_id or not request.env.user.has_group('base.group_system'):
+        if (record._name == 'ir.mail_server' and (record.owner_user_id or not request.env.user.has_group('base.group_system'))):
             response = requests.get(
                 "https://outlook.office.com/api/v2.0/me",
                 headers={"Authorization": f"Bearer {access_token}"},
