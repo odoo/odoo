@@ -10,7 +10,7 @@ from werkzeug.exceptions import Forbidden
 from odoo import _, http
 from odoo.exceptions import UserError
 from odoo.http import request
-from odoo.tools import consteq
+from odoo.tools import consteq, email_normalize
 
 _logger = logging.getLogger(__name__)
 
@@ -100,8 +100,7 @@ class MicrosoftOutlookController(http.Controller):
             id_token_data = id_token.split(".")[1]
             id_token_data += '=' * (-len(id_token_data) % 4)  # `=` padding can be missing
             email = json.loads(base64.b64decode(id_token_data)).get('email')
-
-            if email != record[record._email_field]:
+            if not email or email_normalize(email) != email_normalize(record[record._email_field]):
                 _logger.error('Microsoft Outlook: Invalid email address: %r != %s.', email, record[record._email_field])
                 return request.render('microsoft_outlook.microsoft_outlook_oauth_error', {
                     'error': _(

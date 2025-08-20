@@ -12,12 +12,6 @@ class ResUsers(models.Model):
     )
 
     @api.model
-    def _get_personal_server_type(self, smtp_server):
-        if smtp_server.smtp_authentication == "gmail":
-            return "gmail"
-        return super()._get_personal_server_type(smtp_server)
-
-    @api.model
     def _get_mail_server_values(self, server_type):
         values = super()._get_mail_server_values(server_type)
         if server_type == "gmail":
