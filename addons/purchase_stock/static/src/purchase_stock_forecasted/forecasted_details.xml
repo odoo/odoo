@@ -8,8 +8,8 @@
                 <td>
                     <t t-foreach="props.docs.draft_purchase_orders" t-as="purchase_order" t-key="purchase_order_index">
                         <t t-if="purchase_order_index > 0"> | </t>
-                        <a t-attf-href="#" t-out="purchase_order.name"
-                            class="fw-bold"
+                        <button t-out="purchase_order.name"
+                            class="fw-bold btn btn-link p-0"
                             t-on-click.prevent="() => this.props.openView('purchase.order', 'form', purchase_order.id)"/>
                     </t>
                 </td>
