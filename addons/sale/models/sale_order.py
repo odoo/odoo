@@ -179,6 +179,11 @@ class SaleOrder(models.Model):
         compute='_compute_payment_term_id',
         store=True, readonly=False, precompute=True, check_company=True,  # Unrequired company
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    preferred_payment_method_line_id = fields.Many2one(
+        comodel_name="account.payment.method.line", string="Payment Method",
+        compute="_compute_preferred_payment_method_line_id",
+        store=True, precompute=True, readonly=False, check_company=True,
+        domain="[('payment_type', '=', 'inbound'), ('company_id', '=', company_id)]")
     pricelist_id = fields.Many2one(
         comodel_name='product.pricelist',
         string="Pricelist",
@@ -420,6 +425,12 @@ class SaleOrder(models.Model):
         for order in self:
             order = order.with_company(order.company_id)
             order.payment_term_id = order.partner_id.property_payment_term_id
+
+    @api.depends('partner_id', 'company_id')
+    def _compute_preferred_payment_method_line_id(self):
+        for order in self:
+            order = order.with_company(order.company_id)
+            order.preferred_payment_method_line_id = order.partner_id.property_inbound_payment_method_line_id
 
     @api.depends('partner_id', 'company_id')
     def _compute_pricelist_id(self):
@@ -1378,6 +1389,7 @@ class SaleOrder(models.Model):
             'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id._get_fiscal_position(self.partner_invoice_id)).id,
             'invoice_origin': self.name,
             'invoice_payment_term_id': self.payment_term_id.id,
+            'preferred_payment_method_line_id': self.preferred_payment_method_line_id.id,
             'invoice_user_id': self.user_id.id,
             'payment_reference': self.reference,
             'transaction_ids': [Command.set(txs_to_be_linked.ids)],
