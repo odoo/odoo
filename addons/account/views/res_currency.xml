@@ -7,10 +7,25 @@
             <field name="model">res.currency</field>
             <field name="inherit_id" ref="base.view_currency_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//sheet" position="before">
-                    <div class="alert alert-warning" role="alert" invisible="not display_rounding_warning">
-                        <strong>This currency has already been used to generate accounting entries.</strong> <br/>
-                        Changing its rounding factor now will not change the rounding made on previous entries; possibly causing an inconsistency with the new ones.
+                <form position="attributes">
+                    <attribute name="js_class">currency_form</attribute>
+                </form>
+
+                <xpath expr="//field[@name='decimal_places']" position="after">
+                    <div colspan="2" invisible="not display_rounding_warning" class="alert alert-danger" role="alert">
+                        <p class="m-0">
+                            <strong>WARNING - This change is irreversible</strong>
+                        </p>
+
+                        <p class="mt-1 mb-2">
+                            You are changing decimals in your entire database, including invoices,
+                            tax amounts, accounting amounts, reports. This is probably not intended.
+                        </p>
+
+                        <div>
+                            <field name="display_rounding_warning"
+                               widget="open_decimal_precision_button"/>
+                        </div>
                     </div>
                 </xpath>
             </field>
