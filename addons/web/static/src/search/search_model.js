@@ -15,8 +15,9 @@ import {
     constructDateDomain,
     DEFAULT_INTERVAL,
     getIntervalOptions,
+    getOptionsWithDescriptions,
     getPeriodOptions,
-    INTERVAL_OPTIONS,
+    BACKEND_INTERVAL_OPTIONS,
     rankInterval,
     yearSelected,
 } from "./utils/dates";
@@ -1372,7 +1373,12 @@ export class SearchModel extends EventBus {
                 break;
             case "dateGroupBy":
                 enrichSearchItem.options = _enrichOptions(
-                    this.intervalOptions,
+                    searchItem.defaultIntervalId &&
+                        !this.intervalOptions.some(
+                            (option) => option.id === searchItem.defaultIntervalId
+                        )
+                        ? getOptionsWithDescriptions(BACKEND_INTERVAL_OPTIONS)
+                        : this.intervalOptions,
                     queryElements.map((queryElem) => queryElem.intervalId)
                 );
                 break;
@@ -1662,7 +1668,7 @@ export class SearchModel extends EventBus {
                     case "dateGroupBy": {
                         type = "groupBy";
                         for (const intervalId of activeItem.intervalIds) {
-                            const { description } = INTERVAL_OPTIONS[intervalId];
+                            const { description } = BACKEND_INTERVAL_OPTIONS[intervalId];
                             values.push(`${searchItem.description}: ${description}`);
                         }
                         break;
@@ -1723,7 +1729,7 @@ export class SearchModel extends EventBus {
                     const [fieldName, interval] = gb.split(":");
                     const { string } = this.searchViewFields[fieldName];
                     if (interval) {
-                        const { description } = INTERVAL_OPTIONS[interval];
+                        const { description } = BACKEND_INTERVAL_OPTIONS[interval];
                         return `${string}:${description}`;
                     }
                     return string;

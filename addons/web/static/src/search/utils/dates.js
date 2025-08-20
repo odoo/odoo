@@ -62,7 +62,7 @@ export const INTERVAL_OPTIONS = {
  */
 export const BACKEND_INTERVAL_OPTIONS = {
     ...INTERVAL_OPTIONS,
-    hour: { description: _t("Hour"), id: "hour" },
+    hour: { description: _t("Hour"), id: "hour", groupNumber: 1 },
 };
 
 //-------------------------------------------------------------------------
@@ -311,7 +311,7 @@ export function getSetParam(periodOption, referenceMoment) {
 }
 
 export function rankInterval(intervalOptionId) {
-    return Object.keys(INTERVAL_OPTIONS).indexOf(intervalOptionId);
+    return Object.keys(BACKEND_INTERVAL_OPTIONS).indexOf(intervalOptionId);
 }
 
 /**

@@ -432,7 +432,7 @@
                     <filter string="Point of Sale" name="config_id" domain="[]" context="{'group_by': 'config_id'}"/>
                     <filter string="Customer" name="customer" domain="[]" context="{'group_by': 'partner_id'}"/>
                     <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
-                    <filter string="Order Date" name="order_month" domain="[]" context="{'group_by': 'date_order'}"/>
+                    <filter string="Order Date" name="order_date" domain="[]" context="{'group_by': 'date_order:hour'}"/>
                 </group>
             </search>
         </field>
