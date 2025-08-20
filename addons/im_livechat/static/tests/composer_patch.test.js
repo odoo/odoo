@@ -1,4 +1,5 @@
 import {
+    click,
     contains,
     insertText,
     openDiscuss,
@@ -16,7 +17,6 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { defineLivechatModels } from "./livechat_test_helpers";
 
-import { press } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
@@ -41,7 +41,7 @@ test("Can execute help command on livechat channels", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/help");
-    await press("Enter");
+    await click(".o-mail-Composer button[title='Send']:enabled");
     await waitForSteps(["execute_command_help"]);
 });
 
