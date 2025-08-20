@@ -87,11 +87,14 @@ class PurchaseOrderLine(models.Model):
     product_template_attribute_value_ids = fields.Many2many(related='product_id.product_template_attribute_value_ids', readonly=True)
     product_no_variant_attribute_value_ids = fields.Many2many('product.template.attribute.value', string='Product attribute values that do not create variants', ondelete='restrict')
     purchase_line_warn_msg = fields.Text(related='product_id.purchase_line_warn_msg')
-    section_line_id = fields.Many2one(
-        comodel_name='purchase.order.line',
-        compute='_compute_section_line_id',
-        store=True,
+    parent_id = fields.Many2one(
+        'purchase.order.line',
+        string="Parent Section Line",
+        compute='_compute_parent_id',
+        index='btree_not_null',
+        copy=False, store=True,
     )
+    child_ids = fields.One2many(comodel_name='purchase.order.line', inverse_name='parent_id')
     technical_price_unit = fields.Float(help="Technical field for price computation")
 
     @api.depends('product_qty', 'price_unit', 'tax_ids', 'discount')
@@ -401,16 +404,21 @@ class PurchaseOrderLine(models.Model):
             price_unit *= self.product_id.uom_id.factor / self.product_uom_id.factor
         return price_unit
 
-    @api.depends('order_id.order_line.sequence')
-    def _compute_section_line_id(self):
-        for order, lines in self.grouped('order_id').items():
-            current_section_line = False
+    @api.depends('order_id.order_line.sequence', 'order_id')
+    def _compute_parent_id(self):
+        for _orders, lines in self.grouped('order_id').items():
+            current_section = None
+            current_subsection = None
             for line in lines.sorted('sequence'):
                 if line.display_type == 'line_section':
-                    current_section_line = line
-                    line.section_line_id = False
+                    line.parent_id = None
+                    current_section = line
+                    current_subsection = None
+                elif line.display_type == 'line_subsection':
+                    line.parent_id = current_section
+                    current_subsection = line
                 else:
-                    line.section_line_id = current_section_line
+                    line.parent_id = current_subsection or current_section
 
     def action_add_from_catalog(self):
         order = self.env['purchase.order'].browse(self.env.context.get('order_id'))
@@ -628,3 +636,9 @@ class PurchaseOrderLine(models.Model):
             "order_id": self.order_id,
             "force_uom": True,
         }
+
+    def get_parent_section_line(self):
+        if not self.display_type and self.parent_id.display_type == 'line_subsection':
+            return self.parent_id.parent_id
+
+        return self.parent_id
