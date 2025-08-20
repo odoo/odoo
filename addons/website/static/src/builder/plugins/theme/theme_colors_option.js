@@ -20,9 +20,8 @@ export class ThemeColorsOption extends BaseOptionComponent {
     getPalettes() {
         const palettes = [];
         const style = window.getComputedStyle(document.documentElement);
-        const allPaletteNames = getCSSVariableValue("palette-names", style)
-            .split(", ")
-            .map((name) => name.replace(/'/g, ""));
+        const uniquePaletteNames = new Set(getCSSVariableValue("palette-names", style).split(", "));
+        const allPaletteNames = [...uniquePaletteNames].map((name) => name.replace(/'/g, ""));
         for (const paletteName of allPaletteNames) {
             const palette = {
                 name: paletteName,
