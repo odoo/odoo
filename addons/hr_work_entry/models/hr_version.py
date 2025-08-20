@@ -7,7 +7,7 @@ import pytz
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
 from odoo.tools import ormcache
@@ -344,7 +344,7 @@ class HrVersion(models.Model):
             tz = pytz.timezone(version_tz) if version_tz else utc
             date_start_tz = tz.localize(date_start).astimezone(utc).replace(tzinfo=None)
             date_stop_tz = tz.localize(date_stop).astimezone(utc).replace(tzinfo=None)
-            new_work_entries += versions.with_company(company).sudo()._generate_work_entries(
+            new_work_entries += versions.with_user(SUPERUSER_ID).with_company(company)._generate_work_entries(
                 date_start_tz, date_stop_tz, force=force)
         return new_work_entries
 
