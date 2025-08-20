@@ -28,6 +28,7 @@ from . import test_digest
 from . import test_download_docs
 from . import test_fiscal_position
 from . import test_sequence_mixin
+from . import test_sending_concurrency
 from . import test_tax
 from . import test_taxes_base_lines_tax_details
 from . import test_taxes_computation
