@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
 from odoo import api, fields, models, modules, tools
-from odoo.addons.base.models.ir_qweb import QWebException
+from odoo.addons.base.models.ir_qweb import QWebError
 from odoo.tools import exception_to_unicode
 from odoo.tools.translate import _
 
@@ -423,23 +423,20 @@ class EventMail(models.Model):
                 template.id,
             )
             cause = exception.__cause__ or exception.__context__
-            exc_qweb = cause and isinstance(cause, QWebException)
-            if exc_qweb:
-                root_cause = cause.__cause__
-                exc_qweb_attr = root_cause and isinstance(root_cause, AttributeError)
+            if hasattr(cause, 'qweb'):
                 source_content = _(
                     "This is due to an error in template %(template_link)s.",
                     template_link=template_link,
                 )
-                if exc_qweb_attr:
+                if isinstance(cause, QWebError) and isinstance(cause.__cause__, AttributeError):
                     error_message = _(
                         "There is an issue with dynamic placeholder. Actual error received is: %(error)s.",
-                        error=Markup('<br/>%s') % exception_to_unicode(root_cause),
+                        error=Markup('<br/>%s') % cause.__cause__,
                     )
                 else:
                     error_message = _(
                         "Rendering of template failed with error: %(error)s.",
-                        error=Markup('<br/>%s') % exception_to_unicode(cause),
+                        error=Markup('<br/>%s') % cause.qweb,
                     )
             else:
                 source_content = _(

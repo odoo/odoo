@@ -14,7 +14,7 @@ import odoo
 from odoo import api, models, exceptions, tools, http
 from odoo.addons.base.models import ir_http
 from odoo.addons.base.models.ir_http import RequestUID
-from odoo.addons.base.models.ir_qweb import keep_query, QWebException
+from odoo.addons.base.models.ir_qweb import keep_query
 from odoo.addons.base.models.res_lang import LangData
 from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
@@ -527,16 +527,20 @@ class IrHttp(models.AbstractModel):
             traceback=''.join(traceback.format_exception(exception)),
         )
 
-        if isinstance(exception, QWebException):
-            values.update(qweb_exception=exception)
-            exception = exception.__cause__ or exception.__context__
-
         if isinstance(exception, exceptions.UserError):
             code = exception.http_status
             values['error_message'] = exception.args[0]
         elif isinstance(exception, werkzeug.exceptions.HTTPException):
             code = exception.code
             values['error_message'] = exception.description
+
+        if hasattr(exception, 'qweb'):
+            values.update(qweb_exception=exception.qweb)
+            if code == 404 and exception.qweb.path:
+                # If there is a path, it means that the error does not
+                # come directly from the called template (for example a
+                # "/t" from a t-call MissingError)
+                code = 500
 
         values.update(
             status_message=werkzeug.http.HTTP_STATUS_CODES.get(code, ''),
