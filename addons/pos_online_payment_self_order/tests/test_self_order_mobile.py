@@ -63,3 +63,28 @@ class TestSelfOrderMobile(SelfOrderCommonTest, OnlinePaymentCommon):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
         self.start_tour(self_route, "test_online_payment_kiosk_qr_code")
+
+    def test_online_payment_mobile_self_order_preparation_changes(self):
+        """
+        Ensure that the Order button in the POS UI remains enabled when an online payment method
+        is configured for mobile self-ordering and the order has not yet been paid.
+        """
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'table',
+            'self_order_online_payment_method_id': self.online_payment_method.id,
+            'use_presets': False,
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+
+        # create self-order from mobile
+        self.start_tour(self.pos_config._get_self_order_route(), 'test_online_payment_mobile_self_order_preparation_changes')
+        order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.state, 'draft')
+        self.assertEqual(len(order.lines), 2)
+
+        # Check self-order in pos-terminal order button remains enabled
+        self.start_tour('/pos/ui?config_id=%d' % self.pos_config.id, 'test_online_payment_pos_self_order_preparation_changes', login='pos_user')
