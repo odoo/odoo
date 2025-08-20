@@ -8,7 +8,6 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { press } from "@odoo/hoot-dom";
 import { defineCrmLivechatModels } from "./crm_livechat_test_helpers";
 
 describe.current.tags("desktop");
@@ -29,7 +28,7 @@ test("Can open lead from internal link", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/lead My Lead");
-    await press("Enter");
+    await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o-mail-ChatWindow", { count: 0 });
     await click('.o_mail_notification a[data-oe-model="crm.lead"]');
     await contains(".o-mail-ChatWindow-header", { text: "Visitor" });
