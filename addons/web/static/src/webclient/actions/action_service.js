@@ -832,7 +832,6 @@ export function makeActionManager(env, router = _router) {
     async function _updateUI(controller, options = {}) {
         let resolve;
         let reject;
-        let dialogCloseResolve;
         let removeDialogFn;
         const currentActionProm = new Promise((_res, _rej) => {
             resolve = _res;
@@ -1004,9 +1003,6 @@ export function makeActionManager(env, router = _router) {
             }
             onWillUnmount() {
                 controller.isMounted = false;
-                if (action.target === "new" && dialogCloseResolve) {
-                    dialogCloseResolve();
-                }
             }
             get componentProps() {
                 const componentProps = { ...this.props };
