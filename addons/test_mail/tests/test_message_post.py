@@ -1256,7 +1256,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         -> we don't want XML nor Octet-Stream files to be set as message_main_attachment
         """
         xml_attachment, octet_attachment, pdf_attachment = (
-            [('List1', b'<xml>My xml attachment</xml>')],
+            [('List1', b'<?xml version="1.0"?>My xml attachment<_/>')],
             [('List2', b'\x00\x01My octet-stream attachment\x03\x04')],
             [('List3', b'%PDF My pdf attachment')])
 
