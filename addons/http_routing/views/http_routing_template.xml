@@ -39,13 +39,10 @@
                 <div id="error_qweb" class="collapse show">
                     <div class="card-body">
                         <p>
-                            <strong>Error message:</strong>
-                            <pre t-esc="exception"/>
+                            The error occurred while rendering the template <code t-esc="qweb_exception.template"/>
+                            <t t-if="qweb_exception.element">and evaluating the following expression: <code t-esc="qweb_exception.element"/></t>
                         </p>
-                        <p>
-                            The error occurred while rendering the template <code t-esc="qweb_exception.name"/> 
-                            <t t-if="qweb_exception.html">and evaluating the following expression: <code t-esc="qweb_exception.html"/></t>
-                        </p>
+                        <pre t-esc="str(exception)"/>
                     </div>
                 </div>
             </div>

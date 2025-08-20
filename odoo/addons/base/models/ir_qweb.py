@@ -379,7 +379,6 @@ import traceback
 import warnings
 import werkzeug
 
-import psycopg2.errors
 from markupsafe import Markup, escape
 from collections import defaultdict
 from collections.abc import Sized, Mapping, Sequence, Iterator
@@ -406,7 +405,7 @@ from odoo.tools.profiler import ExecutionContext
 from odoo.tools.translate import FORMAT_REGEX
 from odoo.http import request
 from odoo.tools.profiler import QwebTracker
-from odoo.exceptions import UserError, AccessDenied, AccessError, MissingError, ValidationError
+from odoo.exceptions import UserError, MissingError
 
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS, TEMPLATE_EXTENSIONS
@@ -517,70 +516,44 @@ def keep_query(*keep_params, **additional_params):
                 params[param] = request.httprequest.args.getlist(param)
     return werkzeug.urls.url_encode(params)
 
-####################################
-###        QWebException         ###
-####################################
-
-class QWebException(Exception):
-    """ Management of errors that raised when rendering a QWeb template.
-    """
-    def __init__(self, message, qweb, template=None, ref=None, path_xml=None, code=None, path_info=None):
-        self.title = message
-        self.stack = traceback.format_exc()
-        self.name = ref if template is None else template
-        self.ref, self.path, self.html = path_xml or (ref, None, None)
-        self.path_info = path_info
-        self.code = code if qweb.env.context.get('dev_mode') else None
-        if code:
-            line_nb = 0
-            for error_line in reversed(self.stack.split('\n')):
-                if f'File "<{self.ref}>"' in error_line or (self.ref is None and 'File "<' in error_line):
-                    line_function = error_line.split(', line ')[1]
-                    line_nb = int(line_function.split(',')[0])
-                    break
-            for code_line in reversed(code.split('\n')[:line_nb]):
-                if code_line.startswith('def '):
-                    break
-                match = re.match(r'\s*# element: (.*) , (.*)', code_line)
-                if match:
-                    self.path = match[1][1:-1]
-                    self.html = match[2][1:-1]
-                    break
-
-        super().__init__(message)
-
-    @property
-    def detail(self):
-        parts = []
-        if self.name is not None:
-            parts.append(f"Template: {self.name}")
-        if self.ref is not None:
-            parts.append(f"Reference: {self.ref}")
-        if self.path is not None:
-            parts.append(f"Path: {self.path}")
-        if self.html is not None:
-            parts.append(f"Element: {self.html}")
-        if self.path_info:
-            path_info = '\n      '.join(str(v) for v in self.path_info)
-            parts.append(f"From: {path_info}")
-        if self.code is not None:
-            parts.append(f"Compiled code:\n\n{self.code}")
-        return "\n".join(parts)
-
-    def __str__(self):
-        errorType = "Exception"
-        if str(self.__cause__):
-            errorType = self.__cause__.__class__.__name__
-        elif str(self.__context__):
-            errorType = self.__context__.__class__.__name__
-        return f"Error while rendering the template:\n{errorType}: {self.title!r}\n{self.detail}"
-
-    def __repr__(self):
-        return f"QWebException({self.title!r})"
 
 ####################################
 ###             QWeb             ###
 ####################################
+
+
+class QWebError(Exception):
+    def __init__(self, qweb: QWebErrorInfo):
+        super().__init__('Error while rendering the template')
+        self.qweb = qweb
+
+    def __str__(self):
+        return f'{super().__str__()}:\n    {self.qweb}'
+
+
+class QWebErrorInfo:
+    def __init__(self, error: str, ref_name: str | int | None, ref: int | None, path: str | None, element: str | None, source: str):
+        self.error = error
+        self.template = ref_name
+        self.ref = ref
+        self.path = path
+        self.element = element
+        self.source = source
+
+    def __str__(self):
+        info = [self.error]
+        if self.template is not None:
+            info.append(f'Template: {self.template}')
+        if self.ref is not None:
+            info.append(f'Reference: {self.ref}')
+        if self.path is not None:
+            info.append(f'Path: {self.path}')
+        if self.element is not None:
+            info.append(f'Element: {self.element}')
+        if self.source:
+            source = '\n          '.join(str(v) for v in self.source + ((self.ref, self.path, self.element),))
+            info.append(f'From: {source}')
+        return '\n    '.join(info)
 
 
 class QwebCallParameters(NamedTuple):
@@ -645,7 +618,8 @@ class IrQweb(models.AbstractModel):
 
         values = values.copy() if values else {}
         if T_CALL_SLOT in values:
-            raise ValueError(f'values[{T_CALL_SLOT}] should be unset when call the _render method and only set into the template.')
+            _logger.warning('values[0] should be unset when call the _render method and only set into the template.')
+            values.pop(T_CALL_SLOT)
 
         irQweb = self.with_context(**options)._prepare_environment(values)
         irQweb = irQweb.with_context(
@@ -727,10 +701,12 @@ class IrQweb(models.AbstractModel):
                     if params.values:
                         values.update(params.values)
 
-                    # Create the iterator from the template
-                    iterator = render_template(irQweb, values)
-
-                    stack.append(QwebStackFrame(params, irQweb, iterator, values, options))
+                    iterator = iter([])
+                    try:
+                        # Create the iterator from the template
+                        iterator = render_template(irQweb, values)
+                    finally:
+                        stack.append(QwebStackFrame(params, irQweb, iterator, values, options))
                     break
 
                 else:
@@ -739,31 +715,82 @@ class IrQweb(models.AbstractModel):
         except (TransactionRollbackError, ReadOnlySqlTransaction):
             raise
 
-        except QWebException as error:
-            error.path_info = OrderedSet(info.params.path_xml for info in reversed(stack) if info.params.path_xml)
-            if error.ref is None:
-                error.ref = frame.params.view_ref
+        except Exception as error:
+            qweb_error_info = self._get_error_info(error, stack, frame)
+
+            if hasattr(error, 'qweb'):
+                if qweb_error_info.source:
+                    error.qweb.source = qweb_error_info.source + error.qweb.source
+                if not error.qweb.ref and frame.params.view_ref:
+                    error.qweb.ref = frame.params.view_ref
+                qweb_error_info = error.qweb
+            elif not isinstance(error, UserError):
+                # If is not an odoo Exception check if the current error is raise from
+                # IrQweb (models or computed code). In this case, convert it into an QWebError.
+                isQweb = False
+
+                trace = error.__traceback__
+                tb_frames = [trace.tb_frame]
+                while trace.tb_next is not None:
+                    trace = trace.tb_next
+                    tb_frames.append(trace.tb_frame)
+                for tb_frame in tb_frames[::-1]:
+                    if tb_frame.f_globals.get('__name__') == __name__ or (
+                        isinstance(tb_frame.f_locals.get('self'), models.AbstractModel)
+                        and tb_frame.f_locals['self']._name == self._name
+                    ):
+                        isQweb = True
+                        break
+                    if any(path in tb_frame.f_code.co_filename for path in tools.config['addons_path']):
+                        break
+
+                if isQweb:
+                    raise QWebError(qweb_error_info) from error
+
+            error.qweb = qweb_error_info
             raise
 
-        except Exception as error:
-            loaded_codes = self.env.context['__qweb_loaded_codes']
-            if (frame.params.view_ref in loaded_codes and not isinstance(error, RecursionError)) or len(stack) <= 1:
-                options = frame.options or {}  # The compilation may have failed before the compilation options were loaded.
-                ref = options.get('ref') or view_ref  # The template can have a null reference, for example for a provided etree.
-                ref_name = options.get('ref_name') or None
-                code = loaded_codes.get(frame.params.view_ref) or loaded_codes.get(False)
-                path_xml = [ref] + self.env.context['_qweb_error_path_xml']
+    def _get_error_info(self, error, stack: list[QwebStackFrame], frame: QwebStackFrame) -> QWebErrorInfo:
+        source = tuple(OrderedSet(info.params.path_xml for info in stack if info.params.path_xml))
+
+        loaded_codes = self.env.context['__qweb_loaded_codes']
+        if (frame.params.view_ref in loaded_codes and not isinstance(error, RecursionError)) or len(stack) <= 1:
+            options = frame.options or {}  # The compilation may have failed before the compilation options were loaded.
+            ref = options.get('ref') or stack[0].params.view_ref  # The template can have a null reference, for example for a provided etree.
+            ref_name = options.get('ref_name') or None
+            code = loaded_codes.get(frame.params.view_ref) or loaded_codes.get(False)
+            path = self.env.context['_qweb_error_path_xml'][0]
+            html = self.env.context['_qweb_error_path_xml'][1]
+        else:
+            # get the previous caller (t-call, t-cache...) to display erroneous xml node.
+            options = stack[-2].options or {}  # The compilation may have failed before the compilation options were loaded.
+            ref = options.get('ref')
+            ref_name = options.get('ref_name')
+            code = loaded_codes.get(ref) or loaded_codes.get(False)
+            if frame.params.path_xml:
+                path = frame.params.path_xml[1]
+                html = frame.params.path_xml[2]
             else:
-                # get the previous caller (t-call, t-cache...) to display erroneous xml node.
-                options = stack[-2].options or {}  # The compilation may have failed before the compilation options were loaded.
-                ref = options.get('ref')
-                ref_name = options.get('ref_name')
-                code = loaded_codes.get(ref) or loaded_codes.get(False)
-                path_xml = frame.params.path_xml
+                path = None
+                html = None
 
-            path_info = OrderedSet(info.params.path_xml for info in reversed(stack) if info.params.path_xml)
+        line_nb = 0
+        trace = traceback.format_exc()
+        for error_line in reversed(trace.split('\n')):
+            if f'File "<{ref}>"' in error_line or (ref is None and 'File "<' in error_line):
+                line_function = error_line.split(', line ')[1]
+                line_nb = int(line_function.split(',')[0])
+                break
+        for code_line in reversed((code or '').split('\n')[:line_nb]):
+            if code_line.startswith('def '):
+                break
+            match = re.match(r'\s*# element: (.*) , (.*)', code_line)
+            if match:
+                path = match[1][1:-1]
+                html = match[2][1:-1]
+                break
 
-            raise QWebException(error.args[0], self, ref_name, ref=ref, code=code, path_xml=path_xml, path_info=path_info) from error
+        return QWebErrorInfo(f'{error.__class__.__name__}: {error}', ref if ref_name is None else ref_name, ref, path, html, source)
 
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):
@@ -816,24 +843,30 @@ class IrQweb(models.AbstractModel):
         # generate the template functions and the root function name
         def generate_functions():
             code, options, def_name = self._generate_code(template)
+            if code is None:
+                Error, message, stack = options['error']
+
+                def not_found_template(self, values):
+                    if tools.config['dev_mode']:
+                        _logger.info(stack)
+                    if self.env.context.get('raise_if_not_found', True):
+                        raise Error(message)
+                    _logger.warning('Cannot load template %s: %s', template, message)
+                    return ''
+
+                return {'not_found_template': not_found_template}, 'not_found_template', frozendict(options)
+
             wrap_code = '\n'.join([
                 "def generate_functions():",
                 indent_code(code, 1),
                 f"    code = {code!r}",
                 "    return template_functions",
             ])
-
-            try:
-                compiled = compile(wrap_code, f"<{ref}>", 'exec')
-                globals_dict = self.__prepare_globals()
-                globals_dict['__builtins__'] = globals_dict  # So that unknown/unsafe builtins are never added.
-                unsafe_eval(compiled, globals_dict)
-                return globals_dict['generate_functions'](), def_name, frozendict(options)
-            except QWebException:
-                raise
-            except Exception as e:
-                raise QWebException("Error when compiling xml template",
-                    self, template, code=code, ref=ref) from e
+            compiled = compile(wrap_code, f"<{ref}>", 'exec')
+            globals_dict = self.__prepare_globals()
+            globals_dict['__builtins__'] = globals_dict  # So that unknown/unsafe builtins are never added.
+            unsafe_eval(compiled, globals_dict)
+            return globals_dict['generate_functions'](), def_name, frozendict(options)
 
         return self._load_values(base_key_cache, generate_functions)
 
@@ -877,17 +910,10 @@ class IrQweb(models.AbstractModel):
         try:
             element, document, ref = self._get_template(template)
         except (ValueError, UserError) as e:
-            # return the error function if the template is not found or fail
-            message = str(e)
-            code = indent_code(f"""
-                def not_found_template(self, values):
-                    if self.env.context.get('raise_if_not_found', True):
-                        raise {e.__class__.__name__}({message!r})
-                    warning('Cannot load template %s: %s', {template!r}, {message!r})
-                    return ''
-                template_functions = {{'not_found_template': not_found_template}}
-            """, 0)
-            return (code, {}, 'not_found_template')
+            # return the error information if the template is not found or fail
+            options = {k: compile_context.get(k, False) for k in self._get_template_cache_keys()}
+            options['error'] = (e.__class__, str(e), traceback.format_exc())
+            return (None, options, 'not_found_template')
 
         compile_context.pop('raise_if_not_found', None)
 
@@ -935,48 +961,28 @@ class IrQweb(models.AbstractModel):
         name_gen = count()
         compile_context['make_name'] = lambda prefix: f"{def_name}_{prefix}_{next(name_gen)}"
 
-        try:
-            if element.text:
-                element.text = FIRST_RSTRIP_REGEXP.sub(r'\2', element.text)
+        if element.text:
+            element.text = FIRST_RSTRIP_REGEXP.sub(r'\2', element.text)
 
-            compile_context['template_functions'] = {}
+        compile_context['template_functions'] = {}
 
-            compile_context['_text_concat'] = []
-            self._append_text("", compile_context)  # To ensure the template function is a generator and doesn't become a regular function
-            compile_context['template_functions'][f'{def_name}_content'] = (
-                [f"def {def_name}_content(self, values):"]
-                + self._compile_node(element, compile_context, 2)
-                + self._flush_text(compile_context, 2, rstrip=True))
+        compile_context['_text_concat'] = []
+        self._append_text("", compile_context)  # To ensure the template function is a generator and doesn't become a regular function
+        compile_context['template_functions'][f'{def_name}_content'] = (
+            [f"def {def_name}_content(self, values):"]
+            + self._compile_node(element, compile_context, 2)
+            + self._flush_text(compile_context, 2, rstrip=True))
 
-            compile_context['template_functions'][def_name] = [indent_code(f"""
-                def {def_name}(self, values):
-                    try:
-                        if 'xmlid' not in values:
-                            values['xmlid'] = {options['ref_name']!r}
-                            values['viewid'] = {options['ref']!r}
-                        self.env.context['__qweb_loaded_functions'].update(template_functions)
-                        self.env.context['__qweb_loaded_codes'][{options['ref']!r}] = self.env.context['__qweb_loaded_codes'][{options['ref_name']!r}] = code
-                        yield from {def_name}_content(self, values)
-                    except QWebException:
-                        raise
-                    except Exception as e:
-                        if isinstance(e, TransactionRollbackError):
-                            raise
-                        if isinstance(e, ReadOnlySqlTransaction):
-                            raise
-                        raise QWebException("Error while render the template",
-                            self, template, ref={compile_context['ref']!r}, code=code) from e
-                    """, 0)]
-        except QWebException:
-            raise
-        except Exception as e:
-            msg = "Error when compiling xml template"
-            ref = compile_context['ref']
-            path_xml = [ref] + compile_context['_qweb_error_path_xml']
-            raise QWebException(msg, self, template, ref=ref, path_xml=path_xml) from e
+        compile_context['template_functions'][def_name] = [indent_code(f"""
+            def {def_name}(self, values):
+                if 'xmlid' not in values:
+                    values['xmlid'] = {options['ref_name']!r}
+                    values['viewid'] = {options['ref']!r}
+                self.env.context['__qweb_loaded_functions'].update(template_functions)
+                self.env.context['__qweb_loaded_codes'][{options['ref']!r}] = self.env.context['__qweb_loaded_codes'][{options['ref_name']!r}] = code
+                yield from {def_name}_content(self, values)
+                """, 0)]
 
-        code_lines = ['code = None']
-        code_lines.append(f'template = {(document if isinstance(template, etree._Element) else template)!r}')
         code_lines = []
         code_lines.append(f'template_options = {pprint.pformat(options, indent=4)}')
         code_lines.append('code = None')
@@ -1069,11 +1075,7 @@ class IrQweb(models.AbstractModel):
         missing_refs_values = list(missing_refs.values())
         views = self.env['ir.ui.view'].sudo().union(*[data['view'] for data in missing_refs_values])
 
-        try:
-            trees = views._get_view_etrees()
-        except Exception as e:
-            ref_name = hasattr(e, 'context') and e.context.get('view') and e.context.get('view').key
-            raise QWebException("Error while render the template", self, template=ref_name, ref=','.join(refs)) from e
+        trees = views._get_view_etrees()
 
         # add in cache
         for xmlid, view, tree in zip(xmlids, views, trees):
@@ -1181,23 +1183,14 @@ class IrQweb(models.AbstractModel):
         generated code.
         """
         return {
+            '__name__': __name__,
             'Sized': Sized,
             'Mapping': Mapping,
             'Markup': Markup,
             'escape': escape,
             'VOID_ELEMENTS': VOID_ELEMENTS,
             'QwebCallParameters': QwebCallParameters,
-            'QWebException': QWebException,
-            'Exception': Exception,
-            'TransactionRollbackError': TransactionRollbackError, # for SerializationFailure in assets
-            'ReadOnlySqlTransaction': psycopg2.errors.ReadOnlySqlTransaction,
             'ValueError': ValueError,
-            'UserError': UserError,
-            'AccessDenied': AccessDenied,
-            'AccessError': AccessError,
-            'MissingError': MissingError,
-            'ValidationError': ValidationError,
-            'warning': lambda *args: _logger.warning(*args),
             **_BUILTINS,
         }
 
@@ -2599,21 +2592,12 @@ class IrQweb(models.AbstractModel):
         # generate the cached content method
         def_name = compile_context['make_name']('t_nocache')
         def_code = [f"def {def_name}(self, values):"]
-        def_code.append(indent_code("try:", 1))
         path, xml = compile_context['_qweb_error_path_xml']
-        def_code.append(indent_code(f'# element: {path!r} , {xml!r}', 2))
-        def_content = self._compile_directives(el, compile_context, 2)
+        def_code.append(indent_code(f'# element: {path!r} , {xml!r}', 1))
+        def_content = self._compile_directives(el, compile_context, 1)
         if def_content and not compile_context['_text_concat']:
             self._append_text('', compile_context) # To ensure the template function is a generator and doesn't become a regular function
         def_code.extend(def_content)
-        def_code.extend(self._flush_text(compile_context, 2))
-        def_code.append(indent_code(f"""
-                except QWebException:
-                    raise
-                except Exception as e:
-                    raise QWebException("Error while render the template",
-                        self, template, ref={compile_context['ref']!r}, code=code) from e
-            """, 1))
         def_code.extend(self._flush_text(compile_context, 1))
         compile_context['template_functions'][def_name] = def_code
 

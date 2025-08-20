@@ -28,7 +28,6 @@ from odoo.http import request, SessionExpiredException
 from odoo.tools import OrderedSet, escape_psql, html_escape as escape, py_to_js_locale
 from odoo.tools.translate import LazyTranslate
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
-from odoo.addons.base.models.ir_qweb import QWebException
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
 from odoo.addons.web.controllers.binary import Binary
@@ -743,9 +742,12 @@ class Website(Home):
                         'key': template.key,
                         'template': html.tostring(html_tree),
                     })
-                except QWebException as qe:
-                    # Do not fail if theme is not compatible.
-                    logger.warning("Theme not compatible with template %r: %s", template.key, qe)
+                except Exception as error:
+                    if hasattr(error, 'qweb'):
+                        # Do not fail if theme is not compatible.
+                        logger.warning("Theme not compatible with template %r: %s", template.key, error)
+                    else:
+                        raise
             if group['templates']:
                 result.append(group)
         return result

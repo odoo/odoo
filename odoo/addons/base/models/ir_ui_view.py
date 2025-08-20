@@ -1105,14 +1105,18 @@ actual arch.
                 view.key
             except MissingError:
                 view = None
-                error = MissingError(self.env._("Template not found: %s", id_or_xmlid))
+                error = MissingError(self.env._("Template not found: '%s'", id_or_xmlid))
             except UserError as e:
                 view = None
                 error = e
         else:
-            preload = self.sudo()._preload_views([id_or_xmlid])[id_or_xmlid]
-            view = preload['view']
-            error = preload['error']
+            preload = self.sudo()._preload_views([id_or_xmlid])
+            if id_or_xmlid in preload:
+                info = preload[id_or_xmlid]
+                view = info['view']
+                error = info['error']
+            else:
+                error = SyntaxError('Error compiling template')
         info = {
             f: view[f] if view else None
             for f in self._get_cached_template_prefetched_keys()}
@@ -1196,7 +1200,7 @@ actual arch.
             if xmlid not in view_by_id:
                 # push information in cache
                 self._get_cached_template_info(xmlid, _view=False)
-                view_by_id[xmlid] = MissingError(self.env._("Template not found: %s", xmlid))
+                view_by_id[xmlid] = MissingError(self.env._("Template not found: '%s'", xmlid))
         return view_by_id
 
     @tools.ormcache(cache='templates')

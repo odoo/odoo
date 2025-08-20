@@ -2667,7 +2667,7 @@
         <div class="container" t-if="view and editable">
             <div class="alert alert-danger" role="alert">
                 <h4>Template fallback</h4>
-                <p>An error occurred while rendering the template <code t-out="qweb_exception.name"/>.</p>
+                <p>An error occurred while rendering the template <code t-out="qweb_exception.template"/>.</p>
                 <p>If this error is caused by a change of yours in the templates, you have the possibility to reset the template to its <strong>factory settings</strong>.</p>
                 <form action="#" method="post" id="reset_templates_form">
                     <ul>
