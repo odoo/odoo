@@ -495,11 +495,20 @@ registry.category("web_tour.tours").add("test_sale_order_fp_different_from_partn
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("test_multiple_lots_sale_order", {
+registry.category("web_tour.tours").add("test_multiple_lots_sale_order_1", {
     steps: () =>
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            Order.hasLine({ productName: "Product", quantity: "3.0" }),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_multiple_lots_sale_order_2", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
             PosSale.settleNthOrder(1, { loadSN: true }),
             PosSale.selectedOrderLinesHasLots("Product", ["1002"]),
             Utils.negateStep(...PosSale.selectedOrderLinesHasLots("Product", ["1001"])),
