@@ -52,6 +52,12 @@ const supportedInfoValidation = {
             shape: { label: String, value: String },
             optional: true,
         },
+        /**
+         * If true, the listed fields come from the relation.
+         * e.g.: the field is a relational one like many2many_tags, so
+         * property 'field' will search on the relation.
+         * */
+        isRelationalField: { type: Boolean, optional: false },
     },
     optional: true,
 };
