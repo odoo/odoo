@@ -79,3 +79,14 @@ class IrMail_Server(models.Model):
             connection.docmd('AUTH', f'XOAUTH2 {oauth_param}')
         else:
             super()._smtp_login__(connection, smtp_user, smtp_password)
+
+    def _get_personal_mail_servers_limit(self):
+        """Return the number of email we can send in 1 minutes for this outgoing server.
+
+        0 fallbacks to 30 to avoid blocking servers.
+        """
+        if self.smtp_authentication == 'outlook':
+            # Outlook flag way faster email as spam, so we set a lower limit
+            return int(self.env['ir.config_parameter'].sudo()
+                .get_param('mail.server.personal.limit.minutes_outlook')) or 10
+        return super()._get_personal_mail_servers_limit()

@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
+from contextlib import contextmanager
+from datetime import datetime, timedelta
 from unittest.mock import patch
 
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged, users
-from odoo.tools import config, mute_logger
+from odoo.tools import config, mute_logger, split_every
 
 
 @tagged('mail_server')
@@ -389,6 +393,46 @@ class TestIrMailServer(MailCommon):
             from_filter='random.domain',
         )
 
+
+@tagged('mail_server')
+class TestPersonalServer(MailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_1, cls.user_2 = cls.user_employee, cls.user_employee_c2
+        cls.mail_server_1, cls.mail_server_2 = cls.env["ir.mail_server"].create([{
+            'name': 'test',
+            'owner_user_id': user.id,
+            'from_filter': user.email,
+            'smtp_user': user.email,
+            'smtp_host': f'test_{i}@example.com',
+        } for i, user in enumerate((cls.user_1, cls.user_2))])
+
+    @contextmanager
+    def assert_mail_sent_then_scheduled(self, mails, to_process_count, sent_count, send_datetime):
+        """Assert that X emails has been sent, and the other have been scheduled."""
+        TEST_LIMIT = 5
+        outgoing = mails.filtered(
+            lambda m: m.state == 'outgoing'
+            and (not m.scheduled_date or m.scheduled_date <= send_datetime)
+        ).sorted(lambda m: (m.create_date, m.id))
+
+        self.assertEqual(len(outgoing), to_process_count)
+
+        yield
+
+        sent = outgoing.filtered(lambda m: m.state == 'sent')
+        self.assertEqual(sent, outgoing[:len(sent)], "Should send in priority old mails")
+        unsent = outgoing - sent
+        self.assertEqual(len(sent), sent_count)
+
+        scheduled_dates = sorted(unsent.mapped('scheduled_date'))
+        scheduled_dates = list(split_every(TEST_LIMIT, scheduled_dates))
+
+        for i, to_check in enumerate(scheduled_dates, start=1):
+            self.assertEqual(set(to_check), {send_datetime.replace(second=0) + timedelta(minutes=i)})
+
     @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_mail_server')
     @patch.dict(config.options, {
         "from_filter": "cli@example.com",
@@ -398,46 +442,304 @@ class TestIrMailServer(MailCommon):
         """Test that the personal mail servers can not be used as fallback."""
         IrMailServer = self.env['ir.mail_server']
         self.env['ir.mail_server'].search([]).from_filter = "random.domain"
-        self.mail_alias_domain.default_from = 'test'
-        self.mail_alias_domain.name = 'custom_domain.com'
 
         # Sanity check, no owner so it can be used as fallback
         (self.env['ir.mail_server'].search([]) - self.mail_server_user).unlink()
         self.mail_server_user.write({
-            'from_filter': 'user@custom_domain.com',
+            'from_filter': 'user@test.mycompany.com',
             'owner_user_id': False,
         })
         with self.mock_smtplib_connection():
-            message = self._build_email(mail_from='test@custom_domain.com')
+            message = self._build_email(mail_from='notifications.test@test.mycompany.com')
             IrMailServer.send_email(message)
 
         self.connect_mocked.assert_called_once()
         self.assertSMTPEmailsSent(
-            smtp_from='test@custom_domain.com',
-            message_from='test@custom_domain.com',
-            from_filter='user@custom_domain.com',
+            smtp_from='notifications.test@test.mycompany.com',
+            message_from='notifications.test@test.mycompany.com',
+            from_filter='user@test.mycompany.com',
         )
 
         # Check that even if there is no other mail server,
         # we don't use the mail server having an owner as fallback
         # (to avoid leaking outgoing emails)
         self.mail_server_user.write({
-            'from_filter': 'user@custom_domain.com',
+            'from_filter': 'user@test.mycompany.com',
             'owner_user_id': self.env.user.id,
         })
         with self.mock_smtplib_connection():
-            message = self._build_email(mail_from='test@custom_domain.com')
+            message = self._build_email(mail_from='notifications.test@test.mycompany.com')
             IrMailServer.send_email(message)
 
         self.connect_mocked.assert_called_once()
         self.assertSMTPEmailsSent(
-            smtp_from='test@custom_domain.com',
-            message_from='test@custom_domain.com',
+            smtp_from='notifications.test@test.mycompany.com',
+            message_from='notifications.test@test.mycompany.com',
             from_filter='cli@example.com',
         )
 
         with self.mock_smtplib_connection(), self.assertRaises(UserError):
             # We can't even force it
-            message = self._build_email(mail_from='test@custom_domain.com')
+            message = self._build_email(mail_from='test@test.mycompany.com')
             IrMailServer.send_email(message, mail_server_id=self.mail_server_user.id)
         self.assertFalse(self.emails)
+
+    @mute_logger('odoo.models.unlink')
+    def test_personal_mail_server_limit(self):
+        # Test the limit per personal mail servers
+        TEST_LIMIT = 5
+        self.env['ir.config_parameter'].set_param('mail.server.personal.limit.minutes', str(TEST_LIMIT))
+        user_1, user_2 = self.user_1, self.user_2
+        mail_server_1, mail_server_2 = self.mail_server_1, self.mail_server_2
+
+        with self.mock_datetime_and_now("2025-01-01 20:02:23"):
+            mails_user_1 = self.env["mail.mail"].with_user(user_1).sudo().create([
+                {'state': 'outgoing', 'email_to': 'target@test.com', 'email_from': user_1.email}
+                for i in range(22)
+            ])
+            mails_user_2 = self.env["mail.mail"].with_user(user_2).sudo().create([
+                {'state': 'outgoing', 'email_to': 'target@test.com', 'email_from': user_2.email}
+                for i in range(17)
+            ])
+            mails_other = self.env["mail.mail"].create([
+                {'state': 'outgoing', 'email_to': 'target@test.com', 'email_from': user_1.email}
+                for i in range(25)
+            ])
+
+        mails = mails_other + mails_user_1 + mails_user_2
+
+        self.assertEqual(mail_server_1.owner_limit_count, 0)
+        self.assertFalse(mail_server_1.owner_limit_time)
+
+        DATE_SEND_1 = datetime(2025, 1, 1, 20, 5, 23)
+        with (
+            self.mock_smtplib_connection(),
+            self.mock_datetime_and_now(DATE_SEND_1),
+            self.assert_mail_sent_then_scheduled(mails_user_1, len(mails_user_1), 5, DATE_SEND_1),
+            self.assert_mail_sent_then_scheduled(mails_user_2, len(mails_user_2), 5, DATE_SEND_1),
+        ):
+            mails.send()
+
+        for personal_server in (mail_server_1, mail_server_2):
+            self.assertEqual(personal_server.owner_limit_count, TEST_LIMIT)
+            self.assertEqual(personal_server.owner_limit_time, DATE_SEND_1.replace(second=0))
+
+        self.assertEqual(self.connect_mocked.call_count, 3, "Called once for each mail server")
+
+        # Check that the email not related to personal mail server are all sent
+        self.assertEqual(set(mails_other.mapped('state')), {'sent'})
+
+        # User 1 continues sending emails
+        # Because emails are still in the queue, we delay all of them
+        with self.mock_datetime_and_now("2025-01-01 20:04:23"):
+            new_mails_user_1 = self.env["mail.mail"].with_user(user_1).sudo().create([
+                {'state': 'outgoing', 'email_to': 'target@test.com', 'email_from': user_1.email}
+                for i in range(12)
+            ])
+        mails_user_1 |= new_mails_user_1
+
+        DATE_SEND_2 = datetime(2025, 1, 1, 20, 5, 23)
+        with (
+            self.mock_smtplib_connection(),
+            self.mock_datetime_and_now(DATE_SEND_2),
+            self.assert_mail_sent_then_scheduled(new_mails_user_1, 12, 0, DATE_SEND_2),
+        ):
+            new_mails_user_1.send()
+
+        self.assertEqual(mail_server_1.owner_limit_count, TEST_LIMIT)
+        self.assertEqual(mail_server_1.owner_limit_time, DATE_SEND_2.replace(second=0))
+
+        # One minute later, we can send again
+        DATE_SEND_3 = datetime(2025, 1, 1, 20, 6, 23)
+        processed = (mails_user_1 | new_mails_user_1).filtered(
+            lambda m: not m.scheduled_date or m.scheduled_date <= DATE_SEND_3)
+        with (
+            self.mock_smtplib_connection(),
+            self.mock_datetime_and_now(DATE_SEND_3),
+            self.assert_mail_sent_then_scheduled(processed, 10, 5, DATE_SEND_3),
+        ):
+            self.env['mail.mail'].process_email_queue()
+
+        self.assertEqual(mail_server_1.owner_limit_count, TEST_LIMIT)
+        self.assertEqual(mail_server_1.owner_limit_time, DATE_SEND_3.replace(second=0))
+
+        # The CRON run in one minute later, we can 5 more emails
+        DATE_SEND_5 = datetime(2025, 1, 1, 20, 7, 23)
+        with (
+            self.mock_smtplib_connection(),
+            self.mock_datetime_and_now(DATE_SEND_5),
+            self.assert_mail_sent_then_scheduled(mails_user_1, 15, 5, DATE_SEND_5),
+        ):
+            self.env['mail.mail'].process_email_queue()
+
+        self.assertEqual(mail_server_1.owner_limit_count, TEST_LIMIT)
+        self.assertEqual(mail_server_1.owner_limit_time, DATE_SEND_5.replace(second=0))
+
+        # The CRON is late compared to the scheduled mails,
+        # it should re-schedule the mails, starting from the current time
+        # Should send in priority the old mails
+        DATE_SEND_6 = datetime(2025, 1, 1, 20, 25, 23)
+        with (
+            self.mock_smtplib_connection(),
+            self.mock_datetime_and_now(DATE_SEND_6),
+            self.assert_mail_sent_then_scheduled(mails_user_1, 19, 5, DATE_SEND_6),
+        ):
+            self.env['mail.mail'].process_email_queue()
+
+        self.assertEqual(mail_server_1.owner_limit_count, TEST_LIMIT)
+        self.assertEqual(mail_server_1.owner_limit_time, DATE_SEND_6.replace(second=0))
+
+        # Finish sending the email
+        for i in range(2):
+            DATE_SEND_7 = datetime(2025, 1, 1, 20, 26 + i, 23)
+            with self.mock_smtplib_connection(), self.mock_datetime_and_now(DATE_SEND_7):
+                self.env['mail.mail'].process_email_queue()
+            self.assertEqual(mail_server_1.owner_limit_count, TEST_LIMIT)
+            self.assertEqual(mail_server_1.owner_limit_time, DATE_SEND_7.replace(second=0))
+
+        DATE_SEND_8 = datetime(2025, 1, 1, 20, 28, 23)
+        with self.mock_smtplib_connection(), self.mock_datetime_and_now(DATE_SEND_8):
+            self.env['mail.mail'].process_email_queue()
+        self.assertEqual(mail_server_1.owner_limit_count, 4)
+        self.assertEqual(mail_server_1.owner_limit_time, DATE_SEND_8.replace(second=0))
+
+        # We send 4 emails this minute, check that will send 1 and schedule the remaining
+        new_mails_user_1 = self.env["mail.mail"].with_user(user_1).sudo().create([
+            {'state': 'outgoing', 'email_to': 'target@test.com', 'email_from': user_1.email}
+            for i in range(TEST_LIMIT)
+        ])
+        DATE_SEND_9 = datetime(2025, 1, 1, 20, 28, 23)
+        with (
+            self.mock_smtplib_connection(),
+            self.mock_datetime_and_now(DATE_SEND_9),
+            self.assert_mail_sent_then_scheduled(new_mails_user_1, len(new_mails_user_1), 1, DATE_SEND_9),
+        ):
+            self.env['mail.mail'].process_email_queue()
+        self.assertEqual(mail_server_1.owner_limit_count, TEST_LIMIT)
+        self.assertEqual(mail_server_1.owner_limit_time, DATE_SEND_9.replace(second=0))
+
+    @mute_logger('odoo.models.unlink')
+    def test_personal_mail_server_limit_many_recipient(self):
+        # Test with many recipients (should split the mail)
+        TEST_LIMIT = 5
+        self.env['ir.config_parameter'].set_param('mail.server.personal.limit.minutes', str(TEST_LIMIT))
+
+        partners = self.env['res.partner'].create([
+            {'name': f'Partner {i}', 'email': f'partner_{i}@test.com'}
+            for i in range(16)
+        ])
+        with self.mock_datetime_and_now("2025-01-01 20:30:23"):
+            email_to = '"Named To1" <to.1@test.com>, "Named To2" <to.1@test.com>'
+            mail = self.env["mail.mail"].with_user(self.user_employee).sudo().create({
+                'email_from': self.user_employee.email,
+                'email_cc': '"Named Cc1" <cc.1@test.com>, "Named Cc2" <cc.2@test.com>',
+                'email_to': email_to,
+                'headers': '{"test": "test header"}',
+                'recipient_ids': partners.ids,
+                'state': 'outgoing',
+            })
+
+        with self.mock_smtplib_connection(), self.mock_datetime_and_now("2025-01-01 20:31:23"):
+            self.env['mail.mail'].process_email_queue()
+
+        self.assertEqual(self.mail_server_1.owner_limit_count, TEST_LIMIT)
+        mails = self.env["mail.mail"].search(
+            [('mail_message_id', '=', mail.mail_message_id.id)],
+            order='create_date DESC, id DESC',
+        )
+        self.assertEqual(len(mails), 2)
+
+        # Only one mail preserved the email_to
+        self.assertEqual(mails.mapped('email_to'), [email_to, False])
+
+        # Should preserve the header
+        self.assertEqual(len(set(mails.mapped("headers"))), 1)
+        self.assertEqual({"test": "test header"}, json.loads(mails[0].headers))
+
+        self.assertEqual(mails.mapped('state'), ['sent', 'outgoing'])
+        outgoing = mails.filtered(lambda m: m.state == 'outgoing')
+        self.assertEqual(len(outgoing), 1)
+        self.assertFalse(outgoing.email_to)
+        self.assertEqual(outgoing.state, 'outgoing')
+        self.assertEqual(outgoing.create_uid, self.user_employee)
+        self.assertEqual(len(outgoing.recipient_ids), 16 - TEST_LIMIT)
+
+        # Re-send the same minute, nothing change
+        with self.mock_smtplib_connection(), self.mock_datetime_and_now("2025-01-01 20:31:33"):
+            self.env['mail.mail'].process_email_queue()
+        self.assertEqual(self.mail_server_1.owner_limit_count, TEST_LIMIT)
+        mails = self.env["mail.mail"].search([('mail_message_id', '=', mail.mail_message_id.id)])
+        self.assertEqual(len(mails), 2)
+        self.assertEqual(outgoing.state, 'outgoing')
+        self.assertEqual(outgoing.create_uid, self.user_employee)
+        self.assertEqual(len(outgoing.recipient_ids), 16 - TEST_LIMIT)
+
+        # Re-send one minute later
+        with self.mock_smtplib_connection(), self.mock_datetime_and_now("2025-01-01 20:32:27"):
+            self.env['mail.mail'].process_email_queue()
+        self.assertEqual(self.mail_server_1.owner_limit_count, TEST_LIMIT)
+        mails = self.env["mail.mail"].search([('mail_message_id', '=', mail.mail_message_id.id)])
+        self.assertEqual(sorted(mails.mapped('state')), ['outgoing', 'sent', 'sent'])
+        outgoing = mails.filtered(lambda m: m.state == 'outgoing')
+        self.assertEqual(len(outgoing), 1)
+        self.assertFalse(outgoing.email_to)
+        self.assertEqual(outgoing.state, 'outgoing')
+        self.assertEqual(outgoing.create_uid, self.user_employee)
+        self.assertEqual(len(outgoing.recipient_ids), 16 - 2 * TEST_LIMIT)
+
+        # The user re-send emails, while some emails are still in the queue
+        # We have now 2 mails with many recipients to process in the queue
+        with self.mock_datetime_and_now("2025-01-01 20:32:29"):
+            other_mail = self.env["mail.mail"].with_user(self.user_employee).sudo().create({
+                'email_from': self.user_employee.email,
+                'email_to': 'target@test.com',
+                'headers': '{"test": "test header"}',
+                'recipient_ids': partners[:7].ids,
+                'state': 'outgoing',
+            })
+
+        with self.mock_smtplib_connection(), self.mock_datetime_and_now("2025-01-01 20:37:29"):
+            self.env['mail.mail'].process_email_queue()
+        self.assertEqual(self.mail_server_1.owner_limit_count, TEST_LIMIT)
+        self.assertEqual(other_mail.state, 'outgoing')
+        mails = self.env["mail.mail"].search(
+            [('mail_message_id', 'in', (mail.mail_message_id.id, other_mail.mail_message_id.id))],
+            order='create_date DESC, id DESC',
+        )
+        self.assertEqual(sorted(mails.mapped('state')), ['outgoing', 'outgoing', 'sent', 'sent', 'sent'])
+        outgoing_1 = mails[-1]
+        self.assertFalse(outgoing_1.email_to)
+        self.assertEqual(outgoing_1.state, 'outgoing')
+        self.assertEqual(outgoing_1.create_uid, self.user_employee)
+        self.assertEqual(len(outgoing_1.recipient_ids), 16 - 3 * TEST_LIMIT)  # 1 recipient left
+
+        outgoing_2 = mails[1]
+        self.assertEqual(outgoing_2.email_to, 'target@test.com')
+        self.assertEqual(outgoing_2.state, 'outgoing')
+        self.assertEqual(outgoing_2.create_uid, self.user_employee)
+        self.assertEqual(len(outgoing_2.recipient_ids), 7)
+
+        # The next CRON will send all remaining emails of the first mail (1), and 4 mails for the second one
+        # and schedule the 3 last (7 recipients - 3 sent)
+        with self.mock_smtplib_connection(), self.mock_datetime_and_now("2025-01-01 20:39:29"):
+            self.env['mail.mail'].process_email_queue()
+        self.assertEqual(self.mail_server_1.owner_limit_count, TEST_LIMIT)
+        mails = self.env["mail.mail"].search([('mail_message_id', 'in', (mail.mail_message_id.id, other_mail.mail_message_id.id))])
+        self.assertEqual(
+            sorted(mails.mapped('state')),
+            ['outgoing', 'sent', 'sent', 'sent', 'sent', 'sent'],
+        )
+
+        outgoing = mails.filtered(lambda m: m.state == 'outgoing')
+        self.assertEqual(len(outgoing), 1)
+        self.assertFalse(outgoing.email_to)
+        self.assertEqual(outgoing.state, 'outgoing')
+        self.assertEqual(outgoing.create_uid, self.user_employee)
+        self.assertEqual(len(outgoing.recipient_ids), 3)
+
+        # Send the last email
+        with self.mock_smtplib_connection(), self.mock_datetime_and_now("2025-01-01 20:42:29"):
+            self.env['mail.mail'].process_email_queue()
+        self.assertEqual(self.mail_server_1.owner_limit_count, 3)
+        mails = self.env["mail.mail"].search([('mail_message_id', 'in', (mail.mail_message_id.id, other_mail.mail_message_id.id))])
+        self.assertEqual(set(mails.mapped('state')), {'sent'})
