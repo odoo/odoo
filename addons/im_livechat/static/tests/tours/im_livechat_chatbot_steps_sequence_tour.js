@@ -10,11 +10,11 @@ function createChatbotSteps(...stepMessages) {
         ...stepMessages
             .map((message) => [
                 {
-                    trigger: ".modal textarea#message_0",
-                    run: `edit ${message}`,
+                    trigger: ".modal .odoo-editor-editable",
+                    run: `editor ${message}`,
                 },
                 {
-                    trigger: `.modal textarea#message_0:value(${message})`,
+                    trigger: `.modal .odoo-editor-editable:contains(${message})`,
                 },
                 {
                     trigger: ".modal button:contains(Save & New)",
@@ -24,7 +24,7 @@ function createChatbotSteps(...stepMessages) {
                     trigger: `tr:contains(${message})`,
                 },
                 {
-                    trigger: ".modal textarea#message_0:empty",
+                    trigger: ".modal .odoo-editor-editable:empty",
                 },
             ])
             .flat(),

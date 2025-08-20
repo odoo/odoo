@@ -3,7 +3,7 @@
 from odoo import _, api, models, fields
 from odoo.exceptions import ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import html2plaintext, is_html_empty, email_normalize, plaintext2html
+from odoo.tools import html2plaintext, email_normalize
 from odoo.addons.mail.tools.discuss import Store
 
 from collections import defaultdict
@@ -14,9 +14,9 @@ class ChatbotScriptStep(models.Model):
     _name = 'chatbot.script.step'
     _description = 'Chatbot Script Step'
     _order = 'sequence, id'
-    _rec_name = 'message'
 
-    message = fields.Text(string='Message', translate=True)
+    name = fields.Char(string="Name", compute="_compute_name")
+    message = fields.Html(string="Message", translate=True)
     sequence = fields.Integer(string='Sequence')
     chatbot_script_id = fields.Many2one(
         'chatbot.script', string='Chatbot', required=True, index=True, ondelete='cascade')
@@ -46,6 +46,16 @@ class ChatbotScriptStep(models.Model):
         string="Operator Expertise",
         help="When forwarding live chat conversations, the chatbot will prioritize users with matching expertise.",
     )
+
+    @api.depends("sequence", "chatbot_script_id")
+    @api.depends_context('lang')
+    def _compute_name(self):
+        for step in self:
+            step.name = self.env._(
+                "%(title)s - Step %(sequence)d",
+                title=step.chatbot_script_id.title,
+                sequence=step.sequence,
+            )
 
     @api.depends('sequence')
     def _compute_triggering_answer_ids(self):
@@ -343,12 +353,12 @@ class ChatbotScriptStep(models.Model):
         self.ensure_one()
         if self.step_type == 'forward_operator':
             return discuss_channel._forward_human_operator(chatbot_script_step=self)
-        return discuss_channel._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))
+        return discuss_channel._chatbot_post_message(self.chatbot_script_id, self.message)
 
     def _to_store_defaults(self, target):
         return [
             Store.Many("answer_ids"),
             Store.Attr("is_last", lambda step: step._is_last_step()),
-            Store.Attr("message", lambda s: plaintext2html(s.message) if s.message else False),
+            "message",
             "step_type",
         ]
