@@ -13,7 +13,7 @@ class MrpProduction(models.Model):
         last_done_receipt = finished_move.move_dest_ids.filtered(lambda m: m.state == 'done')[-1:]
         if last_done_receipt.is_subcontract:
             quantity = last_done_receipt.quantity
-            value_from_bill, bill_qty = last_done_receipt._get_value_from_account_move(quantity)
-            value_from_po = last_done_receipt._get_value_from_quotation(quantity - bill_qty)[0]
-            self.extra_cost = value_from_bill + value_from_po
+            bill_data = last_done_receipt._get_value_from_account_move(quantity)
+            po_data = last_done_receipt._get_value_from_quotation(quantity - bill_data['quantity'])
+            self.extra_cost = bill_data['value'] + po_data['value']
         return super()._cal_price(consumed_moves=consumed_moves)

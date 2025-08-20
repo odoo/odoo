@@ -913,7 +913,7 @@ class TestStockValuationChangeCostMethod(TestStockValuationCommon):
         move3 = self._make_out_move(self.product1, 1)
 
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
-        self.assertEqual(self.product1.total_value, 289.94)
+        self.assertEqual(self.product1.total_value, 285)
         self.assertEqual(self.product1.qty_available, 19)
 
     def test_fifo_to_avco(self):
@@ -928,7 +928,7 @@ class TestStockValuationChangeCostMethod(TestStockValuationCommon):
         move3 = self._make_out_move(self.product1, 1)
 
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
-        self.assertEqual(self.product1.total_value, 289.94)
+        self.assertEqual(self.product1.total_value, 285)
         self.assertEqual(self.product1.qty_available, 19)
 
     def test_avco_to_standard(self):

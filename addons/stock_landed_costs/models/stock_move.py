@@ -13,10 +13,11 @@ class StockMove(models.Model):
 
     def _get_value_from_account_move(self, quantity, at_date=None):
         self.ensure_one()
-        value, quantity = super()._get_value_from_account_move(quantity, at_date=at_date)
+        accounting_data = super()._get_value_from_account_move(quantity, at_date=at_date)
         # Add landed costs value
         lc = self._get_landed_cost(at_date=at_date)
         extra_value = 0
         if lc.get(self):
             extra_value = sum(lc[self].mapped('additional_landed_cost'))
-        return value + extra_value, quantity
+        accounting_data['value'] += extra_value
+        return accounting_data
