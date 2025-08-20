@@ -231,7 +231,7 @@ class ProductProduct(models.Model):
                 in_qty = move._get_valued_qty()
                 in_value = move.value
                 if at_date or move.is_dropship:
-                    in_value = move._get_value(at_date=at_date)[0]
+                    in_value = move._get_value(at_date=at_date)
                 if lot:
                     total_qty = move._get_valued_qty(lot)
                     in_value = in_value * in_qty / total_qty
@@ -280,17 +280,17 @@ class ProductProduct(models.Model):
         moves_in = self.env['stock.move'].search(moves_domain, order='date desc, id desc', limit=fifo_stack_size * 10)
         # TODO: fetch more if 10 times quantity is not enough
 
-        remaining_qty_on_last_move = 0
+        remaining_qty_on_first_stack_move = 0
         # Go to the bottom of the stack
         while fifo_stack_size > 0 and moves_in:
             move = moves_in[0]
             moves_in = moves_in[1:]
             in_qty = move._get_valued_qty()
             fifo_stack.append(move)
-            remaining_qty_on_last_move = min(in_qty, fifo_stack_size)
+            remaining_qty_on_first_stack_move = min(in_qty, fifo_stack_size)
             fifo_stack_size -= in_qty
         fifo_stack.reverse()
-        return fifo_stack, remaining_qty_on_last_move
+        return fifo_stack, remaining_qty_on_first_stack_move
 
     def _run_fifo(self, quantity, lot=None, at_date=None, location=None):
         """ Returns the value for the next outgoing product base on the qty give as argument."""
@@ -311,7 +311,7 @@ class ProductProduct(models.Model):
                 in_qty = move._get_valued_qty()
                 in_value = move.value
             if at_date and not external_location:
-                in_value = move._get_value(at_date=at_date)[0]
+                in_value = move._get_value(at_date=at_date)
             if in_qty > quantity:
                 in_value = in_value * quantity / in_qty
                 in_qty = quantity

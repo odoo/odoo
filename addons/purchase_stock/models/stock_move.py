@@ -144,8 +144,9 @@ class StockMove(models.Model):
     # --------------------------------------------------------
 
     def _get_value_from_account_move(self, quantity, at_date=None):
+        valuation_data = super()._get_value_from_account_move(quantity, at_date=at_date)
         if not (self.purchase_line_id and self.purchase_line_id):
-            return 0, 0
+            return valuation_data
 
         quantity = 0
         value = 0
@@ -161,7 +162,9 @@ class StockMove(models.Model):
                 quantity -= aml.quantity
                 value -= aml.price_subtotal
 
-        return value, quantity
+        valuation_data['quantity'] = quantity
+        valuation_data['value'] = value
+        return valuation_data
 
     def _get_value_from_quotation(self, quantity, at_date=None):
         # TODO: Start from global value
@@ -171,7 +174,10 @@ class StockMove(models.Model):
             return super()._get_value_from_quotation(quantity)
         price_unit = self.purchase_line_id._get_stock_move_price_unit()
         quantity = min(quantity, self.quantity)
-        return price_unit * quantity, quantity
+        return {
+            'value': price_unit * quantity,
+            'quantity': quantity,
+        }
 
     def _get_related_invoices(self):
         """ Overridden to return the vendor bills related to this stock move.
