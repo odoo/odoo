@@ -10,7 +10,7 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { asyncStep, onRpc, waitForSteps } from "@web/../tests/web_test_helpers";
+import { onRpc } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { getOrigin } from "@web/core/utils/urls";
 
@@ -297,16 +297,12 @@ test("avatar card preview", async () => {
         }),
         im_status: "online",
     });
-    onRpc("res.users", "read", (params) => {
-        expect(params.args[1]).toEqual([
-            "name",
-            "email",
-            "phone",
-            "im_status",
-            "share",
-            "partner_id",
-        ]);
-        asyncStep("user read");
+    onRpc("/discuss/avatar_card", async (request) => {
+        const args = Object.values((await request.json()).params);
+        expect(args[0]).toEqual(userId);
+        expect(args[1]).toEqual(false);
+        expect(args[2]).toEqual(["name", "email", "phone", "im_status", "share", "partner_id"]);
+        expect.step("/discuss/avatar_card");
     });
     const avatarUserId = pyEnv["m2x.avatar.user"].create({ user_id: userId });
     await start();
@@ -328,7 +324,64 @@ test("avatar card preview", async () => {
     await contains(".o_card_user_infos > span", { text: "Mario" });
     await contains(".o_card_user_infos > a", { text: "Mario@odoo.test" });
     await contains(".o_card_user_infos > a", { text: "+78786987" });
-    await waitForSteps(["user read"]);
+    expect.verifySteps(["/discuss/avatar_card"]);
+    // Close card
+    await click(".o_action_manager");
+    await contains(".o_avatar_card", { count: 0 });
+});
+
+test("avatar card preview (partner_id field)", async () => {
+    registry.category("services").add(
+        "im_status",
+        {
+            start() {
+                return {
+                    registerToImStatus() {},
+                    unregisterFromImStatus() {},
+                    updateBusPresence() {},
+                };
+            },
+        },
+        { force: true }
+    );
+    const pyEnv = await startServer();
+    const userId = pyEnv["res.users"].create({
+        im_status: "online",
+    });
+    const partnerId = pyEnv["res.partner"].create({
+        email: "Mario@odoo.test",
+        name: "Mario",
+        phone: "+78786987",
+        user_ids: [userId],
+    });
+    onRpc("/discuss/avatar_card", async (request) => {
+        const args = Object.values((await request.json()).params);
+        expect(args[0]).toEqual(false);
+        expect(args[1]).toEqual(partnerId);
+        expect(args[2]).toEqual(["name", "email", "phone", "im_status", "share", "partner_id"]);
+        expect.step("/discuss/avatar_card");
+    });
+    const avatarUserId = pyEnv["m2x.avatar.user"].create({ partner_id: partnerId });
+    await start();
+    await openKanbanView("m2x.avatar.user", {
+        res_id: avatarUserId,
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="partner_id" widget="many2one_avatar_user"/>
+                    </t>
+                </templates>
+            </kanban>
+        `,
+    });
+    // Open card
+    await click(".o_m2o_avatar > img");
+    await contains(".o_avatar_card");
+    await contains(".o_card_user_infos > span", { text: "Mario" });
+    await contains(".o_card_user_infos > a", { text: "Mario@odoo.test" });
+    await contains(".o_card_user_infos > a", { text: "+78786987" });
+    expect.verifySteps(["/discuss/avatar_card"]);
     // Close card
     await click(".o_action_manager");
     await contains(".o_avatar_card", { count: 0 });

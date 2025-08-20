@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from . import avatar_card
 from . import channel
 from . import gif
 from . import mail
