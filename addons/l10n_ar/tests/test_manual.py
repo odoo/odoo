@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from . import common
 from odoo import Command
+from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged
 from odoo.tools.float_utils import float_split_str
 from odoo.exceptions import ValidationError
