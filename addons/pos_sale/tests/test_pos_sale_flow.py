@@ -1132,7 +1132,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             })]
         })
         partner_test = self.env['res.partner'].create({
-            'name': 'Test Partner',
+            'name': 'AAA - Test Partner invoice',
             'property_payment_term_id': payment_term.id,
         })
 
