@@ -768,7 +768,9 @@ test("rendering of inbox message", async () => {
     await contains("[title='Add a Reaction']");
     await contains("[title='Add Star']");
     await contains("[title='Mark as Read']");
-    await contains("[title='Reply']");
+    await click("[title='Expand']");
+    await contains(".o-dropdown-item:contains('Reply')");
+    await contains(".o-dropdown-item:contains('Translate')");
 });
 
 test("Unfollow message", async function () {
@@ -782,20 +784,23 @@ test("Unfollow message", async function () {
         res_id: threadFollowedId,
         res_model: "res.partner",
     });
-    for (const threadId of [threadFollowedId, threadFollowedId, threadNotFollowedId]) {
-        const messageId = pyEnv["mail.message"].create({
+    const threadIds = [threadFollowedId, threadFollowedId, threadNotFollowedId];
+    const messageIds = pyEnv["mail.message"].create(
+        threadIds.map((threadId) => ({
             body: "not empty",
             model: "res.partner",
             needaction: true,
             res_id: threadId,
-        });
-        pyEnv["mail.notification"].create({
+        }))
+    );
+    pyEnv["mail.notification"].create(
+        messageIds.map((messageId) => ({
             mail_message_id: messageId,
             notification_status: "sent",
             notification_type: "inbox",
             res_partner_id: serverState.partnerId,
-        });
-    }
+        }))
+    );
     await start();
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message", { count: 3 });
@@ -810,24 +815,27 @@ test("Unfollow message", async function () {
         contains: [[".o-mail-Message-header small", { text: "on Thread followed" }]],
     });
     await contains(".o-dropdown-item:contains('Unfollow')");
-    await contains(".o-mail-Message:eq(2) [title='Expand']", { count: 0 });
+    await click(".o-mail-Message:eq(2) [title='Expand']");
     await contains(".o-mail-Message:eq(2)", {
         contains: [[".o-mail-Message-header small", { text: "on Thread not followed" }]],
     });
-    await contains(".o-mail-Message:eq(2) [title='Unfollow']", { count: 0 });
+    await contains(".o-dropdown-item:contains('Reply')");
+    await contains(".o-dropdown-item:contains('Unfollow')", { count: 0 });
     await click(".o-mail-Message:eq(0) [title='Expand']");
     await click(".o-dropdown-item:contains('Unfollow')");
     await contains(".o-mail-Message", { count: 2 }); // Unfollowing message 0 marks it as read -> Message removed
     await contains(".o-mail-Message:eq(0)", {
         contains: [[".o-mail-Message-header small", { text: "on Thread followed" }]],
     });
-    await contains(".o-mail-Message:eq(0) [title='Expand']", { count: 0 });
-    await contains(".o-mail-Message:eq(0) [title='Unfollow']", { count: 0 });
+    await click(".o-mail-Message:eq(0) [title='Expand']");
+    await contains(".o-dropdown-item:contains('Reply')");
+    await contains(".o-dropdown-item:contains('Unfollow')", { count: 0 });
     await contains(".o-mail-Message:eq(1)", {
         contains: [[".o-mail-Message-header small", { text: "on Thread not followed" }]],
     });
-    await contains(".o-mail-Message:eq(1) [title='Expand']", { count: 0 });
-    await contains(".o-mail-Message:eq(1) [title='Unfollow']", { count: 0 });
+    await click(".o-mail-Message:eq(1) [title='Expand']");
+    await contains(".o-dropdown-item:contains('Reply')");
+    await contains(".o-dropdown-item:contains('Unfollow')", { count: 0 });
 });
 
 test('messages marked as read move to "History" mailbox', async () => {
