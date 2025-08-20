@@ -17,6 +17,7 @@ import {
     hasGridLayoutOption,
 } from "@html_builder/utils/grid_layout_utils";
 import { isMobileView } from "@html_builder/utils/utils";
+import { isElement } from "@html_editor/utils/dom_info";
 
 const gridItemSelector = ".row.o_grid_mode > div.o_grid_item";
 
@@ -45,10 +46,26 @@ export class GridLayoutPlugin extends Plugin {
         on_element_dropped_over_handlers: this.onElementDroppedOver.bind(this),
         on_element_dropped_near_handlers: this.onElementDroppedNear.bind(this),
         on_element_dropped_handlers: this.onElementDropped.bind(this),
+        // Ignore background grid in history
+        savable_mutation_record_predicates: this.ignoreBackgroundGrid.bind(this),
     };
 
     setup() {
         this.overlayTarget = null;
+    }
+
+    ignoreBackgroundGrid(record) {
+        if (record.type === "childList") {
+            const addedOrRemovedNode = record.addedNodes[0] || record.removedNodes[0];
+            // Do not record the addition/removal of the background grid.
+            if (
+                isElement(addedOrRemovedNode) &&
+                addedOrRemovedNode.matches(".o_we_background_grid")
+            ) {
+                return false;
+            }
+        }
+        return true;
     }
 
     getActiveOverlayButtons(target) {
