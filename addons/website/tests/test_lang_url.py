@@ -4,14 +4,14 @@ import json
 import lxml.html
 from urllib.parse import urlparse
 
+import odoo
 from odoo.addons.website.tools import MockRequest
 from odoo.tests import HttpCase, tagged
 
 
-@tagged('-at_install', 'post_install')
-class TestLangUrl(HttpCase):
+class TestLangUrlCommon(HttpCase):
     def setUp(self):
-        super(TestLangUrl, self).setUp()
+        super().setUp()
 
         # Simulate multi lang without loading translations
         self.website = self.env.ref('website.default_website')
@@ -20,6 +20,9 @@ class TestLangUrl(HttpCase):
         self.website.language_ids = self.env.ref('base.lang_en') + self.lang_fr
         self.website.default_lang_id = self.env.ref('base.lang_en')
 
+
+@tagged('-at_install', 'post_install')
+class TestLangUrl(TestLangUrlCommon):
     def test_01_url_lang(self):
         with MockRequest(self.env, website=self.website):
             self.assertEqual(self.env['ir.http']._url_for('', '[lang]'), '/[lang]/mockrequest', "`[lang]` is used to be replaced in the url_return after installing a language, it should not be replaced or removed.")
@@ -61,6 +64,11 @@ class TestLangUrl(HttpCase):
             if match:
                 session_info = json.loads(session_info_str[:-1])
                 self.assertEqual(session_info['user_context']['lang'], 'en_US', "ensure english was loaded")
+                self.assertEqual(session_info['bundle_params']['lang'], 'en_US', "ensure bundle use english")
+                with MockRequest(self.env) as req:
+                    backend_modules = list(req.registry._init_modules) + odoo.tools.config['server_wide_modules']
+                en_hash = self.env['ir.http'].get_web_translations_hash(modules=backend_modules, lang='en_US')
+                self.assertEqual(session_info['cache_hashes']['translations'], en_hash)
                 break
         else:
             raise ValueError('Session info not found in web page')
@@ -77,6 +85,19 @@ class TestLangUrl(HttpCase):
         if 'lang="fr-FR"' not in r.text:
             doc = lxml.html.document_fromstring(r.text)
             self.assertEqual(doc.get('lang'), 'fr-FR', "Ensure contactus did not soft crash + loaded in correct lang")
+
+        for line in r.text.splitlines():
+            _, match, session_info_str = line.partition('odoo.__session_info__ = ')
+            if match:
+                session_info = json.loads(session_info_str[:-1])
+                self.assertEqual(session_info['bundle_params']['lang'], 'fr_FR', "ensure bundle use french")
+                with MockRequest(self.env):
+                    frontend_modules = self.env['ir.http'].get_translation_frontend_modules()
+                fr_hash = self.env['ir.http'].get_web_translations_hash(modules=frontend_modules, lang='fr_FR')
+                self.assertEqual(session_info['cache_hashes']['translations'], fr_hash)
+                break
+        else:
+            raise ValueError('Session info not found in web page')
 
     def test_05_invalid_ipv6_url(self):
         view = self.env['ir.ui.view'].create({
@@ -111,7 +132,7 @@ class TestLangUrl(HttpCase):
 
 
 @tagged('-at_install', 'post_install')
-class TestControllerRedirect(TestLangUrl):
+class TestControllerRedirect(TestLangUrlCommon):
     def setUp(self):
         self.page = self.env['website.page'].create({
             'name': 'Test View',
