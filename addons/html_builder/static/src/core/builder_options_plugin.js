@@ -164,12 +164,6 @@ export class BuilderOptionsPlugin extends Plugin {
             this.getResource("builder_header_middle_buttons")
         );
         this.builderContainerTitle = withIds(this.getResource("container_title"));
-        // doing this manually instead of using addDomListener. This is because
-        // addDomListener will ignore all events from protected targets. But in
-        // our case, we still want to update the containers.
-        this.onClick = this.onClick.bind(this);
-        this.editable.addEventListener("click", this.onClick, { capture: true });
-
         this.lastContainers = [];
 
         // Selector of elements that should not update/have containers when they
@@ -185,16 +179,6 @@ export class BuilderOptionsPlugin extends Plugin {
             ".transfo-container",
             ".o_datetime_picker",
         ].join(", ");
-    }
-
-    destroy() {
-        this.editable.removeEventListener("click", this.onClick, { capture: true });
-    }
-
-    onClick(ev) {
-        this.dependencies.operation.next(() => {
-            this.updateContainers(ev.target);
-        });
     }
     /**
      * Checks if the given element is a valid builder option target.
