@@ -62,6 +62,9 @@ export class BuilderOverlay {
     }
 
     hasSizingHandles() {
+        if (!this.hasOverlayOptions) {
+            return false;
+        }
         return this.isResizableY() || this.isResizableX() || this.isResizableGrid();
     }
 
@@ -175,6 +178,9 @@ export class BuilderOverlay {
     }
 
     initHandles() {
+        if (!this.hasSizingHandles) {
+            return;
+        }
         if (this.isResizableY()) {
             this.yHandles.forEach((handleEl) => handleEl.classList.remove("readonly"));
         }
