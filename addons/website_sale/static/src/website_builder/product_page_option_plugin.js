@@ -349,12 +349,17 @@ export class ProductPageImageGridColumnsAction extends BaseProductPageAction {
 }
 export class ProductReplaceMainImageAction extends BaseProductPageAction {
     static id = "productReplaceMainImage";
+    static dependencies = ["media_website"];
+    setup() {
+        super.setup();
+        this.reload = false;
+    }
     apply({ editingElement: productDetailMainEl }) {
         // Emulate click on the main image of the carousel.
         const image = productDetailMainEl.querySelector(
             `[data-oe-model="${this.model}"][data-oe-field=image_1920] img`
         );
-        image.dispatchEvent(new Event("dblclick", { bubbles: true }));
+        this.dependencies.media_website.replaceMedia(image);
     }
 }
 
