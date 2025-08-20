@@ -266,6 +266,9 @@ class IrHttp(models.AbstractModel):
     def get_frontend_session_info(self) -> dict:
         session_info = super(IrHttp, self).get_frontend_session_info()
 
+        if request.is_frontend:
+            lang = request.lang.code
+            session_info['bundle_params']['lang'] = lang
         session_info.update({
             'translationURL': '/website/translations',
         })
