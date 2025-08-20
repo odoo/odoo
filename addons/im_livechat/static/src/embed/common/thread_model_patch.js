@@ -3,7 +3,6 @@ import { Thread } from "@mail/core/common/thread_model";
 import "@mail/discuss/core/common/thread_model_patch";
 
 import { patch } from "@web/core/utils/patch";
-import { _t } from "@web/core/l10n/translation";
 import { Deferred } from "@web/core/utils/concurrency";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 
@@ -150,7 +149,6 @@ patch(Thread.prototype, {
             return false;
         }
         return (
-            super.composerDisabled ||
             this.chatbot?.isProcessingAnswer ||
             (step &&
                 !step.operatorFound &&
@@ -158,20 +156,10 @@ patch(Thread.prototype, {
         );
     },
 
-    get composerDisabledText() {
-        const text = super.composerDisabledText;
-        if (text || !this.chatbot) {
-            return text;
+    get composerHidden() {
+        if (this.chatbot?.forwarded && this.livechat_active) {
+            return false;
         }
-        if (this.chatbot.completed) {
-            return _t("This livechat conversation has ended");
-        }
-        if (
-            this.chatbot.currentStep?.type === "question_selection" &&
-            !this.chatbot.currentStep.selectedAnswer
-        ) {
-            return _t("Select an option above");
-        }
-        return _t("Say something");
+        return super.composerHidden || this.chatbot?.completed;
     },
 });

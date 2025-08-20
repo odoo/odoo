@@ -2,8 +2,9 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.Discuss" t-inherit-mode="extension">
         <xpath expr="//Composer" position="replace">
-            <t t-if="thread?.composerDisabled and !thread?.isTransient and store.self.notEq(thread?.livechatVisitorMember?.persona)">$0</t>
-            <span t-if="thread?.composerDisabled" class="bg-200 py-1 text-center fst-italic fw-bold text-muted" t-esc="thread.composerDisabledText"/>
+            <span t-if="thread?.composerHidden" class="bg-200 py-1 text-center fst-italic fw-bold text-muted">
+                This livechat conversation has ended
+            </span>
             <t t-else="">$0</t>
         </xpath>
     </t>

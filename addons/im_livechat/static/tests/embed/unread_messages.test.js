@@ -54,14 +54,13 @@ test("new message from operator displays unread counter", async () => {
             livechatUserId: serverState.publicUserId,
         })
     );
-    setupChatHub({ opened: [channelId] });
+    setupChatHub({ folded: [channelId] });
     onRpc("/mail/data", async (request) => {
         const { params } = await request.json();
         if (params.fetch_params.includes("init_messaging")) {
             asyncStep(`/mail/data - ${JSON.stringify(params)}`);
         }
     });
-    onRpc("/discuss/channel/messages", () => asyncStep("/discuss/channel/message"));
     const userId = serverState.userId;
     await start({
         authenticateAs: { ...pyEnv["mail.guest"].read(guestId)[0], _name: "mail.guest" },
@@ -81,7 +80,6 @@ test("new message from operator displays unread counter", async () => {
                 allowed_company_ids: [1],
             },
         })}`,
-        "/discuss/channel/message",
     ]);
     // send after init_messaging because bus subscription is done after init_messaging
     await withUser(userId, () =>
@@ -91,7 +89,7 @@ test("new message from operator displays unread counter", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-ChatWindow-counter", { text: "1" });
+    await contains(".o-mail-ChatBubble-counter", { text: "1" });
 });
 
 test.tags("focus required");
