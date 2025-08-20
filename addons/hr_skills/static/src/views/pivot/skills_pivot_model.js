@@ -22,7 +22,7 @@ export class SkillsPivotModel extends PivotModel {
 
         for (const [groupBy, data] of params.groupingSets.map((g, i) => [g, multiData[i]])) {
             if (groupBy.includes("department_id")) {
-                data.forEach((res) => {
+                data.subGroups.forEach((res) => {
                     res.department_id[1] = this.departmentNamesById[res.department_id[0]];
                 });
             }
