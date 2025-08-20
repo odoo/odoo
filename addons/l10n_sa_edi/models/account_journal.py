@@ -536,7 +536,7 @@ class AccountJournal(models.Model):
             # The 400 case means that it is rejected by ZATCA, but we need to update the hash as done for accepted.
             # In the 401+ cases, it is like the server is overloaded e.g. and we still need to resend later.  We do not
             # erase the index chain (excepted) because for ZATCA, one ICV (index chain) needs to correspond to one invoice.
-            if (status_code := ex.response.status_code) != 400:
+            if (status_code := ex.response.status_code) not in  (400, 409):  # 409: Resend after timeout that succeeded ZATCA side
                 return {
                     'error': (Markup("<b>[%s]</b>") % status_code) + _("Server returned an unexpected error: %(error)s",
                                error=(request_response.text or str(ex))),
@@ -561,6 +561,8 @@ class AccountJournal(models.Model):
                 'blocking_level': 'error'
             }
         response_data['status_code'] = request_response.status_code
+        if status_code == 409:
+            return response_data
 
         val_res = response_data.get('validationResults', {})
         if not request_response.ok and (val_res.get('errorMessages') or val_res.get('warningMessages')):
