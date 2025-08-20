@@ -9,6 +9,7 @@ from odoo.addons.test_mail.tests.test_performance import BaseMailPerformance
 from odoo.tests.common import users, warmup
 from odoo.tests import tagged
 from odoo.tools import mute_logger
+from odoo.tools.mimetypes import magic
 
 
 @tagged('mail_performance', 'post_install', '-at_install')
@@ -247,6 +248,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
         self.assertEqual(len(res), len(messages_all))
         for format_res, message, record in zip(res, messages_all, self.messages_records):
             self.assertEqual(len(format_res['attachment_ids']), 2)
+            expected_mimetype = 'text/plain' if magic else 'application/octet-stream'
             self.assertEqual(
                 format_res['attachment_ids'],
                 [
@@ -255,7 +257,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                         'checksum': message.attachment_ids[0].checksum,
                         'filename': 'Test file 1',
                         'id': message.attachment_ids[0].id,
-                        'mimetype': 'application/octet-stream',
+                        'mimetype': expected_mimetype,
                         'name': 'Test file 1',
                         'res_id': record.id,
                         'res_model': record._name,
@@ -264,7 +266,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                         'checksum': message.attachment_ids[1].checksum,
                         'filename': 'Test file 0',
                         'id': message.attachment_ids[1].id,
-                        'mimetype': 'application/octet-stream',
+                        'mimetype': expected_mimetype,
                         'name': 'Test file 0',
                         'res_id': record.id,
                         'res_model': record._name,
