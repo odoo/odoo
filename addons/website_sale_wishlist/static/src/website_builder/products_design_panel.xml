@@ -59,6 +59,52 @@
             On Hover
         </BuilderSelectItem>
     </BuilderSelectItem>
+
+    <BuilderRow label.translate="Gap" position="replace">
+        <!--
+            Override the Gap row to use wishlist-specific action and make it always visible
+        -->
+        <BuilderRow label.translate="Gap">
+            <BuilderRange
+                t-if="props.recordName === 'wishlist_opt_products_design_classes'"
+                action="'wishlistSetGap'"
+                min="0"
+                max="28"
+                unit="'px'"
+                displayRangeValue="true"
+            />
+            <BuilderRange
+                t-else=""
+                action="'setGap'"
+                min="0"
+                max="28"
+                unit="'px'"
+                displayRangeValue="true"
+            />
+        </BuilderRow>
+    </BuilderRow>
+</t>
+
+<t
+    t-name="website_sale_wishlist.ProductsDesignPanelPresetsOverride"
+    t-inherit="website_sale.ProductsDesignPanelPresets"
+    t-inherit-mode="extension"
+>
+    <BuilderSelectItem id="style.id" position="attributes">
+        <attribute name="actionParam">[
+            {
+                action: 'classActionWithSave',
+                actionParam: {
+                    className: style.className,
+                    suggestedClasses: style.suggestedClasses,
+                }
+            },
+            {
+                action: (props.recordName === 'wishlist_opt_products_design_classes' ? 'wishlistSetGap' : 'setGap'),
+                actionValue: style.gap + 'px'
+            }
+        ]</attribute>
+    </BuilderSelectItem>
 </t>
 
 </templates>
