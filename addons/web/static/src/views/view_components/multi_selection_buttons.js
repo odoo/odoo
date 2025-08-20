@@ -13,6 +13,9 @@ import { MultiCreatePopover } from "./multi_create_popover";
 export class MultiSelectionButtons extends Component {
     static template = "web.MultiSelectionButtons";
     static props = { reactive: Object };
+    static components = {
+        Popover: MultiCreatePopover,
+    };
 
     setup() {
         this.viewService = useService("view");
@@ -37,7 +40,7 @@ export class MultiSelectionButtons extends Component {
             },
         });
 
-        this.multiCreatePopover = usePopover(MultiCreatePopover, {
+        this.multiCreatePopover = usePopover(this.constructor.components.Popover, {
             onClose: () => {
                 const multiCreateData = this.getMultiCreateDataFromPopover();
                 if (multiCreateData) {
