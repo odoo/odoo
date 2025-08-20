@@ -10,7 +10,7 @@ from werkzeug.exceptions import Forbidden
 from odoo import _, http
 from odoo.exceptions import UserError
 from odoo.http import request
-from odoo.tools import consteq
+from odoo.tools import consteq, email_normalize
 from odoo.addons.google_gmail.models.google_gmail_mixin import GMAIL_TOKEN_REQUEST_TIMEOUT
 
 _logger = logging.getLogger(__name__)
@@ -103,7 +103,7 @@ class GoogleGmailController(http.Controller):
 
             response = response.json()
 
-            if not response.get('verified_email') or response.get('email') != record[record._email_field]:
+            if not response.get('verified_email') or email_normalize(response.get('email')) != email_normalize(record[record._email_field]):
                 _logger.error('Google Gmail: Invalid email address: %r != %s.', response, record[record._email_field])
                 return request.render('google_gmail.google_gmail_oauth_error', {
                     'error': _(
