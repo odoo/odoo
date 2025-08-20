@@ -4,6 +4,7 @@ import { AnchorPlugin } from "./anchor/anchor_plugin";
 import { BuilderActionsPlugin } from "./builder_actions_plugin";
 import { BuilderComponentPlugin } from "./builder_component_plugin";
 import { BuilderOptionsPlugin } from "./builder_options_plugin";
+import { BuilderSelectionRestrictionPlugin } from "./builder_selection_restriction_plugin";
 import { BuilderOverlayPlugin } from "./builder_overlay/builder_overlay_plugin";
 import { CachedModelPlugin } from "./cached_model_plugin";
 import { ClonePlugin } from "./clone_plugin";
@@ -54,6 +55,7 @@ export const CORE_PLUGINS = [
     BuilderOptionsPlugin,
     BuilderActionsPlugin,
     BuilderComponentPlugin,
+    BuilderSelectionRestrictionPlugin,
     OperationPlugin,
     BuilderOverlayPlugin,
     OverlayButtonsPlugin,

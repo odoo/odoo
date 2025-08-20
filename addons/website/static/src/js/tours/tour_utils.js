@@ -680,12 +680,12 @@ export function selectFullText(elementName, selector) {
         content: `Select all the text of the ${elementName}`,
         trigger: `:iframe ${selector}`,
         async run(actions) {
-            await actions.click();
             const range = document.createRange();
             const selection = this.anchor.ownerDocument.getSelection();
             range.selectNodeContents(this.anchor);
             selection.removeAllRanges();
             selection.addRange(range);
+            await actions.click();
         },
     };
 }

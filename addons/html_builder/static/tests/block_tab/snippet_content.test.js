@@ -4,6 +4,7 @@ import {
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
 import { BuilderOptionsPlugin } from "@html_builder/core/builder_options_plugin";
+import { BuilderSelectionRestrictionPlugin } from "@html_builder/core/builder_selection_restriction_plugin";
 import { Operation } from "@html_builder/core/operation";
 import { describe, expect, test } from "@odoo/hoot";
 import {
@@ -154,13 +155,15 @@ test("click just after drop is redispatched in next operation", async () => {
         },
     });
     patchWithCleanup(BuilderOptionsPlugin.prototype, {
-        async onClick(ev) {
-            expect.step("onClick");
-            super.onClick(ev);
-        },
         updateContainers(...args) {
             expect.step("updateContainers");
             super.updateContainers(...args);
+        },
+    });
+    patchWithCleanup(BuilderSelectionRestrictionPlugin.prototype, {
+        async onClick(ev) {
+            expect.step("onClick");
+            super.onClick(ev);
         },
     });
     await setupHTMLBuilder("", {
