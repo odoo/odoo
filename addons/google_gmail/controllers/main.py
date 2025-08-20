@@ -76,7 +76,7 @@ class GoogleGmailController(http.Controller):
     def _check_email_and_redirect_to_gmail_record(self, access_token, expiration, refresh_token, record):
         # Verify the token information (that the email set on the
         # server is the email used to login on Gmail)
-        if record.owner_user_id or not request.env.user.has_group('base.group_system'):
+        if (record._name == 'ir.mail_server' and (record.owner_user_id or not request.env.user.has_group('base.group_system'))):
             # https://developers.google.com/identity/protocols/oauth2/scopes
             response = requests.get(
                 'https://www.googleapis.com/oauth2/v2/userinfo',
