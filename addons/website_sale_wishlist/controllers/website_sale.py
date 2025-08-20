@@ -19,7 +19,7 @@ class WebsiteSaleWishlist(main.WebsiteSale):
 
         current_website = request.env['website'].get_current_website()
 
-        wishlist_writable_fields = {'wishlist_opt_products_design_classes'}
+        wishlist_writable_fields = {'wishlist_opt_products_design_classes', 'wishlist_grid_columns', 'wishlist_mobile_columns', 'wishlist_gap'}
 
         wishlist_write_vals = {k: v for k, v in options.items() if k in wishlist_writable_fields}
         if wishlist_write_vals:

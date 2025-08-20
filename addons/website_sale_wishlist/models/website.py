@@ -19,3 +19,21 @@ class Website(models.Model):
         ),
         help="CSS class for wishlist page design"
     )
+
+    wishlist_grid_columns = fields.Integer(
+        string="Wishlist Grid Columns",
+        default=5,
+        help="Number of columns to display on the wishlist page"
+    )
+
+    wishlist_mobile_columns = fields.Integer(
+        string="Wishlist Mobile Columns",
+        default=2,
+        help="Number of columns to display on mobile for the wishlist page (1 or 2)"
+    )
+
+    wishlist_gap = fields.Char(
+        string="Wishlist Grid Gap",
+        default="16px",
+        help="Gap between products on the wishlist page"
+    )

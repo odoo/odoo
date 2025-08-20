@@ -309,12 +309,15 @@
 
                         <div
                             id="o_comparelist_table"
-                            style="--o-wsale-products-grid-gap: 16px;"
+                            t-att-data-wishlist-grid-columns="website.wishlist_grid_columns"
+                            t-att-data-wishlist-mobile-columns="website.wishlist_mobile_columns"
+                            t-attf-style="--o-wsale-wishlist-grid-gap: {{website.wishlist_gap}};"
                             t-attf-class="o_wishlist_table grid table-comparator mb-5 {{website.wishlist_opt_products_design_classes}}"
                         >
                             <t t-foreach="wishes" t-as="wish">
                                 <t t-set="combination_info" t-value="wish.product_id._get_combination_info_variant()"/>
                                 <article
+                                    class="o_wishlist_item"
                                     t-att-data-wish-id="wish.id"
                                     t-att-data-product-id="wish.product_id.id"
                                 >
