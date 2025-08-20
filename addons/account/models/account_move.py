@@ -2741,7 +2741,7 @@ class AccountMove(models.Model):
         grouped_lines = defaultdict(lambda: self.env['account.move.line'])
         for line in self.line_ids:
             if (
-                line.section_line_id.id == selected_section_id
+                line.get_parent_section_line().id == selected_section_id
                 and line.display_type == 'product'
                 and line.product_id.id in product_ids
             ):
@@ -2768,7 +2768,9 @@ class AccountMove(models.Model):
         """
         move_line = self.line_ids.filtered_domain([
             ('product_id', '=', product_id),
-            ('section_line_id', '=', selected_section_id),
+            '|',
+            ('id', 'child_of', selected_section_id),
+            ('parent_id', '=', False),
         ])
         if move_line:
             if quantity != 0:

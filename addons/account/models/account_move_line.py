@@ -350,8 +350,8 @@ class AccountMoveLine(models.Model):
         'account.move.line',
         string="Parent Section Line",
         compute='_compute_parent_id',
-        search='_search_parent_id',
-        copy=False,
+        index='btree_not_null',
+        copy=False, store=True,
     )
     child_ids = fields.One2many(comodel_name='account.move.line', inverse_name='parent_id')
     product_id = fields.Many2one(
@@ -383,11 +383,6 @@ class AccountMoveLine(models.Model):
         tracking=True,
         help="This field is used for payable and receivable journal entries. "
              "You can put the limit date for the payment of this line.",
-    )
-    section_line_id = fields.Many2one(
-        comodel_name='account.move.line',
-        compute='_compute_section_line_id',
-        store=True,
     )
 
     # === Price fields === #
@@ -887,17 +882,6 @@ class AccountMoveLine(models.Model):
                 line.quantity = line.quantity if line.quantity else 1
             else:
                 line.quantity = False
-
-    @api.depends('move_id.line_ids.sequence')
-    def _compute_section_line_id(self):
-        for move, lines in self.grouped('move_id').items():
-            current_section_line = False
-            for line in lines.sorted('sequence'):
-                if line.display_type == 'line_section':
-                    current_section_line = line
-                    line.section_line_id = False
-                else:
-                    line.section_line_id = current_section_line
 
     @api.depends('display_type')
     def _compute_sequence(self):
@@ -3433,6 +3417,12 @@ class AccountMoveLine(models.Model):
     def get_section_subtotal(self):
         section_lines = self.child_ids + self.child_ids.child_ids
         return sum(section_lines.mapped('price_subtotal'))
+
+    def get_parent_section_line(self):
+        if self.display_type == 'product' and self.parent_id.display_type == 'line_subsection':
+            return self.parent_id.parent_id
+
+        return self.parent_id
 
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS
