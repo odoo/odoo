@@ -1,7 +1,7 @@
 import { BackgroundOption } from "@html_builder/plugins/background_option/background_option";
 import { BackgroundPositionOverlay } from "@html_builder/plugins/background_option/background_position_overlay";
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, queryOne, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, queryOne, scroll, waitFor } from "@odoo/hoot-dom";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 
@@ -92,53 +92,237 @@ test("Check if an element with a background image has necessary classes", async 
 
 test("Change the background position and apply", async () => {
     await dragAndDropBgImage();
-    await contains(".overlay .btn-primary").click();
+    await contains(".o_we_background_position_overlay .btn-primary").click();
+    expect(".o_we_background_position_overlay").toHaveCount(0);
     expect("button.fa-undo").toBeEnabled();
 });
 
 test("Change the background position and discard", async () => {
     await dragAndDropBgImage();
-    await contains(".overlay .btn-primary").click();
-    expect("button.fa-undo").toBeEnabled();
+    await contains(".o_we_background_position_overlay .btn-danger").click();
+    expect(".o_we_background_position_overlay").toHaveCount(0);
+    expect("button.fa-undo").not.toBeEnabled();
 });
 
 test("Change the background position and click out of the iframe", async () => {
     await dragAndDropBgImage();
     await contains(".o_customize_tab").click();
+    expect(".o_we_background_position_overlay").toHaveCount(0);
     expect("button.fa-undo").not.toBeEnabled();
 });
 
-async function dragAndDropBgImage() {
+test("Background position overlay layout", async () => {
+    expect.assertions(18);
+
+    const { getEditor, waitDomUpdated } = await setupWebsiteBuilder(
+        `<section>
+            <div class="container">
+                <section style="background-image: url('/web/image/123/transparent.png'); width: 500px; height: 500px">
+                </section>
+            </div>
+        </section>`
+    );
+
+    const iframe = getEditor().editable.ownerDocument.defaultView.frameElement;
+    const body = queryOne(":iframe body");
+    const section = queryOne(":iframe .container section");
+
+    const testLayout = async (mobile) => {
+        // In mobile preview, the iframe is scaled by the o-mobile-phone SCSS mixin.
+        // This mixin creates multiple similar CSS rules with different scales
+        // that activate depending on the screen size.
+        // The following scale of 0.87 is just one of them. It is here to have
+        // a more representative test.
+        const iframeContainerScale = mobile ? 0.87 : 1.0;
+        if (mobile) {
+            const iframeContainer = queryOne(".o_website_preview.o_is_mobile .o_iframe_container");
+            iframeContainer.style.transform = `translate(-50%, -50%) scale(${iframeContainerScale})`;
+        }
+        await openBgPositionOverlay(section, waitDomUpdated);
+
+        // The overlay should cover exactly the iframe
+        const iframeRect = iframe.getBoundingClientRect();
+        const bgOverlayRect = queryOne(".o_we_background_position_overlay").getBoundingClientRect();
+        expect(bgOverlayRect.left).toBeCloseTo(iframeRect.left);
+        expect(bgOverlayRect.top).toBeCloseTo(iframeRect.top);
+        expect(bgOverlayRect.width).toBeCloseTo(body.clientWidth * iframeContainerScale);
+        expect(bgOverlayRect.height).toBeCloseTo(body.clientHeight * iframeContainerScale);
+
+        // The content of the overlay should cover the editing element
+        const editingElementRect = section.getBoundingClientRect();
+        const overlayContentStyle = getComputedStyle(queryOne(".o_we_overlay_content"));
+        expect(parseFloat(overlayContentStyle.left)).toBeCloseTo(
+            editingElementRect.left * iframeContainerScale
+        );
+        expect(parseFloat(overlayContentStyle.top)).toBeCloseTo(
+            editingElementRect.top * iframeContainerScale
+        );
+        expect(parseFloat(overlayContentStyle.width)).toBeCloseTo(
+            editingElementRect.width * iframeContainerScale
+        );
+        expect(parseFloat(overlayContentStyle.height)).toBeCloseTo(
+            editingElementRect.height * iframeContainerScale
+        );
+
+        // The loading spinner should not be displayed
+        expect(":iframe .o_loading_screen").not.toHaveClass("o_we_ui_loading");
+    };
+
+    await testLayout(false);
+    await contains("button[data-action=mobile]").click();
+    await testLayout(true);
+});
+
+test("Background position overlay behavior", async () => {
+    expect.assertions(8);
+
+    const movement = 50;
+    const positionStartDrag = { x: 100, y: 100 };
+    const { startDrag, endDrag } = patchDragBackground(
+        ".o-overlay-container .o_we_background_dragger",
+        positionStartDrag,
+        { x: positionStartDrag.x + movement, y: positionStartDrag.y + movement }
+    );
+
+    const drag = async () => {
+        const dragActions = await startDrag();
+        expect(".o-overlay-container .o_we_background_position_overlay").toHaveClass(
+            "o_we_grabbing"
+        );
+        await endDrag(dragActions);
+    };
+
+    const getBgPosPercent = (el) => {
+        const positions = getComputedStyle(el).backgroundPosition.split(" ");
+        return {
+            x: parseFloat(positions[0]),
+            y: parseFloat(positions[1]),
+        };
+    };
+
+    const { getEditor, waitDomUpdated } = await setupWebsiteBuilder(
+        `<section>
+            <div class="container">
+                <section style="background-image: url('/web/image/123/transparent.png'); width: 500px;">
+                </section>
+            </div>
+        </section>`,
+        {
+            // Load the CSS related to the Scroll Effect
+            loadIframeBundles: true,
+        }
+    );
+
+    // Force the dimensions of the web client in order to have consistent result
+    // values after dragging. The "Fixed" Scroll Effect is applied only when the
+    // iframe is wider than 1200px.
+    Object.assign(document.querySelector(".o_web_client").style, {
+        left: "0px",
+        top: "0px",
+        width: "2000px",
+        height: "900px",
+        transform: "none",
+    });
+
+    const section = queryOne(":iframe .container section");
+    // Make sure we can scroll
+    section.style.height = "1000px";
+
+    await openBgPositionOverlay(section, waitDomUpdated);
+
+    // Scrolling on the overlay should scroll the iframe
+    await scroll(queryOne(".o_we_background_position_overlay"), { y: 50 }, { scrollable: false });
+    await animationFrame();
+    expect(":iframe body").toHaveProperty("scrollTop", 50);
+
+    // The Scroll Effect should be set to "None"
+    expect("[data-label='Scroll Effect'] button").toHaveText("None");
+    await openBgPositionOverlay(section, waitDomUpdated);
+    expect(section).toHaveClass("o_we_background_positioning");
+
+    // Drag and check that the background moves properly
+    await drag();
+    const sectionRect = section.getBoundingClientRect();
+    // Delta X obtained by applying the formula in getBackgroundDelta of BackgroundPositionOverlay
+    const deltaX = sectionRect.width - sectionRect.height;
+    expect(getBgPosPercent(section).x).toBeCloseTo(
+        // Formula derived from the one in onDragBackgroundMove of BackgroundPositionOverlay
+        // 50% being the starting position
+        50 + (movement / deltaX) * 100,
+        {
+            message:
+                "Background X position should be dragged correctly with Scroll Effect set to None ",
+        }
+    );
+
+    // Set Scroll Effect to "Fixed"
+    await contains("[data-label='Scroll Effect'] button").click();
+    await contains("[data-action-value='fixed']").click();
+    await openBgPositionOverlay(section, waitDomUpdated);
+    // The element with the background is not the section when the Scroll Effect is not "None".
+    // However the section (i.e. its parent element) needs to have this class set to hide its content.
+    expect(section).toHaveClass("o_we_background_positioning");
+
+    // Drag and check that the background moves properly
+    await drag();
+    const iframe = getEditor().editable.ownerDocument.defaultView.frameElement;
+    const iframeRect = iframe.getBoundingClientRect();
+    // Delta Y obtained by applying the formula in getBackgroundDelta of BackgroundPositionOverlay
+    const deltaY = iframeRect.height - iframeRect.width;
+    expect(getBgPosPercent(queryOne(":iframe .s_parallax_bg")).y).toBeCloseTo(
+        // Formula derived from the one in onDragBackgroundMove of BackgroundPositionOverlay
+        // 50% being the starting position
+        50 + (movement / deltaY) * 100,
+        {
+            message:
+                "Background Y position should be dragged correctly with Scroll Effect set to Fixed ",
+        }
+    );
+});
+
+async function openBgPositionOverlay(editingElement, waitDomUpdated) {
+    await contains(editingElement).click();
+    await waitDomUpdated();
+    // TODO: Remove the timeouts when waitDomUpdated is fixed
+    await contains("button[data-action-id='backgroundPositionOverlay']", { timeout: 2000 }).click();
+    await waitDomUpdated();
+    await waitFor(".o-overlay-container .o_we_background_dragger", { timeout: 2000 });
+}
+
+function patchDragBackground(el, from, to) {
     patchWithCleanup(BackgroundPositionOverlay.prototype, {
         onDragBackgroundMove(ev) {
-            const movementX = ev.clientX === 200 ? 1 : 0;
-            const movementY = ev.clientY === 200 ? 1 : 0;
             // Mock the movementX and movementY readonly property
-            const newEv = {
+            super.onDragBackgroundMove({
                 preventDefault: () => {},
-                movementX: movementX,
-                movementY: movementY,
-            };
-            super.onDragBackgroundMove(newEv);
+                movementX: ev.clientX === to.x ? to.x - from.x : 0,
+                movementY: ev.clientY === to.y ? to.y - from.y : 0,
+            });
         },
     });
-    await setupWebsiteBuilder(`
+    const startDrag = () => contains(el).drag({ position: from });
+    const endDrag = async (dragActions) => {
+        await dragActions.moveTo(el, { position: to });
+        await dragActions.drop();
+    };
+    return { startDrag, endDrag };
+}
+
+async function dragAndDropBgImage() {
+    const { waitDomUpdated } = await setupWebsiteBuilder(`
         <section style="background-image: url('/web/image/123/transparent.png'); width: 500px; height:500px">
             <div class="o_we_shape o_html_builder_Connections_01">
                 AAAA
             </div>
         </section>`);
-    await contains(":iframe section").click();
-    await contains("button[data-action-id='backgroundPositionOverlay']").click();
-
-    const sectionOverlaySelector = ".overlay .o_overlay_background section";
-    await waitFor(sectionOverlaySelector);
-    expect(sectionOverlaySelector).not.toHaveStyle("background-position", { inline: true });
-    const dragActions = await contains(sectionOverlaySelector).drag({
-        position: { x: 199, y: 199 },
-    });
-    await dragActions.moveTo(sectionOverlaySelector, { position: { x: 200, y: 200 } });
-    await dragActions.drop();
+    await openBgPositionOverlay(":iframe section", waitDomUpdated);
+    const { startDrag, endDrag } = patchDragBackground(
+        ".o-overlay-container .o_we_background_dragger",
+        { x: 199, y: 199 },
+        { x: 200, y: 200 }
+    );
+    const dragActions = await startDrag();
+    await endDrag(dragActions);
 }
 
 test("change the main color of a background image of type '/html_editor/shape'", async () => {
