@@ -321,3 +321,20 @@ registry.category("web_tour.tours").add("self_order_mobile_0_price_order", {
             Utils.clickBtn("My Order"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_mobile_self_order_preparation_changes", {
+    steps: () =>
+        [
+            Utils.checkIsNoBtn("My Order"),
+            Utils.clickBtn("Order Now"),
+            ProductPage.clickProduct("Coca-Cola"),
+            ProductPage.clickProduct("Fanta"),
+            Utils.clickBtn("Order"),
+            CartPage.checkProduct("Fanta", "2.53", "1"),
+            CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+            Utils.clickBtn("Pay"),
+            CartPage.selectTable("3"),
+            ConfirmationPage.isShown(),
+            Utils.clickBtn("Ok"),
+        ].flat(),
+});

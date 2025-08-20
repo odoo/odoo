@@ -158,3 +158,23 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
 
         order = self.env['pos.order'].search([], limit=1)
         self.assertEqual(order.picking_count, 1)
+
+    def test_mobile_self_order_preparation_changes(self):
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'table',
+            'use_presets': False,
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+
+        # create self-order from mobile
+        self.start_tour(self.pos_config._get_self_order_route(), 'test_mobile_self_order_preparation_changes')
+        order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.state, 'draft')
+        self.assertEqual(len(order.lines), 2)
+
+        # Check self-order in pos-terminal are not prompted for Send-for-Preparation
+        self.start_tour('/pos/ui?config_id=%d' % self.pos_config.id, 'test_pos_self_order_preparation_changes', login='pos_user')
