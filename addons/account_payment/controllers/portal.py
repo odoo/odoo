@@ -11,7 +11,7 @@ from odoo.addons.payment.controllers.portal import PaymentPortal
 
 class PortalAccount(portal.PortalAccount, PaymentPortal):
 
-    def _invoice_get_page_view_values(self, invoice, access_token, payment=False, amount=None, **kwargs):
+    def _invoice_get_page_view_values(self, invoice, access_token, payment=False, **kwargs):
         # EXTENDS account
 
         values = super()._invoice_get_page_view_values(invoice, access_token, **kwargs)
@@ -39,7 +39,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
             access_token=access_token,
             **kwargs)
 
-        amount_custom = float(amount or 0.0)
+        amount_custom = float(kwargs.get('amount') or 0.0)
         values |= {
             **common_view_values,
             'amount_custom': amount_custom,
@@ -117,6 +117,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         invoice_company = invoices_data['company'] or request.env.company
 
         availability_report = {}
+        kwargs.pop('amount', None)  # Prevent crash `_get_compatible_providers`
         # Select all the payment methods and tokens that match the payment context.
         providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
             invoice_company.id,
