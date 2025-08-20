@@ -87,7 +87,7 @@ class TestGetOperatorCommon(HttpCase):
             login=f"operator_{lang_code or country_code}_{self.operator_id}",
             groups="im_livechat.im_livechat_group_user",
         )
-        operator.res_users_settings_id.livechat_expertise_ids = expertises
+        operator.livechat_expertise_ids = expertises
         operator.partner_id = self.env["res.partner"].create(
             {
                 "name": f"Operator {lang_code or country_code}",
