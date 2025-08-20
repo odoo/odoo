@@ -13,7 +13,6 @@ import { renderToElement } from "@web/core/utils/render";
 
 import {
     Component,
-    markup,
     onMounted,
     onPatched,
     onWillDestroy,
@@ -37,7 +36,6 @@ import { createElementWithContent } from "@web/core/utils/html";
 import { url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
 import { cookie } from "@web/core/browser/cookie";
-import { rpc } from "@web/core/network/rpc";
 import { MessageActionMenuMobile } from "./message_action_menu_mobile";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
@@ -105,7 +103,6 @@ export class Message extends Component {
             isClicked: false,
             expandOptions: false,
             emailHeaderOpen: false,
-            showTranslation: false,
             actionMenuMobileOpen: false,
         });
         /** @type {ShadowRoot} */
@@ -190,7 +187,7 @@ export class Message extends Component {
                 if (this.shadowBody.el) {
                     const bodyEl = createElementWithContent(
                         "span",
-                        this.state.showTranslation
+                        this.message.showTranslation
                             ? this.message.richTranslationValue
                             : this.props.messageSearch?.highlight(this.message.richBody) ??
                                   this.message.richBody
@@ -203,7 +200,7 @@ export class Message extends Component {
                 }
             },
             () => [
-                this.state.showTranslation,
+                this.message.showTranslation,
                 this.message.richTranslationValue,
                 this.props.messageSearch?.searchTerm,
                 this.message.richBody,
@@ -471,17 +468,7 @@ export class Message extends Component {
     }
 
     async onClickToggleTranslation() {
-        const message = toRaw(this.message);
-        if (!message.translationValue) {
-            const { error, lang_name, body } = await rpc("/mail/message/translate", {
-                message_id: message.id,
-            });
-            message.translationValue = body && markup(body);
-            message.translationSource = lang_name;
-            message.translationErrors = error;
-        }
-        this.state.showTranslation =
-            !this.state.showTranslation && Boolean(message.translationValue);
+        toRaw(this.props.message).onClickToggleTranslation();
     }
 
     get shouldHideFromMessageListOnDelete() {
