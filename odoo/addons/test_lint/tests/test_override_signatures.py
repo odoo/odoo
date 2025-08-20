@@ -121,7 +121,7 @@ def assert_valid_override(parent_signature, child_signature, is_private):
         assert parent_has_varargs, "too many positional parameters"
         cposparams = cposparams[:len(pposparams)]
     for pparam, cparam in zip(pposparams, cposparams, strict=True):
-        assert check_parameter(pparam, cparam, is_private=is_private), f"wrong positional paramter {cparam.name!r}"
+        assert check_parameter(pparam, cparam, is_private=is_private), f"wrong positional parameter {cparam.name!r}"
 
     # check keywords
     kw_kinds = (KEYWORD_ONLY,) if is_private else (POSITIONAL_OR_KEYWORD, KEYWORD_ONLY)
