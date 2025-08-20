@@ -11,6 +11,7 @@ import {
     addPlugin,
     defineWebsiteModels,
     setupWebsiteBuilder,
+    setupWebsiteBuilderWithSnippet,
 } from "./website_helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
@@ -335,4 +336,19 @@ test("The overlay buttons should only appear for elements in editable areas, unl
     await contains(":iframe .test-editable").click();
     expect(".overlay .button-a").toHaveCount(1);
     expect(".overlay .button-b").toHaveCount(1);
+});
+
+test("An inner snippet alone in a column should not have overlay options", async () => {
+    await setupWebsiteBuilderWithSnippet("s_banner");
+    // Clicking on the "Blockquote" should activate the column overlay.
+    await contains(":iframe blockquote").click();
+    expect(".oe_overlay").toHaveCount(3);
+    expect(".oe_overlay.oe_active").toHaveCount(2);
+    // Clone the block so it is not alone anymore.
+    await contains(
+        ".options-container[data-container-title='Blockquote'] .oe_snippet_clone"
+    ).click();
+    // Only the "Blockquote" should have an overlay.
+    expect(".oe_overlay").toHaveCount(3);
+    expect(".oe_overlay.oe_active").toHaveCount(1);
 });

@@ -148,7 +148,11 @@ export class BuilderOptionsPlugin extends Plugin {
             const previousIds = this.lastContainers.map((c) => c.id);
             const newIds = newContainers.map((c) => c.id);
             const areSameElements = newIds.every((id, i) => id === previousIds[i]);
-            if (areSameElements) {
+            // Check if the overlay options status changed.
+            const previousOverlays = this.lastContainers.map((c) => c.hasOverlayOptions);
+            const newOverlays = newContainers.map((c) => c.hasOverlayOptions);
+            const areSameOverlays = previousOverlays.every((check, i) => check === newOverlays[i]);
+            if (areSameElements && areSameOverlays) {
                 const previousOptions = this.lastContainers.flatMap((c) => [
                     ...c.options,
                     ...c.headerMiddleButtons,
@@ -258,6 +262,15 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     hasOverlayOptions(el) {
+        // An inner snippet alone in a column should not have overlay options.
+        const parentEl = el.parentElement;
+        const isAloneInColumn = parentEl?.children.length === 1 && parentEl.matches(".row > div");
+        const isInnerSnippet = this.config.snippetModel.isInnerContent(el);
+        const keepOptions = this.delegateTo("keep_overlay_options", el);
+        if (isInnerSnippet && isAloneInColumn && !keepOptions) {
+            return false;
+        }
+
         for (const { hasOption, editableOnly } of this.getResource("has_overlay_options")) {
             if (checkElement(el, { editableOnly }) && hasOption(el)) {
                 return true;

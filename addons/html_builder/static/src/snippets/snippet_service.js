@@ -69,6 +69,22 @@ export class SnippetModel extends Reactive {
         );
     }
 
+    /**
+     * Checks if the given element is an inner content snippet.
+     *
+     * @param {HTMLElement} el the element
+     * @returns {Boolean}
+     */
+    isInnerContent(el) {
+        const snippetName = el.dataset.snippet;
+        if (!snippetName) {
+            return false;
+        }
+        return !!this.snippetsByCategory.snippet_content.find(
+            (snippet) => snippet.name === snippetName
+        );
+    }
+
     getSnippet(category, id) {
         return this.snippetsByCategory[category].find((snippet) => snippet.id === id);
     }

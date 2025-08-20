@@ -55,6 +55,8 @@ export class GoogleMapsOptionPlugin extends Plugin {
             ResetMapColorAction,
             ShowDescriptionAction,
         },
+        // TODO remove when the snippet will have a "Height" option.
+        keep_overlay_options: (el) => el.matches(".s_google_map"),
     };
 
     setup() {
