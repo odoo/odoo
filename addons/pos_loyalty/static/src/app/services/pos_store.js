@@ -249,6 +249,10 @@ patch(PosStore.prototype, {
         let coupon = null;
         // If the code belongs to a loyalty card we just set the partner
         if (partnerId) {
+            if (!this.models["res.partner"].get(partnerId)) {
+                await this.data.read("res.partner", [partnerId]);
+            }
+
             const partner = this.models["res.partner"].get(partnerId);
             order.setPartner(partner);
         } else if (rule) {
