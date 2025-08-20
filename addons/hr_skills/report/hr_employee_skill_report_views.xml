@@ -3,7 +3,7 @@
     <record id="hr_employee_skill_report_view_pivot" model="ir.ui.view">
         <field name="model">hr.employee.skill.report</field>
         <field name="arch" type="xml">
-            <pivot disable_linking="True" js_class="skill_pivot_view">
+            <pivot disable_linking="True">
                 <field name="department_id" type="col"/>
                 <field name="employee_id" type="col"/>
                 <field name="skill_type_id" type="row"/>

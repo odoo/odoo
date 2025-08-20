@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, tools
+from odoo import api, fields, models, tools
 
 
 class HrEmployeeSkillReport(models.BaseModel):
@@ -43,3 +43,11 @@ class HrEmployeeSkillReport(models.BaseModel):
             WHERE st.active IS True AND st.is_certification IS NOT TRUE AND s.valid_to IS NULL
         )
         """ % (self._table, ))
+
+    @api.model
+    def formatted_read_grouping_sets(self, domain, grouping_sets, aggregates=(), *, order=None):
+        # In the pivot view, we don't want the hierarchical naming of department_id (hr.department)
+        self_contexted = self.with_context(hierarchical_naming=False)
+        return super(HrEmployeeSkillReport, self_contexted).formatted_read_grouping_sets(
+            domain, grouping_sets, aggregates, order=order,
+        )

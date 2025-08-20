@@ -50,7 +50,6 @@ This module introduces skills and resume management for employees.
         ],
         'web.assets_backend_lazy': [
             'hr_skills/static/src/views/skills_graph.js',
-            'hr_skills/static/src/views/pivot/*.js',
         ],
         'web.assets_unit_tests': [
             'hr_skills/static/tests/**/*',
