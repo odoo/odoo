@@ -183,11 +183,11 @@ registerMessageAction("download_files", {
     sequence: 55,
 });
 registerMessageAction("toggle-translation", {
-    condition: ({ message, thread }) => message.isTranslatable(thread),
-    icon: ({ owner }) =>
-        `fa fa-language ${owner.state.showTranslation ? "o-mail-Message-translated" : ""}`,
-    name: ({ owner }) => (owner.state.showTranslation ? _t("Revert") : _t("Translate")),
-    onSelected: ({ owner }) => owner.onClickToggleTranslation(),
+    condition: ({ message }) => message.isTranslatable(message.thread),
+    icon: ({ message }) =>
+        `fa fa-language ${message.showTranslation ? "o-mail-Message-translated" : ""}`,
+    name: ({ message }) => (message.showTranslation ? _t("Revert") : _t("Translate")),
+    onSelected: ({ message }) => message.onClickToggleTranslation(),
     sequence: 100,
 });
 registerMessageAction("copy-message", {
