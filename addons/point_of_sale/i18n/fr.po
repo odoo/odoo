@@ -1,26 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* point_of_sale
+# * point_of_sale
 #
 # Translators:
 # Jolien De Paepe, 2025
 # Wil Odoo, 2025
 # Manon Rondou, 2025
 #
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-08 18:36+0000\n"
-"PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Manon Rondou, 2025\n"
-"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"PO-Revision-Date: 2025-08-20 10:45+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s18-2/"
+"point_of_sale/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
-"1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__pos_reference
@@ -166,7 +169,7 @@ msgstr "%s commandes importées"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "%s required"
-msgstr ""
+msgstr "%s requis"
 
 #. module: point_of_sale
 #. odoo-python
@@ -178,7 +181,7 @@ msgstr "%s hors taxes"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 msgid "(DUPLICATE !)"
-msgstr ""
+msgstr "(DUPLICATA !)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -553,7 +556,7 @@ msgstr "Une note portant le même nom existe déjà"
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_payment_unique_uuid
 msgid "A payment with this uuid already exists"
-msgstr ""
+msgstr "Un paiement avec cet UUID existe déjà"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -1059,12 +1062,12 @@ msgstr "Une identification en interne de l'imprimante"
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_line_unique_uuid
 msgid "An order line with this uuid already exists"
-msgstr ""
+msgstr "Une ligne de commande avec cet UUID existe déjà"
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_unique_uuid
 msgid "An order with this uuid already exists"
-msgstr ""
+msgstr "Une commande avec cet UUID existe déjà"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4712,7 +4715,7 @@ msgstr "Divers"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Missing required"
-msgstr ""
+msgstr "Champ obligatoire manquant"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__mobile
@@ -5420,7 +5423,7 @@ msgstr "Numéro de commande"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Order Outdated"
-msgstr ""
+msgstr "Commande dépassée"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_order_printer
@@ -6028,7 +6031,7 @@ msgstr "Veuillez sélectionner un mode de paiement"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid "Please select a time slot before proceeding."
-msgstr ""
+msgstr "Veuillez sélectionner un créneau horaire avant de continuer."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7905,7 +7908,7 @@ msgstr "Passer l'écran de prévisualisation"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid "Slot"
-msgstr ""
+msgstr "Créneau"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.small_shelf_product_template
@@ -7954,7 +7957,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Some required information is missing."
-msgstr ""
+msgstr "Certaines informations obligatoires sont manquantes."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8553,6 +8556,11 @@ msgid ""
 "The order will be sent to the server with the last changes made on this "
 "device."
 msgstr ""
+"La commande a été modifiée sur un autre appareil. Si vous avez modifié des "
+"lignes existantes, vérifiez que vos changements n’ont pas été écrasés.\n"
+"\n"
+"La commande sera envoyée au serveur avec les dernières modifications "
+"effectuées sur cet appareil."
 
 #. module: point_of_sale
 #. odoo-javascript
