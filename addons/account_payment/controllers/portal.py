@@ -14,7 +14,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
     def _invoice_get_page_view_values(self, invoice, access_token, payment=False, amount=None, **kwargs):
         # EXTENDS account
 
-        values = super()._invoice_get_page_view_values(invoice, access_token, **kwargs)
+        values = super()._invoice_get_page_view_values(invoice, access_token, amount=amount, **kwargs)
 
         if not invoice._has_to_be_paid():
             # Do not compute payment-related stuff if given invoice doesn't have to be paid.
