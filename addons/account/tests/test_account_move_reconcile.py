@@ -5975,3 +5975,22 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertEqual(invoice_line.matching_number, payment_line.matching_number)
         self.assertEqual(payment_line.matching_number, currency_exchange_line.matching_number)
         self.assertEqual(currency_exchange_line.amount_residual, 0)
+
+    def test_partial_reconcile_amounts_of_several_matching_lines(self):
+        """ Test that the amounts of the partial reconcile records are matched by partner in priority. """
+        comp_curr = self.company_data['currency']
+        partner_c = self.partner_a.copy()
+        line_1 = self.create_line_for_reconciliation(1000.0, 1000.0, comp_curr, '2016-01-01', partner=self.partner_a)
+        line_2 = self.create_line_for_reconciliation(1001.0, 1001.0, comp_curr, '2016-01-01', partner=self.partner_b)
+        line_3 = self.create_line_for_reconciliation(1002.0, 1002.0, comp_curr, '2016-01-01', partner=partner_c)
+        line_4 = self.create_line_for_reconciliation(-1002.0, -1002.0, comp_curr, '2016-01-01', partner=partner_c)
+        line_5 = self.create_line_for_reconciliation(-1001.0, -1001.0, comp_curr, '2016-01-01', partner=self.partner_b)
+        line_6 = self.create_line_for_reconciliation(-1000.0, -1000.0, comp_curr, '2016-01-01', partner=self.partner_a)
+        lines = line_1 + line_2 + line_3 + line_4 + line_5 + line_6
+        lines.reconcile()
+        reconciliation_lines = lines.full_reconcile_id.partial_reconcile_ids.sorted('amount')
+        self.assertRecordValues(reconciliation_lines, [
+            {'amount': 1000.0, 'debit_move_id': line_1.id, 'credit_move_id': line_6.id},
+            {'amount': 1001.0, 'debit_move_id': line_2.id, 'credit_move_id': line_5.id},
+            {'amount': 1002.0, 'debit_move_id': line_3.id, 'credit_move_id': line_4.id},
+        ])
