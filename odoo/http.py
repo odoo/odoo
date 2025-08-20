@@ -1359,7 +1359,10 @@ __wz_get_response = HTTPException.get_response
 
 
 def get_response(self, environ=None, scope=None):
-    return Response(__wz_get_response(self, environ, scope))
+    if scope is None:  # compatible with werkzeug 0.16.x
+        return Response(__wz_get_response(self, environ))
+    else:
+        return Response(__wz_get_response(self, environ, scope))  # werkzeug 2.0.2
 
 
 HTTPException.get_response = get_response
