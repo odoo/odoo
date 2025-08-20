@@ -74,16 +74,6 @@ var EventRegistrationForm = publicWidget.Widget.extend({
         $button.attr('disabled', true);
         const self = this;
         return jsonrpc($form.attr('action'), post).then(async function (modal) {
-            const tokenObj = await self._recaptcha.getToken('website_event_registration');
-            if (tokenObj.error) {
-                self.notification.add(tokenObj.error, {
-                    type: "danger",
-                    title: _t("Error"),
-                    sticky: true,
-                });
-                $button.prop('disabled', false);
-                return false;
-            }
             var $modal = $(modal);
             const form = $modal[0].querySelector("form#attendee_registration");
             self._addTurnstile(form);
@@ -99,12 +89,28 @@ var EventRegistrationForm = publicWidget.Widget.extend({
             $modal.on('click', '.btn-close', function () {
                 $button.prop('disabled', false);
             });
-            $modal.on('submit', 'form', function (ev) {
+            $modal.on('submit', 'form', async function (ev) {
+                if (!self._recaptcha._publicKey) {
+                    return;
+                }
+
+                ev.preventDefault();
+                const tokenObj = await self._recaptcha.getToken('website_event_registration');
+                if (tokenObj.error) {
+                    self.notification.add(tokenObj.error, {
+                        type: "danger",
+                        title: _t("Error"),
+                        sticky: true,
+                    });
+                    $button.prop('disabled', false);
+                    return false;
+                }
                 const tokenInput = document.createElement('input');
                 tokenInput.setAttribute('name', 'recaptcha_token_response');
                 tokenInput.setAttribute('type', 'hidden');
                 tokenInput.setAttribute('value', tokenObj.token);
                 ev.currentTarget.appendChild(tokenInput);
+                ev.currentTarget.submit();
             })
         });
     },
