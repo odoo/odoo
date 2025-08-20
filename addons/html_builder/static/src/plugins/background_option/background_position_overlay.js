@@ -1,22 +1,52 @@
 import { scrollTo } from "@html_builder/utils/scrolling";
-import { Component, onMounted, onWillStart, onWillUnmount, useEffect, useRef } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillStart,
+    onWillUnmount,
+    useEffect,
+    useExternalListener,
+    useRef,
+} from "@odoo/owl";
 
 export class BackgroundPositionOverlay extends Component {
     static template = "html_builder.BackgroundPositionOverlay";
     static props = {
-        outerHtmlEditingElement: { type: String },
         editingElement: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
         mockEditingElOnImg: { validate: (p) => p.tagName === "IMG" },
         applyPosition: { type: Function },
         discardPosition: { type: Function },
         editable: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
+        history: Object,
     };
 
     setup() {
-        this.parentBgDraggerRef = useRef("parentBgDragger");
         this.backgroundOverlayRef = useRef("backgroundOverlay");
+        this.overlayMaskRef = useRef("overlayMask");
         this.overlayContentRef = useRef("overlayContent");
+        this.bgDraggerRef = useRef("bgDragger");
+
+        this.iframe = this.props.editable.ownerDocument.defaultView.frameElement;
+        this.builderOverlayContainerEl = document.querySelector(
+            "[data-oe-local-overlay-id='builder-overlay-container']:not(:empty)"
+        );
+        // If there is a Scroll Effect, a span.s_parallax_bg inside the section
+        // contains the background. Otherwise it's the section itself.
+        // And targetContainerEl should always be the section.
+        this.targetContainerEl = this.props.editingElement.classList.contains("s_parallax_bg")
+            ? this.props.editingElement.parentElement
+            : this.props.editingElement;
+
         this._dimensionOverlay = this.dimensionOverlay.bind(this);
+
+        // Discard when clicking anywhere on the page
+        const editableDocument = this.props.editable.ownerDocument;
+        useExternalListener(editableDocument, "pointerdown", this.discard.bind(this));
+        useExternalListener(document, "pointerdown", this.discard.bind(this));
+
+        useExternalListener(window, "resize", this._dimensionOverlay);
+        useExternalListener(this.iframe.contentWindow, "resize", this._dimensionOverlay);
+        useExternalListener(this.iframe.contentWindow, "scroll", this._dimensionOverlay);
 
         onWillStart(async () => {
             const position = getComputedStyle(this.props.editingElement)
@@ -33,28 +63,23 @@ export class BackgroundPositionOverlay extends Component {
                 top: (position[1] / 100) * delta.y || 0,
             };
             // Make sure the editing element is visible
-            // TODO: check; the overlay could fail to be visible if the editing
-            // element is too big.
-            const rect = this.props.editingElement.getBoundingClientRect();
+            const rect = this.targetContainerEl.getBoundingClientRect();
             const isEditingElEntirelyVisible =
                 rect.top >= 0 &&
-                rect.bottom <= this.props.editingElement.ownerDocument.defaultView.innerHeight;
+                rect.bottom <= this.targetContainerEl.ownerDocument.defaultView.innerHeight;
             if (!isEditingElEntirelyVisible) {
-                await scrollTo(this.props.editingElement, { extraOffset: 50 });
+                await scrollTo(this.targetContainerEl, { extraOffset: 50 });
             }
         });
 
         onMounted(() => {
-            this.bgDraggerEl = this.parentBgDraggerRef.el.children[0];
+            this.reloadSavePoint = this.props.history.makeSavePoint();
             this.dimensionOverlay();
-            this.bgDraggerEl.style.backgroundAttachment = getComputedStyle(
-                this.props.editingElement
-            ).backgroundAttachment;
-            window.addEventListener("resize", this._dimensionOverlay);
+            this.targetContainerEl.classList.add("o_we_background_positioning");
         });
 
         useEffect(() => {
-            this.tooltip = window.Tooltip.getOrCreateInstance(this.parentBgDraggerRef.el, {
+            this.tooltip = window.Tooltip.getOrCreateInstance(this.bgDraggerRef.el, {
                 trigger: "manual",
                 container: this.backgroundOverlayRef.el,
             });
@@ -62,24 +87,38 @@ export class BackgroundPositionOverlay extends Component {
         });
 
         onWillUnmount(() => {
-            window.removeEventListener("resize", this._dimensionOverlay);
+            this.builderOverlayContainerEl.style.clipPath = "";
             this.tooltip.dispose();
         });
     }
 
     apply() {
-        this.props.applyPosition(getComputedStyle(this.bgDraggerEl).backgroundPosition);
+        const position = getComputedStyle(this.props.editingElement).backgroundPosition;
+        this.reloadSavePoint();
+        this.props.applyPosition(position);
+    }
+
+    discard() {
+        this.reloadSavePoint();
+        this.props.discardPosition();
+    }
+
+    onWheel(ev) {
+        if (ev.ctrlKey) {
+            return;
+        }
+        this.iframe.contentWindow.scrollBy(ev.deltaX, ev.deltaY);
     }
 
     onDragBackgroundStart(ev) {
-        this.bgDraggerEl.classList.add("o_we_grabbing");
+        this.backgroundOverlayRef.el.classList.add("o_we_grabbing");
         const documentEl = window.document;
         const onDragBackgroundMove = this.onDragBackgroundMove.bind(this);
         documentEl.addEventListener("mousemove", onDragBackgroundMove);
         documentEl.addEventListener(
             "mouseup",
             () => {
-                this.bgDraggerEl.classList.remove("o_we_grabbing");
+                this.backgroundOverlayRef.el.classList.remove("o_we_grabbing");
                 documentEl.removeEventListener("mousemove", onDragBackgroundMove);
             },
             { once: true }
@@ -111,7 +150,7 @@ export class BackgroundPositionOverlay extends Component {
             ? percentPosition.top
             : this.originalPosition.top;
 
-        this.bgDraggerEl.style.backgroundPosition = `${percentPosition.left}% ${percentPosition.top}%`;
+        this.props.editingElement.style.backgroundPosition = `${percentPosition.left}% ${percentPosition.top}%`;
 
         function clamp(val, bounds) {
             // We sort the bounds because when one dimension of the rendered
@@ -123,32 +162,70 @@ export class BackgroundPositionOverlay extends Component {
     }
 
     dimensionOverlay() {
-        // Sets the overlay in the right place so that the draggable
-        // background sizes the background item like the editing element.
-        this.backgroundOverlayRef.el.style.width = `${this.props.editable.clientWidth}px`;
-        this.backgroundOverlayRef.el.style.height = `${this.props.editable.clientHeight}px`;
-
-        const overlayContentEl = this.overlayContentRef.el;
-        const targetRect = this.props.editingElement.getBoundingClientRect();
-        overlayContentEl.style.left = `${targetRect.left + window.scrollX}px`;
-
-        this.bgDraggerEl.style.setProperty(
-            "width",
-            `${this.props.editingElement.clientWidth}px`,
-            "important"
-        );
-        this.bgDraggerEl.style.setProperty(
-            "height",
-            `${this.props.editingElement.clientHeight}px`,
-            "important"
+        const iframeRect = this.iframe.getBoundingClientRect();
+        const targetContainerRect = this.targetContainerEl.getBoundingClientRect();
+        const scale = this.getIframeContainerScale();
+        const scaledRect = new DOMRect(
+            scale * targetContainerRect.x,
+            scale * targetContainerRect.y,
+            scale * targetContainerRect.width,
+            scale * targetContainerRect.height
         );
 
-        const topPos = Math.max(
-            0,
-            window.scrollY -
-                (this.props.editingElement.getBoundingClientRect().top + window.scrollY)
-        );
-        overlayContentEl.querySelector(".o_we_overlay_buttons").style.top = `${topPos}px`;
+        // Make a cut-out in the overlay mask to highlight the editing element.
+        // "polygon" is used because "rect" would do the inverse.
+        const clipPath = `polygon(
+            evenodd,
+            0 0, 100% 0,100% 100%, 0 100%, 0 0,
+            ${scaledRect.left}px ${scaledRect.top}px,
+            ${scaledRect.right}px ${scaledRect.top}px,
+            ${scaledRect.right}px ${scaledRect.bottom}px,
+            ${scaledRect.left}px ${scaledRect.bottom}px,
+            ${scaledRect.left}px ${scaledRect.top}px)
+        `;
+        this.overlayMaskRef.el.style.clipPath = clipPath;
+        this.builderOverlayContainerEl.style.clipPath = clipPath;
+
+        // The overlay covers the whole iframe excluding the scrollbar.
+        Object.assign(this.backgroundOverlayRef.el.style, {
+            left: `${iframeRect.left}px`,
+            top: `${iframeRect.top}px`,
+            height: `${this.props.editable.ownerDocument.body.clientHeight * scale}px`,
+            width: `${this.props.editable.ownerDocument.body.clientWidth * scale}px`,
+        });
+
+        // The overlay content covers the editing element.
+        Object.assign(this.overlayContentRef.el.style, {
+            left: `${scaledRect.left}px`,
+            top: `${scaledRect.top}px`,
+        });
+        const overlayButtonsEl = this.overlayContentRef.el.querySelector(".o_we_overlay_buttons");
+        overlayButtonsEl.style.top = `${Math.max(0, -scaledRect.top)}px`;
+        this.bgDraggerRef.el.style.setProperty("width", `${scaledRect.width}px`, "important");
+        this.bgDraggerRef.el.style.setProperty("height", `${scaledRect.height}px`, "important");
+
+        // Refresh tooltip position after overlay reposition
+        if (this.tooltip) {
+            this.tooltip.update();
+        }
+    }
+
+    /**
+     * Gets the scale factor of the iframe's parent container.
+     * Useful when the user zooms in/out in the browser, as it affects the
+     * dimensions of the iframe.
+     * @returns {number} The scale factor (1 if no transform is applied)
+     */
+    getIframeContainerScale() {
+        const matrix = getComputedStyle(this.iframe.parentElement).transform;
+        if (matrix === "none") {
+            return 1;
+        }
+        const values = matrix
+            .match(/matrix\(([^)]+)\)/)[1]
+            .split(",")
+            .map(parseFloat);
+        return values[0];
     }
 
     /**
@@ -158,45 +235,41 @@ export class BackgroundPositionOverlay extends Component {
      *
      */
     getBackgroundDelta() {
-        const bgSize = getComputedStyle(this.props.editingElement).backgroundSize;
-        const editingElDimension = this.props.editingElement.getBoundingClientRect();
-        if (bgSize !== "cover") {
-            let [width, height] = bgSize.split(" ");
-            if (width === "auto" && (height === "auto" || !height)) {
-                return {
-                    x: editingElDimension.width - this.props.mockEditingElOnImg.naturalWidth,
-                    y: editingElDimension.height - this.props.mockEditingElOnImg.naturalHeight,
-                };
-            }
-            // At least one of width or height is not auto, so we can use it to
-            // calculate the other if it's not set.
-            [width, height] = [parseInt(width), parseInt(height)];
+        const naturalWidth = this.props.mockEditingElOnImg.naturalWidth;
+        const naturalHeight = this.props.mockEditingElOnImg.naturalHeight;
+        const editingElStyle = getComputedStyle(this.props.editingElement);
+        // If background-attachment: fixed, the background is sized relative to
+        // the page viewport.
+        const bgRect =
+            editingElStyle.backgroundAttachment === "fixed"
+                ? this.iframe.getBoundingClientRect()
+                : this.props.editingElement.getBoundingClientRect();
+
+        if (editingElStyle.backgroundSize === "cover") {
+            const renderRatio = Math.max(
+                bgRect.width / naturalWidth,
+                bgRect.height / naturalHeight
+            );
+
             return {
-                x:
-                    editingElDimension.width -
-                    (width ||
-                        (height * this.props.mockEditingElOnImg.naturalWidth) /
-                            this.props.mockEditingElOnImg.naturalHeight),
-                y:
-                    editingElDimension.height -
-                    (height ||
-                        (width * this.props.mockEditingElOnImg.naturalHeight) /
-                            this.props.mockEditingElOnImg.naturalWidth),
+                x: bgRect.width - Math.round(renderRatio * naturalWidth),
+                y: bgRect.height - Math.round(renderRatio * naturalHeight),
             };
         }
 
-        const renderRatio = Math.max(
-            editingElDimension.width / this.props.mockEditingElOnImg.naturalWidth,
-            editingElDimension.height / this.props.mockEditingElOnImg.naturalHeight
-        );
-
+        let [width, height] = editingElStyle.backgroundSize.split(" ");
+        if (width === "auto" && (height === "auto" || !height)) {
+            return {
+                x: bgRect.width - naturalWidth,
+                y: bgRect.height - naturalHeight,
+            };
+        }
+        // At least one of width or height is not auto, so we can use it to
+        // calculate the other if it's not set.
+        [width, height] = [parseInt(width), parseInt(height)];
         return {
-            x:
-                editingElDimension.width -
-                Math.round(renderRatio * this.props.mockEditingElOnImg.naturalWidth),
-            y:
-                editingElDimension.height -
-                Math.round(renderRatio * this.props.mockEditingElOnImg.naturalHeight),
+            x: bgRect.width - (width || (height * naturalWidth) / naturalHeight),
+            y: bgRect.height - (height || (width * naturalHeight) / naturalWidth),
         };
     }
 }
