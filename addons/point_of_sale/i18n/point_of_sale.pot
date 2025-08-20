@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:37+0000\n"
-"PO-Revision-Date: 2025-07-16 18:37+0000\n"
+"POT-Creation-Date: 2025-08-18 18:36+0000\n"
+"PO-Revision-Date: 2025-08-18 18:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -142,6 +142,12 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
+msgid "(DUPLICATE !)"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "(as of opening)"
 msgstr ""
@@ -205,31 +211,6 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "2-03-2000 9:00 AM"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.attribute.value,name:point_of_sale.product_attribute_value_39
-msgid "39"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.attribute.value,name:point_of_sale.product_attribute_value_40
-msgid "40"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.attribute.value,name:point_of_sale.product_attribute_value_41
-msgid "41"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.attribute.value,name:point_of_sale.product_attribute_value_42
-msgid "42"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.attribute.value,name:point_of_sale.product_attribute_value_43
-msgid "43"
 msgstr ""
 
 #. module: point_of_sale
@@ -458,6 +439,11 @@ msgid "A note with this name already exists"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model.constraint,message:point_of_sale.constraint_pos_payment_unique_uuid
+msgid "A payment with this uuid already exists"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
 msgid ""
 "A session is a period of time, usually one day, during which you sell "
@@ -532,6 +518,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Access Denied"
 msgstr ""
@@ -946,6 +933,16 @@ msgid "An internal identification of the printer"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_line_unique_uuid
+msgid "An order line with this uuid already exists"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_unique_uuid
+msgid "An order with this uuid already exists"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.js:0
 msgid ""
@@ -1283,11 +1280,6 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Bills & Receipts"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.attribute.value,name:point_of_sale.product_attribute_value_black
-msgid "Black"
 msgstr ""
 
 #. module: point_of_sale
@@ -2008,7 +2000,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__color
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_note__color
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__color
-#: model:product.attribute,name:point_of_sale.product_attribute_color
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_view_form_normalized_pos
 msgid "Color"
@@ -2159,12 +2150,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/proxy_status/proxy_status.xml:0
 msgid "Connecting to Proxy"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/customer_display/utils.js:0
-msgid "Connecting to the IoT Box"
 msgstr ""
 
 #. module: point_of_sale
@@ -2557,12 +2542,6 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
 msgid "Customers"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
-msgid "DUPLICATA !"
 msgstr ""
 
 #. module: point_of_sale
@@ -3494,11 +3473,6 @@ msgid "Greater than allowed"
 msgstr ""
 
 #. module: point_of_sale
-#: model:product.attribute.value,name:point_of_sale.product_attribute_value_green
-msgid "Green"
-msgstr ""
-
-#. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_green_hood_product_template
 msgid "Green Hood"
 msgstr ""
@@ -4061,6 +4035,12 @@ msgstr ""
 msgid ""
 "It seems like you don't have enough rights to create point of sale "
 "configurations."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "It seems like you don't have enough rights to load data."
 msgstr ""
 
 #. module: point_of_sale
@@ -5270,6 +5250,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__tracking_number
 msgid "Order Number"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Order Outdated"
 msgstr ""
 
 #. module: point_of_sale
@@ -6676,11 +6662,6 @@ msgid "Proxy Warning"
 msgstr ""
 
 #. module: point_of_sale
-#: model:product.attribute.value,name:point_of_sale.product_attribute_value_purple
-msgid "Purple"
-msgstr ""
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_facing_qr.xml:0
@@ -7628,11 +7609,6 @@ msgid "Shipping Policy"
 msgstr ""
 
 #. module: point_of_sale
-#: model:product.attribute,name:point_of_sale.product_attribute_size_number
-msgid "Shoes size"
-msgstr ""
-
-#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/res_partner.py:0
 msgid "Shopping cart"
@@ -7701,11 +7677,6 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "Sign in"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.attribute,name:point_of_sale.product_attribute_size
-msgid "Size"
 msgstr ""
 
 #. module: point_of_sale
@@ -8287,6 +8258,15 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "The order delivery / pickup date is in the future. You cannot cancel it."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid ""
+"The order has been modified on another device. If you have modified existing order lines, check that your changes have not been overwritten.\n"
+"\n"
+"The order will be sent to the server with the last changes made on this device."
 msgstr ""
 
 #. module: point_of_sale
@@ -9377,11 +9357,6 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: model:product.attribute.value,name:point_of_sale.product_attribute_value_white
-msgid "White"
-msgstr ""
-
-#. module: point_of_sale
 #: model:product.template,name:point_of_sale.whiteboard_product_template
 msgid "Whiteboard"
 msgstr ""
@@ -9405,11 +9380,6 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_resource_calendar_attendance
 msgid "Work Detail"
-msgstr ""
-
-#. module: point_of_sale
-#: model:product.attribute.value,name:point_of_sale.product_attribute_value_xl
-msgid "XL"
 msgstr ""
 
 #. module: point_of_sale

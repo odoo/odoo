@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:37+0000\n"
-"PO-Revision-Date: 2025-07-16 18:37+0000\n"
+"POT-Creation-Date: 2025-08-18 18:36+0000\n"
+"PO-Revision-Date: 2025-08-18 18:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -244,6 +244,12 @@ msgid ", back on "
 msgstr ""
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid "- '%(version)s' from %(start_date)s to %(end_date)s"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "00:00"
 msgstr ""
@@ -426,15 +432,15 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
-"A leave cannot be set across multiple contracts with different working schedules.\n"
+"A leave cannot be set across multiple versions with different working schedules.\n"
 "\n"
-"Please create one time off for each contract.\n"
+"Please create one time off for each version period.\n"
 "\n"
 "Time off:\n"
 "%(time_off)s\n"
 "\n"
-"Contracts:\n"
-"%(contracts)s"
+"Versions:\n"
+"%(versions)s"
 msgstr ""
 
 #. module: hr_holidays
@@ -1408,12 +1414,6 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_res_partner
 msgid "Contact"
-msgstr ""
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "Contract %(contract)s from %(start_date)s to %(end_date)s"
 msgstr ""
 
 #. module: hr_holidays

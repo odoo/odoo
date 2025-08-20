@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:37+0000\n"
-"PO-Revision-Date: 2025-07-16 18:37+0000\n"
+"POT-Creation-Date: 2025-08-18 18:36+0000\n"
+"PO-Revision-Date: 2025-08-18 18:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1522,6 +1522,13 @@ msgid "Define the minimum number of sent emails to be displayed as Present."
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_resource_resource__calendar_id
+msgid ""
+"Define the working schedule of the resource. If not set, the resource will "
+"have fully flexible working hours."
+msgstr ""
+
+#. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
@@ -2568,6 +2575,8 @@ msgid "In-depth knowledge of labor laws"
 msgstr ""
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_version.py:0
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Indefinite"
 msgstr ""
@@ -4485,6 +4494,12 @@ msgid "User already exists for Those Employees %s"
 msgstr ""
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "User already exists with the same email for Employees %s"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_partner_id
 msgid "User's partner"
@@ -4518,6 +4533,8 @@ msgid "Valid work permit for Belgium"
 msgstr ""
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_version.py:0
 #: model:ir.model.fields,field_description:hr.field_hr_employee__version_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
 msgid "Version"
@@ -4797,6 +4814,11 @@ msgid "Working Schedules"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_resource_resource__calendar_id
+msgid "Working Time"
+msgstr ""
+
+#. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_users.py:0
 msgid ""
@@ -4836,6 +4858,12 @@ msgstr ""
 msgid ""
 "You have some overlapping contracts for %(employee)s:\n"
 "%(overlaps)s"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "You need to set a valid work email address for %s"
 msgstr ""
 
 #. module: hr
