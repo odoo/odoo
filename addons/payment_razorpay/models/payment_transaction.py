@@ -415,14 +415,14 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'razorpay':
             return super()._compare_notification_data(notification_data)
 
-        # Amount and currency are not sent in notification data for REDIRECT_PAYMENT_METHOD_CODES.
-        if self.payment_method_id.code in const.REDIRECT_PAYMENT_METHOD_CODES:
+        # Amount and currency are not sent in the payment data when redirecting to the return route.
+        if 'amount' not in notification_data or 'currency' not in notification_data:
             return
 
         amount = payment_utils.to_major_currency_units(
-            notification_data.get('amount', 0), self.currency_id
+            notification_data['amount'], self.currency_id
         )
-        currency_code = notification_data.get('currency')
+        currency_code = notification_data['currency']
         self._validate_amount_and_currency(amount, currency_code)
 
     def _process_notification_data(self, notification_data):
