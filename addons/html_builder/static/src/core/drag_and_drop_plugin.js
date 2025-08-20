@@ -198,9 +198,11 @@ export class DragAndDropPlugin extends Plugin {
                     (el) => el !== this.overlayTarget && isVisible(el)
                 );
                 if (parentEl.children.length === 1 || !visibleSiblingEl) {
-                    const dropCloneEl = document.createElement("div");
+                    const dropCloneEl = this.overlayTarget.cloneNode();
                     dropCloneEl.classList.add("oe_drop_clone");
                     dropCloneEl.style.visibility = "hidden";
+                    dropCloneEl.style.height = `${targetRect.height}px`;
+                    dropCloneEl.style.width = `${targetRect.width}px`;
                     this.overlayTarget.after(dropCloneEl);
                     this.dragState.dropCloneEl = dropCloneEl;
                 }
