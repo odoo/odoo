@@ -5,7 +5,7 @@ import { closestScrollableY } from "@web/core/utils/scrolling";
 
 export class EditorOverlay extends Component {
     static template = xml`
-        <div t-ref="root" class="overlay" t-att-class="props.className" t-on-pointerdown.stop="() => {}">
+        <div t-ref="root" class="overlay" t-att-class="props.className">
             <t t-component="props.Component" t-props="props.props"/>
         </div>`;
 
@@ -53,7 +53,7 @@ export class EditorOverlay extends Component {
             position.unlock();
         });
 
-        const rootRef = useRef("root");
+        this.rootRef = useRef("root");
 
         if (this.props.positionOptions?.updatePositionOnResize ?? true) {
             const resizeObserver = new ResizeObserver(() => {
@@ -66,16 +66,16 @@ export class EditorOverlay extends Component {
                         resizeObserver.unobserve(root);
                     };
                 },
-                () => [rootRef.el]
+                () => [this.rootRef.el]
             );
         }
 
         if (this.props.closeOnPointerdown) {
             const editableDocument = this.props.editable.ownerDocument;
-            useExternalListener(editableDocument, "pointerdown", this.props.close);
+            useExternalListener(editableDocument, "pointerdown", this.closeOnPointerDown);
             // Listen to pointerdown outside the iframe
             if (editableDocument !== document) {
-                useExternalListener(document, "pointerdown", this.props.close);
+                useExternalListener(document, "pointerdown", this.closeOnPointerDown);
             }
         }
 
@@ -92,6 +92,12 @@ export class EditorOverlay extends Component {
             },
         };
         position = usePosition("root", getTarget, positionOptions);
+    }
+
+    closeOnPointerDown(ev) {
+        if (ev.target.closest(".overlay") !== this.rootRef.el) {
+            this.props.close();
+        }
     }
 
     getSelectionTarget() {
