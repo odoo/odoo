@@ -217,3 +217,26 @@ test("link redirection should be prefixed for url of website pages only", async 
     await click(".o-we-linkpopover a");
     expect.verifySteps([]);
 });
+
+test("link redirection should not be prefixed when the current page is not a website page", async () => {
+    patchWithCleanup(browser, {
+        open(url) {
+            expect.step("website page url prefixed");
+            expect(url.pathname.startsWith("/@")).toBe(true);
+        },
+        location: {
+            // simulating being on a non-website page (eg. backend) by using /odoo/ URL
+            href: browser.location.origin + "/odoo/contactus",
+            hostname: browser.location.hostname,
+        },
+    });
+    onRpc("/html_editor/link_preview_internal", () => ({}));
+    onRpc("/contactus", () => ({}));
+
+    // website pages should not be prefixed with /@
+    await setupEditor('<p>this is a <a href="/contactus">li[]nk</a></p>');
+    await waitFor(".o-we-linkpopover");
+    await click(".o-we-linkpopover a");
+    // the open method should not be called from onClickForcePreviewMode
+    expect.verifySteps([]);
+});
