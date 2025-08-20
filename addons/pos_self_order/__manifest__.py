@@ -85,8 +85,11 @@
         # Assets tests
         "pos_self_order.assets_tests": [
             ("include", "point_of_sale.base_tests"),
-            "pos_self_order/static/tests/**/*",
+            "pos_self_order/static/tests/tours/**/*",
             "point_of_sale/static/tests/generic_helpers/numpad_util.js",
+        ],
+        'web.assets_tests': [
+            'pos_self_order/static/tests/pos/**/*',
         ],
     },
     "license": "LGPL-3",
