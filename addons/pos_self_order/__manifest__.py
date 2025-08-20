@@ -118,6 +118,9 @@
             "point_of_sale/static/tests/generic_helpers/dialog_util.js",
             "point_of_sale/static/tests/generic_helpers/utils.js",
         ],
+        'web.assets_tests': [
+            'pos_self_order/static/tests/pos/**/*',
+        ],
     },
     "author": "Odoo S.A.",
     "license": "LGPL-3",
