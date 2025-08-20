@@ -24,8 +24,8 @@ class TestRecruitment(TransactionCase):
         # Creating an applicant will create a partner (email_from inverse)
         applicant = self.env['hr.applicant'].sudo().with_context(lang='pl_PL').create({
             'partner_name': 'Test Applicant',
-            'email_from': "test_aplicant@example.com"
         })
+        applicant.email_from = "test_aplicant@example.com"
         self.assertEqual(applicant.partner_id.lang, 'pl_PL', 'Context langague not used for partner creation')
 
     def test_duplicate_email(self):
@@ -250,16 +250,33 @@ class TestRecruitment(TransactionCase):
         self.assertCountEqual(in_pool_applicants, A | B | C | D | E | G | H)
         self.assertCountEqual(out_of_pool_applicants, demo_applicants | F)
 
+    def test_applicant_creation_does_not_create_partner(self):
+        """ Test that when applying, the existing partner
+            doesn't get duplicated.
+        """
+        applicant_data = {
+            'partner_name': 'John Doe',
+            'email_from': 'john.doe@example.com'
+        }
+        # First application, no partner should be created
+        applicant = self.env['hr.applicant'].create(applicant_data)
+        partner_count = self.env['res.partner'].search_count([('email', '=', 'john.doe@example.com')])
+        self.assertEqual(partner_count, 0)
+        # Update application, a partner should be created
+        applicant.stage_id = self.env.ref("hr_recruitment.stage_job2")
+        partner_count = self.env['res.partner'].search_count([('email', '=', 'john.doe@example.com')])
+        self.assertEqual(partner_count, 1)
+
     def test_application_no_partner_duplicate(self):
         """ Test that when applying, the existing partner
             doesn't get duplicated.
         """
         applicant_data = {
             'partner_name': 'Test',
-            'email_from': 'test@thisisatest.com',
         }
         # First application, a partner should be created
-        self.env['hr.applicant'].create(applicant_data)
+        applicant = self.env['hr.applicant'].create(applicant_data)
+        applicant.email_from = 'test@thisisatest.com'
         partner_count = self.env['res.partner'].search_count([('email', '=', 'test@thisisatest.com')])
         self.assertEqual(partner_count, 1)
         # Second application, no partner should be created

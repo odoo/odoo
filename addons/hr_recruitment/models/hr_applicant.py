@@ -46,20 +46,14 @@ class HrApplicant(models.Model):
     email_from = fields.Char(
         string="Email",
         size=128,
-        compute='_compute_partner_phone_email',
-        inverse='_inverse_partner_email',
         copy=True,
-        store=True,
         index='trigram',
     )
     email_normalized = fields.Char(index='trigram')  # inherited via mail.thread.blacklist
     partner_phone = fields.Char(
         string="Phone",
         size=32,
-        compute='_compute_partner_phone_email',
-        inverse='_inverse_partner_email',
         copy=True,
-        store=True,
         index='btree_not_null',
     )
     partner_phone_sanitized = fields.Char(
@@ -221,8 +215,7 @@ class HrApplicant(models.Model):
                 applicant._phone_format(fname="partner_phone") or applicant.partner_phone
             )
 
-    @api.depends("partner_id")
-    def _compute_partner_phone_email(self):
+    def _update_partner_phone_email(self):
         for applicant in self:
             if not applicant.partner_id:
                 continue
@@ -230,7 +223,7 @@ class HrApplicant(models.Model):
             if not applicant.partner_phone:
                 applicant.partner_phone = applicant.partner_id.phone
 
-    def _inverse_partner_email(self):
+    def _generate_related_partner(self):
         for applicant in self:
             email_normalized = tools.email_normalize(applicant.email_from or '')
             if not email_normalized:
@@ -669,6 +662,8 @@ class HrApplicant(models.Model):
                     applicant.job_id.no_of_recruitment += 1
         res = super().write(vals)
 
+        self._generate_related_partner()
+
         for applicant in self:
             if applicant.pool_applicant_id and applicant != applicant.pool_applicant_id and (not applicant.is_pool_applicant):
                 if 'email_from' in vals:
@@ -964,7 +959,7 @@ class HrApplicant(models.Model):
         if custom_values:
             defaults.update(custom_values)
         res = super().message_new(msg_dict, custom_values=defaults)
-        res._compute_partner_phone_email()
+        res._update_partner_phone_email()
         return res
 
     def _message_post_after_hook(self, message, msg_vals):
