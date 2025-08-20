@@ -1876,23 +1876,26 @@ class AccountMove(models.Model):
         self.env["account.move"].flush_model(used_fields)
 
         move_table_and_alias = SQL("account_move AS move")
-        if not moves[0].id:  # check if record is under creation/edition in UI
+        if not all(move.id for move in moves):  # check if record is under creation/edition in UI
             # New record aren't searchable in the DB and record in edition aren't up to date yet
             # Replace the table by safely injecting the values in the query
-            values = {
-                field_name: moves._fields[field_name].convert_to_write(moves[field_name], moves) or None
-                for field_name in used_fields
-            }
-            values["id"] = moves._origin.id or 0
-            # The amount total depends on the field line_ids and is calculated upon saving, we needed a way to get it even when the
-            # invoices has not been saved yet.
-            values['amount_total'] = self.tax_totals.get('total_amount_currency', 0)
-            casted_values = SQL(', ').join(
-                SQL("%s::%s", value, SQL.identifier(moves._fields[field_name].column_type[0]))
-                for field_name, value in values.items()
-            )
-            column_names = SQL(', ').join(SQL.identifier(field_name) for field_name in values)
-            move_table_and_alias = SQL("(VALUES (%s)) AS move(%s)", casted_values, column_names)
+            all_values = []
+            for move in moves:
+                values = {
+                    field_name: move._fields[field_name].convert_to_write(move[field_name], move) or None
+                    for field_name in used_fields
+                }
+                values["id"] = move._origin.id or 0
+                # The amount total depends on the field line_ids and is calculated upon saving,
+                # we needed a way to get it even when the invoices has not been saved yet.
+                values['amount_total'] = move.tax_totals.get('total_amount_currency', 0)
+                casted_values = SQL(', ').join(
+                    SQL("%s::%s", value, SQL.identifier(move._fields[field_name].column_type[0]))
+                    for field_name, value in values.items()
+                )
+                all_values.append(SQL("(%s)", casted_values))
+            column_names = SQL(', ').join(SQL.identifier(field_name) for field_name in used_fields + ("id",))
+            move_table_and_alias = SQL("(VALUES %s) AS move(%s)", SQL(', ').join(all_values), column_names)
 
         to_query = []
         out_moves = moves.filtered(lambda m: m.move_type in ('out_invoice', 'out_refund'))
