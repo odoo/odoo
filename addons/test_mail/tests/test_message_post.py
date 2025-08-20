@@ -1201,9 +1201,9 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         Test the message_main_attachment heuristics with an emphasis on the XML/Octet/PDF types.
         -> we don't want XML nor Octet-Stream files to be set as message_main_attachment
         """
-        xml_attachment, octet_attachment, pdf_attachment = [('List1', b'My xml attachment')], \
-                                                           [('List2', b'My octet-stream attachment')], \
-                                                           [('List3', b'My pdf attachment')]
+        xml_attachment, octet_attachment, pdf_attachment = [('List1', b'<?xml version="1.0"?>My xml attachment<_/>')], \
+                                                           [('List2', b'My octet-stream attachment\20')], \
+                                                           [('List3', b'%PDF-1.0My pdf attachment')]
 
         xml_attachment_data, octet_attachment_data, pdf_attachment_data = self.env['ir.attachment'].create(
             self._generate_attachments_data(3, 'mail.compose.message', 0)
@@ -1217,7 +1217,6 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
             'email_from': 'ignasse@example.com',
         })
         self.assertFalse(test_record.message_main_attachment_id)
-
         # test with xml attachment
         with self.mock_mail_gateway():
             test_record.message_post(
