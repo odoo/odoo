@@ -161,7 +161,7 @@
     <t t-esc="company_name"/>
 </p>
         </template>
-        <record id="mail_template_einvoice_notification" model="mail.template">
+       <record id="mail_template_einvoice_notification" model="mail.template">
             <field name="name">New eInvoices Notification</field>
             <field name="subject">New Electronic Invoices Received</field>
             <field name="email_from">{{ object.company_id.email_formatted }}</field>
@@ -175,135 +175,97 @@
 <t t-set="invoices" t-value="ctx.get('einvoices', [])"/>
 <t t-set="invoice_preview_ids" t-value="','.join([str(i) for i in invoices.ids]) if invoices else ''"/>
 <t t-set="invoice_count" t-value="len(invoices)"/>
-<t t-set="MAX_TABLE_LINES" t-value="10"/>
+<t t-set="MAX_INVOICES_TO_DISPLAY" t-value="5"/>
 
-<table border="0" cellpadding="0" cellspacing="0"
-       style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
-    <tr>
-        <td align="center">
-            <table border="0" cellpadding="0" cellspacing="0" width="590"
-                   style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
-                <!-- HEADER -->
-                <tr>
-                    <td align="center" style="min-width: 590px;">
-                        <table width="590" cellpadding="0" cellspacing="0"
-                               style="padding: 0px 8px; background-color: white; border-collapse:separate;">
-                            <tr>
-                                <td valign="middle">
-                                    <span style="font-size: 10px;">Notification</span>
-                                    <br/>
-                                    <span style="font-size: 20px; font-weight: bold;">
-                                        New Electronic Invoices Received
-                                    </span>
-                                    <div style="margin-bottom: 5px; margin-top: 18px;">
-                                        <a t-if="invoice_count != 1" t-attf-href="/odoo/accounting/action-account.action_account_moves_email_preview?active_ids={{ invoice_preview_ids }}"
-                                           target="_blank"
-                                           t-attf-style="padding: 8px 12px; font-size: 12px; color: {{ object.company_id.email_primary_color or '#FFFFFF' }}; text-decoration: none !important; font-weight: 400; background-color: {{ object.company_id.email_secondary_color or '#875A7B' }}; border-radius:3px">
-                                            Review Invoices
-                                        </a>
-                                        <a t-else="" t-attf-href="/odoo/accounting/{{ object.id }}/account.move/{{ invoices.id }}"
-                                           target="_blank"
-                                           t-attf-style="padding: 8px 12px; font-size: 12px; color: {{ object.company_id.email_primary_color or '#FFFFFF' }}; text-decoration: none !important; font-weight: 400; background-color: {{ object.company_id.email_secondary_color or '#875A7B' }}; border-radius:3px">
-                                            Review Invoice
-                                        </a>
-                                    </div>
-                                </td>
-                                <td valign="middle" align="right">
-                                    <t t-if="not object.company_id.uses_default_logo">
-                                        <img t-att-src="'/logo.png?company=%s' % object.company_id.id"
-                                             style="height: auto; width: 80px; margin-right: 10px;"
-                                             t-att-alt="'%s' % object.company_id.name"/>
-                                    </t>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" style="text-align:center;">
-                                    <hr style="background-color:#CCCCCC; border:none; height:1px; margin:16px 0;" />
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <!-- BODY -->
-                <tr>
-                    <td align="center">
-                        <table width="590" cellpadding="0" cellspacing="0"
-                               style="padding: 0px 8px; background-color: white; border-collapse:separate;">
-                            <tr>
-                                <td style="font-size: 14px;">
-                                    <p>
-                                        Dear <t t-out="object.company_id.name or 'Company'"/>,
-                                        <br/><br/>
-                                        You have received <strong><t t-out="invoice_count or 'new'"/></strong> invoice(s).
-                                        These invoices are now available for your review in Odoo.
-                                        <br/><br/>
-                                        <table width="100%" cellpadding="6" cellspacing="0"
-                                               style="border: 1px solid #DDDDDD; border-collapse: collapse; font-size: 13px; margin-bottom: 16px;">
-                                            <thead style="background-color: #F9F9F9; text-align: left;">
-                                                <tr>
-                                                    <th style="border: 1px solid #DDDDDD;">Invoice</th>
-                                                    <th style="border: 1px solid #DDDDDD;">Vendor</th>
-                                                    <th style="border: 1px solid #DDDDDD;">Date</th>
-                                                    <th style="border: 1px solid #DDDDDD;">Total</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <t t-set="MAX_TABLE_LINES" t-value="10"/>
-                                                <t t-foreach="invoices[:MAX_TABLE_LINES]" t-as="inv">
-                                                    <tr>
-                                                        <td style="border: 1px solid #DDDDDD;">
-                                                            <t t-out="inv.name or 'INV'"/>
-                                                        </td>
-                                                        <td style="border: 1px solid #DDDDDD;">
-                                                            <t t-out="inv.partner_id.name or 'Unknown'"/>
-                                                        </td>
-                                                        <td style="border: 1px solid #DDDDDD;">
-                                                            <t t-out="inv.invoice_date or 'Unknown'"/>
-                                                        </td>
-                                                        <td style="border: 1px solid #DDDDDD;">
-                                                            <t t-if="inv.amount_total is not None" t-out="inv.amount_total"
-                                                               t-options="{'widget': 'monetary', 'display_currency': inv.currency_id or object.company_id.currency_id}"/>
-                                                            <t t-else="">Unknown</t>
-                                                        </td>
-                                                    </tr>
+<div style="margin: 0px; padding: 0px; font-family:Verdana, Arial,sans-serif; color: #454748;">
+    <table border="0" cellpadding="0" cellspacing="0"
+           style="padding-top: 16px; background-color: #F1F1F1; width: 100%; border-collapse:separate;">
+        <tr>
+            <td align="center">
+                <table border="0" cellpadding="0" cellspacing="0" width="590"
+                       style="background-color: white; border-collapse:separate;">
+                    <!-- HEADER -->
+                    <tr>
+                        <td align="center">
+                            <table width="100%" cellpadding="0" cellspacing="0"
+                                   style="background-color: #875A7B; color: #FFFFFF; font-size: 14px; padding: 14px 0; border-radius: 3px;">
+                                <tr>
+                                    <td align="left" style="padding-left: 16px;">
+                                        You have received <t t-if="invoice_count > 1">new electronic invoices!</t><t t-else="">a new electronic invoice!</t>
+                                    </td>
+                                    <td align="right" style="padding-right: 16px;">
+                                        <img alt="Odoo" src="/web/static/img/odoo_logo_dark.svg" style="height: 2em; object-fit: contain;" class="align-baseline w-auto"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- BODY -->
+                    <tr>
+                        <td align="center">
+                            <table width="590" cellpadding="0" cellspacing="0"
+                                   style="padding: 16px 32px; background-color: white; border-collapse:separate;">
+                                <tr>
+                                    <td style="font-size: 14px;">
+                                        <h3 style="font-size: 20px; margin-bottom: 20px;">
+                                            <t t-if="object.company_id.name">
+                                                Hi <t t-out="object.company_id.name"/>,
+                                            </t>
+                                            <t t-else="">
+                                                Hi,
+                                            </t>
+                                        </h3>
+                                        <p style="margin-top: 12px;">
+                                            You have recieved <t t-if="invoice_count > 1">new electronic invoices</t><t t-else="">a new electronic invoice</t>!
+                                        </p>
+                                        <t t-set="MAX_INVOICES_TO_DISPLAY" t-value="5"/>
+                                        <t t-foreach="invoices[:MAX_INVOICES_TO_DISPLAY]" t-as="inv">
+                                            <t t-if="not inv_first">
+                                                <div style="background-color:#EEEEEE; height:1px; width: 60%; margin: 16px auto; border:none;"></div>
+                                            </t>
+                                            <p style="line-height: 1.7em; padding-top: 16px;">
+                                                <t t-if="inv.name or inv.ref">
+                                                    <span style="font-weight:bold;">Invoice Ref:</span> <t t-out="inv.name or inv.ref"/><br/>
                                                 </t>
-                                                <t t-if="invoice_count > MAX_TABLE_LINES">
-                                                    <tr>
-                                                        <td colspan="4" style="border: 1px solid #DDDDDD; text-align: center;">
-                                                            <strong>...</strong>
-                                                        </td>
-                                                    </tr>
+                                                <t t-if="inv.partner_id.name">
+                                                    <span style="font-weight:bold;">Vendor:</span> <t t-out="inv.partner_id.name"/><br/>
                                                 </t>
-                                                <t t-if="invoice_count == 0">
-                                                    <tr>
-                                                        <td style="border: 1px solid #DDDDDD;">
-                                                            <t t-out="'INV'"/>
-                                                        </td>
-                                                        <td style="border: 1px solid #DDDDDD;">
-                                                            Example Vendor
-                                                        </td>
-                                                        <td style="border: 1px solid #DDDDDD;">
-                                                            2025-01-01
-                                                        </td>
-                                                        <td style="border: 1px solid #DDDDDD;">
-                                                            <t t-out="1234.56"
-                                                               t-options="{'widget': 'monetary', 'display_currency': object.company_id.currency_id}"/>
-                                                        </td>
-                                                    </tr>
+                                                <t t-if="inv.amount_total">
+                                                    <span style="font-weight:bold;">Amount:</span> <t t-out="inv.amount_total" t-options="{'widget': 'monetary', 'display_currency': inv.currency_id or object.company_id.currency_id}"/><br/>
                                                 </t>
-                                            </tbody>
-                                        </table>
-                                        Don’t want these emails? <a t-attf-href="/my/journal/{{ object.id }}/unsubscribe">Unsubscribe here</a> or update your <a t-attf-href="/mail/view?model=account.journal&amp;res_id={{ object.id }}"><t t-out="object.name or 'Vendor Bills'"/></a> journal settings.
-                                    </p>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-</table>
+                                                <t t-if="inv.invoice_date_due">
+                                                    <span style="font-weight:bold;">Due date:</span> <t t-out="inv.invoice_date_due"/>
+                                                </t>
+                                            </p>
+                                        </t>
+
+                                        <div style="text-align: center; padding-top: 24px;">
+                                            <a t-if="invoice_count != 1" t-attf-href="/odoo/accounting/action-account.action_account_moves_email_preview?active_ids={{ invoice_preview_ids }}"
+                                               target="_blank"
+                                               t-attf-style="padding: 12px 24px; font-size: 14px; font-weight: bold; color: #FFFFFF; text-decoration: none !important; background-color: #008384; border-radius:3px; display: inline-block;">
+                                               Consult Invoices
+                                            </a>
+                                            <a t-else="" t-attf-href="/odoo/accounting/{{ object.id }}/account.move/{{ invoices.id }}"
+                                               target="_blank"
+                                               t-attf-style="padding: 12px 24px; font-size: 14px; font-weight: bold; color: #FFFFFF; text-decoration: none !important; background-color: #008384; border-radius:3px; display: inline-block;">
+                                               Consult Invoice
+                                            </a>
+                                            <p style="font-size: 11px; margin-top: 8px; color: #777;">Time to crunch some numbers</p>
+                                        </div>
+                                        <br/>
+                                        <p style="text-align: center; margin-top: 16px;">
+                                            If you'd like to unsubscribe from receiving emails for incoming invoices click <a t-attf-href="/my/journal/{{ object.id }}/unsubscribe">here</a>.
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
             </field>
         </record>
     </data>
