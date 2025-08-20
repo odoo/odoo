@@ -8,6 +8,8 @@ import {
 } from "@mail/utils/common/format";
 import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
 
+import { markup } from "@odoo/owl";
+
 import { browser } from "@web/core/browser/browser";
 import { stateToUrl } from "@web/core/browser/router";
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
@@ -155,6 +157,7 @@ export class Message extends Record {
     /** @type {undefined|Boolean} */
     needaction;
     starred = false;
+    showTranslation = false;
 
     /**
      * True if the backend would technically allow edition
@@ -599,6 +602,18 @@ export class Message extends Record {
      */
     getPersonaName(persona) {
         return this.thread?.getPersonaName(persona) || persona.displayName;
+    }
+
+    async onClickToggleTranslation() {
+        if (!this.translationValue) {
+            const { error, lang_name, body } = await rpc("/mail/message/translate", {
+                message_id: this.id,
+            });
+            this.translationValue = body && markup(body);
+            this.translationSource = lang_name;
+            this.translationErrors = error;
+        }
+        this.showTranslation = !this.showTranslation && Boolean(this.translationValue);
     }
 
     async react(content) {
