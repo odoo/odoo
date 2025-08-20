@@ -9,10 +9,10 @@ export const patchAvatarCardPopover = {
         this.userInfoTemplate = "hr.avatarCardUserInfos";
     },
     get email() {
-        return this.user?.employee_id?.work_email || this.user?.email;
+        return this.user?.employee_id?.work_email || this.user?.email || this.partner?.email;
     },
     get phone() {
-        return this.user?.employee_id?.work_phone || this.user?.phone;
+        return this.user?.employee_id?.work_phone || this.user?.phone || this.partner?.phone;
     },
     get employeeId() {
         return this.user?.employee_id;

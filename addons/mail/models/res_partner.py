@@ -303,6 +303,12 @@ class ResPartner(models.Model):
     def _get_mention_suggestions_domain(self, search):
         return (Domain('name', 'ilike', search) | Domain('email', 'ilike', search)) & Domain('active', '=', True)
 
+    def _get_store_avatar_card_fields(self, target):
+        fields = ["name", "user_id"]
+        if target.is_internal(self.env):
+            fields.extend(["email", "phone"])
+        return fields
+
     @api.model
     def _search_mention_suggestions(self, domain, limit, extra_domain=None):
         domain = Domain(domain)

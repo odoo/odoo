@@ -29,6 +29,7 @@ export class Avatar extends Component {
     get popoverProps() {
         return {
             id: this.props.resId,
+            resModel: this.props.resModel,
         };
     }
 

@@ -6,7 +6,7 @@
                 <div class="d-flex align-items-start gap-2 bg-inherit">
                     <span class="o_avatar pt-1 position-relative o_card_avatar bg-inherit">
                         <img t-if="props.id"
-                            t-attf-src="/web/image/res.users/{{props.id}}/avatar_128"
+                            t-attf-src="/web/image/{{props.resModel}}/{{props.id}}/avatar_128"
                             class="rounded"
                         />
                         <span t-if="user?.im_status" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center bg-inherit">
@@ -28,7 +28,7 @@
                             <i class="fa fa-fw fa-phone me-1"/><t t-esc="phone"/>
                         </a>
                         <div class="o_avatar_card_buttons d-flex gap-2 mt-2">
-                            <button t-if="!user?.share" class="btn btn-secondary btn-sm" t-on-click.stop="onSendClick">Send message</button>
+                            <button t-if="user and !user?.share" class="btn btn-secondary btn-sm" t-on-click.stop="onSendClick">Send message</button>
                             <button t-if="showViewProfileBtn" class="btn btn-secondary btn-sm" t-custom-click.stop="(ev, isMiddleClick) => this.onClickViewProfile(isMiddleClick)" t-ref="viewProfileBtn">View Profile</button>
                         </div>
                     </div>

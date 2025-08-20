@@ -105,9 +105,18 @@ class WebclientController(ThreadController):
             ]
             store.add(request.env["mail.canned.response"].search(domain))
         if name == "avatar_card":
-            if (
+            if params["res_model"] == "res.partner":
+                if (
+                    partner := request.env["res.partner"]
+                    .with_context(active_test=False)
+                    .search([("id", "=", params["id"])])
+                ):
+                    store.add(partner, partner._get_store_avatar_card_fields(store.target))
+                    if partner.user_id:
+                        store.add(partner.user_id, partner.user_id._get_store_avatar_card_fields(store.target))
+            elif (
                 user := request.env["res.users"]
                 .with_context(active_test=False)
-                .search([("id", "=", params["user_id"])])
+                .search([("id", "=", params["id"])])
             ):
                 store.add(user, user._get_store_avatar_card_fields(store.target))
