@@ -10,20 +10,16 @@ class HrOrgChartController(http.Controller):
     _managers_level = 5  # FP request
 
     def _check_employee(self, employee_id, **kw):
-        if not employee_id:  # to check
-            return None
-        employee_id = int(employee_id)
+        employee_id = int(employee_id) if employee_id else False
 
         context = kw.get('context', request.env.context)
         if 'allowed_company_ids' in context:
             cids = context['allowed_company_ids']
         else:
             cids = [request.env.company.id]
-
         Employee = request.env['hr.employee.public'].with_context(allowed_company_ids=cids)
         employee = Employee.browse(employee_id)
-        # check and raise
-        return employee if employee.has_access('read') else None
+        return employee if employee.has_access('read') else Employee.browse()
 
     def _prepare_employee_data(self, employee):
         job = employee.sudo().job_id
@@ -46,8 +42,9 @@ class HrOrgChartController(http.Controller):
 
     @http.route('/hr/get_org_chart', type='jsonrpc', auth='user')
     def get_org_chart(self, employee_id, **kw):
-
         employee = self._check_employee(employee_id, **kw)
+        new_parent_id = kw.get('context')['new_parent_id']
+        new_parent = self._check_employee(new_parent_id, **kw)
         if not employee:  # to check
             return {
                 'managers': [],
@@ -56,16 +53,21 @@ class HrOrgChartController(http.Controller):
 
         # compute employee data for org chart
         ancestors, current = request.env['hr.employee.public'].sudo(), employee.sudo()
-        while current.parent_id and len(ancestors) < self._managers_level+1 and current != current.parent_id:
-            ancestors += current.parent_id
-            current = current.parent_id
+        current_parent = new_parent if new_parent_id is not None else current.parent_id
+        max_level = (kw.get('context')['max_level'] or self._managers_level) + 1
+        while current_parent and current != current_parent and employee.sudo() != current_parent and len(ancestors) < max_level:
+            current = current_parent
+            current_parent = current.parent_id if current != employee or not new_parent else new_parent
+            if current_parent in ancestors:
+                break
+            ancestors += current
 
         values = dict(
             self=self._prepare_employee_data(employee),
             managers=[
                 self._prepare_employee_data(ancestor)
                 for idx, ancestor in enumerate(ancestors)
-                if idx < self._managers_level
+                if idx < max_level - 1
             ],
             managers_more=len(ancestors) > self._managers_level,
             children=[self._prepare_employee_data(child) for child in employee.child_ids if child != employee],
