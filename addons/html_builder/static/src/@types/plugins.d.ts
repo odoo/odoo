@@ -33,6 +33,7 @@ declare module "plugins" {
     import { apply_custom_css_style_overrides } from "@html_builder/core/core_builder_action_plugin";
     import { on_bg_color_updated_handlers } from "@html_builder/core/color_style_plugin";
     import { reload_context_processors } from "@html_builder/core/utils";
+    import { uncrossable_element_selector, ignore_ctrl_a_predicates } from "@html_builder/core/builder_selection_restriction_plugin";
 
     interface SharedMethods {
         // Main
@@ -113,6 +114,7 @@ declare module "plugins" {
         is_element_in_invisible_panel_predicates: is_element_in_invisible_panel_predicates;
         is_node_empty_predicates: is_node_empty_predicates;
         is_valid_for_sibling_dropzone_predicates: is_valid_for_sibling_dropzone_predicates;
+        ignore_ctrl_a_predicates: ignore_ctrl_a_predicates;
 
         // Processors
         reload_context_processors: reload_context_processors;
@@ -153,5 +155,6 @@ declare module "plugins" {
         so_snippet_addition_selectors: so_snippet_addition_selectors;
         snippet_preview_dialog_bundles: snippet_preview_dialog_bundles;
         builder_options_render_context: builder_options_render_context;
+        uncrossable_element_selector: uncrossable_element_selector;
     }
 }
