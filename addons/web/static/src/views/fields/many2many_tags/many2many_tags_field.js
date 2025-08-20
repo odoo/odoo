@@ -229,6 +229,7 @@ export const many2ManyTagsField = {
             label: _t("Color field"),
             name: "color_field",
             type: "field",
+            isRelationalField: true,
             availableTypes: ["integer"],
             help: _t("Set an integer field to use colors with the tags."),
         },
