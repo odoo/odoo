@@ -2093,7 +2093,7 @@ class SaleOrder(models.Model):
             if (
                 line.display_type
                 or line.product_id.id not in product_ids
-                or line.section_line_id.id != selected_section_id
+                or line.get_parent_section_line().id != selected_section_id
             ):
                 continue
             grouped_lines[line.product_id] |= line
@@ -2136,7 +2136,9 @@ class SaleOrder(models.Model):
         request.update_context(catalog_skip_tracking=True)
         sol = self.order_line.filtered_domain([
             ('product_id', '=', product_id),
-            ('section_line_id', '=', selected_section_id),
+            '|',
+            ('id', 'child_of', selected_section_id),
+            ('parent_id', '=', False),
         ])
         if sol:
             if quantity != 0:

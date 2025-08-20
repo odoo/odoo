@@ -239,7 +239,7 @@ class ProductCatalogMixin(models.AbstractModel):
                     'line_count': 0,
                 }
             elif self._is_line_valid_for_section_line_count(line):
-                sec_id = line.section_line_id.id
+                sec_id = line.get_parent_section_line().id
                 if sec_id and sec_id in sections:
                     sections[sec_id]['line_count'] += 1
                 else:
@@ -293,13 +293,17 @@ class ProductCatalogMixin(models.AbstractModel):
         move_block = lines.filtered_domain([
             '|',
             ('id', '=', move_section['id']),
-            ('section_line_id', '=', move_section['id']),
+            '|',
+            ('id', 'child_of', move_section['id']),
+            ('parent_id', '=', False),
         ])
 
         target_block = lines.filtered_domain([
             '|',
             ('id', '=', target_section['id']),
-            ('section_line_id', '=', target_section['id']),
+            '|',
+            ('id', 'child_of', target_section['id']),
+            ('parent_id', '=', False),
         ])
 
         remaining_lines = lines - move_block
