@@ -195,7 +195,16 @@ export class ImageTransformation extends Component {
         settings.angle = Math.round(settings.angle);
         settings.translatex = Math.round(settings.translatex);
         settings.translatey = Math.round(settings.translatey);
+
+        // When rotating, the offset used for the rotation center must be stable.
+        // getOffset normally includes CSS transforms, which would move the
+        // transfoCenter on each call and cause flickering.
+        // Temporarily remove the transform to compute the correct static position.
+        const prevImageTransform = this.image.style.transform;
+        this.image.style.transform = "";
         this.transfo.settings.pos = this.getOffset(this.image);
+        this.image.style.transform = prevImageTransform;
+
         this.positionTransfoContainer();
         this.props.onChange();
     }
