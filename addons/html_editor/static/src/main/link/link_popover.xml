@@ -48,15 +48,15 @@
 
                         <t t-if="state.type === 'custom'">
                             <div class="d-flex mb-1 custom-text-color">
-                                <label>Text Color</label>
+                                <label class="d-flex align-items-center">Text Color</label>
                                 <button class="o_we_color_preview custom-text-picker" t-att-data-color="this.customTextColorState.selectedColor" t-ref="customTextColorButton"
                                         t-attf-style="background-color: {{this.props.formatColor(this.customTextColorState.selectedColor)}}" />
-                                <label>Fill Color</label>
+                                <label class="d-flex align-items-center">Fill Color</label>
                                 <button class="o_we_color_preview custom-fill-picker" t-att-data-color="this.customFillColorState.selectedColor" t-ref="customFillColorButton"
                                         t-attf-style="{{this.customFillColorState.selectedColor?.includes('gradient') ? 'background-image' : 'background-color'}}: {{this.props.formatColor(this.customFillColorState.selectedColor)}}" />
                             </div>
                             <div class="d-flex mb-1 custom-border-color">
-                                <label>Border</label>
+                                <label class="d-flex align-items-center">Border</label>
                                 <button class="o_we_color_preview custom-border-picker" t-att-data-color="this.customBorderColorState.selectedColor" t-ref="customBorderColorButton"
                                         t-attf-style="background-color: {{this.props.formatColor(this.customBorderColorState.selectedColor)}}" />
                             </div>
@@ -76,7 +76,7 @@
                                 </select>
                             </div>
                             <div class="input-group mb-1">
-                                <label>Size</label>
+                                <label class="d-flex align-items-center">Size</label>
                                 <select name="link_style_size" class="form-select form-select-sm link-style" t-model="state.buttonSize" t-on-change="onChange">
                                     <t t-foreach="this.buttonSizesData" t-as="buttonSizesData" t-key="buttonSizesData.size">
                                         <option t-att-value="buttonSizesData.size" t-att-selected="state.buttonSize === buttonSizesData.size">
@@ -86,7 +86,7 @@
                                 </select>
                             </div>
                             <div class="input-group mb-1">
-                                <label>Shape</label>
+                                <label class="d-flex align-items-center">Shape</label>
                                 <select name="link_style_shape" class="form-select form-select-sm link-style" t-model="state.buttonShape" t-on-change="onChange">
                                     <t t-foreach="this.buttonShapeData" t-as="buttonShapeData" t-key="buttonShapeData.shape">
                                         <option t-att-value="buttonShapeData.shape" t-att-selected="state.buttonShape === buttonShapeData.shape">

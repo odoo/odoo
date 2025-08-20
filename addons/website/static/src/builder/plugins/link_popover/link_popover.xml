@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website.linkPopover" t-inherit="html_editor.linkPopover">
+    <xpath expr="//div[@class='input-group'][select[@name='link_type']]" position="after">
+        <t t-if="props.allowCustomStyle and (state.type === 'primary' || state.type === 'secondary')">
+            <div class="input-group mb-1">
+                <label class="d-flex align-items-center">Size</label>
+                <select name="link_style_size" class="form-select form-select-sm link-style" t-model="state.buttonSize" t-on-change="onChange">
+                    <t t-foreach="this.buttonSizesData" t-as="buttonSizesData" t-key="buttonSizesData.size">
+                        <option t-att-value="buttonSizesData.size" t-att-selected="state.buttonSize === buttonSizesData.size">
+                            <span t-esc="buttonSizesData.label"/>
+                        </option>
+                    </t>
+                </select>
+            </div>
+        </t>
+    </xpath>
+</t>
+
+</templates>
