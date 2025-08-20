@@ -763,6 +763,19 @@ class AccountMove(models.Model):
         return product
 
     # -------------------------------------------------------------------------
+    # ACTION METHODS
+    # -------------------------------------------------------------------------
+
+    def action_invoice_download_facturae(self):
+        if invoices_with_facturae := self.filtered('l10n_es_edi_facturae_xml_id'):
+            return {
+                'type': 'ir.actions.act_url',
+                'url': f'/account/download_invoice_documents/{",".join(map(str, invoices_with_facturae.ids))}/facturae',
+                'target': 'download',
+            }
+        return False
+
+    # -------------------------------------------------------------------------
     # BUSINESS METHODS                                                        #
     # -------------------------------------------------------------------------
     def _l10n_es_facturae_sign_xml(self, edi_data, signature_data):
@@ -816,3 +829,26 @@ class AccountMove(models.Model):
         signature.find("ds:SignatureValue", namespaces=NS_MAP).text = certificate_sudo._sign(_canonicalize_node(signed_info_xml)).decode()
 
         return etree.tostring(root, xml_declaration=True, encoding='UTF-8', standalone=True)
+
+    def _get_invoice_legal_documents(self, filetype, allow_fallback=False):
+        # EXTENDS 'account'
+        self.ensure_one()
+        if filetype == 'facturae':
+            if facturae_attachment := self.l10n_es_edi_facturae_xml_id:
+                return {
+                    'filename': facturae_attachment.name,
+                    'filetype': 'xml',
+                    'content': facturae_attachment.raw,
+                }
+        return super()._get_invoice_legal_documents(filetype, allow_fallback=allow_fallback)
+
+    def get_extra_print_items(self):
+        # EXTENDS 'account' - add possibility to download Factura-e XML files
+        print_items = super().get_extra_print_items()
+        if self.filtered('l10n_es_edi_facturae_xml_id'):
+            print_items.append({
+                'key': 'download_xml_facturae',
+                'description': _('Factura-e XML'),
+                **self.action_invoice_download_facturae(),
+            })
+        return print_items
