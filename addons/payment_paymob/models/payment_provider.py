@@ -2,7 +2,7 @@
 
 import json
 
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -36,8 +36,6 @@ class PaymentProvider(models.Model):
     )
     paymob_hmac_key = fields.Char(string="Paymob HMAC Key", required_if_provider='paymob')
     paymob_api_key = fields.Char(string="Paymob API Key", required_if_provider='paymob')
-    paymob_access_token = fields.Char(groups='base.group_system')
-    paymob_access_token_expiry = fields.Datetime(default='1970-01-01', groups='base.group_system')
 
     # === CONSTRAINT METHODS === #
 
@@ -232,21 +230,16 @@ class PaymentProvider(models.Model):
         :rtype: str
         :raise ValidationError: If the access token can not be fetched.
         """
-        if not self.paymob_access_token or fields.Datetime.now() > self.paymob_access_token_expiry:
-            response_content = self._send_api_request(
-                'POST',
-                '/api/auth/tokens',
-                json={'api_key': self.paymob_api_key},
-                is_refresh_token_request=True,
-            )
-            access_token = response_content['token']
-            if not access_token:
-                raise ValidationError(_("Could not generate a new access token."))
-            self.write({
-                'paymob_access_token': access_token,
-                'paymob_access_token_expiry': fields.Datetime.now() + timedelta(minutes=55),
-            })
-        return self.paymob_access_token
+        response_content = self._send_api_request(
+            'POST',
+            '/api/auth/tokens',
+            json={'api_key': self.paymob_api_key},
+            is_refresh_token_request=True,
+        )
+        access_token = response_content['token']
+        if not access_token:
+            raise ValidationError(_("Could not generate a new access token."))
+        return access_token
 
     def _parse_response_error(self, response):
         """Override of `payment` to parse the error message."""
