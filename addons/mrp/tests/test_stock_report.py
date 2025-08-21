@@ -634,3 +634,33 @@ class TestMrpStockReports(TestReportsCommon):
         mo.move_raw_ids.filtered(lambda m: m.product_id == black_white_product and m.bom_line_id.bom_id.type != 'phantom').unlink()
         mo_report = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
         self.assertEqual(mo_report['data']['extras']['unit_bom_cost'], mo_report['data']['extras']['unit_mo_cost'] + missing_product.standard_price + black_white_product.standard_price, 'The BoM unit cost should take the missing components into account, which are the deleted MO lines')
+
+    def test_mo_overview_with_different_uom(self):
+        """Ensure that the MO overview correctly computes costs
+        when the product UoM differs from the BoM UoM.
+
+        In this case, the product is defined in Unit while the BoM
+        is defined in Dozen.
+        """
+        self.env['mrp.bom'].create({
+            'product_id': self.product.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
+            'product_qty': 1.0,
+            'bom_line_ids': [Command.create({
+                'product_id': self.product1.id,
+                'product_qty': 12.0,
+            })],
+        })
+        self.product1.standard_price = 10
+        # create MO for 1 dozen of the product
+        mo = self.env['mrp.production'].create({
+            'name': 'MO',
+            'bom_id': self.product.bom_ids.id
+        })
+
+        mo.action_confirm()
+        # check that the mo and bom cost are correctly calculated after mo confirmation
+        overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
+        self.assertEqual(overview_values['data']['components'][0]['summary']['bom_cost'], 120)
+        self.assertEqual(overview_values['data']['components'][0]['summary']['mo_cost'], 120)
