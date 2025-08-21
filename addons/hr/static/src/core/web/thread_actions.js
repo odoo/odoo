@@ -25,12 +25,12 @@ registerThreadAction("open-hr-profile", {
         const orm = useService("orm");
         let employeeId;
         if (
-            !component.thread?.correspondent?.partner_id?.employeeId &&
-            component.thread?.correspondent
+            component.thread?.correspondent?.partner_id &&
+            !component.thread.correspondent.partner_id.employeeId
         ) {
             const employees = await orm.silent.searchRead(
                 "hr.employee",
-                [["user_partner_id", "=", component.thread.correspondent.partner_id?.id]],
+                [["user_partner_id", "=", component.thread.correspondent.partner_id.id]],
                 ["id"]
             );
             employeeId = employees[0]?.id;
