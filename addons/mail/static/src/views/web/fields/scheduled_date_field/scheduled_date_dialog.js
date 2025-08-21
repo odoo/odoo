@@ -56,6 +56,7 @@ export class ScheduledDateDialog extends Component {
             onSelect: (value) => (this.state.customDateTime = value),
             type: "datetime",
             value: this.state.customDateTime,
+            rounding: 1,
         };
     }
 
