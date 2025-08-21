@@ -101,7 +101,7 @@ class AccountPayment(models.Model):
                     date = rec.date or fields.Datetime.now()
 
                     last_operation = check._get_last_operation()
-                    if last_operation and last_operation[0].date > date:
+                    if last_operation and min(last_operation[0].date, check.payment_date) > date:
                         msgs.append(
                             _(
                               "It seems you're trying to move a check with a date (%(date)s) prior to last "
