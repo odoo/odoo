@@ -2238,10 +2238,10 @@ export class PosStore extends WithLazyGetterTrap {
                     }
                 }
             }
+            order.setPreset(preset);
             if (preset.identification === "name") {
                 await this.handleSelectNamePreset(order);
             }
-            order.setPreset(preset);
 
             if (preset.use_timing && !order.preset_time) {
                 await this.openPresetTiming(order);
