@@ -1,4 +1,3 @@
-import { queryOne } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 import * as wsTourUtils from '@website_sale/js/tours/tour_utils';
 
@@ -22,6 +21,7 @@ var registerSteps = [{
     content: "Fill attendees details",
     trigger: 'form[id="attendee_registration"] .btn[type=submit]',
     run: function () {
+        const { queryOne } = odoo.loader.modules.get("@odoo/hoot-dom");
             document.querySelector("input[name*='1-name']").value = "Raoulette Poiluchette";
             document.querySelector("input[name*='1-phone']").value = "0456112233";
             document.querySelector("input[name*='1-email']").value = "raoulette@example.com";

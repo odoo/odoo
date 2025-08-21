@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
+import { delay } from "@web/core/utils/concurrency";
 import { stepUtils } from "@web_tour/tour_utils";
-import { delay } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour", {
     url: "/odoo",
@@ -57,7 +57,7 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
                 // Ensure the system has registered a correct model value before
                 // we try to open the DPH.
                 // It seems that the autocomplete validation can be very slow.
-                await new Promise((r) => setTimeout(r, 200));
+                await delay(200);
             },
         },
         {

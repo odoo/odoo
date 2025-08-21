@@ -2,7 +2,6 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { getVisibleElements } from "@web/core/utils/ui";
 import { Macro } from "@web/core/macro";
-import { click, edit } from "@odoo/hoot-dom";
 
 function clickOnButton(selector) {
     const button = document.body.querySelector(selector);
@@ -33,12 +32,14 @@ function updatePager(position) {
             {
                 trigger: "span.o_pager_value",
                 async action(trigger) {
+                    const { click } = odoo.loader.modules.get("@odoo/hoot-dom");
                     await click(trigger);
                 },
             },
             {
                 trigger: "input.o_pager_value",
                 async action(trigger) {
+                    const { click, edit } = odoo.loader.modules.get("@odoo/hoot-dom");
                     await click(trigger);
                     await edit(next, { confirm: "blur" });
                 },
