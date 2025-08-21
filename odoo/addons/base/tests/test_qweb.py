@@ -543,7 +543,8 @@ class TestQWebNS(TransactionCase):
         self.assertEqual(etree.fromstring(self.env['ir.qweb']._render(view1.id)), expected_result)
 
     def test_render_static_xml_with_t_call(self):
-        view1 = self.env['ir.ui.view'].create({
+        self.env['ir.ui.view'].create({
+            'key': 'base.dummy',
             'name': "dummy",
             'type': 'qweb',
             'arch': """
@@ -558,8 +559,6 @@ class TestQWebNS(TransactionCase):
                 </t>
             """
         })
-        self.env.cr.execute("INSERT INTO ir_model_data(name, model, res_id, module)"
-                            "VALUES ('dummy', 'ir.ui.view', %s, 'base')", [view1.id])
 
         # view2 will t-call view1
         view2 = self.env['ir.ui.view'].create({
@@ -568,7 +567,7 @@ class TestQWebNS(TransactionCase):
             'arch': """
                 <t t-name="base.dummy2">
                     <root xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
-                        <cac:line t-foreach="[1, 2]" t-as="i" t-call="base.dummy"/>
+                        <cac:line t-foreach="[1, 2]" t-as="i"><t t-call="base.dummy"/></cac:line>
                     </root>
                 </t>
             """
@@ -1076,6 +1075,31 @@ class TestQWebBasic(TransactionCase):
         rendered = self.env['ir.qweb']._render(t.id)
         self.assertEqual(rendered.strip(), result.strip())
 
+    def test_set_body_3(self):
+        # test if the cached result don't fail
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.test_set_body_3',
+            'arch_db': '''<t t-name="set">
+                <t t-set="a_empty"><t t-out="''"/></t>
+                <t t-set="abc"> toto   </t>
+                <div t-att-a="abc" t-att-b="abc.strip()" t-att-c="abc[2]" t-att-d="abc[2:4]" t-att-len="len(abc)" t-att-bool="bool(abc)" t-att-bool_empty="str(bool(a_empty))">123</div>
+            </t>'''
+        })
+        result = """
+                <div a=" toto   " b="toto" c="o" d="ot" len="8" bool="True" bool_empty="False">123</div>
+            """
+        rendered = self.env['ir.qweb']._render(t.id)
+        self.assertEqual(str(rendered.strip()), result.strip())
+
+        # test string operations with the content value
+        for test, res in [('abc.strip()', 'toto'), ('abc[2]', 'o'), ('abc[2:4]', 'ot'), ('len(abc)', 8), ('bool(abc)', True)]:
+            t.arch_db = '''<t t-name="set"><t t-set="abc"> toto   </t><div t-att-a="%s">123</div></t>''' % test
+            result = """<div a="%s">123</div>""" % res
+            rendered = self.env['ir.qweb']._render(t.id)
+            self.assertEqual(str(rendered.strip()), result.strip(), (test, res))
+
     @mute_logger('odoo.addons.base.models.ir_qweb')
     def test_set_error_1(self):
         t = self.env['ir.ui.view'].create({
@@ -1223,6 +1247,78 @@ class TestQWebBasic(TransactionCase):
         values = {'v': '"yes"'}
         rendered = self.env['ir.qweb']._render(t.id, values)
         self.assertEqual(rendered.strip(), result.strip())
+
+    def test_out_format_7(self):
+        # Use str method will use the string value. t-out will escape this str
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="test-lazy">
+                <t t-set="val"><b>TOTO %s</b></t>
+                <t t-if="'TOTO' in val">OK</t>
+                <a t-out="val"/>
+            </t>'''.replace('                ', '')
+        })
+        result = """
+                OK
+                <a><b>TOTO %s</b></a>
+            """.replace('                ', '')
+        rendered = self.env['ir.qweb']._render(t.id)
+        self.assertEqual(str(rendered.strip()), result.strip())
+
+    def test_out_format_8(self):
+        # Use str method will use the string value. t-out will escape this str
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="test-lazy">
+                <t t-set="val"><b>TOTO %s</b></t>
+                <t t-if="'TOTO' in val">if 'TOTO' in val</t>
+                <t t-if="'>' in val">if > in val</t>
+                <t t-if="'<b>' in val">if tag in val</t>
+                <a t-att-help="val % 1"/>
+            </t>'''.replace('                ', '')
+        })
+        result = """
+                if 'TOTO' in val
+                if > in val
+                if tag in val
+                <a help="&lt;b&gt;TOTO 1&lt;/b&gt;"></a>
+            """.replace('                ', '')
+        rendered = self.env['ir.qweb']._render(t.id)
+        self.assertEqual(str(rendered.strip()), result.strip())
+
+    def test_out_format_9(self):
+        # Use str method will use the string value. t-out will escape this str
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="test-lazy">
+                <t t-set="val"><b>TOTO %s</b></t>
+                <a t-out="val.replace('T', '_')"/>
+            </t>'''
+        })
+        result = """<a><b>_O_O %s</b></a>"""
+        rendered = self.env['ir.qweb']._render(t.id)
+        self.assertEqual(str(rendered.strip()), result.strip())
+
+    def test_out_json(self):
+        # Use str method will use the string value. t-out will escape this str
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="attr-set">
+                <t t-set="abc"> <span> a </span> </t>
+                <t t-set="props" t-value="{ 'a': 1, 'abc': abc }"/>
+                <div t-att-data="json.dumps(props)"/>
+            </t>'''
+        })
+        result = """
+                <div data="{&#34;a&#34;: 1, &#34;abc&#34;: &#34; &lt;span&gt; a &lt;/span&gt; &#34;}"></div>
+            """
+        values = {'v': '"yes"'}
+        rendered = self.env['ir.qweb']._render(t.id, values)
+        self.assertEqual(str(rendered.strip()), result.strip())
 
     def test_out_escape_text(self):
         view1 = self.env['ir.ui.view'].create({
@@ -1572,7 +1668,7 @@ class TestQWebBasic(TransactionCase):
             )
 
     def test_error_message_10(self):
-        self.env['ir.ui.view'].create({
+        a = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
             'key': 'base.test_qweb_error',
@@ -1590,9 +1686,6 @@ class TestQWebBasic(TransactionCase):
             'arch': """<div><t t-call="base.test_qweb_wrap"/></div>"""
         })
 
-        with self.assertRaises(QWebError):
-            self.env['ir.qweb']._render(t.id)
-
         try:
             self.env['ir.qweb']._render(t.id)
         except QWebError as e:
@@ -1604,8 +1697,167 @@ class TestQWebBasic(TransactionCase):
                 "    Path: /div/t/span\n"
                 "    Element: <span t-out=\"abc + def\"/>\n"
                f"    From: ({t.id}, '/div/t', '<t t-call=\"base.test_qweb_wrap\"/>')\n"
+               f"          ({wrap.id}, '/div/t', '<t t-call=\"base.test_qweb_error\"/>')\n"
+               f"          ({a.id}, '/t/section/div', '<div t-out=\"0\"/>')\n"
+               f"          ({wrap.id}, '/div/t', '<t t-call=\"base.test_qweb_error\"/>')\n"
                f"          ({wrap.id}, '/div/t/span', '<span t-out=\"abc + def\"/>')"
             )
+
+        with self.assertRaises(QWebError):
+            self.env['ir.qweb']._render(t.id)
+
+    def test_error_message_11(self):
+        v = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.view_test_error_11_callee',
+            'arch_db': '<article><t t-out="b % 99"/></article>'
+        })
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.view_test_error_11',
+            'arch_db': '''<section>
+                    <t t-set="a"><div><t t-out="1/div"/> (%s)</div></t>
+                    <t t-call="base.view_test_error_11_callee" b="a"/>
+                </section>'''
+        })
+
+        xml = self.env['ir.qweb']._render(t.id, {'div': 1})
+        self.assertEqual(str(xml).strip(), '''<section><article><div>1.0 (99)</div></article>
+                </section>''')
+
+        with self.assertRaises(QWebError):
+            self.env['ir.qweb']._render(t.id, {'div': 0})
+
+        try:
+            self.env['ir.qweb']._render(t.id, {'div': 0})
+        except QWebError as e:
+            self.assertEqual(str(e),
+                "Error while rendering the template:\n"
+                "    ZeroDivisionError: division by zero\n"
+                "    Template: base.view_test_error_11\n"
+               f"    Reference: {t.id}\n"
+                "    Path: /section/t[1]/div/t\n"
+                "    Element: <t t-out=\"1/div\"/>\n"
+               f"    From: ({t.id}, '/section/t[2]', '<t t-call=\"base.view_test_error_11_callee\" b=\"a\"/>')\n"
+               f"          ({v.id}, '/article/t', '<t t-out=\"b % 99\"/>')\n"
+               f"          ({t.id}, '/section/t[1]', '<t t-set=\"a\"/>')\n"
+               f"          ({t.id}, '/section/t[1]/div/t', '<t t-out=\"1/div\"/>')"
+            )
+
+        # an error triggered on first render
+        self.env.registry.clear_cache('templates')
+
+        try:
+            self.env['ir.qweb']._render(t.id, {'div': 0})
+        except QWebError as e:
+            self.assertEqual(str(e),
+                "Error while rendering the template:\n"
+                "    ZeroDivisionError: division by zero\n"
+                "    Template: base.view_test_error_11\n"
+               f"    Reference: {t.id}\n"
+                "    Path: /section/t[1]/div/t\n"
+                "    Element: <t t-out=\"1/div\"/>\n"
+               f"    From: ({t.id}, '/section/t[2]', '<t t-call=\"base.view_test_error_11_callee\" b=\"a\"/>')\n"
+               f"          ({v.id}, '/article/t', '<t t-out=\"b % 99\"/>')\n"
+               f"          ({t.id}, '/section/t[1]', '<t t-set=\"a\"/>')\n"
+               f"          ({t.id}, '/section/t[1]/div/t', '<t t-out=\"1/div\"/>')"
+            )
+
+    def test_error_message_12(self):
+        self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.view_test_error_9_callee',
+            'arch_db': '<article><t t-out="b"/></article>'
+        })
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.view_test_error_9',
+            'arch_db': '''<section>
+                    <t t-set="a"><div><t t-out="1/div"/> (%s)</div></t>
+                    <t t-call="base.view_test_error_9_callee" b="a"/>
+                </section>'''
+        })
+
+        xml = self.env['ir.qweb']._render(t.id, {'div': 1})
+        self.assertEqual(str(xml).strip(), '''<section><article><div>1.0 (%s)</div></article>
+                </section>''')
+
+        with self.assertRaises(QWebError):
+            self.env['ir.qweb']._render(t.id, {'div': 0})
+
+        try:
+            self.env['ir.qweb']._render(t.id, {'div': 0})
+        except QWebError as e:
+            error = str(e)
+            self.assertIn('ZeroDivisionError', error)
+            self.assertIn('Element: <t t-out="1/div"/>', error)
+            self.assertIn("""'/section/t[1]', '<t t-set="a"/>'""", error)
+            self.assertIn("""'/article/t', '<t t-out="b"/>'""", error)
+            self.assertIn("""'/section/t[2]', '<t t-call="base.view_test_error_9_callee" b="a"/>'""", error)
+
+        # an error triggered on first render
+        self.env.registry.clear_cache('templates')
+
+        with self.assertRaises(QWebError):
+            self.env['ir.qweb']._render(t.id, {'div': 0})
+
+        try:
+            self.env['ir.qweb']._render(t.id, {'div': 0})
+        except QWebError as e:
+            error = str(e)
+            self.assertIn('ZeroDivisionError', error)
+            self.assertIn("""'/section/t[1]', '<t t-set="a"/>'""", error)
+            self.assertIn("""'/article/t', '<t t-out="b"/>'""", error)
+            self.assertIn("""'/section/t[2]', '<t t-call="base.view_test_error_9_callee" b="a"/>'""", error)
+
+    def test_error_message_13(self):
+        view = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<section><t t-set="a" t-value="env.__stuff"/></section>'''
+        })
+
+        with self.assertRaises(QWebError):
+            self.env['ir.qweb']._render(view.id)
+
+        try:
+            self.env['ir.qweb']._render(view.id)
+        except QWebError as e:
+            self.assertEqual(str(e),
+                "Error while rendering the template:\n"
+                "    SyntaxError: Using variable names with '__' is not allowed: '__stuff'\n"
+               f"    Template: {view.id}\n"
+               f"    Reference: {view.id}\n"
+                "    Path: /section/t\n"
+                "    Element: <t t-set=\"a\" t-value=\"env.__stuff\"/>\n"
+               f"    From: ({view.id}, '/section/t', '<t t-set=\"a\" t-value=\"env.__stuff\"/>')"
+            )
+
+    def test_error_message_14(self):
+        view = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''
+                <section>
+                    <t t-set="val"><b>TOTO</b></t>
+                    <t t-set="name" t-valuef="irQweb"/>
+                    <t t-set="a" t-value="val[name]"/>
+                </section>'''
+        })
+
+        with self.assertRaises(QWebError):
+            self.env['ir.qweb']._render(view.id)
+
+        try:
+            self.env['ir.qweb']._render(view.id)
+        except QWebError as e:
+            err = repr(e.__context__)
+            self.assertIn("TypeError", err)
+            self.assertIn("indices must be integers", err)
 
     def test_call_set(self):
         view0 = self.env['ir.ui.view'].create({

@@ -3,9 +3,9 @@
 
 <template id="event_track_main" name="Event Exhibitor">
     <t t-call="website_event.layout">
-        <t t-set="navbar__back_url" t-value="'/event/%s/track' % (slug(event))"/>
-        <t t-set="navbar__back_title">Back to All Talks</t>
-        <t t-set="navbar__back_text">All Talks</t>
+        <t t-set="navbar_back_url" t-value="'/event/%s/track' % (slug(event))"/>
+        <t t-set="navbar_back_title">Back to All Talks</t>
+        <t t-set="navbar_back_text">All Talks</t>
         <!-- Set aside block only if there are filtered tracks -->
         <t t-set="has_ongoing_or_upcoming" t-value="any(track.is_track_live or track.track_start_remaining for track in tracks_other)"/>
         <t t-set="filtered_tracks_other" t-value="tracks_other.filtered(lambda track: not (has_ongoing_or_upcoming and track.is_track_done))"/>
@@ -117,10 +117,10 @@
                     </div>
                     <div class="o_we_track_action_buttons d-flex justify-content-md-end align-items-center flex-wrap">
                         <div class="o_we_track_reminder_button my-1">
-                            <div t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))"
-                                t-call="website_event_track.track_widget_reminder">
-                                <t t-set="reminder_small" t-value="False"/>
-                                <t t-set="reminder_light" t-value="False"/>
+                            <div t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))">
+                                <t t-call="website_event_track.track_widget_reminder"
+                                    reminder_small="False"
+                                    reminder_light="False"/>
                             </div>
                         </div>
                     </div>

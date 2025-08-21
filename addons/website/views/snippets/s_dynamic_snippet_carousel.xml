@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="s_dynamic_snippet_carousel" name="Dynamic Carousel">
-        <t t-call="website.s_dynamic_snippet_template">
-            <t t-set="snippet_name" t-value="'s_dynamic_snippet_carousel'"/>
-        </t>
+        <t t-call="website.s_dynamic_snippet_template"
+            snippet_name.f="s_dynamic_snippet_carousel"/>
     </template>
 
 <record id="website.s_dynamic_snippet_carousel_000_scss" model="ir.asset">

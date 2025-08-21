@@ -225,8 +225,8 @@
                 </div>
             </div>
             <!-- === Payment method logo === -->
-            <div t-call="payment.form_logo">
-                <t t-set="logo_pm_sudo" t-value="token_sudo.payment_method_id"/>
+            <div>
+                <t t-call="payment.form_logo" logo_pm_sudo="token_sudo.payment_method_id"/>
             </div>
         </div>
         <!-- === Inline form === -->

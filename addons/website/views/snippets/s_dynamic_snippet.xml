@@ -42,9 +42,8 @@
         </section>
     </template>
     <template id="s_dynamic_snippet" name="Dynamic Snippet">
-        <t t-call="website.s_dynamic_snippet_template">
-            <t t-set="snippet_name" t-value="'s_dynamic_snippet'"/>
-        </t>
+        <t t-call="website.s_dynamic_snippet_template"
+            snippet_name.f="s_dynamic_snippet"/>
     </template>
 
 <record id="website.s_dynamic_snippet_000_scss" model="ir.asset">

@@ -1259,8 +1259,7 @@ class Website(models.Model):
 
         # keep strange indentation in python file, to get it correctly in database
         new_homepage_view = '''<t name="Homepage" t-name="website.homepage">
-    <t t-call="website.layout">
-        <t t-set="pageName" t-value="'homepage'"/>
+    <t t-call="website.layout" pageName.f="homepage">
         <div id="wrap" class="oe_structure oe_empty"/>
     </t>
 </t>'''

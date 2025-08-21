@@ -742,8 +742,8 @@
             <table class="o_ignore_layout_styling table table-borderless mb-0">
                 <tbody>
                     <tr>
-                        <td t-call="web.address_layout" t-attf-class="p-0 {{'pt-3' if information_block else ''}}">
-                            <t t-set="custom_layout_address" t-value="true"/>
+                        <td t-attf-class="p-0 {{'pt-3' if information_block else ''}}">
+                            <t t-call="web.address_layout" custom_layout_address="true"/>
                         </td>
                         <td t-if="not information_block" class="align-bottom p-0 ps-2">
                             <h2 class="mb-4 text-nowrap text-end" t-out="layout_document_title"/>

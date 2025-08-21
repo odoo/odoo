@@ -63,9 +63,9 @@
     <!-- Added by another template so that it can be disabled if needed -->
     <template id="footer_language_selector" inherit_id="portal.frontend_layout" name="Footer Language Selector">
         <xpath expr="//*[hasclass('o_footer_copyright_name')]" position="after">
-            <t id="language_selector_call" t-call="portal.language_selector">
-                <t t-set="_div_classes" t-value="(_div_classes or '') + ' dropup'"/>
-            </t>
+            <t id="language_selector_call"
+                t-call="portal.language_selector"
+                _div_classes="(_div_classes or '') + ' dropup'"/>
         </xpath>
     </template>
 

@@ -133,7 +133,7 @@
                 t-att-data-order-amount-total="sale_order.amount_total"
             >
                 <!-- Sidebar -->
-                <t t-call="portal.portal_record_sidebar" id="sale_order_portal_sidebar">
+                <t t-call="portal.portal_record_sidebar">
                     <t t-set="classes" t-value="'col-lg-4 col-xxl-3 d-print-none'"/>
                     <t t-set="title">
                         <t t-if="sale_order.state in 'draft,sent' and sale_order.prepayment_percent != 1.0">
@@ -293,17 +293,15 @@
                     <div role="dialog" class="modal fade" id="modalaccept" name="sale_order_modal_sign_and_pay">
                         <div
                             t-if="sale_order._has_to_be_signed() and not payment_amount"
-                            t-call="sale.sale_order_portal_sign_modal"
                             class="modal-dialog"
-                        />
+                        ><t t-call="sale.sale_order_portal_sign_modal"/></div>
                         <div
                             t-elif="not sale_order._has_to_be_signed()
                                     and sale_order._has_to_be_paid()
                                     or (payment_amount and sale_order.state != 'cancel')"
                             name="sale_order_modal_validate"
-                            t-call="sale.sale_order_portal_pay_modal"
                             class="modal-dialog"
-                        />
+                        ><t t-call="sale.sale_order_portal_pay_modal"/></div>
                     </div>
 
                     <!-- modal relative to the action reject -->
@@ -371,7 +369,7 @@
 
                     <!-- main content -->
                     <div t-attf-class="#{'pb-5' if report_type == 'html' else ''}" id="portal_sale_content">
-                        <div t-call="#{sale_order._get_name_portal_content_view()}"/>
+                        <div><t t-call="#{sale_order._get_name_portal_content_view()}"/></div>
                     </div>
 
                     <!-- bottom actions -->
@@ -507,16 +505,16 @@
                         class="fw-bold"
                     />
                 </div>
-                <div t-if="company_mismatch" t-call="payment.company_mismatch_warning"/>
+                <div t-if="company_mismatch"><t t-call="payment.company_mismatch_warning"/></div>
                 <div
                     t-elif="not sale_order._has_to_be_paid() and not payment_amount"
                     class="alert alert-danger"
                 >
                     The order is not in a state requiring customer payment.
                 </div>
-                <div t-else="" id="payment_method" t-call="payment.form" class="text-start mt-0" >
+                <div t-else="" id="payment_method" class="text-start mt-0" >
                     <!-- Inject the order ID to allow Stripe to check if tokenization is required. -->
-                    <t t-set="sale_order_id" t-value="sale_order.id"/>
+                    <t t-call="payment.form" sale_order_id="sale_order.id"/>
                 </div>
             </main>
         </div>
