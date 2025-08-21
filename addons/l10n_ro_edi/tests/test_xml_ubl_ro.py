@@ -118,7 +118,6 @@ class TestUBLRO(TestUBLCommon):
                     'quantity': 1.0,
                     'price_unit': 600.0,
                     'tax_ids': [Command.set(self.tax_19.ids)],
-                    'is_downpayment': True,
                 }
             ]
         )
