@@ -91,8 +91,8 @@
                                             <span t-if="website_visitor_timezone != event.date_tz" class="small">(<t t-out="event.date_tz"/>)</span>
                                         </div>
                                     </div>
-                                    <div t-if="event_attendees[slot]" t-call="website_event.registration_ticket_access">
-                                        <t t-set="attendees" t-value="event_attendees[slot]"/>
+                                    <div t-if="event_attendees[slot]">
+                                        <t t-call="website_event.registration_ticket_access" attendees="event_attendees[slot]"/>
                                     </div>
                                 </div>
                                 <t t-call="website_event.event_calendar_links">

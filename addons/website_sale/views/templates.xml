@@ -703,12 +703,9 @@
                                     <t t-if="is_view_active('website_sale.search')">
                                         <t t-set="_has_all_sibligns" t-value="hasPricelistDropdown and is_view_active('website_sale.sort') and wsale_has_filters_btn"></t>
                                         <!-- Desktop Search button -->
-                                        <div
-                                            t-attf-class="o_wsale_products_header_search_form_container {{ _has_all_sibligns and 'd-none d-sm-inline-block'}} col-xl-5 me-auto {{not hasLeftColumn and 'col-xl-6'}}"
-                                            t-call="website_sale.search"
-                                        >
+                                        <div t-attf-class="o_wsale_products_header_search_form_container {{ _has_all_sibligns and 'd-none d-sm-inline-block'}} col-xl-5 me-auto {{not hasLeftColumn and 'col-xl-6'}}">
                                             <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
-                                            <t t-set="search" t-value="original_search or search"/>
+                                            <t t-call="website_sale.search" placeholder="placeholder" search="original_search or search"/>
                                         </div>
                                         <!-- Mobile Search button -->
                                         <a
@@ -814,7 +811,7 @@
                             </div>
                             <div t-else="" class="text-center text-muted mt128 mb256">
                                 <t t-if="not search">
-                                    <div t-call="website.empty_search_svg" class="mt-5 mb-3"/>
+                                    <div class="mt-5 mb-3"><t t-call="website.empty_search_svg"/></div>
                                     <h3
                                         class="mt8"
                                         style="text-align: center;"
@@ -829,7 +826,7 @@
                                     </p>
                                 </t>
                                 <t t-else="">
-                                    <div t-call="website.empty_search_svg" class="mt-5 mb-3"/>
+                                    <div class="mt-5 mb-3"><t t-call="website.empty_search_svg"/></div>
                                     <h3 class="mt8" style="text-align: center;">No results</h3>
                                     <p style="text-align: center;">
                                         No results for "<strong t-out='search'/>"<t t-if="category"> in category "<strong t-out="category.display_name"/>"</t>.
@@ -2821,7 +2818,7 @@
             t-if="not website_sale_order or not website_sale_order.website_order_line"
             class="js_cart_lines w-100"
         >
-            <div t-call="website_sale.empty_cart_svg" class="mt-5 mb-3"/>
+            <div class="mt-5 mb-3"><t t-call="website_sale.empty_cart_svg"/></div>
             <h5 class="mb-3" style="text-align: center;">
                 Your cart is empty!
             </h5>
@@ -2902,10 +2899,7 @@
                                             />
                                         </div>
                                     </div>
-                                    <div
-                                        t-attf-class="{{'d-block d-md-none' if not is_combo else ''}}"
-                                        t-call="website_sale.cart_lines_price"
-                                    />
+                                    <div t-attf-class="{{'d-block d-md-none' if not is_combo else ''}}"><t t-call="website_sale.cart_lines_price"/></div>
                                 </div>
                                 <t t-call="website_sale.cart_line_description_following_lines"/>
                                 <ul t-if="is_combo" class="list-group">
@@ -2928,30 +2922,20 @@
                                     >
                                         Remove
                                     </a>
-                                    <div
-                                        t-if="is_combo"
-                                        class="d-none d-md-block ms-auto"
-                                        t-call="website_sale.cart_lines_quantity"
-                                    />
+                                    <div t-if="is_combo" class="d-none d-md-block ms-auto"><t t-call="website_sale.cart_lines_quantity"/></div>
                                 </div>
                             </div>
                             <div t-if="not is_combo" class="d-none d-md-block">
                                 <t t-call="website_sale.cart_lines_price"/>
-                                <div
-                                    class="d-none d-md-block mt-2"
-                                    t-call="website_sale.cart_lines_quantity"
-                                />
+                                <div class="d-none d-md-block mt-2"><t t-call="website_sale.cart_lines_quantity"/></div>
                             </div>
                         </div>
                         <div
                             name="o_wsale_cart_line_button_container_mobile"
                             class="d-flex d-md-none"
                         >
-                            <div
-                                class="d-flex d-md-none align-items-center me-auto"
-                                t-call="website_sale.cart_lines_quantity"
-                            >
-                                <t t-set="is_mobile" t-value="True"/>
+                            <div class="d-flex d-md-none align-items-center me-auto">
+                                <t t-call="website_sale.cart_lines_quantity" is_mobile="True"/>
                             </div>
                             <button
                                 class="js_delete_product btn btn-link d-inline-block d-md-none px-2"
@@ -3112,7 +3096,7 @@
             ">
                 <div class="d-flex align-items-center mb-3">
                     <h4 class="mb-0">Order summary</h4>
-                    <div t-call="website_sale.quick_reorder_button" class="ms-3 border-start ps-2"/>
+                    <div class="ms-3 border-start ps-2"><t t-call="website_sale.quick_reorder_button"/></div>
                 </div>
                 <div t-if="abandoned_proceed or access_token" class="alert alert-info mt8 mb8" role="alert"> <!-- abandoned cart choices -->
                     <t t-if="abandoned_proceed">
