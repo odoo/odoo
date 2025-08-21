@@ -2206,7 +2206,7 @@ export function isEmptyBlock(blockEl) {
     for (const node of nodes) {
         // There is no text and no double BR, the only thing that could make
         // this visible is a "visible empty" node like an image.
-        if (node.nodeName != 'BR' && (isSelfClosingElement(node) || isFontAwesome(node))) {
+        if (node.nodeName != 'BR' && (isSelfClosingElement(node) || isFontAwesome(node) || isZWS(node))) {
             return false;
         }
     }
@@ -2484,6 +2484,15 @@ export function fillEmpty(el) {
         el.appendChild(zws);
         el.setAttribute("data-oe-zws-empty-inline", "");
         fillers.zws = zws;
+        // If the parent was filled with BR and we are filling the `el` here
+        // we should remove the parent `br` otherwise we fill the el twice.
+        // we do that only for visible el as in `cleanForSave` we remove the 
+        // non visible elements (with no classes if they are empty) so we should
+        // keep the br
+        if (el.classList.length && fillers.br) {
+            fillers.br.remove();
+            delete fillers.br;
+        }
         const previousSibling = el.previousSibling;
         if (previousSibling && previousSibling.nodeName === "BR") {
             previousSibling.remove();

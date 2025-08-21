@@ -1236,6 +1236,13 @@ X[]
                     contentAfter: '<p>a<span class="style-class">[]\u200B</span>f</p>',
                 });
             });
+            it('should not add a BR', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p><span class="h4-fs">[a]</span></p>',
+                    stepFunction: deleteBackward,
+                    contentAfter: '<p><span class="h4-fs">[]\u200b</span></p>',
+                });
+            });
             it('should delete styling nodes when delete if empty', async () => {
                 // deleteBackward selection
                 await testEditor(BasicEditor, {
