@@ -149,9 +149,20 @@ patch(ImageSelector.prototype, {
             const { isMaxed, images } = await this.unsplash.getImages(this.state.needle, offset, this.NUMBER_OF_RECORDS_TO_DISPLAY, this.props.orientation);
             this.state.isFetchingUnsplash = false;
             this.state.unsplashError = false;
-            // Ignore duplicates.
-            const existingIds = this.state.unsplashRecords.map(existing => existing.id);
-            const newImages = images.filter(record => !existingIds.includes(record.id));
+            // Use a set to keep track of every image we've received so far,
+            // based on their ids. This will allow us to ignore duplicate
+            // images from Unsplash. We can assume there are no duplicates at
+            // this point as a precondition.
+            const existingIds = new Set(this.state.unsplashRecords.map(r => r.id));
+            const newImages = images.filter(record => {
+                if (existingIds.has(record.id)) {
+                    return false;
+                }
+                // Mark this image as seen so that we can ignore any duplicates
+                // from the same Unsplash batch.
+                existingIds.add(record.id);
+                return true;
+            });
             const records = newImages.map(record => {
                 const url = new URL(record.urls.regular);
                 // In small windows, row height could get quite a bit larger than the min, so we keep some leeway.
