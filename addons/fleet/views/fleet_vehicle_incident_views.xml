@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id='fleet_vehicle_incident_action' model='ir.actions.act_window'>
+        <field name="name">Incident</field>
+        <field name="res_model">fleet.vehicle.incident</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            No incidents reported.
+          </p><p>
+            Use this model to log any incidents or issues involving company vehicles.
+          </p>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_incident_view_search" model="ir.ui.view">
+        <field name="name">fleet.vehicle.incident.search</field>
+        <field name="model">fleet.vehicle.incident</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="vehicle_id"/>
+                <field name="driver_id"/>
+                <field name="incident_type_id"/>
+                <filter string="Vehicle" name="groupby_vehicle" context="{'group_by': 'vehicle_id'}"/>
+                <filter string="Incident Type" name="groupby_incident_type" context="{'group_by': 'incident_type_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_incident_view_kanban" model="ir.ui.view">
+        <field name="name">fleet.vehicle.incident.kanban</field>
+        <field name="model">fleet.vehicle.incident</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <templates>
+                    <t t-name="card">
+                        <div>
+                            <div>
+                                <strong><field name="vehicle_id"/></strong>
+                            </div>
+                            <div>
+                                <field name="date"/>
+                            </div>
+                            <div class="d-flex gap-1">
+                                <field name="driver_id" widget="many2one_avatar"/>
+                                <field name="driver_id" class="small pt-1 pb-1"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_incident_view_list' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.incident.list</field>
+        <field name="model">fleet.vehicle.incident</field>
+        <field name="arch" type="xml">
+            <list string="Incident" multi_edit="1">
+                <field name="date"/>
+                <field name="vehicle_id"/>
+                <field name="driver_id" widget="many2one_avatar"/>
+                <field name="incident_type_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_incident_view_form' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.incident.form</field>
+        <field name="model">fleet.vehicle.incident</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state"  widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Incident Details">
+                            <field name="vehicle_id"/>
+                            <field name="date"/>
+                            <field name="incident_type_id"/>
+                            <field name="driver_id" widget="many2one_avatar"/>
+                            <field name="is_third_party_involved"/>
+                            <field name="location" placeholder="Provide an accurate description of the location of the incident"/>
+                            <field name="description" placeholder="Provide an accurate description of the incident"/>
+                        </group>
+                        <group string="Third-party details" invisible="not is_third_party_involved">
+                            <field name="tp_driver_name"/>
+                            <field name="tp_driver_licence_number"/>
+                            <field name="tp_driver_email"/>
+                            <field name="tp_driver_phone"/>
+                            <field name="tp_driver_registration_number"/>
+                            <field name="tp_vehicle_registration_number"/>
+                            <field name="tp_vehicle_damage" placeholder="Provide an accurate description of damage done to the vehicle"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <menuitem
+        action="fleet_vehicle_incident_action"
+        parent="fleet_vehicles"
+        id="fleet_vehicle_incident_menu"
+        groups="fleet_group_user"
+        sequence="5"
+    />
+</odoo>

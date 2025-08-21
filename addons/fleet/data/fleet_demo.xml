@@ -963,4 +963,59 @@
         <field name="user_id" ref="base.user_admin"/>
         <field eval="[(6,0,[ref('fleet.type_contract_omnium'),ref('fleet.type_service_service_3'),ref('fleet.type_service_service_2')])]" name="service_ids"/>
       </record>
+
+    <record id="incident_micra_1" model="fleet.vehicle.incident">
+        <field name="vehicle_id" ref="vehicle_1"/>
+        <field name="date">2025-08-16 14:45:00</field>
+        <field name="incident_type_id" ref="fleet_incident_type_accident"/>
+        <field name="driver_id" ref="base.partner_demo"/>
+        <field name="is_third_party_involved">True</field>
+        <field name="location">Main Street &amp; 3rd Avenue</field>
+        <field name="description">Fleet vehicle was rear-ended while stopped at traffic light.</field>
+        <field name="state">under_review</field>
+        <field name="tp_driver_name">Karen williams</field>
+        <field name="tp_driver_licence_number">JD123456</field>
+        <field name="tp_driver_email">Karen.williams@example.com</field>
+        <field name="tp_driver_phone">+1 555 456 7890</field>
+        <field name="tp_driver_registration_number">TP9876XYZ</field>
+        <field name="tp_vehicle_registration_number">ZXC-4567</field>
+        <field name="tp_vehicle_damage">Front bumper damaged, license plate dented.</field>
+    </record>
+
+    <record id="incident_focus_1" model="fleet.vehicle.incident">
+        <field name="vehicle_id" ref="vehicle_2"/>
+        <field name="date">2025-08-12 16:50:00</field>
+        <field name="incident_type_id" ref="fleet_incident_type_maintenance"/>
+        <field name="driver_id" ref="base.res_partner_address_25"/>
+        <field name="is_third_party_involved">False</field>
+        <field name="location">Company Garage</field>
+        <field name="description">Interior lights flickering and dashboard errors after ignition.</field>
+        <field name="state">resolved</field>
+    </record>
+
+    <record id="incident_focus_2" model="fleet.vehicle.incident">
+        <field name="vehicle_id" ref="vehicle_2"/>
+        <field name="date">2025-08-20 08:15:00</field>
+        <field name="driver_id" ref="base.res_partner_address_25"/>
+        <field name="state">resolved</field>
+        <field name="location">Park Street, near Central Park</field>
+        <field name="description">Side swipe with another vehicle.</field>
+        <field name="is_third_party_involved">True</field>
+        <field name="tp_driver_name">Bennett Parker</field>
+        <field name="tp_driver_licence_number">XYZ654321</field>
+        <field name="tp_driver_email">bennett.parker@example.com</field>
+        <field name="tp_driver_phone">+1 555 987 6543</field>
+        <field name="tp_driver_registration_number">ABC123789</field>
+        <field name="tp_vehicle_registration_number">DEF-5678</field>
+        <field name="tp_vehicle_damage">Side door and mirror damaged.</field>
+    </record>
+
+    <record id="incident_clio_1" model="fleet.vehicle.incident">
+        <field name="vehicle_id" ref="vehicle_3"/>
+        <field name="date">2025-08-24 14:30:00</field>
+        <field name="driver_id" ref="base.res_partner_address_17"/>
+        <field name="state">reported</field>
+        <field name="location">Intersection of Main St and 5th Ave</field>
+        <field name="description">Minor collision with a street light.</field>
+    </record>
 </odoo>
