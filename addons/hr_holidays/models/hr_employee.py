@@ -488,6 +488,23 @@ class HrEmployee(models.Model):
 
         for employee in employees:
             for leave_type in leave_types:
+                if not leave_type.requires_allocation:
+                    # Ensure that leave types that do not require allocation are
+                    # still stored in the consumed allocation leaves.
+                    # False is the special key used for this type of leave
+                    allocations_leaves_consumed[employee][
+                        leave_type
+                    ][False].update(
+                        {
+                            "max_leaves": 0,
+                            "accrual_bonus": 0,
+                            "virtual_remaining_leaves": 0,
+                            "remaining_leaves": 0,
+                            "leaves_taken": 0,
+                            "virtual_leaves_taken": 0,
+                        }
+                    )
+
                 allocations_with_date_to = self.env['hr.leave.allocation']
                 allocations_without_date_to = self.env['hr.leave.allocation']
                 for leave_allocation in allocations_per_employee_type[employee][leave_type]:
@@ -564,9 +581,9 @@ class HrEmployee(models.Model):
                         else:
                             allocated_time = leave.number_of_days
                         leave_type_data[False]['virtual_leaves_taken'] += allocated_time
-                        leave_type_data[False]['virtual_remaining_leaves'] = 0
-                        leave_type_data[False]['remaining_leaves'] = 0
+                        leave_type_data[False]['virtual_remaining_leaves'] -= allocated_time
                         if leave.state == 'validate':
+                            leave_type_data[False]['remaining_leaves'] -= allocated_time
                             leave_type_data[False]['leaves_taken'] += allocated_time
         for employee in to_recheck_leaves_per_leave_type:
             for leave_type in to_recheck_leaves_per_leave_type[employee]:

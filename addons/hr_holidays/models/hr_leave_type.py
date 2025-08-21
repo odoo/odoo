@@ -49,7 +49,21 @@ class HrLeaveType(models.Model):
     icon_id = fields.Many2one('ir.attachment', string='Cover Image', domain="[('res_model', '=', 'hr.leave.type'), ('res_field', '=', 'icon_id')]")
     active = fields.Boolean('Active', default=True,
                             help="If the active field is set to false, it will allow you to hide the time off type without removing it.")
-    hide_on_dashboard = fields.Boolean(default=False, string="Hide On Dashboard", help="Non-visible allocations can still be selected when taking a leave, but will simply not be displayed on the leave dashboard.")
+
+    hide_on_dashboard = fields.Boolean(
+        compute="_compute_hide_on_dashboard",
+        readonly=False,
+        default=False,
+        store=True,
+        string="Hide On Dashboard",
+        help="Non-visible allocations can still be selected when taking a leave, but will simply not be displayed on the leave dashboard.",
+    )
+
+    @api.depends("requires_allocation")
+    def _compute_hide_on_dashboard(self) -> None:
+        record: HrLeaveType
+        for record in self:
+            record.hide_on_dashboard = not record.requires_allocation
 
     # employee specific computed data
     max_leaves = fields.Float(compute='_compute_leaves', string='Maximum Allowed', search='_search_max_leaves',
@@ -85,7 +99,7 @@ class HrLeaveType(models.Model):
         ('hr', 'By Time Off Officer'),
         ('manager', "By Employee's Approver"),
         ('both', "By Employee's Approver and Time Off Officer")], default='hr', string='Time Off Validation')
-    requires_allocation = fields.Boolean(default=True, required=True, string='Requires allocation')
+    requires_allocation = fields.Boolean(default=True, required=True, string='Requires Allocation')
     employee_requests = fields.Boolean(default=False, required=True, string="Allow Employee Requests",
         help="""Extra Days Requests Allowed: User can request an allocation for himself.\n
         Not Allowed: User cannot request an allocation.""")
@@ -479,10 +493,9 @@ class HrLeaveType(models.Model):
         allocations_leaves_consumed, extra_data = employees.with_context(
             ignored_leave_ids=self.env.context.get('ignored_leave_ids')
         )._get_consumed_leaves(self, target_date)
-        leave_type_requires_allocation = self.filtered(lambda lt: lt.requires_allocation)
 
         for employee in employees:
-            for leave_type in leave_type_requires_allocation:
+            for leave_type in self:
                 if len(allocations_leaves_consumed[employee][leave_type]) == 0:
                     continue
                 lt_info = (
@@ -592,7 +605,10 @@ class HrLeaveType(models.Model):
                     'closest_allocation_duration': closest_allocation_duration,
                     'holds_changes': holds_changes,
                 })
-                if not self.env.context.get('from_dashboard', False) or lt_info[1]['max_leaves']:
+                if (
+                    not self.env.context.get("from_dashboard", False)
+                    or lt_info[1]['max_leaves']
+                ):
                     allocation_data[employee].append(lt_info)
         for employee in allocation_data:
             for leave_type_data in allocation_data[employee]:
