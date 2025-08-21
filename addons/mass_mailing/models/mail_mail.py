@@ -4,7 +4,8 @@
 import re
 import werkzeug.urls
 
-from datetime import datetime, timedelta
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, tools
 
@@ -131,7 +132,7 @@ class MailMail(models.Model):
         months_limit = self.env['ir.config_parameter'].sudo().get_param("mass_mailing.cancelled_mails_months_limit", 6)
         if months_limit <= 0:
             return
-        history_deadline = datetime.utcnow() - timedelta(months=months_limit)  # 6 months history will be kept
+        history_deadline = datetime.utcnow() - relativedelta(months=months_limit)  # 6 months history will be kept
         canceled_mails = self.with_context(active_test=False).search([('state', '=', 'cancel'), ('write_date', '<=', history_deadline)], order="id asc", limit=10000)
 
         canceled_mails.with_context(prefetch_fields=False).mail_message_id.unlink()
