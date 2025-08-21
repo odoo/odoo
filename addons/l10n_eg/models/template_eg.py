@@ -46,7 +46,7 @@ class AccountChartTemplate(models.AbstractModel):
                 "name": "Tax Adjustments",
                 "code": "TA",
                 "type": "general",
-                "sequence": 1,
+                "sequence": 10,
                 "show_on_dashboard": True,
             },
             "ifrs": {
@@ -54,6 +54,6 @@ class AccountChartTemplate(models.AbstractModel):
                 "code": "IFRS",
                 "type": "general",
                 "show_on_dashboard": True,
-                "sequence": 10,
+                "sequence": 11,
             },
         }
