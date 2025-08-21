@@ -1380,7 +1380,7 @@ class PosSession(models.Model):
             # for taxes
             'tax_ids': tuple(base_line['record'].tax_ids_after_fiscal_position.flatten_taxes_hierarchy().ids),
             'base_tag_ids': tuple(base_line['tax_tag_ids'].ids),
-            'product_id': base_line['product_id'].id if self.config_id.is_closing_entry_by_product else False,
+            'product_id': base_line['product_id'].id if self.config_id.use_closing_entry_by_product else False,
         }
 
     def _get_sale_vals(self, key, sale_vals):

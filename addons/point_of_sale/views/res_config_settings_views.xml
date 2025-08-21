@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
                 <t groups="point_of_sale.group_pos_manager">
-                    <field name="is_kiosk_mode" invisible="1"/>
+                    <field name="use_kiosk_mode" invisible="1"/>
                     <field name="pos_selectable_categ_ids" invisible="1"/>
                     <field name="pos_has_active_session" invisible="1"/>
                     <field name="pos_allowed_pricelist_ids" invisible="1"/>
@@ -88,7 +88,7 @@
                                 <setting string="Automatically validate order" help="Automatically validates orders paid with a payment terminal.">
                                     <field name="pos_auto_validate_terminal_payment"/>
                                 </setting>
-                                <setting string="Cash Rounding" invisible="is_kiosk_mode" documentation="/applications/sales/point_of_sale/pricing/cash_rounding.html" help="Define the smallest coinage of the currency used to pay by cash">
+                                <setting string="Cash Rounding" invisible="use_kiosk_mode" documentation="/applications/sales/point_of_sale/pricing/cash_rounding.html" help="Define the smallest coinage of the currency used to pay by cash">
                                     <field name="pos_cash_rounding" readonly="pos_has_active_session"/>
                                     <div class="content-group mt16" invisible="not pos_cash_rounding">
                                         <div class="row mt16">
@@ -108,7 +108,7 @@
                                                 invisible="not group_cash_rounding"/>
                                     </div>
                                 </setting>
-                                <setting title="Online payment, delivery payment, terminal payment, and methods that require customer identification are not supported for fast payment validation." help="Shortcut to skip payment screen" invisible="is_kiosk_mode">
+                                <setting title="Online payment, delivery payment, terminal payment, and methods that require customer identification are not supported for fast payment validation." help="Shortcut to skip payment screen" invisible="use_kiosk_mode">
                                     <field name="pos_use_fast_payment" string="One-click Payment" />
                                     <div class="content-group mt16" invisible="not pos_use_fast_payment">
                                         <label for="pos_fast_payment_method_ids" class="fw-bold me-2"/>
@@ -142,10 +142,10 @@
                                         </div>
                                     </div>
                                 </setting>
-                                <setting invisible="is_kiosk_mode" help="Improve navigation for imprecise industrial touchscreens">
+                                <setting invisible="use_kiosk_mode" help="Improve navigation for imprecise industrial touchscreens">
                                     <field name="pos_iface_big_scrollbars"/>
                                 </setting>
-                                <setting string="Share Open Orders" help="Allow to access each other's active orders" id="is_order_shared" invisible="pos_module_pos_restaurant or is_kiosk_mode">
+                                <setting string="Share Open Orders" help="Allow to access each other's active orders" id="is_order_shared" invisible="pos_module_pos_restaurant or use_kiosk_mode">
                                     <div class="content-group">
                                         <div class="row mt16">
                                             <label string="Trusted POS" for="pos_trusted_config_ids" class="col-lg-3 o_light_label" />
@@ -168,7 +168,7 @@
                                         </div>
                                     </div>
                                 </setting>
-                                <setting help="Online reservation for Point of Sale"  invisible="is_kiosk_mode">
+                                <setting help="Online reservation for Point of Sale"  invisible="use_kiosk_mode">
                                     <field name="pos_module_pos_appointment" string="Booking" widget="upgrade_boolean" />
                                     <div class="content-group" id="pos_appointment_booking" invisible="not pos_module_pos_appointment">
                                         <div class="text-warning mt16 mb4">
@@ -176,7 +176,7 @@
                                         </div>
                                     </div>
                                 </setting>
-                                <setting invisible="is_kiosk_mode" help="Display products grouped by categories.">
+                                <setting invisible="use_kiosk_mode" help="Display products grouped by categories.">
                                     <field name="pos_iface_group_by_categ"/>
                                 </setting>
                             </block>
@@ -250,7 +250,7 @@
                                     </div>
                                 </setting>
                                 <setting string="Closing Entry by product" id="pos_closeing_entry_by_product" help="Display the breakdown of sales lines by product in the automatically generated closing entry.">
-                                    <field name="pos_is_closing_entry_by_product"/>
+                                    <field name="pos_use_closing_entry_by_product"/>
                                 </setting>
                                 <setting id="pos-avatax" help="Use automatic taxes mapping with Avatax">
                                     <field name="pos_module_pos_avatax" />
@@ -304,8 +304,8 @@
 
                             <block title="Bills &amp; Receipts" id="pos_bills_and_receipts_section">
                                 <setting help="Add a custom message to header and footer" documentation="/applications/sales/point_of_sale/receipts_invoices.html">
-                                    <field name="pos_is_header_or_footer"/>
-                                    <div class="content-group mt16" invisible="not pos_is_header_or_footer">
+                                    <field name="pos_use_header_or_footer"/>
+                                    <div class="content-group mt16" invisible="not pos_use_header_or_footer">
                                         <div>
                                             <label string="Header" for="pos_receipt_header" class="col-lg-2 o_light_label"/>
                                             <field name="pos_receipt_header" placeholder="e.g. Company Address, Website"/>
@@ -318,7 +318,7 @@
                                 </setting>
                                 <setting id="auto_printing" help="Print receipts automatically once the payment is registered" documentation="/applications/sales/point_of_sale/receipts_invoices.html">
                                     <field name="pos_iface_print_auto"/>
-                                    <div class="content-group mt16" invisible="not pos_iface_print_auto or not pos_is_posbox and not pos_other_devices">
+                                    <div class="content-group mt16" invisible="not pos_iface_print_auto or not pos_use_posbox and not pos_other_devices">
                                         <div>
                                             <field name="pos_iface_print_skip_screen" class="oe_inline"/><span class="oe_inline"><b>Skip Preview Screen</b></span>
                                         </div>
@@ -427,8 +427,8 @@
                                     <field name="pos_customer_display_bg_img" class="w-100" filename="pos_customer_display_bg_img_name"/>
                                 </setting>
                                 <setting string="IoT Box" help="Connect devices using an IoT Box">
-                                    <field name="pos_is_posbox"/>
-                                    <div class="content-group pos_iot_config" invisible="not pos_is_posbox">
+                                    <field name="pos_use_posbox"/>
+                                    <div class="content-group pos_iot_config" invisible="not pos_use_posbox">
                                         <div class="row">
                                             <label string="IoT Box IP Address" for="pos_proxy_ip" class="col-lg-4 o_light_label"/>
                                             <field name="pos_proxy_ip"/>
@@ -454,9 +454,9 @@
                             </block>
 
                             <block title="Preparation" id="pos_preparation_section">
-                                <setting string="Preparation Printers" help="Print orders at the kitchen, at the bar, etc." id="is_order_printer">
-                                    <field name="pos_is_order_printer"/>
-                                    <div class="content-group" invisible="not pos_is_order_printer">
+                                <setting string="Preparation Printers" help="Print orders at the kitchen, at the bar, etc." id="use_order_printer">
+                                    <field name="pos_use_order_printer"/>
+                                    <div class="content-group" invisible="not pos_use_order_printer">
                                         <div class="mt16 mb-1">
                                             <label string="Printers" for="pos_printer_ids" class="o_light_label me-2"/>
                                             <field name="pos_printer_ids" widget="many2many_tags"/>

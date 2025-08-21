@@ -46,13 +46,13 @@ class ResConfigSettings(models.TransientModel):
     @api.onchange("pos_self_ordering_mode", "pos_module_pos_restaurant")
     def _onchange_pos_self_order_kiosk(self):
         if self.pos_self_ordering_mode == 'kiosk':
-            self.is_kiosk_mode = True
+            self.use_kiosk_mode = True
             self.pos_module_pos_restaurant = False
             self.pos_self_ordering_pay_after = "each"
             cash_payment_methods = self.pos_payment_method_ids.filtered(lambda x: x.is_cash_count)
             self.pos_payment_method_ids = self.pos_payment_method_ids - cash_payment_methods
         else:
-            self.is_kiosk_mode = False
+            self.use_kiosk_mode = False
 
             if not self.pos_module_pos_restaurant:
                 self.pos_self_ordering_service_mode = 'counter'
