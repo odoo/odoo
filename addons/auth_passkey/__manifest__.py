@@ -11,6 +11,7 @@ When a user logs in with a Passkey, MFA will not be required.
 """,
     'category': 'Hidden/Tools',
     'depends': ['base_setup', 'web'],
+    'auto_install': True,
     'data': [
         'views/auth_passkey_key_views.xml',
         'views/auth_passkey_login_templates.xml',
@@ -34,5 +35,4 @@ When a user logs in with a Passkey, MFA will not be required.
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
-    'installable': True,
 }
