@@ -19,7 +19,7 @@
                     <a href="/blog" t-attf-class="nav-link fw-bold #{(not blog) and 'active'}">All</a>
                 </li>
                 <li class="nav-item" t-foreach="blogs" t-as="nav_blog">
-                    <a t-attf-href="/blog/#{slug(nav_blog)}" t-cache="nav_blog,blog and nav_blog.id == blog.id"
+                    <a t-attf-href="/blog/#{slug(nav_blog)}"
                        t-attf-class="nav-link #{(blog and nav_blog.id == blog.id) and 'active' or ''}">
                         <b t-field="nav_blog.name"/>
                     </a>

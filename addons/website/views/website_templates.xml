@@ -105,22 +105,6 @@
         })"/>
     </xpath>
 
-    <xpath expr="//head" position="attributes">
-        <!--
-        Cache the <head> of the website.layout:
-        - For each individual website.page record (their css/js might be the
-          same but their title will not for example). Arguably we could do this
-          for any record (not only website.page) but this t-cache was originally
-          added to replace the website.page own cache system. For other records,
-          it could probably depend on each individual access right.
-        - Only for non-designers (especially visitors) (hence the "editable or
-          translatable" check).
-        - Only if not in any debug mode (we want any correct value of debug mode
-          to correctly appear in the `odoo` object + assets may depend on this
-          (e.g. debug=assets or debug=tests)).
-        -->
-        <attribute name="t-cache">main_object if main_object and main_object._name == 'website.page' and not request.session.debug and not editable and not translatable else None</attribute>
-    </xpath>
     <xpath expr="//head/*[1]" position="before">
         <t t-if="not title">
             <t t-if="not additional_title and main_object and 'name' in main_object">
@@ -210,13 +194,6 @@
         <attribute name="t-att-data-extra-items-toggle-aria-label">extra_items_toggle_aria_label</attribute>
     </xpath>
 
-    <xpath expr="//header/t[@t-cache]" position="attributes">
-        <!-- website.is_public_user() is needed for menus having a page with
-        restricted visibility (only shown to logged in user): public users and
-        logged in users can't share the menu cache. -->
-        <attribute name="t-cache">None if website.is_menu_cache_disabled() else (xmlid,website,website.is_public_user())</attribute>
-    </xpath>
-
     <xpath expr="//header" position="before">
         <t t-set="cta_btn_text" t-value="False"/>
         <t t-set="header_content_width" t-valuef="container"/>
@@ -236,7 +213,6 @@
         <attribute name="data-name">Footer</attribute>
         <!-- Background now controlled by css configuration, using color combinations -->
         <attribute name="t-attf-class" add="o_colored_level o_cc" remove="bg-light" separator=" "/>
-        <attribute name="t-cache" add="website" separator=","/>
     </xpath>
     <xpath expr="//div[hasclass('o_footer_copyright')]" position="attributes">
         <attribute name="data-name">Copyright</attribute>
@@ -342,7 +318,6 @@
     <xpath expr="//footer[@id='bottom']" position="attributes">
         <attribute name="t-attf-class" add="#{'d-none o_snippet_invisible' if 'footer_visible' in main_object and not main_object.sudo().footer_visible else ''}" separator=" "/>
         <attribute name="t-att-data-invisible">'1' if 'footer_visible' in main_object and not main_object.sudo().footer_visible else None</attribute>
-        <attribute name="t-cache" add="main_object.sudo().footer_visible if 'footer_visible' in main_object else True" separator=","/>
     </xpath>
 </template>
 
@@ -430,7 +405,7 @@
                 <div class="offcanvas-body d-flex flex-column justify-content-between h-100 w-100 pt-0">
                     <ul class="navbar-nav">
                         <!-- Search bar -->
-                        <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
+                        <t t-call="website.placeholder_header_search_box">
                             <t t-set="_classes" t-valuef="mb-3"/>
                             <t t-set="_input_classes" t-valuef="rounded-start-pill text-bg-light ps-3"/>
                             <t t-set="_submit_classes" t-valuef="rounded-end-pill bg-o-color-3 pe-3"/>
@@ -573,7 +548,7 @@
                 <!-- Extra elements -->
                 <ul class="navbar-nav align-items-center gap-2 flex-shrink-0 justify-content-end ps-3">
                     <!-- Search Bar -->
-                    <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
+                    <t t-call="website.placeholder_header_search_box">
                         <t t-set="_layout" t-valuef="modal"/>
                         <t t-set="_input_classes" t-valuef="border border-end-0 p-3"/>
                         <t t-set="_submit_classes" t-valuef="border border-start-0 px-4 bg-o-color-4"/>
@@ -657,7 +632,7 @@
                     <div class="offcanvas-body d-flex flex-column justify-content-between pt-0">
                         <ul class="navbar-nav">
                             <!-- Search bar -->
-                            <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
+                            <t t-call="website.placeholder_header_search_box">
                                 <t t-set="_input_classes" t-valuef="rounded-start-pill ps-3 text-bg-light"/>
                                 <t t-set="_submit_classes" t-valuef="rounded-end-pill bg-o-color-3"/>
                                 <t t-set="limit" t-valuef="0"/>
@@ -786,7 +761,7 @@
                             <t t-set="_div_class" t-valuef="h-100 border-start o_border_contrast"/>
                         </t>
                     <!-- Search bar -->
-                    <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
+                    <t t-call="website.placeholder_header_search_box">
                         <t t-set="_input_classes" t-valuef="o_header_stretch_search_input border-0 rounded-0 bg-transparent text-reset"/>
                         <t t-set="_submit_classes" t-valuef="o_navlink_background_hover rounded-0 text-reset"/>
                         <t t-set="_form_classes" t-valuef="h-100 z-0"/>
@@ -851,7 +826,7 @@
                 <div class="o_header_hide_on_scroll d-grid align-items-center w-100 o_grid_header_3_cols pb-3">
                     <ul class="navbar-nav align-items-center gap-1">
                         <!-- Search bar -->
-                        <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
+                        <t t-call="website.placeholder_header_search_box">
                             <t t-set="_layout" t-valuef="modal"/>
                             <t t-set="_input_classes" t-valuef="border border-end-0 p-3"/>
                             <t t-set="_submit_classes" t-valuef="border border-start-0 px-4 bg-o-color-4"/>
@@ -967,7 +942,7 @@
                     </t>
                     <ul class="o_header_search_right_col navbar-nav align-items-center gap-2 ms-auto ps-3">
                         <!-- Search bar -->
-                        <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
+                        <t t-call="website.placeholder_header_search_box">
                             <t t-set="_input_classes" t-valuef="rounded-start-pill ps-3 text-bg-light"/>
                             <t t-set="_submit_classes" t-valuef="rounded-end-pill pe-3 bg-o-color-3"/>
                         </t>
@@ -1044,7 +1019,7 @@
                             <t t-set="_div_class" t-valuef="d-flex align-items-center"/>
                         </t>
                         <!-- Search bar -->
-                        <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
+                        <t t-call="website.placeholder_header_search_box">
                             <t t-set="_layout" t-valuef="modal"/>
                             <t t-set="_input_classes" t-valuef="border border-end-0 p-3"/>
                             <t t-set="_submit_classes" t-valuef="border border-start-0 px-4 bg-o-color-4"/>
@@ -1145,7 +1120,7 @@
                         </t>
                         <ul class="navbar-nav align-items-center gap-1">
                             <!-- Search bar -->
-                            <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
+                            <t t-call="website.placeholder_header_search_box">
                                 <t t-set="_input_classes" t-valuef="rounded-start-pill ps-3 text-bg-light"/>
                                 <t t-set="_submit_classes" t-valuef="rounded-end-pill p-3 bg-o-color-3 lh-1"/>
                             </t>
@@ -1231,7 +1206,7 @@
                         </ul>
                         <ul class="navbar-nav">
                             <!-- Search bar -->
-                            <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
+                            <t t-call="website.placeholder_header_search_box">
                                 <t t-set="_input_classes" t-valuef="border-0 border-start rounded-0"/>
                                 <t t-set="_submit_classes" t-valuef="rounded-0 bg-o-color-4"/>
                                 <t t-set="_form_classes" t-valuef="h-100 z-0"/>
@@ -1359,7 +1334,7 @@
                         <ul class="navbar-nav d-grid align-items-center py-2 o_grid_header_3_cols">
                             <!-- Search bar -->
                             <li class="o_header_sales_four_search_placeholder" t-if="is_view_active('website.header_search_box') == False"/>
-                            <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
+                            <t t-call="website.placeholder_header_search_box">
                                 <t t-set="_form_classes" t-valuef="me-auto"/>
                                 <t t-set="_input_classes" t-valuef="rounded-start-pill ps-3 text-bg-light"/>
                                 <t t-set="_submit_classes" t-valuef="rounded-end-pill bg-o-color-3 lh-1"/>
@@ -1419,7 +1394,7 @@
                     <div class="d-flex flex-column justify-content-between h-100 w-100">
                         <ul class="navbar-nav p-0">
                             <!-- Search bar -->
-                            <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
+                            <t t-call="website.placeholder_header_search_box">
                                 <t t-set="_classes" t-valuef="mb-3"/>
                                 <t t-set="_input_classes" t-valuef="rounded-start-pill ps-3 text-bg-light"/>
                                 <t t-set="_submit_classes" t-valuef="rounded-end-pill pe-3 bg-o-color-3"/>
@@ -1554,7 +1529,7 @@
                     <!-- Extra elements -->
                     <ul class="navbar-nav align-items-center gap-1 flex-wrap flex-shrink-0 justify-content-end ps-3">
                         <!-- Search Bar -->
-                        <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
+                        <t t-call="website.placeholder_header_search_box">
                             <t t-set="_layout" t-valuef="modal"/>
                             <t t-set="_input_classes" t-valuef="border border-end-0 p-3"/>
                             <t t-set="_submit_classes" t-valuef="border border-start-0 px-4 bg-o-color-4"/>
@@ -2240,11 +2215,6 @@
 </template>
 
 <template id="language_selector" inherit_id="portal.language_selector">
-    <xpath expr="//t[@t-nocache]" position="attributes">
-        <attribute name="t-nocache-flags">flags</attribute>
-        <attribute name="t-nocache-_flag_class">_flag_class</attribute>
-    </xpath>
-
     <xpath expr="//t[@t-set='active_lang']" position="before">
         <t t-if="lang not in frontend_languages">
             <t t-set="lang" t-value="website.default_lang_id.code"/>

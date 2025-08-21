@@ -9,27 +9,25 @@
             <a class="o_skip_to_content btn btn-primary rounded-0 visually-hidden-focusable position-absolute start-0" href="#wrap" groups="!base.group_user">Skip to Content</a>
         </xpath>
         <xpath expr="//div[@id='wrapwrap']/header/img" position="replace">
-            <t t-cache="res_company">
-                <nav class="navbar navbar-expand navbar-light bg-light">
-                    <div class="container">
-                        <a href="/" class="navbar-brand logo">
-                            <img t-att-src="'/logo.png?company=%s' % res_company.id" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
-                        </a>
-                        <ul id="top_menu" class="nav navbar-nav ms-auto">
-                            <t t-call="portal.placeholder_user_sign_in">
-                                <t t-set="_item_class" t-value="'nav-item'"/>
-                                <t t-set="_link_class" t-value="'nav-link'"/>
-                            </t>
-                            <t t-call="portal.user_dropdown">
-                                <t t-set="_user_name" t-value="true"/>
-                                <t t-set="_item_class" t-value="'nav-item dropdown'"/>
-                                <t t-set="_link_class" t-value="'nav-link'"/>
-                                <t t-set="_dropdown_menu_class" t-value="'dropdown-menu-end'"/>
-                            </t>
-                        </ul>
-                    </div>
-                </nav>
-            </t>
+            <nav class="navbar navbar-expand navbar-light bg-light">
+                <div class="container">
+                    <a href="/" class="navbar-brand logo">
+                        <img t-att-src="'/logo.png?company=%s' % res_company.id" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
+                    </a>
+                    <ul id="top_menu" class="nav navbar-nav ms-auto">
+                        <t t-call="portal.placeholder_user_sign_in">
+                            <t t-set="_item_class" t-value="'nav-item'"/>
+                            <t t-set="_link_class" t-value="'nav-link'"/>
+                        </t>
+                        <t t-call="portal.user_dropdown">
+                            <t t-set="_user_name" t-value="true"/>
+                            <t t-set="_item_class" t-value="'nav-item dropdown'"/>
+                            <t t-set="_link_class" t-value="'nav-link'"/>
+                            <t t-set="_dropdown_menu_class" t-value="'dropdown-menu-end'"/>
+                        </t>
+                    </ul>
+                </div>
+            </nav>
         </xpath>
         <xpath expr="//div[@id='wrapwrap']/main/t[@t-out='0']" position="before">
             <div t-if="o_portal_fullwidth_alert" class="container mt-3">
@@ -72,72 +70,52 @@
     </template>
 
     <template id="language_selector" name="Language Selector">
-        <t t-nocache="The query strings can change for the same page and the same rendering."
-           t-nocache-no_text="no_text"
-           t-nocache-codes="codes"
-           t-nocache-_div_classes="_div_classes"
-           t-nocache-_btn_class="_btn_class"
-           t-nocache-_txt_class="_txt_class"
-           t-nocache-_dropdown_menu_class="_dropdown_menu_class">
-            <t t-set="language_selector_visible" t-value="len(frontend_languages) &gt; 1"/>
-            <div t-attf-class="js_language_selector #{_div_classes} d-print-none" t-if="language_selector_visible">
-               <t t-set="active_lang" t-value="frontend_languages[lang]"/>
-                <button t-attf-class="border-0 dropdown-toggle #{_btn_class or 'btn btn-sm btn-outline-secondary'}" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <span t-if="not no_text"
-                            t-attf-class="#{_txt_class}"
-                            t-esc="active_lang.name.split('/').pop()"/>
-                    <span t-elif="codes" class="align-middle" t-esc="active_lang.url_code.split('_').pop(0).upper()"/>
-                </button>
-                <div t-attf-class="dropdown-menu #{_dropdown_menu_class}" role="menu">
-                    <t t-foreach="frontend_languages.values()" t-as="lg">
-                        <a class="dropdown-item" t-att-href="url_localized(lang_code=lg.code, prefetch_langs=True, force_default_lang=True)"
-                        t-attf-class="dropdown-item js_change_lang #{active_lang == lg and 'active'}"
-                        t-att-data-url_code="lg.url_code" t-att-title="lg.name.split('/').pop()"
-                        role="menuitem">
-                            <span t-if="not no_text" t-esc="lg.name.split('/').pop()" t-attf-class="#{_txt_class}"/>
-                            <span t-elif="codes" t-esc="lg.url_code.split('_').pop(0).upper()" t-attf-class="align-middle #{_txt_class}"/>
-                        </a>
-                    </t>
-                </div>
+        <t t-set="language_selector_visible" t-value="len(frontend_languages) &gt; 1"/>
+        <div t-attf-class="js_language_selector #{_div_classes} d-print-none" t-if="language_selector_visible">
+            <t t-set="active_lang" t-value="frontend_languages[lang]"/>
+            <button t-attf-class="border-0 dropdown-toggle #{_btn_class or 'btn btn-sm btn-outline-secondary'}" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <span t-if="not no_text"
+                        t-attf-class="#{_txt_class}"
+                        t-esc="active_lang.name.split('/').pop()"/>
+                <span t-elif="codes" class="align-middle" t-esc="active_lang.url_code.split('_').pop(0).upper()"/>
+            </button>
+            <div t-attf-class="dropdown-menu #{_dropdown_menu_class}" role="menu">
+                <t t-foreach="frontend_languages.values()" t-as="lg">
+                    <a class="dropdown-item" t-att-href="url_localized(lang_code=lg.code, prefetch_langs=True, force_default_lang=True)"
+                    t-attf-class="dropdown-item js_change_lang #{active_lang == lg and 'active'}"
+                    t-att-data-url_code="lg.url_code" t-att-title="lg.name.split('/').pop()"
+                    role="menuitem">
+                        <span t-if="not no_text" t-esc="lg.name.split('/').pop()" t-attf-class="#{_txt_class}"/>
+                        <span t-elif="codes" t-esc="lg.url_code.split('_').pop(0).upper()" t-attf-class="align-middle #{_txt_class}"/>
+                    </a>
+                </t>
             </div>
-        </t>
+        </div>
     </template>
 
     <template id="user_dropdown" name="Portal User Dropdown">
-        <t t-nocache="Each user is different regardless of the page visited."
-           t-nocache-_avatar="_avatar"
-           t-nocache-_icon="_icon"
-           t-nocache-_icon_class="_icon_class"
-           t-nocache-_icon_wrap_class="_icon_wrap_class"
-           t-nocache-_no_caret="_no_caret"
-           t-nocache-_user_name="_user_name"
-           t-nocache-_user_name_class="_user_name_class"
-           t-nocache-_item_class="_item_class"
-           t-nocache-_link_class="_link_class"
-           t-nocache-_dropdown_menu_class="_dropdown_menu_class">
-            <t t-set="is_connected" t-value="not user_id._is_public()"/>
-            <li t-if="is_connected" t-attf-class="#{_item_class} o_no_autohide_item">
-                <a href="#" role="button" data-bs-toggle="dropdown" t-attf-class="#{'' if _no_caret else 'dropdown-toggle'} #{_link_class}">
-                    <t t-if="_avatar">
-                        <t t-set="avatar_source" t-value="image_data_uri(user_id.avatar_256)"/>
-                        <img t-att-src="avatar_source" t-attf-class="rounded-circle object-fit-cover #{_avatar_class}" width="24" height="24" alt="" loading="eager"/>
-                    </t>
-                    <div t-if="_icon" t-attf-class="#{_icon_wrap_class}">
-                        <i t-attf-class="fa fa-1x fa-fw fa-user #{_icon_class}"/>
-                    </div>
-                    <span t-if="_user_name" t-attf-class="#{_user_name_class}" t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
-                </a>
-                <div t-attf-class="dropdown-menu js_usermenu #{_dropdown_menu_class}" role="menu">
-                    <a groups="base.group_user" href="/odoo" role="menuitem" class="dropdown-item ps-3" id="o_backend_user_dropdown_link">
-                        <i class="fa fa-fw fa-th me-1 small text-primary-emphasis"/> Apps
-                    </a>
-                    <div id="o_logout_divider" class="dropdown-divider"/>
-                    <a t-attf-href="/web/session/logout?redirect=/" role="menuitem" id="o_logout" class="dropdown-item ps-3">
-                        <i class="fa fa-fw fa-sign-out me-1 small text-primary-emphasis"/> Logout
-                    </a>
+        <t t-set="is_connected" t-value="not user_id._is_public()"/>
+        <li t-if="is_connected" t-attf-class="#{_item_class} o_no_autohide_item">
+            <a href="#" role="button" data-bs-toggle="dropdown" t-attf-class="#{'' if _no_caret else 'dropdown-toggle'} #{_link_class}">
+                <t t-if="_avatar">
+                    <t t-set="avatar_source" t-value="image_data_uri(user_id.avatar_256)"/>
+                    <img t-att-src="avatar_source" t-attf-class="rounded-circle object-fit-cover #{_avatar_class}" width="24" height="24" alt="" loading="eager"/>
+                </t>
+                <div t-if="_icon" t-attf-class="#{_icon_wrap_class}">
+                    <i t-attf-class="fa fa-1x fa-fw fa-user #{_icon_class}"/>
                 </div>
-            </li>
-        </t>
+                <span t-if="_user_name" t-attf-class="#{_user_name_class}" t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
+            </a>
+            <div t-attf-class="dropdown-menu js_usermenu #{_dropdown_menu_class}" role="menu">
+                <a groups="base.group_user" href="/odoo" role="menuitem" class="dropdown-item ps-3" id="o_backend_user_dropdown_link">
+                    <i class="fa fa-fw fa-th me-1 small text-primary-emphasis"/> Apps
+                </a>
+                <div id="o_logout_divider" class="dropdown-divider"/>
+                <a t-attf-href="/web/session/logout?redirect=/" role="menuitem" id="o_logout" class="dropdown-item ps-3">
+                    <i class="fa fa-fw fa-sign-out me-1 small text-primary-emphasis"/> Logout
+                </a>
+            </div>
+        </li>
     </template>
 
     <template id="portal_breadcrumbs" name="Portal Breadcrumbs">
@@ -208,10 +186,7 @@
 
     <template id="user_sign_in" name="User Sign In" inherit_id="portal.placeholder_user_sign_in">
         <xpath expr="." position="inside">
-            <li t-nocache="Profile session and user group can change unrelated to parent caches."
-                t-nocache-_item_class="_item_class"
-                t-nocache-_link_class="_link_class"
-                groups="base.group_public" t-attf-class="#{_item_class} o_no_autohide_item">
+            <li groups="base.group_public" t-attf-class="#{_item_class} o_no_autohide_item">
                 <a t-attf-href="/web/login" t-attf-class="#{_link_class}">Sign in<span t-if="request.session.get('profile_session')" class="text-danger fa fa-circle"/></a>
             </li>
         </xpath>

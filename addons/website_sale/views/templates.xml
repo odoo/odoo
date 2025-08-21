@@ -1,28 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="header_cart_link" name="Header Cart Link">
-        <t t-nocache="The number of products is dynamic, this rendering cannot be cached."
-           t-nocache-_icon="_icon"
-           t-nocache-_text="_text"
-           t-nocache-_badge="_badge"
-           t-nocache-_badge_class="_badge_class"
-           t-nocache-_icon_wrap_class="_icon_wrap_class"
-           t-nocache-_text_class="_text_class"
-           t-nocache-_item_class="_item_class"
-           t-nocache-_link_class="_link_class">
-            <t t-set="website_sale_cart_quantity" t-value="request.session.get('website_sale_cart_quantity', request.cart.cart_quantity) or 0"/>
-            <t t-set="show_cart" t-value="website.has_ecommerce_access()"/>
-            <li t-attf-class="#{_item_class} divider d-none"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
-            <li t-attf-class="o_wsale_my_cart #{not show_cart and 'd-none'} #{_item_class}">
-                <a href="/shop/cart" t-attf-class="#{_link_class}" aria-label="eCommerce cart">
-                    <div t-attf-class="#{_icon_wrap_class}">
-                        <i t-if="_icon" class="fa fa-shopping-cart fa-stack"/>
-                        <sup t-attf-class="my_cart_quantity badge bg-primary #{_badge_class} #{'d-none' if (website_sale_cart_quantity == 0) else ''}" t-out="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', '')"/>
-                    </div>
-                    <span t-if="_text" t-attf-class="#{_text_class}">My Cart</span>
-                </a>
-            </li>
-        </t>
+        <t t-set="website_sale_cart_quantity" t-value="request.session.get('website_sale_cart_quantity', request.cart.cart_quantity) or 0"/>
+        <t t-set="show_cart" t-value="website.has_ecommerce_access()"/>
+        <li t-attf-class="#{_item_class} divider d-none"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
+        <li t-attf-class="o_wsale_my_cart #{not show_cart and 'd-none'} #{_item_class}">
+            <a href="/shop/cart" t-attf-class="#{_link_class}" aria-label="eCommerce cart">
+                <div t-attf-class="#{_icon_wrap_class}">
+                    <i t-if="_icon" class="fa fa-shopping-cart fa-stack"/>
+                    <sup t-attf-class="my_cart_quantity badge bg-primary #{_badge_class} #{'d-none' if (website_sale_cart_quantity == 0) else ''}" t-out="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', '')"/>
+                </div>
+                <span t-if="_text" t-attf-class="#{_text_class}">My Cart</span>
+            </a>
+        </li>
     </template>
 
     <template id="header_hide_empty_cart_link" inherit_id="website_sale.header_cart_link" name="Header Hide Empty Cart link" active="False">
@@ -442,35 +432,33 @@
         <t t-set="pricelist" t-value="request.pricelist"/>
         <t t-set="pricelist_label">Pricelist</t>
         <div t-attf-class="o_pricelist_dropdown dropdown #{_classes if hasPricelistDropdown else 'd-none'}">
-            <t t-cache="pricelist,website_sale_pricelists,navClass">
-                <a
-                    role="button"
-                    href="#"
-                    t-attf-class="dropdown-toggle btn px-2"
-                    data-bs-toggle="dropdown"
-                >
-                    <small class="d-none d-md-inline opacity-75"><t t-out="pricelist_label"/>:</small>
-                    <span class="d-none d-md-inline" t-out="pricelist and pricelist.name or ' - '" />
-                    <span class="d-md-none"><t t-out="pricelist_label"/></span>
-                </a>
-                <div class="dropdown-menu" role="menu">
-                    <t t-foreach="website_sale_pricelists" t-as="pl">
-                        <t t-set="_is_active" t-value="pricelist.id == pl.id"/>
-                        <a
-                            role="menuitem"
-                            t-att-href="'/shop/change_pricelist/%s' % pl.id"
-                            t-attf-class="dropdown-item {{_is_active and 'active'}}"
-                            t-att-aria-current="_is_active and 'true' or 'false'"
-                        >
-                            <span
-                                class="switcher_pricelist"
-                                t-att-data-pl_id="pl.id"
-                                t-out="pl.name"
-                            />
-                        </a>
-                    </t>
-                </div>
-            </t>
+            <a
+                role="button"
+                href="#"
+                t-attf-class="dropdown-toggle btn px-2"
+                data-bs-toggle="dropdown"
+            >
+                <small class="d-none d-md-inline opacity-75"><t t-out="pricelist_label"/>:</small>
+                <span class="d-none d-md-inline" t-out="pricelist and pricelist.name or ' - '" />
+                <span class="d-md-none"><t t-out="pricelist_label"/></span>
+            </a>
+            <div class="dropdown-menu" role="menu">
+                <t t-foreach="website_sale_pricelists" t-as="pl">
+                    <t t-set="_is_active" t-value="pricelist.id == pl.id"/>
+                    <a
+                        role="menuitem"
+                        t-att-href="'/shop/change_pricelist/%s' % pl.id"
+                        t-attf-class="dropdown-item {{_is_active and 'active'}}"
+                        t-att-aria-current="_is_active and 'true' or 'false'"
+                    >
+                        <span
+                            class="switcher_pricelist"
+                            t-att-data-pl_id="pl.id"
+                            t-out="pl.name"
+                        />
+                    </a>
+                </t>
+            </div>
         </div>
     </template>
 
@@ -1194,76 +1182,74 @@
             />
 
             <t t-foreach="attributes" t-as="a">
-                <t t-cache="a,attrib_set,visible_attributes,isMobile">
-                    <t t-set="_status" t-value="'inactive'"/>
-                    <t t-foreach="a.value_ids" t-as="v" t-if="v.id in attrib_set" t-set="_status" t-value="'active'"/>
-                    <t t-set="_expand_attributes" t-value="_status == 'active' or visible_attributes &lt; 4"/>
-                    <div
-                        t-if="a.value_ids and len(a.value_ids) &gt; 1"
-                        t-attf-class="accordion-item {{('border-top-0 ' + ('order-1' if _status == 'active' else 'order-2')) if isMobile else 'nav-item mb-1 rounded-0'}}"
+                <t t-set="_status" t-value="'inactive'"/>
+                <t t-foreach="a.value_ids" t-as="v" t-if="v.id in attrib_set" t-set="_status" t-value="'active'"/>
+                <t t-set="_expand_attributes" t-value="_status == 'active' or visible_attributes &lt; 4"/>
+                <div
+                    t-if="a.value_ids and len(a.value_ids) &gt; 1"
+                    t-attf-class="accordion-item {{('border-top-0 ' + ('order-1' if _status == 'active' else 'order-2')) if isMobile else 'nav-item mb-1 rounded-0'}}"
+                >
+                    <h2
+                        t-if="isMobile"
+                        class="accordion-header mb-0"
+                        t-attf-id="o_wsale_offcanvas_attribute_{{a.id}}_header"
                     >
-                        <h2
-                            t-if="isMobile"
-                            class="accordion-header mb-0"
-                            t-attf-id="o_wsale_offcanvas_attribute_{{a.id}}_header"
+                        <button
+                            t-attf-class="o_wsale_offcanvas_title accordion-button rounded-0 {{'' if _expand_attributes else 'collapsed'}}"
+                            type="button"
+                            t-att-data-status="_status"
+                            data-bs-toggle="collapse"
+                            t-attf-data-bs-target="#o_wsale_offcanvas_attribute_{{a.id}}"
+                            t-att-aria-expanded="_expand_attributes"
+                            t-attf-aria-controls="o_wsale_offcanvas_attribute_{{a.id}}"
                         >
-                            <button
-                                t-attf-class="o_wsale_offcanvas_title accordion-button rounded-0 {{'' if _expand_attributes else 'collapsed'}}"
-                                type="button"
-                                t-att-data-status="_status"
-                                data-bs-toggle="collapse"
-                                t-attf-data-bs-target="#o_wsale_offcanvas_attribute_{{a.id}}"
-                                t-att-aria-expanded="_expand_attributes"
-                                t-attf-aria-controls="o_wsale_offcanvas_attribute_{{a.id}}"
+                            <b t-out="a.name"/>
+                        </button>
+                    </h2>
+                    <h6 t-else="" class="mb-3">
+                        <b class="d-none d-lg-block" t-field="a.name"/>
+                    </h6>
+                    <div
+                        t-attf-id="{{'o_wsale_offcanvas_attribute_' + str(a.id) if isMobile else 'o_products_attributes_' + str(a.id)}}"
+                        t-attf-class="{{'accordion-collapse collapse ' + ('show' if _expand_attributes else '') if isMobile else ''}}"
+                    >
+                        <div t-attf-class="{{'accordion-body pt-0' if isMobile else ''}}">
+                            <div
+                                t-if="a.display_type == 'select'"
+                                t-attf-class="{{'my-2' if isMobile else 'mb-3'}}"
                             >
-                                <b t-out="a.name"/>
-                            </button>
-                        </h2>
-                        <h6 t-else="" class="mb-3">
-                            <b class="d-none d-lg-block" t-field="a.name"/>
-                        </h6>
-                        <div
-                            t-attf-id="{{'o_wsale_offcanvas_attribute_' + str(a.id) if isMobile else 'o_products_attributes_' + str(a.id)}}"
-                            t-attf-class="{{'accordion-collapse collapse ' + ('show' if _expand_attributes else '') if isMobile else ''}}"
-                        >
-                            <div t-attf-class="{{'accordion-body pt-0' if isMobile else ''}}">
-                                <div
-                                    t-if="a.display_type == 'select'"
-                                    t-attf-class="{{'my-2' if isMobile else 'mb-3'}}"
-                                >
-                                    <t t-call="website_sale.filter_select_attributes"/>
-                                </div>
-                                <div
-                                    t-elif="a.display_type == 'color'"
-                                    t-attf-class="{{'pt-1 pb-3' if isMobile else 'mb-3'}}"
-                                >
-                                    <t t-call="website_sale.filter_color_attributes"/>
-                                </div>
-                                <div
-                                    t-elif="a.display_type == 'image'"
-                                    t-attf-class="d-flex flex-wrap gap-2 #{'pt-1 pb-3' if isMobile else 'mb-3'}"
-                                >
-                                    <t t-call="website_sale.filter_image_attributes"/>
-                                </div>
-                                <div
-                                    t-elif="a.display_type in ('radio', 'multi')"
-                                    t-attf-class="{{'list-group list-group-flush' if isMobile else 'flex-column mb-3'}}"
-                                >
-                                    <t t-call="website_sale.filter_radio_and_multi_attributes">
-                                        <t t-set="isMobile" t-value="isMobile"/>
-                                    </t>
-                                </div>
-                                <div
-                                    t-elif="a.display_type == 'pills'"
-                                    t-attf-class="d-flex flex-wrap gap-2 {{'my-2' if isMobile else 'mb-3'}}"
-                                    data-bs-toggle="buttons"
-                                >
-                                    <t t-call="website_sale.filter_pills_attributes"/>
-                                </div>
+                                <t t-call="website_sale.filter_select_attributes"/>
+                            </div>
+                            <div
+                                t-elif="a.display_type == 'color'"
+                                t-attf-class="{{'pt-1 pb-3' if isMobile else 'mb-3'}}"
+                            >
+                                <t t-call="website_sale.filter_color_attributes"/>
+                            </div>
+                            <div
+                                t-elif="a.display_type == 'image'"
+                                t-attf-class="d-flex flex-wrap gap-2 #{'pt-1 pb-3' if isMobile else 'mb-3'}"
+                            >
+                                <t t-call="website_sale.filter_image_attributes"/>
+                            </div>
+                            <div
+                                t-elif="a.display_type in ('radio', 'multi')"
+                                t-attf-class="{{'list-group list-group-flush' if isMobile else 'flex-column mb-3'}}"
+                            >
+                                <t t-call="website_sale.filter_radio_and_multi_attributes">
+                                    <t t-set="isMobile" t-value="isMobile"/>
+                                </t>
+                            </div>
+                            <div
+                                t-elif="a.display_type == 'pills'"
+                                t-attf-class="d-flex flex-wrap gap-2 {{'my-2' if isMobile else 'mb-3'}}"
+                                data-bs-toggle="buttons"
+                            >
+                                <t t-call="website_sale.filter_pills_attributes"/>
                             </div>
                         </div>
                     </div>
-                </t>
+                </div>
             </t>
             <t t-if="isMobile">
                 <t t-if="opt_wsale_filter_tags and (opt_wsale_attributes or opt_wsale_attributes_top)">
@@ -1999,7 +1985,6 @@
                                 </li>
                                 <t t-foreach="category.parents_and_self" t-as="cat">
                                     <li
-                                        t-nocache="The category does not have to be cached, as the product can be accessed via different paths."
                                         class="breadcrumb-item d-none d-lg-inline-block"
                                     >
                                         <a
@@ -2093,7 +2078,6 @@
                                         type="hidden"
                                         name="csrf_token"
                                         t-att-value="request.csrf_token()"
-                                        t-nocache="The csrf token must always be up to date."
                                     />
 
                                     <t name="variant_info">
@@ -3387,7 +3371,7 @@
             method="post"
             name="coupon_code"
         >
-            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <div class="input-group w-100">
                 <input name="promo" class="form-control" type="text" placeholder="Discount code..." t-att-value="website_sale_order.pricelist_id.code or None"/>
                 <button type="submit" class="btn btn-light border">Apply</button>
@@ -3425,8 +3409,7 @@
                               method="post">
                             <input type="hidden"
                                    name="csrf_token"
-                                   t-att-value="request.csrf_token()"
-                                   t-nocache="The csrf token must always be up to date."/>
+                                   t-att-value="request.csrf_token()"/>
                             <t t-if="not hide_payment_button" t-call="payment.submit_button">
                                 <t t-set="submit_button_label">Confirm Order</t>
                             </t>

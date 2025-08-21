@@ -11,4 +11,3 @@ class TestPerformance(UtilPerf):
             'orm_signaling_registry': 1,
         }
         self._check_url_hot_query(url, 1, select_tables_perf)
-        self.assertEqual(self._get_url_hot_query(url, cache=False), 1)

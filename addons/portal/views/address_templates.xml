@@ -357,7 +357,6 @@
             type="hidden"
             name="csrf_token"
             t-att-value="request.csrf_token()"
-            t-nocache="The csrf token must always be up to date."
         />
         <input type="hidden" name="address_type" t-att-value="address_type"/>
         <input type="hidden" name="use_delivery_as_billing" t-att-value="use_delivery_as_billing"/>

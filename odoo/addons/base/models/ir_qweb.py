@@ -76,8 +76,6 @@ in the IrQweb class.
               ┣━► _compile_directives (loop)    Consume all remaining directives ◄━━━┓  ┃ ┃
               ┃  ┃                              (e.g.: to change the indentation)    ┃  ┃ ┃
               ┃  ┣━► _compile_directive                                              ┃  ┃ ┃
-              ┃  ┃    ┗━► t-nocache       ━━► _compile_directive_nocache            ━┫  ┃ ┃
-              ┃  ┃    ┗━► t-cache         ━━► _compile_directive_cache              ━┫  ┃ ┃
               ┃  ┃    ┗━► t-groups        ━━► _compile_directive_groups             ━┫  ┃ ┃
               ┃  ┃    ┗━► t-foreach       ━━► _compile_directive_foreach            ━┫  ┃ ┃
               ┃  ┃    ┗━► t-if            ━━► _compile_directive_if                 ━┛  ┃ ┃
@@ -757,13 +755,13 @@ class IrQweb(models.AbstractModel):
         loaded_codes = self.env.context['__qweb_loaded_codes']
         if (frame.params.view_ref in loaded_codes and not isinstance(error, RecursionError)) or len(stack) <= 1:
             options = frame.options or {}  # The compilation may have failed before the compilation options were loaded.
-            ref = options.get('ref') or stack[0].params.view_ref  # The template can have a null reference, for example for a provided etree.
+            ref = options.get('ref') or frame.params.view_ref  # The template can have a null reference, for example for a provided etree.
             ref_name = options.get('ref_name') or None
             code = loaded_codes.get(frame.params.view_ref) or loaded_codes.get(False)
             path = self.env.context['_qweb_error_path_xml'][0]
             html = self.env.context['_qweb_error_path_xml'][1]
         else:
-            # get the previous caller (t-call, t-cache...) to display erroneous xml node.
+            # get the previous caller (like t-call) to display erroneous xml node.
             options = stack[-2].options or {}  # The compilation may have failed before the compilation options were loaded.
             ref = options.get('ref')
             ref_name = options.get('ref_name')
@@ -802,7 +800,21 @@ class IrQweb(models.AbstractModel):
         return self.env['ir.ui.view']._get_cached_template_info(template)
 
     def _compile(self, template):
-        template_functions, def_name, options = self.__compile(template)
+        ref = None
+        if isinstance(template, str) and template.endswith('.xml'):
+            module_path = Manifest.for_addon(Path(template).parts[0]).path
+            if 'templates' not in Path(file_path(template)).relative_to(module_path).parts:
+                raise ValueError("The templates file %s must be under a subfolder 'templates' of a module", template)
+            else:
+                with file_open(template, 'rb', filter_ext=('.xml',)) as file:
+                    template = etree.fromstring(file.read())
+        elif not isinstance(template, etree._Element):
+            ref = self._get_template_info(template)['id']
+
+        if ref:
+            template_functions, def_name, options = self._generate_code_cached(ref)
+        else:
+            template_functions, def_name, options = self._generate_code_uncached(template)
 
         render_template = template_functions[def_name]
         if options.get('profile') and render_template.__name__ != 'profiled_method_compile':
@@ -826,69 +838,44 @@ class IrQweb(models.AbstractModel):
 
         return (template_functions, def_name, options)
 
-    def __compile(self, template):
-        ref = None
-        if isinstance(template, etree._Element):
-            self = self.with_context(is_t_cache_disabled=True)
-        elif isinstance(template, str) and template.endswith('.xml'):
-            module_path = Manifest.for_addon(Path(template).parts[0]).path
-            if 'templates' not in Path(file_path(template)).relative_to(module_path).parts:
-                raise ValueError("The templates file %s must be under a subfolder 'templates' of a module", template)
-            else:
-                with file_open(template, 'rb', filter_ext=('.xml',)) as file:
-                    template = etree.fromstring(file.read())
-        else:
-            ref = self._get_template_info(template)['id']
-
-        # define the base key cache for code in cache and t-cache feature
-        base_key_cache = None
-        if ref:
-            base_key_cache = self._get_cache_key(tuple([ref] + [self.env.context.get(k) for k in self._get_template_cache_keys()]))
-        self = self.with_context(__qweb_base_key_cache=base_key_cache)
-
-        # generate the template functions and the root function name
-        def generate_functions():
-            code, options, def_name = self._generate_code(template)
-            if code is None:
-                Error, message, stack = options['error']
-
-                def not_found_template(self, values):
-                    if tools.config['dev_mode']:
-                        _logger.info(stack)
-                    if self.env.context.get('raise_if_not_found', True):
-                        raise Error(message)
-                    _logger.warning('Cannot load template %s: %s', template, message)
-                    return ''
-
-                return {'not_found_template': not_found_template}, 'not_found_template', frozendict(options)
-
-            wrap_code = '\n'.join([
-                "def generate_functions():",
-                indent_code(code, 1),
-                f"    code = {code!r}",
-                "    return template_functions",
-            ])
-            compiled = compile(wrap_code, f"<{ref}>", 'exec')
-            globals_dict = self.__prepare_globals()
-            globals_dict['__builtins__'] = globals_dict  # So that unknown/unsafe builtins are never added.
-            unsafe_eval(compiled, globals_dict)
-            return globals_dict['generate_functions'](), def_name, frozendict(options)
-
-        return self._load_values(base_key_cache, generate_functions)
-
-    def _generate_code(self, template):
-        if isinstance(template, etree._Element):
-            return self.__generate_code(template)
-        return self._generate_code_cached(template)
-
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache('template', 'tuple(self.env.context.get(k) or False for k in self._get_template_cache_keys())', cache='templates'),
+        tools.ormcache('ref', 'tuple(self.env.context.get(k) or False for k in self._get_template_cache_keys())', cache='templates'),
     )
-    def _generate_code_cached(self, template):
-        return self.__generate_code(template)
+    def _generate_code_cached(self, ref: int):
+        return self._generate_code_uncached(ref)
 
-    def __generate_code(self, template):
+    def _generate_code_uncached(self, template: int | str | etree._Element):
+        ref = self._get_template_info(template)['id'] if isinstance(template, (int, str)) else None
+
+        code, options, def_name = self._generate_code(template)
+
+        if code is None:
+            Error, message, stack = options['error']
+
+            def not_found_template(self, values):
+                if tools.config['dev_mode']:
+                    _logger.info(stack)
+                if self.env.context.get('raise_if_not_found', True):
+                    raise Error(message)
+                _logger.warning('Cannot load template %s: %s', template, message)
+                return ''
+
+            return {'not_found_template': not_found_template}, 'not_found_template', frozendict(options)
+
+        wrap_code = '\n'.join([
+            "def generate_functions():",
+            indent_code(code, 1),
+            f"    code = {code!r}",
+            "    return template_functions",
+        ])
+        compiled = compile(wrap_code, f"<{ref}>", 'exec')
+        globals_dict = self.__prepare_globals()
+        globals_dict['__builtins__'] = globals_dict  # So that unknown/unsafe builtins are never added.
+        unsafe_eval(compiled, globals_dict)
+        return globals_dict['generate_functions'](), def_name, frozendict(options)
+
+    def _generate_code(self, template: int | str | etree._Element):
         """ Compile the given template into a rendering function (generator)::
 
             render_template(qweb, values)
@@ -923,16 +910,16 @@ class IrQweb(models.AbstractModel):
 
         compile_context.pop('raise_if_not_found', None)
 
-        ref_name = element.attrib.pop('t-name', template if isinstance(template, str) and '<' not in template else None)
-        if ref_name is None and isinstance(ref, int):
-            ref_name = self._get_template_info(ref)['key']
+        ref_name = element.attrib.pop('t-name', None)
+        if isinstance(ref, int) or (isinstance(template, str) and '<' not in template):
+            ref_name = self._get_template_info(ref)['key'] or ref_name
 
         # reference to get xml and etree (usually the template ID)
         with contextlib.suppress(ValueError, TypeError):
             ref = int(ref)
         compile_context['ref'] = ref
         # reference name or key to get xml and etree (usually the template XML ID)
-        compile_context['ref_name'] = element.attrib.pop('t-name', template if isinstance(template, str) and '<' not in template else ref_name)
+        compile_context['ref_name'] = ref_name
         # str xml of the reference template used for compilation. Useful for debugging, dev mode and profiling.
         compile_context['ref_xml'] = str(document) if document else None
         # Identifier used to call `_compile`
@@ -1178,10 +1165,6 @@ class IrQweb(models.AbstractModel):
             )
 
         context = {'dev_mode': 'qweb' in tools.config['dev_mode']}
-        if 'xml' in tools.config['dev_mode']:
-            context['is_t_cache_disabled'] = True
-        elif 'disable-t-cache' in debug:
-            context['is_t_cache_disabled'] = True
         return self.with_context(**context)
 
     def __prepare_globals(self):
@@ -1505,8 +1488,6 @@ class IrQweb(models.AbstractModel):
             'elif', # Must be the first because compiled by the previous if.
             'else', # Must be the first because compiled by the previous if.
             'debug',
-            'nocache',
-            'cache',
             'groups',
             'as', 'foreach',
             'if',
@@ -1672,9 +1653,6 @@ class IrQweb(models.AbstractModel):
                 code.extend(self._compile_directive(el, compile_context, directive, level))
             elif directive == 'options':
                 if any(name.startswith('t-options-') for name in el.attrib):
-                    code.extend(self._compile_directive(el, compile_context, directive, level))
-            elif directive == 'nocache':
-                if any(name.startswith('t-nocache-') for name in el.attrib):
                     code.extend(self._compile_directive(el, compile_context, directive, level))
 
         # compile unordered directives still present on the element
@@ -2501,117 +2479,6 @@ class IrQweb(models.AbstractModel):
 
         return code
 
-    def _compile_directive_cache(self, el, compile_context, level):
-        """Compile the `t-cache` tuple expression into a key cache.
-
-        The `t-cache` directive allows you to keep the rendered result
-        of a template part. The supplied key must be a tuple. This tuple
-        can contain recordset in this case the zone will be invalidated
-        each time the write_date of these records changes.
-        The values are scoped into the `t-cache` and are not available
-        outside.
-        see: `t-nocache`
-        """
-        expr = el.attrib.pop('t-cache')
-        code = self._flush_text(compile_context, level)
-
-        def_name = compile_context['make_name']('t_cache')
-
-        # Generate the content function
-        def_code = [indent_code(f"""def {def_name}(self, values):""", 0)]
-        path, xml = compile_context['_qweb_error_path_xml']
-        def_code.append(indent_code(f'# element: {path!r} , {xml!r}', 1))
-        def_content = self._compile_directives(el, compile_context, 1)
-        if def_content and not compile_context['_text_concat']:
-            self._append_text('', compile_context) # To ensure the template function is a generator and doesn't become a regular function
-        def_code.extend(def_content)
-        def_code.extend(self._flush_text(compile_context, 1))
-        compile_context['template_functions'][def_name] = def_code
-
-        # Get the dynamic key for the cache and load the content.
-        # The t-nocache yield a tuple (ref, function name) instead of a
-        # When reading tuple coming from t-nocache, we check if the
-        # method is already known otherwise the corresponding template
-        # and its functions are loaded.
-        def_wrap = [indent_code(f"""
-            def {def_name}_wrap(self, values):
-                # element: {path!r} , {xml!r}'
-                template_cache_key = {self._compile_expr(expr)} if not self.env.context.get('is_t_cache_disabled') else None
-                cache_key = self._get_cache_key(template_cache_key) if template_cache_key else None
-                uniq_cache_key = cache_key and ({str(self.env.context['__qweb_base_key_cache'])!r}, '{def_name}_cache', cache_key)
-                def {def_name}_cache():
-                    text = []
-                    result = []
-                    for item in self.with_context(__qweb_skip_render_directives=['t-nocache'])._render_iterall({compile_context['template']!r}, {def_name!r}, values):
-                        if isinstance(item, str):
-                            text.append(item)
-                        else:
-                            if text:
-                                result.append(''.join(text))
-                                text = []
-                            result.append(item)
-                    if text: result.append(''.join(text))
-                    return result
-
-                yield from self._load_values(uniq_cache_key, {def_name}_cache, self.env.context['__qweb_loaded_functions'])
-            """, 0)]
-        compile_context['template_functions'][f'{def_name}_wrap'] = def_wrap
-
-        code.append(indent_code(f"yield QwebCallParameters({{}}, {compile_context['template']!r}, '{def_name}_wrap', {{}}, True, 't-cache', (template_options['ref'], {path!r}, {xml!r}))", level))
-        return code
-
-    def _compile_directive_nocache(self, el, compile_context, level):
-        """
-        The `t-nocache` directive makes it possible to force rendering
-        of a part even if it is in a `t-cache`. The values available in
-        the `t-nocache` are the one provided when calling the template
-        (and therefore ignores any t-set that could have been done).
-
-        The `t-nocache-*` are the values whose result of the
-        expression will be cached and added to the root's values when
-        rendering the no cache part. Only primitive types can be cached.
-
-        see: `t-cache`
-        """
-        if 't-nocache' not in el.attrib:
-            raise SyntaxError("t-nocache-* must be on the same node as t-nocache")
-
-        el.attrib.pop('t-nocache')
-        code = self._flush_text(compile_context, level)
-
-        # t-nocache-* will generate the values to put in cache
-        # must cosume this attributes before generate the cached content.
-        code_cache_values = [indent_code("cached_values = {}", level)]
-        for key in list(el.attrib):
-            if key.startswith('t-nocache-'):
-                expr = el.attrib.pop(key)
-                varname = key[10:]
-                if not VARNAME_REGEXP.match(varname):
-                    raise ValueError(f'The varname {varname!r} can only contain alphanumeric characters and underscores.')
-                code_cache_values.append(indent_code(f"""
-                    cached_value = {self._compile_expr(expr)}
-                    if cached_value is not None and not isinstance(cached_value, (str, int, float, bool)):
-                        raise ValueError(f'''The value type of {key!r} cannot be cached: {{cached_value!r}}''')
-                    cached_values[{varname!r}] = cached_value
-                """, level))
-
-        # generate the cached content method
-        def_name = compile_context['make_name']('t_nocache')
-        def_code = [f"def {def_name}(self, values):"]
-        path, xml = compile_context['_qweb_error_path_xml']
-        def_code.append(indent_code(f'# element: {path!r} , {xml!r}', 1))
-        def_content = self._compile_directives(el, compile_context, 1)
-        if def_content and not compile_context['_text_concat']:
-            self._append_text('', compile_context) # To ensure the template function is a generator and doesn't become a regular function
-        def_code.extend(def_content)
-        def_code.extend(self._flush_text(compile_context, 1))
-        compile_context['template_functions'][def_name] = def_code
-
-        code.extend(code_cache_values)
-        code.append(indent_code(f"yield QwebCallParameters({{'__qweb_skip_render_directives': None}}, {compile_context['template']!r}, {def_name!r}, cached_values, self.env.context.get('__qweb_skip_render_directives') and 'root', 't-nocache', (template_options['ref'], {path!r}, {xml!r}))", level))
-
-        return code
-
     # methods called by the compiled function at rendering time.
 
     def _debug_trace(self, debugger, values):
@@ -2722,50 +2589,6 @@ class IrQweb(models.AbstractModel):
             return self._generate_asset_links(bundle, css=css, js=js, debug_assets=True, assets_params=assets_params, rtl=rtl, autoprefix=autoprefix)
         else:
             return self._generate_asset_links_cache(bundle, css=css, js=js, assets_params=assets_params, rtl=rtl, autoprefix=autoprefix)
-
-    # qweb cache feature
-
-    def _get_cache_key(self, cache_key):
-        """
-            Convert the template cache key item into a hashable key.
-            :param cache_key: tuple
-            :returns: tuple of hashable items
-        """
-        if not isinstance(cache_key, (tuple, list)):
-            cache_key = (cache_key,)
-        keys = []
-        for item in cache_key:
-            try:
-                # use try catch instead of isinstance to detect lazy values
-                keys.append(item._name)
-                keys.append(tuple(item.ids))
-                dates = item.mapped('write_date')
-                if dates:
-                    keys.append(max(dates).timestamp())
-            except AttributeError:
-                keys.append(repr(item))
-        return tuple(keys)
-
-    def _load_values(self, cache_key, get_value, loaded_values=None):
-        """ generate value from the function if the result is not cached. """
-        if not cache_key:
-            return get_value()
-        value = loaded_values and loaded_values.get(cache_key)
-        if not value:
-            value = self._get_cached_values(cache_key, get_value)
-        if loaded_values is not None:
-            loaded_values[cache_key] = value
-        return value
-
-    # The cache does not need to be invalidated if the 'base_key_cache'
-    # in '_compile' method contains the write_date of all inherited views.
-    @tools.conditional(
-        'xml' not in tools.config['dev_mode'],
-        tools.ormcache('cache_key', cache='templates.cached_values'),
-    )
-    def _get_cached_values(self, cache_key, get_value):
-        """ generate value from the function if the result is not cached. """
-        return get_value()
 
     # other methods used for the asset bundles
     @tools.conditional(
@@ -2955,7 +2778,7 @@ def render(template_name, values, load, **options):
         def _prepare_environment(self, values):
             values['true'] = True
             values['false'] = False
-            return self.with_context(is_t_cache_disabled=True, __qweb_loaded_functions={})
+            return self.with_context(__qweb_loaded_functions={})
 
         def _get_field(self, *args):
             raise NotImplementedError("Fields are not allowed in this rendering mode. Please use \"env['ir.qweb']._render\" method")
