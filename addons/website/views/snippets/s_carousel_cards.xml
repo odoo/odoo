@@ -2,7 +2,7 @@
 <odoo>
 
 <template id="s_carousel_cards" name="Carousel Cards">
-    <section class="s_carousel_cards_wrapper pt64 pb64" data-preview-interaction-enabled="true">
+    <section class="s_carousel_cards_wrapper pt64 pb64">
         <t t-set="uniq" t-value="datetime.datetime.now().microsecond"/>
         <div t-attf-id="myCarouselCards{{uniq}}" class="s_carousel_cards s_carousel_cards_with_img s_carousel_boxed container carousel carousel-fade slide" data-bs-interval="10000" data-bs-ride="true" data-option-name="CarouselCards" style="--card-img-size-h: 60%; --CardBody-extra-height: 0px;">
             <!-- Content -->

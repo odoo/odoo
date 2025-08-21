@@ -5,43 +5,40 @@ const CarouselSliderPreview = (I) =>
     class extends I {
         carouselOptions = { ride: true, pause: true, interval: 500 };
 
-        setup() {
-            // Bind mouse events to the entire section (top-most parent of the
-            // snippet). This ensures events trigger when hovering anywhere on
-            // the snippet, even if the carousel itself is smaller in width.
-            if (this.el.tagName === "SECTION") {
-                this.carouselSnippetEl = this.el;
-            } else {
-                this.carouselSnippetEl = this.el.closest("section");
-            }
-        }
-
-        start() {
-            super.start();
-
-            this.carouselSnippetEl.style.pointerEvents = "auto";
-
-            this.addListener(this.carouselSnippetEl, "mouseenter", this.mouseEnter);
-            this.addListener(this.carouselSnippetEl, "mouseleave", this.mouseLeave);
-        }
+        dynamicSelectors = {
+            ...this.dynamicSelectors,
+            _snippetPreviewWrapEl: () => this.el.closest(".o_snippet_preview_wrap"),
+        };
+        dynamicContent = {
+            ...this.dynamicContent,
+            // Bind events to the entire preview wrap. This ensures events
+            // trigger when hovering anywhere on the snippet, even though the
+            // preview containers are `inert`.
+            _snippetPreviewWrapEl: {
+                "t-on-mouseenter": this.mouseEnter,
+                "t-on-mouseleave": this.mouseLeave,
+                "t-on-focusin": this.mouseEnter,
+                "t-on-focusout": this.mouseLeave,
+            },
+        };
 
         /**
          * Starts the carousel autoplay when the mouse enters the element.
          */
-        mouseEnter = () => {
+        mouseEnter() {
             const carousel = window.Carousel.getOrCreateInstance(this.el);
             carousel.cycle();
-        };
+        }
 
         /**
          * Pauses the carousel and resets it to the first slide when the mouse
          * leaves the element.
          */
-        mouseLeave = () => {
+        mouseLeave() {
             const carousel = window.Carousel.getOrCreateInstance(this.el);
             carousel.pause();
             carousel.to(0);
-        };
+        }
     };
 
 registry.category("public.interactions.preview").add("website.carousel_slider", {
