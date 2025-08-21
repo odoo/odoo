@@ -390,6 +390,7 @@ from pathlib import Path
 from psycopg2.extensions import TransactionRollbackError
 from psycopg2.errors import ReadOnlySqlTransaction
 from typing import NamedTuple, Literal
+from types import FunctionType
 
 from odoo import api, models, tools
 from odoo.modules import Manifest
@@ -808,15 +809,20 @@ class IrQweb(models.AbstractModel):
             ref = options.get('ref')
             ref_xml = str(val) if (val := options.get('ref_xml')) else None
 
-            def profiled_method_compile(self, values):
-                qweb_tracker = QwebTracker(ref, ref_xml, self.env.cr)
-                self = self.with_context(qweb_tracker=qweb_tracker)
-                if qweb_tracker.execution_context_enabled:
-                    with ExecutionContext(template=ref):
-                        return render_template(self, values)
-                return render_template(self, values)
+            def wrap(function):
+                def profiled_method_compile(self, values):
+                    qweb_tracker = QwebTracker(ref, ref_xml, self.env.cr)
+                    self = self.with_context(qweb_tracker=qweb_tracker)
+                    if qweb_tracker.execution_context_enabled:
+                        with ExecutionContext(template=ref):
+                            return function(self, values)
+                    return function(self, values)
 
-            template_functions[def_name] = profiled_method_compile
+                return profiled_method_compile
+
+            for key, function in template_functions.items():
+                if isinstance(function, FunctionType):
+                    template_functions[key] = wrap(function)
 
         return (template_functions, def_name, options)
 
