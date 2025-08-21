@@ -523,7 +523,7 @@ class Cart(PaymentPortal):
             ):
                 infos['image_url'] = image_data_uri(combo_item.product_id.image_128)
 
-        if request.env['res.groups']._is_feature_enabled('uom.group_uom'):
+        if line.product_template_id._has_multiple_uoms():
             infos['uom_name'] = line.product_uom_id.name
 
         return infos
