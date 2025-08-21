@@ -9,6 +9,8 @@ import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { contains } from "@web/../tests/web_test_helpers";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { Plugin } from "@html_editor/plugin";
+import { highlightIdToName } from "@website/builder/plugins/highlight/highlight_configurator";
+import { textHighlightFactory } from "@website/js/highlight_utils";
 
 defineMailModels();
 
@@ -173,4 +175,12 @@ test("Can modify multiple highlights", async () => {
     await contains(".o_popover .o_text_highlight_underline").click();
     expect("p>.o_text_highlight_underline").toHaveCount(1);
     expect(".o_text_highlight").toHaveCount(1);
+});
+
+test("each highlight has a name", () => {
+    const highlightWithAName = Object.keys(highlightIdToName);
+    const highlightWithAPath = Object.keys(textHighlightFactory);
+    highlightWithAName.sort();
+    highlightWithAPath.sort();
+    expect(highlightWithAPath).toEqual(highlightWithAName);
 });
