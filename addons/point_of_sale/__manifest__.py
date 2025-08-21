@@ -233,6 +233,7 @@
             "point_of_sale/static/tests/pos/tours/utils/common.js",
             "point_of_sale/static/tests/generic_helpers/order_widget_util.js",
             "point_of_sale/static/tests/generic_helpers/utils.js",
+            "point_of_sale/static/tests/customer_display/customer_display_utils.js",
             "point_of_sale/static/tests/customer_display/customer_display_tour.js",
         ],
         'point_of_sale.assets_debug': [
