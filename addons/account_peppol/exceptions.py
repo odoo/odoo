@@ -41,6 +41,7 @@ STANDARD_EXCEPTION_CODE_MESSAGES_MAP: dict[int, Callable[..., str]] = {
     705: lambda: _('You don\'t have enough credit'),
     706: lambda: _('The document could not be found'),
     707: lambda: _('You have reached the limit of documents you can send today. Retry later. Please contact the support if you think you need to increase that limit.'),
+    708: lambda: _('You are not authorized to change the contact email.'),
 }
 
 
