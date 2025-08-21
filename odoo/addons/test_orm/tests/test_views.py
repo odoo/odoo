@@ -227,3 +227,26 @@ class TestViewGroups(ViewCase):
         self.assertIsNotNone(discussion_node, "the properties definition field `discussion` should be added automatically")
         self.assertEqual(discussion_node.get("invisible"), "True")
         self.assertEqual(discussion_node.get("data-used-by"), "fieldname='attributes' (field,attributes)")
+
+    def test_auto_add_filename_with_binary_requesting(self):
+        view = self.env['ir.ui.view'].create({
+            'name': 'stuff',
+            'model': 'test_orm.model_binary',
+            'arch': """
+                <form>
+                    <field name="binary" filename="binary_x_filename" readonly="context.get('dummy')"/>
+                    <field name="binary" filename="binary_x_filename2"/>
+                    <field name="binary" filename="i_dont_exist"/>
+                </form>
+            """,
+        })
+        views = self.env['test_orm.model_binary'].get_views([(view.id, 'form')])
+        arch = views['views']['form']['arch']
+        form = etree.fromstring(arch)
+        filename = form.xpath("//field[@name='binary_x_filename']")[0]
+        self.assertEqual(dict(filename.attrib), {'name': 'binary_x_filename', 'invisible': 'True', 'readonly': "context.get('dummy')", 'data-used-by': "filename='binary_x_filename' (field,binary)"})
+
+        filename2 = form.xpath("//field[@name='binary_x_filename2']")[0]
+        self.assertEqual(dict(filename2.attrib), {'name': 'binary_x_filename2', 'invisible': 'True', 'readonly': 'False', 'data-used-by': "filename='binary_x_filename2' (field,binary)"})
+
+        self.assertEqual(form.xpath("//field[@name='i_dont_exist']"), [])
