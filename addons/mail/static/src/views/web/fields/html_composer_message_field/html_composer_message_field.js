@@ -24,9 +24,9 @@ export class HtmlComposerMessageField extends HtmlMailField {
                 this.editor.editable.after(elContent);
                 // TODO: the following legacy regex may not have the desired effect as it
                 // agglomerates multiple newLines together.
-                const text = elContent.innerText.replace(/(\t|\n)+/g, "\n");
+                const composerText = elContent.innerText.replace(/(\t|\n)+/g, "\n");
                 elContent.remove();
-                ev.detail.onSaveContent({ text, emailAddSignature });
+                ev.detail.onSaveContent({ composerText, emailAddSignature });
             });
             useBus(this.env.fullComposerBus, "ATTACHMENT_REMOVED", (ev) => {
                 const attachmentElements = this.editor.editable.querySelectorAll(
