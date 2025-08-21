@@ -11,6 +11,7 @@ import re
 import smtplib
 import ssl
 from email.message import EmailMessage
+from email.parser import BytesParser
 from email.utils import make_msgid
 from socket import gaierror, timeout
 
@@ -618,8 +619,7 @@ class IrMail_Server(models.Model):
             for (fname, fcontent, mime) in attachments:
                 maintype, subtype = mime.split('/') if mime and '/' in mime else ('application', 'octet-stream')
                 if maintype == 'message' and subtype == 'rfc822':
-                    #  Use binary encoding for "message/rfc822" attachments (see RFC 2046 Section 5.2.1)
-                    msg.add_attachment(fcontent, maintype, subtype, filename=fname, cte='binary')
+                    msg.add_attachment(BytesParser().parsebytes(fcontent), filename=fname)
                 else:
                     msg.add_attachment(fcontent, maintype, subtype, filename=fname)
         return msg
