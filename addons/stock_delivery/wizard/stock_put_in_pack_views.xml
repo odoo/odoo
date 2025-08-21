@@ -22,7 +22,7 @@
             </field>
             <field name="result_package_id" position="attributes">
                 <attribute name="domain">
-                    [('package_type_id.package_carrier_type', '=?', package_carrier_type), ('package_type_id', '=?', package_type_id), '|', '|', ('location_id', '=', False), ('location_id', '=', location_dest_id), ('id', 'in', origin_package_ids)]
+                    [('package_carrier_type', '=?', package_carrier_type), ('package_type_id', '=?', package_type_id), '|', '|', ('location_id', '=', False), ('location_id', '=', location_dest_id), ('id', 'in', origin_package_ids)]
                 </attribute>
             </field>
         </field>
