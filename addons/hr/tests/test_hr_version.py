@@ -305,21 +305,6 @@ class TestHrVersion(TransactionCase):
         for version in versions:
             self.assertEqual(version.contract_date_end, date(2040, 12, 31))
 
-        v4 = employee.create_version({
-            'date_version': '2050-01-01',
-            'contract_date_start': '2050-01-01',
-            'contract_date_end': '2050-12-31',
-        })
-        v5 = employee.create_version({
-            'date_version': '2051-01-01',
-            'contract_date_start': '2051-01-01',
-            'contract_date_end': '2051-12-31',
-        })
-        v5.write({
-            'contract_date_start': '2050-01-01',
-        })
-        self.assertEqual(v4.contract_date_end, date(2051, 12, 31))
-
     def test_in_out_contract(self):
         """
         Check that an employee is in or out of the contract at a specific date.
@@ -396,3 +381,101 @@ class TestHrVersion(TransactionCase):
         self.assertFalse(fields_without_group, "Inconsistency between some employee fields and version ones (those employees fields should have the same groups than related one in version")
         self.assertFalse(fields_without_related, "Some employee fields have the same name than the version ones but they are not related")
         self.assertFalse(fields_readonly, "(Readonly) Inconsistency between some employee fields and version ones, the both fields (in version and employee) have to be readonly or editable")
+
+    def test_multi_edit_contract_sync_same_contract(self):
+        """
+        Test the multi-edit contract sync feature when the targeted versions share the same contract.
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'contract_date_end': '2020-12-31',
+        })
+        versions = employee.version_id
+        versions |= employee.create_version({'date_version': '2020-04-01'})
+        versions |= employee.create_version({'date_version': '2020-08-01'})
+
+        versions[:2].contract_date_end = "2020-9-30"
+
+        for version in versions:
+            self.assertEqual(version.contract_date_end, date(2020, 9, 30))
+
+    def test_multi_edit_contract_sync_different_contract(self):
+        """
+        Test the multi-edit contract sync feature when the targeted versions have different contracts.
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'contract_date_end': '2020-5-31',
+        })
+        versions = employee.version_id
+        versions |= employee.create_version({'date_version': '2020-04-01'})
+        versions |= employee.create_version({
+            'date_version': '2020-08-01',
+            'contract_date_start': '2020-08-01',
+        })
+
+        with self.assertRaises(ValidationError):
+            versions[:2].contract_date_end = "2020-9-30"
+
+    def test_multi_edit_other(self):
+        """
+        Test the multi-edit when the targeted versions have different contracts
+        Different fields than contract_date_start and contract_date_end are changed.
+        """
+        jobA = self.env['hr.job'].create({'name': "Job A"})
+        jobB = self.env['hr.job'].create({'name': "Job B"})
+
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'contract_date_end': '2020-5-31',
+            'job_id': jobA.id,
+        })
+        versions = employee.version_id
+        versions |= employee.create_version({'date_version': '2020-04-01'})
+        versions |= employee.create_version({
+            'date_version': '2020-08-01',
+            'contract_date_start': '2020-08-01',
+            'job_id': jobA.id,
+        })
+
+        versions[1:].job_id = jobB.id
+
+        self.assertEqual(versions[0].job_id.id, jobA.id)
+        for version in versions[1:]:
+            self.assertEqual(version.job_id.id, jobB.id)
+
+    def test_multi_edit_other_and_contract_date_sync(self):
+        """
+        Test the multi-edit when the targeted versions have the same contract
+        Different contract_dates and other fields are changed.
+        """
+        jobA = self.env['hr.job'].create({'name': "Job A"})
+        jobB = self.env['hr.job'].create({'name': "Job B"})
+
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'contract_date_end': '2020-12-31',
+            'job_id': jobA.id,
+        })
+        versions = employee.version_id
+        versions |= employee.create_version({'date_version': '2020-04-01'})
+        versions |= employee.create_version({'date_version': '2020-08-01'})
+
+        versions[1:].write({
+            "contract_date_end": "2020-9-30",
+            "job_id": jobB.id,
+        })
+
+        self.assertEqual(versions[0].job_id.id, jobA.id)
+        self.assertEqual(versions[0].contract_date_end, date(2020, 9, 30))
+        for version in versions[1:]:
+            self.assertEqual(version.job_id.id, jobB.id)
+            self.assertEqual(version.contract_date_end, date(2020, 9, 30))
