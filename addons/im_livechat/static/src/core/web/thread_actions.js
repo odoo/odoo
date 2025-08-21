@@ -6,7 +6,10 @@ import { LivechatChannelInfoList } from "@im_livechat/core/web/livechat_channel_
 registerThreadAction("livechat-info", {
     actionPanelComponent: LivechatChannelInfoList,
     condition(component) {
-        return component.thread?.channel_type === "livechat";
+        return (
+            component.thread?.channel_type === "livechat" &&
+            !component.isDiscussSidebarChannelActions
+        );
     },
     panelOuterClass: "o-livechat-ChannelInfoList bg-inherit",
     icon: "fa fa-fw fa-info",
@@ -19,7 +22,11 @@ registerThreadAction("livechat-info", {
 registerThreadAction("livechat-status", {
     actionPanelComponent: LivechatChannelInfoList,
     condition(component) {
-        return component.thread?.channel_type === "livechat" && !component.thread.livechat_end_dt;
+        return (
+            component.thread?.channel_type === "livechat" &&
+            !component.thread.livechat_end_dt &&
+            !component.isDiscussContent
+        );
     },
     dropdown: {
         template: "im_livechat.LivechatStatusAction",
@@ -52,16 +59,15 @@ registerThreadAction("livechat-status", {
     },
     name: (component) => component.thread.livechatStatusLabel,
     nameClass: "fst-italic small mx-2",
-    partition: (component) => !component.env.inDiscussApp,
-    sequence: 5,
-    sequenceGroup: 7,
-    sidebar: true,
-    sidebarSequence: 10,
-    sidebarSequenceGroup: 5,
+    sequence: (component) => (component.isDiscussSidebarChannelActions ? 10 : 5),
+    sequenceGroup: (component) => (component.isDiscussSidebarChannelActions ? 5 : 7),
     toggle: true,
 });
 registerThreadAction("join-livechat-needing-help", {
-    condition: (comp) => comp.thread?.livechat_status === "need_help" && !comp.thread?.selfMember,
+    condition: (comp) =>
+        comp.thread?.livechat_status === "need_help" &&
+        !comp.thread?.selfMember &&
+        !comp.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-sign-in",
     iconLarge: "fa fa-fw fa-lg fa-sign-in",
     name: _t("Join Chat"),

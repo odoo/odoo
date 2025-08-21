@@ -24,8 +24,6 @@ registerThreadAction("call", {
     setup(component) {
         component.rtc = useService("discuss.rtc");
     },
-    sidebarSequence: 10,
-    sidebarSequenceGroup: 10,
     success: true,
 });
 registerThreadAction("camera-call", {
@@ -48,8 +46,6 @@ registerThreadAction("camera-call", {
     setup(component) {
         component.rtc = useService("discuss.rtc");
     },
-    sidebarSequence: 20,
-    sidebarSequenceGroup: 10,
     success: true,
 });
 registerThreadAction("call-settings", {
@@ -60,7 +56,8 @@ registerThreadAction("call-settings", {
     condition(component) {
         return (
             component.thread?.allowCalls &&
-            (component.props.chatWindow?.isOpen || component.store.inPublicPage)
+            (component.props.chatWindow?.isOpen || component.store.inPublicPage) &&
+            !component.isDiscussSidebarChannelActions
         );
     },
     icon: "fa fa-fw fa-gear",
@@ -74,16 +71,17 @@ registerThreadAction("call-settings", {
     toggle: true,
 });
 registerThreadAction("disconnect", {
-    condition: (component) => component.rtc.selfSession?.in(component.thread?.rtc_session_ids),
+    condition: (component) =>
+        component.rtc.selfSession?.in(component.thread?.rtc_session_ids) &&
+        component.isDiscussSidebarChannelActions,
     danger: true,
     open: (component) => component.rtc.toggleCall(component.thread),
     icon: "fa fa-fw fa-phone text-danger",
     iconLarge: "fa fa-fw fa-lg fa-phone text-danger",
     name: _t("Disconnect"),
-    partition: false,
+    sequence: 30,
+    sequenceGroup: 10,
     setup(component) {
         component.rtc = useService("discuss.rtc");
     },
-    sidebarSequence: 30,
-    sidebarSequenceGroup: 10,
 });

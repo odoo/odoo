@@ -43,7 +43,7 @@ registerThreadAction("notification-settings", {
         component.store = useService("mail.store");
     },
     open(component, action) {
-        if (action.sidebar) {
+        if (component.isDiscussSidebarChannelActions) {
             action.dialogService?.add(ChannelActionDialog, {
                 title: component.thread.name,
                 contentComponent: NotificationSettings,
@@ -75,15 +75,14 @@ registerThreadAction("notification-settings", {
     panelOuterClass: "bg-100 border border-secondary",
     sequence: 10,
     sequenceGroup: 30,
-    sidebarSequence: 10,
-    sidebarSequenceGroup: 30,
     toggle: true,
 });
 registerThreadAction("attachments", {
     actionPanelComponent: AttachmentPanel,
     condition: (component) =>
         component.thread?.hasAttachmentPanel &&
-        (!component.props.chatWindow || component.props.chatWindow.isOpen),
+        (!component.props.chatWindow || component.props.chatWindow.isOpen) &&
+        !component.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-paperclip",
     iconLarge: "fa fa-fw fa-lg fa-paperclip",
     name: _t("Attachments"),
@@ -114,7 +113,7 @@ registerThreadAction("invite-people", {
     iconLarge: "fa fa-fw fa-lg fa-user-plus",
     name: _t("Invite People"),
     open(component, action) {
-        if (action.sidebar) {
+        if (component.isDiscussSidebarChannelActions) {
             action.dialogService?.add(ChannelActionDialog, {
                 title: component.thread.name,
                 contentComponent: ChannelInvitation,
@@ -133,7 +132,7 @@ registerThreadAction("invite-people", {
             });
         }
     },
-    sequence: 10,
+    sequence: (component) => (component.isDiscussSidebarChannelActions ? 20 : 10),
     sequenceGroup: 20,
     setup(component) {
         if (!component.props.chatWindow) {
@@ -144,8 +143,6 @@ registerThreadAction("invite-people", {
         }
         this.dialogService = useService("dialog");
     },
-    sidebarSequence: 20,
-    sidebarSequenceGroup: 20,
     toggle: true,
 });
 registerThreadAction("member-list", {
@@ -162,7 +159,8 @@ registerThreadAction("member-list", {
     condition(component) {
         return (
             component.thread?.hasMemberList &&
-            (!component.props.chatWindow || component.props.chatWindow.isOpen)
+            (!component.props.chatWindow || component.props.chatWindow.isOpen) &&
+            !component.isDiscussSidebarChannelActions
         );
     },
     panelOuterClass: "o-discuss-ChannelMemberList bg-inherit",
@@ -187,12 +185,12 @@ registerThreadAction("mark-read", {
     condition: (component) =>
         component.thread?.selfMember &&
         component.thread.selfMember.message_unread_counter > 0 &&
-        !component.thread.selfMember.mute_until_dt,
+        !component.thread.selfMember.mute_until_dt &&
+        component.isDiscussSidebarChannelActions,
     open: (component) => component.thread.markAsRead(),
     icon: "fa fa-fw fa-check",
     iconLarge: "fa fa-lg fa-fw fa-check",
     name: _t("Mark Read"),
-    partition: false,
-    sidebarSequence: 10,
-    sidebarSequenceGroup: 20,
+    sequence: 10,
+    sequenceGroup: 20,
 });

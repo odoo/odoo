@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
 import { markEventHandled } from "@web/core/utils/misc";
 import { Action } from "./action";
+import { Reactive } from "@web/core/utils/reactive";
 
 export const threadActionsRegistry = registry.category("mail.thread/actions");
 
@@ -22,12 +23,8 @@ export const threadActionsRegistry = registry.category("mail.thread/actions");
  * @property {string|(comp: Component) => string} [nameClass]
  * @property {(comp: Component) => void} [open]
  * @property {(comp: Component) => string} [panelOuterClass]
- * @property {boolean|(comp: Component) => boolean} [partition=true]
  * @property {boolean|(comp: Component) => boolean} [sequenceGroup]
  * @property {boolean|(comp: Component) => boolean} [sequenceQuick]
- * @property {boolean|(comp: Component) => boolean} [sidebar=false]
- * @property {boolean|(comp: Component) => boolean} [sidebarSequence]
- * @property {boolean|(comp: Component) => boolean} [sidebarSequenceGroup]
  * @property {boolean} [toggle]
  */
 
@@ -45,7 +42,7 @@ export function registerThreadAction(id, definition) {
 
 registerThreadAction("fold-chat-window", {
     condition(component) {
-        return component.props.chatWindow;
+        return component.props.chatWindow && !component.isDiscussSidebarChannelActions;
     },
     icon: "oi oi-fw oi-minus",
     iconLarge: "oi oi-fw fa-lg oi-minus",
@@ -66,7 +63,8 @@ registerThreadAction("rename-thread", {
         return (
             component.thread &&
             component.props.chatWindow?.isOpen &&
-            (component.thread.is_editable || component.thread.channel_type === "chat")
+            (component.thread.is_editable || component.thread.channel_type === "chat") &&
+            !component.isDiscussSidebarChannelActions
         );
     },
     icon: "fa fa-fw fa-pencil",
@@ -80,7 +78,7 @@ registerThreadAction("rename-thread", {
 });
 registerThreadAction("close", {
     condition(component) {
-        return component.props.chatWindow;
+        return component.props.chatWindow && !component.isDiscussSidebarChannelActions;
     },
     icon: "oi fa-fw oi-close",
     iconLarge: "oi fa-lg fa-fw oi-close",
@@ -96,7 +94,8 @@ registerThreadAction("search-messages", {
     condition(component) {
         return (
             ["discuss.channel", "mail.box"].includes(component.thread?.model) &&
-            (!component.props.chatWindow || component.props.chatWindow.isOpen)
+            (!component.props.chatWindow || component.props.chatWindow.isOpen) &&
+            !component.isDiscussSidebarChannelActions
         );
     },
     panelOuterClass: "o-mail-SearchMessagesPanel bg-inherit",
@@ -224,23 +223,6 @@ class ThreadAction extends Action {
             : this.explicitDefinition.panelOuterClass;
     }
 
-    /**
-     * - In action definition: indicate whether the action is elligible as partition actions. @see useThreadActions::partition
-     * - While action is being used: indicate that the action is being used as a partitioned action.
-     */
-    get partition() {
-        if (this.explicitDefinition._partition) {
-            return this.explicitDefinition._partition;
-        }
-        return typeof this.explicitDefinition.partition === "function"
-            ? this.explicitDefinition.partition(this._component)
-            : this.explicitDefinition.partition ?? true;
-    }
-
-    set partition(partition) {
-        this.explicitDefinition._partition = partition;
-    }
-
     get sequenceGroup() {
         return typeof this.explicitDefinition.sequenceGroup === "function"
             ? this.explicitDefinition.sequenceGroup(this._component)
@@ -251,35 +233,6 @@ class ThreadAction extends Action {
         return typeof this.explicitDefinition.sequenceQuick === "function"
             ? this.explicitDefinition.sequenceQuick(this._component)
             : this.explicitDefinition.sequenceQuick;
-    }
-
-    /**
-     * - In action definition: indicate whether the action is elligible as sidebar actions. @see useThreadActions::sidebarActions
-     * - While action is being used: indicate that the action is being used as a sidebar action.
-     */
-    get sidebar() {
-        return (
-            this._sidebar ??
-            this.explicitDefinition.sidebar ??
-            this.explicitDefinition.sidebarSequence ??
-            false
-        );
-    }
-
-    set sidebar(sidebar) {
-        this._sidebar = sidebar;
-    }
-
-    get sidebarSequence() {
-        return typeof this.explicitDefinition.sidebarSequence === "function"
-            ? this.explicitDefinition.sidebarSequence(this._component)
-            : this.explicitDefinition.sidebarSequence;
-    }
-
-    get sidebarSequenceGroup() {
-        return typeof this.explicitDefinition.sidebarSequenceGroup === "function"
-            ? this.explicitDefinition.sidebarSequenceGroup(this._component)
-            : this.explicitDefinition.sidebarSequenceGroup;
     }
 
     /** Determines whether this action is a one time effect or can be toggled (on or off). */
@@ -299,8 +252,47 @@ export const threadActionsInternal = {
     },
 };
 
-function makeContextualAction(action, ctx) {
-    return Object.assign(Object.create(action), ctx);
+class UseThreadActions extends Reactive {
+    actionStack = [];
+    activeAction = null;
+
+    constructor(component, transformedActions) {
+        super();
+        this.component = component;
+        this.transformedActions = transformedActions;
+    }
+
+    get actions() {
+        return this.transformedActions
+            .filter((action) => action.condition && action.sequence !== undefined)
+            .sort((a1, a2) => a1.sequence - a2.sequence);
+    }
+
+    get partition() {
+        const actions = this.transformedActions.filter((action) => action.condition);
+        const quick = actions
+            .filter((a) => a.sequenceQuick)
+            .sort((a1, a2) => a1.sequenceQuick - a2.sequenceQuick);
+        const grouped = actions.filter((a) => a.sequenceGroup);
+        const groups = {};
+        for (const a of grouped) {
+            if (!(a.sequenceGroup in groups)) {
+                groups[a.sequenceGroup] = [];
+            }
+            groups[a.sequenceGroup].push(a);
+        }
+        const sortedGroups = Object.entries(groups).sort(
+            ([groupId1], [groupId2]) => groupId1 - groupId2
+        );
+        for (const [, actions] of sortedGroups) {
+            actions.sort((a1, a2) => a1.sequence - a2.sequence);
+        }
+        const group = sortedGroups.map(([groupId, actions]) => actions);
+        const other = actions
+            .filter((a) => !a.sequenceQuick && !a.sequenceGroup)
+            .sort((a1, a2) => a1.sequence - a2.sequence);
+        return { quick, group, other };
+    }
 }
 
 export function useThreadActions() {
@@ -311,60 +303,5 @@ export function useThreadActions() {
     for (const action of transformedActions) {
         action.setup();
     }
-    const state = useState({
-        get actions() {
-            return transformedActions
-                .filter((action) => action.condition && action.sequence !== undefined)
-                .map((action) => makeContextualAction(action, { partition: false, sidebar: false }))
-                .sort((a1, a2) => a1.sequence - a2.sequence);
-        },
-        get sidebarActions() {
-            const actions = transformedActions
-                .filter((action) => action.condition && action.sidebarSequence !== undefined)
-                .sort((action1, action2) => action1.sidebarSequence - action2.sidebarSequence)
-                .map((action) => makeContextualAction(action, { partition: false, sidebar: true }));
-            const groups = {};
-            for (const a of actions) {
-                if (!(a.sidebarSequenceGroup in groups)) {
-                    groups[a.sidebarSequenceGroup] = [];
-                }
-                groups[a.sidebarSequenceGroup].push(a);
-            }
-            const sortedGroups = Object.entries(groups).sort(([g1, g2]) => g1 - g2);
-            for (const [, actions] of sortedGroups) {
-                actions.sort((a1, a2) => a1.sidebarSequence - a2.sidebarSequence);
-            }
-            return sortedGroups.map(([g1, actions]) => actions);
-        },
-        get partition() {
-            const actions = transformedActions
-                .filter((action) => action.condition && action.partition)
-                .map((action) => makeContextualAction(action, { partition: true, sidebar: false }));
-            const quick = actions
-                .filter((a) => a.sequenceQuick)
-                .sort((a1, a2) => a1.sequenceQuick - a2.sequenceQuick);
-            const grouped = actions.filter((a) => a.sequenceGroup);
-            const groups = {};
-            for (const a of grouped) {
-                if (!(a.sequenceGroup in groups)) {
-                    groups[a.sequenceGroup] = [];
-                }
-                groups[a.sequenceGroup].push(a);
-            }
-            const sortedGroups = Object.entries(groups).sort(
-                ([groupId1], [groupId2]) => groupId1 - groupId2
-            );
-            for (const [, actions] of sortedGroups) {
-                actions.sort((a1, a2) => a1.sequence - a2.sequence);
-            }
-            const group = sortedGroups.map(([groupId, actions]) => actions);
-            const other = actions
-                .filter((a) => !a.sequenceQuick && !a.sequenceGroup)
-                .sort((a1, a2) => a1.sequence - a2.sequence);
-            return { quick, group, other };
-        },
-        actionStack: [],
-        activeAction: null,
-    });
-    return state;
+    return useState(new UseThreadActions(component, transformedActions));
 }

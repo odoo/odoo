@@ -3,7 +3,8 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 registerThreadAction("leave", {
-    condition: (component) => component.thread?.canLeave || component.thread?.canUnpin,
+    condition: (component) =>
+        (component.thread?.canLeave || component.thread?.canUnpin) && !component.isDiscussContent,
     danger: true,
     icon: "fa fa-fw fa-sign-out",
     iconLarge: "fa fa-fw fa-lg fa-sign-out",
@@ -17,6 +18,4 @@ registerThreadAction("leave", {
     setup(component) {
         component.ui = useService("ui");
     },
-    sidebarSequence: 10,
-    sidebarSequenceGroup: 40,
 });

@@ -10,7 +10,8 @@ registerThreadAction("pinned-messages", {
     condition(component) {
         return (
             component.thread?.model === "discuss.channel" &&
-            (!component.props.chatWindow || component.props.chatWindow.isOpen)
+            (!component.props.chatWindow || component.props.chatWindow.isOpen) &&
+            !component.isDiscussSidebarChannelActions
         );
     },
     panelOuterClass: "o-discuss-PinnedMessagesPanel bg-inherit",

@@ -16,6 +16,7 @@ export class DiscussSidebarChannelActions extends Component {
 
     setup() {
         this.store = useService("mail.store");
+        this.isDiscussSidebarChannelActions = true;
         this.threadActions = useThreadActions();
     }
 

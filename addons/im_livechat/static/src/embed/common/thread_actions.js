@@ -6,7 +6,7 @@ import { patch } from "@web/core/utils/patch";
 
 registerThreadAction("restart", {
     condition(component) {
-        return component.thread?.chatbot?.canRestart;
+        return component.thread?.chatbot?.canRestart && !component.isDiscussSidebarChannelActions;
     },
     icon: "fa fa-fw fa-refresh",
     iconLarge: "fa fa-lg fa-fw fa-refresh",

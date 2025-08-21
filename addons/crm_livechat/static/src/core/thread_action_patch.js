@@ -7,7 +7,8 @@ patch(threadActionsInternal, {
         if (
             id === "create-lead" &&
             component.thread?.channel_type === "livechat" &&
-            component.store.has_access_create_lead
+            component.store.has_access_create_lead &&
+            !component.isDiscussSidebarChannelActions
         ) {
             return true;
         }
