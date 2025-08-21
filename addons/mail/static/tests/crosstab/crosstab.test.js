@@ -131,7 +131,9 @@ test("Adding attachments", async () => {
         attachment_ids: [attachmentId],
         message_id: messageId,
     });
-    await contains(".o-mail-AttachmentContainer", { target: env2, text: "test.txt" });
+    await contains(".o-mail-AttachmentContainer:not(.o-isUploading):contains(test.txt)", {
+        target: env2,
+    });
 });
 
 test("Remove attachment from message", async () => {
