@@ -16,6 +16,9 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
         "getListComputedDomain",
         "getListHeaderValue",
         "getListIdFromPosition",
+        "getListFieldFromPosition",
+        "getListSortDirection",
+        "isSortableListHeader",
         "getListCellValueAndFormat",
         "getListDataSource",
         "getAsyncListDataSource",
@@ -265,6 +268,52 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
             }
         }
         return undefined;
+    }
+
+    getListFieldFromPosition(position) {
+        const listId = this.getters.getListIdFromPosition(position);
+        if (listId === undefined) {
+            return undefined;
+        }
+        const cell = this.getters.getCell(position);
+        const { functionName, args } = getFirstListFunction(cell.compiledFormula.tokens);
+        const fieldArg = functionName === "ODOO.LIST.HEADER" ? args[1] : args[2];
+        const dataSource = this.getters.getListDataSource(listId);
+        if (!fieldArg || !dataSource.isValid()) {
+            return undefined;
+        }
+        const fieldName = this.getters
+            .evaluateFormula(position.sheetId, astToFormula(fieldArg))
+            ?.toString();
+        return dataSource.getFields()[fieldName];
+    }
+
+    getListSortDirection(position) {
+        const field = this.getters.getListFieldFromPosition(position);
+        const listId = this.getters.getListIdFromPosition(position);
+        if (!listId) {
+            return "none";
+        }
+        const orderBy = this.getters.getListDefinition(listId).orderBy[0];
+        if (!orderBy || !field || orderBy.name !== field.name) {
+            return "none";
+        }
+        return orderBy.asc ? "asc" : "desc";
+    }
+
+    isSortableListHeader(position) {
+        const listId = this.getters.getListIdFromPosition(position);
+        const cell = this.getters.getCell(position);
+        if (!listId) {
+            return false;
+        }
+        const { functionName } = getFirstListFunction(cell.compiledFormula.tokens);
+        const dataSource = this.getters.getListDataSource(listId);
+        return (
+            functionName === "ODOO.LIST.HEADER" &&
+            dataSource.isMetaDataLoaded() &&
+            this.getters.getListFieldFromPosition(position)?.sortable
+        );
     }
 
     /**
