@@ -11,11 +11,6 @@ from odoo.tools import mute_logger
 
 @tagged('post_install', '-at_install')
 class TestHrVersion(TransactionCase):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
     def test_dates_constraints(self):
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
