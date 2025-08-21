@@ -75,7 +75,7 @@ class AccountMove(models.Model):
             :param start_date: the start date of the period
             :param end_date: the end date of the period
         """
-        for line in self.filtered(lambda i: i.move_type == 'out_invoice' and i.state == 'draft').invoice_line_ids:
+        for line in self.filtered(lambda i: i.move_type in ['out_invoice', 'out_refund'] and i.state == 'draft').invoice_line_ids:
             sale_line_delivery = line.sale_line_ids.filtered(lambda sol: sol.product_id.invoice_policy == 'delivery' and sol.product_id.service_type == 'timesheet')
             if not start_date and not end_date:
                 start_date, end_date = self._get_range_dates(sale_line_delivery.order_id)
