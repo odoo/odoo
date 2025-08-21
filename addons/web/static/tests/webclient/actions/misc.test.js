@@ -16,6 +16,7 @@ import {
     onRpc,
     patchWithCleanup,
     serverState,
+    stepAllNetworkCalls,
     switchView,
     webModels,
 } from "@web/../tests/web_test_helpers";
@@ -200,6 +201,78 @@ test("action doesn't exists", async () => {
             "The ActionManager service can't handle actions of type ir.not_action.error"
         );
     }
+});
+
+test("getCurrentAction", async () => {
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    const currentAction = await getService("action").currentAction;
+    expect(currentAction).toEqual({
+        binding_type: "action",
+        binding_view_types: "list,form",
+        id: 1,
+        type: "ir.actions.act_window",
+        xml_id: "action_1",
+        name: "Partners Action 1",
+        res_model: "partner",
+        views: [[1, "kanban"]],
+        context: {},
+        embedded_action_ids: [],
+        group_ids: [],
+        limit: 80,
+        mobile_view_mode: "kanban",
+        target: "current",
+        view_ids: [],
+        view_mode: "list,form",
+        cache: true,
+    });
+});
+
+test("getCurrentAction (virtual controller)", async () => {
+    stepAllNetworkCalls();
+    class ClientAction extends Component {
+        static template = xml`<div class="o_client_action_test">Hello World</div>`;
+        static props = ["*"];
+        static path = "plop";
+        setup() {
+            onWillStart(async () => {
+                const currentAction = await getService("action").currentAction;
+                expect.step(currentAction);
+            });
+        }
+    }
+    actionRegistry.add("HelloWorldTest", ClientAction);
+
+    redirect("/odoo/action-1/plop");
+    await mountWithCleanup(WebClient);
+
+    await animationFrame();
+
+    expect.verifySteps([
+        "/web/webclient/translations",
+        "/web/webclient/load_menus",
+        "/web/action/load_breadcrumbs",
+        "/web/action/load",
+        {
+            binding_type: "action",
+            binding_view_types: "list,form",
+            id: 1,
+            type: "ir.actions.act_window",
+            xml_id: "action_1",
+            name: "Partners Action 1",
+            res_model: "partner",
+            views: [[1, "kanban"]],
+            context: {},
+            embedded_action_ids: [],
+            group_ids: [],
+            limit: 80,
+            mobile_view_mode: "kanban",
+            target: "current",
+            view_ids: [],
+            view_mode: "list,form",
+            cache: true,
+        },
+    ]);
 });
 
 test("action in handler registry", async () => {
