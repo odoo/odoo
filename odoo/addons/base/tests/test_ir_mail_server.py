@@ -474,7 +474,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
                 )
 
     def test_eml_attachment_encoding(self):
-        """Test that message/rfc822 attachments are encoded using 7bit, 8bit, or binary encoding."""
+        """Test that message/rfc822 attachments are encoded using 7bit, 8bit, or binary encoding per RFC."""
         IrMailServer = self.env['ir.mail_server']
 
         # Create a sample .eml file content
@@ -490,12 +490,43 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             attachments=attachments,
         )
 
-        # Verify that the attachment is correctly encoded
         acceptable_encodings = {'7bit', '8bit', 'binary'}
+        found_rfc822_part = False
+
         for part in message.iter_attachments():
             if part.get_content_type() == 'message/rfc822':
+                found_rfc822_part = True
+                # Get Content-Transfer-Encoding, defaulting to '7bit' if not present (per RFC)
+                encoding = part.get('Content-Transfer-Encoding', '7bit').lower()
+
                 self.assertIn(
-                    part.get('Content-Transfer-Encoding'),
+                    encoding,
                     acceptable_encodings,
-                    "The message/rfc822 attachment should be encoded using 7bit, 8bit, or binary encoding.",
+                    f"RFC violation: message/rfc822 attachment has Content-Transfer-Encoding '{encoding}'. "
+                    f"Only 7bit, 8bit, or binary encoding is permitted per RFC 2046 Section 5.2.1."
                 )
+
+        self.assertTrue(found_rfc822_part, "No message/rfc822 attachment found in the built email")
+
+    def test_eml_message_serialization_with_non_ascii(self):
+        """Ensure an email with a message/rfc822 attachment containing non-ASCII chars can be serialized."""
+        IrMailServer = self.env['ir.mail_server']
+
+        # .eml content with non-ASCII character
+        eml_content = "From: user@example.com\nTo: user2@example.com\nSubject: Test\n\nBody with é"
+        attachments = [('test.eml', eml_content.encode(), 'message/rfc822')]
+
+        message = IrMailServer.build_email(
+            email_from='john.doe@from.example.com',
+            email_to='destinataire@to.example.com',
+            subject='Serialization test',
+            body='This email contains a .eml attachment.',
+            attachments=attachments,
+        )
+
+        try:
+            serialized = message.as_string().encode('utf-8')
+        except UnicodeEncodeError as e:
+            raise AssertionError("Email with non-ASCII .eml attachment could not be serialized") from e
+
+        self.assertIsInstance(serialized, bytes)
