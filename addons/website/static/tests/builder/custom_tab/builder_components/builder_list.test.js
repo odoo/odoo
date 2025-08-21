@@ -248,3 +248,85 @@ test("hides hiddenProperties from options", async () => {
         ])
     );
 });
+
+test("do not lose id when adjusting 'selected'", async () => {
+    class Test extends Component {
+        static template = xml`
+            <BuilderList
+                dataAttributeAction="'list'"
+                addItemTitle="'Add'"
+                itemShape="{ display_name: 'text', selected: 'boolean' }"
+                default="{ display_name: 'Extra', selected: false }"
+                records="availableRecords" />`;
+        static components = { BuilderList };
+        static props = ["*"];
+        setup() {
+            this.availableRecords = JSON.stringify([
+                { id: 1, display_name: "A" },
+                { id: 2, display_name: "B" },
+            ]);
+        }
+    }
+    addOption({
+        selector: ".test-options-target",
+        Component: Test,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+
+    await contains(".we-bg-options-container .bl-dropdown-toggle").click();
+    await contains(".o_popover .o-hb-select-dropdown-item").click();
+    await contains(".we-bg-options-container .bl-dropdown-toggle").click();
+    await contains(".o_popover .o-hb-select-dropdown-item").click();
+    expect(":iframe .test-options-target").toHaveAttribute(
+        "data-list",
+        JSON.stringify([
+            {
+                id: 1,
+                display_name: "A",
+                _id: "0",
+            },
+            {
+                id: 2,
+                display_name: "B",
+                _id: "1",
+            },
+        ])
+    );
+
+    await contains(".we-bg-options-container .o-hb-checkbox input").click();
+    expect(":iframe .test-options-target").toHaveAttribute(
+        "data-list",
+        JSON.stringify([
+            {
+                id: 1,
+                display_name: "A",
+                _id: "0",
+                selected: true,
+            },
+            {
+                id: 2,
+                display_name: "B",
+                _id: "1",
+            },
+        ])
+    );
+
+    await contains(".we-bg-options-container .o-hb-checkbox input").click();
+    expect(":iframe .test-options-target").toHaveAttribute(
+        "data-list",
+        JSON.stringify([
+            {
+                id: 1,
+                display_name: "A",
+                _id: "0",
+                selected: false,
+            },
+            {
+                id: 2,
+                display_name: "B",
+                _id: "1",
+            },
+        ])
+    );
+});
