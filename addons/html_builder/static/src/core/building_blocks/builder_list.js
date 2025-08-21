@@ -176,8 +176,8 @@ export class BuilderList extends Component {
     handleValueChange(targetInputEl, commitToHistory) {
         const id = targetInputEl.dataset.id;
         const propertyName = targetInputEl.name;
-        const value =
-            targetInputEl.type === "checkbox" ? targetInputEl.checked : targetInputEl.value;
+        const isCheckbox = targetInputEl.type === "checkbox";
+        const value = isCheckbox ? targetInputEl.checked : targetInputEl.value;
 
         const items = this.formatRawValue(this.state.value);
         if (value === true && this.props.itemShape[propertyName] === "exclusive_boolean") {
@@ -187,7 +187,9 @@ export class BuilderList extends Component {
         }
         const item = items.find((item) => item._id === id);
         item[propertyName] = value;
-        item.id = isSmallInteger(value) ? parseInt(value) : value;
+        if (!isCheckbox) {
+            item.id = isSmallInteger(value) ? parseInt(value) : value;
+        }
 
         if (commitToHistory) {
             this.commit(items);
