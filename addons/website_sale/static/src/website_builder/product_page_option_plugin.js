@@ -128,7 +128,7 @@ class ProductPageOptionPlugin extends Plugin {
 
 export class ProductPageImageWidthAction extends WebsiteConfigAction {
     static id = "productPageImageWidth";
-    static dependencies = ["customizeWebsite", "productPageOption"];
+    static dependencies = [...super.dependencies, "customizeWebsite", "productPageOption"];
     isApplied({ editingElement: productDetailMainEl, value }) {
         return productDetailMainEl.dataset.image_width === value;
     }
@@ -149,7 +149,7 @@ export class ProductPageImageWidthAction extends WebsiteConfigAction {
 }
 export class ProductPageImageLayoutAction extends WebsiteConfigAction {
     static id = "productPageImageLayout";
-    static dependencies = ["customizeWebsite", "productPageOption"];
+    static dependencies = [...super.dependencies, "customizeWebsite", "productPageOption"];
     isApplied({ editingElement: productDetailMainEl, value }) {
         return productDetailMainEl.dataset.image_layout === value;
     }
@@ -357,7 +357,7 @@ export class ProductPageImageGridColumnsAction extends BaseProductPageAction {
 }
 export class ProductReplaceMainImageAction extends BaseProductPageAction {
     static id = "productReplaceMainImage";
-    static dependencies = ["media_website"];
+    static dependencies = [...super.dependencies, "media_website"];
     setup() {
         super.setup();
         this.reload = false;
@@ -373,7 +373,7 @@ export class ProductReplaceMainImageAction extends BaseProductPageAction {
 
 export class ProductAddExtraImageAction extends BaseProductPageAction {
     static id = "productAddExtraImage";
-    static dependencies = ["media"];
+    static dependencies = [...super.dependencies, "media"];
     async apply({ editingElement: el }) {
         // Prompts the user for images, then saves the new images.
         if (this.model === "product.template") {
