@@ -6,7 +6,6 @@ from dateutil.relativedelta import relativedelta
 from babel.dates import format_date, get_date_format
 
 from odoo import _, api, fields, models
-from odoo.fields import Domain
 from odoo.exceptions import ValidationError
 from odoo.tools import get_lang, babel_locale_parse
 
@@ -266,7 +265,6 @@ class HrVersion(models.Model):
 
     def write(self, values):
         # Employee Versions Validation
-        # ARPI TODO: what if mass edit ?
         if 'employee_id' in values:
             if self.filtered(lambda v: len(v.employee_id.version_ids) == 1 and values['employee_id'] != v.employee_id.id):
                 raise ValidationError(self.env._("Cannot unassign the only active version of an employee."))
@@ -274,8 +272,14 @@ class HrVersion(models.Model):
             if self.filtered(lambda v: len(v.employee_id.version_ids) == 1):
                 raise ValidationError(self.env._("Cannot archive the only active version of an employee."))
 
-        if self.env.context.get('sync_contract_dates'):
+        if self.env.context.get('sync_contract_dates') or "contract_date_start" not in values and "contract_date_end" not in values:
             return super().write(values)
+
+        contract_date_starts = list(filter(bool, self.grouped("contract_date_start").keys()))
+        if not contract_date_starts:
+            return super().write(values)
+        if len(contract_date_starts) > 1:
+            raise ValidationError(self.env._("Cannot modify multiple versions contract dates with different contracts at once."))
 
         new_vals = {
             f_name: f_value
@@ -283,51 +287,22 @@ class HrVersion(models.Model):
             if (f_name != 'contract_date_start' or not f_value) and f_name != 'contract_date_end'
         }
         dates_vals = {}
-        if 'contract_date_start' in values:
-            dates_vals['contract_date_start'] = values['contract_date_start']
-        if 'contract_date_end' in values:
-            dates_vals['contract_date_end'] = values['contract_date_end']
-        if dates_vals:
-            new_contract_date_start = dates_vals.get('contract_date_start')
-            if new_contract_date_start:
-                new_contract_date_start = fields.Date.to_date(new_contract_date_start)
-            min_contract_date_start = new_contract_date_start or date.max
-            max_date_end = date.min
-            for version in self:
-                if version.contract_date_start and min_contract_date_start > version.contract_date_start:
-                    min_contract_date_start = version.contract_date_start
-                if max_date_end is False:
-                    continue
-                if not version.contract_date_end:
-                    max_date_end = False
-                max_date_end = max(max_date_end, version.contract_date_end)
-            version_domain = [
-                ('contract_date_start', '>=', min_contract_date_start),
-                ('id', 'not in', self.ids),
-            ]
-            date_end_domain = [('contract_date_end', '=', False)]
-            if max_date_end:
-                date_end_domain = Domain.OR([date_end_domain, [('contract_date_end', '<=', max_date_end)]])
-            version_domain = Domain.AND([version_domain, date_end_domain])
-            versions_to_sync_per_employee = dict(self.env['hr.version']._read_group(version_domain, ['employee_id'], ['id:recordset']))
-            if not versions_to_sync_per_employee:
-                return super().write(values)
-            for version in self:
-                versions_to_sync = versions_to_sync_per_employee.get(version.employee_id)
-                if versions_to_sync:
-                    sync_versions = versions_to_sync.filtered(
-                        lambda v:
-                            v.contract_date_start == version.contract_date_start
-                            or (
-                                new_contract_date_start
-                                and new_contract_date_start == v.contract_date_start
-                            )
-                    )
-                    if new_contract_date_start and 'contract_date_end' not in dates_vals:
-                        dates_vals['contract_date_end'] = version.contract_date_end
-                    (sync_versions + version).with_context(sync_contract_dates=True).write(dates_vals)
-                else:
-                    version.with_context(sync_contract_dates=True).write(dates_vals)
+
+        if "contract_date_start" in values:
+            dates_vals["contract_date_start"] = fields.Date.to_date(values.get('contract_date_start'))
+        else:
+            dates_vals["contract_date_start"] = self[0].contract_date_start
+        if "contract_date_end" in values:
+            dates_vals["contract_date_end"] = fields.Date.to_date(values.get('contract_date_end'))
+        else:
+            dates_vals["contract_date_end"] = self[0].contract_date_end
+
+        versions_to_sync_per_employee = self.employee_id._get_contract_versions(
+            date_start=self[0].contract_date_start,
+            date_end=self[0].contract_date_end,
+        )
+        for contract_versions in versions_to_sync_per_employee.values():
+            next(iter(contract_versions.values())).with_context(sync_contract_dates=True).write(dates_vals)
         return super().write(new_vals)
 
     @api.depends_context('lang')
