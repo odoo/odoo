@@ -2,7 +2,7 @@
 
 <templates id="template" xml:space="preserve">
     <t
-        t-name="product.SearchPanelContent"
+        t-name="account.ProductCatalogSearchPanelContent"
         t-inherit="web.SearchPanelContent"
         t-inherit-mode="primary"
     >
@@ -29,20 +29,20 @@
                 <ul class="list-group d-block">
                     <li
                         draggable="true"
-                        t-foreach="this.state.sectionOfSections.keys()"
-                        t-as="secId"
-                        t-key="secId"
+                        t-foreach="this.state.sections.keys()"
+                        t-as="sectionId"
+                        t-key="sectionId"
                         t-att-class="'list-group-item p-0 mb-1 border-0 cursor-pointer ' + (
-                            selectedSection.sectionId == secId ? 'o_selected_section' : ''
+                            selectedSection.sectionId == sectionId ? 'o_selected_section' : ''
                         )"
-                        t-on-dragstart="(e) => onDragStart(secId, e)"
+                        t-on-dragstart="(e) => onDragStart(sectionId, e)"
                         t-on-dragover="(e) => onDragOver(e)"
-                        t-on-drop="(e) => this.onDrop(secId, e)"
+                        t-on-drop="(e) => this.onDrop(sectionId, e)"
                     >
                         <div class="d-flex align-items-center">
-                            <t t-set="section" t-value="this.state.sectionOfSections.get(secId)"/>
+                            <t t-set="section" t-value="this.state.sections.get(sectionId)"/>
                             <span
-                                t-if="secId"
+                                t-if="sectionId"
                                 class="o_row_handle oi oi-draggable ui-sortable-handle"
                             />
                             <i
@@ -51,7 +51,7 @@
                                 t-on-click="() => this.enableSectionInput('top')"
                             />
                             <input
-                                t-if="secId === false and this.state.isAddingSection === 'top'"
+                                t-if="sectionId === false and this.state.isAddingSection === 'top'"
                                 class="ms-2 o_section_input"
                                 type="text"
                                 t-model="this.state.newSectionName"
@@ -62,7 +62,7 @@
                                 t-else=""
                                 class="w-100 ms-2 d-flex align-items-center justify-content-between overflow-hidden"
                                 t-on-click="() => this.setSelectedSection(
-                                    secId, selectedSection.filtered
+                                    sectionId, selectedSection.filtered
                                 )"
                                 t-att-title="section.name"
                             >
@@ -91,11 +91,15 @@
                 </button>
             </section>
         </section>
+
+        <div class="o_search_panel_empty_state me-3" position="attributes">
+            <attribute name="class" add="d-none" separator=" "/>
+        </div>
     </t>
 
-    <t t-name="product.SearchPanel" t-inherit="web.SearchPanel" t-inherit-mode="primary">
+    <t t-name="account.ProductCatalogSearchPanel" t-inherit="web.SearchPanel" t-inherit-mode="primary">
         <t t-call="web.SearchPanel.Regular" position="attributes">
-            <attribute name="t-call">product.SearchPanelContent</attribute>
+            <attribute name="t-call">account.ProductCatalogSearchPanelContent</attribute>
         </t>
     </t>
 </templates>

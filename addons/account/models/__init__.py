@@ -28,6 +28,7 @@ from . import account_analytic_plan
 from . import account_analytic_line
 from . import account_journal_dashboard
 from . import product
+from . import product_catalog_mixin
 from . import company
 from . import res_config_settings
 from . import res_country_group

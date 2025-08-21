@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="purchase_stock.SearchPanel" t-inherit="web.SearchPanel" t-inherit-mode="primary">
-        <xpath expr="//t[@t-call='web.SearchPanel.Regular']" position="attributes">
-            <attribute name="t-call">purchase_stock.SearchPanelContent</attribute>
+    <t t-name="purchase_stock.ProductCatalogSearchPanel" t-inherit="account.ProductCatalogSearchPanel" t-inherit-mode="primary">
+        <xpath expr="//t[@t-call='account.ProductCatalogSearchPanelContent']" position="attributes">
+            <attribute name="t-call">purchase_stock.ProductCatalogSearchPanelContent</attribute>
         </xpath>
     </t>
-    <t t-name="purchase_stock.SearchPanelContent" t-inherit="product.SearchPanelContent" t-inherit-mode="primary">
-        <xpath expr="//section[hasclass('o_search_panel_sections')]" position="attributes">
-            <attribute name="class">o_search_panel_sections mt-3</attribute>
-        </xpath>
-        <xpath expr="//section[hasclass('o_search_panel_sections')]" position="before">
+    <t t-name="purchase_stock.ProductCatalogSearchPanelContent" t-inherit="account.ProductCatalogSearchPanelContent" t-inherit-mode="primary">
+        <xpath expr="//section[hasclass('o_search_panel_sections')]" position="after">
             <t t-if="displaySuggest">
                 <t t-call="PurchaseSuggest.SearchPanel.Header"/>
                 <t t-if="suggest.suggestToggle.isOn">
@@ -25,7 +22,7 @@
     </t>
     <!-- ───────────────── Header ───────────────── -->
     <t t-name="PurchaseSuggest.SearchPanel.Header">
-        <div class="d-flex pt-4 pb-2 mt-3">
+        <div class="d-flex pb-2 mt-3">
             <header class=" text-uppercase cursor-default" t-att-title="tooltipTitle">
                 <i class="fa fa-lg fa-lightbulb-o text-primary me-2"/>
                 <b class="me-2">Suggest</b>

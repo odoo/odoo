@@ -1,6 +1,6 @@
 import { SearchModel } from "@web/search/search_model";
 
-export class ProductCatalogSearchModel extends SearchModel {
+export class AccountProductCatalogSearchModel extends SearchModel {
     setup() {
         super.setup(...arguments);
         this.selectedSection = {sectionId: null, filtered: false};
