@@ -1512,13 +1512,22 @@ actual arch.
             name_manager.available_fields[name].setdefault('groups', []).append(missing_groups)
             name_manager.available_names.add(name)
 
+            readonly = True
+            if filename_reasons := [r for r in reasons if r[1][0] == "filename"]:
+                node = filename_reasons[-1][2]
+                if node_readonly := node.get("readonly"):
+                    readonly = node_readonly
+                else:
+                    field = name_manager.model._fields[node.get("name")]
+                    if field.type == "binary":
+                        readonly = field.readonly or False
             # If the field is not in the view without any group restriction,
             # add the field node with all mandatory groups (or without group if
             # the mandatory field does not have groups).
             attrs = {
                 'name': name,
                 'invisible' if root.tag != 'list' else 'column_invisible': 'True',
-                'readonly': 'True',
+                'readonly': str(readonly),
                 'data-used-by': '; '.join(
                     f"{attr}={expr!r} ({node.tag},{node.get('name')})"
                     for _groups, (attr, expr), node in reasons
@@ -1653,6 +1662,8 @@ actual arch.
             if context:
                 vnames = get_expression_field_names(context)
                 name_manager.must_have_fields(node, vnames, node_info, ('context', context))
+            if field.type == "binary" and (field_filename := node.get("filename")):
+                name_manager.must_have_fields(node, [field_filename], node_info, ("filename", field_filename))
 
             for child in node:
                 if child.tag in ('form', 'list', 'graph', 'kanban', 'calendar'):
