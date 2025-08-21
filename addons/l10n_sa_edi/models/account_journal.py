@@ -611,7 +611,7 @@ class AccountJournal(models.Model):
             # In the 401+ cases, it is like the server is overloaded e.g. and we still need to resend later.  We do not
             # erase the index chain (excepted) because for ZATCA, one ICV (index chain) needs to correspond to one invoice.
             status_code = ex.response.status_code
-            if status_code != 400:
+            if status_code not in {400, 409}:
                 return {
                     'error': (Markup("<b>[%s]</b>") % status_code) + _("Server returned an unexpected error: %(error)s",
                                error=(request_response.text or str(ex))),
@@ -636,6 +636,9 @@ class AccountJournal(models.Model):
                 'blocking_level': 'error'
             }
         response_data['status_code'] = request_response.status_code
+
+        if status_code == 409:
+            return response_data
 
         val_res = response_data.get('validationResults', {})
         if not request_response.ok and (val_res.get('errorMessages') or val_res.get('warningMessages')):
