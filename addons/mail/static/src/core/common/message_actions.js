@@ -9,7 +9,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
 import { isMobileOS } from "@web/core/browser/feature_detection";
-import { Action } from "./action";
+import { Action, UseActions } from "./action";
 
 const { DateTime } = luxon;
 
@@ -233,6 +233,10 @@ export const messageActionsInternal = {
     },
 };
 
+class UseMessageActions extends UseActions {
+    ActionClass = MessageAction;
+}
+
 export function useMessageActions() {
     const component = useComponent();
     const transformedActions = messageActionsRegistry
@@ -241,17 +245,6 @@ export function useMessageActions() {
     for (const action of transformedActions) {
         action.setup();
     }
-    const state = useState({
-        get actions() {
-            const actions = transformedActions
-                .filter((action) => action.condition)
-                .sort((a1, a2) => a1.sequence - a2.sequence);
-            if (actions.length > 0) {
-                actions.at(0).isFirst = true;
-                actions.at(-1).isLast = true;
-            }
-            return actions;
-        },
-    });
+    const state = useState(new UseMessageActions(component, transformedActions));
     return state;
 }
