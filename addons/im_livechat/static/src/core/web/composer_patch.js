@@ -9,7 +9,7 @@ patch(Composer.prototype, {
         if (
             ev.key === "Tab" &&
             this.thread?.channel_type === "livechat" &&
-            !this.props.composer.text
+            !this.props.composer.composerText
         ) {
             const threadChanged = this.store.goToOldestUnreadLivechatThread();
             if (threadChanged) {

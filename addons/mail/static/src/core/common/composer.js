@@ -29,11 +29,12 @@ import {
     useExternalListener,
     toRaw,
     EventBus,
+    reactive,
 } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { createElementWithContent, htmlJoin } from "@web/core/utils/html";
+import { createElementWithContent, htmlJoin, setElementContent } from "@web/core/utils/html";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { isEmail } from "@web/core/utils/strings";
 import { isDisplayStandalone, isIOS, isMobileOS } from "@web/core/browser/feature_detection";
@@ -96,6 +97,8 @@ export class Composer extends Component {
 
     setup() {
         super.setup();
+        /** @type {import("@html_editor/editor").Editor} */
+        this.editor = undefined;
         this.isMobileOS = isMobileOS();
         this.isIosPwa = isIOS() && isDisplayStandalone();
         this.composerActions = useComposerActions();
@@ -144,6 +147,7 @@ export class Composer extends Component {
         this.saveContentDebounced = useDebounced(this.saveContent, 5000, {
             execBeforeUnmount: true,
         });
+        this.updateFromEditor = false;
         useExternalListener(window, "beforeunload", this.saveContent.bind(this));
         useExternalListener(
             window,
@@ -205,7 +209,7 @@ export class Composer extends Component {
                 }
                 this.saveContentDebounced();
             },
-            () => [this.props.composer.text, this.ref.el]
+            () => [this.props.composer.composerText, this.ref.el]
         );
         useEffect(
             () => {
@@ -219,13 +223,27 @@ export class Composer extends Component {
         );
         onMounted(() => {
             this.ref.el?.scrollTo({ top: 0, behavior: "instant" });
-            if (!this.props.composer.text) {
+            if (!this.props.composer.composerText) {
                 this.restoreContent();
             }
         });
         onWillUnmount(() => {
             this.props.composer.isFocused = false;
         });
+        const composerProxy = reactive(this.props.composer, () => {
+            if (this.status === 2 /* DESTROYED */) {
+                return;
+            }
+            const composerHtml = composerProxy.composerHtml;
+            if (this.updateFromEditor) {
+                return;
+            }
+            if (!this.editor?.editable) {
+                return;
+            }
+            setElementContent(this.editor?.editable, composerHtml);
+        });
+        void composerProxy.composerHtml; // start observing
     }
 
     get areAllActionsDisabled() {
@@ -261,9 +279,10 @@ export class Composer extends Component {
 
     get wysiwygConfig() {
         return {
-            content: markup("<p><br></p>"),
+            content: this.props.composer.composerHtml,
             Plugins: this.ui.isSmall ? MAIL_SMALL_UI_PLUGINS : MAIL_PLUGINS,
             classList: ["o-mail-Composer-html"],
+            onChange: () => this.onChangeWysiwygContent(),
         };
     }
 
@@ -347,7 +366,7 @@ export class Composer extends Component {
         const attachments = this.props.composer.attachments;
         return (
             !this.state.active ||
-            (!this.props.composer.text && attachments.length === 0) ||
+            (!this.props.composer.composerText && attachments.length === 0) ||
             attachments.some(({ uploading }) => Boolean(uploading))
         );
     }
@@ -493,7 +512,7 @@ export class Composer extends Component {
         const composer = toRaw(this.props.composer);
         switch (ev.key) {
             case "ArrowUp":
-                if (!this.env.inChatter && composer.text === "") {
+                if (!this.env.inChatter && composer.composerText === "") {
                     const messageToEdit = composer.thread.lastEditableMessageOfSelf;
                     if (messageToEdit) {
                         messageToEdit.enterEditMode(this.props.composer.thread);
@@ -558,7 +577,7 @@ export class Composer extends Component {
             }
         }
         const attachmentIds = this.props.composer.attachments.map((attachment) => attachment.id);
-        const body = this.props.composer.text;
+        const body = this.props.composer.composerText;
         const validMentions = this.store.getMentionsFromText(body, {
             mentionedChannels: this.props.composer.mentionedChannels,
             mentionedPartners: this.props.composer.mentionedPartners,
@@ -585,7 +604,6 @@ export class Composer extends Component {
             default_body,
             this.props.composer.emailAddSignature ? signature : ""
         );
-        console.log(allRecipients);
         const context = {
             default_attachment_ids: attachmentIds,
             default_body,
@@ -681,7 +699,7 @@ export class Composer extends Component {
                 type: "warning",
             });
         } else if (
-            this.props.composer.text.trim() ||
+            this.props.composer.composerText.trim() ||
             attachments.length > 0 ||
             (this.message && this.message.attachment_ids.length > 0)
         ) {
@@ -689,7 +707,7 @@ export class Composer extends Component {
                 return;
             }
             this.state.active = false;
-            await cb(this.props.composer.text);
+            await cb(this.props.composer.composerText);
             if (this.props.onPostCallback) {
                 this.props.onPostCallback();
             }
@@ -770,7 +788,7 @@ export class Composer extends Component {
 
     async editMessage() {
         const composer = toRaw(this.props.composer);
-        if (composer.text || composer.message.attachment_ids.length > 0) {
+        if (composer.composerText || composer.message.attachment_ids.length > 0) {
             await this.processMessage(async (value) =>
                 composer.message.edit(value, composer.attachments, {
                     mentionedChannels: composer.mentionedChannels,
@@ -791,23 +809,34 @@ export class Composer extends Component {
     onClickInsertCannedResponse(ev) {
         markEventHandled(ev, "composer.clickInsertCannedResponse");
         const composer = toRaw(this.props.composer);
-        const text = composer.text;
-        const firstPart = text.slice(0, composer.selection.start);
-        const secondPart = text.slice(composer.selection.end, text.length);
+        const composerText = composer.composerText;
+        const firstPart = composerText.slice(0, composer.selection.start);
+        const secondPart = composerText.slice(composer.selection.end, composerText.length);
         const toInsertPart = firstPart.length === 0 || firstPart.at(-1) === " " ? "::" : " ::";
-        composer.text = firstPart + toInsertPart + secondPart;
+        composer.composerText = firstPart + toInsertPart + secondPart;
         this.selection.moveCursor((firstPart + toInsertPart).length);
         if (!this.ui.isSmall || !this.env.inChatter) {
             composer.autofocus++;
         }
     }
 
+    onChangeWysiwygContent() {
+        this.updateFromEditor = true;
+        // markup: editor content is trusted
+        this.props.composer.composerHtml = markup(this.editor.getContent());
+        this.updateFromEditor = false;
+    }
+
+    onLoadWysiwyg(editor) {
+        this.editor = editor;
+    }
+
     addEmoji(str) {
         const composer = toRaw(this.props.composer);
-        const text = composer.text;
-        const firstPart = text.slice(0, composer.selection.start);
-        const secondPart = text.slice(composer.selection.end, text.length);
-        composer.text = firstPart + str + secondPart;
+        const composerText = composer.composerText;
+        const firstPart = composerText.slice(0, composer.selection.start);
+        const secondPart = composerText.slice(composer.selection.end, composerText.length);
+        composer.composerText = firstPart + str + secondPart;
         this.selection.moveCursor((firstPart + str).length);
         if (this.ui.isSmall && !this.env.inChatter) {
             return false;
@@ -840,13 +869,17 @@ export class Composer extends Component {
 
     saveContent() {
         const composer = toRaw(this.props.composer);
-        const saveContentToLocalStorage = ({ text, emailAddSignature, replyToMessageId }) => {
+        const saveContentToLocalStorage = ({
+            composerText,
+            emailAddSignature,
+            replyToMessageId,
+        }) => {
             browser.localStorage.setItem(
                 composer.localId,
                 JSON.stringify({
                     emailAddSignature,
                     replyToMessageId,
-                    text,
+                    composerText,
                 })
             );
         };
@@ -856,7 +889,7 @@ export class Composer extends Component {
             });
         } else {
             saveContentToLocalStorage({
-                text: composer.text,
+                composerText: composer.composerText,
                 emailAddSignature: true,
                 replyToMessageId: composer.replyToMessage?.id,
             });
@@ -874,9 +907,9 @@ export class Composer extends Component {
         if (!config) {
             return;
         }
-        if (config.text) {
+        if (config.composerText) {
             composer.emailAddSignature = config.emailAddSignature;
-            composer.text = config.text;
+            composer.composerText = config.composerText;
         }
         if (Number.isInteger(config.replyToMessageId)) {
             composer.replyToMessage = this.store["mail.message"].insert(config.replyToMessageId);

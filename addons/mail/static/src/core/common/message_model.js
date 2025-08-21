@@ -569,7 +569,7 @@ export class Message extends Record {
         }
         this.composer = {
             mentionedPartners: this.partner_ids,
-            text,
+            composerText: text,
             selection: {
                 start: text.length,
                 end: text.length,

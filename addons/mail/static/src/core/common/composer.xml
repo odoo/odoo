@@ -62,7 +62,7 @@
                             'o-mail-Composer-inputStyle form-control border-0 o-rounded-bubble': true,
                             'ps-2': partitionedActions.other.length === 0
                         }"/>
-                        <Wysiwyg t-if="composerService.htmlEnabled" class="'w-100 text-break overflow-auto'" config="wysiwygConfig"/>
+                        <Wysiwyg t-if="composerService.htmlEnabled" class="'w-100 text-break overflow-auto'" config="this.wysiwygConfig" onLoad.bind="onLoadWysiwyg"/>
                         <t t-else="">
                                 <textarea class="o-mail-Composer-input o-mail-Composer-bg shadow-none overflow-auto o-scrollbar-thin text-body user-select-auto"
                                 t-att-class="inputClasses"
@@ -72,7 +72,7 @@
                                 t-on-focusout="onFocusout"
                                 t-on-click="(ev) => markEventHandled(ev, 'composer.onClickTextarea')"
                                 t-on-paste="onPaste"
-                                t-model="props.composer.text"
+                                t-model="props.composer.composerText"
                                 t-on-input="(ev) => this.onInput(ev)"
                                 t-att-placeholder="placeholder"
                                 t-att-readOnly="!state.active"
@@ -86,7 +86,7 @@
                             <textarea
                                 class="o-mail-Composer-fake position-absolute overflow-hidden"
                                 t-att-class="inputClasses"
-                                t-model="props.composer.text"
+                                t-att-value="props.composer.composerText"
                                 t-ref="fakeTextarea"
                                 disabled="1"
                             />

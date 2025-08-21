@@ -32,7 +32,11 @@ export class UseSuggestion {
             () => {
                 this.detect();
             },
-            () => [this.composer.selection.start, this.composer.selection.end, this.composer.text]
+            () => [
+                this.composer.selection.start,
+                this.composer.selection.end,
+                this.composer.composerText,
+            ]
         );
     }
     /** @type {import("@mail/core/common/composer").Composer} */
@@ -77,7 +81,7 @@ export class UseSuggestion {
     }
     detect() {
         const { start, end } = this.composer.selection;
-        const text = this.composer.text;
+        const text = this.composer.composerText;
         if (start !== end) {
             // avoid interfering with multi-char selection
             this.clearSearch();
@@ -148,7 +152,7 @@ export class UseSuggestion {
     }
     insert(option) {
         const position = this.composer.selection.start;
-        const text = this.composer.text;
+        const text = this.composer.composerText;
         let before = text.substring(0, this.search.position + 1);
         let after = text.substring(position, text.length);
         if ([":", "::"].includes(this.search.delimiter)) {
@@ -173,7 +177,7 @@ export class UseSuggestion {
             this.composer.cannedResponses.push(option.cannedResponse);
         }
         this.clearSearch();
-        this.composer.text = before + option.label + " " + after;
+        this.composer.composerText = before + option.label + " " + after;
         this.composer.selection.start = before.length + option.label.length + 1;
         this.composer.selection.end = before.length + option.label.length + 1;
         this.composer.forceCursorMove = true;
