@@ -327,6 +327,36 @@ export function makeActionManager(env, router = _router) {
     }
 
     /**
+     * Returns the current action, which is the action of the last controller in the stack.
+     *
+     * @returns {Action|null}
+     */
+
+    async function _getCurrentAction() {
+        const currentController = _getCurrentController();
+        let action = null;
+        if (currentController) {
+            if (currentController.virtual) {
+                try {
+                    action = await _loadAction(currentController.action.id);
+                } catch (error) {
+                    if (
+                        error.exceptionName ===
+                        "odoo.addons.web.controllers.action.MissingActionError"
+                    ) {
+                        action = null;
+                    } else {
+                        throw error;
+                    }
+                }
+            } else {
+                action = JSON.parse(currentController.action._originalAction);
+            }
+        }
+        return action;
+    }
+
+    /**
      * Given an id, xmlid, tag (key of the client action registry) or directly an
      * object describing an action.
      *
@@ -1821,6 +1851,9 @@ export function makeActionManager(env, router = _router) {
         },
         get currentController() {
             return _getCurrentController();
+        },
+        get currentAction() {
+            return _getCurrentAction();
         },
     };
 }
