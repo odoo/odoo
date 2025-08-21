@@ -13,7 +13,7 @@ class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = ['res.partner']
 
-    invoice_edi_format = fields.Selection(selection_add=[('ubl_tr', "Turkyie (UBL TR 1.2)")])
+    invoice_edi_format = fields.Selection(selection_add=[('ubl_tr', "Türkiye (UBL TR 1.2)")])
     l10n_tr_nilvera_customer_status = fields.Selection(
         selection=[
             ('not_checked', "Not Checked"),
