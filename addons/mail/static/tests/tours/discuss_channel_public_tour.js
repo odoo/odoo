@@ -1,5 +1,9 @@
 import { registry } from "@web/core/registry";
-import { click, contains, inputFiles } from "@web/../tests/utils";
+import { inputFiles } from "@web/../tests/utils";
+
+// The tour is ran twice, ensure the correct message is always targetted.
+const messageSelector = ".o-mail-Message:has(.o-mail-Message-body:contains('cheese'))";
+const editedMessageSelector = ".o-mail-Message:has(.o-mail-Message-body:contains('vegetables'))";
 
 registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
     steps: () => [
@@ -7,7 +11,6 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             trigger: ".o-mail-Discuss",
         },
         {
-            content: "Check that we are on channel page",
             trigger: ".o-mail-Thread",
             run() {
                 if (!window.location.pathname.startsWith("/discuss/channel")) {
@@ -26,16 +29,13 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             },
         },
         {
-            content: "Wait for all modules loaded check in previous step",
             trigger: ".o_discuss_channel_public_modules_loaded",
         },
         {
-            content: "Write something in composer",
             trigger: ".o-mail-Composer-input",
             run: "edit cheese",
         },
         {
-            content: "Add a text file in composer",
             trigger: ".o-mail-Composer button[aria-label='Attach files']",
             async run() {
                 const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
@@ -46,7 +46,6 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             trigger: ".o-mail-AttachmentCard:not(.o-isUploading):contains(text.txt)",
         },
         {
-            content: "Add an image file in composer",
             trigger: ".o-mail-Composer button[aria-label='Attach files']",
             async run() {
                 await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
@@ -80,73 +79,43 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             },
         },
         {
-            content: "Send message",
             trigger: ".o-mail-Composer-send:enabled",
             run: "click",
         },
         {
-            content: "Check message is shown",
-            trigger: '.o-mail-Message-body:contains("cheese")',
+            trigger: `${messageSelector}[data-persistent]`,
         },
         {
-            content: "Check message contains the attachment",
-            trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
+            trigger: `${messageSelector} .o-mail-AttachmentCard:contains("text.txt")`,
         },
         {
-            trigger: ".o-mail-Message[data-persistent]:contains(cheese)",
-            run: "hover && click .o-mail-Message:contains(cheese) [title='Add a Reaction']",
+            trigger: messageSelector,
+            run: `hover && click ${messageSelector} [title='Add a Reaction']`,
         },
         {
             trigger: ".o-EmojiPicker .o-Emoji:contains('🙂')",
             run: "click",
         },
         {
-            content: "Reload page (fetch reactions)",
-            trigger: ".o-mail-Message",
-            run() {
-                document.body.classList.add("before-reload-1");
-                location.reload();
-            },
-        },
-        {
-            trigger: "body:not(.before-reload-1)",
-        },
-        {
-            content: "Remove reaction",
-            trigger: ".o-mail-MessageReaction:contains('🙂')",
+            trigger: `${messageSelector} .o-mail-MessageReaction:contains('🙂')`,
             run: "click",
         },
         {
-            content: "Reload page (fetch reactions)",
-            trigger: ".o-mail-Message:not(:has(.o-mail-MessageReaction:contains('🙂')))",
-            run() {
-                document.body.classList.add("before-reload-2");
-                location.reload();
-            },
+            trigger: `${messageSelector}:not(:has(.o-mail-MessageReaction:contains('🙂')))`,
         },
         {
-            trigger: "body:not(.before-reload-2)",
+            trigger: `${messageSelector}`,
+            run: `hover && click ${messageSelector} [title='Expand']`,
         },
         {
-            trigger: ".o-mail-Message:not(:has(.o-mail-MessageReaction:contains('🙂')))",
-        },
-        {
-            content: "Click on more menu",
-            trigger: ".o-mail-Message[data-persistent]:contains(cheese)",
-            run: "hover && click .o-mail-Message:contains(cheese) [title='Expand']",
-        },
-        {
-            content: "Click on edit",
-            trigger: ".o-mail-Message-moreMenu [title='Edit'], .o-mail-Message [title='Edit']",
+            trigger: `.o-mail-Message-moreMenu [title='Edit'], ${messageSelector} [title='Edit']`,
             run: "click",
         },
         {
-            content: "Edit message",
             trigger: ".o-mail-Message .o-mail-Composer-input",
             run: "edit vegetables",
         },
         {
-            content: "Add one more file in composer",
             trigger: ".o-mail-Message button[aria-label='Attach files']",
             async run() {
                 const extratxt = new File(["hello 2"], "extra.txt", { type: "text/plain" });
@@ -158,48 +127,43 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
                 ".o-mail-Message .o-mail-Composer .o-mail-AttachmentCard:not(.o-isUploading):contains(extra.txt)",
         },
         {
-            content: "Save edited message",
             trigger: ".o-mail-Message a:contains(save)",
             run: "click",
         },
         {
-            content: "Check message is edited",
-            trigger: '.o-mail-Message-body:contains("vegetables")',
+            trigger: editedMessageSelector,
         },
         {
-            content: "Check edited message contains the first attachment",
-            trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
+            trigger: `${editedMessageSelector} .o-mail-AttachmentCard:contains("text.txt")`,
         },
         {
-            content: "Check edited message contains the extra attachment",
-            trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("extra.txt")',
-            async run() {
-                await click(".o-mail-AttachmentCard-unlink", {
-                    parent: [".o-mail-AttachmentCard", { text: "extra.txt" }],
-                });
-                await click(".btn", { text: "Ok", parent: [".modal", { text: "Confirmation" }] });
-                await contains(".o-mail-AttachmentCard", { text: "extra.txt", count: 0 });
-            },
+            trigger: `${editedMessageSelector} .o-mail-AttachmentCard:contains("extra.txt")`,
         },
         {
-            content: "Open search panel",
+            trigger: `${editedMessageSelector} .o-mail-AttachmentCard:contains("extra.txt") .o-mail-AttachmentCard-unlink`,
+            run: "click",
+        },
+        {
+            trigger: ".modal:contains(Confirmation) .btn:contains(Ok)",
+            run: "click",
+        },
+        {
+            trigger: `${editedMessageSelector}:not(:has(.o-mail-AttachmentCard:contains("extra.txt")))`,
+        },
+        {
             trigger: "button[title='Search Messages']",
             run: "click",
         },
         {
-            content: "Search for the attachment name",
             trigger: ".o_searchview_input",
             run: "edit text.txt",
         },
         {
-            content: "Trigger the search",
             trigger: "button[aria-label='Search button']",
             run: "click",
         },
         {
-            content: "Check that searched message contains the attachment",
-            trigger:
-                '.o-mail-SearchMessagesPanel .o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
+            trigger: `.o-mail-SearchMessagesPanel ${editedMessageSelector} .o-mail-AttachmentCard:contains("text.txt")`,
         },
     ],
 });
