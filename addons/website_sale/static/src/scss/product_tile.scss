@@ -283,7 +283,7 @@
         order: var(--o-wsale-card-sub-order, 6);
         flex-grow: var(--o-wsale-card-sub-flex-grow);
     }
-    .product_price {
+    .product_price, .o_wish_price {
         display: var(--o-wsale-card-price-display);
         flex-direction: var(--o-wsale-card-price-flex-direction);
         flex-basis: var(--o-wsale-card-price-flex-basis);
@@ -530,7 +530,7 @@
             --o-wsale-card-btns-flex-direction: column;
         }
         @include media-breakpoint-up(md) {
-            .product_price {
+            .product_price, .o_wish_price {
                 margin: auto;
             }
         }
@@ -694,7 +694,7 @@
             --o-wsale-card-price-flex-basis: 100%;
             --o-wsale-card-info-attributes-justify-content: center;
 
-            .product_price {
+            .product_price, .o_wish_price {
                 margin: auto;
             }
         }
