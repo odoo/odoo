@@ -109,7 +109,7 @@ def split_etree_on_tag(tree, tag):
 
 
 def extract_pdf_embedded_files(filename, content):
-    with io.BytesIO(content) as buffer:
+    with io.BytesIO(content or b'') as buffer:
         try:
             pdf_reader = OdooPdfFileReader(buffer, strict=False)
         except Exception as e:  # noqa: BLE001
