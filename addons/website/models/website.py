@@ -1716,12 +1716,14 @@ class Website(models.Model):
             return self.env["ir.actions.actions"]._for_xml_id("website.backend_dashboard")
         return self.env["ir.actions.actions"]._for_xml_id("website.action_website")
 
-    def get_client_action_url(self, url, mode_edit=False):
+    def get_client_action_url(self, url, mode_edit=False, mode_debug=0):
         action_params = {
             "path": url,
         }
         if mode_edit:
             action_params["enable_editor"] = 1
+        if mode_debug:
+            action_params["debug"] = mode_debug
         return "/odoo/action-website.website_preview?" + urls.url_encode(action_params)
 
     def get_client_action(self, url, mode_edit=False, website_id=False):
