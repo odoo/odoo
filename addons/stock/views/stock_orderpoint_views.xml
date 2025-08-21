@@ -39,7 +39,7 @@
                 <button name="action_product_forecast_report" type="object" icon="fa-area-chart" title="Forecast Report" invisible="not id or unwanted_replenish"/>
                 <button name="action_product_forecast_report" type="object" icon="fa-warning text-warning" title="Due to receipts scheduled in the future, you might end up with excessive stock . Check the Forecasted Report  before reordering" invisible="not id or not unwanted_replenish"/>
                 <field name="visibility_days" optional="hidden"/>
-                <field name="route_id" options="{'no_create': True, 'no_open': True}" optional="hidden"/>
+                <field name="route_id" options="{'no_create': True, 'no_open': True}" optional="hidden" decoration-muted="not route_id_manual"/>
                 <button name="action_stock_replenishment_info" type="object" icon="fa-info-circle" title="Replenishment Information" invisible="not id"/>
                 <field name="trigger" optional="hide"/>
                 <field name="group_id" optional="hide" groups="stock.group_adv_location"/>
@@ -68,12 +68,11 @@
         <field name="arch" type="xml">
             <search string="Replenishment Report Search">
                 <field name="product_id"/>
-                <field name="trigger"/>
                 <field name="product_category_id"/>
+                <field name="route_id"/>
                 <field name="group_id" groups="stock.group_adv_location"/>
                 <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                 <field name="location_id" groups="stock.group_stock_multi_locations"/>
-                <field name="name" string="Reordering Rule"/>
                 <filter string="Trigger Manual" name="filter_creation_trigger" domain="[('trigger', '=', 'manual')]"/>
                 <separator/>
                 <filter string="To Reorder" name="filter_to_reorder" domain="[('qty_to_order', '&gt;', 0.0)]"/>
