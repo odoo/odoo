@@ -342,3 +342,16 @@ export function createCarousel(model, data = { items: [] }, carouselId, sheetId,
         ...figureData,
     });
 }
+
+export function addChartFigureToCarousel(
+    model,
+    carouselId,
+    chartFigureId,
+    sheetId = model.getters.getActiveSheetId()
+) {
+    return model.dispatch("ADD_FIGURE_CHART_TO_CAROUSEL", {
+        carouselFigureId: carouselId,
+        chartFigureId,
+        sheetId,
+    });
+}
