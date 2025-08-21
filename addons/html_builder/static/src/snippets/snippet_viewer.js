@@ -1,4 +1,5 @@
 import { Component, markup, useRef } from "@odoo/owl";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { InputConfirmationDialog } from "./input_confirmation_dialog";
@@ -69,6 +70,13 @@ export class SnippetViewer extends Component {
             this.props.snippetModel.installSnippetModule(snippet, this.props.installSnippetModule);
         } else {
             this.props.selectSnippet(snippet);
+        }
+    }
+
+    onPreviewKeydown(ev, snippet) {
+        const hotkey = getActiveHotkey(ev);
+        if (hotkey === "enter" || hotkey === "space") {
+            this.onClick(snippet);
         }
     }
 
