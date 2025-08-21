@@ -532,7 +532,8 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         real_cost = currency.round(self._get_component_real_cost(move_raw, current_quantity if move_raw.picked else 0))
         if production.bom_id:
             if move_raw.bom_line_id:
-                bom_cost = currency.round(self._get_component_real_cost(move_raw, move_raw.bom_line_id.product_qty * production.product_uom_qty / production.bom_id.product_qty))
+                qty_in_bom_uom = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id)
+                bom_cost = currency.round(self._get_component_real_cost(move_raw, move_raw.bom_line_id.product_qty * qty_in_bom_uom / production.bom_id.product_qty))
             else:
                 bom_cost = False
         else:
@@ -689,7 +690,8 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         free_qty = max(0, product.uom_id._compute_quantity(product.free_qty, move_raw.product_uom))
         available_qty = reserved_quantity + free_qty + total_ordered
         missing_quantity = quantity - available_qty
-        bom_missing_quantity = production.product_uom_qty * move_raw.bom_line_id.product_qty - (reserved_quantity + free_qty + total_ordered)
+        qty_in_bom_uom = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id)
+        bom_missing_quantity = qty_in_bom_uom * move_raw.bom_line_id.product_qty - (reserved_quantity + free_qty + total_ordered)
 
         if product.is_storable and production.state not in ('done', 'cancel')\
            and float_compare(missing_quantity, 0, precision_rounding=move_raw.product_uom.rounding) > 0:
