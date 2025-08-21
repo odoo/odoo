@@ -5,22 +5,27 @@ import { useBus } from '@web/core/utils/hooks';
 import { SearchPanel } from '@web/search/search_panel/search_panel';
 
 
-export class ProductCatalogSearchPanel extends SearchPanel {
-    static template = 'product.SearchPanel';
+export class AccountProductCatalogSearchPanel extends SearchPanel {
+    static template = 'account.ProductCatalogSearchPanel';
 
     setup() {
         super.setup();
 
         this.state = useState({
             ...this.state,
-            sectionOfSections: new Map(),
+            sections: new Map(),
             isAddingSection: '',
             newSectionName: "",
         });
 
         useBus(this.env.searchModel, 'section-line-count-change', this.updateSectionLineCount);
 
-        onWillStart(async () =>  await this.loadSections());
+        onWillStart(async () => await this.loadSections());
+    }
+
+    updateActiveValues() {
+        super.updateActiveValues();
+        this.state.sidebarExpanded ||= this.showSections;
     }
 
     get showSections() {
@@ -70,20 +75,19 @@ export class ProductCatalogSearchPanel extends SearchPanel {
         const sectionName = this.state.newSectionName.trim();
         if (!sectionName) return this.state.isAddingSection = '';
 
-        const sections = this.state.sectionOfSections;
-
-        const extraParams = {
-            name: sectionName,
-            position: this.state.isAddingSection,
-        };
-        let newLineCount = 0;
-
+        const position = this.state.isAddingSection;
         const section = await rpc('/product/catalog/create_section',
-            this._getSectionInfoParams(extraParams)
+            this._getSectionInfoParams({
+                name: sectionName,
+                position: position,
+            })
         );
 
         if (section) {
-            if (extraParams.position === 'top') {
+            const sections = this.state.sections;
+            let newLineCount = 0;
+
+            if (position === 'top') {
                 newLineCount = sections.get(false).line_count;
                 sections.delete(false);
             }
@@ -109,13 +113,13 @@ export class ProductCatalogSearchPanel extends SearchPanel {
         for (const {id, name, sequence, line_count} of sections) {
             sectionMap.set(id, {name, sequence, line_count});
         }
-        this.state.sectionOfSections = sectionMap;
+        this.state.sections = sectionMap;
         this.setSelectedSection(sectionMap.size > 0 ? [...sectionMap.keys()][0] : null);
     }
 
     async reorderSections(moveId, targetId) {
         [moveId, targetId] = [parseInt(moveId), parseInt(targetId)];
-        const sections = this.state.sectionOfSections;
+        const sections = this.state.sections;
         const moveSection = sections.get(moveId);
         const targetSection = sections.get(targetId);
 
@@ -139,7 +143,7 @@ export class ProductCatalogSearchPanel extends SearchPanel {
     }
 
     updateSectionLineCount({detail: {sectionId, lineCountChange}}) {
-        const sections = this.state.sectionOfSections;
+        const sections = this.state.sections;
         const section = sections.get(sectionId);
         if (!section) return;
 
@@ -162,7 +166,7 @@ export class ProductCatalogSearchPanel extends SearchPanel {
     }
 
     _sortSectionsBySequence(sections) {
-        this.state.sectionOfSections = new Map(
+        this.state.sections = new Map(
             [...sections].sort((a, b) => a[1].sequence - b[1].sequence)
         );
     }

@@ -707,8 +707,7 @@ class RepairOrder(models.Model):
 
     def action_add_from_catalog(self):
         res = super().action_add_from_catalog()
-        if res['context'].get('product_catalog_order_model') == 'repair.order':
-            res['search_view_id'] = [self.env.ref('repair.product_view_search_catalog').id, 'search']
+        res['search_view_id'] = [self.env.ref('repair.product_view_search_catalog').id, 'search']
         return res
 
     def _default_order_line_values(self, child_field=False):

@@ -31,7 +31,6 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
             setQuantity: this.setQuantity.bind(this),
             decreaseQuantity: this.decreaseQuantity.bind(this),
             childField: this.props.record.context.child_field,
-            selectedSectionId: this.env.searchModel.selectedSection.sectionId,
         });
     }
 
@@ -75,7 +74,6 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
             quantity: this.productCatalogData.quantity,
             res_model: this.env.orderResModel,
             child_field: this.env.childField,
-            selected_section_id: this.env.selectedSectionId,
         }
     }
 
@@ -86,10 +84,6 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
     updateQuantity(quantity) {
         if (this.productCatalogData.readOnly) {
             return;
-        }
-        const lineCountChange = (quantity > 0) - (this.productCatalogData.quantity > 0);
-        if (lineCountChange !== 0) {
-            this.notifyLineCountChange(lineCountChange);
         }
         this.productCatalogData.quantity = quantity || 0;
         this.debouncedUpdateQuantity();
@@ -130,12 +124,5 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
      */
     decreaseQuantity() {
         this.updateQuantity(parseFloat(this.productCatalogData.quantity - 1));
-    }
-
-    notifyLineCountChange(lineCountChange) {
-        this.env.searchModel.trigger('section-line-count-change', {
-            sectionId: this.env.selectedSectionId,
-            lineCountChange: lineCountChange,
-        });
     }
 }

@@ -364,7 +364,7 @@ class ProductProduct(models.Model):
             return []
 
         product_ids = self.env[order_model].browse(order_id)[line_field].filtered(
-            lambda line: line.get_parent_section_line().id == ctx.get('selected_section_id'),
+            lambda line: line.get_parent_section_line().id == ctx.get('section_id'),
         ).mapped('product_id').ids
 
         return [('id', 'in', product_ids)]
