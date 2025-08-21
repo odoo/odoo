@@ -1185,6 +1185,10 @@ class MrpProduction(models.Model):
         ], limit=1).id
 
     def _get_move_finished_values(self, product_id, product_uom_qty, product_uom, operation_id=False, byproduct_id=False, cost_share=0):
+        group_orders = self.production_group_id.production_ids
+        move_dest_ids = self.move_dest_ids
+        if len(group_orders) > 1:
+            move_dest_ids |= group_orders[0].move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_dest_ids
         return {
             'product_id': product_id,
             'product_uom_qty': product_uom_qty,
@@ -1202,7 +1206,7 @@ class MrpProduction(models.Model):
             'origin': self.product_id.partner_ref,
             'reference_ids': self.reference_ids.ids,
             'propagate_cancel': self.propagate_cancel,
-            'move_dest_ids': [(4, x.id) for x in self.move_dest_ids if not byproduct_id],
+            'move_dest_ids': [(4, x.id) for x in move_dest_ids if not byproduct_id],
             'cost_share': cost_share,
             'production_group_id': self.production_group_id.id,
         }
