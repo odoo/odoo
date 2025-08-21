@@ -1091,7 +1091,11 @@ class HrEmployee(models.Model):
 
         employee = super().new(new_vals, origin, ref)
         version_vals['employee_id'] = employee
-        self.env['hr.version'].new(version_vals)
+        self.env['hr.version'].new({
+            f_name: value
+            for f_name, value in version_vals.items()
+            if self.env['hr.version']._has_field_access(self.env['hr.version']._fields[f_name], 'read')
+        })
         return employee
 
     @api.model_create_multi
@@ -1313,9 +1317,9 @@ class HrEmployee(models.Model):
 
         date_from = fields.Date.to_date(date_from)
         for employee in self:
-            employee_versions = employee.version_ids.filtered(lambda v: v._is_in_contract(date_from))
-            if employee_versions:
-                res[employee.id] = employee_versions[0].resource_calendar_id.sudo(False)
+            employee_versions_sudo = employee.version_ids.sudo().filtered(lambda v: v._is_in_contract(date_from))
+            if employee_versions_sudo:
+                res[employee.id] = employee_versions_sudo[0].resource_calendar_id.sudo(False)
         return res
 
     def _get_calendar_periods(self, start, stop):
