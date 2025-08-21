@@ -368,6 +368,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         The difference between these is the cash discount in case of early payment.
         """
         vals_list = []
+
         # Early Payment Discount
         epd_tax_to_discount = self._get_early_payment_discount_grouped_by_tax_rate(invoice)
         if epd_tax_to_discount:
@@ -402,6 +403,31 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                         'tax_scheme_vals': {'id': 'VAT'},
                     }],
                 })
+
+        # Discount from Sales Order
+        for line in self._get_sale_order_discount_lines(invoice):
+            tax = line.tax_ids.filtered(lambda tax: tax.amount_type == 'percent')[:1]
+            if tax:
+                tax_category = {
+                    'id': 'S',
+                    'percent': tax.amount,
+                    'tax_scheme_vals': {'id': 'VAT'},
+                }
+            else:
+                tax_category = {
+                    'id': 'E',
+                    'percent': 0.0,
+                    'tax_scheme_vals': {'id': 'VAT'},
+                }
+            vals_list.append({
+                'charge_indicator': 'false',
+                'allowance_charge_reason_code': '95',
+                'allowance_charge_reason': _("Global discount"),
+                'amount': line.amount_currency,
+                'currency_dp': 2,
+                'currency_name': invoice.currency_id.name,
+                'tax_category_vals': [tax_category],
+            })
 
         return vals_list
 
@@ -594,6 +620,14 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 tax_to_discount[tax.amount] += line.amount_currency
         return tax_to_discount
 
+    def _get_sale_order_discount_lines(self, invoice):
+        company = invoice.company_id
+        if company._fields.get('sale_discount_product_id') and company.sale_discount_product_id:
+            return invoice.invoice_line_ids.filtered(
+                lambda line: line.product_id == company.sale_discount_product_id
+            )
+        return self.env['account.move.line']
+
     def _get_tax_grouping_key(self, base_line, tax_data):
         tax = tax_data['tax']
         customer = base_line['record'].move_id.commercial_partner_id
@@ -639,7 +673,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # Compute values for invoice lines.
         line_extension_amount = 0.0
 
-        invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section') and line._check_edi_line_tax_required())
+        invoice_lines = invoice.invoice_line_ids.filtered(
+            lambda line: line.display_type not in ('line_note', 'line_section') and line._check_edi_line_tax_required()
+        ) - self._get_sale_order_discount_lines(invoice)
         document_allowance_charge_vals_list = self._get_document_allowance_charge_vals_list(invoice, taxes_vals)
         invoice_line_vals_list = []
         for line_id, line in enumerate(invoice_lines):
@@ -1035,9 +1071,22 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             }[vals['document_type']]
         }
 
+    def _get_document_allowance_charge_type(self, base_line):
+        """ The AllowanceCharge "type of the base (or `False` if not applicable). """
+        if base_line['special_type'] == 'early_payment':
+            return 'early_payment'
+        # TODO: maybe it would be better to get the company somewhere else?
+        company = base_line['record'] and base_line['record']['company_id']
+        if (company
+            and company._fields.get('sale_discount_product_id')
+            and company.sale_discount_product_id
+            and base_line['product_id'] == company.sale_discount_product_id):
+            return 'global_discount'
+        return False
+
     def _is_document_allowance_charge(self, base_line):
         """ Whether the base line should be treated as a document-level AllowanceCharge. """
-        return base_line['special_type'] == 'early_payment'
+        return bool(self._get_document_allowance_charge_type(base_line))
 
     # -------------------------------------------------------------------------
     # EXPORT: account.move specific templates
@@ -1680,12 +1729,17 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         """ Generic helper to generate a document-level AllowanceCharge node given a base_line. """
         base_line = vals['base_line']
         currency_suffix = vals['currency_suffix']
+        charge_type = self._get_document_allowance_charge_type(base_line)
+        reason_code, reason = {
+            'early_payment': ('64', _("Conditional cash/payment discount")),
+            'global_discount': ('95', _("Global discount")),
+        }.get(charge_type, ('95', _("Discount")))
         aggregated_tax_details = self.env['account.tax']._aggregate_base_line_tax_details(base_line, vals['tax_grouping_function'])
         base_amount = base_line['tax_details'][f'total_excluded{currency_suffix}']
         return {
             'cbc:ChargeIndicator': {'_text': 'false' if base_amount < 0.0 else 'true'},
-            'cbc:AllowanceChargeReasonCode': {'_text': '64' if base_amount < 0.0 else 'ZZZ'},
-            'cbc:AllowanceChargeReason': {'_text': _("Conditional cash/payment discount")},
+            'cbc:AllowanceChargeReasonCode': {'_text': reason_code if base_amount < 0.0 else 'ZZZ'},
+            'cbc:AllowanceChargeReason': {'_text': reason},
             'cbc:Amount': {
                 '_text': self.format_float(abs(base_amount), vals['currency_dp']),
                 'currencyID': vals['currency_name']

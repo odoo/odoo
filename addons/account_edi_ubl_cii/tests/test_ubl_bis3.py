@@ -1,3 +1,4 @@
+from freezegun import freeze_time
 from lxml import etree
 
 from odoo import Command
@@ -561,6 +562,57 @@ class TestUblBis3(AccountTestInvoicingCommon):
         invoice.action_post()
         self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
         self._assert_invoice_ubl_file(invoice, 'bis3/test_dispatch_base_lines_delta')
+
+    @freeze_time('2017-01-01')
+    def test_sale_order_discount(self):
+        if self.env['ir.module.module']._get('sale').state != 'installed':
+            self.skipTest("module sale is not installed")
+
+        self.setup_partner_as_be1(self.env.company.partner_id)
+        self.setup_partner_as_be2(self.partner_a)
+        tax_21 = self.percent_tax(21.0)
+        tax_6 = self.percent_tax(6.0)
+
+        sale_order = self.env['sale.order'].create({
+            'name': 'My SO',
+            'partner_id': self.partner_a.id,
+            'client_order_ref': 'PO/1234',
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'name': 'Product A description',
+                    'product_uom_qty': 1.0,
+                    'price_unit': 100.0,
+                    'tax_id': [Command.set(tax_21.ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'name': 'Product A description',
+                    'product_uom_qty': 1.0,
+                    'price_unit': 100.0,
+                    'tax_id': [Command.set(tax_6.ids)],
+                })
+            ]
+        })
+
+        discount_wizard = self.env['sale.order.discount'].create({
+            'sale_order_id': sale_order.id,
+            'discount_percentage': 0.1,
+            'discount_type': 'so_discount',
+        })
+        discount_wizard.action_apply_discount()
+
+        sale_order.action_confirm()
+
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+
+        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        self._assert_invoice_ubl_file(invoice, 'bis3/test_sale_order_discount')
+
+    def test_sale_order_discount_new(self):
+        self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
+        self.test_sale_order_discount()
 
     # -------------------------------------------------------------------------
     # Business Expert Group (BEG)
