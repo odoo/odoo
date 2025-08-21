@@ -13,8 +13,9 @@ registerThreadAction("show-threads", {
         action.popover?.close();
     },
     condition: (component) =>
-        component.thread?.hasSubChannelFeature ||
-        component.thread?.parent_channel_id?.hasSubChannelFeature,
+        (component.thread?.hasSubChannelFeature ||
+            component.thread?.parent_channel_id?.hasSubChannelFeature) &&
+        !component.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-comments-o",
     iconLarge: "fa fa-fw fa-lg fa-comments-o",
     name: _t("Threads"),

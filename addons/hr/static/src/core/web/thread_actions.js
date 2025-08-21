@@ -7,7 +7,8 @@ registerThreadAction("open-hr-profile", {
         return (
             component.thread?.channel_type === "chat" &&
             component.props.chatWindow?.isOpen &&
-            component.thread.correspondent?.partner_id?.employeeId
+            component.thread.correspondent?.partner_id?.employeeId &&
+            !component.isDiscussSidebarChannelActions
         );
     },
     icon: "fa fa-fw fa-id-card",
