@@ -19,7 +19,9 @@ class ProductValue(models.Model):
     move_id = fields.Many2one('stock.move', string='Move')
 
     value = fields.Monetary(string='Value', currency_field='currency_id', required=True)
-    company_id = fields.Many2one('res.company', string='Company', compute='_compute_company_id', store=True, required=True)
+    company_id = fields.Many2one(
+        'res.company', string='Company', compute='_compute_company_id',
+        store=True, required=True, precompute=True, readonly=False)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', string='Currency')
     date = fields.Datetime(string='Date', default=fields.Datetime.now, required=True)
     user_id = fields.Many2one('res.users', string='User', default=lambda self: self.env.user, required=True)
@@ -31,6 +33,7 @@ class ProductValue(models.Model):
         string='Current Value', currency_field='currency_id',
         related='move_id.value')
     current_value_details = fields.Char(string='Current Value Details', compute="_compute_current_value_details")
+    current_value_description = fields.Char(string='Current Value Description', compute="_compute_current_value_description")
 
     @api.depends('move_id', 'lot_id', 'product_id')
     def _compute_company_id(self):
@@ -55,6 +58,14 @@ class ProductValue(models.Model):
             price_unit = move.value / move.quantity
             product_value.current_value_details = _("For %(quantity)s %(uom)s (%(price_unit)s per %(uom)s)",
                 quantity=quantity, uom=uom, price_unit=price_unit)
+
+    def _compute_current_value_description(self):
+        for product_value in self:
+            if not product_value.move_id:
+                product_value.current_value_description = False
+                continue
+            product_value.current_value_description = product_value.move_id._get_value_data(
+                add_computed_value_to_description=True)['description']
 
     @api.model_create_multi
     def create(self, vals_list):
