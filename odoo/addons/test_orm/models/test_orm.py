@@ -1066,6 +1066,8 @@ class TestOrmModel_Binary(models.Model):
     _description = 'Test Image field'
 
     binary = fields.Binary()
+    binary_x_filename = fields.Char()
+    binary_x_filename2 = fields.Char()
     binary_related_store = fields.Binary("Binary Related Store", related='binary', store=True, readonly=False)
     binary_related_no_store = fields.Binary("Binary Related No Store", related='binary', store=False, readonly=False)
     binary_computed = fields.Binary(compute='_compute_binary')
