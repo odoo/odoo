@@ -79,7 +79,7 @@ function runConfiguratorFlow(industrySearchText, featureOrPageName) {
 registry.category("web_tour.tours").add('configurator_translation', {
     url: '/website/configurator',
     steps: () => [
-    ...runConfiguratorFlow("in fr", "Parseltongue_privacy"),
+    ...runConfiguratorFlow("in fr", "Parseltongue_pricing"),
     {
         content: "Check if the current interface language is active and monkey patch terms",
         trigger: "body",
@@ -108,7 +108,7 @@ registry.category("web_tour.tours").add('configurator_translation', {
 registry.category("web_tour.tours").add("configurator_page_creation", {
     url: "/website/configurator",
     steps: () => [
-        ...runConfiguratorFlow("abbey", "Pricing"),
+        ...runConfiguratorFlow("abbey", "Pricing Plan"),
         // Verify configurator page templates exist in landing pages category.
         {
             content: "Open create content menu",
