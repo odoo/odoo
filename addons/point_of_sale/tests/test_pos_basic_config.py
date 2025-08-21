@@ -1147,7 +1147,7 @@ class TestPoSBasicConfig(TestPoSCommon):
 
     def test_closing_entry_by_product(self):
         # set the Group by Product at Closing Entry
-        self.config.is_closing_entry_by_product = True
+        self.config.use_closing_entry_by_product = True
         self.open_new_session()
 
         # 4 orders

@@ -1403,7 +1403,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.write({
-            'is_order_printer': True,
+            'use_order_printer': True,
             'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
         })
         self.main_pos_config.write({

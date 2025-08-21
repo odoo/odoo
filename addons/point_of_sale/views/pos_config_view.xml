@@ -12,7 +12,7 @@
                     <field name="company_has_template" invisible="1"/>
                     <field name="has_active_session" invisible="1"/>
                     <field name="other_devices" invisible="1"/>
-                    <field name="is_posbox" invisible="1"/>
+                    <field name="use_posbox" invisible="1"/>
                     <field name="module_pos_hr" invisible="1"/>
 
                     <div class="oe_title" id="title">
@@ -92,8 +92,8 @@
                             </div>
                         </setting>
                         <setting string="IoT Box" help="Connect devices using an IoT Box">
-                                <field name="is_posbox" />
-                                <div class="content-group pos_iot_config ms-3" invisible="not is_posbox">
+                                <field name="use_posbox" />
+                                <div class="content-group pos_iot_config ms-3" invisible="not use_posbox">
                                     <div class="row">
                                         <div class="col-lg-4 o_light_label">
                                             <label string="IoT Box IP Address" for="proxy_ip"/>

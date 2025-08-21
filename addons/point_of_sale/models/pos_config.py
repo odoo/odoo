@@ -70,7 +70,7 @@ class PosConfig(models.Model):
 
     name = fields.Char(string='Point of Sale', required=True, help="An internal identification of the point of sale.")
     printer_ids = fields.Many2many('pos.printer', 'pos_config_printer_rel', 'config_id', 'printer_id', string='Order Printers')
-    is_order_printer = fields.Boolean('Order Printer')
+    use_order_printer = fields.Boolean('Order Printer')
     is_installed_account_accountant = fields.Boolean(string="Is the Full Accounting Installed",
         compute="_compute_is_installed_account_accountant")
     picking_type_id = fields.Many2one(
@@ -160,8 +160,8 @@ class PosConfig(models.Model):
     module_pos_avatax = fields.Boolean("AvaTax PoS Integration", help="Use automatic taxes mapping with Avatax in PoS")
     module_pos_discount = fields.Boolean("Global Discounts")
     module_pos_appointment = fields.Boolean("Online Booking")
-    is_posbox = fields.Boolean("PosBox")
-    is_header_or_footer = fields.Boolean("Custom Header & Footer")
+    use_posbox = fields.Boolean("PosBox")
+    use_header_or_footer = fields.Boolean("Custom Header & Footer")
     module_pos_hr = fields.Boolean(help="Show employee login screen")
     amount_authorized_diff = fields.Float('Amount Authorized Difference',
         help="This field depicts the maximum difference allowed between the ending balance and the theoretical cash when "
@@ -194,7 +194,7 @@ class PosConfig(models.Model):
     show_category_images = fields.Boolean(string="Show Category Images", help="Show category images in the Point of Sale interface.", default=True)
     note_ids = fields.Many2many('pos.note', string='Note Models', help='The predefined notes of this point of sale.')
     module_pos_sms = fields.Boolean(string="SMS Enabled", help="Activate SMS feature for point_of_sale")
-    is_closing_entry_by_product = fields.Boolean(
+    use_closing_entry_by_product = fields.Boolean(
         string='Closing Entry by product',
         help="Display the breakdown of sales lines by product in the automatically generated closing entry.")
     order_edit_tracking = fields.Boolean(string="Track orders edits", help="Store edited orders in the backend", default=False)
@@ -559,7 +559,7 @@ class PosConfig(models.Model):
                     raise ValidationError(_("You cannot share open orders with configuration that does not use the same currency."))
 
     def _check_header_footer(self, values):
-        if not self.env.is_admin() and {'is_header_or_footer', 'receipt_header', 'receipt_footer'} & values.keys():
+        if not self.env.is_admin() and {'use_header_or_footer', 'receipt_header', 'receipt_footer'} & values.keys():
             raise AccessError(_('Only administrators can edit receipt headers and footers'))
 
     def _check_company_has_fiscal_country(self):
@@ -637,7 +637,7 @@ class PosConfig(models.Model):
     def _update_preparation_printers_menuitem_visibility(self):
         prepa_printers_menuitem = self.sudo().env.ref('point_of_sale.menu_pos_preparation_printer', raise_if_not_found=False)
         if prepa_printers_menuitem:
-            prepa_printers_menuitem.active = self.sudo().env['pos.config'].search_count([('is_order_printer', '=', True)], limit=1) > 0
+            prepa_printers_menuitem.active = self.sudo().env['pos.config'].search_count([('use_order_printer', '=', True)], limit=1) > 0
 
     @api.depends('use_pricelist', 'pricelist_id', 'available_pricelist_ids', 'payment_method_ids', 'limit_categories',
         'iface_available_categ_ids', 'module_pos_hr', 'module_pos_discount', 'iface_tipproduct', 'default_preset_id', 'module_pos_appointment')
@@ -647,7 +647,7 @@ class PosConfig(models.Model):
     def write(self, vals):
         self._check_header_footer(vals)
         self._reset_default_on_vals(vals)
-        if ('is_order_printer' in vals and not vals['is_order_printer']):
+        if ('use_order_printer' in vals and not vals['use_order_printer']):
             vals['printer_ids'] = [fields.Command.clear()]
 
         bypass_payment_method_ids_forbidden_change = self.env.context.get('bypass_payment_method_ids_forbidden_change', False)
@@ -679,7 +679,7 @@ class PosConfig(models.Model):
         self.sudo()._set_fiscal_position()
         self.sudo()._check_modules_to_install()
         self.sudo()._check_groups_implied()
-        if 'is_order_printer' in vals:
+        if 'use_order_printer' in vals:
             self._update_preparation_printers_menuitem_visibility()
         return result
 
@@ -1267,7 +1267,7 @@ class PosConfig(models.Model):
             param_model.set_param("point_of_sale.limited_customer_count", DEFAULT_LIMIT_LOAD_PARTNER)
 
     def _is_quantities_set(self):
-        return self.is_closing_entry_by_product
+        return self.use_closing_entry_by_product
 
     @api.onchange("epson_printer_ip")
     def _onchange_epson_printer_ip(self):

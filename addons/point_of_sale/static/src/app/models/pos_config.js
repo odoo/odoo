@@ -19,7 +19,7 @@ export class PosConfig extends Base {
 
     get useProxy() {
         return (
-            this.is_posbox &&
+            this.use_posbox &&
             (this.iface_electronic_scale ||
                 this.iface_print_via_proxy ||
                 this.iface_scan_via_proxy ||
