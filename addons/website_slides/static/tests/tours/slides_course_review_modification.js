@@ -130,11 +130,7 @@ registry.category("web_tour.tours").add("course_review_modification", {
         },
         {
             trigger:
-                "#chatterRoot:shadow .o-mail-Message .o-mail-Composer .o-mail-AttachmentCard:not(.o-isUploading)",
-        },
-        {
-            trigger:
-                "#chatterRoot:shadow .o-mail-Message .o-mail-Composer .o-mail-AttachmentCard[title='test.txt']",
+                "#chatterRoot:shadow .o-mail-Message .o-mail-Composer .o-mail-AttachmentCard:not(.o-isUploading):contains(test.txt)",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message a:contains(save)",

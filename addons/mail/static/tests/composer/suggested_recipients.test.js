@@ -141,7 +141,7 @@ test("Check that a partner is created for new followers when sending a message",
     const partners = pyEnv["res.partner"].search_read([["email", "=", "john@test.be"]]);
     expect(partners).toHaveLength(0);
     await insertText(".o-mail-Composer-input", "Dummy Message");
-    await click(".o-mail-Composer-send");
+    await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Followers-counter", { text: "1" });
 });
 
@@ -168,7 +168,7 @@ test("suggest recipient on 'Send message' composer", async () => {
     // Ensure that partner `john@test.be` is created before sending the message
     expect(pyEnv["res.partner"].search_read([["email", "=", "john@test.be"]])).toHaveLength(0);
     await insertText(".o-mail-Composer-input", "Dummy Message");
-    await click(".o-mail-Composer-send");
+    await click(".o-mail-Composer-send:enabled");
     await tick();
     expect(pyEnv["res.partner"].search_read([["email", "=", "john@test.be"]])).toHaveLength(1);
     await contains(".o-mail-Followers-counter", { text: "1" });
