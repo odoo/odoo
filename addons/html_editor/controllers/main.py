@@ -596,7 +596,14 @@ class HTML_Editor(http.Controller):
             words = parsed_preview_url.path.strip('/').split('/')
             last_segment = words[-1]
 
-            if not last_segment.isnumeric():
+            if not (
+                last_segment.isnumeric()
+                and (
+                    parsed_preview_url.path.startswith("/odoo")
+                    or parsed_preview_url.path.startswith("/web")
+                    or parsed_preview_url.path.startswith("/@/")
+                )
+            ):
                 # this could be a frontend or an external page
                 link_preview_data = self.link_preview_metadata(preview_url)
                 result = {}

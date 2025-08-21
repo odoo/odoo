@@ -154,7 +154,7 @@ class TestController(HttpCase):
                 return {
                     'og_description': 'Mocked page description',
                 }
-            elif url == _get_full_url("/page-without-description"):
+            elif url == _get_full_url("/page-without-description") or url == _get_full_url("/shop/category/1"):
                 return {
                     'og_description': None,
                 }
@@ -229,6 +229,19 @@ class TestController(HttpCase):
             )
             self.assertEqual(200, response_page_without_desc.status_code)
             self.assertTrue('"result": {}' in response_page_without_desc.text)
+
+            response_page_without_desc = self.url_open(
+                '/html_editor/link_preview_internal',
+                data=json_safe.dumps({
+                    "params": {
+                        "preview_url": _get_full_url("/shop/category/1"),
+                    }
+                }),
+                headers=self.headers
+            )
+            self.assertEqual(200, response_page_without_desc.status_code)
+            self.assertTrue('"result": {}' in response_page_without_desc.text)
+            self.assertFalse('error_msg' in response_page_without_desc.text)
 
             # Check metadata for a URL that points to an invalid/unknown page
             invalid_page = self.url_open(
