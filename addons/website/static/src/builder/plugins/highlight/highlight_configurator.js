@@ -24,8 +24,8 @@ export const highlightIdToName = {
     diagonal: "Diagonal",
     strikethrough: "Strikethrough",
     bold: "Bold",
-    bold1: "Bold 1",
-    bold2: "Bold 2",
+    bold_1: "Bold 1",
+    bold_2: "Bold 2",
 };
 
 export class HighlightConfigurator extends Component {
