@@ -141,6 +141,6 @@ export class EditorOverlay extends Component {
         }
         const container = closestScrollableY(this.props.editable) || this.props.getContainer();
         const containerRect = container.getBoundingClientRect();
-        overlayElement.style.visibility = solution.top > containerRect.top ? "visible" : "hidden";
+        overlayElement.style.visibility = solution.top >= containerRect.top ? "visible" : "hidden";
     }
 }
