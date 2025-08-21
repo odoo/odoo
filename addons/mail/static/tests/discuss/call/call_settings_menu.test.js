@@ -19,22 +19,20 @@ describe.current.tags("desktop");
 defineMailModels();
 
 test("Renders the call settings", async () => {
-    patchWithCleanup(browser.navigator, {
-        mediaDevices: {
-            enumerateDevices: () =>
-                Promise.resolve([
-                    {
-                        deviceId: "mockAudioDeviceId",
-                        kind: "audioinput",
-                        label: "mockAudioDeviceLabel",
-                    },
-                    {
-                        deviceId: "mockVideoDeviceId",
-                        kind: "videoinput",
-                        label: "mockVideoDeviceLabel",
-                    },
-                ]),
-        },
+    patchWithCleanup(browser.navigator.mediaDevices, {
+        enumerateDevices: () =>
+            Promise.resolve([
+                {
+                    deviceId: "mockAudioDeviceId",
+                    kind: "audioinput",
+                    label: "mockAudioDeviceLabel",
+                },
+                {
+                    deviceId: "mockVideoDeviceId",
+                    kind: "videoinput",
+                    label: "mockVideoDeviceLabel",
+                },
+            ]),
     });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });

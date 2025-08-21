@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.CallDeviceSelect">
-        <select name="inputDevice" class="form-select d-flex w-auto shadow-sm" t-on-change="onChangeSelectAudioInput">
+        <select name="inputDevice" class="form-select d-flex shadow-sm" t-on-change="onChangeSelectAudioInput">
             <option value="">Browser default</option>
             <t t-foreach="state.userDevices" t-as="device" t-key="device_index">
                 <option t-if="device.kind === props.kind" t-att-selected="isSelected(device.deviceId)" t-att-value="device.deviceId">
