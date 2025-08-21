@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-18 18:36+0000\n"
-"PO-Revision-Date: 2025-08-06 14:50+0000\n"
+"PO-Revision-Date: 2025-08-21 19:36+0000\n"
 "Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-4/"
 "account/fi/>\n"
@@ -8603,6 +8603,8 @@ msgid ""
 "Groupby feature isn't supported by '%(engine)s' engine. Please remove the "
 "groupby value on '%(report_line)s'"
 msgstr ""
+"Ryhmittely-ominaisuutta ei tueta '%(engine)s'-moduulissa. Poista "
+"ryhmittelyarvo kohdasta '%(report_line)s'"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__grouping_key
@@ -9206,6 +9208,9 @@ msgid ""
 "(label)s',\n"
 "Failed to parse the cross report id or xml_id.\n"
 msgstr ""
+"Raportissa \"%(report_name)s\", rivillä \"%(line_name)s\", tunnisteella "
+"\"%(label)s\",\n"
+"Ristiraportoinnin id:n tai xml_id:n jäsentäminen epäonnistui.\n"
 
 #. module: account
 #. odoo-python
@@ -9217,6 +9222,11 @@ msgid ""
 "Expected: cross_report(<report_id>|<xml_id>)Example:  "
 "cross_report(my_module.my_report) or cross_report(123)"
 msgstr ""
+"Raportissa \"%(report_name)s\", rivillä \"%(line_name)s\", tunnisteella "
+"\"%(label)s\",\n"
+"Ristiraportoinnin muoto on virheellinen.\n"
+"Odotettu: cross_report(<report_id>|<xml_id>) Esimerkki:  "
+"cross_report(my_module.my_report) tai cross_report(123)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -12313,13 +12323,13 @@ msgstr "Avointen kuittien tilit"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Outstanding credits"
-msgstr "Maksamatta oleva luotto"
+msgstr "Luottokannat"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Outstanding debits"
-msgstr "Avoimet veloitukset"
+msgstr "Maksamattomat velat"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -19830,12 +19840,12 @@ msgstr "out_invoice"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding credits"
-msgstr "maksamattomiat luotot"
+msgstr "luottokannat"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding debits"
-msgstr "maksamattomiat veloitukset"
+msgstr "maksamattomat velat"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form

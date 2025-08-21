@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-18 18:36+0000\n"
-"PO-Revision-Date: 2025-08-20 14:13+0000\n"
+"PO-Revision-Date: 2025-08-21 19:35+0000\n"
 "Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-4/"
 "point_of_sale/fi/>\n"
@@ -172,7 +172,7 @@ msgstr "%s veroton"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 msgid "(DUPLICATE !)"
-msgstr ""
+msgstr "(KOPIO!)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -527,7 +527,7 @@ msgstr "Tällä nimellä oleva huomautus on jo olemassa"
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_payment_unique_uuid
 msgid "A payment with this uuid already exists"
-msgstr ""
+msgstr "Maksu, jolla on tämä uuid, on jo olemassa"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -4240,6 +4240,8 @@ msgstr "Sinulla ei ole tarpeeksi oikeuksia kassan määritysten luomiseen."
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "It seems like you don't have enough rights to load data."
 msgstr ""
+"Vaikuttaa siltä, että sinulla ei ole tarvittavia oikeuksia tietojen "
+"lataamiseen."
 
 #. module: point_of_sale
 #. odoo-python
@@ -4277,13 +4279,13 @@ msgstr "Päiväkirjan kirjaus"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_move_line
 msgid "Journal Item"
-msgstr "Päiväkirjatapahtuma"
+msgstr "Päiväkirjamerkintä"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Journal Items"
-msgstr "Päiväkirjan tapahtumat"
+msgstr "Päiväkirjamerkinnät"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5501,7 +5503,7 @@ msgstr "Tilausnro"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Order Outdated"
-msgstr ""
+msgstr "Tilaus on vanhentunut"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_order_printer
@@ -8598,6 +8600,11 @@ msgid ""
 "The order will be sent to the server with the last changes made on this "
 "device."
 msgstr ""
+"Tilausta on muokattu toisella laitteella. Jos olet muokannut olemassa olevia "
+"tilausrivejä, tarkista, ettei muutoksiasi ole korvattu.\n"
+"\n"
+"Tilaus lähetetään palvelimelle tällä laitteella viimeksi tehtyjen muutosten "
+"kera."
 
 #. module: point_of_sale
 #. odoo-javascript

@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-18 18:36+0000\n"
-"PO-Revision-Date: 2025-08-20 14:13+0000\n"
+"PO-Revision-Date: 2025-08-21 19:34+0000\n"
 "Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-4/hr/fi/"
 ">\n"
@@ -1727,13 +1727,13 @@ msgstr "Kyberturvallisuus"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__date_end
 #: model:ir.model.fields,field_description:hr.field_hr_version__date_end
 msgid "Date End"
-msgstr "Loppupäiväys"
+msgstr "Päättymispäivä"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__date_start
 #: model:ir.model.fields,field_description:hr.field_hr_version__date_start
 msgid "Date Start"
-msgstr "Aloituspäivämäärä"
+msgstr "Alkamispäivä"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__date_version
@@ -1778,6 +1778,8 @@ msgid ""
 "Define the working schedule of the resource. If not set, the resource will "
 "have fully flexible working hours."
 msgstr ""
+"Määritä resurssin työaikataulu. Jos sitä ei ole määritetty, resurssilla on "
+"täysin joustavat työajat."
 
 #. module: hr
 #. odoo-javascript
@@ -2876,19 +2878,19 @@ msgstr "Työharjoittelija"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_current
 #: model:ir.model.fields,field_description:hr.field_hr_version__is_current
 msgid "Is Current"
-msgstr "On nykyinen"
+msgstr "Nykyinen"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_custom_job_title
 #: model:ir.model.fields,field_description:hr.field_hr_version__is_custom_job_title
 msgid "Is Custom Job Title"
-msgstr "On mukautettu työnimike"
+msgstr "Räätälöity työnimike"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_flexible
 #: model:ir.model.fields,field_description:hr.field_hr_version__is_flexible
 msgid "Is Flexible"
-msgstr "On joustava"
+msgstr "Joustava"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
@@ -2896,51 +2898,51 @@ msgstr "On joustava"
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_version__message_is_follower
 msgid "Is Follower"
-msgstr "On seuraaja"
+msgstr "Seuraaja"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_fully_flexible
 #: model:ir.model.fields,field_description:hr.field_hr_version__is_fully_flexible
 msgid "Is Fully Flexible"
-msgstr "On täysin joustava"
+msgstr "Täysin joustava"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_future
 #: model:ir.model.fields,field_description:hr.field_hr_version__is_future
 msgid "Is Future"
-msgstr "On tuleva"
+msgstr "Tuleva"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__is_hr_user
 msgid "Is Hr User"
-msgstr "On HR-käyttäjä"
+msgstr "HR-käyttäjä"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_in_contract
 #: model:ir.model.fields,field_description:hr.field_hr_version__is_in_contract
 msgid "Is In Contract"
-msgstr "On sopimuksessa"
+msgstr "Sopimuksessa"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_manager
 msgid "Is Manager"
-msgstr "On esimies"
+msgstr "Esimies"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_past
 #: model:ir.model.fields,field_description:hr.field_hr_version__is_past
 msgid "Is Past"
-msgstr "On mennyt"
+msgstr "Mennyt"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__is_system
 msgid "Is System"
-msgstr "Onko järjestelmä"
+msgstr "Järjestelmä"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "It prioritizes data-driven decision-making"
-msgstr "Päätöksenteossa painotetaan datalähtöisyyttä"
+msgstr "Datalähtöisyys on päätöksenteossa prioriteetti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_id
@@ -2949,7 +2951,7 @@ msgstr "Päätöksenteossa painotetaan datalähtöisyyttä"
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_tree
 msgid "Job"
-msgstr "Tehtävä"
+msgstr "Työtehtävä"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__description
@@ -4831,6 +4833,7 @@ msgstr "Käyttäjä on jo olemassa näille työntekijöille %s"
 #: code:addons/hr/models/hr_employee.py:0
 msgid "User already exists with the same email for Employees %s"
 msgstr ""
+"Käyttäjä, jolla on sama sähköpostiosoite, on jo olemassa työntekijöille %s"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
@@ -5160,7 +5163,7 @@ msgstr "Työaikataulut"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_resource_resource__calendar_id
 msgid "Working Time"
-msgstr ""
+msgstr "Työaika"
 
 #. module: hr
 #. odoo-python
@@ -5214,7 +5217,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "You need to set a valid work email address for %s"
-msgstr ""
+msgstr "Sinun on asetettava kelvollinen työsähköpostiosoite käyttäjälle %s"
 
 #. module: hr
 #. odoo-python

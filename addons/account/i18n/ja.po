@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-18 18:36+0000\n"
-"PO-Revision-Date: 2025-08-20 09:56+0000\n"
+"PO-Revision-Date: 2025-08-21 19:36+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-4/"
 "account/ja/>\n"
@@ -5271,7 +5271,7 @@ msgstr "計算残高"
 #. module: account
 #: model:ir.model,name:account.model_res_config_settings
 msgid "Config Settings"
-msgstr "コンフィグ設定"
+msgstr "詳細設定"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_configuration
@@ -8519,6 +8519,9 @@ msgid ""
 "Groupby feature isn't supported by '%(engine)s' engine. Please remove the "
 "groupby value on '%(report_line)s'"
 msgstr ""
+"'%(engine)s' エンジンでは groupby "
+"機能はサポートされていません。'%(report_line)s' の groupby "
+"値を削除してください"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__grouping_key
@@ -8838,8 +8841,7 @@ msgstr "支払期限の60日後にまだ未払の場合は、"
 msgid ""
 "If activated, user-defined filters on journal items can be selected on this "
 "report"
-msgstr ""
-"有効にすると、仕訳帳項目のユーザ定義フィルタをこのレポートで選択できます"
+msgstr "有効にすると、仕訳項目のユーザ定義フィルタをこのレポートで選択できます"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_needaction
@@ -9114,6 +9116,8 @@ msgid ""
 "(label)s',\n"
 "Failed to parse the cross report id or xml_id.\n"
 msgstr ""
+"レポート'%(report_name)s' の行 '%(line_name)s' (ラベル '%(label)s') で、\n"
+"クロスレポートの ID または XML ID の解析に失敗しました。\n"
 
 #. module: account
 #. odoo-python
@@ -9125,6 +9129,10 @@ msgid ""
 "Expected: cross_report(<report_id>|<xml_id>)Example:  "
 "cross_report(my_module.my_report) or cross_report(123)"
 msgstr ""
+"レポート '%(report_name)s' の行 '%(line_name)s' (ラベル '%(label)s')\n"
+"で、クロスレポート式の形式が無効です。 \n"
+"正しい形式: cross_report(<report_id>|<xml_id>)例:  "
+"cross_report(my_module.my_report) または cross_report(123)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -10111,13 +10119,13 @@ msgstr "仕訳明細"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s created"
-msgstr "仕訳帳項目 %s が作成されました"
+msgstr "仕訳項目 %s が作成されました"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s deleted"
-msgstr "仕訳帳項目 %s が削除されました"
+msgstr "仕訳項目 %s が削除されました"
 
 #. module: account
 #. odoo-python
@@ -10179,7 +10187,7 @@ msgstr "突合番号が設定されていない仕訳明細"
 msgid ""
 "Journal items where the account allows reconciliation no matter the residual "
 "amount"
-msgstr "残高に関わらず、会計で消込が許可されている仕訳帳項目"
+msgstr "残高に関わらず、会計で消込が許可されている仕訳項目"
 
 #. module: account
 #. odoo-python
@@ -13937,7 +13945,7 @@ msgstr "取り消す"
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__state__revoked
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "Revoked"
-msgstr "取消済"
+msgstr "キャンセル済"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_line__horizontal_split_side__right
@@ -17916,10 +17924,10 @@ msgid ""
 "should be reset to zero at each new fiscal year (like expenses, revenue..) "
 "should not have this option set."
 msgstr ""
-"レポートで使用され、会計年度のみではなく、時間の初めから仕訳帳項目を検討する"
-"必要があるかどうかを判断します。新しい会計年度ごとにゼロにリセットする必要が"
-"あるアカウントタイプ（経費、収益など）には、このオプションを設定しないでくだ"
-"さい。"
+"レポートで使用され、会計年度のみではなく、時間の初めから仕訳項目を検討する必"
+"要があるかどうかを判断します。新しい会計年度ごとにゼロにリセットする必要があ"
+"るアカウントタイプ（経費、収益など）には、このオプションを設定しないでくださ"
+"い。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence
@@ -18648,9 +18656,8 @@ msgstr ""
 msgid ""
 "You can't unlink this company from this account since there are some journal "
 "items linked to it."
-msgstr ""
-"この会社とこの勘定科目のリンクを解除することはできません。この会社にはいくつ"
-"かの仕訳帳項目がリンクされているためです。"
+msgstr "この会社とこの勘定科目のリンクを解除することはできません。この会社にはいくつ"
+"かの仕訳項目がリンクされているためです。"
 
 #. module: account
 #. odoo-python
@@ -18731,7 +18738,7 @@ msgstr "税レポートに影響を与えるため、税目を削除すること
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete journal items belonging to a locked journal entry."
-msgstr "ロックされた仕訳帳の仕訳帳項目は削除できません。"
+msgstr "ロックされた仕訳帳の仕訳項目は削除できません。"
 
 #. module: account
 #. odoo-python

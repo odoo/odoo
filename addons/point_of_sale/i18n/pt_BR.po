@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-18 18:36+0000\n"
-"PO-Revision-Date: 2025-08-20 16:34+0000\n"
+"PO-Revision-Date: 2025-08-21 19:35+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-s18-4/point_of_sale/pt_BR/>\n"
@@ -527,7 +527,7 @@ msgstr "Já existe uma nota com este nome"
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_payment_unique_uuid
 msgid "A payment with this uuid already exists"
-msgstr ""
+msgstr "Já existe um pagamento com esse uuid"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -4244,6 +4244,8 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "It seems like you don't have enough rights to load data."
 msgstr ""
+"Parece que você não tem direitos suficientes para criar configurações para o "
+"ponto de venda."
 
 #. module: point_of_sale
 #. odoo-python
@@ -5508,7 +5510,7 @@ msgstr "Número do pedido"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Order Outdated"
-msgstr ""
+msgstr "Pedido desatualizado"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_order_printer
@@ -8618,6 +8620,11 @@ msgid ""
 "The order will be sent to the server with the last changes made on this "
 "device."
 msgstr ""
+"O pedido foi modificado em outro dispositivo. Se você mexeu nas linhas do "
+"pedido existentes, confira se suas alterações não foram substituídas.\n"
+"\n"
+"O pedido será enviado ao servidor com as últimas alterações feitas neste "
+"dispositivo."
 
 #. module: point_of_sale
 #. odoo-javascript

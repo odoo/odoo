@@ -1,23 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* cloud_storage
-# 
+# * cloud_storage
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
+# "Marta (wacm)" <wacm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-16 18:37+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"PO-Revision-Date: 2025-08-21 19:34+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s18-4/"
+"cloud_storage/pl/>\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pl\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && ("
+"n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: cloud_storage
 #: model:ir.model,name:cloud_storage.model_ir_attachment
@@ -33,30 +38,30 @@ msgstr "Przechowywanie w chmurze"
 #. module: cloud_storage
 #: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_provider
 msgid "Cloud Storage Provider for new attachments"
-msgstr ""
+msgstr "Dostawca pamięci masowej w chmurze dla nowych załączników"
 
 #. module: cloud_storage
 #: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
 msgid "Cloud Storage Settings"
-msgstr ""
+msgstr "Ustawienia pamięci w chmurze"
 
 #. module: cloud_storage
 #. odoo-python
 #: code:addons/cloud_storage/models/ir_attachment.py:0
 msgid "Cloud Storage is not enabled"
-msgstr ""
+msgstr "Pamięć w chmurze nie jest aktywowana"
 
 #. module: cloud_storage
 #. odoo-python
 #: code:addons/cloud_storage/controllers/attachment.py:0
 msgid "Cloud storage configuration has been changed. Please refresh the page."
-msgstr ""
+msgstr "Zmieniono konfigurację pamięci w chmurze. Odśwież stronę."
 
 #. module: cloud_storage
 #. odoo-javascript
 #: code:addons/cloud_storage/static/src/core/common/attachment_upload_service_patch.js:0
 msgid "Cloud storage error"
-msgstr ""
+msgstr "Błąd pamięci w chmurze"
 
 #. module: cloud_storage
 #: model:ir.model,name:cloud_storage.model_res_config_settings
@@ -85,23 +90,24 @@ msgstr "ID"
 #. module: cloud_storage
 #: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_min_file_size
 msgid "Minimum File Size (bytes)"
-msgstr ""
+msgstr "Minimalny rozmiar pliku (bajty)"
 
 #. module: cloud_storage
 #: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
 msgid "Minimum size(bytes) for attachments to be stored in the cloud storage"
-msgstr ""
+msgstr "Minimalny rozmiar (bajty) dla załączników zapisywanych w chmurze."
 
 #. module: cloud_storage
 #. odoo-python
 #: code:addons/cloud_storage/models/res_config_settings.py:0
 msgid "Please configure the Cloud Storage before enabling it"
-msgstr ""
+msgstr "Skonfiguruj pamięć w chmurze przed aktywacją jej"
 
 #. module: cloud_storage
 #: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
 msgid "Select the cloud storage provider to store new attachments."
 msgstr ""
+"Wybierz dostawcę pamięci w chmurze do przechowywania nowych załączników."
 
 #. module: cloud_storage
 #: model:ir.model.fields,field_description:cloud_storage.field_ir_attachment__type
@@ -112,7 +118,7 @@ msgstr "Typ"
 #. odoo-javascript
 #: code:addons/cloud_storage/static/src/core/common/attachment_upload_service_patch.js:0
 msgid "You are not allowed to upload file to the cloud storage"
-msgstr ""
+msgstr "Nie masz uprawnień do przesyłania załączników do chmury"
 
 #. module: cloud_storage
 #: model:ir.model.fields,help:cloud_storage.field_ir_attachment__type
@@ -130,3 +136,7 @@ msgid ""
 "        (in bytes) as url attachments to the server and then upload the file to\n"
 "        the cloud storage."
 msgstr ""
+"Klient internetowy może przesyłać pliki większe niż minimalny rozmiar pliku\n"
+"        (w bajtach) jako załączniki URL na serwer, a następnie przesyłać "
+"plik do\n"
+"        chmury."
