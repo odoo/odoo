@@ -2,33 +2,49 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.WelcomePage">
-    <div class="o-mail-WelcomePage h-100 w-100 d-flex flex-column justify-content-center align-items-center bg-light">
-        <h1 class="fw-light">
+    <div class="o-mail-WelcomePage w-100 d-flex flex-column justify-content-md-center align-items-center bg-light p-3" style="min-height: 100dvh;">
+        <h1 class="fw-light text-center">
             <span t-if="this.store.discuss.thread.default_display_mode === 'video_full_screen'">You've been invited to a meeting!</span>
             <span t-else="">You've been invited to a chat!</span>
         </h1>
-        <h2 class="m-5" t-esc="store.companyName"/>
-        <div class="d-flex justify-content-center gap-5" t-att-class="{'flex-column': ui.isSmall}">
-            <div t-if="this.store.discuss.thread.default_display_mode === 'video_full_screen'" class="position-relative d-flex justify-content-center" t-ref="root">
-                <video class="shadow rounded-3 bg-dark" t-attf-height="{{ui.isSmall ? 240 : 480}}" t-attf-width="{{ui.isSmall ? 320 : 640}}" autoplay="" t-ref="video"/>
-                <p t-if="hasRtcSupport and !state.videoStream" class="position-absolute bottom-50 text-light">
-                    Camera is off
-                </p>
-                <p t-if="!hasRtcSupport" class="position-absolute bottom-50 text-light">
-                    Your browser does not support videoconference
-                </p>
-                <div class="position-absolute bottom-0">
-                    <button class="btn fa-stack align-self-end p-0 m-3 rounded-circle fs-1 shadow" t-attf-class="{{ state.audioStream ? 'btn-dark' : 'btn-danger' }}" t-on-click="onClickMic">
-                        <i class="fa" t-attf-class="{{ state.audioStream ? 'fa-microphone' : 'fa-microphone-slash' }}"/>
-                    </button>
-                    <button class="btn fa-stack align-self-end p-0 m-3 rounded-circle fs-1 shadow" t-attf-class="{{ state.videoStream ? 'btn-dark' : 'btn-danger' }}" t-on-click="onClickVideo">
-                        <i class="fa fa-camera"/>
-                    </button>
-                    <button t-if="state.videoStream"  class="btn fa-stack p-0 m-3 rounded-circle fs-1 shadow" t-attf-class="{{ store.settings.useBlur ? 'btn-secondary' : 'btn-dark' }}" t-on-click="onClickBlur" t-att-title="blurButtonTitle">
-                        <i class="fa fa-photo" t-att-class="{ 'opacity-50': !store.settings.useBlur }"/>
-                    </button>
+        <h2 class="m-3 m-md-5" t-esc="store.companyName"/>
+        <div class="w-100 d-flex justify-content-center gap-5" t-att-class="{'flex-column': ui.isSmall}">
+            <div t-if="this.store.discuss.thread.default_display_mode === 'video_full_screen'" class="w-100 align-self-center" style="max-width: 640px;">
+                <div class="position-relative d-flex flex-column align-items-center" t-ref="root">
+                    <video class="shadow rounded-3 bg-dark object-fit-contain" t-attf-height="{{ui.isSmall ? 240 : 360}}" width="100%" autoplay="" t-ref="video"/>
+                    <p t-if="hasRtcSupport and !state.videoStream" class="position-absolute bottom-50 text-light">
+                        Camera is off
+                    </p>
+                    <p t-if="!hasRtcSupport" class="position-absolute bottom-50 text-light">
+                        Your browser does not support videoconference
+                    </p>
+                    <div class="position-absolute bottom-0">
+                        <button class="btn fa-stack align-self-end p-0 m-3 rounded-circle fs-1 shadow" t-attf-class="{{ state.audioStream ? 'btn-dark' : 'btn-danger' }}" t-on-click="onClickMic">
+                            <i class="fa" t-attf-class="{{ state.audioStream ? 'fa-microphone' : 'fa-microphone-slash' }}"/>
+                        </button>
+                        <button class="btn fa-stack align-self-end p-0 m-3 rounded-circle fs-1 shadow" t-attf-class="{{ state.videoStream ? 'btn-dark' : 'btn-danger' }}" t-on-click="onClickVideo">
+                            <i class="fa fa-camera"/>
+                        </button>
+                        <button t-if="state.videoStream"  class="btn fa-stack p-0 m-3 rounded-circle fs-1 shadow" t-attf-class="{{ store.settings.useBlur ? 'btn-secondary' : 'btn-dark' }}" t-on-click="onClickBlur" t-att-title="blurButtonTitle">
+                            <i class="fa fa-photo" t-att-class="{ 'opacity-50': !store.settings.useBlur }"/>
+                        </button>
+                    </div>
+                    <audio autoplay="" t-ref="audio"/>
                 </div>
-                <audio autoplay="" t-ref="audio"/>
+                <div class="d-flex flex-column flex-md-row gap-2 text-muted mt-3">
+                    <div class="w-100 text-uppercase">
+                        <i class="fa fa-microphone"></i> Microphone
+                        <DeviceSelect kind="'audioinput'"/>
+                    </div>
+                    <div class="w-100 text-uppercase">
+                        <i class="fa fa-volume-up"></i> Output
+                        <DeviceSelect kind="'audiooutput'"/>
+                    </div>
+                    <div class="w-100 text-uppercase">
+                        <i class="fa fa-camera"></i> Camera
+                        <DeviceSelect kind="'videoinput'"/>
+                    </div>
+                </div>
             </div>
             <div class="d-flex flex-column justify-content-center">
                 <t t-if="store.self_guest">
