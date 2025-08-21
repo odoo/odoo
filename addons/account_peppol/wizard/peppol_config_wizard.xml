@@ -10,7 +10,10 @@
                 <div invisible="account_peppol_proxy_state != 'sender'">
                     You are sending your e-invoices via Odoo with this Peppol ID <field name="account_peppol_edi_identification" class="oe_inline o_form_label" readonly="1"/>.
                 </div>
-                <div invisible="account_peppol_proxy_state not in ('smp_registration', 'receiver')">
+                <div invisible="account_peppol_proxy_state != 'smp_registration'">
+                    Your Peppol registration is being processed, it should be active within a day.
+                </div>
+                <div invisible="account_peppol_proxy_state != 'receiver'">
                     You are sending and receiving your e-invoices via Odoo with this Peppol ID <field name="account_peppol_edi_identification" class="oe_inline o_form_label" readonly="1"/>.
                 </div>
                 <group string="Company information">
