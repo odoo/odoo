@@ -75,10 +75,7 @@ export function useColorPickerBuilderComponent() {
         callOperation(applyOperation.preview, {
             preview: true,
             userInputValue: getColor(colorValue),
-            operationParams: {
-                cancellable: true,
-                cancelPrevious: () => applyOperation.revert(),
-            },
+            operationParams: { cancel: () => applyOperation.revert() },
         });
     };
     const hasPreview = useHasPreview(getAllActions);

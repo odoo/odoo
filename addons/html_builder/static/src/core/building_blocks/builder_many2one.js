@@ -112,10 +112,7 @@ export class BuilderMany2One extends Component {
         this.callOperation(this.applyOperation.preview, {
             preview: true,
             userInputValue: newSelected && JSON.stringify(newSelected),
-            operationParams: {
-                cancellable: true,
-                cancelPrevious: () => this.applyOperation.revert(),
-            },
+            operationParams: { cancel: () => this.applyOperation.revert() },
         });
     }
     revert() {
@@ -126,8 +123,12 @@ export class BuilderMany2One extends Component {
     create(name) {
         const args = { editingElement: this.env.getEditingElement(), value: name };
         this.env.editor.shared.operation.next(() => this.createOperation.commit(args), {
-            load: () =>
-                this.createAction.load?.(args).then((loadResult) => (args.loadResult = loadResult)),
+            load: this.createAction.load
+                ? () =>
+                      this.createAction
+                          .load(args)
+                          .then((loadResult) => (args.loadResult = loadResult))
+                : undefined,
         });
     }
 }

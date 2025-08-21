@@ -492,10 +492,7 @@ export function useClickableBuilderComponent() {
             preventNextPreview = true;
             callOperation(applyOperation.preview, {
                 preview: true,
-                operationParams: {
-                    cancellable: true,
-                    cancelPrevious: () => applyOperation.revert(),
-                },
+                operationParams: { cancel: () => applyOperation.revert() },
             });
         },
         revert: () => {
@@ -699,10 +696,7 @@ export function useInputBuilderComponent({
             callOperation(applyOperation.preview, {
                 preview: true,
                 userInputValue: parseDisplayValue(userInputValue),
-                operationParams: {
-                    cancellable: true,
-                    cancelPrevious: () => applyOperation.revert(),
-                },
+                operationParams: { cancel: () => applyOperation.revert() },
             });
         }
     }
