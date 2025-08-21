@@ -90,7 +90,7 @@ class PurchaseOrder(models.Model):
     date_approve = fields.Datetime('Confirmation Date', readonly=True, index=True, copy=False)
     partner_id = fields.Many2one(
         'res.partner', string='Vendor', required=True, change_default=True,
-        tracking=True, check_company=True,
+        tracking=True, check_company=True, index=True,
         help="You can find a vendor by its Name, TIN, Email or Internal Reference.")
     dest_address_id = fields.Many2one('res.partner', check_company=True, string='Dropship Address',
         help="Put an address if you want to deliver directly from the vendor to the customer. "
