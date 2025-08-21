@@ -46,7 +46,7 @@ export class FontSizeSelector extends Component {
 
                 this.fontSizeInput = iframeDoc.createElement("input");
                 const isDarkMode = cookie.get("color_scheme") === "dark";
-                const htmlStyle = getHtmlStyle(this.props.document);
+                const htmlStyle = getHtmlStyle(document);
                 const backgroundColor = getCSSVariableValue(
                     isDarkMode ? "gray-200" : "white",
                     htmlStyle
