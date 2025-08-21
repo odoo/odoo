@@ -126,7 +126,7 @@ class Website(models.Model):
         string="Shop Design Class",
         default=(
             'o_wsale_products_opt_layout_catalog o_wsale_products_opt_design_thumbs '
-            'o_wsale_products_opt_name_color_regular o_wsale_products_opt_thumb_6_5 '
+            'o_wsale_products_opt_name_color_regular o_wsale_products_opt_rounded_2 '
             'o_wsale_products_opt_thumb_cover o_wsale_products_opt_img_secondary_show '
             'o_wsale_products_opt_img_hover_zoom_out_light o_wsale_products_opt_has_cta '
             'o_wsale_products_opt_actions_onhover o_wsale_products_opt_has_wishlist '
