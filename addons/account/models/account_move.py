@@ -2731,8 +2731,7 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     def action_add_from_catalog(self):
         res = super().action_add_from_catalog()
-        if res['context'].get('product_catalog_order_model') == 'account.move':
-            res['search_view_id'] = [self.env.ref('account.product_view_search_catalog').id, 'search']
+        res['search_view_id'] = [self.env.ref('account.product_view_search_catalog').id, 'search']
         return res
 
     def _get_action_add_from_catalog_extra_context(self):
@@ -2793,12 +2792,17 @@ class AccountMove(models.Model):
                 )
         return product_infos
 
-    def _get_product_catalog_record_lines(self, product_ids, *, selected_section_id=False, **kwargs):
+    def _get_product_catalog_record_lines(self, product_ids, *, section_id=None, **kwargs):
         grouped_lines = defaultdict(lambda: self.env['account.move.line'])
-        selected_section_id = selected_section_id or False
+        if section_id is None:
+            section_id = (
+                self.line_ids[:1].id
+                if self.line_ids[:1].display_type == 'line_section'
+                else False
+            )
         for line in self.line_ids:
             if (
-                line.get_parent_section_line().id == selected_section_id
+                line.get_parent_section_line().id == section_id
                 and line.display_type == 'product'
                 and line.product_id.id in product_ids
             ):
@@ -2806,27 +2810,20 @@ class AccountMove(models.Model):
         return grouped_lines
 
     def _update_order_line_info(
-            self,
-            product_id,
-            quantity,
-            *,
-            selected_section_id=False,
-            child_field='line_ids',
-            **kwargs,
-        ):
+        self, product_id, quantity, *, section_id=False, child_field='line_ids', **kwargs
+    ):
         """ Update account_move_line information for a given product or create a
         new one if none exists yet.
         :param int product_id: The product, as a `product.product` id.
         :param int quantity: The quantity selected in the catalog
-        :param int selected_section_id: The id of section selected in the catalog.
+        :param int section_id: The id of section selected in the catalog.
         :return: The unit price of the product, based on the pricelist of the
                  sale order and the quantity selected.
         :rtype: float
         """
-        selected_section_id = selected_section_id or False
         move_line = self.line_ids.filtered(
             lambda line: line.product_id.id == product_id
-            and line.get_parent_section_line().id == selected_section_id,
+            and line.get_parent_section_line().id == section_id,
         )
         if move_line:
             if quantity != 0:
@@ -2845,7 +2842,7 @@ class AccountMove(models.Model):
                 'move_id': self.id,
                 'quantity': quantity,
                 'product_id': product_id,
-                'sequence': self._get_new_line_sequence(child_field, selected_section_id),
+                'sequence': self._get_new_line_sequence(child_field, section_id),
             })
         return move_line.price_unit
 
@@ -2856,18 +2853,13 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.state == 'cancel'
 
-    def _get_section_model_info(self):
-        """ Override of `product` to return the model name and parent field for the move lines.
-
-        :return: line_model, parent_field
-        """
-        return 'account.move.line', 'move_id'
+    def _get_parent_field_on_child_model(self):
+        return 'move_id'
 
     def _is_line_valid_for_section_line_count(self, line):
-        """ Override of `product` to check if a line is valid for inclusion in the section's line
-            count.
+        """Check if a line is valid for inclusion in the section's line count.
 
-        :param recordset line: A record of an order line.
+        :param recordset line: A record of a move line.
         :return: True if this line is a valid, else False.
         :rtype: bool
         """

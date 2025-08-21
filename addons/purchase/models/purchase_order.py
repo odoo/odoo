@@ -1119,10 +1119,9 @@ class PurchaseOrder(models.Model):
 
     def action_add_from_catalog(self):
         res = super().action_add_from_catalog()
-        if res['context'].get('product_catalog_order_model') == 'purchase.order':
-            res['search_view_id'] = [self.env.ref('purchase.product_view_search_catalog').id, 'search']
         kanban_view_id = self.env.ref('purchase.product_view_kanban_catalog_purchase_only').id
         res['views'][0] = (kanban_view_id, 'kanban')
+        res['search_view_id'] = [self.env.ref('purchase.product_view_search_catalog').id, 'search']
         res['context']['partner_id'] = self.partner_id.id
         return res
 
@@ -1145,14 +1144,19 @@ class PurchaseOrder(models.Model):
             res[product.id] |= self._get_product_price_and_data(product)
         return res
 
-    def _get_product_catalog_record_lines(self, product_ids, *, selected_section_id=False, **kwargs):
+    def _get_product_catalog_record_lines(self, product_ids, *, section_id=None, **kwargs):
         grouped_lines = defaultdict(lambda: self.env['purchase.order.line'])
-        selected_section_id = selected_section_id or False
+        if section_id is None:
+            section_id = (
+                self.order_line[:1].id
+                if self.order_line[:1].display_type == 'line_section'
+                else False
+            )
         for line in self.order_line:
             if (
                 line.display_type
                 or line.product_id.id not in product_ids
-                or line.get_parent_section_line().id != selected_section_id
+                or line.get_parent_section_line().id != section_id
             ):
                 continue
             grouped_lines[line.product_id] |= line
@@ -1254,28 +1258,21 @@ class PurchaseOrder(models.Model):
             line._update_date_planned(date)
 
     def _update_order_line_info(
-            self,
-            product_id,
-            quantity,
-            *,
-            selected_section_id=False,
-            child_field='order_line',
-            **kwargs,
-        ):
+        self, product_id, quantity, *, section_id=False, child_field='order_line', **kwargs
+    ):
         """ Update purchase order line information for a given product or create
         a new one if none exists yet.
         :param int product_id: The product, as a `product.product` id.
         :param int quantity: The quantity selected in the catalog.
-        :param int selected_section_id: The id of section selected in the catalog.
+        :param int section_id: The id of section selected in the catalog.
         :return: The unit price of the product, based on the pricelist of the
                  purchase order and the quantity selected.
         :rtype: float
         """
         self.ensure_one()
-        selected_section_id = selected_section_id or False
         pol = self.order_line.filtered(
             lambda l: l.product_id.id == product_id
-            and l.get_parent_section_line().id == selected_section_id,
+            and l.get_parent_section_line().id == section_id,
         )
         if pol:
             if quantity != 0:
@@ -1291,7 +1288,7 @@ class PurchaseOrder(models.Model):
                 'order_id': self.id,
                 'product_id': product_id,
                 'product_qty': quantity,
-                'sequence': self._get_new_line_sequence(child_field, selected_section_id),
+                'sequence': self._get_new_line_sequence(child_field, section_id),
             })
             if pol.selected_seller_id:
                 # Fix the PO line's price on the seller's one.
@@ -1302,15 +1299,17 @@ class PurchaseOrder(models.Model):
                 pol.price_unit = price
         return pol.price_unit_discounted
 
-    def _create_order_section(self, child_field, name, position, **kwargs):
-        return super()._create_order_section(child_field, name, position, product_qty=0, **kwargs)
+    def _get_default_create_section_values(self):
+        """ Return the default values for creating a section line in the purchase order through
+        catalog.
 
-    def _get_section_model_info(self):
-        """ Override of `product` to return the model name and parent field for the order lines.
-
-        :return: line_model, parent_field
+        :return: A dictionary with default values for creating a new section.
+        :rtype: dict
         """
-        return 'purchase.order.line', 'order_id'
+        return {'product_qty': 0}
+
+    def _get_parent_field_on_child_model(self):
+        return 'order_id'
 
     def _create_update_date_activity(self, updated_dates):
         note = Markup('<p>%s</p>\n') % _('%s modified receipt dates for the following products:', self.partner_id.name)

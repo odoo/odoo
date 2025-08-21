@@ -1245,6 +1245,13 @@ class SaleOrder(models.Model):
                 subtype_xmlid='mail.mt_comment',
             )
 
+    def _validate_order(self):
+        """Confirm the sale order and send a confirmation email.
+
+        :return: None
+        """
+        self.with_context(send_email=True).action_confirm()
+
     @api.model
     def _cron_send_pending_emails(self):
         """ Find and send pending order status emails asynchronously.
@@ -2074,6 +2081,8 @@ class SaleOrder(models.Model):
 
         return generated_invoices
 
+    # === CATALOG === #
+
     def _get_product_catalog_order_data(self, products, **kwargs):
         pricelist = self.pricelist_id._get_products_price(
             quantity=1.0,
@@ -2089,58 +2098,43 @@ class SaleOrder(models.Model):
                 res[product.id]['warning'] = product.sale_line_warn_msg
         return res
 
-    def _get_product_catalog_record_lines(self, product_ids, *, selected_section_id=False, **kwargs):
+    def _get_product_catalog_record_lines(self, product_ids, *, section_id=None, **kwargs):
         grouped_lines = defaultdict(lambda: self.env['sale.order.line'])
-        selected_section_id = selected_section_id or False
+        if section_id is None:
+            section_id = (
+                self.order_line[:1].id
+                if self.order_line[:1].display_type == 'line_section'
+                else False
+            )
         for line in self.order_line:
             if (
                 line.display_type
                 or line.product_id.id not in product_ids
-                or line.get_parent_section_line().id != selected_section_id
+                or line.get_parent_section_line().id != section_id
             ):
                 continue
             grouped_lines[line.product_id] |= line
         return grouped_lines
 
-    def _get_product_documents(self):
-        self.ensure_one()
-
-        documents = (
-            self.order_line.product_id.product_document_ids
-            | self.order_line.product_template_id.product_document_ids
-        )
-        return self._filter_product_documents(documents).sorted()
-
-    def _filter_product_documents(self, documents):
-        return documents.filtered(
-            lambda document:
-                document.attached_on_sale == 'quotation'
-                or (self.state == 'sale' and document.attached_on_sale == 'sale_order')
-        )
+    def _get_parent_field_on_child_model(self):
+        return 'order_id'
 
     def _update_order_line_info(
-            self,
-            product_id,
-            quantity,
-            *,
-            selected_section_id=False,
-            child_field='order_line',
-            **kwargs,
-        ):
+        self, product_id, quantity, *, section_id=False, child_field='order_line', **kwargs
+    ):
         """ Update sale order line information for a given product or create a
         new one if none exists yet.
         :param int product_id: The product, as a `product.product` id.
         :param int quantity: The quantity selected in the catalog.
-        :param int selected_section_id: The id of section selected in the catalog.
+        :param int section_id: The id of section selected in the catalog.
         :return: The unit price of the product, based on the pricelist of the
                  sale order and the quantity selected.
         :rtype: float
         """
         request.update_context(catalog_skip_tracking=True)
-        selected_section_id = selected_section_id or False
         sol = self.order_line.filtered(
             lambda l: l.product_id.id == product_id
-            and l.get_parent_section_line().id == selected_section_id,
+            and l.get_parent_section_line().id == section_id,
         )
         if sol:
             if quantity != 0:
@@ -2162,16 +2156,27 @@ class SaleOrder(models.Model):
                 'order_id': self.id,
                 'product_id': product_id,
                 'product_uom_qty': quantity,
-                'sequence': self._get_new_line_sequence(child_field, selected_section_id),
+                'sequence': self._get_new_line_sequence(child_field, section_id),
             })
         return sol.price_unit * (1-(sol.discount or 0.0)/100.0)
 
-    def _get_section_model_info(self):
-        """ Override of `product` to return the model name and parent field for the order lines.
+    # === Product Documents === #
 
-        :return: line_model, parent_field
-        """
-        return 'sale.order.line', 'order_id'
+    def _get_product_documents(self):
+        self.ensure_one()
+
+        documents = (
+            self.order_line.product_id.product_document_ids
+            | self.order_line.product_template_id.product_document_ids
+        )
+        return self._filter_product_documents(documents).sorted()
+
+    def _filter_product_documents(self, documents):
+        return documents.filtered(
+            lambda document:
+                document.attached_on_sale == 'quotation'
+                or (self.state == 'sale' and document.attached_on_sale == 'sale_order')
+        )
 
     #=== TOOLING ===#
 
@@ -2206,14 +2211,6 @@ class SaleOrder(models.Model):
             return self.partner_id.lang
 
         return self.env.lang
-
-    def _validate_order(self):
-        """
-        Confirm the sale order and send a confirmation email.
-
-        :return: None
-        """
-        self.with_context(send_email=True).action_confirm()
 
     @api.model
     def get_import_templates(self):

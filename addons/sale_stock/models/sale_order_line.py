@@ -388,6 +388,7 @@ class SaleOrderLine(models.Model):
 
     #=== HOOKS ===#
 
+    # FIXME VFE this hook is supported on the order, not the order line
     def _get_action_add_from_catalog_extra_context(self, order):
         extra_context = super()._get_action_add_from_catalog_extra_context(order)
         extra_context.update(warehouse_id=order.warehouse_id.id)

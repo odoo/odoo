@@ -1,11 +1,11 @@
 import { useEnv, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { ProductCatalogSearchPanel } from "@product/product_catalog/search/search_panel";
+import { AccountProductCatalogSearchPanel } from "@account/components/product_catalog/search/search_panel";
 import { TimePeriodSelectionField } from "./time_period_selection_fields";
 import { formatMonetary } from "@web/views/fields/formatters";
 
-export class PurchaseSuggestCatalogSearchPanel extends ProductCatalogSearchPanel {
-    static template = "purchase_stock.SearchPanel";
+export class PurchaseSuggestCatalogSearchPanel extends AccountProductCatalogSearchPanel {
+    static template = "purchase_stock.ProductCatalogSearchPanel";
     static components = { TimePeriodSelectionField };
     static basedOnOptions = [
         ["actual_demand", "Forecasted"],
