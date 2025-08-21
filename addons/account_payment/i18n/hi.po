@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-20 10:02+0000\n"
-"PO-Revision-Date: 2025-08-20 23:51+0000\n"
+"PO-Revision-Date: 2025-08-21 17:21+0000\n"
 "Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/"
 "account_payment/hi/>\n"
@@ -117,12 +117,16 @@ msgid ""
 "                        Wait a moment for it to be processed. If the refund is still pending in a\n"
 "                        few minutes, please check your payment provider configuration."
 msgstr ""
+"<strong>चेतावनी!</strong> इस भुगतान के लिए एक रिफंड बकाया है.\n"
+"                        इसके प्रोसेस होने के लिए कुछ देर इंतज़ार करें. अगर कुछ मिनटों में भी"
+" रिफंड बकाया रहता है,\n"
+"                        तो कृपया अपने भुगतान प्रोवाइडर का कॉन्फ़िगरेशन जांचें।"
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/wizards/payment_link_wizard.py:0
 msgid "A discount will be applied if the customer pays before %s included."
-msgstr ""
+msgstr "ग्राहक के %s तक भुगतान करने पर छूट लागू होगी।"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -130,23 +134,24 @@ msgid ""
 "A payment has already been made on this invoice, please make sure to not pay"
 " twice."
 msgstr ""
+"इस इनवॉइस पर पहले ही पेमेंट किया जा चुका है, कृपया दोबारा पेमेंट न करें।"
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 msgid "A payment transaction with reference %s already exists."
-msgstr ""
+msgstr "%s नंबर वाला पेमेंट पहले से ही रिकॉर्ड हो चुका है।"
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 msgid "A token is required to create a new payment transaction."
-msgstr ""
+msgstr "एक नया पेमेंट ट्रांज़ैक्शन बनाने के लिए एक टोकन ज़रूरी है।"
 
 #. module: account_payment
 #: model:onboarding.onboarding.step,button_text:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Activate Stripe"
-msgstr ""
+msgstr "Stripe चालू करें"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -157,7 +162,7 @@ msgstr "रकम"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_available_for_refund
 msgid "Amount Available For Refund"
-msgstr ""
+msgstr "रिफ़ंड के लिए उपलब्ध राशि"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__invoice_amount_due
@@ -168,7 +173,7 @@ msgstr "बकाया रकम"
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__amount_paid
 #: model:ir.model.fields,field_description:account_payment.field_account_move__amount_paid
 msgid "Amount paid"
-msgstr ""
+msgstr "चुकाया गया पैसा"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
@@ -176,17 +181,19 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"क्या आप वाकई मंज़ूर किए गए लेन-देन को रद्द करना चाहते हैं? इस कार्रवाई को वापस नहीं लिया "
+"जा सकता।"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__authorized_transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_move__authorized_transaction_ids
 msgid "Authorized Transactions"
-msgstr ""
+msgstr "अधिकृत लेन-देन"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Capture Transaction"
-msgstr ""
+msgstr "ट्रांज़ैक्शन कैप्चर करें"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
@@ -244,7 +251,7 @@ msgstr "डिस्प्ले नाम"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__display_open_installments
 msgid "Display Open Installments"
-msgstr ""
+msgstr "ओपन इंस्टॉलमेंट दिखाएं"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
@@ -252,6 +259,8 @@ msgid ""
 "Done, your online payment has been successfully processed. Thank you for "
 "your order."
 msgstr ""
+"हो गया, आपका ऑनलाइन भुगतान सफलतापूर्वक प्रोसेस कर दिया गया है. आपके ऑर्डर के लिए "
+"धन्यवाद।"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__epd_info
@@ -286,12 +295,12 @@ msgstr "पेमेंट लिंक जनरेट करें"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__has_eligible_epd
 msgid "Has Eligible Epd"
-msgstr ""
+msgstr "जल्दी भुगतान पर छूट है"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__has_pending_refund
 msgid "Has a pending refund"
-msgstr ""
+msgstr "रिफंड बाकी है"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_journal__id
