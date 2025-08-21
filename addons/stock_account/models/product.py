@@ -235,7 +235,7 @@ class ProductProduct(models.Model):
                 if lot:
                     total_qty = move._get_valued_qty(lot)
                     in_value = in_value * in_qty / total_qty
-                if quantity < 0 and quantity + in_qty > 0:
+                if quantity < 0 and quantity + in_qty >= 0:
                     positive_qty = quantity + in_qty
                     ratio = positive_qty / in_qty
                     avco_total_value = ratio * in_value
