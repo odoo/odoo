@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
 
 
 class StockLot(models.Model):
@@ -87,24 +86,3 @@ class StockLot(models.Model):
                 'description': _('%(lot)s price update from %(old_price)s to %(new_price)s by %(user)s',
                     lot=lot.name, old_price=old_price, new_price=lot.standard_price, user=self.env.user.name)
             })
-
-    # # -------------------------------------------------------------------------
-    # # Actions
-    # # -------------------------------------------------------------------------
-    def action_revaluation(self):
-        # Cannot hide the button in list view for non required field in groupby
-        if not self:
-            raise UserError(_("Select an existing lot/serial number to be reevaluated"))
-        elif all(self.product_id.uom_id.is_zero(lot.product_qty) for lot in self):
-            raise UserError(_("You cannot adjust the valuation of a layer with zero quantity"))
-        self.ensure_one()
-        ctx = dict(self.env.context, default_lot_ids=self.ids, default_company_id=self.env.company.id)
-        return {
-            'name': _('Lot/Serial number Revaluation - %s', self.product_id.display_name),
-            'view_mode': 'form',
-            'res_model': 'stock.valuation.layer.revaluation',
-            'view_id': self.env.ref('stock_account.stock_valuation_layer_revaluation_form_view').id,
-            'type': 'ir.actions.act_window',
-            'context': ctx,
-            'target': 'new'
-        }
