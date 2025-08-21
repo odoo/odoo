@@ -190,8 +190,6 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             },
             'cac:PostalAddress': self._get_address_node(vals),
             'cac:PartyTaxScheme': {
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
-                'cbc:CompanyID': {'_text': commercial_partner.vat},
                 'cac:TaxScheme': {
                     'cbc:Name': {
                         '_text': (
