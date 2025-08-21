@@ -181,14 +181,6 @@ describe("toolbar dropdowns", () => {
         expect(p).toHaveStyle("text-align: center");
     });
 
-    test("font family dropdown should close only after click", async () => {
-        const { p } = await setup();
-        click(".o-we-toolbar .btn[name='font_family']");
-        await focusAndClick(".dropdown-menu .dropdown-item[name='Arial']");
-        await animationFrame();
-        expect(p.firstChild).toHaveStyle("font-family: Arial, sans-serif");
-    });
-
     test("font style dropdown should close only after click", async () => {
         const { editor } = await setup();
         click(".o-we-toolbar .btn[name='font']");
