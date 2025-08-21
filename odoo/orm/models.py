@@ -3622,7 +3622,6 @@ class BaseModel(metaclass=MetaModel):
         # the following write is incharge of
         # 1. mark field as modified
         # 2. execute logics in the override `write` method
-        # 3. update write_date of the record if exists to support 't-cache'
         # even if the value in cache is the same as the value written
         self[field_name] = self[field_name]
         return True

@@ -234,7 +234,6 @@ class TestMailTemplate(MailCommon):
             '<p t-set="x" t-value="object.name"></p>',
             '<p t-groups="base.group_system"></p>',
             '<p t-call="template"></p>',
-            '<p t-cache="object.name"></p>',
             '<t t-set="namn" t-value="Hello {{world}} !"/>',
             '<t t-att-test="object.name"/>',
             '<p t-att-title="object.name"></p>',

@@ -21,7 +21,7 @@ You can use any truthy/falsy value from `str2bool` (eg: 'on', 'f'..)
 Multiple debug modes can be activated simultaneously, separated with a
 comma (eg: 'tests, assets').
 """
-ALLOWED_DEBUG_MODES = ['', '1', 'assets', 'tests', 'disable-t-cache']
+ALLOWED_DEBUG_MODES = ['', '1', 'assets', 'tests']
 
 
 class IrHttp(models.AbstractModel):

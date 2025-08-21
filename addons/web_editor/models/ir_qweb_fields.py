@@ -40,11 +40,13 @@ class IrQweb(models.AbstractModel):
 
     def _compile_node(self, el, compile_context, level):
         snippet_key = compile_context.get('snippet-key')
-        template = compile_context['template']
+
+        template = compile_context['ref_name']
         sub_call_key = compile_context.get('snippet-sub-call-key')
+
         # We only add the 'data-snippet' & 'data-name' attrib once when
         # compiling the root node of the template.
-        if template not in {snippet_key, sub_call_key} or el.getparent() is not None:
+        if not template or template not in {snippet_key, sub_call_key} or el.getparent() is not None:
             return super()._compile_node(el, compile_context, level)
 
         snippet_base_node = el
