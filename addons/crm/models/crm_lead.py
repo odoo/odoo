@@ -1055,6 +1055,11 @@ class CrmLead(models.Model):
         team_id = self.env.context.get('default_team_id')
         if team_id:
             search_domain = ['|', ('id', 'in', stages.ids), '|', ('team_ids', '=', False), ('team_ids', 'in', team_id)]
+        if self.env.context.get('show_user_team_stages'):
+            team_ids = self.env.user.crm_team_ids._ids
+            if team_id:
+                team_ids += (team_id,)
+            search_domain = ['|', ('id', 'in', stages.ids), '|', ('team_ids', '=', False), ('team_ids', 'in', team_ids)]
         else:
             search_domain = ['|', ('id', 'in', stages.ids), ('team_ids', '=', False)]
 
