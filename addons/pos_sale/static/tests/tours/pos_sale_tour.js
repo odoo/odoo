@@ -441,7 +441,13 @@ registry.category("web_tour.tours").add("POSSalePaymentScreenInvoiceOrder", {
             Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Product Test", "1"),
             ProductScreen.clickPartnerButton(),
+<<<<<<< 99fb1c4581f6b10681d628ad45e1aa65a82fdd10
             ProductScreen.clickCustomer("AAA - Test Partner invoice"),
+||||||| 68a156030c366fbbf6b0841e1e2688a571355bf2
+            ProductScreen.clickCustomer("Test Partner"),
+=======
+            ProductScreen.clickCustomer("A Test Partner"),
+>>>>>>> d0386f788ee43485a0ad58159431e0723ec64d21
             ProductScreen.clickPayButton(),
 
             PaymentScreen.clickPaymentMethod("Bank"),

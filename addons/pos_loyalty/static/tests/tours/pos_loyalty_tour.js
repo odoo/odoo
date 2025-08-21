@@ -613,6 +613,7 @@ registry.category("web_tour.tours").add("test_scan_loyalty_card_select_customer"
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             scan_barcode("0444-e050-4548"),
+<<<<<<< 99fb1c4581f6b10681d628ad45e1aa65a82fdd10
             ProductScreen.customerIsSelected("AABBCC Test Partner"),
         ].flat(),
 });
@@ -650,5 +651,10 @@ registry.category("web_tour.tours").add("test_discount_after_unknown_scan", {
             scan_barcode("00998877665544332211"), //should be unknown
             PosLoyalty.hasRewardLine("10% on Test Product A", "-0.50"),
             ProductScreen.totalAmountIs("4.50"),
+||||||| 68a156030c366fbbf6b0841e1e2688a571355bf2
+            ProductScreen.customerIsSelected("Test Partner"),
+=======
+            ProductScreen.customerIsSelected("A Test Partner"),
+>>>>>>> d0386f788ee43485a0ad58159431e0723ec64d21
         ].flat(),
 });

@@ -869,7 +869,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             })],
         })
 
-        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        partner = self.env['res.partner'].create({'name': 'A Test Partner'})
         card = self.env['loyalty.card'].create({
             'partner_id': partner.id,
             'program_id': loyalty_program.id,
@@ -2717,7 +2717,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_not_create_loyalty_card_expired_program(self):
         self.env['loyalty.program'].search([]).write({'active': False})
-        self.env['res.partner'].create({'name': 'Test Partner'})
+        self.env['res.partner'].create({'name': 'A Test Partner'})
 
         LoyaltyProgram = self.env['loyalty.program']
         loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
@@ -2786,8 +2786,16 @@ class TestUi(TestPointOfSaleHttpCommon):
         LoyaltyProgram = self.env['loyalty.program']
         # Deactivate all other programs to avoid interference and activate the gift_card_product_50
         LoyaltyProgram.search([]).write({'pos_ok': False})
+<<<<<<< 99fb1c4581f6b10681d628ad45e1aa65a82fdd10
         self.env.ref('loyalty.gift_card_product_50').product_tmpl_id.write({'active': True})
         partner = self.env['res.partner'].create({'name': 'AABBCC Test Partner'})
+||||||| 68a156030c366fbbf6b0841e1e2688a571355bf2
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+=======
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+        partner = self.env['res.partner'].create({'name': 'A Test Partner'})
+>>>>>>> d0386f788ee43485a0ad58159431e0723ec64d21
         # Create gift card program
         gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
 
@@ -2940,7 +2948,13 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_scan_loyalty_card_select_customer(self):
         self.env['loyalty.program'].search([]).write({'active': False})
+<<<<<<< 99fb1c4581f6b10681d628ad45e1aa65a82fdd10
         self.test_partner = self.env['res.partner'].create({'name': 'AABBCC Test Partner'})
+||||||| 68a156030c366fbbf6b0841e1e2688a571355bf2
+        self.test_partner = self.env['res.partner'].create({'name': 'Test Partner'})
+=======
+        self.test_partner = self.env['res.partner'].create({'name': 'A Test Partner'})
+>>>>>>> d0386f788ee43485a0ad58159431e0723ec64d21
 
         loyalty_program = self.env['loyalty.program'].create({
             'name': 'Loyalty Program',
