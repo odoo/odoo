@@ -59,6 +59,7 @@ export class CustomerDisplayPosAdapter {
                 line.getUnitDisplayPriceBeforeDiscount(),
                 line.currency
             ),
+            isSelected: line.isSelected(),
         };
     }
 
