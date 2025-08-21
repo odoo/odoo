@@ -275,7 +275,15 @@ class StockMove(models.Model):
             if quotation_data.get('description'):
                 descriptions.append(quotation_data['description'])
 
-        # 3. standard_price
+        # 3. from returns
+        if remaining_qty:
+            return_data = self._get_value_from_returns(remaining_qty, at_date)
+            value += return_data['value']
+            remaining_qty -= return_data['quantity']
+            if return_data.get('description'):
+                descriptions.append(return_data['description'])
+
+        # 4. standard_price
         if remaining_qty:
             std_price_data = self._get_value_from_std_price(remaining_qty, forced_std_price, at_date)
             value += std_price_data['value']
@@ -323,6 +331,16 @@ class StockMove(models.Model):
         return dict(VALUATION_DICT)
 
     def _get_value_from_quotation(self, quantity, at_date=None):
+        return dict(VALUATION_DICT)
+
+    def _get_value_from_returns(self, quantity, at_date=None):
+        if self.origin_returned_move_id and self.origin_returned_move_id.is_out:
+            origin_move = self.origin_returned_move_id
+            return {
+                'value': origin_move.value * quantity / origin_move._get_valued_qty(),
+                'quantity': quantity,
+                'description': _('Value based on original move %(reference)s', reference=origin_move.reference),
+            }
         return dict(VALUATION_DICT)
 
     def _get_value_from_std_price(self, quantity, std_price=False, at_date=None):
