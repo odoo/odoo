@@ -6,6 +6,7 @@
 from datetime import datetime, date, time
 from dateutil.relativedelta import relativedelta
 from calendar import monthrange
+import pytz
 
 from odoo import api, fields, models, _
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
@@ -583,6 +584,7 @@ class HolidaysAllocation(models.Model):
             return 0
 
         fake_allocation = self.env['hr.leave.allocation'].with_context(default_date_from=accrual_date).new(origin=self)
+        fake_allocation.leaves_taken = self._get_leaves_taken_in_period(accrual_date)
         fake_allocation.sudo().with_context(default_date_from=accrual_date)._process_accrual_plans(accrual_date, log=False)
         if self.holiday_status_id.request_unit in ['hour']:
             res = float_round(fake_allocation.number_of_hours_display - self.number_of_hours_display, precision_digits=2)
@@ -590,6 +592,50 @@ class HolidaysAllocation(models.Model):
             res = round((fake_allocation.number_of_days - self.number_of_days), 2)
         fake_allocation.invalidate_recordset()
         return res
+
+    def _get_leaves_taken_in_period(self, target_date):
+        """
+        Return leaves taken for this allocation up to target_date,
+        mimicking _get_consumed_leaves logic but without recursion.
+        """
+        self.ensure_one()
+
+        leaves_domain = [
+            ('holiday_status_id', '=', self.holiday_status_id.id),
+            ('employee_id', '=', self.employee_id.id),
+            ('state', 'in', ['confirm', 'validate1', 'validate']),
+            ('date_from', '<=', target_date)
+        ]
+        leaves = self.env['hr.leave'].search(leaves_domain)
+
+        total_taken = 0
+        leave_unit = 'days' if self.holiday_status_id.request_unit in ['day', 'half_day'] else 'hours'
+
+        for leave in leaves:
+            if self.date_from > leave.date_to.date() or (self.date_to and self.date_to < leave.date_from.date()):
+                continue
+            interval_start = max(
+                leave.date_from,
+                datetime.combine(self.date_from, time.min)
+            )
+            interval_end = min(
+                leave.date_to,
+                datetime.combine(self.date_to, time.max)
+                if self.date_to else leave.date_to
+            )
+
+            if leave.date_from != interval_start or leave.date_to != interval_end:
+                duration_info = self.employee_id._get_calendar_attendances(
+                    interval_start.replace(tzinfo=pytz.UTC),
+                    interval_end.replace(tzinfo=pytz.UTC)
+                )
+                duration = duration_info[leave_unit]
+            else:
+                duration = leave.number_of_hours_display if leave_unit == 'hours' else leave.number_of_days
+
+            total_taken += duration
+
+        return total_taken
 
     ####################################################
     # ORM Overrides methods
