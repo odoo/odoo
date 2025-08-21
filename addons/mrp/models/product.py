@@ -232,8 +232,16 @@ class ProductProduct(models.Model):
         # pre-compute bom lines and identify missing kit components to prefetch
         bom_sub_lines_per_kit = {}
         prefetch_component_ids = set()
-        for product in bom_kits:
-            __, bom_sub_lines = bom_kits[product].explode(product, 1)
+        # memoize explode calls as we are using bom_sub_lines that depends only on the bom.
+        exploded_values = {}
+        explodable_variants = self.env['mrp.bom'].union(*bom_kits.values()).get_explodable_variants()
+        for product, bom in bom_kits.items():
+            exploded_lines = ()
+            if not exploded_values.get(bom) or product in explodable_variants:
+                exploded_lines = bom.explode(product, 1)
+                if product not in explodable_variants:
+                    exploded_values[bom] = exploded_lines
+            __, bom_sub_lines = exploded_lines or exploded_values[bom]
             bom_sub_lines_per_kit[product] = bom_sub_lines
             for bom_line, __ in bom_sub_lines:
                 if bom_line.product_id.id not in qties:
