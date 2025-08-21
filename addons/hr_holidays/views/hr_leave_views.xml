@@ -812,7 +812,7 @@
         <field name="name">All Time Off</field>
         <field name="res_model">hr.leave</field>
         <field name="path">time-off-approval</field>
-        <field name="view_mode">kanban,list,form,calendar,activity</field>
+        <field name="view_mode">list,kanban,form,calendar,activity</field>
         <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_manager"/>
         <field name="context">{
             'search_default_waiting_for_me': 1,
@@ -848,16 +848,16 @@
         </field>
     </record>
 
-    <record id="action_view_kanban_manager_approve" model="ir.actions.act_window.view">
-        <field name="sequence" eval="1"/>
-        <field name="view_mode">kanban</field>
-        <field name="view_id" ref="hr_leave_view_kanban"/>
-        <field name="act_window_id" ref="hr_leave_action_action_approve_department"/>
-    </record>
     <record id="action_view_tree_manager_approve" model="ir.actions.act_window.view">
-        <field name="sequence" eval="2"/>
+        <field name="sequence" eval="1"/>
         <field name="view_mode">list</field>
         <field name="view_id" ref="hr_leave_view_tree"/>
+        <field name="act_window_id" ref="hr_leave_action_action_approve_department"/>
+    </record>
+    <record id="action_view_kanban_manager_approve" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="hr_leave_view_kanban"/>
         <field name="act_window_id" ref="hr_leave_action_action_approve_department"/>
     </record>
     <record id="action_view_form_manager_approve" model="ir.actions.act_window.view">

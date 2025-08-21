@@ -36,6 +36,12 @@ registry.category("web_tour.tours").add("hr_leave_type_tour", {
             run: "click",
         },
         {
+            trigger: "button.o_kanban",
+            content: "Open kanban view",
+            tooltipPosition: "bottom",
+            run: "click",
+        },
+        {
             trigger: "button.o-kanban-button-new",
             content: "Create a new time-off request",
             tooltipPosition: "bottom",
