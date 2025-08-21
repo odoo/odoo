@@ -5,9 +5,9 @@
     <t t-set="no_header" t-value="option_widescreen"/>
     <t t-set="no_footer" t-value="option_widescreen"/>
     <t t-call="website_event.layout">
-        <t t-set="navbar__back_url" t-value="'/event/%s/exhibitors' % (slug(event))"/>
-        <t t-set="navbar__back_title">Back to all Exhibitors</t>
-        <t t-set="navbar__back_text">All Exhibitors</t>
+        <t t-set="navbar_back_url" t-value="'/event/%s/exhibitors' % (slug(event))"/>
+        <t t-set="navbar_back_title">Back to all Exhibitors</t>
+        <t t-set="navbar_back_text">All Exhibitors</t>
 
 
         <div class="o_wevent_online o_wesponsor_index">

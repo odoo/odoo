@@ -292,10 +292,9 @@
                             id="empty-wishlist-message"
                             t-attf-class="w-100 #{'d-none' if wishes else ''}"
                         >
-                            <div
-                                t-call="website_sale_wishlist.empty_wishlist_svg"
-                                class="mt-5 mb-3"
-                            />
+                            <div class="mt-5 mb-3">
+                                <t t-call="website_sale_wishlist.empty_wishlist_svg"/>
+                            </div>
                             <h5 class="mb-3" style="text-align: center;">
                                 Your wishlist is empty!
                             </h5>

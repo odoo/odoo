@@ -179,8 +179,8 @@
                                 <div t-if="event.address_id" class="col-md-6 col-12 mb-3 mb-md-0 o_event_full_page_ticket_column">
                                     <div class="d-flex">
                                         <i class="fa fa-map-marker fa-2x fa-fw me-2 mt-1"/>
-                                        <div t-call="event.event_report_template_formatted_event_address">
-                                            <t t-set="multi_line_address" t-value="True"/>
+                                        <div>
+                                            <t t-call="event.event_report_template_formatted_event_address" multi_line_address="True"/>
                                         </div>
                                     </div>
                                 </div>

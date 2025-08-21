@@ -48,7 +48,7 @@
                     <div class="mb-4">
                         <h5 class="border-bottom pb-1 d-flex align-items-center justify-content-between">
                             Questions
-                            <t t-if="count_questions &gt; 0" class="float-end" t-call="website.website_search_box_input">
+                            <t t-if="count_questions &gt; 0" t-call="website.website_search_box_input">
                                 <t t-set="_form_classes" t-valuef="d-flex flex-row align-items-center flex-wrap float-end"/>
                                 <t t-set="search_type" t-valuef="forums"/>
                                 <t t-if="forum_id" t-set="action" t-value="'/forum/%s%s' % (forum_id, ('/tag/%s/questions' % slug(tag)) if tag else '')"/>
@@ -105,7 +105,7 @@
                     <div class="mb-4">
                         <h5 class="border-bottom pb-1 d-flex align-items-center justify-content-between">
                             Answers
-                            <t t-if="count_questions &gt; 0" class="float-end" t-call="website.website_search_box_input">
+                            <t t-if="count_questions &gt; 0" t-call="website.website_search_box_input">
                                 <t t-set="_form_classes" t-valuef="d-flex flex-row align-items-center flex-wrap float-end"/>
                                 <t t-set="search_type" t-valuef="forums"/>
                                 <t t-if="forum_id" t-set="action" t-value="'/forum/%s%s' % (forum_id, '/tag/%s/questions' % slug(tag)) if tag else ''"/>
@@ -145,7 +145,7 @@
                     <div class="mb-4">
                         <h5 class="border-bottom pb-1 flex align-items-center justify-content-between" style="height:43px;">
                             Votes
-                            <t t-if="my_profile" class="float-end" t-call="website.website_search_box_input">
+                            <t t-if="my_profile" t-call="website.website_search_box_input">
                                 <t t-set="_form_classes" t-valuef="d-flex flex-row align-items-center flex-wrap float-end"/>
                                 <t t-set="search_type" t-valuef="forums"/>
                                 <t t-set="action" t-value="'/forum/%s%s' % (forum_id or 'all', '/tag/%s/questions' % slug(tag) if tag else '')"/>

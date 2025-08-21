@@ -198,7 +198,7 @@
               <div id="quote_content" class="o_portal_content col-12 col-lg-8 col-xxl-9">
                   <!-- main content -->
                   <div id="portal_purchase_content">
-                      <div t-call="purchase.purchase_order_portal_content"/>
+                      <div><t t-call="purchase.purchase_order_portal_content"/></div>
                   </div>
 
                   <!-- chatter -->
@@ -411,7 +411,7 @@
     <xpath expr="////div[@id='portal_purchase_content']" position="replace">
       <div id="portal_purchase_content">
         <t t-set="update_dates" t-value="True"/>
-        <div t-call="purchase.purchase_order_portal_content"/>
+        <div><t t-call="purchase.purchase_order_portal_content"/></div>
       </div>
     </xpath>
   </template>

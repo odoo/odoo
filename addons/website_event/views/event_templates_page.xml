@@ -24,9 +24,9 @@
     <section id="o_wevent_event_submenu">
         <!-- Mobile -->
         <div id="o_wevent_submenu_mobile" class="container d-flex d-lg-none align-items-center py-3 pb-lg-2">
-            <a t-if="navbar__back_url" t-att-href="navbar__back_url" t-att-title="navbar__back_title or 'Go back'">
+            <a t-if="navbar_back_url" t-att-href="navbar_back_url" t-att-title="navbar_back_title or 'Go back'">
                 <i class="oi oi-chevron-left"/>
-                <span t-out="navbar__back_text or 'Go back'"/>
+                <span t-out="navbar_back_text or 'Go back'"/>
             </a>
             <a t-else="" href="/event" title="All Events">
                 <i class="oi oi-chevron-left"/>
@@ -52,19 +52,19 @@
                             <li class="breadcrumb-item" t-if="event.header_visible">
                                 <a href="/event" title="Back to All Events">All Events</a>
                             </li>
-                            <t t-if="navbar__back_url">
+                            <t t-if="navbar_back_url">
                                 <li class="breadcrumb-item">
                                     <a t-attf-href="/event/{{slug(event)}}" t-attf-title="Back to {{event.name}}" t-field="event.name"/>
                                 </li>
                                 <li class="breadcrumb-item">
-                                    <a t-att-href="navbar__back_url" t-att-title="navbar__back_title" t-out="navbar__back_text"/>
+                                    <a t-att-href="navbar_back_url" t-att-title="navbar_back_title" t-out="navbar_back_text"/>
                                 </li>
                             </t>
                             <t t-else="">
                                 <li t-attf-class="breadcrumb-item active #{'fw-bold' if not event.header_visible else ''}" aria-current="page"><span class="pe-3" t-field="event.name"/></li>
                             </t>
                         </ul>
-                        <ul t-if="not navbar__back_url" class="nav" t-att-data-menu_name="editable and 'Event Menu'" t-att-data-content_menu_id="editable and event.menu_id.id">
+                        <ul t-if="not navbar_back_url" class="nav" t-att-data-menu_name="editable and 'Event Menu'" t-att-data-content_menu_id="editable and event.menu_id.id">
                             <t t-foreach="event.menu_id.child_id" t-as="submenu">
                                 <t t-call="website.submenu">
                                     <t t-set="item_class" t-value="'nav-item'"/>
@@ -81,7 +81,7 @@
                         <t t-call="website_event.registration_template"/>
                     </div>
 
-                    <t t-if="navbar__back_url" t-call="website_event.navbar_dropdown"/>
+                    <t t-if="navbar_back_url" t-call="website_event.navbar_dropdown"/>
                 </div>
             </div>
         </div>
