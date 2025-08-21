@@ -29,7 +29,7 @@ class PeppolConfigWizard(models.TransientModel):
     )
     account_peppol_edi_identification = fields.Char(related='account_peppol_edi_user.edi_identification')
     account_peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state', readonly=False)
-    account_peppol_contact_email = fields.Char(related='company_id.account_peppol_contact_email', readonly=False, required=True)
+    account_peppol_contact_email = fields.Char(default=lambda self: self.env.company.account_peppol_contact_email, required=True)
     account_peppol_migration_key = fields.Char(related='company_id.account_peppol_migration_key', readonly=False)
 
     service_json = fields.Json(
@@ -116,6 +116,7 @@ class PeppolConfigWizard(models.TransientModel):
 
         # Update company details
         if self.account_peppol_contact_email != self.company_id.account_peppol_contact_email:
+            self.company_id.account_peppol_contact_email = self.account_peppol_contact_email
             params = {
                 'update_data': {
                     'peppol_contact_email': self.account_peppol_contact_email,
