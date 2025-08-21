@@ -55,6 +55,7 @@ from lxml import etree, html
 from requests import PreparedRequest, Session
 from urllib3.util import Url, parse_url
 
+import odoo.cli
 import odoo.orm.registry
 from odoo import api
 from odoo.exceptions import AccessError
@@ -95,14 +96,14 @@ except ImportError:
     freezegun = None
 
 _logger = logging.getLogger(__name__)
-if config['test_enable']:
-    _logger.info("Importing test framework", stack_info=_logger.isEnabledFor(logging.DEBUG))
-else:
+if odoo.cli.COMMAND in ('server', 'start') and not config['test_enable']:
     _logger.error(
         "Importing test framework"
         ", avoid importing from business modules and when not running in test mode",
         stack_info=True,
     )
+else:
+    _logger.info("Importing test framework", stack_info=_logger.isEnabledFor(logging.DEBUG))
 
 
 # backward compatibility: Form was defined in this file
