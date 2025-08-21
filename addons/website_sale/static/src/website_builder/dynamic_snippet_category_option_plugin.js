@@ -37,12 +37,12 @@ export class DynamicSnippetCategoryOptionPlugin extends Plugin {
         if (snippetEl.matches(this.selector)) {
             for (const [optionName, value] of [
                 ['showParent', true],
-                ['columns', 2],
+                ['columns', 4],
                 ['rounded', 2],
                 ['gap', 2],
                 ['size', 'medium'],
                 ['button', 'Explore Now'],
-                ['alignment', 'left'],
+                ['alignment', 'center'],
             ]) {
                 setDatasetIfUndefined(snippetEl, optionName, value);
             }
