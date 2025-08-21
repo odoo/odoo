@@ -355,7 +355,6 @@ describe('insert HTML', () => {
                               <p><br>[]</p>
                               <p>
                                 <span class="h4-fs">\u200b</span>
-                                <br>
                               </p>`),
             });
         });
