@@ -23,7 +23,7 @@ class Driver(Thread):
         self.device_connection = ''
         self.device_type = ''
         self.device_manufacturer = ''
-        self.data = {'value': ''}
+        self.data = {'value': '', 'result': ''}  # TODO: deprecate "value"?
         self._actions = {}
         self._stopped = Event()
 

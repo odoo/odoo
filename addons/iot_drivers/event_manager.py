@@ -52,17 +52,7 @@ class EventManager:
         :param Driver device: actual device class
         :param dict data: data returned by the device (optional)
         """
-        if data:
-            # Notify via websocket
-            send_to_controller({
-                **device.data,
-                'session_id': data.get('action_args', {}).get('session_id', ''),
-                'iot_box_identifier': helpers.get_identifier(),
-                'device_identifier': device.device_identifier,
-                **data,
-            })
-        else:
-            data = request.params.get('data', {}) if request else {}
+        data = data or request.params.get('data', {}) if request else {}
 
         # Make notification available to longpolling event route
         event = {
@@ -71,6 +61,12 @@ class EventManager:
             'time': time.time(),
             **data,
         }
+        send_to_controller({
+            **event,
+            'session_id': data.get('action_args', {}).get('session_id', ''),
+            'iot_box_identifier': helpers.get_identifier(),
+            **data,
+        })
         webrtc_client.send(event)
         self.events.append(event)
         for session in self.sessions:

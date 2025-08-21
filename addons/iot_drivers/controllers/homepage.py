@@ -142,7 +142,7 @@ class IotBoxOwlHomePage(http.Controller):
 
         devices = [{
             'name': device.device_name,
-            'value': str(device.data['value']),
+            'value': str(device.data['result']),
             'type': device.device_type,
             'identifier': device.device_identifier,
             'connection': device.device_connection,

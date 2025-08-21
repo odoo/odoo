@@ -96,7 +96,7 @@ class ScaleDriver(SerialDriver):
         """Reads the scale current weight value and pushes it to the frontend."""
 
         self._read_weight()
-        self.last_sent_value = self.data['value']
+        self.last_sent_value = self.data['result']
 
     @staticmethod
     def _get_raw_response(connection):
@@ -126,7 +126,7 @@ class ScaleDriver(SerialDriver):
         match = re.search(self._protocol.measureRegexp, answer)
         if match:
             self.data = {
-                'value': float(match.group(1)),
+                'result': float(match.group(1)),
                 'status': self._status
             }
         else:
@@ -137,15 +137,15 @@ class ScaleDriver(SerialDriver):
         """Used when the iot app is not installed"""
         with self._device_lock:
             self._read_weight()
-        return self.data['value']
+        return self.data['result']
 
     def _take_measure(self):
         """Reads the device's weight value, and pushes that value to the frontend."""
 
         with self._device_lock:
             self._read_weight()
-            if self.data['value'] != self.last_sent_value or self._status['status'] == self.STATUS_ERROR:
-                self.last_sent_value = self.data['value']
+            if self.data['result'] != self.last_sent_value or self._status['status'] == self.STATUS_ERROR:
+                self.last_sent_value = self.data['result']
                 event_manager.device_changed(self)
 
 
@@ -171,11 +171,14 @@ class Toledo8217Driver(ScaleDriver):
 
         try:
             with serial_connection(device['identifier'], protocol, is_probing=True) as connection:
+                connection.reset_input_buffer()
+
                 connection.write(b'Ehello' + protocol.commandTerminator)
                 time.sleep(protocol.commandDelay)
                 answer = connection.read(8)
                 if answer == b'\x02E\rhello':
                     connection.write(b'F' + protocol.commandTerminator)
+                    connection.reset_input_buffer()
                     return True
         except serial.serialutil.SerialTimeoutException:
             pass
@@ -209,7 +212,7 @@ class Toledo8217Driver(ScaleDriver):
                 if int(bit):
                     _logger.debug("Scale error: %s. Status string: %s. Scale answer: %s.", status_char_error_bits[index], binary_status_char, answer)
                     self.data = {
-                        'value': 0,
+                        'result': 0,
                         'status': self._status,
                     }
                     break
