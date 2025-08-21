@@ -8,6 +8,6 @@
         <field name="invoice_policy">order</field>
         <field name="is_published" eval="True"/>
         <field name="image_1920" type="base64" file="website_sale_slides/static/img/default_course_product.svg"/>
-        <field name="categ_id" ref="product.product_category_services"/>
+        <field name="categ_id" eval="ref('product.product_category_services', raise_if_not_found=False)"/>
     </record>
 </data></odoo>
