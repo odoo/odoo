@@ -94,14 +94,14 @@ except ImportError:
     freezegun = None
 
 _logger = logging.getLogger(__name__)
-if config['test_enable'] or config['test_file']:
-    _logger.info("Importing test framework", stack_info=_logger.isEnabledFor(logging.DEBUG))
-else:
+if odoo.cli.COMMAND in ('server', 'start') and not (config['test_enable'] or config['test_file']):
     _logger.error(
         "Importing test framework"
         ", avoid importing from business modules and when not running in test mode",
         stack_info=True,
     )
+else:
+    _logger.info("Importing test framework", stack_info=_logger.isEnabledFor(logging.DEBUG))
 
 
 # backward compatibility: Form was defined in this file
