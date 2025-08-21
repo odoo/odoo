@@ -52,7 +52,7 @@ patch(Composer.prototype, {
         this.detectTyping(ev);
     },
     detectTyping() {
-        const value = this.props.composer.text;
+        const value = this.props.composer.composerText;
         if (this.thread?.model === "discuss.channel" && value.startsWith("/")) {
             const [firstWord] = value.substring(1).split(/\s/);
             const command = commandRegistry.get(firstWord, false);

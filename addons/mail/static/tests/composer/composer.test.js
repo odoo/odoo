@@ -1,3 +1,5 @@
+import { insertText as htmlInsertText } from "@html_editor/../tests/_helpers/user_actions";
+
 import {
     SIZES,
     click,
@@ -5,6 +7,7 @@ import {
     defineMailModels,
     dragenterFiles,
     dropFiles,
+    focus,
     inputFiles,
     insertText,
     onRpcBefore,
@@ -1118,7 +1121,7 @@ test("composer reply-to message is restored on thread change", async () => {
         browser.localStorage.getItem(
             store.Thread.get({ model: "discuss.channel", id: channelId }).composer.localId
         )
-    ).toBe('{"emailAddSignature":true,"replyToMessageId":1,"text":""}');
+    ).toBe('{"emailAddSignature":true,"replyToMessageId":1,"composerText":""}');
 });
 
 test("composer reply-to message is restored page reload", async () => {
@@ -1168,14 +1171,37 @@ test("html composer: basic rendering", async () => {
     const composerService = getService("mail.composer");
     await openFormView("res.partner", serverState.partnerId);
     await click("button", { text: "Send message" });
-    await contains("textarea.o-mail-Composer-input[placeholder='Send a message to followers…']");
+    await contains("textarea.o-mail-Composer-input");
     await contains(".o-mail-Composer-html.odoo-editor-editable", { count: 0 });
+    await insertText(".o-mail-Composer-input", "Hello World!");
     composerService.setHtmlComposer();
-    await contains(".o-mail-Composer-html.odoo-editor-editable");
-    await contains("textarea.o-mail-Composer-input[placeholder='Send a message to followers…']", {
-        count: 0,
-    });
+    await contains("textarea.o-mail-Composer-input", { count: 0 });
+    await contains(".o-mail-Composer-html.odoo-editor-editable", { text: "Hello World!" });
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "Test ");
     composerService.setTextComposer();
-    await contains("textarea.o-mail-Composer-input[placeholder='Send a message to followers…']");
+    await contains("textarea.o-mail-Composer-input", { value: "Test Hello World!" });
     await contains(".o-mail-Composer-html.odoo-editor-editable", { count: 0 });
+});
+
+test.tags("html composer");
+test("html composer: send a message in a chatter", async () => {
+    await startServer();
+    await start();
+    const composerService = getService("mail.composer");
+    await openFormView("res.partner", serverState.partnerId);
+    await click("button", { text: "Send message" });
+    composerService.setHtmlComposer();
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "Hello");
+    await click(".o-mail-Composer-send:enabled");
+    await click(".o-mail-Message[data-persistent]:contains(Hello)");
 });
