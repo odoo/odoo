@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-26 10:46+0000\n"
-"PO-Revision-Date: 2025-06-26 14:58+0400\n"
+"POT-Creation-Date: 2025-08-22 06:34+0000\n"
+"PO-Revision-Date: 2025-08-22 10:51+0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ar\n"
@@ -1004,9 +1004,23 @@ msgid "The private key used to generate the CSR and obtain certificates"
 msgstr "المفتاح الخاص المستخدَم لإنشاء CSR والحصول على الشهادات"
 
 #. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_move.py:0
+#, python-format
+msgid "This invoice was already successfully reported to ZATCA. Please, check the response below:"
+msgstr "تم الإبلاغ عن هذه الفاتورة بنجاح إلى زاتكا. يُرجى مراجعة الرد أدناه:"
+
+#. module: l10n_sa_edi
 #: model:ir.model,name:l10n_sa_edi.model_account_edi_xml_ubl_21_zatca
 msgid "UBL 2.1 (ZATCA)"
 msgstr "UBL 2.1 (زاتكا)"
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_move.py:0
+#, python-format
+msgid "Unable to retrieve response from ZATCA. Please, check the response below:"
+msgstr "تعذر استلام الرد من ZATCA. يُرجى مراجعة الرد أدناه:"
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_journal__l10n_sa_serial_number
@@ -1136,6 +1150,20 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #. odoo-python
+#: code:addons/l10n_sa_edi/models/account_move.py:0
+#, python-format
+msgid "Warning: Invoice was already successfully reported to ZATCA"
+msgstr "تحذير: تم بالفعل الإبلاغ عن الفاتورة بنجاح إلى زاتكا"
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_move.py:0
+#, python-format
+msgid "Warning: Unable to Retrieve a Response from ZATCA"
+msgstr "تحذير: غير قادر على استلام الرد من زاتكا"
+
+#. module: l10n_sa_edi
+#. odoo-python
 #: code:addons/l10n_sa_edi/models/account_journal.py:0
 #, python-format
 msgid "Warnings:"
@@ -1181,7 +1209,7 @@ msgstr "عليك طلب CCSID أولاً قبل الاستمرار"
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
 msgid "ZATCA"
-msgstr "زاتكا"
+msgstr "تحذير: غير قادر على استلام الرد من ZATCA"
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
