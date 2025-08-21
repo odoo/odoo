@@ -104,6 +104,7 @@ def main():
         command_name = 'server'
 
     if command := find_command(command_name):
+        odoo.cli.COMMAND = command_name
         o = command()
         o.run(args)
     else:
