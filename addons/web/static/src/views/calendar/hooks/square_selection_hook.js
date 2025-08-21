@@ -1,4 +1,4 @@
-import { useComponent, useEffect, useRef } from "@odoo/owl";
+import { useComponent, useEffect, useExternalListener, useRef } from "@odoo/owl";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { shallowEqual } from "@web/core/utils/objects";
 import { closest } from "@web/core/utils/ui";
@@ -25,24 +25,40 @@ function getCoordinates(cell) {
 }
 
 function getBlockBounds({ initCoord, coord }) {
-    const [startColIndex, endColIndex] = [initCoord.colIndex, coord.colIndex].sort();
-    const [startRowIndex, endRowIndex] = [initCoord.rowIndex, coord.rowIndex].sort();
+    const [startColIndex, endColIndex] = [initCoord.colIndex, coord.colIndex].sort((a, b) => a - b);
+    const [startRowIndex, endRowIndex] = [initCoord.rowIndex, coord.rowIndex].sort((a, b) => a - b);
     return { startColIndex, endColIndex, startRowIndex, endRowIndex };
 }
 
-function getResult(ctx) {
-    const { current, ref } = ctx;
+function getSelectedCellsInBlock(ctx) {
+    const { cellIsSelectable, current, ref } = ctx;
     const { startColIndex, endColIndex, startRowIndex, endRowIndex } = getBlockBounds(current);
-    const selectorParts = [];
-    for (let x = startColIndex; x <= endColIndex; x++) {
-        for (let y = startRowIndex; y <= endRowIndex; y++) {
-            selectorParts.push(
-                `tbody tr[role="row"]:nth-child(${y + 1}) > .fc-day:nth-child(${x + 1})`
-            );
+    const selectedCells = [];
+    for (const cell of ref.el.querySelectorAll(`tbody tr[role="row"] .fc-day`)) {
+        const { colIndex, rowIndex } = getCoordinates(cell);
+        if (
+            startColIndex <= colIndex &&
+            colIndex <= endColIndex &&
+            startRowIndex <= rowIndex &&
+            rowIndex <= endRowIndex &&
+            cellIsSelectable(cell)
+        ) {
+            selectedCells.push(cell);
         }
     }
-    const selector = selectorParts.join(",");
-    return { selectedCells: [...ref.el.querySelectorAll(selector)].filter(ctx.cellIsSelectable) };
+    return { selectedCells };
+}
+
+function getSelectedCellsBetween2Cells(ctx, prevCell, cellClicked) {
+    const { cellIsSelectable, ref } = ctx;
+    const cells = [...ref.el.querySelectorAll(`tbody tr[role="row"] .fc-day`)];
+    const index1 = cells.indexOf(prevCell);
+    if (index1 === -1) {
+        return new Set([cellClicked]);
+    }
+    const index2 = cells.indexOf(cellClicked);
+    const [startIndex, endIndex] = [index1, index2].sort((a, b) => a - b);
+    return new Set(cells.slice(startIndex, endIndex + 1).filter((cell) => cellIsSelectable(cell)));
 }
 
 // @ts-ignore
@@ -63,10 +79,10 @@ const useBlockSelection = makeDraggableHook({
         const coord = getCoordinates(cell);
         current.initCoord = coord;
         current.coord = coord;
-        return getResult(ctx);
+        return getSelectedCellsInBlock(ctx);
     },
     onDragStart({ ctx }) {
-        return getResult(ctx);
+        return getSelectedCellsInBlock(ctx);
     },
     onDrag({ ctx }) {
         const { current } = ctx;
@@ -76,10 +92,10 @@ const useBlockSelection = makeDraggableHook({
             return;
         }
         current.coord = coord;
-        return getResult(ctx);
+        return getSelectedCellsInBlock(ctx);
     },
     onDrop({ ctx }) {
-        return getResult(ctx);
+        return getSelectedCellsInBlock(ctx);
     },
 });
 
@@ -94,6 +110,20 @@ export function useSquareSelection(params = {}) {
             node.classList.remove(highlightClass);
         });
     };
+
+    let allSelectedCells = new Set();
+    const getAllCells = (cells, action) => {
+        cells = new Set(cells);
+        switch (action) {
+            case "add":
+                return allSelectedCells.union(cells);
+            case "toggle":
+                return allSelectedCells.symmetricDifference(cells);
+            case "replace":
+                return cells;
+        }
+    };
+
     const highlight = ({ selectedCells }) => {
         removeHighlight();
         selectedCells.forEach((node) => {
@@ -101,7 +131,19 @@ export function useSquareSelection(params = {}) {
         });
     };
 
-    useCallbackRecorder(component.props.callbackRecorder, removeHighlight);
+    useCallbackRecorder(component.props.callbackRecorder, () => {
+        allSelectedCells = new Set();
+        prevSelectedCell = null;
+        removeHighlight();
+    });
+
+    let action = null;
+    let prevSelectedCell = null;
+    const update = ({ selectedCells }) => {
+        const allSelectedCells = getAllCells(selectedCells, action);
+        highlight({ selectedCells: allSelectedCells });
+    };
+
     const selectState = useBlockSelection({
         enable: () => component.props.model.hasMultiCreate,
         ignore: EVENT_CONTAINER_SELECTOR,
@@ -109,12 +151,17 @@ export function useSquareSelection(params = {}) {
         ref,
         edgeScrolling: { speed: 40, threshold: 150 },
         cellIsSelectable,
-        onWillStartDrag: removeHighlight,
-        onDragStart: highlight,
-        onDrag: highlight,
+        onDragStart: ({ selectedCells }) => {
+            prevSelectedCell = null;
+            action = ctrlPressed ? "add" : "replace";
+            update({ selectedCells });
+        },
+        onDrag: update,
         onDrop: ({ selectedCells }) => {
-            highlight({ selectedCells });
-            component.props.onSquareSelection(selectedCells);
+            allSelectedCells = getAllCells(selectedCells, action);
+            action = null;
+            highlight({ selectedCells: allSelectedCells });
+            component.props.onSquareSelection([...allSelectedCells]);
         },
     });
 
@@ -136,9 +183,24 @@ export function useSquareSelection(params = {}) {
         }
         const coord = getCoordinates(cell);
         const current = { initCoord: coord, coord };
-        const { selectedCells } = getResult({ current, ref, cellIsSelectable });
-        highlight({ selectedCells });
-        component.props.onSquareSelection(selectedCells);
+        const pseudoCtx = { current, ref, cellIsSelectable };
+        const { selectedCells } = getSelectedCellsInBlock(pseudoCtx);
+        const selectedCell = selectedCells[0];
+        if (prevSelectedCell && shiftPressed) {
+            allSelectedCells = getSelectedCellsBetween2Cells(
+                pseudoCtx,
+                prevSelectedCell,
+                selectedCell
+            );
+        } else {
+            const action = ctrlPressed ? "toggle" : "replace";
+            allSelectedCells = getAllCells(selectedCells, action);
+        }
+        if (!prevSelectedCell || !shiftPressed) {
+            prevSelectedCell = selectedCell;
+        }
+        highlight({ selectedCells: allSelectedCells });
+        component.props.onSquareSelection([...allSelectedCells]);
     };
 
     useEffect(
@@ -153,4 +215,25 @@ export function useSquareSelection(params = {}) {
         },
         () => [ref.el, component.props.model.hasMultiCreate]
     );
+
+    let ctrlPressed = false;
+    let shiftPressed = false;
+    function onWindowKeyDown(ev) {
+        if (ev.key === "Control") {
+            ctrlPressed = true;
+        } else if (ev.key === "Shift") {
+            shiftPressed = true;
+        }
+    }
+
+    function onWindowKeyUp(ev) {
+        if (ev.key === "Control") {
+            ctrlPressed = false;
+        } else if (ev.key === "Shift") {
+            shiftPressed = false;
+        }
+    }
+
+    useExternalListener(window, "keydown", onWindowKeyDown);
+    useExternalListener(window, "keyup", onWindowKeyUp);
 }
