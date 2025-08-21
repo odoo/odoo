@@ -6347,12 +6347,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             $select.append(`<we-button data-select-format="${Math.round(value)} ${targetFormat}" class="o_we_badge_at_end">${label} <span class="badge rounded-pill text-bg-dark">${targetFormat.split('/')[1]}</span></we-button>`);
         });
 
-        if (!['image/jpeg', 'image/webp'].includes(this._getImageMimetype(img))) {
-            const optQuality = uiFragment.querySelector('we-range[data-set-quality]');
-            if (optQuality) {
-                optQuality.remove();
-            }
-        }
+        // TODO: remove in saas-18.4 since XML is static and will be up to date
+        const optQuality = uiFragment.querySelector('we-range[data-set-quality]');
+        optQuality.setAttribute('data-name', 'quality_range_opt');
     },
     /**
      * Returns a list of valid formats for a given image or an empty list if
@@ -6952,6 +6949,18 @@ registry.ImageTools = ImageHandlerOption.extend({
         if (hoverEffectsOptionsEl && animationEffectWidget) {
             animationEffectWidget.getParent().$el[0].append(hoverEffectsOptionsEl);
         }
+        // Disable quality option if partially not supported
+        const unsupportedQuality = this._unsupportedQualityOption();
+        const inputQuality = this.el.querySelector('we-range[data-set-quality] input');
+        if (inputQuality) {
+            if (!unsupportedQuality) {
+                inputQuality.disabled = false;
+                inputQuality.removeAttribute('title');
+            } else if (unsupportedQuality !== true) {
+                inputQuality.disabled = true;
+                inputQuality.setAttribute('title', unsupportedQuality);
+            }
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -6969,6 +6978,33 @@ registry.ImageTools = ImageHandlerOption.extend({
 ￼    */
     _isCropped() {
         return this.$target.hasClass('o_we_image_cropped');
+    },
+    /**
+     * Determines if the quality of the image can be adjusted.
+     *
+     * @returns {boolean|string}
+     * - `false`: supported
+     * - `true`: not supported
+     * - `string`: reason why partially not supported
+     */
+    _unsupportedQualityOption() {
+        const img = this._getImg();
+        const mimetype = this._getImageMimetype(img);
+        if (!['image/jpeg', 'image/webp'].includes(mimetype)) {
+            return true;
+        }
+        // disable WebP quality change if unsupported
+        if ('image/webp' === mimetype) {
+            if (this.canvasSupportWebp === undefined) {
+                const canvas = document.createElement('canvas');
+                canvas.width = canvas.height = 1;
+                this.canvasSupportWebp = canvas.toDataURL('image/webp').slice(0, 16) === 'data:image/webp;';
+            }
+            if (this.canvasSupportWebp === false) {
+                return _t('WebP compression not supported on this browser');
+            }
+        }
+        return false;
     },
     /**
      * @override
@@ -7217,6 +7253,9 @@ registry.ImageTools = ImageHandlerOption.extend({
             }
             const colors = img.dataset.shapeColors.split(';');
             return colors[parseInt(params.colorId)];
+        }
+        if (widgetName == 'quality_range_opt' && this._unsupportedQualityOption() === true) {
+            return false;
         }
         if (params.optionsPossibleValues.resetTransform) {
             return this._isTransformed();

@@ -429,7 +429,7 @@ class AccountEdiFormat(models.Model):
         if not company._l10n_sa_check_organization_unit():
             errors.append(
                 _("- The company VAT identification must contain 15 digits, with the first and last digits being '3' as per the BR-KSA-39 and BR-KSA-40 of ZATCA KSA business rule."))
-        if not company.sudo().l10n_sa_private_key:
+        if not journal.company_id.sudo().l10n_sa_private_key:
             errors.append(
                 _("- No Private Key was generated for company %s. A Private Key is mandatory in order to generate Certificate Signing Requests (CSR).", company.name))
         if not journal.l10n_sa_serial_number:
