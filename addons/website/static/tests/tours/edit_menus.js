@@ -292,8 +292,8 @@ registerWebsitePreviewTour('edit_menus', {
         run: "click",
     },
     {
-        content: `Drag "Contact Us" menu below "Home" menu`,
-        trigger: '.oe_menu_editor li:contains("Contact us") .oi-draggable',
+        content: `Drag "Modnar !!" menu below "Home" menu`,
+        trigger: '.oe_menu_editor li:contains("Modnar !!") .oi-draggable',
         run(helpers) {
             return helpers.drag_and_drop('.oe_menu_editor li:contains("Home")', {
                 position: {
@@ -305,13 +305,13 @@ registerWebsitePreviewTour('edit_menus', {
         },
     },
     {
-        content: "Drag 'Contact Us' item as a child of the 'Home' item",
-        trigger: '.oe_menu_editor li:contains("Contact us") .oi-draggable',
-        run: 'drag_and_drop .oe_menu_editor li:contains("Contact us") .form-control',
+        content: "Drag 'Modnar !!' item as a child of the 'Home' item",
+        trigger: '.oe_menu_editor li:contains("Modnar !!") .oi-draggable',
+        run: 'drag_and_drop .oe_menu_editor li:contains("Modnar !!") .form-control',
     },
     {
         content: "Wait for drop",
-        trigger: '.oe_menu_editor li:contains("Home") ul li:contains("Contact us")',
+        trigger: '.oe_menu_editor li:contains("Home") ul li:contains("Modnar !!")',
     },
     // Drag the Mega menu to the first position.
     {
@@ -344,7 +344,7 @@ registerWebsitePreviewTour('edit_menus', {
     // openable.
     {
         content: "When menu item is opened, child item must appear in the shown menu",
-        trigger: ':iframe .top_menu .nav-item:contains("Home") ul.show li a.dropdown-item:contains("Contact us")[href="/contactus"]',
+        trigger: ':iframe .top_menu .nav-item:contains("Home") ul.show li a.dropdown-item:contains("Modnar !!")',
         run() {
             // Scroll down.
             this.anchor.closest("body").querySelector(".o_footer_copyright_name")
@@ -366,7 +366,7 @@ registerWebsitePreviewTour('edit_menus', {
     {
         content: "Check that the Home menu is opened",
         trigger: ':iframe .top_menu .nav-item:contains("Home") ul.show li' +
-            ' a.dropdown-item:contains("Contact us")[href="/contactus"]',
+            ' a.dropdown-item:contains("Modnar !!")',
     },
     {
         content: "Close the Home menu",
@@ -422,7 +422,7 @@ registerWebsitePreviewTour('edit_menus', {
     {
         // If this step fails, it means that a patch inside bootstrap was lost.
         content: "Press the 'down arrow' key.",
-        trigger: ':iframe .top_menu .nav-item:contains("Home") li:contains("Contact us")',
+        trigger: ':iframe .top_menu .nav-item:contains("Home") li:contains("Modnar !!")',
         run: "press ArrowDown",
     },
     ...clickOnSave(),
@@ -492,7 +492,7 @@ registerWebsitePreviewTour('edit_menus', {
     },
     {
         content: "Drag 'Modnar !!' below 'new_menu'",
-        trigger: '.oe_menu_editor li:contains("Modnar !!") .oi-draggable',
+        trigger: '.oe_menu_editor li:contains("Home") > ul > li:contains("Modnar !!") .oi-draggable',
         async run(helpers) {
             await helpers.drag_and_drop('.oe_menu_editor li:contains("new_menu") .oi-draggable', {
                 position: "bottom",

@@ -55,12 +55,12 @@ registry.category("web_tour.tours").add("configurator_flow", {
         },
         // Features screen
         {
-            content: "select Pricing",
-            trigger: '.card:contains("Pricing")',
+            content: "select Pricing Plan",
+            trigger: '.card:contains("Pricing Plan")',
             run: "click",
         },
         {
-            trigger: '.card.border-success:contains("Pricing")',
+            trigger: '.card.border-success:contains("Pricing Plan")',
         },
         {
             content: "Events should be selected (module already installed)",
@@ -71,11 +71,7 @@ registry.category("web_tour.tours").add("configurator_flow", {
             trigger: '.card.card_installed:contains("eLearning")',
         },
         {
-            trigger: '.card.card_installed:contains("Success Stories")',
-        },
-        {
-            content:
-                "Success Stories (Blog) and News (Blog) should be selected (module already installed)",
+            content:"News (Blog) should be selected (module already installed)",
             trigger: '.card.card_installed:contains("News")',
         },
         {
@@ -113,13 +109,13 @@ registry.category("web_tour.tours").add("configurator_flow", {
             content: `Check footer menu ${menu} is there`,
             trigger: `:iframe footer a:contains(${menu})`,
         })),
-        ...["Home", "Events", "Courses", "Pricing", "News", "Success Stories", "Contact us"].map(
+        ...["Home", "Events", "Courses", "Pricing Plan", "News"].map(
             (menu) => ({
                 content: `Check menu ${menu} is there`,
                 trigger: `:iframe .top_menu a:contains(${menu}):not(:visible)`,
             })
         ),
-        ...["/", "/event", "/slides", "/pricing", "/blog/", "/blog/", "/contactus"].map((url) => ({
+        ...["/", "/event", "/slides", "/pricing", "/blog/"].map((url) => ({
             content: `Check url ${url} is there`,
             trigger: `:iframe .top_menu a[href^='${url}']:not(:visible)`,
         })),

@@ -18,10 +18,12 @@ class WithContext(HttpCase):
         contactus_url = '/contactus'
         contactus_url_full = website.domain + contactus_url
         contactus_content = b'content="Contact Us | Test Website"'
-        self.env['website.menu'].search([
-            ('website_id', '=', website.id),
-            ('url', '=', contactus_url),
-        ]).sequence = 1
+        self.env['website.menu'].create({
+            'name': "Contact us",
+            'url': contactus_url,
+            'website_id': website.id,
+            'parent_id': website.menu_id.id,
+        }).sequence = 1
 
         # 404 shouldn't be served but fallback on first menu
         # -------------------------------------------
