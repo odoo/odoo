@@ -937,3 +937,13 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 }
             },
         )
+
+    def test_75_journal_upload_empty_pdf(self):
+        empty_pdf_vals = {'name': 'empty.pdf', 'raw': False, 'type': 'binary', 'mimetype': 'application/pdf'}
+        self.assert_attachment_import(
+            origin='journal',
+            attachments_vals=[empty_pdf_vals],
+            expected_invoices={
+                1: {'empty.pdf': {'on_invoice': True, 'on_message': True, 'is_decoded': True, 'is_new': True}},
+            },
+        )
