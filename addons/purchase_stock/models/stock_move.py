@@ -150,11 +150,13 @@ class StockMove(models.Model):
 
         quantity = 0
         value = 0
+        aml_ids = set()
         for aml in self.purchase_line_id.invoice_lines:
             if at_date and aml.date > at_date:
                 continue
             if aml.move_id.state != 'posted':
                 continue
+            aml_ids.add(aml.id)
             if aml.move_type == 'in_invoice':
                 quantity += aml.quantity
                 value += aml.price_subtotal
@@ -164,6 +166,10 @@ class StockMove(models.Model):
 
         valuation_data['quantity'] = quantity
         valuation_data['value'] = value
+        account_moves = self.env['account.move.line'].browse(aml_ids).move_id
+        valuation_data['description'] = _('%(value)s for %(quantity)s %(unit)s from %(bills)s',
+            value=value, quantity=quantity, unit=self.product_id.uom_id.name,
+            bills=', '.join(account_move.name for account_move in account_moves))
         return valuation_data
 
     def _get_value_from_quotation(self, quantity, at_date=None):
@@ -177,6 +183,7 @@ class StockMove(models.Model):
         return {
             'value': price_unit * quantity,
             'quantity': quantity,
+            'description': _('From %(quotation)s', quotation=self.purchase_line_id.order_id.name),
         }
 
     def _get_related_invoices(self):

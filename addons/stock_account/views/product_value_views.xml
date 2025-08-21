@@ -14,6 +14,10 @@
                         <field name="current_value" style="width: 100px;" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                         <span><field name="current_value_details" class="oe_inline me-5"/></span>
                     </div>
+                    <label for="current_value_description" string=""/>
+                    <div class="text-muted">
+                        <field name="current_value_description"/>
+                    </div>
                     <field name="value" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                     <field name="description"/>
                 </group>
