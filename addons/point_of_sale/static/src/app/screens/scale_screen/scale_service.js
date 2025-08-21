@@ -161,7 +161,7 @@ export class PosScaleService extends Reactive {
     }
 }
 
-const posScaleService = {
+export const posScaleService = {
     dependencies: ["hardware_proxy"],
     start(env, deps) {
         return new PosScaleService(env, deps);
