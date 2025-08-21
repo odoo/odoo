@@ -461,8 +461,15 @@ class TestEdiXmls(TestEsEdiCommon):
                     'TipoDesglose': {
                         'DesgloseTipoOperacion': {
                             'PrestacionServicios': {
-                                'NoSujeta': {
-                                    'ImporteTAIReglasLocalizacion': 100.0,
+                                'Sujeta': {
+                                    'Exenta': {
+                                        'DetalleExenta': [
+                                            {
+                                                'BaseImponible': 100.0,
+                                                'CausaExencion': 'E2',
+                                            },
+                                        ],
+                                    },
                                 },
                             },
                             'Entrega': {
