@@ -8,26 +8,20 @@ export const YOUTUBE_URL_GET_VIDEO_ID =
 
 export class YoutubePlugin extends Plugin {
     static id = "youtube";
-    static dependencies = ["history", "powerbox", "link", "dom"];
+    static dependencies = ["history", "dom"];
     resources = {
         ...(this.config.allowVideo && {
-            paste_url_overrides: this.handlePasteUrl.bind(this),
+            paste_media_url_command_providers: this.getCommandForVideoUrlPaste.bind(this),
         }),
     };
     /**
-     * @param {string} text
      * @param {string} url
      */
-    handlePasteUrl(text, url) {
+    getCommandForVideoUrlPaste(url) {
         const youtubeUrl = YOUTUBE_URL_GET_VIDEO_ID.exec(url);
         if (youtubeUrl) {
-            const restoreSavepoint = this.dependencies.history.makeSavePoint();
-            // Open powerbox with commands to embed media or paste as link.
-            // Insert URL as text, revert it later if a command is triggered.
-            this.dependencies.dom.insert(text);
-            this.dependencies.history.addStep();
             // URL is a YouTube video.
-            const embedVideoCommand = {
+            return {
                 title: _t("Embed Youtube Video"),
                 description: _t("Embed the youtube video in the document."),
                 icon: "fa-youtube-play",
@@ -37,12 +31,6 @@ export class YoutubePlugin extends Plugin {
                     this.dependencies.history.addStep();
                 },
             };
-            const commands = [
-                embedVideoCommand,
-                this.dependencies.link.getPathAsUrlCommand(text, url),
-            ];
-            this.dependencies.powerbox.openPowerbox({ commands, onApplyCommand: restoreSavepoint });
-            return true;
         }
     }
     // @todo @phoenix: Should this be in this plugin?

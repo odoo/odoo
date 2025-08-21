@@ -153,6 +153,7 @@ export class WebsiteBuilder extends Component {
         const pluginsBlockedInTranslationMode = [
             "PowerboxPlugin",
             "SearchPowerboxPlugin",
+            "MediaUrlPastePlugin",
             "YoutubePlugin",
             "ImagePlugin",
         ];
