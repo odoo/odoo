@@ -25,8 +25,8 @@ describe('Odoo fields', () => {
             contentBefore: `<p><span data-oe-model="product.template" data-oe-id="27" data-oe-field="name" data-oe-type="char" data-oe-expression="product.name" data-oe-xpath="/t[1]/div[1]/h3[2]/span[1]" class="o_editable">a[]</span></p>`,
             contentBeforeEdit: `<p><span data-oe-model="product.template" data-oe-id="27" data-oe-field="name" data-oe-type="char" data-oe-expression="product.name" data-oe-xpath="/t[1]/div[1]/h3[2]/span[1]" class="o_editable">a[]</span></p>`,
             stepFunction: (editor) => editor.execCommand('oDeleteBackward'),
-            contentAfterEdit: `<p><span data-oe-model="product.template" data-oe-id="27" data-oe-field="name" data-oe-type="char" data-oe-expression="product.name" data-oe-xpath="/t[1]/div[1]/h3[2]/span[1]" class="o_editable" data-oe-zws-empty-inline="">[]\u200b</span><br></p>`,
-            contentAfter: `<p><span data-oe-model="product.template" data-oe-id="27" data-oe-field="name" data-oe-type="char" data-oe-expression="product.name" data-oe-xpath="/t[1]/div[1]/h3[2]/span[1]" class="o_editable">[]</span><br></p>`,
+            contentAfterEdit: `<p><span data-oe-model="product.template" data-oe-id="27" data-oe-field="name" data-oe-type="char" data-oe-expression="product.name" data-oe-xpath="/t[1]/div[1]/h3[2]/span[1]" class="o_editable" data-oe-zws-empty-inline="">[]\u200b</span></p>`,
+            contentAfter: `<p><span data-oe-model="product.template" data-oe-id="27" data-oe-field="name" data-oe-type="char" data-oe-expression="product.name" data-oe-xpath="/t[1]/div[1]/h3[2]/span[1]" class="o_editable">[]</span></p>`,
         });
     });
     it('should keep zero-width breaking space for empty inline editable', async () => {
