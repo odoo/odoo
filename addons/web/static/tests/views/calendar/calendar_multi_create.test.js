@@ -1,5 +1,5 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { click, edit, queryAllTexts } from "@odoo/hoot-dom";
+import { click, edit, keyDown, keyUp, queryAllTexts, queryAll } from "@odoo/hoot-dom";
 import {
     advanceTime,
     animationFrame,
@@ -20,6 +20,7 @@ import {
     preloadBundle,
     serverState,
 } from "@web/../tests/web_test_helpers";
+import { selectDateRange } from "./calendar_test_helpers";
 
 import { markup } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
@@ -858,4 +859,187 @@ test(`multi_create: no button "Delete" if no record selected`, async () => {
     await contains(".fc-day[data-date='2019-03-04']").click();
     expect(".o_multi_selection_buttons").toHaveCount(1);
     expect(".o_multi_selection_buttons .btn .fa-trash").toHaveCount(0);
+});
+
+test.tags("desktop");
+test("multi_create: selection with ctrl", async () => {
+    onRpc("event", "create", ({ args: [records] }) => {
+        for (const record of records) {
+            if (record.name !== "Time off" || record.type !== 3) {
+                expect.step("error");
+            }
+            expect.step(`${record.user_id}_${record.date_start}`);
+        }
+    });
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        context: { default_name: "Sick" },
+    });
+
+    expect(".fc .fc-event").toHaveCount(4, { message: "events should be filter" });
+
+    await selectDateRange("2019-03-04", "2019-03-14");
+
+    await keyDown("Control");
+    await selectDateRange("2019-02-26", "2019-03-27");
+    await contains(".fc-day[data-date='2019-03-20']").click();
+    await contains(".fc-day[data-date='2019-03-16']").click();
+    await keyUp("Control");
+
+    expect(".fc-day.o-highlight").toHaveCount(14);
+
+    await multiCreateClickAddButton();
+
+    expect(".o_multi_create_popover .o_form_view").toBeVisible();
+    expect(".o_multi_create_popover .o_form_view [name='name'] input").toHaveValue("Sick", {
+        message: "should have a default value from the context",
+    });
+    await click(".o_multi_create_popover .o_form_view [name='name'] input");
+    await edit("Time off");
+    await contains(".o_multi_create_popover .o_form_view [name='type'] input").click();
+    await contains(".o-autocomplete--dropdown-item:contains('Event Type 3')").click();
+    await multiCreatePopoverClickAddButton();
+
+    expect.verifySteps([
+        "1_2019-03-04",
+        "3_2019-03-04",
+        "1_2019-03-05",
+        "3_2019-03-05",
+        "1_2019-03-06",
+        "3_2019-03-06",
+        "1_2019-03-07",
+        "3_2019-03-07",
+        "1_2019-03-11",
+        "3_2019-03-11",
+        "1_2019-03-12",
+        "3_2019-03-12",
+        "1_2019-03-13",
+        "3_2019-03-13",
+        "1_2019-03-14",
+        "3_2019-03-14",
+        "1_2019-02-26",
+        "3_2019-02-26",
+        "1_2019-02-27",
+        "3_2019-02-27",
+        "1_2019-03-19",
+        "3_2019-03-19",
+        "1_2019-03-26",
+        "3_2019-03-26",
+        "1_2019-03-27",
+        "3_2019-03-27",
+        "1_2019-03-16",
+        "3_2019-03-16",
+    ]);
+    expect(".fc .fc-event").toHaveCount(32, {
+        message: "events should be added for the two users selected",
+    });
+});
+
+test.tags("desktop");
+test("multi_create: selection with shift", async () => {
+    onRpc("event", "create", ({ args: [records] }) => {
+        for (const record of records) {
+            if (record.name !== "Time off" || record.type !== 3) {
+                expect.step("error");
+            }
+            expect.step(`${record.user_id}_${record.date_start}`);
+        }
+    });
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        context: { default_name: "Sick" },
+    });
+
+    expect(".fc .fc-event").toHaveCount(4, { message: "events should be filter" });
+
+    await keyDown("Shift");
+    await contains(".fc-day[data-date='2019-03-20']").click();
+    await contains(".fc-day[data-date='2019-03-16']").click();
+    await keyUp("Shift");
+
+    expect(".o_selection_box").toHaveText("1\nselected");
+    expect(queryAll(".fc-day.o-highlight").map((el) => el.dataset.date)).toEqual([
+        "2019-03-16",
+        "2019-03-17",
+        "2019-03-18",
+        "2019-03-19",
+        "2019-03-20",
+    ]);
+
+    await multiCreateClickAddButton();
+
+    expect(".o_multi_create_popover .o_form_view").toBeVisible();
+    expect(".o_multi_create_popover .o_form_view [name='name'] input").toHaveValue("Sick", {
+        message: "should have a default value from the context",
+    });
+    await click(".o_multi_create_popover .o_form_view [name='name'] input");
+    await edit("Time off");
+    await contains(".o_multi_create_popover .o_form_view [name='type'] input").click();
+    await contains(".o-autocomplete--dropdown-item:contains('Event Type 3')").click();
+    await multiCreatePopoverClickAddButton();
+
+    expect.verifySteps([
+        "1_2019-03-16",
+        "3_2019-03-16",
+        "1_2019-03-17",
+        "3_2019-03-17",
+        "1_2019-03-18",
+        "3_2019-03-18",
+        "1_2019-03-19",
+        "3_2019-03-19",
+        "1_2019-03-20",
+        "3_2019-03-20",
+    ]);
+    expect(".fc .fc-event").toHaveCount(14, {
+        message: "events should be added for the two users selected",
+    });
+
+    await keyDown("Shift");
+    await contains(".fc-day[data-date='2019-03-16']").click();
+    await contains(".fc-day[data-date='2019-03-20']").click();
+    await contains(".fc-day[data-date='2019-03-14']").click();
+
+    expect(".o_selection_box").toHaveText("2\nselected");
+    expect(queryAll(".fc-day.o-highlight").map((el) => el.dataset.date)).toEqual([
+        "2019-03-14",
+        "2019-03-15",
+        "2019-03-16",
+    ]);
+
+    await contains(".fc-day[data-date='2019-03-13']").click();
+
+    expect(".o_selection_box").toHaveText("3\nselected");
+    expect(queryAll(".fc-day.o-highlight").map((el) => el.dataset.date)).toEqual([
+        "2019-03-13",
+        "2019-03-14",
+        "2019-03-15",
+        "2019-03-16",
+    ]);
+
+    await keyUp("Shift");
+    await contains(".fc-day[data-date='2019-03-13']").click();
+    await keyDown("Shift");
+    await contains(".fc-day[data-date='2019-03-11']").click();
+    await keyUp("Shift");
+
+    expect(".o_selection_box").toHaveText("3\nselected");
+    expect(queryAll(".fc-day.o-highlight").map((el) => el.dataset.date)).toEqual([
+        "2019-03-11",
+        "2019-03-12",
+        "2019-03-13",
+    ]);
+
+    await contains(".fc-day[data-date='2019-03-20']").click();
+
+    await selectDateRange("2019-03-04", "2019-03-14");
+
+    await keyUp("Shift");
+    await contains(".fc-day[data-date='2019-03-13']").click();
+
+    expect(".o_selection_box").toHaveText("1\nselected");
+    expect(queryAll(".fc-day.o-highlight").map((el) => el.dataset.date)).toEqual(["2019-03-13"]);
 });
