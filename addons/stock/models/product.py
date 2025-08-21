@@ -125,8 +125,12 @@ class Product(models.Model):
     def _compute_quantities(self):
         products = self.with_context(prefetch_fields=False).filtered(lambda p: p.type != 'service').with_context(prefetch_fields=True)
         res = products._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
-        for product in products:
-            product.update(res[product.id])
+        # group result by values to reduce calls to __setitem__
+        grouped_res = defaultdict(list)
+        for product_id, quantities in res.items():
+            grouped_res[tuple(quantities.items())].append(product_id)
+        for quantities, product_ids in grouped_res.items():
+            self.env['product.product'].browse(product_ids).update(dict(quantities))
         # Services need to be set with 0.0 for all quantities
         services = self - products
         services.qty_available = 0.0
