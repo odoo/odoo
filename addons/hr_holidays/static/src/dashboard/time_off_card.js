@@ -108,6 +108,24 @@ export class TimeOffCard extends Component {
         onWillRender(this.updateWarning);
     }
 
+
+    // e.g.: Input: 9.5 Output: 9:30
+    formatHour(hoursFloat) {
+        const hours = Math.floor(hoursFloat);
+        const minutes = Math.round((hoursFloat - hours) * 60);
+        // Pad minutes with leading zero if needed
+        const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+        return `${hours}:${formattedMinutes}`;
+    }
+
+    formatDuration(duration) {
+        if (this.props.data.request_unit === 'hour') {
+            return this.formatHour(duration);
+        }
+        return formatNumber(this.lang, duration);
+    }
+
+
     updateWarning() {
         const { data } = this.props;
         const errorLeavesSignificant = data.allows_negative
