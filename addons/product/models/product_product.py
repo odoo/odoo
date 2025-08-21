@@ -416,10 +416,8 @@ class ProductProduct(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        if 'product_template_attribute_value_ids' in vals:
+        if any(self._ids) and ('product_template_attribute_value_ids' in vals or 'active' in vals):
             # `_get_variant_id_for_combination` depends on `product_template_attribute_value_ids`
-            self.env.registry.clear_cache()
-        elif 'active' in vals:
             # `_get_first_possible_variant_id` depends on variants active state
             self.env.registry.clear_cache()
         return res
@@ -834,7 +832,7 @@ class ProductProduct(models.Model):
         self = self.with_context(
             empty_list_help_document_name=_("product"),
         )
-        return super(ProductProduct, self).get_empty_list_help(help_message)
+        return super().get_empty_list_help(help_message)
 
     def get_product_multiline_description_sale(self):
         """ Compute a multiline description of this product, in the context of sales

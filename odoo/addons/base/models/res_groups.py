@@ -178,7 +178,7 @@ class ResGroups(models.Model):
 
         res = super().write(vals)
 
-        if 'implied_ids' in vals or 'implied_by_ids' in vals:
+        if ('implied_ids' in vals or 'implied_by_ids' in vals) and any(self._ids):
             # Invalidate the cache of groups and their relationships
             self.env.registry.clear_cache('groups')
 

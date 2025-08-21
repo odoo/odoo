@@ -112,12 +112,15 @@ class IrConfig_Parameter(models.Model):
             illegal = _default_parameters.keys() & self.mapped('key')
             if illegal:
                 raise ValidationError(self.env._("You cannot rename config parameters with keys %s", ', '.join(illegal)))
-        self.env.registry.clear_cache()
+        if any(self._ids):
+            self.env.flush_all()
+            self.env.registry.clear_cache()
         return super().write(vals)
 
     def unlink(self):
+        res = super().unlink()
         self.env.registry.clear_cache()
-        return super().unlink()
+        return res
 
     @api.ondelete(at_uninstall=False)
     def unlink_default_parameters(self):

@@ -336,8 +336,8 @@ class Website(models.Model):
         original_company = self.company_id
         values = vals
         self._handle_create_write(values)
-
-        self.env.registry.clear_cache()
+        clear_cache = self.env.registry.clear_cache if any(self._ids) else lambda: None
+        clear_cache()
 
         if 'company_id' in values and 'user_id' not in values:
             public_user_to_change_websites = self.filtered(lambda w: w.sudo().user_id.company_id.id != values['company_id'])
@@ -349,7 +349,7 @@ class Website(models.Model):
 
         if 'cdn_activated' in values or 'cdn_url' in values or 'cdn_filters' in values:
             # invalidate the caches from static node at compile time
-            self.env.registry.clear_cache()
+            clear_cache()
 
         # invalidate cache for `company.website_id` to be recomputed
         if 'sequence' in values or 'company_id' in values:

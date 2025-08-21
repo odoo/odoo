@@ -975,7 +975,7 @@ class IrModelFields(models.Model):
 
         model_names = self.mapped('model')
         self._drop_column()
-        res = super(IrModelFields, self).unlink()
+        res = super().unlink()
 
         # The field we just deleted might be inherited, and the registry is
         # inconsistent in this case; therefore we reload the registry.
@@ -999,7 +999,7 @@ class IrModelFields(models.Model):
         # for self._get_ids() in _update_selection()
         self.env.registry.clear_cache()
 
-        res = super(IrModelFields, self).create(vals_list)
+        res = super().create(vals_list)
         models = OrderedSet(res.mapped('model'))
 
         for vals in vals_list:
@@ -1073,7 +1073,7 @@ class IrModelFields(models.Model):
             if column_name in vals:
                 del vals[column_name]
 
-        res = super(IrModelFields, self).write(vals)
+        res = super().write(vals)
 
         self.env.flush_all()
 
@@ -2134,12 +2134,15 @@ class IrModelAccess(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
-        self.call_cache_clearing_methods()
+        if any(self._ids):
+            self.call_cache_clearing_methods()
         return super().write(vals)
 
     def unlink(self):
-        self.call_cache_clearing_methods()
-        return super().unlink()
+        res = super().unlink()
+        if self:
+            self.call_cache_clearing_methods()
+        return res
 
 
 class IrModelData(models.Model):
@@ -2254,16 +2257,17 @@ class IrModelData(models.Model):
     def write(self, vals):
         self.env.registry.clear_cache()  # _xmlid_lookup
         res = super().write(vals)
-        if vals.get('model') == 'res.groups':
+        if vals.get('model') == 'res.groups' and any(self._ids):
             self.env.registry.clear_cache('groups')
         return res
 
     def unlink(self):
         """ Regular unlink method, but make sure to clear the caches. """
+        res = super().unlink()
         self.env.registry.clear_cache()  # _xmlid_lookup
         if self and any(data.model == 'res.groups' for data in self.exists()):
             self.env.registry.clear_cache('groups')
-        return super().unlink()
+        return res
 
     def _lookup_xmlids(self, xml_ids, model):
         """ Look up the given XML ids of the given model. """

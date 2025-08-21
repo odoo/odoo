@@ -109,6 +109,7 @@ class ResCountry(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        self.env.registry.clear_cache()
         for vals in vals_list:
             if vals.get('code'):
                 vals['code'] = vals['code'].upper()
@@ -118,15 +119,20 @@ class ResCountry(models.Model):
         if vals.get('code'):
             vals['code'] = vals['code'].upper()
         res = super().write(vals)
-        if ('code' in vals or 'phone_code' in vals):
+        if ('code' in vals or 'phone_code' in vals) and any(self._ids):
             # Intentionally simplified by not clearing the cache in create and unlink.
             self.env.registry.clear_cache()
-        if 'address_view_id' in vals or 'vat_label' in vals:
+        if ('address_view_id' in vals or 'vat_label' in vals) and any(self._ids):
             # Changing the address view of the company must invalidate the view cached for res.partner
             # because of _view_get_address
             # Same goes for vat_label
             # because of _get_view override from FormatVATLabelMixin
             self.env.registry.clear_cache('templates')
+        return res
+
+    def unlink(self):
+        res = super().unlink()
+        self.env.registry.clear_cache()
         return res
 
     def get_address_fields(self):

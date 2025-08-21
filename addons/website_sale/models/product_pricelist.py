@@ -71,12 +71,14 @@ class ProductPricelist(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        self and self.env.registry.clear_cache()
+        if any(self._ids):
+            self.env.registry.clear_cache()
         return res
 
     def unlink(self):
         res = super().unlink()
-        self and self.env.registry.clear_cache()
+        if self:
+            self.env.registry.clear_cache()
         return res
 
     #=== BUSINESS METHODS ===#

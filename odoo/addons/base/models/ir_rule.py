@@ -182,20 +182,20 @@ class IrRule(models.Model):
             yield v
 
     def unlink(self):
-        res = super(IrRule, self).unlink()
+        res = super().unlink()
         self.env.registry.clear_cache()
         return res
 
     @api.model_create_multi
     def create(self, vals_list):
-        res = super(IrRule, self).create(vals_list)
+        res = super().create(vals_list)
         # DLE P33: tests
         self.env.flush_all()
         self.env.registry.clear_cache()
         return res
 
     def write(self, vals):
-        res = super(IrRule, self).write(vals)
+        res = super().write(vals)
         # DLE P33: tests
         # - odoo/addons/test_access_rights/tests/test_feedback.py
         # - odoo/addons/test_access_rights/tests/test_ir_rules.py

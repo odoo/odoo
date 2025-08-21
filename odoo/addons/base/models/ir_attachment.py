@@ -593,7 +593,7 @@ class IrAttachment(models.Model):
             vals.pop(field, False)
         if 'mimetype' in vals or 'datas' in vals or 'raw' in vals:
             vals = self._check_contents(vals)
-        res = super(IrAttachment, self).write(vals)
+        res = super().write(vals)
         if 'url' in vals or 'type' in vals:
             self._check_serving_attachments()
         return res
@@ -616,8 +616,8 @@ class IrAttachment(models.Model):
         # database allowed it. Helps avoid errors when concurrent transactions
         # are deleting the same file, and some of the transactions are
         # rolled back by PostgreSQL (due to concurrent updates detection).
-        to_delete = set(attach.store_fname for attach in self if attach.store_fname)
-        res = super(IrAttachment, self).unlink()
+        to_delete = {attach.store_fname for attach in self if attach.store_fname}
+        res = super().unlink()
         for file_path in to_delete:
             self._file_delete(file_path)
 
