@@ -38,6 +38,7 @@ const mainEditorPluginsToRemove = [
     "StarPlugin",
     "BannerPlugin",
     "MoveNodePlugin",
+    "FontFamilyPlugin",
     // Replaced plugins:
     "ColorPlugin",
 ];
