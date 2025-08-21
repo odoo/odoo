@@ -99,7 +99,7 @@ class TestWebsiteAssets(odoo.tests.HttpCase):
         page = self.url_open('/').text
 
         new_public_assets_links = re.findall(r'(/web/assets/\d+/\w{7}/web.assets_frontend\..+)"/>', page)
-        self.assertEqual(new_admin_assets_links, new_public_assets_links, "t-cache should have been invalidated for public user too")
+        self.assertEqual(new_admin_assets_links, new_public_assets_links, "caches should have been invalidated for public user too")
 
     def test_invalid_unlink(self):
         self.env['ir.attachment'].search([('url', '=like', '/web/assets/%')]).unlink()

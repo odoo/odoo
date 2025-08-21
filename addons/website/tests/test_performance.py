@@ -28,7 +28,7 @@ class UtilPerf(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         if 'channel_id' in cls.env['website']:
             cls.env['website'].search([]).channel_id = False
 
-    def _get_url_hot_query(self, url, cache=True, query_list=False):
+    def _get_url_hot_query(self, url, query_list=False):
         """ This method returns the number of SQL Queries used inside a request.
         The returned query number will be the same as a "real" (outside of test
         mode) case: the method takes care of removing the extra queries related
@@ -43,7 +43,6 @@ class UtilPerf(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
             value to be asserted/checked.
 
         :param str url: url to be checked
-        :param bool cache: whether the QWeb `t-cache` should be disabled or not
         :param bool query_list: whether the method should also return list of
             queries (without test cursor savepoint queries)
         :return: the query count plus the list of queries if ``query_list``
@@ -51,10 +50,6 @@ class UtilPerf(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         :rtype: int|tuple(int, list)
         """
         url += ('?' not in url and '?' or '')
-        if cache:
-            url += '&debug='
-        else:
-            url += '&debug=disable-t-cache'
 
         # ensure worker is in hot state
         self.url_open(url)
@@ -117,7 +112,6 @@ class TestStandardPerformance(UtilPerf):
         self.assertEqual(self.env['res.users'].sudo().browse(2).website_published, False)
         url = '/web/image/res.users/2/image_256'
         self.assertEqual(self._get_url_hot_query(url), 8)
-        self.assertEqual(self._get_url_hot_query(url, cache=False), 8)
 
     @mute_logger('odoo.http')
     def test_11_perf_sql_img_controller(self):
@@ -131,7 +125,6 @@ class TestStandardPerformance(UtilPerf):
             'ir_attachment': 2,
         }
         self._check_url_hot_query(url, 6, select_tables_perf)
-        self.assertEqual(self._get_url_hot_query(url, cache=False), 6)
 
     @mute_logger('odoo.http')
     def test_20_perf_sql_img_controller_bis(self):
@@ -148,11 +141,9 @@ class TestStandardPerformance(UtilPerf):
             # 2. ..followed by a `_read()`
         }
         self._check_url_hot_query(url, 5, select_tables_perf)
-        self.assertEqual(self._get_url_hot_query(url, cache=False), 5)
 
         self.authenticate('portal', 'portal')
         self._check_url_hot_query(url, 5, select_tables_perf)
-        self.assertEqual(self._get_url_hot_query(url, cache=False), 5)
 
 
 class TestWebsitePerformanceCommon(UtilPerf):
@@ -200,20 +191,21 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     'orm_signaling_registry': 1,
                     'ir_attachment': 1,
                     # `_get_serve_attachment` dispatcher fallback
-                    'website_page': 2,
+                    'website_page': 3,
                     # 1. `_serve_page` search page matching URL..
                     # 2. ..then reads it (`is_visible`)
                     'website': 1,
+                    # menu and layout
+                    'website_menu': 1,
+                    'ir_ui_view': 2,
+                    'res_company': 1,
                 }
-                expected_query_count = 5
-                if not readonly_enabled:
-                    select_tables_perf['ir_ui_view'] = 1 # Check if `view.track` to track visitor or not
-                    expected_query_count += 1
+                expected_query_count = 10
                 self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf)
-                self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 10)
+                self.assertEqual(self._get_url_hot_query(self.page.url), expected_query_count)
                 self.menu.unlink()  # page being or not in menu shouldn't add queries
                 self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf)
-                self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 10)
+                self.assertEqual(self._get_url_hot_query(self.page.url), expected_query_count)
 
     def test_15_perf_sql_queries_page(self):
         # standard tracked website.page
@@ -224,29 +216,28 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     'orm_signaling_registry': 1,
                     'ir_attachment': 1,
                     # `_get_serve_attachment` dispatcher fallback
-                    'website_page': 2,
+                    'website_page': 3,
                     # 1. `_serve_page` search page matching URL..
                     # 2. ..then reads it (`is_visible`)
                     'website': 1,
+                    # menu and layout
+                    'website_menu': 1,
+                    'ir_ui_view': 2,
+                    'res_company': 1,
                 }
-                expected_query_count = 5
-                expected_query_count_no_cache = 10
+                expected_query_count = 10
                 insert_tables_perf = {}
                 if not readonly_enabled:
-                    select_tables_perf['ir_ui_view'] = 1 # Check if `view.track` to track visitor or not
                     insert_tables_perf = {
                         'website_visitor': 1,
                         # Visitor upsert
                     }
-                    expected_query_count += 2
-                    expected_query_count_no_cache += 1
+                    expected_query_count += 1
                 self.page.track = True
-                self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, insert_tables_perf)
-                self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), expected_query_count_no_cache)
 
                 self.menu.unlink()  # page being or not in menu shouldn't add queries
                 self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, insert_tables_perf)
-                self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), expected_query_count_no_cache)
+                self.assertEqual(self._get_url_hot_query(self.page.url), expected_query_count)
 
     def test_20_perf_sql_queries_homepage(self):
         # homepage "/" has its own controller
@@ -261,20 +252,20 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     # 1. the menu prefetching is also prefetching all menu's pages
                     # 2. find page matching the `/` url
                     'website': 1,
+                    # layout
+                    'ir_ui_view': 2,
+                    'res_company': 1,
                 }
-                expected_query_count = 5
-                expected_query_count_no_cache = 8
+                expected_query_count = 8
                 insert_tables_perf = {}
                 if not readonly_enabled:
-                    select_tables_perf['ir_ui_view'] = 1 # Check if `view.track` to track visitor or not
                     insert_tables_perf = {
                         'website_visitor': 1,
                         # Visitor upsert
                     }
-                    expected_query_count += 2
-                    expected_query_count_no_cache += 1
+                    expected_query_count += 1
                 self._check_url_hot_query('/', expected_query_count, select_tables_perf, insert_tables_perf)
-                self.assertEqual(self._get_url_hot_query('/', cache=False), expected_query_count_no_cache)
+                self.assertEqual(self._get_url_hot_query('/'), expected_query_count)
 
     def test_30_perf_sql_queries_page_no_layout(self):
         # untrack website.page with no call to layout templates
@@ -292,7 +283,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             # Check if `view.track` to track visitor or not
         }
         self._check_url_hot_query(self.page.url, 6, select_tables_perf)
-        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 6)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 6)
 
     def test_40_perf_sql_queries_page_multi_level_menu(self):
         # menu structure should not impact SQL requests
@@ -308,15 +299,18 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             'orm_signaling_registry': 1,
             'ir_attachment': 1,
             # `_get_serve_attachment` dispatcher fallback
-            'website_page': 2,
+            'website_page': 3,
             # 1. `_serve_page` search page matching URL..
             # 2. ..then reads it (`is_visible`)
             'website': 1,
-            'ir_ui_view': 1,
+            'website_menu': 1,
+            'ir_ui_view': 2,
             # Check if `view.track` to track visitor or not
+            # layout content (company name, logo)
+            'res_company': 1,
         }
-        self._check_url_hot_query(self.page.url, 6, select_tables_perf)
-        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 10)
+        self._check_url_hot_query(self.page.url, 10, select_tables_perf)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 10)
 
 @tagged('-at_install', 'post_install')
 class TestWebsitePerformancePost(UtilPerf):
@@ -333,4 +327,4 @@ class TestWebsitePerformancePost(UtilPerf):
             # 2. `_record_to_stream` reads the other attachment fields
         }
         self._check_url_hot_query(assets_url, 3, select_tables_perf)
-        self.assertEqual(self._get_url_hot_query(assets_url, cache=False), 3)
+        self.assertEqual(self._get_url_hot_query(assets_url), 3)

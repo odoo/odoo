@@ -526,10 +526,10 @@ class TestQwebDataSnippet(TransactionCase):
         ir_ui_view_queries = [q for q in actual_queries if re_sql.search(q)]
 
         # nb_snippets = 156
-        first_search = 1
+        first_search = 1  # fom key & website
         t_call_snippets = 2
         fetch_snippets = 0
-        get_root_view = 3
+        get_root_view = 2
         combine_views = 3
 
         all_ir_ui_view_queries = first_search + t_call_snippets + fetch_snippets + get_root_view + combine_views  # 9
@@ -538,4 +538,4 @@ class TestQwebDataSnippet(TransactionCase):
         re_sql = re.compile(r'\bwebsite\b', re.IGNORECASE)
         website_queries = [q for q in actual_queries if re_sql.search(q)]
 
-        self.assertEqual(len(website_queries), 19, f'Maximum queries: {19}')
+        self.assertEqual(len(website_queries), 18, f'Maximum queries: {18}')

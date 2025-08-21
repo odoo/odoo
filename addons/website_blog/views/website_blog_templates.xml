@@ -124,7 +124,7 @@ list of filtered posts (by date or tag).
             <t t-set="use_filters" t-value="True"/>
             <t t-set="use_text_align" t-value="True"/>
             <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_record_has_cover cover_auto'"/>
-            <div class="container position-relative h-100 d-flex flex-column justify-content-around" t-cache="_record">
+            <div class="container position-relative h-100 d-flex flex-column justify-content-around">
                 <div t-attf-class="o_wblog_post_title">
                     <span t-att-title="blog.name" class="text-white text-decoration-none">
                         <h1 t-field="blog.name" class="o_wblog_post_name" placeholder="Blog Title"/>
@@ -357,7 +357,7 @@ list of filtered posts (by date or tag).
                 </div>
             </t>
             <t t-else="">
-                <div id="o_wblog_next_container" class="d-flex flex-column" t-cache="next_post">
+                <div id="o_wblog_next_container" class="d-flex flex-column">
                     <button aria-labelledby="o_wblog_next_title" class="o_wblog_next_button o_button_area btn z-1"/>
                     <t t-call="website.record_cover">
                         <t t-set="_record" t-value="next_post"/>
