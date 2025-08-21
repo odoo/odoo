@@ -34,6 +34,7 @@ export class DiscussContent extends Component {
         this.threadActions = useThreadActions();
         this.root = useRef("root");
         this.state = useState({ jumpThreadPresent: 0 });
+        this.isDiscussContent = true;
         useEffect(
             () => this.actionPanelAutoOpenFn(),
             () => [this.thread]

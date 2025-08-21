@@ -5,7 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 
 registerThreadAction("mark-all-read", {
     condition(component) {
-        return component.thread?.id === "inbox";
+        return component.thread?.id === "inbox" && !component.isDiscussSidebarChannelActions;
     },
     disabledCondition(component) {
         return component.thread.isEmpty;
@@ -21,7 +21,7 @@ registerThreadAction("mark-all-read", {
 });
 registerThreadAction("unstar-all", {
     condition(component) {
-        return component.thread?.id === "starred";
+        return component.thread?.id === "starred" && !component.isDiscussSidebarChannelActions;
     },
     disabledCondition(component) {
         return component.thread.isEmpty;

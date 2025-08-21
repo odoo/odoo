@@ -16,7 +16,7 @@ registerThreadAction("create-lead", {
         icon: "fa fa-handshake-o",
     }),
     close: (component, action) => action.popover?.close(),
-    condition: (component) => false,
+    condition: (component) => false, // managed by threadActionsInternal patch
     panelOuterClass: "bg-100",
     icon: "fa fa-handshake-o",
     iconLarge: "fa-lg fa fa-handshake-o",

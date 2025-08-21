@@ -9,7 +9,8 @@ registerThreadAction("expand-discuss", {
             component.thread &&
             component.props.chatWindow?.isOpen &&
             component.thread.model === "discuss.channel" &&
-            !component.ui.isSmall
+            !component.ui.isSmall &&
+            !component.isDiscussSidebarChannelActions
         );
     },
     setup(component) {
@@ -37,7 +38,7 @@ registerThreadAction("expand-discuss", {
     sequenceGroup: 5,
 });
 registerThreadAction("advanced-settings", {
-    condition: (component) => component.thread,
+    condition: (component) => component.thread && component.isDiscussSidebarChannelActions,
     open(component, action) {
         action.actionService.doAction({
             type: "ir.actions.act_window",
@@ -50,10 +51,9 @@ registerThreadAction("advanced-settings", {
     icon: "fa fa-fw fa-gear",
     iconLarge: "fa fa-lg fa-fw fa-gear",
     name: _t("Advanced Settings"),
-    partition: false,
     setup() {
         this.actionService = useService("action");
     },
-    sidebarSequence: 20,
-    sidebarSequenceGroup: 30,
+    sequence: 20,
+    sequenceGroup: 30,
 });
