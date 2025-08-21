@@ -1799,8 +1799,8 @@ test("warning on send with shortcut when attempting to post message with still-u
     const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await editInput(document.body, ".o-mail-Composer input[type=file]", [file]);
-    await contains(".o-mail-AttachmentCard");
-    await contains(".o-mail-AttachmentCard .fa.fa-circle-o-notch");
+    await contains(".o-mail-AttachmentCard.o-isUploading:contains(text.txt) .fa.fa-circle-o-notch");
+    await contains(".o-mail-Composer button[title='Send']:disabled");
     await press("Enter"); // Try to send message
     await contains(".o_notification", { text: "Please wait while the file is uploading." });
 });
@@ -1814,7 +1814,9 @@ test("post attachment-only message shows optimistically the new message with att
     await contains(".o-mail-Composer input[type=file]");
     const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
     await editInput(document.body, ".o-mail-Composer input[type=file]", [file]);
-    await contains(".o-mail-AttachmentCard:not(:has(.fa.fa-circle-o-notch)):contains('text.txt')");
+    await contains(
+        ".o-mail-AttachmentCard:not(.o-isUploading):contains('text.txt'):not(:has(.fa.fa-circle-o-notch))"
+    );
     await press("Enter");
     await contains(".o-mail-Message");
     await contains(".o-mail-Message .o-mail-AttachmentCard:contains('text.txt')");
@@ -1943,7 +1945,10 @@ test("composer state: attachments save and restore", async () => {
         ".o-mail-Composer:has(textarea[placeholder='Message #General…']) input[type=file]",
         [file]
     );
-    await contains(".o-mail-Composer .o-mail-AttachmentCard:not(.o-isUploading)");
+    await contains(
+        ".o-mail-Composer .o-mail-AttachmentCard:not(.o-isUploading):contains(text.txt)"
+    );
+    await contains(".o-mail-Composer .o-mail-AttachmentCard");
     // Switch to #special
     await click("button", { text: "Special" });
     // Attach files in a message for #special
@@ -1961,10 +1966,11 @@ test("composer state: attachments save and restore", async () => {
         files
     );
     await contains(".o-mail-Composer .o-mail-AttachmentCard:not(.o-isUploading)", { count: 3 });
+    await contains(".o-mail-Composer .o-mail-AttachmentCard", { count: 3 });
     // Switch back to #general
     await click("button", { text: "General" });
     await contains(".o-mail-Composer .o-mail-AttachmentCard");
-    await contains(".o-mail-AttachmentCard", { text: "text.txt" });
+    await contains(".o-mail-Composer .o-mail-AttachmentCard:contains(text.txt)");
     // Switch back to #special
     await click("button", { text: "Special" });
     await contains(".o-mail-Composer .o-mail-AttachmentCard", { count: 3 });
