@@ -48,4 +48,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 timesheet_end_date=self.date_end_invoice_timesheet
             )._create_invoices(final=self.deduct_down_payments, grouped=not self.consolidated_billing)
 
-        return super()._create_invoices(sale_orders)
+        moves = super()._create_invoices(sale_orders)
+        moves._link_timesheets_to_invoice()
+        return moves

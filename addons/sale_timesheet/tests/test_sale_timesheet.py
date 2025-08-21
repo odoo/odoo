@@ -1245,3 +1245,39 @@ class TestSaleTimesheetAnalyticPlan(TestCommonSaleTimesheet):
             'employee_id': self.employee_manager.id,
             'so_line': so_line.id,
         })
+
+    def test_invoice_timesheet_with_down_payments(self):
+        """
+        Test that the timesheets are correctly linked to
+        the invoice when creating an invoice with down payments.
+        """
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_delivery_timesheet2.id,
+            })],
+        })
+        sale_order.action_confirm()
+
+        # Create timesheets linked to the sale order
+        timesheets = self.env['account.analytic.line'].create([{
+            'name': 'Timesheet',
+            'task_id': task.id,
+            'project_id': task.project_id.id,
+            'unit_amount': 2,
+            'employee_id': self.employee_user.id,
+        } for task in sale_order.tasks_ids])
+
+        # Create an advance payment invoice
+        downpayment = self.env['sale.advance.payment.inv'].with_context(active_ids=sale_order.ids).create({
+            'advance_payment_method': 'percentage',
+            'amount': 10,
+        })
+
+        moves = downpayment._create_invoices(sale_order)
+        self.assertEqual(len(moves), 1, "One invoice should be created for the down payment.")
+
+        # Check that the timesheets are linked to the invoice
+        self.assertTrue(all(ts.timesheet_invoice_id == moves for ts in timesheets),
+                        "All timesheets should be linked to the created invoice.")

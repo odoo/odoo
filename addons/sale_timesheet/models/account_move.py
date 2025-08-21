@@ -76,7 +76,7 @@ class AccountMove(models.Model):
             :param end_date: the end date of the period
         """
         for line in self.filtered(lambda i: i.move_type == 'out_invoice' and i.state == 'draft').invoice_line_ids:
-            sale_line_delivery = line.sale_line_ids.filtered(lambda sol: sol.product_id.invoice_policy == 'delivery' and sol.product_id.service_type == 'timesheet')
+            sale_line_delivery = line.sale_line_ids.order_id.order_line.filtered(lambda sol: sol.product_id.invoice_policy == 'delivery' and sol.product_id.service_type == 'timesheet')
             if not start_date and not end_date:
                 start_date, end_date = self._get_range_dates(sale_line_delivery.order_id)
             if sale_line_delivery:
@@ -86,7 +86,8 @@ class AccountMove(models.Model):
                 if end_date:
                     domain = expression.AND([domain, [('date', '<=', end_date)]])
                 timesheets = self.env['account.analytic.line'].sudo().search(domain)
-                timesheets.write({'timesheet_invoice_id': line.move_id.id})
+                for timesheet in timesheets.filtered(lambda t: not t.timesheet_invoice_id):
+                    timesheet.write({'timesheet_invoice_id': line.move_id.id})
 
     def _get_range_dates(self, order):
         # A method that can be overridden
