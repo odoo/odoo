@@ -29,6 +29,13 @@ class PaymentTransaction(models.Model):
         super()._post_process()
         self._process_pos_online_payment()
 
+    def _set_done(self, *, state_message=None, extra_allowed_states=()):
+        """ Override to trigger the post_processing for pos order payments.
+            This is usefull in case the user closes the payment page that was responsible to call `/payment/status/poll` """
+        super()._set_done()
+        if self.pos_order_id:
+            self.env.ref('payment.cron_post_process_payment_tx')._trigger()
+
     def _process_pos_online_payment(self):
         for tx in self:
             if tx and tx.pos_order_id and tx.state in ('authorized', 'done') and not tx.payment_id.pos_order_id:
