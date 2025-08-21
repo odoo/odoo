@@ -18,12 +18,15 @@ export class ThemeColorsOption extends BaseOptionComponent {
     }
 
     getPalettes() {
-        const palettes = [];
+        const palettesByName = {};
         const style = window.getComputedStyle(document.documentElement);
         const allPaletteNames = getCSSVariableValue("palette-names", style)
             .split(", ")
             .map((name) => name.replace(/'/g, ""));
         for (const paletteName of allPaletteNames) {
+            if (palettesByName[paletteName]) {
+                continue;
+            }
             const palette = {
                 name: paletteName,
                 colors: [],
@@ -32,9 +35,9 @@ export class ThemeColorsOption extends BaseOptionComponent {
                 const color = getCSSVariableValue(`o-palette-${paletteName}-o-color-${c}`, style);
                 palette.colors.push(color);
             });
-            palettes.push(palette);
+            palettesByName[paletteName] = palette;
         }
-        return palettes;
+        return Object.values(palettesByName);
     }
 
     getPresets() {
