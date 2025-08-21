@@ -13,7 +13,7 @@ const patchAvatarCardResourcePopover = {
         return [
             ...super.fieldNames,
             "department_id",
-            this.props.recordModel ? "employee_id" : "employee_ids",
+            this.props.resModel ? "employee_id" : "employee_ids",
             "hr_icon_display",
             "job_title",
             "show_hr_icon_display",

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="resource_mail.AvatarCardResourcePopover" t-inherit="mail.AvatarCardPopover">
         <xpath expr="//span[hasclass('o_avatar')]/img" position="attributes">
-            <attribute name="t-attf-src" t-if="displayAvatar">/web/image/{{ props.recordModel }}/{{ props.id }}/avatar_128</attribute>
+            <attribute name="t-attf-src" t-if="displayAvatar">/web/image/{{ props.resModel }}/{{ props.id }}/avatar_128</attribute>
         </xpath>
         <xpath expr="//span[hasclass('o_card_avatar_im_status')]" position="replace">
             <span t-if="record.user_id" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center o_user_im_status bg-inherit">

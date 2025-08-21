@@ -3,7 +3,7 @@ import { AvatarCardResourcePopover } from "@resource_mail/components/avatar_card
 export class AvatarCardEmployeePopover extends AvatarCardResourcePopover {
     static defaultProps = {
         ...AvatarCardResourcePopover.defaultProps,
-        recordModel: "hr.employee",
+        resModel: "hr.employee",
     };
     async onWillStart() {
         await super.onWillStart();

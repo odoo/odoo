@@ -7,7 +7,7 @@ export class AvatarCardPopover extends Component {
 
     static props = {
         id: { type: Number, required: true },
-        resModel: { type: String, required: true },
+        resModel: { type: String, optional: true },
         close: { type: Function, required: true },
     };
     static defaultProps = {

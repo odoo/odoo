@@ -3,11 +3,4 @@ import { AvatarCardEmployeePopover } from "../avatar_card_employee/avatar_card_e
 
 export class AvatarEmployee extends Avatar {
     static components = { ...super.components, Popover: AvatarCardEmployeePopover };
-
-    get popoverProps() {
-        return {
-            ...super.popoverProps,
-            recordModel: this.props.resModel,
-        };
-    }
 }

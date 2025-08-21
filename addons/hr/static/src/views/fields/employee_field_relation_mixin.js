@@ -35,7 +35,7 @@ export function EmployeeFieldRelationMixin(fieldClass) {
             if (["hr.employee", "hr.employee.public"].includes(this.relation)) {
                 return {
                     ...originalProps,
-                    recordModel: this.relation,
+                    resModel: this.relation,
                 };
             }
             return originalProps;

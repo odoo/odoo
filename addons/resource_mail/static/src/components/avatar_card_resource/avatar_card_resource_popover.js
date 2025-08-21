@@ -6,17 +6,9 @@ import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_pop
 export class AvatarCardResourcePopover extends AvatarCardPopover {
     static template = "resource_mail.AvatarCardResourcePopover";
 
-    static props = {
-        ...AvatarCardPopover.props,
-        recordModel: {
-            type: String,
-            optional: true,
-        },
-    };
-
     static defaultProps = {
         ...AvatarCardPopover.defaultProps,
-        recordModel: "resource.resource",
+        resModel: "resource.resource",
     };
 
     setup() {
@@ -27,7 +19,7 @@ export class AvatarCardResourcePopover extends AvatarCardPopover {
     }
 
     async onWillStart() {
-        [this.record] = await this.orm.call(this.props.recordModel, 'get_avatar_card_data', [[this.props.id], this.fieldNames], {});
+        [this.record] = await this.orm.call(this.props.resModel, 'get_avatar_card_data', [[this.props.id], this.fieldNames], {});
         await Promise.all(this.loadAdditionalData());
     }
 
