@@ -3,7 +3,7 @@
     <div t-name="hr_holidays.TimeOffCard" class="o_timeoff_card py-3 text-primary">
         <t t-set="data" t-value="props.data"/>
         <t t-set="duration" t-value="props.requires_allocation ? data.virtual_remaining_leaves : data.virtual_leaves_taken"/>
-        <t t-set="parsed_duration" t-value="formatNumber(this.lang, duration)"/>
+        <t t-set="parsed_duration" t-value="formatDuration(duration)"/>
         <t t-set="show_popover" t-value="true"/>
 
         <strong class="o_timeoff_name cursor-pointer btn-link" t-on-click="navigateTimeOffType"><t t-esc="props.name"/></strong>
