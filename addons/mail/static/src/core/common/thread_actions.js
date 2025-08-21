@@ -4,8 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
 import { markEventHandled } from "@web/core/utils/misc";
-import { Action } from "./action";
-import { Reactive } from "@web/core/utils/reactive";
+import { Action, UseActions } from "./action";
 
 export const threadActionsRegistry = registry.category("mail.thread/actions");
 
@@ -23,8 +22,6 @@ export const threadActionsRegistry = registry.category("mail.thread/actions");
  * @property {string|(comp: Component) => string} [nameClass]
  * @property {(comp: Component) => void} [open]
  * @property {(comp: Component) => string} [panelOuterClass]
- * @property {boolean|(comp: Component) => boolean} [sequenceGroup]
- * @property {boolean|(comp: Component) => boolean} [sequenceQuick]
  * @property {boolean} [toggle]
  */
 
@@ -252,47 +249,10 @@ export const threadActionsInternal = {
     },
 };
 
-class UseThreadActions extends Reactive {
+class UseThreadActions extends UseActions {
+    ActionClass = ThreadAction;
     actionStack = [];
     activeAction = null;
-
-    constructor(component, transformedActions) {
-        super();
-        this.component = component;
-        this.transformedActions = transformedActions;
-    }
-
-    get actions() {
-        return this.transformedActions
-            .filter((action) => action.condition && action.sequence !== undefined)
-            .sort((a1, a2) => a1.sequence - a2.sequence);
-    }
-
-    get partition() {
-        const actions = this.transformedActions.filter((action) => action.condition);
-        const quick = actions
-            .filter((a) => a.sequenceQuick)
-            .sort((a1, a2) => a1.sequenceQuick - a2.sequenceQuick);
-        const grouped = actions.filter((a) => a.sequenceGroup);
-        const groups = {};
-        for (const a of grouped) {
-            if (!(a.sequenceGroup in groups)) {
-                groups[a.sequenceGroup] = [];
-            }
-            groups[a.sequenceGroup].push(a);
-        }
-        const sortedGroups = Object.entries(groups).sort(
-            ([groupId1], [groupId2]) => groupId1 - groupId2
-        );
-        for (const [, actions] of sortedGroups) {
-            actions.sort((a1, a2) => a1.sequence - a2.sequence);
-        }
-        const group = sortedGroups.map(([groupId, actions]) => actions);
-        const other = actions
-            .filter((a) => !a.sequenceQuick && !a.sequenceGroup)
-            .sort((a1, a2) => a1.sequence - a2.sequence);
-        return { quick, group, other };
-    }
 }
 
 export function useThreadActions() {

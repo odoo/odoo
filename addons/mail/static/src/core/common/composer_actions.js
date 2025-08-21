@@ -4,7 +4,7 @@ import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { markEventHandled } from "@web/core/utils/misc";
-import { Action } from "./action";
+import { Action, UseActions } from "./action";
 
 export const composerActionsRegistry = registry.category("mail.composer/actions");
 
@@ -17,8 +17,6 @@ export const composerActionsRegistry = registry.category("mail.composer/actions"
  * @property {boolean|(comp: Component) => boolean} [condition=true]
  * @property {boolean} [isPicker]
  * @property {string|(comp: Component) => string} [pickerName]
- * @property {boolean|(comp: Component) => boolean} [sequenceGroup]
- * @property {boolean|(comp: Component) => boolean} [sequenceQuick]
  */
 
 /**
@@ -219,6 +217,21 @@ export const composerActionsInternal = {
     },
 };
 
+class UseComposerActions extends UseActions {
+    get partition() {
+        const res = super.partition;
+        const actions = this.transformedActions.filter((action) => action.condition);
+        const groupedPickers = Object.groupBy(
+            actions.filter((a) => a.isPicker),
+            (a) => (a.sequenceQuick ? "quick" : "other")
+        );
+        groupedPickers.quick?.sort((a1, a2) => a1.sequenceQuick - a2.sequenceQuick);
+        groupedPickers.other?.sort((a1, a2) => a1.sequence - a2.sequence);
+        const pickers = (groupedPickers.other ?? []).concat(groupedPickers.quick ?? []);
+        return Object.assign(res, { pickers });
+    }
+}
+
 export function useComposerActions() {
     const component = useComponent();
     const transformedActions = composerActionsRegistry
@@ -227,45 +240,7 @@ export function useComposerActions() {
     for (const action of transformedActions) {
         action.setup();
     }
-    const state = useState({
-        get actions() {
-            return transformedActions
-                .filter((action) => action.condition)
-                .sort((a1, a2) => a1.sequence - a2.sequence);
-        },
-        get partition() {
-            const actions = transformedActions.filter((action) => action.condition);
-            const groupedPickers = Object.groupBy(
-                actions.filter((a) => a.isPicker),
-                (a) => (a.sequenceQuick ? "quick" : "other")
-            );
-            groupedPickers.quick?.sort((a1, a2) => a1.sequenceQuick - a2.sequenceQuick);
-            groupedPickers.other?.sort((a1, a2) => a1.sequence - a2.sequence);
-            const pickers = (groupedPickers.other ?? []).concat(groupedPickers.quick ?? []);
-            const quick = actions
-                .filter((a) => a.sequenceQuick)
-                .sort((a1, a2) => a1.sequenceQuick - a2.sequenceQuick);
-            const grouped = actions.filter((a) => a.sequenceGroup);
-            const groups = {};
-            for (const a of grouped) {
-                if (!(a.sequenceGroup in groups)) {
-                    groups[a.sequenceGroup] = [];
-                }
-                groups[a.sequenceGroup].push(a);
-            }
-            const sortedGroups = Object.entries(groups).sort(
-                ([groupId1], [groupId2]) => groupId1 - groupId2
-            );
-            for (const [, actions] of sortedGroups) {
-                actions.sort((a1, a2) => a1.sequence - a2.sequence);
-            }
-            const group = sortedGroups.map(([groupId, actions]) => actions);
-            const other = actions
-                .filter((a) => !a.sequenceQuick && !a.sequenceGroup)
-                .sort((a1, a2) => a1.sequence - a2.sequence);
-            return { quick, group, other, pickers };
-        },
-    });
+    const state = useState(new UseComposerActions(component, transformedActions));
     component.getActivePicker = () => state.activePicker;
     component.setActivePicker = (newActivePicker) => (state.activePicker = newActivePicker);
     return state;

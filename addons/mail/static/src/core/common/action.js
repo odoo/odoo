@@ -1,4 +1,5 @@
 import { useComponent } from "@odoo/owl";
+import { Reactive } from "@web/core/utils/reactive";
 
 /** @typedef {import("@odoo/owl").Component} Component */
 
@@ -18,6 +19,8 @@ import { useComponent } from "@odoo/owl";
  * @property {string|(comp: Component) => string} [name]
  * @property {(component: Component, ev: Event) => void} [onSelected]
  * @property {number|(comp: Component) => number} [sequence]
+ * @property {boolean|(comp: Component) => boolean} [sequenceGroup]
+ * @property {boolean|(comp: Component) => boolean} [sequenceQuick]
  * @property {() => void} [setup]
  * @property {boolean|(comp: Component) => boolean} [success]
  */
@@ -144,5 +147,54 @@ export class Action {
         return typeof this.explicitDefinition.success === "function"
             ? this.explicitDefinition.success.call(this, this._component)
             : this.explicitDefinition.success;
+    }
+}
+
+export class UseActions extends Reactive {
+    ActionClass = Action;
+    component;
+    transformedActions;
+
+    constructor(component, transformedActions) {
+        super();
+        this.component = component;
+        this.transformedActions = transformedActions;
+    }
+
+    get actions() {
+        const actions = this.transformedActions
+            .filter((action) => action.condition)
+            .sort((a1, a2) => a1.sequence - a2.sequence);
+        if (actions.length > 0) {
+            actions.at(0).isFirst = true;
+            actions.at(-1).isLast = true;
+        }
+        return actions;
+    }
+
+    get partition() {
+        const actions = this.transformedActions.filter((action) => action.condition);
+        const quick = actions
+            .filter((a) => a.sequenceQuick)
+            .sort((a1, a2) => a1.sequenceQuick - a2.sequenceQuick);
+        const grouped = actions.filter((a) => a.sequenceGroup);
+        const groups = {};
+        for (const a of grouped) {
+            if (!(a.sequenceGroup in groups)) {
+                groups[a.sequenceGroup] = [];
+            }
+            groups[a.sequenceGroup].push(a);
+        }
+        const sortedGroups = Object.entries(groups).sort(
+            ([groupId1], [groupId2]) => groupId1 - groupId2
+        );
+        for (const [, actions] of sortedGroups) {
+            actions.sort((a1, a2) => a1.sequence - a2.sequence);
+        }
+        const group = sortedGroups.map(([groupId, actions]) => actions);
+        const other = actions
+            .filter((a) => !a.sequenceQuick && !a.sequenceGroup)
+            .sort((a1, a2) => a1.sequence - a2.sequence);
+        return { quick, group, other };
     }
 }
