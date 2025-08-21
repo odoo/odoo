@@ -23,7 +23,12 @@
             <we-checkbox string="Partner page"
                         data-customize-website-views="website_partner.linked_partner_page_setting"
                         data-no-preview="true"
-                        data-reload="/"/> 
+                        data-reload="/"/>
+            <we-select string="Image Format" data-attribute-name="image_format" data-attribute-default-value="one_one_opt">
+                <we-button data-select-data-attribute="one_one" data-name="one_one_opt">1:1</we-button>
+                <we-button data-select-data-attribute="six_five" data-name="six_five_opt">6:5</we-button>
+                <we-button data-select-data-attribute="four_five" data-name="four_five_opt">4:5</we-button>
+            </we-select>
         </div>
     </xpath>
 </template>

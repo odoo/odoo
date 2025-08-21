@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="layout" name="Partners Layout">
+    <t t-set="editable" t-value="True"/>
     <t t-call="website.layout">
         <t t-set="additional_title">Partners</t>
         <div id="wrap">
@@ -17,9 +18,9 @@
 
 <template id="index" name="Find Partners">
     <t t-call="website_partner.layout">
-        <div class="odoo-editor-editable" contenteditable="false">
+        <div>
             <section class="o_wcrm_filters_top d-flex d-print-none align-items-center justify-content-lg-end flex-wrap gap-2 mt-4 mb-3">
-                <h1 id="page_title" class="me-auto mb-0 h4 o_editable" data-oe-model="ir.ui.view" data-oe-id="" data-oe-field="arch" data-oe-xpath="" contenteditable="true">
+                <h1 id="page_title" class="me-auto mb-0 h4 o_editable">
                     Find a partner<t t-foreach="countries" t-as="country"><span t-if="country['active'] and country['country_id'][0] != 0 and country['country_id']">in <t t-out="country['country_id'][1]"/></span></t>
                 </h1>
                 <div id="page_top_middle"/><!--Used to add items by inheritage-->
@@ -49,7 +50,7 @@
                 <div class="col-md-4 col-xl-3 col-12 mb-4">
                     <div class="card h-100 text-decoration-none">
                         <a id="partner_link_card" class="text-decoration-none" aria-label="Go to reseller">
-                            <div t-field="partner.image_1920"
+                            <div t-field="partner.avatar_1920"
                                 class="card-img-top border-bottom"
                                 t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img img-fluid h-100 w-100 mw-100", "style": "max-height: 208px; min-height: 208px; object-fit: cover"}'
                                 />
@@ -157,7 +158,7 @@
 <template id="add_grades_on_partner" inherit_id="website_partner.index" name="Add Grades On Partners Page">
     <xpath expr="//h1[@id='page_title']" position="after">
         <t t-set='all_categories_label'>All Categories</t>
-        <div class="dropdown d-none d-lg-block">
+        <div class="dropdown d-none d-lg-block" contenteditable="True">
             <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by category" aria-label="Filter by category" aria-expanded="false">
                 <t t-foreach="grades" t-as="grade">
                     <span t-if="grade['active']" t-out="grade['grade_id'][1] if grade['grade_id'][0] != 0 else all_categories_label"/>
@@ -222,8 +223,8 @@
             </t>
             <div class="col-md-4 col-xl-3 col-12 mb-4">
                 <div class="card h-100 text-decoration-none">
-                    <a id="partner_link_card" class="text-decoration-none" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}" aria-label="Go to reseller">
-                        <div t-field="partner.image_1920"
+                    <a id="partner_link_card" class="text-decoration-none" aria-label="Go to reseller">
+                        <div t-field="partner.avatar_1920"
                             class="card-img-top border-bottom"
                             t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img img-fluid h-100 w-100 mw-100", "style": "max-height: 208px; min-height: 208px; object-fit: cover"}'
                             />
@@ -342,7 +343,26 @@
 
 <template id="linked_partner_page_setting" inherit_id="website_partner.index" name="Partner page">
     <xpath expr="//a[@id='partner_link_card']" position="attributes">
-        <attribute name="t-attf-href">/partners/#{slug(partner)}?#{current_country and 'country_id=%s' % current_country.id}</attribute>
+        <attribute name="t-attf-href">/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}</attribute>
     </xpath>
 </template>
+
+<template id="image_one_one_partner_page" inherit_id="website_partner.index" name="Partner page">
+    <xpath expr="//div[hasclass('card-img-top')]" position="attributes">
+        <attribute name="t-options">{"widget": "image", "qweb_img_responsive": False, "class": "img img-fluid h-100 w-100 mw-100", "style": "max-height: 300px; min-height: 300px; object-fit: cover"}</attribute>
+    </xpath>
+</template>
+
+<template id="image_six_five_partner_page" inherit_id="website_partner.index" name="Partner page">
+    <xpath expr="//div[hasclass('card-img-top')]" position="attributes">
+        <attribute name="t-options">{"widget": "image", "qweb_img_responsive": False, "class": "img img-fluid h-100 w-100 mw-100", "style": "max-height: 250px; min-height: 250px; object-fit: cover"}</attribute>
+    </xpath>
+</template>
+
+<template id="image_four_five_partner_page" inherit_id="website_partner.index" name="Partner page">
+    <xpath expr="//div[hasclass('card-img-top')]" position="attributes">
+        <attribute name="t-options">{"widget": "image", "qweb_img_responsive": False, "class": "img img-fluid h-100 w-100 mw-100", "style": "max-height: 375px; min-height: 375px; object-fit: cover"}</attribute>
+    </xpath>
+</template>
+
 </odoo>

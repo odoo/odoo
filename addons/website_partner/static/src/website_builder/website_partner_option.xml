@@ -17,6 +17,13 @@
         <BuilderRow label.translate="Partner page">
             <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partner.linked_partner_page_setting']}" />
         </BuilderRow>
+        <BuilderRow label.translate="Image Format">
+            <BuilderSelect dataAttributeAction="'image_format'">
+                <BuilderSelectItem action="'websiteConfig'" actionParam="{views: ['website_partner.image_one_one_partner_page']}">1:1</BuilderSelectItem>
+                <BuilderSelectItem action="'websiteConfig'" actionParam="{views: ['website_partner.image_six_five_partner_page']}">6:5</BuilderSelectItem>
+                <BuilderSelectItem action="'websiteConfig'" actionParam="{views: ['website_partner.image_four_five_partner_page']}">4:5</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
     </t>
 
 </templates>
