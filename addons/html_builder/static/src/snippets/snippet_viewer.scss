@@ -51,10 +51,8 @@
             .o_half_screen_height {
                 aspect-ratio: 8 / 3;
             }
-            > [data-snippet] {
+            [inert="inert"] > [data-snippet] {
                 isolation: isolate;
-                pointer-events: none;
-                user-select: none;
 
                 &[data-snippet="s_text_block"] {
                     font-size: 1.6rem;
