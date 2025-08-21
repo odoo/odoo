@@ -117,14 +117,29 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
     def _get_partner_party_tax_scheme_vals_list(self, partner, role):
         # EXTENDS account.edi.xml.ubl_21
+        # Cleans the PartyTaxScheme node values for Turkey (TR).
+        #
+        # Expected XML structure:
+        # <cac:PartyTaxScheme t-foreach="vals.get('party_tax_scheme_vals', [])" t-as="foreach_vals">
+        #     <cac:TaxScheme>
+        #         <cbc:Name>TAX OFFICE NAME</cbc:Name>
+        #     </cac:TaxScheme>
+        # </cac:PartyTaxScheme>
+        #
+        # Note: Adding any extra nodes may cause blocking validation errors on Nilvera's side
+        # when tax office is not set on E-Archive Invoice.
+
         vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
         for vals in vals_list:
             vals.pop('registration_address_vals', None)
+            vals.pop('registration_name', None)
+            vals.pop('company_id', None)
+            vals.pop('tax_level_code', None)
             vals["tax_scheme_vals"].update(
                 {
                     "id": "",
                     "name": partner.ref,
-                }
+                },
             )
         return vals_list
 
