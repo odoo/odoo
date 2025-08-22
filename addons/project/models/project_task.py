@@ -122,7 +122,7 @@ class ProjectTask(models.Model):
         project_id = self.env.context.get('default_project_id')
         if not project_id:
             return False
-        return self.stage_find(project_id, order="fold, sequence, id")
+        return self.env['project.project'].browse(project_id)._get_default_task_stage().id
 
     @api.model
     def _default_user_ids(self):
@@ -671,7 +671,7 @@ class ProjectTask(models.Model):
             project = task.project_id or task.parent_id.project_id
             if project:
                 if project not in task.stage_id.project_ids:
-                    task.stage_id = task.stage_find(project.id, [('fold', '=', False)])
+                    task.stage_id = project._get_default_task_stage().id
             else:
                 task.stage_id = False
 
@@ -941,31 +941,6 @@ class ProjectTask(models.Model):
             empty_list_help_document_name=tname,
         )
         return super().get_empty_list_help(help_message)
-
-    # ----------------------------------------
-    # Case management
-    # ----------------------------------------
-
-    def stage_find(self, section_id, domain=[], order='sequence, id'):
-        """ Override of the base.stage method
-            Parameter of the stage search taken from the lead:
-            - section_id: if set, stages must belong to this section or
-              be a default stage; if not set, stages must be default
-              stages
-        """
-        # collect all section_ids
-        section_ids = []
-        if section_id:
-            section_ids.append(section_id)
-        section_ids.extend(self.mapped('project_id').ids)
-        search_domain = []
-        if section_ids:
-            search_domain = [('|')] * (len(section_ids) - 1)
-            for section_id in section_ids:
-                search_domain.append(('project_ids', '=', section_id))
-        search_domain += list(domain)
-        # perform search, return the first found
-        return self.env['project.task.type'].search(search_domain, order=order, limit=1).id
 
     # ------------------------------------------------
     # CRUD overrides

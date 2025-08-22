@@ -1188,6 +1188,14 @@ class ProjectProject(models.Model):
             'default_company_id': unquote('company_id'),
         }
 
+    def _get_default_task_stage(self):
+        self.ensure_one()
+        return self.env['project.task.type'].search(
+            [('project_ids', '=', self.id)],
+            order="fold, sequence, id",
+            limit=1,
+        )
+
     # ---------------------------------------------------
     # Privacy
     # ---------------------------------------------------
