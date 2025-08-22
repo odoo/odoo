@@ -1007,6 +1007,7 @@ test("should drag and drop image with its caption", async () => {
     // Simulate the application/vnd.odoo.odoo-editor data that the browser would do.
     dropData.setData("application/vnd.odoo.odoo-editor", imageHTML);
     await manuallyDispatchProgrammaticEvent(targetNodeForDrop, "drop", { dataTransfer: dropData });
+    await manuallyDispatchProgrammaticEvent(imgElement, "dragend");
     await animationFrame();
 
     expect(getContent(el)).toBe(
@@ -1057,6 +1058,7 @@ test("should drag and drop image with caption along with selected text", async (
     // Simulate the application/vnd.odoo.odoo-editor data that the browser would do.
     dropData.setData("application/vnd.odoo.odoo-editor", odooEditorData);
     await manuallyDispatchProgrammaticEvent(targetNodeForDrop, "drop", { dataTransfer: dropData });
+    await manuallyDispatchProgrammaticEvent(imgElement, "dragend");
     await animationFrame();
 
     expect(getContent(el)).toBe(

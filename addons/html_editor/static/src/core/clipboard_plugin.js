@@ -556,6 +556,35 @@ export class ClipboardPlugin extends Plugin {
     }
 
     /**
+     * Creates a drag preview element that is invisible on the page but fully renderable.
+     * @param {string} htmlContent
+     * @returns {HTMLElement | null}
+     */
+    createDragPreview(htmlContent) {
+        const dragPreview = this.document.createElement("div");
+        dragPreview.innerHTML = htmlContent;
+        const figCaptions = dragPreview.querySelectorAll("figcaption");
+        if (!figCaptions.length) {
+            return null;
+        }
+        for (const fig of figCaptions) {
+            const input = fig.querySelector("input");
+            if (input) {
+                input.value = fig.getAttribute("placeholder");
+            }
+        }
+        // Keep element hidden but renderable so setDragImage can capture it
+        Object.assign(dragPreview.style, {
+            position: "absolute",
+            clipPath: "inset(100%)",
+            pointerEvents: "none",
+        });
+
+        this.document.body.appendChild(dragPreview);
+        return dragPreview;
+    }
+
+    /**
      * @param {DragEvent} ev
      */
     onDragStart(ev) {
@@ -567,6 +596,14 @@ export class ClipboardPlugin extends Plugin {
         ev.dataTransfer.setData("text/plain", textContent);
         ev.dataTransfer.setData("text/html", htmlContent);
         ev.dataTransfer.setData("application/vnd.odoo.odoo-editor", htmlContent);
+
+        // Create and set drag preview
+        const dragPreview = this.createDragPreview(htmlContent);
+        if (dragPreview) {
+            ev.dataTransfer.setDragImage(dragPreview, 0, 0);
+            // Clean up preview after drag ends
+            ev.target.addEventListener("dragend", () => dragPreview.remove(), { once: true });
+        }
     }
     /**
      * Handle safe dropping of html into the editor.
