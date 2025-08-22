@@ -314,6 +314,16 @@ export class LinkPopover extends Component {
             ev.preventDefault();
             ev.stopImmediatePropagation();
             this.onClickApply();
+        } else if (ev.key == "Tab") {
+            ev.preventDefault();
+            const focusableElements = [
+                ...this.editingWrapper.el.querySelectorAll("input, select, button:not([disabled])"),
+            ];
+            const currentIndex = focusableElements.indexOf(document.activeElement);
+            const nextIndex =
+                (currentIndex + (ev.shiftKey ? -1 : 1) + focusableElements.length) %
+                focusableElements.length;
+            focusableElements[nextIndex].focus();
         }
     }
 
