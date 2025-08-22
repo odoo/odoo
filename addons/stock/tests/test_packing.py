@@ -1873,3 +1873,33 @@ class TestPackagePropagation(TestPackingCommon):
             {'package_id': big_pack.id, 'result_package_id': big_pack.id, 'quantity': 3},
         ])
         self.assertEqual(smol_pack.dest_complete_name, 'Big > Mid > Smol')
+
+    def test_add_only_child_package(self):
+        """ Ensures that when adding packages directly into a picking, if that package has a
+            parent package but it isn't selected, then the parent won't be set as destination,
+            thus be removed from the parent.
+        """
+        container, pack = self.env['stock.package'].create([{
+            'name': name,
+        } for name in ['container', 'package']])
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1, package_id=pack)
+        pack.parent_package_id = container
+
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+
+        delivery.action_add_entire_packs(pack)
+        self.assertEqual(delivery.move_line_ids.result_package_id, pack)
+        self.assertTrue(delivery.move_line_ids.is_entire_pack)
+        self.assertFalse(pack.package_dest_id)
+
+        pack.with_context(picking_id=delivery.id).action_remove_package()
+        self.assertFalse(pack.move_line_ids)
+
+        delivery.action_add_entire_packs(container)
+        self.assertEqual(delivery.move_line_ids.result_package_id, pack)
+        self.assertTrue(delivery.move_line_ids.is_entire_pack)
+        self.assertEqual(pack.package_dest_id, container)

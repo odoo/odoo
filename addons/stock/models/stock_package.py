@@ -485,14 +485,16 @@ class StockPackage(models.Model):
 
         return list(fetch_next_parents(self))
 
-    def _apply_package_dest_for_entire_packs(self):
+    def _apply_package_dest_for_entire_packs(self, allowed_package_ids=None):
         """ When a package is assigned to a picking, if all of its container is added,
             then we consider the container to be added itself, unless the container
             is a reusable package itself.
         """
         for container, packages in self.grouped('parent_package_id').items():
             if container.child_package_ids == packages and container.package_type_id.package_use != 'reusable':
+                if allowed_package_ids and container.id not in allowed_package_ids:
+                    continue
                 packages.package_dest_id = container
         if self.package_dest_id:
             # If one level was added, need to check if the upper container is fully contained as well.
-            self.package_dest_id._apply_package_dest_for_entire_packs()
+            self.package_dest_id._apply_package_dest_for_entire_packs(allowed_package_ids)
