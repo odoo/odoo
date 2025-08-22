@@ -1000,3 +1000,81 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
         self.assertEqual(invoice.invoice_line_ids.account_id.id, self.company_data['company'].downpayment_account_id.id)
         # We should have half the amount of the Sale Order -> 840$
         self.assertEqual(invoice.amount_total, 840)
+
+    def test_down_payment_with_global_discount(self):
+        """ This test checks that the down payment invoice lines are
+        correctly computed when a global discount is applied to the sale order.
+
+        Test data:
+        - A single sale order line with a 14,990.00 price and a 0% tax.
+        - A global discount of 990.00 is applied to the sale order.
+        - A down payment invoice of 1,000.00 is created.
+
+        Assert that the down payment invoice has one line with price_unit 1070.71
+        and one line with price_unit -70.71.
+
+        Since in saas-18.4 there is no longer the possibility to split the down payment lines
+        into multiple down payment accounts, we assert the result of `_prepare_down_payment_lines`
+        after passing a grouping_function that creates two different down payment lines
+        """
+        self.env.company.downpayment_account_id = self.company_data['default_account_assets']
+        product = self.company_data['product_order_cost']
+        tax_0 = self.percent_tax(0.0)
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': 'line_1',
+                    'product_id': product.id,
+                    'price_unit': 14990.00,
+                    'tax_ids': [Command.set(tax_0.ids)],
+                }),
+            ],
+        })
+        so.action_confirm()
+        self.assertRecordValues(so, [{
+            'amount_untaxed': 14990.00,
+            'amount_tax': 0.0,
+            'amount_total': 14990.00,
+        }])
+
+        # Put a discount of 990.00 on the sale order.
+        wizard = self.env['sale.order.discount'].create({
+            'sale_order_id': so.id,
+            'discount_type': 'amount',
+            'discount_amount': 990.00,
+        })
+        wizard.action_apply_discount()
+
+        # Create a down payment invoice for 1,000.00.
+        wizard = (
+            self.env['sale.advance.payment.inv']
+            .with_context(active_model=so._name, active_ids=so.ids)
+            .create({
+                'advance_payment_method': 'fixed',
+                'fixed_amount': 1000.00,
+            })
+        )
+
+        so_base_lines = [
+            order_line._prepare_base_line_for_taxes_computation()
+            for order_line in so.order_line
+        ]
+        AccountTax = self.env['account.tax']
+        AccountTax._add_tax_details_in_base_lines(so_base_lines, self.env.company)
+        AccountTax._round_base_lines_tax_details(so_base_lines, self.env.company)
+
+        dp_lines = AccountTax._prepare_down_payment_lines(
+            base_lines=so_base_lines,
+            company=self.env.company,
+            amount_type='fixed',
+            amount=1000.00,
+            # Group the product and global discount separately.
+            grouping_function=lambda line: {
+                'special_type': line['special_type'],
+            },
+        )
+
+        self.assertAlmostEqual(dp_lines[0]['price_unit'], 1070.71, 2)
+        self.assertAlmostEqual(dp_lines[1]['price_unit'], -70.71, 2)
