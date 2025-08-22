@@ -1,6 +1,7 @@
 import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, hover, queryAllTexts, queryOne, waitFor } from "@odoo/hoot-dom";
+import { advanceTime } from "@odoo/hoot-mock";
 import { xml } from "@odoo/owl";
 import { contains, defineStyle } from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../../website_helpers";
@@ -73,8 +74,12 @@ describe("website tests", () => {
     });
 
     /* ================= Collapse template ================= */
-    const collapseOptionTemplate = (dependency = false, expand = false) => xml`
-        <BuilderRow label="'Test Collapse'" expand="${expand}">
+    const collapseOptionTemplate = ({
+        dependency = false,
+        expand = false,
+        observeCollapseContent = false,
+    } = {}) => xml`
+        <BuilderRow label="'Test Collapse'" expand="${expand}" observeCollapseContent="${observeCollapseContent}">
             <BuilderButton classAction="'a'" ${
                 dependency ? "id=\"'test_opt'\"" : ""
             }>A</BuilderButton>
@@ -102,7 +107,7 @@ describe("website tests", () => {
         test("expand=true is expanded by default", async () => {
             addOption({
                 selector: ".test-options-target",
-                template: collapseOptionTemplate(false, true),
+                template: collapseOptionTemplate({ dependency: false, expand: true }),
             });
             await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
             await contains(":iframe .test-options-target").click();
@@ -114,7 +119,10 @@ describe("website tests", () => {
         test("Toggler button is not visible if no dependency is active", async () => {
             addOption({
                 selector: ".test-options-target",
-                template: collapseOptionTemplate(true),
+                template: collapseOptionTemplate({
+                    dependency: true,
+                    observeCollapseContent: true,
+                }),
             });
             await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
             await contains(":iframe .test-options-target").click();
@@ -125,7 +133,7 @@ describe("website tests", () => {
         test("expand=true works when a dependency becomes active", async () => {
             addOption({
                 selector: ".test-options-target",
-                template: collapseOptionTemplate(true, true),
+                template: collapseOptionTemplate({ dependency: true, expand: true }),
             });
             await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
             await contains(":iframe .test-options-target").click();
@@ -184,13 +192,34 @@ describe("website tests", () => {
             await contains(":iframe .test-options-target").click();
             expect(".options-container").toBeVisible();
             expect(".o_hb_collapse_toggler:not(.d-none)").not.toHaveClass("active");
+            expect(".options-container button[data-class-action='b']").toHaveCount(0);
+            await contains(".o_hb_collapse_toggler:not(.d-none)").click();
+            expect(".o_hb_collapse_toggler:not(.d-none)").toHaveClass("active");
+            expect(".options-container button[data-class-action='b']").toBeVisible();
+            await contains(".o_hb_collapse_toggler:not(.d-none)").click();
+            advanceTime(400); // wait for the collapse transition to be over
+            await animationFrame();
+            expect(".o_hb_collapse_toggler:not(.d-none)").not.toHaveClass("active");
+            expect(".options-container button[data-class-action='b']").toHaveCount(0);
+        });
+
+        test("Click on toggler collapses / expands the BuilderRow (with observeCollapseContent)", async () => {
+            addOption({
+                selector: ".test-options-target",
+                template: collapseOptionTemplate({ observeCollapseContent: true }),
+            });
+            await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+            await contains(":iframe .test-options-target").click();
+            expect(".options-container").toBeVisible();
+            expect(".o_hb_collapse_toggler:not(.d-none)").not.toHaveClass("active");
             expect(".options-container button[data-class-action='b']").not.toBeVisible();
             await contains(".o_hb_collapse_toggler:not(.d-none)").click();
             expect(".o_hb_collapse_toggler:not(.d-none)").toHaveClass("active");
             expect(".options-container button[data-class-action='b']").toBeVisible();
             await contains(".o_hb_collapse_toggler:not(.d-none)").click();
             expect(".o_hb_collapse_toggler:not(.d-none)").not.toHaveClass("active");
-            await waitFor(".hb-collapse-content:not([style*='overflow: hidden'])", { timeout: 500 });
+            advanceTime(400); // wait for the collapse transition to be over
+            await animationFrame();
             expect(".options-container button[data-class-action='b']").not.toBeVisible();
         });
 
@@ -204,20 +233,41 @@ describe("website tests", () => {
             await contains(":iframe .test-options-target").click();
             expect(".options-container").toBeVisible();
             expect(".o_hb_collapse_toggler:not(.d-none)").not.toHaveClass("active");
+            expect(".options-container button[data-class-action='b']").toHaveCount(0);
+            await contains("[data-label='Test Collapse'] span:contains('Test Collapse')").click();
+            expect(".o_hb_collapse_toggler:not(.d-none)").toHaveClass("active");
+            expect(".options-container button[data-class-action='b']").toBeVisible();
+            await contains("[data-label='Test Collapse'] span:contains('Test Collapse')").click();
+            advanceTime(400); // wait for the collapse transition to be over
+            await animationFrame();
+            expect(".o_hb_collapse_toggler:not(.d-none)").not.toHaveClass("active");
+            expect(".options-container button[data-class-action='b']").toHaveCount(0);
+        });
+
+        test("Click header row's label collapses / expands the BuilderRow (with observeCollapseContent)", async () => {
+            addOption({
+                selector: ".test-options-target",
+                template: collapseOptionTemplate({ observeCollapseContent: true }),
+            });
+            await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+            await contains(":iframe .test-options-target").click();
+            expect(".options-container").toBeVisible();
+            expect(".o_hb_collapse_toggler:not(.d-none)").not.toHaveClass("active");
             expect(".options-container button[data-class-action='b']").not.toBeVisible();
             await contains("[data-label='Test Collapse'] span:contains('Test Collapse')").click();
             expect(".o_hb_collapse_toggler:not(.d-none)").toHaveClass("active");
             expect(".options-container button[data-class-action='b']").toBeVisible();
             await contains("[data-label='Test Collapse'] span:contains('Test Collapse')").click();
             expect(".o_hb_collapse_toggler:not(.d-none)").not.toHaveClass("active");
-            await waitFor(".hb-collapse-content:not([style*='overflow: hidden'])", { timeout: 500 });
+            advanceTime(400); // wait for the collapse transition to be over
+            await animationFrame();
             expect(".options-container button[data-class-action='b']").not.toBeVisible();
         });
 
         test("Two BuilderRows with collapse content on the same option are toggled independently", async () => {
             addOption({
                 selector: ".test-options-target",
-                template: collapseOptionTemplate(true, true),
+                template: collapseOptionTemplate({ dependency: true, expand: true }),
             });
             addOption({
                 selector: ".test-options-target",
