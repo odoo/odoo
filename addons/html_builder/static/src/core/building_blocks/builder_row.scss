@@ -147,12 +147,9 @@
         }
     }
 
-    &:not(:has(> .o_hb_collapse_toggler.active)) + .hb-collapse-content {
-        display: none;
-        height: 0;
-    }
-
     & + .hb-collapse-content {
+        overflow: hidden;
+        height: 0; // default collapsed state
         transition: height 0.35s ease;
     }
 }

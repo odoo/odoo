@@ -1,12 +1,13 @@
-import { Component, useRef, useState, onMounted } from "@odoo/owl";
+import { Component, onMounted, useEffect, useRef, useState } from "@odoo/owl";
+import { useTransition } from "@web/core/transition";
+import { uniqueId } from "@web/core/utils/functions";
 import {
-    useVisibilityObserver,
-    useApplyVisibility,
     basicContainerBuilderComponentProps,
+    useApplyVisibility,
     useBuilderComponent,
+    useVisibilityObserver,
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
-import { uniqueId } from "@web/core/utils/functions";
 
 export class BuilderRow extends Component {
     static template = "html_builder.BuilderRow";
@@ -20,8 +21,9 @@ export class BuilderRow extends Component {
         expand: { type: Boolean, optional: true },
         initialExpandAnim: { type: Boolean, optional: true },
         extraLabelClass: { type: String, optional: true },
+        observeCollapseContent: { type: Boolean, optional: true },
     };
-    static defaultProps = { expand: false };
+    static defaultProps = { expand: false, observeCollapseContent: false };
 
     setup() {
         useBuilderComponent();
@@ -40,6 +42,7 @@ export class BuilderRow extends Component {
 
         this.labelRef = useRef("label");
         this.collapseContentRef = useRef("collapse-content");
+        let isMounted = false;
 
         onMounted(() => {
             if (this.props.initialExpandAnim) {
@@ -52,6 +55,47 @@ export class BuilderRow extends Component {
                 this.state.tooltip = this.props.label;
             }
         });
+
+        this.transition = useTransition({
+            initialVisibility: this.props.expand,
+            leaveDuration: 350,
+            name: "hb-collapse-content",
+        });
+
+        useEffect(
+            (stage) => {
+                const isFirstMount = !isMounted;
+                isMounted = true;
+                const contentEl = this.collapseContentRef.el;
+                if (!contentEl) return;
+
+                const setHeightAuto = () => {
+                    contentEl.style.height = "auto";
+                };
+
+                // Skip transition on first mount if expand=true.
+                if (isFirstMount && this.props.expand) {
+                    setHeightAuto();
+                    return;
+                }
+
+                switch (stage) {
+                    case "enter-active": {
+                        contentEl.style.height = contentEl.scrollHeight + "px";
+                        contentEl.addEventListener("transitionend", setHeightAuto, { once: true});
+                        break;
+                    }
+                    case "leave": {
+                        // Collapse from current height to 0
+                        contentEl.style.height = contentEl.scrollHeight + "px";
+                        void contentEl.offsetHeight; // force reflow
+                        contentEl.style.height = "0px";
+                        break;
+                    }
+                }
+            },
+            () => [this.transition.stage]
+        );
     }
 
     getLevelClass() {
@@ -60,25 +104,15 @@ export class BuilderRow extends Component {
 
     toggleCollapseContent() {
         this.state.expanded = !this.state.expanded;
-        const expanded = this.state.expanded;
-        const contentEl = this.collapseContentRef.el;
+        this.transition.shouldMount = this.state.expanded;
+    }
 
-        if (!contentEl) {
-            return;
-        }
+    get displayCollapseContent() {
+        return this.transition.shouldMount || this.props.observeCollapseContent;
+    }
 
-        const cleanup = () => {
-            contentEl.style.display = expanded ? "block" : "";
-            contentEl.style.overflow = "";
-            contentEl.style.height = expanded ? "auto" : "";
-            contentEl.removeEventListener("transitionend", cleanup);
-        };
-
-        contentEl.style.display = "block";
-        contentEl.style.overflow = "hidden";
-        contentEl.style.height = contentEl.scrollHeight + "px";
-        void contentEl.offsetHeight; // force reflow
-        contentEl.style.height = expanded ? contentEl.scrollHeight + "px" : "0px";
-        contentEl.addEventListener("transitionend", cleanup);
+    get collapseContentClass() {
+        const isNotVisible = this.props.observeCollapseContent && !this.transition.shouldMount;
+        return `${this.transition.className} ${isNotVisible ? "d-none" : ""}`;
     }
 }
