@@ -33,7 +33,7 @@ export class ProductAttributeDisplayAction extends BuilderAction {
     }
     async apply({ editingElement: el, value }) {
         const attributeID = parseInt(
-            el.closest("[data-attribute_id]").dataset.attribute_id
+            el.closest("[data-attribute-id]").dataset.attributeId
         );
         await rpc("/shop/config/attribute", {
             attribute_id: attributeID,
@@ -41,7 +41,7 @@ export class ProductAttributeDisplayAction extends BuilderAction {
         });
     }
     getProductAttributeDisplay(el) {
-        return el.closest("[data-attribute_display_type]").dataset.attribute_display_type;
+        return el.closest("[data-attribute-display-type]").dataset.attributeDisplayType;
     }
 }
 

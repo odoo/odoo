@@ -190,7 +190,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
         {
             content: "Select Bottle with second variant from /product",
-            trigger: "input.js_variant_change[data-value_name=blue]:not(:visible)",
+            trigger: "input.js_variant_change[data-value-name=blue]:not(:visible)",
             run: "click",
         },
         {
@@ -203,7 +203,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
         {
             content: "Select Bottle with third variant from /product",
-            trigger: "input.js_variant_change[data-value_name=black]:not(:visible)",
+            trigger: "input.js_variant_change[data-value-name=black]:not(:visible)",
             run: "click",
         },
         {
@@ -289,7 +289,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
         {
             content: "Select Bottle with first variant (red) from /product",
-            trigger: "input.js_variant_change[data-value_name=red]:not(:visible)",
+            trigger: "input.js_variant_change[data-value-name=red]:not(:visible)",
             run: "click",
         },
         {
@@ -298,7 +298,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
         {
             content: "Select Bottle with second variant (blue) from /product",
-            trigger: "input.js_variant_change[data-value_name=blue]:not(:visible)",
+            trigger: "input.js_variant_change[data-value-name=blue]:not(:visible)",
             run: "click",
         },
         {

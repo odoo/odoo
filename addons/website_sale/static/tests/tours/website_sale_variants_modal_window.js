@@ -12,22 +12,22 @@
         },
         {
             content: "Click on the always variant",
-            trigger: 'input[data-attribute_name="Always attribute size"][data-value_name="M always"]',
+            trigger: 'input[data-attribute-name="Always attribute size"][data-value-name="M always"]',
             run: "check",
         },
         {
             content: "Click on the dynamic variant",
-            trigger: 'input[data-attribute_name="Dynamic attribute size"][data-value_name="M dynamic"]',
+            trigger: 'input[data-attribute-name="Dynamic attribute size"][data-value-name="M dynamic"]',
             run: "check",
         },
         {
             content: "Click on the never variant",
-            trigger: 'input[data-attribute_name="Never attribute size"][data-value_name="M never"]',
+            trigger: 'input[data-attribute-name="Never attribute size"][data-value-name="M never"]',
             run: "check",
         },
         {
             content: "Click on the never custom variant",
-            trigger: 'input[data-attribute_name="Never attribute size custom"][data-value_name="Yes never custom"]',
+            trigger: 'input[data-attribute-name="Never attribute size custom"][data-value-name="Yes never custom"]',
             run: "check",
         },
         {
