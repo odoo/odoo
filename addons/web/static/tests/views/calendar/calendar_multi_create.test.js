@@ -548,8 +548,6 @@ test("multi_create: input validation (datetime field)", async () => {
     ]);
 });
 
-// Test skipped has the state is push only when we add at least one record
-// The state should be always accessible also before creating a record
 test.tags("desktop");
 test("multi_create: use state to keep values of inputs", async () => {
     onRpc("event.type", "get_formview_action", ({ args, model }) => ({
