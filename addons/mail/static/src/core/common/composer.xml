@@ -156,6 +156,7 @@
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
             <t t-set="moreName">More Actions</t>
             <ActionList inline="true" actions="[{
+                'disabledCondition': areAllActionsDisabled,
                 'icon': 'fa fa-plus-circle',
                 'iconLarge': 'fa fa-lg fa-plus-circle',
                 'id': 'more-actions',
