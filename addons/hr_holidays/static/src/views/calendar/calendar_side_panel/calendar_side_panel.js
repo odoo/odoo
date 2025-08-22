@@ -3,12 +3,10 @@ import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { Cache } from "@web/core/utils/cache";
 import { useService } from "@web/core/utils/hooks";
 import { useState, onWillStart, onWillUpdateProps } from "@odoo/owl";
-import { TimeOffCalendarFilterSection } from "../filter_section/calendar_filter_section";
 
 export class TimeOffCalendarSidePanel extends CalendarSidePanel {
     static components = {
         ...CalendarSidePanel.components,
-        FilterSection: TimeOffCalendarFilterSection,
     };
     static template = "hr_holidays.TimeOffCalendarSidePanel";
 
@@ -28,6 +26,7 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
         this.leaveState = useState({
             mandatoryDays: [],
             bankHolidays: [],
+            holidays: [],
         });
 
         this._specialDaysCache = new Cache(
@@ -35,8 +34,15 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
             (start, end) => `${serializeDateTime(start)},${serializeDateTime(end)}`
         );
 
-        onWillStart(this.updateSpecialDays);
-        onWillUpdateProps(this.updateSpecialDays);
+        onWillStart(async () => {
+            await this.updateSpecialDays();
+            await this.loadHolidayData();
+        });
+        onWillUpdateProps(async () => {
+            await this.updateSpecialDays();
+            await this.loadHolidayData();
+        });
+        
     }
 
     fetchSpecialDays(start, end) {
@@ -51,6 +57,31 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
                 context: context,
             }
         );
+    }
+
+    async loadHolidayData() {
+        if (!this.env.isSmall) {
+            return;
+        }
+        const promises = [];
+        for (const section of this.props.model.filterSections){
+
+            if (section.fieldName !== "holiday_status_id") {
+                continue;
+            }
+            promises.push(
+                this.orm.call("hr.leave.type", "get_allocation_data_request", [])
+            );
+        }
+        const filterData = {};
+        const [data,] = await Promise.all(promises);
+        if(!data){
+            return;
+        }
+        data.forEach((leave) => {
+            filterData[leave[3]] = leave;
+        });
+        this.leaveState.holidays = Object.values(filterData);
     }
 
     async updateSpecialDays() {
