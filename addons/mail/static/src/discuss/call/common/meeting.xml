@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.Meeting">
+        <div class="o-mail-Meeting h-100 w-100 d-flex flex-column" t-att-class="{'p-3 gap-3': !ui.isSmall}">
+            <div class="d-flex flex-grow-1 h-100 o-min-height-0 gap-3 position-relative">
+                <div class="o-mail-Meeting-callContainer h-100 flex-grow-1 o-min-width-0" t-att-class="{'invisible': ui.isSmall and state.activeSidePanel, 'pb-4': ui.isSmall}">
+                    <Call hasOverlay="false" />
+                </div>
+                <div t-if="state.activeSidePanel" class="o-mail-Meeting-sidePanelContainer z-1 h-100" t-att-class="{'position-absolute top-0 start-0 end-0 bottom-0 p-4': ui.isSmall}" t-ref="sidePanel">
+                    <div class="o-mail-Meeting-sidePanel border rounded-4 pt-1 overflow-hidden d-flex flex-column h-100">
+                        <button title="Close Side Panel" class="o-mail-Meeting-closeSidePanel btn btn-link align-self-end opacity-100-hover p-1 m-1" t-on-click="() => state.activeSidePanel = false">
+                            <i class="fa-lg oi fa-fw oi-close"/>
+                        </button>
+                        <t t-if="state.activeSidePanel === 'chat'" t-call="mail.Meeting-sidePanelChat"/>
+                        <t t-if="state.activeSidePanel === 'invite'" t-call="mail.Metting-sidePanelInvite"/>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between overflow-x-auto" style="flex-shrink: 0;" t-att-class="{'pb-3': ui.isSmall}">
+                <div/>
+                <CallActionList thread="store.rtc.channel"/>
+                <div class="o-mail-Meeting-sidePanelActions d-flex">
+                    <button class="btn btn-light rounded-circle smaller d-flex align-items-center m-1 p-0" t-att-class="{'text-success': state.activeSidePanel === 'invite'}" t-att-title="toggleInvitePanelTitle" t-on-click="() => this.toggleSidePanel('invite')">
+                        <i class="fa fa-fw m-2 fa fa-lg fa-user-plus"/>
+                    </button>
+                    <button class="btn btn-light rounded-circle smaller d-flex align-items-center m-1 p-0" t-att-class="{'text-success': state.activeSidePanel === 'chat'}" t-att-title="toggleChatPanelTitle" t-on-click="() => this.toggleSidePanel('chat')">
+                        <i class="fa fa-fw m-2 fa-lg fa-comments"/>
+                    </button>
+                    <button class="btn btn-light rounded-circle smaller d-flex align-items-center m-1 p-0" title="Exit Fullscreen" t-on-click="() => rtc.exitFullscreen()">
+                        <i class="fa fa-fw m-2 fa-lg fa-compress"/>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="mail.Meeting-sidePanelChat">
+        <Thread thread="store.rtc.channel" jumpPresent="state.jumpPresent"/>
+        <Composer
+            composer="store.rtc.channel.composer"
+            className="'o-mail-Meeting-composer'"
+            autofocus="!isMobileOS"
+            onDiscardCallback="() => (store.rtc.channel.composer.replyToMessage = undefined)"
+            onPostCallback.bind="() => this.state.jumpPresent++"
+            dropzoneRef="sidePanelRef"
+        />
+    </t>
+    <t t-name="mail.Metting-sidePanelInvite">
+        <ChannelInvitation thread="store.rtc.channel" state="channelInvitationState"/>
+    </t>
+</templates>

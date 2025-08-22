@@ -169,7 +169,9 @@ export class Composer extends Component {
                     extraClass: "o-mail-Composer-dropzone",
                     onDrop: this.onDropFile,
                 },
-                () => this.props.allowUpload
+                () =>
+                    this.props.allowUpload &&
+                    (!this.store.meetingViewOpened || this.env.inMeetingView)
             );
         }
         useChildSubEnv({ inComposer: true });

@@ -3,7 +3,7 @@
 
     <t t-name="discuss.CallActionList">
         <div class="o-discuss-CallActionList d-flex flex-column justify-content-center" t-attf-class="{{ className }}" t-ref="root">
-            <div class="o-discuss-CallActionList-bar d-flex align-items-center flex-wrap justify-content-between" t-att-class="{ 'w-100 ps-2 pe-2': isSmall }">
+            <div class="o-discuss-CallActionList-bar d-flex align-items-center justify-content-between" t-att-class="{ 'w-100 ps-2 pe-2': isSmall }">
                 <t t-if="isOfActiveCall and rtc.selfSession">
                     <t t-foreach="callActions.actions.slice(0, 4)" t-as="action" t-key="action_index">
                         <CallActionButton action="action" isSmall="isSmall" isActive="action.isActive"/>
