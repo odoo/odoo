@@ -10,6 +10,17 @@
                     <span class="align-middle"><img class="o_calendar_filter_line" src="/hr/static/src/img/icons/line.svg"/> Refused</span>
                 </div>
 
+                <div class="d-flex flex-column mt-4 d-block d-md-none">
+                    <h5>Time Off Balance</h5>
+                    <ul class="ps-0">
+                        <li t-foreach="leaveState.holidays" t-as="holiday" t-key="holiday[3]" class="mt-2 list-unstyled">
+                            <strong t-esc="holiday[0]"/>
+                            : <span class="o_timeoff_green text-success" t-esc="holiday[2] ? holiday[1].virtual_remaining_leaves : holiday[1].virtual_leaves_taken"/>
+                                <t t-if="holiday[2]"> / <span t-esc="holiday[1].max_leaves"/> <t t-if="holiday[1].request_unit == 'hour'">Hours</t><t t-else="">Days</t> <span class="o_timeoff_green text-success">Available</span></t>
+                        </li>
+                    </ul>
+                </div>
+
                 <div class="d-flex flex-column mt-4" t-if="leaveState.mandatoryDays.length">
                     <h5>Mandatory Days</h5>
                     <ul class="ps-0">
@@ -36,4 +47,3 @@
         </xpath>
     </t>
 </templates>
-
