@@ -368,7 +368,7 @@ class AccountEdiCommon(models.AbstractModel):
         banks_to_create = []
         acc_number_partner_bank_dict = {
             bank.sanitized_acc_number: bank
-            for bank in ResPartnerBank.search(
+            for bank in ResPartnerBank.with_context(active_test=False).search(
                 [('company_id', 'in', [False, invoice.company_id.id]), ('acc_number', 'in', bank_details)]
             )
         }
@@ -377,6 +377,8 @@ class AccountEdiCommon(models.AbstractModel):
             partner_bank = acc_number_partner_bank_dict.get(account_number, ResPartnerBank)
 
             if partner_bank.partner_id == partner:
+                if not partner_bank.active:
+                    partner_bank.active = True
                 invoice.partner_bank_id = partner_bank
                 return
             elif not partner_bank and account_number:

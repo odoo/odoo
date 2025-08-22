@@ -207,3 +207,20 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             'quantity': 1.0,
             'tax_ids': self.env['account.tax'],
         }])
+
+    def test_bank_details_import(self):
+        acc_number = '1234567890'
+        partner_bank = self.env['res.partner.bank'].create({
+            'active': False,
+            'acc_number': acc_number,
+            'partner_id': self.partner_a.id
+        })
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'in_invoice',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+        # will not raise sql constraint because the sql is not commited yet
+        self.env['account.edi.common']._import_retrieve_and_fill_partner_bank_details(invoice, [acc_number])
+        self.assertEqual(invoice.partner_bank_id, partner_bank, "Partner bank must be the same")
+        self.assertTrue(partner_bank.active, "Partner bank must be the activated")
