@@ -21,7 +21,7 @@
     }
 }
 
-.o_wsale_products_opt_wishlist_fixed.o_wsale_products_opt_wishlist_fixed_onhover {
+.o_wsale_products_opt_wishlist_fixed.o_wsale_products_opt_wishlist_fixed_onhover:where(:not(.o_wsale_products_opt_design_bento)) {
     .oe_product_cart:where(:not(:hover):not(:focus-visible):not(:focus-within)) {
         .o_add_wishlist:where(:not([disabled])) {
             opacity: 0;
@@ -38,7 +38,7 @@
 }
 
 .o_wsale_products_opt_wishlist_fixed {
-    &:where(:not(.o_wsale_products_opt_design_showcase)) {
+    &:where(:not(.o_wsale_products_opt_design_showcase):not(.o_wsale_products_opt_design_bento)) {
         --o-wsale-card-info-position: none;
     }
 
@@ -46,7 +46,7 @@
         --o-wsale-wishlist-btn-display: flex;
     }
 
-    .o_wsale_product_btn .o_add_wishlist {
+    &:where(:not(.o_wsale_products_opt_design_bento)) .o_wsale_product_btn .o_add_wishlist {
         --btn-bg: transparent;
         --btn-border-width: 0;
         --btn-hover-bg: transparent;
