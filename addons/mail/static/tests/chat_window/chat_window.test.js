@@ -592,7 +592,7 @@ test("chat window: composer state conservation on toggle discuss", async () => {
     await click(".o-mail-NotificationItem");
     // Set content of the composer of the chat window
     await insertText(".o-mail-Composer-input", "XDU for the win !");
-    await contains(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard", {
+    await contains(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentContainer", {
         count: 0,
     });
     // Set attachments of the composer
@@ -601,9 +601,10 @@ test("chat window: composer state conservation on toggle discuss", async () => {
     await openDiscuss();
     await contains(".o-mail-ChatWindow", { count: 0 });
     await openFormView("discuss.channel", channelId);
-    await contains(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard", {
-        count: 2,
-    });
+    await contains(
+        ".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentContainer:not(.o-isUploading)",
+        { count: 2 }
+    );
     await contains(".o-mail-Composer-input", { value: "XDU for the win !" });
 });
 
