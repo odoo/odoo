@@ -18,6 +18,11 @@
             width: 70px;
         }
     }
+
+    .form-control:focus, .form-select:focus, .form-check-input:focus {
+        border-color: $input-focus-border-color !important;
+        box-shadow: 0 0 0 $focus-ring-width rgba($input-focus-border-color, $focus-ring-opacity);
+    }
 }
 
 .o_seo_option_child {
