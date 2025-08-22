@@ -348,3 +348,89 @@ class TestArManual(common.TestArCommon):
         self.assertAlmostEqual(l10n_ar_values['price_unit'], 5470.0)
         self.assertAlmostEqual(l10n_ar_values['price_subtotal'], 124716.0)
         self.assertAlmostEqual(l10n_ar_values['price_net'], 5196.5)
+
+    def test_l10n_ar_vat_details(self):
+        data = {
+            'lines': [
+                {'product': self.product_iva_21,
+                 'extra_taxes': self._search_tax('percepcion_iva')},
+                {'product': self.product_iva_105,
+                 'extra_taxes': self._search_tax('percepcion_ganancias')},
+                {'product': self.service_iva_27,
+                 'extra_taxes': self._search_tax('percepcion_iibb_caba')},
+                {'product': self.product_iva_exento, 'extra_taxes': self.tax_other},
+                # TODO: agregar impuesto "otros impuestos"
+                #  'extra_taxes': self._search_tax('otros_impuestos')},
+                {'product': self.product_no_gravado},
+                {'product': self.product_iva_cero},
+            ],
+        }
+        invoice = self._create_invoice(data)
+        base_lines, _tax_lines = invoice._get_rounded_base_and_tax_lines()
+        amounts_detail = invoice._l10n_ar_get_amounts(base_lines=base_lines)
+        vat_detail = invoice._get_vat(base_lines=base_lines)
+        expected_amounts_detail = {'vat_amount': 58.5,
+                                   'vat_taxable_amount': 400.0,
+                                   'vat_exempt_base_amount': 100.0,
+                                   'vat_untaxed_base_amount': 100.0,
+                                   'not_vat_taxes_amount': 0.4,
+                                   'iibb_perc_amount': 0.1,
+                                   'mun_perc_amount': 0,
+                                   'intern_tax_amount': 0,
+                                   'other_taxes_amount': 0.1,
+                                   'profits_perc_amount': 0.1,
+                                   'vat_perc_amount': 0.1,
+                                   'other_perc_amount': 0}
+        expected_vat_detail = [{'Id': '5', 'BaseImp': 100.0, 'Importe': 21.0},
+                               {'Id': '4', 'BaseImp': 100.0, 'Importe': 10.5},
+                               {'Id': '6', 'BaseImp': 100.0, 'Importe': 27.0},
+                               {'Id': '3', 'BaseImp': 100.0, 'Importe': 0.0}]
+        from rich.pretty import pprint
+        pprint(expected_amounts_detail)
+        pprint(amounts_detail)
+        print('-' * 80)
+        pprint(expected_vat_detail)
+        pprint(vat_detail)
+        self.assertEqual(amounts_detail, expected_amounts_detail, 'Amounts detail is not correct')
+        self.assertEqual(vat_detail, expected_vat_detail, 'VAT detail is not correct')
+
+    def test_l10n_ar_vat_details_in_USD(self):
+        self._prepare_multicurrency_values()
+        data = {
+            'currency': self.env.ref('base.USD'),
+            'lines': [
+                {'product': self.product_iva_21,
+                 'extra_taxes': self._search_tax('percepcion_iva')},
+                {'product': self.product_iva_105,
+                 'extra_taxes': self._search_tax('percepcion_ganancias')},
+                {'product': self.service_iva_27,
+                 'extra_taxes': self._search_tax('percepcion_iibb_caba')},
+                {'product': self.product_iva_exento},
+                # TODO: agregar impuesto "otros impuestos"
+                #  'extra_taxes': self._search_tax('otros_impuestos')},
+                {'product': self.product_no_gravado},
+                {'product': self.product_iva_cero},
+            ],
+        }
+        invoice = self._create_invoice(data)
+        base_lines, _tax_lines = invoice._get_rounded_base_and_tax_lines()
+        amounts_detail = invoice._l10n_ar_get_amounts(base_lines=base_lines)
+        vat_detail = invoice._get_vat(base_lines=base_lines)
+        expected_amounts_detail = {'vat_amount': 58.5,
+                                   'vat_taxable_amount': 400.0,
+                                   'vat_exempt_base_amount': 100.0,
+                                   'vat_untaxed_base_amount': 100.0,
+                                   'not_vat_taxes_amount': 0.4,
+                                   'iibb_perc_amount': 0.1,
+                                   'mun_perc_amount': 0,
+                                   'intern_tax_amount': 0,
+                                   'other_taxes_amount': 0.1,
+                                   'profits_perc_amount': 0.1,
+                                   'vat_perc_amount': 0.1,
+                                   'other_perc_amount': 0}
+        expected_vat_detail = [{'Id': '5', 'BaseImp': 100.0, 'Importe': 21.0},
+                               {'Id': '4', 'BaseImp': 100.0, 'Importe': 10.5},
+                               {'Id': '6', 'BaseImp': 100.0, 'Importe': 27.0},
+                               {'Id': '3', 'BaseImp': 100.0, 'Importe': 0.0}]
+        self.assertEqual(amounts_detail, expected_amounts_detail, 'Amounts detail is not correct')
+        self.assertEqual(vat_detail, expected_vat_detail, 'VAT detail is not correct')
