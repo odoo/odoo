@@ -5,7 +5,6 @@ import odoo.tests
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError
-from odoo import Command
 
 
 class TestPackingCommon(TransactionCase):
@@ -1829,3 +1828,48 @@ class TestPackagePropagation(TestPackingCommon):
         # action_assign => On move lines, result_package_id is not set.
         self.assertEqual(partial_deliveries.move_line_ids.package_id, package, "The package should be used as source.")
         self.assertFalse(partial_deliveries.move_line_ids.result_package_id, "If the contents of a single pack are reserved by multiple picks, the entire pack can't reproduce on each pick.")
+
+    def test_multi_step_reservation_multi_level_packages(self):
+        """ Checks that in a multi-step delivery, the packages are correctly re-assigned after the validation of the first step.
+        """
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 6)
+
+        pg = self.env['procurement.group'].create({'name': 'package_propagation'})
+        self.env['procurement.group'].run([
+            pg.Procurement(
+                self.productA,
+                6.0,
+                self.productA.uom_id,
+                self.customer_location,
+                'package_propagation',
+                'package_propagation',
+                self.warehouse.company_id,
+                {
+                    'warehouse_id': self.warehouse,
+                    'group_id': pg,
+                }
+            )
+        ])
+        pick = self.env['stock.picking'].search([('group_id', '=', pg.id)])
+
+        pick.move_ids.quantity = 1
+        smol_pack = pick.action_put_in_pack(package_name='Smol')
+
+        pick.move_ids.quantity = 3
+        mid_pack = pick.action_put_in_pack(package_name='Mid')
+        smol_pack.action_put_in_pack(package_id=mid_pack.id)
+        self.assertEqual(smol_pack.dest_complete_name, 'Mid > Smol')
+
+        pick.move_ids.quantity = 6
+        big_pack = pick.action_put_in_pack(package_name='Big')
+        mid_pack.action_put_in_pack(package_id=big_pack.id)
+        self.assertEqual(smol_pack.dest_complete_name, 'Big > Mid > Smol')
+
+        pick.button_validate()
+        pack = pick._get_next_transfers()
+        self.assertRecordValues(pack.move_line_ids.sorted(lambda ml: ml.package_id.id), [
+            {'package_id': smol_pack.id, 'result_package_id': smol_pack.id, 'quantity': 1},
+            {'package_id': mid_pack.id, 'result_package_id': mid_pack.id, 'quantity': 2},
+            {'package_id': big_pack.id, 'result_package_id': big_pack.id, 'quantity': 3},
+        ])
+        self.assertEqual(smol_pack.dest_complete_name, 'Big > Mid > Smol')
