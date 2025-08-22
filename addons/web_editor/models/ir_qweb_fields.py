@@ -96,10 +96,11 @@ class IrQweb(models.AbstractModel):
         # - "true": always forbid
         # - "form": forbid if forms are sanitized
         forbid_sanitize = el.attrib.pop('t-forbid-sanitize', None)
+        grid_column_span = el.attrib.pop('t-grid-column-span', None)
         snippet_group = el.attrib.pop('snippet-group', None)
         group = el.attrib.pop('group', None)
         label = el.attrib.pop('label', None)
-        div = Markup('<div name="%s" data-oe-type="snippet" data-o-image-preview="%s" data-oe-thumbnail="%s" data-oe-snippet-id="%s" data-oe-snippet-key="%s" data-oe-keywords="%s" %s %s %s %s>') % (
+        div = Markup('<div name="%s" data-oe-type="snippet" data-o-image-preview="%s" data-oe-thumbnail="%s" data-oe-snippet-id="%s" data-oe-snippet-key="%s" data-oe-keywords="%s" %s %s %s %s %s>') % (
             name,
             escape_silent(image_preview),
             thumbnail,
@@ -107,6 +108,7 @@ class IrQweb(models.AbstractModel):
             key.split('.')[-1],
             escape_silent(el.findtext('keywords')),
             Markup('data-oe-forbid-sanitize="%s"') % forbid_sanitize if forbid_sanitize else '',
+            Markup('data-o-grid-column-span="%s"') % grid_column_span if grid_column_span else '',
             Markup('data-o-snippet-group="%s"') % snippet_group if snippet_group else '',
             Markup('data-o-group="%s"') % group if group else '',
             Markup('data-o-label="%s"') % label if label else '',
