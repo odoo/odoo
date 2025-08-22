@@ -275,6 +275,17 @@ test("Can transform an image", async () => {
     }
 });
 
+test("Image transform button is not available when config option is disabled", async () => {
+    await setupEditor(`<img class="img-fluid test-image" src="${base64Img}">`, {
+        config: { allowImageTransform: false },
+    });
+    await click("img.test-image");
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar div[name='image_modifiers'] button[name='image_transform']").toHaveCount(
+        0
+    );
+});
+
 test("Image transformation dissapear when selection change", async () => {
     const { el } = await setupEditor(`
         <img class="img-fluid test-image" src="${base64Img}">
