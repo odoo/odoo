@@ -81,7 +81,6 @@ class MrpProduction(models.Model):
                     byproduct.price_unit = total_cost * byproduct.cost_share / 100 / byproduct.product_uom._compute_quantity(byproduct.quantity, byproduct.product_id.uom_id)
             if finished_move.product_id.cost_method in ('fifo', 'average'):
                 finished_move.price_unit = total_cost * float_round(1 - byproduct_cost_share / 100, precision_rounding=0.0001) / quantity
-        self.move_finished_ids._set_value()
         return True
 
     def _get_backorder_mo_vals(self):
