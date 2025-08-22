@@ -206,12 +206,11 @@
             min="1"
         />
     </BuilderRow>
-    <BuilderRow label.translate="Max File Size">
+    <BuilderRow label.translate="Max File Size"
+        tooltip.translate="Note that your server has its own upload limit (typically 64 MB on Odoo SaaS), which will take precedence over this value">
         <BuilderNumberInput
-            title.translate="The maximum size (in MB) an uploaded file can have."
             dataAttributeAction="'maxFileSize'"
             applyTo="`input[type='file']`"
-            default="1"
             unit="'MB'"
             applyWithUnit="false"
         />
