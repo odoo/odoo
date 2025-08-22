@@ -420,6 +420,18 @@ class DiscussChannel(models.Model):
                 question_msg.user_raw_script_answer_id = selected_answer.id
                 if store := self.env.context.get("message_post_store"):
                     store.add(message, for_current_user=True).add(question_msg.mail_message_id)
+                partner, guest = self.env["res.partner"]._get_current_persona()
+                (partner or guest)._bus_send_store(
+                    Store().add_model_values(
+                        "ChatbotStep",
+                        {
+                            "id": (self.chatbot_current_step_id.id, question_msg.mail_message_id.id),
+                            "scriptStep": self.chatbot_current_step_id.id,
+                            "message": question_msg.mail_message_id.id,
+                            "selectedAnswer": selected_answer.id,
+                        },
+                    )
+                )
 
             self.env["chatbot.message"].sudo().create(
                 {
