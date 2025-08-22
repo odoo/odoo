@@ -6,6 +6,7 @@ from odoo.addons.mail.tools.discuss import Store
 class DiscussMailController(MailController):
 
     def _mail_thread_message_redirect(self, message):
+        """Deprecated - use _redirect_to_record instead. """
         if message.model != 'discuss.channel':
             return super()._mail_thread_message_redirect(message)
         if not request.env.user._is_internal():
