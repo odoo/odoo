@@ -32,9 +32,9 @@ test("internal users can upload file to temporary thread", async () => {
     await click(".o-mail-Composer button[title='More Actions']");
     await contains(".dropdown-item:contains('Attach files')");
     await inputFiles(".o-mail-Composer .o_input_file", [file]);
-    await contains(".o-mail-AttachmentContainer", { text: "text.txt", contains: [".fa-check"] });
+    await contains(".o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt) .fa-check");
     await triggerHotkey("Enter");
-    await contains(".o-mail-Message .o-mail-AttachmentCard", { text: "text.txt" });
+    await contains(".o-mail-Message .o-mail-AttachmentContainer:contains(text.txt)");
 });
 
 test("Conversation name is operator livechat user name", async () => {
