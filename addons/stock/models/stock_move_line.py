@@ -941,8 +941,9 @@ class StockMoveLine(models.Model):
                 }
             elif line_key in aggregated_move_lines:
                 aggregated_move_lines[line_key]['qty_ordered'] += empty_move.product_uom_qty
-
-        return aggregated_move_lines
+        sorted_items = sorted(aggregated_move_lines.items(), key=lambda item: item[1]['move'].id)
+        ordered_dict = dict(sorted_items)
+        return ordered_dict
 
     def _compute_sale_price(self):
         # To Override
