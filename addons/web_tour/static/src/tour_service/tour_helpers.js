@@ -302,6 +302,23 @@ export class TourHelpers {
     }
 
     /**
+     * Ensures that the given canvas selector **{@link Selector}** contains pixels.
+     * @param {string|Node} selector
+     */
+    async canvasNotEmpty(selector) {
+        const canvas = this._get_action_element(selector);
+        if (canvas.tagName.toLowerCase() !== "canvas") {
+            throw new Error(`canvasNotEmpty is only suitable for canvas elements.`);
+        }
+        await hoot.waitUntil(() => {
+            const context = canvas.getContext("2d");
+            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            const pixels = new Uint32Array(imageData.data.buffer);
+            return pixels.some((pixel) => pixel !== 0); // pixel is on
+        });
+    }
+
+    /**
      * Get Node for **{@link Selector}**
      * @param {Selector} selector
      * @returns {Node}
