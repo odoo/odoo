@@ -1,5 +1,6 @@
 import { fields } from "@mail/core/common/record";
 import { Store } from "@mail/core/common/store_service";
+import { router } from "@web/core/browser/router";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -26,6 +27,25 @@ const StorePatch = {
         });
         this.allActiveRtcSessions = fields.Many("discuss.channel.rtc.session");
         this.nextTalkingTime = 1;
+        this.fullscreenChannel = fields.One("Thread");
+        this._hasFullscreenUrl = fields.Attr(false, {
+            compute() {
+                return this.discuss?.thread?.eq(this.fullscreenChannel);
+            },
+            onUpdate() {
+                if (!this.discuss?.hasRestoredThread) {
+                    return;
+                }
+                this._hasFullscreenUrlOnUpdate();
+            },
+            eager: true,
+        });
+        this.meetingViewOpened = false;
+    },
+    _hasFullscreenUrlOnUpdate() {
+        router.pushState({
+            fullscreen: this._hasFullscreenUrl ? true : undefined,
+        });
     },
     onStarted() {
         super.onStarted(...arguments);

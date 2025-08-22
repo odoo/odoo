@@ -137,7 +137,7 @@ const ThreadPatch = {
         this.useCameraByDefault = fields.Attr(null, {
             /** @this {import("models").Thread} */
             compute() {
-                if (this.channel_type === "chat" && this.store.rtc.selfSession?.channel.eq(this)) {
+                if (this.channel_type === "chat" && this.store.rtc.selfSession?.channel?.eq(this)) {
                     return this.store.rtc.selfSession.is_camera_on;
                 }
                 return JSON.parse(

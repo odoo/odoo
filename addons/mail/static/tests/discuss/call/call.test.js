@@ -270,7 +270,7 @@ test("Create a direct message channel when clicking on start a meeting", async (
     await click("button[title='New Meeting']");
     await contains(".o-mail-DiscussSidebarChannel", { text: "Mitchell Admin" });
     await contains(".o-discuss-Call");
-    await contains(".o-discuss-ChannelInvitation");
+    await contains(".o-mail-Meeting-sidePanel:contains('Invite people')");
 });
 
 test("Can share user camera and screen together", async () => {
