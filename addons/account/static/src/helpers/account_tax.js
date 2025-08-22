@@ -686,10 +686,22 @@ export const accountTaxHelpers = {
         const nb_of_errors = Math.round(Math.abs(delta_amount / precision_rounding));
         let remaining_errors = nb_of_errors;
 
-        for (let i = 0; i < target_factors.length; i++) {
-            const factor = target_factors[i].factor;
+        const factors = target_factors.map((x) => x.factor);
+        let sum_of_factors = factors.reduce((a, b) => a + b, 0);
+        if (sum_of_factors >= 0.0) {
+            sum_of_factors = factors.filter((x) => x > 0.0).reduce((a, b) => a + b, 0);
+        } else {
+            sum_of_factors = factors.filter((x) => x < 0.0).reduce((a, b) => a + b, 0);
+        }
+
+        for (let i = 0; i < factors.length; i++) {
             if (remaining_errors === 0) {
                 break;
+            }
+
+            const factor = factors[i] / sum_of_factors;
+            if (factor <= 0.0) {
+                continue;
             }
 
             const nb_of_amount_to_distribute = Math.min(
@@ -1058,10 +1070,7 @@ export const accountTaxHelpers = {
                 const target_factors = tax_amounts.sorted_base_line_x_tax_data
                     .filter(([base_line, index_tax_data]) => index_tax_data)
                     .map(([base_line, index_tax_data]) => ({
-                        factor: Math.abs(
-                            base_line.tax_details.total_included_currency /
-                                tax_amounts.total_included_currency
-                        ),
+                        factor: base_line.tax_details.total_included_currency,
                         base_line: base_line,
                         index_tax_data: index_tax_data,
                     }));
@@ -1123,10 +1132,7 @@ export const accountTaxHelpers = {
 
                 const target_factors = tax_amounts.sorted_base_line_x_tax_data.map(
                     ([base_line, index_tax_data]) => ({
-                        factor: Math.abs(
-                            base_line.tax_details.total_included_currency /
-                                tax_amounts.total_included_currency
-                        ),
+                        factor: base_line.tax_details.total_included_currency,
                         base_line: base_line,
                         index_tax_data: index_tax_data,
                     })
@@ -1204,7 +1210,7 @@ export const accountTaxHelpers = {
             }
 
             // Dispatch the base delta evenly on the base lines, starting from the biggest line.
-            const factors = Array(base_amounts.base_lines.length).fill({ factor: 1.0 / base_amounts.base_lines.length });
+            const factors = Array(base_amounts.base_lines.length).fill({ factor: 1.0 });
             const base_lines_sorted = base_amounts.base_lines.sort((a, b) => 
                 a.tax_details.total_included_currency - b.tax_details.total_included_currency
             );
@@ -1822,11 +1828,7 @@ export const accountTaxHelpers = {
             ["", target_base_amount, company.currency_id],
         ]) {
             const target_factors = sorted_base_lines.map((base_line) => ({
-                factor: Math.abs(
-                    (base_line.tax_details.total_excluded_currency +
-                        base_line.tax_details.delta_total_excluded_currency) /
-                        base_lines_totals.base_amount_currency
-                ),
+                factor: base_line.tax_details.total_excluded_currency + base_line.tax_details.delta_total_excluded_currency,
                 base_line: base_line,
             }));
             const amounts_to_distribute = this.distribute_delta_amount_smoothly(
@@ -1877,10 +1879,7 @@ export const accountTaxHelpers = {
                     for (const tax_data of base_line.tax_details.taxes_data) {
                         if (tax_data.tax.id.toString() === tax_id_str) {
                             target_factors.push({
-                                factor: Math.abs(
-                                    tax_data.tax_amount_currency /
-                                        current_tax_amounts.tax_amount_currency
-                                ),
+                                factor: tax_data.tax_amount_currency,
                                 base_line: base_line,
                                 tax_data: tax_data,
                             });
