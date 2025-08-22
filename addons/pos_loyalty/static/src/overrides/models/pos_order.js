@@ -1,6 +1,6 @@
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
-import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
+import { roundDecimals, roundPrecision, floatIsZero } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { loyaltyIdsGenerator } from "./pos_store";
 import { compute_price_force_price_include } from "@point_of_sale/app/models/utils/tax_utils";
@@ -1135,7 +1135,7 @@ patch(PosOrder.prototype, {
         }
         let { discountable, discountablePerTax } = getDiscountable(reward);
         discountable = Math.min(this.get_total_with_tax(), discountable);
-        if (!discountable) {
+        if (floatIsZero(discountable)) {
             return [];
         }
         let maxDiscount = reward.discount_max_amount || Infinity;
