@@ -36,6 +36,10 @@ class StockPicking(models.Model):
     def _search_delay_pass(self, operator, value):
         return [('purchase_id.date_order', operator, value)]
 
+    def _action_done(self):
+        self.purchase_id.sudo().action_acknowledge()
+        return super()._action_done()
+
 
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
