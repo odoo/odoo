@@ -449,10 +449,18 @@ export class Form extends Interaction {
                     this.resetForm();
                 }
             })
-            .catch(error => {
+            .catch((error) => {
+                let fileName = "";
+                if (error.message && error.message === "Content too large") {
+                    const largestFile = Object.values(formValues)
+                        .filter(value => value instanceof File)
+                        .reduce((max, file) => (!max || file.size > max.size ? file : max), null);
+                    fileName = largestFile?.name || "";
+                }
                 this.updateStatus(
                     "error",
-                    error.message && error.message === 'Content too large' ? _t("Uploaded file is too large.") : "",
+                    error.message && error.message === "Content too large" ? _t("The file %(fileName)s is too large for the server to accept. Please choose a smaller file.", { fileName })
+                        : ""
                 );
             });
     }
