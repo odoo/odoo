@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
 from odoo import api, Command, fields, models, SUPERUSER_ID, _
+from odoo.fields import Domain
 from odoo.tools.float_utils import float_compare, float_repr
 from odoo.exceptions import UserError
 from odoo.tools import format_list
@@ -207,6 +208,12 @@ class PurchaseOrder(models.Model):
         result['my']['otd'] = _("%(otd)s %%", otd=float_repr(my_otd_purchase_count / my_purchase_count * 100 if my_purchase_count else 100, precision_digits=0))
         result['days_to_purchase'] = self.env.company.days_to_purchase
         return result
+
+    def _get_domain_is_late(self, operator, value):
+        domain = super()._get_domain_is_late(operator, value)
+        if operator == "=" and value or operator == "!=" and not value:
+            domain &= Domain.OR([Domain('picking_ids', '=', False), Domain('picking_ids.state', '!=', 'done')])
+        return domain
 
     def _get_action_view_picking(self, pickings):
         """ This function returns an action that display existing picking orders of given purchase order ids. When only one found, show the picking immediately.
