@@ -79,7 +79,7 @@ export class PaymentVivaCom extends PaymentInterface {
         line.viva_com_session_id = order.uuid + " - " + uuidv4();
         var data = {
             sessionId: line.viva_com_session_id,
-            parentSessionId: line.vivaComParentSessionId,
+            parentSessionId: line.uiState.vivaComParentSessionId,
             terminalId: line.payment_method_id.viva_com_terminal_id,
             cashRegisterId: this.pos.getCashier().name,
             amount: roundPrecision(Math.abs(line.amount * 100)),
