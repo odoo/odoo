@@ -2,6 +2,8 @@
 
 from datetime import timedelta
 
+from freezegun import freeze_time
+
 from odoo import fields
 from odoo.fields import Command
 from odoo.tests import tagged
@@ -116,3 +118,54 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
         right_date = commitment_date - security_delay
         for line in new_order.order_line:
             self.assertEqual(line.move_ids[0].date, right_date, "The expected date for the Stock Move is wrong")
+
+    def test_invoice_delivery_date(self):
+        self.env['stock.quant']._update_available_quantity(
+            self.test_product_order,
+            self.company_data['default_warehouse'].lot_stock_id,
+            75.0,
+        )
+        order = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner_a.id,
+            'picking_policy': 'one',
+            'order_line': [Command.create({
+                'product_id': self.test_product_order.id,
+                'product_uom_qty': 100.0,
+            })],
+        })
+        order.action_confirm()
+        picking_1 = order.picking_ids
+        picking_1.move_ids.picked = True
+        invoice = order._create_invoices()
+        self.assertFalse(invoice.delivery_date)
+        picking_1._action_done()
+        self.assertTrue(order.effective_date, "Effective date should exist after done picking")
+        effective_date = order.effective_date.date()
+        self.assertEqual(
+            invoice.delivery_date, effective_date,
+            "Default invoice delivery date should equal effective date",
+        )
+
+        self.env['stock.quant']._update_available_quantity(
+            self.test_product_order,
+            self.company_data['default_warehouse'].lot_stock_id,
+            25.0,
+        )
+        with freeze_time(effective_date + timedelta(days=3)):
+            picking_2 = (order.picking_ids - picking_1).ensure_one()
+            picking_2.move_ids.write({'quantity': 25.0, 'picked': True})
+            picking_2._action_done()
+            self.assertEqual(
+                invoice.delivery_date, effective_date,
+                "Invoice delivery date should default to earliest picking date",
+            )
+            product_line = invoice.line_ids[0]
+            invoice.write({
+                'delivery_date': fields.Date.today(),
+                'line_ids': [Command.update(product_line.id, {'quantity': 0.0})],
+            })
+            product_line.quantity += 75.0
+            self.assertEqual(
+                invoice.delivery_date, fields.Date.today(),
+                "Custom invoice delivery shouldn't change after line change",
+            )
