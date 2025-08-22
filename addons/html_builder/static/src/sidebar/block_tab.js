@@ -58,6 +58,7 @@ export class BlockTab extends Component {
         this.shared.operation.next(
             async () => {
                 this.cancelDragAndDrop = this.shared.history.makeSavePoint();
+                this.dragState = {};
                 let snippetEl;
                 const baseSectionEl = snippet.content.cloneNode(true);
                 this.state.ongoingInsertion = true;
@@ -313,7 +314,14 @@ export class BlockTab extends Component {
                     dynamicSvgEl.src = colorCustomizedURL.pathname + colorCustomizedURL.search;
                 });
 
-                const selectors = this.shared.dropzone.getSelectors(snippetEl);
+                // The dragged element may change while dragging.
+                Object.assign(this.dragState, { draggedEl: snippetEl, snippetEl });
+
+                // Add the dropzones.
+                const withGrids =
+                    !isSnippetGroup &&
+                    (this.env.editor.config.isMobileView(this.editable) ? "filterOnly" : true);
+                const selectors = this.shared.dropzone.getSelectors(snippetEl, false, withGrids);
                 dropzoneEls = this.shared.dropzone.activateDropzones(selectors, {
                     toInsertInline: isInlineSnippet,
                 });
@@ -327,9 +335,10 @@ export class BlockTab extends Component {
                 const dropzoneEl = dropzone.el;
                 if (isSnippetGroup) {
                     dropzoneEl.classList.add("o_dropzone_highlighted");
+                    this.dragState.currentDropzoneEl = dropzoneEl;
                     return;
                 }
-                dropzoneEl.after(snippetEl);
+                dropzoneEl.after(this.dragState.draggedEl);
                 dropzoneEl.classList.add("invisible");
                 this.dragState.currentDropzoneEl = dropzoneEl;
 
@@ -337,41 +346,40 @@ export class BlockTab extends Component {
                     snippetEl,
                     dragState: this.dragState,
                 });
+            },
+            onDrag: ({ x, y }) => {
+                if (!this.dragState.currentDropzoneEl) {
+                    return;
+                }
 
-                // Preview the snippet correctly.
-                // Note: no async previews, in order to not slow down the drag.
-                this.cancelSnippetPreview = this.shared.history.makeSavePoint();
-                this.env.editor.dispatchTo("on_snippet_preview_handlers", {
+                this.env.editor.dispatchTo("on_snippet_move_handlers", {
                     snippetEl,
                     dragState: this.dragState,
+                    x,
+                    y,
                 });
             },
             dropzoneOut: ({ dropzone }) => {
                 const dropzoneEl = dropzone.el;
                 if (isSnippetGroup) {
                     dropzoneEl.classList.remove("o_dropzone_highlighted");
+                    this.dragState.currentDropzoneEl = null;
                     return;
                 }
-                // Undo the preview
-                this.cancelSnippetPreview();
-                delete this.cancelSnippetPreview;
 
                 this.env.editor.dispatchTo("on_snippet_out_dropzone_handlers", {
                     snippetEl,
                     dragState: this.dragState,
                 });
 
-                snippetEl.remove();
+                this.dragState.draggedEl.remove();
                 dropzoneEl.classList.remove("invisible");
                 this.dragState.currentDropzoneEl = null;
             },
-            onDragEnd: async ({ x, y, helper, dropzone }) => {
-                // Undo the preview if any.
-                this.cancelSnippetPreview?.();
-
+            onDragEnd: async ({ x, y, helper }) => {
                 this.document.body.classList.remove("oe_dropzone_active");
-                snippetEl.remove();
-                let currentDropzoneEl = dropzone && dropzone.el;
+                let currentDropzoneEl = this.dragState.currentDropzoneEl;
+                const isDroppedOver = !!currentDropzoneEl;
 
                 // If the snippet was dropped outside of a dropzone, find the
                 // dropzone that is the nearest to the dropping point.
@@ -386,14 +394,38 @@ export class BlockTab extends Component {
                 }
 
                 if (currentDropzoneEl) {
+                    let draggedEl = this.dragState.draggedEl;
+                    if (isDroppedOver) {
+                        this.env.editor.dispatchTo("on_snippet_dropped_over_handlers", {
+                            droppedEl: draggedEl,
+                            dragState: this.dragState,
+                        });
+                    } else {
+                        currentDropzoneEl.after(draggedEl);
+                        this.env.editor.dispatchTo("on_snippet_dropped_near_handlers", {
+                            droppedEl: draggedEl,
+                            dropzoneEl: currentDropzoneEl,
+                            dragState: this.dragState,
+                        });
+                    }
+                    // The dragged element may have changed, so get it again.
+                    draggedEl = this.dragState.draggedEl;
+
+                    // In order to mark only the concerned elements as dirty,
+                    // remove the element, then replay the drop after
+                    // re-allowing to mark dirty.
+                    draggedEl.remove();
+
                     // Undo the changes needed to ease the drag and drop and
                     // re-allow to mark dirty.
                     this.dragState.restoreCallbacks.forEach((restore) => restore());
                     this.dragState.restoreCallbacks = null;
 
-                    currentDropzoneEl.after(snippetEl);
+                    // Replay the drop.
+                    currentDropzoneEl.after(draggedEl);
                     this.shared.dropzone.removeDropzones();
 
+                    // Process the dropped element.
                     if (!isSnippetGroup) {
                         await this.processDroppedSnippet(snippetEl);
                         delete this.cancelDragAndDrop;
@@ -414,7 +446,6 @@ export class BlockTab extends Component {
                 }
 
                 this.state.ongoingInsertion = false;
-                delete this.cancelSnippetPreview;
                 dragAndDropResolve();
             },
         };

@@ -216,10 +216,12 @@ export class DragAndDropPlugin extends Plugin {
                 }
 
                 // Get the dropzone selectors.
+                const isColumn = parentEl.classList.contains("row");
+                const withGrids = isColumn || "filterOnly";
                 const selectors = this.dependencies.dropzone.getSelectors(
                     this.overlayTarget,
                     true,
-                    true
+                    withGrids
                 );
 
                 // Remove the dragged element and deactivate the options.

@@ -39,6 +39,7 @@ class NewsletterSubscribeCommonOptionPlugin extends Plugin {
             {
                 selector: ".js_subscribe",
                 dropNear: "p, h1, h2, h3, blockquote, .card",
+                dropIn: ".row.o_grid_mode",
             },
         ],
     };
