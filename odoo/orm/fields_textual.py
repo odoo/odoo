@@ -86,6 +86,8 @@ class BaseString(Field[str | typing.Literal[False]]):
 
     def convert_to_column_insert(self, value, record, values=None, validate=True):
         if self.translate:
+            if isinstance(value, dict):
+                return PsycopgJson(value)
             value = self.convert_to_column(value, record, values, validate)
             if value is None:
                 return None
