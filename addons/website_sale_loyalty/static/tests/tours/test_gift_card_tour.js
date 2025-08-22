@@ -14,7 +14,7 @@ registry.category("web_tour.tours").add('shop_sale_gift_card', {
         },
         {
             content: 'validate the gift card',
-            trigger: 'form[name="coupon_code"] .a-submit',
+            trigger: 'form[name="coupon_code"] button[type="submit"]',
             run: "click",
             expectUnloadPage: true,
         },
@@ -29,7 +29,7 @@ registry.category("web_tour.tours").add('shop_sale_gift_card', {
         },
         {
             content: "Validate the promo",
-            trigger: 'form[name="coupon_code"] .a-submit',
+            trigger: 'form[name="coupon_code"] button[type="submit"]',
             run: "click",
             expectUnloadPage: true,
         },

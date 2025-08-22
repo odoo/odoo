@@ -129,17 +129,16 @@
                                                     </select>
                                                 </div>
                                                 <div class="d-flex align-items-center">
-                                                    <a
-                                                        class="btn btn-sm btn-primary a-submit"
-                                                        href="#"
-                                                        role="button"
+                                                    <button
+                                                        type="submit"
+                                                        class="btn btn-sm btn-primary"
                                                         name="o_loyalty_claim"
                                                     >
                                                         <t t-if="(reward.program_id.trigger == 'with_code' and reward.program_id.program_type != 'promo_code') or (reward.program_id.trigger == 'auto' and reward.program_id.applies_on == 'future')">
                                                             Use
                                                         </t>
                                                         <t t-else="">Claim</t>
-                                                    </a>
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>

@@ -10,7 +10,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     events: {
         'change form .js_product:first input[name="add_qty"]': '_onChangeAddQuantity',
         'click a.js_add_cart_json': '_onChangeQuantity',
-        'click .a-submit': '_onClickSubmit',
         'change form.js_attributes input, form.js_attributes select': '_onChangeAttribute',
         'submit .o_wsale_products_searchbar_form': '_onSubmitSaleSearch',
         'click #add_to_cart, .o_we_buy_now, #products_grid .o_wsale_product_btn .a-submit': '_onClickAdd',
@@ -375,32 +374,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         const $parent = $(ev.currentTarget).closest('form');
         if ($parent.length > 0) {
             this.triggerVariantChange($parent);
-        }
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onClickSubmit: function (ev) {
-        if ($(ev.currentTarget).is('#add_to_cart, #products_grid .a-submit')) {
-            return;
-        }
-        var $aSubmit = $(ev.currentTarget);
-        if (!ev.defaultPrevented && !$aSubmit.is(".disabled")) {
-            ev.preventDefault();
-            $aSubmit.closest('form')[0].requestSubmit();
-        }
-        if ($aSubmit.hasClass('a-submit-disable')) {
-            $aSubmit.addClass("disabled");
-        }
-        if ($aSubmit.hasClass('a-submit-loading')) {
-            var loading = '<span class="fa fa-cog fa-spin"/>';
-            var fa_span = $aSubmit.find('i[class*="fa"]');
-            if (fa_span.length) {
-                fa_span.replaceWith(loading);
-            } else {
-                $aSubmit.append(loading);
-            }
         }
     },
     /**

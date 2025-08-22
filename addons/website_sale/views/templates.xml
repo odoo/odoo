@@ -3256,7 +3256,7 @@
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
             <div class="input-group w-100">
                 <input name="promo" class="form-control" type="text" placeholder="Discount code..." t-att-value="website_sale_order.pricelist_id.code or None"/>
-                <a href="#" role="button" class="btn btn-light a-submit border">Apply</a>
+                <button type="submit" class="btn btn-light border">Apply</button>
             </div>
         </form>
         <t t-if="request.params.get('code_not_available')" name="code_not_available">
@@ -3267,7 +3267,6 @@
     <!-- Called in `website_sale.checkout_layout`. -->
     <template id="navigation_buttons" name="Navigation buttons">
         <!-- Layout customization parameters:
-            - _cta_classes: CSS classes to append on the primary navigation button; default `None`.
             - _form_send_navigation: Whether the primary button serves as a submit button for a
                                      form; default `None`.
             - hide_payment_button: Whether the payment button should be hidden; default: False.
@@ -3303,7 +3302,7 @@
                 </t>
                 <t t-else="">
                     <a role="button" name="website_sale_main_button"
-                        t-attf-class="#{_cta_classes} btn btn-primary #{not website_sale_order._is_cart_ready() and 'disabled'} #{_form_send_navigation and 'order-lg-3 w-100 w-lg-auto ms-lg-auto' or 'w-100'}"
+                        t-attf-class="btn btn-primary #{not website_sale_order._is_cart_ready() and 'disabled'} #{_form_send_navigation and 'order-lg-3 w-100 w-lg-auto ms-lg-auto' or 'w-100'}"
                         t-att-href="next_website_checkout_step_href">
                         <span t-field="next_website_checkout_step.main_button_label"/>
                         <i class="fa fa-angle-right ms-2 fw-light"/>
