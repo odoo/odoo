@@ -126,7 +126,7 @@ const threadPatch = {
     },
     onPinStateUpdated() {
         super.onPinStateUpdated();
-        if (this.selfMember?.is_pinned) {
+        if (this.self_member_id?.is_pinned) {
             this.isLocallyPinned = false;
         }
         if (this.isLocallyPinned) {
@@ -140,7 +140,7 @@ const threadPatch = {
                 this.isBusSubscribed = false;
             }
         }
-        if (!this.selfMember?.is_pinned && !this.isLocallyPinned) {
+        if (!this.self_member_id?.is_pinned && !this.isLocallyPinned) {
             this.sub_channel_ids.forEach((c) => (c.isLocallyPinned = false));
         }
     },

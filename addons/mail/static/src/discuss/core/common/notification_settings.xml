@@ -4,11 +4,11 @@
     <t t-name="discuss.NotificationSettings">
         <ActionPanel title.translate="Notification Settings" resizable="false" icon="'fa fa-bell'">
             <div class="o-discuss-NotificationSettings">
-                <t t-if="props.thread.selfMember?.mute_until_dt">
+                <t t-if="props.thread.self_member_id?.mute_until_dt">
                     <button class="btn w-100 d-flex p-1 opacity-75 border-0" t-on-click="()=>this.setMute(false)">
                         <div class="d-flex flex-column flex-grow-1 px-2 py-1 w-100 rounded">
                             <span class="fs-6 fw-bold text-wrap text-start text-break">Unmute Conversation</span>
-                            <span class="fw-normal smaller text-start" t-out="store.settings.getMuteUntilText(props.thread.selfMember?.mute_until_dt)"/>
+                            <span class="fw-normal smaller text-start" t-out="store.settings.getMuteUntilText(props.thread.self_member_id?.mute_until_dt)"/>
                         </div>
                     </button>
                 </t>
@@ -37,7 +37,7 @@
                                 <span class="fw-bolder o-xsmaller ps-2 o-discuss-NotificationSettings-defaultValue"><t t-out="store.settings.NOTIFICATIONS.find((n) => n.label === store.settings.channel_notifications).name"/></span>
                             </div>
                             <div class="o-discuss-NotificationSettings-separator flex-grow-1"/>
-                            <input class="form-check-input shadow-sm" type="radio" t-att-checked="!props.thread.selfMember?.custom_notifications"/>
+                            <input class="form-check-input shadow-sm" type="radio" t-att-checked="!props.thread.self_member_id?.custom_notifications"/>
                         </div>
                     </button>
                     <t t-foreach="store.settings.NOTIFICATIONS" t-as="notif" t-key="notif.label">
@@ -45,7 +45,7 @@
                             <div class="d-flex flex-grow-1 align-items-center px-2 py-1 rounded">
                                 <span class="fs-6 fw-normal text-wrap text-start text-break" t-esc="notif.name"/>
                                 <div class="o-discuss-NotificationSettings-separator flex-grow-1"/>
-                                <input class="form-check-input ms-2 shadow-sm" type="radio" t-att-checked="props.thread.selfMember?.custom_notifications === notif.label"/>
+                                <input class="form-check-input ms-2 shadow-sm" type="radio" t-att-checked="props.thread.self_member_id?.custom_notifications === notif.label"/>
                             </div>
                         </button>
                     </t>

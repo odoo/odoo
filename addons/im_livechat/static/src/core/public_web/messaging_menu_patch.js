@@ -16,7 +16,7 @@ patch(MessagingMenu.prototype, {
             items.push({
                 counter: this.store.discuss.livechats.reduce(
                     (acc, channel) =>
-                        channel.selfMember?.message_unread_counter > 0 ? acc + 1 : acc,
+                        channel.self_member_id?.message_unread_counter > 0 ? acc + 1 : acc,
                     0
                 ),
                 id: "livechat",
