@@ -300,6 +300,10 @@ class StockPicking(models.Model):
             return super(StockPicking, self.batch_id.picking_ids if self.batch_id else self)._package_move_lines(batch_pack, move_lines_to_pack)
         return super()._package_move_lines(batch_pack, move_lines_to_pack)
 
+    def _add_to_wave_post_picking_split_hook(self):
+        # Hook meant to be overriden
+        pass
+
     def assign_batch_user(self, user_id):
         pickings = self.filtered(lambda p: p.user_id.id != user_id)
         pickings.write({'user_id': user_id})
