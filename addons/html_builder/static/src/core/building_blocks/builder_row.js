@@ -19,8 +19,9 @@ export class BuilderRow extends Component {
         level: { type: Number, optional: true },
         expand: { type: Boolean, optional: true },
         extraLabelClass: { type: String, optional: true },
+        observeCollapseContent: { type: Boolean, optional: true },
     };
-    static defaultProps = { expand: false };
+    static defaultProps = { expand: false, observeCollapseContent: false };
 
     setup() {
         useBuilderComponent();
@@ -52,5 +53,12 @@ export class BuilderRow extends Component {
 
     toggleCollapseContent() {
         this.state.expanded = !this.state.expanded;
+    }
+
+    get displayCollapseContent() {
+        return (
+            !!this.props.slots.collapse &&
+            (this.props.observeCollapseContent || this.state.expanded)
+        );
     }
 }
