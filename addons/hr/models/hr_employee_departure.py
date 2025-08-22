@@ -115,7 +115,7 @@ class HrEmployeeDeparture(models.Model):
     def create(self, vals_list):
         res = super().create(vals_list)
         for departure in res:
-            departure.employee_id.write({
+            departure.employee_id._get_version(departure.departure_date).write({
                 'departure_id': departure.id,
             })
         return res
