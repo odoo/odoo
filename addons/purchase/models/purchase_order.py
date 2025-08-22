@@ -162,6 +162,7 @@ class PurchaseOrder(models.Model):
     receipt_reminder_email = fields.Boolean('Receipt Reminder Email', compute='_compute_receipt_reminder_email', store=True, readonly=False)
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', compute='_compute_receipt_reminder_email', store=True, readonly=False)
 
+    is_not_acknowledged = fields.Boolean('Is Not Acknowledged', store=False, search='_search_is_not_acknowledged')
     is_late = fields.Boolean('Is Late', store=False, search='_search_is_late')
     show_comparison = fields.Boolean('Show Comparison', compute='_compute_show_comparison')
 
@@ -279,16 +280,21 @@ class PurchaseOrder(models.Model):
         if self.date_planned:
             self.order_line.filtered(lambda line: not line.display_type).date_planned = self.date_planned
 
+    def _search_is_not_acknowledged(self, operator, value):
+        if operator not in ["=", "!="]:
+            raise ValidationError(self.env._("Unsupported operator"))
+        purchase_lines_not_acknowledged = self.env['purchase.order.line'].search([('order_id.acknowledged', '=', False), ('qty_received', '=', 0)])
+        if operator == "=" and value or operator == "!=" and not value:
+            return [('id', 'in', purchase_lines_not_acknowledged.order_id.ids)]
+        return [('id', 'not in', purchase_lines_not_acknowledged.order_id.ids)]
+
     def _search_is_late(self, operator, value):
         if operator not in ["=", "!="]:
-            raise ValidationError(_("Unsupported operator"))
-        purchase_ids = self._search([('state', '=', 'purchase'), ('date_planned', '<=', fields.Datetime.now())])
+            raise ValidationError(self.env._("Unsupported operator"))
+        purchase_lines_late = self.env['purchase.order.line'].search([('order_id.date_planned', '<=', fields.Datetime.now()), ('qty_received', '=', 0)])
         if operator == "=" and value or operator == "!=" and not value:
-            purchase_lines_late = self.env['purchase.order.line'].search([('order_id', 'in', purchase_ids), ('qty_received', '<', SQL('product_qty'))])
             return [('id', 'in', purchase_lines_late.order_id.ids)]
-        else:
-            purchase_lines_on_time = self.env['purchase.order.line']._search([('order_id', 'in', purchase_ids), ('qty_received', '>=', SQL('product_qty'))])
-            return [('id', 'in', purchase_lines_on_time.order_id.ids)]
+        return [('id', 'not in', purchase_lines_late.order_id.ids)]
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -928,11 +934,11 @@ class PurchaseOrder(models.Model):
         rfq_late_group = self.env['purchase.order']._read_group(rfq_late_domain, groupby, aggregate)
         _update('late', result, rfq_late_group)
 
-        rfq_not_acknowledge = [('state', '=', 'purchase'), ('acknowledged', '=', False)]
+        rfq_not_acknowledge = [('state', 'in', ['purchase', 'done']), ('is_not_acknowledged', '=', True)]
         rfq_not_acknowledge_group = self.env['purchase.order']._read_group(rfq_not_acknowledge, groupby, aggregate)
         _update('not_acknowledged', result, rfq_not_acknowledge_group)
 
-        rfq_late_receipt = [('is_late', '=', True)]
+        rfq_late_receipt = [('state', 'in', ['purchase', 'done']), ('is_late', '=', True)]
         rfq_late_receipt_group = self.env['purchase.order']._read_group(rfq_late_receipt, groupby, aggregate)
         _update('late_receipt', result, rfq_late_receipt_group)
 
