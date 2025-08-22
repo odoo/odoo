@@ -294,6 +294,7 @@ class DiscussChannelMember(models.Model):
         # always unlink members of sub-channels as well
         domains = [
             [
+                ("id", "not in", self.ids),
                 ("partner_id", "=", member.partner_id.id),
                 ("guest_id", "=", member.guest_id.id),
                 ("channel_id", "in", member.channel_id.sub_channel_ids.ids),

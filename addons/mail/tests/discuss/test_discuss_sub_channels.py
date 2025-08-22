@@ -4,6 +4,7 @@ from odoo import Command
 
 from datetime import datetime, timedelta
 from freezegun import freeze_time
+from unittest.mock import patch
 
 from odoo.tests.common import HttpCase, new_test_user, tagged
 from odoo.exceptions import UserError, ValidationError
@@ -173,3 +174,19 @@ class TestDiscussSubChannels(HttpCase):
         parent._message_update_content(message, body="")
         sub_channel = parent._create_sub_channel(from_message_id=message.id)
         self.assertEqual(sub_channel.name, "This message has been removed")
+
+    def test_12_unlink_children_members_only_once(self):
+        parent = self.env["discuss.channel"].create({"name": "General"})
+        child = parent._create_sub_channel()
+
+        og_unlink = self.env.registry["discuss.channel.member"].unlink
+        unlinked_member_ids = []
+        expected_unlinked_member_ids = sorted((parent.self_member_id | child.self_member_id).ids)
+
+        def _patched_unlink(records):
+            unlinked_member_ids.extend(records.ids)
+            og_unlink(records)
+
+        with patch.object(self.env.registry["discuss.channel.member"], "unlink", _patched_unlink):
+            (parent | child).channel_member_ids.unlink()
+        self.assertEqual(expected_unlinked_member_ids, sorted(unlinked_member_ids))
