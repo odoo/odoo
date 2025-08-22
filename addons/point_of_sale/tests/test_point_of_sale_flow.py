@@ -1798,3 +1798,58 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.pos_config_usd.company_id.account_fiscal_country_id = False
         with self.assertRaises(ValidationError, msg="The company must have a fiscal country set."):
             self.pos_config_usd.open_ui()
+
+    def test_branch_company_access_cost_currency_id(self):
+        branch = self.env['res.company'].create({
+            'name': 'Branch 1',
+            'parent_id': self.env.company.id,
+            'chart_template': self.env.company.chart_template,
+            'country_id': self.env.company.country_id.id,
+        })
+        user = self.env['res.users'].create({
+            'name': 'Branch user',
+            'login': 'branch_user',
+            'email': 'branch@yourcompany.com',
+            'group_ids': [(6, 0, [self.ref('base.group_user'), self.ref('point_of_sale.group_pos_user')])],
+            'company_ids': [(4, branch.id)],
+            'company_id': branch.id,
+        })
+        product = self.env['product.product'].create({
+            'name': 'Product A',
+            'is_storable': True,
+            'company_id': self.env.company.id,
+        })
+        config = self.env['pos.config'].with_company(branch).create({
+            'name': 'Main',
+            'company_id': branch.id,
+        })
+        config.payment_method_ids.filtered(lambda pm: pm.is_cash_count).unlink()
+
+        config.open_ui()
+        current_session = config.current_session_id
+
+        order = self.env['pos.order'].with_user(user).with_company(branch).create({
+            'session_id': current_session.id,
+            'partner_id': self.partner.id,
+            'company_id': branch.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': product.id,
+                'price_unit': 6,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': [[6, False, []]],
+                'price_subtotal': 6,
+                'price_subtotal_incl': 6,
+            })],
+            'amount_paid': 6.0,
+            'amount_total': 6.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+            'last_order_preparation_change': '{}'
+        })
+
+        order_line = order.lines[0]
+        self.env.invalidate_all()
+        order_line.with_user(user).with_company(branch)._compute_total_cost(None)
