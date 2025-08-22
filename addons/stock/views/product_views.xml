@@ -552,9 +552,12 @@
                     <field name="id" column_invisible="True"/>
                     <field name="display_name" string="Product"/>
                     <field name="categ_id" optional="hide"/>
-                    <field name="qty_available" string="On Hand" sum="Total On Hand"/>
-                    <button name="%(action_view_inventory_tree)d" title="Inventory Adjustment" type="action" class="btn-link"
-                        icon="fa-pencil" context="{'search_default_product_id': id, 'default_product_id': id}"/>
+                    <!-- <button name="%(action_view_inventory_tree)d" type="action" class="btn-link"
+                            context="{'search_default_product_id': id, 'default_product_id': id}"> -->
+                    <field name="qty_available" string="On Hand"
+                           sum="Total On Hand" widget="stock_float_action_field"
+                           options="{ 'actionName': 'stock.action_view_inventory_tree' }"
+                           context="{'search_default_product_id': id, 'default_product_id': id}"/>
                     <field name="free_qty" string="Free to Use" sum="Total Free to Use"/>
                     <field name="incoming_qty" optional="show" sum="Total Incoming"/>
                     <field name="outgoing_qty" optional="show" sum="Total Outgoing"/>
