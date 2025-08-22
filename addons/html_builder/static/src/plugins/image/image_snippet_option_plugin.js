@@ -9,7 +9,7 @@ class ImageSnippetOptionPlugin extends Plugin {
         so_content_addition_selector: [".s_image"],
     };
 
-    async onSnippetDropped({ snippetEl }) {
+    async onSnippetDropped({ snippetEl, dragState }) {
         if (!snippetEl.matches(".s_image")) {
             return;
         }
@@ -23,6 +23,11 @@ class ImageSnippetOptionPlugin extends Plugin {
                 save: async (selectedImageEl) => {
                     isImageSelected = true;
                     snippetEl.replaceWith(selectedImageEl);
+                    // If the "Image" snippet was dropped as a grid item, make
+                    // it a grid image.
+                    if (dragState.draggedEl.classList.contains("o_grid_item")) {
+                        dragState.draggedEl.classList.add("o_grid_item_image");
+                    }
                 },
             });
             onClose.then(() => {

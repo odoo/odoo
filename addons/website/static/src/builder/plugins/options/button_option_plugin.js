@@ -17,7 +17,12 @@ class ButtonOptionPlugin extends Plugin {
     static id = "buttonOption";
     resources = {
         on_cloned_handlers: this.onCloned.bind(this),
-        on_snippet_preview_handlers: this.onSnippetPreview.bind(this),
+        // Drag and drop from sidebar: manage the button preview.
+        on_snippet_over_dropzone_handlers: this.onSnippetPreview.bind(this),
+        on_snippet_out_dropzone_handlers: ({ snippetEl, dragState }) =>
+            this.resetPreview(snippetEl, dragState),
+        on_snippet_dropped_over_handlers: ({ droppedEl, dragState }) =>
+            this.resetPreview(droppedEl, dragState),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
 
@@ -27,12 +32,66 @@ class ButtonOptionPlugin extends Plugin {
         }
     }
 
-    onSnippetPreview({ snippetEl }) {
+    /**
+     * Adapts the dragged "Button" snippet when it is over a dropzone, in order
+     * to preview it correctly.
+     *
+     * @param {Object} - snippetEl: the dragged snippet
+     *                 - dragState: the current drag state
+     */
+    onSnippetPreview({ snippetEl, dragState }) {
         if (snippetEl.matches(selector) && !snippetEl.matches(exclude)) {
-            this.adaptButtons(snippetEl, { isDragAndDropPreview: true });
+            const dropzoneEl = dragState.currentDropzoneEl;
+            // No need to preview if it is a grid item, as it is alone.
+            if (dropzoneEl.classList.contains("oe_grid_zone")) {
+                return;
+            }
+
+            // Preview the button.
+            const initialState = this.adaptButtons(snippetEl, { isDragAndDropPreview: true });
+            // Store the restore function to undo the preview.
+            dragState.restoreButtonPreview = () => {
+                const { isWrapped, previousClassName, nextClassName } = initialState;
+                // Restore the classes and remove the added spaces.
+                snippetEl.className = initialState.buttonClassName;
+                if (previousClassName) {
+                    initialState.previousSiblingEl.className = previousClassName;
+                    snippetEl.previousSibling.remove();
+                }
+                if (nextClassName) {
+                    initialState.nextSiblingEl.className = nextClassName;
+                    snippetEl.nextSibling.remove();
+                }
+                // Unwrap the button.
+                if (isWrapped) {
+                    const wrapperEl = snippetEl.parentElement;
+                    dropzoneEl.after(snippetEl);
+                    wrapperEl.remove();
+                }
+            };
         }
     }
 
+    /**
+     * Resets the "Button" snippet drag and drop preview.
+     *
+     * @param {HTMLElement} snippetEl the snippet
+     * @param {Object} dragState the current drag state
+     */
+    resetPreview(snippetEl, dragState) {
+        if (snippetEl.matches(selector) && !snippetEl.matches(exclude)) {
+            if ("restoreButtonPreview" in dragState) {
+                dragState.restoreButtonPreview();
+                delete dragState.restoreButtonPreview;
+            }
+        }
+    }
+
+    /**
+     * Adapts the dropped "Button" snippet.
+     *
+     * @param {Object} - snippetEl: the dropped snippet.
+     */
     onSnippetDropped({ snippetEl }) {
         if (snippetEl.matches(selector) && !snippetEl.matches(exclude)) {
             this.adaptButtons(snippetEl, {});
@@ -47,6 +106,7 @@ class ButtonOptionPlugin extends Plugin {
      * @param {Object}
      *   - [adaptAppearance=true]
      *   - [isDragAndDropPreview = false]
+     * @returns {Object} the info needed to restore the drag and drop preview
      */
     adaptButtons(editingElement, { adaptAppearance = true, isDragAndDropPreview = false }) {
         let previousSiblingEl = editingElement.previousElementSibling;
@@ -63,10 +123,12 @@ class ButtonOptionPlugin extends Plugin {
         }
 
         let siblingButtonEl = null;
+        const initialState = { buttonClassName: editingElement.className };
         // When multiple buttons follow each other, they may break on 2 lines or
         // more on mobile, so they need a margin-bottom. Also, if the button is
         // dropped next to another button add a space between them.
         if (nextSiblingEl?.matches(".btn")) {
+            initialState.nextClassName = nextSiblingEl.className;
             nextSiblingEl.classList.add("mb-2");
             editingElement.after(" ");
             // It is first the next button that we put in this variable because
@@ -75,6 +137,7 @@ class ButtonOptionPlugin extends Plugin {
             siblingButtonEl = nextSiblingEl;
         }
         if (previousSiblingEl?.matches(".btn")) {
+            initialState.previousClassName = previousSiblingEl.className;
             previousSiblingEl.classList.add("mb-2");
             editingElement.before(" ");
             siblingButtonEl = previousSiblingEl;
@@ -114,10 +177,12 @@ class ButtonOptionPlugin extends Plugin {
                     const paragraphEl = document.createElement("p");
                     editingElement.parentNode.insertBefore(paragraphEl, editingElement);
                     paragraphEl.appendChild(editingElement);
+                    initialState.isWrapped = true;
                 }
             }
             editingElement.classList.remove("s_custom_button");
         }
+        return { ...initialState, previousSiblingEl, nextSiblingEl };
     }
 }
 

@@ -34,8 +34,13 @@ export class GridLayoutPlugin extends Plugin {
         on_cloned_handlers: this.onCloned.bind(this),
         on_removed_handlers: this.onRemoved.bind(this),
         // Drag and drop from sidebar
-        on_snippet_preview_handlers: this.onSnippetPreviewOrDropped.bind(this),
-        on_snippet_dropped_handlers: this.onSnippetPreviewOrDropped.bind(this),
+        on_snippet_dragged_handlers: this.onSnippetDragged.bind(this),
+        on_snippet_over_dropzone_handlers: this.onSnippetOverDropzone.bind(this),
+        on_snippet_move_handlers: this.onSnippetMove.bind(this),
+        on_snippet_out_dropzone_handlers: this.onSnippetOutDropzone.bind(this),
+        on_snippet_dropped_over_handlers: this.onSnippetDroppedOver.bind(this),
+        on_snippet_dropped_near_handlers: this.onSnippetDroppedNear.bind(this),
+        on_snippet_dropped_handlers: withSequence(1000, this.onSnippetDropped.bind(this)),
         // Drag and drop from the page
         is_draggable_handlers: this.isDraggable.bind(this),
         on_element_dragged_handlers: this.onElementDragged.bind(this),
@@ -121,56 +126,6 @@ export class GridLayoutPlugin extends Plugin {
     }
 
     /**
-     * Called when previewing/dropping a snippet.
-     *
-     * @param {Object} - snippetEl: the snippet
-     */
-    onSnippetPreviewOrDropped({ snippetEl }) {
-        // Adjust the closest grid item if any.
-        this.adjustGridItem(snippetEl);
-    }
-
-    /**
-     * Adapts the height of a grid item (if any) to its content when a new
-     * element goes in it and returns a function restoring the grid item height.
-     *
-     * @param {HTMLElement} el the new content
-     * @returns {Function} a function restoring the grid item state
-     */
-    adjustGridItem(el) {
-        const gridItemEl = el.closest(".o_grid_item");
-        if (gridItemEl && gridItemEl !== el && !this.config.isMobileView(gridItemEl)) {
-            const rowEl = gridItemEl.parentElement;
-            const { rowGap, rowSize } = getGridProperties(rowEl);
-            const { rowStart, rowEnd } = getGridItemProperties(gridItemEl);
-            const oldRowSpan = rowEnd - rowStart;
-
-            // Compute the new height.
-            const { borderTop, borderBottom, paddingTop, paddingBottom } =
-                window.getComputedStyle(gridItemEl);
-            const borderY = parseFloat(borderTop) + parseFloat(borderBottom);
-            const paddingY = parseFloat(paddingTop) + parseFloat(paddingBottom);
-            const height = gridItemEl.scrollHeight + borderY + paddingY;
-
-            const rowSpan = Math.ceil((height + rowGap) / (rowSize + rowGap));
-            gridItemEl.style.gridRowEnd = rowStart + rowSpan;
-            gridItemEl.classList.remove(`g-height-${oldRowSpan}`);
-            gridItemEl.classList.add(`g-height-${rowSpan}`);
-            resizeGrid(rowEl);
-
-            return () => {
-                // Restore the grid item height.
-                gridItemEl.style.gridRowEnd = rowEnd;
-                gridItemEl.classList.remove(`g-height-${rowSpan}`);
-                gridItemEl.classList.add(`g-height-${oldRowSpan}`);
-                resizeGrid(rowEl);
-            };
-        }
-
-        return () => {};
-    }
-
-    /**
      * Puts the grid item behind all the others (minimum z-index).
      */
     sendGridItemToBack() {
@@ -195,6 +150,234 @@ export class GridLayoutPlugin extends Plugin {
     bringGridItemToFront() {
         const rowEl = this.overlayTarget.parentNode;
         setElementToMaxZindex(this.overlayTarget, rowEl);
+    }
+
+    /**
+     * Adapts the height of the grid item (if any) to its content and returns a
+     * function restoring the grid item height.
+     *
+     * @param {HTMLElement} el the new content
+     * @param {Boolean} [shouldResizeGrid=true] `true` if the grid height should also
+     *   be adapted.
+     * @returns {Function} a function restoring the grid item state
+     */
+    adjustGridItem(el, shouldResizeGrid = true) {
+        const gridItemEl = el.closest(".o_grid_item");
+        if (gridItemEl && gridItemEl !== el && !this.config.isMobileView(gridItemEl)) {
+            const rowEl = gridItemEl.parentElement;
+            const { rowGap, rowSize } = getGridProperties(rowEl);
+            const { rowStart, rowEnd } = getGridItemProperties(gridItemEl);
+            const oldRowSpan = rowEnd - rowStart;
+
+            // Compute the new height.
+            const { borderTop, borderBottom, paddingTop, paddingBottom } =
+                window.getComputedStyle(gridItemEl);
+            const borderY = parseFloat(borderTop) + parseFloat(borderBottom);
+            const paddingY = parseFloat(paddingTop) + parseFloat(paddingBottom);
+            const height = gridItemEl.scrollHeight + borderY + paddingY;
+
+            const rowSpan = Math.ceil((height + rowGap) / (rowSize + rowGap));
+            gridItemEl.style.gridRowEnd = rowStart + rowSpan;
+            gridItemEl.classList.remove(`g-height-${oldRowSpan}`);
+            gridItemEl.classList.add(`g-height-${rowSpan}`);
+            if (shouldResizeGrid) {
+                resizeGrid(rowEl);
+            }
+
+            return () => {
+                // Restore the grid item height.
+                gridItemEl.style.gridRowEnd = rowEnd;
+                gridItemEl.classList.remove(`g-height-${rowSpan}`);
+                gridItemEl.classList.add(`g-height-${oldRowSpan}`);
+                if (shouldResizeGrid) {
+                    resizeGrid(rowEl);
+                }
+            };
+        }
+
+        return () => {};
+    }
+
+    //--------------------------------------------------------------------------
+    // DRAG AND DROP HANDLERS (from the sidebar)
+    //--------------------------------------------------------------------------
+
+    /**
+     * Returns the grid dropzone that overlaps with the given dropzone, if any.
+     *
+     * @param {HTMLElement} dropzoneEl the dropzone
+     * @returns {HTMLElement}
+     */
+    getOverlappingGridDropzone(dropzoneEl) {
+        const closestGridEl = dropzoneEl.closest(".o_grid_mode");
+        const gridDropzoneEl = closestGridEl && closestGridEl.querySelector(".oe_grid_zone");
+        return gridDropzoneEl;
+    }
+
+    /**
+     * Wraps the given element inside a grid item, makes the drag and drop use
+     * this item instead and returns it.
+     *
+     * @param {HTMLElement} el the element
+     * @param {HTMLElement} dropzoneEl the grid dropzone
+     * @param {Object} dragState the current drag state
+     * @returns {HTMLElement}
+     */
+    wrapInGridItem(el, dropzoneEl, dragState) {
+        // Create the grid item.
+        const columnEl = document.createElement("div");
+        columnEl.classList.add("o_grid_item", "col-lg-6", "g-col-lg-6", "g-height-1");
+        columnEl.style.gridArea = "1 / 1 / 2 / 7";
+        dropzoneEl.after(columnEl);
+        columnEl.append(el);
+        dragState.draggedEl = columnEl;
+
+        // Remove the padding/margins.
+        const { paddingToRemove, marginToRemove, marginToAdd } = dragState;
+        el.classList.remove(...paddingToRemove, ...marginToRemove);
+        el.classList.add(...marginToAdd);
+
+        // Adjust the grid item dimensions to its content and store them.
+        this.adjustGridItem(el, false);
+        const { rowStart, rowEnd, columnStart, columnEnd } = getGridItemProperties(columnEl);
+        dragState.columnSpan = columnEnd - columnStart;
+        dragState.rowSpan = rowEnd - rowStart;
+        return columnEl;
+    }
+
+    /**
+     * Called when we start dragging the snippet.
+     *
+     * @param {Object} - snippetEl: the dragged snippet
+     *                 - dragState: the current drag state
+     */
+    onSnippetDragged({ snippetEl, dragState }) {
+        // Store the padding and margin classes to remove/add them when needed.
+        const paddingRegex = /^((pt|pb)\d{1,3}$)/;
+        const marginRegex = /^((mt|my)-\d$)/;
+        const paddingClasses = [...snippetEl.classList].filter((c) => paddingRegex.test(c));
+        const marginClasses = [...snippetEl.classList].filter((c) => marginRegex.test(c));
+        Object.assign(dragState, {
+            paddingToRemove: paddingClasses,
+            marginToRemove: marginClasses,
+        });
+
+        // Check if CSS rules are potentially applying a top margin.
+        snippetEl.classList.remove(...paddingClasses, ...marginClasses);
+        this.document.body.appendChild(snippetEl);
+        const { marginTop } = getComputedStyle(snippetEl);
+        dragState.marginToAdd = parseInt(marginTop) ? ["mt-0"] : [];
+        snippetEl.remove();
+        snippetEl.classList.add(...paddingClasses, ...paddingClasses);
+    }
+
+    /**
+     * Called when the snippet is dragged over a dropzone.
+     *
+     * @param {Object}
+     */
+    onSnippetOverDropzone({ snippetEl, dragState }) {
+        const dropzoneEl = dragState.currentDropzoneEl;
+        if (!dropzoneEl.classList.contains("oe_grid_zone")) {
+            // If we are not over a grid dropzone, hide the grid dropzone that
+            // is overlapping with it (if any).
+            const gridDropzoneEl = this.getOverlappingGridDropzone(dropzoneEl);
+            if (gridDropzoneEl) {
+                gridDropzoneEl.classList.add("invisible");
+            }
+        } else {
+            // If we are over a grid dropzone, wrap the snippet inside a column and
+            // drag that column instead.
+            const columnEl = this.wrapInGridItem(snippetEl, dropzoneEl, dragState);
+            // Drag the column by the middle top.
+            dragState.mousePositionYOnElement = 0;
+            dragState.mousePositionXOnElement = columnEl.scrollWidth / 2;
+        }
+
+        this.onDropzoneOver({ draggedEl: dragState.draggedEl, dragState });
+    }
+
+    /**
+     * Called when the snippet is dragged out of a dropzone.
+     *
+     * @param {Object}
+     */
+    onSnippetOutDropzone({ snippetEl, dragState }) {
+        const dropzoneEl = dragState.currentDropzoneEl;
+        this.onDropzoneOut({ draggedEl: dragState.draggedEl, dragState });
+
+        if (!dropzoneEl.classList.contains("oe_grid_zone")) {
+            // If we were not over a grid dropzone, show back the hidden grid
+            // dropzone if any.
+            const gridDropzoneEl = this.getOverlappingGridDropzone(dropzoneEl);
+            if (gridDropzoneEl) {
+                gridDropzoneEl.classList.remove("invisible");
+            }
+        } else {
+            // If we were over a grid dropzone, unwrap the snippet.
+            dropzoneEl.after(snippetEl);
+            dragState.draggedEl.remove();
+            dragState.draggedEl = snippetEl;
+            // Restore the padding/margins.
+            const { paddingToRemove, marginToRemove, marginToAdd } = dragState;
+            snippetEl.classList.add(...paddingToRemove, ...marginToRemove);
+            snippetEl.classList.remove(...marginToAdd);
+        }
+    }
+
+    /**
+     * Called while moving the dragged element over a dropzone.
+     *
+     * @param {Object} - dragState: the current drag state.
+     *                 - x, y: the horizontal/vertical position of the helper
+     */
+    onSnippetMove({ dragState, x, y }) {
+        if (!dragState.overGrid) {
+            return;
+        }
+        this.onDragMove({ draggedEl: dragState.draggedEl, dragState, x, y });
+    }
+
+    /**
+     * Called when the snippet is dropped when over a dropzone.
+     *
+     * @param {Object} - droppedEl: the dropped element
+     *                 - dragState: the current drag state
+     */
+    onSnippetDroppedOver({ droppedEl, dragState }) {
+        const dropzoneEl = dragState.currentDropzoneEl;
+        if (!dropzoneEl.classList.contains("oe_grid_zone")) {
+            return;
+        }
+        this.onElementDroppedOver({ droppedEl, dragState });
+    }
+
+    /**
+     * Called when the snippet is dropped near a dropzone.
+     *
+     * @param {Object} - dropzoneEl: the closest dropzone
+     */
+    onSnippetDroppedNear({ droppedEl, dropzoneEl, dragState }) {
+        if (!dropzoneEl.classList.contains("oe_grid_zone")) {
+            return;
+        }
+        // If we are near a grid dropzone, wrap the snippet inside a column.
+        this.wrapInGridItem(droppedEl, dropzoneEl, dragState);
+        this.onElementDroppedNear({ droppedEl: dragState.draggedEl, dropzoneEl, dragState });
+    }
+
+    /**
+     * Called when the snippet is dropped in general.
+     *
+     * @param {Object}
+     */
+    onSnippetDropped({ snippetEl, dragState }) {
+        // Readjust the closest grid item (needed to compute its height without
+        // the inner dropzones).
+        if ("restoreGridItem" in dragState) {
+            dragState.restoreGridItem();
+            this.adjustGridItem(snippetEl);
+        }
     }
 
     //--------------------------------------------------------------------------
