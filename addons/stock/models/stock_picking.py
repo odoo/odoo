@@ -1263,7 +1263,9 @@ class StockPicking(models.Model):
             )
 
     def _check_move_lines_map_quant_package(self, package):
-        return package._check_move_lines_map_quant(self.move_line_ids.filtered(lambda ml: ml.package_id == package and ml.product_id.is_storable))
+        return package._check_move_lines_map_quant(self.move_line_ids.filtered(lambda ml:
+            ml.product_id.is_storable
+            and (ml.package_id == package or ml.package_id in package.all_children_package_ids)))
 
     def _get_entire_pack_location_dest(self, move_line_ids):
         location_dest_ids = move_line_ids.mapped('location_dest_id')
