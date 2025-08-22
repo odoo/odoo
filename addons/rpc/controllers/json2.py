@@ -32,16 +32,19 @@ class Json2RpcDispatcher(http.Dispatcher):
         return request.httprequest.mimetype in cls.mimetypes
 
     def dispatch(self, endpoint, args):
-        self.request.params = dict(args)
+        # "args" are the path parameters, "id" in /web/image/<id>
+        json = {}
         if self.request.httprequest.content_length:
             try:
-                self.request.params |= self.request.get_json_data()
+                json = self.request.get_json_data()
             except ValueError as exc:
                 e = f"could not parse the body as json: {exc.args[0]}"
                 raise BadRequest(e) from exc
-            except TypeError as exc:
-                e = "could not parse the body, expecting a json object"
-                raise BadRequest(e) from exc
+        try:
+            self.request.params = json | args
+        except TypeError:
+            self.request.params = dict(args)  # make a copy
+
         if self.request.db:
             result = self.request.registry['ir.http']._dispatch(endpoint)
         else:
