@@ -592,6 +592,7 @@ export class Composer extends Component {
             const divElement = document.createElement("div");
             divElement.setAttribute("data-o-mail-quote", "1");
             divElement.append(
+                document.createElement("br"),
                 document.createTextNode("-- "),
                 document.createElement("br"),
                 ...createElementWithContent("div", signature).childNodes
