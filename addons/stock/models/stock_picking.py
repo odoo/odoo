@@ -1873,7 +1873,7 @@ class StockPicking(models.Model):
             pack_move_lines = self.env['stock.move.line'].create(move_line_vals)
             pack_move_lines._apply_putaway_strategy()
             # Need to set the right package dest for now fully contained packages
-            self.move_line_ids.result_package_id._apply_package_dest_for_entire_packs()
+            self.move_line_ids.result_package_id._apply_package_dest_for_entire_packs(allowed_package_ids=all_package_ids)
             return True
         return False
 
