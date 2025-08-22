@@ -150,10 +150,10 @@ class ProductProduct(models.Model):
         for product in self:
             if product.cost_method == 'fifo' or product.standard_price == old_price.get(product):
                 continue
-            self.env['product.value'].create({
+            self.env['product.value'].sudo().create({
                 'product_id': product.id,
                 'value': product.standard_price,
-                'company_id': product.company_id or self.env.company.id,
+                'company_id': product.company_id.id or self.env.company.id,
                 'date': fields.Datetime.now(),
                 'description': _('Price update from %(old_price)s to %(new_price)s by %(user)s',
                     old_price=old_price, new_price=product.standard_price, user=self.env.user.name)
