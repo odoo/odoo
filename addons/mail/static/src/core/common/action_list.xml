@@ -58,12 +58,12 @@
         'o-danger': action.danger,
         'o-success': action.success,
     }).filter(([_, val]) => val).map(([key, _]) => key).join(' ')"/>
-    <t t-set="attrs" t-value="{ 'disabled': action.disabledCondition, 'title': action.name, 'name': action.id }"/>
+    <t t-set="attrs" t-value="{ 'disabled': action.disabledCondition, 'name': action.id }"/>
     <t t-if="action.component and action.componentCondition" t-component="action.component" t-props="action.componentProps"/>
-    <DropdownItem t-elif="props.dropdown" class="btnClass + ' d-flex align-items-center gap-1'" tag="'button'" onSelected="(ev) => action.onSelected(ev)">        
+    <DropdownItem t-elif="props.dropdown" class="btnClass + ' d-flex align-items-center gap-1'" tag="'button'" onSelected="(ev) => action.onSelected(ev)" attrs="attrs">
         <t t-call="mail.ActionList.actionContent"/>
     </DropdownItem>
-    <button t-else="" t-att-class="btnClass" t-att="attrs" t-on-click="(ev) => action.onSelected(ev)">
+    <button t-else="" t-att-class="btnClass" t-att="Object.assign(attrs, { 'title': action.name })" t-on-click="(ev) => action.onSelected(ev)">
         <t t-call="mail.ActionList.actionContent"/>
     </button>
 </t>

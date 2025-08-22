@@ -169,6 +169,16 @@ class ComposerAction extends Action {
         return composerActionsInternal.condition(this._component, this.id, this.explicitDefinition);
     }
 
+    get disabledCondition() {
+        return (
+            composerActionsInternal.disabledCondition(
+                this._component,
+                this.id,
+                this.explicitDefinition
+            ) ?? super.disabledCondition
+        );
+    }
+
     get isPicker() {
         return this.explicitDefinition.isPicker;
     }
@@ -200,6 +210,12 @@ export const composerActionsInternal = {
         return typeof action.condition === "function"
             ? action.condition(component)
             : action.condition;
+    },
+    disabledCondition(component, id, action) {
+        if (!action?.disabledCondition) {
+            return false;
+        }
+        return undefined;
     },
 };
 
