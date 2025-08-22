@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <record id="hr_holidays.menu_open_allocation" model="ir.ui.menu">
-        <field name="sequence">4</field>
-    </record>
-
     <record id="hr_leave_cash_out_filter" model="ir.ui.view">
         <field name="name">hr.leave.cash.out.filter</field>
         <field name="model">hr.leave.cash.out</field>
@@ -36,8 +32,6 @@
                 <filter domain="[('state', '=', 'confirm')]" string="First Approval" name="approve"/>
                 <filter domain="[('state', '=', 'validate1')]" string="Second Approval" name="second_approval"/>
                 <filter domain="[('state', '=', 'validate')]" string="Approved" name="validated"/>
-                <filter domain="[('state', '=', 'done')]" string="Done" name="done"/>
-                <filter domain="[('state', '=', 'paid')]" string="Paid" name="paid"/>
                 <filter domain="[('state', '=', 'refuse')]" string="Refused" name="refused"/>
                 <filter domain="[('state', '=', 'cancel')]" string="Canceled" name="canceled"/>
                 <group>
@@ -97,6 +91,7 @@
                     <button string="Validate" name="action_approve" invisible="not can_validate or can_approve or not id" type="object" class="oe_highlight"/>
                     <button string="Refuse" name="action_refuse" type="object" invisible="not can_refuse or not id"/>
                     <button string="Cancel" name="action_cancel" type="object" invisible="state == 'cancel' or not can_cancel or not id" />
+                    <button string="Back to Approval" name="action_back_to_approval" type="object" invisible="not can_back_to_approve or not id"/>
                     <field name="state" widget="statusbar" statusbar_visible="confirm,validate,validate1" invisible="validation_type != 'both'"/>
                     <field name="state" widget="statusbar" statusbar_visible="confirm,validate" invisible="validation_type == 'both'"/>
                 </header>
@@ -122,7 +117,7 @@
                                     options="{'no_create': True, 'request_type': 'leave'}"
                                     readonly="state not in ['confirm']"
                                 />
-                                <field name="create_date" class="oe_inline" string="Date" readonly="state not in ['confirm']" />
+                                <field name="leave_allocation_id" readonly="state not in ['confirm']"/>
                                 <label for="quantity"/>
                                 <div class="o_row">
                                     <field class="o_hr_narrow_field" name="quantity" readonly="state not in ['confirm']"/>
@@ -148,7 +143,7 @@
                 <attribute name="invisible">0</attribute>
             </field>
             <field name="leave_type_id" position="before">
-                <field name="company_id" groups="base.group_multi_company" readonly="state not in ['confirm']"/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </field>
         </field>
     </record>
@@ -185,21 +180,5 @@
         <field name="act_window_id" ref="hr_leave_action_cash_out_manager"/>
         <field name="view_id" ref="hr_leave_cash_out_form_manager"/>
     </record>
-
-    <menuitem
-        id="menu_cash_out_my"
-        name="My Leave Cash-out"
-        parent="hr_holidays.menu_hr_holidays_my_leaves"
-        action="hr_leave_action_cash_out_my"
-        sequence="3"
-    />
-
-    <menuitem
-        id="menu_cash_out_manger"
-        name="Cash-out"
-        parent="hr_holidays.menu_hr_holidays_management"
-        action="hr_leave_action_cash_out_manager"
-        sequence="6"
-    />
 
 </odoo>

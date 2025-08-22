@@ -122,6 +122,10 @@ class HrLeaveType(models.Model):
         help="If checked, users request can exceed the allocated days and balance can go in negative.")
     max_allowed_negative = fields.Integer(string="Maximum Excess Amount",
         help="Define the maximum level of negative days this kind of time off can reach. Value must be at least 1.")
+    allow_cash_out_request = fields.Boolean(default=False, string="Allow Cash Out Request",
+        help="Allow employee to request cash out for this leave type.")
+    allow_employee_request = fields.Boolean(default=False, string="Allow Employee Request",
+        help="Allow employee to request cash out for this leave type. If disabled, only managers can request cash out.")
 
     _check_negative = models.Constraint(
         'CHECK(NOT allows_negative OR max_allowed_negative > 0)',

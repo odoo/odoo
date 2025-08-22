@@ -10,18 +10,6 @@ class HrLeaveCashOut(models.Model):
     _inherit = ["mail.thread.main.attachment", "mail.activity.mixin"]
     _mail_post_access = "read"
 
-    @api.model
-    def default_get(self, fields_list):
-        defaults = super().default_get(fields_list)
-        if "leave_type_id" in fields_list:
-            domain = [('has_valid_allocation', '=', True), ('allow_cash_out_request', '=', True)]
-            if defaults.get('request_unit_hours'):
-                domain.append(('request_unit', '=', 'hour'))
-            lt = self.env['hr.leave.type'].search(domain, limit=1, order='sequence')
-            if lt:
-                defaults['leave_type_id'] = lt.id
-        return defaults
-
     employee_id = fields.Many2one(
         "hr.employee",
         string="Employee",
@@ -39,7 +27,7 @@ class HrLeaveCashOut(models.Model):
     )
     leave_type_id = fields.Many2one(
         "hr.leave.type",
-        compute='_compute_from_employee_id',
+        compute='_compute_leave_type_id',
         string="Time Off Type",
         required=True,
         store=True,
@@ -48,6 +36,14 @@ class HrLeaveCashOut(models.Model):
             ('has_valid_allocation', '=', True),
         ]""",
         tracking=True,
+    )
+    leave_allocation_id = fields.Many2one(
+        "hr.leave.allocation",
+        domain="""
+            [('employee_id', '=', employee_id), ('state', '=', 'validate'), ('holiday_status_id', '=', leave_type_id)]""",
+        tracking=True,
+        string="Allocation",
+        required=True,
     )
     state = fields.Selection(
         [
@@ -64,7 +60,6 @@ class HrLeaveCashOut(models.Model):
         readonly=False,
         default="confirm",
     )
-    create_date = fields.Date(default=fields.Date.context_today, copy=False, required=True)
     request_unit = fields.Selection(related="leave_type_id.request_unit")
     quantity = fields.Float(string="Quantity")
     company_id = fields.Many2one(
@@ -101,6 +96,9 @@ class HrLeaveCashOut(models.Model):
     can_refuse = fields.Boolean(
         compute="_compute_can_refuse", export_string_translation=False,
     )
+    can_back_to_approve = fields.Boolean(
+        compute="_compute_can_back_to_approve", export_string_translation=False,
+    )
 
     _quantity_check = models.Constraint(
         "CHECK ( quantity > 0 )",
@@ -119,12 +117,6 @@ class HrLeaveCashOut(models.Model):
                 msg = "The selected leave type should require allocation."
                 raise ValidationError(msg)
 
-            # The employee_id is set in the context because it's used in the _compute_valid
-            # function to compute the has_valid_allocation field.
-            if not record.leave_type_id.with_context(employee_id=self.employee_id).has_valid_allocation:
-                msg = "The selected leave type does have a valid allocation for the selected employee."
-                raise ValidationError(msg)
-
             if not record.leave_type_id.allow_employee_request and not is_officer:
                 msg = "Only an officer or an administrator can create a cash out request of this time off type."
                 raise ValidationError(msg)
@@ -135,19 +127,19 @@ class HrLeaveCashOut(models.Model):
             unit = self.env._("hours") if cash_out.request_unit == 'hour' else self.env._("days")
             cash_out.display_name = self.env._(
                 "%(person)s on %(leave_type)s: %(quantity)s %(unit)s",
-                person=cash_out.employee_id.name,
-                leave_type=cash_out.leave_type_id.name,
+                person=cash_out.employee_id.name or '',
+                leave_type=cash_out.leave_type_id.name or '',
                 quantity=cash_out.quantity,
                 unit=unit,
             )
 
     @api.depends("employee_id")
-    def _compute_from_employee_id(self):
+    def _compute_leave_type_id(self):
         for cash_out in self:
-            if not cash_out.leave_type_id.with_context(
-                employee_id=cash_out.employee_id.id,
-            ).has_valid_allocation:
-                cash_out.leave_type_id = False
+            if cash_out._origin.employee_id == cash_out.employee_id:
+                continue
+            cash_out.leave_type_id = False
+            cash_out.leave_allocation_id = False
 
     @api.depends("state", "employee_id")
     def _compute_can_approve(self):
@@ -176,6 +168,16 @@ class HrLeaveCashOut(models.Model):
         for cash_out in self:
             cash_out.can_cancel = cash_out._check_approval_update(
                 "cancel", raise_if_not_possible=False,
+            )
+
+    @api.depends("state", "employee_id")
+    def _compute_can_back_to_approve(self):
+        for cash_out in self:
+            cash_out.can_back_to_approve = (
+                cash_out.state == "validate"
+                and cash_out._check_approval_update(
+                    "confirm", raise_if_not_possible=False
+                )
             )
 
     def _get_employee_domain(self):
@@ -212,12 +214,11 @@ class HrLeaveCashOut(models.Model):
 
         user_employees = self.env.user.employee_ids
         is_own_leave = self.employee_id in user_employees
-        is_in_past = self.create_date < fields.Date.today()
 
         is_officer = self.env.user.has_group("hr_holidays.group_hr_holidays_user")
         is_time_off_manager = self.employee_id.leave_manager_id == self.env.user
 
-        if is_own_leave and (not is_in_past or is_officer):
+        if is_own_leave and is_officer:
             state_result["validate1"].add("cancel")
             state_result["validate"].add("cancel")
             state_result["refuse"].add("cancel")
@@ -412,6 +413,14 @@ is approved, validated or refused.",
             subtype_xmlid="mail.mt_note",
         )
         self.sudo().state = "cancel"
+        return True
+
+    def action_back_to_approval(self):
+        for cash_out in self:
+            if not cash_out.can_back_to_approve:
+                raise UserError(self.env._("This cash-out cannot be returned to approval."))
+            cash_out.write({'state': 'confirm'})
+            cash_out.activity_update()
         return True
 
     def _notify_manager(self):
@@ -627,7 +636,7 @@ is approved, validated or refused.",
 
         to_clean, to_do, to_do_confirm_activity = self.env['hr.leave.cash.out'], self.env['hr.leave.cash.out'], self.env['hr.leave.cash.out']
         activity_vals = []
-        model_id = self.env.ref('hr_holidays_cash_out.model_hr_leave_cash_out').id
+        model_id = self.env.ref('hr_holidays.model_hr_leave_cash_out').id
         confirm_activity = self.env.ref('hr_holidays.mail_act_leave_approval')
         approval_activity = self.env.ref('hr_holidays.mail_act_leave_second_approval')
         for cash_out in self:
