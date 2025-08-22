@@ -142,7 +142,7 @@ class TestTracking(MailCommon):
 
         def _track_subtype(self, init_values):
             return self.env.ref('mail.mt_note')
-        self.patch(self.registry('mail.test.ticket'), '_track_subtype', _track_subtype)
+        self.patch(self.registry['mail.test.ticket'], '_track_subtype', _track_subtype)
 
         def _track_template(self, changes):
             if 'email_from' in changes:
@@ -150,7 +150,7 @@ class TestTracking(MailCommon):
             elif 'container_id' in changes:
                 return {'container_id': (mail_templates[1], {'message_type': 'notification'})}
             return {}
-        self.patch(self.registry('mail.test.ticket'), '_track_template', _track_template)
+        self.patch(self.registry['mail.test.ticket'], '_track_template', _track_template)
 
         container = self.env['mail.test.container'].create({'name': 'Container'})
 
