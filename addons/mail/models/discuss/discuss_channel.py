@@ -868,6 +868,22 @@ class DiscussChannel(models.Model):
         self.ensure_one()
         return len(self.rtc_session_ids) == 1 and self.channel_type != "channel"
 
+    def _get_access_action(self, access_uid=None, force_website=False):
+        """ Redirect to Discuss instead of form view. """
+        self.ensure_one()
+        if not self.env.user._is_internal() or force_website:
+            return {
+                "type": "ir.actions.act_url",
+                "url": f"/discuss/channel/{self.id}",
+                "target": "self",
+                "target_type": "public",
+            }
+        return {
+            "type": "ir.actions.act_url",
+            "url": f"/odoo/action-mail.action_discuss?active_id={self.id}",
+            "target": "self",
+        }
+
     # ------------------------------------------------------------
     # BROADCAST
     # ------------------------------------------------------------

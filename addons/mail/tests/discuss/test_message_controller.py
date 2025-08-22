@@ -370,7 +370,7 @@ class TestMessageLinks(MailCommon, HttpCase):
             self.assertEqual(res.url, expected_url)
         with self.subTest(private_message_id=private_message_id):
             res = self.url_open(f'/mail/message/{private_message_id}')
-            self.assertEqual(res.status_code, 401)
+            self.assertEqual(res.status_code, 404)
 
     @users('employee')
     def test_message_link_by_public(self):
