@@ -5780,6 +5780,37 @@ class AccountMove(models.Model):
             return autopost_bills_wizard
         return False
 
+    def action_validate_moves_with_confirmation(self):
+        """
+        If 'restrict_mode_hash_table' is enabled or future-dated moves, open a confirmation wizard;
+        otherwise, validate moves directly.
+        """
+        draft_moves = self.filtered(lambda m: m.state == 'draft' and m.line_ids)
+        if not draft_moves:
+            raise UserError(_('There are no journal items in the draft state to post.'))
+
+        need_confirmation_moves = draft_moves.filtered(lambda move:
+            (move.date or move.invoice_date) > fields.Date.context_today(self)
+            or move.restrict_mode_hash_table
+        )
+        direct_validate_moves = draft_moves - need_confirmation_moves
+        if direct_validate_moves:
+            direct_validate_moves._post(soft=False)
+        if need_confirmation_moves:
+            wizard = self.env['validate.account.move'].create({
+                'move_ids': [Command.set(need_confirmation_moves.ids)],
+            })
+            return {
+                'name': _("Confirm Entries"),
+                'type': 'ir.actions.act_window',
+                'res_model': 'validate.account.move',
+                'res_id': wizard.id,
+                'view_mode': 'form',
+                'view_id': self.env.ref('account.validate_account_move_view').id,
+                'target': 'new',
+            }
+        return False
+
     def js_assign_outstanding_line(self, line_id):
         ''' Called by the 'payment' widget to reconcile a suggested journal item to the present
         invoice.

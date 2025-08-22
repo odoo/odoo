@@ -9,11 +9,12 @@
             <field name="arch" type="xml">
                 <form string="Confirm Entries">
                     <field name="move_ids" invisible="1"/>
-                    <h2 class="mb-4">
-                        Validating
+                    <h4 class="mb-4">
+                        The selected
                         <t invisible="not is_entries"> entries </t>
                         <t invisible="is_entries"> invoices </t>
-                        is a key action. Have you reviewed everything?</h2>
+                        will be posted. Some of them may be future-dated or require hashing,</h4>
+                    <h4>and will not be posted automatically.</h4>
                     <group invisible="not display_force_post">
                         <field name="display_force_post" invisible="1"/>
                         <div colspan="2">
@@ -22,6 +23,14 @@
                             <t invisible="is_entries"> invoices </t>
                             will auto-confirm on their respective dates.
                             <field name="force_post" class="oe_inline"/><label for="force_post" string="Confirm them now"/>
+                        </div>
+                    </group>
+                    <group invisible="not display_force_hash">
+                        <div colspan="2"> Some
+                            <t invisible="not is_entries"> entries </t>
+                            <t invisible="is_entries"> invoices </t>
+                            will be secured with hash.
+                            <field name="force_hash" class="oe_inline"/><label for="force_hash" string="Yes, confirm and secure them now."/>
                         </div>
                     </group>
                     <group invisible="not abnormal_date_partner_ids">
@@ -58,17 +67,14 @@
             </field>
         </record>
 
-        <record id="action_validate_account_move" model="ir.actions.act_window">
+        <record id="action_validate_account_moves" model="ir.actions.server">
             <field name="name">Confirm Entries</field>
-            <field name="res_model">validate.account.move</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="validate_account_move_view"/>
-            <field name="context">{}</field>
-            <field name="target">new</field>
-            <field name="help">This wizard will validate all journal entries selected. Once journal entries are validated, you can not update them anymore.</field>
-            <field name="group_ids" eval="[(4, ref('account.group_account_invoice'))]"/>
+            <field name="model_id" ref="account.model_account_move" />
+            <field name="group_ids" eval="[(4, ref('account.group_account_invoice'))]" />
             <field name="binding_model_id" ref="account.model_account_move" />
             <field name="binding_view_types">list,kanban</field>
+            <field name="state">code</field>
+            <field name="code">action = records.action_validate_moves_with_confirmation()</field>
         </record>
 
     </data>
