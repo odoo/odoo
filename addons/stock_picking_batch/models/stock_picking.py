@@ -298,6 +298,10 @@ class StockPicking(models.Model):
             description_items.append(self.location_dest_id.display_name)
         return ', '.join(description_items)
 
+    def _add_to_wave_post_picking_split_hook(self):
+        # Hook meant to be overriden
+        pass
+
     def assign_batch_user(self, user_id):
         pickings = self.filtered(lambda p: p.user_id.id != user_id)
         pickings.write({'user_id': user_id})
