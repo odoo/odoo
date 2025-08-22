@@ -226,8 +226,14 @@ export class GridLayoutPlugin extends Plugin {
     wrapInGridItem(el, dropzoneEl, dragState) {
         // Create the grid item.
         const columnEl = document.createElement("div");
-        columnEl.classList.add("o_grid_item", "col-lg-6", "g-col-lg-6", "g-height-1");
-        columnEl.style.gridArea = "1 / 1 / 2 / 7";
+        const columnSpan = dragState.snippet.gridColumnSpan || 6;
+        columnEl.classList.add(
+            "o_grid_item",
+            `col-lg-${columnSpan}`,
+            `g-col-lg-${columnSpan}`,
+            "g-height-1"
+        );
+        columnEl.style.gridArea = `1 / 1 / 2 / ${columnSpan + 1}`;
         dropzoneEl.after(columnEl);
         columnEl.append(el);
         dragState.draggedEl = columnEl;
@@ -239,8 +245,8 @@ export class GridLayoutPlugin extends Plugin {
 
         // Adjust the grid item dimensions to its content and store them.
         this.adjustGridItem(el, false);
-        const { rowStart, rowEnd, columnStart, columnEnd } = getGridItemProperties(columnEl);
-        dragState.columnSpan = columnEnd - columnStart;
+        const { rowStart, rowEnd } = getGridItemProperties(columnEl);
+        dragState.columnSpan = columnSpan;
         dragState.rowSpan = rowEnd - rowStart;
         return columnEl;
     }

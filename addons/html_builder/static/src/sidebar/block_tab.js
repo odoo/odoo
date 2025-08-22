@@ -315,7 +315,7 @@ export class BlockTab extends Component {
                 });
 
                 // The dragged element may change while dragging.
-                Object.assign(this.dragState, { draggedEl: snippetEl, snippetEl });
+                Object.assign(this.dragState, { draggedEl: snippetEl, snippetEl, snippet });
 
                 // Add the dropzones.
                 const withGrids =
