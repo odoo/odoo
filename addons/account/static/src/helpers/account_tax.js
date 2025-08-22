@@ -1723,6 +1723,7 @@ export const accountTaxHelpers = {
                 price_unit: base_line.quantity * price_unit_after_discount,
                 quantity: 1.0,
                 discount: 0.0,
+                manual_tax_amounts: null,
             });
             const raw_grouping_key = {
                 tax_ids: new_base_line.tax_ids.map((tax) => tax.id),
@@ -1840,7 +1841,7 @@ export const accountTaxHelpers = {
                 const base_line = target_factor.base_line;
                 const tax_details = base_line.tax_details;
                 const taxes_data = tax_details.taxes_data;
-                if (delta_currency.id === currency.id) {
+                if (delta_suffix === '_currency') {
                     base_line.price_unit +=
                         amount_to_distribute / Math.abs(base_line.quantity || 1.0);
                 }
