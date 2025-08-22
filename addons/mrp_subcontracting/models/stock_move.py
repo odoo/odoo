@@ -320,6 +320,11 @@ class StockMove(models.Model):
         # Cancel productions until reach new_quantity
         for production in (productions - wip_production):
             if float_compare(quantity_to_remove, production.product_qty, precision_rounding=production.product_uom_id.rounding) >= 0:
+                if len(productions + wip_production) == 1:
+                    production.qty_producing = 0
+                    production.subcontracting_has_been_recorded = False
+                    production._set_qty_producing()
+                    break  # Never cancel the last MO if there's still a subcontracting move
                 quantity_to_remove -= production.product_qty
                 production.with_context(skip_activity=True).action_cancel()
             else:
