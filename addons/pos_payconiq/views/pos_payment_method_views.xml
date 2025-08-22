@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form_inherit_payconiq" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.payconiq</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='use_payment_terminal']" position="after">
+                <field name="payconiq_api_key" password="True" invisible="use_payment_terminal != 'payconiq'" required="use_payment_terminal == 'payconiq'"/>
+                <field name="payconiq_ppid" invisible="use_payment_terminal != 'payconiq'" required="use_payment_terminal == 'payconiq'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

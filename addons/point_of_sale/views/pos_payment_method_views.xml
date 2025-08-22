@@ -10,6 +10,45 @@
                     <field name="active" invisible="1"/>
                     <field name="type" invisible="1"/>
                     <field name="default_pos_receivable_account_name" invisible="1" />
+                    <div class="accordion-item alert alert-warning d-flex align-items-start gap-2 pb-0" role="alert" invisible="not (payment_method_type == 'external_qr' and external_qr_usage == 'sticker')">
+                        <i class="fa mt-1 fa-exclamation-triangle" aria-hidden="true" title="warning"></i>
+                        <div>
+                            <div class="accordion-header cursor-pointer d-flex collapsed" data-bs-toggle="collapse" data-bs-target="#alert-sticker" aria-controls="alert-sticker">
+                                <div class="flex-grow-1">
+                                    <strong class='d-block fs-4'>A static QR code must not be shared across multiple checkouts.</strong>
+                                    <p>
+                                        This type of QR code is tied to a specific payment method within a given Point of Sale configuration.
+                                        If multiple orders are sent at the same time to the same QR code, the system can no longer reliably match the received payment to the correct order.
+                                    </p>
+                                </div>
+                                <div class="accordion-item-chevron d-flex mx-2 align-items-center fs-3">
+                                    <i class="fa fa-chevron-down" aria-hidden="true" title="Expand/Collapse"></i>
+                                </div>
+                            </div>
+                            <div id="alert-sticker" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <p>
+                                        <strong class='d-block fs-5'>Example:</strong>
+                                        You have a food truck with two checkout counters, but only one payment method using the same sticker.
+                                        If two orders are sent simultaneously to this QR code, it's no longer possible to confidently associate the scanned payment with the right order — which can result in a customer paying for someone else’s order.
+                                    </p>
+
+                                    <p>
+                                        <strong class='d-block fs-5'>To avoid this situation:</strong>
+                                        <ul>
+                                            <li>Duplicate the payment method and use one for each checkout counter.</li>
+                                            <li>Or set up a separate Point of Sale for each checkout, each with its own payment method.</li>
+                                        </ul>
+                                    </p>
+
+                                    <p>
+                                        The goal is to have <strong>one QR sticker per checkout.</strong>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="d-flex justify-content-between">
                         <div class="oe_title">
                             <label for="name"/>
@@ -33,8 +72,12 @@
                                 <field name="payment_method_type" />
                                 <field name="use_payment_terminal" string="Integrate with" invisible="hide_use_payment_terminal"/>
                                 <field name="qr_code_method" invisible="hide_qr_code_method" required="payment_method_type == 'qr_code'"/>
+                                <field name="external_qr_usage" invisible="not (use_payment_terminal and payment_method_type == 'external_qr')"/>
+                                <field name="external_qr_sticker_size" invisible="not (use_payment_terminal and payment_method_type == 'external_qr' and external_qr_usage == 'sticker')"/>
+                                <button name="download_sticker" type="object" string="Download Sticker" class="btn btn-primary" invisible="not (use_payment_terminal and payment_method_type == 'external_qr' and external_qr_usage == 'sticker')"/>
                             </group>
-                            <widget name="pos_payment_provider_cards" invisible="use_payment_terminal or payment_method_type != 'terminal'" />
+                            <widget name="pos_payment_provider_cards" options="{ 'payment_method_types': ['terminal']}" invisible="not (payment_method_type == 'terminal' and not use_payment_terminal)" />
+                            <widget name="pos_payment_provider_cards" options="{ 'payment_method_types': ['external_qr']}" invisible="not (payment_method_type == 'external_qr' and not use_payment_terminal)" />
                         </div>
                     </group>
                 </sheet>
@@ -68,7 +111,7 @@
                 <field name="name"/>
                 <field name="receivable_account_id" groups="account.group_account_readonly" />
                 <group>
-                    <filter name="group_by_receivable_account" string="Account" domain="[]"  context="{'group_by':'receivable_account_id'}"/>
+                    <filter name="group_by_receivable_account" string="Account" domain="[]" context="{'group_by':'receivable_account_id'}"/>
                     <filter name="group_by_pos_config" string="Point of Sale" domain="[]" context="{'group_by':'config_ids'}"/>
                     <filter name="group_by_method_name" string="Method Name" domain="[]" context="{'group_by':'name'}"/>
                     <filter name="group_by_journal_id" string="Journal" domain="[]" context="{'group_by':'journal_id'}"/>

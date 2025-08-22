@@ -18,6 +18,7 @@ export class PaymentScreenPaymentLines extends Component {
         sendPaymentCancel: Function,
         sendPaymentRequest: Function,
         sendPaymentReverse: Function,
+        sendPaymentConfirm: Function,
         updateSelectedPaymentline: Function,
         isRefundOrder: Boolean,
     };

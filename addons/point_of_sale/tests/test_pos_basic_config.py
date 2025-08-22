@@ -1406,3 +1406,33 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertEqual(len(product_data['_archived_combinations']), 1, "There should be one archived combination for the product")
         self.assertEqual(len(product_data['_archived_combinations'][0]), 2, "Archived combination should have two values")
         self.assertTrue(all(value in product_data['_archived_combinations'][0] for value in first_variant.product_template_attribute_value_ids.ids), "Archived combination should match the first variant's attribute values")
+
+    def test_auto_switch_payment_method_type(self):
+        pm = self.env['pos.payment.method'].create({
+            'name': 'Temp Payment Method',
+            'journal_id': self.company_data['default_journal_cash'].id,
+            'receivable_account_id': self.pos_receivable_cash.id,
+            'company_id': self.env.company.id,
+            'payment_method_type': 'terminal',
+            'use_payment_terminal': '__test_terminal_1__',
+        })
+
+        pm.use_payment_terminal = '__test_terminal_2__'
+        pm._onchange_use_payment_terminal()
+        self.assertEqual(pm.payment_method_type, 'terminal', "Payment method type should remain 'terminal' when switching between terminals")
+        self.assertEqual(pm.use_payment_terminal, '__test_terminal_2__', "Payment terminal should be updated to 'adyen'")
+
+        pm.payment_method_type = 'external_qr'
+        pm._onchange_payment_method_type()
+        self.assertEqual(pm.payment_method_type, 'external_qr', "Payment method type should be updated to 'external_qr'")
+        self.assertEqual(pm.use_payment_terminal, False, "Payment terminal should be removed when switching to 'external_qr'")
+
+        pm.use_payment_terminal = '__test_terminal_1__'
+        pm._onchange_use_payment_terminal()
+        self.assertEqual(pm.payment_method_type, 'terminal', "Payment method type should be updated back to 'terminal' when adding a terminal")
+        self.assertEqual(pm.use_payment_terminal, '__test_terminal_1__', "Payment terminal should be updated back to '__test_terminal_1__'")
+
+        pm.use_payment_terminal = False
+        pm._onchange_use_payment_terminal()
+        self.assertEqual(pm.payment_method_type, 'terminal', "Payment method type should remain 'terminal' when removing terminal")
+        self.assertEqual(pm.use_payment_terminal, False, "Payment terminal should be removed")
