@@ -3076,6 +3076,7 @@ class AccountTax(models.Model):
                 price_unit=base_line['quantity'] * price_unit_after_discount,
                 quantity=1.0,
                 discount=0.0,
+                manual_tax_amounts=None,
             )
             grouping_key = {
                 'tax_ids': new_base_line['tax_ids'],
@@ -3202,7 +3203,7 @@ class AccountTax(models.Model):
                 base_line = target_factor['base_line']
                 tax_details = base_line['tax_details']
                 taxes_data = tax_details['taxes_data']
-                if delta_currency == currency:
+                if delta_suffix == '_currency':
                     base_line['price_unit'] += amount_to_distribute / abs(base_line['quantity'] or 1.0)
                 if not taxes_data:
                     continue
