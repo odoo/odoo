@@ -418,8 +418,8 @@
                     <filter name="draft_rfqs" string="New" domain="[('state', '=', 'draft')]"/>
                     <filter name="waiting_rfqs" string="Sent" domain="[('state', '=', 'sent')]"/>
                     <filter name="late" string="Late" domain="[('state', 'in', ['draft', 'sent', 'to approve']),('date_order', '&lt;', datetime.datetime.now())]"/>
-                    <filter name="not_acknowledged" string="Not Acknowledged" domain="[('state', '=', 'purchase'), ('acknowledged', '=', False)]"/>
-                    <filter name="late_receipt" string="Late Receipts" domain="[('is_late', '=', True)]"/>
+                    <filter name="not_acknowledged" string="Not Acknowledged" domain="[('state', 'in', ['purchase', 'done']), ('acknowledged', '=', False)]"/>
+                    <filter name="late_receipt" string="Late Receipts" domain="[('state', 'in', ['purchase', 'done']), ('is_late', '=', True)]"/>
                     <separator/>
                     <filter invisible="1" string="My Activities" name="filter_activities_my"
                         domain="[('activity_user_id', '=', uid)]"/>

@@ -9,6 +9,7 @@ from markupsafe import escape, Markup
 from werkzeug.urls import url_encode
 
 from odoo import api, Command, fields, models, _
+from odoo.fields import Domain
 from odoo.osv import expression
 from odoo.tools import format_amount, format_date, formatLang, groupby, OrderedSet, SQL
 from odoo.tools.float_utils import float_is_zero, float_repr
@@ -303,10 +304,18 @@ class PurchaseOrder(models.Model):
             self.order_line.filtered(lambda line: not line.display_type).date_planned = self.date_planned
 
     def _search_is_late(self, operator, value):
-        if operator != 'in':
-            return NotImplemented
-        purchase_domain = [('state', '=', 'purchase'), ('date_planned', '<=', fields.Datetime.now())]
-        return [('order_line', 'any', [('order_id', 'any', purchase_domain), ('qty_received', '<', SQL('product_qty'))])]
+        if operator not in ["=", "!="]:
+            raise ValidationError(self.env._("Unsupported operator"))
+        purchase_ids = self._search(self._get_domain_is_late(operator, value))
+        if operator == "=" and value or operator == "!=" and not value:
+            purchase_lines_late = self.env['purchase.order.line'].search([('order_id', 'in', purchase_ids), ('qty_received', '<', SQL('product_qty'))])
+            return [('id', 'in', purchase_lines_late.order_id.ids)]
+        else:
+            purchase_lines_on_time = self.env['purchase.order.line'].search([('order_id', 'in', purchase_ids), ('qty_received', '>=', SQL('product_qty'))])
+            return [('id', 'in', purchase_lines_on_time.order_id.ids)]
+
+    def _get_domain_is_late(self, operator, value):
+        return Domain([('state', '=', 'purchase'), ('date_planned', '<=', fields.Datetime.now())])
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -922,11 +931,11 @@ class PurchaseOrder(models.Model):
         rfq_late_group = self.env['purchase.order']._read_group(rfq_late_domain, groupby, aggregate)
         _update('late', result, rfq_late_group)
 
-        rfq_not_acknowledge = [('state', '=', 'purchase'), ('acknowledged', '=', False)]
+        rfq_not_acknowledge = [('state', 'in', ['purchase', 'done']), ('acknowledged', '=', False)]
         rfq_not_acknowledge_group = self.env['purchase.order']._read_group(rfq_not_acknowledge, groupby, aggregate)
         _update('not_acknowledged', result, rfq_not_acknowledge_group)
 
-        rfq_late_receipt = [('is_late', '=', True)]
+        rfq_late_receipt = [('state', 'in', ['purchase', 'done']), ('is_late', '=', True)]
         rfq_late_receipt_group = self.env['purchase.order']._read_group(rfq_late_receipt, groupby, aggregate)
         _update('late_receipt', result, rfq_late_receipt_group)
 
