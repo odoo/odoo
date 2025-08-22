@@ -243,7 +243,7 @@ describe("popover should switch UI depending on editing state", () => {
         await click(".o_advance_option_panel .fa-angle-left");
         await waitFor(".o-we-linkpopover");
         await contains(".o_we_apply_link").click();
-        expect (cleanLinkArtifacts(getContent(el))).toBe(
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>this is a <a href="http://test.com/" rel="noopener" target="_blank">li[]nk</a></p>'
         );
     });
@@ -1167,6 +1167,34 @@ describe("shortcut", () => {
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p><a href="https://test.com">li[]nk</a></p>'
         );
+    });
+    test("should trap focus within link popover when using Tab and Shift+Tab", async () => {
+        await setupEditor(`<p><a>li[]nk</a></p>`);
+        await expectElementCount(".o-we-linkpopover", 1);
+
+        // Tab through all focusable elements
+        await press("Tab");
+        await animationFrame();
+        expect(".o_we_href_input_link").toBeFocused();
+        await press("Tab");
+        await animationFrame();
+        expect("select[name='link_type']").toBeFocused();
+        await press("Tab");
+        await animationFrame();
+        expect(".form-check-input").toBeFocused();
+        await press("Tab");
+        await animationFrame();
+        expect(".o_we_discard_link").toBeFocused();
+
+        // One more Tab should wrap to first element
+        await press("Tab");
+        await animationFrame();
+        expect(".o_we_label_link").toBeFocused();
+
+        // Shift+Tab should wrap to Last element
+        await press(["Shift", "Tab"]);
+        await animationFrame();
+        expect(".o_we_discard_link").toBeFocused();
     });
 });
 
