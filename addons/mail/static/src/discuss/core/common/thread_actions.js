@@ -109,8 +109,8 @@ registerThreadAction("invite-people", {
             component.props.chatWindow ? "bg-inherit" : ""
         } bg-100 border border-secondary`;
     },
-    icon: "fa fa-fw fa-user-plus",
-    iconLarge: "fa fa-fw fa-lg fa-user-plus",
+    icon: "oi oi-fw oi-user-plus",
+    iconLarge: "oi oi-fw oi-large oi-user-plus",
     name: _t("Invite People"),
     open(component, action) {
         if (component.isDiscussSidebarChannelActions) {
@@ -164,8 +164,8 @@ registerThreadAction("member-list", {
         );
     },
     panelOuterClass: "o-discuss-ChannelMemberList bg-inherit",
-    icon: "fa fa-fw fa-users",
-    iconLarge: "fa fa-fw fa-lg fa-users",
+    icon: "oi oi-fw oi-users",
+    iconLarge: "oi oi-fw oi-large oi-users",
     name: _t("Members"),
     close(component) {
         if (component.env.inDiscussApp) {
