@@ -957,3 +957,62 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             # Receivable line:
             {'tax_ids': [],                     'analytic_distribution': False,                                 'balance': 3375.0},
         ])
+
+    def test_down_payment_with_global_discount(self):
+        """ This test checks that the down payment invoice lines are
+        correctly computed when a global discount is applied to the sale order.
+
+        Test data:
+        - A single sale order line with a 14,990.00 price and a 0% tax.
+        - A global discount of 990.00 is applied to the sale order.
+        - A down payment invoice of 1,000.00 is created.
+
+        Assert that the down payment invoice has one line for 1070.71
+        and one line for -70.71.
+        """
+        self.product_category.property_account_downpayment_categ_id = self.company_data['default_account_assets']
+        product = self.company_data['product_order_cost']
+        tax_0 = self.percent_tax(0.0)
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': 'line_1',
+                    'product_id': product.id,
+                    'price_unit': 14990.00,
+                    'tax_ids': [Command.set(tax_0.ids)],
+                }),
+            ],
+        })
+        so.action_confirm()
+        self.assertRecordValues(so, [{
+            'amount_untaxed': 14990.00,
+            'amount_tax': 0.0,
+            'amount_total': 14990.00,
+        }])
+
+        # Put a discount of 990.00 on the sale order.
+        wizard = self.env['sale.order.discount'].create({
+            'sale_order_id': so.id,
+            'discount_type': 'amount',
+            'discount_amount': 990.00,
+        })
+        wizard.action_apply_discount()
+
+        # Create a down payment invoice for 1,000.00.
+        wizard = (
+            self.env['sale.advance.payment.inv']
+            .with_context(active_model=so._name, active_ids=so.ids)
+            .create({
+                'advance_payment_method': 'fixed',
+                'fixed_amount': 1000.00,
+            })
+        )
+        action_values = wizard.create_invoices()
+        dp_invoice = self.env['account.move'].browse(action_values['res_id'])
+        dp_invoice.action_post()
+        self.assertRecordValues(dp_invoice.invoice_line_ids, [
+            {'price_unit': 1070.71, 'price_subtotal': 1070.71, 'balance': -1070.71},
+            {'price_unit': -70.71, 'price_subtotal': -70.71, 'balance': 70.71},
+        ])
