@@ -317,10 +317,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
         """ Return the model with the given name or raise KeyError if it doesn't exist."""
         return self.models[model_name]
 
-    def __call__(self, model_name: str) -> type[BaseModel]:
-        """ Same as ``self[model_name]``. """
-        return self.models[model_name]
-
     def __setitem__(self, model_name: str, model: type[BaseModel]):
         """ Add or replace a model in the registry."""
         self.models[model_name] = model
