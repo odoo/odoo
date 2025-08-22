@@ -299,6 +299,18 @@ class AccountMove(models.Model):
             elif self.company_id.l10n_jo_edi_taxpayer_type == 'special' and len(line.tax_ids) != 2:
                 error_msgs.append(_("One special and one general tax per invoice line is expected for taxpayers registered in the special tax"))
 
+        missing_fields = [
+            field for field, condition in [
+                (_("TIN"), not self.company_id.vat),
+                (_("Country (must be Jordan!)"), not self.company_id.country_id)
+            ] if condition
+        ]
+
+        if missing_fields:
+            error_msgs.append(_("Please define the following for %(company)s: %(missing_fields)s", company=self.company_id.name, missing_fields=", ".join(missing_fields)))
+        if self.company_id.country_id and self.company_id.country_code != 'JO':
+            error_msgs.append(_("%(company)s's Country must be Jordan", company=self.company_id.name))
+
         return "\n".join(error_msgs)
 
     def _mark_sent_jo_edi(self):
