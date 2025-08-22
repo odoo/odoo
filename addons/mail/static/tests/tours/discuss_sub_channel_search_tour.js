@@ -109,14 +109,17 @@ registry.category("web_tour.tours").add("create_thread_for_attachment_without_bo
             },
         },
         {
+            trigger: '.o-mail-AttachmentContainer:not(.o-isUploading):contains("file2.txt")',
+        },
+        {
             content: "Click on send button",
-            trigger: ".o-mail-Composer-mainActions [title='Send']",
+            trigger: ".o-mail-Composer-mainActions [title='Send']:enabled",
             run: "click",
         },
         {
             content: "Hover on attachment",
             trigger:
-                '.o-mail-Message:not(:has(.o-mail-Message-pendingProgress)) .o-mail-AttachmentCard:contains("file2.txt")',
+                '.o-mail-Message:not(:has(.o-mail-Message-pendingProgress)) .o-mail-AttachmentContainer:contains("file2.txt")',
             run: "hover",
         },
         {

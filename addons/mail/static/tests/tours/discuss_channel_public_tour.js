@@ -56,7 +56,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             },
         },
         {
-            trigger: '.o-mail-AttachmentContainer[title="text.txt"]:not(.o-isUploading)',
+            trigger: ".o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt)",
         },
         {
             content: "Add an image file in composer",
@@ -78,7 +78,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             },
         },
         {
-            trigger: '.o-mail-AttachmentContainer[title="image.png"]:not(.o-isUploading)',
+            trigger: '.o-mail-AttachmentContainer:not(.o-isUploading)[title="image.png"]',
             async run() {
                 /** @type {import("models").Store} */
                 const store = odoo.__WOWL_DEBUG__.root.env.services["mail.store"];
@@ -176,12 +176,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         },
         {
             trigger:
-                ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading)", // waiting the attachment to be uploaded
-        },
-        {
-            content: "Check the earlier provided extra attachment is listed",
-            trigger:
-                '.o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer[title="extra.txt"]',
+                ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading):contains(extra.txt)",
         },
         {
             content: "Save edited message",

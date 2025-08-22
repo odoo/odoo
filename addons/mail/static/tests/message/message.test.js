@@ -1246,7 +1246,7 @@ test("allow attachment delete on authored message", async () => {
     await click("button[title='Remove']");
     await contains(".modal-dialog .modal-body", { text: 'Do you really want to delete "BLAH"?' });
     await click(".modal-footer .btn-primary");
-    await contains(".o-mail-AttachmentCard", { count: 0 });
+    await contains(".o-mail-AttachmentImage", { count: 0 });
 });
 
 test("prevent attachment delete on non-authored message in channels", async () => {
