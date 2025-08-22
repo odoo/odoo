@@ -12,7 +12,7 @@
                 </div>
                 <div t-else="" class="d-flex">
                     <div class="col p-2" style="max-width: 270px;">
-                        <div class="input-group mb-1" t-att-class="{'d-none': !state.showLabel}">
+                        <div class="input-group mb-2" t-att-class="{'d-none': !state.showLabel}">
                             <input t-ref="label"
                                 class="o_we_label_link border-dark-subtle form-control form-control-sm"
                                 t-model="state.label"
@@ -20,7 +20,7 @@
                                 placeholder="Add a label for your link"
                                 t-on-input="onChange"/>
                         </div>
-                        <div class="input-group mb-1">
+                        <div class="input-group mb-2">
                             <input t-ref="url"
                                 name="o_linkpopover_url"
                                 class="o_we_href_input_link border-dark-subtle form-control form-control-sm"
