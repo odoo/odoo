@@ -1047,12 +1047,12 @@ class PosOrder(models.Model):
             line.filtered(lambda l: not l.reconciled).reconcile()
 
     def action_pos_order_invoice(self):
-        if len(self.company_id) > 1:
-            raise UserError(_("You cannot invoice orders belonging to different companies."))
-        self.write({'to_invoice': True})
-        if self.company_id.anglo_saxon_accounting and self.session_id.update_stock_at_closing and self.session_id.state != 'closed':
-            self._create_order_picking()
-        move = self._generate_pos_order_invoice()
+        self.ensure_one()
+        if not (move := self.account_move):
+            self.write({'to_invoice': True})
+            if self.company_id.anglo_saxon_accounting and self.session_id.update_stock_at_closing and self.session_id.state != 'closed':
+                self._create_order_picking()
+            move = self._generate_pos_order_invoice()
         return {
             'name': _('Customer Invoice'),
             'view_mode': 'form',
@@ -1068,6 +1068,8 @@ class PosOrder(models.Model):
         return {"skip_invoice_sync": True}
 
     def _generate_pos_order_invoice(self):
+        if not self.env['res.company']._with_locked_records(self, allow_raising=False):
+            raise UserError(_("Some orders are already being invoiced. Please try again later."))
         self.state = 'done'
 
         company = self.company_id
