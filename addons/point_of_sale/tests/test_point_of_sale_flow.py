@@ -2586,6 +2586,72 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         pos_order.action_pos_order_invoice()
         self.assertEqual(pos_order.state, 'invoiced')
 
+    def test_order_refund_lot_valuated(self):
+        product2 = self.env['product.product'].create({
+            'name': 'Product B',
+            'is_storable': True,
+            'tracking': 'lot',
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'available_in_pos': True,
+            'lot_valuated': True,
+            'lst_price': 500.0
+        })
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': product2.id,
+            'inventory_quantity': 10,
+            'location_id': self.env.user._get_default_warehouse_id().lot_stock_id.id,
+            'lot_id': self.env['stock.lot'].create({'name': '1001', 'product_id': product2.id}).id,
+        }).sudo().action_apply_inventory()
+
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
+        # I create a new PoS order with 2 lines
+        order = self.PosOrder.create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': self.partner1.id,
+            'pricelist_id': self.partner1.property_product_pricelist.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': product2.id,
+                'price_unit': 500,
+                'discount': 0,
+                'qty': 1.0,
+                'tax_ids': [],
+                'price_subtotal': 500,
+                'price_subtotal_incl': 500,
+                'pack_lot_ids': [Command.create({'lot_name': '1001'})]
+            })],
+            'amount_total': 500.0,
+            'amount_tax': 0.0,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+            'last_order_preparation_change': '{}'
+        })
+
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.PosMakePayment.with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.cash_payment_method.id
+        })
+        order_payment.with_context(**payment_context).check()
+        self.assertAlmostEqual(order.amount_total, order.amount_paid, msg='Order should be fully paid.')
+
+        # I create a refund
+        refund_action = order.refund()
+        refund = self.PosOrder.browse(refund_action['res_id'])
+
+        payment_context = {"active_ids": refund.ids, "active_id": refund.id}
+        refund_payment = self.PosMakePayment.with_context(**payment_context).create({
+            'amount': refund.amount_total,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+
+        # I click on the validate button to register the payment.
+        refund_payment.with_context(**payment_context).check()
+        current_session.close_session_from_ui()
+        self.assertEqual(current_session.picking_ids.mapped('state'), ['done', 'done'])
+
     def test_search_tracking_number(self):
         self.pos_config.open_ui()
         session_id = self.pos_config.current_session_id

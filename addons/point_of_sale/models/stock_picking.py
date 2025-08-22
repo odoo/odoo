@@ -290,7 +290,7 @@ class StockMove(models.Model):
         mls_qties = []
         if are_qties_done:
             for move in moves_remaining:
-                move.move_line_ids.quantity = 0
+                move.move_line_ids.unlink()
                 for line in lines_data[move.product_id.id]['order_lines']:
                     sum_of_lots = 0
                     for lot in line.pack_lot_ids.filtered(lambda l: l.lot_name):
