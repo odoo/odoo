@@ -406,10 +406,20 @@ export class PosData extends Reactive {
         this.relations = relations;
         this.models = models;
 
+<<<<<<< 6e781f113dc2145623e92f8292af0493f6154861:addons/point_of_sale/static/src/app/services/data_service.js
         if (odoo.debug === "assets") {
             window.performance.mark("pos_data_service_init");
         }
+||||||| 132938929d46c8248a9e3a7e2972174ae38eacfa:addons/point_of_sale/static/src/app/models/data_service.js
+        const order = data["pos.order"] || [];
+        const orderlines = data["pos.order.line"] || [];
+=======
+        const order = data["pos.order"] || [];
+        const orderlines = data["pos.order.line"] || [];
+        const payments = data["pos.payment"] || [];
+>>>>>>> e6033ed74334f31e942c7cadea3a495c7db07c80:addons/point_of_sale/static/src/app/models/data_service.js
 
+<<<<<<< 6e781f113dc2145623e92f8292af0493f6154861:addons/point_of_sale/static/src/app/services/data_service.js
         await this.initData();
         await this.getLocalDataFromIndexedDB();
         this.initListeners();
@@ -418,7 +428,33 @@ export class PosData extends Reactive {
             window.performance.mark("pos_data_service_init_end");
             this.debugInfos();
         }
+||||||| 132938929d46c8248a9e3a7e2972174ae38eacfa:addons/point_of_sale/static/src/app/models/data_service.js
+        delete data["pos.order"];
+        delete data["pos.order.line"];
+=======
+        delete data["pos.order"];
+        delete data["pos.order.line"];
+        delete data["pos.payment"];
+>>>>>>> e6033ed74334f31e942c7cadea3a495c7db07c80:addons/point_of_sale/static/src/app/models/data_service.js
 
+<<<<<<< 6e781f113dc2145623e92f8292af0493f6154861:addons/point_of_sale/static/src/app/services/data_service.js
+||||||| 132938929d46c8248a9e3a7e2972174ae38eacfa:addons/point_of_sale/static/src/app/models/data_service.js
+        this.models.loadData(data, this.modelToLoad);
+        this.models.loadData({ "pos.order": order, "pos.order.line": orderlines });
+        const dbData = await this.loadIndexedDBData();
+        this.loadedIndexedDBProducts = dbData ? dbData["product.product"] : [];
+        this.sanitizeData();
+=======
+        this.models.loadData(data, this.modelToLoad);
+        const dbData = await this.loadIndexedDBData();
+        this.models.loadData({
+            "pos.order": order,
+            "pos.order.line": orderlines,
+            "pos.payment": payments,
+        });
+        this.loadedIndexedDBProducts = dbData ? dbData["product.product"] : [];
+        this.sanitizeData();
+>>>>>>> e6033ed74334f31e942c7cadea3a495c7db07c80:addons/point_of_sale/static/src/app/models/data_service.js
         this.network.loading = false;
     }
 

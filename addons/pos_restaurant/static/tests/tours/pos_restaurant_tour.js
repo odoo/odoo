@@ -7,10 +7,25 @@ const Chrome = { ...ChromePos, ...ChromeRestaurant };
 import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_util";
 import * as ProductScreenPos from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/product_screen_util";
+<<<<<<< 6e781f113dc2145623e92f8292af0493f6154861
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
+||||||| 132938929d46c8248a9e3a7e2972174ae38eacfa
+import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
+import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
+import { inLeftSide, negateStep, waitForLoading } from "@point_of_sale/../tests/tours/utils/common";
+=======
+import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
+import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
+import {
+    inLeftSide,
+    negateStep,
+    waitForLoading,
+    refresh,
+} from "@point_of_sale/../tests/tours/utils/common";
+>>>>>>> e6033ed74334f31e942c7cadea3a495c7db07c80
 import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import { delay } from "@odoo/hoot-dom";
@@ -817,5 +832,26 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant_dialog", 
             PaymentScreen.clickValidate(),
             Dialog.bodyIs("Please select a time slot before proceeding."),
             Dialog.confirm(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_reload_order_line_removed", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("5"),
+            inLeftSide([
+                ...ProductScreen.clickLine("Coca-Cola"),
+                Numpad.click("⌫"),
+                Numpad.click("⌫"),
+                ...Order.doesNotHaveLine(),
+            ]),
+            refresh(),
+            FloorScreen.clickTable("5"),
+            inLeftSide(Order.hasLine({ productName: "Coca-Cola", quantity: 1 })),
         ].flat(),
 });

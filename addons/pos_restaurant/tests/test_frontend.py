@@ -644,6 +644,7 @@ class TestFrontend(TestFrontendCommon):
 
     def test_sync_set_partner(self):
         self.pos_config.with_user(self.pos_user).open_ui()
+<<<<<<< 6e781f113dc2145623e92f8292af0493f6154861
         self.start_pos_tour('test_sync_set_partner')
         order = self.pos_config.current_session_id.order_ids[0]
         self.assertEqual(order.partner_id.name, "Deco Addict")
@@ -671,3 +672,14 @@ class TestFrontend(TestFrontendCommon):
         self.start_pos_tour('test_delete_line_release_table')
         order = self.pos_config.current_session_id.order_ids[0]
         self.assertEqual(len(order.lines), 0)
+||||||| 132938929d46c8248a9e3a7e2972174ae38eacfa
+        self.start_pos_tour('test_combo_synchronisation')
+=======
+        self.start_pos_tour('test_combo_synchronisation')
+
+    def test_reload_order_line_removed(self):
+        """ This test checks that when a saved order line is removed but not yet synced to the backend,
+            if PoS gets reloaded, the order line gets back
+        """
+        self.start_pos_tour('test_reload_order_line_removed')
+>>>>>>> e6033ed74334f31e942c7cadea3a495c7db07c80
