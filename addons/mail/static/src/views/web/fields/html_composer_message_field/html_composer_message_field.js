@@ -79,7 +79,7 @@ export class HtmlComposerMessageField extends HtmlMailField {
 
 export const htmlComposerMessageField = {
     ...htmlMailField,
-    additionalClasses: [...htmlMailField.additionalClasses, "ps-0"],
+    additionalClasses: [...htmlMailField.additionalClasses, "ps-0", "o_mail_composer_message"],
     component: HtmlComposerMessageField,
 };
 
