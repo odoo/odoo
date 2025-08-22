@@ -9,6 +9,7 @@ For sending and receiving electronic invoices to Nilvera.
     'data': [
         'data/cron.xml',
         'data/ubl_tr_templates.xml',
+        'data/res_partner_category_data.xml',
         'views/account_journal_dashboard_views.xml',
         'views/account_move_views.xml',
         'wizard/account_move_send_views.xml',

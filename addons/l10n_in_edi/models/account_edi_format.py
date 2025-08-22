@@ -520,7 +520,7 @@ class AccountEdiFormat(models.Model):
                 "RegRev": tax_details_by_code.get("is_reverse_charge") and "Y" or "N",
                 "IgstOnIntra": is_intra_state and tax_details_by_code.get("igst_amount") and "Y" or "N"},
             "DocDtls": {
-                "Typ": invoice.move_type == "out_refund" and "CRN" or "INV",
+                "Typ": (invoice.move_type == "out_refund" and "CRN") or (invoice._get_debit_note_origin() and "DBN") or "INV",
                 "No": invoice.name,
                 "Dt": invoice.invoice_date.strftime("%d/%m/%Y")},
             "SellerDtls": self._get_l10n_in_edi_partner_details(saler_buyer.get("seller_details")),

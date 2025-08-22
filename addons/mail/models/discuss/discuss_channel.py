@@ -1049,19 +1049,17 @@ class Channel(models.Model):
         channel_member_domain = expression.AND([
             [('channel_id', 'in', self.ids)],
             [('partner_id', '=', current_partner.id) if current_partner else ('guest_id', '=', current_guest.id)],
-            [] if allow_older else expression.OR([
-                [('seen_message_id', '=', False)],
-                [('seen_message_id', '<', last_message.id)]
-            ])
         ])
         member = self.env['discuss.channel.member'].search(channel_member_domain)
         if not member:
             return
-        member.write({
-            'fetched_message_id': max(member.fetched_message_id.id, last_message.id),
-            'seen_message_id': last_message.id,
-            'last_seen_dt': fields.Datetime.now(),
-        })
+        update_seen_message = allow_older or not member.seen_message_id or member.seen_message_id.id < last_message.id
+        if update_seen_message:
+            member.write({
+                'fetched_message_id': max(member.fetched_message_id.id, last_message.id),
+                'seen_message_id': last_message.id,
+                'last_seen_dt': fields.Datetime.now(),
+            })
         member_basic_info = {
             "id": member.id,
             "persona": {
@@ -1084,7 +1082,7 @@ class Channel(models.Model):
         notifications = [
             [current_partner or current_guest, "mail.record/insert", {"ChannelMember": member_self_info}],
         ]
-        if self.channel_type in self._types_allowing_seen_infos():
+        if update_seen_message and self.channel_type in self._types_allowing_seen_infos():
             notifications.append([self, "mail.record/insert", {"ChannelMember": member_basic_info}])
         self.env["bus.bus"]._sendmany(notifications)
 

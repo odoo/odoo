@@ -102,6 +102,23 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             },
             'id': partner.vat,
         })
+
+        mandatory_categories = self.env["res.partner.category"]._get_l10n_tr_official_mandatory_categories()
+        tr_companies = self.env.companies.filtered(lambda company: company.country_code == 'TR' and company.l10n_tr_nilvera_api_key)
+        if partner in tr_companies.partner_id and not (mandatory_categories & partner.category_id.parent_id):
+            raise UserError(_("Please ensure that your company contact has either the 'MERSISNO' or 'TICARETSICILNO' tag with a value assigned."))
+
+        official_categories = partner.category_id._get_l10n_tr_official_categories()
+        for category in partner.category_id:
+            if category.parent_id not in official_categories:
+                continue
+            vals.append({
+                'id_attrs': {
+                    'schemeID': category.parent_id.name,
+                },
+                'id': category.name,
+            })
+
         return vals
 
     def _get_partner_address_vals(self, partner):

@@ -32,3 +32,8 @@ class AccountMove(models.Model):
     def action_debit_note(self):
         action = self.env.ref('account_debit_note.action_view_account_move_debit')._get_action_dict()
         return action
+
+    def _get_debit_note_origin(self):
+        # OVERRIDE
+        self.ensure_one()
+        return self.debit_origin_id

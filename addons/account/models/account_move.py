@@ -2422,7 +2422,7 @@ class AccountMove(models.Model):
                     if command == Command.CREATE
                 ]
             elif move.move_type == 'entry':
-                if 'partner_id' not in data:
+                if 'partner_id' not in data or not self._context.get('move_reverse_cancel'):
                     data['partner_id'] = False
         if not self.journal_id.active and 'journal_id' in data_list:
             del default['journal_id']
@@ -5055,6 +5055,12 @@ class AccountMove(models.Model):
                                          and credit_note.invoice_line_ids.sale_line_ids in inv.invoice_line_ids.sale_line_ids)
         if len(original_invoice) == 1 and original_invoice._refunds_origin_required():
             credit_note.reversed_entry_id = original_invoice.id
+
+    def _get_debit_note_origin(self):
+        """ Return the original move for a debit note.
+        This method is overridden in the account_debit_note module to return the original move.
+        """
+        return False
 
     @api.model
     def get_invoice_localisation_fields_required_to_invoice(self, country_id):
