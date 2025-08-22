@@ -525,3 +525,20 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
             'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"})
         self.assertEqual(scheme_ID.attrib.get("schemeID"), "0190")
+
+    def test_bank_details_import(self):
+        acc_number = '1234567890'
+        partner_bank = self.env['res.partner.bank'].create({
+            'active': False,
+            'acc_number': acc_number,
+            'partner_id': self.partner_a.id
+        })
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'in_invoice',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+        # will not raise sql constraint because the sql is not commited yet
+        self.env['account.edi.common']._import_partner_bank(invoice, [acc_number])
+        self.assertEqual(invoice.partner_bank_id, partner_bank, "Partner bank must be the same")
+        self.assertTrue(partner_bank.active, "Partner bank must be the activated")
