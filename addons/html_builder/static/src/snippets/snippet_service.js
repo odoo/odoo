@@ -198,6 +198,7 @@ export class SnippetModel extends Reactive {
                     label: snippetEl.dataset.oLabel,
                     isDisabled: false,
                     forbidSanitize: false,
+                    gridColumnSpan: 0,
                 };
                 const moduleId = snippetEl.dataset.moduleId;
                 if (moduleId) {
@@ -209,6 +210,9 @@ export class SnippetModel extends Reactive {
                 }
                 if (snippetEl.dataset.oeForbidSanitize) {
                     Object.assign(snippet, { forbidSanitize: snippetEl.dataset.oeForbidSanitize });
+                }
+                if (snippetEl.dataset.oGridColumnSpan) {
+                    snippet.gridColumnSpan = parseInt(snippetEl.dataset.oGridColumnSpan);
                 }
                 switch (snippetCategory.id) {
                     case "snippet_groups":
