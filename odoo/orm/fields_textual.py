@@ -106,6 +106,7 @@ class BaseString(Field[str | typing.Literal[False]]):
         if isinstance(value, bytes):
             s = value.decode()
         else:
+            context = {'lang': record.env.lang or 'en_US'}
             s = str(value)
         value = s[:self.size]
         if validate and callable(self.translate):
