@@ -2,6 +2,7 @@
 from datetime import datetime, timedelta
 from http import HTTPStatus
 from textwrap import dedent
+from unittest.mock import patch
 
 from odoo.tests import Like, get_db_name, mute_logger, new_test_user, tagged
 from odoo.tools.misc import submap
@@ -112,13 +113,13 @@ class TestHttpWebJson_2(TestHttpBase):
             data=r'null',
             headers=CT_JSON | self.bearer_header,
         )
-        m = "could not parse the body, expecting a json object"
+        m = "missing a required argument: 'domain'"
         self.assertErrorLike(res, {
-            'name': "werkzeug.exceptions.BadRequest",
+            'name': "werkzeug.exceptions.UnprocessableEntity",
             'message': m,
-            'arguments': [m, HTTPStatus.BAD_REQUEST],
+            'arguments': [m, HTTPStatus.UNPROCESSABLE_ENTITY],
         })
-        self.assertEqual(res.status_code, HTTPStatus.BAD_REQUEST)
+        self.assertEqual(res.status_code, HTTPStatus.UNPROCESSABLE_ENTITY)
         self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
 
     def test_webjson2_missing_auth(self):
@@ -229,3 +230,23 @@ class TestHttpWebJson_2(TestHttpBase):
         })
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
+
+    def test_webjson2_url_params_vs_body_params(self):
+        url_model = 'res.users'
+        body_model = 'res.partner'
+        method = 'search'
+
+        with (
+            patch.object(self.registry[url_model], method, autospec=True) as url_search,
+            patch.object(self.registry[body_model], method, autospec=True) as body_search,
+        ):
+            self.db_url_open(
+                f'/json/2/{url_model}/{method}',
+                headers=self.bearer_header,
+                json={
+                    'model': body_model,  # trick
+                    'method': method,
+                    'domain': [('id', '=', 1)],
+                })
+            url_search.assert_called()
+            body_search.assert_not_called()
