@@ -275,10 +275,6 @@ export class Composer extends Component {
         return "";
     }
 
-    get showQuickAction() {
-        return true;
-    }
-
     get wysiwygConfig() {
         return {
             content: this.props.composer.composerHtml,
