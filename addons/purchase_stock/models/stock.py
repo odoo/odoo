@@ -38,6 +38,10 @@ class StockPicking(models.Model):
         date_value = fields.Datetime.from_string(value)
         return [('purchase_id.date_order', operator, date_value)]
 
+    def _action_done(self):
+        self.purchase_id.sudo().action_acknowledge()
+        return super()._action_done()
+
 
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
