@@ -77,11 +77,11 @@ class StockLot(models.Model):
             if lot.product_id.cost_method != 'average' or lot.standard_price == old_price:
                 continue
             product = lot.product_id
-            self.env['product.value'].create({
+            self.env['product.value'].sudo().create({
                 'product_id': product.id,
                 'lot_id': lot.id,
                 'value': lot.standard_price,
-                'company_id': product.company_id or self.env.company.id,
+                'company_id': product.company_id.id or self.env.company.id,
                 'date': fields.Datetime.now(),
                 'description': _('%(lot)s price update from %(old_price)s to %(new_price)s by %(user)s',
                     lot=lot.name, old_price=old_price, new_price=lot.standard_price, user=self.env.user.name)
