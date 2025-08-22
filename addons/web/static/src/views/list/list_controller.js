@@ -186,12 +186,9 @@ export class ListController extends Component {
 
         useEffect(
             () => {
-                if (this.props.onSelectionChanged) {
-                    const resIds = this.model.root.selection.map((record) => record.resId);
-                    this.props.onSelectionChanged(resIds);
-                }
+                this.onSelectionChanged();
             },
-            () => [this.model.root.selection.length]
+            () => [this.model.root.selection.length, this.model.root.isDomainSelected]
         );
         this.searchBarToggler = useSearchBarToggler();
         this.firstLoad = true;
@@ -260,6 +257,13 @@ export class ListController extends Component {
      * @param {Record} record
      */
     async onRecordSaved(record) {}
+
+    async onSelectionChanged() {
+        if (this.props.onSelectionChanged) {
+            const resIds = await this.model.root.getResIds(true);
+            this.props.onSelectionChanged(resIds);
+        }
+    }
 
     /**
      * onWillSaveRecord is a callBack that will be executed before the
@@ -431,10 +435,6 @@ export class ListController extends Component {
 
     async onSelectDomain() {
         await this.model.root.selectDomain(true);
-        if (this.props.onSelectionChanged) {
-            const resIds = await this.model.root.getResIds(true);
-            this.props.onSelectionChanged(resIds);
-        }
     }
 
     onUnselectAll() {

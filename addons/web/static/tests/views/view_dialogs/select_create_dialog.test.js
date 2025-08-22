@@ -536,3 +536,34 @@ test("SelectCreateDialog with open action", async () => {
     expect("input").toHaveValue("Instrument 10");
     expect.verifySteps([]);
 });
+
+test("SelectCreateDialog: enable select when grouped with domain selection", async () => {
+    Partner._views["list"] = `
+        <list string="Partner">
+            <field name="name"/>
+            <field name="foo"/>
+        </list>
+    `;
+    Partner._views["search"] = `
+        <search>
+            <group expand="0" string="Group By">
+                <filter name="groupby_bar" context="{'group_by' : 'bar'}"/>
+            </group>
+        </search>
+    `;
+
+    await mountWithCleanup(WebClient);
+    getService("dialog").add(SelectCreateDialog, {
+        noCreate: true,
+        resModel: "partner",
+        domain: [["name", "like", "a"]],
+        context: {
+            search_default_groupby_bar: true,
+        },
+    });
+    await animationFrame();
+    await contains("thead .o_list_record_selector input").click();
+
+    await animationFrame();
+    expect(".o_select_button:not([disabled])").toHaveCount(1);
+});
