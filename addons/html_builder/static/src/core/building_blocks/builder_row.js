@@ -20,8 +20,9 @@ export class BuilderRow extends Component {
         expand: { type: Boolean, optional: true },
         initialExpandAnim: { type: Boolean, optional: true },
         extraLabelClass: { type: String, optional: true },
+        observeCollapseContent: { type: Boolean, optional: true },
     };
-    static defaultProps = { expand: false };
+    static defaultProps = { expand: false, observeCollapseContent: false };
 
     setup() {
         useBuilderComponent();
@@ -80,5 +81,12 @@ export class BuilderRow extends Component {
         void contentEl.offsetHeight; // force reflow
         contentEl.style.height = expanded ? contentEl.scrollHeight + "px" : "0px";
         contentEl.addEventListener("transitionend", cleanup);
+    }
+
+    get displayCollapseContent() {
+        return (
+            !!this.props.slots.collapse &&
+            (this.props.observeCollapseContent || this.state.expanded)
+        );
     }
 }

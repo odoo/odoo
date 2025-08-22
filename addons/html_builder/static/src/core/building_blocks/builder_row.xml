@@ -53,9 +53,15 @@
                 <t t-slot="default" toggleCollapseContent="() => this.toggleCollapseContent()"/>
             </div>
         </div>
+<<<<<<< 551c2fd6d8ba2520149604c6302f751fea8174eb
         <div t-if="props.slots.collapse"
              class="hb-collapse-content"
              t-ref="collapse-content" t-att-id="collapseContentId">
+||||||| fe252296d1534a01f7fd777275a643af3726f4c9
+        <div t-if="props.slots.collapse" t-att-class="{ 'd-none': !state.expanded }" t-ref="collapse-content" t-att-id="collapseContentId">
+=======
+        <div t-if="displayCollapseContent" t-att-class="{ 'd-none': !state.expanded }" t-ref="collapse-content" t-att-id="collapseContentId">
+>>>>>>> b4567b48e19927d8a16811b89ede5e62d77380ef
             <t t-slot="collapse"/>
         </div>
     </BuilderComponent>
