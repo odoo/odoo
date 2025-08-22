@@ -1,5 +1,6 @@
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
-import { onExternalClick } from "@mail/utils/common/hooks";
+import { onExternalClick, useVisible } from "@mail/utils/common/hooks";
+import { cleanTerm } from "@mail/utils/common/format";
 import { useEffect } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -18,6 +19,8 @@ patch(MessagingMenu.prototype, {
         Object.assign(this.state, {
             searchOpen: false,
         });
+        this.store.inbox.loadOlder = true;
+        this.store.history.loadOlder = true;
 
         onExternalClick("selector", () => Object.assign(this.state, { adding: false }));
         useEffect(
@@ -44,6 +47,11 @@ patch(MessagingMenu.prototype, {
             },
             () => [this.dropdown.isOpen]
         );
+        useVisible("load-more", (isVisible) => {
+            if (isVisible) {
+                this.loadMoreInboxTabData();
+            }
+        });
     },
     beforeOpen() {
         this.state.searchOpen = false;
@@ -177,5 +185,76 @@ patch(MessagingMenu.prototype, {
             return _t("Email Failure: %(modelName)s", { modelName: failure.modelName });
         }
         return _t("Failure: %(modelName)s", { modelName: failure.modelName });
+    },
+    onClickThread(isMarkAsRead, thread) {
+        if (this.store.discuss.activeTab === "inbox") {
+            if (isMarkAsRead) {
+                thread.needactionMessages[0].setDone();
+                return;
+            } else {
+                thread.highlightMessage = thread.needactionMessages[0];
+            }
+        }
+        super.onClickThread(isMarkAsRead, thread);
+    },
+    get threads() {
+        if (this.store.discuss.activeTab === "inbox") {
+            return this._getInboxTabThreads();
+        }
+        return super.threads;
+    },
+    _getInboxTabThreads() {
+        const searchTerm = cleanTerm(this.store.discuss.searchTerm);
+        let allMessages = [
+            ...this.store.inbox.messages.reverse(),
+            ...this.store.history.messages.reverse(),
+        ];
+        if (searchTerm) {
+            allMessages = allMessages.filter(
+                (msg) =>
+                    cleanTerm(msg.thread.displayName).includes(searchTerm) ||
+                    cleanTerm(msg.previewText.toString()).includes(searchTerm)
+            );
+        }
+        return allMessages.map(
+            (msg, idx) =>
+                new Proxy(msg.thread, {
+                    get(target, prop) {
+                        const overrides = {
+                            localId: `${target.localId}-${msg.id || idx}`,
+                            needactionMessages: [msg],
+                            isUnread: msg.needaction ? target.isUnread : false,
+                            needactionCounter: 0,
+                        };
+                        return prop in overrides ? overrides[prop] : target[prop];
+                    },
+                })
+        );
+    },
+    get notificationItems() {
+        return Array.from(super.notificationItems).filter((el) =>
+            el.classList.contains("o-mail-NotificationItem")
+        );
+    },
+    get isInboxTabLoading() {
+        return this.store.inbox.status === "loading" || this.store.history.status === "loading";
+    },
+    get hasInboxTabLoadingFailed() {
+        return this.store.inbox.hasLoadingFailed || this.store.history.hasLoadingFailed;
+    },
+    async loadMoreInboxTabData() {
+        if (this.store.inbox.loadOlder) {
+            await this.store.inbox.fetchMoreMessages();
+            if (this.threads.length < 15) {
+                await this.loadMoreInboxTabData();
+            }
+            return;
+        }
+        if (this.store.history.loadOlder) {
+            await this.store.history.fetchMoreMessages();
+            if (this.threads.length < 15) {
+                await this.loadMoreInboxTabData();
+            }
+        }
     },
 });
