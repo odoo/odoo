@@ -363,13 +363,22 @@ class PurchaseOrder(models.Model):
             self.order_line.filtered(lambda line: not line.display_type).date_planned = self.date_planned
 
     def _search_is_late(self, operator, value):
-        if operator != 'in':
-            return NotImplemented
-        purchase_domain = Domain('state', '=', 'purchase') & Domain('date_planned', '<=', fields.Datetime.now())
-        line_domain = Domain('order_id', 'any', purchase_domain) & Domain.custom(
-            to_sql=lambda table: SQL("%s < %s", table.qty_received, table.product_qty),
-        )
-        return Domain('order_line', 'any', line_domain)
+        if operator not in ["=", "!="]:
+            raise ValidationError(self.env._("Unsupported operator"))
+        purchase_domain = self._get_domain_is_late(operator, value)
+        if operator == "=" and value or operator == "!=" and not value:
+            purchase_lines_late = Domain('order_id', 'any', purchase_domain) & Domain.custom(
+                to_sql=lambda table: SQL("%s < %s", table.qty_received, table.product_qty),
+            )
+            return Domain('order_line', 'any', purchase_lines_late)
+        else:
+            purchase_lines_on_time = Domain('order_id', 'any', purchase_domain) & Domain.custom(
+                to_sql=lambda table: SQL("%s >= %s", table.qty_received, table.product_qty),
+            )
+            return Domain('order_line', 'any', purchase_lines_on_time)
+
+    def _get_domain_is_late(self, operator, value):
+        return Domain([('state', '=', 'purchase'), ('date_planned', '<=', fields.Datetime.now())])
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1006,11 +1015,11 @@ class PurchaseOrder(models.Model):
         rfq_late_group = self.env['purchase.order']._read_group(rfq_late_domain, groupby, aggregate)
         _update('late', result, rfq_late_group)
 
-        rfq_not_acknowledge = [('state', '=', 'purchase'), ('acknowledged', '=', False)]
+        rfq_not_acknowledge = [('state', 'in', ['purchase', 'done']), ('acknowledged', '=', False)]
         rfq_not_acknowledge_group = self.env['purchase.order']._read_group(rfq_not_acknowledge, groupby, aggregate)
         _update('not_acknowledged', result, rfq_not_acknowledge_group)
 
-        rfq_late_receipt = [('is_late', '=', True)]
+        rfq_late_receipt = [('state', 'in', ['purchase', 'done']), ('is_late', '=', True)]
         rfq_late_receipt_group = self.env['purchase.order']._read_group(rfq_late_receipt, groupby, aggregate)
         _update('late_receipt', result, rfq_late_receipt_group)
 
