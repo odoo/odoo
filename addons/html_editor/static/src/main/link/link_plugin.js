@@ -13,6 +13,7 @@ import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { FONT_SIZE_CLASSES } from "@html_editor/utils/formatting";
 
 /**
  * @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection
@@ -487,59 +488,90 @@ export class LinkPlugin extends Plugin {
                 }
             } else if (url) {
                 // prevent the link creation if the url field was empty
-
-                // create a new link with current selection as a content
-                if ((selectionTextContent && selectionTextContent === label) || isImage) {
+                const sameTextOrImage =
+                    (selectionTextContent && selectionTextContent === label) || isImage;
+                if (sameTextOrImage || label) {
+                    // Create a new link with current selection as a content.
                     const link = this.createLink(url);
-                    if (classes) {
-                        link.className = classes;
-                    }
+                    const fontSizeWrapper = closestElement(
+                        selection.commonAncestorContainer,
+                        (el) =>
+                            el.tagName === "SPAN" &&
+                            (FONT_SIZE_CLASSES.some((cls) => el.classList.contains(cls)) ||
+                                el.style?.fontSize)
+                    );
                     const image = isImage && findInSelection(selection, "img");
                     const figure =
                         image?.parentElement?.matches("figure[contenteditable=false]") &&
                         image.parentElement;
-                    if (figure) {
-                        figure.before(link);
-                        link.append(figure);
-                        if (link.parentElement === this.editable) {
-                            const baseContainer =
-                                this.dependencies.baseContainer.createBaseContainer();
-                            link.before(baseContainer);
-                            baseContainer.append(link);
+                    let content;
+
+                    // Split selection to include font-size <span>
+                    // inside <a> to preserve styling.
+                    if (fontSizeWrapper) {
+                        this.dependencies.split.splitSelection();
+                        const selectedNodes = this.dependencies.selection
+                            .getTargetedNodes()
+                            .filter(
+                                this.dependencies.selection.areNodeContentsFullySelected.bind(this)
+                            );
+                        content = this.dependencies.split.splitAroundUntil(
+                            selectedNodes,
+                            fontSizeWrapper
+                        );
+                        const [anchorNode, anchorOffset] = leftPos(content);
+                        // Force selection to correct spot after split to prevent wrong link placement.
+                        this.dependencies.selection.setSelection(
+                            { anchorNode, anchorOffset },
+                            { normalize: false }
+                        );
+                        if (!sameTextOrImage) {
+                            // If label changed, clear existing content and set new text.
+                            content.textContent = label;
+                        }
+                    } else if (sameTextOrImage) {
+                        if (figure) {
+                            figure.before(link);
+                            link.append(figure);
+                            if (link.parentElement === this.editable) {
+                                const baseContainer =
+                                    this.dependencies.baseContainer.createBaseContainer();
+                                link.before(baseContainer);
+                                baseContainer.append(link);
+                            }
+                        } else {
+                            content = this.dependencies.selection.extractContent(selection);
+                            selection = this.dependencies.selection.getEditableSelection();
+                            const anchorClosestElement = closestElement(selection.anchorNode);
+                            if (commonAncestor !== anchorClosestElement && !fontSizeWrapper) {
+                                // We force the cursor after the anchorClosestElement
+                                // To be sure the link is inserted in the correct place in the dom.
+                                const [anchorNode, anchorOffset] = rightPos(anchorClosestElement);
+                                this.dependencies.selection.setSelection(
+                                    { anchorNode, anchorOffset },
+                                    { normalize: false }
+                                );
+                            }
                         }
                     } else {
-                        const content = this.dependencies.selection.extractContent(selection);
-                        link.append(content);
-                        link.normalize();
-                        cursorsToRestore = null;
-                        selection = this.dependencies.selection.getEditableSelection();
-                        const anchorClosestElement = closestElement(selection.anchorNode);
-                        if (commonAncestor !== anchorClosestElement) {
-                            // We force the cursor after the anchorClosestElement
-                            // To be sure the link is inserted in the correct place in the dom.
-                            const [anchorNode, anchorOffset] = rightPos(anchorClosestElement);
-                            this.dependencies.selection.setSelection(
-                                { anchorNode, anchorOffset },
-                                { normalize: false }
-                            );
+                        content = this.document.createTextNode(label);
+                        if (customStyle) {
+                            link.setAttribute("style", customStyle);
                         }
-                        this.dependencies.dom.insert(link);
+                        if (linkTarget) {
+                            link.setAttribute("target", linkTarget);
+                        }
                     }
                     this.linkInDocument = link;
-                } else if (label) {
-                    const link = this.createLink(url, label);
                     if (classes) {
                         link.className = classes;
                     }
-                    if (customStyle) {
-                        link.setAttribute("style", customStyle);
+                    if (!figure) {
+                        link.append(content);
+                        link.normalize();
+                        cursorsToRestore = null;
+                        this.dependencies.dom.insert(link);
                     }
-                    if (linkTarget) {
-                        link.setAttribute("target", linkTarget);
-                    }
-                    this.linkInDocument = link;
-                    cursorsToRestore = null;
-                    this.dependencies.dom.insert(link);
                 }
             }
             if (attachmentId) {
