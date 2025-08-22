@@ -8,7 +8,7 @@ registry.category("web_tour.tours").add("shop_sale_ewallet", {
         ...wsTourUtils.addToCart({ productName: "TEST - Gift Card", expectUnloadPage: true }),
         wsTourUtils.goToCart(),
         {
-            trigger: 'a[name="o_loyalty_claim"]:contains("Use")',
+            trigger: 'button[name="o_loyalty_claim"]:contains("Use")',
             async run(helpers) {
                 const rewards = document.querySelectorAll('form[name="claim_reward"]');
                 if (rewards.length === 1) {
