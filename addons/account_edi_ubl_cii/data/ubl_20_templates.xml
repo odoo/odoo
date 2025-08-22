@@ -464,6 +464,11 @@
                     <cbc:DocumentTypeCode t-out="billing_reference_vals.get('document_type_code')"/>
                 </cac:InvoiceDocumentReference>
             </cac:BillingReference>
+            <cac:DespatchDocumentReference t-foreach="vals.get('dispatch_document_reference_vals', [])" t-as="foreach_vals">
+                <cbc:ID t-out="foreach_vals.get('id')"/>
+                <cbc:IssueDate t-out="foreach_vals.get('issue_date')"/>
+                <cbc:DocumentTypeCode t-out="foreach_vals.get('document_type_code')"/>
+            </cac:DespatchDocumentReference>
             <t t-foreach="vals.get('additional_document_reference_list', [])" t-as="foreach_vals">
                 <cac:AdditionalDocumentReference>
                     <cbc:ID t-out="foreach_vals.get('id')"/>
