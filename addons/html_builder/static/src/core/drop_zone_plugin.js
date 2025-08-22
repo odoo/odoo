@@ -63,8 +63,10 @@ export class DropZonePlugin extends Plugin {
      * @param {HTMLElement} snippetEl the element
      * @param {Boolean} [checkLockedWithin=false] true if the selectors should
      *   be filtered based on the `dropLockWithin` selectors
-     * @param {Boolean} [withGrids=false] true if the elements in grid mode are
-     *   considered
+     * @param {Boolean|String} [withGrids=false]
+     *   - `true` if the elements in grid mode are considered,
+     *   - `"filterOnly"` if the grids should only be filtered out,
+     *   - `false`
      * @returns {Object} [selectorChildren, selectorSiblings]
      */
     getSelectors(snippetEl, checkLockedWithin = false, withGrids = false) {
@@ -169,7 +171,7 @@ export class DropZonePlugin extends Plugin {
 
         // Remove the siblings/children that would add a dropzone as a direct
         // child of a grid and make a dedicated set out of the identified grids.
-        const selectorGrids = new Set();
+        let selectorGrids = new Set();
         if (withGrids) {
             const filterGrids = (potentialGridEl) => {
                 if (potentialGridEl.matches(".o_grid_mode")) {
@@ -180,6 +182,11 @@ export class DropZonePlugin extends Plugin {
             };
             selectorSiblings = selectorSiblings.filter((el) => filterGrids(el.parentElement));
             selectorChildren = selectorChildren.filter((el) => filterGrids(el));
+
+            // If specified, only filter out the grids.
+            if (withGrids === "filterOnly") {
+                selectorGrids = new Set();
+            }
         }
 
         return {
