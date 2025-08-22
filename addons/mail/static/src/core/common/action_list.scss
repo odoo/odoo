@@ -1,76 +1,84 @@
-.o-mail-ActionList-group {
-    &.o-inline {
-        gap: 1px;
-    }
-    &:not(.o-inline) {
-        gap: 1px;
-    }
-}
-
 .o-mail-ActionList {
     hr {
         opacity: 12.5% !important;
+    }
+
+    .o-mail-ActionList-group.o-odooControlPanelSwitchStyle:has(.rounded-circle) {
+        gap: map-get($spacers, 1);
     }
 
     button {
         z-index: 1;
         --btn-disabled-opacity: 0.25;
 
-        &.o-danger {
-            color: var(--mail-ActionList-dangerColor, darken($danger, 5%)) !important;
-        }
-
-        &.o-success {
-            color: darken($success, 5%) !important;
-        }
-
         &:not(.o-odooControlPanelSwitchStyle) {
             background-color: inherit;
         }
 
         &.o-inline {
-            i {
-                opacity: 35%;
+            &:where(:has(i:first-child:last-child)) {
+                height: ($btn-font-size * $btn-line-height) + $btn-padding-y * 2;
+                aspect-ratio: 1.1;
+                line-height: 1;
+
+                &:where(.rounded-circle) {
+                    aspect-ratio: 1;
+                }
             }
+
             &.o-odooControlPanelSwitchStyle i {
-                opacity: var(--mail-ActionList-buttonInlineIconOpacity, 65%);
+                opacity: var(--mail-ActionList-buttonInlineIconOpacity);
             }
         }
-        &:not(.o-inline) i {
+
+        &:not(.o-inline) > i {
             opacity: 65%;
             .o_bottom_sheet_sheet:has(&) {
                 opacity: 100%;
             }
         }
 
-        .o-mail-ActionList-actionLabel {
-            opacity: 65%;
-            .o_bottom_sheet_sheet:has(&) {
-                opacity: 100%;
-            }
-        }
-
-        &:hover:not(.o-dropdown-item), &.o-isActive, &.o-active, &.focus, &.show, &.active {
-            .o-mail-ActionList-actionLabel {
-                opacity: 100%;
-            }
-
-            color: var(--mail-ActionList-activeItemColor, black);
-            &:not(.o-inline) {
-                background-color: $dropdown-link-hover-bg !important;
-            }
-            &.o-danger {
-                background-color: var(--mail-ActionList-dangerBgColor, rgba($danger, .75)) !important;
-                color: white !important;
-            }
-            &.o-success {
-                background-color: var(--mail-ActionList-successBgColor, rgba($success, .6)) !important;
-                color: white !important;
-            }
-            z-index: 2 !important;
+        &.o-dropdown-item.btn-success, .o-mail-ChatWindow &.btn-success {
             i {
                 opacity: 100%;
+                background: var(--btn-bg);
+                color: var(--btn-color);
+                aspect-ratio: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 100%;
+                padding: 0.4em;
+                height: 1.2em;
+                box-sizing: content-box;
             }
+
+            &:hover, &:focus-visible {
+                i {
+                    background: var(--btn-hover-bg);
+                    color: var(--btn-hover-color);
+                }
+            }
+        }
+        &.o-dropdown-item.btn-success i {
+            font-size: 0.7em !important;
+        }
+        .o-mail-ChatWindow &.btn-success i {
+            font-size: 0.9em !important;
+        }
+    }
+
+    .o_popover > & {
+        .o-mail-ActionList-button {
+            --btn-group-gap: 0px;
+        }
+    }
+
+    .o_bottom_sheet & {
+        .o-mail-ActionList-button {
+            padding: var(--dropdown-item-padding-y) var(--dropdown-item-padding-x) !important;
+            font-size: $h5-font-size !important;
+            font-weight: $o-font-weight-medium !important;
         }
     }
 }

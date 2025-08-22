@@ -36,14 +36,16 @@
 </t>
 
 <t t-name="mail.ActionList.actionMain">
+    <t t-set="isComposerRoundedBtn" t-value="props.inline and !props.odooControlPanelSwitchStyle and env.inComposer"/>
+    <t t-set="isThreadRoundedBtn" t-value="(props.inline and props.odooControlPanelSwitchStyle) and (action.success or action.danger)"/>
     <t t-set="btnClass" t-value="Object.entries({
         [action.btnClass ?? '']: true,
-        'o-mail-ActionList-button btn btn-secondary m-0 btn-group-item': true,
+        'o-mail-ActionList-button btn btn-secondary btn-group-item': true,
         'o-first': action_first,
         'o-last': action_last,
         'o-odooControlPanelSwitchStyle': props.odooControlPanelSwitchStyle,
         'rounded-3': props.inline and !props.odooControlPanelSwitchStyle and !env.inComposer,
-        'rounded-circle': props.inline and !props.odooControlPanelSwitchStyle and env.inComposer,
+        'rounded-circle': isComposerRoundedBtn or isThreadRoundedBtn,
         'px-1': props.inline and props.odooControlPanelSwitchStyle,
         'o-inline': props.inline,
         'p-0': props.inline and !props.odooControlPanelSwitchStyle and !(ui.isSmall and props.inline) and !env.inComposer,
@@ -55,8 +57,8 @@
         'o-p-1_5': props.inline and ui.isSmall,
         'text-start px-2': !props.inline and !ui.isSmall,
         'active': action.isActive,
-        'o-danger': action.danger,
-        'o-success': action.success,
+        'btn-danger': action.danger,
+        'btn-success': action.success,
     }).filter(([_, val]) => val).map(([key, _]) => key).join(' ')"/>
     <t t-set="attrs" t-value="{ 'disabled': action.disabledCondition, 'name': action.id }"/>
     <t t-if="action.component and action.componentCondition" t-component="action.component" t-props="action.componentProps"/>
@@ -72,11 +74,11 @@
     <t t-if="action.icon?.template" t-call="{{ action.icon.template }}">
         <t t-set="templateParams" t-value="action.icon.params"/>
     </t>
-    <i t-elif="props.inline and action.iconLarge" t-attf-class="{{ action.iconLarge }}" class="fa-fw"/>
+    <i t-elif="props.inline and action.icon" t-attf-class="{{ action.icon }}" class="fa-fw"/>
     <i t-elif="action.icon" t-attf-class="{{ action.icon }}" t-att-class="{ 'o-fs-small': props.dropdown }" class="fa-fw"/>
     <span t-elif="action.name and props.inline" t-esc="action.name"/>
     <i t-else="action.name" class="fa-question fa-fw opacity-0"/>
-    <span t-if="!props.inline" class="o-mail-ActionList-actionLabel fw-bold mx-1" t-attf-class="{{ action.nameClass }}" t-out="action.name"/>
+    <span t-if="!props.inline" class="o-mail-ActionList-actionLabel mx-1" t-attf-class="{{ action.nameClass }}" t-out="action.name"/>
 </t>
 
 </templates>
