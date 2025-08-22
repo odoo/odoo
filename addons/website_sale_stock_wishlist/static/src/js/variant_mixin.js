@@ -1,6 +1,5 @@
-import VariantMixin from "@website_sale_stock/js/variant_mixin";
-import "@website_sale/js/website_sale";
-import { renderToElement } from "@web/core/utils/render";
+import VariantMixin from '@website_sale_stock/js/variant_mixin';
+import { renderToElement } from '@web/core/utils/render';
 
 const oldChangeCombinationStock = VariantMixin._onChangeCombinationStock;
 /**
@@ -9,7 +8,7 @@ const oldChangeCombinationStock = VariantMixin._onChangeCombinationStock;
  *
  * @override
  */
-VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
+VariantMixin._onChangeCombinationStock = function (ev, parent, combination) {
     oldChangeCombinationStock.apply(this, arguments);
     if (this.el.querySelector('.o_add_wishlist_dyn')) {
         const messageEl = this.el.querySelector('div.availability_messages');

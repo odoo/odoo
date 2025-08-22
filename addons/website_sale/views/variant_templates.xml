@@ -4,7 +4,7 @@
         <t t-set="attribute_exclusions" t-value="product._get_attribute_exclusions(parent_combination)"/>
         <ul
             t-attf-class="o_wsale_product_page_variants d-flex flex-column gap-4 list-unstyled js_add_cart_variants #{ul_class} #{'d-none' if not product.valid_product_template_attribute_line_ids else '' }"
-            t-att-data-attribute_exclusions="json.dumps(attribute_exclusions)"
+            t-att-data-attribute-exclusions="json.dumps(attribute_exclusions)"
         >
             <t t-foreach="product.valid_product_template_attribute_line_ids" t-as="ptal">
                 <t t-set="attribute" t-value="ptal.attribute_id"/>
@@ -13,9 +13,9 @@
 
                 <!-- Attributes selection is hidden if there is only one value available and it's not a custom value -->
                 <li name="variant_attribute"
-                    t-att-data-attribute_id="attribute.id"
-                    t-att-data-attribute_name="attribute.name"
-                    t-att-data-attribute_display_type="attribute.display_type"
+                    t-att-data-attribute-id="attribute.id"
+                    t-att-data-attribute-name="attribute.name"
+                    t-att-data-attribute-display-type="attribute.display_type"
                     t-attf-class="variant_attribute #{
                         'd-none' if single
                         and not ptavs[0].is_custom
@@ -40,19 +40,17 @@
 
                     <t t-if="attribute.display_type == 'select'">
                         <select
-                            t-att-data-attribute_id="attribute.id"
+                            t-att-data-attribute-id="attribute.id"
                             t-attf-class="form-select css_attribute_select o_wsale_product_attribute js_variant_change #{attribute.create_variant} #{'d-none' if single_and_custom else ''}"
                             t-att-name="'ptal-%s' % ptal.id">
                             <t t-foreach="ptavs" t-as="ptav">
                                 <option t-att-value="ptav.id"
                                     t-att-data-attribute-value-id="ptav.product_attribute_value_id.id"
-                                    t-att-data-value_id="ptav.id"
-                                    t-att-data-value_name="ptav.name"
-                                    t-att-data-attribute_name="attribute.name"
-                                    t-att-data-is_custom="ptav.is_custom"
-                                    t-att-selected="ptav in combination"
-                                    t-att-data-is_single="single"
-                                    t-att-data-is_single_and_custom="single_and_custom">
+                                    t-att-data-value-id="ptav.id"
+                                    t-att-data-value-name="ptav.name"
+                                    t-att-data-attribute-name="attribute.name"
+                                    t-att-data-is-custom="ptav.is_custom"
+                                    t-att-selected="ptav in combination">
                                     <span t-field="ptav.name"/>
                                     <t t-call="website_sale.badge_extra_price"/>
                                 </option>
@@ -62,7 +60,7 @@
 
                     <t t-elif="attribute.display_type in ('radio', 'multi')">
                         <ul
-                            t-att-data-attribute_id="attribute.id"
+                            t-att-data-attribute-id="attribute.id"
                             t-attf-class="o_wsale_product_attribute d-flex flex-wrap gap-3 list-unstyled #{'d-none' if single_and_custom else ''}"
                         >
                             <t t-foreach="ptavs" t-as="ptav">
@@ -76,12 +74,10 @@
                                                 t-att-name="'ptal-%s' % ptal.id"
                                                 t-att-value="ptav.id"
                                                 t-att-data-attribute-value-id="ptav.product_attribute_value_id.id"
-                                                t-att-data-value_id="ptav.id"
-                                                t-att-data-value_name="ptav.name"
-                                                t-att-data-attribute_name="attribute.name"
-                                                t-att-data-is_custom="ptav.is_custom"
-                                                t-att-data-is_single="single if ptal.attribute_id.display_type != 'multi' else False"
-                                                t-att-data-is_single_and_custom="single_and_custom"/>
+                                                t-att-data-value-id="ptav.id"
+                                                t-att-data-value-name="ptav.name"
+                                                t-att-data-attribute-name="attribute.name"
+                                                t-att-data-is-custom="ptav.is_custom"/>
                                             <div class="radio_input_value form-check-label">
                                                 <span t-field="ptav.name"/>
                                                 <t t-call="website_sale.badge_extra_price"/>
@@ -95,7 +91,7 @@
 
                     <t t-elif="attribute.display_type == 'pills'">
                         <ul
-                            t-att-data-attribute_id="attribute.id"
+                            t-att-data-attribute-id="attribute.id"
                             t-attf-class="o_wsale_product_attribute d-flex flex-wrap list-unstyled gap-2 #{'d-none' if single_and_custom else ''}"
                             data-bs-toggle="buttons"
                         >
@@ -106,13 +102,12 @@
                                         t-att-checked="ptav in combination"
                                         t-att-name="'ptal-%s' % ptal.id"
                                         t-att-value="ptav.id"
-                                        t-att-data-value_id="ptav.id"
+                                        t-att-data-value-id="ptav.id"
                                         t-att-id="ptav.id"
                                         t-att-data-attribute-value-id="ptav.product_attribute_value_id.id"
-                                        t-att-data-value_name="ptav.name"
-                                        t-att-data-attribute_name="attribute.name"
-                                        t-att-data-is_custom="ptav.is_custom"
-                                        t-att-data-is_single_and_custom="single_and_custom"
+                                        t-att-data-value-name="ptav.name"
+                                        t-att-data-attribute-name="attribute.name"
+                                        t-att-data-is-custom="ptav.is_custom"
                                         t-att-autocomplete="off"/>
                                     <label class="radio_input_value o_variant_pills_input_value cursor-pointer"
                                            t-att-for="ptav.id">
@@ -126,7 +121,7 @@
 
                     <t t-elif="attribute.display_type == 'color'">
                         <ul
-                            t-att-data-attribute_id="attribute.id"
+                            t-att-data-attribute-id="attribute.id"
                             t-attf-class="o_wsale_product_attribute d-flex flex-wrap gap-2 list-unstyled #{'d-none' if single_and_custom else ''}"
                         >
                             <li t-foreach="ptavs" t-as="ptav">
@@ -146,12 +141,10 @@
                                         t-att-value="ptav.id"
                                         t-att-title="ptav.name"
                                         t-att-data-attribute-value-id="ptav.product_attribute_value_id.id"
-                                        t-att-data-value_id="ptav.id"
-                                        t-att-data-value_name="ptav.name"
-                                        t-att-data-attribute_name="attribute.name"
-                                        t-att-data-is_custom="ptav.is_custom"
-                                        t-att-data-is_single="single"
-                                        t-att-data-is_single_and_custom="single_and_custom"/>
+                                        t-att-data-value-id="ptav.id"
+                                        t-att-data-value-name="ptav.name"
+                                        t-att-data-attribute-name="attribute.name"
+                                        t-att-data-is-custom="ptav.is_custom"/>
                                 </label>
                             </li>
                         </ul>
@@ -159,7 +152,7 @@
 
                     <t t-elif="attribute.display_type == 'image'">
                         <ul
-                            t-att-data-attribute_id="attribute.id"
+                            t-att-data-attribute-id="attribute.id"
                             t-attf-class="list-inline o_wsale_product_attribute #{'d-none' if single_and_custom else ''}"
                         >
                             <li t-foreach="ptavs" t-as="ptav" class="list-inline-item me-2 mb-2">
@@ -176,12 +169,10 @@
                                         t-att-value="ptav.id"
                                         t-att-title="ptav.name"
                                         t-att-data-attribute-value-id="ptav.product_attribute_value_id.id"
-                                        t-att-data-value_id="ptav.id"
-                                        t-att-data-value_name="ptav.name"
-                                        t-att-data-attribute_name="attribute.name"
-                                        t-att-data-is_custom="ptav.is_custom"
-                                        t-att-data-is_single="single"
-                                        t-att-data-is_single_and_custom="single_and_custom"
+                                        t-att-data-value-id="ptav.id"
+                                        t-att-data-value-name="ptav.name"
+                                        t-att-data-attribute-name="attribute.name"
+                                        t-att-data-is-custom="ptav.is_custom"
                                     />
                                 </label>
                             </li>
@@ -193,9 +184,9 @@
         <ul
             t-if="product._has_multiple_uoms()"
             t-attf-class="o_wsale_product_page_variants d-flex flex-column gap-4 list-unstyled js_add_cart_variants mt-4 #{ul_class}"
-            t-att-data-attribute_exclusions="json.dumps(attribute_exclusions)"
+            t-att-data-attribute-exclusions="json.dumps(attribute_exclusions)"
         >
-            <!-- NOTE: the t-att-data-attribute_exclusions is only there to match existing events selectors -->
+            <!-- NOTE: the t-att-data-attribute-exclusions is only there to match existing events selectors -->
             <li>
                 <!-- Separate template to reduce views duplication -->
                 <t t-call="website_sale.packaging_title"/>

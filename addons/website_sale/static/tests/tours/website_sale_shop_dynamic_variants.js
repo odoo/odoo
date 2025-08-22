@@ -13,7 +13,7 @@ registry.category("web_tour.tours").add('tour_shop_dynamic_variants', {
     },
     {
         content: "click on the second variant",
-        trigger: 'input[data-attribute_name="Dynamic Attribute"][data-value_name="Dynamic Value 2"]',
+        trigger: 'input[data-attribute-name="Dynamic Attribute"][data-value-name="Dynamic Value 2"]',
         run: "click",
     },
     {
