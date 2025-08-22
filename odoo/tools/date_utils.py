@@ -463,3 +463,31 @@ def weeknumber(locale: babel.Locale, date: date) -> tuple[int, int]:
     doy = (date - fdow).days
 
     return date.year, (doy // 7 + 1)
+
+
+def weekstart(locale: babel.Locale, date: date):
+    """
+    Return the first weekday of the week containing `day`
+
+    If `day` is already that weekday, it is returned unchanged.
+    Otherwise, it is shifted back to the most recent such weekday.
+
+    Examples: week starts Sunday
+        - weekstart of Sat 30 Aug -> Sun 24 Aug
+        - weekstart of Sat 23 Aug -> Sun 17 Aug
+    """
+    return date + relativedelta(weekday=weekdays[locale.first_week_day](-1))
+
+
+def weekend(locale: babel.Locale, date: date):
+    """
+    Return the last weekday of the week containing `day`
+
+    If `day` is already that weekday, it is returned unchanged.
+    Otherwise, it is shifted forward to the next such weekday.
+
+    Examples: week starts Sunday (so week ends Saturday)
+        - weekend of Sun 24 Aug -> Sat 30 Aug
+        - weekend of Sat 30 Aug -> Sat 30 Aug
+    """
+    return weekstart(locale, date) + relativedelta(days=6)

@@ -32,3 +32,4 @@ from . import test_hr_leave_type_tour
 from . import test_time_off_graph_view_tour
 from . import test_leave_type_data
 from . import test_multi_contract
+from . import test_flexible_resource_calendar

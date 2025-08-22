@@ -468,12 +468,11 @@ class ResourceCalendar(models.Model):
             start_dt, end_dt, resources=resource, domain=domain, tz=tz,
         )[resource.id]
 
-    def _leave_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, any_calendar=False):
+    def _leave_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None):
         """ Return the leave intervals in the given datetime range.
             The returned intervals are expressed in specified tz or in the calendar's timezone.
         """
         assert start_dt.tzinfo and end_dt.tzinfo
-        self.ensure_one()
 
         if not resources:
             resources = self.env['resource.resource']
@@ -482,8 +481,9 @@ class ResourceCalendar(models.Model):
             resources_list = list(resources) + [self.env['resource.resource']]
         if domain is None:
             domain = [('time_type', '=', 'leave')]
-        if not any_calendar:
-            domain = domain + [('calendar_id', 'in', [False, self.id])]
+        if self:
+            domain = domain + [('calendar_id', 'in', [False] + self.ids)]
+
         # for the computation, express all datetimes in UTC
         # Public leave don't have a resource_id
         domain = domain + [

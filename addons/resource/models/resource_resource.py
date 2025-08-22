@@ -1,13 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from copy import deepcopy
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
+from datetime import datetime, timedelta, time
 from pytz import timezone
 
 from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
+from odoo.tools import get_lang, babel_locale_parse
 from odoo.tools.intervals import Intervals
-from odoo.tools.date_utils import localized, to_timezone
+from odoo.tools.date_utils import localized, sum_intervals, to_timezone, weeknumber, weekstart, weekend
 
 
 class ResourceResource(models.Model):
@@ -223,3 +226,168 @@ class ResourceResource(models.Model):
         """
         self.ensure_one()
         return self._is_fully_flexible() or (self.calendar_id and self.calendar_id.flexible_hours)
+
+    def _get_flexible_resources_default_work_intervals(self, start, end):
+        assert start.tzinfo and end.tzinfo
+
+        start_date = start.date()
+        end_date = end.date()
+        res = {}
+
+        resources_per_tz = defaultdict(list)
+        for resource in self:
+            resources_per_tz[timezone((resource or self.env.user).tz)].append(resource)
+
+        for tz, resources in resources_per_tz.items():
+            start = start_date
+            ranges = []
+            while start <= end_date:
+                start_datetime = tz.localize(datetime.combine(start, datetime.min.time()))
+                end_datetime = tz.localize(datetime.combine(start, datetime.max.time()))
+                ranges.append((start_datetime, end_datetime, self.env['resource.calendar.attendance']))
+                start += timedelta(days=1)
+
+            for resource in resources:
+                res[resource.id] = Intervals(ranges)
+
+        return res
+
+    def _get_flexible_resources_calendars_validity_within_period(self, start, end):
+        assert start.tzinfo and end.tzinfo
+        resource_default_work_intervals = self._get_flexible_resources_default_work_intervals(start, end)
+
+        calendars_within_period_per_resource = defaultdict(lambda: defaultdict(Intervals))  # keys are [resource id:integer][calendar:self.env['resource.calendar']]
+        for resource in self:
+            calendars_within_period_per_resource[resource.id][resource.calendar_id] = resource_default_work_intervals[resource.id]
+
+        return calendars_within_period_per_resource
+
+    def _format_leave(self, leave, resource_hours_per_day, resource_hours_per_week, ranges_to_remove, start_day, end_day, locale):
+        leave_start_day = leave[0].date()
+        leave_end_day = leave[1].date()
+        tz = timezone(self.tz or self.env.user.tz)
+
+        while leave_start_day <= leave_end_day:
+            if not self._is_fully_flexible():
+                hours = self.calendar_id.hours_per_day
+                # only days inside the original period
+                if leave_start_day >= start_day and leave_start_day <= end_day:
+                    resource_hours_per_day[self.id][leave_start_day] -= hours
+                year_and_week = weeknumber(babel_locale_parse(locale), leave_start_day)
+                resource_hours_per_week[self.id][year_and_week] -= hours
+
+            range_start_datetime = tz.localize(datetime.combine(leave_start_day, datetime.min.time()))
+            range_end_datetime = tz.localize(datetime.combine(leave_start_day, datetime.max.time()))
+            ranges_to_remove.append((range_start_datetime, range_end_datetime, self.env['resource.calendar.attendance']))
+            leave_start_day += timedelta(days=1)
+
+    def _get_flexible_resource_valid_work_intervals(self, start, end):
+        if not self:
+            return {}, {}, {}
+
+        assert all(record._is_flexible() for record in self)
+        assert start.tzinfo and end.tzinfo
+
+        start_day, end_day = start.date(), end.date()
+        week_start_date, week_end_date = start, end
+        locale = babel_locale_parse(get_lang(self.env).code)
+        week_start_date = weekstart(locale, start)
+        week_end_date = weekend(locale, end)
+        end_week = weeknumber(locale, week_end_date)[1]
+
+        min_start_date = week_start_date + relativedelta(hour=0, minute=0, second=0, microsecond=0)
+        max_end_date = week_end_date + relativedelta(days=1, hour=0, minute=0, second=0, microsecond=0)
+
+        resource_work_intervals = defaultdict(Intervals)
+        calendar_resources = defaultdict(lambda: self.env['resource.resource'])
+
+        resource_calendar_validity_intervals = self._get_flexible_resources_calendars_validity_within_period(min_start_date, max_end_date)
+        for resource in self:
+            # For each resource, retrieve their calendars validity intervals
+            for calendar, work_intervals in resource_calendar_validity_intervals[resource.id].items():
+                calendar_resources[calendar] |= resource
+                resource_work_intervals[resource.id] |= work_intervals
+
+        resource_by_id = {resource.id: resource for resource in self}
+
+        resource_hours_per_day = defaultdict(lambda: defaultdict(float))
+        resource_hours_per_week = defaultdict(lambda: defaultdict(float))
+        locale = get_lang(self.env).code
+
+        for resource in self:
+            if resource._is_fully_flexible():
+                continue
+            duration_per_day = defaultdict(float)
+            resource_intervals = resource_work_intervals.get(resource.id, Intervals())
+            for interval_start, interval_end, _dummy in resource_intervals:
+                # thanks to default periods structure, start and end should be in same day (with a same timezone !!)
+                day = interval_start.date()
+                # custom timeoff can divide a day to > 1 intervals
+                duration_per_day[day] += (interval_end - interval_start).total_seconds() / 3600
+
+            for day, hours in duration_per_day.items():
+                day_working_hours = min(hours, resource.calendar_id.hours_per_day)
+                # only days inside the original period
+                if day >= start_day and day <= end_day:
+                    resource_hours_per_day[resource.id][day] = day_working_hours
+
+                week = weeknumber(babel_locale_parse(locale), day)
+                if week[1] <= end_week:
+                    resource_hours_per_week[resource.id][week] = min(resource.calendar_id.full_time_required_hours, day_working_hours + resource_hours_per_week[resource.id][week])
+
+        for calendar, resources in calendar_resources.items():
+            domain = [('calendar_id', '=', False)] if not calendar else None
+            leave_intervals = (calendar or self.env['resource.calendar'])._leave_intervals_batch(min_start_date, max_end_date, resources, domain)
+            for resource_id, leaves in leave_intervals.items():
+                if not resource_id:
+                    continue
+
+                ranges_to_remove = []
+                for leave in leaves._items:
+                    resource_by_id[resource_id]._format_leave(leave, resource_hours_per_day, resource_hours_per_week, ranges_to_remove, start_day, end_day, locale)
+
+                resource_work_intervals[resource_id] -= Intervals(ranges_to_remove)
+
+        for resource_id, work_intervals in resource_work_intervals.items():
+            tz = timezone(resource_by_id[resource_id].tz or self.env.user.tz)
+            resource_work_intervals[resource_id] = work_intervals & Intervals([(start.astimezone(tz), end.astimezone(tz), self.env['resource.calendar.attendance'])])
+
+        return resource_work_intervals, resource_hours_per_day, resource_hours_per_week
+
+    def _get_flexible_resource_work_hours(self, intervals, flexible_resources_hours_per_day, flexible_resources_hours_per_week, work_hours_per_day=None):
+        assert self._is_flexible()
+
+        if self._is_fully_flexible():
+            return round(sum_intervals(intervals), 2)
+
+        # start and end for each Interval have the same day thanks to schedule_intervals_per_resource_id format for flexible employees
+        # 2 intervals can cover the same day, in case of custom timeoff at the middle of the day
+        duration_per_day = deepcopy(flexible_resources_hours_per_day)
+        duration_per_week = deepcopy(flexible_resources_hours_per_week)
+
+        interval_duration_per_day = defaultdict(float)
+        # days with custom time off can divide a day to many intervals
+        for start, end, _dummy in intervals:
+            if end.time() == time.max:
+                # flex resource intervals are formatted in days, each day from min time to max time, when getting the difference, one microsecond is lost
+                duration = (end + timedelta(microseconds=1) - start).total_seconds() / 3600
+            else:
+                duration = (end - start).total_seconds() / 3600
+            interval_duration_per_day[start.date()] += duration
+
+        work_hours = 0.0
+        locale = get_lang(self.env).code
+        for day, hours in interval_duration_per_day.items():
+            week = weeknumber(babel_locale_parse(locale), day)
+            day_working_hours = max(0.0, min(
+                hours,
+                duration_per_day.get(day, 0.0),
+                duration_per_week.get(week, 0.0),
+            ))
+            work_hours += day_working_hours
+            duration_per_week[week] -= day_working_hours
+
+            if work_hours_per_day is not None:
+                work_hours_per_day[day] += day_working_hours
+
+        return work_hours
