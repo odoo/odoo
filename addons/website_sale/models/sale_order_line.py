@@ -23,7 +23,7 @@ class SaleOrderLine(models.Model):
     #=== BUSINESS METHODS ===#
 
     def get_description_following_lines(self):
-        return self.name.splitlines()[1:]
+        return reversed(self.name.splitlines()[1:])
 
     def _get_combination_name(self):
         return self.product_id.product_template_attribute_value_ids._get_combination_name()
