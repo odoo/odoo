@@ -1,12 +1,13 @@
-import { Component, onMounted, useRef, useState } from "@odoo/owl";
+import { Component, useRef, useState } from "@odoo/owl";
+import { uniqueId } from "@web/core/utils/functions";
+import { useService } from "@web/core/utils/hooks";
 import {
-    useVisibilityObserver,
-    useApplyVisibility,
     basicContainerBuilderComponentProps,
+    useApplyVisibility,
     useBuilderComponent,
+    useVisibilityObserver,
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
-import { uniqueId } from "@web/core/utils/functions";
 
 export class BuilderRow extends Component {
     static template = "html_builder.BuilderRow";
@@ -29,8 +30,8 @@ export class BuilderRow extends Component {
 
         this.state = useState({
             expanded: this.props.expand,
-            tooltip: this.props.tooltip,
         });
+        this.hasTooltip = this.props.tooltip ? true : undefined;
 
         if (this.props.slots.collapse) {
             useVisibilityObserver("collapse-content", useApplyVisibility("collapse"));
@@ -39,12 +40,7 @@ export class BuilderRow extends Component {
         }
 
         this.labelRef = useRef("label");
-        onMounted(() => {
-            const labelEl = this.labelRef.el;
-            if (!this.state.tooltip && labelEl && labelEl.clientWidth < labelEl.scrollWidth) {
-                this.state.tooltip = this.props.label;
-            }
-        });
+        this.tooltip = useService("tooltip");
     }
 
     getLevelClass() {
@@ -53,6 +49,23 @@ export class BuilderRow extends Component {
 
     toggleCollapseContent() {
         this.state.expanded = !this.state.expanded;
+    }
+
+    openTooltip() {
+        if (this.hasTooltip === undefined) {
+            const labelEl = this.labelRef.el;
+            this.hasTooltip = labelEl && labelEl.clientWidth < labelEl.scrollWidth;
+        }
+        if (this.hasTooltip) {
+            const tooltip = this.props.tooltip || this.props.label;
+            this.removeTooltip = this.tooltip.add(this.labelRef.el, { tooltip });
+        }
+    }
+
+    closeTooltip() {
+        if (this.removeTooltip) {
+            this.removeTooltip();
+        }
     }
 
     get displayCollapseContent() {

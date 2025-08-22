@@ -1,8 +1,16 @@
 import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, hover, queryAllTexts, queryOne, waitFor } from "@odoo/hoot-dom";
+import {
+    advanceTime,
+    animationFrame,
+    hover,
+    queryAllTexts,
+    queryOne,
+    waitFor,
+} from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
+import { OPEN_DELAY } from "@web/core/tooltip/tooltip_service";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../../website_helpers";
 
 describe("website tests", () => {
@@ -29,7 +37,8 @@ describe("website tests", () => {
         expect(".hb-row .text-nowrap").toHaveText("my label");
         expect(".o-tooltip").not.toHaveCount();
         await hover(".hb-row .text-nowrap");
-        await waitFor(".o-tooltip", { timeout: 1000 });
+        await advanceTime(OPEN_DELAY);
+        await waitFor(".o-tooltip");
         expect(".o-tooltip").toHaveText("my tooltip");
         await contains(":iframe .test-options-target").hover();
         expect(".o-tooltip").not.toHaveCount();
@@ -285,9 +294,14 @@ describe("HTML builder tests", () => {
         });
         await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
+        await hover("[data-label='Supercalifragilisticexpalidocious'] .text-truncate");
+        await advanceTime(OPEN_DELAY);
+        await waitFor(".o-tooltip");
         const label = queryOne("[data-label='Supercalifragilisticexpalidocious'] .text-truncate");
         expect(label.scrollWidth).toBeGreaterThan(label.clientWidth); // the text is longer than the available width.
-        await animationFrame();
-        expect(label.parentElement.dataset.tooltip).toBe("Supercalifragilisticexpalidocious");
+        expect(".o-tooltip").toHaveText("Supercalifragilisticexpalidocious");
+
+        await contains(":iframe .test-options-target").hover();
+        expect(".o-tooltip").toHaveCount(0);
     });
 });
