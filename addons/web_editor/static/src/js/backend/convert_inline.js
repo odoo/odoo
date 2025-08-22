@@ -1842,7 +1842,10 @@ function correctBorderAttributes(style) {
         return correctedStyle;
     }
 
-    return style;
+    if (/border-style\s*:/i.test(style)) {
+        return style;
+    }
+    return style.trim().replace(/;?$/, "; border-style: solid;");
 }
 
 export default {
