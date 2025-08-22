@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* event_sms
-# 
+# * event_sms
+#
 # Translators:
 # Wil Odoo, 2025
 # Jessica Jakara, 2025
-# 
+#
+# "Jessica Tuulia Sade Jäkärä (jtsj)" <jtsj@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-16 18:37+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Jessica Jakara, 2025\n"
-"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"PO-Revision-Date: 2025-08-22 23:41+0000\n"
+"Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-4/"
+"event_sms/fi/>\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__display_name
@@ -63,7 +66,14 @@ msgid ""
 "{{ 'It starts at %s' % format_time(time=object.event_begin_date, tz=object.event_id.date_tz, time_format='short', lang_code=object.partner_id.lang) + (', at %s' % object.event_id.address_inline if object.event_id.address_inline else '') + '.\\nSee you there!' if object.event_id.address_inline or 'website_published' not in object.event_id._fields else 'Join us on %s/event/%i!' % (object.get_base_url(), object.event_id.id) }}"
 msgstr ""
 "Valmiina \"{{ object.event_id.name }}}\" {{ object.event_date_range }}?\n"
-"{{ 'Tapahtuma alkaa %s' % format_time(time=object.event_begin_date, tz=object.event_id.date_tz, time_format='short', lang_code=object.partner_id.lang) + (', at %s' % object.event_id.address_inline if object.event_id.address_inline else '') + '.\\nNäemme siellä!' if object.event_id.address_inline or 'website_published' not in object.event_id._fields else 'Liity mukaan osoitteessa %s/event/%i!' % (object.get_base_url(), object.event_id.id) }} }}"
+"{{ 'Tapahtuma alkaa %s' % format_time(time=object.event_begin_date, "
+"tz=object.event_id.date_tz, time_format='short', "
+"lang_code=object.partner_id.lang) + (', at %s' % "
+"object.event_id.address_inline if object.event_id.address_inline else '') + "
+"'.\\n"
+"Nähdään siellä!' if object.event_id.address_inline or 'website_published' "
+"not in object.event_id._fields else 'Liity mukaan osoitteessa %s/event/%i!' "
+"% (object.get_base_url(), object.event_id.id) }}"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail_registration
