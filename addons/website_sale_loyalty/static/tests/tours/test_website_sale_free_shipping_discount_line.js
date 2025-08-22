@@ -60,7 +60,7 @@ webTours.add("check_shipping_discount", {
         ...assertRewardAmounts({ shipping: "- 6.00" }),
         {
             content: "pay with eWallet",
-            trigger: "form[name=claim_reward] a[name='o_loyalty_claim']:contains('Use')",
+            trigger: "form[name=claim_reward] button[name='o_loyalty_claim']:contains('Use')",
             run: "click",
             expectUnloadPage: true,
         },
@@ -85,7 +85,7 @@ webTours.add("update_shipping_after_discount", {
         goToCart(),
         {
             content: "use eWallet to check it doesn't impact `free_over` shipping",
-            trigger: "a[name='o_loyalty_claim']:contains('Use')",
+            trigger: "button[name='o_loyalty_claim']:contains('Use')",
             run: "click",
             expectUnloadPage: true,
         },
@@ -108,7 +108,7 @@ webTours.add("update_shipping_after_discount", {
         },
         {
             content: "apply discount code",
-            trigger: "form[name=coupon_code] .a-submit",
+            trigger: 'form[name="coupon_code"] button[type="submit"]',
             run: "click",
             expectUnloadPage: true,
         },
