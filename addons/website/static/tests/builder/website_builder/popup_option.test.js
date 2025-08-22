@@ -110,6 +110,8 @@ describe("Popup options: popup in page before edit", () => {
         await expectToTriggerEvent(":iframe .s_popup .modal", "shown.bs.modal", () =>
             contains(".o_we_invisible_entry .fa-eye-slash").click()
         );
+        // Sometimes bootstrap.js takes a bit of time to display the popup
+        await waitFor(":iframe .s_popup .modal", { timeout: 1000, visible: true });
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
         expect(":iframe .s_popup .modal").toBeVisible();
         await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () =>
@@ -127,6 +129,8 @@ describe("Popup options: popup in page before edit", () => {
         await expectToTriggerEvent(":iframe .s_popup .modal", "shown.bs.modal", () =>
             contains(".o_we_invisible_entry .fa-eye-slash").click()
         );
+        // Sometimes bootstrap.js takes a bit of time to display the popup
+        await waitFor(":iframe .s_popup .modal", { timeout: 1000, visible: true });
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
         expect(":iframe .s_popup .modal").toBeVisible();
         setSelection({ anchorNode: queryOne(":iframe .s_popup section p"), anchorOffset: 0 });
