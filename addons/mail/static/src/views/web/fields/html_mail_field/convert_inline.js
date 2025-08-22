@@ -37,7 +37,7 @@ const RE_OFFSET_MATCH = /(^| )offset(-[\w\d]+)*( |$)/;
 const RE_PADDING_MATCH = /[ ]*padding[^;]*;/g;
 const RE_PADDING = /([\d.]+)/;
 const RE_WHITESPACE = /[\s\u200b]*/;
-const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|'|\([^(),]+[,(])|@page/;
+const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|')|@page/; // :not(:has) should be legal
 const CONVERT_INLINE_BLACKLIST_CLASSES = ["o_mail_redirect"];
 // CSS properties relating to font, which Outlook seem to have trouble inheriting.
 const FONT_PROPERTIES_TO_INHERIT = [
@@ -65,6 +65,11 @@ export const TABLE_STYLES = {
     "text-align": "inherit",
     "font-size": "unset",
     "line-height": "inherit",
+};
+
+export const BASIC_THEME_TABLE_STYLES = {
+    "background-color": "transparent",
+    color: "inherit",
 };
 
 const GROUPED_STYLES = {
@@ -98,7 +103,13 @@ const GROUPED_STYLES = {
  * @param {HTMLElement} element
  */
 export function addTables(element) {
+    const isInBasicTheme = Boolean(element.querySelector(".o_layout.o_basic_theme"));
     for (const snippet of element.querySelectorAll(".o_mail_snippet_general, .o_layout")) {
+        if (isInBasicTheme) {
+            for (const [property, value] of Object.entries(BASIC_THEME_TABLE_STYLES)) {
+                snippet.style.setProperty(property, value);
+            }
+        }
         // Convert all snippets and the mailing itself into table > tr > td
         const table = _createTable(snippet.attributes);
 
@@ -1252,7 +1263,7 @@ export function formatTables(element) {
  */
 export function getCSSRules(doc) {
     const cssRules = [];
-    for (const sheet of doc.styleSheets) {
+    for (const sheet of [...doc.styleSheets, ...doc.adoptedStyleSheets]) {
         // try...catch because browser may not able to enumerate rules for cross-domain sheets
         let rules;
         try {
@@ -1616,6 +1627,10 @@ function _computeStyleAndSpecificityOnRules(cssRules) {
                 Object.assign(cssRule, {
                     style,
                     specificity: _computeSpecificity(cssRule.selector),
+                });
+            } else {
+                Object.assign(cssRule, {
+                    specificity: 0,
                 });
             }
         }
