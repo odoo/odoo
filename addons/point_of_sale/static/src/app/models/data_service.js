@@ -284,13 +284,19 @@ export class PosData extends Reactive {
 
         const order = data["pos.order"] || [];
         const orderlines = data["pos.order.line"] || [];
+        const payments = data["pos.payment"] || [];
 
         delete data["pos.order"];
         delete data["pos.order.line"];
+        delete data["pos.payment"];
 
         this.models.loadData(data, this.modelToLoad);
-        this.models.loadData({ "pos.order": order, "pos.order.line": orderlines });
         const dbData = await this.loadIndexedDBData();
+        this.models.loadData({
+            "pos.order": order,
+            "pos.order.line": orderlines,
+            "pos.payment": payments,
+        });
         this.loadedIndexedDBProducts = dbData ? dbData["product.product"] : [];
         this.sanitizeData();
         this.network.loading = false;
