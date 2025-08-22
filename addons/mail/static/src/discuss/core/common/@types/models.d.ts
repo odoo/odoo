@@ -60,7 +60,7 @@ declare module "models" {
         onlineMembers: ChannelMember[];
         otherTypingMembers: ChannelMember[];
         scrollUnread: boolean;
-        selfMember: ChannelMember;
+        self_member_id: ChannelMember;
         showUnreadBanner: Readonly<boolean>;
         toggleBusSubscription: boolean;
         typingMembers: ChannelMember[];

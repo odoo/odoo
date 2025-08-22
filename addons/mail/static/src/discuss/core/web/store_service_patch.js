@@ -16,7 +16,7 @@ const StorePatch = {
     /** @returns {import("models").Thread[]} */
     getSelfRecentChannels() {
         return Object.values(this.Thread.records)
-            .filter((thread) => thread.model === "discuss.channel" && thread.selfMember)
+            .filter((thread) => thread.model === "discuss.channel" && thread.self_member_id)
             .sort((a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id);
     },
     onStarted() {

@@ -226,7 +226,7 @@ export class Thread extends Component {
                     return;
                 }
                 const el = this.refByMessageId.get(
-                    this.props.thread.selfMember.new_message_separator_ui - 1
+                    this.props.thread.self_member_id.new_message_separator_ui - 1
                 )?.el;
                 if (el) {
                     el.querySelector(".o-mail-Message-jumpTarget").scrollIntoView({

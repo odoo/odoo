@@ -19,9 +19,9 @@ patch(Thread.prototype, {
      */
     async notifyMessageToUser(message) {
         const channel_notifications =
-            this.selfMember?.custom_notifications || this.store.settings.channel_notifications;
+            this.self_member_id?.custom_notifications || this.store.settings.channel_notifications;
         if (
-            !this.selfMember?.mute_until_dt &&
+            !this.self_member_id?.mute_until_dt &&
             !this.store.self.im_status.includes("busy") &&
             (this.channel_type !== "channel" ||
                 (this.channel_type === "channel" &&
@@ -97,7 +97,7 @@ patch(Thread.prototype, {
         if (this.eq(this.store.discuss.thread)) {
             router.replaceState({ active_id: undefined });
         }
-        if (this.model === "discuss.channel" && this.selfMember?.is_pinned !== false) {
+        if (this.model === "discuss.channel" && this.self_member_id?.is_pinned !== false) {
             await this.store.env.services.orm.silent.call(
                 "discuss.channel",
                 "channel_pin",

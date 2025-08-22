@@ -66,7 +66,7 @@ registerThreadAction("livechat-status", {
 registerThreadAction("join-livechat-needing-help", {
     condition: (comp) =>
         comp.thread?.livechat_status === "need_help" &&
-        !comp.thread?.selfMember &&
+        !comp.thread?.self_member_id &&
         !comp.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-sign-in",
     iconLarge: "fa fa-fw fa-lg fa-sign-in",

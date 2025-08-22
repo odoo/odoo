@@ -13,7 +13,7 @@ registerMessageAction("set-new-message-separator", {
         const thread = component.props.thread;
         return (
             thread &&
-            thread.selfMember &&
+            thread.self_member_id &&
             thread.eq(component.message.thread) &&
             !component.message.hasNewMessageSeparator &&
             component.message.persistent
@@ -25,7 +25,7 @@ registerMessageAction("set-new-message-separator", {
     /** @param {import("@mail/core/common/message").Message} component */
     onSelected: (component) => {
         const message = toRaw(component.message);
-        const selfMember = message.thread?.selfMember;
+        const selfMember = message.thread?.self_member_id;
         if (selfMember) {
             selfMember.new_message_separator = message.id;
             selfMember.new_message_separator_ui = selfMember.new_message_separator;

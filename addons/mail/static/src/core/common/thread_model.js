@@ -122,7 +122,7 @@ export class Thread extends Record {
     displayToSelf = fields.Attr(false, {
         compute() {
             return (
-                this.selfMember?.is_pinned ||
+                this.self_member_id?.is_pinned ||
                 (["channel", "group"].includes(this.channel_type) &&
                     this.hasSelfAsMember &&
                     !this.parent_channel_id)
@@ -769,8 +769,8 @@ export class Thread extends Record {
                     { name: newName }
                 );
             } else if (this.supportsCustomChannelName) {
-                if (this.selfMember) {
-                    this.selfMember.custom_channel_name = newName;
+                if (this.self_member_id) {
+                    this.self_member_id.custom_channel_name = newName;
                 }
                 await this.store.env.services.orm.call(
                     "discuss.channel",

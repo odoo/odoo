@@ -30,7 +30,7 @@
                         </t>
                     </CallPopover>
                 </t>
-                <button t-if="props.thread.selfMember?.rtc_inviting_session_id?.is_camera_on" class="btn smaller btn-success d-flex m-1 border-0 rounded-circle shadow-none align-items-center p-0"
+                <button t-if="props.thread.self_member_id?.rtc_inviting_session_id?.is_camera_on" class="btn smaller btn-success d-flex m-1 border-0 rounded-circle shadow-none align-items-center p-0"
                     aria-label="Accept with camera"
                     title="Accept with camera"
                     t-att-disabled="rtc.state.hasPendingRequest"
@@ -38,7 +38,7 @@
                     <i class="fa fa-video-camera fa-fw m-2" t-att-class="{ 'fa-lg': !isSmall }"/>
                 </button>
                 <t t-if="!isOfActiveCall and props.thread.useCameraByDefault !== null">
-                    <button t-if="props.thread.selfMember?.rtc_inviting_session_id"
+                    <button t-if="props.thread.self_member_id?.rtc_inviting_session_id"
                         class="btn btn-danger smaller d-flex gap-1 m-1 border-0 align-items-center rounded-3"
                         t-att-disabled="rtc.state.hasPendingRequest"
                         aria-label="Reject"
@@ -59,7 +59,7 @@
                     </button>
                 </t>
                 <t t-else="">
-                    <button t-if="props.thread.selfMember?.rtc_inviting_session_id and !isOfActiveCall" class="btn smaller btn-danger d-flex m-1 border-0 rounded-circle shadow-none align-items-center p-0"
+                    <button t-if="props.thread.self_member_id?.rtc_inviting_session_id and !isOfActiveCall" class="btn smaller btn-danger d-flex m-1 border-0 rounded-circle shadow-none align-items-center p-0"
                         aria-label="Reject"
                         title="Reject"
                         t-att-disabled="rtc.state.hasPendingRequest"

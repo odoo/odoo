@@ -56,12 +56,12 @@ export class DiscussCoreCommon {
         });
         this.env.bus.addEventListener("mail.message/delete", ({ detail: { message, notifId } }) => {
             if (message.thread) {
-                const { selfMember } = message.thread;
+                const { self_member_id } = message.thread;
                 if (
-                    message.id > selfMember?.seen_message_id.id &&
-                    notifId > selfMember.message_unread_counter_bus_id
+                    message.id > self_member_id?.seen_message_id.id &&
+                    notifId > self_member_id.message_unread_counter_bus_id
                 ) {
-                    selfMember.message_unread_counter--;
+                    self_member_id.message_unread_counter--;
                 }
             }
         });
@@ -99,21 +99,25 @@ export class DiscussCoreCommon {
             if (message.isSelfAuthored) {
                 channel.onNewSelfMessage(message);
             } else {
-                if (channel.isDisplayed && channel.selfMember?.new_message_separator_ui === 0) {
-                    channel.selfMember.new_message_separator_ui = message.id;
+                if (channel.isDisplayed && channel.self_member_id?.new_message_separator_ui === 0) {
+                    channel.self_member_id.new_message_separator_ui = message.id;
                 }
-                if (!channel.isDisplayed && channel.selfMember) {
+                if (!channel.isDisplayed && channel.self_member_id) {
                     channel.scrollUnread = true;
                 }
                 if (
-                    notifId > channel.selfMember?.message_unread_counter_bus_id &&
+                    notifId > channel.self_member_id?.message_unread_counter_bus_id &&
                     !message.isNotification
                 ) {
-                    channel.selfMember.message_unread_counter++;
+                    channel.self_member_id.message_unread_counter++;
                 }
             }
         }
-        if (channel.channel_type !== "channel" && this.store.self_partner && channel.selfMember) {
+        if (
+            channel.channel_type !== "channel" &&
+            this.store.self_partner &&
+            channel.self_member_id
+        ) {
             // disabled on non-channel threads and
             // on "channel" channels for performance reasons
             channel.markAsFetched();

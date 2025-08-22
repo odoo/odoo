@@ -17,7 +17,7 @@ const messagePatch = {
             compute() {
                 // compute for caching the value and not re-rendering all
                 // messages when new_message_separator changes
-                return this.thread?.selfMember?.new_message_separator === this.id;
+                return this.thread?.self_member_id?.new_message_separator === this.id;
             },
         });
         this.hasSomeoneFetched = fields.Attr(false, {
