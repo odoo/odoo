@@ -8,9 +8,17 @@
         <t t-set="cardsLabel">Cards</t>
         <t t-set="gridLabel">Grid</t>
         <t t-set="showcaseLabel">Showcase</t>
+        <t t-set="bentoLabel">Bento</t>
 
         <t t-set="suggestedClassesCatalogDefault">
             o_wsale_products_opt_name_color_regular
+            o_wsale_products_opt_thumb_cover o_wsale_products_opt_img_secondary_show
+            o_wsale_products_opt_img_hover_zoom_out_light o_wsale_products_opt_has_cta
+            o_wsale_products_opt_has_wishlist o_wsale_products_opt_has_comparison
+        </t>
+
+        <t t-set="suggestedClassesCatalogVertical">
+            o_wsale_products_opt_name_color_regular o_wsale_products_opt_thumb_2_3
             o_wsale_products_opt_thumb_cover o_wsale_products_opt_img_secondary_show
             o_wsale_products_opt_img_hover_zoom_out_light o_wsale_products_opt_has_cta
             o_wsale_products_opt_has_wishlist o_wsale_products_opt_has_comparison
@@ -69,6 +77,15 @@
                 img: '/website_sale/static/src/img/products_entries_design/style_catalog_grid.svg',
                 suggestedClasses: suggestedClassesCatalogDefault + suggestedClassesCatalogSubtle + ' o_wsale_products_opt_thumb_4_3',
                 gap: 0,
+            },
+            {
+                id: 'wsale_design_bento_catalog',
+                type: 'catalog',
+                label: bentoLabel,
+                className: 'o_wsale_products_opt_layout_catalog o_wsale_products_opt_design_bento',
+                img: '/website_sale/static/src/img/products_entries_design/style_catalog_bento.svg',
+                suggestedClasses: suggestedClassesCatalogVertical + suggestedClassesCatalogSubtle + 'o_wsale_products_opt_rounded_3 o_wsale_products_opt_cc o_wsale_products_opt_cc5 o_wsale_products_opt_has_description o_wsale_products_opt_hover_show_description o_wsale_products_opt_overlay_opacity_7',
+                gap: 16,
             },
             {
                 id: 'wsale_design_thumbs_list',
@@ -239,10 +256,14 @@
                 t-set="listCondensed"
                 t-value="this.isActiveItem('wsale_design_condensed_list')"
             />
+            <t
+                t-set="catalogBento"
+                t-value="this.isActiveItem('wsale_design_bento_catalog')"
+            />
 
             <BuilderRow
                 label.translate="Hover Effect"
-                t-if="anyThumb || anyCard || catalogThumb || catalogChips || listCondensed"
+                t-if="anyThumb || anyCard || catalogThumb || catalogChips || listCondensed || (catalogPanel and this.isActiveItem('o_has_description_opt'))"
                 >
                 <BuilderSelect>
                     <BuilderSelectItem
@@ -273,6 +294,11 @@
                         t-if="anyCard || catalogChips"
                         classAction="'o_wsale_products_opt_hover_border_primary'">
                         Border-Primary
+                    </BuilderSelectItem>
+                    <BuilderSelectItem
+                        t-if="catalogPanel"
+                        classAction="'o_wsale_products_opt_hover_show_description'">
+                        Show description
                     </BuilderSelectItem>
                 </BuilderSelect>
             </BuilderRow>
@@ -325,7 +351,7 @@
                 label.translate="Overlay"
                 tooltip.translate="Opacity of the overlay"
                 level="1"
-                t-if="this.isActiveItem('wsale_design_showcase_list')"
+                t-if="this.isActiveItem('wsale_design_showcase_list') || catalogBento"
             >
                 <BuilderRange
                     action="'setClassRange'"
@@ -394,7 +420,7 @@
             </BuilderRow>
 
             <BuilderRow label.translate="Description">
-                <BuilderCheckbox classAction="'o_wsale_products_opt_has_description'"/>
+                <BuilderCheckbox id="'o_has_description_opt'" classAction="'o_wsale_products_opt_has_description'"/>
             </BuilderRow>
 
             <BuilderRow
@@ -430,7 +456,25 @@
                 label="this.isActiveItem('wsale_design_showcase_list') ? imageRatioLabelMobile : imageRatioLabel"
             >
                 <BuilderSelect>
-                    <t t-set="imgRatios" t-value="[
+                    <t t-if="catalogBento" t-set="imgRatios" t-value="[
+                        {
+                            label: 'Horizontal (6/5)',
+                            className: 'o_wsale_products_opt_thumb_6_5',
+                        },
+                        {
+                            label: 'Default (1/1)',
+                            className: '',
+                        },
+                        {
+                            label: 'Portrait (4/5)',
+                            className: 'o_wsale_products_opt_thumb_4_5',
+                        },
+                        {
+                            label: 'Vertical (2/3)',
+                            className: 'o_wsale_products_opt_thumb_2_3',
+                        },
+                    ]"/>
+                    <t t-else="" t-set="imgRatios" t-value="[
                         {
                             label: 'WideScreen (16/9)',
                             className: 'o_wsale_products_opt_thumb_16_9',
@@ -527,7 +571,7 @@
                     classAction="'o_wsale_products_opt_has_cta'"
                     id="'wsale_products_opt_add_to_cart'"
                 />
-                <BuilderSelect t-if="isOnHoverAvailable">
+                <BuilderSelect t-if="isOnHoverAvailable || this.isActiveItem('wsale_design_bento_catalog')">
                     <BuilderSelectItem
                         classAction="'o_wsale_products_opt_actions_inline'"
                         id="'wsale_products_opt_actions_inline'"
