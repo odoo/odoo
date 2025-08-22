@@ -45,6 +45,7 @@ export class ImagePlugin extends Plugin {
     static id = "image";
     static dependencies = ["history", "dom", "selection", "overlay"];
     static shared = ["getTargetedImage", "previewImage", "resetImageTransformation"];
+    static defaultConfig = { allowImageTransform: true };
     resources = {
         user_commands: [
             {
@@ -191,9 +192,8 @@ export class ImagePlugin extends Plugin {
                 description: _t("Transform the picture (click twice to reset transformation)"),
                 Component: ImageTransformButton,
                 props: this.getImageTransformProps(),
-                isAvailable: (selection) => isHtmlContentSupported(selection),
-                isDisabled: () =>
-                    "allowImageTransform" in this.config ? !this.config.allowImageTransform : false,
+                isAvailable: (selection) =>
+                    this.config.allowImageTransform && isHtmlContentSupported(selection),
             },
             {
                 id: "image_delete",
