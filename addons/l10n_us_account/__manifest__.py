@@ -19,4 +19,5 @@
     'auto_install': ['account'],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'post_init_hook': '_l10n_us_account_post_init',
 }
