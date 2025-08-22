@@ -28,6 +28,12 @@
                     </field>
                 </page>
             </page>
+            <button name="toggle_prod_environment" position="attributes">
+                <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
+            </button>
+            <button name="toggle_debug" position="attributes">
+                <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
+            </button>
         </field>
     </record>
 
