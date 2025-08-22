@@ -76,7 +76,7 @@ test("Seen message is saved on the server", async () => {
     await contains(".o-mail-Message", { text: "Hello, I need help!" });
     await waitUntilSubscribe();
     const initialSeenMessageId = Object.values(getService("mail.store").Thread.records).at(-1)
-        .selfMember.seen_message_id?.id;
+        .self_member_id.seen_message_id?.id;
     queryFirst(".o-mail-Composer-input").blur();
     await withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -100,6 +100,7 @@ test("Seen message is saved on the server", async () => {
     ]);
     expect(initialSeenMessageId).not.toBe(member.seen_message_id[0]);
     expect(
-        Object.values(getService("mail.store").Thread.records).at(-1).selfMember.seen_message_id.id
+        Object.values(getService("mail.store").Thread.records).at(-1).self_member_id.seen_message_id
+            .id
     ).toBe(member.seen_message_id[0]);
 });

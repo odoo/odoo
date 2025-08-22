@@ -62,12 +62,12 @@ registerThreadAction("notification-settings", {
         action.popover?.close();
     },
     icon(component) {
-        return component.thread.selfMember?.mute_until_dt
+        return component.thread.self_member_id?.mute_until_dt
             ? "fa fa-fw text-danger fa-bell-slash"
             : "fa fa-fw fa-bell";
     },
     iconLarge(component) {
-        return component.thread.selfMember?.mute_until_dt
+        return component.thread.self_member_id?.mute_until_dt
             ? "fa fa-fw fa-lg text-danger fa-bell-slash"
             : "fa fa-fw fa-lg fa-bell";
     },
@@ -183,9 +183,9 @@ registerThreadAction("member-list", {
 });
 registerThreadAction("mark-read", {
     condition: (component) =>
-        component.thread?.selfMember &&
-        component.thread.selfMember.message_unread_counter > 0 &&
-        !component.thread.selfMember.mute_until_dt &&
+        component.thread?.self_member_id &&
+        component.thread.self_member_id.message_unread_counter > 0 &&
+        !component.thread.self_member_id.mute_until_dt &&
         component.isDiscussSidebarChannelActions,
     open: (component) => component.thread.markAsRead(),
     icon: "fa fa-fw fa-check",

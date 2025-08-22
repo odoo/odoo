@@ -184,9 +184,9 @@ export class DiscussCommandPalette {
                     (!filtered || !filtered.has(thread))
             )
             .sort((c1, c2) => {
-                if (c1.selfMember && !c2.selfMember) {
+                if (c1.self_member_id && !c2.self_member_id) {
                     return -1;
-                } else if (!c1.selfMember && c2.selfMember) {
+                } else if (!c1.self_member_id && c2.self_member_id) {
                     return 1;
                 }
                 return c1.id - c2.id;

@@ -29,8 +29,8 @@ patch(MessagingMenu.prototype, {
                 : Object.values(this.store.Thread.records).filter(
                       (thread) =>
                           thread.displayToSelf &&
-                          !thread.selfMember?.mute_until_dt &&
-                          (thread.selfMember?.message_unread_counter ||
+                          !thread.self_member_id?.mute_until_dt &&
+                          (thread.self_member_id?.message_unread_counter ||
                               thread.message_needaction_counter)
                   ).length;
         // Needactions are already counted in the super call, but we want to discard them for channel so that there is only +1 per channel.
