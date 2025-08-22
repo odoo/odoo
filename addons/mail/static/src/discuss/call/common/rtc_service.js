@@ -607,6 +607,7 @@ export class Rtc extends Record {
      * Notifies the server and does the cleanup of the current call.
      */
     async leaveCall(channel = this.state.channel) {
+        this.store.fullscreenChannel = null;
         this.state.hasPendingRequest = true;
         await this.rpcLeaveCall(channel);
         this.endCall(channel);
@@ -685,12 +686,19 @@ export class Rtc extends Record {
         this.soundEffectsService.play("mic-off");
     }
 
-    async enterFullscreen() {
-        const Call = registry.category("discuss.call/components").get("Call");
-        await this.fullscreen.enter(Call, { id: CALL_FULLSCREEN_ID });
+    /** @param {Object} props Properties to pass to the meeting component. */
+    async enterFullscreen(props) {
+        const Meeting = registry.category("discuss.call/components").get("Meeting");
+        this.store.fullscreenChannel = this.channel;
+        await this.fullscreen.enter(Meeting, {
+            id: CALL_FULLSCREEN_ID,
+            keepBrowserHeader: true,
+            props,
+        });
     }
 
     async exitFullscreen() {
+        this.store.fullscreenChannel = null;
         await this.fullscreen.exit(CALL_FULLSCREEN_ID);
     }
 

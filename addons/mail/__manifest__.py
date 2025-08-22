@@ -189,6 +189,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/tests/tours/discuss_channel_call_action.js',
             'mail/static/tests/tours/discuss_channel_call_public_tour.js',
             'mail/static/tests/tours/discuss_sidebar_in_public_page_tour.js',
+            'mail/static/tests/tours/discuss_channel_meeting_view_tour.js',
         ],
         # Unit test files
         'web.assets_unit_tests': [

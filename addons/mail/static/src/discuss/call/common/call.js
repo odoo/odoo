@@ -2,14 +2,14 @@ import { BlurPerformanceWarning } from "@mail/discuss/call/common/blur_performan
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { CallParticipantCard } from "@mail/discuss/call/common/call_participant_card";
 import { PttAdBanner } from "@mail/discuss/call/common/ptt_ad_banner";
-import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
-import { isMobileOS } from "@web/core/browser/feature_detection";
 
 import { Component, onMounted, onPatched, onWillUnmount, toRaw, useRef, useState } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
-import { useService } from "@web/core/utils/hooks";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { useService } from "@web/core/utils/hooks";
+import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 
 /**
  * @typedef CardData
@@ -32,7 +32,8 @@ export class Call extends Component {
         CallParticipantCard,
         PttAdBanner,
     };
-    static props = ["thread?", "compact?", "isPip?"];
+    static props = ["thread?", "compact?", "isPip?", "hasOverlay?"];
+    static defaultProps = { hasOverlay: true };
     static template = "discuss.Call";
 
     overlayTimeout;

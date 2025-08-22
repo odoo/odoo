@@ -112,7 +112,6 @@ export class Store extends BaseStore {
         sort: (f1, f2) => f2.lastMessage?.id - f1.lastMessage?.id,
     });
     settings = fields.One("Settings");
-    openInviteThread = fields.One("Thread");
     emojiLoader = loader;
 
     /** @type {[[string, any, import("models").DataResponse]]} */
@@ -350,8 +349,8 @@ export class Store extends BaseStore {
         });
         await this.store.chatHub.initPromise;
         this.ChatWindow.get(thread)?.update({ autofocus: 0 });
-        this.env.services["discuss.rtc"].toggleCall(thread, { camera: true });
-        this.openInviteThread = thread;
+        await this.env.services["discuss.rtc"].toggleCall(thread, { camera: true });
+        this.rtc.enterFullscreen({ initialSidePanel: "invite" });
     }
 
     /**

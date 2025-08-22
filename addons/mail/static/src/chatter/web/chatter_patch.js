@@ -101,32 +101,37 @@ patch(Chatter.prototype, {
         this.followerListDropdown = useDropdownState();
         /** @type {number|null} */
         this.loadingAttachmentTimeout = null;
-        useCustomDropzone(this.rootRef, MailAttachmentDropzone, {
-            extraClass: "o-mail-Chatter-dropzone",
-            /** @param {Event} ev */
-            onDrop: async (ev) => {
-                if (this.state.composerType) {
-                    return;
-                }
-                if (isDragSourceExternalFile(ev.dataTransfer)) {
-                    const files = [...ev.dataTransfer.files];
-                    if (!this.state.thread.id) {
-                        const saved = await this.props.saveRecord?.();
-                        if (!saved) {
-                            return;
-                        }
+        useCustomDropzone(
+            this.rootRef,
+            MailAttachmentDropzone,
+            {
+                extraClass: "o-mail-Chatter-dropzone",
+                /** @param {Event} ev */
+                onDrop: async (ev) => {
+                    if (this.state.composerType) {
+                        return;
                     }
-                    Promise.all(files.map((file) => this.attachmentUploader.uploadFile(file))).then(
-                        () => {
+                    if (isDragSourceExternalFile(ev.dataTransfer)) {
+                        const files = [...ev.dataTransfer.files];
+                        if (!this.state.thread.id) {
+                            const saved = await this.props.saveRecord?.();
+                            if (!saved) {
+                                return;
+                            }
+                        }
+                        Promise.all(
+                            files.map((file) => this.attachmentUploader.uploadFile(file))
+                        ).then(() => {
                             if (this.props.hasParentReloadOnAttachmentsChanged) {
                                 this.reloadParentView();
                             }
-                        }
-                    );
-                    this.state.isAttachmentBoxOpened = true;
-                }
+                        });
+                        this.state.isAttachmentBoxOpened = true;
+                    }
+                },
             },
-        });
+            () => !this.store.meetingViewOpened || this.env.inMeetingView
+        );
         useEffect(
             () => {
                 if (!this.state.thread) {
