@@ -15,7 +15,7 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'l10n_ar_website_sale/static/src/js/*.js',
+            'l10n_ar_website_sale/static/src/interactions/**/*',
             'l10n_ar_website_sale/static/src/scss/*.scss',
         ]
     },

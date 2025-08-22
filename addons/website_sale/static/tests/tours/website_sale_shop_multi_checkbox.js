@@ -17,16 +17,16 @@ registry.category("web_tour.tours").add('tour_shop_multi_checkbox', {
     },
     {
         content: 'click on the first option to select it',
-        trigger: 'input[data-attribute_name="Options"][data-value_name="Option 1"]',
+        trigger: 'input[data-attribute-name="Options"][data-value-name="Option 1"]',
         run: "click",
     },
     {
         content: 'check third option is not selectable',
-        trigger: 'input[data-attribute_name="Options"][data-value_name="Option 3"][disabled]',
+        trigger: 'input[data-attribute-name="Options"][data-value-name="Option 3"][disabled]',
     },
     {
         content: 'click on the second option to select it',
-        trigger: 'input[data-attribute_name="Options"][data-value_name="Option 2"]',
+        trigger: 'input[data-attribute-name="Options"][data-value-name="Option 2"]',
         run: "click",
     },
     {
@@ -60,7 +60,7 @@ registry.category("web_tour.tours").add('tour_shop_multi_checkbox_single_value',
     },
     {
         content: 'click on the first option to select it',
-        trigger: 'input[data-attribute_name="Toppings"][data-value_name="cheese"]',
+        trigger: 'input[data-attribute-name="Toppings"][data-value-name="cheese"]',
         run: "click",
     },
     {

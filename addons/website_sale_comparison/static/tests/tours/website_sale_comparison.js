@@ -68,7 +68,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
     },
     {
         content: "select 2nd variant(Pink Color)",
-        trigger: '.variant_attribute[data-attribute_name="Color"] input[data-value_name="Pink"]:not(:visible)',
+        trigger: '.variant_attribute[data-attribute-name="Color"] input[data-value-name="Pink"]:not(:visible)',
         run: function (actions) {
           document.querySelector('img[class*="product_detail_img"]').setAttribute('data-image-to-change', 1);
           actions.click();
@@ -92,7 +92,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
     },
     {
         content: "select 3nd variant(Custom)",
-        trigger: '.variant_attribute[data-attribute_name="Color"] input[data-value_name="Blue"]:not(:visible)',
+        trigger: '.variant_attribute[data-attribute-name="Color"] input[data-value-name="Blue"]:not(:visible)',
         run: "click",
     },
     {

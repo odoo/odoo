@@ -22,12 +22,12 @@ registry.category("web_tour.tours").add('tour_shop_archived_variant_multi', {
     },
     {
         content: 'click on the first variant',
-        trigger: 'input[data-attribute_name="Size"][data-value_name="Small"]',
+        trigger: 'input[data-attribute-name="Size"][data-value-name="Small"]',
         run: "click",
     },
     {
         content: "click on the second variant",
-        trigger: 'input[data-attribute_name="Color"][data-value_name="Black"]',
+        trigger: 'input[data-attribute-name="Color"][data-value-name="Black"]',
         run: "click",
     },
     {
@@ -36,12 +36,12 @@ registry.category("web_tour.tours").add('tour_shop_archived_variant_multi', {
     },
     {
         content: "change second variant to make brand b available",
-        trigger: 'input[data-attribute_name="Color"][data-value_name="White"]',
+        trigger: 'input[data-attribute-name="Color"][data-value-name="White"]',
         run: "click",
     },
     {
         content: "check if brand b is clickable again",
-        trigger: 'input[data-attribute_name="Brand"][data-value_name="Brand B"]',
+        trigger: 'input[data-attribute-name="Brand"][data-value-name="Brand B"]',
         run: "click",
     },
 ]});
@@ -84,7 +84,7 @@ registry.category("web_tour.tours").add('test_09_pills_variant', {
         content: 'check second variant is selected',
         trigger: 'li.o_variant_pills.active:contains("Small")',
         run: function () {
-            var button = [...document.querySelectorAll('input.js_variant_change[data-attribute_name="Size"][data-value_name="Small"]')];
+            var button = [...document.querySelectorAll('input.js_variant_change[data-attribute-name="Size"][data-value-name="Small"]')];
             assert(button.length, 1, "there should be one radio input")
             assert(button[0].checked, true, "the radio input should be checked")
         }
