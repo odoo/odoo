@@ -412,7 +412,7 @@
             <h4>Your contact</h4>
             <hr class="mt-1 mb0"/>
             <h6 class="mb-1"><b t-esc="sales_user.name"/></h6>
-            <div class="d-flex align-items-center mb-1">
+            <div t-if="sales_user.email_normalized" class="d-flex align-items-center mb-1">
                 <div class="fa fa-envelope fa-fw me-1"></div>
                 <a t-att-href="'mailto:'+sales_user.email" t-esc="sales_user.email"/>
             </div>
