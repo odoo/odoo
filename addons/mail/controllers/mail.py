@@ -1,7 +1,8 @@
 import logging
 
 from werkzeug.urls import url_encode
-from werkzeug.exceptions import Unauthorized
+from werkzeug.exceptions import Unauthorized, NotFound
+from urllib.parse import parse_qsl, urlencode, urlparse
 
 from odoo import _, http
 from odoo.exceptions import AccessError
@@ -135,7 +136,13 @@ class MailController(http.Controller):
         record_action.pop('target_type', None)
         # the record has an URL redirection: use it directly
         if record_action['type'] == 'ir.actions.act_url':
-            return request.redirect(record_action['url'])
+            url = record_action["url"]
+            if highlight_message_id := kwargs.get("highlight_message_id"):
+                parsed_url = urlparse(url)
+                url = parsed_url._replace(query=urlencode(
+                    parse_qsl(parsed_url.query) + [("highlight_message_id", highlight_message_id)]
+                )).geturl()
+            return request.redirect(url)
         # anything else than an act_window is not supported
         elif record_action['type'] != 'ir.actions.act_window':
             return cls._redirect_to_messaging()
@@ -158,6 +165,8 @@ class MailController(http.Controller):
         view_id = record_sudo.get_formview_id()
         if view_id:
             url_params['view_id'] = view_id
+        if highlight_message_id := kwargs.get("highlight_message_id"):
+            url_params["highlight_message_id"] = highlight_message_id
         if cids:
             request.future_response.set_cookie('cids', '-'.join([str(cid) for cid in cids]))
 
@@ -230,10 +239,12 @@ class MailController(http.Controller):
         if not message:
             if request.env.user._is_public():
                 return request.redirect(f'/web/login?redirect=/mail/message/{message_id}')
-            raise Unauthorized()
-        return self._mail_thread_message_redirect(message)
+            raise NotFound()
+
+        return self._redirect_to_record(message.model, message.res_id, highlight_message_id=message_id)
 
     def _mail_thread_message_redirect(self, message):
+        """Deprecated - use _redirect_to_record instead. """
         if not request.env.user._is_internal():
             thread = request.env[message.model].search([('id', '=', message.res_id)])
             if hasattr(thread, "_get_share_url"):
