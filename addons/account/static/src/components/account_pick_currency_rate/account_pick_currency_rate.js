@@ -22,7 +22,7 @@ export class AccountPickCurrencyDate extends Component {
                 const rate = await this.orm.call(
                     'account.move',
                     'get_currency_rate',
-                    [record.resId, record.data.company_id.id, record.data.currency_id.id, date],
+                    [record.resId, record.data.company_id.id, record.data.currency_id.id, date.toISODate()],
                 );
                 this.props.record.update({ invoice_currency_rate: rate });
                 await this.props.record.save();
