@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-15 18:37+0000\n"
+"POT-Creation-Date: 2025-08-22 18:38+0000\n"
 "PO-Revision-Date: 2025-08-21 17:21+0000\n"
 "Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -161,6 +161,12 @@ msgstr "%s on yhteensä %s, haluatko varmasti poistaa tämän tilauksen?"
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.js:0
 msgid "%s orders imported"
 msgstr "%s tuodut tilaukset"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "%s required"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -863,6 +869,8 @@ msgid "Additional required user information:"
 msgstr "Tarvittavat käyttäjän lisätiedot:"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__address
 msgid "Address"
 msgstr "Osoite"
@@ -2640,6 +2648,7 @@ msgstr "Muokatut arvot"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/select_partner_button/select_partner_button.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
@@ -2717,12 +2726,6 @@ msgstr "Asiakkaan osoite on pakollinen"
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 msgid "Customer is required for %s payment method."
 msgstr "Asiakas tarvitaan %s maksutapaa varten."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
-msgid "Customer required"
-msgstr "Asiakas vaaditaan"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4805,6 +4808,12 @@ msgid "Misc"
 msgstr "Sekalaiset"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "Missing required"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__mobile
 msgid "Mobile"
 msgstr "Matkapuhelin"
@@ -6021,7 +6030,7 @@ msgstr "Hyväksy suuri määrä"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid "Please add a valid customer to the order."
 msgstr "Lisää olemassa oleva asiakas tilaukseen."
 
@@ -6133,6 +6142,12 @@ msgstr "Skannaa QR-koodi painikkeella %s"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
 msgid "Please select a payment method"
 msgstr "Valitse maksutapa"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
+msgid "Please select a time slot before proceeding."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8027,6 +8042,12 @@ msgid "Skip Preview Screen"
 msgstr "Ohita esikatselunäyttö"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
+msgid "Slot"
+msgstr ""
+
+#. module: point_of_sale
 #: model:product.template,name:point_of_sale.small_shelf_product_template
 msgid "Small Shelf"
 msgstr "Pieni hylly"
@@ -8068,6 +8089,12 @@ msgstr ""
 "Joitakin tilauksia ei voitu lähettää palvelimelle internetyhteysongelmien "
 "vuoksi. Voit poistua kassasta, mutta älä sulje istuntoa ennen kuin ongelma "
 "on ratkaistu."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "Some required information is missing."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8791,6 +8818,7 @@ msgstr "Haettu palautettava määrä on suurempi kuin palautettava määrä."
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "The selected customer needs an address."
 msgstr "Valittu asiakas tarvitsee osoitteen."
@@ -9778,16 +9806,6 @@ msgid ""
 msgstr "Varoitus, maksettu summa on suurempi kuin kokonaissumma. (Ero: %s)"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
-msgid ""
-"Warning: Your browser doesn't support IndexedDB. The data won't be saved. "
-"Please use a modern browser."
-msgstr ""
-"Varoitus: Selaimesi ei tue IndexedDB:tä. Tietoja ei tallenneta. Käytä "
-"nykyaikaista selainta."
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__website_message_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__website_message_ids
 msgid "Website Messages"
@@ -10444,6 +10462,16 @@ msgstr "painikkeiden aktivoimiseksi."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "käyttäen"
+
+#~ msgid "Customer required"
+#~ msgstr "Asiakas vaaditaan"
+
+#~ msgid ""
+#~ "Warning: Your browser doesn't support IndexedDB. The data won't be saved. "
+#~ "Please use a modern browser."
+#~ msgstr ""
+#~ "Varoitus: Selaimesi ei tue IndexedDB:tä. Tietoja ei tallenneta. Käytä "
+#~ "nykyaikaista selainta."
 
 #~ msgid "DUPLICATA !"
 #~ msgstr "KAKSOISKAPPALE!"

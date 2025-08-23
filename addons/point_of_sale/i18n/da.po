@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-15 18:37+0000\n"
+"POT-Creation-Date: 2025-08-22 18:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Kira Petersen, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
@@ -160,6 +160,12 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.js:0
 msgid "%s orders imported"
 msgstr "%s importerede ordrer"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "%s required"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -860,6 +866,8 @@ msgid "Additional required user information:"
 msgstr "Yderligere nødvendige brugeroplysninger:"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__address
 msgid "Address"
 msgstr "Adresse"
@@ -2633,6 +2641,7 @@ msgstr "Tilpasset værdier"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/select_partner_button/select_partner_button.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
@@ -2710,12 +2719,6 @@ msgstr "Kundeadresse påkrævet"
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 msgid "Customer is required for %s payment method."
 msgstr "Kunder er påkrævet for %s betalingsmetode."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
-msgid "Customer required"
-msgstr "Kunde påkrævet"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4798,6 +4801,12 @@ msgid "Misc"
 msgstr "Diverse"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "Missing required"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__mobile
 msgid "Mobile"
 msgstr "Mobil"
@@ -6013,7 +6022,7 @@ msgstr "Bekræft venligst stort antal"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid "Please add a valid customer to the order."
 msgstr "Angiv venligst en gyldig kunde på ordren."
 
@@ -6130,6 +6139,12 @@ msgstr "Scan venligst QR-koden med %s"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
 msgid "Please select a payment method"
 msgstr "Vælg venligst en betalingsform"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
+msgid "Please select a time slot before proceeding."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8022,6 +8037,12 @@ msgid "Skip Preview Screen"
 msgstr "Spring forhåndsvisning over"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
+msgid "Slot"
+msgstr ""
+
+#. module: point_of_sale
 #: model:product.template,name:point_of_sale.small_shelf_product_template
 msgid "Small Shelf"
 msgstr "Lille hylde"
@@ -8061,6 +8082,12 @@ msgstr ""
 "Visse ordre kunne ikke indsendes til serveren, på grund af fejl med internet "
 "forbindelsen. Du kan forlade Point of Sale, men luk ikke sessionen før "
 "fejlen er rettet."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "Some required information is missing."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8798,6 +8825,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "The selected customer needs an address."
 msgstr "Den valgte kunde mangler en adresse."
@@ -9795,16 +9823,6 @@ msgstr ""
 "Advarsel, det betalte beløb er højere end det samlede beløb. (Difference: %s)"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
-msgid ""
-"Warning: Your browser doesn't support IndexedDB. The data won't be saved. "
-"Please use a modern browser."
-msgstr ""
-"Advarsel: IndexedDB understøttes ikke i din browser, og data kan derfor ikke "
-"gemmes. Vi anbefaler, at du anvender en moderne browser."
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__website_message_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__website_message_ids
 msgid "Website Messages"
@@ -10473,6 +10491,16 @@ msgstr "for at aktivere knapperne."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "bruger"
+
+#~ msgid "Customer required"
+#~ msgstr "Kunde påkrævet"
+
+#~ msgid ""
+#~ "Warning: Your browser doesn't support IndexedDB. The data won't be saved. "
+#~ "Please use a modern browser."
+#~ msgstr ""
+#~ "Advarsel: IndexedDB understøttes ikke i din browser, og data kan derfor "
+#~ "ikke gemmes. Vi anbefaler, at du anvender en moderne browser."
 
 #~ msgid "DUPLICATA !"
 #~ msgstr "DUBLET!"

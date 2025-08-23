@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-15 18:37+0000\n"
+"POT-Creation-Date: 2025-08-22 18:38+0000\n"
 "PO-Revision-Date: 2025-08-23 00:20+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -159,6 +159,12 @@ msgstr "%sは合計%sの金額があります。本当にこのオーダを削�
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.js:0
 msgid "%s orders imported"
 msgstr "%s オーダがインポートされました"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "%s required"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -848,6 +854,8 @@ msgid "Additional required user information:"
 msgstr "追加必要ユーザ情報:"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__address
 msgid "Address"
 msgstr "住所"
@@ -2609,6 +2617,7 @@ msgstr "カスタム値"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/select_partner_button/select_partner_button.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
@@ -2686,12 +2695,6 @@ msgstr "顧客の住所が必要です"
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 msgid "Customer is required for %s payment method."
 msgstr "%s決済方法用に顧客が必要です"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
-msgid "Customer required"
-msgstr "顧客が必要です"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4756,6 +4759,12 @@ msgid "Misc"
 msgstr "その他"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "Missing required"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__mobile
 msgid "Mobile"
 msgstr "携帯電話"
@@ -5963,7 +5972,7 @@ msgstr "高額のため確認してください"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid "Please add a valid customer to the order."
 msgstr "オーダに有効な顧客を追加して下さい。"
 
@@ -6074,6 +6083,12 @@ msgstr " %sでQRコードをスキャンして下さい。"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
 msgid "Please select a payment method"
 msgstr "支払方法を選択して下さい。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
+msgid "Please select a time slot before proceeding."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7962,6 +7977,12 @@ msgid "Skip Preview Screen"
 msgstr "プレビュー画面をスキップ"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
+msgid "Slot"
+msgstr ""
+
+#. module: point_of_sale
 #: model:product.template,name:point_of_sale.small_shelf_product_template
 msgid "Small Shelf"
 msgstr "小さな棚"
@@ -8002,6 +8023,12 @@ msgstr ""
 "インターネット接続の問題により、一部の注文をサーバーに送信できませんでした。 "
 "POSを終了することはできますが、問題が解決するまでセッションを閉じないでくださ"
 "い。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "Some required information is missing."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8719,6 +8746,7 @@ msgstr "返金要求数量が返金可能数量より多いです。"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "The selected customer needs an address."
 msgstr "選択された顧客に住所が必要です。"
@@ -9700,16 +9728,6 @@ msgid ""
 msgstr "警告: 支払金額の合計が総額よりも高いです。(違い: %s)"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
-msgid ""
-"Warning: Your browser doesn't support IndexedDB. The data won't be saved. "
-"Please use a modern browser."
-msgstr ""
-"警告 お使いのブラウザは IndexedDB をサポートしていません。データは保存されま"
-"せん。最新のブラウザをご利用下さい。"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__website_message_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__website_message_ids
 msgid "Website Messages"
@@ -10362,6 +10380,16 @@ msgstr "ボタンを有効化します。"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "を使用して"
+
+#~ msgid "Customer required"
+#~ msgstr "顧客が必要です"
+
+#~ msgid ""
+#~ "Warning: Your browser doesn't support IndexedDB. The data won't be saved. "
+#~ "Please use a modern browser."
+#~ msgstr ""
+#~ "警告 お使いのブラウザは IndexedDB をサポートしていません。データは保存され"
+#~ "ません。最新のブラウザをご利用下さい。"
 
 #~ msgid "DUPLICATA !"
 #~ msgstr "DUPLICATA !"

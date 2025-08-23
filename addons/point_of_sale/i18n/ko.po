@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-15 18:37+0000\n"
+"POT-Creation-Date: 2025-08-22 18:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -158,6 +158,12 @@ msgstr "%s의 총액은 %s입니다. 이 주문을 삭제하시겠습니까?"
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.js:0
 msgid "%s orders imported"
 msgstr "%s 주문 가져옴"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "%s required"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -849,6 +855,8 @@ msgid "Additional required user information:"
 msgstr "사용자 관련 필수 추가 정보:"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__address
 msgid "Address"
 msgstr "주소"
@@ -2604,6 +2612,7 @@ msgstr "맞춤 값"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/select_partner_button/select_partner_button.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
@@ -2681,12 +2690,6 @@ msgstr "고객 주소가 필요합니다"
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 msgid "Customer is required for %s payment method."
 msgstr "고객에게 %s 결제 방법이 필수입니다."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
-msgid "Customer required"
-msgstr "고객 요청"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4752,6 +4755,12 @@ msgid "Misc"
 msgstr "기타"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "Missing required"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__mobile
 msgid "Mobile"
 msgstr "모바일"
@@ -5960,7 +5969,7 @@ msgstr "큰 금액을 확인하십시오"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid "Please add a valid customer to the order."
 msgstr "주문에 유효한 고객을 추가하세요."
 
@@ -6070,6 +6079,12 @@ msgstr "QR 코드를 %s로 스캔하세요."
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
 msgid "Please select a payment method"
 msgstr "결제 방법을 선택하세요."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
+msgid "Please select a time slot before proceeding."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7953,6 +7968,12 @@ msgid "Skip Preview Screen"
 msgstr "미리보기 화면 통과"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
+msgid "Slot"
+msgstr ""
+
+#. module: point_of_sale
 #: model:product.template,name:point_of_sale.small_shelf_product_template
 msgid "Small Shelf"
 msgstr "작은 선반"
@@ -7991,6 +8012,12 @@ msgid ""
 msgstr ""
 "인터넷 연결 문제로 인해 일부 주문을 서버에 제출할 수 없습니다. POS (Point of "
 "Sale)를 종료 할 수 있지만 문제가 해결되기 전에 세션을 닫지 마십시오."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "Some required information is missing."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8697,6 +8724,7 @@ msgstr " 환불 요청 수량이 환불 가능 수량보다 큽니다."
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "The selected customer needs an address."
 msgstr "선택한 고객 항목에 주소 정보가 필요합니다."
@@ -9673,16 +9701,6 @@ msgid ""
 msgstr "경고, 결제 금액이 총 금액보다 높습니다. (금액차: %s)"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
-msgid ""
-"Warning: Your browser doesn't support IndexedDB. The data won't be saved. "
-"Please use a modern browser."
-msgstr ""
-"경고: 브라우저가 인덱싱된DB를 지원하지 않아 데이터가 저장되지 않습니다. 최신 "
-"브라우저로 전환하세요."
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__website_message_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__website_message_ids
 msgid "Website Messages"
@@ -10325,6 +10343,16 @@ msgstr "버튼을 눌러 활성화합니다."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "사용"
+
+#~ msgid "Customer required"
+#~ msgstr "고객 요청"
+
+#~ msgid ""
+#~ "Warning: Your browser doesn't support IndexedDB. The data won't be saved. "
+#~ "Please use a modern browser."
+#~ msgstr ""
+#~ "경고: 브라우저가 인덱싱된DB를 지원하지 않아 데이터가 저장되지 않습니다. 최"
+#~ "신 브라우저로 전환하세요."
 
 #~ msgid "DUPLICATA !"
 #~ msgstr "중복!"

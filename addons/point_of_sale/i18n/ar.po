@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-15 18:37+0000\n"
+"POT-Creation-Date: 2025-08-22 18:38+0000\n"
 "PO-Revision-Date: 2025-08-23 00:20+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -159,6 +159,12 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.js:0
 msgid "%s orders imported"
 msgstr "تم استيراد %s طلبات "
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "%s required"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -856,6 +862,8 @@ msgid "Additional required user information:"
 msgstr "معلومات المستخدم الإضافية المطلوبة: "
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__address
 msgid "Address"
 msgstr "العنوان"
@@ -2622,6 +2630,7 @@ msgstr "القيم المخصصة "
 #. odoo-javascript
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/select_partner_button/select_partner_button.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
@@ -2699,12 +2708,6 @@ msgstr "عنوان العميل مطلوب "
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 msgid "Customer is required for %s payment method."
 msgstr "العميل مطلوب لطريقة الدفع %s.  "
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
-msgid "Customer required"
-msgstr "يتطلب وجود عميل "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4771,6 +4774,12 @@ msgid "Misc"
 msgstr "متفرقات "
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "Missing required"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__mobile
 msgid "Mobile"
 msgstr "الهاتف المحمول"
@@ -5979,7 +5988,7 @@ msgstr "يرجى تأكيد الكمية الكبيرة "
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid "Please add a valid customer to the order."
 msgstr "يُرجى إضافة عميل صالح إلى الطلب. "
 
@@ -6089,6 +6098,12 @@ msgstr "يُرجى مسح كود QR باستخدام %s "
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
 msgid "Please select a payment method"
 msgstr "يرجى اختيار طريقة دفع "
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
+msgid "Please select a time slot before proceeding."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7979,6 +7994,12 @@ msgid "Skip Preview Screen"
 msgstr "تجاوز شاشة المعاينة"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
+msgid "Slot"
+msgstr ""
+
+#. module: point_of_sale
 #: model:product.template,name:point_of_sale.small_shelf_product_template
 msgid "Small Shelf"
 msgstr "رف صغير"
@@ -8016,6 +8037,12 @@ msgid ""
 msgstr ""
 "تعذر إرسال بعض الطلبات إلى الخادم جراء أخطاء في الاتصال بالإنترنت. يمكنك "
 "الخروج من نقطة البيع، ولكن لا تقم بإغلاق الجلسة قبل أن يتم حل المشكلة. "
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "Some required information is missing."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8733,6 +8760,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "The selected customer needs an address."
 msgstr "يحتاج العميل المحدد إلى عنوان. "
@@ -9706,16 +9734,6 @@ msgid ""
 msgstr "تحذير، المبلغ المدفوع أعلى من المبلغ الإجمالي. (الفرق: %s) "
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
-msgid ""
-"Warning: Your browser doesn't support IndexedDB. The data won't be saved. "
-"Please use a modern browser."
-msgstr ""
-"تحذير: متصفحك لا يدعم IndexedDB. لن يتم حفظ البيانات. يُرجى استخدام متصفح "
-"حديث. "
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__website_message_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__website_message_ids
 msgid "Website Messages"
@@ -10362,6 +10380,16 @@ msgstr "لتفعيل الأزرار. "
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "باستخدام"
+
+#~ msgid "Customer required"
+#~ msgstr "يتطلب وجود عميل "
+
+#~ msgid ""
+#~ "Warning: Your browser doesn't support IndexedDB. The data won't be saved. "
+#~ "Please use a modern browser."
+#~ msgstr ""
+#~ "تحذير: متصفحك لا يدعم IndexedDB. لن يتم حفظ البيانات. يُرجى استخدام متصفح "
+#~ "حديث. "
 
 #~ msgid "DUPLICATA !"
 #~ msgstr "DUPLICATA !"

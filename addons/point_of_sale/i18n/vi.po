@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-15 18:37+0000\n"
+"POT-Creation-Date: 2025-08-22 18:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -156,6 +156,12 @@ msgstr "%s có tổng số tiền là %s, bạn có chắc chắn muốn xoá đ
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.js:0
 msgid "%s orders imported"
 msgstr "%s đơn hàng đã được nhập"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "%s required"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -857,6 +863,8 @@ msgid "Additional required user information:"
 msgstr "Thông tin người dùng bắt buộc khác:"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__address
 msgid "Address"
 msgstr "Địa chỉ"
@@ -2631,6 +2639,7 @@ msgstr "Giá trị tùy chỉnh"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/select_partner_button/select_partner_button.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
@@ -2708,12 +2717,6 @@ msgstr "Địa chỉ của khách hàng là bắt buộc"
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 msgid "Customer is required for %s payment method."
 msgstr "Phải có khách hàng cho phương thức thanh toán %s."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
-msgid "Customer required"
-msgstr "Phải có khách hàng"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4801,6 +4804,12 @@ msgid "Misc"
 msgstr "Thông tin khác"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "Missing required"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__mobile
 msgid "Mobile"
 msgstr "Di động"
@@ -6016,7 +6025,7 @@ msgstr "Vui lòng xác nhận số tiền lớn"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid "Please add a valid customer to the order."
 msgstr "Vui lòng thêm khách hàng hợp lệ vào đơn hàng."
 
@@ -6129,6 +6138,12 @@ msgstr "Vui lòng quét mã QR bằng %s"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
 msgid "Please select a payment method"
 msgstr "Vui lòng chọn phương thức thanh toán"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
+msgid "Please select a time slot before proceeding."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8020,6 +8035,12 @@ msgid "Skip Preview Screen"
 msgstr "Bỏ qua màn hình xem trước"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
+msgid "Slot"
+msgstr ""
+
+#. module: point_of_sale
 #: model:product.template,name:point_of_sale.small_shelf_product_template
 msgid "Small Shelf"
 msgstr "Giá nhỏ"
@@ -8057,6 +8078,12 @@ msgid ""
 msgstr ""
 "Không thể gửi một số đơn hàng về máy chủ do vấn đề kết nối mạng. Bạn có thể "
 "thoát POS, nhưng không được đóng phiên trước khi sự cố được giải quyết. "
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid "Some required information is missing."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8777,6 +8804,7 @@ msgstr "Số lượng yêu cầu hoàn tiền cao hơn số lượng có thể h
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "The selected customer needs an address."
 msgstr "Những khách hàng được chọn cần cung cấp địa chỉ. "
@@ -9773,16 +9801,6 @@ msgid ""
 msgstr "Cảnh báo, số tiền đã thanh toán cao hơn tổng số tiền. (Chênh lệch: %s)"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
-msgid ""
-"Warning: Your browser doesn't support IndexedDB. The data won't be saved. "
-"Please use a modern browser."
-msgstr ""
-"Cảnh báo: Trình duyệt của bạn không hỗ trợ IndexedDB, nên dữ liệu sẽ không "
-"được lưu. Vui lòng sử dụng trình duyệt mới hơn."
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__website_message_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__website_message_ids
 msgid "Website Messages"
@@ -10440,6 +10458,16 @@ msgstr "để kích hoạt nút."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "sử dụng"
+
+#~ msgid "Customer required"
+#~ msgstr "Phải có khách hàng"
+
+#~ msgid ""
+#~ "Warning: Your browser doesn't support IndexedDB. The data won't be saved. "
+#~ "Please use a modern browser."
+#~ msgstr ""
+#~ "Cảnh báo: Trình duyệt của bạn không hỗ trợ IndexedDB, nên dữ liệu sẽ "
+#~ "không được lưu. Vui lòng sử dụng trình duyệt mới hơn."
 
 #~ msgid "DUPLICATA !"
 #~ msgstr "TRÙNG LẶP!"

@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_razorpay
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Junko Augias, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:37+0000\n"
+"POT-Creation-Date: 2025-08-22 18:39+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_razorpay
@@ -201,6 +201,14 @@ msgstr "Razorpay Webhookシークレット"
 #. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_provider.py:0
+msgid ""
+"Razorpay credentials are missing. Click the \"Connect\" button to set up "
+"your account"
+msgstr ""
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_provider.py:0
 msgid "Razorpay gave us the following information: '%s'"
 msgstr "Razorpayが以下の情報を提供しています: '%s'"
 
@@ -210,7 +218,9 @@ msgstr "Razorpayが以下の情報を提供しています: '%s'"
 msgid ""
 "Razorpay is not available in your country; please use another payment "
 "provider."
-msgstr "Razorpayはお客様の国ではご利用いただけません。他の決済プロバイダーをご利用下さい。"
+msgstr ""
+"Razorpayはお客様の国ではご利用いただけません。他の決済プロバイダーをご利用下"
+"さい。"
 
 #. module: payment_razorpay
 #. odoo-python
@@ -294,21 +304,26 @@ msgstr "Webhookシークレット"
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid ""
-"You are currently connected to Razorpay through the credentials method, which is\n"
-"                    deprecated. Click the \"Connect\" button below to use the recommended OAuth\n"
+"You are currently connected to Razorpay through the credentials method, "
+"which is\n"
+"                    deprecated. Click the \"Connect\" button below to use "
+"the recommended OAuth\n"
 "                    method."
 msgstr ""
 "現在、認証情報方式でRazorpayに接続していますが、これは\n"
-"                    非推奨です。推奨されるOAuth方式を使用するには、下の \"接続 \" ボタンをクリックして\n"
+"                    非推奨です。推奨されるOAuth方式を使用するには、下の \"接"
+"続 \" ボタンをクリックして\n"
 "                    下さい。"
 
 #. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_token.py:0
 msgid ""
-"You can not pay amounts greater than %(currency_symbol)s %(max_amount)s with"
-" this payment method"
-msgstr "この支払方法では、 %(currency_symbol)s %(max_amount)s 以上の金額を支払うことはできません。"
+"You can not pay amounts greater than %(currency_symbol)s %(max_amount)s with "
+"this payment method"
+msgstr ""
+"この支払方法では、 %(currency_symbol)s %(max_amount)s 以上の金額を支払うこと"
+"はできません。"
 
 #. module: payment_razorpay
 #. odoo-python
@@ -322,4 +337,6 @@ msgstr "Razorpayのウェブフックが正常に設定されました! "
 msgid ""
 "Your last payment with reference %s will soon be processed. Please wait up "
 "to 24 hours before trying again, or use another payment method."
-msgstr "参照番号%sの最後の支払いはまもなく処理されます。再試行する前に最大24時間お待ちいただくか、別の支払い方法をご利用ください。"
+msgstr ""
+"参照番号%sの最後の支払いはまもなく処理されます。再試行する前に最大24時間お待"
+"ちいただくか、別の支払い方法をご利用ください。"
