@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_stock
-# 
+#
 # Translators:
 # Lyall Kindmurr, 2024
 # Wil Odoo, 2024
 # Larisa_nexterp, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:37+0000\n"
+"POT-Creation-Date: 2025-08-22 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -63,23 +64,29 @@ msgstr "<span class=\"o_stat_text\">Vânzări</span>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
-"<span class=\"small badge rounded-pill text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Shipped\n"
+"<span class=\"small badge rounded-pill text-bg-success "
+"orders_label_text_align\">\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Shipped\n"
 "                                    </span>"
 msgstr ""
-"<span class=\"small badge rounded-pill text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Livrat\n"
+"<span class=\"small badge rounded-pill text-bg-success "
+"orders_label_text_align\">\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Livrat\n"
 "                                    </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
 msgid ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
+"                    Some deliveries are already done. Returns can be created "
+"from the Delivery Orders.\n"
 "                </span>"
 msgstr ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    Unele livrări sunt deja efectuate. Returnările pot fi create din comenzile de livrare.\n"
+"                    Unele livrări sunt deja efectuate. Returnările pot fi "
+"create din comenzile de livrare.\n"
 "                </span>"
 
 #. module: sale_stock
@@ -101,16 +108,22 @@ msgstr "Un produs stocabil este un produs pentru care gestionați stocul."
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"În funcție de configurarea produsului, cantitatea livrată poate fi calculată automat prin mecanism:\n"
+"În funcție de configurarea produsului, cantitatea livrată poate fi calculată "
+"automat prin mecanism:\n"
 "  - Manual: cantitatea este setată manual pe linie\n"
-"  - Analitic din cheltuieli: cantitatea este suma cantităților din cheltuielile postate\n"
-"  - Foaie de pontaj: cantitatea este suma orelor înregistrate pe sarcini legate de această linie de vânzare\n"
+"  - Analitic din cheltuieli: cantitatea este suma cantităților din "
+"cheltuielile postate\n"
+"  - Foaie de pontaj: cantitatea este suma orelor înregistrate pe sarcini "
+"legate de această linie de vânzare\n"
 "  - Mișcări de stoc: cantitatea provine din colectările confirmate\n"
 
 #. module: sale_stock
@@ -222,8 +235,8 @@ msgid ""
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
 "Data de livrare pe care o puteți promite clientului, calculată din timpul "
-"minim de livrare al liniilor de comandă în cazul produselor de tip Serviciu."
-" În cazul expedierii, politica de livrare a comenzii va fi luată în "
+"minim de livrare al liniilor de comandă în cazul produselor de tip Serviciu. "
+"În cazul expedierii, politica de livrare a comenzii va fi luată în "
 "considerare pentru a folosi fie timpul minim, fie cel maxim al liniilor de "
 "comandă."
 
@@ -311,8 +324,8 @@ msgid ""
 "shortest."
 msgstr ""
 "Dacă livrați toate produsele simultan, comanda de livrare va fi programată "
-"în funcție de cel mai mare timp de livrare al produsului. În caz contrar, se"
-" va baza pe cel mai scurt timp."
+"în funcție de cel mai mare timp de livrare al produsului. În caz contrar, se "
+"va baza pe cel mai scurt timp."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -415,12 +428,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
 msgstr ""
 "Marja de eroare pentru datele promise clienților. Produsele vor fi "
-"programate pentru achiziție și livrare cu atâtea zile mai devreme decât data"
-" reală promisă, pentru a face față întârzierilor neașteptate din lanțul de "
+"programate pentru achiziție și livrare cu atâtea zile mai devreme decât data "
+"reală promisă, pentru a face față întârzierilor neașteptate din lanțul de "
 "aprovizionare."
 
 #. module: sale_stock
@@ -521,7 +534,8 @@ msgstr "RETURNARE"
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
 msgid ""
 "Reduce back orders with reservations, locations management, smart\n"
-"                replenishment propositions, shipping connectors, barcode scanner, etc."
+"                replenishment propositions, shipping connectors, barcode "
+"scanner, etc."
 msgstr ""
 "Reduceți comenzile restante cu rezervări, gestionarea locațiilor, propuneri "
 "inteligente de reaprovizionare, conectori de expediere, scaner de coduri de "
@@ -689,6 +703,11 @@ msgid "Stock Rules report"
 msgstr "Raport reguli de stoc"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_valuation_layer
+msgid "Stock Valuation Layer"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "Raport regulă de stoc"
@@ -704,19 +723,22 @@ msgstr "Livrarea"
 #: code:addons/sale_stock/models/sale_order.py:0
 msgid ""
 "The delivery address has been changed on the Sales Order<br/>\n"
-"                        From <strong>\"%(old_address)s\"</strong> to <strong>\"%(new_address)s\"</strong>,\n"
-"                        You should probably update the partner on this document."
+"                        From <strong>\"%(old_address)s\"</strong> to "
+"<strong>\"%(new_address)s\"</strong>,\n"
+"                        You should probably update the partner on this "
+"document."
 msgstr ""
 "Adresa de livrare a fost schimbată pe comanda de vânzare<br/>\n"
-"De la <strong>\"%(old_address)s\"</strong> la <strong>\"%(new_address)s\"</strong>,\n"
+"De la <strong>\"%(old_address)s\"</strong> la <strong>\"%(new_address)s\"</"
+"strong>,\n"
 "Ar trebui să actualizați partenerul pe acest document."
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js:0
 msgid ""
-"The ordered quantity cannot be decreased below the amount already delivered."
-" Instead, create a return in your inventory."
+"The ordered quantity cannot be decreased below the amount already delivered. "
+"Instead, create a return in your inventory."
 msgstr ""
 "Cantitatea comandată nu poate fi redusă sub cantitatea deja livrată. În "
 "schimb, creați un retur în inventarul dvs."
