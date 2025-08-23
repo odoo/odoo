@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_razorpay
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Maitê Dietze, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-30 18:38+0000\n"
+"POT-Creation-Date: 2025-08-21 18:40+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Maitê Dietze, 2025\n"
-"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/"
+"41243/pt_BR/)\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt_BR\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
@@ -202,6 +204,14 @@ msgstr "Segredo do webhook do Razorpay"
 #. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_provider.py:0
+msgid ""
+"Razorpay credentials are missing. Click the \"Connect\" button to set up "
+"your account"
+msgstr ""
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_provider.py:0
 msgid "Razorpay gave us the following information: '%s'"
 msgstr "O Razorpay nos forneceu as seguintes informações: '%s'"
 
@@ -298,11 +308,14 @@ msgstr "Segredo do webhook"
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid ""
-"You are currently connected to Razorpay through the credentials method, which is\n"
-"                    deprecated. Click the \"Connect\" button below to use the recommended OAuth\n"
+"You are currently connected to Razorpay through the credentials method, "
+"which is\n"
+"                    deprecated. Click the \"Connect\" button below to use "
+"the recommended OAuth\n"
 "                    method."
 msgstr ""
-"No momento, você está conectado ao Razorpay por meio do método de credenciais, que é\n"
+"No momento, você está conectado ao Razorpay por meio do método de "
+"credenciais, que é\n"
 "obsoleto. Clique no botão \"Conectar\" abaixo para usar o método OAuth\n"
 "recomendado."
 
@@ -310,8 +323,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_token.py:0
 msgid ""
-"You can not pay amounts greater than %(currency_symbol)s %(max_amount)s with"
-" this payment method"
+"You can not pay amounts greater than %(currency_symbol)s %(max_amount)s with "
+"this payment method"
 msgstr ""
 "Você não pode pagar valores superiores a %(currency_symbol)s %(max_amount)s "
 "com essa forma de pagamento"

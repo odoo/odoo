@@ -1,22 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_online_payment_self_order
-# 
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-12 20:36+0000\n"
+"POT-Creation-Date: 2025-08-21 18:39+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_online_payment_self_order
@@ -25,6 +26,7 @@ msgid "Config Settings"
 msgstr "配置設定"
 
 #. module: pos_online_payment_self_order
+#: model:ir.model.fields,field_description:pos_online_payment_self_order.field_payment_transaction__display_name
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_config__display_name
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_order__display_name
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_payment_method__display_name
@@ -33,6 +35,7 @@ msgid "Display Name"
 msgstr "顯示名稱"
 
 #. module: pos_online_payment_self_order
+#: model:ir.model.fields,field_description:pos_online_payment_self_order.field_payment_transaction__id
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_config__id
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_order__id
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_payment_method__id
@@ -72,6 +75,11 @@ msgstr "如果留空，可在收銀台付款"
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
 msgid "Payment Methods"
 msgstr "付款方式"
+
+#. module: pos_online_payment_self_order
+#: model:ir.model,name:pos_online_payment_self_order.model_payment_transaction
+msgid "Payment Transaction"
+msgstr ""
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
@@ -126,7 +134,9 @@ msgid ""
 "The online payment method used for self-order in a POS config must have at "
 "least one published payment provider supporting the currency of that POS "
 "config."
-msgstr "POS配置中用於自助訂單的網上付款方式,必須至少有一個已發佈的付款服務商支援該POS 配置的貨幣。"
+msgstr ""
+"POS配置中用於自助訂單的網上付款方式,必須至少有一個已發佈的付款服務商支援該"
+"POS 配置的貨幣。"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_order__use_self_order_online_payment

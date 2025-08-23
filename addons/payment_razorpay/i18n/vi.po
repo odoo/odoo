@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_razorpay
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Thi Huong Nguyen, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-30 18:38+0000\n"
+"POT-Creation-Date: 2025-08-21 18:40+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_razorpay
@@ -203,6 +203,14 @@ msgstr "Mã bí mật Webhook Razorpay"
 #. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_provider.py:0
+msgid ""
+"Razorpay credentials are missing. Click the \"Connect\" button to set up "
+"your account"
+msgstr ""
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_provider.py:0
 msgid "Razorpay gave us the following information: '%s'"
 msgstr "Razorpay đã cung cấp cho chúng tôi thông tin sau: '%s'"
 
@@ -300,20 +308,24 @@ msgstr "Mã bí mật Webhook"
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid ""
-"You are currently connected to Razorpay through the credentials method, which is\n"
-"                    deprecated. Click the \"Connect\" button below to use the recommended OAuth\n"
+"You are currently connected to Razorpay through the credentials method, "
+"which is\n"
+"                    deprecated. Click the \"Connect\" button below to use "
+"the recommended OAuth\n"
 "                    method."
 msgstr ""
-"Bạn hiện đang kết nối với Razorpay bằng phương thức thông tin đăng nhập, nhưng\n"
-"phương thức này đã bị ngừng hỗ trợ. Nhấp vào nút \"Kết nối\" bên dưới để sử dụng \n"
+"Bạn hiện đang kết nối với Razorpay bằng phương thức thông tin đăng nhập, "
+"nhưng\n"
+"phương thức này đã bị ngừng hỗ trợ. Nhấp vào nút \"Kết nối\" bên dưới để sử "
+"dụng \n"
 "phương thức OAuth được khuyên dùng."
 
 #. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_token.py:0
 msgid ""
-"You can not pay amounts greater than %(currency_symbol)s %(max_amount)s with"
-" this payment method"
+"You can not pay amounts greater than %(currency_symbol)s %(max_amount)s with "
+"this payment method"
 msgstr ""
 "Bạn không thể thanh toán số tiền lớn hơn %(max_amount)s %(currency_symbol)s "
 "bằng phương thức thanh toán này"
@@ -331,6 +343,5 @@ msgid ""
 "Your last payment with reference %s will soon be processed. Please wait up "
 "to 24 hours before trying again, or use another payment method."
 msgstr ""
-"Thanh toán gần nhất của bạn với mã tham chiếu %s sẽ sớm được xử lý. Vui lòng"
-" đợi tối đa 24 giờ trước khi thử lại hoặc sử dụng phương thức thanh toán "
-"khác."
+"Thanh toán gần nhất của bạn với mã tham chiếu %s sẽ sớm được xử lý. Vui lòng "
+"đợi tối đa 24 giờ trước khi thử lại hoặc sử dụng phương thức thanh toán khác."

@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_razorpay
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Jessica Jakara, 2025
 # Dylan Kiss, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-30 18:38+0000\n"
+"POT-Creation-Date: 2025-08-21 18:40+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Dylan Kiss, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_razorpay
@@ -202,6 +202,14 @@ msgstr "Razorpay Webhook-salaus"
 #. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_provider.py:0
+msgid ""
+"Razorpay credentials are missing. Click the \"Connect\" button to set up "
+"your account"
+msgstr ""
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_provider.py:0
 msgid "Razorpay gave us the following information: '%s'"
 msgstr "Razorpay antoi seuraavat tiedot: \"%s\""
 
@@ -297,23 +305,26 @@ msgstr "Webhook-salaus"
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid ""
-"You are currently connected to Razorpay through the credentials method, which is\n"
-"                    deprecated. Click the \"Connect\" button below to use the recommended OAuth\n"
+"You are currently connected to Razorpay through the credentials method, "
+"which is\n"
+"                    deprecated. Click the \"Connect\" button below to use "
+"the recommended OAuth\n"
 "                    method."
 msgstr ""
 "Sinut on yhdistetty Razorpay:hin käyttäjätunnusmenetelmällä, joka on\n"
-"                    poistettu käytöstä. KIikkaa alla olevaa \"Yhdistä\"-painiketta käyttääksesi suositeltua OAuth\n"
+"                    poistettu käytöstä. KIikkaa alla olevaa \"Yhdistä\"-"
+"painiketta käyttääksesi suositeltua OAuth\n"
 "                    -menetelmää."
 
 #. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_token.py:0
 msgid ""
-"You can not pay amounts greater than %(currency_symbol)s %(max_amount)s with"
-" this payment method"
+"You can not pay amounts greater than %(currency_symbol)s %(max_amount)s with "
+"this payment method"
 msgstr ""
-"Tällä maksutavalla ei voi maksaa suurempia summia kuin %(currency_symbol)s "
-"%(max_amount)s"
+"Tällä maksutavalla ei voi maksaa suurempia summia kuin %(currency_symbol)s %"
+"(max_amount)s"
 
 #. module: payment_razorpay
 #. odoo-python
