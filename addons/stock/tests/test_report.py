@@ -1342,6 +1342,117 @@ class TestReports(TestReportsCommon):
             }
         ])
 
+    def test_report_forecast_14(self):
+
+        def create_picking(quantity, picking_type):
+            picking_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
+            picking_form.partner_id = self.partner
+            picking_form.picking_type_id = picking_type
+            with picking_form.move_ids_without_package.new() as move_line:
+                move_line.product_id = self.product
+                move_line.product_uom_qty = quantity
+            return picking_form.save()
+
+        delivery_one, delivery_two = create_picking(10, self.picking_type_out), create_picking(10, self.picking_type_out)
+        receipt_one, receipt_two, receipt_three = create_picking(5, self.picking_type_in), create_picking(5, self.picking_type_in), create_picking(10, self.picking_type_in)
+
+        for receipt in [receipt_one, receipt_two]:
+            receipt.move_ids.write({
+                "move_dest_ids": [Command.link(delivery_one.move_ids.id), Command.link(delivery_two.move_ids.id)]
+            })
+
+        for picking in [receipt_one, receipt_two, receipt_three, delivery_one, delivery_two]:
+            picking.action_confirm()
+
+        report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
+
+        # The number of lines should be 3:
+        #    - Line_1: reconcilation of delivery_one with receipt_one. (quantity = 5)
+        #    - Line_2: reconcilation of delivery_one with receipt_two. (quantity = 5)
+        # Since receipt_two and receipt_one got fully reconcilated with the first delivery, we expect delivery_two to fulfill its demand from receipt_three
+        #    - Line_3: reconcilation of delivery_two with receipt_three. (quantity = 10)
+
+        self.assertEqual(len(lines), 3, "The report must have 3 lines.")
+        line_one, line_two, line_three = lines
+        self.assertEqual(line_one['quantity'], 5)
+        self.assertEqual(line_one['document_out']['id'], delivery_one.id)
+        self.assertEqual(line_one['document_in']['id'], receipt_one.id)
+        self.assertEqual(line_three['replenishment_filled'], True)
+
+        self.assertEqual(line_two['quantity'], 5)
+        self.assertEqual(line_two['document_out']['id'], delivery_one.id)
+        self.assertEqual(line_two['document_in']['id'], receipt_two.id)
+        self.assertEqual(line_two['replenishment_filled'], True)
+
+        self.assertEqual(line_three['quantity'], 10)
+        self.assertEqual(line_three['document_out']['id'], delivery_two.id)
+        self.assertEqual(line_three['document_in']['id'], receipt_three.id)
+        self.assertEqual(line_three['replenishment_filled'], True)
+
+    def test_report_forecast_15(self):
+
+        def create_picking(quantity, picking_type):
+            picking_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
+            picking_form.partner_id = self.partner
+            picking_form.picking_type_id = picking_type
+            with picking_form.move_ids_without_package.new() as move_line:
+                move_line.product_id = self.product
+                move_line.product_uom_qty = quantity
+
+            picking = picking_form.save()
+            picking.action_confirm()
+            return picking
+
+        delivery_one, delivery_two = create_picking(10, self.picking_type_out), create_picking(10, self.picking_type_out)
+        receipt_one, receipt_two, receipt_three = create_picking(7, self.picking_type_in), create_picking(5, self.picking_type_in), create_picking(6, self.picking_type_in)
+
+        for receipt in [receipt_two, receipt_three]:
+            receipt.move_ids.write({
+                "move_dest_ids": [Command.link(delivery_one.move_ids.id), Command.link(delivery_two.move_ids.id)]
+            })
+
+        report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
+
+        # The number of lines should be 5:
+        #   The quantity fulfillment process will begin firstly with delivery_one then delivery_two.
+        #   Candidates for delivery_one will be (receipt_two, receipt_three, receipt_one). (In this order. receipt_two and receipt_three came before receipt_one because one of their move_dest_ids is delivery_one)
+        #       - Line_1: reconcilation of delivery_one with receipt_two. (receipt_two and receipt_three have the same priority, but receipt_two was fulfilled firstly because it was created before receipt_three) (quantity = 5)
+        #       - Line_2: reconcilation of delivery_one with receipt_three. (quantity = 5)
+        #   delivery_one quantity has been fulfilled completely and the reconcilation process will start for delivery_two.
+        #   Candidates for delivery_two will be [receipt_three (remaining_qty: 1), receipt_one (remaining_qty: 7)]. (Notice here that we should assume that receipt_two is not a candidate anymore since it was fully reconciled with delivery_one)
+        #       - Line_3: reconcilation of delivery_two with receipt_three. (quantity = 1)
+        #       - Line_4: reconcilation of deivery_two with receipt_one. (quantity = 7)
+        #   delivery_one quantity has been totally fulfilled and delivery_two with a partial reconcilation of 8 quants.
+        #       - Line_5: replenishment not filled for delivery_two: (quantity = 2)
+
+        self.assertEqual(len(lines), 5, "The report must have 5 lines.")
+
+        line_one, line_two, line_three, line_four, line_five = lines
+
+        self.assertEqual(line_one['quantity'], 5)
+        self.assertEqual(line_one['document_out']['id'], delivery_one.id)
+        self.assertEqual(line_one['document_in']['id'], receipt_two.id)
+        self.assertEqual(line_one['replenishment_filled'], True)
+
+        self.assertEqual(line_two['quantity'], 5)
+        self.assertEqual(line_two['document_out']['id'], delivery_one.id)
+        self.assertEqual(line_two['document_in']['id'], receipt_three.id)
+        self.assertEqual(line_two['replenishment_filled'], True)
+
+        self.assertEqual(line_three['quantity'], 1)
+        self.assertEqual(line_three['document_out']['id'], delivery_two.id)
+        self.assertEqual(line_three['document_in']['id'], receipt_three.id)
+        self.assertEqual(line_three['replenishment_filled'], True)
+
+        self.assertEqual(line_four['quantity'], 7)
+        self.assertEqual(line_four['document_out']['id'], delivery_two.id)
+        self.assertEqual(line_four['document_in']['id'], receipt_one.id)
+        self.assertEqual(line_four['replenishment_filled'], True)
+
+        self.assertEqual(line_five['quantity'], 2)
+        self.assertEqual(line_five['document_out']['id'], delivery_two.id)
+        self.assertEqual(line_five['replenishment_filled'], False)
+
     def test_report_reception_1_one_receipt(self):
         """ Create 2 deliveries and 1 receipt where some of the products being received
         can be reserved for the deliveries. Check that the reception report correctly
