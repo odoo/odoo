@@ -39,6 +39,7 @@ class TestSnippets(HttpCase):
             's_image',  # Avoid specific case where the media dialog opens on drop
             's_snippet_group',  # Snippet groups are not snippets
             's_inline_text',
+            's_disclaimer',  # Avoid specific case where snippet should be dropped outside #wrap
         ]
         snippets_names = ','.join({
             f"{el.attrib['data-oe-snippet-key']}:{el.attrib.get('data-o-group', '')}"
@@ -110,6 +111,9 @@ class TestSnippets(HttpCase):
 
     def test_12_snippet_images_wall(self):
         self.start_tour('/', 'snippet_images_wall', login='admin')
+
+    def test_13_snippet_disclaimer(self):
+        self.start_tour("/", "snippet_disclaimer", login="admin")
 
     def test_snippet_popup_with_scrollbar_and_animations(self):
         website = self.env.ref('website.default_website')
