@@ -9,13 +9,15 @@ patch(PosOrder.prototype, {
             onlinePaymentData: { ...this.onlinePaymentData },
         };
     },
-    set_partner(partner) {
+    async set_partner(partner) {
         super.set_partner(...arguments);
-        return rpc("/web/dataset/call_kw/pos.order/write", {
-            model: "pos.order",
-            method: "write",
-            args: [this.id, { partner_id: partner ? partner.id : false }],
-            kwargs: {},
-        });
+        if (typeof this.id === "number") {
+            await rpc("/web/dataset/call_kw/pos.order/write", {
+                model: "pos.order",
+                method: "write",
+                args: [this.id, { partner_id: partner ? partner.id : false }],
+                kwargs: {},
+            });
+        }
     },
 });
