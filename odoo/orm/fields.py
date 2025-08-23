@@ -1587,13 +1587,7 @@ class Field(typing.Generic[T]):
         enables to keep the pending updates of records, and flush them later.
         """
         field_cache = self._get_cache(records.env)
-        # call setdefault for all ids, values (looping in C)
-        # this is ~15% faster than the equivalent:
-        # ```
-        # for record, value in zip(records._ids, values):
-        #   field_cache.setdefault(record, value)
-        # ```
-        collections.deque(map(field_cache.setdefault, records._ids, values), maxlen=0)
+        field_cache |= zip(records._ids, values)
 
     def _update_cache(self, records: BaseModel, cache_value: typing.Any, dirty: bool = False) -> None:
         """ Update the value in the cache for the given records, and optionally
