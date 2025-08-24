@@ -1493,8 +1493,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
         order_sudo._update_address(partner_id, partner_fnames)
 
     # === CHECKOUT FLOW - EXTRA STEP METHODS === #
+    def system_page_extra_info(env):
+        website = env['website'].get_current_website()
+        if website.is_view_active('website_sale.extra_info'):
+            return _lt("Shop Checkout - Extra Information")
+        return False
 
-    @route(['/shop/extra_info'], type='http', auth="public", website=True, sitemap=False, list_as_website_content=_lt("Shop Checkout - Extra Information"))
+    @route(['/shop/extra_info'], type='http', auth="public", website=True, sitemap=False, list_as_website_content=system_page_extra_info)
     def extra_info(self, **post):
         # Check that this option is activated
         extra_step = request.website.viewref('website_sale.extra_info')
