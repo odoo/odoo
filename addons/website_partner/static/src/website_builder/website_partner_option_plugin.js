@@ -10,7 +10,7 @@ class WebsitePartnersPageOption extends Plugin {
         builder_options: [
             {
                 OptionComponent: WebsitePartnersPage,
-                selector: "main:has(#oe_structure_website_partner_layout_1)",
+                selector: "main:has(#oe_structure_website_partners_layout_1)",
                 title: _t("Partners Page"),
                 editableOnly: false,
                 groups: ["website.group_website_designer"],

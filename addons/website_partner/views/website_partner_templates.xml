@@ -1,84 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="layout" name="Partners Layout">
-    <t t-set="editable" t-value="True"/>
     <t t-call="website.layout">
         <t t-set="additional_title">Partners</t>
         <div id="wrap">
             <div class="oe_structure oe_empty" id="oe_structure_website_partner_layout_1"
-                data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL RESELLERS"/>
+                data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PARTNERS"/>
             <div class="container mb-3">
                 <t t-out="0" />
             </div>
             <div class="oe_structure oe_empty" id="oe_structure_website_partner_layout_2"
-                data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL RESELLERS"/>
+                data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PARTNERS"/>
+        </div>
+    </t>
+</template>
+
+<template id="index_main" name="Find Partners">
+    <t t-call="website.layout">
+        <t t-set="additional_title">Partners</t>
+        <div id="wrap">
+            <div class="oe_structure oe_empty" id="oe_structure_website_partners_layout_1"
+                data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS PARTNERS"/>
+            <div class="container mb-3">
+                <t t-call="website_partner.index"/>
+            </div>
+            <div class="oe_structure oe_empty" id="oe_structure_website_partners_layout_2"
+                data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS PARTNERS"/>
         </div>
     </t>
 </template>
 
 <template id="index" name="Find Partners">
-    <t t-call="website_partner.layout">
-        <div>
-            <section class="o_wcrm_filters_top d-flex d-print-none align-items-center justify-content-lg-end flex-wrap gap-2 mt-4 mb-3">
-                <h1 id="page_title" class="me-auto mb-0 h4 o_editable">
-                    Find a partner<t t-foreach="countries" t-as="country"><span t-if="country['active'] and country['country_id'][0] != 0 and country['country_id']">in <t t-out="country['country_id'][1]"/></span></t>
-                </h1>
-                <div id="page_top_middle"/><!--Used to add items by inheritage-->
-            </section>
+    <div class="container" id="partners_page_top_menu">
+        <section class="o_wcrm_filters_top d-flex d-print-none align-items-center justify-content-lg-end flex-wrap gap-2 mt-4 mb-3">
+            <h1 id="page_title" class="me-auto mb-0 h4">Find a partner</h1>
+            <div id="page_top_middle"/><!--Used to add items by inheritage-->
+        </section>
+    </div>
+    <!-- Off canvas filters on mobile-->
+    <div id="o_wcrm_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">Filters</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
         </div>
-        <!-- Off canvas filters on mobile-->
-        <div id="o_wcrm_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible">
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title">Filters</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
-            </div>
-            <div class="offcanvas-body p-0">
-                <div class="accordion accordion-flush"><!--Used to add accordion items by inheritage--></div>
-            </div>
+        <div class="offcanvas-body p-0">
+            <div class="accordion accordion-flush"><!--Used to add accordion items by inheritage--></div>
         </div>
-        <div class="row mb-4">
-            <div class="my-5 py-5 text-center" t-if="not partners">
-                <h5>No results found for "<span t-out="searches.get('search', '')"/>"</h5>
-                <a href="/partners">See all partners</a>
-            </div>
-            <div t-elif="fallback_all_countries" class="mt-4 alert alert-primary alert-dismissible fade show" role="alert">
-                <i class="fa fa-info-circle me-2"/>
-                There are no matching partners found for the selected country. Displaying results across all countries instead.
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            <t id="partners_cards" t-foreach="partners" t-as="partner">
-                <div class="col-md-4 col-xl-3 col-12 mb-4">
-                    <div class="card h-100 text-decoration-none">
-                        <a id="partner_link_card" class="text-decoration-none" aria-label="Go to reseller">
-                            <div t-field="partner.avatar_1920"
-                                class="card-img-top border-bottom"
-                                t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img img-fluid h-100 w-100 mw-100", "style": "max-height: 208px; min-height: 208px; object-fit: cover"}'
-                                />
-                            <div class="card-body">
-                                <h5 class="card-title m-0" t-attf-href="/partners/#{slug(partner)}?#{current_country and 'country_id=%s' % current_country.id}" t-field="partner.display_name"/>
-                                <small id="o_wcrm_partners_address"/>
-                                <small class="o_wcrm_short_description text-muted overflow-hidden">
-                                    <b t-if="partner.implemented_partner_count">
-                                        <t t-if="partner.implemented_partner_count > 1" t-set='reflabel'>references</t>
-                                        <t t-else="" t-set='reflabel'>reference</t>
-                                        <t t-out="partner.implemented_partner_count"/> <t t-out='reflabel'/> » </b>
-                                    <span t-field="partner.website_short_description"/>
-                                </small>
-                                <small t-if="not partner.website_short_description" class="css_editable_mode_hidden text-muted fst-italic" groups="website.group_website_restricted_editor">
-                                    Edit to add a short description
-                                </small>
-                            </div>
-                        </a>
-                    </div>
+    </div>
+    <div class="row mb-4">
+        <div class="my-5 py-5 text-center" t-if="not partners">
+            <h5>No results found for "<span t-out="searches.get('search', '')"/>"</h5>
+            <a href="/partners">See all partners</a>
+        </div>
+        <div t-elif="fallback_all_countries" class="mt-4 alert alert-primary alert-dismissible fade show" role="alert">
+            <i class="fa fa-info-circle me-2"/>
+            There are no matching partners found for the selected country. Displaying results across all countries instead.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <t id="partners_cards" t-foreach="partners" t-as="partner">
+            <div class="col-md-4 col-xl-3 col-12 mb-4">
+                <div class="card h-100 text-decoration-none">
+                    <a id="partner_link_card" class="text-decoration-none" aria-label="Go to reseller">
+                        <div t-field="partner.avatar_1920"
+                            class="card-img-top border-bottom"
+                            t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img img-fluid h-100 w-100 mw-100", "style": "max-height: 208px; min-height: 208px; object-fit: cover"}'
+                            />
+                        <div class="card-body">
+                            <h5 class="card-title m-0" t-attf-href="/partners/#{slug(partner)}?#{current_country and 'country_id=%s' % current_country.id}" t-field="partner.display_name"/>
+                            <small id="o_wcrm_partners_address"/>
+                            <small class="o_wcrm_short_description text-muted overflow-hidden">
+                                <b t-if="partner.implemented_partner_count">
+                                    <t t-if="partner.implemented_partner_count > 1" t-set='reflabel'>references</t>
+                                    <t t-else="" t-set='reflabel'>reference</t>
+                                    <t t-out="partner.implemented_partner_count"/> <t t-out='reflabel'/> » </b>
+                                <span t-field="partner.website_short_description"/>
+                            </small>
+                            <small t-if="not partner.website_short_description" class="css_editable_mode_hidden text-muted fst-italic" groups="website.group_website_restricted_editor">
+                                Edit to add a short description
+                            </small>
+                        </div>
+                    </a>
                 </div>
-            </t>
-            <div class="navbar">
-                <t t-call="website.pager">
-                   <t t-set="classname" t-valuef="mx-auto"/>
-                </t>
             </div>
+        </t>
+        <div class="navbar">
+            <t t-call="website.pager">
+                <t t-set="classname" t-valuef="mx-auto"/>
+            </t>
         </div>
-    </t>
+    </div>
 </template>
 
 <template id="partner" name="Partner Detail">
@@ -157,8 +167,8 @@
 
 <template id="add_grades_on_partner" inherit_id="website_partner.index" name="Add Grades On Partners Page">
     <xpath expr="//h1[@id='page_title']" position="after">
-        <t t-set='all_categories_label'>All Categories</t>
-        <div class="dropdown d-none d-lg-block" contenteditable="True">
+        <t t-set='all_categories_label'>All Categories</t>        
+        <div class="dropdown d-none d-lg-block">
             <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by category" aria-label="Filter by category" aria-expanded="false">
                 <t t-foreach="grades" t-as="grade">
                     <span t-if="grade['active']" t-out="grade['grade_id'][1] if grade['grade_id'][0] != 0 else all_categories_label"/>

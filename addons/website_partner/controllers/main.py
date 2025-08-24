@@ -173,7 +173,7 @@ class WebsitePartnerPage(http.Controller):
             references_per_page=self._references_per_page,
             **post
         )
-        return request.render("website_partner.index", values, status=values.get('partners') and 200 or 404)
+        return request.render("website_partner.index_main", values, status=values.get('partners') and 200 or 404)
 
     # Do not use semantic controller due to SUPERUSER_ID
     @http.route(['/partners/<partner_id>'], type='http', auth="public", website=True)
