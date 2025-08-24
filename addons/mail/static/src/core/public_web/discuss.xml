@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Discuss">
-    <div class="o-mail-Discuss d-flex h-100 flex-grow-1" t-att-class="{ 'flex-column align-items-center': ui.isSmall, 'border-top border-secondary o-border-opacity-25': !ui.isSmall }" t-att-data-active="store.discuss.isActive" t-ref="root">
+    <div class="o-mail-Discuss d-flex h-100 flex-grow-1" t-att-class="{ 'flex-column align-items-center': ui.isSmall, 'border-top border-secondary': !ui.isSmall }" t-att-data-active="store.discuss.isActive" t-ref="root">
         <DiscussSidebar t-if="!ui.isSmall and props.hasSidebar"/>
         <DiscussContent t-if="!ui.isSmall" thread="props.thread"/>
         <MessagingMenu t-if="ui.isSmall"/>

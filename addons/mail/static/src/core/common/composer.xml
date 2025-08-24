@@ -14,13 +14,13 @@
                     'pb-2': extended and !props.composer.message,
                     'o-extended': extended,
                     'o-isUiSmall': ui.isSmall,
-                    'ps-2 pe-4 pb-2': normal,
+                    'ps-2 pe-4 pb-2': normal and !env.inDiscussApp,
                     'o-hasSelfAvatar': showComposerAvatar,
                     'o-focused': props.composer.isFocused,
                     'o-editing': props.composer.message,
                     'o-chatWindow mx-2': env.inChatWindow,
                     'mb-3': env.inChatWindow and !props.composer.message,
-                    'o-discussApp pt-1': env.inDiscussApp,
+                    'o-discussApp ps-2 ps-xl-3 pt-1 pe-4 pb-2': env.inDiscussApp,
                     'm-1': env.inChatWindow,
                 }" t-attf-class="{{ props.className }}">
             <FileUploader t-if="allowUpload" multiUpload="isMultiUpload" onUploaded.bind="(data) => { attachmentUploader.uploadData(data) }">

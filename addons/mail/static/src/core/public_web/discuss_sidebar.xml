@@ -10,7 +10,7 @@
                         'py-2': !store.inPublicPage and !store.discuss.isSidebarCompact,
                         'pt-2 o-px-2_5': store.inPublicPage,
                         'flex-column': store.discuss.isSidebarCompact and !ui.isSmall,
-                        'o-px-2_5 o-mt-0_5': !store.discuss.isSidebarCompact or ui.isSmall,
+                        'o-px-2_5 mt-1': !store.discuss.isSidebarCompact or ui.isSmall,
                     }"/>
                     <t t-foreach="discussSidebarItems" t-as="item" t-key="item_index" t-component="item"/>
                 </div>

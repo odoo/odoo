@@ -10,8 +10,6 @@
 
 .o-mail-DiscussContent-header {
     background-color: $white;
-    box-shadow: 0px 1px 6px -3px rgba(50, 50, 50, 0.15);
-    --border-opacity: .25;
 }
 
 .o-mail-DiscussContent-headerActions button {
@@ -56,10 +54,6 @@
     right: -2px;
 }
 
-.o-mail-DiscussContent-panelContainer {
-    --border-opacity: .25;
-}
-
 .o-mail-DiscussContent-selfAvatar {
     height: 30px;
     width: 30px;
@@ -67,8 +61,8 @@
 
 .o-mail-DiscussContent-threadAvatar {
     img {
-        height: $o-mail-Avatar-size;
-        width: $o-mail-Avatar-size;
+        height: ($btn-font-size * $btn-line-height) + $btn-padding-y;
+        aspect-ratio: 1;
     }
 
     a {
