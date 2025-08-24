@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:37+0000\n"
+"POT-Creation-Date: 2025-08-22 18:39+0000\n"
 "PO-Revision-Date: 2025-08-19 22:20+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-18/"
@@ -79,8 +79,10 @@ msgstr "<span class=\"o_stat_text\">Ventes</span>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
-"<span class=\"small badge rounded-pill text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Shipped\n"
+"<span class=\"small badge rounded-pill text-bg-success "
+"orders_label_text_align\">\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Shipped\n"
 "                                    </span>"
 msgstr ""
 
@@ -88,7 +90,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
 msgid ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
+"                    Some deliveries are already done. Returns can be created "
+"from the Delivery Orders.\n"
 "                </span>"
 msgstr ""
 
@@ -111,16 +114,22 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Segons la configuració del producte, la quantitat entregada pot ser calculada automàticament amb el mecanisme:\n"
+"Segons la configuració del producte, la quantitat entregada pot ser "
+"calculada automàticament amb el mecanisme:\n"
 "  - Manual: la quantitat s'informa manualment a la línia\n"
-"  - Analítica de despeses: la quantitat es la suma de les despeses informades\n"
-"  - Fulls d'hores: la quantitat és la suma de les hores informades a les tasques enllaçades amb aquesta línia de venda\n"
+"  - Analítica de despeses: la quantitat es la suma de les despeses "
+"informades\n"
+"  - Fulls d'hores: la quantitat és la suma de les hores informades a les "
+"tasques enllaçades amb aquesta línia de venda\n"
 "  - Moviments d'estoc: la quantitat ve de les entregues confirmades\n"
 
 #. module: sale_stock
@@ -243,8 +252,7 @@ msgstr "Mostra Qty Display"
 #: code:addons/sale_stock/models/sale_order.py:0
 msgid ""
 "Do not forget to change the partner on the following delivery orders: %s"
-msgstr ""
-"No oblidis canviar el partner en les següents ordres de lliurament: %s"
+msgstr "No oblidis canviar el partner en les següents ordres de lliurament: %s"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -412,8 +420,8 @@ msgid ""
 "with unexpected delays in the supply chain."
 msgstr ""
 "El marge d'error per les dates promeses als clients. L'entrega dels "
-"productes serà programada per dies abans de la data promesa, per fer front a"
-" retards inesperats en la cadena de subministrament. "
+"productes serà programada per dies abans de la data promesa, per fer front a "
+"retards inesperats en la cadena de subministrament. "
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
@@ -421,11 +429,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
 msgstr ""
-"Els incoterms són una sèrie de termes. S'utilitzen per dividir els costos de"
-" la transacció i les responsabilitats entre el comprador i el venedor i "
+"Els incoterms són una sèrie de termes. S'utilitzen per dividir els costos de "
+"la transacció i les responsabilitats entre el comprador i el venedor i "
 "reflecteixen les últimes pràctiques en el transport"
 
 #. module: sale_stock
@@ -526,7 +534,8 @@ msgstr "RETORN"
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
 msgid ""
 "Reduce back orders with reservations, locations management, smart\n"
-"                replenishment propositions, shipping connectors, barcode scanner, etc."
+"                replenishment propositions, shipping connectors, barcode "
+"scanner, etc."
 msgstr ""
 
 #. module: sale_stock
@@ -691,6 +700,11 @@ msgid "Stock Rules report"
 msgstr "Informe de norma d'estoc"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_valuation_layer
+msgid "Stock Valuation Layer"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "Informe de norma d'estoc"
@@ -706,19 +720,21 @@ msgstr "El lliurament"
 #: code:addons/sale_stock/models/sale_order.py:0
 msgid ""
 "The delivery address has been changed on the Sales Order<br/>\n"
-"                        From <strong>\"%(old_address)s\"</strong> to <strong>\"%(new_address)s\"</strong>,\n"
-"                        You should probably update the partner on this document."
+"                        From <strong>\"%(old_address)s\"</strong> to "
+"<strong>\"%(new_address)s\"</strong>,\n"
+"                        You should probably update the partner on this "
+"document."
 msgstr ""
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js:0
 msgid ""
-"The ordered quantity cannot be decreased below the amount already delivered."
-" Instead, create a return in your inventory."
+"The ordered quantity cannot be decreased below the amount already delivered. "
+"Instead, create a return in your inventory."
 msgstr ""
-"La quantitat ordenada no es pot reduir per sota de la quantitat ja lliurada."
-" En comptes d'això, crea un retorn a l'inventari."
+"La quantitat ordenada no es pot reduir per sota de la quantitat ja lliurada. "
+"En comptes d'això, crea un retorn a l'inventari."
 
 #. module: sale_stock
 #. odoo-python

@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-08-22 18:39+0000\n"
 "PO-Revision-Date: 2025-08-12 22:21+0000\n"
 "Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-18/"
@@ -71,19 +71,24 @@ msgstr "<span class=\"o_stat_text\">Försäljning</span>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
-"<span class=\"small badge rounded-pill text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Shipped\n"
+"<span class=\"small badge rounded-pill text-bg-success "
+"orders_label_text_align\">\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Shipped\n"
 "                                    </span>"
 msgstr ""
-"<span class=\"small badge rounded-pill text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Skickad\n"
+"<span class=\"small badge rounded-pill text-bg-success "
+"orders_label_text_align\">\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Skickad\n"
 "                                    </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
 msgid ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
+"                    Some deliveries are already done. Returns can be created "
+"from the Delivery Orders.\n"
 "                </span>"
 msgstr ""
 "<span invisible=\"inte display_delivery_alert\">\n"
@@ -110,10 +115,13 @@ msgstr "En lagringsbar produkt är en produkt som du förvaltar ett lager av."
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 "Enligt produktkonfigurationen kan den levererade kvantiteten beräknas "
@@ -235,8 +243,8 @@ msgid ""
 msgstr ""
 "Leveransdatum du kan lova kunden, beräknat från den minsta ledtiden för "
 "orderlinjerna i fallet med serviceprodukter. Vid leverans kommer orderns "
-"leveranspolicy att tas i beaktande för att använda antingen den minsta eller"
-" största ledtiden för orderlinjerna."
+"leveranspolicy att tas i beaktande för att använda antingen den minsta eller "
+"största ledtiden för orderlinjerna."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
@@ -425,8 +433,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
 msgstr ""
 "Felmarginal för datum som utlovats till kunder. Produkter kommer att "
 "planeras för inköp och leverans så många dagar tidigare än det faktiska "
@@ -528,7 +536,8 @@ msgstr "RETURN"
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
 msgid ""
 "Reduce back orders with reservations, locations management, smart\n"
-"                replenishment propositions, shipping connectors, barcode scanner, etc."
+"                replenishment propositions, shipping connectors, barcode "
+"scanner, etc."
 msgstr ""
 "Minska antalet restorder med reservationer, platshantering, smarta\n"
 "                påfyllningsförslag, fraktanslutningar, streckkodsläsare etc."
@@ -695,6 +704,11 @@ msgid "Stock Rules report"
 msgstr "Rapport om lagerregler"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_valuation_layer
+msgid "Stock Valuation Layer"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "Rapport om lagerregler"
@@ -710,19 +724,23 @@ msgstr "Leveransen"
 #: code:addons/sale_stock/models/sale_order.py:0
 msgid ""
 "The delivery address has been changed on the Sales Order<br/>\n"
-"                        From <strong>\"%(old_address)s\"</strong> to <strong>\"%(new_address)s\"</strong>,\n"
-"                        You should probably update the partner on this document."
+"                        From <strong>\"%(old_address)s\"</strong> to "
+"<strong>\"%(new_address)s\"</strong>,\n"
+"                        You should probably update the partner on this "
+"document."
 msgstr ""
 "Leveransadressen har ändrats på försäljningsordern<br/>\n"
-"                        Från <strong>\"%(old_address)s\"</strong> till <strong>\"%(new_address)s\"</strong>,\n"
-"                        Du bör förmodligen uppdatera partnern på det här dokumentet."
+"                        Från <strong>\"%(old_address)s\"</strong> till "
+"<strong>\"%(new_address)s\"</strong>,\n"
+"                        Du bör förmodligen uppdatera partnern på det här "
+"dokumentet."
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js:0
 msgid ""
-"The ordered quantity cannot be decreased below the amount already delivered."
-" Instead, create a return in your inventory."
+"The ordered quantity cannot be decreased below the amount already delivered. "
+"Instead, create a return in your inventory."
 msgstr ""
 "Den beställda kvantiteten kan inte minskas under den mängd som redan "
 "levererats. Skapa istället en retur i ditt lager."
@@ -735,8 +753,7 @@ msgid ""
 "amount already delivered. Instead, create a return in your inventory."
 msgstr ""
 "Den beställda kvantiteten på en försäljningsorderrad kan inte minskas under "
-"den kvantitet som redan har levererats. Skapa istället en retur i ditt "
-"lager."
+"den kvantitet som redan har levererats. Skapa istället en retur i ditt lager."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -776,6 +793,7 @@ msgid "Virtual Available At Date"
 msgstr "Virtuell Tillgänglig vid datum"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_warehouse
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__warehouse_id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_report__warehouse_id
