@@ -1,5 +1,5 @@
 from odoo import models, fields
-from odoo.tools import ormcache, SQL
+from odoo.tools import SQL
 import re
 
 
@@ -21,7 +21,6 @@ class WebsiteTechnicalPage(models.Model):
         """
         return self.env["website"].get_client_action(self.website_url)
 
-    @ormcache(cache='routing')
     def get_static_routes(self):
         """
         Returns a set of website content static routes.
@@ -31,6 +30,8 @@ class WebsiteTechnicalPage(models.Model):
         for rule in self.env["ir.http"].routing_map().iter_rules():
             endpoint = rule.endpoint.routing
             route_title = endpoint.get("list_as_website_content")
+            if callable(route_title):
+                route_title = route_title(self.env)
             if route_title:
                 last_static_route = next(
                     r for r in reversed(endpoint.get("routes", []))
@@ -45,7 +46,7 @@ class WebsiteTechnicalPage(models.Model):
         values = ", ".join(str(route) for route in routes)
 
         return SQL("""
-            SELECT row_number() OVER () AS id,
+            SELECT row_number() OVER (ORDER BY column1 ASC) AS id,
                 column1 AS name,
                 column2 AS website_url
             FROM (VALUES %s) AS t(column1, column2)
