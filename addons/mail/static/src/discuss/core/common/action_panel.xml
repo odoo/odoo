@@ -11,13 +11,13 @@
     </t>
 
     <t t-name="mail.ActionPanel.content">
-        <div class="o-mail-ActionPanel-header position-sticky top-0 pt-2 pb-1 d-flex flex-column bg-inherit smaller" t-att-class="{ 'px-1': env.inChatWindow, 'pe-2': !env.inChatWindow }">
+        <div class="o-mail-ActionPanel-header position-sticky top-0 pt-2 pb-1 d-flex flex-column bg-inherit smaller" t-att-class="{ 'px-1 pb-1': env.inChatWindow, 'ps-1 pe-2 pb-2': !env.inChatWindow }">
             <div class="d-flex align-items-center gap-1">
                 <button t-if="env.closeActionPanel" class="btn p-1 opacity-75 opacity-100-hover" title="Close panel" t-on-click.stop="env.closeActionPanel">
                     <i class="oi oi-arrow-left fa-fw"/>
                 </button>
-                <i t-if="props.icon" class="text-muted opacity-50 fa-fw fa-lg" t-att-class="props.icon"/>
-                <p t-if="props.title" class="fw-bold text-uppercase m-0 text-muted opacity-75 flex-grow-1" t-esc="props.title"/>
+                <i t-if="props.icon" class="text-muted fa-fw" t-att-class="props.icon"/>
+                <p t-if="props.title" class="fw-bold text-uppercase m-0 flex-grow-1" t-esc="props.title"/>
             </div>
             <t t-slot="header"/>
         </div>

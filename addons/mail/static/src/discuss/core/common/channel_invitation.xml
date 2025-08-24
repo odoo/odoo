@@ -11,7 +11,7 @@
     <t t-name="discuss.ChannelInvitation.main">
         <div class="d-flex flex-column flex-grow-1 bg-inherit o-min-height-0" t-att-class="{ 'o-mail-Discuss-threadActionPopover w-100': props.hasSizeConstraints, 'px-1': !props.thread }">
             <t t-if="store.self_partner">
-                <input class="o-discuss-ChannelInvitation-search form-control lh-1 px-2 bg-view shadow-sm" t-att-value="searchStr" t-ref="input" t-att-placeholder="searchPlaceholder" t-on-input="onInput"/>
+                <input class="o-discuss-ChannelInvitation-search form-control lh-1 px-2 bg-view" t-att-value="searchStr" t-ref="input" t-att-placeholder="searchPlaceholder" t-on-input="onInput"/>
                 <ul class="d-flex flex-column mx-0 pt-1 pb-0 overflow-auto o-scrollbar-thin list-group border-0 flex-grow-1" t-att-class="{ 'align-items-center justify-content-center': selectablePartners.length === 0 }">
                     <div t-if="selectablePartners.length === 0" class="smaller text-muted mx-1 opacity-50">
                         <t t-if="props.thread">No user found that is not already a member of this channel.</t>
@@ -50,17 +50,18 @@
                             </t>
                         </div>
                     </div>
-                    <button t-if="props.thread" class="btn btn-primary w-100 my-2" t-att-disabled="selectedPartners.length === 0" t-att-title="invitationButtonText" t-on-click="onClickInvite">
+                    <button t-if="props.thread and selectedPartners.length > 0" class="btn btn-primary w-100 my-2" t-att-title="invitationButtonText" t-on-click="onClickInvite">
                         <t t-esc="invitationButtonText"/>
                     </button>
                 </t>
-                <div t-if="props.thread?.invitationLink" class="input-group shadow-sm">
-                    <input class="border border-secondary form-control lh-1 px-2 py-0 opacity-50 bg-view smaller" type="text" t-att-value="props.thread.invitationLink" readonly="" t-on-focus="onFocusInvitationLinkInput"/>
+                <hr t-if="props.thread?.invitationLink" class="border-dark-subtle"/>
+                <div t-if="props.thread?.invitationLink" class="input-group">
+                    <input class="border border-secondary form-control lh-1 rounded-start border-0 smaller" type="text" t-att-value="props.thread.invitationLink" readonly="" disabled="" t-on-focus="onFocusInvitationLinkInput"/>
                     <button class="btn btn-primary px-2 o-py-0_5" t-on-click="onClickCopy">
                         <i class="fa fa-copy"/>
                     </button>
                 </div>
-                <div t-if="props.thread?.accessRestrictedToGroupText" class="mt-2 text-muted smaller mx-1 opacity-50" t-esc="props.thread.accessRestrictedToGroupText"/>
+                <div t-if="props.thread?.accessRestrictedToGroupText" class="mt-2 text-muted smaller mx-1" t-esc="props.thread.accessRestrictedToGroupText"/>
             </div>
         </div>
     </t>

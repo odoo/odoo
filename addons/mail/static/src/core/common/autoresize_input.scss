@@ -3,8 +3,10 @@
     border:$input-border-width solid var(--o-input-border-color);
     background-color: var(--o-input-background-color, #{$input-bg});
 
-    &::placeholder {
-        opacity: 50%;
+    &:where(:not([disabled])):where(:not(:focus)) {
+        &::placeholder {
+            font-style: italic;
+        }
     }
 
     &:not([disabled]) {
@@ -12,7 +14,12 @@
             --o-input-border-color: #{$border-color};
         }
         &:focus {
-            --o-input-border-color: #{rgba($black, .5)};
+            --o-input-border-color: #{$o-component-active-border};
+            color: $body-color !important; // Reset eventual text-muted.
         }
+    }
+
+    &:where([disabled]) {
+        color: $body-color;
     }
 }

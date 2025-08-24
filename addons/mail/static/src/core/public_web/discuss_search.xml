@@ -26,10 +26,10 @@
 </t>
 
 <t t-name="mail.DiscussSearch.inputContainer">
-    <div class="o-mail-DiscussSearch-inputContainer border border-secondary shadow-sm position-relative d-flex align-items-center justify-content-center gap-1 flex-grow-1" t-att-class="{ 'rounded-3': store.discuss.isSidebarCompact, 'rounded-start-3 rounded-end-0': !store.discuss.isSidebarCompact }" t-on-click="onClickSearchConversations">
+    <div class="o-mail-DiscussSearch-inputContainer border border-secondary position-relative d-flex align-items-center justify-content-center gap-1 flex-grow-1" t-att-class="{ 'rounded-2': store.discuss.isSidebarCompact, 'rounded-start-2 rounded-end-0 border-end-0': !store.discuss.isSidebarCompact }" t-on-click="onClickSearchConversations">
         <div class="d-flex w-100 align-items-center gap-2" t-att-class="{ 'p-2': store.discuss.isSidebarCompact and !ui.isSmall, 'ps-2 gap-2': !store.discuss.isSidebarCompact or ui.isSmall }">
-            <i class="oi oi-search o-opacity-35 smaller"/>
-            <input t-if="ui.isSmall or !store.discuss.isSidebarCompact" class="form-control rounded-3 border-0 bg-inherit ps-0" t-att-class="{ 'lh-1': !ui.isSmall }" disabled="true" placeholder="Search conversations" tabindex="0"/>
+            <i class="oi oi-search smaller"/>
+            <input t-if="ui.isSmall or !store.discuss.isSidebarCompact" class="form-control rounded-2 border-0 bg-inherit ps-0" t-att-class="{ 'lh-1': !ui.isSmall }" disabled="true" placeholder="Search conversations" tabindex="0"/>
         </div>
         <div class="o-mail-DiscussSearch-inputClickable position-absolute z-1 opacity-0 cursor-pointer w-100 h-100"/>
     </div>
@@ -37,8 +37,8 @@
 
 <t t-name="mail.DiscussSearch.newMeeting">
     <button class="btn btn-primary d-flex align-items-center gap-1" t-attf-class="{{ ui.isSmall ? 'p-2' : 'o-px-1_5 py-2' }}" t-att-title="newMeetingText" t-on-click="onClickNewMeeting" data-hotkey="m" t-ref="meeting-btn" t-att-class="{
-        'rounded-3': store.discuss.isSidebarCompact,
-        'rounded-start-0 rounded-end-3': !store.discuss.isSidebarCompact,
+        'rounded-2': store.discuss.isSidebarCompact,
+        'rounded-start-0 rounded-end-2 h-100': !store.discuss.isSidebarCompact,
         'p-2': ui.isSmall,
         'o-px-1_5 py-2': !ui.isSmall and store.discuss.isSidebarCompact,
         'o-p-1_5': !ui.isSmall and !store.discuss.isSidebarCompact,
