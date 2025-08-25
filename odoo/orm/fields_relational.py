@@ -60,7 +60,7 @@ class _Relational(Field[BaseModel]):
             try:
                 vals.append(field_cache[record_id])
             except KeyError:
-                if self.store and len(vals) < len(records) - PREFETCH_MAX:
+                if self.store and record_id and len(vals) < len(records) - PREFETCH_MAX:
                     # a lot of missing records, just fetch that field
                     remaining = records[len(vals):]
                     remaining.fetch([self.name])
