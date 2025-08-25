@@ -7,6 +7,7 @@ export const projectProjectKanbanView = {
     ...kanbanView,
     Controller: ProjectKanbanController,
     Renderer: ProjectProjectKanbanRenderer,
+    buttonTemplate: "project.ProjectKanbanView.Buttons",
 };
 
 registry.category("views").add("project_project_kanban", projectProjectKanbanView);

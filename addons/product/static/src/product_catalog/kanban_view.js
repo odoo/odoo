@@ -15,6 +15,7 @@ export const productCatalogKanbanView = {
     Renderer: ProductCatalogKanbanRenderer,
     SearchModel: ProductCatalogSearchModel,
     SearchPanel: ProductCatalogSearchPanel,
+    buttonTemplate: "ProductCatalogKanbanController.Buttons",
 };
 
 registry.category("views").add("product_kanban_catalog", productCatalogKanbanView);
