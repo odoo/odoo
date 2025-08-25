@@ -3,6 +3,7 @@
 
 from datetime import datetime, timedelta, time
 
+from odoo import Command
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.event.tests.common import EventCase
@@ -480,7 +481,7 @@ class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, MockVisitor
         self.event_question_1 = self.env['event.question'].create({
             'title': 'Which field are you working in',
             'question_type': 'simple_choice',
-            'event_id': self.event.id,
+            'event_ids': [Command.set(self.event.ids)],
             'once_per_order': False,
             'answer_ids': [
                 (0, 0, {'name': 'Consumers'}),
@@ -491,7 +492,7 @@ class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, MockVisitor
         self.event_question_2 = self.env['event.question'].create({
             'title': 'How did you hear about us ?',
             'question_type': 'text_box',
-            'event_id': self.event.id,
+            'event_ids': [Command.set(self.event.ids)],
             'once_per_order': True,
         })
 
