@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import hashlib
 import logging
 import secrets
 import uuid
@@ -29,7 +30,10 @@ class IapAccount(models.Model):
     account_token = fields.Char(
         default=lambda s: uuid.uuid4().hex,
         help="Account token is your authentication key for this service. Do not share it.",
-        size=43)
+        size=43,
+        copy=False,
+        groups="base.group_system",
+    )
     company_ids = fields.Many2many('res.company')
 
     # Dynamic fields, which are received from iap server and set when loading the view
@@ -69,7 +73,7 @@ class IapAccount(models.Model):
             url = url_join(endpoint, route)
             for account in self:
                 data = {
-                    'account_token': account.account_token,
+                    'account_token': account.sudo().account_token,
                     'warning_threshold': account.warning_threshold,
                     'warning_emails': [{
                         'email': user.email,
@@ -91,7 +95,7 @@ class IapAccount(models.Model):
         url = url_join(endpoint, route)
         params = {
             'iap_accounts': [{
-                'token': account.account_token,
+                'token': account.sudo().account_token,
                 'service': account.service_id.technical_name,
             } for account in self if account.service_id],
             'dbuuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
@@ -104,7 +108,7 @@ class IapAccount(models.Model):
 
         for token, information in accounts_information.items():
             information.pop('link_to_service_page', None)
-            accounts = self.filtered(lambda acc: secrets.compare_digest(acc.account_token, token))
+            accounts = self.filtered(lambda acc: secrets.compare_digest(acc.sudo().account_token, token))
 
             for account in accounts:
                 # Default rounding of 4 decimal places to avoid large decimals
@@ -144,7 +148,7 @@ class IapAccount(models.Model):
                 ('company_ids', '=', False)
         ]
         accounts = self.search(domain, order='id desc')
-        accounts_without_token = accounts.filtered(lambda acc: not acc.account_token)
+        accounts_without_token = accounts.filtered(lambda acc: not acc.sudo().account_token)
         if accounts_without_token:
             with self.pool.cursor() as cr:
                 # In case of a further error that will rollback the database, we should
@@ -179,7 +183,7 @@ class IapAccount(models.Model):
                     account = IapAccount.create({'service_id': service.id})
                 # fetch 'account_token' into cache with this cursor,
                 # as self's cursor cannot see this account
-                account_token = account.account_token
+                account_token = account.sudo().account_token
             account = self.browse(account.id)
             self.env.cache.set(account, IapAccount._fields['account_token'], account_token)
             return account
@@ -193,30 +197,35 @@ class IapAccount(models.Model):
         return self.get(service_name).id
 
     @api.model
-    def get_credits_url(self, service_name, base_url='', credit=0, trial=False, account_token=False):
-        """ Called notably by ajax crash manager, buy more widget, partner_autocomplete, sanilmail. """
+    def get_credits_url(self, service_name, account_token=None):
+        """ Called notably by: buy more widget, partner_autocomplete, snailmail, ... """
         dbuuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
-        if not base_url:
-            endpoint = iap_tools.iap_get_endpoint(self.env)
-            route = '/iap/1/credit'
-            base_url = url_join(endpoint, route)
-        if not account_token:
-            account_token = self.get(service_name).account_token
+        endpoint = iap_tools.iap_get_endpoint(self.env)
+        route = '/iap/1/credit'
+        base_url = url_join(endpoint, route)
+        account_token = account_token or self.get(service_name).sudo().account_token
+        hashed_account_token = self._hash_iap_token(account_token)
         d = {
             'dbuuid': dbuuid,
             'service_name': service_name,
-            'account_token': account_token,
-            'credit': credit,
+            'account_token': hashed_account_token,
+            'hashed': 1,
         }
-        if trial:
-            d.update({'trial': trial})
         return '%s?%s' % (base_url, werkzeug.urls.url_encode(d))
+
+    @api.model
+    def _hash_iap_token(self, key):
+        # disregard possible suffix
+        key = (key or '').split('+')[0]
+        if not key:
+            raise UserError(_('The IAP token provided is invalid or empty.'))
+        return hashlib.sha1(key.encode('utf-8')).hexdigest()
 
     def action_buy_credits(self):
         return {
             'type': 'ir.actions.act_url',
             'url': self.env['iap.account'].get_credits_url(
-                account_token=self.account_token,
+                account_token=self.sudo().account_token,
                 service_name=self.service_name,
             ),
         }
@@ -245,7 +254,7 @@ class IapAccount(models.Model):
             url = url_join(endpoint, route)
             params = {
                 'dbuuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
-                'account_token': account.account_token,
+                'account_token': account.sudo().account_token,
                 'service_name': service_name,
             }
             try:

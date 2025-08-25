@@ -42,7 +42,7 @@ class SmsApi:
         if not self.env.registry.ready:  # Don't reach IAP servers during module installation
             raise exceptions.AccessError("Unavailable during module installation.")  # pylint: disable=missing-gettext
 
-        params['account_token'] = self.account.account_token
+        params['account_token'] = self.account.sudo().account_token
         endpoint = self.env['ir.config_parameter'].sudo().get_param('sms.endpoint', self.DEFAULT_ENDPOINT)
         return iap_tools.iap_jsonrpc(endpoint + local_endpoint, params=params, timeout=timeout)
 
@@ -88,7 +88,7 @@ class SmsApi:
         buy_credits = '<a href="{}" target="_blank">{}</a>'.format(buy_credits_url, _("Buy credits."))
 
         sms_endpoint = self.env['ir.config_parameter'].sudo().get_param('sms.endpoint', self.DEFAULT_ENDPOINT)
-        sms_account_token = self.env['iap.account'].sudo().get('sms').account_token
+        sms_account_token = self.env['iap.account'].sudo().get('sms').sudo().account_token
         register_now = f'<a href="{sms_endpoint}/1/account?account_token={sms_account_token}" target="_blank">%s</a>' % (
             _('Register now.')
         )
