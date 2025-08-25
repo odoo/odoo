@@ -219,20 +219,27 @@ export class DateTimeField extends Component {
 
     /**
      * @param {number} valueIndex
+     * @param {boolean} [numeric=this.props.numeric]
+     * @returns formatted date string
      */
-    getFormattedValue(valueIndex) {
+    getFormattedValue(valueIndex, numeric = this.props.numeric) {
         const values = this.values;
         const value = values[valueIndex];
         if (!value) {
             return "";
         }
-        const { numeric, showSeconds, showTime } = this.props;
+        const { showSeconds, showTime } = this.props;
         if (this.field.type === "date") {
             return formatDate(value, { numeric });
         } else {
             const showDate =
                 !showTime || valueIndex !== 1 || !values[0] || !values[0].hasSame(value, "day");
-            return formatDateTime(value, { numeric, showSeconds, showTime, showDate });
+            return formatDateTime(value, {
+                numeric,
+                showSeconds,
+                showTime,
+                showDate,
+            });
         }
     }
 
