@@ -36,20 +36,17 @@
 
     &:hover {
         background-color: mix($gray-100, $gray-200) !important;
-        outline-color: mix($gray-100, $gray-200) !important;
+        outline-color: mix($gray-100, $gray-200, 20%) !important;
     }
 
     &.o-active {
         background-color: var(--mail-DiscussSidebar-itemActiveBgColor, mix($o-view-background-color, $o-action, 90%)) !important;
-        outline-color: var(--mail-DiscussSidebar-itemActiveOutlineColor, rgba($o-action, .05)) !important;
+        outline-color: var(--mail-DiscussSidebar-itemActiveOutlineColor, mix($o-view-background-color, $o-action, 50%)) !important;
     }
 
     &.o-active, &:hover {
         .o-mail-DiscussSidebarChannel-itemName {
             filter: brightness(1.1);
-        }
-        img {
-            box-shadow: $box-shadow !important;
         }
     }
 }
