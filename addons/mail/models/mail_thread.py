@@ -1655,7 +1655,7 @@ class MailThread(models.AbstractModel):
         """Derive message values from the parents."""
         if parent_messages:
             # If there's multiple parents, assume the non-internal one is the real parent
-            parent_message = parent_messaged.sorted(lambda m: bool(m.subtype_id and m.subtype_id.internal))[0]
+            parent_message = parent_messages.sorted(lambda m: bool(m.subtype_id and m.subtype_id.internal))[0]
             parent_is_internal = bool(parent_message.subtype_id and parent_message.subtype_id.internal)
             parent_is_auto_comment = parent_message.message_type == 'auto_comment'
             return {
