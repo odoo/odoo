@@ -18,17 +18,15 @@
 
     <t t-inherit="mail.MessagingMenu.content" t-inherit-mode="extension">
         <xpath expr="//*[@name='before-content']" position="after">
-            <div class="o-mail-MessagingMenu-header d-flex o-px-1_5" t-att-class="{'border-start-0 border-end-0': ui.isSmall, 'flex-shrink-0': !env.inDiscussApp }">
-                <t t-if="!ui.isSmall">
+            <div class="o-mail-MessagingMenu-header d-flex px-2 pb-1 text-nowrap overflow-x-auto flex-shrink-0" t-att-class="{'border-start-0 border-end-0': ui.isSmall, 'flex-shrink-0': !env.inDiscussApp }">
+                <!-- <t t-if="!ui.isSmall"> -->
                     <MessagingMenuQuickSearch t-if="state.searchOpen" onClose.bind="toggleSearch"/>
                     <t t-else="">
-                        <button class="o-mail-MessagingMenu-headerFilter btn btn-link o-px-1_5 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'notification' ? 'fw-bold o-active shadow-sm' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'notification'">Notifications</button>
-                        <button class="o-mail-MessagingMenu-headerFilter btn btn-link o-px-1_5 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'chat' ? 'fw-bold o-active shadow-sm' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'chat'">Chats</button>
-                        <button class="o-mail-MessagingMenu-headerFilter btn btn-link o-px-1_5 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'channel' ? 'fw-bold o-active shadow-sm' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
-                        <button t-if="threads.length >= 20 and store.channels.status !== 'fetching'" class="btn btn-link py-1 rounded-0 text-muted" type="button" title="Quick search" t-on-click="toggleSearch"><i class="fa fa-fw fa-search"/></button>
-                        <button t-if="store.channels.status === 'fetching'" class="btn btn-light py-1 rounded-0" disabled="true" type="button"><i class="fa fa-fw fa-circle-o-notch fa-spin"/></button>
+                        <button t-foreach="tabs" t-as="tab" t-key="tab.id" class="o-mail-MessagingMenu-headerFilter rounded-3 btn btn-link px-2 py-1 lh-1" t-att-class="store.discuss.activeTab === tab.id ? 'fw-bold o-active shadow-sm' : 'text-muted opacity-75'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = tab.id" t-out="tab.label"/>
+                        <button t-if="threads.length >= 20 and store.channels.status !== 'fetching'" class="btn btn-link py-0 rounded-0 text-muted" type="button" title="Quick search" t-on-click="toggleSearch"><i class="fa fa-fw fa-search"/></button>
+                        <button t-if="store.channels.status === 'fetching'" class="btn btn-light py-0 rounded-0" disabled="true" type="button"><i class="fa fa-fw fa-circle-o-notch fa-spin"/></button>
                     </t>
-                </t>
+                <!-- </t> -->
             </div>
         </xpath>
         <xpath expr="//*[@name='threads']" position="before">

@@ -324,7 +324,7 @@ test("Show send button in mobile", async () => {
     pyEnv["discuss.channel"].create({ name: "minecraft-wii-u" });
     await start();
     await openDiscuss();
-    await contains("button.o-active", { text: "Notifications" });
+    await contains("button.o-active", { text: "All" });
     await click("button", { text: "Channels" });
     await click(".o-mail-NotificationItem", { text: "minecraft-wii-u" });
     await contains(".o-mail-Composer button[title='Send']");

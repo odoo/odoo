@@ -557,14 +557,14 @@ export function useDiscussSystray() {
         class: "o-mail-DiscussSystray-class",
         get contentClass() {
             return `d-flex flex-column flex-grow-1 ${
-                ui.isSmall ? "overflow-auto o-scrollbar-thin w-100 mh-100" : ""
+                ui.isSmall ? "overflow-auto o-scrollbar-thin w-100 mh-100" : "rounded-3"
             }`;
         },
         get menuClass() {
             return `p-0 o-mail-DiscussSystray ${
                 ui.isSmall
                     ? "o-mail-systrayFullscreenDropdownMenu start-0 w-100 mh-100 d-flex flex-column mt-0 border-0 shadow-lg"
-                    : ""
+                    : "rounded-3"
             }`;
         },
     };

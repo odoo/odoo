@@ -236,7 +236,7 @@ test("mobile: mark as read when opening chat", async () => {
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss();
-    await contains("button.o-active", { text: "Notifications" });
+    await contains("button.o-active", { text: "All" });
     await click("button:has(.badge:contains('1'))", { text: "Chats" });
     await contains(".o-mail-NotificationItem:has(.badge:contains(1))", { text: "bob" });
     await click(".o-mail-NotificationItem", { text: "bob" });

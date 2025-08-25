@@ -13,9 +13,17 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { DiscussContent } from "./discuss_content";
+import { DiscussSearch } from "./discuss_search";
 
 export class MessagingMenu extends Component {
-    static components = { CountryFlag, DiscussContent, Dropdown, NotificationItem, ImStatus };
+    static components = {
+        CountryFlag,
+        DiscussContent,
+        DiscussSearch,
+        Dropdown,
+        NotificationItem,
+        ImStatus,
+    };
     static props = [];
     static template = "mail.MessagingMenu";
 
