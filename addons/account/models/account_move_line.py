@@ -3386,16 +3386,21 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         return self.move_id.state == 'posted'
 
-    def get_lines_grouped_by_section(self):
+    def get_lines_grouped_by_section(self, grouped=True):
         """
         Return a tax-wise summary of sale order lines linked to section.
         Groups lines by their tax IDs and computes subtotal and total for each group.
         """
         self.ensure_one()
 
-        section_lines = self.child_ids + self.child_ids.child_ids
+        section_lines = self.move_id.invoice_line_ids.filtered_domain([('id', 'child_of', self.id)]) - self
         result = []
         for taxes, lines in groupby(section_lines, key=lambda l: l.tax_ids):
+            amls = sum(lines, start=self.env['account.move.line'])
+            for aml in amls.sorted('sequence'):
+                if aml.parent_id != self and aml.parent_id not in amls:
+                    amls += aml.parent_id
+
             tax_labels = [tax.tax_label for tax in taxes if tax.tax_label]
             subtotal = sum(l.price_subtotal for l in lines)
             price_total = sum(l.price_total for l in lines)
@@ -3404,10 +3409,28 @@ class AccountMoveLine(models.Model):
                 result.append({
                     'name': self.name,
                     'taxes': tax_labels,
-                    'ids': [line.id for line in section_lines],
+                    'ids': (section_lines | self).ids,
                     'price_subtotal': subtotal,
                     'price_total': price_total,
+                    'display_type': self.display_type if not grouped else 'product',
+                    'quantity': 1,
+                    'discount': self.discount,
                 })
+
+                if not grouped:
+                    for line in amls.sorted('sequence'):
+                        if line != self:
+                            result.append({
+                                'name': line.name,
+                                'ids': [line.id],
+                                'price_subtotal': sum(l.price_subtotal for l in amls.filtered_domain([('id', 'child_of', line.id)])),
+                                'price_total': sum(l.price_total for l in amls.filtered_domain([('id', 'child_of', line.id)])),
+                                'display_type': line.display_type,
+                                'quantity': line.quantity,
+                                'line_uom': line.product_uom_id,
+                                'product_uom': line.product_id.uom_id,
+                                'discount': line.discount,
+                            })
 
         return result or [{
             'name': self.name,
