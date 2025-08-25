@@ -1,4 +1,4 @@
-import { Component, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
@@ -137,6 +137,13 @@ export class SelectMenu extends Component {
                 },
             },
         };
+
+        onMounted(() => {
+            console.log("mounted", this.inputRef.el);
+        });
+        onPatched(() => {
+            console.log("patched", this.inputRef.el);
+        });
     }
 
     get displayValue() {
@@ -171,10 +178,12 @@ export class SelectMenu extends Component {
     }
 
     async onBeforeOpen() {
+        console.log("on before open", this.inputRef.el);
         await this.onInput("");
     }
 
     onStateChanged(open) {
+        console.log("on state changed", { open }, this.inputRef.el);
         this.isOpen = open;
         if (open) {
             this.menuRef.el?.addEventListener("scroll", (ev) => this.onScroll(ev));

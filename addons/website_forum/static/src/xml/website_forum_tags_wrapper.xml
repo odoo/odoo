@@ -4,7 +4,7 @@
 <t t-name="website_forum.WebsiteForumTagsWrapper">
     <input name="post_tags" type="hidden" class="form-control" t-att-value="state.value"/>
     <SelectMenu
-        choices="state.choices"
+        choices="[{label: 'something'}]"
         value="state.value"
         onInput.bind="loadChoices"
         onSelect.bind="onSelect"

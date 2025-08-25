@@ -60,7 +60,9 @@ export function useAutofocus({ refName, selectAll, mobile } = {}) {
     // LEGACY
     useEffect(
         (el) => {
+            console.log("effect of useFocus", el);
             if (isFocusable(el)) {
+                console.log("effect of useFocus: isFocusable");
                 el.focus();
                 if (["INPUT", "TEXTAREA"].includes(el.tagName) && el.type !== "number") {
                     el.selectionEnd = el.value.length;

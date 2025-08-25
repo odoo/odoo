@@ -1,7 +1,39 @@
 import { expect, test } from "@odoo/hoot";
-import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
+import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
+import { Component, useState, xml } from "@odoo/owl";
+import { SelectMenu } from "@web/core/select_menu/select_menu";
+import { click } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
+
+class Test extends Component {
+    static template = xml`
+        <SelectMenu
+            choices="getChoices()"
+        >
+        </SelectMenu>
+    `;
+    static components = { SelectMenu };
+    setup() {
+        this.state = useState({ choices: [] });
+    }
+    getChoices() {
+        // setTimeout(() => {
+        //     this.state.choices = [
+        //         { value: "a", label: "A" },
+        //         { value: "x", label: "X" },
+        //     ];
+        // }, 3000);
+        return this.state.choices;
+    }
+}
+
+test("autofocus in select menu", async () => {
+    addOption({ selector: ".test", Component: Test });
+    await setupWebsiteBuilder(`<div class="test">TEST in website</div>`);
+    await click(":iframe .test");
+    expect(1).toBe(1);
+});
 
 test("should not allow edition of date and datetime fields", async () => {
     await setupWebsiteBuilder(

@@ -312,6 +312,8 @@ export class Dropdown extends Component {
             return;
         }
 
+        console.log("open popover");
+
         this.popoverRefresher = reactive({ token: 0 });
         const props = {
             beforeOpen: () => this.props.beforeOpen?.(),

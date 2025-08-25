@@ -53,6 +53,7 @@
                     <t t-if="state.choices.length === 0">
                         <span class="text-muted fst-italic mx-3">No result found</span>
                     </t>
+                    <t t-out="console.log('x')"/>
                     <t t-foreach="state.displayedOptions" t-as="choice" t-key="choice_index">
                         <t t-call="{{ this.constructor.choiceItemTemplate }}">
                             <t t-set="choice" t-value="choice" />
