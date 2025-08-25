@@ -40,6 +40,7 @@ export class Countdown extends Interaction {
             this.el.dataset.display = this.display;
         }
 
+        this.defaultColor = "rgba(0, 0, 0, 0)";
         this.layout = this.el.dataset.layout;
         this.layoutBackground = this.el.dataset.layoutBackground;
         this.progressBarStyle = this.el.dataset.progressBarStyle;
@@ -76,7 +77,7 @@ export class Countdown extends Interaction {
         if (isCSSColor(color)) {
             return color;
         }
-        return getCSSVariableValue(color, getHtmlStyle(document)) || "";
+        return getCSSVariableValue(color, getHtmlStyle(document)) || this.defaultColor;
     }
 
     /**
