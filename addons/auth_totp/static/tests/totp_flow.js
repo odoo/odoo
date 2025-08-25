@@ -1,7 +1,9 @@
-import { queryAll, waitFor } from "@odoo/hoot-dom";
+import { WORKER_STATE } from "@bus/workers/websocket_worker";
+import {animationFrame, queryAll, waitFor} from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
+import {whenReady} from "@odoo/owl";
 
 function openRoot() {
     return [{
@@ -249,6 +251,20 @@ registry.category("web_tour.tours").add('totp_login_device', {
     trigger: "button:contains(Log in)",
     run: "click",
     expectUnloadPage: true,
+},
+{
+    trigger: ".o_web_client .o_navbar",
+    async run() {
+        await whenReady();
+        await animationFrame();
+        await new Promise((resolve) => {
+            const bus = odoo.__WOWL_DEBUG__.root.env.services.bus_service;
+            bus.addEventListener("BUS:CONNECT", resolve, { once: true });
+            if (bus.workerState === WORKER_STATE.CONNECTED) {
+                resolve();
+            }
+        });
+    },
 },
 {
     content: "check we're logged in",
