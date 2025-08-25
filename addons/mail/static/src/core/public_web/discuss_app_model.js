@@ -3,6 +3,7 @@ import { browser } from "@web/core/browser/browser";
 
 const NO_MEMBERS_DEFAULT_OPEN_LS = "mail.user_setting.no_members_default_open";
 export const DISCUSS_SIDEBAR_COMPACT_LS = "mail.user_setting.discuss_sidebar_compact";
+export const LAST_DISCUSS_ACTIVE_ID_LS = "mail.user_setting.discuss_last_active_id";
 
 export class DiscussApp extends Record {
     INSPECTOR_WIDTH = 300;
@@ -40,7 +41,26 @@ export class DiscussApp extends Record {
             }
         },
     });
-    thread = fields.One("Thread");
+    lastActiveId = fields.Attr(undefined, {
+        /** @this {import("models").DiscussApp} */
+        compute() {
+            return browser.localStorage.getItem(LAST_DISCUSS_ACTIVE_ID_LS) ?? undefined;
+        },
+        /** @this {import("models").DiscussApp} */
+        onUpdate() {
+            if (this.lastActiveId) {
+                browser.localStorage.setItem(LAST_DISCUSS_ACTIVE_ID_LS, this.lastActiveId);
+            } else {
+                browser.localStorage.removeItem(LAST_DISCUSS_ACTIVE_ID_LS);
+            }
+        },
+    });
+    thread = fields.One("Thread", {
+        /** @this {import("models").DiscussApp} */
+        onUpdate() {
+            this.lastActiveId = this.store.Thread.localIdToActiveId(this.thread?.localId);
+        },
+    });
     hasRestoredThread = false;
 
     static new() {

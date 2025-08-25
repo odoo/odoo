@@ -41,10 +41,12 @@ test("can create a new channel", async () => {
     listenStoreFetch(undefined, { logParams: ["/discuss/create_channel"] });
     await start();
     await openDiscuss();
-    await waitStoreFetch(
-        ["failures", "systray_get_activities", "init_messaging", "channels_as_member"],
-        { stepsAfter: ['/mail/inbox/messages - {"fetch_params":{"limit":30}}'] }
-    );
+    await waitStoreFetch([
+        "failures",
+        "systray_get_activities",
+        "init_messaging",
+        "channels_as_member",
+    ]);
     await contains(".o-mail-Discuss");
     await contains(".o-mail-DiscussSidebar-item", { text: "abc", count: 0 });
     await click("input[placeholder='Search conversations']");
@@ -99,9 +101,7 @@ test("can make a DM chat", async () => {
     await start();
     await waitStoreFetch(["failures", "systray_get_activities", "init_messaging"]);
     await openDiscuss();
-    await waitStoreFetch(["channels_as_member"], {
-        stepsAfter: ['/mail/inbox/messages - {"fetch_params":{"limit":30}}'],
-    });
+    await waitStoreFetch(["channels_as_member"]);
     await contains(".o-mail-Discuss");
     await contains(".o-mail-DiscussSidebar-item", { text: "Mario", count: 0 });
     await click("input[placeholder='Search conversations']");

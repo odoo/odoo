@@ -811,7 +811,7 @@ test("can be marked as read while loading", async () => {
     const loadDeferred = new Deferred();
     onRpc("/discuss/channel/messages", () => loadDeferred);
     await start();
-    await openDiscuss(undefined);
+    await openDiscuss();
     await contains(".o-discuss-badge", { text: "1" });
     await click(".o-mail-DiscussSidebarChannel", { text: "Demo" });
     loadDeferred.resolve();

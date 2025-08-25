@@ -41,7 +41,7 @@ test("reply: discard on reply button toggle", async () => {
         res_partner_id: serverState.partnerId,
     });
     await start();
-    await openDiscuss();
+    await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message");
     await click("[title='Reply']");
     await contains(".o-mail-Composer");
@@ -69,7 +69,7 @@ test("reply: discard on pressing escape", async () => {
         res_partner_id: serverState.partnerId,
     });
     await start();
-    await openDiscuss();
+    await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message");
     await click("[title='Reply']");
     await contains(".o-mail-Composer");
@@ -114,7 +114,7 @@ test('"reply to" composer should log note if message replied to is a note', asyn
         expect(args.post_data.subtype_xmlid).toBe("mail.mt_note");
     });
     await start();
-    await openDiscuss();
+    await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message");
     await click("[title='Reply']");
     await contains(".o-mail-Composer [placeholder='Log an internal note…']");
@@ -148,7 +148,7 @@ test('"reply to" composer should send message if message replied to is not a not
         expect(args.post_data.subtype_xmlid).toBe("mail.mt_comment");
     });
     await start();
-    await openDiscuss();
+    await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message");
     await click("[title='Reply']");
     await contains(".o-mail-Composer [placeholder='Send a message to followers…']");
@@ -173,7 +173,7 @@ test("show subject of message in Inbox", async () => {
         res_partner_id: serverState.partnerId,
     });
     await start();
-    await openDiscuss();
+    await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message", { text: "Subject: Salutations, voyageurnot empty" });
 });
 
@@ -401,7 +401,7 @@ test("inbox: mark all messages as read", async () => {
         },
     ]);
     await start();
-    await openDiscuss();
+    await openDiscuss("mail.box_inbox");
     await contains("button", { text: "Inbox", contains: [".badge", { text: "2" }] });
     await contains(".o-mail-DiscussSidebarChannel", {
         contains: [
@@ -445,7 +445,7 @@ test("inbox: mark as read should not display jump to present", async () => {
             }))
     );
     await start();
-    await openDiscuss();
+    await openDiscuss("mail.box_inbox");
     // scroll up so that there's the "Jump to Present".
     // So that assertion of negative matches the positive assertion
     await contains(".o-mail-Message", { count: 30 });
@@ -488,7 +488,7 @@ test("click on (non-channel/non-partner) origin thread link should redirect to f
         },
     });
     await start();
-    await openDiscuss();
+    await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message");
     await click(".o-mail-Message-header a", { text: "Some record" });
     await def;
@@ -534,7 +534,7 @@ test("inbox messages are never squashed", async () => {
         },
     ]);
     await start();
-    await openDiscuss();
+    await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message", { count: 2 });
     await contains(".o-mail-Message:not(.o-squashed)", { text: "body1" });
     await contains(".o-mail-Message:not(.o-squashed)", { text: "body2" });
@@ -558,7 +558,7 @@ test("reply: stop replying button click", async () => {
         res_partner_id: serverState.partnerId,
     });
     await start();
-    await openDiscuss();
+    await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message");
     await click("[title='Reply']");
     await contains(".o-mail-Composer");
@@ -583,7 +583,7 @@ test("error notifications should not be shown in Inbox", async () => {
         res_partner_id: serverState.partnerId,
     });
     await start();
-    await openDiscuss();
+    await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-header small", { text: "on Demo User" });
     await contains(`.o-mail-Message-header a[href*='/odoo/res.partner/${partnerId}']`, {
@@ -609,7 +609,7 @@ test("emptying inbox displays rainbow man in inbox", async () => {
         },
     ]);
     await start();
-    await openDiscuss();
+    await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message");
     await click("button:enabled", { text: "Mark all read" });
     await contains(".o_reward_rainbow");
@@ -666,7 +666,7 @@ test("Counter should be incremented by 1 when receiving a message with a mention
         },
     ]);
     await start();
-    await openDiscuss();
+    await openDiscuss("mail.box_inbox");
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
     const mention = [serverState.partnerId];
     const mentionName = serverState.partnerName;
@@ -715,7 +715,7 @@ test("Clear need action counter when opening a channel", async () => {
         },
     ]);
     await start();
-    await openDiscuss();
+    await openDiscuss("mail.box_inbox");
     await contains(".o-mail-DiscussSidebar-item", {
         text: "General",
         contains: [".badge", { text: "2" }],
@@ -745,7 +745,7 @@ test("can reply to email message", async () => {
         res_partner_id: serverState.partnerId,
     });
     await start();
-    await openDiscuss();
+    await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message");
     await click("[title='Reply']");
     await contains(".o-mail-Composer", { text: "Replying to md@oilcompany.fr" });
