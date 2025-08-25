@@ -6,7 +6,7 @@
         <field name="name">iap.account.form</field>
         <field name="model">iap.account</field>
         <field name="arch" type="xml">
-            <form string="IAP Account">
+            <form string="IAP Account" duplicate="false">
                 <sheet>
                     <group name="account" string="Account Information">
                         <group>
@@ -42,7 +42,7 @@
         <field name="name">iap.account.list</field>
         <field name="model">iap.account</field>
         <field name="arch" type="xml">
-            <list string="IAP Accounts">
+            <list string="IAP Accounts" duplicate="false">
                 <field name="name" />
                 <field name="service_id" />
                 <field name="company_ids" widget="many2many_tags" />

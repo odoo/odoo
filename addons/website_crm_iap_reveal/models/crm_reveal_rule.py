@@ -317,9 +317,9 @@ class CrmRevealRule(models.Model):
 
     def _perform_reveal_service(self, server_payload):
         result = False
-        account_token = self.env['iap.account'].get('reveal')
+        account = self.env['iap.account'].get('reveal')
         params = {
-            'account_token': account_token.account_token,
+            'account_token': account.sudo().account_token,
             'data': server_payload
         }
         result = self._iap_contact_reveal(params, timeout=300)
