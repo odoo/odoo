@@ -6842,6 +6842,21 @@ class AccountMove(models.Model):
         # TO OVERRIDE
         return []
 
+    def _get_move_lines_to_report(self):
+        def show_line(line):
+            return (
+                line.display_type == 'line_section'
+                or (not (
+                    line.parent_id.collapse_composition
+                    or line.parent_id.parent_id.collapse_composition
+                ) and not (
+                    line.parent_id.collapse_prices
+                    or line.parent_id.parent_id.collapse_prices
+                ))
+            )
+
+        return self.invoice_line_ids.filtered(show_line).sorted('sequence')
+
     @staticmethod
     def _can_commit():
         """ Helper to know if we can commit the current transaction or not.

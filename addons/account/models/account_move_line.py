@@ -3380,16 +3380,21 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         return self.move_id.state == 'posted'
 
-    def get_lines_grouped_by_section(self):
+    def _get_child_lines(self, grouped=True):
         """
         Return a tax-wise summary of sale order lines linked to section.
         Groups lines by their tax IDs and computes subtotal and total for each group.
         """
         self.ensure_one()
 
-        section_lines = self.child_ids + self.child_ids.child_ids
+        section_lines = self.move_id.invoice_line_ids.filtered_domain([('id', 'child_of', self.id), ('id', '!=', self.id)])
         result = []
         for taxes, lines in groupby(section_lines, key=lambda l: l.tax_ids):
+            amls = sum(lines, start=self.env['account.move.line'])
+            for aml in amls.sorted('sequence'):
+                if aml.parent_id != self and aml.parent_id not in amls:
+                    amls += aml.parent_id
+
             tax_labels = [tax.tax_label for tax in taxes if tax.tax_label]
             subtotal = sum(l.price_subtotal for l in lines)
             price_total = sum(l.price_total for l in lines)
@@ -3398,24 +3403,60 @@ class AccountMoveLine(models.Model):
                 result.append({
                     'name': self.name,
                     'taxes': tax_labels,
-                    'ids': [line.id for line in section_lines],
                     'price_subtotal': subtotal,
                     'price_total': price_total,
+                    'display_type': self.display_type if not grouped else 'product',
+                    'quantity': 1,
+                    'discount': self.discount,
                 })
+
+                if not grouped:
+                    treated_lines = []
+                    for line in amls.sorted('sequence'):
+                        if line.display_type == 'line_subsection' and not self.collapse_composition and line.collapse_composition:
+                            # In case we have a section in hide prices, and a subsection in hide composition
+                            sub_section_lines = amls.filtered_domain([('id', 'child_of', line), ('id', '!=', line.id)])
+                            result.append({
+                                'name': line.name,
+                                'price_subtotal': sum(l.price_subtotal for l in sub_section_lines),
+                                'price_total': sum(l.price_total for l in sub_section_lines),
+                                'display_type': 'product',
+                                'original_display_type': line.display_type,
+                                'quantity': 1,
+                                'discount': line.discount,
+                                'colspan': 1,
+                            })
+                            treated_lines.extend(sub_section_lines)
+                        elif line not in treated_lines:
+                            result.append({
+                                'name': line.name,
+                                'price_subtotal': sum(l.price_subtotal for l in amls.filtered(lambda l: (l.parent_id == line or l.parent_id.parent_id == line))),
+                                'price_total': sum(l.price_total for l in amls.filtered(lambda l: (l.parent_id == line or l.parent_id.parent_id == line))),
+                                'display_type': line.display_type,
+                                'quantity': line.quantity,
+                                'line_uom': line.product_uom_id,
+                                'product_uom': line.product_id.uom_id,
+                                'discount': line.discount,
+                                'colspan': line.get_column_to_exclude_for_colspan_calculation(),
+                            })
 
         return result or [{
             'name': self.name,
             'taxes': [],
-            'ids': [],
             'price_subtotal': 0.0,
             'price_total': 0.0,
             'quantity': 0,
             'display_type': 'product',
+            'colspan': 1,
         }]
 
     def get_section_subtotal(self):
         section_lines = self.child_ids + self.child_ids.child_ids
         return sum(section_lines.mapped('price_subtotal'))
+
+    def get_column_to_exclude_for_colspan_calculation(self, taxes=None):
+        colspan = 2 if taxes and self.display_type != 'product' else 1
+        return colspan
 
     def get_parent_section_line(self):
         if self.display_type == 'product' and self.parent_id.display_type == 'line_subsection':
