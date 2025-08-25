@@ -221,7 +221,7 @@ export default class OrderPaymentValidation {
 
     handleValidationError(error) {
         if (error instanceof ConnectionLostError) {
-            this.pos.navigate(this.nextPage.page, this.nextPage.params);
+            this.afterOrderValidation();
             Promise.reject(error);
         } else if (error instanceof RPCError) {
             this.order.state = "draft";
