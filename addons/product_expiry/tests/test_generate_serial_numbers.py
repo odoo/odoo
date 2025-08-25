@@ -243,7 +243,7 @@ class TestStockLot(StockGenerateCommon):
 
 class TestProductExpiryTour(TestStockPickingTour):
 
-    @freeze_time("2025-06-01")
+    @freeze_time("2020-06-01")
     def test_generate_serial_with_expiration(self):
         """
         Ensure that serial/lot numbers generated using the 'Generate Serials/Lots' button in Detailed
