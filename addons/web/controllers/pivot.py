@@ -25,7 +25,6 @@ class TableExporter(http.Controller):
         bold = workbook.add_format({'bold': True})
 
         measure_count = jdata['measure_count']
-        origin_count = jdata['origin_count']
 
         # Step 1: writing col group headers
         col_group_headers = jdata['col_group_headers']
@@ -39,11 +38,11 @@ class TableExporter(http.Controller):
             for header in header_row:
                 while (carry and carry[0]['x'] == x):
                     cell = carry.popleft()
-                    for j in range(measure_count * (2 * origin_count - 1)):
+                    for j in range(measure_count):
                         worksheet.write(y, x+j, '', header_plain)
                     if cell['height'] > 1:
                         carry.append({'x': x, 'height': cell['height'] - 1})
-                    x = x + measure_count * (2 * origin_count - 1)
+                    x = x + measure_count
                 for j in range(header['width']):
                     worksheet.write(y, x + j, header['title'] if j == 0 else '', header_plain)
                 if header['height'] > 1:
@@ -51,11 +50,11 @@ class TableExporter(http.Controller):
                 x = x + header['width']
             while (carry and carry[0]['x'] == x):
                 cell = carry.popleft()
-                for j in range(measure_count * (2 * origin_count - 1)):
+                for j in range(measure_count):
                     worksheet.write(y, x+j, '', header_plain)
                 if cell['height'] > 1:
                     carry.append({'x': x, 'height': cell['height'] - 1})
-                x = x + measure_count * (2 * origin_count - 1)
+                x = x + measure_count
             x, y = 1, y + 1
 
         # Step 2: writing measure headers
@@ -66,23 +65,10 @@ class TableExporter(http.Controller):
             for measure in measure_headers:
                 style = header_bold if measure['is_bold'] else header_plain
                 worksheet.write(y, x, measure['title'], style)
-                for i in range(1, 2 * origin_count - 1):
-                    worksheet.write(y, x+i, '', header_plain)
-                x = x + (2 * origin_count - 1)
+                x = x + 1
             x, y = 1, y + 1
             # set minimum width of cells to 16 which is around 88px
             worksheet.set_column(0, len(measure_headers), 16)
-
-        # Step 3: writing origin headers
-        origin_headers = jdata['origin_headers']
-
-        if origin_headers:
-            worksheet.write(y, 0, '', header_plain)
-            for origin in origin_headers:
-                style = header_bold if origin['is_bold'] else header_plain
-                worksheet.write(y, x, origin['title'], style)
-                x = x + 1
-            y = y + 1
 
         # Step 4: writing data
         x = 0
