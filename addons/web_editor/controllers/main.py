@@ -238,44 +238,6 @@ class Web_Editor(http.Controller):
 
         return value
 
-    @http.route('/web_editor/attachment/remove', type='jsonrpc', auth='user', website=True)
-    def remove(self, ids, **kwargs):
-        """ Removes a web-based image attachment if it is used by no view (template)
-
-        Returns a dict mapping attachments which would not be removed (if any)
-        mapped to the views preventing their removal
-        """
-        self._clean_context()
-        Attachment = attachments_to_remove = request.env['ir.attachment']
-        Views = request.env['ir.ui.view']
-
-        # views blocking removal of the attachment
-        removal_blocked_by = {}
-
-        for attachment in Attachment.browse(ids):
-            # in-document URLs are html-escaped, a straight search will not
-            # find them
-            url = tools.html_escape(attachment.local_url)
-            views = Views.search([
-                "|",
-                ('arch_db', 'like', '"%s"' % url),
-                ('arch_db', 'like', "'%s'" % url)
-            ])
-
-            if views:
-                removal_blocked_by[attachment.id] = views.read(['name'])
-            else:
-                attachments_to_remove += attachment
-        if attachments_to_remove:
-            attachments_to_remove.unlink()
-        return removal_blocked_by
-
-    def _clean_context(self):
-        # avoid allowed_company_ids which may erroneously restrict based on website
-        context = dict(request.env.context)
-        context.pop('allowed_company_ids', None)
-        request.update_env(context=context)
-
     @http.route("/web_editor/get_assets_editor_resources", type="jsonrpc", auth="user", website=True)
     def get_assets_editor_resources(self, key, get_views=True, get_scss=True, get_js=True, bundles=False, bundles_restriction=[], only_user_custom_files=True):
         """
