@@ -23,7 +23,7 @@ export class HrHolidaysGraphModel extends GraphModel {
      * @returns {Object[]}
      */
     _getProcessedDataPoints() {
-        const {fields, domains, groupBy, mode, order } = this.metaData;
+        const {fields, groupBy, mode, order } = this.metaData;
         this.allocation_label = fields['leave_type'].selection.find((selection) => selection[0] === 'allocation')[1]
         this.timeoff_label = fields['leave_type'].selection.find((selection) => selection[0] === 'request')[1]
 
@@ -33,7 +33,7 @@ export class HrHolidaysGraphModel extends GraphModel {
                 (dataPoint) => dataPoint.labels[0] !== this._getDefaultFilterLabel(groupBy[0])
             );
 
-            if (order !== null && domains.length === 1 && groupBy.length > 0) {
+            if (order !== null && groupBy.length > 0) {
                 const groupedDataPoints = {};
                 for (const dataPt of processedDataPoints) {
                     const key = dataPt.labels[0]; // = x-axis value under the current assumptions
