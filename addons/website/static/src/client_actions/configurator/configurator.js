@@ -401,7 +401,7 @@ export class PaletteSelectionScreen extends Component {
      * @param {Array<number>} ids the attachment ids to remove
      */
     async _removeAttachments(ids) {
-        rpc("/web_editor/attachment/remove", { ids: ids });
+        rpc("/html_editor/attachment/remove", { ids: ids });
     }
 }
 
