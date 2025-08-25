@@ -18,7 +18,7 @@ export const accountTourSteps = {
     newInvoice() {
         return [
             {
-                trigger: ".out_invoice_tree button.o_list_button_add",
+                trigger: "button.o_list_button_add",
                 content: _t("Now, we'll create your first invoice"),
                 run: "click",
             },
