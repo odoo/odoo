@@ -48,7 +48,7 @@
             </div>
         </t>
         <t t-else="">
-            <div class="o-mail-Thread-empty d-flex flex-column text-muted h-100"
+            <div class="o-mail-Thread-empty d-flex flex-column h-100"
                 t-att-class="{
                     'p-4': props.showEmptyMessage and !showStartMessage,
                     'align-items-start justify-content-end': showStartMessage,
@@ -108,11 +108,11 @@
         }">
             <div class="o-mail-Thread-avatar d-inline" t-att-class="{'o-mail-Thread-avatarChatWindow': env.inChatWindow }">
                 <img t-if="!props.thread.parent_channel_id" class="rounded-3 object-fit-cover" t-att-src="props.thread?.avatarUrl" alt="Thread Image"/>
-                <i t-else="" class="fa fa-comments-o opacity-75"/>
+                <i t-else="" class="fa fa-comments-o text-muted" role="presentation"/>
             </div>
-            <h1 class="opacity-75" t-att-class="{ 'fs-3': env.inChatWindow, 'mb-0': env.inChatWindow, 'mb-1': !env.inChatWindow }" t-esc="startMessageTitle"/>
+            <div role="heading" aria-level="1" t-att-class="{ 'fs-1': !env.inChatWindow, 'fs-3': env.inChatWindow }" t-esc="startMessageTitle"/>
         </div>
-        <p class="text-muted mb-0 small opacity-75" t-esc="startMessageSubtitle"/>
+        <p class="text-muted mb-0 small" t-esc="startMessageSubtitle"/>
     </div>
 </t>
 </templates>
