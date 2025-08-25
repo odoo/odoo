@@ -5,6 +5,7 @@ from odoo import Command
 
 from odoo.tests import common, tagged, Form
 from odoo.tools import mute_logger
+from datetime import datetime
 
 
 class TestDropship(common.TransactionCase):
@@ -297,6 +298,81 @@ class TestDropship(common.TransactionCase):
         self.assertTrue(purchase, "an RFQ should have been created by the scheduler")
         self.assertTrue((purchase.date_planned - purchase.date_order).days == 10, "The first supplier has a delay of 10 days")
         self.assertTrue(purchase.amount_untaxed == 8, "The price should be 4 * 2")
+
+    def test_dropship_return_backorders_bill_on_order(self):
+        """
+        Dropshipped billed-on-order product
+        Sell 10
+        Deliver 7 + backorder creation
+        Return 2
+        Process the backorder (3)
+        Re-return 2
+        Ensure all SVL values are correct
+        """
+        product = self.dropship_product
+        product.purchase_method = 'purchase'
+        product.write({
+            'seller_ids': [
+                Command.clear(),
+                Command.create({
+                    'partner_id': self.supplier.id,
+                    'min_qty': 1.0,
+                    'price': 10
+                }),
+            ],
+            'standard_price': 10,
+        })
+        product.categ_id.property_cost_method = 'average'
+        product.route_ids = self.dropshipping_route
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 10.0,
+                'price_unit': 10,
+            })]
+        })
+        sale_order.action_confirm()
+        purchase_order = sale_order.order_line.purchase_line_ids.order_id
+        purchase_order.button_confirm()
+
+        purchase_order.action_create_invoice()
+        purchase_bill = purchase_order.invoice_ids
+        purchase_bill.invoice_date = datetime.today()
+        purchase_bill.action_post()
+
+        dropship = sale_order.picking_ids
+        dropship.move_ids.quantity = 7
+        res_dict = dropship.button_validate()
+        backorder_wizard = Form(self.env['stock.backorder.confirmation'].with_context(res_dict['context'])).save()
+        backorder_wizard.process()
+        backorder = dropship.backorder_ids
+
+        return_form = Form(self.env['stock.return.picking'].with_context(active_id=dropship.id, active_model='stock.picking'))
+        return_wizard = return_form.save()
+        return_wizard.product_return_moves.quantity = 2
+        return_id, _ = return_wizard._create_returns()
+        return_picking = self.env['stock.picking'].browse(return_id)
+        return_picking.move_ids.quantity = 2
+        return_picking.button_validate()
+
+        backorder.button_validate()
+
+        return_form = Form(self.env['stock.return.picking'].with_context(active_id=return_picking.id, active_model='stock.picking'))
+        return_wizard = return_form.save()
+        return_wizard.product_return_moves.quantity = 2
+        re_return_id, _ = return_wizard._create_returns()
+        re_return = self.env['stock.picking'].browse(re_return_id)
+        re_return.move_ids.quantity = 2
+        re_return.button_validate()
+
+        layers = sale_order.picking_ids.move_ids.stock_valuation_layer_ids.sorted('id')
+        self.assertEqual(layers.mapped('value'), [
+            70.0, -70.0,    # Dropship
+            20.0, -20.0,    # Return
+            30.0, -30.0,    # Backorder
+            20.0, -20.0,    # Re-return
+        ])
 
 
 @tagged('post_install', '-at_install')

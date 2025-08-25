@@ -90,6 +90,17 @@ class AccountMoveSend(models.TransientModel):
                 "critical": True,
             }
 
+        if invalid_negative_lines := moves_to_check.filtered(
+            lambda move: move._l10n_tr_nilvera_einvoice_check_negative_lines(),
+        ):
+            warnings["critical_invalid_negative_lines"] = {
+                "message": _("Nilvera portal cannot process negative quantity nor negative price on invoice lines"),
+                "action_text": _("View Invoice(s)"),
+                "action": invalid_negative_lines._get_records_action(name=_("Check data on Invoice(s)")),
+                "critical": True,
+                "danger": True,
+            }
+
         return warnings
 
     # -------------------------------------------------------------------------
