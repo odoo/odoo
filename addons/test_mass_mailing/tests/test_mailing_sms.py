@@ -13,7 +13,7 @@ from odoo.tools import mute_logger
 
 
 @tagged('mass_mailing', 'mass_mailing_sms')
-class TestMassSMSInternals(TestMassSMSCommon):
+class TestMassSMSInternals(TestMassSMSCommon, MockSmsTwilioApi):
 
     @users('user_marketing')
     def test_mass_sms_domain(self):
@@ -283,6 +283,32 @@ class TestMassSMSInternals(TestMassSMSCommon):
         with self.with_user('user_marketing'):
             with self.mock_mail_gateway(), self.assertRaises(Exception):
                 mailing_test.action_send_sms()
+
+    def test_mass_sms_test_button_twilio(self):
+        """ Test the testing tool when twilio is activated on company """
+        self._setup_sms_twilio(self.user_marketing.company_id)
+
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'TestButton',
+            'subject': 'Subject {{ object.name }}',
+            'preview': 'Preview {{ object.name }}',
+            'state': 'draft',
+            'mailing_type': 'sms',
+            'body_plaintext': 'Hello {{ object.name }}',
+            'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+        })
+        mailing_test = self.env['mailing.sms.test'].with_user(self.user_marketing).create({
+            'numbers': '+32456001122',
+            'mailing_id': mailing.id,
+        })
+
+        with self.with_user('user_marketing'):
+            with self.mock_sms_twilio_gateway():
+                mailing_test.action_send_sms()
+
+        self.assertSMS(
+            self.env["res.partner"], '+32456001122', 'outgoing',
+        )
 
 
 @tagged('mass_mailing', 'mass_mailing_sms')
