@@ -3,6 +3,7 @@ import { ColorPicker } from "@web/core/color_picker/color_picker";
 import { HighlightPicker } from "./highlight_picker";
 import { normalizeColor } from "@html_builder/utils/utils_css";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
+import { _t } from "@web/core/l10n/translation";
 
 export const highlightIdToName = {
     underline: "Underline",
@@ -42,6 +43,7 @@ export class HighlightConfigurator extends Component {
         revertHighlightStyle: Function,
         componentStack: Object,
         getUsedCustomColors: Function,
+        getMaxFontSize: Function,
     };
 
     setup() {
@@ -55,14 +57,25 @@ export class HighlightConfigurator extends Component {
     }
 
     openHighlightPicker(withPrevious = true) {
+        // Picker's samples use the fs-3 class
+        const fs3 = document.createElement("div");
+        fs3.classList.add("fs-3");
+        document.body.append(fs3);
+        const fs3Size = parseFloat(getComputedStyle(fs3).fontSize);
+        fs3.remove();
+        const fontRatio = this.props.getMaxFontSize() / fs3Size;
         this.props.componentStack.push(
             HighlightPicker,
             {
                 selectHighlight: this.selectHighlight.bind(this),
                 previewHighlight: this.props.previewHighlight,
                 revertHighlight: this.props.revertHighlight,
+                style: `
+                    --text-highlight-width: ${(this.state.thickness || 2) / fontRatio}px;
+                    --text-highlight-color: ${this.state.color || "var(--o-color-1)"};
+                `,
             },
-            "Select a highlight",
+            _t("Select a highlight"),
             withPrevious
         );
     }
