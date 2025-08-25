@@ -308,7 +308,7 @@
         <field name="model">stock.move.line</field>
         <field name="inherit_id" ref="stock.stock_move_line_view_search"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='groupby']" position="inside">
+            <xpath expr="//group" position="inside">
                 <filter string="Batch Transfer" name="by_batch_id" context="{'group_by': 'batch_id'}"/>
             </xpath>
         </field>

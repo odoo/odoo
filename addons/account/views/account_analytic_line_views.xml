@@ -56,7 +56,7 @@
                     <xpath expr="//filter[@name='month']" position="after">
                         <filter name="fiscal_date" string="From last fiscal year" domain="[('fiscal_year_search', '=', True)]" invisible="1"/>
                     </xpath>
-                    <xpath expr="//group[@name='groupby']" position="inside">
+                    <xpath expr="//group" position="inside">
                         <separator/>
                         <filter name="account_id" context="{'group_by': 'account_id'}"/>
                         <separator/>

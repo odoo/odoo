@@ -450,7 +450,7 @@
                         domain="[('my_activity_date_deadline', '&gt;', 'today')]"/>
 
                     <!-- Group bys -->
-                    <group name="group_filters">
+                    <group>
                         <filter string="Employee" name="employee" domain="[]" context="{'group_by': 'employee_id'}"/>
                         <filter string="Category" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
@@ -521,7 +521,7 @@
             <field name="inherit_id" ref="hr_expense_view_search"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='group_filters']" position='after'>
+                <xpath expr="//group" position='after'>
                     <searchpanel>
                         <field name="state" expand="1" select="multi" icon="fa-check-square-o" enable_counters="1"/>
                         <field name="employee_id"  limit="20" hierarchize="0" select="one" icon="fa-users"/>

@@ -19,7 +19,7 @@
             <xpath expr="//field[@name='owner_id']" position="after">
                 <field name="carrier_id" invisible="1" string="Carrier name"/>
             </xpath>
-            <xpath expr="//group[@name='groupby']" position="inside">
+            <xpath expr="//group" position="inside">
                 <filter string="Carrier" name="by_carrier" context="{'group_by': 'carrier_id'}"/>
             </xpath>
         </field>
