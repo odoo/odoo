@@ -258,11 +258,7 @@ export class Thread extends Record {
     /** @type {"not_fetched"|"pending"|"fetched"} */
     fetchMembersState = "not_fetched";
     /** @type {integer|null} */
-    highlightMessage = fields.One("mail.message", {
-        onAdd(msg) {
-            msg.thread = this;
-        },
-    });
+    highlightMessage = fields.One("mail.message");
     /** @type {String|undefined} */
     access_token;
     /** @type {String|undefined} */

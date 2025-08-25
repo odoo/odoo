@@ -20,7 +20,7 @@
                     important="thread.needactionCounter"
                     hasMarkAsReadButton="thread.isUnread"
                     muted="thread.selfMember?.mute_until_dt ? 2 : !thread.isUnread ? 1 : 0"
-                    onClick="(isMarkAsRead) => this.onClickThread(isMarkAsRead, thread)"
+                    onClick="(isMarkAsRead) => this.onClickThread(isMarkAsRead, thread, message)"
                     onSwipeRight="hasTouch() and thread.isUnread ? { action: () => this.markAsRead(thread), icon: 'fa-check-circle', bgColor: 'bg-success' } : undefined"
                     onSwipeLeft="hasTouch() and canUnpinItem(thread) ? { action: () => thread.unpin(), icon: 'fa-times-circle', bgColor: 'bg-danger' } : undefined"
                     nameMaxLine="1"

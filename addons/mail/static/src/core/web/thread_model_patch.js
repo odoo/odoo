@@ -60,12 +60,24 @@ const threadPatch = {
         if (res) {
             return res;
         }
-        this.store.env.services.action.doAction({
-            type: "ir.actions.act_window",
-            res_id: this.id,
-            res_model: this.model,
-            views: [[false, "form"]],
-        });
+        if (this.model === "mail.box") {
+            if (this.store.discuss.isActive) {
+                this.setAsDiscussThread();
+            } else {
+                this.store.env.services.action.doAction({
+                    context: { active_id: `mail.box_${this.id}` },
+                    tag: "mail.action_discuss",
+                    type: "ir.actions.client",
+                });
+            }
+        } else {
+            this.store.env.services.action.doAction({
+                type: "ir.actions.act_window",
+                res_id: this.id,
+                res_model: this.model,
+                views: [[false, "form"]],
+            });
+        }
         return true;
     },
     async unpin() {

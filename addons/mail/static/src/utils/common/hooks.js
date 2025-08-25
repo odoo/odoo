@@ -339,9 +339,6 @@ export function useMessageScrolling(duration = 2000) {
          * @param {import("models").Thread} thread
          */
         async highlightMessage(message, thread) {
-            if (thread.notEq(message.thread)) {
-                return;
-            }
             state.initiated = true;
             let messageScrollDirection;
             if (message.notIn(thread.messages)) {

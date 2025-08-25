@@ -10,11 +10,11 @@ patch(MessagingMenu.prototype, {
         this.orm = useService("orm");
     },
 
-    onClickThread(isMarkAsRead, thread) {
+    onClickThread(isMarkAsRead, thread, message) {
         if (!isMarkAsRead && thread.model === "gamification.badge.user") {
             this.openEmployeeView(thread);
         } else {
-            super.onClickThread(isMarkAsRead, thread);
+            super.onClickThread(...arguments);
         }
     },
 
