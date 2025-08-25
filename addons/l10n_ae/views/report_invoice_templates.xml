@@ -3,11 +3,13 @@
     <template id="l10n_ae_report_invoice_document" inherit_id="l10n_gcc_invoice.l10n_gcc_report_invoice_document" primary="True">
         <!-- Invoice table -->
         <th name="th_taxes" position="after">
-            <th name="th_vat_amount" class="text-end">
-                <span name="th_vat_amount_span_ar" t-if="display_in_ar" t-translation="off">مبلغ الضريبة<br/></span>
-                <span name="th_vat_amount_span_en" t-if="display_in_en" t-translation="off">VAT Amount<br/></span>
-                <span name="th_vat_amount_span">VAT Amount</span>
-            </th>
+            <t t-if="display_taxes">
+                <th name="th_vat_amount" class="text-end">
+                    <span name="th_vat_amount_span_ar" t-if="display_in_ar" t-translation="off">مبلغ الضريبة<br/></span>
+                    <span name="th_vat_amount_span_en" t-if="display_in_en" t-translation="off">VAT Amount<br/></span>
+                    <span name="th_vat_amount_span">VAT Amount</span>
+                </th>
+            </t>
         </th>
         <th name="th_subtotal" position="after">
             <t t-if="o.currency_id != o.company_currency_id">
@@ -19,9 +21,11 @@
             </t>
         </th>
         <td name="td_taxes" position="after">
-            <td name="td_vat_amount" class="text-end">
-                <span t-if="not line.collapse_prices" name="td_vat_amount_span" t-field="line.l10n_gcc_invoice_tax_amount"/>
-            </td>
+            <t t-if="display_taxes">
+                <td name="td_vat_amount" class="text-end">
+                    <span t-if="not line.collapse_prices" name="td_vat_amount_span" t-field="line.l10n_gcc_invoice_tax_amount"/>
+                </td>
+            </t>
         </td>
         <td name="td_subtotal" position="after">
             <t t-if="o.currency_id != o.company_currency_id">
