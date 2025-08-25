@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-16 18:38+0000\n"
-"PO-Revision-Date: 2025-08-22 23:41+0000\n"
+"PO-Revision-Date: 2025-08-25 13:14+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s18-4/"
 "payment/es/>\n"
@@ -592,7 +592,7 @@ msgstr "Cuenta bancaria"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_installments_eg
 msgid "Bank Installments"
-msgstr ""
+msgstr "Cuotas bancarias"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__journal_name
@@ -1103,8 +1103,9 @@ msgstr "EPS"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_easypaisa
+#, fuzzy
 msgid "EasyPaisa"
-msgstr ""
+msgstr "EasyPaisa"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_elo
@@ -1190,7 +1191,7 @@ msgstr "Flutterwave"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_forsa
 msgid "Forsa"
-msgstr ""
+msgstr "Forsa"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_frafinance
@@ -1272,7 +1273,7 @@ msgstr "Enrutamiento HTTP "
 #. module: payment
 #: model:payment.method,name:payment.payment_method_halan
 msgid "Halan"
-msgstr ""
+msgstr "Halan"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_draft_children
@@ -1367,7 +1368,7 @@ msgstr "Instalar"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "Install the provider you want to add."
-msgstr ""
+msgstr "Instale el proveedor que desea añadir."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_state
@@ -1413,7 +1414,7 @@ msgstr "JCB"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_jazzcash
 msgid "JazzCash"
-msgstr ""
+msgstr "JazzCash"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_jeniuspay
@@ -1670,7 +1671,7 @@ msgstr "MoMo"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mobile_wallet_eg
 msgid "Mobile Wallets Egypt"
-msgstr ""
+msgstr "Monedero electrónico - Egipto"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mobile_money
@@ -1756,6 +1757,8 @@ msgstr ""
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "No override of _compare_notification_data found for provider %s"
 msgstr ""
+"No hemos encontrado ninguna anulación de _compare_notification_data para el "
+"proveedor %s"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
@@ -1770,7 +1773,7 @@ msgstr "No hay proveedores de pago configurados."
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "No providers available"
-msgstr ""
+msgstr "No hay proveedores disponibles"
 
 #. module: payment
 #. odoo-python
@@ -2197,7 +2200,7 @@ msgstr "Pagos"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_paymob
 msgid "Paymob"
-msgstr ""
+msgstr "Paymob"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_paypal
@@ -2275,7 +2278,7 @@ msgstr "PostePay"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_premium_card
 msgid "Premium Card"
-msgstr ""
+msgstr "PremiumCard"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_presto
@@ -2447,7 +2450,7 @@ msgstr "SPEI"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_stcpay
 msgid "STCPay"
-msgstr ""
+msgstr "STCPay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_samsung_pay
@@ -2540,7 +2543,7 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_souhoola
 msgid "Souhoola"
-msgstr ""
+msgstr "Souhoola"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
@@ -2600,7 +2603,7 @@ msgstr "Swish"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_sympl
 msgid "Sympl"
-msgstr ""
+msgstr "Sympl"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tenpay
@@ -2615,12 +2618,12 @@ msgstr "TTB"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tabby
 msgid "Tabby"
-msgstr ""
+msgstr "Tabby"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tamara
 msgid "Tamara"
-msgstr ""
+msgstr "Tamara"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tmb
@@ -2671,12 +2674,13 @@ msgstr "El token de acceso no es válido."
 msgid ""
 "The amount from the payment data doesn't match the one from the transaction."
 msgstr ""
+"El importe de los datos de pago no coincide con el importe de la transacción."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The amount or currency is missing from the payment data."
-msgstr ""
+msgstr "Falta el importe o la moneda en los datos de pago."
 
 #. module: payment
 #. odoo-python
@@ -2744,6 +2748,7 @@ msgid ""
 "The currency from the payment data doesn't match the one from the "
 "transaction."
 msgstr ""
+"La moneda de los datos de pago no coincide con la moneda de la transacción."
 
 #. module: payment
 #. odoo-python
@@ -3111,12 +3116,12 @@ msgstr "Tinka"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "To add a provider to the current company:"
-msgstr ""
+msgstr "Para añadir el proveedor a la compañía actual:"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "Toggle the main company in the company switcher."
-msgstr ""
+msgstr "Elija la compañía principal en el selector de compañías."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
@@ -3237,7 +3242,7 @@ msgstr "VISA"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_valu
 msgid "ValU"
-msgstr ""
+msgstr "ValU"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__validation

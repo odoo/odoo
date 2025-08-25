@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment
-# 
+# * payment
+#
 # Translators:
 # Wil Odoo, 2025
 # Rasareeyar Lappiam, 2025
-# 
+#
+# "Rasareeyar Lappiam (rlap)" <rlap@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-16 18:38+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2025\n"
-"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"PO-Revision-Date: 2025-08-25 07:39+0000\n"
+"Last-Translator: \"Rasareeyar Lappiam (rlap)\" <rlap@odoo.com>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-4/payment/"
+"th/>\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard___data_fetched
@@ -55,14 +58,18 @@ msgid ""
 "                                and should be tested on a test database first."
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle\"/> คุณสมบัติเหล่านี้ได้รับการตั้งค่า\n"
-"                              ให้ตรงกับพฤติกรรมของผู้ให้บริการและการบูรณาการกับ Odoo \n"
-"                              เกี่ยวกับวิธีการชำระเงินนี้ การเปลี่ยนแปลงใดๆ อาจส่งผลให้เกิดข้อผิดพลาด \n"
+"                              ให้ตรงกับพฤติกรรมของผู้ให้บริการและการบูรณาการกับ Odoo "
+"\n"
+"                              เกี่ยวกับวิธีการชำระเงินนี้ การเปลี่ยนแปลงใดๆ "
+"อาจส่งผลให้เกิดข้อผิดพลาด \n"
 "                              และควรได้รับการทดสอบกับฐานข้อมูลทดสอบก่อน"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
 msgid "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
-msgstr "<i class=\"fa fa-home\" role=\"รูปหน้า\" title=\"หน้าแรก\" aria-label=\"หน้าแรก\"/>"
+msgstr ""
+"<i class=\"fa fa-home\" role=\"รูปหน้า\" title=\"หน้าแรก\" aria-label=\"หน้าแรก\""
+"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -72,9 +79,9 @@ msgid ""
 " only be captured in full. Handle the transactions individually to capture a"
 " partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture"
-" != 'full_only'\" "
-"title=\"ธุรกรรมบางรายการที่คุณตั้งใจจะบันทึกสามารถบันทึกได้ทั้งหมดเท่านั้น "
+"<i class=\"fa fa-info-circle oe_inline\" invisible="
+"\"support_partial_capture != 'full_only'\" title=\"ธ"
+"ุรกรรมบางรายการที่คุณตั้งใจจะบันทึกสามารถบันทึกได้ทั้งหมดเท่านั้น "
 "จัดการธุรกรรมทีละรายการเพื่อบันทึกจำนวนเงินบางส่วน\"/>"
 
 #. module: payment
@@ -83,8 +90,8 @@ msgid ""
 "<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-"
 "toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
 msgstr ""
-"<i class=\"fa fa-trash\" title=\"ลบวิธีการชำระเงิน\" data-bs-"
-"toggle=\"เคล็ดลับเครื่องมือ\" data-bs-placement=\"บน\" data-bs-delay=\"0\"/>"
+"<i class=\"fa fa-trash\" title=\"ลบวิธีการชำระเงิน\" data-bs-toggle="
+"\"เคล็ดลับเครื่องมือ\" data-bs-placement=\"บน\" data-bs-delay=\"0\"/>"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
@@ -176,7 +183,8 @@ msgid ""
 "                    the capture is still pending after a few minutes."
 msgstr ""
 "<strong>คำเตือน!</strong> มีการจับภาพบางส่วนที่รอดำเนินการ กรุณารอสักครู่\n"
-"                    เพื่อดำเนินการ ตรวจสอบการกำหนดค่าผู้ให้บริการชำระเงินของคุณว่าการจับภาพยังคง\n"
+"                    เพื่อดำเนินการ "
+"ตรวจสอบการกำหนดค่าผู้ให้บริการชำระเงินของคุณว่าการจับภาพยังคง\n"
 "                    ค้างอยู่หลังจากผ่านไปไม่กี่นาทีหรือไม่"
 
 #. module: payment
@@ -231,8 +239,7 @@ msgstr ""
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
 "A transaction with reference %(ref)s has been initiated (%(provider_name)s)."
-msgstr ""
-"การทำธุรกรรมที่มีอ้างอิง %(ref)s ได้ถูกเริ่มต้นแล้ว (%(provider_name)s)"
+msgstr "การทำธุรกรรมที่มีอ้างอิง %(ref)s ได้ถูกเริ่มต้นแล้ว (%(provider_name)s)"
 
 #. module: payment
 #. odoo-python
@@ -241,8 +248,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated to save a new "
 "payment method (%(provider_name)s)"
 msgstr ""
-"การทำธุรกรรมที่มีอ้างอิง %(ref)s "
-"ได้ถูกเริ่มต้นขึ้นเพื่อบันทึกวิธีการชำระเงินใหม่ (%(provider_name)s)"
+"การทำธุรกรรมที่มีอ้างอิง %(ref)s ได้ถูกเริ่มต้นขึ้นเพื่อบันทึกวิธีการชำระเงินใหม่ "
+"(%(provider_name)s)"
 
 #. module: payment
 #. odoo-python
@@ -251,8 +258,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated using the payment "
 "method %(token)s (%(provider_name)s)."
 msgstr ""
-"การทำธุรกรรมด้วยอ้างอิง %(ref)s ได้ถูกเริ่มต้นขึ้นโดยใช้วิธีการชำระเงิน "
-"%(token)s (%(provider_name)s)"
+"การทำธุรกรรมด้วยอ้างอิง %(ref)s ได้ถูกเริ่มต้นขึ้นโดยใช้วิธีการชำระเงิน %(token)s "
+"(%(provider_name)s)"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ach_direct_debit
@@ -439,8 +446,7 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
-"คุณแน่ใจหรือไม่ว่าต้องการยกเลิกธุรกรรมที่ได้รับอนุญาต? "
-"การดำเนินการนี้ไม่สามารถยกเลิกได้"
+"คุณแน่ใจหรือไม่ว่าต้องการยกเลิกธุรกรรมที่ได้รับอนุญาต? การดำเนินการนี้ไม่สามารถยกเลิกได้"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_argencard
@@ -1152,8 +1158,8 @@ msgid ""
 "that provides all required billing and shipping information, thus allowing "
 "to skip the checkout process."
 msgstr ""
-"การชำระเงินด่วนช่วยให้ลูกค้าชำระเงินได้เร็วขึ้นโดยใช้วิธีการชำระเงินที่ให้ข้อมูลการเรียกเก็บเงินและการจัดส่งที่จำเป็นทั้งหมด"
-" จึงสามารถข้ามขั้นตอนการชำระเงินได้"
+"การชำระเงินด่วนช่วยให้ลูกค้าชำระเงินได้เร็วขึ้นโดยใช้วิธีการชำระเงินที่ให้ข้อมูลการเรียกเก็บเงินและก"
+"ารจัดส่งที่จำเป็นทั้งหมด จึงสามารถข้ามขั้นตอนการชำระเงินได้"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_fps
@@ -1739,8 +1745,7 @@ msgid ""
 "No manual payment method could be found for this company. Please create one "
 "from the Payment Provider menu."
 msgstr ""
-"ไม่พบวิธีการชำระเงินด้วยตนเองสำหรับบริษัทนี้ "
-"โปรดสร้างหนึ่งรายการจากเมนูผู้ให้บริการชำระเงิน"
+"ไม่พบวิธีการชำระเงินด้วยตนเองสำหรับบริษัทนี้ โปรดสร้างหนึ่งรายการจากเมนูผู้ให้บริการชำระเงิน"
 
 #. module: payment
 #. odoo-python
@@ -2392,8 +2397,7 @@ msgid ""
 "Refund is a feature allowing to refund customers directly from the payment "
 "in Odoo."
 msgstr ""
-"การคืนเงินเป็นฟีเจอร์ที่ช่วยให้คืนเงินให้กับลูกค้าได้โดยตรงจากการชำระเงินใน "
-"Odoo"
+"การคืนเงินเป็นฟีเจอร์ที่ช่วยให้คืนเงินให้กับลูกค้าได้โดยตรงจากการชำระเงินใน Odoo"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -2713,8 +2717,7 @@ msgid ""
 "The countries in which this payment provider is available. Leave blank to "
 "make it available in all countries."
 msgstr ""
-"ประเทศที่ผู้ให้บริการชำระเงินรายนี้ให้บริการ "
-"เว้นว่างไว้เพื่อให้สามารถใช้ได้ในทุกประเทศ"
+"ประเทศที่ผู้ให้บริการชำระเงินรายนี้ให้บริการ เว้นว่างไว้เพื่อให้สามารถใช้ได้ในทุกประเทศ"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__available_currency_ids
@@ -2722,8 +2725,7 @@ msgid ""
 "The currencies available with this payment provider. Leave empty not to "
 "restrict any."
 msgstr ""
-"สกุลเงินที่สามารถใช้ได้กับผู้ให้บริการชำระเงินรายนี้ "
-"เว้นว่างไว้เพื่อไม่จำกัด"
+"สกุลเงินที่สามารถใช้ได้กับผู้ให้บริการชำระเงินรายนี้ เว้นว่างไว้เพื่อไม่จำกัด"
 
 #. module: payment
 #. odoo-python
@@ -2773,8 +2775,8 @@ msgid ""
 "provider allows it). In other countries, this payment method is not "
 "available to customers."
 msgstr ""
-"รายชื่อประเทศที่ใช้วิธีการชำระเงินนี้ได้ (หากผู้ให้บริการอนุญาต) "
-"ในประเทศอื่น วิธีการชำระเงินนี้ไม่พร้อมให้บริการแก่ลูกค้า"
+"รายชื่อประเทศที่ใช้วิธีการชำระเงินนี้ได้ (หากผู้ให้บริการอนุญาต) ในประเทศอื่น "
+"วิธีการชำระเงินนี้ไม่พร้อมให้บริการแก่ลูกค้า"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__supported_currency_ids
@@ -2783,8 +2785,8 @@ msgid ""
 " provider allows it). When paying with another currency, this payment method"
 " is not available to customers."
 msgstr ""
-"รายการสกุลเงินที่รองรับวิธีการชำระเงินนี้ (หากผู้ให้บริการอนุญาต) "
-"เมื่อชำระเงินด้วยสกุลเงินอื่น ลูกค้าจะไม่สามารถชำระเงินด้วยวิธีดังกล่าวได้"
+"รายการสกุลเงินที่รองรับวิธีการชำระเงินนี้ (หากผู้ให้บริการอนุญาต) เมื่อชำระเงินด้วยสกุลเงินอื่น "
+"ลูกค้าจะไม่สามารถชำระเงินด้วยวิธีดังกล่าวได้"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_ids
@@ -2845,8 +2847,7 @@ msgstr ""
 msgid ""
 "The payment should either be direct, with redirection, or made by a token."
 msgstr ""
-"การชำระเงินควรเป็นการชำระเงินโดยตรง หรือมีการเปลี่ยนเส้นทาง "
-"หรือชำระด้วยโทเค็น"
+"การชำระเงินควรเป็นการชำระเงินโดยตรง หรือมีการเปลี่ยนเส้นทาง หรือชำระด้วยโทเค็น"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__primary_payment_method_id
@@ -2933,8 +2934,7 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s encountered an error "
 "(%(provider_name)s)."
 msgstr ""
-"ธุรกรรมที่มีการอ้างอิง %(ref)s สำหรับ %(amount)s พบข้อผิดพลาด "
-"(%(provider_name)s)"
+"ธุรกรรมที่มีการอ้างอิง %(ref)s สำหรับ %(amount)s พบข้อผิดพลาด (%(provider_name)s)"
 
 #. module: payment
 #. odoo-python
@@ -2943,8 +2943,7 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s has been authorized "
 "(%(provider_name)s)."
 msgstr ""
-"ธุรกรรมที่มีการอ้างอิง %(ref)s สำหรับ %(amount)s ได้รับการอนุมัติแล้ว "
-"(%(provider_name)s)"
+"ธุรกรรมที่มีการอ้างอิง %(ref)s สำหรับ %(amount)s ได้รับการอนุมัติแล้ว (%(provider_name)s)"
 
 #. module: payment
 #. odoo-python
@@ -2953,8 +2952,7 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s has been confirmed "
 "(%(provider_name)s)."
 msgstr ""
-"ธุรกรรมที่มีการอ้างอิง %(ref)s สำหรับ %(amount)s ได้รับการยืนยันแล้ว "
-"(%(provider_name)s)"
+"ธุรกรรมที่มีการอ้างอิง %(ref)s สำหรับ %(amount)s ได้รับการยืนยันแล้ว (%(provider_name)s)"
 
 #. module: payment
 #. odoo-python
@@ -3048,8 +3046,7 @@ msgid ""
 "This payment method needs a partner in crime; you should enable a payment "
 "provider supporting this method first."
 msgstr ""
-"วิธีการชำระเงินนี้จำเป็นต้องมีพาร์ทเนอร์ "
-"คุณควรเปิดใช้งานผู้ให้บริการการชำระเงินที่รองรับวิธีนี้ก่อน"
+"วิธีการชำระเงินนี้จำเป็นต้องมีพาร์ทเนอร์ คุณควรเปิดใช้งานผู้ให้บริการการชำระเงินที่รองรับวิธีนี้ก่อน"
 
 #. module: payment
 #. odoo-python
@@ -3058,8 +3055,8 @@ msgid ""
 "This transaction has been confirmed following the processing of its partial "
 "capture and partial void transactions (%(provider)s)."
 msgstr ""
-"ธุรกรรมนี้ได้รับการยืนยันหลังจากการประมวลผลการตัดวงเงินบางส่วนและธุรกรรมที่เป็นโมฆะบางส่วน"
-" (%(provider)s)."
+"ธุรกรรมนี้ได้รับการยืนยันหลังจากการประมวลผลการตัดวงเงินบางส่วนและธุรกรรมที่เป็นโมฆะบางส่วน "
+"(%(provider)s)."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tienphong
@@ -3099,7 +3096,8 @@ msgid ""
 "can later be reused without having to enter the payment details again."
 msgstr ""
 "Tokenization "
-"คือกระบวนการบันทึกรายละเอียดการชำระเงินเป็นโทเค็นที่สามารถนำมาใช้ซ้ำได้ในภายหลังโดยไม่ต้องป้อนรายละเอียดการชำระเงินอีกครั้ง"
+"คือกระบวนการบันทึกรายละเอียดการชำระเงินเป็นโทเค็นที่สามารถนำมาใช้ซ้ำได้ในภายหลังโดยไม่ต้องป้อ"
+"นรายละเอียดการชำระเงินอีกครั้ง"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_toss_pay
@@ -3122,8 +3120,7 @@ msgstr "ธุรกรรม"
 msgid ""
 "Transaction authorization is not supported by the following payment "
 "providers: %s"
-msgstr ""
-"การอนุมัติธุรกรรมไม่ได้รับการรองรับโดยผู้ให้บริการชำระเงินต่อไปนี้: %s"
+msgstr "การอนุมัติธุรกรรมไม่ได้รับการรองรับโดยผู้ให้บริการชำระเงินต่อไปนี้: %s"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_truemoney
@@ -3317,7 +3314,8 @@ msgid ""
 "You can't unarchive tokens linked to inactive payment methods or disabled "
 "providers."
 msgstr ""
-"คุณไม่สามารถยกเลิกการเก็บถาวรโทเค็นที่เชื่อมโยงกับวิธีการชำระเงินที่ไม่ได้ใช้งานหรือผู้ให้บริการที่ถูกปิดการใช้งานได้"
+"คุณไม่สามารถยกเลิกการเก็บถาวรโทเค็นที่เชื่อมโยงกับวิธีการชำระเงินที่ไม่ได้ใช้งานหรือผู้ให้บริการที่ถูกปิ"
+"ดการใช้งานได้"
 
 #. module: payment
 #. odoo-python
@@ -3325,8 +3323,7 @@ msgstr ""
 msgid ""
 "You cannot change the company of a payment provider with existing "
 "transactions."
-msgstr ""
-"คุณไม่สามารถเปลี่ยนบริษัทของผู้ให้บริการชำระเงินด้วยธุรกรรมที่มีอยู่ได้"
+msgstr "คุณไม่สามารถเปลี่ยนบริษัทของผู้ให้บริการชำระเงินด้วยธุรกรรมที่มีอยู่ได้"
 
 #. module: payment
 #. odoo-python

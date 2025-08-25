@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* survey
-# 
+# * survey
+#
 # Translators:
 # Wil Odoo, 2025
 # Rasareeyar Lappiam, 2025
-# 
+#
+# "Rasareeyar Lappiam (rlap)" <rlap@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:09+0000\n"
-"PO-Revision-Date: 2025-07-01 13:07+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2025\n"
-"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"PO-Revision-Date: 2025-08-25 07:48+0000\n"
+"Last-Translator: \"Rasareeyar Lappiam (rlap)\" <rlap@odoo.com>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-4/survey/"
+"th/>\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_count
@@ -201,7 +204,8 @@ msgid ""
 "                                    <span class=\"text-muted\">Completed</span>"
 msgstr ""
 "<br/>\n"
-"                                    <span class=\"text-muted\">เสร็จสมบูรณ์</span>"
+"                                    <span class=\"text-muted\""
+">เสร็จสมบูรณ์</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -210,7 +214,8 @@ msgid ""
 "                                    <span class=\"text-muted\">Registered</span>"
 msgstr ""
 "<br/>\n"
-"                                    <span class=\"text-muted\">ลงทะเบียน</span>"
+"                                    <span class=\"text-muted\""
+">ลงทะเบียน</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
@@ -247,27 +252,37 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-"
+"family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
-"                <!-- เราใช้โลโก้ของบริษัทที่สร้างแบบสำรวจ (เพื่อจัดการกับกรณีหลายบริษัท) -->\n"
-"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                <!-- เราใช้โลโก้ของบริษัทที่สร้างแบบสำรวจ (เพื่อจัดการกับกรณีหลายบริษัท) "
+"-->\n"
+"                <a href=\"/\"><img t-if="
+"\"not object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src="
+"\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style"
+"=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
-"                    ใบรับรอง: <t t-out=\"object.survey_id.display_name or ''\">แบบฟอร์มข้อเสนอแนะ</t>\n"
+"                    ใบรับรอง: <t t-out=\"object.survey_id.display_name or ''\""
+">แบบฟอร์มข้อเสนอแนะ</t>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
-"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"    <table style="
+"\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
 "        <tbody>\n"
 "            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
-"                <p>เรียน <span t-out=\"object.partner_id.name or 'participant'\">ผู้เข้าร่วม</span></p>\n"
+"                <p>เรียน <span t-out="
+"\"object.partner_id.name or 'participant'\">ผู้เข้าร่วม</span></p>\n"
 "                <p>\n"
 "                    กรุณาค้นหาใบรับรอง\n"
-"                        <strong t-out=\"object.survey_id.display_name or ''\">การสร้างเฟอร์นิเจอร์</strong>\n"
+"                        <strong t-out=\"object.survey_id.display_name or ''\""
+">การสร้างเฟอร์นิเจอร์</strong>\n"
 "                    ในไฟล์แนบของคุณ\n"
 "                </p>\n"
-"                <p>ขอแสดงความยินดีที่ผ่านการทดสอบด้วยคะแนน<strong t-out=\"object.scoring_percentage\"/>%!</p>\n"
+"                <p>ขอแสดงความยินดีที่ผ่านการทดสอบด้วยคะแนน<strong t-out="
+"\"object.scoring_percentage\"/>%!</p>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -311,15 +326,21 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        เรียน <t t-out=\"object.partner_id.name or 'participant'\">ผู้เข้าร่วม</t><br/><br/>\n"
+"        เรียน <t t-out=\"object.partner_id.name or 'participant'\""
+">ผู้เข้าร่วม</t><br/><br/>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            คุณได้รับเชิญให้ทำการรับรองใหม่\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            ขณะนี้ทางเรากำลังดำเนินการสำรวจความคิดเห็น และขอความกรุณาท่านในการตอบแบบสอบถามนี้\n"
+"            ขณะนี้ทางเรากำลังดำเนินการสำรวจความคิดเห็น "
+"และขอความกรุณาท่านในการตอบแบบสอบถามนี้\n"
 "        </t>\n"
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.get_start_url())\" t-attf-style=\"background-color: {{user.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-size:13px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" t-attf-style"
+"=\"background-color: {{user.company_id.email_secondary_color or '#875A7B'}}; "
+"padding: 8px 16px 8px 16px; text-decoration: none; color: {{"
+"user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-"
+"size:13px;\">\n"
 "                <t t-if=\"object.survey_id.certification\">\n"
 "                    เริ่มต้นการรับรอง\n"
 "                </t>\n"
@@ -329,7 +350,8 @@ msgstr ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            กรุณาตอบแบบสอบถามเพื่อ <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            กรุณาตอบแบบสอบถามเพื่อ <t t-out="
+"\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            ขอให้โชคดี!\n"
@@ -362,8 +384,8 @@ msgid ""
 "<i class=\"fa fa-circle-o fa-lg\" role=\"img\" aria-label=\"Not checked\" "
 "title=\"Not checked\"/>"
 msgstr ""
-"<i class=\"fa fa-circle-o fa-lg\" role=\"รูปภาพ\" aria-"
-"label=\"ไม่ทำเครื่องหมาย\" title=\"ไม่ทำเครื่องหมาย\"/>"
+"<i class=\"fa fa-circle-o fa-lg\" role=\"รูปภาพ\" aria-label=\"ไม่ทำเครื่องหมาย\""
+" title=\"ไม่ทำเครื่องหมาย\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -381,8 +403,8 @@ msgid ""
 "<i class=\"fa fa-dot-circle-o fa-lg\" role=\"img\" aria-label=\"Checked\" "
 "title=\"Checked\"/>"
 msgstr ""
-"<i class=\"fa fa-dot-circle-o fa-lg\" role=\"รูปภาพ\" aria-"
-"label=\"ทำเครื่องหมาย\" title=\"ทำเครื่องหมาย\"/>"
+"<i class=\"fa fa-dot-circle-o fa-lg\" role=\"รูปภาพ\" aria-label="
+"\"ทำเครื่องหมาย\" title=\"ทำเครื่องหมาย\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
@@ -390,8 +412,7 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/> It is currently not possible to "
 "pass this assessment because no question is configured to give any points."
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/> "
-"ขณะนี้ยังไม่สามารถผ่านการประเมินนี้ได้ "
+"<i class=\"fa fa-exclamation-triangle\"/> ขณะนี้ยังไม่สามารถผ่านการประเมินนี้ได้ "
 "เนื่องจากไม่มีการกำหนดคำถามการให้คะแนนใดๆ"
 
 #. module: survey
@@ -400,7 +421,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download certification\" title=\"Download certification\"/>\n"
 "                                        Download certification"
 msgstr ""
-"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download certification\" title=\"Download certification\"/>\n"
+"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label="
+"\"Download certification\" title=\"Download certification\"/>\n"
 "                                        ดาวน์โหลดใบรับรอง"
 
 #. module: survey
@@ -409,8 +431,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
-"title=\"ลูกศร\"/>"
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" title="
+"\"ลูกศร\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -428,8 +450,8 @@ msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 "
 "pt-1\">Avg</span>"
 msgstr ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 "
-"pt-1\">เฉลี่ย</span>"
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\""
+">เฉลี่ย</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -446,8 +468,8 @@ msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 "
 "pt-1\">Min</span>"
 msgstr ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 "
-"pt-1\">ขั้นต่ำ</span>"
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\""
+">ขั้นต่ำ</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -491,8 +513,10 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"certifications_company_count &lt; 2\">Certifications</span>\n"
 "                        <span class=\"o_stat_text\" invisible=\"certifications_company_count &gt; 1\">Certification</span>"
 msgstr ""
-"<span class=\"o_stat_text\" invisible=\"certifications_company_count &lt; 2\">ใบรับรอง</span>\n"
-"                        <span class=\"o_stat_text\" invisible=\"certifications_company_count &gt; 1\">ใบรับรอง</span>"
+"<span class=\"o_stat_text\" invisible=\"certifications_company_count &lt; 2\""
+">ใบรับรอง</span>\n"
+"                        <span class=\"o_stat_text\" invisible="
+"\"certifications_company_count &gt; 1\">ใบรับรอง</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.res_partner_view_form
@@ -500,8 +524,10 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\">Certifications</span>\n"
 "                        <span class=\"o_stat_text\" invisible=\"certifications_count &gt; 1\">Certification</span>"
 msgstr ""
-"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\">ใบรับรอง</span>\n"
-"                        <span class=\"o_stat_text\" invisible=\"certifications_count &gt; 1\">ใบรับรอง</span>"
+"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\""
+">ใบรับรอง</span>\n"
+"                        <span class=\"o_stat_text\" invisible="
+"\"certifications_count &gt; 1\">ใบรับรอง</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
@@ -509,8 +535,8 @@ msgid ""
 "<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">or"
 " press Enter</span>"
 msgstr ""
-"<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-"
-"inline\">หรือกด Enter</span>"
+"<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">หรื"
+"อกด Enter</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_selection_key
@@ -531,7 +557,8 @@ msgid ""
 "                            </span>"
 msgstr ""
 "<span class=\"o_survey_results_topbar_clear_filters text-primary\">\n"
-"                                <i class=\"fa fa-trash me-1\"/>ลบตัวกรองทั้งหมด\n"
+"                                <i class=\"fa fa-trash me-1\"/>ลบตัวกรองทั้"
+"งหมด\n"
 "                            </span>"
 
 #. module: survey
@@ -631,8 +658,10 @@ msgid ""
 "                                    <i class=\"fa fa-2x fa-sort\" role=\"img\" aria-label=\"Numeric\"/>"
 msgstr ""
 "<span>เท่าไร่ ...?</span><br/>\n"
-"                                    <i class=\"fa fa-2x\" role=\"img\" aria-label=\"Numeric\" title=\"Numeric\">123 </i>\n"
-"                                    <i class=\"fa fa-2x fa-sort\" role=\"img\" aria-label=\"Numeric\"/>"
+"                                    <i class=\"fa fa-2x\" role=\"img\" aria-"
+"label=\"Numeric\" title=\"Numeric\">123 </i>\n"
+"                                    <i class=\"fa fa-2x fa-sort\" role="
+"\"img\" aria-label=\"Numeric\"/>"
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p5_q1
@@ -648,7 +677,8 @@ msgid ""
 "                                    <i class=\"fa fa-align-justify fa-4x\" role=\"img\" aria-label=\"Multiple lines\" title=\"Multiple Lines\"/>"
 msgstr ""
 "<span>ตั้งชื่อสัตว์ทั้งหมด</span><br/>\n"
-"                                    <i class=\"fa fa-align-justify fa-4x\" role=\"img\" aria-label=\"Multiple lines\" title=\"Multiple Lines\"/>"
+"                                    <i class=\"fa fa-align-justify fa-4x\" "
+"role=\"img\" aria-label=\"Multiple lines\" title=\"Multiple Lines\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -657,7 +687,8 @@ msgid ""
 "                                    <i class=\"fa fa-minus fa-4x\" role=\"img\" aria-label=\"Single Line\" title=\"Single Line\"/>"
 msgstr ""
 "<span>ตั้งชื่อสัตว์หนึ่งตัว</span><br/>\n"
-"                                    <i class=\"fa fa-minus fa-4x\" role=\"img\" aria-label=\"Single Line\" title=\"Single Line\"/>"
+"                                    <i class=\"fa fa-minus fa-4x\" role="
+"\"img\" aria-label=\"Single Line\" title=\"Single Line\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_retake
@@ -887,8 +918,7 @@ msgid ""
 "After watching this video, will you swear that you are not going to "
 "procrastinate to trim your hedge this year?"
 msgstr ""
-"หลังจากดูวิดีโอนี้ "
-"คุณจะสาบานได้ไหมว่าจะไม่ผัดวันประกันพรุ่งในการป้องกันความเสี่ยงของคุณในปีนี้"
+"หลังจากดูวิดีโอนี้ คุณจะสาบานได้ไหมว่าจะไม่ผัดวันประกันพรุ่งในการป้องกันความเสี่ยงของคุณในปีนี้"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_col3
@@ -996,8 +1026,7 @@ msgid ""
 "Answer label as either the value itself if not empty or a letter "
 "representing the index of the answer otherwise."
 msgstr ""
-"ป้ายกำกับคำตอบจะเป็นค่าของตัวเองหากไม่เว้นว่างไว้ "
-"หรือเป็นตัวอักษรที่แสดงถึงดัชนีของคำตอบ"
+"ป้ายกำกับคำตอบจะเป็นค่าของตัวเองหากไม่เว้นว่างไว้ หรือเป็นตัวอักษรที่แสดงถึงดัชนีของคำตอบ"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__user_input_line_ids
@@ -1106,8 +1135,7 @@ msgid ""
 "Attendee nickname, mainly used to identify them in the survey session "
 "leaderboard."
 msgstr ""
-"ชื่อเล่นของผู้เข้าร่วม "
-"ส่วนใหญ่จะใช้เพื่อระบุพวกเขาในกระดานผู้นำเซสชั่นแบบสอบถาม"
+"ชื่อเล่นของผู้เข้าร่วม ส่วนใหญ่จะใช้เพื่อระบุพวกเขาในกระดานผู้นำเซสชั่นแบบสอบถาม"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -1448,7 +1476,8 @@ msgid ""
 "Combining roaming and \"Scoring with answers after each page\" is not possible; please update the following surveys:\n"
 "- %(survey_names)s"
 msgstr ""
-"ไม่สามารถรวมการโรมมิ่งและ \"การให้คะแนนพร้อมคำตอบหลังแต่ละหน้า\" ได้ โปรดอัปเดตแบบสอบถามต่อไปนี้:\n"
+"ไม่สามารถรวมการโรมมิ่งและ \"การให้คะแนนพร้อมคำตอบหลังแต่ละหน้า\" ได้ "
+"โปรดอัปเดตแบบสอบถามต่อไปนี้:\n"
 "- %(survey_names)s"
 
 #. module: survey
@@ -1866,8 +1895,7 @@ msgstr "คุณมีความคิดเห็น คำถาม หร�
 #: model:survey.question,title:survey.vendor_certification_page_1_question_5
 msgid "Do you think we have missing products in our catalog? (not rated)"
 msgstr ""
-"คุณคิดว่าเรามีผลิตภัณฑ์ที่ขาดหายไปในแค็ตตาล็อกของเราหรือไม่? "
-"(ไม่ได้รับการจัดอันดับ)"
+"คุณคิดว่าเรามีผลิตภัณฑ์ที่ขาดหายไปในแค็ตตาล็อกของเราหรือไม่? (ไม่ได้รับการจัดอันดับ)"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q2_sug2
@@ -2251,8 +2279,7 @@ msgstr "แม่น้ำ White Nile มีความยาวเท่าไ
 msgid ""
 "How many chairs do you think we should aim to sell in a year (not rated)?"
 msgstr ""
-"ภายในระยะเวลาในหนึ่งปี คุณคิดว่าเราควรตั้งเป้าหมายที่จะขายเก้าอี้กี่ตัว "
-"(ไม่ได้รับการจัดอันดับ)"
+"ภายในระยะเวลาในหนึ่งปี คุณคิดว่าเราควรตั้งเป้าหมายที่จะขายเก้าอี้กี่ตัว (ไม่ได้รับการจัดอันดับ)"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3_question_1
@@ -2301,8 +2328,7 @@ msgid ""
 "I actually don't like thinking. I think people think I like to think a lot. "
 "And I don't. I do not like to think at all."
 msgstr ""
-"ฉันไม่ชอบคิดนะ ฉันคิดว่าคนคิดว่าฉันชอบคิดมาก และฉันไม่ใช่แบบนั้น "
-"ฉันไม่ชอบคิดเลย"
+"ฉันไม่ชอบคิดนะ ฉันคิดว่าคนคิดว่าฉันชอบคิดมาก และฉันไม่ใช่แบบนั้น ฉันไม่ชอบคิดเลย"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q3_sug2
@@ -2365,8 +2391,7 @@ msgstr "โทเค็นการระบุตัวตน"
 msgid ""
 "If Number is selected, it will display the number of questions answered on "
 "the total number of question to answer."
-msgstr ""
-"หากเลือกหมายเลขก็จะแสดงจำนวนคำถามที่ตอบแล้วจากจำนวนคำถามทั้งหมดที่จะตอบ"
+msgstr "หากเลือกหมายเลขก็จะแสดงจำนวนคำถามที่ตอบแล้วจากจำนวนคำถามทั้งหมดที่จะตอบ"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3_question_3
@@ -2374,8 +2399,7 @@ msgid ""
 "If a customer purchases a 1 year warranty on 6 January 2020, when do we "
 "expect the warranty to expire?"
 msgstr ""
-"หากลูกค้าซื้อการรับประกัน 1 ปีในวันที่ 6 มกราคม 2563 "
-"การรับประกันจะหมดอายุเมื่อไหร่?"
+"หากลูกค้าซื้อการรับประกัน 1 ปีในวันที่ 6 มกราคม 2563 การรับประกันจะหมดอายุเมื่อไหร่?"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3_question_2
@@ -2421,8 +2445,7 @@ msgstr "หากทำเครื่องหมาย ผู้ใช้ส�
 msgid ""
 "If checked, users have to login before answering even with a valid token."
 msgstr ""
-"หากทำเครื่องหมาย "
-"ผู้ใช้จะต้องเข้าสู่ระบบก่อนที่จะตอบแม้ว่าจะมีโทเค็นที่ถูกต้องก็ตาม"
+"หากทำเครื่องหมาย ผู้ใช้จะต้องเข้าสู่ระบบก่อนที่จะตอบแม้ว่าจะมีโทเค็นที่ถูกต้องก็ตาม"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_container
@@ -2443,8 +2466,7 @@ msgid ""
 "If randomized is selected, you can configure the number of random questions "
 "by section. This mode is ignored in live session."
 msgstr ""
-"หากเลือกการสุ่ม คุณสามารถกำหนดจำนวนคำถามแบบสุ่มตามหมวดได้ "
-"โหมดนี้จะถูกละเว้นในไลฟ์เซสชัน"
+"หากเลือกการสุ่ม คุณสามารถกำหนดจำนวนคำถามแบบสุ่มตามหมวดได้ โหมดนี้จะถูกละเว้นในไลฟ์เซสชัน"
 
 #. module: survey
 #: model:survey.question,question_placeholder:survey.vendor_certification_page_1_question_5
@@ -2501,8 +2523,7 @@ msgid ""
 "Include this question as part of quiz scoring. Requires an answer and answer"
 " score to be taken into account."
 msgstr ""
-"รวมคำถามนี้ไว้เป็นส่วนหนึ่งของการให้คะแนนแบบทดสอบ "
-"จำเป็นต้องคำนึงถึงคำตอบและคะแนนคำตอบด้วย"
+"รวมคำถามนี้ไว้เป็นส่วนหนึ่งของการให้คะแนนแบบทดสอบ จำเป็นต้องคำนึงถึงคำตอบและคะแนนคำตอบด้วย"
 
 #. module: survey
 #. odoo-javascript
@@ -2658,8 +2679,7 @@ msgid ""
 "I’ve never really wanted to go to Japan. Simply because I don’t like eating "
 "fish. And I know that’s very popular out there in Africa."
 msgstr ""
-"ฉันไม่เคยอยากไปญี่ปุ่นเลย เพราะว่าฉันไม่ชอบกินปลา "
-"และฉันรู้ว่ามันเป็นที่นิยมมากในแอฟริกา"
+"ฉันไม่เคยอยากไปญี่ปุ่นเลย เพราะว่าฉันไม่ชอบกินปลา และฉันรู้ว่ามันเป็นที่นิยมมากในแอฟริกา"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q2_sug1
@@ -2707,8 +2727,7 @@ msgid ""
 "Labels used for proposed choices: simple choice, multiple choice and columns"
 " of matrix"
 msgstr ""
-"ป้ายกำกับที่ใช้สำหรับตัวเลือกที่เสนอ ได้แก่ ตัวเลือกแบบง่าย หลายตัวเลือก "
-"และคอลัมน์เมทริกซ์"
+"ป้ายกำกับที่ใช้สำหรับตัวเลือกที่เสนอ ได้แก่ ตัวเลือกแบบง่าย หลายตัวเลือก และคอลัมน์เมทริกซ์"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__lang
@@ -3340,8 +3359,7 @@ msgstr "บ่อยครั้ง (1-3 ครั้งต่อสัปดา
 msgid ""
 "On Survey questions, one can define \"placeholders\". But what are they for?"
 msgstr ""
-"ในคำถามของแบบสอบถาม เราสามารถกำหนด \"ตัวยึดตำแหน่ง\" ได้ "
-"แต่พวกเขามีไว้เพื่ออะไร?"
+"ในคำถามของแบบสอบถาม เราสามารถกำหนด \"ตัวยึดตำแหน่ง\" ได้ แต่พวกเขามีไว้เพื่ออะไร?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p1_q3_sug1
@@ -3455,9 +3473,8 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
-"ตัวเลือกภาษาการแปล (โค้ด ISO) เพื่อเลือกเมื่อส่งอีเมล หากไม่ได้ตั้งค่าไว้ "
-"ระบบจะใช้เวอร์ชันภาษาอังกฤษ โดยปกติควรเป็นตัวอย่างนิพจน์ที่ให้ภาษาที่เหมาะสม"
-" เช่น {{ object.partner_id.lang }}"
+"ตัวเลือกภาษาการแปล (โค้ด ISO) เพื่อเลือกเมื่อส่งอีเมล หากไม่ได้ตั้งค่าไว้ ระบบจะใช้เวอร์ชันภาษาอั"
+"งกฤษ โดยปกติควรเป็นตัวอย่างนิพจน์ที่ให้ภาษาที่เหมาะสม เช่น {{ object.partner_id.lang }}"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -4708,8 +4725,7 @@ msgstr "ขอบคุณสำหรับการเข้าร่วม �
 #: code:addons/survey/models/survey_survey_template.py:0
 msgid "Thank you very much for your feedback. We highly value your opinion!"
 msgstr ""
-"ขอบคุณมากสำหรับข้อเสนอแนะของคุณ "
-"เราให้ความสำคัญกับความคิดเห็นของคุณเป็นอย่างมาก!"
+"ขอบคุณมากสำหรับข้อเสนอแนะของคุณ เราให้ความสำคัญกับความคิดเห็นของคุณเป็นอย่างมาก!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -4829,8 +4845,7 @@ msgstr "คำถามมีเวลาจำกัด"
 #: model:ir.model.constraint,message:survey.constraint_survey_question_scale
 msgid ""
 "The scale must be a growing non-empty range between 0 and 10 (inclusive)"
-msgstr ""
-"มาตราส่วนต้องเป็นช่วงที่ไม่ว่างเปล่าที่เพิ่มขึ้นระหว่าง 0 ถึง 10 (รวม)"
+msgstr "มาตราส่วนต้องเป็นช่วงที่ไม่ว่างเปล่าที่เพิ่มขึ้นระหว่าง 0 ถึง 10 (รวม)"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
@@ -4920,8 +4935,7 @@ msgid ""
 "This code will be used by your attendees to reach your session. Feel free to"
 " customize it however you like!"
 msgstr ""
-"ผู้เข้าร่วมของคุณจะใช้รหัสนี้เพื่อเข้าถึงเซสชั่นของคุณ "
-"คุณสามารถปรับแต่งได้ตามใจชอบ!"
+"ผู้เข้าร่วมของคุณจะใช้รหัสนี้เพื่อเข้าถึงเซสชั่นของคุณ คุณสามารถปรับแต่งได้ตามใจชอบ!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
@@ -4968,8 +4982,7 @@ msgid ""
 "This section is about general information about you. Answering them helps "
 "qualifying your answers."
 msgstr ""
-"หมวดนี้เป็นเรื่องเกี่ยวกับข้อมูลทั่วไปเกี่ยวกับคุณ "
-"การตอบคำถามนี้ช่วยให้คำตอบของคุณมีคุณสมบัติที่เหมาะสม"
+"หมวดนี้เป็นเรื่องเกี่ยวกับข้อมูลทั่วไปเกี่ยวกับคุณ การตอบคำถามนี้ช่วยให้คำตอบของคุณมีคุณสมบัติที่เหมาะสม"
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_feedback_p2
@@ -4981,8 +4994,7 @@ msgstr "หมวดนี้เป็นเรื่องเกี่ยวก
 msgid ""
 "This small quiz will test your knowledge about our Company. Be prepared!"
 msgstr ""
-"แบบทดสอบแบบสั้นนี้จะทดสอบความรู้ของคุณเกี่ยวกับบริษัทของเรา "
-"เตรียมตัวให้พร้อม!"
+"แบบทดสอบแบบสั้นนี้จะทดสอบความรู้ของคุณเกี่ยวกับบริษัทของเรา เตรียมตัวให้พร้อม!"
 
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_feedback
@@ -5070,8 +5082,7 @@ msgid ""
 "To take this survey, please close all other tabs on <strong class=\"text-"
 "danger\"/>."
 msgstr ""
-"หากต้องการทำแบบสอบถามนี้ โปรดปิดแท็บอื่นๆ ทั้งหมด <strong class=\"text-"
-"danger\"/>"
+"หากต้องการทำแบบสอบถามนี้ โปรดปิดแท็บอื่นๆ ทั้งหมด <strong class=\"text-danger\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
@@ -5224,8 +5235,7 @@ msgid ""
 "Use this field to add additional explanations about your question or to "
 "illustrate it with pictures or a video"
 msgstr ""
-"ใช้ฟิลด์นี้เพื่อเพิ่มคำอธิบายเพิ่มเติมเกี่ยวกับคำถามของคุณ "
-"หรือเพื่ออธิบายด้วยรูปภาพหรือวิดีโอ"
+"ใช้ฟิลด์นี้เพื่อเพิ่มคำอธิบายเพิ่มเติมเกี่ยวกับคำถามของคุณ หรือเพื่ออธิบายด้วยรูปภาพหรือวิดีโอ"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__random_questions_count
@@ -5367,8 +5377,7 @@ msgid ""
 "Welcome to this Odoo certification. You will receive 2 random questions out "
 "of a pool of 3."
 msgstr ""
-"ยินดีต้อนรับสู่การรับรอง Odoo นี้ คุณจะได้รับคำถามแบบสุ่ม 2 คำถามจากทั้งหมด "
-"3 คำถาม"
+"ยินดีต้อนรับสู่การรับรอง Odoo นี้ คุณจะได้รับคำถามแบบสุ่ม 2 คำถามจากทั้งหมด 3 คำถาม"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3_question_5
@@ -5376,8 +5385,7 @@ msgid ""
 "What day and time do you think most customers are most likely to call "
 "customer service (not rated)?"
 msgstr ""
-"วันและเวลาที่คุณคิดว่าลูกค้าจะโทรสอบถามบริการลูกค้ามากที่สุด? "
-"(ไม่ได้จัดอันดับ)"
+"วันและเวลาที่คุณคิดว่าลูกค้าจะโทรสอบถามบริการลูกค้ามากที่สุด? (ไม่ได้จัดอันดับ)"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3_question_4
@@ -5545,8 +5553,7 @@ msgid ""
 "Who received a Nobel prize in Physics for the discovery of neutrino "
 "oscillations, which shows that neutrinos have mass?"
 msgstr ""
-"ใครได้รับรางวัลโนเบลสาขาฟิสิกส์จากการค้นพบการแกว่งของนิวตริโน "
-"ซึ่งแสดงให้เห็นว่านิวตริโนมีมวล?"
+"ใครได้รับรางวัลโนเบลสาขาฟิสิกส์จากการค้นพบการแกว่งของนิวตริโน ซึ่งแสดงให้เห็นว่านิวตริโนมีมวล?"
 
 #. module: survey
 #. odoo-python
@@ -5583,7 +5590,8 @@ msgid ""
 "                                        <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 msgstr ""
 "ปปปป-ดด-วว\n"
-"                                        <i class=\"fa fa-calendar\" role=\"รูปภาพ\" aria-label=\"ปฏิทิน\" title=\"ปฏิทิน\"/>"
+"                                        <i class=\"fa fa-calendar\" role="
+"\"รูปภาพ\" aria-label=\"ปฏิทิน\" title=\"ปฏิทิน\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -5592,7 +5600,8 @@ msgid ""
 "                                        <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 msgstr ""
 "ปปปป-ดด-วว ชม:นท:วน\n"
-"                                        <i class=\"fa fa-calendar\" role=\"รูปภาพ\" aria-label=\"ปฏิทิน\" title=\"ปฏิทิน\"/>"
+"                                        <i class=\"fa fa-calendar\" role="
+"\"รูปภาพ\" aria-label=\"ปฏิทิน\" title=\"ปฏิทิน\"/>"
 
 #. module: survey
 #. odoo-python
@@ -5626,8 +5635,7 @@ msgid ""
 "You can share your links through different means: email, invite shortcut, "
 "live presentation, ..."
 msgstr ""
-"คุณสามารถแชร์ลิงก์ของคุณด้วยวิธีต่างๆ: อีเมล ทางลัดการเชิญ การนำเสนอแบบไลฟ์ "
-"..."
+"คุณสามารถแชร์ลิงก์ของคุณด้วยวิธีต่างๆ: อีเมล ทางลัดการเชิญ การนำเสนอแบบไลฟ์ ..."
 
 #. module: survey
 #. odoo-python
@@ -5646,8 +5654,7 @@ msgid ""
 "You cannot send an invitation for a \"One page per section\" survey if the "
 "survey has no sections."
 msgstr ""
-"คุณไม่สามารถส่งคำเชิญสำหรับแบบสอบถาม \"หนึ่งหน้าต่อหมวด\" "
-"ถ้าแบบสอบถามไม่มีหมวด"
+"คุณไม่สามารถส่งคำเชิญสำหรับแบบสอบถาม \"หนึ่งหน้าต่อหมวด\" ถ้าแบบสอบถามไม่มีหมวด"
 
 #. module: survey
 #. odoo-python
@@ -5861,5 +5868,4 @@ msgid ""
 "⚠️ This question is positioned before some or all of its triggers and could "
 "be skipped."
 msgstr ""
-"⚠️ "
-"คำถามนี้อยู่ในตำแหน่งก่อนการกระตุ้นบางส่วนหรือทั้งหมดและจึงจะสามารถข้ามได้"
+"⚠️ คำถามนี้อยู่ในตำแหน่งก่อนการกระตุ้นบางส่วนหรือทั้งหมดและจึงจะสามารถข้ามได้"
