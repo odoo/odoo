@@ -192,6 +192,15 @@ class ResPartner(models.Model):
                     }
         return errors
 
+    def _compute_is_company(self):
+        l10n_it_partners = self.filtered(lambda p: p.vat and p.country_code == 'IT')
+        for partner in l10n_it_partners:
+            partner.is_company = False
+            if partner.l10n_it_codice_fiscale and len(partner.l10n_it_codice_fiscale) == 11:
+                partner.is_company = True
+
+        super(ResPartner, self - l10n_it_partners)._compute_is_company()
+
     def _deduce_country_code(self):
         if self.l10n_it_codice_fiscale:
             return 'IT'
