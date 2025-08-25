@@ -30,4 +30,8 @@ export class ApiKeyModal extends Component {
     cancel() {
         this.env.modelStore.showApiKeyModal = false;
     }
+
+    async openAPIKeyForm() {
+        window.open(`${window.location.origin}/odoo/action-doc_api_key_wizard`, "_blank");
+    }
 }
