@@ -252,6 +252,13 @@ class HrEmployee(models.Model):
         if not self.contract_date_start:
             self.contract_date_end = False
 
+    @api.onchange('work_phone', 'mobile_phone', 'company_country_id', 'company_id')
+    def _onchange_phone_validation_employee(self):
+        if self.work_phone:
+            self.work_phone = self._phone_format(number=self.work_phone, force_format='INTERNATIONAL') or self.work_phone
+        if self.mobile_phone:
+            self.mobile_phone = self._phone_format(number=self.mobile_phone, force_format='INTERNATIONAL') or self.mobile_phone
+
     @api.model
     def _get_new_hire_field(self):
         return 'create_date'
