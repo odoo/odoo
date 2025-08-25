@@ -898,9 +898,7 @@ class WebsocketRequest:
         self.session = self._get_session()
 
         try:
-            self.registry = Registry(self.db)
-            threading.current_thread().dbname = self.registry.db_name
-            self.registry.check_signaling()
+            self.registry = Registry(self.db).check_signaling()
         except (
             AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError
         ) as exc:

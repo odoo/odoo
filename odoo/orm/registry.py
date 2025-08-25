@@ -113,6 +113,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
     def __new__(cls, db_name: str):
         """ Return the registry for the given database name."""
         assert db_name, "Missing database name"
+        # set the database name for logging
+        current_thread = threading.current_thread()
+        current_thread.dbname = db_name
         with cls._lock:
             try:
                 return cls.registries[db_name]

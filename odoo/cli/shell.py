@@ -133,7 +133,6 @@ class Shell(Command):
             'odoo': odoo,
         }
         if dbname:
-            threading.current_thread().dbname = dbname
             registry = Registry(dbname)
             with registry.cursor() as cr:
                 uid = api.SUPERUSER_ID
