@@ -15,7 +15,7 @@ class IapAccount(models.Model):
         user_token = self.get(IAP_SERVICE_NAME)
         params.update({
             "dbuuid": self.env["ir.config_parameter"].sudo().get_param("database.uuid"),
-            "account_token": user_token.account_token,
+            "account_token": user_token.sudo().account_token,
         })
         if params.get('gstin') == TEST_GST_NUMBER:
             default_endpoint = DEFAULT_IAP_TEST_ENDPOINT

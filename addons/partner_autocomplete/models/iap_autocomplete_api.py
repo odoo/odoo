@@ -20,13 +20,13 @@ class IapAutocompleteApi(models.AbstractModel):
         if modules.module.current_test:
             raise exceptions.ValidationError(_('Test mode'))
         account = self.env['iap.account'].get('partner_autocomplete')
-        if not account.account_token:
+        if not account.sudo().account_token:
             raise ValueError(_('No account token'))
         params.update({
             'db_uuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
             'db_version': release.version,
             'db_lang': self.env.lang,
-            'account_token': account.account_token,
+            'account_token': account.sudo().account_token,
             'country_code': self.env.company.country_id.code,
             'zip': self.env.company.zip,
         })
