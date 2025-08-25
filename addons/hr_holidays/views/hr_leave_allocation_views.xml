@@ -74,6 +74,9 @@
                 <filter name="approved_state" string="To Approve or Approved Allocations" invisible="1"
                     domain="[('state', 'in', ('confirm', 'validate'))]"/>
                 <separator/>
+                <filter string="Active Employees" name="active_employee" domain="[('active_employee', '=', True)]"/>
+                <filter string="Archived Employees" name="archived_employee" domain="[('active_employee', '=', False)]"/>
+                <separator/>
                 <group>
                     <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
                     <filter name="group_type" string="Type" context="{'group_by':'holiday_status_id'}"/>
@@ -591,7 +594,7 @@
         <field name="name">Allocations</field>
         <field name="res_model">hr.leave.allocation</field>
         <field name="view_mode">kanban,list,form,activity</field>
-        <field name="context">{'search_default_my_team': 1,'search_default_approve': 2}</field>
+        <field name="context">{'search_default_my_team': 1,'search_default_approve': 2, 'search_default_active_employee': 3}</field>
         <field name="domain">[]</field>
         <field name="search_view_id" ref="hr_holidays.hr_leave_allocation_view_search_manager"/>
         <field name="help" type="html">
