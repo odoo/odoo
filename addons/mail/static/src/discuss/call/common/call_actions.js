@@ -94,7 +94,7 @@ callActionsRegistry
         inactiveIcon: "fa-eye",
         icon: "fa-eye-slash",
         select: (component) => {
-            component.store.settings.setCameraAutoFocus(!component.store.settings.useCallAutoFocus);
+            component.store.settings.useCallAutoFocus = !component.store.settings.useCallAutoFocus;
         },
         sequence: 50,
     })

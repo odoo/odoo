@@ -57,6 +57,20 @@ export class Settings extends Record {
             }
         },
     });
+    useCallAutoFocus = fields.Attr(true, {
+        /** @this {import("models").Settings} */
+        compute() {
+            return !browser.localStorage.getItem("mail_user_setting_disable_call_auto_focus");
+        },
+        /** @this {import("models").Settings} */
+        onUpdate() {
+            if (this.useCallAutoFocus) {
+                browser.localStorage.removeItem("mail_user_setting_disable_call_auto_focus");
+                return;
+            }
+            browser.localStorage.setItem("mail_user_setting_disable_call_auto_focus", "true");
+        },
+    });
 
     // Voice settings
     // DeviceId of the audio input selected by the user
@@ -227,16 +241,6 @@ export class Settings extends Record {
             "mail_user_setting_camera_input_device_id",
             cameraInputDeviceId
         );
-    }
-    /**
-     * @param {Boolean} active
-     */
-    setCameraAutoFocus(active) {
-        if (active) {
-            browser.localStorage.removeItem("mail_user_setting_disable_call_auto_focus");
-            return;
-        }
-        browser.localStorage.setItem("mail_user_setting_disable_call_auto_focus", "true");
     }
     /**
      * @param {string} value

@@ -783,4 +783,9 @@ test("dynamic focus switches to talking participant", async () => {
     await contains(".o-discuss-CallParticipantCard[title='Alice']");
     rtc.updateSessionInfo({ [aliceSessionId]: { isTalking: false } });
     await contains(".o-discuss-CallParticipantCard[title='Bob']");
+    await click("[title='More']");
+    await click(".o-discuss-CallActionList-dropdownItem:contains('Disable speaker autofocus')");
+    await contains(".o-discuss-CallActionList-dropdownItem", { count: 0 });
+    await click("[title='More']");
+    await contains(".o-discuss-CallActionList-dropdownItem:contains('Autofocus speaker')");
 });
