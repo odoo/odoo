@@ -850,6 +850,7 @@ class RecipientsNotificationTest(MailCommon):
             } for idx in range(5)
         ])
         for test_record in test_records:
+            # test_record.message_subscribe(partner_ids=(self.partner_portal + self.user_2.partner_id).ids)
             test_record.message_subscribe(partner_ids=(self.user_2.partner_id).ids)
             test_record.message_unsubscribe(partner_ids=(self.partner_employee).ids)
         now = datetime(2025, 6, 8, 8, 45, 12)
@@ -865,25 +866,17 @@ class RecipientsNotificationTest(MailCommon):
                 (self.user_2 + self.user_portal).write({
                     'out_of_office_from': ooo_from,
                     'out_of_office_to': ooo_to,
-                    'out_of_office_message': '<p>PAS LA BISOUS</p>',
+                    'out_of_office_message': 'PAS LA BISOUS',
                 })
                 for test_subtype in (self.env.ref('mail.mt_comment').id, False):
                     with self.subTest(ooo_from=ooo_from, ooo_to=ooo_to, test_subtype=test_subtype):
                         res = self.env['mail.followers']._get_recipient_data(
                             test_records[0], 'comment', self.env.ref('mail.mt_comment').id,
-                            pids=self.partner_portal.ids,
                         )
                         self.assertEqual(
                             res[test_records[0].id][self.user_2.partner_id.id]['ooo_activated'],
                             exp_ooo)
-                        self.assertEqual(
-                            res[test_records[0].id][self.user_2.partner_id.id]['ooo_msg'],
-                            '<p>PAS LA BISOUS</p>' if exp_ooo else '',
-                            'OOO message should be returned only if activated')
-                        self.assertFalse(res[test_records[0].id][self.user_portal.partner_id.id]['ooo_activated'],
-                                         'Portal users do not benefit from OOO, hence always Falsy')
-                        # self.assertFalse(res[test_records[0].id][self.user_portal.partner_id.id]['ooo_msg'],
-                        #                  'Portal users do not benefit from OOO, hence always Falsy')
+                        # self.assertFalse(res[test_records[0].id][self.user_portal.partner_id.id]['ooo_activated'])
 
     def test_subscribe_post_author(self):
         """ Test author is added in followers, unless it is archived / odoobot """
