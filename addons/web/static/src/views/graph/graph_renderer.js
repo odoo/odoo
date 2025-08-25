@@ -290,14 +290,14 @@ export class GraphRenderer extends Component {
      */
     getBarChartData() {
         // style data
-        const { domains, stacked } = this.model.metaData;
+        const { stacked } = this.model.metaData;
         const { data, lineOverlayDataset } = this.model;
         for (let index = 0; index < data.datasets.length; ++index) {
             const dataset = data.datasets[index];
             const itemColor = getColor(index, colorScheme, data.datasets.length);
             // used when stacked
             if (stacked) {
-                dataset.stack = domains[dataset.originIndex].description || "";
+                dataset.stack = "";
             }
             // set dataset color
             dataset.backgroundColor = itemColor;
@@ -512,7 +512,6 @@ export class GraphRenderer extends Component {
      * @returns {Object}
      */
     getPieChartData() {
-        const { domains } = this.model.metaData;
         const data = this.model.data;
         // style/complete data
         // give same color to same groups from different origins
@@ -526,26 +525,20 @@ export class GraphRenderer extends Component {
             dataset.borderColor = borderColor;
             dataset.hoverOffset = 60;
         }
-        // make sure there is a zone associated with every origin
-        const representedOriginIndexes = new Set(
-            data.datasets.map((dataset) => dataset.originIndex)
-        );
         let addNoDataToLegend = false;
-        const fakeData = new Array(data.labels.length + 1);
-        fakeData[data.labels.length] = 1;
-        const fakeTrueLabels = new Array(data.labels.length + 1);
-        fakeTrueLabels[data.labels.length] = NO_DATA;
-        for (let index = 0; index < domains.length; ++index) {
-            if (!representedOriginIndexes.has(index)) {
-                data.datasets.push({
-                    label: domains[index].description,
-                    data: fakeData,
-                    trueLabels: fakeTrueLabels,
-                    backgroundColor: [...colors, NO_DATA_COLOR],
-                    borderColor,
-                });
-                addNoDataToLegend = true;
-            }
+        if (data.datasets.length === 0) {
+            const fakeData = new Array(data.labels.length + 1);
+            fakeData[data.labels.length] = 1;
+            const fakeTrueLabels = new Array(data.labels.length + 1);
+            fakeTrueLabels[data.labels.length] = NO_DATA;
+            data.datasets.push({
+                label: "",
+                data: fakeData,
+                trueLabels: fakeTrueLabels,
+                backgroundColor: [...colors, NO_DATA_COLOR],
+                borderColor,
+            });
+            addNoDataToLegend = true;
         }
         if (addNoDataToLegend) {
             data.labels.push(NO_DATA);
@@ -646,7 +639,7 @@ export class GraphRenderer extends Component {
      * @returns {Object[]}
      */
     getTooltipItems(data, metaData, tooltipModel) {
-        const { allIntegers, domains, mode, groupBy, measure } = metaData;
+        const { allIntegers, mode, groupBy, measure } = metaData;
         const sortedDataPoints = sortBy(tooltipModel.dataPoints, "raw", "desc");
         const items = [];
         for (const item of sortedDataPoints) {
@@ -669,14 +662,11 @@ export class GraphRenderer extends Component {
                 if (label === NO_DATA) {
                     value = this.formatValue(0, allIntegers, measureWidget);
                 }
-                if (domains.length > 1) {
-                    label = `${dataset.label} / ${label}`;
-                }
                 boxColor = dataset.backgroundColor[index];
                 const totalData = dataset.data.reduce((a, b) => a + b, 0);
                 percentage = totalData && ((dataset.data[index] * 100) / totalData).toFixed(2);
             } else {
-                if (groupBy.length > 1 || domains.length > 1) {
+                if (groupBy.length > 1) {
                     label = `${label} / ${dataset.label}`;
                 }
                 boxColor = mode === "bar" ? dataset.backgroundColor : dataset.borderColor;
