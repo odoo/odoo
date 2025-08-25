@@ -101,8 +101,8 @@ export function getOrderLineValues(
                     );
                     if (attrVal.attribute_id.create_variant !== "always") {
                         values.price_extra += attrVal.price_extra;
-                        acc.push(attrVal);
                     }
+                    acc.push(attrVal);
                 });
                 return acc;
             },
