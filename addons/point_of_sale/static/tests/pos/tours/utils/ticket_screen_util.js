@@ -234,3 +234,12 @@ export function back() {
         run: "click",
     };
 }
+
+export function clickFilterButton(buttonText) {
+    return [
+        {
+            trigger: `.filter-buttons button:contains("${buttonText}")`,
+            run: "click",
+        },
+    ];
+}
