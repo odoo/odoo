@@ -7920,6 +7920,11 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
      */
     toggleBgImage(previewMode, widgetValue, params) {
         if (!widgetValue) {
+            // When background image with position "Repeat pattern" is removed,
+            // remove background size to avoid repeating gradient
+            const targetEl = this.$target[0];
+            targetEl.style.removeProperty("background-size");
+            targetEl.classList.remove("o_bg_img_opt_repeat");
             this.$target.find('> .o_we_bg_filter').remove();
             // TODO: use setWidgetValue instead of calling background directly when possible
             const [bgImageWidget] = this._requestUserValueWidgets('bg_image_opt');
@@ -8700,7 +8705,9 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
     backgroundType: function (previewMode, widgetValue, params) {
         this.$target.toggleClass('o_bg_img_opt_repeat', widgetValue === 'repeat-pattern');
         this.$target.css('background-position', '');
-        this.$target.css('background-size', widgetValue !== 'repeat-pattern' ? '' : '100px');
+        // Set image size to "100px" for repeating, and "cover" for gradient.
+        // Ensures gradient doesn’t repeat while image does.
+        this.$target[0].style.backgroundSize = widgetValue !== "repeat-pattern" ? "" : "100px, cover";
     },
     /**
      * Saves current background position and enables overlay.
@@ -8745,10 +8752,21 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
      * @override
      */
     selectStyle: function (previewMode, widgetValue, params) {
-        if (params.cssProperty === 'background-size'
-                && !this.$target.hasClass('o_bg_img_opt_repeat')) {
-            // Disable the option when the image is in cover mode, otherwise
-            // the background-size: auto style may be forced.
+        if (params.cssProperty === "background-size") {
+            const targetEl = this.$target[0];
+            if (!targetEl.classList.contains("o_bg_img_opt_repeat")) {
+                // Disable the option when the image is in cover mode, otherwise
+                // the background-size: auto style may be forced.
+                return;
+            }
+            const sizeLayers = getComputedStyle(targetEl)
+                .getPropertyValue("background-size")
+                .split(",")
+                .map((bgSize) => bgSize.trim());
+            // Update only the image layer's background-size (first layer)
+            // while keeping other layers (e.g., gradient) unchanged.
+            sizeLayers[0] = widgetValue;
+            targetEl.style.setProperty("background-size", sizeLayers.join(", "));
             return;
         }
         this._super(...arguments);
@@ -8768,8 +8786,17 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
      * @override
      */
     _computeWidgetState: function (methodName, params) {
-        if (methodName === 'backgroundType') {
-            return this.$target.css('background-repeat') === 'repeat' ? 'repeat-pattern' : 'cover';
+        const computedStyle = getComputedStyle(this.$target[0]);
+        if (methodName === "backgroundType") {
+            return computedStyle.backgroundRepeat.includes("no-repeat")
+                ? "cover"
+                : "repeat-pattern";
+        }
+        if (methodName === "selectStyle" && params.cssProperty === "background-size") {
+            const bgSize = computedStyle.getPropertyValue("background-size").trim();
+            // Handle multi-layer background (image + gradient)
+            // return first layer's size
+            return bgSize.split(",")[0].trim();
         }
         return this._super(...arguments);
     },
