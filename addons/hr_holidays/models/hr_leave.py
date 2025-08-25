@@ -949,13 +949,28 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             allday_value = not holiday.request_unit_half
             if holiday.leave_type_request_unit == 'hour':
                 allday_value = float_compare(holiday.number_of_days, 1.0, 1) >= 0
+<<<<<<< e6b87a2a37b4550faf60a77981c533d19aa054d4
+||||||| 997fadcc3f65c881e79a3dab314469fdb30f094f
+            else:
+                meeting_name = _("%s on Time Off : %.2f day(s)") % (holiday.employee_id.name or holiday.category_id.name, holiday.number_of_days)
+                allday_value = not holiday.request_unit_half
+=======
+            else:
+                meeting_name = _("%s on Time Off : %.2f day(s)") % (holiday.employee_id.name or holiday.category_id.name, holiday.number_of_days)
+                allday_value = not holiday.request_unit_half
+
+            leave_tz = timezone(holiday.tz) if holiday.tz else UTC
+            start_value = UTC.localize(holiday.date_from).astimezone(leave_tz).replace(tzinfo=None)
+            stop_value = UTC.localize(holiday.date_to).astimezone(leave_tz).replace(tzinfo=None)
+
+>>>>>>> 8c8c38b1d57971aa5ef220f720d4aeea86b6de98
             meeting_values = {
                 'name': meeting_name,
                 'duration': holiday.number_of_days * (holiday.resource_calendar_id.hours_per_day or HOURS_PER_DAY),
                 'description': holiday.notes,
                 'user_id': user.id,
-                'start': holiday.date_from,
-                'stop': holiday.date_to,
+                'start': start_value,
+                'stop': stop_value,
                 'allday': allday_value,
                 'privacy': 'confidential',
                 'event_tz': user.tz,
