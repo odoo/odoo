@@ -17,9 +17,8 @@ class SmsTwilioAccountManage(models.TransientModel):
     sms_provider = fields.Selection(related='company_id.sms_provider', readonly=False)
     sms_twilio_account_sid = fields.Char(related='company_id.sms_twilio_account_sid', readonly=False)
     sms_twilio_auth_token = fields.Char(related='company_id.sms_twilio_auth_token', readonly=False)
-
     sms_twilio_number_ids = fields.One2many(related='company_id.sms_twilio_number_ids', readonly=False)
-    sms_twilio_to_number = fields.Char("To Number")
+    test_number = fields.Char("Test Number")
 
     def action_reload_numbers(self):
         """Fetch the available numbers from Twilio account"""
@@ -73,11 +72,11 @@ class SmsTwilioAccountManage(models.TransientModel):
         }
 
     def action_send_test(self):
-        if not self.sms_twilio_to_number:
+        if not self.test_number:
             raise UserError(_("Please set the number to which you want to send a test SMS."))
         temp_partner = self.env['res.partner'].create({
             'name': 'Temporary Partner',
-            'mobile': self.sms_twilio_to_number,
+            'mobile': self.test_number,
         })
         composer = self.env['sms.composer'].with_context(
             active_model='res.partner',
@@ -87,7 +86,7 @@ class SmsTwilioAccountManage(models.TransientModel):
 
         res_error = False
         if not message_notif.failure_type:
-            res_msg = _("The SMS has been sent from %s", get_twilio_from_number(self.company_id, self.sms_twilio_to_number).display_name)
+            res_msg = _("The SMS has been sent from %s", get_twilio_from_number(self.company_id, self.test_number).display_name)
         else:
             res_error = True
             if message_notif.failure_type != "unknown":

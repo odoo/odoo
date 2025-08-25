@@ -31,7 +31,7 @@ class TestSmsTwilio(MockSmsTwilio, TransactionCase):
     @users('admin')
     def test_manage_action_send_test(self):
         wizard = self.env["sms.twilio.account.manage"].create({
-            'sms_twilio_to_number': '+32455001122',
+            'test_number': '+32455001122',
         })
         with self.mock_sms_twilio_send():
             notif = wizard.action_send_test()
