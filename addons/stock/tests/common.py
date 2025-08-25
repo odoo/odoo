@@ -94,9 +94,11 @@ class TestStockCommon(ProductVariantsCommon):
         cls.picking_type_in = cls.warehouse_1.in_type_id
         cls.picking_type_int = cls.warehouse_1.int_type_id
         cls.picking_type_out = cls.warehouse_1.out_type_id
+        cls.picking_type_store = cls.warehouse_1.store_type_id
         cls.picking_type_out.reservation_method = 'manual'
 
         cls.stock_location = cls.warehouse_1.lot_stock_id
+        cls.view_location = cls.warehouse_1.view_location_id
         cls.scrap_location = cls.StockLocationObj.search([
             ('company_id', '=', cls.warehouse_1.company_id.id), ('usage', '=', 'inventory')
         ], limit=1)
@@ -115,6 +117,7 @@ class TestStockCommon(ProductVariantsCommon):
         output_location.active = True
         cls.output_location = output_location
 
+        cls.input_location = cls.warehouse_1.wh_input_stock_loc_id
         cls.supplier_location = cls.quick_ref('stock.stock_location_suppliers')
         cls.customer_location = cls.quick_ref('stock.stock_location_customers')
         cls.inter_company_location = cls.quick_ref('stock.stock_location_inter_company')

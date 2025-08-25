@@ -7,12 +7,11 @@ from odoo.tests import Form
 from unittest.mock import patch
 
 
-class TestPacking(TestPackingCommon):
+class TestPackingDelivery(TestPackingCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestPacking, cls).setUpClass()
-        cls.uom_kg = cls.env.ref('uom.product_uom_kgm')
+        super().setUpClass()
         cls.product_aw = cls.env['product.product'].create({
             'name': 'Product AW',
             'is_storable': True,
@@ -44,7 +43,7 @@ class TestPacking(TestPackingCommon):
 
         picking_ship = self.env['stock.picking'].create({
             'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
-            'picking_type_id': self.warehouse.out_type_id.id,
+            'picking_type_id': self.picking_type_out.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'carrier_id': self.test_carrier.id
@@ -103,7 +102,7 @@ class TestPacking(TestPackingCommon):
         self.env['stock.quant']._update_available_quantity(self.product_bw, self.stock_location, 5.0)
 
         delivery = self.env['stock.picking'].create({
-            'picking_type_id': self.warehouse.out_type_id.id,
+            'picking_type_id': self.picking_type_out.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'carrier_id': self.test_carrier.id,
@@ -159,7 +158,7 @@ class TestPacking(TestPackingCommon):
 
         picking_ship = self.env['stock.picking'].create({
             'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
-            'picking_type_id': self.warehouse.out_type_id.id,
+            'picking_type_id': self.picking_type_out.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'carrier_id': self.test_carrier.id
@@ -179,9 +178,6 @@ class TestPacking(TestPackingCommon):
         self.assertEqual(picking_ship.state, 'done')
 
     def test_multistep_delivery_tracking(self):
-        # Set Warehouse as multi steps delivery
-        self.warehouse.delivery_steps = "pick_pack_ship"
-
         # Create and confirm the SO
         so = self.env['sale.order'].create({
             'name': 'Sale order',
@@ -237,7 +233,7 @@ class TestPacking(TestPackingCommon):
 
         delivery_1 = self.env['stock.picking'].create({
             'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
-            'picking_type_id': self.warehouse.out_type_id.id,
+            'picking_type_id': self.picking_type_out.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'carrier_id': self.test_carrier.id
@@ -299,7 +295,7 @@ class TestPacking(TestPackingCommon):
         })
 
         delivery_company_a = self.env['stock.picking'].create({
-            'picking_type_id': self.warehouse.out_type_id.id,
+            'picking_type_id': self.picking_type_out.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'move_ids': [Command.create({

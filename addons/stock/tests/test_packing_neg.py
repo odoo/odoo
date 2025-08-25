@@ -1,18 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase
+from odoo.addons.stock.tests.test_packing import TestPackingCommon
 
 
-class TestPackingNeg(TransactionCase):
+class TestPackingNeg(TestPackingCommon):
 
     def test_packing_neg(self):
-        res_partner_2 = self.env['res.partner'].create({
-            'name': 'Deco Addict',
-            'email': 'deco.addict82@example.com',
-        })
-
-        res_partner_4 = self.env['res.partner'].create({
+        partner_2 = self.env['res.partner'].create({
             'name': 'Ready Mat',
             'email': 'ready.mat28@example.com',
         })
@@ -25,24 +20,25 @@ class TestPackingNeg(TransactionCase):
             'standard_price': 70.0,
             'seller_ids': [(0, 0, {
                 'delay': 1,
-                'partner_id': res_partner_2.id,
-                'min_qty': 2.0,})],
-            'uom_id': self.ref('uom.product_uom_unit'),
+                'partner_id': self.partner_1.id,
+                'min_qty': 2.0,
+            })],
+            'uom_id': self.uom_unit.id,
         })
 
         # Create an incoming picking for this product of 300 PCE from suppliers to stock
         vals = {
             'name': 'Incoming picking (negative product)',
-            'partner_id': res_partner_2.id,
-            'picking_type_id': self.ref('stock.picking_type_in'),
-            'location_id': self.ref('stock.stock_location_suppliers'),
-            'location_dest_id': self.ref('stock.stock_location_stock'),
+            'partner_id': self.partner_1.id,
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
             'move_ids': [(0, 0, {
                 'product_id': product_neg.id,
                 'product_uom': product_neg.uom_id.id,
                 'product_uom_qty': 300.00,
-                'location_id': self.ref('stock.stock_location_suppliers'),
-                'location_dest_id': self.ref('stock.stock_location_stock'),
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
             })],
             'state': 'draft',
         }
@@ -65,22 +61,22 @@ class TestPackingNeg(TransactionCase):
         pick_neg.move_line_ids[0].write({'result_package_id': package1.id, 'quantity': 120})
         new_pack1 = self.env['stock.move.line'].create({
             'product_id': product_neg.id,
-            'product_uom_id': self.ref('uom.product_uom_unit'),
+            'product_uom_id': self.uom_unit.id,
             'picking_id': pick_neg.id,
             'lot_id': lot_a.id,
             'quantity': 120,
             'result_package_id': package2.id,
-            'location_id': self.ref('stock.stock_location_suppliers'),
-            'location_dest_id': self.ref('stock.stock_location_stock')
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id
         })
         new_pack2 = self.env['stock.move.line'].create({
             'product_id': product_neg.id,
-            'product_uom_id': self.ref('uom.product_uom_unit'),
+            'product_uom_id': self.uom_unit.id,
             'picking_id': pick_neg.id,
             'result_package_id': package3.id,
             'quantity': 60,
-            'location_id': self.ref('stock.stock_location_suppliers'),
-            'location_dest_id': self.ref('stock.stock_location_stock')
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id
         })
 
         # Transfer the receipt
@@ -90,16 +86,16 @@ class TestPackingNeg(TransactionCase):
         # Make a delivery order of 300 pieces to the customer
         vals = {
             'name': 'outgoing picking (negative product)',
-            'partner_id': res_partner_4.id,
-            'picking_type_id': self.ref('stock.picking_type_out'),
-            'location_id': self.ref('stock.stock_location_stock'),
-            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'partner_id': partner_2.id,
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
             'move_ids': [(0, 0, {
                 'product_id': product_neg.id,
                 'product_uom': product_neg.uom_id.id,
                 'product_uom_qty': 300.00,
-                'location_id': self.ref('stock.stock_location_stock'),
-                'location_dest_id': self.ref('stock.stock_location_customers'),
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
             })],
             'state': 'draft',
         }
@@ -134,28 +130,28 @@ class TestPackingNeg(TransactionCase):
         records = self.env['stock.quant'].search([('product_id', '=', product_neg.id), ('quantity', '!=', '0')])
         pallet_3_stock_qty = 0
         for rec in records:
-            if rec.package_id.name == 'Palneg 2' and rec.location_id.id == self.ref('stock.stock_location_stock'):
+            if rec.package_id.name == 'Palneg 2' and rec.location_id.id == self.stock_location.id:
                 self.assertTrue(rec.quantity == -20, "Should have -20 pieces in stock on pallet 2. Got " + str(rec.quantity))
                 self.assertTrue(rec.lot_id.name == 'Lot neg', "It should have kept its Lot")
-            elif rec.package_id.name == 'Palneg 3' and rec.location_id.id == self.ref('stock.stock_location_stock'):
+            elif rec.package_id.name == 'Palneg 3' and rec.location_id.id == self.stock_location.id:
                 pallet_3_stock_qty += rec.quantity
             else:
-                self.assertTrue(rec.location_id.id != self.ref('stock.stock_location_stock'), "Unrecognized quant in stock")
+                self.assertTrue(rec.location_id.id != self.stock_location.id, "Unrecognized quant in stock")
         self.assertEqual(pallet_3_stock_qty, 50, "Should have 50 pieces in stock on pallet 3")
 
         # Create a picking for reconciling the negative quant
         vals = {
             'name': 'reconciling_delivery',
-            'partner_id': res_partner_4.id,
-            'picking_type_id': self.ref('stock.picking_type_in'),
-            'location_id': self.ref('stock.stock_location_suppliers'),
-            'location_dest_id': self.ref('stock.stock_location_stock'),
+            'partner_id': partner_2.id,
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
             'move_ids': [(0, 0, {
                 'product_id': product_neg.id,
                 'product_uom': product_neg.uom_id.id,
                 'product_uom_qty': 20.0,
-                'location_id': self.ref('stock.stock_location_suppliers'),
-                'location_dest_id': self.ref('stock.stock_location_stock'),
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
             })],
             'state': 'draft',
         }
@@ -176,5 +172,5 @@ class TestPackingNeg(TransactionCase):
         neg_quants = self.env['stock.quant'].search([
             ('product_id', '=', product_neg.id),
             ('quantity', '<', 0),
-            ('location_id.id', '!=', self.ref('stock.stock_location_suppliers'))])
+            ('location_id.id', '!=', self.supplier_location.id)])
         self.assertTrue(len(neg_quants) == 0, "Negative quants should have been reconciled")
