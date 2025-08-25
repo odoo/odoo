@@ -41,7 +41,7 @@ test("toggling category button hide category items", async () => {
         channel_type: "channel",
     });
     await start();
-    await openDiscuss();
+    await openDiscuss("mail.box_inbox");
     await contains("button.o-active", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel");
     await click(
@@ -201,7 +201,7 @@ test("default thread rendering", async () => {
         },
     ]);
     await start();
-    await openDiscuss();
+    await openDiscuss("mail.box_inbox");
     await contains("button", { text: "Inbox" });
     await contains("button", { text: "Starred messages" });
     await contains("button", { text: "History" });
@@ -1288,7 +1288,7 @@ test("Redirect to the thread containing the starred message and highlight the me
         body: "<p>Hello there!!!</p>",
     });
     await start();
-    await openDiscuss();
+    await openDiscuss("mail.box_inbox");
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await click(".o-mail-Message [title='Mark as Todo']");
     await click("button", { text: "Starred messages", contains: [".badge", { count: 1 }] });

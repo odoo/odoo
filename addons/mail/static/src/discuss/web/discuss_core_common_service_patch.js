@@ -27,7 +27,7 @@ patch(DiscussCoreCommon.prototype, {
             (msg) => !msg.thread?.eq(thread)
         );
         if (thread.eq(this.store.discuss.thread)) {
-            this.store.inbox.setAsDiscussThread();
+            this.store.discuss.thread = undefined;
         }
         super._handleNotificationChannelDelete(thread, metadata);
     },

@@ -27,7 +27,7 @@ test("unknown channel can be displayed and interacted with", async () => {
     env.services.bus_service.subscribe("discuss.channel/new_message", () =>
         asyncStep("discuss.channel/new_message")
     );
-    await openDiscuss();
+    await openDiscuss("mail.box_inbox");
     await contains("button.o-active", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await openDiscuss(channelId);
