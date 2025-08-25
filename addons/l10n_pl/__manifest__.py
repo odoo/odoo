@@ -32,6 +32,7 @@ Wewnętrzny numer wersji OpenGLOBE 1.02
         'views/product_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
+        'views/res_company.xml',
         'wizard/account_payment_register_views.xml',
         'security/ir.access.csv',
     ],
