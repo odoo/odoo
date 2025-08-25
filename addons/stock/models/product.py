@@ -123,7 +123,7 @@ class Product(models.Model):
         'location', 'warehouse', 'allowed_company_ids'
     )
     def _compute_quantities(self):
-        products = self.with_context(prefetch_fields=False).filtered(lambda p: p.type != 'service').with_context(prefetch_fields=True)
+        products = self.with_context(prefetch_fields=False).filtered(lambda p: p.product_tmpl_id.type != 'service').with_context(prefetch_fields=True)
         res = products._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
         for product in products:
             product.update(res[product.id])
@@ -197,7 +197,7 @@ class Product(models.Model):
                     0.0,
                 )
                 continue
-            rounding = product.uom_id.rounding
+            rounding = product.product_tmpl_id.uom_id.rounding
             res[product_id] = {}
             if dates_in_the_past:
                 qty_available = quants_res.get(origin_product_id, [0.0])[0] - moves_in_res_past.get(origin_product_id, 0.0) + moves_out_res_past.get(origin_product_id, 0.0)

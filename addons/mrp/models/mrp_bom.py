@@ -343,7 +343,7 @@ class MrpBom(models.Model):
         :rtype: defaultdict(`lambda: self.env['mrp.bom']`)
         """
         bom_by_product = defaultdict(lambda: self.env['mrp.bom'])
-        products = products.filtered(lambda p: p.type != 'service')
+        products = products.filtered(lambda p: p.product_tmpl_id.type != 'service')
         if not products:
             return bom_by_product
         domain = self._bom_find_domain(products, picking_type=picking_type, company_id=company_id, bom_type=bom_type)
