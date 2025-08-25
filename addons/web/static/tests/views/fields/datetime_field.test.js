@@ -63,13 +63,18 @@ test("DatetimeField in form view", async () => {
         type: "form",
         resModel: "partner",
         resId: 1,
-        arch: '<form><field name="datetime"/></form>',
+        arch: `<form>
+            <field name="datetime"/>
+            <field name="datetime" readonly="1"/>
+        </form>`,
     });
 
     const expectedDateString = "02/08/2017 12:00:00"; // 10:00:00 without timezone
     expect(".o_field_datetime button").toHaveValue(expectedDateString, {
         message: "the datetime should be correctly displayed",
     });
+    expect(".o_field_datetime button").toHaveAttribute("data-tooltip", expectedDateString);
+    expect(".o_field_datetime span").toHaveAttribute("data-tooltip", expectedDateString);
 
     // datepicker should not open on focus
     expect(".o_datetime_picker").toHaveCount(0);
