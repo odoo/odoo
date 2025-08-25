@@ -793,3 +793,55 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertRecordValues(delivery.move_ids, [
             {'quantity': 5.0, 'state': 'done', 'lot_ids': self.lot1.ids}
         ])
+
+    def test_adjustment_post_validation(self):
+        """
+        On a picking order test the behavior of changing the quantity on a stock.move
+        """
+        in_move = self._make_in_move(self.product1, 2, 2, create_picking=True, lot_ids=[self.lot1])
+        picking = in_move.picking_id
+        picking.action_toggle_is_locked()
+        with self.assertRaises(UserError):
+            with Form(picking) as picking_form:
+                with picking_form.move_ids_without_package.edit(0) as mv:
+                    mv.quantity = 5.0
+        self.assertEqual(in_move.quantity, 2)
+
+        picking.move_ids.move_line_ids = [Command.create({
+            'move_id': in_move.id,
+            'product_id': in_move.product_id.id,
+            'lot_id': self.lot2.id,
+            'location_id': in_move.location_id.id,
+            'location_dest_id': in_move.location_dest_id.id,
+            'quantity': 2,
+        })]
+
+        self.assertEqual(in_move.quantity, 4)
+        with Form(picking.move_ids_without_package) as move_form:
+            with move_form.edit(0) as ml:
+                ml.quantity = 100
+        self.assertEqual(len(in_move.move_line_ids), 2)
+        self.assertEqual(in_move.quantity, 102)
+
+        with self.assertRaises(UserError):
+            with Form(picking.move_ids_without_package) as move_form:
+                with move_form.edit(0) as ml:
+                    ml.lot_id = False
+
+        with self.assertRaises(UserError):
+            with Form(picking.move_ids_without_package) as move_form:
+                with move_form.edit(0) as ml:
+                    ml.lot_id = False
+                    ml.lot_name = False
+
+        with self.assertRaises(UserError):
+            with Form(picking.move_ids_without_package) as move_form:
+                with move_form.new() as new_line:
+                    new_line.quantity = 100
+
+        with Form(picking.move_ids_without_package) as move_form:
+            with move_form.new() as new_line:
+                new_line.quantity = 100
+                ml.lot_name = 'mySuperLotName'
+
+        self.assertEqual(in_move.quantity, 202)
