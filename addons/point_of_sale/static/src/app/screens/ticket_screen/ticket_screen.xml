@@ -7,11 +7,11 @@
             <div class="screen-full-width d-flex w-100 h-100">
                 <t t-set="usePreset" t-value="pos.config.use_presets and pos.models['pos.preset'].length > 1" />
                 <div t-if="!ui.isSmall || pos.ticket_screen_mobile_pane === 'left'" class="rightpane pane-border d-flex flex-column flex-grow-1 w-100 h-100 h-lg-100 pe-lg-0 bg-view border-end overflow-y-auto">
-                    <div class="controls d-grid d-sm-flex align-items-center justify-content-between gap-2 gap-sm-3 p-2 border-bottom bg-view">
-                        <div class="buttons d-flex gap-1" t-if="usePreset">
+                    <div class="controls d-sm-flex align-items-center justify-content-between gap-2 gap-sm-3 p-2 border-bottom bg-view">
+                        <div class="filter-buttons buttons d-flex gap-1 overflow-auto" t-if="usePreset" t-att-class="{'mb-2 mb-sm-0': ui.isSmall}">
                             <button t-foreach="pos.models['pos.preset'].getAll()" t-as="preset" t-key="preset.id"
                                 class="btn btn-lg btn-secondary text-nowrap" t-on-click="() => this.onPresetSelected(preset)"
-                                t-attf-class="{{this.state.selectedPreset === preset ? 'active' : ''}}">
+                                t-att-class="{'active': this.state.selectedPreset === preset}">
                                 <t t-esc="preset.name"/>
                             </button>
                         </div>
