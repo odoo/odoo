@@ -964,4 +964,10 @@ patch(PosStore.prototype, {
             }
         }
     },
+    setPartnerToCurrentOrder(partner) {
+        super.setPartnerToCurrentOrder(partner);
+        if (this.config.module_pos_restaurant) {
+            this.addPendingOrder([this.getOrder().id]);
+        }
+    },
 });
