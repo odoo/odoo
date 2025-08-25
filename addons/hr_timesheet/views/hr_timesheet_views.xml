@@ -223,7 +223,7 @@
                         ('date', '&lt;', '=week_start'),
                     ]"/>
                 </filter>
-                <xpath expr="//group[@name='groupby']" position="before">
+                <xpath expr="//group" position="before">
                     <field name="employee_id"/>
                     <field name="project_id"/>
                     <field name="task_id"/>
@@ -231,7 +231,7 @@
                     <field name="department_id"/>
                     <field name="manager_id"/>
                 </xpath>
-                <xpath expr="//group[@name='groupby']" position="inside">
+                <xpath expr="//group" position="inside">
                     <filter string="Project" name="groupby_project" domain="[]" context="{'group_by': 'project_id'}"/>
                     <filter string="Parent Task" name="groupby_parent_task" domain="[]" context="{'group_by': 'parent_task_id'}"/>
                     <filter string="Task" name="groupby_task" domain="[]" context="{'group_by': 'task_id'}"/>
