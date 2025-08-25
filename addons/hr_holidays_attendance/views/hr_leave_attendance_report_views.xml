@@ -99,7 +99,7 @@
                 <separator/>
                 <filter string="Archived Employees" name="archived_employees"
                     domain="[('active', '=', False)]"/>
-                <group name="groupby">
+                <group>
                     <filter string="Date" name="group_by_date" context="{'group_by': 'date'}"/>
                     <filter string="Employees" name="group_by_employees" context="{'group_by': 'employee_id'}"/>
                     <separator/>
