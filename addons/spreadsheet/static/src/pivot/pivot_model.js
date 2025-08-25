@@ -250,8 +250,8 @@ export class OdooPivotModel extends PivotModel {
         const values = this.data.measurements[group];
         const measurementId = this._getAggregateSpec(measure);
 
-        if (values && (values[0][measurementId] || values[0][measurementId] === 0)) {
-            return values[0][measurementId];
+        if (values && (values[measurementId] || values[measurementId] === 0)) {
+            return values[measurementId];
         }
         return "";
     }
@@ -334,8 +334,7 @@ export class OdooPivotModel extends PivotModel {
         }
         const { cols, rows } = this._getColsRowsValuesFromDomain(domain);
         const key = JSON.stringify([rows, cols]);
-        const domains = this.data.groupDomains[key];
-        return domains ? domains[0] : Domain.FALSE.toList();
+        return this.data.groupDomains[key] || Domain.FALSE.toList();
     }
 
     resetTableStructure() {
@@ -1005,16 +1004,13 @@ export class OdooPivotModel extends PivotModel {
      *
      * @override
      */
-    _getCellValue(groupId, measureName, originIndexes, config) {
+    _getCellValue(groupId, measureName, config) {
         const measure = this.getDefinition().measures.find((m) => m.fieldName === measureName);
         const measurementId = this._getAggregateSpec(measure);
         var key = JSON.stringify(groupId);
         if (!config.data.measurements[key]) {
             return;
         }
-        var values = originIndexes.map(
-            (originIndex) => config.data.measurements[key][originIndex][measurementId]
-        );
-        return values[0];
+        return config.data.measurements[key][measurementId];
     }
 }

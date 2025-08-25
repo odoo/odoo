@@ -13,7 +13,6 @@ import { CustomGroupByItem } from "@web/search/custom_group_by_item/custom_group
 import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
 import { getIntervalOptions } from "@web/search/utils/dates";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
-import { formatPercentage } from "@web/views/fields/formatters";
 import { ReportViewMeasures } from "@web/views/view_components/report_view_measures";
 
 const formatters = registry.category("formatters");
@@ -110,19 +109,6 @@ export class PivotRenderer extends Component {
             formatOptions.currencyId = cell.currencyId;
         }
         return { value: formatter(cell.value, formatOptions) };
-    }
-    /**
-     * Get the formatted variation of a cell.
-     *
-     * @private
-     * @param {Object} cell
-     * @returns {string} Formatted variation
-     */
-    getFormattedVariation(cell) {
-        if (isNaN(cell.value)) {
-            return "-";
-        }
-        return formatPercentage(cell.value, this.model.metaData.fields[cell.measure]);
     }
 
     /**
@@ -232,7 +218,6 @@ export class PivotRenderer extends Component {
             groupId: cell.groupId,
             measure: cell.measure,
             order: (cell.order || "desc") === "asc" ? "desc" : "asc",
-            originIndexes: cell.originIndexes,
         });
     }
     /**
@@ -243,12 +228,6 @@ export class PivotRenderer extends Component {
     onMouseEnter(ev) {
         var index = [...ev.currentTarget.parentNode.children].indexOf(ev.currentTarget);
         if (ev.currentTarget.tagName === "TH") {
-            if (
-                !ev.currentTarget.classList.contains("o_pivot_origin_row") &&
-                this.model.metaData.origins.length === 2
-            ) {
-                index = 3 * index; // two origins + comparison column
-            }
             index += 1; // row groupbys column
         }
         this.tableRef.el
@@ -350,11 +329,7 @@ export class PivotRenderer extends Component {
             return [view ? view[0] : false, viewType];
         });
 
-        const group = {
-            rowValues: cell.groupId[0],
-            colValues: cell.groupId[1],
-            originIndex: cell.originIndexes[0],
-        };
+        const group = { rowValues: cell.groupId[0], colValues: cell.groupId[1] };
         this.openView(this.model.getGroupDomain(group), this.views, context, newWindow);
     }
 }

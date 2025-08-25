@@ -39,12 +39,7 @@
                                     }" t-custom-click.synthetic="(ev, isMiddleClick) => this.onOpenView(cell, isMiddleClick)"
                                     t-on-mouseover="onMouseEnter" t-on-mouseout="onMouseLeave">
                                     <t t-if="cell.value !== undefined">
-                                        <div t-if="cell.originIndexes.length > 1" class="o_variation" t-att-class="{
-                                                'o_positive text-success': cell.value &gt; 0,
-                                                'o_negative text-danger': cell.value &lt; 0,
-                                                o_null: cell.value === 0,
-                                            }" t-esc="getFormattedVariation(cell)"/>
-                                        <div t-elif="model.metaData.measures[cell.measure].type === 'boolean'" class="o_value">
+                                        <div t-if="model.metaData.measures[cell.measure].type === 'boolean'" class="o_value">
                                             <CheckBox disabled="true" value="cell.value" />
                                         </div>
                                         <div t-else="" class="o_value">
@@ -139,9 +134,7 @@
     </t>
 
     <t t-name="web.PivotMeasure">
-        <th class="bg-view text-muted text-center text-nowrap fw-normal" t-att-colspan="cell.width" t-att-rowspan="cell.height" t-att-class="{
-                'o_pivot_origin_row cursor-pointer user-select-none': cell.originIndexes,
-                'o_pivot_measure_row cursor-pointer user-select-none': !cell.originIndexes,
+        <th class="bg-view text-muted text-center text-nowrap fw-normal o_pivot_measure_row cursor-pointer user-select-none" t-att-colspan="cell.width" t-att-rowspan="cell.height" t-att-class="{
                 o_pivot_sort_order_asc: cell.order === 'asc',
                 o_pivot_sort_order_desc: cell.order === 'desc',
             }" t-on-click.prevent="() => this.onMeasureClick(cell)" t-on-mouseover="onMouseEnter" t-on-mouseout="onMouseLeave">
