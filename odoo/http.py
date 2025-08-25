@@ -2289,7 +2289,6 @@ class Request:
                 self.registry = registry.check_signaling(cr)
             except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError) as e:
                 raise RegistryError(f"Cannot get registry {self.db}") from e
-            threading.current_thread().dbname = self.registry.db_name
 
             # find the controller endpoint to use
             self.env = odoo.api.Environment(cr, self.session.uid, self.session.context)
