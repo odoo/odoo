@@ -1081,16 +1081,25 @@ class HrLeave(models.Model):
                 "%(employee)s on Time Off : %(duration)s",
                 employee=holiday.employee_id.name or holiday.category_id.name,
                 duration=holiday.duration_display)
-            allday_value = (holiday.leave_type_request_unit != 'half_day')
+            allday_value = (holiday.leave_type_request_unit != 'half_day' or holiday.request_date_from_period == 'am' and holiday.request_date_to_period == 'pm')
             if holiday.leave_type_request_unit == 'hour':
                 allday_value = float_compare(holiday.number_of_days, 1.0, 1) >= 0
+
+            if allday_value:
+                leave_tz = ZoneInfo(holiday.tz) if holiday.tz else UTC
+                start_value = holiday.date_from.replace(tzinfo=UTC).astimezone(leave_tz).replace(tzinfo=None)
+                stop_value = holiday.date_to.replace(tzinfo=UTC).astimezone(leave_tz).replace(tzinfo=None)
+            else:
+                start_value = holiday.date_from
+                stop_value = holiday.date_to
+
             meeting_values = {
                 'name': meeting_name,
                 'duration': holiday.number_of_days * (holiday.resource_calendar_id.hours_per_day or HOURS_PER_DAY),
                 'description': holiday.notes,
                 'user_id': user.id,
-                'start': holiday.date_from,
-                'stop': holiday.date_to,
+                'start': start_value,
+                'stop': stop_value,
                 'allday': allday_value,
                 'privacy': 'confidential',
                 'event_tz': user.tz,
