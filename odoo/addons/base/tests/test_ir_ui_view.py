@@ -5032,7 +5032,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'l10n_pe_reports',
             'l10n_pe_reports_stock',
             'l10n_ph_check_printing',
-            'l10n_pl_reports',
             'l10n_ro_edi_stock',
             'l10n_ro_edi_stock_batch',
             'l10n_ro_saft',
