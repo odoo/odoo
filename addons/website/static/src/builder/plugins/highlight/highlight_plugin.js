@@ -38,6 +38,7 @@ export class HighlightPlugin extends Plugin {
                         getHighlightState: () => this.highlightState,
                         getUsedCustomColors: this.getUsedCustomColors.bind(this),
                         deleteHighlight: this.deleteSelectedHighlight.bind(this),
+                        getMaxFontSize: this.getMaxFontSize.bind(this),
                     },
                     onClick: this.completeHighlightSelection.bind(this),
                 },
@@ -81,6 +82,25 @@ export class HighlightPlugin extends Plugin {
         });
     }
 
+    getMaxFontSize() {
+        const nodes = this.dependencies.selection
+            .getTargetedNodes()
+            .map((n) => closestElement(n, "*"))
+            .filter(Boolean);
+        const uniqueNodes = new Set(nodes);
+        if (uniqueNodes.size === 0) {
+            uniqueNodes.add(this.document.body);
+        }
+        let max = 0;
+        for (const node of uniqueNodes) {
+            const size = parseFloat(getComputedStyle(node).fontSize);
+            if (size > max) {
+                max = size;
+            }
+        }
+        return max;
+    }
+
     updateSelectedHighlight() {
         const nodes = this.getSelectedHighlightNodes();
         const uniqueNodes = new Set(nodes);
@@ -99,20 +119,22 @@ export class HighlightPlugin extends Plugin {
             const style = nodes.map((node) =>
                 getComputedStyle(node).getPropertyValue("--text-highlight-color")
             );
-            this.highlightState.color = style.every((v) => v === style[0]) ? style[0] : undefined;
+            this.highlightState.color = style.every((v) => v === style[0])
+                ? style[0]
+                : getComputedStyle(this.document.body).getPropertyValue("--o-color-1");
             const thickness = nodes.map((node) =>
                 getComputedStyle(node).getPropertyValue("--text-highlight-width")
             );
             this.highlightState.thickness = thickness.every((v) => v === thickness[0])
                 ? parseInt(thickness[0])
-                : "";
+                : 2;
         }
     }
 
     _applyHighlight(highlightId) {
         const highlightedNodes = this.getSelectedHighlightNodes();
-        let thicknessToRestore;
-        let colorToRestore;
+        let thicknessToRestore = "2px";
+        let colorToRestore = "var(--o-color-1)";
         if (highlightedNodes.length > 0) {
             const style = getComputedStyle(highlightedNodes[0]);
             colorToRestore = style.getPropertyValue("--text-highlight-color");
