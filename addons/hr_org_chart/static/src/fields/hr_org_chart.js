@@ -4,7 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { user } from "@web/core/user";
 import { onEmployeeSubRedirect } from './hooks';
-import { Component, onWillStart, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 
@@ -46,27 +46,21 @@ export class HrOrgChart extends Component {
         this.popover = usePopover(HrOrgChartPopover);
 
         this.state = useState({'employee_id': null});
-        this.lastParent = null;
+        this.max_level = null;
         this.lastEmployeeId = null;
         this._onEmployeeSubRedirect = onEmployeeSubRedirect();
 
-        onWillStart(async () => {
-            this.employee = this.props.record.data;
-            // the widget is either dispayed in the context of a hr.employee form or a res.users form
-            this.state.employee_id = this.employee.employee_ids !== undefined ? this.employee.employee_ids.resIds[0] : this.props.record.resId;
-            this.state.parent_id = this.employee.parent_id?.id || this.employee.employee_parent_id?.id;
-        });
-
         useRecordObserver(async (record) => {
-            const newParentId = record.data.parent_id?.id || record.data.employee_parent_id?.id || false;
-            const newEmployeeId = record.data.employee_ids !== undefined ? record.data.employee_ids.resIds[0] :
-                                        record.resId;
-            this.state.employee_id = newEmployeeId;
-            if (this.lastParent !== newParentId || this.lastEmployeeId !== newEmployeeId) {
-                await this.fetchEmployeeData(this.state.employee_id, newParentId, true);
+            const newParentId =
+                record.data.parent_id?.id || record.data.employee_parent_id?.id || false;
+            const newEmployeeId = record.resId || record.data.id || false;
+            if (this.lastParent !== newParentId || this.state.employee_id !== newEmployeeId) {
+                this.lastParent = newParentId;
+                this.max_level = null; // Reset max_level to default
+                await this.fetchEmployeeData(newEmployeeId, newParentId, true);
             }
-            this.lastParent = newParentId;
-        })
+            this.state.employee_id = newEmployeeId;
+        });
     }
 
     async fetchEmployeeData(employeeId, newParentId = null, force = false) {
@@ -84,9 +78,11 @@ export class HrOrgChart extends Component {
                 {
                     employee_id: employeeId,
                     new_parent_id: newParentId,
-                    context: user.context,
-                }
-            );
+                    context: {
+                        ...user.context,
+                    max_level: this.max_level,
+                },
+            });
             if (Object.keys(orgData).length === 0) {
                 orgData = {
                     managers: [],
@@ -118,8 +114,8 @@ export class HrOrgChart extends Component {
     }
 
     async _onEmployeeMoreManager(managerId) {
-        await this.fetchEmployeeData(managerId);
-        this.state.employee_id = managerId;
+        this.max_level = 100; // Set a high level to fetch all managers
+        await this.fetchEmployeeData(this.state.employee_id, null, true);
     }
 }
 

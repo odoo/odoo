@@ -71,7 +71,7 @@
         -->
     <t t-set="emp_count" t-value="0"/>
     <div t-if='managers.length &gt; 0' class="o_org_chart_group_up position-relative">
-        <div t-if='managers_more' class="o_org_chart_more pe-3">
+        <div t-if='managers_more' class="o_org_chart_more pe-3" t-attf-class="{{max_level !== null ? 'invisible' : ''}}">
             <a href="#" t-att-data-employee-id="managers[0].id" class="o_employee_more_managers d-block bg-100 px-2" t-on-click.prevent="() => this._onEmployeeMoreManager(managers[0].id)">
                 <i class="fa fa-angle-double-up" role="img" aria-label="More managers" title="More managers"/>
             </a>
