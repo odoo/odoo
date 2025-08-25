@@ -42,7 +42,7 @@
         'web.assets_web_dark': [
             'html_builder/static/src/**/*.dark.scss',
         ],
-        'html_builder.inside_builder_style': [
+        'html_builder.assets_edit_frontend': [
             ('include', 'web._assets_helpers'),
 
             'web/static/src/scss/bootstrap_overridden.scss',

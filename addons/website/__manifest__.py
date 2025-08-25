@@ -282,13 +282,9 @@
             ('remove', 'website/static/src/js/content/adapt_content.js'),
         ],
         'website.assets_edit_frontend': [
-            'website/static/src/**/*.edit.js',
-            'website/static/src/**/*.edit.scss',
-            'website/static/src/**/*.edit.xml',
+            ('include', 'html_builder.assets_edit_frontend'),
+            'website/static/src/**/*.edit.*',
             'website/static/src/core/website_edit_service.js',
-        ],
-        'website.inside_builder_style': [
-            ('include', 'html_builder.inside_builder_style'),
             'website/static/src/**/*.inside.scss',
         ],
         'web._assets_primary_variables': [
@@ -457,7 +453,9 @@
             ('remove', 'website/static/src/builder/**/*.inside.scss'),
         ],
         'html_builder.iframe_add_dialog': [
-            'website/static/src/snippets/**/*.edit.scss',
+            'website/static/src/snippets/s_color_blocks_2/s_color_blocks_2.scss',
+            'website/static/src/snippets/s_ecomm_categories_showcase/categories_showcase.scss',
+            'website/static/src/snippets/s_floating_blocks/floating_blocks.scss',
         ],
     },
     'configurator_snippets': {
