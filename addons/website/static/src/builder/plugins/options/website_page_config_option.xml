@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.TopMenuVisibilityOption">
-    <BuilderRow label.translate="Header Position" level="1" t-if="!this.isActiveItem('header_sidebar_opt')">
+    <BuilderRow label.translate="Header Position" tooltip.translate="Change the Header Position on this page" t-if="!this.isActiveItem('header_sidebar_opt')">
         <BuilderSelect preview="false" action="'setWebsiteHeaderVisibility'">
             <BuilderSelectItem actionValue="'overTheContent'" id="'overTheContent'" t-if="props.doesPageOptionExist('header_overlay')">Over The Content</BuilderSelectItem>
             <BuilderSelectItem actionValue="'regular'">Regular</BuilderSelectItem>
