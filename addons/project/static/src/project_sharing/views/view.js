@@ -1,4 +1,5 @@
 import { patch } from "@web/core/utils/patch";
+import { router } from "@web/core/browser/router";
 import { session } from "@web/session";
 import { View } from "@web/views/view";
 
@@ -6,11 +7,10 @@ import { View } from "@web/views/view";
 patch(View.prototype, {
     setup() {
         super.setup();
-        const params = this.props.context?.params;
         if (
-            params?.action === "project_sharing" &&
-            !("resId" in params) &&
-            params.active_id === session.project_id
+            router.current.action === "project_sharing" &&
+            !router.current.resId &&
+            router.current.active_id === session.project_id
         ) {
             this.env.config.setDisplayName(session.project_name);
         }
