@@ -509,14 +509,16 @@ export function registerThemeHomepageTour(name, steps) {
         throw new Error(`tour.steps has to be a function that returns TourStep[]`);
     }
     return registerWebsitePreviewTour(
-        name,
+        "homepage", // it overrides the community tour with the associated theme tour
         {
             url: "/",
         },
         () => [
             ...clickOnEditAndWaitEditMode(),
-            ...prepend_trigger(
-                steps().concat(clickOnSave())),
+            // FIXME(?) this should probably reuse the prepend_trigger function
+            // so that we do check that we are really on the homepage.
+            ...steps(),
+            ...clickOnSave(),
         ]
     );
 }
