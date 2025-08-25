@@ -51,6 +51,10 @@ the methods over HTTP, with examples in various programming languages.
             'api_doc/static/src/**/*.xml',
             'api_doc/static/src/**/*.js',
             'api_doc/static/src/doc_client.css',
+            ('remove', 'api_doc/static/src/api_action.js'),
+        ],
+        'web.assets_backend': [
+            'api_doc/static/src/api_action.js',
         ],
     },
     'bootstrap': True,

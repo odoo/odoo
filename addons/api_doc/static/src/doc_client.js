@@ -14,7 +14,7 @@ export class DocClient extends Component {
         DocModel,
         ApiKeyModal,
         SearchModal,
-    };t
+    };
     static props = {};
 
     setup() {
