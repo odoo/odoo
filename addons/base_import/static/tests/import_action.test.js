@@ -513,6 +513,8 @@ describe("Import view", () => {
         });
         await mountWebClient();
         await getService("action").doAction(1);
+        // Should not get a traceback when clicking Cancel
+        await contains("button:contains('Cancel')").click();
         expect.verifySteps(["action"]);
         queryOne(".o_nocontent_help").draggable = true;
         const file = new File(["fake_file"], "fake_file.csv", {

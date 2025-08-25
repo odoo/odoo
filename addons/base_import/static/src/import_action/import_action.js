@@ -98,6 +98,10 @@ export class ImportAction extends Component {
     }
 
     exit(resIds) {
+        if (!resIds) {
+            this.env.config.historyBack();
+            return;
+        }
         this.actionService.doAction({
             type: "ir.actions.act_window",
             name: _t("Imported records"),
