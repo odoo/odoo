@@ -26,7 +26,6 @@ class TestItEdiReverseCharge(TestItEdi):
             'street': 'Avenue Test rue',
             'zip': '84000',
             'city': 'Avignon',
-            'is_company': True
         })
 
         cls.san_marino_partner = cls.env['res.partner'].create({
@@ -37,7 +36,6 @@ class TestItEdiReverseCharge(TestItEdi):
             'zip': '47893',
             'city': 'San Marino',
             'company_id': cls.company.id,
-            'is_company': True,
         })
 
         # Taxes -----------
@@ -301,7 +299,6 @@ class TestItEdiReverseCharge(TestItEdi):
             'street': 'Street test',
             'zip': '12345',
             'city': 'Test',
-            'is_company': True
         })
 
         dt_18 = self.env.ref('l10n_it_edi.l10n_it_document_type_18')
