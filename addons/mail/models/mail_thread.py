@@ -1638,14 +1638,12 @@ class MailThread(models.AbstractModel):
         if msg_dict['in_reply_to']:
             parent_ids = self.env['mail.message'].search(
                 [('message_id', '=', msg_dict['in_reply_to'])],
-                order='create_date DESC, id DESC',
-                limit=1)
+                order='create_date DESC, id DESC')
         if msg_dict['references'] and not parent_ids:
             references_msg_id_list = tools.unfold_references(msg_dict['references'])
             parent_ids = self.env['mail.message'].search(
                 [('message_id', 'in', [x.strip() for x in references_msg_id_list])],
-                order='create_date DESC, id DESC',
-                limit=1)
+                order='create_date DESC, id DESC')
         if parent_ids:
             msg_dict.update(self._message_parse_extract_from_parent(parent_ids))
 
@@ -1653,9 +1651,11 @@ class MailThread(models.AbstractModel):
         msg_dict.update(self._message_parse_extract_bounce(message, msg_dict))
         return msg_dict
 
-    def _message_parse_extract_from_parent(self, parent_message):
-        """Derive message values from the parent."""
-        if parent_message:
+    def _message_parse_extract_from_parent(self, parent_messages):
+        """Derive message values from the parents."""
+        if parent_messages:
+            # If there's multiple parents, assume the non-internal one is the real parent
+            parent_message = parent_messaged.sorted(lambda m: bool(m.subtype_id and m.subtype_id.internal))[0]
             parent_is_internal = bool(parent_message.subtype_id and parent_message.subtype_id.internal)
             parent_is_auto_comment = parent_message.message_type == 'auto_comment'
             return {
