@@ -92,4 +92,4 @@ class LoyaltyGenerateWizard(models.TransientModel):
                 'issued': self.points_granted,
             } for coupon in coupons
         ])
-        return True
+        return coupons
