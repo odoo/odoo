@@ -825,13 +825,18 @@ class HolidaysAllocation(models.Model):
         if any(allocation.state not in ['confirm', 'validate'] for allocation in self):
             raise UserError(_('Allocation request must be confirmed or validated in order to refuse it.'))
 
-        days_per_allocation = self.employee_id._get_consumed_leaves(self.holiday_status_id)[0]
-
-        for allocation in self:
-            days_taken = days_per_allocation[allocation.employee_id][allocation.holiday_status_id][allocation]['virtual_leaves_taken']
-            if days_taken > 0:
-                raise UserError(_('You cannot refuse this allocation request since the employee has already taken leaves for it. Please refuse or delete those leaves first.'))
+        previous_data = self.holiday_status_id.get_allocation_data(self.employee_id)
         self.write({'state': 'refuse', 'approver_id': current_employee.id})
+        new_data = self.holiday_status_id.get_allocation_data(self.employee_id)
+
+        for employee, employee_data in previous_data.items():
+            for holiday_status in employee_data:
+                previous_virtual_leaves_taken = holiday_status[1].get("virtual_leaves_taken", False)
+                previous_total_virtual_excess = holiday_status[1].get("total_virtual_excess", False)
+                new_total_virtual_excess = next((data[1].get("total_virtual_excess", 0) for data in new_data[employee] if data[3] == holiday_status[3]), False)
+                if previous_virtual_leaves_taken > 0 and (new_total_virtual_excess is False or new_total_virtual_excess > previous_total_virtual_excess):
+                    raise UserError(_('You cannot refuse this allocation request since the employee has already taken leaves for it. Please refuse or delete those leaves first.'))
+
         # If a category that created several holidays, cancel all related
         linked_requests = self.mapped('linked_request_ids')
         if linked_requests:
