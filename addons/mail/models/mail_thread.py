@@ -4298,19 +4298,16 @@ class MailThread(models.AbstractModel):
         # done manually (not when computing recipients data) as it would be costly
         # and difficult with potential inheritance (calendar, ...)
         pids = msg_vals['partner_ids'] if 'partner_ids' in (msg_vals or {}) else message.partner_ids.ids
-        internal_uids = [
-            r['uid'] for r in recipients_data if (
+        ooo_recipients = [
+            r for r in recipients_data if (
                 r['active'] and
                 r['id'] and r['id'] in pids and
-                r['uid'] and not r['share']
+                r['uid'] and not r['share'] and
+                r['ooo_activated'] and r['ooo_msg'] and not is_html_empty(r['ooo_msg']) and
+                r['email_normalized']
             )
         ]
-        ooo_users = self.env['res.users'].sudo()
-        if internal_uids:
-            users = self.env['res.users'].sudo().browse(internal_uids)
-            users.fetch(['is_out_of_office'])
-            ooo_users = users.filtered(lambda u: u.is_out_of_office and not is_html_empty(u.out_of_office_message))
-        if not ooo_users:
+        if not ooo_recipients:
             return ooo_messages
 
         # message real author is either a customer, either an internal user using emails only
@@ -4321,7 +4318,7 @@ class MailThread(models.AbstractModel):
 
         # limit number of real author / recipient exchanges to 1 every 4 days
         sent_su = self.env['mail.message'].sudo().search([
-            ('author_id', 'in', ooo_users.partner_id.ids),
+            ('author_id', 'in', [r['id'] for r in ooo_recipients]),
             ('message_type', '=', 'out_of_office'),
             ('partner_ids', 'in', real_author_su.ids),
             ('date', '>=', self.env.cr.now() - datetime.timedelta(days=4)),
@@ -4330,14 +4327,16 @@ class MailThread(models.AbstractModel):
 
         # finally send OOO messages
         original_subject = msg_vals['subject'] if 'subject' in (msg_vals or {}) else message.subject
-        for user in ooo_users.filtered(lambda u: u.partner_id not in already_mailed):
+        for recipient in ooo_recipients:
+            if recipient['id'] in already_mailed.ids:
+                continue
             body = self.env['ir.qweb']._render(
                 'mail.message_notification_out_of_office',
                 {
                     # content
-                    'out_of_office_message': user.out_of_office_message,
+                    'out_of_office_message': Markup(recipient['ooo_msg']),
                     'replied_body': msg_vals['body'] if 'body' in (msg_vals or {}) else message.body,
-                    'signature': user.signature,
+                    'signature': 'prout',
                     # tools
                     'is_html_empty': is_html_empty,
                 },
@@ -4345,9 +4344,9 @@ class MailThread(models.AbstractModel):
                 raise_if_not_found=False,
             )
             ooo_messages += self.message_post(
-                author_id=user.partner_id.id,
+                author_id=recipient['id'],
                 body=body,
-                email_from=user.email_formatted,
+                email_from=formataddr((recipient['name'], recipient['email_normalized'])),
                 mail_headers={
                     'Auto-Submitted': 'auto-replied',
                     'X-Auto-Response-Suppress': 'All',  # avoid out-of-office (and other automated) replies from MS Exchange

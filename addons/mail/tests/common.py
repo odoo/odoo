@@ -1547,7 +1547,12 @@ class MailCase(common.TransactionCase, MockEmail):
                     ('message_type', '=', mtype),
                     ('subtype_id', '=', msubtype.id)
                 ], limit=1, order='id DESC')
-            self.assertTrue(message, 'Mail: not found message (content: %s, message_type: %s, subtype: %s)' % (mbody, mtype, msubtype and msubtype.name))
+            if not message:
+                msg_debug_info = '\n'.join(
+                    f'{msg.message_type}, {msg.subtype_id.name}, {msg.body}'
+                    for msg in messages
+                )
+                self.assertTrue(message, 'Mail: not found message (content: %s, message_type: %s, subtype: %s)\n--MOCKED DATA\n%s' % (mbody, mtype, msubtype and msubtype.name, msg_debug_info))
 
             # check message values
             if message_values:

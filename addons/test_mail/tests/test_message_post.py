@@ -1555,16 +1555,16 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 message_type='comment',
                 subtype_id=self.env.ref('mail.mt_comment').id,
             )
-        test_record.message_unsubscribe(self.partner_admin.ids)
+            test_record.message_unsubscribe(self.partner_admin.ids)
 
-        # note that even if somehow portal achieved to be OOO we don't care
-        self._setup_out_of_office(self.user_admin + self.user_employee_c2 + self.user_portal)
-        self.user_employee.notification_type = 'email'  # potential limitation of from, to check
+            # note that even if somehow portal achieved to be OOO we don't care
+            self._setup_out_of_office(self.user_admin + self.user_employee_c2 + self.user_portal)
+            self.user_employee.notification_type = 'email'  # potential limitation of from, to check
 
-        for user in self.user_admin + self.user_employee_c2:
-            self.assertTrue(user.is_out_of_office)
-        for user in self.user_employee + self.user_employee_c3 + self.user_portal:
-            self.assertFalse(user.is_out_of_office, 'Unset or portal')
+            for user in self.user_admin + self.user_employee_c2:
+                self.assertTrue(user.is_out_of_office)
+            for user in self.user_employee + self.user_employee_c3 + self.user_portal:
+                self.assertFalse(user.is_out_of_office, 'Unset or portal')
 
         for post_dt, recipients, exp_ooo_authors in [
             # portal user should not generate OOO messages
