@@ -8,6 +8,7 @@ from hashlib import md5
 from urllib import parse
 
 from odoo import api, fields, models
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from odoo.addons.account.models.company import PEPPOL_LIST
 
@@ -32,6 +33,7 @@ class ResPartner(models.Model):
             ('not_valid_format', 'Cannot receive this format'),  # registered on Peppol but cannot receive the selected document type
             ('valid', 'Valid'),
         ],
+        store=True,
         string='Peppol endpoint verification',
         company_dependent=True,
     )
@@ -80,6 +82,9 @@ class ResPartner(models.Model):
         selection_values = dict(peppol_verification_state_field.selection)
         old_label = selection_values[old_value] if old_value else False  # get translated labels
         new_label = selection_values[new_value] if new_value else False
+        invoice_edi_format_field = self._fields['invoice_edi_format']
+        format_selection_values = dict(invoice_edi_format_field.selection)
+        edi_format = format_selection_values[self._get_peppol_edi_format()]
 
         body = Markup("""
             <ul>
@@ -87,15 +92,13 @@ class ResPartner(models.Model):
                     <span class='o-mail-Message-trackingOld me-1 px-1 text-muted fw-bold'>{old}</span>
                     <i class='o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600'/>
                     <span class='o-mail-Message-trackingNew me-1 fw-bold text-info'>{new}</span>
-                    <span class='o-mail-Message-trackingField ms-1 fst-italic text-muted'>({field})</span>
-                    <span class='o-mail-Message-trackingCompany ms-1 fst-italic text-muted'>({company})</span>
+                    <span class='o-mail-Message-trackingField ms-1 fst-italic text-muted'>{format}</span>
                 </li>
             </ul>
         """).format(
             old=old_label,
             new=new_label,
-            field=peppol_verification_state_field.string,
-            company=company.display_name,
+            format=f'({edi_format})' if new_value == 'not_valid_format' else '',
         )
         self._message_log(body=body)
 
@@ -164,6 +167,36 @@ class ResPartner(models.Model):
             for company in all_companies:
                 partner.button_account_peppol_check_partner_endpoint(company=company)
 
+    def _peppol_try_other_eas(self, eas_to_check, invoice_edi_format):
+        """
+        This method is called when the user checks the peppol endpoint for a partner, and that it's not found.
+        We try the other eas available for this country, following the mapping in EAS_MAPPING.
+        :param eas_to_check: A list of eas code to try to find the user.
+        :param edi_format:
+        :return: The eas code for which the user was found, or False if the user is still not found.
+        """
+        for eas, field in eas_to_check.items():
+            if field and self._get_peppol_verification_state(self[field], eas, invoice_edi_format) == 'valid':
+                return self[field], eas, 'valid'
+        return False, False, 'not_valid'
+
+    def _get_eas_mapping(self, eas, include_given_eas=True):
+        """
+        This method is called to get the eas mappings for a given eas code
+        :param eas:                 The eas code we search the mappings for
+        :param include_given_eas:   bool if the returned dictionnary should contains the eas given as a parameter
+        :return: A dict containing the eas mappings for the given eas code
+        """
+        # get mappings based on the partner country and check the given eas is inside
+        mappings = dict(EAS_MAPPING.get(self.country_code, {}))
+        if not mappings or not mappings.get(eas):
+            # get mappings based on eas
+            mappings = [country for country in EAS_MAPPING.values() if country.get(eas)]
+            mappings = mappings[0] if mappings else False
+        if mappings and not include_given_eas:
+            del mappings[eas]
+        return mappings
+
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
@@ -173,6 +206,21 @@ class ResPartner(models.Model):
         res = super().create(vals_list)
         if res:
             res._update_peppol_state_per_company()
+        return res
+
+    def write(self, vals):
+        # OVERRIDE
+        old_verification_state = None
+        company = self.env.company
+        if ('peppol_eas' in vals or 'peppol_endpoint' in vals
+                and self.peppol_verification_state != 'not_verified'
+                and not vals.get('peppol_verification_state')):
+            # reset the verification state to not have new combination flagged as anything else than 'not verified'
+            old_verification_state = self.with_company(company).peppol_verification_state
+            vals['peppol_verification_state'] = 'not_verified'
+        res = super().write(vals)
+        if res and old_verification_state:
+            self._log_verification_state_update(self.env.company, old_verification_state, vals.get('peppol_verification_state'))
         return res
 
     # -------------------------------------------------------------------------
@@ -199,6 +247,17 @@ class ResPartner(models.Model):
             self.peppol_eas,
             self_partner._get_peppol_edi_format(),
         )
+
+        if new_value in ('not_valid', 'not_valid_format'):
+            eas_to_try = self._get_eas_mapping(eas=self.peppol_eas, include_given_eas=False)
+            if eas_to_try:
+                new_endpoint, new_eas, new_peppol_verification_state = self._peppol_try_other_eas(eas_to_try, self_partner._get_peppol_edi_format())
+                if new_peppol_verification_state == 'valid':
+                    new_value = new_peppol_verification_state
+                    self.write({
+                        'peppol_eas': new_eas,
+                        'peppol_endpoint': new_endpoint,
+                    })
 
         if old_value != new_value:
             self_partner.peppol_verification_state = new_value

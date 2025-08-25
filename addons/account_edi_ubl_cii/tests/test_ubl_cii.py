@@ -285,10 +285,13 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon, HttpCase):
             'email': "mypartner@email.com",
         })
         # Change the fields of the partner, keep the peppol fields
+        # We have to set the peppol fields again since we set the vat to False, otherwise the peppol_endpoint will be set to False
         partner.update({
             'name': "Turlututu",
             'email': False,
             'vat': False,
+            'peppol_eas': '0208',
+            'peppol_endpoint': '0477472701',
         })
         # The partner should be retrieved based on the peppol fields
         imported_invoice = self.import_attachment(xml_attachment, self.company_data["default_journal_sale"])

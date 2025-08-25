@@ -53,14 +53,14 @@ class TestPeppolParticipant(TransactionCase):
     def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
         response = Response()
         response.status_code = 200
-        if r.url.endswith('/iso6523-actorid-upis%3A%3A9925%3A0000000000'):
-            # 9925:0000000000 is not on Peppol
+        if r.url.endswith('/iso6523-actorid-upis%3A%3A9925%3ABE0482376248') or r.url.endswith('/iso6523-actorid-upis%3A%3A9925%3Abe0482376248'):
+            # 9925:BE0482376248 is not on Peppol
             response.status_code = 404
             return response
 
-        if r.url.endswith('/iso6523-actorid-upis%3A%3A0208%3A0000000000'):
-            # 0208:0000000000 is on Peppol
-            response._content = b'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0208:0000000000</id:ParticipantIdentifier></smp:ServiceGroup>'
+        if r.url.endswith('/iso6523-actorid-upis%3A%3A0208%3A0482376248'):
+            # 0208:0482376248 is on Peppol
+            response._content = b'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0208:0482376248</id:ParticipantIdentifier></smp:ServiceGroup>'
             return response
 
         url = r.path_url
@@ -92,7 +92,7 @@ class TestPeppolParticipant(TransactionCase):
     def _get_participant_vals(self):
         return {
             'peppol_eas': '9925',
-            'peppol_endpoint': '0000000000',
+            'peppol_endpoint': 'BE0482376248',
             'phone_number': '+32483123456',
             'contact_email': 'yourcompany@test.example.com',
         }
@@ -133,6 +133,7 @@ class TestPeppolParticipant(TransactionCase):
         company = self.env.company
         vals = self._get_participant_vals()
         vals['peppol_eas'] = '0208'
+        vals['peppol_endpoint'] = '0482376248'
         wizard = self.env['peppol.registration'].create(vals)
         self.assertFalse(wizard.smp_registration)
         wizard.button_register_peppol_participant()
@@ -188,14 +189,14 @@ class TestPeppolParticipant(TransactionCase):
             wizard.button_register_peppol_participant()
 
     def test_config_unregister_participant(self):
-        wizard = self.env['peppol.registration'].create({**self._get_participant_vals(), 'peppol_eas': '0208'})
+        wizard = self.env['peppol.registration'].create({**self._get_participant_vals(), 'peppol_eas': '0208', 'peppol_endpoint': '0482376248'})
         wizard.button_register_peppol_participant()
         config_wizard = self.env['peppol.config.wizard'].new({})
         config_wizard.button_peppol_unregister()
         self.assertEqual(self.env.company.account_peppol_proxy_state, 'not_registered')
 
     def test_config_update_email(self):
-        wizard = self.env['peppol.registration'].create({**self._get_participant_vals(), 'peppol_eas': '0208'})
+        wizard = self.env['peppol.registration'].create({**self._get_participant_vals(), 'peppol_eas': '0208', 'peppol_endpoint': '0482376248'})
         wizard.button_register_peppol_participant()
         self.assertEqual(self.env.company.account_peppol_contact_email, self._get_participant_vals()['contact_email'])
         config_wizard = self.env['peppol.config.wizard'].new({})

@@ -46,19 +46,20 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             'refresh_token': FAKE_UUID[0],
         })
 
+        # The invalid partner is just a partner with no eas/endpoint. The creation of a partner with an invalid endpoint
+        # is handled in the test_invalid_partner_raise_error_at_creation method
         cls.invalid_partner, cls.valid_partner = cls.env['res.partner'].create([{
             'name': 'Wintermute',
             'city': 'Charleroi',
             'country_id': cls.env.ref('base.be').id,
-            'peppol_eas': '0208',
-            'peppol_endpoint': '3141592654',
-        }, {
+        },
+        {
             'name': 'Molly',
             'city': 'Namur',
             'email': 'Namur@company.com',
             'country_id': cls.env.ref('base.be').id,
             'peppol_eas': '0208',
-            'peppol_endpoint': '2718281828',
+            'peppol_endpoint': '0465348392',
         }])
 
         cls.env['res.partner.bank'].create({
@@ -147,11 +148,11 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             '<smp:ServiceMetadataReferenceCollection><smp:ServiceMetadataReference href="https://iap-services.odoo.com/iso6523-actorid-upis%3A%3A0208%3A0477472701/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1"/>'
             '</smp:ServiceMetadataReferenceCollection></smp:ServiceGroup>"""
             return response
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A3141592654'):
+        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A0858962813'):
             response.status_code = 404
             return response
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A2718281828'):
-            response._content = b"""<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0208:2718281828</id:ParticipantIdentifier>
+        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A0465348392'):
+            response._content = b"""<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0208:0465348392</id:ParticipantIdentifier>
             '<smp:ServiceMetadataReferenceCollection><smp:ServiceMetadataReference href="https://iap-services.odoo.com/iso6523-actorid-upis%3A%3A0208%3A0477472701/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1"/>'
             '</smp:ServiceMetadataReferenceCollection></smp:ServiceGroup>"""
             return response
@@ -210,10 +211,10 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         wizard = self.create_send_and_print(move, default=True)
 
         self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
-        self.assertEqual(self.invalid_partner.peppol_verification_state, 'not_valid')  # not on peppol at all
+        self.assertEqual(self.invalid_partner.peppol_verification_state, 'not_verified')  # not verified because no datas
         self.assertFalse(wizard.sending_methods and 'peppol' in wizard.sending_methods)  # peppol is not checked
         self.assertTrue(wizard.sending_method_checkboxes['peppol']['readonly'])  # peppol is not possible to select
-        self.assertFalse(wizard.alerts)  # there is no alerts
+        self.assertIn('account_edi_ubl_cii_configure_partner', wizard.alerts)  # there is an alert asking to fill in partner's VAT or peppol address
 
     @patch('odoo.addons.account_peppol.models.res_partner.ResPartner._check_document_type_support', return_value=False)
     def test_send_peppol_alerts_not_valid_format_partner(self, mocked_check):
@@ -355,13 +356,13 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                 'peppol_endpoint': '0477472701',
             }])
 
-        new_partner.peppol_endpoint = '3141592654'
+        new_partner.peppol_endpoint = '0858962813'
         new_partner.button_account_peppol_check_partner_endpoint()
         self.assertRecordValues(
             new_partner, [{
                 'peppol_verification_state': 'not_valid',
                 'peppol_eas': '0208',
-                'peppol_endpoint': '3141592654',
+                'peppol_endpoint': '0858962813',
             }])
 
         # the participant exists on the network but cannot receive XRechnung
@@ -491,3 +492,13 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             wizard.action_send_and_print()
             self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
         self.assertEqual(move_1.peppol_move_state, 'error')
+
+    def test_invalid_partner_raise_error_at_creation(self):
+        with self.assertRaisesRegex(UserError, "The peppol endpoint is not valid. Please check the endpoint value."):
+            self.env['res.partner'].create({
+                'name': 'Wintermute',
+                'city': 'Charleroi',
+                'country_id': self.env.ref('base.be').id,
+                'peppol_eas': '0208',
+                'peppol_endpoint': '3141592654',
+            })

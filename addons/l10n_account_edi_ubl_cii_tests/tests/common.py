@@ -132,21 +132,12 @@ class TestUBLCommon(AccountTestInvoicingCommon):
     # -------------------------------------------------------------------------
 
     @freeze_time('2017-01-01')
-    def _generate_move(self, seller, buyer, send=True, **invoice_kwargs):
+    def _generate_move(self, buyer, send=True, **invoice_kwargs):
         """
         Create and post an account.move.
         """
-
         # Setup the seller.
-        self.env.company.write({
-            'partner_id': seller.id,
-            'name': seller.name,
-            'street': seller.street,
-            'zip': seller.zip,
-            'city': seller.city,
-            'vat': seller.vat,
-            'country_id': seller.country_id.id,
-        })
+        seller = self.env.company.partner_id
 
         move_type = invoice_kwargs['move_type']
         account_move = self.env['account.move'].create({

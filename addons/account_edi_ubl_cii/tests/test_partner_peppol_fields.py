@@ -20,7 +20,9 @@ class TestAccountUblCii(AccountTestInvoicingCommon):
                 'peppol_endpoint': False,
             })
         yield
-        partner.country_id = self.env.ref('base.ba')
+        if partner.country_id != self.env.ref('base.ba'):
+            # if the country is already set, we don't want to trigger the computes
+            partner.country_id = self.env.ref('base.ba')
         self.assertEqual((partner.peppol_eas, partner.peppol_endpoint), expected)
 
     def _build_error_peppol_endpoint(self, eas, endpoint):
@@ -64,7 +66,9 @@ class TestAccountUblCii(AccountTestInvoicingCommon):
             'peppol_eas': '0184',
             'peppol_endpoint': '12345674'
         })
-        with self.check_peppol_vals(partner_1, expected=("0184", '12345674'), reset=False):
+        # Here we are expecting an endpoint=False because we set the country after so it will trigger the compute and
+        # since the partner has no company_registry, the endpoint cannot be computed so it will be set to False
+        with self.check_peppol_vals(partner_1, expected=("0184", False), reset=False):
             pass
 
         # Create a partner, set the country, then fill the peppol fields
@@ -76,9 +80,9 @@ class TestAccountUblCii(AccountTestInvoicingCommon):
             partner_2.peppol_eas = '0184'
             partner_2.peppol_endpoint = '12345674'
 
-        # Change the country, the EAS changes but we do not overwrite the existing endpoint
+        # Change the country, the EAS changes and the endpoint is reset to False
         partner_2.country_id = self.env.ref('base.be')
-        self.assertEqual((partner_2.peppol_eas, partner_2.peppol_endpoint), ('0208', '12345674'))
+        self.assertEqual((partner_2.peppol_eas, partner_2.peppol_endpoint), ('0208', False))
 
     def test_partner_ubl_cii_formats(self):
         def _get_ubl_cii_formats_info(self):

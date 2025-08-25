@@ -30,7 +30,6 @@ class TestCIIUS(TestUBLCommon):
         """ Even for a US company, a printed PDF should contain a Factur-X xml
         """
         invoice = self._generate_move(
-            self.partner_1,
             self.partner_2,
             move_type='out_invoice',
             invoice_line_ids=[

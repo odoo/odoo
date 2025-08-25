@@ -102,13 +102,31 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                 Command.create({'value': 'percent', 'value_amount': 100.0, 'nb_days': 30})],
         })
 
+    def check_attachment(self, invoice, expected_file):
+        self._assert_invoice_attachment(
+            invoice.ubl_cii_xml_id,
+            xpaths=f'''
+                <xpath expr="./*[local-name()='PaymentMeans']/*[local-name()='PaymentID']" position="replace">
+                    <cbc:PaymentID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:PaymentID>
+                </xpath>
+                <xpath expr=".//*[local-name()='InvoiceLine'][1]/*[local-name()='ID']" position="replace">
+                    <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
+                </xpath>
+                <xpath expr=".//*[local-name()='AdditionalDocumentReference']/*[local-name()='Attachment']/*[local-name()='EmbeddedDocumentBinaryObject']" position="attributes">
+                    <attribute name="mimeCode">application/pdf</attribute>
+                    <attribute name="filename">{invoice.invoice_pdf_report_id.name}</attribute>
+                </xpath>
+            ''',
+            expected_file_path=expected_file,
+        )
+
     ####################################################
     # Test export - import
     ####################################################
 
     def test_export_import_invoice(self):
+        self.env.company.partner_id = self.partner_1
         invoice = self._generate_move(
-            self.partner_1,
             self.partner_2,
             move_type='out_invoice',
             delivery_date='2017-01-15',
@@ -166,8 +184,8 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         self._assert_imported_invoice_from_etree(invoice, attachment)
 
     def test_export_import_refund(self):
+        self.env.company.partner_id = self.partner_1
         refund = self._generate_move(
-            self.partner_1,
             self.partner_2,
             move_type='out_refund',
             invoice_line_ids=[
@@ -224,8 +242,8 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         self._assert_imported_invoice_from_etree(refund, attachment)
 
     def test_encoding_in_attachment_ubl(self):
+        self.env.company.partner_id = self.partner_1
         invoice = self._generate_move(
-            seller=self.partner_1,
             buyer=self.partner_2,
             move_type='out_invoice',
             invoice_line_ids=[{'product_id': self.product_a.id}],
@@ -239,28 +257,12 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         In addition, when the Seller has no VAT, the node PartyTaxScheme and PartyLegalEntity may contain the Seller
         identifier or the Seller legal registration identifier.
         """
-        def check_attachment(invoice, expected_file):
-            self._assert_invoice_attachment(
-                invoice.ubl_cii_xml_id,
-                xpaths=f'''
-                    <xpath expr="./*[local-name()='PaymentMeans']/*[local-name()='PaymentID']" position="replace">
-                        <cbc:PaymentID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:PaymentID>
-                    </xpath>
-                    <xpath expr=".//*[local-name()='InvoiceLine'][1]/*[local-name()='ID']" position="replace">
-                        <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
-                    </xpath>
-                    <xpath expr=".//*[local-name()='AdditionalDocumentReference']/*[local-name()='Attachment']/*[local-name()='EmbeddedDocumentBinaryObject']" position="attributes">
-                        <attribute name="mimeCode">application/pdf</attribute>
-                        <attribute name="filename">{invoice.invoice_pdf_report_id.name}</attribute>
-                    </xpath>
-                ''',
-                expected_file_path=expected_file,
-            )
+        self.env.company.partner_id = self.partner_1
         # Setup a public admin in Luxembourg without VAT
         self.partner_2.write({
             'vat': None,
             'peppol_eas': '9938',
-            'peppol_endpoint': '00005000041',
+            'peppol_endpoint': '00005050',
             'country_id': self.env.ref('base.lu').id,
         })
         invoice_vals = {
@@ -272,19 +274,41 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                 'tax_ids': [(6, 0, self.tax_21.ids)],
             }],
         }
-        invoice1 = self._generate_move(self.partner_1, self.partner_2, **invoice_vals)
-        check_attachment(invoice1, "from_odoo/bis3_out_invoice_public_admin_1.xml")
-        # Switch the partner's roles
-        invoice2 = self._generate_move(self.partner_2, self.partner_1, **invoice_vals)
-        check_attachment(invoice2, "from_odoo/bis3_out_invoice_public_admin_2.xml")
+        invoice1 = self._generate_move(self.partner_2, **invoice_vals)
+        self.check_attachment(invoice1, "from_odoo/bis3_out_invoice_public_admin_1.xml")
+
+    def test_sending_to_seller_public_admin(self):
+        # Setup a public admin in Luxembourg without VAT
+        self.env.company.write({
+            'partner_id': self.partner_2.id,
+            'vat': None,
+            'country_id': self.env.ref('base.lu').id,
+        })
+        # Write these fields on partner to avoid re computation
+        self.env.company.partner_id.write({
+            'peppol_eas': '9938',
+            'peppol_endpoint': '00005050',
+        })
+        invoice_vals = {
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [{
+                'product_id': self.product_a.id,
+                'quantity': 2,
+                'price_unit': 100,
+                'tax_ids': [(6, 0, self.tax_21.ids)],
+            }],
+        }
+
+        invoice2 = self._generate_move(self.partner_1, **invoice_vals)
+        self.check_attachment(invoice2, "from_odoo/bis3_out_invoice_public_admin_2.xml")
 
     ####################################################
     # Test import
     ####################################################
 
     def test_import_partner_ubl(self):
+        self.env.company.partner_id = self.partner_1
         invoice = self._generate_move(
-            seller=self.partner_1,
             buyer=self.partner_2,
             move_type='out_invoice',
             invoice_line_ids=[{'product_id': self.product_a.id}],
@@ -292,8 +316,8 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         self._test_import_partner(invoice.ubl_cii_xml_id, self.partner_1, self.partner_2)
 
     def test_import_in_journal_ubl(self):
+        self.env.company.partner_id = self.partner_1
         invoice = self._generate_move(
-            seller=self.partner_1,
             buyer=self.partner_2,
             move_type='out_invoice',
             invoice_line_ids=[{'product_id': self.product_a.id}],
@@ -565,8 +589,8 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
     ####################################################
 
     def test_send_and_print(self):
+        self.env.company.partner_id = self.partner_1
         invoice = self._generate_move(
-            self.partner_1,
             self.partner_2,
             send=False,
             move_type='out_invoice',
