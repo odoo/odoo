@@ -575,6 +575,7 @@ class HrVersion(models.Model):
         salary_simulation = self.env.context.get('salary_simulation')
         if not salary_simulation and any(key in dependent_fields for key in vals):
             for version in self:
+                version = version.sudo()
                 date_from = max(version.date_start, version.date_generated_from.date())
                 date_to = min(version.date_end or date.max, version.date_generated_to.date())
                 if date_from != date_to and self.employee_id:

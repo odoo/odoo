@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="group_hr_contract_template_editor" model="res.groups">
+        <field name="name">Contract Template Editor</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
 
     <record model="res.groups.privilege" id="res_groups_privilege_employees">
         <field name="name">Employees</field>
@@ -112,6 +116,17 @@
         <field name="name">HR Contract: Multi Company</field>
         <field name="model_id" ref="model_hr_version"/>
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_hr_contract_template_editor" model="ir.rule">
+        <field name="name">HR Contract: Contract Template Editor</field>
+        <field name="model_id" ref="hr.model_hr_version"/>
+        <field name="domain_force">[('company_id', 'in', [False] + company_ids), ('employee_id', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('group_hr_contract_template_editor'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
     </record>
 
     <record id="ir_rule_hr_payroll_structure_type_multi_company" model="ir.rule">

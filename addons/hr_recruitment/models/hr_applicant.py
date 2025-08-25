@@ -792,7 +792,7 @@ class HrApplicant(models.Model):
         return {
             'name': _('Employee'),
             'type': 'ir.actions.act_window',
-            'res_model': 'hr.employee',
+            'res_model': 'hr.employee' if self.env.user.has_group('hr.group_hr_user') else 'hr.employee.public',
             'view_mode': 'form',
             'res_id': self.employee_id.id,
         }
@@ -998,28 +998,28 @@ class HrApplicant(models.Model):
         if not self.partner_id:
             if not self.partner_name:
                 raise UserError(_('Please provide an applicant name.'))
-            self.partner_id = self.env['res.partner'].create({
+            self.partner_id = self.env['res.partner'].sudo().create({
                 'is_company': False,
                 'name': self.partner_name,
                 'email': self.email_from,
             })
 
-        action = self.env['ir.actions.act_window']._for_xml_id('hr.open_view_employee_list')
-        employee = self.env['hr.employee'].with_context(clean_context(self.env.context)).create(self._get_employee_create_vals())
-        action['res_id'] = employee.id
-        employee_attachments = self.env['ir.attachment'].search([('res_model', '=','hr.employee'), ('res_id', '=', employee.id)])
-        unique_attachments = self.attachment_ids.filtered(
-            lambda attachment: attachment.datas not in employee_attachments.mapped('datas')
-        )
-        unique_attachments.copy({'res_model': 'hr.employee', 'res_id': employee.id})
-        employee.write({
+        employee_vals = {
+            **self._get_employee_create_vals(),
             'job_id': self.job_id.id,
             'job_title': self.job_id.name,
             'department_id': self.department_id.id,
-            'work_email': self.department_id.company_id.email or self.email_from, # To have a valid email address by default
+            'work_email': self.department_id.company_id.email or self.email_from,  # To have a valid email address by default
             'work_phone': self.department_id.company_id.phone,
-        })
-        return action
+        }
+        employee = self.env['hr.employee'].sudo().with_context(clean_context(self.env.context)).create(employee_vals)
+        self.employee_id = employee.id
+        employee_attachments = self.env['ir.attachment'].search([('res_model', '=', 'hr.employee'), ('res_id', '=', employee.id)])
+        unique_attachments = self.attachment_ids.filtered(
+            lambda attachment: attachment.datas not in employee_attachments.mapped('datas')
+        )
+        unique_attachments.sudo().copy({'res_model': 'hr.employee', 'res_id': employee.id})
+        return self.action_open_employee()
 
     def _get_employee_create_vals(self):
         self.ensure_one()
