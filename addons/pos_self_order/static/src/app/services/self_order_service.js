@@ -241,10 +241,8 @@ export class SelfOrder extends Reactive {
                         const attrVal = this.models["product.template.attribute.value"].get(
                             Number(optionId)
                         );
-                        if (attrVal.attribute_id.create_variant !== "always") {
-                            values.price_extra += attrVal.price_extra;
-                            acc.push(["link", attrVal]);
-                        }
+                        values.price_extra += attrVal.price_extra;
+                        acc.push(["link", attrVal]);
                     });
                     return acc;
                 },
