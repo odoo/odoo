@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil.relativedelta import relativedelta
-from itertools import chain
 from unittest.mock import patch, PropertyMock
 
 from odoo import Command, fields
@@ -1775,13 +1774,10 @@ class TestRatingStatsPerformance(HttpCase, MailCommon):
         """
         Computation of rating_stats should run a single query per model with rating_stats enabled.
         """
-        first_model_records = self.env["mail.test.rating"].create(
-            [{"name": f"Ticket {i}"} for i in range(3)]
-        )
-        second_model_records = self.env["slide.channel"].create(
-            [{"name": f"Course {i}"} for i in range(3)]
-        )
-        for record in chain(first_model_records, second_model_records):
+        record_a = self.env["mail.test.rating"].create({"name": "Ticket A1"})
+        record_b = self.env["slide.channel"].create({"name": "Course B1"})
+
+        for record in [record_a, record_b]:
             record.message_post(
                 body=f"<p>Test message for {record.name}</p>",
                 message_type="comment",
@@ -1789,5 +1785,12 @@ class TestRatingStatsPerformance(HttpCase, MailCommon):
                 rating_value="4",
             )
         self.authenticate(self.user_employee.login, self.user_employee.password)
-        with self.assertQueryCount(28):
+        self.env.invalidate_all()
+        self.env.registry.clear_cache()
+        with self.assertQueryCount(49):
+            self.make_jsonrpc_request("/mail/inbox/messages")
+
+        self.env.invalidate_all()
+        self.env.registry.clear_cache()
+        with self.assertQueryCount(47):
             self.make_jsonrpc_request("/mail/inbox/messages")
