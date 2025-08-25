@@ -1414,6 +1414,13 @@ class ChromeBrowser:
                 self._logger.debug('\n<- %s', msg)
             except websocket.WebSocketTimeoutException:
                 continue
+            except websocket.WebSocketConnectionClosedException as e:
+                if not self._result.done():
+                    self.ws = None
+                    self._result.set_exception(e)
+                    for f in self._responses.values():
+                        f.cancel()
+                return
             except Exception as e:
                 if isinstance(e, ConnectionResetError) and self._result.done():
                     return
