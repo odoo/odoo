@@ -357,7 +357,7 @@
             ('include', 'website.website_builder_assets'),
             'website/static/tests/mock_server/**/*',
             'website/static/tests/redirect_field.test.js',
-            'website/static/tests/new_content_modal.test.js',
+            'website/static/tests/new_content_systray_item.test.js',
         ],
         'web.assets_unit_tests_setup': [
             'html_builder/static/src/utils/scrolling.js',
