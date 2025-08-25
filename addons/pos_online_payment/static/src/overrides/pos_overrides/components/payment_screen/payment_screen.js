@@ -5,11 +5,12 @@ import { OnlinePaymentPopup } from "@pos_online_payment/app/online_payment_popup
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { qrCodeSrc } from "@point_of_sale/utils";
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { serializeDateTime } from "@web/core/l10n/dates";
 
 patch(PaymentScreen.prototype, {
     async addNewPaymentLine(paymentMethod) {
         if (paymentMethod.is_online_payment && typeof this.currentOrder.id === "string") {
-            this.currentOrder.date_order = luxon.DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss");
+            this.currentOrder.date_order = serializeDateTime(luxon.DateTime.now());
             this.pos.addPendingOrder([this.currentOrder.id]);
             await this.pos.syncAllOrders();
         }
