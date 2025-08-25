@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { mountWithCleanup, onRpc} from "@web/../tests/web_test_helpers";
-import { NewContentModal } from "@website/client_actions/website_preview/new_content_modal";
+import { NewContentModal } from "@website/client_actions/website_preview/new_content_systray_item";
 import { defineWebsiteModels } from "./builder/website_helpers";
 
 defineWebsiteModels();
