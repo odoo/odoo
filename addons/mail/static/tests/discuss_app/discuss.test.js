@@ -597,7 +597,7 @@ test("last discuss conversation is remembered", async () => {
     browser.localStorage.setItem(LAST_DISCUSS_ACTIVE_ID_LS, "discuss.channel_" + channelId);
     await start();
     await openDiscuss();
-    await contains("h1", { text: "Welcome to #General!" });
+    await contains("[role=\"heading\"]", { text: "Welcome to #General!" });
 });
 
 test("sidebar: default no conversation selected", async () => {
