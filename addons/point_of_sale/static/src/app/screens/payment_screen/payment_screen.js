@@ -374,7 +374,7 @@ export class PaymentScreen extends Component {
     }
     handleValidationError(error) {
         if (error instanceof ConnectionLostError) {
-            this.pos.navigate(this.nextPage.page, this.nextPage.params);
+            this.afterOrderValidation();
             Promise.reject(error);
         } else if (error instanceof RPCError) {
             this.currentOrder.state = "draft";
