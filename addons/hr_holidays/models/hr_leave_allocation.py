@@ -765,7 +765,7 @@ class HrLeaveAllocation(models.Model):
 
         self.add_follower(employee_id)
 
-        if 'number_of_days_display' not in values and 'number_of_hours_display' not in values:
+        if 'number_of_days_display' not in values and 'number_of_hours_display' not in values and 'state' not in values:
             res = super().write(values)
             if 'allocation_type' in values:
                 self._add_lastcalls()
@@ -865,13 +865,6 @@ class HrLeaveAllocation(models.Model):
         current_employee = self.env.user.employee_id
         if any(allocation.state not in ['confirm', 'validate', 'validate1'] for allocation in self):
             raise UserError(_('Allocation request must be confirmed, second approval or validated in order to refuse it.'))
-
-        days_per_allocation = self.employee_id._get_consumed_leaves(self.holiday_status_id)[0]
-
-        for allocation in self:
-            days_taken = days_per_allocation[allocation.employee_id][allocation.holiday_status_id][allocation]['virtual_leaves_taken']
-            if days_taken > 0:
-                raise UserError(_('You cannot refuse this allocation request since the employee has already taken leaves for it. Please refuse or delete those leaves first.'))
 
         self.write({'state': 'refuse', 'approver_id': current_employee.id})
         self.activity_update()
