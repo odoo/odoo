@@ -168,7 +168,7 @@
         'website.backend_assets_all_wysiwyg': [
             'website_sale/static/src/js/components/wysiwyg_adapter/wysiwyg_adapter.js',
         ],
-        'website.inside_builder_style': [
+        'website.assets_edit_frontend': [
             'web/static/lib/bootstrap/scss/_variables.scss',
             'website_sale/static/src/website_builder/**/*.inside.scss',
         ],
