@@ -191,7 +191,9 @@ class MailComposeMessage(models.TransientModel):
         help="In comment mode: if set, postpone notifications sending. "
              "In mass mail mode: if sent, send emails after that date. "
              "This date is considered as being in UTC timezone.")
-    use_exclusion_list = fields.Boolean('Check Exclusion List', default=True)
+    use_exclusion_list = fields.Boolean(
+        'Use Exclusion List', default=True, copy=False,
+        help='Prevent sending messages to blacklisted contacts. Disable only when absolutely necessary.')
     # template generation
     template_name = fields.Char('Template Name')
 

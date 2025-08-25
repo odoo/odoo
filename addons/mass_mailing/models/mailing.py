@@ -175,6 +175,9 @@ class MailingMailing(models.Model):
         default=_get_default_mail_server_id,
         help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.")
     contact_list_ids = fields.Many2many('mailing.list', 'mail_mass_mailing_list_rel', string='Mailing Lists')
+    use_exclusion_list = fields.Boolean(
+        'Use Exclusion List', default=True, copy=False,
+        help='Prevent sending messages to blacklisted contacts. Disable only when absolutely necessary.')
     # Mailing Filter
     mailing_filter_id = fields.Many2one(
         'mailing.filter', string='Favorite Filter',
@@ -1077,7 +1080,8 @@ class MailingMailing(models.Model):
         return self._action_send_mail(res_ids)
 
     def _action_send_mail(self, res_ids=None):
-        author_id = self.env.user.partner_id.id
+        odoobot = self.env.ref('base.partner_root')
+        user_partner = self.env.user.partner_id
 
         for mailing in self:
             context_user = mailing.user_id or mailing.write_uid or self.env.user
@@ -1092,7 +1096,8 @@ class MailingMailing(models.Model):
                 'auto_delete': not mailing.keep_archives,
                 # email-mode: keep original message for routing
                 'auto_delete_keep_log': mailing.reply_to_mode == 'update',
-                'author_id': author_id,
+                # If current user is odoobot, use mailing responsible (no impact on email_from)
+                'author_id': mailing.user_id.partner_id.id if user_partner == odoobot else user_partner.id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
                 'body': mailing._prepend_preview(mailing.body_html or '', mailing.preview),
                 'composition_mode': 'mass_mail',
@@ -1104,6 +1109,7 @@ class MailingMailing(models.Model):
                 'reply_to_force_new': mailing.reply_to_mode == 'new',
                 'subject': mailing.subject,
                 'template_id': False,
+                'use_exclusion_list': mailing.use_exclusion_list,
             }
             if mailing.reply_to_mode == 'new':
                 composer_values['reply_to'] = mailing.reply_to
@@ -1460,10 +1466,6 @@ class MailingMailing(models.Model):
         mailing_domain = Domain.TRUE
         if hasattr(self.env[self.mailing_model_name], '_mailing_get_default_domain'):
             mailing_domain = Domain(self.env[self.mailing_model_name]._mailing_get_default_domain(self))
-
-        if self.mailing_type == 'mail' and 'is_blacklisted' in self.env[self.mailing_model_name]._fields:
-            mailing_domain = Domain('is_blacklisted', '=', False) & mailing_domain
-
         return mailing_domain
 
     def _get_image_by_url(self, url, session):
