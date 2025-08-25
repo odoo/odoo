@@ -1563,3 +1563,13 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'request_date_from': '2024-07-01',
                 'request_date_to': '2024-07-02',
             })
+
+    def test_duration_display_without_request_date_to(self):
+        req_form = Form(self.env['hr.leave'])
+        req_form.employee_id = self.employee_emp
+        req_form.holiday_status_id = self.holidays_type_1
+
+        req_form.request_date_from = fields.Date.to_date('2025-08-26')
+        req_form.request_date_to = False
+
+        self.assertEqual(req_form.duration_display, "0 days")

@@ -357,7 +357,7 @@ class HrLeave(models.Model):
             # used to get the contracts for which these leaves apply and
             # contract start- and end-dates are just dates (and not datetimes)
             # these dates are comparable.
-            if not leave.employee_id:
+            if not leave.employee_id or not leave.request_date_from or not leave.request_date_to:
                 continue
             contracts = self.env['hr.version'].search([('employee_id', '=', leave.employee_id.id)]).filtered(
                 lambda c: c.date_start <= leave.request_date_to and
