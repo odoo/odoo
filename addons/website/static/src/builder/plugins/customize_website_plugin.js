@@ -18,7 +18,7 @@ export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
 
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
-    static dependencies = ["builderActions", "history", "savePlugin"];
+    static dependencies = ["builderActions", "history", "savePlugin", "edit_interaction"];
     static shared = [
         "customizeWebsiteColors",
         "customizeWebsiteVariables",
@@ -234,6 +234,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 el.remove();
             }
         });
+        this.dependencies.edit_interaction.restartInteractions();
     }
 
     // -------------------------------------------------------------------------
