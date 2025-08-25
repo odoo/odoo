@@ -31,8 +31,15 @@ test("Can highlight a selected text", async () => {
     await waitFor(".o_popover .o_text_highlight_underline");
 
     expect("p>.o_text_highlight_underline").toHaveCount(0);
+    const color = getComputedStyle(document.documentElement).getPropertyValue("--o-color-1");
+    expect(".o_popover .o_text_highlight_underline").toHaveStyle({
+        "--text-highlight-color": color,
+    });
     await click(".o_popover .o_text_highlight_underline");
     expect("p>.o_text_highlight_underline").toHaveCount(1);
+    expect("span.o_text_highlight_freehand_2").toHaveStyle({
+        "--text-highlight-color": color,
+    });
 });
 
 test("Can set a color to a highlight", async () => {
@@ -49,9 +56,9 @@ test("Can set a color to a highlight", async () => {
     await animationFrame();
     await click("#colorButton");
     await animationFrame();
-    await click("button[style='background-color: var(--o-color-1)']");
+    await click("button[style='background-color: var(--o-color-2)']");
     await animationFrame();
-    const color = getComputedStyle(document.documentElement).getPropertyValue("--o-color-1");
+    const color = getComputedStyle(document.documentElement).getPropertyValue("--o-color-2");
     expect("span.o_text_highlight_freehand_2").toHaveStyle({
         "--text-highlight-color": color,
     });

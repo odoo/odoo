@@ -11,6 +11,7 @@ export class HighlightPicker extends Component {
         selectHighlight: Function,
         previewHighlight: Function,
         revertHighlight: Function,
+        style: { type: String, optional: true },
     };
 
     setup() {
