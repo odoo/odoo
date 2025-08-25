@@ -7,7 +7,7 @@
                 'o-green': props.message.parent_id.bubbleColor === 'green',
                 'o-orange': props.message.parent_id.bubbleColor === 'orange',
             }">
-                <span class="d-inline-flex align-items-center text-muted opacity-75" t-att-class="{ 'cursor-pointer opacity-100-hover': props.onClick }" t-on-click="() => this.props.onClick?.()">
+                <span class="d-inline-flex align-items-center" t-att-class="{ 'cursor-pointer': props.onClick }" t-on-click="() => this.props.onClick?.()">
                     <t t-if="!props.message.parent_id.isEmpty">
                         <img class="o-mail-MessageInReply-avatar me-2 rounded object-fit-cover" t-att-src="authorAvatarUrl" t-att-title="props.message.parent_id.authorName" alt="Avatar"/>
                         <span class="o-mail-MessageInReply-content overflow-hidden smaller">
