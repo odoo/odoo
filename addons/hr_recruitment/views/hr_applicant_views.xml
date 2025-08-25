@@ -89,7 +89,7 @@
                         class="o_create_employee" invisible="employee_id or not active or not date_closed"/>
                 <button string="Refuse" name="archive_applicant" type="object" invisible="not active or is_pool_applicant" data-hotkey="d"/>
                 <button string="Restore" name="action_unarchive" type="object" invisible="active" data-hotkey="x"/>
-                <field name="stage_id" widget="statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="(not active and not employee_id) or is_pool_applicant"/>
+                <field name="stage_id" widget="statusbar_duration" options="{'clickable': '1'}" invisible="(not active and not employee_id) or is_pool_applicant"/>
                 <button string="Create Applications" name="action_job_add_applicants" type="object" invisible="not is_pool_applicant"/>
                 <button string="Add to Pool" name="action_talent_pool_add_applicants" type="object" invisible="is_pool_applicant or is_applicant_in_pool"/>
             </header>
