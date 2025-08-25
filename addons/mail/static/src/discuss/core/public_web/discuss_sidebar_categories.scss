@@ -36,12 +36,22 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .05;
 }
 
 .o-mail-DiscussSidebarChannel-actions button {
-    opacity: 35%;
     --border-opacity: .15;
 
-    &:hover, &.o-showingActions {
-        opacity: 100%;
-        --border-opacity: .25;
+    &.rounded-circle {
+        --oi-vertical-align: -5%;
+        aspect-ratio: 1;
+    }
+
+    @media (min-resolution: 2dppx) {
+        .oi-ellipsis-h {
+            transform: translateX(0.5px);
+        }
+    }
+
+    &:hover, &:active, &:focus-visible, &.o-showingActions {
+        --border-opacity: 1;
+        --border-color: #{$o-action};
     }
 }
 
@@ -55,6 +65,41 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .05;
     }
     &:not(.o-compact) {
         line-height: 2.35; // so that same height as actions, so folding doesn't resize
+    }
+}
+
+.o-mail-DiscussSidebarCategory {
+    &:hover {
+        outline: 1px solid transparent;
+        outline-offset: -1px;
+
+        .o-mail-DiscussSidebarCategory-title {
+            margin-left: map-get($spacers, 1);
+            transition: margin-left 0.2s;
+        }
+    }
+
+    &:hover {
+        background-color: mix($gray-100, $gray-200);
+        outline-color: mix($gray-100, $gray-200, 20%);
+    }
+
+    &:active {
+        background-color: mix($o-view-background-color, $o-action, 90%);
+        outline-color: mix($o-view-background-color, $o-action, 50%);
+    }
+    
+    &:not(:hover) {
+        .o-mail-DiscussSidebarCategory-actions {
+            visibility: hidden;
+        }
+    }
+
+}
+
+.o-mail-DiscussSidebarCategory-actions button:not(:hover) {
+    .text-success, .text-danger {
+        --color: #{$btn-color}
     }
 }
 
