@@ -64,7 +64,6 @@ export class HrHolidaysGraphRenderer extends GraphRenderer {
         let balanceDataset = {
             'trueLabels': dataset.trueLabels,
             'stack': this.balance_label,
-            'originIndex': dataset.originIndex,
             'label': label,
             'backgroundColor': backgroundColor,
             'borderRadius': dataset.borderRadius,

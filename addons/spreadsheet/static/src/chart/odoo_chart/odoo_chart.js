@@ -5,7 +5,7 @@ import { ChartDataSource, chartTypeToDataSourceMode } from "../data_source/chart
  * @typedef {import("@web/search/search_model").SearchParams} SearchParams
  *
  * @typedef MetaData
- * @property {Array<Object>} domains
+ * @property {Object} domain
  * @property {Array<string>} groupBy
  * @property {string} measure
  * @property {string} mode

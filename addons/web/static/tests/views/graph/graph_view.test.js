@@ -646,22 +646,15 @@ test("Stacked line prop click false", async () => {
         {
             backgroundColor: "#a7d3f9",
             borderColor: "#4EA7F2",
-            originIndex: 0,
             pointBackgroundColor: "#4EA7F2",
         },
         {
             backgroundColor: "#f5b0ba",
             borderColor: "#EA6175",
-            originIndex: 0,
             pointBackgroundColor: "#EA6175",
         },
     ];
-    const keysToEvaluate = [
-        "backgroundColor",
-        "borderColor",
-        "originIndex",
-        "pointBackgroundColor",
-    ];
+    const keysToEvaluate = ["backgroundColor", "borderColor", "pointBackgroundColor"];
     checkDatasets(view, keysToEvaluate, expectedDatasets);
 });
 
@@ -693,12 +686,7 @@ test("Stacked prop and default line chart", async () => {
     });
 
     const expectedDatasets = [];
-    const keysToEvaluate = [
-        "backgroundColor",
-        "borderColor",
-        "originIndex",
-        "pointBackgroundColor",
-    ];
+    const keysToEvaluate = ["backgroundColor", "borderColor", "pointBackgroundColor"];
     const datasets = getChart(view).data.datasets;
     const colors = getColors(undefined, "sm");
     for (let i = 0; i < datasets.length; i++) {
@@ -706,7 +694,6 @@ test("Stacked prop and default line chart", async () => {
         expectedDatasets.push({
             backgroundColor: lightenColor(expectedColor, 0.5),
             borderColor: expectedColor,
-            originIndex: 0,
             pointBackgroundColor: expectedColor,
         });
     }
@@ -942,7 +929,7 @@ test("pie chart rendering (no data)", async () => {
                 backgroundColor: [DEFAULT_BG],
                 borderColor: getBorderWhite(),
                 data: [1],
-                label: null,
+                label: "",
             },
         ]
     );
@@ -1014,11 +1001,10 @@ test("field id not in groupBy", async () => {
     });
 
     checkLabels(view, ["Total"]);
-    checkDatasets(view, ["backgroundColor", "data", "label", "originIndex", "stack"], {
+    checkDatasets(view, ["backgroundColor", "data", "label", "stack"], {
         backgroundColor: "#4EA7F2",
         data: [8],
         label: "Count",
-        originIndex: 0,
         stack: "",
     });
     checkLegend(view, "Count");

@@ -39,7 +39,7 @@
                 t-att-class="{ active: model.metaData.cumulated }"
             />
         </div>
-        <div t-if="model.metaData.mode !== 'pie' and model.metaData.domains.length === 1" class="btn-group" role="toolbar" aria-label="Sort graph" name="toggleOrderToolbar">
+        <div t-if="model.metaData.mode !== 'pie'" class="btn-group" role="toolbar" aria-label="Sort graph" name="toggleOrderToolbar">
             <button class="btn btn-secondary fa fa-sort-amount-desc o_graph_button" data-tooltip="Descending" aria-label="Descending"
                 t-on-click="() => this.toggleOrder('DESC')"
                 t-att-class="{ active: model.metaData.order === 'DESC' }"
