@@ -1593,3 +1593,51 @@ class TestPointOfSaleFlow(CommonPosTest):
         refund_payment.with_context(**payment_context).check()
         current_session.close_session_from_ui()
         self.assertEqual(current_session.picking_ids.mapped('state'), ['done', 'done'])
+
+    def test_ptav_load_after_extra_price_change(self):
+        product = self.env['product.template'].create({
+            'name': 'Product Test',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+        })
+
+        attribute = self.env['product.attribute'].create({
+            'name': 'Attribute',
+            'create_variant': 'no_variant',
+            'value_ids': [(0, 0, {
+                'name': 'Value 1',
+            }), (0, 0, {
+                'name': 'Value 2',
+            })],
+        })
+
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product.id,
+            'attribute_id': attribute.id,
+            'value_ids': [(6, 0, attribute.value_ids.ids)],
+            'sequence': 3,
+        })
+
+        first_ptav = product.attribute_line_ids.product_template_value_ids[0]
+
+        self.pos_config_usd.open_ui()
+        loaded_ptav = self.pos_config_usd.current_session_id.load_data([])['product.template.attribute.value']
+
+        self.assertIn(first_ptav.id, [ptav['id'] for ptav in loaded_ptav])
+
+        loaded_ptav = self.pos_config_usd.current_session_id.with_context(
+            pos_limited_loading=True,
+            pos_last_server_date=fields.Datetime.to_string(fields.Datetime.now()),
+        ).load_data([])['product.template.attribute.value']
+
+        self.assertNotIn(first_ptav.id, [ptav['id'] for ptav in loaded_ptav])
+
+        first_ptav.write({'price_extra': 5})
+
+        loaded_ptav = self.pos_config_usd.current_session_id.with_context(
+            pos_limited_loading=True,
+            pos_last_server_date=fields.Datetime.to_string(first_ptav.write_date - timedelta(seconds=1)),
+        ).load_data([])['product.template.attribute.value']
+
+        self.assertIn(first_ptav.id, [ptav['id'] for ptav in loaded_ptav])
