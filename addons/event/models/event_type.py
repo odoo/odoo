@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 
 
@@ -28,11 +28,7 @@ class EventType(models.Model):
                  })]
 
     def _default_question_ids(self):
-        return [
-            (0, 0, {'title': _('Name'), 'question_type': 'name', 'is_mandatory_answer': True}),
-            (0, 0, {'title': _('Email'), 'question_type': 'email', 'is_mandatory_answer': True}),
-            (0, 0, {'title': _('Phone'), 'question_type': 'phone'}),
-        ]
+        return self.env['event.question'].search([('is_default', '=', True), ('active', '=', True)]).ids
 
     name = fields.Char('Event Template', required=True, translate=True)
     note = fields.Html(string='Note')
@@ -55,8 +51,8 @@ class EventType(models.Model):
     # ticket reports
     ticket_instructions = fields.Html('Ticket Instructions', translate=True,
         help="This information will be printed on your tickets.")
-    question_ids = fields.One2many(
-        'event.question', 'event_type_id', default=_default_question_ids,
+    question_ids = fields.Many2many(
+        'event.question', default=_default_question_ids,
         string='Questions', copy=True)
 
     @api.depends('has_seats_limitation')
