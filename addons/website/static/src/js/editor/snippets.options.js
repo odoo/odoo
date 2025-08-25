@@ -2454,6 +2454,12 @@ options.registry.Parallax = options.Class.extend({
                 this.parallaxEl = document.createElement('span');
                 this.parallaxEl.classList.add('s_parallax_bg');
                 this.$target.prepend(this.parallaxEl);
+                // Remove the repeat class and background-size from the original
+                // target to prevent gradient repetition in multi-background
+                // setup (image + gradient).
+                const targetEl = this.$target[0];
+                targetEl.style.removeProperty("background-size");
+                targetEl.classList.remove("o_bg_img_opt_repeat");
             }
         } else {
             if (this.parallaxEl) {
