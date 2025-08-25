@@ -114,8 +114,10 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
 
         order = self.pos_config.current_session_id.order_ids[0]
         self.assertEqual(order.lines[0].product_id.id, chair_product_tmpl.product_variant_ids[0].id)
+        self.assertEqual(order.lines[0].attribute_value_ids.ids, chair_product_tmpl.product_variant_ids[0].product_template_attribute_value_ids.ids)
         self.assertEqual(order.lines[0].price_unit, 10.0)
         self.assertEqual(order.lines[1].product_id.id, chair_product_tmpl.product_variant_ids[1].id)
+        self.assertEqual(order.lines[1].attribute_value_ids.ids, chair_product_tmpl.product_variant_ids[1].product_template_attribute_value_ids.ids)
         self.assertEqual(order.lines[1].price_unit, 15.0)
 
     def test_self_order_product_info(self):

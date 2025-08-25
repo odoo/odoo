@@ -60,10 +60,7 @@ export class CartPage extends Component {
     }
 
     getAttributes(line) {
-        return [
-            ...(line.attribute_value_ids || []),
-            ...(line.product_id.product_template_attribute_value_ids || []),
-        ];
+        return [...(line.attribute_value_ids || [])];
     }
 
     async cancelOrder() {
