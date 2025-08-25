@@ -47,7 +47,9 @@ class SmsComposer(models.TransientModel):
     # options for comment and mass mode
     mass_keep_log = fields.Boolean('Keep a note on document', default=True)
     mass_force_send = fields.Boolean('Send directly', default=False)
-    mass_use_blacklist = fields.Boolean('Use blacklist', default=True)
+    use_exclusion_list = fields.Boolean(
+        'Use Exclusion List', default=True, copy=False,
+        help='Prevent sending messages to blacklisted contacts. Disable only when absolutely necessary.')
     # recipients
     recipient_valid_count = fields.Integer('# Valid recipients', compute='_compute_recipients', compute_sudo=False)
     recipient_invalid_count = fields.Integer('# Invalid recipients', compute='_compute_recipients', compute_sudo=False)
@@ -276,7 +278,7 @@ class SmsComposer(models.TransientModel):
     def _get_blacklist_record_ids(self, records, recipients_info):
         """ Get a list of blacklisted records. Those will be directly canceled
         with the right error code. """
-        if self.mass_use_blacklist:
+        if self.use_exclusion_list:
             bl_numbers = self.env['phone.blacklist'].sudo().search([]).mapped('number')
             return [r.id for r in records if recipients_info[r.id]['sanitized'] in bl_numbers]
         return []
