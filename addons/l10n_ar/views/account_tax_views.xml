@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tax_form-l10n_ar" model="ir.ui.view">
+        <field name="name">account.tax.form.l10n_ar.inherit</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount']/.." position="after">
+                <field name="l10n_ar_state_id" invisible="l10n_ar_tribute_afip_code != '07'" required="l10n_ar_tribute_afip_code == '07'" options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

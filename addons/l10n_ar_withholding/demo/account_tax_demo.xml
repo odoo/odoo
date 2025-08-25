@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- activate Cordoba taxes -->
+    <function model="account.tax" name="write" context="{'active_test': False}">
+        <value model="account.tax" eval="obj().search([('name', 'like', 'CBA'), ('company_id', '=', ref('base.company_ri'))]).ids"/>
+        <value model="account.tax" eval="{'active': True}"/>
+    </function>
+
+</odoo>
