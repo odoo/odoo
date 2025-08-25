@@ -304,9 +304,6 @@ export class WebsiteBuilderClientAction extends Component {
             loadBundle("website.assets_edit_frontend", {
                 targetDoc: this.websiteContent.el.contentDocument,
             }),
-            loadBundle("website.inside_builder_style", {
-                targetDoc: this.websiteContent.el.contentDocument,
-            }),
         ]);
     }
 

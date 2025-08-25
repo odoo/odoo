@@ -151,15 +151,15 @@ export async function setupWebsiteBuilder(
             this.iframeLoaded = iframeLoaded;
         },
         async loadAssetsEditBundle() {
-            // To instantiate interactions in the iframe test we need to
-            // load the edit and frontend bundle in it. The problem is that
-            // Hoot does not have control of this iframe and therefore
-            // does not mock anything in it (location, rpc, ...). So we don't
-            // load the website.assets_edit_frontend bundle.
+            // To instantiate interactions in the iframe test we need to load
+            // the frontend bundle in it. The problem is that Hoot does not have
+            // control of this iframe and therefore does not mock anything in it
+            // (location, rpc, ...). So we don't load the js part of the bundle
 
             if (loadIframeBundles) {
-                await loadBundle("website.inside_builder_style", {
+                await loadBundle("website.assets_edit_frontend", {
                     targetDoc: queryOne("iframe[data-src^='/website/force/1']").contentDocument,
+                    js: false,
                 });
             }
             await resolveEditAssetsLoaded();

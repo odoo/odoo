@@ -109,7 +109,7 @@ a dependency towards website editing and customization capabilities.""",
             ("remove", "mail/static/src/**/*.dark.scss"),
             "portal/static/src/chatter/scss/shadow.scss",
         ],
-        'website.inside_builder_style': [
+        'website.assets_edit_frontend': [
             'portal/static/src/scss/portal.inside.scss'
         ],
     },
