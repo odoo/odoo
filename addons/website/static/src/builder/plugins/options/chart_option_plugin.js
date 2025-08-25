@@ -283,6 +283,7 @@ export class ColorChangeAction extends BaseChartAction {
         }
     }
     apply({ editingElement, value, params: { type, datasetIndex, dataIndex } }) {
+        value = value.replace("var(--", "").replace(")", "");
         const data = this.getData(editingElement);
         if (this.isPieChart(editingElement)) {
             data.datasets[datasetIndex][type][dataIndex] = value;
