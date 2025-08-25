@@ -29,8 +29,12 @@ class WebsiteSaleVariantController(Controller):
             uom_id=uom_id,
         )
 
-        # Pop data only computed to ease server-side computations.
-        for key in ('product_taxes', 'taxes', 'currency', 'date', 'combination'):
+        for key in (
+            # Only provided to ease server-side computations.
+            'product_taxes', 'taxes', 'currency', 'date', 'combination',
+            # Only used in Google Merchant Center logic, not client-side.
+            'discount_start_date', 'discount_end_date'
+        ):
             combination_info.pop(key)
 
         product = request.env['product.product'].browse(combination_info['product_id'])
