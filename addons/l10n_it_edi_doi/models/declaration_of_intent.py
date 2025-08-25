@@ -41,7 +41,7 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
         string='Partner',
         index=True,
         required=True,
-        domain="['|', ('is_company', '=', True), ('parent_id', '=', False)]",
+        domain="['&', ('vat', '!=', False), ('parent_id', '=', False)]",
     )
 
     currency_id = fields.Many2one(
