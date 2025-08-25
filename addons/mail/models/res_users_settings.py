@@ -37,6 +37,8 @@ class ResUsersSettings(models.Model):
             volume_settings = self.volume_settings_ids._discuss_users_settings_volume_format()
             res.pop('volume_settings_ids', None)
             res['volumes'] = [('ADD', volume_settings)]
+        if "mute_until_dt" in fields_to_format:
+            res["mute_until_dt"] = fields.Datetime.to_string(self.mute_until_dt)
         return res
 
     def set_custom_notifications(self, custom_notifications):
