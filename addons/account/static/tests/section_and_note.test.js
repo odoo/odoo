@@ -875,8 +875,7 @@ test("can resequence sections", async () => {
             </form>
         `,
     });
-
-    await contains(".o_data_row:eq(11) .o_row_handle").dragAndDrop(".o_data_row:eq(0)");
+    await contains(".o_data_row:eq(11) .o_row_handle", { visible: false }).dragAndDrop(".o_data_row:eq(0)");
     expect(queryAllTexts(".o_data_row")).toEqual(
         ["C", "r1", "r2", "A", "A1", "A2", "B", "B1", "B2", "Ba", "Ba1", "Ba2", "C1"],
         {

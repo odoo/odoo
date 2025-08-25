@@ -2,45 +2,70 @@
 // The goal of this file is to contain CSS hacks related to allowing
 // section and note on sale order and invoice.
 
-table.o_section_and_note_list_view tr.o_data_row {
-    &.o_is_line_note {
-        font-style: italic;
-    }
-    &.o_is_line_section {
-        font-weight: bold;
-        background-color: #DDDDDD;
-        --table-bg: var(--300);
-    }
-    &.o_is_line_subsection {
-        --table-bg: var(--200);
-    }
-    &.o_is_line_section, &.o_is_line_subsection {
-        border-top: 1px solid #BBB;
-        border-bottom: 1px solid #BBB;
-        .o_list_section_options {
-            width: 1px;  // to prevent the column to expand
-            button {
-                padding: 0px;
-                background: none;
-                border-style: none;
-                display: table-cell;
-                cursor: pointer;
+table.o_section_and_note_list_view {
+    --o-SectionAndNote-border-color: #{$gray-500};
+    $_SectionAndNote-transition: 0.1s ease-in-out;
+
+    tr {
+        &.o_is_line_note {
+            font-style: italic;
+        }
+
+        &.o_is_line_section, &.o_is_line_subsection {
+            --table-striped-bg: var(--table-bg-type);
+
+            .o_list_section_options {
+                width: 1px;  // to prevent the column to expand
+            }
+
+            td[name="price_subtotal"] {
+                color: $gray-700;
             }
         }
-        &.o_selected_row {
-            th:focus-within, td:focus-within {
-                background-color: var(--table-bg);
+
+        &.o_is_line_section {
+            --table-hover-bg: #{rgba($body-emphasis-color, .08)};
+            --table-bg-type: #{rgba($body-emphasis-color, .06)};
+
+            .o_handle_cell .o_row_handle {
+                transition: opacity $_SectionAndNote-transition;
+            }
+
+            &:where(:not(.o_selected_row)) {
+                div:has(> div.o_field_product_label_section_and_note_cell) {
+                    transition: transform $_SectionAndNote-transition;
+                    position: absolute;
+                }
+
+                &:not(:hover, .o_dragged) {
+                    div:has(> div.o_field_product_label_section_and_note_cell) {
+                        transform: translateX(($font-size-base + $table-cell-padding-x-sm * 2) * -1);
+                    }
+
+                    .o_handle_cell .o_row_handle {
+                        cursor: default;
+                        pointer-events: none;
+                        opacity: 0;
+                    }
+                }
             }
         }
-    }
-    &.o_is_line_note,
-    &.o_is_line_section,
-    &.o_is_line_subsection {
-        td {
-            // There is an undeterministic CSS behaviour in Chrome related to
-            // the combination of the row's and its children's borders.
-            border: none !important;
+
+        &.o_is_line_subsection {
+            --table-hover-bg: #{rgba($body-emphasis-color, .05)};
+            --table-bg-type: #{rgba($body-emphasis-color, .03)};
         }
+
+        // Check if next sibling is a section to apply a border-color.
+        &:where(:not(.o_dragged):has(+ .o_is_line_section:not(.o_dragged, .d-table-row))) {
+            border-color: var(--o-SectionAndNote-border-color);
+        }
+    }
+
+    // Check if first tr in the table is a section to apply a border-color on
+    // the <th> els.
+    &:where(:has(tbody > tr:first-child.o_is_line_section:not(.o_dragged, .d-table-row))) th {
+        border-color: var(--o-SectionAndNote-border-color);
     }
 }
 
