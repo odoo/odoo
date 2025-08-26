@@ -29,7 +29,7 @@ class WebsiteSale(main.WebsiteSale):
                     reward = rewards
                 else:
                     reward = reward_id in rewards.ids and rewards.browse(reward_id)
-                if reward and (not reward.multi_product or request.env.get('product_id')):
+                if reward and (not reward.multi_product or request.env.context.get('product_id')):
                     reward_successfully_applied = self._apply_reward(order, reward, coupon)
 
             if reward_successfully_applied:

@@ -105,7 +105,7 @@ class TestClaimReward(TransactionCaseWithUserPortal):
             self.assertEqual(len(order.order_line), 2, 'reward line should be added to order')
             self.assertEqual(order.order_line[1].product_id, product2, 'added reward line should should contain product 2')
 
-    def test_apply_coupon_with_multiple_rewards(self):
+    def test_apply_coupon_with_multiple_rewards_claim_discount(self):
         discount_reward = self.coupon_program.reward_ids.filtered('discount')
 
         with MockRequest(self.website.env, website=self.website, sale_order_id=self.cart.id):
@@ -124,4 +124,22 @@ class TestClaimReward(TransactionCaseWithUserPortal):
                 self.cart.amount_untaxed,
                 delta=self.cart.currency_id.rounding,
                 msg="10% discount should be applied",
+            )
+
+    def test_apply_coupon_with_multiple_rewards_claim_multiproduct(self):
+        multiproduct_reward = self.coupon_program.reward_ids.filtered('reward_product_tag_id')
+
+        with MockRequest(self.website.env, website=self.website, sale_order_id=self.cart.id):
+            self.WebsiteSaleController.pricelist(promo=self.coupon.code)
+            self.assertFalse(self.cart.order_line.reward_id)
+
+            self.WebsiteSaleController.claim_reward(
+                multiproduct_reward.id,
+                code=self.coupon.code,
+                product_id=str(self.product1.id),
+            )
+            self.assertTrue(self.cart.order_line.reward_id, "Reward should be added")
+            self.assertIn(
+                self.product1, self.cart.order_line.product_id,
+                "Chosen reward product should be added to order",
             )
