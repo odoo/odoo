@@ -230,7 +230,10 @@
     <div t-attf-class="o_wevent_dates_block {{is_one_day_without_slots and 'd-flex flex-wrap justify-content-between align-items-center gap-2'}}">
         <div t-if="opt_event_dates_block" class="pb-3 flex-wrap gap-3 w-lg-100">
             <div t-if="event.is_multi_slots">
-                <small class="fw-bold">Next Dates</small>
+                <small class="d-flex align-items-end justify-content-between gap-2 fw-bold text-nowrap">
+                    Next Dates
+                    <span t-if="website_visitor_timezone != event.date_tz" class="text-truncate small fw-normal" t-out="event.date_tz"/>
+                </small>
                 <div class="card bg-transparent py-3 px-2 px-md-3">
                     <!-- Up to the next 3 closest dates -->
                     <t t-set="slots_to_preview" t-value="dict(list(slots.items())[:3])"/>
@@ -669,7 +672,8 @@
                             <time t-out="date" class="text-nowrap pe-5 me-5" t-options="{'widget': 'date', 'format': 'full'}"/>
                             <div class="d-flex flex-wrap gap-2">
                                 <button type="button" t-foreach="slots[date]" t-as="slot" class="o_wevent_slot_btn btn btn-sm btn-light"
-                                    t-att-data-slot-id="slot.id" t-att-data-slot-start="slot.start_datetime">
+                                    t-att-data-slot-id="slot.id" t-att-data-event-tz="event.date_tz"
+                                    t-att-data-slot-start="slot.start_datetime" t-att-data-slot-end="slot.end_datetime">
                                     <time t-out="slot.start_datetime" class="lh-1"
                                         t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
                                 </button>

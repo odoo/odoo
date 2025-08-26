@@ -85,7 +85,9 @@ export class CalendarCommonRenderer extends Component {
             },
             () => [this.fc.el]
         );
-        useSquareSelection();
+        useSquareSelection({
+            cellIsSelectable: this.constructor.cellIsSelectable,
+        });
     }
 
     get options() {

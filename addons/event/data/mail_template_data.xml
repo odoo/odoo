@@ -63,16 +63,33 @@
                             <strong t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</strong>.
                         </t>
                     </div>
-                    <div>
-                        <br />
-                        <strong>Add this event to your calendar</strong>
-                        <a t-attf-href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}&amp;details={{ object.event_id._get_external_description() }}" t-attf-style="padding:3px 5px; color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Google</a>
-                        <a t-attf-href="/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}" t-attf-style="padding:3px 5px; color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; text-decoration:none;border-radius:3px;"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> iCal/Outlook</a>
-                        <a t-attf-href="https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_begin_date, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}&amp;et={{ format_datetime(object.event_end_date, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}" t-attf-style="padding:3px 5px; color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; text-decoration:none;border-radius:3px;" target="new">
-                            <img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Yahoo
-                        </a>
-                        <br /><br />
-                    </div>
+                    <br/>
+                    <table style="width: auto;">
+                        <tr>
+                            <td>
+                                <strong>Add this event to your calendar</strong>
+                            </td>
+                            <td>
+                                <a t-attf-href="/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}"
+                                    style="padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                                    <img src="/event/static/src/img/apple-calendar.svg" alt="iCal" title="iCal" style="height: 20px; vertical-align: baseline;"/>
+                                </a>
+                            </td>
+                            <td>
+                                <a t-attf-href="/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}"
+                                    style="padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                                    <img src="/event/static/src/img/outlook-calendar.svg" alt="Outlook" title="Outlook" style="height: 20px; vertical-align: baseline;"/>
+                                </a>
+                            </td>
+                            <td>
+                                <a t-attf-href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}&amp;details={{ object.event_id._get_external_description() }}" target="new"
+                                    style="padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                                    <img src="/event/static/src/img/google-calendar.svg" alt="Google" title="Google" style="height: 20px; vertical-align: baseline;"/>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                    <br/><br/>
                     <div>
                         See you soon,<br/>
                         <span style="color: #454748;">
@@ -333,16 +350,33 @@
                             <t t-out="object.sale_order_line_id.price_unit" t-options="{'widget': 'monetary', 'display_currency': object.sale_order_line_id.currency_id}"/>
                         </t>.
                     </div>
-                    <div>
-                        <br />
-                        <strong>Add this event to your calendar</strong>
-                        <a t-attf-href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}&amp;details={{ object.event_id._get_external_description() }}" t-attf-style="padding:3px 5px; color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Google</a>
-                        <a t-attf-href="/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}" t-attf-style="padding:3px 5px; ;color:{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; text-decoration:none;border-radius:3px;"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> iCal/Outlook</a>
-                        <a t-attf-href="https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_begin_date, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}&amp;et={{ format_datetime(object.event_end_date, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}" t-attf-style="padding:3px 5px; color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; text-decoration:none;border-radius:3px;" target="new">
-                            <img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Yahoo
-                        </a>
-                        <br /><br />
-                    </div>
+                    <br/>
+                    <table style="width: auto;">
+                        <tr>
+                            <td>
+                                <strong>Add this event to your calendar</strong>
+                            </td>
+                            <td>
+                                <a t-attf-href="/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}"
+                                    style="padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                                    <img src="/event/static/src/img/apple-calendar.svg" alt="iCal" title="iCal" style="height: 20px; vertical-align: baseline;"/>
+                                </a>
+                            </td>
+                            <td>
+                                <a t-attf-href="/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}"
+                                    style="padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                                    <img src="/event/static/src/img/outlook-calendar.svg" alt="Outlook" title="Outlook" style="height: 20px; vertical-align: baseline;"/>
+                                </a>
+                            </td>
+                            <td>
+                                <a t-attf-href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}&amp;details={{ object.event_id._get_external_description() }}" target="new"
+                                    style="padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                                    <img src="/event/static/src/img/google-calendar.svg" alt="Google" title="Google" style="height: 20px; vertical-align: baseline;"/>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                    <br/><br/>
                     <div>
                         See you soon,<br/>
                         <span style="color: #454748;">
@@ -590,16 +624,33 @@
                         </t>
                         is starting <strong t-out="object.event_date_range or ''">today</strong>.
                     </div>
-                    <div>
-                        <br />
-                        <strong>Add this event to your calendar</strong>
-                        <a t-attf-href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}&amp;details={{ object.event_id._get_external_description() }}" t-attf-style="padding:3px 5px; color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Google</a>
-                        <a t-attf-href="/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}" t-attf-style="padding:3px 5px; color:{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; text-decoration:none;border-radius:3px;"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> iCal/Outlook</a>
-                        <a t-attf-href="https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_begin_date, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}&amp;et={{ format_datetime(object.event_end_date, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}" t-attf-style="padding:3px 5px; color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; text-decoration:none;border-radius:3px;" target="new">
-                            <img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Yahoo
-                        </a>
-                        <br /><br />
-                    </div>
+                    <br/>
+                    <table style="width: auto;">
+                        <tr>
+                            <td>
+                                <strong>Add this event to your calendar</strong>
+                            </td>
+                            <td>
+                                <a t-attf-href="/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}"
+                                    style="padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                                    <img src="/event/static/src/img/apple-calendar.svg" alt="iCal" title="iCal" style="height: 20px; vertical-align: baseline;"/>
+                                </a>
+                            </td>
+                            <td>
+                                <a t-attf-href="/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}"
+                                    style="padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                                    <img src="/event/static/src/img/outlook-calendar.svg" alt="Outlook" title="Outlook" style="height: 20px; vertical-align: baseline;"/>
+                                </a>
+                            </td>
+                            <td>
+                                <a t-attf-href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}&amp;details={{ object.event_id._get_external_description() }}" target="new"
+                                    style="padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                                    <img src="/event/static/src/img/google-calendar.svg" alt="Google" title="Google" style="height: 20px; vertical-align: baseline;"/>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                    <br/><br/>
                     <div>
                         We confirm your registration and hope to meet you there,<br/>
                         <span style="color: #454748;">
