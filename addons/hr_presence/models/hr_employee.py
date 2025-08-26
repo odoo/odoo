@@ -21,7 +21,7 @@ class HrEmployee(models.Model):
     # Stored field used in the presence kanban reporting view
     # to allow group by state.
     hr_presence_state_display = fields.Selection([
-        ('out_of_working_hour', 'Out of Working Hours'),
+        ('out_of_working_hour', 'Off-Hours'),
         ('present', 'Present'),
         ('absent', 'Absent'),
         ], default='out_of_working_hour')
