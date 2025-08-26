@@ -109,7 +109,7 @@ test("Clicking on the 'Blocks' or 'Theme' tab should deactivate the options", as
     expect(".oe_overlay").toHaveCount(0);
     await contains(".o-snippets-tabs button:contains('Style')").click();
     expect(".o-snippets-tabs button:contains('Style')").toHaveClass("active");
-    expect(".o_customize_tab .options-container").toHaveCount(0);
+    expect(".o_customize_tab .options-container").toHaveCount(1);
 
     await contains(":iframe .s_banner").click();
     await waitFor(".o_customize_tab .options-container");
@@ -121,7 +121,7 @@ test("Clicking on the 'Blocks' or 'Theme' tab should deactivate the options", as
     expect(".oe_overlay").toHaveCount(0);
     await contains(".o-snippets-tabs button:contains('Style')").click();
     expect(".o-snippets-tabs button:contains('Style')").toHaveClass("active");
-    expect(".o_customize_tab .options-container").toHaveCount(0);
+    expect(".o_customize_tab .options-container").toHaveCount(1);
 });
 
 test("Hotkeys on Theme and Blocks tab", async () => {
