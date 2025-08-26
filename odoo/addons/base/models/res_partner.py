@@ -725,8 +725,8 @@ class ResPartner(models.Model):
             sync_vals = commercial_partner._get_commercial_values()
             if sync_vals:
                 self.write(sync_vals)
-                self._company_dependent_commercial_sync()
                 self._commercial_sync_to_descendants()
+            self._company_dependent_commercial_sync()
 
     def _company_dependent_commercial_sync(self):
         """ Propagate sync of company dependant commercial fields to other

@@ -1000,6 +1000,22 @@ class TestPartnerAddressCompany(TransactionCase):
             self.assertEqual(child_address.with_company(company_1).barcode, 'Company 1')
             self.assertEqual(child_address.with_company(company_2).barcode, 'Company 2')
 
+    def test_company_dependent_commercial_sync_falsy_fields(self):
+        """Check that company-dependent fields still sync when unset on current company."""
+        ResPartner = self.env['res.partner']
+
+        alt_company = self.env.company.create({'name': "Alt Company"})
+        parent = ResPartner.create({'name': "Parent", 'is_company': True, 'barcode': False})
+        parent.with_company(alt_company).barcode = "BARCODE"
+
+        with (
+            patch.object(ResPartner.__class__, '_commercial_fields', lambda self: ['barcode']),
+            patch.object(ResPartner.__class__, '_validate_fields'),  # skip _check_barcode_unicity
+        ):
+            child = ResPartner.create({'name': "Child", 'parent_id': parent.id})
+            self.assertFalse(child.barcode)
+            self.assertEqual(child.with_company(alt_company).barcode, "BARCODE")
+
     def test_company_change_propagation(self):
         """ Check propagation of company_id across children """
         User = self.env['res.users']
