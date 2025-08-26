@@ -114,6 +114,7 @@ test("Can remove an highlight with the trash button", async () => {
     );
     await expandToolbar();
     expect(".o-select-highlight").toHaveCount(1);
+    expect(".o-select-highlight").toHaveClass("active");
     expect(".o_text_highlight").toHaveCount(1);
     await click(".o-we-toolbar .o-select-highlight");
     await waitFor("button[title='Reset']");
