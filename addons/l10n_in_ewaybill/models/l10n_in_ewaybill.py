@@ -486,6 +486,10 @@ class L10nInEwaybill(models.Model):
             'cancelRmrk': self.cancel_remarks,
         }
         ewb_api = EWayBillApi(self.company_id)
+        if self.error_message and self.blocking_level == 'error':
+            self.message_post(body=_(
+                "Retrying to request cancellation of E-waybill on government portal."
+            ))
         self._lock_ewaybill()
         try:
             response = ewb_api._ewaybill_cancel(cancel_json)
@@ -501,8 +505,15 @@ class L10nInEwaybill(models.Model):
         self._write_successfully_response({'state': 'cancel'})
         self.env.cr.commit()
 
+    def _log_retry_message_on_generate(self):
+        if self.error_message and self.blocking_level == 'error':
+            self.message_post(body=_(
+                "Retrying E-Waybill generation on the government portal."
+            ))
+
     def _generate_ewaybill(self):
         self.ensure_one()
+        self._log_retry_message_on_generate()
         ewb_api = EWayBillApi(self.company_id)
         self._lock_ewaybill()
         try:

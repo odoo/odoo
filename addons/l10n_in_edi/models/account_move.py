@@ -196,6 +196,9 @@ class AccountMove(models.Model):
         if self.l10n_in_edi_error:
             # make sure to clear the error before sending again
             self.l10n_in_edi_error = False
+            self.message_post(body=_(
+                "Retrying to send your E-Invoice to government portal."
+            ))
         partners = set(self._get_l10n_in_seller_buyer_party().values())
         for partner in partners:
             if partner_validation := partner._l10n_in_edi_strict_error_validation():
@@ -310,6 +313,9 @@ class AccountMove(models.Model):
         if self.l10n_in_edi_error:
             # make sure to clear the error before cancelling again
             self.l10n_in_edi_error = False
+            self.message_post(body=_(
+                "Retrying to send cancellation request for E-Invoice to government portal."
+            ))
         self._l10n_in_lock_invoice()
         l10n_in_edi_response_json = self._get_l10n_in_edi_response_json()
         cancel_json = {

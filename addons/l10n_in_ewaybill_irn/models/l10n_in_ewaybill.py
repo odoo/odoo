@@ -77,6 +77,7 @@ class L10nInEwaybill(models.Model):
 
     def _generate_ewaybill_by_irn(self):
         self.ensure_one()
+        self._log_retry_message_on_generate()
         self._lock_ewaybill()
         try:
             response = self._ewaybill_generate_by_irn(self._ewaybill_generate_irn_json())

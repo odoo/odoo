@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.1+e\n"
+"Project-Id-Version: Odoo Server saas~18.2+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-26 05:36+0000\n"
-"PO-Revision-Date: 2025-06-26 05:36+0000\n"
+"POT-Creation-Date: 2025-08-29 09:25+0000\n"
+"PO-Revision-Date: 2025-08-29 09:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -90,7 +90,7 @@ msgstr ""
 msgid ""
 "<br/>\n"
 "                                            <br/>\n"
-"                                            ::Dispatch From:: <br/><br/>"
+"                                            Dispatch From <br/><br/>"
 msgstr ""
 
 #. module: l10n_in_ewaybill
@@ -98,7 +98,7 @@ msgstr ""
 msgid ""
 "<br/>\n"
 "                                            <br/>\n"
-"                                            ::Ship To:: <br/><br/>"
+"                                            Ship To <br/><br/>"
 msgstr ""
 
 #. module: l10n_in_ewaybill
@@ -324,12 +324,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_in_ewaybill/models/error_codes.py:0
 msgid "Both Transaction and Vehicle Number Blank"
-msgstr ""
-
-#. module: l10n_in_ewaybill
-#. odoo-python
-#: code:addons/l10n_in_ewaybill/tools/ewaybill_api.py:0
-msgid "Buy Credits"
 msgstr ""
 
 #. module: l10n_in_ewaybill
@@ -767,12 +761,20 @@ msgstr ""
 #. module: l10n_in_ewaybill
 #: model:ir.model.fields,field_description:l10n_in_ewaybill.field_account_bank_statement_line__l10n_in_ewaybill_ids
 #: model:ir.model.fields,field_description:l10n_in_ewaybill.field_account_move__l10n_in_ewaybill_ids
+#: model:ir.model.fields,field_description:l10n_in_ewaybill.field_res_company__l10n_in_ewaybill_feature
+#: model:ir.model.fields,field_description:l10n_in_ewaybill.field_res_config_settings__l10n_in_ewaybill_feature
 msgid "E-Waybill"
 msgstr ""
 
 #. module: l10n_in_ewaybill
 #: model:ir.model,name:l10n_in_ewaybill.model_l10n_in_ewaybill_type
 msgid "E-Waybill Document Type"
+msgstr ""
+
+#. module: l10n_in_ewaybill
+#: model:ir.model.fields,field_description:l10n_in_ewaybill.field_account_bank_statement_line__l10n_in_ewaybill_feature_enabled
+#: model:ir.model.fields,field_description:l10n_in_ewaybill.field_account_move__l10n_in_ewaybill_feature_enabled
+msgid "E-Waybill Feature Enabled"
 msgstr ""
 
 #. module: l10n_in_ewaybill
@@ -2164,12 +2166,6 @@ msgstr ""
 
 #. module: l10n_in_ewaybill
 #. odoo-python
-#: code:addons/l10n_in_ewaybill/tools/ewaybill_api.py:0
-msgid "Please buy more credits and retry: "
-msgstr ""
-
-#. module: l10n_in_ewaybill
-#. odoo-python
 #: code:addons/l10n_in_ewaybill/models/l10n_in_ewaybill.py:0
 msgid "Please generate the E-Waybill to print it."
 msgstr ""
@@ -2247,6 +2243,18 @@ msgstr ""
 #. module: l10n_in_ewaybill
 #: model:ir.model.fields,field_description:l10n_in_ewaybill.field_l10n_in_ewaybill__activity_user_id
 msgid "Responsible User"
+msgstr ""
+
+#. module: l10n_in_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_ewaybill/models/l10n_in_ewaybill.py:0
+msgid "Retrying E-Waybill generation on the government portal."
+msgstr ""
+
+#. module: l10n_in_ewaybill
+#. odoo-python
+#: code:addons/l10n_in_ewaybill/models/l10n_in_ewaybill.py:0
+msgid "Retrying to request cancellation of E-waybill on government portal."
 msgstr ""
 
 #. module: l10n_in_ewaybill
@@ -3125,12 +3133,6 @@ msgstr ""
 msgid ""
 "You cannot update transporter details, as the current tranporter is already "
 "entered Part B details of the eway bill"
-msgstr ""
-
-#. module: l10n_in_ewaybill
-#. odoo-python
-#: code:addons/l10n_in_ewaybill/tools/ewaybill_api.py:0
-msgid "You have insufficient credits to send this document!"
 msgstr ""
 
 #. module: l10n_in_ewaybill
