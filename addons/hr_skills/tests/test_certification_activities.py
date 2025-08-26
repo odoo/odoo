@@ -11,6 +11,7 @@ class TestCertificationActivities(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.today = date.today()
+        cls.demo_data_activities = cls.env["hr.employee"]._add_certification_activity_to_employees()
 
         cls.t_job = cls.env["hr.job"].create({"name": "Test Job"})
         cls.t_user_1, cls.t_user_2 = cls.env["res.users"].create(
