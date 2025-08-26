@@ -110,7 +110,7 @@ a dependency towards website editing and customization capabilities.""",
             "portal/static/src/chatter/scss/shadow.scss",
         ],
         'website.assets_edit_frontend': [
-            'portal/static/src/scss/portal.inside.scss'
+            'portal/static/src/scss/portal.edit.*'
         ],
     },
     'author': 'Odoo S.A.',

@@ -285,7 +285,6 @@
             ('include', 'html_builder.assets_edit_frontend'),
             'website/static/src/**/*.edit.*',
             'website/static/src/core/website_edit_service.js',
-            'website/static/src/**/*.inside.scss',
         ],
         'web._assets_primary_variables': [
             'website/static/src/scss/primary_variables.scss',
@@ -450,7 +449,7 @@
             ('include', 'html_builder.assets'),
             'website/static/src/scss/website_common.scss',
             'website/static/src/builder/**/*',
-            ('remove', 'website/static/src/builder/**/*.inside.scss'),
+            ('remove', 'website/static/src/builder/**/*.edit.*'),
         ],
         'html_builder.iframe_add_dialog': [
             'website/static/src/snippets/s_color_blocks_2/s_color_blocks_2.scss',

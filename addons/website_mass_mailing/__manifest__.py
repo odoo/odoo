@@ -29,10 +29,10 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
         'website.website_builder_assets': [
             'website_mass_mailing/static/src/js/mass_mailing_form_editor.js',
             'website_mass_mailing/static/src/website_builder/**/*',
-            ('remove', 'website_mass_mailing/static/src/website_builder/**/*.inside.scss'),
+            ('remove', 'website_mass_mailing/static/src/website_builder/**/*.edit.*'),
         ],
         'website.assets_edit_frontend': [
-            'website_mass_mailing/static/src/website_builder/mailing_list_subscribe_option.inside.scss',
+            'website_mass_mailing/static/src/website_builder/mailing_list_subscribe_option.edit.*',
         ],
         'web.assets_tests': [
             'website_mass_mailing/static/tests/tours/**/*',
