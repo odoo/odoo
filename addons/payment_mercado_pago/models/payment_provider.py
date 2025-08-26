@@ -260,7 +260,10 @@ class PaymentProvider(models.Model):
 
         if (
             self.mercado_pago_access_token
-            and fields.Datetime.now() <= self.mercado_pago_access_token_expiry
+            and (
+                not self.mercado_pago_access_token_expiry  # Legacy access token
+                or self.mercado_pago_access_token_expiry >= fields.Datetime.now()
+            )
         ):
             return self.mercado_pago_access_token
         else:
