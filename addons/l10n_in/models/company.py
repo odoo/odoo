@@ -73,6 +73,23 @@ class ResCompany(models.Model):
     )
     l10n_in_gstin_status_feature = fields.Boolean(string="Check GST Number Status")
 
+    l10n_in_gst_invoice_journal_feature = fields.Boolean(string="GST Invoice Journals")
+    l10n_in_tax_invoice_journal_id = fields.Many2one(
+        'account.journal',
+        string="Tax Invoice Journal",
+        domain=[('type', '=', 'sale')],
+    )
+    l10n_in_bill_of_supply_journal_id = fields.Many2one(
+        'account.journal',
+        string="Bill of Supply Journal",
+        domain=[('type', '=', 'sale')],
+    )
+    l10n_in_invoice_cum_bill_of_supply_journal_id = fields.Many2one(
+        'account.journal',
+        string="Invoice-cum-Bill of Supply Journal",
+        domain=[('type', '=', 'sale')],
+    )
+
     @api.depends('l10n_in_upi_id')
     def _compute_qr_code(self):
         # EXTENDS 'account'

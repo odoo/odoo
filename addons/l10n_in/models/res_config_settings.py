@@ -71,6 +71,27 @@ class ResConfigSettings(models.TransientModel):
     module_l10n_in_edi = fields.Boolean("Indian Electronic Invoicing")
     module_l10n_in_ewaybill = fields.Boolean("Indian Electronic Waybill")
 
+    l10n_in_gst_invoice_journal_feature = fields.Boolean(
+        related='company_id.l10n_in_gst_invoice_journal_feature',
+        string="GST Invoice Journals",
+        readonly=False,
+    )
+    l10n_in_tax_invoice_journal_id = fields.Many2one(
+        related='company_id.l10n_in_tax_invoice_journal_id',
+        string="Tax Invoice Journal",
+        readonly=False,
+    )
+    l10n_in_bill_of_supply_journal_id = fields.Many2one(
+        related='company_id.l10n_in_bill_of_supply_journal_id',
+        string="Bill of Supply Journal",
+        readonly=False,
+    )
+    l10n_in_invoice_cum_bill_of_supply_journal_id = fields.Many2one(
+        related='company_id.l10n_in_invoice_cum_bill_of_supply_journal_id',
+        string="Invoice-cum-Bill of Supply Journal",
+        readonly=False,
+    )
+
     def set_values(self):
         super().set_values()
         if self.country_code == 'IN':

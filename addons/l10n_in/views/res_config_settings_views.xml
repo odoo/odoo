@@ -6,6 +6,20 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <block id="invoicing_settings" position="inside">
+                <setting help="Create seperate Tax invoice, Bill of Supply or Invoice-cum-Bill of Supply based on the compliance in specific journals"
+                    name="l10n_in_gst_invoice_journal" invisible="country_code != 'IN'">
+                    <field name="l10n_in_gst_invoice_journal_feature"/>
+                    <div class="content-group" invisible="not l10n_in_gst_invoice_journal_feature">
+                        <div class="row mt8">
+                            <label for="l10n_in_tax_invoice_journal_id" class="col-lg-5 o_light_label" string="Tax Invoice"/>
+                            <field name="l10n_in_tax_invoice_journal_id" required="l10n_in_gst_invoice_journal_feature"/>
+                            <label for="l10n_in_bill_of_supply_journal_id" class="col-lg-5 o_light_label" string="Bill of Supply "/>
+                            <field name="l10n_in_bill_of_supply_journal_id" required="l10n_in_gst_invoice_journal_feature"/>
+                            <label for="l10n_in_invoice_cum_bill_of_supply_journal_id" class="col-lg-5 o_light_label" string="Invoice-cum-Bill of Supply"/>
+                            <field name="l10n_in_invoice_cum_bill_of_supply_journal_id" required="l10n_in_gst_invoice_journal_feature"/>
+                        </div>
+                    </div>
+                </setting>
                 <setting help="Use this if setup with Reseller(E-Commerce)." name="ecommerce_reseller_setting" title="Manage Reseller(E-Commerce)" invisible="country_code != 'IN'">
                     <field name="group_l10n_in_reseller"/>
                 </setting>
