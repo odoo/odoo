@@ -92,7 +92,10 @@ class StockMove(models.Model):
                 move.remaining_value = 0
                 continue
             ratio = move.remaining_qty / move.quantity if move.quantity else 0
-            move.remaining_value = ratio * move.value if ratio else 0
+            if move.product_id.cost_method == 'fifo':
+                move.remaining_value = ratio * move.value if ratio else 0
+            else:
+                move.remaining_value = move.remaining_qty * move.with_company(move.company_id).standard_price
 
     def _inverse_value_manual(self):
         for move in self:

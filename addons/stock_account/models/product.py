@@ -187,6 +187,7 @@ class ProductProduct(models.Model):
         # Get value and quantity for all incoming
         moves_domain = Domain([
             ('product_id', '=', self.id),
+            ('company_id', '=', self.env.company.id),
         ])
         if lot:
             moves_domain &= Domain([
@@ -265,6 +266,7 @@ class ProductProduct(models.Model):
 
         moves_domain = Domain([
             ('product_id', '=', self.id),
+            ('company_id', '=', self.env.company.id)
         ])
         if lot:
             moves_domain &= Domain([('move_line_ids.lot_id', 'in', lot.id)])
