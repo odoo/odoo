@@ -182,7 +182,7 @@ class Manifest(Mapping[str, typing.Any]):
         _, self.name = os.path.split(path)
         if not MODULE_NAME_RE.match(self.name):
             raise FileNotFoundError(f"Invalid module name: {self.name}")
-        self._manifest_content = manifest_content
+        self.__manifest_content = manifest_content
 
     @property
     def addons_path(self) -> str:
@@ -191,14 +191,14 @@ class Manifest(Mapping[str, typing.Any]):
         return parent_path
 
     @functools.cached_property
-    def manifest_cached(self) -> dict:
+    def __manifest_cached(self) -> dict:
         """Parsed and validated manifest data from the file."""
-        return _load_manifest(self.name, self._manifest_content)
+        return _load_manifest(self.name, self.__manifest_content)
 
     @functools.cached_property
     def description(self):
         """The description of the module defaulting to the README file."""
-        if (desc := self.manifest_cached.get('description')):
+        if (desc := self.__manifest_cached.get('description')):
             return desc
         for file_name in README:
             try:
@@ -211,7 +211,7 @@ class Manifest(Mapping[str, typing.Any]):
     @functools.cached_property
     def version(self):
         try:
-            return self.manifest_cached['version']
+            return self.__manifest_cached['version']
         except Exception:  # noqa: BLE001
             return adapt_version('1.0')
 
@@ -222,7 +222,7 @@ class Manifest(Mapping[str, typing.Any]):
     @functools.cached_property
     def static_path(self) -> str | None:
         static_path = opj(self.path, 'static')
-        manifest = self.manifest_cached
+        manifest = self.__manifest_cached
         if (manifest['installable'] or manifest['assets']) and os.path.isdir(static_path):
             return static_path
         return None
@@ -230,10 +230,13 @@ class Manifest(Mapping[str, typing.Any]):
     def __getitem__(self, key: str):
         if key in ('description', 'icon', 'addons_path', 'version', 'static_path'):
             return getattr(self, key)
-        return copy.deepcopy(self.manifest_cached[key])
+        return copy.deepcopy(self.__manifest_cached[key])
+
+    def raw_value(self, key):
+        return copy.deepcopy(self.__manifest_cached.get(key))
 
     def __iter__(self):
-        manifest = self.manifest_cached
+        manifest = self.__manifest_cached
         yield from manifest
         for key in ('description', 'icon', 'addons_path', 'version', 'static_path'):
             if key not in manifest:
