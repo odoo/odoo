@@ -71,37 +71,14 @@ export class ListConfirmationDialog extends Component {
         this.props.close();
     }
 
-    getTagProps(record) {
-        return {
+    getTagsListProps(field, records) {
+        const colorField = field.fieldNode?.options?.color_field;
+        return records.map((record) => ({
             id: record.id, // datapoint_X
             resId: record.resId,
             text: record.data.display_name,
-            colorIndex: record.data[this.props.colorField],
-        };
-    }
-
-    getChanges(field) {
-        const selectionChangeIds = this.props.selection.map((record) => {
-            const changes = record._changes[field.name];
-            if (!changes) {
-                return [];
-            }
-            const initialCurrentIds = changes._initialCurrentIds;
-            const currentIds = changes._currentIds;
-            return [
-                ...currentIds.filter((id) => !initialCurrentIds.includes(id)),
-                ...initialCurrentIds.filter((id) => !currentIds.includes(id)).map((id) => -id),
-            ];
-        });
-        const uniqueIds = [...new Set(selectionChangeIds.flat())];
-        return {
-            operation: uniqueIds[0] < 0 ? _t("Remove") : _t("Add"),
-            tags: uniqueIds.map((_id) => {
-                const id = Math.abs(_id);
-                const record = this.props.changes[field.name]._cache[id];
-                return this.getTagProps(record);
-            }),
-        };
+            colorIndex: record.data[colorField],
+        }));
     }
 
     isManyToManyField(field) {

@@ -21,12 +21,19 @@
                                     <td><t t-esc="field.label"/></td>
                                 </tr>
                                 <t t-if="isManyToManyField(field)">
-                                    <t t-set="changes" t-value="getChanges(field)"/>
-                                    <tr>
-                                        <td><span t-out="changes.operation"></span>: </td>
+                                    <tr t-if="props.changes[field.name].add.length">
+                                        <td>Add:</td>
                                         <td>
                                             <div class="o_field_many2many_tags">
-                                                <TagsList tags="changes.tags"/>
+                                                <TagsList tags="getTagsListProps(field, props.changes[field.name].add)"/>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr t-if="props.changes[field.name].remove.length">
+                                        <td>Remove:</td>
+                                        <td>
+                                            <div class="o_field_many2many_tags">
+                                                <TagsList tags="getTagsListProps(field, props.changes[field.name].remove)"/>
                                             </div>
                                         </td>
                                     </tr>
