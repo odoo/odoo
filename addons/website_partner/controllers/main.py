@@ -40,7 +40,7 @@ class WebsitePartnerPage(http.Controller):
 
         search = post.get('search', '')
 
-        base_partner_domain = [('website_published', '=', True)]
+        base_partner_domain = [('website_published', '=', True), ('grade_id', '!=', False)]
         if search:
             base_partner_domain += ['|', ('name', 'ilike', search), ('website_description', 'ilike', search)]
 
