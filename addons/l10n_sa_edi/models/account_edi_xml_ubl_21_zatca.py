@@ -235,14 +235,15 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
 
     def _get_address_node(self, vals):
         partner = vals['partner']
-        model = vals.get('model', 'res.partner')
-        country = partner['country' if model == 'res.bank' else 'country_id']
-        state = partner['state' if model == 'res.bank' else 'state_id']
+        country = partner['country' if partner._name == 'res.bank' else 'country_id']
+        state = partner['state' if partner._name == 'res.bank' else 'state_id']
+        building_number = partner.l10n_sa_edi_building_number if partner._name == 'res.partner' else ''
+        edi_plot_identification = partner.l10n_sa_edi_plot_identification if partner._name == 'res.partner' else ''
 
         return {
             'cbc:StreetName': {'_text': partner.street},
-            'cbc:BuildingNumber': {'_text': partner.l10n_sa_edi_building_number},
-            'cbc:PlotIdentification': {'_text': partner.l10n_sa_edi_plot_identification},
+            'cbc:BuildingNumber': {'_text': building_number},
+            'cbc:PlotIdentification': {'_text': edi_plot_identification},
             'cbc:CitySubdivisionName': {'_text': partner.street2},
             'cbc:CityName': {'_text': partner.city},
             'cbc:PostalZone': {'_text': partner.zip},
