@@ -27,6 +27,7 @@ class PrinterDriver(PrinterDriverBase):
         self.receipt_protocol = 'star' if 'STR_T' in device['device-id'] else 'escpos'
         self.connected_by_usb = self.device_connection == 'direct'
         self.device_name = device['device-make-and-model']
+        self.ip = device.get('ip')
 
         if any(cmd in device['device-id'] for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']):
             self.device_subtype = "receipt_printer"
