@@ -573,7 +573,7 @@ class CalendarEvent(models.Model):
     def create(self, vals_list):
         # Prevent sending update notification when _inverse_dates is called
         self = self.with_context(is_calendar_event_new=True)
-        defaults = self.default_get([
+        defaults = self.browse().default_get([
             'activity_ids', 'allday', 'description', 'name', 'partner_ids',
             'res_model_id', 'res_id', 'start', 'user_id',
         ])
