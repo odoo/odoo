@@ -396,7 +396,7 @@ class TestMenuHttp(common.HttpCase):
             'field_name': 'mega_menu_content',
             'translations': {fr.code: {sha: 'french_mega_menu_content'}},
         })
-        self.url_open('/web_editor/field/translation/update', data=json.dumps(payload), headers=self.headers)
+        self.url_open('/website/field/translation/update', data=json.dumps(payload), headers=self.headers)
         self.assertIn("french_mega_menu_content",
                       menu.with_context(lang=fr.code, website_id=website.id).mega_menu_content)
 

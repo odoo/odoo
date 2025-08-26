@@ -2544,7 +2544,7 @@ export class Wysiwyg extends Component {
                     [$(x).data('oe-translation-source-sha')]: this._getEscapedElement($(x)).html()
                 })
             ));
-            return rpc('/web_editor/field/translation/update', {
+            return rpc('/website/field/translation/update', {
                 model: $els.data('oe-model'),
                 record_id: [+$els.data('oe-id')],  
                 field_name: $els.data('oe-field'),
