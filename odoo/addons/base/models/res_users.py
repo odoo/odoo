@@ -989,12 +989,15 @@ class ResUsers(models.Model):
             'tag': 'reload_context',
         }
 
+    @check_identity
     def action_change_password_wizard(self):
         return {
             'type': 'ir.actions.act_window',
             'target': 'new',
             'res_model': 'change.password.wizard',
             'view_mode': 'form',
+            'name': 'Change Password',
+            'context': {'active_ids': self.ids, 'active_model': 'res.users'}
         }
 
     @check_identity

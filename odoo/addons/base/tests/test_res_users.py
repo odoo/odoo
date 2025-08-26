@@ -508,6 +508,40 @@ class TestUsersTweaks(TransactionCase):
 @tagged('post_install', '-at_install')
 class TestUsersIdentitycheck(HttpCase):
 
+    def _rpc(self, model, method, *args, **kwargs):
+        return self.url_open(
+            "/web/dataset/call_kw", json={"params": {"model": model, "method": method, "args": args, "kwargs": kwargs}}
+        ).json()
+
+    def test_change_password(self):
+        """Test that the change of users' password is correctly done and allowed by an identity check."""
+        user_internal = self.env['res.users'].create({
+            'name': 'Internal',
+            'login': 'user_internal',
+            'password': 'oldpassword',
+            'group_ids': [self.env.ref('base.group_user').id],
+        })
+        user_admin = self.env.ref('base.user_admin')
+        self.authenticate(user_admin.login, user_admin.password)
+
+        # Check that an identity check is triggered when clicking the "Change Password" button in the user form of user_internal.
+        wizard_result = self._rpc('res.users', 'action_change_password_wizard', user_internal.id)['result']
+        self.assertEqual(wizard_result['res_model'], 'res.users.identitycheck')
+
+        # Validate the check identity and change the user_internal's password.
+        action = self._rpc(wizard_result['res_model'], 'run_check', wizard_result['res_id'], context={'password': user_admin.login})['result']
+        with Form(self.env[action['res_model']].with_context(action['context']), view='base.change_password_wizard_view') as form:
+            with form.user_ids.edit(0) as line:
+                line.new_passwd = 'newpassword'
+        rec = form.save()
+        rec.change_password_button()
+
+        # To check that the password of user_internal has been modified.
+        self.env['res.users'].with_user(user_internal)._check_credentials(
+            {'login': 'user_internal', 'password': 'newpassword', 'type': 'password'},
+            {'interactive': False}
+        )
+
     @users('admin')
     def test_revoke_all_devices(self):
         """
