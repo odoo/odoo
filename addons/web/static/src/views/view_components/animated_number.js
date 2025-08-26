@@ -1,5 +1,5 @@
 import { browser } from "@web/core/browser/browser";
-import { formatInteger } from "@web/views/fields/formatters";
+import { formatInteger, formatMonetary } from "@web/views/fields/formatters";
 
 import { Component, onWillUpdateProps, onWillUnmount, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
@@ -10,7 +10,7 @@ export class AnimatedNumber extends Component {
         value: Number,
         duration: Number,
         animationClass: { type: String, optional: true },
-        currency: { type: [Object, Boolean], optional: true },
+        currencyId: { type: [Number, Boolean], optional: true },
         title: { type: String, optional: true },
         slots: {
             type: Object,
@@ -23,7 +23,6 @@ export class AnimatedNumber extends Component {
     static enableAnimations = true;
 
     setup() {
-        this.formatInteger = formatInteger;
         this.state = useState({ value: this.props.value });
         this.handle = null;
         onWillUpdateProps((nextProps) => {
@@ -51,7 +50,15 @@ export class AnimatedNumber extends Component {
     }
 
     format(value) {
-        return this.formatInteger(value, { humanReadable: true, decimals: 0, minDigits: 3 });
+        if (this.props.currencyId) {
+            return formatMonetary(value, {
+                currencyId: this.props.currencyId,
+                humanReadable: true,
+                digits: [null, 0],
+                minDigits: 3,
+            });
+        }
+        return formatInteger(value, { humanReadable: true, minDigits: 3 });
     }
 
     get invalidAggregateTooltip() {

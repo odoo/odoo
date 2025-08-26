@@ -9424,7 +9424,7 @@ test("progress bar with false aggregate value", async () => {
 
     expect(".o_kanban_counter .o_animated_number").toHaveCount(2);
 
-    expect(".o_kanban_counter:last .o_animated_number").toHaveText("$3,722");
+    expect(".o_kanban_counter:last .o_animated_number").toHaveText("$ 3,722");
     expect(".o_kanban_counter:first .o_animated_number").toHaveText("3,750?");
     expect(".o_kanban_counter:first .o_animated_number").toHaveAttribute(
         "title",
