@@ -34,38 +34,3 @@ registerWebsitePreviewTour("snippet_version_1", {
 },
     ...clickOnSave(),
 ]);
-registerWebsitePreviewTour("snippet_version_2", {
-    edition: true,
-    url: "/",
-}, () => [
-{
-    content: "Edit s_test_snip",
-    trigger: ':iframe #wrap.o_editable .s_test_snip',
-    run: "click",
-},
-{
-    trigger:
-        ".o_customize_tab .options-container[data-container-title='Test snip'] .o_we_version_control",
-},
-{
-    content: "Edit text_image",
-    trigger: ':iframe #wrap.o_editable .s_text_image',
-    run: "click",
-},
-{
-    trigger:
-        ".o_customize_tab .options-container[data-container-title='Text - Image'] .o_we_version_control",
-},
-{
-    content: "Edit s_share",
-    trigger: ':iframe #wrap.o_editable .s_share',
-    run: "click",
-},
-{
-    trigger:
-        ".o_customize_tab .options-container[data-container-title='Block'] .o_we_version_control",
-},
-{
-    content: "s_share is outdated",
-    trigger: ':iframe body',
-}]);

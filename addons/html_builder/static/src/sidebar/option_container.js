@@ -1,7 +1,7 @@
 import { BorderConfigurator } from "../plugins/border_configurator_option";
 import { ShadowOption } from "../plugins/shadow_option";
 import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
-import { onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
+import { onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { useOperation } from "../core/operation_plugin";
@@ -45,11 +45,6 @@ export class OptionsContainer extends BaseOptionComponent {
         useVisibilityObserver("content", useApplyVisibility("root"));
 
         this.callOperation = useOperation();
-        this.state = useState({
-            isUpToDate: this.env.editor.shared.versionControl.hasAccessToOutdatedEl(
-                this.props.editingElement
-            ),
-        });
 
         this.hasGroup = {};
         onWillStart(async () => {
@@ -127,16 +122,5 @@ export class OptionsContainer extends BaseOptionComponent {
                 activateClone: false,
             });
         });
-    }
-
-    // Version control
-    replaceElementWithNewVersion() {
-        this.callOperation(() => {
-            this.env.editor.shared.versionControl.replaceWithNewVersion(this.props.editingElement);
-        });
-    }
-    accessOutdated() {
-        this.env.editor.shared.versionControl.giveAccessToOutdatedEl(this.props.editingElement);
-        this.state.isUpToDate = true;
     }
 }
