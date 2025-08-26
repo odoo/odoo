@@ -22,12 +22,15 @@ def _synchronize_crons(env):
 
 
 def _setup_downpayment_account(env):
+    """ Set the downpayment_account_id field for existing companies, based on the value defined in the chart template. """
     for company in env.companies:
         if not company.chart_template:
             continue
 
-        template_data = env['account.chart.template']._get_chart_template_data(company.chart_template).get('template_data')
-        if template_data and template_data.get('downpayment_account_id'):
-            property_downpayment_account = env['account.chart.template'].with_company(company).ref(template_data['downpayment_account_id'], raise_if_not_found=False)
-            if property_downpayment_account:
-                company.downpayment_account_id = property_downpayment_account
+        ChartTemplate = env["account.chart.template"].with_company(company)
+        company_template_data = ChartTemplate._get_chart_template_data(company.chart_template).get('res.company', {})
+
+        if downpayment_account_id := company_template_data.get(company.id, {}).get('downpayment_account_id'):
+            downpayment_account = ChartTemplate.ref(downpayment_account_id, raise_if_not_found=False)
+            if downpayment_account:
+                company.downpayment_account_id = downpayment_account
