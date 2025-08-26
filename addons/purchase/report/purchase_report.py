@@ -159,3 +159,12 @@ class PurchaseReport(models.Model):
             f_qty=self._field_to_sql(self._table, 'qty_ordered', query),
             f_price=self._field_to_sql(self._table, 'price_average', query),
         )
+
+    def action_open_purchase_order(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'purchase.order',
+            'res_id': self.order_id.id,
+            'views': [(False, 'form')],
+        }
