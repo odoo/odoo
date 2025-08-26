@@ -139,7 +139,7 @@ export class CalendarModel extends Model {
         return this.meta.hasEditDialog;
     }
     get hasMultiCreate() {
-        return !!this.meta.multiCreateView && !this.env.isSmall;
+        return !!this.meta.multiCreateView && !this.env.isSmall && this.meta.scale === "month";
     }
     get hasQuickCreate() {
         return this.meta.quickCreate;
