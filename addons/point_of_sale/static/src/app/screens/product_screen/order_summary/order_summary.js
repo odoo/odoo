@@ -97,8 +97,7 @@ export class OrderSummary extends Component {
         ) {
             await this._showDecreaseQuantityPopup();
             if (selectedLine.getQuantity() === 0) {
-                const val = buffer === null ? "remove" : buffer;
-                this._setValue(val);
+                this._setValue("remove");
             }
             return;
         } else if (
