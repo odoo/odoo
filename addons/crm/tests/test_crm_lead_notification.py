@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.crm.tests.common import TestCrmCommon
+from odoo.addons.crm.tests.common import INCOMING_EMAIL, TestCrmCommon
 from odoo.tests import tagged, users
 from odoo.tools import email_normalize, formataddr, mute_logger
 
@@ -377,3 +377,46 @@ Content-Transfer-Encoding: quoted-printable
 
         self.assertEqual(crm_lead0.company_id, company0)
         self.assertEqual(crm_lead1.company_id, company1)
+
+    @users('user_sales_manager')
+    def test_incoming_email_automatic_lead_assignment(self):
+        # create a second team with a set leader
+        leader_team_2 = self.env['res.users'].sudo().create({'name': 'bob', 'login': 'bob'})
+        team_2 = self.env['crm.team'].create({
+            'name': 'team_2',
+            'alias_name': 'team.2',
+            'user_id': leader_team_2.id,
+        })
+
+        # send three emails to the aliases of both teams
+        for x in range(3):
+            self.format_and_process(
+                INCOMING_EMAIL,
+                f'source.email@customerOfTeam1{x}.be',
+                self.sales_team_1.alias_email,
+                subject=f'OpportunityTeam1{x}',
+                target_model='crm.lead',
+            )
+            self.format_and_process(
+                INCOMING_EMAIL,
+                f'source.email@customerOfTeam2{x}.be',
+                team_2.alias_email,
+                subject=f'OpportunityTeam2{x}',
+                target_model='crm.lead',
+            )
+
+        # each team should receive all three of their new opportunities and none of the others'
+        team1_leads = self.env['crm.lead'].search([
+            ('team_id', '=', self.sales_team_1.id),
+            ('email_from', 'ilike', 'source.email@customerOfTeam'),
+        ])
+        team2_leads = self.env['crm.lead'].search([
+            ('team_id', '=', team_2.id),
+            ('email_from', 'ilike', 'source.email@customerOfTeam'),
+        ])
+        for lead in team1_leads:
+            self.assertTrue('source.email@customerOfTeam1' in lead.email_from)
+            self.assertTrue(lead.user_id == self.user_sales_manager)
+        for lead in team2_leads:
+            self.assertTrue('source.email@customerOfTeam2' in lead.email_from)
+            self.assertTrue(lead.user_id == leader_team_2)

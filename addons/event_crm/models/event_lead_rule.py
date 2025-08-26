@@ -4,7 +4,7 @@
 from ast import literal_eval
 from collections import defaultdict
 
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 
 
 class EventLeadRule(models.Model):
@@ -109,6 +109,11 @@ class EventLeadRule(models.Model):
         help="Automatically assign the created leads to this Sales Team.")
     lead_user_id = fields.Many2one('res.users', string='Salesperson', help="Automatically assign the created leads to this Salesperson.")
     lead_tag_ids = fields.Many2many('crm.tag', string='Tags', help="Automatically add these tags to the created leads.")
+
+    @api.onchange('lead_sales_team_id')
+    def _onchange_lead_sales_team_id(self):
+        if self.lead_sales_team_id and self.lead_sales_team_id.user_id:
+            self.lead_user_id = self.lead_sales_team_id.user_id
 
     def _run_on_registrations(self, registrations):
         """ Create or update leads based on rule configuration. Two main lead

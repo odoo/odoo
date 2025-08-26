@@ -2,7 +2,7 @@
 
 from ast import literal_eval
 
-from odoo import models, fields
+from odoo import _, models, fields
 from odoo.fields import Domain
 from odoo.tools import html2plaintext
 
@@ -77,7 +77,9 @@ class ChatbotScriptStep(models.Model):
             create_values = {"partner_id": self.env.user.partner_id.id}
         create_values.update(self._chatbot_crm_prepare_lead_values(
             discuss_channel, customer_values['description']))
-        return self.env["crm.lead"].create(create_values)
+        new_leads = self.env["crm.lead"].create(create_values)
+        new_leads._assign_userless_lead_in_team(_('livechat discussion'))
+        return new_leads
 
     def _process_step_create_lead_and_forward(self, discuss_channel):
         lead = self._process_step_create_lead(discuss_channel)

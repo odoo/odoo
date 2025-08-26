@@ -11,7 +11,7 @@ import {
 import { Avatar } from "../avatar/avatar";
 import { Many2XAvatarUserAutocomplete } from "../avatar_autocomplete/avatar_many2x_autocomplete";
 
-class Many2OneAvatarUser extends Many2One {
+export class Many2OneAvatarUser extends Many2One {
     static components = {
         ...Many2One.components,
         Many2XAutocomplete: Many2XAvatarUserAutocomplete,
@@ -46,7 +46,7 @@ export class Many2OneAvatarUserField extends Component {
     }
 }
 
-registry.category("fields").add("many2one_avatar_user", {
+export const many2OneAvatarUserField = {
     ...buildM2OFieldDescription(Many2OneAvatarUserField),
     additionalClasses: ["o_field_many2one_avatar"],
     extractProps(staticInfo, dynamicInfo) {
@@ -59,4 +59,5 @@ registry.category("fields").add("many2one_avatar_user", {
         };
     },
     listViewWidth: [110],
-});
+};
+registry.category("fields").add("many2one_avatar_user", many2OneAvatarUserField);
