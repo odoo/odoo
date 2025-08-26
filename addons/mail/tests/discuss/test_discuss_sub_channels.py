@@ -10,10 +10,33 @@ from odoo.tests.common import HttpCase, new_test_user, tagged
 from odoo.exceptions import UserError, ValidationError
 
 
+def parametrize_test(arg_names, arg_values):
+    args = [name.strip() for name in arg_names.split(",")]
+    for value in arg_values:
+        if not isinstance(value, tuple):
+            raise TypeError("Each value should be a tuple")
+        if len(value) != len(args):
+            raise ValueError("Each value should have the same length as arg_names")
+
+    def decorator(func):
+        def wrapper(self):
+            for arg_value in arg_values:
+                kwargs = dict(zip(args, arg_value))
+                with self.subTest(**kwargs):
+                    func(self, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
 @tagged("post_install", "-at_install")
 class TestDiscussSubChannels(HttpCase):
-    def test_01_gc_unpin_outdated_sub_channels(self):
-        parent = self.env["discuss.channel"].create({"name": "General"})
+    @parametrize_test("channel_type", [("channel",), ("announcement",)])
+    def test_01_gc_unpin_outdated_sub_channels(self, channel_type):
+        parent = self.env["discuss.channel"].create(
+            {"name": "General", "channel_type": channel_type}
+        )
         parent._create_sub_channel()
         sub_channel = parent.sub_channel_ids[0]
         sub_channel._add_members(users=self.env.user)
@@ -34,8 +57,11 @@ class TestDiscussSubChannels(HttpCase):
             self.env["discuss.channel.member"]._gc_unpin_outdated_sub_channels()
             self.assertTrue(self_member.is_pinned)
 
-    def test_02_sub_channel_members_sync_with_parent(self):
-        parent = self.env["discuss.channel"].create({"name": "General"})
+    @parametrize_test("channel_type", [("channel",), ("announcement",)])
+    def test_02_sub_channel_members_sync_with_parent(self, channel_type):
+        parent = self.env["discuss.channel"].create(
+            {"name": "General", "channel_type": channel_type}
+        )
         parent.action_unfollow()
         self.assertFalse(any(m.is_self for m in parent.channel_member_ids))
         parent._create_sub_channel()
@@ -55,8 +81,11 @@ class TestDiscussSubChannels(HttpCase):
         self.assertTrue(any(m.is_self for m in parent.channel_member_ids))
         self.assertTrue(any(m.is_self for m in sub_channel.channel_member_ids))
 
-    def test_03_cannot_create_recursive_sub_channel(self):
-        parent = self.env["discuss.channel"].create({"name": "General"})
+    @parametrize_test("channel_type", [("channel",), ("announcement",)])
+    def test_03_cannot_create_recursive_sub_channel(self, channel_type):
+        parent = self.env["discuss.channel"].create(
+            {"name": "General", "channel_type": channel_type}
+        )
         parent._create_sub_channel()
         sub_channel = parent.sub_channel_ids[0]
         with self.assertRaises(ValidationError):
@@ -75,8 +104,11 @@ class TestDiscussSubChannels(HttpCase):
             login="bob_user",
         )
 
-    def test_05_cannot_upate_first_message_nor_parent_channel(self):
-        parent = self.env["discuss.channel"].create({"name": "General"})
+    @parametrize_test("channel_type", [("channel",), ("announcement",)])
+    def test_05_cannot_upate_first_message_nor_parent_channel(self, channel_type):
+        parent = self.env["discuss.channel"].create(
+            {"name": "General", "channel_type": channel_type}
+        )
         parent.message_post(body="Hello there!")
         parent._create_sub_channel(from_message_id=parent.message_ids[0].id)
         sub_channel = parent.sub_channel_ids[0]
@@ -87,8 +119,11 @@ class TestDiscussSubChannels(HttpCase):
         with self.assertRaises(UserError, msg="Cannot change initial message nor parent channel of: Hello there!."):
             sub_channel.from_message_id = parent.message_ids[0]
 
-    def test_06_initial_message_must_belong_to_parent_channel(self):
-        parent = self.env["discuss.channel"].create({"name": "General"})
+    @parametrize_test("channel_type", [("channel",), ("announcement",)])
+    def test_06_initial_message_must_belong_to_parent_channel(self, channel_type):
+        parent = self.env["discuss.channel"].create(
+            {"name": "General", "channel_type": channel_type}
+        )
         random_channel = self.env["discuss.channel"].create({"name": "Random"})
         random_channel.message_post(body="Hello world!")
         with self.assertRaises(
@@ -97,20 +132,33 @@ class TestDiscussSubChannels(HttpCase):
         ):
             parent._create_sub_channel(from_message_id=random_channel.message_ids[0].id)
 
-    def test_07_unlink_sub_channel(self):
-        bob_user = new_test_user(self.env, "bob_user", groups="base.group_user")
-        baz_user = new_test_user(self.env, "baz_user", groups="base.group_user")
-        parent_1 = self.env["discuss.channel"].with_user(bob_user).create({"name": "Parent 1"})
+    @parametrize_test("channel_type", [("channel",), ("announcement",)])
+    def test_07_unlink_sub_channel(self, channel_type):
+        bob_user = new_test_user(self.env, f"bob_user_{channel_type}", groups="base.group_user")
+        baz_user = new_test_user(self.env, f"baz_user_{channel_type}", groups="base.group_user")
+        parent_1 = (
+            self.env["discuss.channel"]
+            .with_user(bob_user)
+            .create({"name": "Parent 1", "channel_type": channel_type})
+        )
         parent_1_baz_member = parent_1._add_members(users=baz_user)
         parent_1_sub_channel_1 = parent_1._create_sub_channel(name="Parent 1 Sub 1")
         parent_1_sub_channel_1._add_members(users=baz_user)
         parent_1_sub_channel_2 = parent_1._create_sub_channel(name="Parent 1 Sub 2")
         parent_1_sub_channel_2._add_members(users=baz_user)
-        parent_2 = self.env["discuss.channel"].with_user(baz_user).create({"name": "Parent 2"})
+        parent_2 = (
+            self.env["discuss.channel"]
+            .with_user(baz_user)
+            .create({"name": "Parent 2", "channel_type": channel_type})
+        )
         parent_2_bob_member = parent_2._add_members(users=bob_user)
         parent_2_sub_channel = parent_2._create_sub_channel(name="Parent 2 Sub")
         parent_2_sub_channel._add_members(users=bob_user)
-        parent_3 = self.env["discuss.channel"].with_user(bob_user).create({"name": "Parent 3"})
+        parent_3 = (
+            self.env["discuss.channel"]
+            .with_user(bob_user)
+            .create({"name": "Parent 3", "channel_type": channel_type})
+        )
         guest = self.env["mail.guest"].create({"name": "Guest"})
         parent_3_guest_member = parent_3._add_members(guests=guest)
         parent_3_sub_channel = parent_3._create_sub_channel(name="Parent 3 Sub")
@@ -137,8 +185,11 @@ class TestDiscussSubChannels(HttpCase):
         self.assertIn(baz_user.partner_id, parent_2_sub_channel.channel_member_ids.partner_id)
         self.assertIn(bob_user.partner_id, parent_3_sub_channel.channel_member_ids.partner_id)
 
-    def test_08_group_public_id_synced_with_parent(self):
-        parent = self.env["discuss.channel"].create({"name": "General"})
+    @parametrize_test("channel_type", [("channel",), ("announcement",)])
+    def test_08_group_public_id_synced_with_parent(self, channel_type):
+        parent = self.env["discuss.channel"].create(
+            {"name": "General", "channel_type": channel_type}
+        )
         parent._create_sub_channel()
         sub_channel = parent.sub_channel_ids[0]
         self.assertEqual(parent.group_public_id, self.env.ref("base.group_user"))
@@ -150,19 +201,31 @@ class TestDiscussSubChannels(HttpCase):
         self.assertEqual(parent.group_public_id, self.env["res.groups"])
         self.assertEqual(sub_channel.group_public_id, parent.group_public_id)
 
-    def test_09_cannot_change_group_public_id_of_sub_channel(self):
-        parent = self.env["discuss.channel"].create({"name": "General"})
+    @parametrize_test("channel_type", [("channel",), ("announcement",)])
+    def test_09_cannot_change_group_public_id_of_sub_channel(self, channel_type):
+        parent = self.env["discuss.channel"].create(
+            {"name": "General", "channel_type": channel_type}
+        )
         parent._create_sub_channel()
         sub_channel = parent.sub_channel_ids[0]
         with self.assertRaises(UserError):
             sub_channel.group_public_id = self.env.ref("base.group_system")
 
-    def test_10_sub_channel_message_author_member(self):
-        bob_user = new_test_user(self.env, "bob_user", groups="base.group_user")
-        parent = self.env["discuss.channel"].create({
+    @parametrize_test("channel_type", [("channel",), ("announcement",)])
+    def test_10_sub_channel_message_author_member(self, channel_type):
+        bob_user = new_test_user(self.env, f"bob_user_{channel_type}", groups="base.group_user")
+        channel_args = {
             "name": "General",
-            "channel_member_ids": [Command.create({"partner_id": bob_user.partner_id.id})],
-        })
+            "channel_type": channel_type,
+        }
+        member_channel_args = {"partner_id": bob_user.partner_id.id}
+        if channel_type == "announcement":
+            member_channel_args["member_type"] = "admin"
+        channel_args["channel_member_ids"] = [
+            Command.create(member_channel_args)
+        ]
+
+        parent = self.env["discuss.channel"].create(channel_args)
         message = parent.with_user(bob_user).message_post(body="Hello there!")
         sub_channel = parent._create_sub_channel(from_message_id=message.id)
         self.assertIn(bob_user.partner_id, sub_channel.channel_member_ids.partner_id)
@@ -175,8 +238,11 @@ class TestDiscussSubChannels(HttpCase):
         sub_channel = parent._create_sub_channel(from_message_id=message.id)
         self.assertEqual(sub_channel.name, "This message has been removed")
 
-    def test_12_unlink_children_members_only_once(self):
-        parent = self.env["discuss.channel"].create({"name": "General"})
+    @parametrize_test("channel_type", [("channel",), ("announcement",)])
+    def test_12_unlink_children_members_only_once(self, channel_type):
+        parent = self.env["discuss.channel"].create(
+            {"name": "General", "channel_type": channel_type}
+        )
         child = parent._create_sub_channel()
 
         og_unlink = self.env.registry["discuss.channel.member"].unlink
@@ -190,3 +256,20 @@ class TestDiscussSubChannels(HttpCase):
         with patch.object(self.env.registry["discuss.channel.member"], "unlink", _patched_unlink):
             (parent | child).channel_member_ids.unlink()
         self.assertEqual(expected_unlinked_member_ids, sorted(unlinked_member_ids))
+
+    def test_13_channel_can_have_announcement_sub_channel(self):
+        parent = self.env["discuss.channel"].create(
+            {
+                "name": "General",
+                "channel_type": "channel",
+                "group_public_id": self.env.ref("base.group_system").id,
+            }
+        )
+        announcement_sub_channel = parent._create_sub_channel(channel_type="announcement")
+        self.assertEqual(announcement_sub_channel.channel_type, "announcement")
+        self.assertEqual(announcement_sub_channel.parent_channel_id, parent)
+        self.assertEqual(announcement_sub_channel.group_public_id, parent.group_public_id)
+        self.assertIn(
+            self.env.user.partner_id, announcement_sub_channel.channel_member_ids.partner_id
+        )
+        self.assertEqual(announcement_sub_channel.channel_member_ids.member_type, "admin")

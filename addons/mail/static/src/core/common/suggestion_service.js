@@ -310,7 +310,7 @@ export class SuggestionService {
     searchChannelSuggestions(cleanedSearchTerm) {
         const suggestionList = Object.values(this.store.Thread.records).filter(
             (thread) =>
-                thread.channel_type === "channel" &&
+                ["channel", "announcement"].includes(thread.channel_type) &&
                 thread.displayName &&
                 cleanTerm(thread.displayName).includes(cleanedSearchTerm)
         );

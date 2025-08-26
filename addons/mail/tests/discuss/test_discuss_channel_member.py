@@ -265,3 +265,90 @@ class TestDiscussChannelMember(MailCommon):
             1,  # channel 2 user 1: received 1 message (from message post)
             1,  # channel 2 user 3: received 1 message (from message post)
         ])
+
+    # ------------------------------------------------------------
+    # ANNOUNCEMENT CHANNELS
+    # ------------------------------------------------------------
+
+    def test_announcement_admins_can_manage_members(self):
+        announcement_channel = self.env["discuss.channel"].with_user(self.user_1).create(
+            {
+                "name": "Announcement channel",
+                "channel_type": "announcement",
+                "channel_member_ids": [(0, 0, {
+                    "partner_id": self.user_1.partner_id.id,
+                    "member_type": "admin",
+                })],
+            }
+        )
+        # admins can add members
+        announcement_channel._add_members(users=self.user_2)
+        channel_members = self.env["discuss.channel.member"].search(
+            [("channel_id", "=", announcement_channel.id)]
+        )
+        self.assertEqual(
+            channel_members.mapped("partner_id"), self.user_1.partner_id | self.user_2.partner_id
+        )
+        # admins can promote other members to admin but not demote or delete them
+        member_user_3 = announcement_channel.with_user(self.user_1)._add_members(users=self.user_3)
+        member_user_3.with_user(self.user_1).member_type = "admin"
+        with self.assertRaises(AccessError):
+            member_user_3.with_user(self.user_1).member_type = "member"
+        with self.assertRaises(AccessError):
+            member_user_3.with_user(self.user_1).unlink()
+        member_user_3.with_user(self.env.user).unlink()
+        # admins can remove members and themselves
+        channel_members = self.env["discuss.channel.member"].with_user(self.user_1).search(
+            [("channel_id", "=", announcement_channel.id)]
+        )
+        channel_members.filtered(lambda cm: cm.partner_id != self.user_1.partner_id).unlink()
+        channel_members = self.env["discuss.channel.member"].search(
+            [("channel_id", "=", announcement_channel.id)]
+        )
+        self.assertEqual(channel_members.mapped("partner_id"), self.user_1.partner_id)
+        channel_members.unlink()
+
+    def test_announcement_non_admins_cannot_manage_members(self):
+        announcement_channel = self.env["discuss.channel"].with_user(self.user_1).create(
+            {
+                "name": "Announcement channel",
+                "channel_type": "announcement",
+                "channel_member_ids": [(0, 0, {
+                    "partner_id": self.user_1.partner_id.id,
+                    "member_type": "admin",
+                }), (0, 0, {
+                    "partner_id": self.user_2.partner_id.id,
+                    "member_type": "member",
+                })],
+            }
+        )
+        # non-admins cannot add members
+        with self.assertRaises(AccessError):
+            announcement_channel.with_user(self.user_2)._add_members(users=self.user_3)
+        announcement_channel._add_members(users=self.user_3)
+        channel_members = self.env["discuss.channel.member"].with_user(self.user_2).search(
+            [("channel_id", "=", announcement_channel.id)]
+        )
+        self.assertEqual(
+            channel_members.mapped("partner_id"),
+            self.user_1.partner_id | self.user_2.partner_id | self.user_3.partner_id,
+        )
+        # non-admins cannot promote members
+        with self.assertRaises(AccessError):
+            channel_members.with_user(self.user_2).filtered(
+                lambda cm: cm.partner_id == self.user_3.partner_id
+            ).member_type = "admin"
+        # non-admins cannot demote non-admins
+        with self.assertRaises(AccessError):
+            channel_members.with_user(self.user_2).filtered(
+                lambda cm: cm.partner_id == self.user_1.partner_id
+            ).member_type = "member"
+        # non-admins cannot delete other members but can delete themselves
+        for member in channel_members.filtered(
+            lambda cm: cm.partner_id != self.user_2.partner_id
+        ).with_user(self.user_2):
+            with self.assertRaises(AccessError):
+                member.unlink()
+        channel_members.with_user(self.user_2).filtered(
+            lambda cm: cm.partner_id == self.user_2.partner_id
+        ).unlink()

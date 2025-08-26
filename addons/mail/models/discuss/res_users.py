@@ -39,7 +39,7 @@ class ResUsers(models.Model):
         # sudo: discuss.channel.member - removing member of other users based on channel restrictions
         current_cm = self.env["discuss.channel.member"].sudo().search(domain)
         current_cm.filtered(
-            lambda cm: (cm.channel_id.channel_type == "channel" and cm.channel_id.group_public_id)
+            lambda cm: (cm.channel_id.channel_type in ("channel", "announcement") and cm.channel_id.group_public_id)
         ).unlink()
 
     def _init_messaging(self, store: Store):

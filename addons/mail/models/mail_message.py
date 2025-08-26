@@ -576,6 +576,9 @@ class MailMessage(models.Model):
             for record_operation, records in operation_res_ids.items():
                 check_result = records._check_access(record_operation)
                 forbidden_doc_ids = set(check_result[0]._ids) if check_result else set()
+                if hasattr(records, "_check_mail_message_access"):
+                    if forbidden_records := records._check_mail_message_access(operation):
+                        forbidden_doc_ids |= set(forbidden_records._ids)
                 for res_id in (r.id for r in records if r.id not in forbidden_doc_ids):
                     for mid in docid_msgids[res_id]:
                         messages_to_check.pop(mid)

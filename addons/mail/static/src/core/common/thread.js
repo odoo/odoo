@@ -672,7 +672,7 @@ export class Thread extends Component {
     get showStartMessage() {
         return (
             this.state.mountedAndLoaded &&
-            ["channel", "group", "chat"].includes(this.props.thread.channel_type)
+            ["channel", "group", "chat", "announcement"].includes(this.props.thread.channel_type)
         );
     }
 
@@ -681,7 +681,7 @@ export class Thread extends Component {
         if (this.props.thread.parent_channel_id) {
             return channelName;
         }
-        if (this.props.thread.channel_type === "channel") {
+        if (["channel", "announcement"].includes(this.props.thread.channel_type)) {
             return _t("Welcome to #%(channelName)s!", { channelName });
         }
         return this.props.thread.displayName;
@@ -701,7 +701,12 @@ export class Thread extends Component {
                 channelName: this.props.thread.name,
             });
         }
-        if (this.props.thread.channel_type === "channel") {
+        if (this.props.thread.channel_type === "announcement") {
+            return _t("This is the start of %(channelName)s announcement channel", {
+                channelName: this.props.thread.name,
+            });
+        }
+        if (this.props.thread.channel_type === "group") {
             return _t("This is the start of %(conversationName)s group", {
                 conversationName: this.props.thread.displayName,
             });

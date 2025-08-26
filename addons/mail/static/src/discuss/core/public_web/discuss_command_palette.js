@@ -13,6 +13,7 @@ const commandSetupRegistry = registry.category("command_setup");
 const commandProviderRegistry = registry.category("command_provider");
 
 const NEW_CHANNEL = "NEW_CHANNEL";
+const NEW_ANNOUNCEMENT_CHANNEL = "NEW_ANNOUNCEMENT_CHANNEL";
 const NEW_GROUP_CHAT = "NEW_GROUP_CHAT";
 
 class CreateChatDialog extends Component {
@@ -51,7 +52,7 @@ class CreateChatDialog extends Component {
 
 class CreateChannelDialog extends Component {
     static components = { Dialog };
-    static props = ["close", "name?"];
+    static props = ["close", "name?", "channel_type?"];
     static template = "mail.CreateChannelDialog";
 
     setup() {
@@ -78,8 +79,17 @@ class CreateChannelDialog extends Component {
             this.state.isInvalid = true;
             return;
         }
-        await makeNewChannel(name, this.store);
+        await makeNewChannel(name, this.store, this.props.channel_type);
         this.props.close();
+    }
+}
+
+class CreateAnnouncementChannelDialog extends CreateChannelDialog {
+    static template = "mail.CreateAnnouncementChannelDialog";
+
+    setup() {
+        this.props.channel_type = "announcement";
+        super.setup();
     }
 }
 
@@ -119,10 +129,10 @@ commandSetupRegistry.add("@", {
  * @param {string} name
  * @param {import("models").Store} store
  */
-async function makeNewChannel(name, store) {
+async function makeNewChannel(name, store, channel_type) {
     const { channel } = await store.fetchStoreData(
         "/discuss/create_channel",
-        { name, group_id: store.internalUserGroupId },
+        { name, group_id: store.internalUserGroupId, channel_type },
         { readonly: false, requestData: true }
     );
     await channel.open({ focus: true, bypassCompact: true });
@@ -278,6 +288,22 @@ export class DiscussCommandPalette {
                 props: { action: { icon: "fa fa-fw fa-hashtag", searchValueSuffix: true } },
             };
         }
+        if (threadOrPersona === NEW_ANNOUNCEMENT_CHANNEL) {
+            return {
+                Component: DiscussCommand,
+                action: async () => {
+                    const name = this.options.searchValue.trim();
+                    if (name) {
+                        makeNewChannel(name, this.store, "announcement");
+                    } else {
+                        this.dialog.add(CreateAnnouncementChannelDialog);
+                    }
+                },
+                name: _t("Create Announcement Channel"),
+                className: "o-mail-DiscussCommand-createAnnouncementChannel d-flex",
+                props: { action: { icon: "fa fa-fw fa-bullhorn", searchValueSuffix: true } },
+            };
+        }
         if (threadOrPersona === NEW_GROUP_CHAT) {
             const name = this.options.searchValue.trim();
             return {
@@ -303,6 +329,7 @@ commandProviderRegistry.add("find_or_start_conversation", {
         palette.commands.slice(0, 8);
         if (!palette.store.inPublicPage) {
             palette.commands.push(palette.makeDiscussCommand(NEW_CHANNEL));
+            palette.commands.push(palette.makeDiscussCommand(NEW_ANNOUNCEMENT_CHANNEL));
             palette.commands.push(palette.makeDiscussCommand(NEW_GROUP_CHAT));
         }
         return palette.commands;

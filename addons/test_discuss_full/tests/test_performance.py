@@ -58,6 +58,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search discuss_channel (channels_domain)
     #       22: channel add:
     #           - read group member (prefetch _compute_self_member_id from _compute_is_member)
+    #           - read group member (prefetch _compute_is_self_admin from _compute_self_member_id)
     #           - read group member (_compute_invited_member_ids)
     #           - search discuss_channel_rtc_session
     #           - fetch discuss_channel_rtc_session
@@ -81,7 +82,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - _compute_message_needaction
     #           - search discuss_channel_res_groups_rel (group_ids)
     #           - fetch res_groups (group_public_id)
-    _query_count_init_messaging = 35
+    _query_count_init_messaging = 36
     # Queries for _query_count_discuss_channels (in order):
     #   1: insert res_device_log
     #   3: _search_is_member (for current user, first occurence _get_channels_as_member)
@@ -93,6 +94,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search discuss_channel (pinned_member_domain)
     #   36: channel _to_store_defaults:
     #       - read group member (prefetch _compute_self_member_id from _compute_is_member)
+    #       - read group member (prefetch _compute_is_self_admin from _compute_self_member_id)
     #       - read group member (_compute_invited_member_ids)
     #       - search discuss_channel_rtc_session
     #       - fetch discuss_channel_rtc_session
@@ -154,7 +156,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch discuss_call_history
     #       - search mail_tracking_value
     #       - _compute_rating_stats
-    _query_count_discuss_channels = 64
+    _query_count_discuss_channels = 65
 
     def setUp(self):
         super().setUp()
@@ -220,6 +222,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             name="public channel 2", group_id=None
         )
         self.channel_channel_public_2._add_members(users=self.users[0] | self.users[2] | self.users[4] | self.users[7] | self.users[9])
+
         # create group-restricted channels
         self.channel_channel_group_1 = Channel._create_channel(
             name="group restricted channel 1", group_id=self.env.ref("base.group_user").id
@@ -229,6 +232,25 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             name="group restricted channel 2", group_id=self.env.ref("base.group_user").id
         )
         self.channel_channel_group_2._add_members(users=self.users[0] | self.users[2] | self.users[6] | self.users[7] | self.users[13])
+        # create announcement channels
+        self.channel_announcement_1 = Channel._create_announcement_channel(
+            name="announcement channel 1", group_id=None
+        )
+        self.channel_announcement_1._add_members(users=self.users[5] | self.users[10])
+        self.channel_announcement_2 = Channel._create_announcement_channel(
+            name="announcement channel 2", group_id=None
+        )
+        self.channel_announcement_2._add_members(users=self.users[5] | self.users[11])
+
+        # create group-restricted announcement channels
+        self.channel_announcement_group_1 = Channel._create_announcement_channel(
+            name="announcement group channel 1", group_id=self.env.ref("base.group_user").id
+        )
+        self.channel_announcement_group_1._add_members(users=self.users[2] | self.users[3] | self.users[6] | self.users[12])
+        self.channel_announcement_group_2 = Channel._create_announcement_channel(
+            name="announcement group channel 2", group_id=self.env.ref("base.group_user").id
+        )
+        self.channel_announcement_group_2._add_members(users=self.users[2] | self.users[6] | self.users[7] | self.users[13])
         # create chats
         self.channel_chat_1 = Channel._get_or_create_chat((self.users[0] + self.users[14]).partner_id.ids)
         self.channel_chat_2 = Channel._get_or_create_chat((self.users[0] + self.users[15]).partner_id.ids)
@@ -447,6 +469,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "settings": {
                     "channel_notifications": False,
                     "id": self.env["res.users.settings"]._find_or_create_for_user(self.users[0]).id,
+                    "is_discuss_sidebar_category_announcement_open": True,
                     "is_discuss_sidebar_category_channel_open": True,
                     "is_discuss_sidebar_category_chat_open": True,
                     "livechat_expertise_ids": [],
@@ -531,6 +554,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_channel(self.channel_channel_public_2),
                 self._expected_result_for_channel(self.channel_channel_group_1),
                 self._expected_result_for_channel(self.channel_channel_group_2),
+                self._expected_result_for_channel(self.channel_announcement_1),
+                self._expected_result_for_channel(self.channel_announcement_2),
+                self._expected_result_for_channel(self.channel_announcement_group_1),
+                self._expected_result_for_channel(self.channel_announcement_group_2),
                 self._expected_result_for_channel(self.channel_group_1),
                 self._expected_result_for_channel(self.channel_chat_1),
                 self._expected_result_for_channel(self.channel_chat_2),
@@ -546,6 +573,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._res_for_member(self.channel_channel_group_1, self.users[0].partner_id),
                 self._res_for_member(self.channel_channel_group_1, self.users[2].partner_id),
                 self._res_for_member(self.channel_channel_group_2, self.users[0].partner_id),
+                self._res_for_member(self.channel_announcement_1, self.users[0].partner_id),
+                self._res_for_member(self.channel_announcement_2, self.users[0].partner_id),
+                self._res_for_member(self.channel_announcement_group_1, self.users[0].partner_id),
+                self._res_for_member(self.channel_announcement_group_2, self.users[0].partner_id),
                 self._res_for_member(self.channel_group_1, self.users[0].partner_id),
                 self._res_for_member(self.channel_group_1, self.users[12].partner_id),
                 self._res_for_member(self.channel_chat_1, self.users[0].partner_id),
@@ -579,6 +610,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_message(self.channel_channel_public_2),
                 self._expected_result_for_message(self.channel_channel_group_1),
                 self._expected_result_for_message(self.channel_channel_group_2),
+                self._expected_result_for_message(self.channel_announcement_1),
+                self._expected_result_for_message(self.channel_announcement_2),
+                self._expected_result_for_message(self.channel_announcement_group_1),
+                self._expected_result_for_message(self.channel_announcement_group_2),
                 self._expected_result_for_message(self.channel_livechat_1),
                 self._expected_result_for_message(self.channel_livechat_2),
             ),
@@ -595,6 +630,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_thread(self.channel_channel_public_2),
                 self._expected_result_for_thread(self.channel_channel_group_1),
                 self._expected_result_for_thread(self.channel_channel_group_2),
+                self._expected_result_for_thread(self.channel_announcement_1),
+                self._expected_result_for_thread(self.channel_announcement_2),
+                self._expected_result_for_thread(self.channel_announcement_group_1),
+                self._expected_result_for_thread(self.channel_announcement_group_2),
                 self._expected_result_for_thread(self.channel_livechat_1),
                 self._expected_result_for_thread(self.channel_livechat_2),
             ),
@@ -761,6 +800,98 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_needaction_counter_bus_id": bus_last_id,
                 "message_needaction_counter": 0,
                 "name": "group restricted channel 2",
+                "parent_channel_id": False,
+                "rtc_session_ids": [["ADD", []]],
+                "uuid": channel.uuid,
+            }
+        if channel == self.channel_announcement_1:
+            return {
+                "avatar_cache_key": channel.avatar_cache_key,
+                "channel_type": "announcement",
+                "create_uid": self.env.user.id,
+                "default_display_mode": False,
+                "description": False,
+                "fetchChannelInfoState": "fetched",
+                "from_message_id": False,
+                "group_ids": [],
+                "group_public_id": False,
+                "id": channel.id,
+                "invited_member_ids": [["ADD", []]],
+                "is_editable": True,
+                "last_interest_dt": last_interest_dt,
+                "member_count": 3,
+                "message_needaction_counter_bus_id": bus_last_id,
+                "message_needaction_counter": 0,
+                "name": "announcement channel 1",
+                "parent_channel_id": False,
+                "rtc_session_ids": [["ADD", []]],
+                "uuid": channel.uuid,
+            }
+        if channel == self.channel_announcement_2:
+            return {
+                "avatar_cache_key": channel.avatar_cache_key,
+                "channel_type": "announcement",
+                "create_uid": self.env.user.id,
+                "default_display_mode": False,
+                "description": False,
+                "fetchChannelInfoState": "fetched",
+                "from_message_id": False,
+                "group_ids": [],
+                "group_public_id": False,
+                "id": channel.id,
+                "invited_member_ids": [["ADD", []]],
+                "is_editable": True,
+                "last_interest_dt": last_interest_dt,
+                "member_count": 3,
+                "message_needaction_counter_bus_id": bus_last_id,
+                "message_needaction_counter": 0,
+                "name": "announcement channel 2",
+                "parent_channel_id": False,
+                "rtc_session_ids": [["ADD", []]],
+                "uuid": channel.uuid,
+            }
+        if channel == self.channel_announcement_group_1:
+            return {
+                "avatar_cache_key": channel.avatar_cache_key,
+                "channel_type": "announcement",
+                "create_uid": self.env.user.id,
+                "default_display_mode": False,
+                "description": False,
+                "fetchChannelInfoState": "fetched",
+                "from_message_id": False,
+                "group_ids": [],
+                "group_public_id": self.env.ref("base.group_user").id,
+                "id": channel.id,
+                "invited_member_ids": [["ADD", []]],
+                "is_editable": True,
+                "last_interest_dt": last_interest_dt,
+                "member_count": 5,
+                "message_needaction_counter_bus_id": bus_last_id,
+                "message_needaction_counter": 0,
+                "name": "announcement group channel 1",
+                "parent_channel_id": False,
+                "rtc_session_ids": [["ADD", []]],
+                "uuid": channel.uuid,
+            }
+        if channel == self.channel_announcement_group_2:
+            return {
+                "avatar_cache_key": channel.avatar_cache_key,
+                "channel_type": "announcement",
+                "create_uid": self.env.user.id,
+                "default_display_mode": False,
+                "description": False,
+                "fetchChannelInfoState": "fetched",
+                "from_message_id": False,
+                "group_ids": [],
+                "group_public_id": self.env.ref("base.group_user").id,
+                "id": channel.id,
+                "invited_member_ids": [["ADD", []]],
+                "is_editable": True,
+                "last_interest_dt": last_interest_dt,
+                "member_count": 5,
+                "message_needaction_counter_bus_id": bus_last_id,
+                "message_needaction_counter": 0,
+                "name": "announcement group channel 2",
                 "parent_channel_id": False,
                 "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
@@ -1031,6 +1162,86 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "fetched_message_id": last_message.id,
                 "id": member_0.id,
                 "last_interest_dt": member_0_last_interest_dt,
+                "message_unread_counter": 0,
+                "message_unread_counter_bus_id": bus_last_id,
+                "mute_until_dt": False,
+                "last_seen_dt": member_0_last_seen_dt,
+                "new_message_separator": last_message.id + 1,
+                "partner_id": self.users[0].partner_id.id,
+                "rtc_inviting_session_id": False,
+                "seen_message_id": last_message.id,
+                "unpin_dt": False,
+                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+            }
+        if channel == self.channel_announcement_1 and partner == self.users[0].partner_id:
+            return {
+                "create_date": member_0_create_date,
+                "custom_channel_name": False,
+                "custom_notifications": False,
+                "fetched_message_id": last_message.id,
+                "id": member_0.id,
+                "last_interest_dt": member_0_last_interest_dt,
+                "member_type": "admin",
+                "message_unread_counter": 0,
+                "message_unread_counter_bus_id": bus_last_id,
+                "mute_until_dt": False,
+                "last_seen_dt": member_0_last_seen_dt,
+                "new_message_separator": last_message.id + 1,
+                "partner_id": self.users[0].partner_id.id,
+                "rtc_inviting_session_id": False,
+                "seen_message_id": last_message.id,
+                "unpin_dt": False,
+                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+            }
+        if channel == self.channel_announcement_2 and partner == self.users[0].partner_id:
+            return {
+                "create_date": member_0_create_date,
+                "custom_channel_name": False,
+                "custom_notifications": False,
+                "fetched_message_id": last_message.id,
+                "id": member_0.id,
+                "last_interest_dt": member_0_last_interest_dt,
+                "member_type": "admin",
+                "message_unread_counter": 0,
+                "message_unread_counter_bus_id": bus_last_id,
+                "mute_until_dt": False,
+                "last_seen_dt": member_0_last_seen_dt,
+                "new_message_separator": last_message.id + 1,
+                "partner_id": self.users[0].partner_id.id,
+                "rtc_inviting_session_id": False,
+                "seen_message_id": last_message.id,
+                "unpin_dt": False,
+                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+            }
+        if channel == self.channel_announcement_group_1 and partner == self.users[0].partner_id:
+            return {
+                "create_date": member_0_create_date,
+                "custom_channel_name": False,
+                "custom_notifications": False,
+                "fetched_message_id": last_message.id,
+                "id": member_0.id,
+                "last_interest_dt": member_0_last_interest_dt,
+                "member_type": "admin",
+                "message_unread_counter": 0,
+                "message_unread_counter_bus_id": bus_last_id,
+                "mute_until_dt": False,
+                "last_seen_dt": member_0_last_seen_dt,
+                "new_message_separator": last_message.id + 1,
+                "partner_id": self.users[0].partner_id.id,
+                "rtc_inviting_session_id": False,
+                "seen_message_id": last_message.id,
+                "unpin_dt": False,
+                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+            }
+        if channel == self.channel_announcement_group_2 and partner == self.users[0].partner_id:
+            return {
+                "create_date": member_0_create_date,
+                "custom_channel_name": False,
+                "custom_notifications": False,
+                "fetched_message_id": last_message.id,
+                "id": member_0.id,
+                "last_interest_dt": member_0_last_interest_dt,
+                "member_type": "admin",
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
                 "mute_until_dt": False,
@@ -1448,6 +1659,150 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "trackingValues": [],
                 "write_date": write_date,
             }
+        if channel == self.channel_announcement_1:
+            return {
+                "attachment_ids": [],
+                "author_guest_id": False,
+                "author_id": user_0.partner_id.id,
+                "body": [
+                    "markup",
+                    '<div class="o_mail_notification">created this announcement channel.</div>',
+                ],
+                "create_date": create_date,
+                "date": date,
+                "default_subject": "announcement channel 1",
+                "email_from": '"Ernest Employee" <e.e@example.com>',
+                "id": last_message.id,
+                "incoming_email_cc": False,
+                "incoming_email_to": False,
+                "message_link_preview_ids": [],
+                "message_type": "notification",
+                "model": "discuss.channel",
+                "needaction": False,
+                "notification_ids": [],
+                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "parent_id": False,
+                "partner_ids": [],
+                "pinned_at": False,
+                "rating_id": False,
+                "reactions": [],
+                "record_name": "announcement channel 1",
+                "res_id": channel.id,
+                "scheduledDatetime": False,
+                "starred": False,
+                "subject": False,
+                "subtype_id": self.env.ref("mail.mt_comment").id,
+                "trackingValues": [],
+                "write_date": write_date,
+            }
+        if channel == self.channel_announcement_2:
+            return {
+                "attachment_ids": [],
+                "author_guest_id": False,
+                "author_id": user_0.partner_id.id,
+                "body": [
+                    "markup",
+                    '<div class="o_mail_notification">created this announcement channel.</div>',
+                ],
+                "create_date": create_date,
+                "date": date,
+                "default_subject": "announcement channel 2",
+                "email_from": '"Ernest Employee" <e.e@example.com>',
+                "id": last_message.id,
+                "incoming_email_cc": False,
+                "incoming_email_to": False,
+                "message_link_preview_ids": [],
+                "message_type": "notification",
+                "model": "discuss.channel",
+                "needaction": False,
+                "notification_ids": [],
+                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "parent_id": False,
+                "partner_ids": [],
+                "pinned_at": False,
+                "rating_id": False,
+                "reactions": [],
+                "record_name": "announcement channel 2",
+                "res_id": channel.id,
+                "scheduledDatetime": False,
+                "starred": False,
+                "subject": False,
+                "subtype_id": self.env.ref("mail.mt_comment").id,
+                "trackingValues": [],
+                "write_date": write_date,
+            }
+        if channel == self.channel_announcement_group_1:
+            return {
+                "attachment_ids": [],
+                "author_guest_id": False,
+                "author_id": user_0.partner_id.id,
+                "body": [
+                    "markup",
+                    '<div class="o_mail_notification">created this announcement channel.</div>',
+                ],
+                "create_date": create_date,
+                "date": date,
+                "default_subject": "announcement group channel 1",
+                "email_from": '"Ernest Employee" <e.e@example.com>',
+                "id": last_message.id,
+                "incoming_email_cc": False,
+                "incoming_email_to": False,
+                "message_link_preview_ids": [],
+                "message_type": "notification",
+                "model": "discuss.channel",
+                "needaction": False,
+                "notification_ids": [],
+                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "parent_id": False,
+                "partner_ids": [],
+                "pinned_at": False,
+                "rating_id": False,
+                "reactions": [],
+                "record_name": "announcement group channel 1",
+                "res_id": channel.id,
+                "scheduledDatetime": False,
+                "starred": False,
+                "subject": False,
+                "subtype_id": self.env.ref("mail.mt_comment").id,
+                "trackingValues": [],
+                "write_date": write_date,
+            }
+        if channel == self.channel_announcement_group_2:
+            return {
+                "attachment_ids": [],
+                "author_guest_id": False,
+                "author_id": user_0.partner_id.id,
+                "body": [
+                    "markup",
+                    '<div class="o_mail_notification">created this announcement channel.</div>',
+                ],
+                "create_date": create_date,
+                "date": date,
+                "default_subject": "announcement group channel 2",
+                "email_from": '"Ernest Employee" <e.e@example.com>',
+                "id": last_message.id,
+                "incoming_email_cc": False,
+                "incoming_email_to": False,
+                "message_link_preview_ids": [],
+                "message_type": "notification",
+                "model": "discuss.channel",
+                "needaction": False,
+                "notification_ids": [],
+                "thread": {"id": channel.id, "model": "discuss.channel"},
+                "parent_id": False,
+                "partner_ids": [],
+                "pinned_at": False,
+                "rating_id": False,
+                "reactions": [],
+                "record_name": "announcement group channel 2",
+                "res_id": channel.id,
+                "scheduledDatetime": False,
+                "starred": False,
+                "subject": False,
+                "subtype_id": self.env.ref("mail.mt_comment").id,
+                "trackingValues": [],
+                "write_date": write_date,
+            }
         if channel == self.channel_livechat_1:
             return {
                 "attachment_ids": [],
@@ -1783,6 +2138,14 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {**common_data, "display_name": "group restricted channel 1"}
         if channel == self.channel_channel_group_2:
             return {**common_data, "display_name": "group restricted channel 2"}
+        if channel == self.channel_announcement_1:
+            return {**common_data, "display_name": "announcement channel 1"}
+        if channel == self.channel_announcement_2:
+            return {**common_data, "display_name": "announcement channel 2"}
+        if channel == self.channel_announcement_group_1:
+            return {**common_data, "display_name": "announcement group channel 1"}
+        if channel == self.channel_announcement_group_2:
+            return {**common_data, "display_name": "announcement group channel 2"}
         if channel == self.channel_livechat_1:
             return {**common_data, "display_name": "test1 Ernest Employee"}
         if channel == self.channel_livechat_2:

@@ -26,6 +26,11 @@ group_avatar = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 53
 <circle cx="265.03" cy="265.03" r="265.03" fill="#875a7b"/>
 <path d="m184.356059,265.030004c-23.740561,0.73266 -43.157922,10.11172 -58.252302,28.136961l-29.455881,0c-12.0169,0 -22.128621,-2.96757 -30.335161,-8.90271s-12.309921,-14.618031 -12.309921,-26.048671c0,-51.730902 9.08582,-77.596463 27.257681,-77.596463c0.87928,0 4.06667,1.53874 9.56217,4.61622s12.639651,6.19167 21.432451,9.34235s17.512401,4.72613 26.158581,4.72613c9.8187,0 19.563981,-1.68536 29.236061,-5.05586c-0.73266,5.4223 -1.0991,10.25834 -1.0991,14.508121c0,20.370061 5.93514,39.127962 17.805421,56.273922zm235.42723,140.025346c0,17.585601 -5.34888,31.470971 -16.046861,41.655892s-24.912861,15.277491 -42.645082,15.277491l-192.122688,0c-17.732221,0 -31.947101,-5.09257 -42.645082,-15.277491s-16.046861,-24.070291 -16.046861,-41.655892c0,-7.7669 0.25653,-15.350691 0.76937,-22.751371s1.53874,-15.387401 3.07748,-23.960381s3.48041,-16.523211 5.82523,-23.850471s5.4955,-14.471411 9.45226,-21.432451s8.49978,-12.89618 13.628841,-17.805421c5.12906,-4.90924 11.393931,-8.82951 18.794611,-11.76037s15.570511,-4.3964 24.509931,-4.3964c1.46554,0 4.61622,1.57545 9.45226,4.72613s10.18492,6.6678 16.046861,10.55136c5.86194,3.88356 13.702041,7.40068 23.520741,10.55136s19.710601,4.72613 29.675701,4.72613s19.857001,-1.57545 29.675701,-4.72613s17.658801,-6.6678 23.520741,-10.55136c5.86194,-3.88356 11.21082,-7.40068 16.046861,-10.55136s7.98672,-4.72613 9.45226,-4.72613c8.93942,0 17.109251,1.46554 24.509931,4.3964s13.665551,6.85113 18.794611,11.76037c5.12906,4.90924 9.67208,10.844381 13.628841,17.805421s7.10744,14.105191 9.45226,21.432451s4.28649,15.277491 5.82523,23.850471s2.56464,16.559701 3.07748,23.960381s0.76937,14.984471 0.76937,22.751371zm-225.095689,-280.710152c0,15.534021 -5.4955,28.796421 -16.486501,39.787422s-24.253401,16.486501 -39.787422,16.486501s-28.796421,-5.4955 -39.787422,-16.486501s-16.486501,-24.253401 -16.486501,-39.787422s5.4955,-28.796421 16.486501,-39.787422s24.253401,-16.486501 39.787422,-16.486501s28.796421,5.4955 39.787422,16.486501s16.486501,24.253401 16.486501,39.787422zm154.753287,84.410884c0,23.300921 -8.24325,43.194632 -24.729751,59.681133s-36.380212,24.729751 -59.681133,24.729751s-43.194632,-8.24325 -59.681133,-24.729751s-24.729751,-36.380212 -24.729751,-59.681133s8.24325,-43.194632 24.729751,-59.681133s36.380212,-24.729751 59.681133,-24.729751s43.194632,8.24325 59.681133,24.729751s24.729751,36.380212 24.729751,59.681133zm126.616325,49.459502c0,11.43064 -4.10338,20.113531 -12.309921,26.048671s-18.318261,8.90271 -30.335161,8.90271l-29.455881,0c-15.094381,-18.025241 -34.511741,-27.404301 -58.252302,-28.136961c11.87028,-17.145961 17.805421,-35.903862 17.805421,-56.273922c0,-4.24978 -0.36644,-9.08582 -1.0991,-14.508121c9.67208,3.3705 19.417361,5.05586 29.236061,5.05586c8.64618,0 17.365781,-1.57545 26.158581,-4.72613s15.936951,-6.26487 21.432451,-9.34235s8.68289,-4.61622 9.56217,-4.61622c18.171861,0 27.257681,25.865561 27.257681,77.596463zm-28.136961,-133.870386c0,15.534021 -5.4955,28.796421 -16.486501,39.787422s-24.253401,16.486501 -39.787422,16.486501s-28.796421,-5.4955 -39.787422,-16.486501s-16.486501,-24.253401 -16.486501,-39.787422s5.4955,-28.796421 16.486501,-39.787422s24.253401,-16.486501 39.787422,-16.486501s28.796421,5.4955 39.787422,16.486501s16.486501,24.253401 16.486501,39.787422z" fill="#ffffff"/>
 </svg>'''
+announcement_avatar = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 530.06">
+<rect width="530.06" height="530.06" fill="#875a7b"/>
+<polygon points="105.03,195.03 105.03,335.03 425.03,465.03 425.03,65.03" fill="#ffffff" />
+
+</svg>"""
 
 
 def is_channel(channel):
@@ -34,17 +39,17 @@ def is_channel(channel):
     :returns: Whether the channel type is 'channel'.
     :rtype: bool
     """
-    return channel.channel_type == "channel"
+    return channel.channel_type in ("channel", "announcement")
 
 
 def is_channel_or_group(channel):
     """Predicate to filter channels for which the channel type is either
-    'channel' or 'group'.
+    'channel', 'announcement' or 'group'.
 
-    :returns: Whether the channel type is 'channel' or 'group'.
+    :returns: Whether the channel type is 'channel', 'announcement' or 'group'.
     :rtype: bool
     """
-    return channel.channel_type in ("channel", "group")
+    return channel.channel_type in ("channel", "group", "announcement")
 
 
 class DiscussChannel(models.Model):
@@ -66,12 +71,21 @@ class DiscussChannel(models.Model):
     # description
     name = fields.Char('Name', required=True)
     active = fields.Boolean(default=True, help="Set active to false to hide the channel without removing it.")
-    channel_type = fields.Selection([
-        ('chat', 'Chat'),
-        ('channel', 'Channel'),
-        ('group', 'Group')],
-        string='Channel Type', required=True, default='channel', readonly=True, help="Chat is private and unique between 2 persons. Group is private among invited persons. Channel can be freely joined (depending on its configuration).")
+    channel_type = fields.Selection(
+        [
+            ("chat", "Chat"),
+            ("channel", "Channel"),
+            ("group", "Group"),
+            ("announcement", "Announcement"),
+        ],
+        string="Channel Type",
+        required=True,
+        default="channel",
+        readonly=True,
+        help="Chat is private and unique between 2 persons. Group is private among invited persons. Channel can be freely joined (depending on its configuration). Announcement is like channel but only admins can post messages.",
+    )
     is_editable = fields.Boolean('Is Editable', compute='_compute_is_editable')
+    readonly = fields.Boolean('Read Only', compute="_compute_readonly", default=False, help="Non-admin members cannot post messages in this channel.")
     default_display_mode = fields.Selection(string="Default Display Mode", selection=[('video_full_screen', "Full screen video")], help="Determines how the channel will be displayed by default when opening it from its invitation link. No value means display text (no voice/video).")
     description = fields.Text('Description')
     image_128 = fields.Image("Image", max_width=128, max_height=128)
@@ -92,7 +106,15 @@ class DiscussChannel(models.Model):
     call_history_ids = fields.One2many("discuss.call.history", "channel_id")
     is_member = fields.Boolean("Is Member", compute="_compute_is_member", search="_search_is_member", compute_sudo=True)
     # sudo: discuss.channel - sudo for performance, self member can be accessed on accessible channel
-    self_member_id = fields.Many2one("discuss.channel.member", compute="_compute_self_member_id", compute_sudo=True)
+    self_member_id = fields.Many2one("discuss.channel.member", compute="_compute_self_member_id", search="_search_self_member_id", compute_sudo=True)
+    # sudo: discuss.channel - sudo for performance, self member can be accessed on accessible channel
+    is_self_admin = fields.Boolean(
+        "Is Self Admin",
+        default=False,
+        compute="_compute_is_self_admin",
+        search="_search_is_self_admin",
+        compute_sudo=True,
+    )
     # sudo: discuss.channel - sudo for performance, invited members can be accessed on accessible channel
     invited_member_ids = fields.One2many("discuss.channel.member", compute="_compute_invited_member_ids", compute_sudo=True)
     member_count = fields.Integer(string="Member Count", compute='_compute_member_count', compute_sudo=True)
@@ -131,8 +153,8 @@ class DiscussChannel(models.Model):
         'The channel UUID must be unique',
     )
     _group_public_id_check = models.Constraint(
-        "CHECK (channel_type = 'channel' OR group_public_id IS NULL)",
-        'Group authorization and group auto-subscription are only supported on channels.',
+        "CHECK (channel_type = 'channel' OR channel_type = 'announcement' OR group_public_id IS NULL)",
+        'Group authorization and group auto-subscription are only supported on channels and announcements.',
     )
 
     # CONSTRAINTS
@@ -160,8 +182,13 @@ class DiscussChannel(models.Model):
             lambda c: c.parent_channel_id
             and (
                 c.parent_channel_id.parent_channel_id
-                or c.parent_channel_id.channel_type not in ["channel", "group"]
-                or c.parent_channel_id.channel_type != c.channel_type
+                or c.parent_channel_id.channel_type not in ["channel", "group", "announcement"]
+                or (
+                    c.parent_channel_id.channel_type != c.channel_type
+                    and c.channel_type in ["channel", "group"]
+                ) or (
+                    c.parent_channel_id.channel_type not in ("announcement", "channel") and c.channel_type == "announcement"
+                )
             )
         ):
             raise ValidationError(
@@ -181,9 +208,9 @@ class DiscussChannel(models.Model):
     @api.constrains('group_public_id', 'group_ids')
     def _constraint_group_id_channel(self):
         # sudo: discuss.channel - skipping ACL for constraint, more performant and no sensitive information is leaked
-        failing_channels = self.sudo().filtered(lambda channel: channel.channel_type != 'channel' and (channel.group_public_id or channel.group_ids))
+        failing_channels = self.sudo().filtered(lambda channel: channel.channel_type not in ("channel", "announcement") and (channel.group_public_id or channel.group_ids))
         if failing_channels:
-            raise ValidationError(_("For %(channels)s, channel_type should be 'channel' to have the group-based authorization or group auto-subscription.", channels=', '.join([ch.name for ch in failing_channels])))
+            raise ValidationError(_("For %(channels)s, channel_type should be 'channel' or 'announcement' to have the group-based authorization or group auto-subscription.", channels=', '.join([ch.name for ch in failing_channels])))
 
     # COMPUTE / INVERSE
 
@@ -236,6 +263,11 @@ class DiscussChannel(models.Model):
         for channel in self:
             channel.is_editable = channel.has_access("write")
 
+    @api.depends("channel_type")
+    def _compute_readonly(self):
+        for channel in self:
+            channel.readonly = channel.channel_type == "announcement"
+
     @api.depends('channel_type', 'image_128', 'uuid')
     def _compute_avatar_128(self):
         for record in self:
@@ -250,9 +282,14 @@ class DiscussChannel(models.Model):
                 channel.avatar_cache_key = sha512(channel.avatar_128).hexdigest()
 
     def _generate_avatar(self):
-        if self.channel_type not in ('channel', 'group'):
+        if self.channel_type not in ("channel", "group", "announcement"):
             return False
-        avatar = group_avatar if self.channel_type == 'group' else channel_avatar
+        if self.channel_type == "announcement":
+            avatar = announcement_avatar
+        elif self.channel_type == "channel":
+            avatar = channel_avatar
+        else:
+            avatar = group_avatar
         bgcolor = get_hsl_from_seed(self.uuid)
         avatar = avatar.replace('fill="#875a7b"', f'fill="{bgcolor}"')
         return base64.b64encode(avatar.encode())
@@ -320,6 +357,22 @@ class DiscussChannel(models.Model):
         for channel in self:
             channel.self_member_id = member_by_channel.get(channel)
 
+    def _search_self_member_id(self, operator, operand):
+        return [('channel_member_ids', "any", [("is_self", "=", True), ("id", operator, operand)])]
+
+    @api.depends("self_member_id", "self_member_id.member_type")
+    def _compute_is_self_admin(self):
+        self.self_member_id.fetch(["member_type", "channel_id"])
+
+        self.filtered(lambda c: not c.self_member_id).is_self_admin = False
+        for channel in self - self.filtered(lambda c: not c.self_member_id):
+            channel.is_self_admin = channel.self_member_id.member_type == "admin"
+
+    def _search_is_self_admin(self, operator, operand):
+        if operator != '=' or not isinstance(operand, bool):
+            return NotImplemented
+        return [('channel_member_ids', 'any', [('is_self', '=', True), ('member_type', '=', 'admin' if operand else 'member')])]
+
     @api.depends("channel_member_ids.rtc_inviting_session_id")
     def _compute_invited_member_ids(self):
         members_by_channel = {
@@ -355,7 +408,7 @@ class DiscussChannel(models.Model):
 
     @api.depends("channel_type", "parent_channel_id.group_public_id")
     def _compute_group_public_id(self):
-        channels = self.filtered(lambda channel: channel.channel_type == "channel")
+        channels = self.filtered(lambda channel: channel.channel_type in ("channel", "announcement"))
         for channel in channels:
             if channel.parent_channel_id:
                 channel.group_public_id = channel.parent_channel_id.group_public_id
@@ -374,11 +427,30 @@ class DiscussChannel(models.Model):
 
     @api.model
     def _get_allowed_channel_member_create_params(self):
-        return ["partner_id", "guest_id", "unpin_dt", "last_interest_dt"]
+        return ["partner_id", "guest_id", "unpin_dt", "last_interest_dt", "member_type"]
 
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            if is_announcement := (
+                vals.get("channel_type") == "announcement"
+                or self.env.context.get("default_channel_type") == "announcement"
+            ):
+                if vals.get("parent_channel_id"):
+                    parent = self.search_fetch(
+                        Domain("id", "=", vals["parent_channel_id"]),
+                        ["channel_type", "sub_channel_ids"],
+                    )
+                    if (
+                        parent
+                        and parent.channel_type == "channel"
+                        and any(c.channel_type == "announcement" for c in parent.sub_channel_ids)
+                    ):
+                        raise UserError(
+                            self.env._(
+                                "The parent channel already has an announcement sub-channel."
+                            )
+                        )
             # find partners to add from partner_ids
             partner_ids_cmd = vals.get('channel_partner_ids') or []
             if any(cmd[0] not in (4, 6) for cmd in partner_ids_cmd):
@@ -414,6 +486,13 @@ class DiscussChannel(models.Model):
                 (0, 0, {'partner_id': pid})
                 for pid in partner_ids_to_add if pid not in membership_pids
             ]
+            # current user is automatically admin of announcement channels
+            if is_announcement:
+                vals["channel_member_ids"] = [
+                    m
+                    for m in vals["channel_member_ids"]
+                    if m[0] != 0 or m[2].get("partner_id") != self.env.user.partner_id.id
+                ] + [(0, 0, {"partner_id": self.env.user.partner_id.id, "member_type": "admin"})]
 
             # clean vals
             vals.pop('channel_partner_ids', False)
@@ -579,7 +658,7 @@ class DiscussChannel(models.Model):
         custom_store.add(self, {"close_chat_window": True, "isLocallyPinned": False}).bus_send()
         if not member:
             return
-        if self.channel_type != "channel" and post_leave_message:
+        if self.channel_type not in ("channel", "announcement") and post_leave_message:
             notification = Markup('<div class="o_mail_notification" data-oe-type="channel-left">%s</div>') % _(
                 "left the channel"
             )
@@ -617,6 +696,7 @@ class DiscussChannel(models.Model):
         invite_to_rtc_call=False,
         post_joined_message=True,
         inviting_partner=None,
+        member_type=None,
     ):
         inviting_partner = inviting_partner or self.env["res.partner"]
         partners = partners or self.env["res.partner"]
@@ -641,6 +721,9 @@ class DiscussChannel(models.Model):
                 'guest_id': guest.id,
                 'channel_id': channel.id,
             } for guest in guests - existing_members.guest_id]
+            members_to_create = [
+                {**m, "member_type": member_type or "member"} for m in members_to_create
+            ]
             new_members = self.env['discuss.channel.member'].create(members_to_create)
             all_new_members += new_members
             for member in new_members:
@@ -654,7 +737,7 @@ class DiscussChannel(models.Model):
                 if not member.is_self and not self.env.user._is_public():
                     payload["invited_by_user_id"] = self.env.user.id
                 member._bus_send("discuss.channel/joined", payload)
-                if channel.channel_type != "channel" and post_joined_message:
+                if channel.channel_type not in ("channel", "announcement") and post_joined_message:
                     notification = (
                         _("joined the channel")
                         if member.is_self
@@ -877,9 +960,9 @@ class DiscussChannel(models.Model):
             [("mute_until_dt", "=", False)],
             [("partner_id.user_ids.manual_im_status", "!=", "busy")],
             Domain.OR([
-                [("channel_id.channel_type", "!=", "channel")],
+                [("channel_id.channel_type", "not in", ["channel", "announcement"])],
                 Domain.AND([
-                    [("channel_id.channel_type", "=", "channel")],
+                    [("channel_id.channel_type", "in", ["channel", "announcement"])],
                     Domain.OR([
                         [("custom_notifications", "=", "all")],
                         Domain.AND([
@@ -956,7 +1039,7 @@ class DiscussChannel(models.Model):
         )
         if self.channel_type == 'chat':
             payload['title'] = author.name
-        elif self.channel_type == 'channel':
+        elif self.channel_type in 'channel':
             payload['title'] = "#%s - %s" % (record_name, author.name)
         elif self.channel_type == 'group':
             if not record_name:
@@ -986,7 +1069,7 @@ class DiscussChannel(models.Model):
     def _get_allowed_message_partner_ids(self, partner_ids):
         """Ensure only partners having access to the channel can be mentioned."""
         partners = self.env["res.partner"].browse(partner_ids)
-        if self.channel_type == "channel":
+        if self.channel_type in ("channel", "announcement"):
             if self.group_public_id:
                 partners = partners.filtered(
                     lambda p: p.user_ids.all_group_ids & self.group_public_id,
@@ -1021,6 +1104,14 @@ class DiscussChannel(models.Model):
             self.with_context(mail_post_autofollow_author_skip=True, mail_post_autofollow=False),
         ).message_post(message_type=message_type, **kwargs)
 
+    def _check_can_post_message(self, message_type):
+        if self.channel_type == "announcement" and message_type == "comment":
+            # only admins can post in announcement channels
+            if not self.is_self_admin:
+                raise UserError(
+                    self.env._("Only administrators of announcement channels can post messages.")
+                )
+
     def _message_post_after_hook(self, message, msg_vals):
         # Automatically set the message posted by the current user as seen for themselves.
         if self.self_member_id and message.is_current_user_or_guest_author:
@@ -1037,6 +1128,15 @@ class DiscussChannel(models.Model):
         # Don't call super in this override as we want to ignore the mail.thread behavior completely
         if not message.message_type == 'comment':
             raise UserError(_("Only messages type comment can have their content updated on model 'discuss.channel'"))
+        if self.channel_type == "announcement":
+            raise UserError(self.env._("Messages in announcement channels cannot be edited."))
+
+    def _check_mail_message_access(self, operation):
+        if operation == "read":
+            return None
+        if operation in ("write", "unlink"):
+            return self.filtered(lambda c: c.channel_type == "announcement")
+        return self.filtered(lambda c: not c.is_self_admin and self.channel_type == "announcement")
 
     def _create_attachments_for_post(self, values_list, extra_list):
         # Create voice metadata from meta information
@@ -1188,9 +1288,9 @@ class DiscussChannel(models.Model):
     @api.model
     def _get_channels_as_member(self):
         # 2 different queries because the 2 sub-queries together with OR are less efficient
-        member_domain = [("channel_type", "in", ("channel", "group")), ("is_member", "=", True)]
+        member_domain = [("channel_type", "in", ("channel", "group", "announcement")), ("is_member", "=", True)]
         pinned_member_domain = [
-                ("channel_type", "not in", ("channel", "group")),
+                ("channel_type", "not in", ("channel", "group", "announcement")),
                 ("channel_member_ids", "any", [("is_self", "=", True), ("is_pinned", "=", True)]),
             ]
         channels = self.env["discuss.channel"].search(member_domain)
@@ -1201,7 +1301,7 @@ class DiscussChannel(models.Model):
         # As the method uses partial recordsets with filtered (that lose the prefetch ids) it is
         # best to prefetch these computed fields once to avoid doing partial queries multiple times,
         # especially because these 2 fields are used in ACL too.
-        self.fetch(["is_member", "self_member_id"])
+        self.fetch(["is_member", "self_member_id", "is_self_admin"])
         # Avoid sending potentially a lot of members for big channels: exclude chat and other small
         # channels from this optimization because they are assumed to be smaller and it's important
         # to know the member list for them.
@@ -1401,7 +1501,7 @@ class DiscussChannel(models.Model):
     def _types_allowing_unfollow(self):
         """ Return the channel types which allow leaving the channel, channel will be unpinned
         otherwise """
-        return ["channel", "group"]
+        return ["channel", "group", "annoucement"]
 
     def _member_based_naming_channel_types(self):
         """ Return the channel types that use member-based naming,
@@ -1411,7 +1511,7 @@ class DiscussChannel(models.Model):
 
     def _lazy_load_members_channel_types(self):
         """ Return the channel types that load members lazily. """
-        return ["channel", "group"]
+        return ["channel", "group", "announcement"]
 
     def channel_fetched(self):
         """ Broadcast the channel_fetched notification to channel members
@@ -1496,6 +1596,31 @@ class DiscussChannel(models.Model):
         return new_channel
 
     @api.model
+    def _create_announcement_channel(self, name, group_id):
+        """Create an announcement channel and add the current partner as admin, broadcast it
+        (to make the user directly listen to it when polling)
+        :param name : the name of the channel to create
+        :param group_id : the group allowed to join the channel.
+        :return dict : channel header
+        """
+        # create the channel
+        vals = {
+            "channel_type": "announcement",
+            "name": name,
+        }
+        new_channel = self.create(vals)
+        group = self.env["res.groups"].search([("id", "=", group_id)]) if group_id else None
+        new_channel.group_public_id = group.id if group else None
+        notification = Markup('<div class="o_mail_notification">%s</div>') % _(
+            "created this announcement channel."
+        )
+        new_channel.message_post(
+            body=notification, message_type="notification", subtype_xmlid="mail.mt_comment"
+        )
+        Store(bus_channel=self.env.user).add(new_channel).bus_send()
+        return new_channel
+
+    @api.model
     def _create_group(self, partners_to, default_display_mode=False, name=''):
         """ Creates a group channel.
 
@@ -1515,7 +1640,7 @@ class DiscussChannel(models.Model):
         channel._broadcast(channel.channel_member_ids.partner_id.ids)
         return channel
 
-    def _create_sub_channel(self, from_message_id=None, name=None):
+    def _create_sub_channel(self, from_message_id=None, name=None, channel_type=None):
         self.ensure_one()
         message = self.env["mail.message"]
         if from_message_id:
@@ -1529,7 +1654,7 @@ class DiscussChannel(models.Model):
                     name = stripped[:30]
         sub_channel = self.create(
             {
-                "channel_type": self.channel_type,
+                "channel_type": self.channel_type if channel_type is None else channel_type,
                 "from_message_id": message.id,
                 "name": name,
                 "parent_channel_id": self.id,
@@ -1561,7 +1686,7 @@ class DiscussChannel(models.Model):
         """ Return 'limit'-first channels' name, channel_type and group_public_id fields such that the
             name matches a 'search' string. Exclude channels of type chat (DM) and group.
         """
-        domain = [("name", "ilike", search), ("channel_type", "=", "channel")]
+        domain = [("name", "ilike", search), ("channel_type", "in", ["channel", "announcement"])]
         channels = self.search(domain, limit=limit)
         channel_fields = [
             "name",
@@ -1610,11 +1735,12 @@ class DiscussChannel(models.Model):
 
     def execute_command_help(self, **kwargs):
         self.ensure_one()
-        if self.channel_type == 'channel':
+        if self.channel_type in ("channel", "announcement"):
             msg = _(
-                "You are in channel %(bold_start)s#%(channel_name)s%(bold_end)s.",
+                "You are in %(channel_type)s %(bold_start)s#%(channel_name)s%(bold_end)s.",
                 bold_start=Markup("<b>"),
                 bold_end=Markup("</b>"),
+                channel_type=self.channel_type,
                 channel_name=self.name,
             )
         else:

@@ -197,6 +197,14 @@ const threadPatch = {
                 return this.typingMembers.filter((member) => !member.persona?.eq(this.store.self));
             },
         });
+        this.readOnly = fields.Attr(false, {
+            compute() {
+                return (
+                    this.channel_type === "announcement" &&
+                    this.self_member_id?.member_type !== "admin"
+                );
+            },
+        });
         this.self_member_id = fields.One("discuss.channel.member", {
             inverse: "threadAsSelf",
         });
@@ -226,7 +234,7 @@ const threadPatch = {
         return this.member_count === this.channel_member_ids.length;
     },
     get avatarUrl() {
-        if (this.channel_type === "channel" || this.channel_type === "group") {
+        if (["channel", "group", "announcement"].includes(this.channel_type)) {
             return imageUrl("discuss.channel", this.id, "avatar_128", {
                 unique: this.avatar_cache_key,
             });
@@ -235,6 +243,15 @@ const threadPatch = {
             return this.correspondent.avatarUrl;
         }
         return super.avatarUrl;
+    },
+    get composerDisabled() {
+        return this.readOnly || super.composerDisabled;
+    },
+    get composerDisabledText() {
+        if (this.readOnly) {
+            return _t("Only channel administrators can post messages.");
+        }
+        return super.composerDisabledText;
     },
     get showCorrespondentCountry() {
         return false;
@@ -250,7 +267,7 @@ const threadPatch = {
     },
     /** @returns {import("models").ChannelMember} */
     computeCorrespondent() {
-        if (this.channel_type === "channel") {
+        if (["channel", "announcement"].includes(this.channel_type)) {
             return undefined;
         }
         const correspondents = this.correspondents;
@@ -331,7 +348,7 @@ const threadPatch = {
         }
     },
     get hasMemberList() {
-        return ["channel", "group"].includes(this.channel_type);
+        return ["channel", "group", "announcement"].includes(this.channel_type);
     },
     get hasSelfAsMember() {
         return Boolean(this.self_member_id);

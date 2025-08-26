@@ -16,6 +16,7 @@ export class DiscussChannelMember extends models.ServerModel {
     last_interest_dt = fields.Datetime({
         default: () => serializeDateTime(today().minus({ seconds: 1 })),
     });
+    member_type = fields.Generic({ default: "member" });
 
     create(values) {
         const idOrIds = super.create(values);
@@ -212,6 +213,15 @@ export class DiscussChannelMember extends models.ServerModel {
             "last_interest_dt",
             "last_seen_dt",
             "new_message_separator",
+            mailDataHelpers.Store.attr(
+                "member_type",
+                makeKwArgs({
+                    predicate: (m) => {
+                        const [channel] = this.env["discuss.channel"].browse(m.channel_id);
+                        return channel?.channel_type === "announcement";
+                    },
+                })
+            ),
         ].concat(this._to_store_persona());
     }
 

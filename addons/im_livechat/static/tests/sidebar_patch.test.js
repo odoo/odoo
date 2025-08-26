@@ -63,7 +63,7 @@ test("Do not show channel when visitor is typing", async () => {
     });
     await start();
     await openDiscuss();
-    await contains(".o-mail-DiscussSidebarCategory", { count: 2 });
+    await contains(".o-mail-DiscussSidebarCategory", { count: 3 });
     await contains(
         ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel-container",
         {

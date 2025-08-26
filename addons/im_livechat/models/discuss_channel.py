@@ -674,6 +674,7 @@ class DiscussChannel(models.Model):
         invite_to_rtc_call=False,
         post_joined_message=True,
         inviting_partner=None,
+        member_type=None,
     ):
         all_new_members = super()._add_members(
             guests=guests,
@@ -683,6 +684,7 @@ class DiscussChannel(models.Model):
             invite_to_rtc_call=invite_to_rtc_call,
             post_joined_message=post_joined_message,
             inviting_partner=inviting_partner,
+            member_type=member_type,
         )
         for channel in all_new_members.channel_id:
             # sudo: discuss.channel - accessing livechat_status in internal code is acceptable

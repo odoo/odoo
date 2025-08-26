@@ -380,7 +380,11 @@ export class Store extends BaseStore {
      * @returns Thread types matching the given tab.
      */
     tabToThreadType(tab) {
-        return tab === "chat" ? ["chat", "group"] : [tab];
+        return tab === "chat"
+            ? ["chat", "group"]
+            : tab === "channel"
+            ? ["channel", "announcement"]
+            : [tab];
     }
 
     handleClickOnLink(ev, thread) {

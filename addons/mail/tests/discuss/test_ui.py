@@ -43,3 +43,6 @@ class TestUi(HttpCaseWithUserDemo):
             login="john",
         )
         self.start_tour(group_chat.invitation_url, "discuss.meeting_view_public_tour", login="john")
+
+    def test_05_mail_create_announcement_channel_tour(self):
+        self.start_tour("/odoo", 'discuss_announcement_channel_tour', login="admin")

@@ -195,12 +195,15 @@ function generateMentionsLinks(
     }
     for (const thread of threads) {
         const placeholder = `#-mention-channel-${thread.id}`;
-        let className, text;
+        let className = "o_channel_redirect";
+        let text;
         if (thread.parent_channel_id) {
-            className = "o_channel_redirect o_channel_redirect_asThread";
+            className +=
+                thread.channel_type === "announcement"
+                    ? " o_channel_redirect_asAnnouncementThread"
+                    : " o_channel_redirect_asThread";
             text = `#${thread.parent_channel_id.displayName} > ${thread.displayName}`;
         } else {
-            className = "o_channel_redirect";
             text = `#${thread.displayName}`;
         }
         mentions.push({

@@ -9,12 +9,20 @@ from odoo.tests.common import tagged
 from odoo.tools import mute_logger
 
 
+def add_announcement_channel_cases(cases):
+    return [
+        (user, f"{channel}_{group}", *_)
+        for channel in ("channel", "announcement")
+        for user, group, *_ in cases
+    ]
+
+
 @tagged("post_install", "-at_install")
 class TestDiscussChannelAccess(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls._channel_type_channel_access_cases = [
+        generic_channel_type_access_cases = [
             ("public", "no_group", "member", "read", True),
             ("public", "no_group", "member", "write", False),
             ("public", "no_group", "member", "unlink", False),
@@ -58,28 +66,38 @@ class TestDiscussChannelAccess(MailCommon):
             ("portal", "group_failing", "outside", "write", False),
             ("portal", "group_failing", "outside", "unlink", False),
             ("user", "no_group", "member", "read", True),
-            ("user", "no_group", "member", "write", True),
             ("user", "no_group", "member", "unlink", False),
             ("user", "no_group", "outside", "create", True),
             ("user", "no_group", "outside", "read", True),
-            ("user", "no_group", "outside", "write", True),
             ("user", "no_group", "outside", "unlink", False),
             ("user", "group_matching", "member", "read", True),
-            ("user", "group_matching", "member", "write", True),
             ("user", "group_matching", "member", "unlink", False),
             ("user", "group_matching", "outside", "create", True),
             ("user", "group_matching", "outside", "read", True),
-            ("user", "group_matching", "outside", "write", True),
             ("user", "group_matching", "outside", "unlink", False),
             ("user", "group_failing", "member", "read", False),
             ("user", "group_failing", "member", "write", False),
             ("user", "group_failing", "member", "unlink", False),
-            ("user", "group_failing", "outside", "create", False),
             ("user", "group_failing", "outside", "read", False),
             ("user", "group_failing", "outside", "write", False),
             ("user", "group_failing", "outside", "unlink", False),
         ]
-        cls._channel_type_channel_member_access_cases = [
+        cls._channel_type_channel_access_cases = [
+            *add_announcement_channel_cases(generic_channel_type_access_cases),
+            ("user", "channel_group_failing", "outside", "create", False),
+            ("user", "channel_no_group", "member", "write", True),
+            ("user", "channel_no_group", "outside", "write", True),
+            ("user", "channel_group_matching", "member", "write", True),
+            ("user", "channel_group_matching", "outside", "write", True),
+            ("user", "announcement_group_failing", "outside", "create", True),
+            ("user", "announcement_no_group", "admin", "write", True),
+            ("user", "announcement_no_group", "member", "write", False),
+            ("user", "announcement_no_group", "outside", "write", False),
+            ("user", "announcement_group_matching", "admin", "write", True),
+            ("user", "announcement_group_matching", "member", "write", False),
+            ("user", "announcement_group_matching", "outside", "write", False),
+        ]
+        generic_channel_type_channel_member_access_cases = [
             ("public", "no_group", "member", "self", "create", False),
             ("public", "no_group", "member", "self", "read", True),
             ("public", "no_group", "member", "self", "write", True),
@@ -158,16 +176,14 @@ class TestDiscussChannelAccess(MailCommon):
             ("portal", "group_failing", "outside", "other", "read", False),
             ("portal", "group_failing", "outside", "other", "write", False),
             ("portal", "group_failing", "outside", "other", "unlink", False),
+            ("user", "no_group", "member", "self", "write", True),
             ("user", "no_group", "member", "self", "create", False),
             ("user", "no_group", "member", "self", "read", True),
-            ("user", "no_group", "member", "self", "write", True),
             ("user", "no_group", "member", "self", "unlink", True),
-            ("user", "no_group", "member", "other", "create", True),
             ("user", "no_group", "member", "other", "read", True),
             ("user", "no_group", "member", "other", "write", False),
             ("user", "no_group", "member", "other", "unlink", False),
             ("user", "no_group", "outside", "self", "create", True),
-            ("user", "no_group", "outside", "other", "create", True),
             ("user", "no_group", "outside", "other", "read", True),
             ("user", "no_group", "outside", "other", "write", False),
             ("user", "no_group", "outside", "other", "unlink", False),
@@ -175,20 +191,18 @@ class TestDiscussChannelAccess(MailCommon):
             ("user", "group_matching", "member", "self", "read", True),
             ("user", "group_matching", "member", "self", "write", True),
             ("user", "group_matching", "member", "self", "unlink", True),
-            ("user", "group_matching", "member", "other", "create", True),
             ("user", "group_matching", "member", "other", "read", True),
             ("user", "group_matching", "member", "other", "write", False),
             ("user", "group_matching", "member", "other", "unlink", False),
             ("user", "group_matching", "outside", "self", "create", True),
-            ("user", "group_matching", "outside", "other", "create", True),
             ("user", "group_matching", "outside", "other", "read", True),
             ("user", "group_matching", "outside", "other", "write", False),
             ("user", "group_matching", "outside", "other", "unlink", False),
             ("user", "group_failing", "member", "self", "create", False),
+            ("user", "group_failing", "member", "other", "create", False),
             ("user", "group_failing", "member", "self", "read", False),
             ("user", "group_failing", "member", "self", "write", False),
             ("user", "group_failing", "member", "self", "unlink", False),
-            ("user", "group_failing", "member", "other", "create", False),
             ("user", "group_failing", "member", "other", "read", False),
             ("user", "group_failing", "member", "other", "write", False),
             ("user", "group_failing", "member", "other", "unlink", False),
@@ -197,6 +211,20 @@ class TestDiscussChannelAccess(MailCommon):
             ("user", "group_failing", "outside", "other", "read", False),
             ("user", "group_failing", "outside", "other", "write", False),
             ("user", "group_failing", "outside", "other", "unlink", False),
+        ]
+        cls._channel_type_channel_member_access_cases = [
+            *add_announcement_channel_cases(generic_channel_type_channel_member_access_cases),
+            ("user", "channel_no_group", "member", "other", "create", True),
+            ("user", "channel_no_group", "outside", "other", "create", True),
+            ("user", "channel_group_matching", "member", "other", "create", True),
+            ("user", "channel_group_matching", "outside", "other", "create", True),
+            ("user", "announcement_no_group", "member", "other", "create", False),
+            ("user", "announcement_no_group", "admin", "other", "create", True),
+            ("user", "announcement_no_group", "outside", "other", "create", False),
+            ("user", "announcement_group_matching", "member", "other", "create", False),
+            ("user", "announcement_group_matching", "outside", "other", "create", False),
+            ("user", "announcement_group_matching", "admin", "other", "create", True),
+            ("user", "announcement_group_failing", "admin", "other", "create", True),
         ]
         cls._group_type_channel_access_cases = [
             ("public", "group", "member", "read", True),
@@ -492,14 +520,21 @@ class TestDiscussChannelAccess(MailCommon):
         elif channel_key == "chat":
             channel = DiscussChannel._get_or_create_chat(partners.ids)
         else:
-            channel = DiscussChannel._create_channel("Channel", group_id=None)
-            if membership == "member":
-                channel._add_members(users=user, guests=guest)
-        if channel_key == "no_group":
+            if "announcement" in channel_key:
+                channel = DiscussChannel.create({
+                    "channel_type": "announcement",
+                    "name": "Announcement",
+                })
+            else:
+                channel = DiscussChannel._create_channel("Channel", group_id=None)
+            if membership in ("member", "admin"):
+                channel._add_members(users=user, guests=guest, member_type=membership)
+
+        if "no_group" in channel_key:
             channel.group_public_id = None
-        elif channel_key == "group_matching":
+        elif "group_matching" in channel_key:
             channel.group_public_id = self.secret_group
-        elif channel_key == "group_failing":
+        elif "group_failing" in channel_key:
             channel.group_public_id = self.env.ref("base.group_system")
         if sub_channel:
             channel.sudo()._create_sub_channel()
@@ -514,13 +549,19 @@ class TestDiscussChannelAccess(MailCommon):
         ChannelAsUser = self.env["discuss.channel"].with_user(current_user).with_context(guest=guest)
         if operation == "create":
             group_public_id = None
-            if channel_key == "group_matching":
+            if "group_matching" in channel_key:
                 group_public_id = self.secret_group.id
-            elif channel_key == "group_failing":
+            elif "group_failing" in channel_key:
                 group_public_id = self.env.ref("base.group_system").id
+            if "channel" in channel_key:
+                channel_type = "channel"
+            elif "announcement" in channel_key:
+                channel_type = "announcement"
+            else:
+                channel_type = channel_key
             data = {
                 "name": "Test Channel",
-                "channel_type": channel_key if channel_key in ("group", "chat") else "channel",
+                "channel_type": channel_type,
                 "group_public_id": group_public_id,
             }
             ChannelAsUser.create(data)
@@ -528,9 +569,11 @@ class TestDiscussChannelAccess(MailCommon):
             channel = ChannelAsUser.browse(
                 self._get_channel_id(user_key, channel_key, membership, for_sub_channel)
             )
+            self.env.invalidate_all()
             self.assertEqual(len(channel), 1, "should find the channel")
             if operation == "read":
-                self.assertEqual(len(ChannelAsUser.search([("id", "=", channel.id)])), 1 if result else 0)
+                channel_tmp = ChannelAsUser.search([("id", "=", channel.id)])
+                self.assertEqual(len(channel_tmp), 1 if result else 0)
                 channel.read(["name"])
             elif operation == "write":
                 channel.write({"name": "new name"})

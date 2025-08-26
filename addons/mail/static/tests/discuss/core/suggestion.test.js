@@ -214,3 +214,15 @@ test("mention suggestion displays OdooBot before archived partners", async () =>
         ],
     });
 });
+
+test("announcement channel: suggestion basic rendering", async () => {
+    const pyEnv = await startServer();
+    const channel = pyEnv["discuss.channel"]._create_announcement_channel("General");
+    pyEnv["discuss.channel"]._create_announcement_channel("General 2");
+    const channelId = channel[0].id;
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "#");
+    await contains(".o-mail-Composer-suggestionList .fa-bullhorn", { count: 2 });
+    await contains(".o-mail-Composer-suggestionList", { text: "General 2" });
+});
