@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-08 08:46+0000\n"
-"PO-Revision-Date: 2025-09-08 08:46+0000\n"
+"POT-Creation-Date: 2025-09-09 06:42+0000\n"
+"PO-Revision-Date: 2025-09-09 06:42+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -67,12 +67,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 msgid "Check data on Invoice(s)"
-msgstr ""
-
-#. module: l10n_tr_nilvera_einvoice
-#. odoo-python
-#: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
-msgid "Check data on Partner(s)"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -193,11 +187,6 @@ msgid "Nilvera document has been received successfully"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
-#: model:ir.actions.server,name:l10n_tr_nilvera_einvoice.ir_cron_nilvera_get_invoice_status_ir_actions_server
-msgid "Nilvera: retrieve invoice status"
-msgstr ""
-
-#. module: l10n_tr_nilvera_einvoice
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_edi_xml_ubl_tr.py:0
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
@@ -207,8 +196,23 @@ msgid ""
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
-#: model:ir.actions.server,name:l10n_tr_nilvera_einvoice.ir_cron_nilvera_get_new_documents_ir_actions_server
-msgid "Nilvera: retrieve new documents"
+#: model:ir.actions.server,name:l10n_tr_nilvera_einvoice.ir_cron_nilvera_get_new_einvoice_sale_documents_ir_actions_server
+msgid "Nilvera: retrieve E-Invoice new sale documents"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.actions.server,name:l10n_tr_nilvera_einvoice.ir_cron_nilvera_get_invoice_status_ir_actions_server
+msgid "Nilvera: retrieve invoice status"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.actions.server,name:l10n_tr_nilvera_einvoice.ir_cron_nilvera_get_new_earchive_sale_documents_ir_actions_server
+msgid "Nilvera: retrieve new E-Archive sale documents"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.actions.server,name:l10n_tr_nilvera_einvoice.ir_cron_nilvera_get_new_purchase_documents_ir_actions_server
+msgid "Nilvera: retrieve new purchase documents"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -332,14 +336,6 @@ msgstr ""
 msgid ""
 "The following invoice(s) need to have the same Start Date and End Date on "
 "all their respective Invoice Lines."
-msgstr ""
-
-#. module: l10n_tr_nilvera_einvoice
-#. odoo-python
-#: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
-msgid ""
-"The following partner(s) are either not Turkish or are missing one of those "
-"fields: city, state and street."
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
