@@ -100,10 +100,22 @@ patch(MessagingMenu.prototype, {
                 sequence: 10,
             },
             {
-                counter: this.store.inbox.counter,
-                icon: "fa fa-inbox",
-                id: "inbox",
-                label: _t("Inbox"),
+                counter:
+                    this.store.self.main_user_id?.notification_type === "inbox"
+                        ? this.store.inbox.counter
+                        : this.store.starred.counter,
+                icon:
+                    this.store.self.main_user_id?.notification_type === "inbox"
+                        ? "fa fa-inbox"
+                        : "fa fa-star-o",
+                id:
+                    this.store.self.main_user_id?.notification_type === "inbox"
+                        ? "inbox"
+                        : "starred",
+                label:
+                    this.store.self.main_user_id?.notification_type === "inbox"
+                        ? _t("Inbox")
+                        : _t("Starred"),
                 sequence: 100,
             },
             ...super._tabs,

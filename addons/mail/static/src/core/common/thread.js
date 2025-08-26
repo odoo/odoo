@@ -483,14 +483,6 @@ export class Thread extends Component {
         return this.state.showJumpPresent ? threshold - 200 : threshold;
     }
 
-    get preferenceButtonText() {
-        const [, before, inside, after] =
-            _t(
-                "<button>Change your preferences</button> to receive new notifications in your inbox."
-            ).match(/(.*)<button>(.*)<\/button>(.*)/) ?? [];
-        return { before, inside, after };
-    }
-
     updateShowJumpPresent() {
         this.state.showJumpPresent =
             this.visibleState.isVisible &&

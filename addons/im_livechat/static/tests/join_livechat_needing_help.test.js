@@ -6,7 +6,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-dom";
 
 import { Deferred } from "@web/core/utils/concurrency";
-import { Command, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { Command, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
 defineLivechatModels();
 describe.current.tags("desktop");
@@ -60,6 +60,7 @@ test("Show notification when joining a channel that already received help", asyn
 
 test("Hide 'help already received' notification when channel is not visible", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const bobPartnerId = pyEnv["res.partner"].create({
         name: "bob",
         user_ids: [Command.create({ name: "bob" })],

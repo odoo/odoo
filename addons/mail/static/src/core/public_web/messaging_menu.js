@@ -165,7 +165,10 @@ export class MessagingMenu extends Component {
         ) {
             this.store.inbox.setAsDiscussThread();
         }
-        if (this.store.discuss.activeTab !== "inbox") {
+        if (this.store.discuss.activeTab === "starred") {
+            this.store.starred.setAsDiscussThread();
+        }
+        if (!["inbox", "starred"].includes(this.store.discuss.activeTab)) {
             this.store.discuss.thread = undefined;
         }
     }

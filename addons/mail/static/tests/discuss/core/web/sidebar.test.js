@@ -10,13 +10,14 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
-import { asyncStep, Command, waitForSteps } from "@web/../tests/web_test_helpers";
+import { asyncStep, Command, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
 
 test("unknown channel can be displayed and interacted with", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const partnerId = pyEnv["res.partner"].create({ name: "Jane" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [Command.create({ partner_id: partnerId })],

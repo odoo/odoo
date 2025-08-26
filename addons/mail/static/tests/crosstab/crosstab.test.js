@@ -166,6 +166,7 @@ test("Message (hard) delete notification", async () => {
     // Note: This isn't a notification from when user click on "Delete message" action:
     // this happens when mail_message server record is effectively deleted (unlink)
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const messageId = pyEnv["mail.message"].create({
         body: "Needaction message",
         model: "res.partner",
