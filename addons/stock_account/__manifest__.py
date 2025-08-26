@@ -39,6 +39,7 @@ Dashboard / Reports for Warehouse Management includes:
         'views/stock_move_views.xml',
         'wizard/stock_request_count.xml',
         'report/account_invoice_report_view.xml',
+        'report/stock_avco_audit_report_views.xml',
         'report/stock_valuation_report.xml',
     ],
     'installable': True,

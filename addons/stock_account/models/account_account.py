@@ -9,4 +9,4 @@ class AccountAccount(models.Model):
         help="At closing, register the inventory variation of the period into a specific account")
     account_stock_expense_id = fields.Many2one(
         'account.account', string='Adjustment Account',
-        help="Counter part used at closing for the book adjustments of the inventory valuation.")
+        help="Counterpart used at closing for accounting adjustments to inventory valuation.")

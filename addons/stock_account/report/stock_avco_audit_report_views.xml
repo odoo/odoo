@@ -1,0 +1,26 @@
+<odoo>
+    <record id="stock_avco_report_view_list" model="ir.ui.view">
+        <field name="name">stock.avco.report.view.list</field>
+        <field name="model">stock.avco.report</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="reference"/>
+                <field name="product_id"/>
+                <field name="date"/>
+                <field name="description"/>
+                <field name="quantity"/>
+                <field name="value"/>
+                <field name="total_value"/>
+                <field name="total_quantity"/>
+                <field name="avco_value"/>
+            </list>
+        </field>
+    </record>
+    
+    <record id="stock_avco_report_action" model="ir.actions.act_window">
+        <field name="name">AVCO Justification</field>
+        <field name="res_model">stock.avco.report</field>
+        <field name="view_mode">list</field>
+        <field name="domain">[("product_id", "=", active_id)]</field>
+    </record>
+</odoo>

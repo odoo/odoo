@@ -57,9 +57,28 @@
             <field name="arch" type="xml">
                 <field name="qty_available" position="before">
                     <field name="company_currency_id" column_invisible="True"/>
-                    <field name="cost_method" column_invisible="True"/>
-                    <field name="avg_cost" string="Unit Cost" optional="show" widget='monetary' options="{'currency_field': 'company_currency_id'}"/>
-                    <field name="total_value" string="Total Value" optional="show" widget='monetary' options="{'currency_field': 'company_currency_id'}" sum="Total Value"/>
+                    <field name="cost_method" optional="hide"/>
+                    <field name="avg_cost"
+                        string="Unit Cost" optional="show" widget='stock_action_field'
+                        options="{
+                            'currency_field': 'company_currency_id',
+                            'action_name': 'stock_account.stock_avco_report_action',
+                        }" context="{
+                            'active_id': id,
+                        }"/>
+                    <field
+                        name="total_value" string="Total Value" optional="show"
+                        widget='stock_action_field' options="{
+                            'currency_field': 'company_currency_id',
+                            'action_name': 'stock_account.stock_move_valuation_action',
+                        }" context=" {
+                            'search_default_product_id': id,
+                            'search_default_incoming': 1,
+                            'search_default_outgoing': 1,
+                            'cost_method': cost_method,
+                            'tracking': tracking,
+                        }"
+                        sum="Total Value"/>
                 </field>
             </field>
         </record>
