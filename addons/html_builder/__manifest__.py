@@ -36,7 +36,7 @@
             'web/static/lib/bootstrap/scss/_maps.scss',
             'web/static/fonts/fonts.scss',
             'html_builder/static/src/**/*',
-            ('remove', 'html_builder/static/src/**/*.inside.scss'),
+            ('remove', 'html_builder/static/src/**/*.edit.*'),
             ('remove', 'html_builder/static/src/**/*.dark.scss'),
         ],
         'web.assets_web_dark': [
@@ -46,7 +46,7 @@
             ('include', 'web._assets_helpers'),
 
             'web/static/src/scss/bootstrap_overridden.scss',
-            'html_builder/static/src/**/*.inside.scss',
+            'html_builder/static/src/**/*.edit.*',
             'html_editor/static/src/main/chatgpt/chatgpt_plugin.scss',
             'html_editor/static/src/main/link/link.scss',
         ],
