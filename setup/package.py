@@ -4,19 +4,18 @@
 import argparse
 import logging
 import os
-import pexpect
 import shutil
 import subprocess
 import sys
 import tempfile
-import textwrap
 import time
 import traceback
-
+from datetime import datetime
+from glob import glob
 from pathlib import Path
 from xmlrpc import client as xmlrpclib
 
-from glob import glob
+import pexpect
 
 #----------------------------------------------------------
 # Utils
@@ -347,13 +346,14 @@ class DockerRpm(Docker):
     def build(self):
         logging.info('Start building fedora rpm package')
         rpmbuild_dir = '/var/lib/odoo/rpmbuild'
+        build_date = datetime.now().strftime('%a %b %d %Y')
         cmds = [
             'cd /data/src',
             'mkdir -p dist',
             'rpmdev-setuptree -d',
             f'cp -a /data/src/setup/rpm/odoo.spec {rpmbuild_dir}/SPECS/',
             f'tar --transform "s/^\\./odoo-{VERSION}/" -c -z -f {rpmbuild_dir}/SOURCES/odoo-{VERSION}.tar.gz .',
-            f'rpmbuild -bb --define="%version {VERSION}" /data/src/setup/rpm/odoo.spec',
+            f'rpmbuild -bb --define="%version {VERSION}" --define "%release {TSTAMP}" --define "%build_date {build_date}" /data/src/setup/rpm/odoo.spec',
             f'mv {rpmbuild_dir}/RPMS/noarch/odoo*.rpm /data/src/dist/'
         ]
         self.run(' && '.join(cmds), self.args.build_dir, f'odoo-rpm-build-{TSTAMP}')
@@ -369,7 +369,7 @@ class DockerRpm(Docker):
             'sleep 5',
             'su postgres -c "createuser -s odoo"',
             'su odoo -c "createdb mycompany"',
-            'dnf install -d 0 -e 0 /data/src/odoo_%s.%s.rpm -y' % (VERSION, TSTAMP),
+            'dnf install -q /data/src/odoo_%s.%s.rpm -y' % (VERSION, TSTAMP),
             'su odoo -s /bin/bash -c "odoo -c /etc/odoo/odoo.conf -d mycompany -i base --stop-after-init"',
             'su odoo -s /bin/bash -c "odoo -c /etc/odoo/odoo.conf -d mycompany --pidfile=/data/src/odoo.pid"',
         ]
