@@ -58,7 +58,7 @@ registerThreadAction("livechat-status", {
         };
     },
     name: (component) => component.thread.livechatStatusLabel,
-    nameClass: "fst-italic small mx-2",
+    nameClass: "fst-italic small",
     sequence: (component) => (component.isDiscussSidebarChannelActions ? 10 : 5),
     sequenceGroup: (component) => (component.isDiscussSidebarChannelActions ? 5 : 7),
     toggle: true,
