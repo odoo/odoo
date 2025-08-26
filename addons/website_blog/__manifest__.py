@@ -51,6 +51,9 @@
             'website_blog/static/src/scss/website_blog.scss',
             'website_blog/static/src/snippets/**/*.js',
         ],
+        'website.assets_editor': [
+            'website_blog/static/src/js/systray_items/*.js',
+        ],
         'website.website_builder_assets': [
             'website_blog/static/src/website_builder/**/*',
         ],
