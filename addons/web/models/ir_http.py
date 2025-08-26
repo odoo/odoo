@@ -65,8 +65,12 @@ class IrHttp(models.AbstractModel):
 
     def webclient_rendering_context(self):
         return {
+            'color_scheme': self.color_scheme(),
             'session_info': self.session_info(),
         }
+
+    def color_scheme(self):
+        return "light"
 
     @api.model
     def lazy_session_info(self):
