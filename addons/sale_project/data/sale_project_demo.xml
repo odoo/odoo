@@ -4,9 +4,10 @@
         <!-- Project Template -->
         <record id="so_template_project" model="project.project">
             <field name="name">Sales Order</field>
-            <field name="active">False</field>
             <field name="type_ids" eval="[Command.link(ref('project.project_stage_0')), Command.link(ref('project.project_stage_1')), Command.link(ref('project.project_stage_2'))]"/>
             <field name="description">This project is used as a template for projects created from sales orders.</field>
+            <field name="is_template">True</field>
+            <field name="allow_billable">True</field>
         </record>
 
         <record id="product_service_create_project_and_task" model="product.product">

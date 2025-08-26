@@ -73,6 +73,35 @@
             <field name="name">Priority</field>
         </record>
 
+        <!-- Project Roles -->
+        <record id="project_role_1" model="project.role">
+            <field name="name">Project Manager</field>
+        </record>
+        <record id="project_role_2" model="project.role">
+            <field name="name">Design Architect</field>
+        </record>
+        <record id="project_role_3" model="project.role">
+            <field name="name">Logistics Staff</field>
+        </record>
+        <record id="project_role_4" model="project.role">
+            <field name="name">Worker</field>
+        </record>
+        <record id="project_role_5" model="project.role">
+            <field name="name">Electrician</field>
+        </record>
+        <record id="project_role_6" model="project.role">
+            <field name="name">Gas Technician</field>
+        </record>
+        <record id="project_role_7" model="project.role">
+            <field name="name">Surface Installer</field>
+        </record>
+        <record id="project_role_8" model="project.role">
+            <field name="name">Plumber</field>
+        </record>
+        <record id="project_role_9" model="project.role">
+            <field name="name">Quality &amp; Safety Officer</field>
+        </record>
+
         <!-- Analytic Accounts -->
         <!-- Needed so that we can have the same analytic accounts on hr_timesheet and project_account_budget -->
         <record id="analytic_office_design" model="account.analytic.account">
@@ -125,6 +154,7 @@
             <field name="fold" eval="True"/>
         </record>
 
+        <!-- Projects -->
         <record id="project_project_1" model="project.project">
             <field name="date_start" eval="DateTime.today() - relativedelta(weeks=9)"/>
             <field name="date" eval="DateTime.today() + relativedelta(weekday=4,weeks=1)"/>
@@ -222,7 +252,7 @@
             <field name="allow_milestones" eval="True"/>
         </record>
 
-        <!-- Project Template -->
+        <!-- Projects Templates -->
         <record id="project_template_1" model="project.project">
             <field name="name">Product Launch Campaign</field>
             <field name="is_template" eval="True"/>
@@ -291,6 +321,279 @@
                 Command.link(ref('project_template_1_task_7')),
                 Command.link(ref('project_template_1_task_8'))
             ]"/>
+        </record>
+
+        <record id="project_template_2" model="project.project">
+            <field name="name">Kitchen Assembly</field>
+            <field name="description">Organize and track all tasks required to assemble and install a kitchen, from delivery to final inspection.</field>
+            <field name="is_template">True</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="type_ids" eval="[Command.link(ref('project_stage_0')), Command.link(ref('project_stage_1')), Command.link(ref('project_stage_2')), Command.link(ref('project_stage_3'))]"/>
+        </record>
+
+        <record id="project_template_2_task_1" model="project.task">
+            <field name="name">Project Coordination</field>
+            <field name="description">
+                <![CDATA[
+                <div>
+                    Oversee the kitchen project from start to finish, ensuring timelines, budgets, and quality standards are met.
+                </div>
+                <h3><br/>Checklist</h3>
+                <ul class="o_checklist">
+                    <li>Define project scope and objectives with [Customer Name]</li>
+                    <li>Create a detailed timeline and schedule for all phases</li>
+                    <li>Track budget and manage procurement of materials from [Vendor Names]</li>
+                    <li>Monitor progress and report milestones to [Customer Name] or management</li>
+                    <li>Coordinate communication between contractors, suppliers, and customer</li>
+                    <li>Conduct periodic site inspections to ensure compliance with plans</li>
+                    <li>Obtain approvals for key stages and final handover</li>
+                </ul>
+                ]]>
+            </field>
+            <field name="project_id" ref="project.project_template_2"/>
+            <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="sequence">1</field>
+            <field name="role_ids" eval="[Command.link(ref('project_role_1'))]"/>
+        </record>
+
+        <record id="project_template_2_task_1_subtask_1" model="project.task">
+            <field name="name">Define project scope and objectives with [Customer Name]</field>
+            <field name="project_id" ref="project.project_template_2"/>
+            <field name="parent_id" ref="project_template_2_task_1"/>
+            <field name="role_ids" eval="[Command.link(ref('project_role_1'))]"/>
+        </record>
+
+        <record id="project_template_2_task_2" model="project.task">
+            <field name="name">Kitchen Design</field>
+            <field name="description">
+                <![CDATA[
+                <div>
+                    Develop and validate the kitchen layout, ensuring functionality, aesthetics, and compliance with regulations.
+                </div>
+                <h3><br/>Checklist</h3>
+                <ul class="o_checklist">
+                    <li>Gather design requirements and preferences from [Customer Name]</li>
+                    <li>Produce preliminary kitchen layouts and space planning</li>
+                    <li>Select materials, appliances, and finishes with [Vendor Names]</li>
+                    <li>Create 3D renderings or visual mockups for approval</li>
+                    <li>Prepare detailed technical drawings including utility placements</li>
+                    <li>Verify compliance with building codes, safety, and accessibility standards</li>
+                    <li>Adjust design based on feedback from [Customer Name] and project constraints</li>
+                </ul>
+                ]]>
+            </field>
+            <field name="project_id" ref="project.project_template_2"/>
+            <field name="user_ids" eval="[Command.link(ref('base.user_demo'))]"/>
+            <field name="sequence">5</field>
+            <field name="role_ids" eval="[Command.link(ref('project_role_2'))]"/>
+        </record>
+
+        <record id="project_template_2_task_2_subtask_1" model="project.task">
+            <field name="name">Gather design requirements and preferences from [Customer Name]</field>
+            <field name="project_id" ref="project.project_template_2"/>
+            <field name="parent_id" ref="project_template_2_task_2"/>
+            <field name="role_ids" eval="[Command.link(ref('project_role_2'))]"/>
+        </record>
+
+        <record id="project_template_2_task_3" model="project.task">
+            <field name="name">Delivery &amp; Inventory Check</field>
+            <field name="description">
+                <![CDATA[
+                <div>
+                    Confirm delivery of all items from [Vendor Name], check for damages or missing parts, and store items securely.
+                </div>
+                <h3><br/>Checklist</h3>
+                <ul class="o_checklist">
+                    <li>Confirm delivery date and arrival of all items from [Vendor Name]</li>
+                    <li>Cross-check delivered items against purchase orders or packing list</li>
+                    <li>Verify that the correct quantities and models have been delivered</li>
+                    <li>Store all items securely in [Storage Area] until installation</li>
+                    <li>Confirm receipt and update project inventory records or tracking system</li>
+                    <li>Communicate any issues to [Project Manager] for resolution</li>
+                </ul>
+                ]]>
+            </field>
+            <field name="project_id" ref="project.project_template_2"/>
+            <field name="sequence">8</field>
+            <field name="role_ids" eval="[Command.link(ref('project_role_3'))]"/>
+        </record>
+
+        <record id="project_template_2_task_4" model="project.task">
+            <field name="name">Prepare Kitchen Area</field>
+            <field name="description">
+                <![CDATA[
+                <div>
+                    Prepare the installation area before assembly begins.
+                </div>
+                <h3><br/>Checklist</h3>
+                <ul class="o_checklist">
+                    <li>Remove old kitchen furniture/appliances</li>
+                    <li>Dispose of debris and packaging in compliance with [Waste Vendor/Local Regulation]</li>
+                    <li>Inspect and level the floor [Flooring Vendor/Worker]</li>
+                    <li>Mark placement for cabinets, appliances, plumbing, and electrical points</li>
+                    <li>Ensure utilities (water, gas, electricity) are disconnected safely [Certified Worker/Vendor]</li>
+                    <li>Prepare wiring, outlets, and lighting in the kitchen area before cabinets are installed [Electrician/Vendor Name]</li>
+                    <li>Prepare plumbing connections for [Sink], [Dishwasher], and other water-based appliances</li>
+                </ul>
+                ]]>
+            </field>
+            <field name="project_id" ref="project.project_template_2"/>
+            <field name="sequence">10</field>
+            <field name="role_ids" eval="[Command.link(ref('project_role_4')), Command.link(ref('project_role_5')), Command.link(ref('project_role_6')), Command.link(ref('project_role_7')), Command.link(ref('project_role_8'))]"/>
+        </record>
+
+        <record id="project_template_2_task_5" model="project.task">
+            <field name="name">Infrastructure Setup</field>
+            <field name="description">
+                <![CDATA[
+                <div>
+                    Prepare utilities and connections before installing kitchen elements.
+                </div>
+                <h3><br/>Checklist</h3>
+                <ul class="o_checklist">
+                    <li>Install or relocate electrical wiring, sockets, lighting circuits [Electrician/Vendor Name]</li>
+                    <li>Verify and connect gas pipelines for [Oven/Stove]</li>
+                    <li>Prepare ventilation ducting for [Range Hood / Extractor Fan]</li>
+                    <li>Install underfloor heating or radiator (if required)</li>
+                </ul>
+                ]]>
+            </field>
+            <field name="project_id" ref="project.project_template_2"/>
+            <field name="sequence">15</field>
+            <field name="role_ids" eval="[Command.link(ref('project_role_4')), Command.link(ref('project_role_5')), Command.link(ref('project_role_6'))]"/>
+        </record>
+
+        <record id="project_template_2_task_5_subtask_1" model="project.task">
+            <field name="name">Install or relocate electrical wiring, sockets, lighting circuits [Electrician/Vendor Name]</field>
+            <field name="project_id" ref="project.project_template_2"/>
+            <field name="parent_id" ref="project_template_2_task_5"/>
+            <field name="role_ids" eval="[Command.link(ref('project_role_5'))]"/>
+        </record>
+
+        <record id="project_template_2_task_5_subtask_2" model="project.task">
+            <field name="name">Verify and connect gas pipelines for [Oven/Stove]</field>
+            <field name="project_id" ref="project.project_template_2"/>
+            <field name="parent_id" ref="project_template_2_task_5"/>
+            <field name="role_ids" eval="[Command.link(ref('project_role_6'))]"/>
+        </record>
+
+        <record id="project_template_2_task_6" model="project.task">
+            <field name="name">Structural &amp; Surface Installation</field>
+            <field name="description">
+                <![CDATA[
+                <div>
+                    Build the core structure and surfaces of the kitchen.
+                </div>
+                <h3><br/>Checklist</h3>
+                <ul class="o_checklist">
+                    <li>Install flooring [Material Type: Tiles / Wood / Vinyl]</li>
+                    <li>Assemble and position base cabinets [Cabinet Model/Type]</li>
+                    <li>Assemble and secure wall cabinets [Cabinet Model/Type] at correct height and alignment</li>
+                    <li>Install wall cladding or protective wall panels [Material Type]</li>
+                </ul>
+                ]]>
+            </field>
+            <field name="project_id" ref="project.project_template_2"/>
+            <field name="sequence">20</field>
+            <field name="role_ids" eval="[Command.link(ref('project_role_7'))]"/>
+        </record>
+
+        <record id="project_template_2_task_7" model="project.task">
+            <field name="name">Equipment &amp; Appliance Installation</field>
+            <field name="description">
+                <![CDATA[
+                <div>
+                    Connect and test all kitchen equipment.
+                </div>
+                <h3><br/>Checklist</h3>
+                <ul class="o_checklist">
+                    <li>Install and connect sink [Sink Model] and Faucet [Faucet Model]</li>
+                    <li>Position and connect [Oven], [Cooktop], [Dishwasher], [Fridge], [Microwave], [Wine Cooler]</li>
+                    <li>Install and connect [Range Hood / Extractor Fan] with ventilation ducts</li>
+                    <li>Mount and wire built-in small appliances (e.g., [Coffee Machine], [Steam Oven])</li>
+                    <li>Install water filtration system [Vendor/Model] if required</li>
+                </ul>
+                ]]>
+            </field>
+            <field name="project_id" ref="project.project_template_2"/>
+            <field name="sequence">25</field>
+            <field name="role_ids" eval="[Command.link(ref('project_role_8'))]"/>
+        </record>
+
+        <record id="project_template_2_task_8" model="project.task">
+            <field name="name">Lighting &amp; Electrical Fixtures</field>
+            <field name="description">
+                <![CDATA[
+                <div>
+                    Complete all lighting and electrical details.
+                </div>
+                <h3><br/>Checklist</h3>
+                <ul class="o_checklist">
+                    <li>Install ceiling lights [Fixture Model/Type]</li>
+                    <li>Install under-cabinet and task lighting [LED Strip/Spotlights]</li>
+                    <li>Connect sockets and power outlets in [Planned Positions]</li>
+                    <li>Integrate smart-home system or controls [Vendor Name] (optional)</li>
+                </ul>
+                ]]>
+            </field>
+            <field name="project_id" ref="project.project_template_2"/>
+            <field name="sequence">30</field>
+            <field name="role_ids" eval="[Command.link(ref('project_role_5'))]"/>
+        </record>
+
+        <record id="project_template_2_task_9" model="project.task">
+            <field name="name">Finishing Touches &amp; Safety</field>
+            <field name="description">
+                <![CDATA[
+                <div>
+                    Finalize aesthetics and ensure safety compliance.
+                </div>
+                <h3><br/>Checklist</h3>
+                <ul class="o_checklist">
+                    <li>Install backsplash [Material/Design] and seal edges</li>
+                    <li>Adjust cabinet doors, drawers, and handles for alignment</li>
+                    <li>Install decorative trims, moldings, or cover panels [Material Type]</li>
+                    <li>Test and install smoke detector and CO2 detector [Safety Vendor]</li>
+                    <li>Install fire extinguisher or safety equipment [Vendor/Model]</li>
+                </ul>
+                ]]>
+            </field>
+            <field name="project_id" ref="project.project_template_2"/>
+            <field name="sequence">35</field>
+            <field name="role_ids" eval="[Command.link(ref('project_role_9'))]"/>
+        </record>
+
+        <record id="project_template_2_task_10" model="project.task">
+            <field name="name">Customer Inspection &amp; Documents</field>
+            <field name="description">
+                <![CDATA[
+                <div>
+                    Deliver the kitchen ready for use.
+                </div>
+                <h3><br/>Checklist</h3>
+                <ul class="o_checklist">
+                    <li>Conduct a walkthrough with [Customer Name] to review features and functionality</li>
+                    <li>Provide user manuals and warranty documents for [Appliances/Materials]</li>
+                    <li>Obtain final customer approval and project sign-off</li>
+                </ul>
+                ]]>
+            </field>
+            <field name="project_id" ref="project.project_template_2"/>
+            <field name="user_ids" eval="[Command.link(ref('base.user_admin')), Command.link(ref('base.user_demo'))]"/>
+            <field name="sequence">40</field>
+        </record>
+
+        <record id="project_template_2_task_10_subtask_1" model="project.task">
+            <field name="name">Conduct a walkthrough with [Customer Name] to review features and functionality</field>
+            <field name="project_id" ref="project.project_template_2"/>
+            <field name="parent_id" ref="project_template_2_task_10"/>
+        </record>
+
+        <record id="project_template_2_task_11" model="project.task">
+            <field name="name">Feedback Gathering</field>
+            <field name="description">Collect and organize customer feedback to identify insights for improving your [Kitchen Assembly Project].</field>
+            <field name="project_id" ref="project.project_template_2"/>
+            <field name="sequence">45</field>
         </record>
 
         <!-- Personal Stages: Mitchell Admin-->
