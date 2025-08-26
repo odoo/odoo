@@ -10,7 +10,7 @@ import * as ChromePos from "@point_of_sale/../tests/pos/tours/utils/chrome_util"
 import * as ChromeRestaurant from "@pos_restaurant/../tests/tours/utils/chrome";
 const Chrome = { ...ChromePos, ...ChromeRestaurant };
 import { registry } from "@web/core/registry";
-import { delay } from "@odoo/hoot-dom";
+import { delay } from "@web/core/utils/concurrency";
 
 registry.category("web_tour.tours").add("ControlButtonsTour", {
     steps: () =>

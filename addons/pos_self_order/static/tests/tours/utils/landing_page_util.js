@@ -1,4 +1,4 @@
-import { delay } from "@odoo/hoot-dom";
+import { delay } from "@web/core/utils/concurrency";
 
 export function selectLocation(locationName) {
     return {
