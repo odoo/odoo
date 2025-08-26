@@ -111,13 +111,13 @@ export class Notification extends Record {
             case "pending":
                 return "fa fa-paper-plane-o";
             case "sent":
-                return `fa ${!this.isFollowerNotification ? "fa-check" : "fa-user-o"}`;
+                return "fa fa-check";
             case "bounce":
                 return "fa fa-exclamation";
             case "exception":
                 return "fa fa-times text-danger";
             case "ready":
-                return `fa ${!this.isFollowerNotification ? "fa-send-o" : "fa-user-o"}`;
+                return "fa fa-send-o";
             case "canceled":
                 if (this.autoCanceledFailureType) {
                     return "fa fa-remove";
@@ -140,7 +140,7 @@ export class Notification extends Record {
             case "exception":
                 return _t("Error");
             case "ready":
-                return _t("Ready");
+                return _t("Queued");
             case "canceled":
                 return this.autoCanceledFailureType || _t("Cancelled");
         }
