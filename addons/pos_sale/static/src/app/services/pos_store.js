@@ -250,8 +250,11 @@ patch(PosStore.prototype, {
         accountTaxHelpers.add_tax_details_in_base_lines(baseLines, this.company);
         accountTaxHelpers.round_base_lines_tax_details(baseLines, this.company);
 
-        const amount = parseFloat(payload);
-        const amountType = isPercentage ? "percent" : "fixed";
+        let amount = parseFloat(payload);
+        if (isPercentage) {
+            const percentage = amount / 100.0;
+            amount = baseLines.length ? saleOrder.amount_unpaid * percentage : 0.0;
+        }
         const downPaymentProduct = this.config.down_payment_product_id;
         const groupingFunction = (base_line) => ({
             grouping_key: { product_id: downPaymentProduct },
@@ -260,7 +263,7 @@ patch(PosStore.prototype, {
         const downPaymentBaseLines = accountTaxHelpers.prepare_down_payment_lines(
             baseLines,
             this.company,
-            amountType,
+            "fixed",
             amount,
             {
                 computation_key: "down_payment", // TODO: won't work with multiple down payment on the same order... is it a problem?
