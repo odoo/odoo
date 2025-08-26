@@ -117,6 +117,7 @@ test("new message separator is shown after first mark as read, on receiving new 
 
 test("keep new message separator until user goes back to the thread", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
@@ -340,6 +341,7 @@ test("only show new message separator in its thread", async () => {
     // when a message acts as the reference for displaying new message separator,
     // this should applies only when vieweing the message in its thread.
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const demoPartnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const messageIds = pyEnv["mail.message"].create([

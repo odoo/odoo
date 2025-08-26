@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.DiscussContent" t-inherit-mode="extension">
         <xpath expr="//*[@t-ref='root']" position="before">
-            <div t-if="ui.isSmall and store.discuss.activeTab === 'inbox'" class="w-100 border-bottom" t-call="mail.DiscussContent.mobileTopbar" t-ref="mobileTopbar"/>
+            <div t-if="ui.isSmall and store.discuss.activeTab === 'inbox' and store.self.main_user_id?.notification_type === 'inbox'" class="w-100 border-bottom" t-call="mail.DiscussContent.mobileTopbar" t-ref="mobileTopbar"/>
         </xpath>
         <xpath expr="//*[@t-ref='main']" position="inside">
             <t t-if="!ui.isSmall" t-call="mail.Discuss.loading"/>

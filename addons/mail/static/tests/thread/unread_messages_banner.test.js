@@ -125,6 +125,7 @@ test("remove banner when scrolling to bottom", async () => {
 
 test("remove banner when opening thread at the bottom", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
     const messageId = pyEnv["mail.message"].create({

@@ -1155,6 +1155,7 @@ test('can quickly add emoji with ":" keyword', async () => {
 
 test("composer reply-to message is restored on thread change", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
