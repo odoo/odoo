@@ -304,8 +304,7 @@ export class AnimateOptionPlugin extends Plugin {
         const ancestor = closestElement(selection.commonAncestorContainer, ".o_animated_text");
         if (
             ancestor &&
-            (selection.isCollapsed ||
-                this.dependencies.selection.areNodeContentsFullySelected(ancestor))
+            (selection.isCollapsed || selection.textContent() === ancestor.textContent)
         ) {
             return ancestor;
         }
