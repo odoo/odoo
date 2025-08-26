@@ -1435,6 +1435,18 @@ class CrmLead(models.Model):
     # BUSINESS
     # ------------------------------------------------------------
 
+    def _assign_userless_lead_in_team(self, creation_source: str):
+        """ Assign userless leads to their team's leader. """
+        if not self._is_rule_based_assignment_activated() and self.team_id:
+            for team_id, leads in self.filtered(lambda lead: not lead.user_id).grouped('team_id').items():
+                if team_id.user_id:
+                    leads.user_id = team_id.user_id
+                    message = _('This new lead created by %(creation_source)s was automatically assigned to team leader %(user_name)s',
+                        user_name=team_id.user_id.name,
+                        creation_source=creation_source,
+                    )
+                    leads._message_log_batch(bodies={lead.id: message for lead in leads})
+
     def log_meeting(self, meeting):
         """ Log the meeting info with a link to it in the chatter
         :param record meeting: the meeting we want to log
@@ -2049,6 +2061,11 @@ class CrmLead(models.Model):
             res['lang'] = self.lang_id.code
         return res
 
+    def _is_rule_based_assignment_activated(self):
+        """ Returns whether a rule-based assignment method is activated (cron-enabled or manually-ran).
+        """
+        return self.env['ir.config_parameter'].sudo().get_param('crm.lead.auto.assignment', False)
+
     # ------------------------------------------------------------
     # MAILING
     # ------------------------------------------------------------
@@ -2118,7 +2135,9 @@ class CrmLead(models.Model):
             defaults['priority'] = msg_dict.get('priority')
         defaults.update(custom_values)
 
-        return super().message_new(msg_dict, custom_values=defaults)
+        new_lead = super().message_new(msg_dict, custom_values=defaults)
+        new_lead._assign_userless_lead_in_team(_('incoming email'))
+        return new_lead
 
     def _message_post_after_hook(self, message, msg_vals):
         if self.email_from and not self.partner_id:
