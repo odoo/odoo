@@ -16,7 +16,7 @@ class TestContractCalendars(TestHrCommon):
 
         cls.contract_cdd_values = {
             'date_version': Date.to_date('2016-01-01'),
-            'date_start': Date.to_date('2016-01-01'),
+            'contract_date_start': Date.to_date('2016-01-01'),
             'name': 'First CDD Contract for Richard',
             'resource_calendar_id': cls.calendar_35h.id,
             'wage': 5000.0,
@@ -24,7 +24,7 @@ class TestContractCalendars(TestHrCommon):
 
         cls.contract_fully_flexible_values = {
             'date_version': Date.to_date('2017-01-01'),
-            'date_start': Date.to_date('2017-01-01'),
+            'contract_date_start': Date.to_date('2017-01-01'),
             'name': 'Fully Flexible Contract for Richard',
             'resource_calendar_id': False,
             'wage': 5000.0,

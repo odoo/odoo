@@ -56,7 +56,7 @@ class TestHolidaysMultiContract(TestHolidayContract):
         self.create_leave(start, end, name="Doctor Appointment", employee_id=self.jules_emp.id)
 
         # begins during contract, ends after contract => should not raise
-        self.contract_cdi.date_end = datetime.strptime('2015-11-30', '%Y-%m-%d').date()
+        self.contract_cdi.contract_date_end = datetime.strptime('2015-11-30', '%Y-%m-%d').date()
         start = datetime.strptime('2015-11-25 07:00:00', '%Y-%m-%d %H:%M:%S')
         end = datetime.strptime('2015-12-05 18:00:00', '%Y-%m-%d %H:%M:%S')
         self.create_leave(start, end, name="Doctor Appointment", employee_id=self.jules_emp.id)

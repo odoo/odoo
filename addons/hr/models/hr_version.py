@@ -147,13 +147,11 @@ class HrVersion(models.Model):
         'Contract End Date', tracking=True, help="End date of the contract (if it's a fixed-term contract).",
         groups="hr.group_hr_user")
     trial_date_end = fields.Date('End of Trial Period', help="End date of the trial period (if there is one).",
-                                 groups="hr.group_hr_user")
-    date_start = fields.Date(compute='_compute_dates', groups="hr.group_hr_user")
-    date_end = fields.Date(compute='_compute_dates', groups="hr.group_hr_user")
-    is_current = fields.Boolean(compute='_compute_is_current', groups="hr.group_hr_user")
-    is_past = fields.Boolean(compute='_compute_is_past', groups="hr.group_hr_user")
-    is_future = fields.Boolean(compute='_compute_is_future', groups="hr.group_hr_user")
-    is_in_contract = fields.Boolean(compute='_compute_is_in_contract', groups="hr.group_hr_user")
+                                 groups="hr.group_hr_manager")
+    is_current = fields.Boolean(compute='_compute_is_current', groups="hr.group_hr_manager")
+    is_past = fields.Boolean(compute='_compute_is_past', groups="hr.group_hr_manager")
+    is_future = fields.Boolean(compute='_compute_is_future', groups="hr.group_hr_manager")
+    is_in_contract = fields.Boolean(compute='_compute_is_in_contract', groups="hr.group_hr_manager")
 
     contract_template_id = fields.Many2one(
         'hr.version', string="Contract Template", groups="hr.group_hr_user",
@@ -354,17 +352,19 @@ class HrVersion(models.Model):
     def _compute_is_current(self):
         today = fields.Date.today()
         for version in self:
-            version.is_current = version.date_start <= today and (not version.date_end or version.date_end >= today)
+            next_version_start = version.get_next_version_start()
+            version.is_current = version.contract_date_start <= today and (not (version.contract_date_end or next_version_start) or min(next_version_start, version.contract_date_end) >= today)
 
     def _compute_is_past(self):
         today = fields.Date.today()
         for version in self:
-            version.is_past = version.date_end and version.date_end < today
+            next_version_start = version.get_next_version_start()
+            version.is_past = (version.contract_date_end or next_version_start) and min(next_version_start, version.contract_date_end) < today
 
     def _compute_is_future(self):
         today = fields.Date.today()
         for version in self:
-            version.is_future = version.date_start > today
+            version.is_future = version.contract_date_start > today
 
     def _compute_is_in_contract(self):
         for version in self:
@@ -374,7 +374,12 @@ class HrVersion(models.Model):
         # Return True if the employee is in contract on a given date
         if not self.contract_date_start:
             return False
-        return self.date_start <= date and (not self.date_end or self.date_end >= date)
+        next_version_start = self.get_next_version_start()
+        if next_version_start and self.contract_date_end:
+            date_end = min(self.contract_date_end, next_version_start)
+        else:
+            date_end = next_version_start if next_version_start else self.contract_date_end
+        return self.contract_date_start <= date and (not date_end or date_end >= date)
 
     def _is_overlapping_period(self, date_from, date_to):
         """
@@ -384,7 +389,12 @@ class HrVersion(models.Model):
         """
         if not self.contract_date_start:
             return False
-        return self.date_start <= date_to and (not self.date_end or self.date_end >= date_from)
+        next_version_start = self.get_next_version_start()
+        if next_version_start and self.contract_date_end:
+            date_end = min(next_version_start, self.contract_date_end)
+        else:
+            date_end = next_version_start if next_version_start else self.contract_date_end
+        return max(self.contract_date_start, self.date_version) <= date_to and (not date_end or date_end >= date_from)
 
     def _is_fully_flexible(self):
         """ return True if the version has a fully flexible working calendar """
@@ -515,27 +525,6 @@ class HrVersion(models.Model):
         for version in self:
             version.distance_home_work = version.km_home_work / 1.609 if version.distance_home_work_unit == "miles" else version.km_home_work
 
-    @api.depends(
-        'contract_date_start', 'contract_date_end', 'date_version', 'employee_id',
-        'employee_id.version_ids.date_version')
-    def _compute_dates(self):
-        for version in self:
-            version.date_start = max(version.date_version, version.contract_date_start) \
-                if version.contract_date_start \
-                else version.date_version
-
-            next_version = self.env['hr.version'].search([
-                ('employee_id', 'in', version.employee_id.ids),
-                ('date_version', '>', version.date_version)], limit=1)
-            date_version_end = next_version.date_version + relativedelta(days=-1) if next_version else False
-
-            if date_version_end and version.contract_date_end:
-                version.date_end = min(date_version_end, version.contract_date_end)
-            elif date_version_end:
-                version.date_end = date_version_end
-            else:
-                version.date_end = version.contract_date_end
-
     @api.model
     def _get_marital_status_selection(self):
         return [
@@ -561,6 +550,12 @@ class HrVersion(models.Model):
         self.ensure_one()
         self_sudo = self.sudo()
         return self_sudo.structure_type_id and self_sudo.structure_type_id.country_id.code == country_code
+
+    def get_next_version_start(self):
+        next_version = self.env['hr.version'].search([
+                ('employee_id', 'in', self.employee_id.ids),
+                ('date_version', '>', self.date_version)], limit=1)
+        return next_version.date_version + relativedelta(days=-1) if next_version else self.contract_date_end
 
     def action_open_version(self):
         self.ensure_one()
