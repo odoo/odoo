@@ -38,7 +38,7 @@ test("Office Location (online)", async () => {
     expect("small.fa-building").toHaveCount(1);
     expect("small.fa-home").toHaveCount(0);
     expect("small.fa-map-marker").toHaveCount(0);
-    expect("small.fa-building").toHaveStyle({ color: "rgb(0, 136, 24)" }); // color == text-success
+    expect("small").toHaveClass(["text-success", "fa-building"]);; // color == text-success
     expect("small.fa-building[title='Office 1']").toHaveCount(1);
 });
 
@@ -67,6 +67,6 @@ test("Home Location (away)", async () => {
     expect("small.fa-home").toHaveCount(1);
     expect("small.fa-building").toHaveCount(0);
     expect("small.fa-map-marker").toHaveCount(0);
-    expect("small.fa-home").toHaveStyle({ color: "rgb(233, 157, 0)" }); // color == text-warning
+    expect("small").toHaveClass(["o_icon_employee_absent", "fa-home"]); // color == text-warning
     expect("small.fa-home[title='Home']").toHaveCount(1);
 });
