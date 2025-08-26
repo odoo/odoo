@@ -716,3 +716,14 @@ class HTML_Editor(http.Controller):
         # catch all other exceptions and return the error message to display in the console but not blocking the flow
         except Exception as e:  # noqa: BLE001
             return {'other_error_msg': str(e)}
+
+    @http.route(['/html_editor/media_library_search'], type='jsonrpc', auth="user", website=True)
+    def media_library_search(self, **params):
+        ICP = request.env['ir.config_parameter'].sudo()
+        endpoint = ICP.get_param('web_editor.media_library_endpoint', DEFAULT_LIBRARY_ENDPOINT)
+        params['dbuuid'] = ICP.get_param('database.uuid')
+        response = requests.post('%s/media-library/1/search' % endpoint, data=params, timeout=5)
+        if response.status_code == requests.codes.ok and response.headers['content-type'] == 'application/json':
+            return response.json()
+        else:
+            return {'error': response.status_code}

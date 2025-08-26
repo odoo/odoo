@@ -276,7 +276,7 @@ export class ImageSelector extends FileSelector {
         this.state.isFetchingLibrary = true;
         try {
             const response = await rpc(
-                '/web_editor/media_library_search',
+                '/html_editor/media_library_search',
                 {
                     'query': this.state.needle,
                     'offset': offset,

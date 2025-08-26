@@ -238,17 +238,6 @@ class Web_Editor(http.Controller):
 
         return value
 
-    @http.route(['/web_editor/media_library_search'], type='jsonrpc', auth="user", website=True)
-    def media_library_search(self, **params):
-        ICP = request.env['ir.config_parameter'].sudo()
-        endpoint = ICP.get_param('web_editor.media_library_endpoint', DEFAULT_LIBRARY_ENDPOINT)
-        params['dbuuid'] = ICP.get_param('database.uuid')
-        response = requests.post('%s/media-library/1/search' % endpoint, data=params)
-        if response.status_code == requests.codes.ok and response.headers['content-type'] == 'application/json':
-            return response.json()
-        else:
-            return {'error': response.status_code}
-
     @http.route('/web_editor/tests', type='http', auth="user")
     def test_suite(self, mod=None, **kwargs):
         return request.render('web_editor.tests')

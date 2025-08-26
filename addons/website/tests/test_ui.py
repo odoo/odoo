@@ -10,7 +10,7 @@ import odoo
 import odoo.tests
 from odoo import http
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
-from odoo.addons.web_editor.controllers.main import Web_Editor
+from odoo.addons.html_editor.controllers.main import HTML_Editor
 from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
 from odoo.fields import Command
 
@@ -183,7 +183,7 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
         # disable undraw, no third party should be called in tests
         # Mocked for the previews in the media dialog
         mock_media_library_search.routing_type = 'json'
-        Web_Editor.media_library_search = http.route(['/web_editor/media_library_search'], type='jsonrpc', auth='user', website=True)(mock_media_library_search)
+        HTML_Editor.media_library_search = http.route(['/html_editor/media_library_search'], type='jsonrpc', auth='user', website=True)(mock_media_library_search)
 
         self.start_tour("/", 'website_media_dialog_undraw', login='admin')
 
