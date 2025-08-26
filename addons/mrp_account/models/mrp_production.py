@@ -58,7 +58,7 @@ class MrpProduction(models.Model):
         """Set a price unit on the finished move according to `consumed_moves`.
         """
         super()._cal_price(consumed_moves)
-        consumed_moves._set_value()
+
         work_center_cost = 0
         finished_move = self.move_finished_ids.filtered(
             lambda x: x.product_id == self.product_id and x.state not in ('done', 'cancel') and x.quantity > 0)
