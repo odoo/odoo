@@ -11,14 +11,9 @@
     </template>
 
     <template id="report_saleorder_document_brazil" inherit_id="sale.report_saleorder_document" primary="True">
-        <th name="th_taxes" position="replace"/>
-        <td name="td_taxes" position="replace"/>
-        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="attributes">
-            <attribute name="t-value">current_subtotal + line.price_total</attribute>
+        <t t-set="hide_taxes_details" position="attributes">
+            <attribute name="t-value">True</attribute>
         </t>
-        <span t-field="line.price_subtotal" position="attributes">
-            <attribute name="t-field">line.price_total</attribute>
-        </span>
         <xpath expr="//t[@t-call='sale.document_tax_totals']" position="replace">
             <t t-call="l10n_br_sales.document_tax_totals_brazil">
                 <t t-set="tax_totals" t-value="doc.tax_totals"/>

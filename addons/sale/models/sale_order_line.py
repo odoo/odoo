@@ -316,8 +316,11 @@ class SaleOrderLine(models.Model):
         string="Parent Section Line",
         comodel_name='sale.order.line',
         compute='_compute_parent_id',
+        index='btree_not_null',
         store=True,
     )  # The section or subsection this line belongs to.
+    # The lines (not sections) that belong to this section or subsection.
+    child_ids = fields.One2many(comodel_name='sale.order.line', inverse_name='parent_id')
     collapse_prices = fields.Boolean(
         string="Collapse Prices",
         compute='_compute_section_visibility_fields',
@@ -1489,40 +1492,53 @@ class SaleOrderLine(models.Model):
             if l.move_id.state == 'posted' and l.move_id not in invoices  # don't recompute with the final invoice
         )
 
-    def _get_grouped_section_summary(self):
+    def _get_grouped_section_summary(self, display_taxes=True):
         """Return a tax-wise summary of sales order lines linked to section.
 
         Group lines by their tax IDs and computes subtotal and total for each group.
+
+        :param bool display_taxes: whether tax details are shown. If not, it is meaningless to
+            group amounts by taxes and the section amount should be aggregated on one report line.
         """
         self.ensure_one()
 
-        def is_relevant_line(line_):
-            """Return whether the line is a direct or indirect child of the section."""
-            is_direct_child = line_.parent_id == self and not line_.display_type
-            is_indirect_child = (
-                self.display_type == 'line_section'
-                and line_.parent_id
-                and line_.parent_id.display_type == 'line_subsection'
-                and line_.parent_id.parent_id == self
-            )
-            return is_direct_child or is_indirect_child
-
-        section_lines = self.order_id.order_line.filtered(is_relevant_line)
-        result = []
-        for taxes, lines in groupby(section_lines, key=lambda l: l.tax_ids):
-            tax_labels = [tax.tax_label for tax in taxes if tax.tax_label]
-            subtotal = sum(l.price_subtotal for l in lines)
-            result.append({
-                'name': self.name,
-                'taxes': tax_labels,
-                'price_subtotal': subtotal,
-            })
-
-        return result or [{
-            'name': self.name,
-            'taxes': [],
+        section_lines = (self.child_ids + self.child_ids.child_ids).filtered(
+            lambda sol: not sol.display_type
+        )
+        if display_taxes:
+            res = [
+                {
+                    'tax_labels': [tax.tax_label for tax in taxes if tax.tax_label],
+                    'price_subtotal': sum(lines.mapped('price_subtotal')),
+                    'price_total': sum(lines.mapped('price_total')),
+                }
+                for taxes, lines in section_lines.grouped('tax_ids').items()
+            ]
+        else:
+            res = [{
+                'tax_labels': [],
+                'price_subtotal': sum(section_lines.mapped('price_subtotal')),
+                'price_total': sum(section_lines.mapped('price_total')),
+            }]
+        return res or [{
+            'tax_labels': [],
             'price_subtotal': 0.0,
+            'price_total': 0.0,
         }]
+
+    def _get_section_totals(self, totals_field):
+        """Return the total/subtotal amount sale order lines linked to section."""
+        self.ensure_one()
+        section_lines = self.child_ids + self.child_ids.child_ids
+        return sum(section_lines.mapped(totals_field))
+
+    def _has_taxes(self):
+        """Check if a line has taxes or not. For (sub)sections, check if any child line has taxes."""
+        self.ensure_one()
+        return bool(
+            self.tax_ids
+            or (self.display_type and any(line._has_taxes() for line in self.child_ids)),
+        )
 
     #=== CORE METHODS OVERRIDES ===#
 
