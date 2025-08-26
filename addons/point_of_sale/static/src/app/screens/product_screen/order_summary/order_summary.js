@@ -97,8 +97,7 @@ export class OrderSummary extends Component {
         ) {
             await this._showDecreaseQuantityPopup();
             if (selectedLine.getQuantity() === 0) {
-                const val = buffer === null ? "remove" : buffer;
-                this._setValue(val);
+                this._setValue("remove");
             }
             return;
         } else if (
@@ -203,9 +202,6 @@ export class OrderSummary extends Component {
         const selectedLine = this.currentOrder.getSelectedOrderline();
         const decreaseQuantity = selectedLine.getQuantity() - newQuantity;
         selectedLine.setQuantity(newQuantity);
-        if (newQuantity == 0) {
-            this.currentOrder.removeOrderline(selectedLine);
-        }
         return decreaseQuantity;
     }
     async handleDecreaseLine(newQuantity) {
