@@ -764,7 +764,9 @@ export class Composer extends Component {
                 MessageConfirmDialog,
                 {
                     message: composer.message,
-                    onConfirm: () => this.message.remove(),
+                    onConfirm: this.message.remove({
+                        removeFromThread: this.shouldHideFromMessageListOnDelete,
+                    }),
                     prompt: _t("Are you sure you want to delete this message?"),
                 },
                 { context: this }
@@ -835,5 +837,9 @@ export class Composer extends Component {
         } catch {
             browser.localStorage.removeItem(composer.localId);
         }
+    }
+
+    get shouldHideFromMessageListOnDelete() {
+        return false;
     }
 }

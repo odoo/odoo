@@ -14,7 +14,7 @@ patch(Message.prototype, {
     },
 
      async remove() {
-        const data = await super.remove();
+        const data = await super.remove(...arguments);
         this.rating_value = false;
         return data;
     },
