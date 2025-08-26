@@ -6,13 +6,13 @@
                 View Contact
             </a>
             <div t-if="!props.thread.livechat_end_dt" class="o-livechat-LivechatChannelInfoList d-flex flex-column bg-inherit gap-1">
-                <h3 class="pt-3">Status</h3>
+                <h6 class="pt-3 mb-1">Status</h6>
                 <t t-call="im_livechat.LivechatStatusSelection">
                     <t t-set="livechatThread" t-value="props.thread"/>
                 </t>
             </div>
             <div t-if="props.thread.livechat_end_dt" class="o-livechat-LivechatChannelInfoList d-flex flex-column bg-inherit gap-1">
-                <h3 class="pt-3">Outcome</h3>
+                <h6 class="pt-3 mb-1">Outcome</h6>
                 <div class="d-flex text-truncate">
                     <t t-if="props.thread.livechat_outcome === 'no_answer'">Never Answered</t>
                     <t t-elif="props.thread.livechat_outcome === 'no_agent'">No one Available</t>
@@ -21,11 +21,11 @@
                 </div>
             </div>
             <div class="d-flex flex-column bg-inherit gap-1">
-                <h3 class="pt-3">Notes</h3>
+                <h6 class="pt-3 mb-0">Notes</h6>
                 <textarea class="form-control" rows="3" placeholder="Add your notes here..." t-model="props.thread.livechatNoteText" t-on-blur="onBlurNote"></textarea>
             </div>
             <div t-if="expectAnswerSteps.length" class="d-flex flex-column bg-inherit gap-1">
-                <h3 class="pt-3">Chatbot answers</h3>
+                <h6 class="pt-3 mb-0">Chatbot answers</h6>
                 <t t-foreach="expectAnswerSteps" t-as="step" t-key="step.id">
                     <div class="d-flex align-items-center gap-1 bg-inherit rounded-3">
                         <i class="fa fa-comment-o me-1"/>
@@ -34,14 +34,14 @@
                 </t>
             </div>
             <div t-if="expertiseTags.length" class="d-flex flex-column bg-inherit gap-1">
-                <h3 class="pt-3">Expertise</h3>
+                <h6 class="pt-3 mb-1">Expertise</h6>
                 <div class="d-flex flex-wrap gap-1">
                     <TagsList displayText="true" tags="expertiseTags"/>
                 </div>
             </div>
             <t t-name="extra_infos"/>
             <div t-if="props.thread.livechat_end_dt" class="d-flex flex-column bg-inherit gap-1">
-                <h3 class="pt-3">Send conversation</h3>
+                <h6 class="pt-3 mb-0">Send conversation</h6>
                 <TranscriptSender thread="props.thread"/>
             </div>
         </ActionPanel>

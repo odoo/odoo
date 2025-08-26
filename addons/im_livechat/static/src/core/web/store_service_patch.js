@@ -48,17 +48,17 @@ const storePatch = {
             {
                 label: _t("In progress"),
                 status: "in_progress",
-                icon: "fa fa-commenting-o",
+                icon: "fa fa-comments",
             },
             {
                 label: _t("Waiting for customer"),
                 status: "waiting",
-                icon: "fa fa-hourglass-o",
+                icon: "fa fa-hourglass-start",
             },
             {
                 label: _t("Looking for help"),
                 status: "need_help",
-                icon: "fa fa-exclamation",
+                icon: "fa fa-exclamation-circle",
             },
         ];
     },
