@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div class="d-flex flex-column mb-1">
-                <div t-foreach="state.leaves" t-as="leave" t-key="leave.id" class="d-flex mb-2">
+                <div t-foreach="state.leaves" t-as="leave" t-key="leave.id" class="d-flex mb-2 gap-1">
                     <span class="col-4 fw-bold" t-esc="leave.holiday_status_id.display_name"/>
                     <div t-if="leave.leave_type_request_unit == 'hour'" class="d-flex gap-2 col-6">
                         <span t-esc="leave.date_from"/>
@@ -24,12 +24,12 @@
                         <i class="fa fa-long-arrow-right my-1" aria-label="Arrow icon" title="Arrow"/>
                         <span t-esc="leave.hour_to" class="fst-italic"/>
                     </div>
-                    <div t-else="" class="col-6 d-flex gap-2">
+                    <div t-else="" class="col-5 d-flex gap-2 flex-wrap">
                         <span t-esc="leave.date_from"/>
                         <i class="fa fa-long-arrow-right my-1" aria-label="Arrow icon" title="Arrow"/>
                         <span t-esc="leave.date_to"/>
                     </div>
-                    <div class="col-3">
+                    <div class="col-3 text-center">
                     (
                         <span t-if="leave.leave_type_request_unit == 'hour'"><t t-esc="leave.number_of_hours"/> hours</span>
                         <span t-else=""><t t-esc="leave.number_of_days"/> days</span>
@@ -48,7 +48,7 @@
             </div>
             <div class="d-flex flex-column mb-1">
                 <div t-foreach="state.departmentLeaves" t-as="leave" t-key="leave.id" class="d-flex flex-column mb-2">
-                    <div class=" d-flex my-1">
+                    <div class=" d-flex my-1 gap-1">
                         <div class="col-4 d-flex">
                             <KanbanMany2OneAvatarEmployeeField
                                 record="{'data' : {'employee_id': leave.employee_id}, 'fields': this.props.record.fields}"
@@ -62,12 +62,12 @@
                             <i class="fa fa-long-arrow-right my-1" aria-label="Arrow icon" title="Arrow"/>
                             <span t-esc="leave.hour_to" class="fst-italic"/>
                         </div>
-                        <div t-else="" class="col-6 d-flex gap-2">
+                        <div t-else="" class="col-5 d-flex gap-2 flex-wrap">
                             <span t-esc="leave.date_from"/>
                             <i class="fa fa-long-arrow-right my-1" aria-label="Arrow icon" title="Arrow"/>
                             <span t-esc="leave.date_to"/>
                         </div>
-                        <div class="col-3">
+                        <div class="col-3 text-center">
                             (
                             <span t-if="leave.leave_type_request_unit == 'hour'"><t t-esc="leave.number_of_hours"/> hours</span>
                             <span t-else=""><t t-esc="leave.number_of_days"/> days</span>
