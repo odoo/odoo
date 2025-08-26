@@ -11,15 +11,17 @@
             <field name="use_default_to" eval="True"/>
             <field name="description">Invitation email to new attendees</field>
             <field name="body_html" type="html">
-<div>
-    <t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}"/>
+<div style="font-size: 13px; color: #374151;">
     <t t-set="customer" t-value=" object.event_id.find_partner_customer()"/>
     <t t-set="target_responsible" t-value="object.partner_id == object.event_id.partner_id"/>
-    <t t-set="target_customer" t-value="object.partner_id == customer"/>
     <t t-set="recurrent" t-value="object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')"/>
+    <t t-set="is_online" t-value="'appointment_type_id' in object.event_id and object.event_id.appointment_type_id"/>
 
-    <p>
-        Hello <t t-out="object.common_name or ''">Wood Corner</t>,<br/><br/>
+    <h1 style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 28px;">
+        Invitation
+    </h1>
+    <p style="margin: 0;">
+        <span style="display: block; margin-bottom: 8px;">Hello <t t-out="object.common_name or ''">Wood Corner</t>,</span>
 
         <t t-if="not target_responsible">
             <t t-if="not object.event_id.user_id.active">
@@ -36,87 +38,85 @@
     </p>
     <div style="text-align: center; padding: 16px 0px 16px 0px;">
         <a t-attf-href="/calendar/meeting/accept?token={{object.access_token}}&amp;id={{object.event_id.id}}"
-            t-attf-style="padding: 5px 10px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
+            t-attf-style="display: inline-block; padding: 7px 14px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
             Accept</a>
         <a t-attf-href="/calendar/meeting/decline?token={{object.access_token}}&amp;id={{object.event_id.id}}"
-            t-attf-style="padding: 5px 10px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
+            t-attf-style="display: inline-block; margin-left: 6px; padding: 7px 14px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
             Decline</a>
         <a t-attf-href="/calendar/meeting/view?token={{object.access_token}}&amp;id={{object.event_id.id}}"
-            t-attf-style="padding: 5px 10px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
+            t-attf-style="display: inline-block; margin-left: 12px; padding: 7px 14px; color: #111827; text-decoration: none; background-color: #E7E9ED; border-radius: 3px;">
             View</a>
     </div>
-    <table border="0" cellpadding="0" cellspacing="0"><tr>
-        <td width="130px;" style="min-width: 130px;">
-            <div t-attf-style="border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; min-height: 18px; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};">
-                <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', lang_code=object.env.lang) or ''">Tuesday</t>
-            </div>
-            <div t-attf-style="font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};">
-                <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''">4</t>
-            </div>
-            <div t-attf-style="font-size: 12px; text-align: center; font-weight: bold; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};">
-                <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''">May 2021</t>
-            </div>
-            <div t-attf-style="border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold ; border: 1px solid {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-bottom-start-radius: 3px;">
-                <t t-if="not object.event_id.allday">
-                    <div>
+    <div style="margin: 16px 0 0;">
+        <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Details</h2>
+        <table cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #374151;">
+            <tr>
+                <td style="width: 100px; color: #676F7B;">Date &amp; Time</td>
+                <td style="font-weight: bold;">
+                    <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', lang_code=object.env.lang) or ''">Tuesday</t>
+                    <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''">4</t>
+                    <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''">May 2021</t>
+                    <t t-if="not object.event_id.allday">
                         <t t-out="format_time(time=object.event_id.start, tz=object.mail_tz, time_format='short', lang_code=object.env.lang) or ''">11:00 AM</t>
-                    </div>
-                    <t t-if="object.mail_tz">
-                        <div style="font-size: 10px; font-weight: normal">
-                            (<t t-out="object.mail_tz or ''">Europe/Brussels</t>)
-                        </div>
+                        <t t-if="object.mail_tz">
+                            <span style="font-size: 11px; font-weight: normal;">
+                                (<t t-out="object.mail_tz or ''">Europe/Brussels</t>)
+                            </span>
+                        </t>
                     </t>
-                </t>
-            </div>
-        </td>
-        <td width="20px;"/>
-        <td style="padding-top: 5px;">
-            <p><strong>Details of the event</strong></p>
-            <ul>
-                <t t-if="object.event_id.location">
-                    <li>Location: <t t-out="object.event_id.location or ''">Bruxelles</t>
-                        <a target="_blank" t-if="not is_online or is_online and object.event_id.location != object.event_id.appointment_type_id.location_id.name" t-attf-href="http://maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}">(View Map)</a>
-                    </li>
-                </t>
-                <t t-if="recurrent">
-                    <li>When: <t t-out="object.recurrence_id.get_recurrence_name()">Every 1 Weeks, for 3 events</t></li>
-                </t>
-                <t t-if="not object.event_id.allday and object.event_id.duration">
-                    <li>Duration: <t t-out="('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''">0H30</t></li>
-                </t>
-                <li>Attendees
-                <ul>
-                    <li t-foreach="object.event_id.attendee_ids" t-as="attendee">
-                        <div t-attf-style="display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:{{ colors.get(attendee.state) or 'white' }};"> </div>
-                        <t t-if="attendee.common_name != object.common_name">
-                            <span style="margin-left:5px" t-out="attendee.common_name or ''">Mitchell Admin</span>
-                        </t>
-                        <t t-else="">
-                            <span style="margin-left:5px">You</span>
-                        </t>
-                    </li>
-                </ul></li>
-                <t t-if="object.event_id.videocall_location">
-                    <li>
-                        How to Join:
-                        <t t-if="object.get_base_url() in object.event_id.videocall_location"> Join with Odoo Discuss</t>
-                        <t t-else=""> Join at</t><br/>
-                        <a t-att-href="object.event_id.videocall_location" target="_blank" t-out="object.event_id.videocall_location or ''">www.mycompany.com/calendar/join_videocall/xyz</a>
-                    </li>
-                </t>
-                <t t-if="not is_html_empty(object.event_id.description)">
-                    <li>Description of the event:
-                    <t t-out="object.event_id.description">Internal meeting for discussion for new pricing for product and services.</t></li>
-                </t>
-            </ul>
-        </td>
-    </tr></table>
-    <br/>
-    Thank you,
-    <t t-if="object.event_id.user_id.signature">
-        <br />
-        <div>--<br/><t t-out="object.event_id.user_id.signature or ''">Mitchell Admin</t></div>
-    </t>
+                </td>
+            </tr>
+            <tr t-if="recurrent">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;">When</td>
+                <td style="padding-top: 6px;"><t t-out="object.recurrence_id.get_recurrence_name() or ''">Every 1 Weeks, for 3 events</t></td>
+            </tr>
+            <tr t-if="not object.event_id.allday and object.event_id.duration">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;">Duration</td>
+                <td style="padding-top: 6px;"><t t-out="('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''">0H30</t></td>
+            </tr>
+            <tr t-if="object.event_id.location">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B; vertical-align: top;">Location</td>
+                <td style="padding-top: 6px;">
+                    <t t-out="object.event_id.location or ''">Bruxelles</t>
+                    <a target="_blank" t-if="not is_online or is_online and object.event_id.location != object.event_id.appointment_type_id.location_id.name" t-attf-href="http://maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}" style="margin-left: 12px; font-size: 12px; color: #008f8c; text-decoration: underline;">View Map</a>
+                </td>
+            </tr>
+            <tr t-if="object.event_id.videocall_location">
+                <td style="width: 100px; padding-top: 6px;color: #676F7B;">
+                    <t t-if="object.get_base_url() in object.event_id.videocall_location">Join with</t>
+                    <t t-else="">Join</t>
+                </td>
+                <td style="padding-top: 6px;">
+                    <a t-attf-href="object.event_id.videocall_location" target="_blank" style="color: #008f8c;">
+                        <t t-if="object.get_base_url() in object.event_id.videocall_location">Odoo Discuss</t>
+                        <t t-else="">Video meeting</t>
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div style="margin: 32px 0 0;">
+        <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Attendees</h2>
+        <div t-foreach="object.event_id.attendee_ids" t-as="attendee" style="margin-bottom: 5px;">
+            <img t-if="attendee.state" t-attf-src="/calendar/static/src/img/state_{{ attendee.state }}.png" style="border:0; width: 15px; height: 15px; vertical-align: text-bottom;" />
+            <t t-if="attendee != object">
+                <span style="margin-left: 5px;" t-out="attendee.common_name or ''">Mitchell Admin</span>
+            </t>
+            <t t-else="">
+                <span style="margin-left: 5px;">You</span>
+            </t>
+        </div>
+    </div>
+    <div t-if="not is_html_empty(object.event_id.description)" style="margin: 32px 0 0;">
+        <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Description of the event</h2>
+        <t t-out="object.event_id.description">Internal meeting for discussion for new pricing for product and services.</t>
+    </div>
+    <p style="margin: 32px 0 0;">
+        Thank you!
+        <t t-if="object.event_id.user_id.signature">
+            <span style="display: block; margin-top: 8px;"><t t-out="object.event_id.user_id.signature or ''">Mitchell Admin</t></span>
+        </t>
+    </p>
 </div>
             </field>
             <field name="auto_delete" eval="True"/>
@@ -132,121 +132,121 @@
             <field name="use_default_to" eval="True"/>
             <field name="description">Sent to all attendees if the schedule change</field>
             <field name="body_html" type="html">
-<div>
+<div style="font-size: 13px; color: #374151;">
 
-    <t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}"/>
     <t t-set="is_online" t-value="'appointment_type_id' in object.event_id and object.event_id.appointment_type_id"/>
     <t t-set="customer" t-value="object.event_id.find_partner_customer()"/>
     <t t-set="target_responsible" t-value="object.partner_id == object.event_id.partner_id"/>
     <t t-set="target_customer" t-value="object.partner_id == customer"/>
-     <t t-set="recurrent" t-value="object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')"/>
+    <t t-set="recurrent" t-value="object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')"/>
+    <t t-set="organizer" t-value="object.event_id.user_id"/>
 
-    <p>
-        Hello <t t-out="object.common_name or ''">Ready Mat</t>,<br/><br/>
+    <h1 style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 28px;">
+        Date Updated
+        <img src="/calendar/static/src/img/sync.png" style="border:0; width: 24px; height: 24px; margin-left: 10px; text-decoration:none; vertical-align: bottom;" />
+    </h1>
+    <p style="margin: 0;">
+        <span style="display: block; margin-bottom: 8px;">Hello <t t-out="object.common_name or ''">Ready Mat</t>,</span>
         <t t-if="is_online and target_responsible">
             <t t-if="customer">
-                The date of your appointment with <t t-out="customer.name or ''">Jesse Brown</t> has been updated.
+                Your appointment with <t t-out="customer.name or ''">Jesse Brown</t> has been updated:
             </t>
             <t t-else="">
-                Your appointment has been updated.
+                Your appointment has been updated:
             </t>
-            The appointment <strong t-out="object.event_id.appointment_type_id.name or ''">Schedule a Demo</strong> is now scheduled for
-            <t t-out="object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''">05/04/2021 at (11:00:00 To 11:30:00) (Europe/Brussels)</t>
-        </t>
-        <t t-elif="is_online and target_customer">
-            The date of your appointment with <t t-out="object.event_id.user_id.partner_id.name or ''">Colleen Diaz</t> has been updated.
-            The appointment <strong t-out="object.event_id.appointment_type_id.name or ''"></strong> is now scheduled for
+            <strong t-out="object.event_id.appointment_type_id.name or ''">Schedule a Demo</strong> is now scheduled for
             <t t-out="object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''">05/04/2021 at (11:00:00 To 11:30:00) (Europe/Brussels)</t>.
         </t>
+        <t t-elif="is_online and target_customer">
+            Your appointment <strong t-out="object.event_id.appointment_type_id.name or ''"></strong> <t t-if="organizer">with </t><t t-out="organizer.partner_id.name or ''">Colleen Diaz</t>
+            is now scheduled for <t t-out="object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''">05/04/2021 at (11:00:00 To 11:30:00) (Europe/Brussels)</t>.
+        </t>
         <t t-else="">
-            The date of the meeting has been updated.
-            The meeting <strong t-out="object.event_id.name or ''">Follow-up for Project proposal</strong> created by <t t-out="object.event_id.user_id.partner_id.name or ''">Colleen Diaz</t> is now scheduled for
+            The date of the meeting <strong t-out="object.event_id.name or ''">Follow-up for Project proposal</strong> <t t-if="organizer">created by </t><t t-out="organizer.partner_id.name or ''">Colleen Diaz</t> is now scheduled for
             <t t-out="object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''">05/04/2021 at (11:00:00 To 11:30:00) (Europe/Brussels)</t>.
         </t>
     </p>
     <div style="text-align: center; padding: 16px 0px 16px 0px;">
         <a t-attf-href="/calendar/meeting/accept?token={{ object.access_token }}&amp;id={{ object.event_id.id }}"
-            t-attf-style="padding: 5px 10px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
+            t-attf-style="display: inline-block; padding: 7px 14px; color: {{organizer.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{organizer.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
             Accept</a>
         <a t-attf-href="/calendar/meeting/decline?token={{ object.access_token }}&amp;id={{ object.event_id.id }}"
-            t-attf-style="padding: 5px 10px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
+            t-attf-style="display: inline-block; margin-left: 6px; padding: 7px 14px; color: {{organizer.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{organizer.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
             Decline</a>
         <a t-attf-href="/calendar/meeting/view?token={{ object.access_token }}&amp;id={{ object.event_id.id }}"
-            t-attf-style="padding: 5px 10px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
+            t-attf-style="display: inline-block; margin-left: 12px; padding: 7px 14px; color: #111827; text-decoration: none; background-color: #E7E9ED; border-radius: 3px;">
             View</a>
     </div>
-    <table border="0" cellpadding="0" cellspacing="0"><tr>
-        <td width="130px;" style="min-width: 130px;">
-            <div t-attf-style="border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; min-height: 18px; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};">
-                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format="EEEE", lang_code=object.env.lang) or ""'>Tuesday</t>
-            </div>
-            <div t-attf-style="font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};">
-                <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''">4</t>
-            </div>
-            <div t-attf-style="font-size: 12px; text-align: center; font-weight: bold; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};">
-                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format="MMMM y", lang_code=object.env.lang) or ""'>May 2021</t>
-            </div>
-            <div t-attf-style="border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold; border: 1px solid {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-bottom-start-radius: 3px;">
-                 <t t-if="not object.event_id.allday">
-                    <div>
-                        <t t-out='format_time(time=object.event_id.start, tz=object.mail_tz, time_format="short", lang_code=object.env.lang) or ""'>11:00 AM</t>
-                    </div>
-                    <t t-if="object.mail_tz">
-                        <div style="font-size: 10px; font-weight: normal">
-                            (<t t-out="object.mail_tz or ''">Europe/Brussels</t>)
-                        </div>
+    <div style="margin: 16px 0 0;">
+        <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Details</h2>
+        <table cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #374151;">
+		    <tr>
+                <td style="width: 100px; color: #676F7B;">Date &amp; Time</td>
+                <td style="font-weight: bold;">
+                    <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', lang_code=object.env.lang) or ''">Tuesday</t>
+                    <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''">4</t>
+                    <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''">May 2021</t>
+                    <t t-if="not object.event_id.allday">
+                        <t t-out="format_time(time=object.event_id.start, tz=object.mail_tz, time_format='short', lang_code=object.env.lang) or ''">11:00 AM</t>
+                        <t t-if="object.mail_tz">
+                            <span style="font-size: 11px; font-weight: normal;">
+                                (<t t-out="object.mail_tz or ''">Europe/Brussels</t>)
+                            </span>
+                        </t>
                     </t>
-                </t>
-            </div>
-        </td>
-        <td width="20px;"/>
-        <td style="padding-top: 5px;">
-            <p><strong>Details of the event</strong></p>
-            <ul>
-                <t t-if="object.event_id.location">
-                    <li>Location: <t t-out="object.event_id.location or ''">Bruxelles</t>
-                        <a target="_blank" t-if="not is_online or is_online and object.event_id.location != object.event_id.appointment_type_id.location_id.name" t-attf-href="http://maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}">(View Map)</a>
-                    </li>
-                </t>
-                <t t-if="recurrent">
-                    <li>When: <t t-out="object.recurrence_id.get_recurrence_name()">Every 1 Weeks, for 3 events</t></li>
-                </t>
-                <t t-if="not object.event_id.allday and object.event_id.duration">
-                    <li>Duration: <t t-out="('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''">0H30</t></li>
-                </t>
-                <li>Attendees
-                <ul>
-                    <li t-foreach="object.event_id.attendee_ids" t-as="attendee">
-                        <div t-attf-style="display: inline-block; border-radius: 50%; width: 10px; height: 10px; background: {{ colors.get(attendee.state) or 'white' }};"> </div>
-                        <t t-if="attendee.common_name != object.common_name">
-                            <span style="margin-left:5px" t-out="attendee.common_name or ''">Mitchell Admin</span>
-                        </t>
-                        <t t-else="">
-                            <span style="margin-left:5px">You</span>
-                        </t>
-                    </li>
-                </ul></li>
-                <t t-if="object.event_id.videocall_location">
-                    <li>
-                        How to Join:
-                        <t t-if="object.get_base_url() in object.event_id.videocall_location"> Join with Odoo Discuss</t>
-                        <t t-else=""> Join at</t><br/>
-                        <a t-att-href="object.event_id.videocall_location" target="_blank" t-out="object.event_id.videocall_location or ''">www.mycompany.com/calendar/join_videocall/xyz</a>
-                    </li>
-                </t>
-                <t t-if="not is_html_empty(object.event_id.description)">
-                    <li>Description of the event:
-                    <t t-out="object.event_id.description">Internal meeting for discussion for new pricing for product and services.</t></li>
-                </t>
-            </ul>
-        </td>
-    </tr></table>
-    <br/>
-    Thank you,
-    <t t-if="object.event_id.user_id.signature">
-        <br />
-        <div>--<br/><t t-out="object.event_id.user_id.signature or ''">Mitchell Admin</t></div>
-    </t>
+                </td>
+            </tr>
+            <tr t-if="recurrent">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;">When</td>
+                <td style="padding-top: 6px;"><t t-out="object.recurrence_id.get_recurrence_name() or ''">Every 1 Weeks, for 3 events</t></td>
+            </tr>
+            <tr t-if="not object.event_id.allday and object.event_id.duration">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;">Duration</td>
+                <td style="padding-top: 6px;"><t t-out="('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''">0H30</t></td>
+            </tr>
+            <tr t-if="object.event_id.location">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B; vertical-align: top;">Location</td>
+                <td style="padding-top: 6px;">
+                    <t t-out="object.event_id.location or ''">Bruxelles</t>
+                    <a target="_blank" t-if="not is_online or is_online and object.event_id.location != object.event_id.appointment_type_id.location_id.name" t-attf-href="http://maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}" style="margin-left: 12px; font-size: 12px; color: #008f8c; text-decoration: underline;">View Map</a>
+                </td>
+            </tr>
+            <tr t-if="object.event_id.videocall_location">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;">
+                    <t t-if="object.event_id.videocall_source == 'discuss'">Join with</t>
+                    <t t-else="">Join</t>
+                </td>
+                <td style="padding-top: 6px;">
+                    <a t-attf-href="object.event_id.videocall_location" target="_blank" style="color: #008f8c;">
+                        <t t-if="object.event_id.videocall_source == 'discuss'">Odoo Discuss</t>
+                        <t t-else="">Video meeting</t>
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div style="margin: 32px 0 0;">
+        <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Attendees</h2>
+        <div t-foreach="object.event_id.attendee_ids" t-as="attendee" style="margin-bottom: 5px;">
+            <img t-if="attendee.state" t-attf-src="/calendar/static/src/img/state_{{ attendee.state }}.png" style="border:0; width: 15px; height: 15px; vertical-align: text-bottom;" />
+            <t t-if="attendee != object">
+                <span style="margin-left: 5px;" t-out="attendee.common_name or ''">Mitchell Admin</span>
+            </t>
+            <t t-else="">
+                <span style="margin-left: 5px;">You</span>
+            </t>
+        </div>
+    </div>
+    <div t-if="not is_html_empty(object.event_id.description)" style="margin: 32px 0 0;">
+        <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Description of the event</h2>
+        <t t-out="object.event_id.description">Internal meeting for discussion for new pricing for product and services.</t>
+    </div>
+    <p style="margin: 32px 0 0;">
+        Thank you!
+        <t t-if="organizer.signature">
+            <span style="display: block; margin-top: 8px;"><t t-out="organizer.signature or ''">Mitchell Admin</t></span>
+        </t>
+    </p>
 </div>
             </field>
             <field name="auto_delete" eval="True"/>
@@ -262,97 +262,102 @@
             <field name="use_default_to" eval="True"/>
             <field name="description">Sent to all attendees if a reminder is set</field>
             <field name="body_html" type="html">
-<div>
-    <t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}" />
+<div style="font-size: 13px; color: #374151;">
     <t t-set="is_online" t-value="'appointment_type_id' in object.event_id and object.event_id.appointment_type_id" />
     <t t-set="recurrent" t-value="object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')" />
-    <p>
-        Hello <t t-out="object.common_name or ''">Gemini Furniture</t>,<br/><br/>
-        This is a reminder for the below event:
+    <h1 style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 28px;">
+        Reminder
+        <img src="/calendar/static/src/img/bell.png" style="border:0; width: 21px; height: 24px; margin-left: 10px; text-decoration:none; vertical-align: bottom;" />
+    </h1>
+    <p style="margin: 0;">
+        Hello <t t-out="object.common_name or ''">Gemini Furniture</t>,<br/>
+        <span style="display: block; margin-top: 8px;">This is a reminder for the event below.</span>
     </p>
     <div style="text-align: center; padding: 16px 0px 16px 0px;">
         <a t-attf-href="/calendar/{{ 'recurrence' if recurrent else 'meeting' }}/accept?token={{ object.access_token }}&amp;id={{ object.event_id.id }}"
-            t-attf-style="padding: 5px 10px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
+            t-attf-style="display: inline-block; padding: 7px 14px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
             Accept</a>
         <a t-attf-href="/calendar/{{ 'recurrence' if recurrent else 'meeting' }}/decline?token={{ object.access_token }}&amp;id={{ object.event_id.id }}"
-            t-attf-style="padding: 5px 10px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
+            t-attf-style="display: inline-block; margin-left: 6px; padding: 7px 14px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
             Decline</a>
         <a t-attf-href="/calendar/meeting/view?token={{ object.access_token }}&amp;id={{ object.event_id.id }}" 
-            t-attf-style="padding: 5px 10px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
+            t-attf-style="display: inline-block; margin-left: 12px; padding: 7px 14px; color: #111827; text-decoration: none; background-color: #E7E9ED; border-radius: 3px;">
             View</a>
     </div>
-    <table border="0" cellpadding="0" cellspacing="0"><tr>
-        <td width="130px;" style="min-width: 130px;">
-            <div t-attf-style="border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; min-height: 18px; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};">
-                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format="EEEE", lang_code=object.env.lang) or ""'>Tuesday</t>
-            </div>
-            <div t-attf-style="font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};">
-                <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''">4</t>
-            </div>
-            <div t-attf-style="font-size: 12px; text-align: center; font-weight: bold; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};">
-                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format="MMMM y", lang_code=object.env.lang) or ""'>May 2021</t>
-            </div>
-            <div t-attf-style="border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold; border: 1px solid {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-bottom-start-radius: 3px;">
-                <t t-if="not object.event_id.allday">
-                    <div>
-                        <t t-out='format_time(time=object.event_id.start, tz=object.mail_tz, time_format="short", lang_code=object.env.lang) or ""'>11:00 AM</t>
-                    </div>
-                    <t t-if="object.mail_tz">
-                        <div style="font-size: 10px; font-weight: normal">
-                            (<t t-out="object.mail_tz or ''">Europe/Brussels</t>)
-                        </div>
+    <div style="margin: 16px 0 0;">
+        <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Details</h2>
+        <table cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #374151;">
+            <tr>
+                <td style="width: 100px; color: #676F7B;">Date &amp; Time</td>
+                <td style="font-weight: bold;">
+                    <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', lang_code=object.env.lang) or ''">Tuesday</t>
+                    <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''">4</t>
+                    <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''">May 2021</t>
+                    <t t-if="not object.event_id.allday">
+                        <t t-out="format_time(time=object.event_id.start, tz=object.mail_tz, time_format='short', lang_code=object.env.lang) or ''">11:00 AM</t>
+                        <t t-if="object.mail_tz">
+                            <span style="font-size: 11px; font-weight: normal;">
+                                (<t t-out="object.mail_tz or ''">Europe/Brussels</t>)
+                            </span>
+                        </t>
                     </t>
-                </t>
-            </div>
-        </td>
-        <td width="20px;"/>
-        <td style="padding-top: 5px;">
-            <p><strong>Details of the event</strong></p>
-            <ul>
-                <t t-if="object.event_id.location">
-                    <li>Location: <t t-out="object.event_id.location or ''">Bruxelles</t>
-                        <a target="_blank" t-if="not is_online or is_online and object.event_id.location != object.event_id.appointment_type_id.location_id.name" t-attf-href="http://maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}">(View Map)</a>
-                    </li>
-                </t>
-                <t t-if="recurrent">
-                    <li>When: <t t-out="object.recurrence_id.get_recurrence_name()">Every 1 Weeks, for 3 events</t></li>
-                </t>
-                <t t-if="not object.event_id.allday and object.event_id.duration">
-                    <li>Duration: <t t-out="('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''">0H30</t></li>
-                </t>
-                <li>Attendees
-                <ul>
-                    <li t-foreach="object.event_id.attendee_ids" t-as="attendee">
-                        <div t-attf-style="display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:{{ colors.get(attendee.state) or 'white' }};"> </div>
-                        <t t-if="attendee.common_name != object.common_name">
-                            <span style="margin-left:5px" t-out="attendee.common_name or ''">Mitchell Admin</span>
-                        </t>
-                        <t t-else="">
-                            <span style="margin-left:5px">You</span>
-                        </t>
-                    </li>
-                </ul></li>
-                <t t-if="object.event_id.videocall_location">
-                    <li>
-                        How to Join:
-                        <t t-if="object.get_base_url() in object.event_id.videocall_location"> Join with Odoo Discuss</t>
-                        <t t-else=""> Join at</t><br/>
-                        <a t-att-href="object.event_id.videocall_location" target="_blank" t-out="object.event_id.videocall_location or ''">www.mycompany.com/calendar/join_videocall/xyz</a>
-                    </li>
-                </t>
-                <t t-if="not is_html_empty(object.event_id.description)">
-                    <li>Description of the event:
-                    <t t-out="object.event_id.description">Internal meeting for discussion for new pricing for product and services.</t></li>
-                </t>
-            </ul>
-        </td>
-    </tr></table>
-    <br/>
-    Thank you,
-    <t t-if="object.event_id.user_id.signature">
-        <br />
-        <div>--<br/><t t-out="object.event_id.user_id.signature or ''">Mitchell Admin</t></div>
-    </t>
+                </td>
+            </tr>
+            <tr t-if="recurrent">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;">When</td>
+                <td style="padding-top: 6px;">
+                    <t t-out="object.recurrence_id.get_recurrence_name() or ''">Every 1 Weeks, for 3 events</t>
+                </td>
+            </tr>
+            <tr t-if="not object.event_id.allday and object.event_id.duration">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;">Duration</td>
+                <td style="padding-top: 6px;">
+                    <t t-out="('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''">0H30</t>
+                </td>
+            </tr>
+            <tr t-if="object.event_id.location">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B; vertical-align: top;">Location</td>
+                <td style="padding-top: 6px;">
+                    <t t-out="object.event_id.location or ''">Bruxelles</t>
+                    <a target="_blank" t-if="not is_online or is_online and object.event_id.location != object.event_id.appointment_type_id.location_id.name" t-attf-href="http://maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}" style="margin-left: 12px; font-size: 12px; color: #008f8c; text-decoration: underline;">View Map</a>
+                </td>
+            </tr>
+            <tr t-if="object.event_id.videocall_location">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;">
+                    <t t-if="object.get_base_url() in object.event_id.videocall_location">Join with</t>
+                    <t t-else="">Join</t>
+                </td>
+                <td style="padding-top: 6px;">
+                    <a t-attf-href="object.event_id.videocall_location" target="_blank" style="color: #008f8c;">
+                        <t t-if="object.get_base_url() in object.event_id.videocall_location">Odoo Discuss</t>
+                        <t t-else="">Video meeting</t>
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div style="margin: 32px 0 0;">
+        <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Attendees</h2>
+        <div t-foreach="object.event_id.attendee_ids" t-as="attendee" style="margin-bottom: 5px;">
+            <img t-if="attendee.state" t-attf-src="/calendar/static/src/img/state_{{ attendee.state }}.png" style="border:0; width: 15px; height: 15px; vertical-align: text-bottom;" />
+            <t t-if="attendee != object">
+                <span style="margin-left: 5px;" t-out="attendee.common_name or ''">Mitchell Admin</span>
+            </t>
+            <t t-else="">
+                <span style="margin-left: 5px;">You</span>
+            </t>
+        </div>
+    </div>
+    <div t-if="not is_html_empty(object.event_id.description)" style="margin: 32px 0 0;">
+        <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Description of the event</h2>
+        <t t-out="object.event_id.description">Internal meeting for discussion for new pricing for product and services.</t>
+    </div>
+    <p style="margin: 32px 0 0;">
+        Thank you!
+        <t t-if="object.event_id.user_id.signature">
+            <span style="display: block; margin-top: 8px;"><t t-out="object.event_id.user_id.signature or ''">Mitchell Admin</t></span>
+        </t>
+    </p>
 </div>
             </field>
             <field name="auto_delete" eval="True"/>
@@ -367,86 +372,88 @@
             <field name="use_default_to" eval="True"/>
             <field name="description">Used to manually notify attendees</field>
             <field name="body_html" type="html">
-<div>
-    <t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}" />
+<div style="font-size: 13px; color: #374151;">
     <t t-set="is_online" t-value="'appointment_type_id' in object and object.appointment_type_id" />
-    <t t-set="target_responsible" t-value="object.partner_id == object.partner_id" />
-    <t t-set="target_customer" t-value="object.partner_id == customer" />
     <t t-set="recurrent" t-value="object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')" />
     <t t-set="mail_tz" t-value="object._get_mail_tz() or ctx.get('mail_tz')" />
-    <div>
-        <table border="0" cellpadding="0" cellspacing="0">
+    <h1 style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 28px;">
+        Event updated
+        <img src="/calendar/static/src/img/sync.png" style="border:0; width: 24px; height: 24px; margin-left: 10px; text-decoration:none; vertical-align: bottom;" />
+    </h1>
+    <p style="margin: 0;">
+        <span style="display: block; margin-bottom: 8px;">Hello,</span>
+        This meeting has been updated.
+    </p>
+    <div style="margin: 32px 0 0;">
+        <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Details</h2>
+        <table cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #374151;">
             <tr>
-                <td width="130px;" style="min-width: 130px;">
-                    <div t-attf-style="border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: {{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; min-height: 18px; background-color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}};">
-                        <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang) ">Tuesday</t>
-                    </div>
-                    <div t-attf-style="font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid {{object.user_id.company_id.email_secondary_color or '#875A7B'}};">
-                        <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='d', lang_code=object.env.lang)">4</t>
-                    </div>
-                    <div t-attf-style="font-size: 12px; text-align: center; font-weight: bold; color: {{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; background-color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}};">
-                        <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='MMMM y', lang_code=object.env.lang)">May 2021</t>
-                    </div>
-                    <div t-attf-style="border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold; border: 1px solid {{object.user_id.company_id.email_secondary_color or '#875A7B'}}; border-bottom-start-radius: 3px;">
-                        <t t-if="not object.allday">
-                            <div>
-                                <t t-out="format_time(time=object.start, tz=mail_tz, time_format='short', lang_code=object.env.lang)">11:00 AM</t>
-                            </div>
-                            <t t-if="mail_tz">
-                                <div style="font-size: 10px; font-weight: normal">
-                                    (<t t-out="mail_tz"> Europe/Brussels</t>)
-                                </div>
-                            </t>
+                <td style="width: 100px; color: #676F7B;">Date &amp; Time</td>
+                <td style="font-weight: bold;">
+                    <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang)">Tuesday</t>
+                    <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='d', lang_code=object.env.lang)">4</t>
+                    <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='MMMM y', lang_code=object.env.lang)">May 2021</t>
+                    <t t-if="not object.allday">
+                        <t t-out="format_time(time=object.start, tz=mail_tz, time_format='short', lang_code=object.env.lang)">11:00 AM</t>
+                        <t t-if="mail_tz">
+                            <span style="font-size: 11px; font-weight: normal;">
+                                (<t t-out="mail_tz or ''">Europe/Brussels</t>)
+                            </span>
                         </t>
-                    </div>
+                    </t>
                 </td>
-                <td width="20px;"/>
-                <td style="padding-top: 5px;">
-                    <p>
-                        <strong>Details of the event</strong>
-                    </p>
-                    <ul>
-                        <t t-if="not is_html_empty(object.description)">
-                            <li>Description:
-                            <t t-out="object.description">Internal meeting for discussion for new pricing for product and services.</t></li>
-                        </t>
-                        <t t-if="object.videocall_location">
-                            <li>
-                                How to Join:
-                                <t t-if="object.get_base_url() in object.videocall_location"> Join with Odoo Discuss</t>
-                                <t t-else=""> Join at</t><br/>
-                                <a t-att-href="object.videocall_location" target="_blank" t-out="object.videocall_location or ''">www.mycompany.com/calendar/join_videocall/xyz</a>
-                            </li>
-                        </t>
-                        <t t-if="object.location">
-                            <li>Location: <t t-out="object.location or ''">Bruxelles</t>
-                                <a target="_blank"
-                                    t-if="not is_online or is_online and object.location != object.appointment_type_id.location_id.name"
-                                    t-attf-href="http://maps.google.com/maps?oi=map&amp;q={{object.location}}">(View Map)</a>
-                            </li>
-                        </t>
-                        <t t-if="recurrent">
-                            <li>When: <t t-out="object.recurrence_id.get_recurrence_name()">Every 1 Weeks, for 3 events</t></li>
-                        </t>
-                        <t t-if="not object.allday and object.duration">
-                            <li>Duration:
-                                <t t-out="('%dH%02d' % (object.duration,round(object.duration*60)%60))">0H30</t>
-                            </li>
-                        </t>
-                    </ul>
+            </tr>
+            <tr t-if="recurrent">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;">When</td>
+                <td style="padding-top: 6px;"><t t-out="object.recurrence_id.get_recurrence_name() or ''">Every 1 Weeks, for 3 events</t></td>
+            </tr>
+            <tr t-if="not object.allday and object.duration">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;">Duration</td>
+                <td style="padding-top: 6px;"><t t-out="('%dH%02d' % (object.duration,round(object.duration*60)%60))">0H30</t></td>
+            </tr>
+            <tr t-if="object.location">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;">Location</td>
+                <td style="padding-top: 6px;">
+                    <t t-out="object.location or ''">Bruxelles</t>
+                    <a target="_blank" t-if="not is_online or is_online and object.location != object.appointment_type_id.location_id.name" t-attf-href="http://maps.google.com/maps?oi=map&amp;q={{object.location}}" style="margin-left: 12px; font-size: 12px; color: #008f8c; text-decoration: underline;">View Map</a>
+                </td>
+            </tr>
+            <tr t-if="object.videocall_location">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;">
+                    <t t-if="object.videocall_source == 'discuss'">Join with</t>
+                    <t t-else="">Join</t>
+                </td>
+                <td style="padding-top: 6px;">
+                    <a t-attf-href="object.videocall_location" target="_blank" style="color: #008f8c;">
+                        <t t-if="object.videocall_source == 'discuss'">Odoo Discuss</t>
+                        <t t-else="">Video meeting</t>
+                    </a>
                 </td>
             </tr>
         </table>
     </div>
-    <div class="user_input">
-        <hr/>
-        <p placeholder="Enter your message here"><br/></p>
-
+    <div style="margin: 32px 0 0;">
+        <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Attendees</h2>
+        <div t-foreach="object.attendee_ids" t-as="attendee" style="margin-bottom: 5px;">
+            <img t-if="attendee.state" t-attf-src="/calendar/static/src/img/state_{{ attendee.state }}.png" style="border:0; width: 15px; height: 15px; vertical-align: text-bottom;" />
+            <t t-if="attendee.common_name">
+                <span style="margin-left: 5px" t-out="attendee.common_name or ''">Mitchell Admin</span>
+            </t>
+            <t t-else="">
+                <span style="margin-left: 5px;">You</span>
+            </t>
+        </div>
     </div>
-    <t t-if="object.user_id.signature">
-        <br />
-        <div>--<br/><t t-out="object.user_id.signature or ''">Mitchell Admin</t></div>
-    </t>
+    <div t-if="not is_html_empty(object.description)" style="margin: 32px 0 0;">
+        <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Description of the event</h2>
+        <t t-out="object.description">Internal meeting for discussion for new pricing for product and services.</t>
+    </div>
+    <p style="margin: 32px 0 0;">
+        Thank you!
+        <t t-if="object.user_id.signature">
+            <span style="display: block; margin-top: 8px;"><t t-out="object.user_id.signature or ''">Mitchell Admin</t></span>
+        </t>
+    </p>
 </div>
             </field>
         </record>
@@ -460,64 +467,55 @@
             <field name="use_default_to" eval="True"/>
             <field name="description">Used to manually notify attendees</field>
             <field name="body_html" type="html">
-                <div>
-                    <t t-set="mail_tz" t-value="object._get_mail_tz() or ctx.get('mail_tz')" />
-                    <t t-set="event_name" t-value="object.name or ''"/>
-                    <t t-set="start_date" t-value="object.start or ''"/>
-                    <t t-set="end_date" t-value="object.stop or ''"/>
-                    <t t-set="event_organizer" t-value="object.user_id.name or ''"/>
-                    <div>
-                        <table border="0" cellpadding="0" cellspacing="0">
-                            <tr>
-                                <td width="130px;" style="min-width: 130px;">
-                                    <div t-attf-style="border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: {{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; min-height: 18px; background-color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}};">
-                                        <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang) ">Tuesday</t>
-                                    </div>
-                                    <div t-attf-style="font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid {{object.user_id.company_id.email_secondary_color or '#875A7B'}};">
-                                        <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='d', lang_code=object.env.lang)">4</t>
-                                    </div>
-                                    <div t-attf-style="font-size: 12px; text-align: center; font-weight: bold; color: {{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; background-color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}};">
-                                        <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='MMMM y', lang_code=object.env.lang)">May 2021</t>
-                                    </div>
-                                    <div t-attf-style="border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold; border: 1px solid {{object.user_id.company_id.email_secondary_color or '#875A7B'}}; border-bottom-start-radius: 3px;">
-                                        <t t-if="not object.allday">
-                                            <div>
-                                                <t t-out="format_time(time=object.start, tz=mail_tz, time_format='short', lang_code=object.env.lang)">11:00 AM</t>
-                                            </div>
-                                            <t t-if="mail_tz">
-                                                <div style="font-size: 10px; font-weight: normal">
-                                                    (<t t-out="mail_tz"> Europe/Brussels</t>)
-                                                </div>
-                                            </t>
-                                        </t>
-                                    </div>
-                                </td>
-                                <td width="20px;"/>
-                                <td style="padding-top: 5px;">
-                                    <p>
-                                        <strong>This event has been canceled and removed from your calendar.</strong>
-                                    </p>
-                                    <p>
-                                        This is to inform you that the event <strong><t t-out="event_name"/></strong>
-                                        scheduled from <strong><t t-out="start_date or ''"/></strong>
-                                        to <strong><t t-out="end_date or ''"/></strong>
-                                        has been deleted.
-                                    </p>
-                                    <p>
-                                        Organizer: <strong><t t-out="event_organizer"/></strong>
-                                    </p>
-                                    <p>
-                                        If you have any questions or concerns, please feel free to contact us.
-                                    </p>
-                                    <p>
-                                        Best regards,<br/>
-                                        <strong>The Calendar Team</strong>
-                                    </p>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
+<div style="font-size: 13px; color: #374151;">
+    <t t-set="mail_tz" t-value="object._get_mail_tz() or ctx.get('mail_tz')" />
+    <t t-set="event_name" t-value="object.name or ''"/>
+    <t t-set="event_organizer" t-value="object.user_id.name or ''"/>
+    <h1 style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 28px;">
+        Event canceled
+        <img src="/calendar/static/src/img/times-circle.png" style="border:0; width: 24px; height: 24px; margin-left: 10px; text-decoration:none; vertical-align: bottom;" />
+    </h1>
+    <p style="margin: 0;">
+        Hello,<br/>
+        <span style="display: block; margin-top: 8px;">
+            This is to inform you that the event <strong t-out="event_name or ''">Follow-up for Project proposal</strong> <t t-if="event_organizer">organized by </t><t t-out="event_organizer or ''">Colleen Diaz</t> has been canceled and removed from your calendar.
+        </span>
+    </p>
+    <div style="margin: 32px 0 0;">
+        <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Details</h2>
+        <table cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #374151;">
+            <tr>
+                <td style="width: 100px; color: #676F7B;">Date &amp; Time</td>
+                <td style="font-weight: bold;">
+                    <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang)">Tuesday</t>
+                    <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='d', lang_code=object.env.lang)">4</t>
+                    <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='MMMM y', lang_code=object.env.lang)">May 2021</t>
+                    <t t-if="not object.allday">
+                        <t t-out="format_time(time=object.start, tz=mail_tz, time_format='short', lang_code=object.env.lang)">11:00 AM</t>
+                        <t t-if="mail_tz">
+                            <span style="font-size: 11px; font-weight: normal;">
+                                (<t t-out="mail_tz or ''">Europe/Brussels</t>)
+                            </span>
+                        </t>
+                    </t>
+                </td>
+            </tr>
+            <tr t-if="not object.allday and object.duration">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;">Duration</td>
+                <td style="padding-top: 6px;"><t t-out="('%dH%02d' % (object.duration,round(object.duration*60)%60))">0H30</t></td>
+            </tr>
+            <tr t-if="object.location">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;">Location</td>
+                <td style="padding-top: 6px;"><t t-out="object.location or ''">Bruxelles</t></td>
+            </tr>
+        </table>
+    </div>
+    <p style="margin: 32px 0 0;">
+        If you have any questions or concerns, please feel free to contact us. <br/>
+        Best regards,
+        <span style="display: block; margin-top: 8px;">The Calendar Team</span>
+    </p>
+</div>
             </field>
         </record>
     </data>
