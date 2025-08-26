@@ -1,4 +1,3 @@
-import { queryAll, queryText } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
@@ -49,7 +48,7 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
     content: "Check that we're on the last step & grab key",
     trigger: '.modal p:contains("Here is your new API key")',
     run: async () => {
-        const key = queryText("code [name=key] span");
+        const key = document.querySelector("code [name=key] span").textContent;
         await rpc('/web/dataset/call_kw', {
             model: 'ir.logging', method: 'send_key',
             args: [key],
@@ -110,10 +109,5 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
     run: 'click',
 }, {
     content: "Check that there's no more keys",
-    trigger: '.o_notebook',
-    run: function() {
-        if (queryAll("[name=api_key_ids]:visible", { root: this.anchor }).length) {
-            console.error("Expected API keys to be hidden (because empty), but it's not");
-        }
-    }
+    trigger: "body:not(:has(.o_notebook [name=api_key_ids]))",
 }]});

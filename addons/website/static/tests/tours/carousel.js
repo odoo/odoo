@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { delay } from "@odoo/hoot-dom";
+import { delay } from "@web/core/utils/concurrency";
 import {
     insertSnippet,
     clickOnSnippet,

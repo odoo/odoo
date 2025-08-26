@@ -1,6 +1,5 @@
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
-import { queryFirst } from "@odoo/hoot-dom";
 
 function openAccountSettingsTab() {
     return [{
@@ -48,16 +47,7 @@ registry.category("web_tour.tours").add('totp_admin_self_invite', {
     run: "click",
 }, {
     content: "check that user cannot invite themselves to use 2FA.",
-    trigger: "body",
-    run: function () {
-        const inviteBtn = queryFirst('button:contains(Invite to use 2FA)');
-        if (!inviteBtn) {
-            document.body.classList.add('CannotInviteYourself');
-        }
-    }
-}, {
-    content: "check that user cannot invite themself.",
-    trigger: "body.CannotInviteYourself",
+    trigger: "body:not(:has(button:contains(Invite to use 2FA)))",
 }]});
 
 registry.category("web_tour.tours").add('totp_admin_invite', {

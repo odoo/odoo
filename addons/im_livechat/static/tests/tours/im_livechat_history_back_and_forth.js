@@ -1,4 +1,4 @@
-import { delay } from "@odoo/hoot-dom";
+import { delay } from "@web/core/utils/concurrency";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour", {

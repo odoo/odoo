@@ -1,4 +1,3 @@
-import { queryAll, queryOne } from "@odoo/hoot-dom";
 import { patch } from "@web/core/utils/patch";
 
 /**
@@ -183,19 +182,11 @@ const retrySteps = [
     },
 ];
 
-const lastSteps = [
-    {
-        trigger: 'h1:contains("You scored")',
-        run: function () {
-            if (queryAll('a:contains("Retry")').length === 0) {
-                queryOne('h1:contains("You scored")').classList.add("tour_success");
-            }
-        },
-    },
-    {
-        trigger: "h1.tour_success",
-    },
-];
+var lastSteps = [{
+    trigger: 'h1:contains("You scored")',
+}, {
+    trigger: 'body:not(:has(a:contains("Retry")))',
+}];
 
 registry.category("web_tour.tours").add("test_certification_failure", {
     url: "/survey/start/4ead4bc8-b8f2-4760-a682-1fde8daaaaac",
