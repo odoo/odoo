@@ -7,7 +7,7 @@ from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
 from odoo.http import _request_stack
-from odoo.tests import Form, TransactionCase, new_test_user, tagged, HttpCase, users, warmup
+from odoo.tests import Form, TransactionCase, new_test_user, tagged, HttpCase, users, warmup, freeze_time
 from odoo.tools import mute_logger
 
 
@@ -518,6 +518,53 @@ class TestUsersTweaks(TransactionCase):
 
 @tagged('post_install', '-at_install')
 class TestUsersIdentitycheck(HttpCase):
+
+    def _rpc(self, model, method, *args, **kwargs):
+        return self.url_open(
+            "/web/dataset/call_kw", json={"params": {"model": model, "method": method, "args": args, "kwargs": kwargs}}
+        ).json()
+
+    def test_change_password(self):
+        """Test that the change of users' password is correctly done and allowed by an identity check."""
+        user_internal = self.env['res.users'].create({
+            'name': 'Internal',
+            'login': 'user_internal',
+            'password': 'oldpassword',
+            'group_ids': [self.env.ref('base.group_user').id],
+        })
+        user_admin = self.env.ref('base.user_admin')
+        self.authenticate(user_admin.login, user_admin.password)
+
+        with freeze_time('2025-10-14 00:00:00'):
+            # Check that an identity check is triggered when clicking the "Change Password" button in the user form of user_internal.
+            wizard_action_result = self._rpc('res.users', 'action_change_password_wizard', user_internal.id)['result']
+            self.assertEqual(wizard_action_result['res_model'], 'res.users.identitycheck')
+            identitycheck_result = self._rpc(
+                wizard_action_result['res_model'],
+                'run_check',
+                wizard_action_result['res_id'],
+                context={'password': user_admin.login}
+            )['result']
+
+        # Wait 10 minutes that the first identity check, triggered at the opening of the form, expire before the submission
+        # to ensure that an identity check protect the method changing the passwords.
+        with freeze_time('2025-10-14 00:10:00'):
+            wizard_id = self._rpc(identitycheck_result['res_model'], 'create', {}, context=identitycheck_result['context'])['result']
+            self.env['change.password.user'].search([('wizard_id', '=', wizard_id), ('user_id', '=', user_internal.id)]).write({'new_passwd': 'newpassword'})
+            change_password_result = self._rpc(identitycheck_result['res_model'], 'change_password_button', wizard_id)['result']
+            self.assertEqual(change_password_result['res_model'], 'res.users.identitycheck')
+            self._rpc(
+                change_password_result['res_model'],
+                'run_check',
+                change_password_result['res_id'],
+                context={'password': user_admin.login}
+            )['result']
+
+        # To check that the password of user_internal has been modified.
+        self.env['res.users'].with_user(user_internal)._check_credentials(
+            {'login': 'user_internal', 'password': 'newpassword', 'type': 'password'},
+            {'interactive': False}
+        )
 
     @users('admin')
     def test_revoke_all_devices(self):

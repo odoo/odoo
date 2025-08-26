@@ -956,12 +956,15 @@ class ResUsers(models.Model):
             'tag': 'reload_context',
         }
 
+    @check_identity
     def action_change_password_wizard(self):
         return {
             'type': 'ir.actions.act_window',
             'target': 'new',
             'res_model': 'change.password.wizard',
             'view_mode': 'form',
+            'name': 'Change Password',
+            'context': {'active_ids': self.ids, 'active_model': 'res.users'}
         }
 
     @check_identity
@@ -1394,10 +1397,7 @@ class ChangePasswordWizard(models.TransientModel):
 
     def change_password_button(self):
         self.ensure_one()
-        self.user_ids.change_password_button()
-        if self.env.user in self.user_ids.user_id:
-            return {'type': 'ir.actions.client', 'tag': 'reload'}
-        return {'type': 'ir.actions.act_window_close'}
+        return self.user_ids.change_password_button()
 
 
 class ChangePasswordUser(models.TransientModel):
@@ -1409,12 +1409,16 @@ class ChangePasswordUser(models.TransientModel):
     user_login = fields.Char(string='User Login', readonly=True)
     new_passwd = fields.Char(string='New Password', default='')
 
+    @check_identity
     def change_password_button(self):
         for line in self:
             if line.new_passwd:
                 line.user_id._change_password(line.new_passwd)
         # don't keep temporary passwords in the database longer than necessary
         self.write({'new_passwd': False})
+        if self.env.user in self.user_id:
+            return {'type': 'ir.actions.client', 'tag': 'reload'}
+        return {'type': 'ir.actions.act_window_close'}
 
 
 class ChangePasswordOwn(models.TransientModel):
