@@ -3,7 +3,7 @@
 
 <t t-name="website.WebsiteBuilderClientAction">
     <div class="d-flex h-100 w-100" t-ref="container">
-        <div class="o_website_preview border-top flex-grow-1" t-ref="website_preview">
+        <div class="o_website_preview flex-grow-1" t-att-class="state.isEditing ? '' : 'border-top'" t-ref="website_preview">
             <div class="o_iframe_container">
                 <iframe t-if="!testMode" t-att-src="iframeFallbackUrl"
                     class="o_ignore_in_tour"
