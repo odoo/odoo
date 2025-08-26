@@ -166,8 +166,8 @@ const EVENT_TEMPLATE = /* xml */ `
         <t t-esc="'@' + timestamp" />
     </small>
     <t t-if="event.additionalMessage">
-        <div class="flex items-center ms-4 px-2 gap-1 truncate col-span-2">
-            <em class="text-blue" t-esc="event.additionalMessage" />
+        <div class="flex items-center ms-4 px-2 gap-1 col-span-2">
+            <em class="text-blue truncate" t-esc="event.additionalMessage" />
             <HootCopyButton text="event.additionalMessage" />
         </div>
     </t>
