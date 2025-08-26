@@ -86,7 +86,7 @@ test("show invisible elements in translate mode", async () => {
 
 test("translate text", async () => {
     const resultSave = [];
-    onRpc("/web_editor/field/translation/update", async (data) => {
+    onRpc("/website/field/translation/update", async (data) => {
         const { params } = await data.json();
         resultSave.push(params.translations.fr_BE.sourceSha);
         return true;
@@ -137,7 +137,7 @@ test("404 page in translate mode", async () => {
 
 test("translate attribute", async () => {
     const resultSave = [];
-    onRpc("/web_editor/field/translation/update", async (data) => {
+    onRpc("/website/field/translation/update", async (data) => {
         const { params } = await data.json();
         resultSave.push(params.translations.fr_BE.sourceSha);
         return true;
@@ -225,7 +225,7 @@ test("test that powerbox should not open in translate mode", async () => {
 
 describe("save translation", () => {
     beforeEach(async () => {
-        onRpc("/web_editor/field/translation/update", async (data) => {
+        onRpc("/website/field/translation/update", async (data) => {
             const { params } = await data.json();
             expect.step(params.translations.fr_BE);
             return true;

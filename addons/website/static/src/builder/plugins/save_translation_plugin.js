@@ -26,7 +26,7 @@ export class SaveTranslationPlugin extends Plugin {
                     [el.dataset["oeTranslationSourceSha"]]: this.getEscapedElement(el).innerHTML,
                 }))
             );
-            return rpc("/web_editor/field/translation/update", {
+            return rpc("/website/field/translation/update", {
                 model: els[0].dataset["oeModel"],
                 record_id: [Number(els[0].dataset["oeId"])],
                 field_name: els[0].dataset["oeField"],

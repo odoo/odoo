@@ -1317,7 +1317,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
             'field_name': 'arch_db',
             'translations': {french.code: {sha: 'contenu de base'}},
         })
-        self.url_open('/web_editor/field/translation/update', data=json.dumps(payload), headers=self.headers)
+        self.url_open('/website/field/translation/update', data=json.dumps(payload), headers=self.headers)
         new_specific_views = View.search([('website_id', '!=', None)])
         self.assertEqual(len(old_specific_views), len(new_specific_views), "No additional specific view must have been created")
         self.assertTrue(view.arch.index('contenu de base') > 0, "New translation must appear in view")
