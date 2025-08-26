@@ -203,7 +203,7 @@ class AccountMove(models.Model):
         for partner in partners:
             if partner_validation := partner._l10n_in_edi_strict_error_validation():
                 self.l10n_in_edi_error = Markup("<br>").join(partner_validation)
-                return partner_validation
+                return {'messages': partner_validation}
         self._l10n_in_lock_invoice()
         generate_json = self._l10n_in_edi_generate_invoice_json()
         response = self._l10n_in_edi_connect_to_server(
@@ -278,13 +278,17 @@ class AccountMove(models.Model):
                 msg = Markup("<br/>").join(
                     ["[%s] %s" % (e.get("code"), e.get("message")) for e in error]
                 )
+                is_warning = any(warning_code in error_codes for warning_code in ('404', 'timeout'))
                 self.l10n_in_edi_error = (
                     self._l10n_in_edi_get_iap_buy_credits_message()
                     if no_credit else msg
                 )
                 # avoid return `l10n_in_edi_error` because as a html field
                 # values are sanitized with `<p>` tag
-                return msg
+                return {
+                    'messages': [msg],
+                    'is_warning': is_warning
+                }
         data = response.get("data", {})
         json_dump = json.dumps(data)
         json_name = "%s_einvoice.json" % (self.name.replace("/", "_"))
