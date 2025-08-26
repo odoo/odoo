@@ -103,6 +103,29 @@ class AccountChartTemplate(models.AbstractModel):
             taxes_xml_ids = [f"igst_sale_{rate}_sez_exp_lut" for rate in rates] + ['igst_sale_0_sez_exp_lut']
         return [Command.set(taxes_xml_ids)]
 
+    @template('in', 'account.journal')
+    def _get_in_account_journal(self):
+        return {
+            "sale": {
+                "name": "Sales (Invoice-cum-Bill of Supply)",
+                "l10n_in_sale_journal_type": "invoice_cum_bill_of_supply",
+            },
+            "sale_bill_of_supply": {
+                "name": "Sales (Bill of Supply)",
+                "l10n_in_sale_journal_type": "bill_of_supply",
+                "code": "BINV",
+                "type": "sale",
+                "default_account_id": "p20011",
+            },
+            "sale_tax_invoice": {
+                "name": "Sales (Tax Invoice)",
+                "l10n_in_sale_journal_type": "tax_invoice",
+                "code": "TINV",
+                "type": "sale",
+                "default_account_id": "p20011",
+            },
+        }
+
     def _post_load_data(self, template_code, company, template_data):
         super()._post_load_data(template_code, company, template_data)
         if template_code == 'in':
