@@ -28,6 +28,7 @@ class StockMove(models.Model):
     value_manual = fields.Monetary(
         "Manual Value", currency_field='company_currency_id',
         compute="_compute_value_manual", inverse="_inverse_value_manual")
+    standard_price = fields.Float(related='product_id.standard_price', string='Standard Price')
 
     # To remove and only use value
     price_unit = fields.Float("Price Unit")

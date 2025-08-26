@@ -156,7 +156,7 @@ class ProductProduct(models.Model):
                 'company_id': product.company_id.id or self.env.company.id,
                 'date': fields.Datetime.now(),
                 'description': _('Price update from %(old_price)s to %(new_price)s by %(user)s',
-                    old_price=old_price, new_price=product.standard_price, user=self.env.user.name)
+                    old_price=old_price.get(product), new_price=product.standard_price, user=self.env.user.name)
             })
         return
 
@@ -222,6 +222,7 @@ class ProductProduct(models.Model):
             avco_value = product_values[-1].value
             return avco_value, avco_value * quantity
 
+        # TODO Only browse from last product_value
         for move in moves:
             if product_values and move.date > product_values[0].date:
                 product_value = product_values[0]
