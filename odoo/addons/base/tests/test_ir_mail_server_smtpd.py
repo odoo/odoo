@@ -8,13 +8,14 @@ import unittest
 import warnings
 from base64 import b64encode
 from pathlib import Path
-from unittest.mock import patch
 from socket import getaddrinfo  # keep a reference on the non-patched function
+from unittest.mock import patch
 
-from odoo import modules
 from odoo.exceptions import UserError
 from odoo.tools import config, file_path, mute_logger
+
 from .common import TransactionCaseWithUserDemo
+from odoo.addons.base.models.ir_mail_server import IrMail_Server
 
 try:
     import aiosmtpd
@@ -148,7 +149,7 @@ class TestIrMailServerSMTPD(TransactionCaseWithUserDemo):
         # reactivate sending emails during this test suite, make sure
         # NOT TO send emails using another ir.mail_server than the one
         # created in setUp!
-        patcher = patch.object(modules.module, 'current_test', False)
+        patcher = patch.object(IrMail_Server, '_disable_send', return_value=False)
         patcher.start()
         self.addCleanup(patcher.stop)
 
