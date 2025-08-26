@@ -10,7 +10,6 @@ import {
 } from "@html_editor/utils/color";
 import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
 import {
-    isContentEditable,
     isEmptyBlock,
     isRedundantElement,
     isTextNode,
@@ -24,6 +23,7 @@ import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { withSequence } from "@html_editor/utils/resource";
 import { isBlock } from "@html_editor/utils/blocks";
+import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 
 const RGBA_OPACITY = 0.6;
 const HEX_OPACITY = "99";
@@ -207,9 +207,6 @@ export class ColorPlugin extends Plugin {
      * @param {boolean} [previewMode=false] true - apply color in preview mode
      */
     _applyColor(color, mode, previewMode = false) {
-        if (this.delegateTo("color_apply_overrides", color, mode, previewMode)) {
-            return;
-        }
         const activeTab = document
             .querySelector(".o_font_color_selector button.active")
             ?.innerHTML.trim();
@@ -218,6 +215,10 @@ export class ColorPlugin extends Plugin {
             // mode to make text highlighting more usable between light and dark modes.
             color += HEX_OPACITY;
         }
+        if (this.delegateTo("color_apply_overrides", color, mode, previewMode)) {
+            return;
+        }
+        let cursors;
         let selection = this.dependencies.selection.getEditableSelection();
         let targetedNodes;
         // Get the <font> nodes to color
@@ -238,12 +239,17 @@ export class ColorPlugin extends Plugin {
                 },
                 { normalize: false }
             );
+            cursors = this.dependencies.selection.preserveSelection();
             targetedNodes = [zws];
         } else {
             selection = this.dependencies.split.splitSelection();
+            cursors = this.dependencies.selection.preserveSelection();
             targetedNodes = this.dependencies.selection
                 .getTargetedNodes()
-                .filter((node) => isContentEditable(node) && node.nodeName !== "T");
+                .filter(
+                    (node) =>
+                        this.dependencies.selection.isNodeEditable(node) && node.nodeName !== "T"
+                );
             if (isEmptyBlock(selection.endContainer)) {
                 targetedNodes.push(selection.endContainer, ...descendants(selection.endContainer));
             }
@@ -270,6 +276,9 @@ export class ColorPlugin extends Plugin {
                         '[style*="color"], [style*="background-color"], [style*="background-image"]'
                     ) ||
                     closestElement(node, "span");
+                if (font && font.querySelector(".fa")) {
+                    return font;
+                }
                 const children = font && descendants(font);
                 const hasInlineGradient = font && isColorGradient(font.style["background-image"]);
                 const isFullySelected =
@@ -417,6 +426,7 @@ export class ColorPlugin extends Plugin {
                 ["FONT", "SPAN"].includes(font.nodeName) &&
                 (!font.hasAttribute("style") || !color)
             ) {
+                cursors.update(callbacksForCursorUpdate.unwrap(font));
                 for (const child of [...font.childNodes]) {
                     font.parentNode.insertBefore(child, font);
                 }
@@ -424,7 +434,7 @@ export class ColorPlugin extends Plugin {
                 fontsSet.delete(font);
             }
         }
-        this.dependencies.selection.setSelection(selection, { normalize: false });
+        cursors.restore();
     }
 
     getUsedCustomColors(mode) {
