@@ -273,7 +273,7 @@ class IrUiView(models.Model):
     def get_related_views(self, key, bundles=False):
         '''Make this only return most specific views for website.'''
         # get_related_views can be called through website=False routes
-        # (e.g. /web_editor/get_assets_editor_resources), so website
+        # (e.g. /website/get_assets_editor_resources), so website
         # dispatch_parameters may not be added. Manually set
         # website_id. (It will then always fallback on a website, this
         # method should never be called in a generic context, even for

@@ -181,7 +181,7 @@ export class ResourceEditor extends Component {
 
     async loadResources() {
         const resources = await this.keepLast.add(
-            rpc("/web_editor/get_assets_editor_resources", {
+            rpc("/website/get_assets_editor_resources", {
                 key: this.viewKey,
                 bundles: this.state.xmlFilter === "all",
                 bundles_restriction: BUNDLES_RESTRICTION,
