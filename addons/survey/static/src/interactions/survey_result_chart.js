@@ -28,14 +28,14 @@ const D3_COLORS = [
 ];
 
 /**
- * Widget responsible for the initialization and the drawing of the various charts.
+ * Interaction responsible for the initialization and the drawing of the various charts.
  *
  */
 export class SurveyResultChart extends Interaction {
     static selector = ".survey_graph";
 
     /**
-     * Initializes the widget based on its defined graph_type and loads the chart.
+     * Initializes the interaction based on its defined graph_type and loads the chart.
      *
      */
     start() {

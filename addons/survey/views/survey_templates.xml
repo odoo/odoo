@@ -144,20 +144,6 @@
                 <t t-else="" t-call="survey.survey_fill_form_done"/>
             </div>
         </form>
-
-        <!-- Modal used to display error message, i.c.o. ajax error -->
-        <div role="dialog" class="modal fade" id="MasterTabErrorModal" >
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <header class="modal-header">
-                        <h4 class="modal-title">A problem has occurred</h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </header>
-                    <main class="modal-body"><p>To take this survey, please close all other tabs on <strong class="text-danger"></strong>.</p></main>
-                    <footer class="modal-footer"><button type="button" class="btn btn-primary" data-bs-dismiss="modal">Continue here</button></footer>
-                </div>
-            </div>
-        </div>
     </template>
 
     <template id="survey_fill_form_start" name="Survey: start form content">
@@ -650,7 +636,8 @@
         <table class="table table-borderless o_survey_question_matrix text-white text-center mb-0"
                t-att-data-name="question.id"
                t-att-data-question-type="question.question_type"
-               t-att-data-sub-questions="question.matrix_row_ids.ids">
+               t-att-data-sub-questions="question.matrix_row_ids.ids"
+               t-att-data-is-skipped-question="is_skipped_question or None">
             <thead>
                 <tr>
                     <th> </th>
