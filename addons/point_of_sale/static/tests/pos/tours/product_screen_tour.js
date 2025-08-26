@@ -969,15 +969,8 @@ registry.category("web_tour.tours").add("test_delete_line", {
                 },
             },
             inLeftSide([
+                ...ProductScreen.orderLineHas("Desk Organizer", "1"),
                 ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "1"),
-                Numpad.click("⌫"),
-                {
-                    content: "Click 0",
-                    trigger: ".modal " + Numpad.buttonTriger("0"),
-                    run: "click",
-                },
-                ...Chrome.confirmPopup(),
-                ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "0"),
                 Numpad.click("⌫"),
                 {
                     content: "Click 0",
