@@ -8,7 +8,6 @@ import {
 } from "@html_editor/utils/color";
 import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
 import {
-    isContentEditable,
     isEmptyBlock,
     isRedundantElement,
     isTextNode,
@@ -257,9 +256,6 @@ export class ColorPlugin extends Plugin {
      */
     _applyColor(color, mode, previewMode = false) {
         this.dependencies.selection.selectAroundNonEditable();
-        if (this.delegateTo("color_apply_overrides", color, mode, previewMode)) {
-            return;
-        }
         const activeTab = document
             .querySelector(".o_font_color_selector button.active")
             ?.innerHTML.trim();
@@ -267,6 +263,9 @@ export class ColorPlugin extends Plugin {
             // Apply default transparency to selected solid tab colors in background
             // mode to make text highlighting more usable between light and dark modes.
             color += HEX_OPACITY;
+        }
+        if (this.delegateTo("color_apply_overrides", color, mode, previewMode)) {
+            return;
         }
         let selection = this.dependencies.selection.getEditableSelection();
         let targetedNodes;
@@ -293,7 +292,10 @@ export class ColorPlugin extends Plugin {
             selection = this.dependencies.split.splitSelection();
             targetedNodes = this.dependencies.selection
                 .getTargetedNodes()
-                .filter((node) => isContentEditable(node) && node.nodeName !== "T");
+                .filter(
+                    (node) =>
+                        this.dependencies.selection.isNodeEditable(node) && node.nodeName !== "T"
+                );
             if (isEmptyBlock(selection.endContainer)) {
                 targetedNodes.push(selection.endContainer, ...descendants(selection.endContainer));
             }
@@ -339,6 +341,9 @@ export class ColorPlugin extends Plugin {
                         '[style*="color"]:not(li), [style*="background-color"]:not(li), [style*="background-image"]:not(li)'
                     ) ||
                     closestElement(node, "span");
+                if (font && font.querySelector(".fa")) {
+                    return font;
+                }
                 const children = font && descendants(font);
                 const hasInlineGradient = font && isColorGradient(font.style["background-image"]);
                 const isFullySelected =
