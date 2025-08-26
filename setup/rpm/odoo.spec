@@ -1,5 +1,4 @@
 %global name odoo
-%global release 1
 %global unmangled_version %{version}
 %global __requires_exclude ^.*odoo/addons/mail/static/scripts/odoo-mailgate.py$
 
@@ -102,8 +101,14 @@ KillMode=mixed
 WantedBy=multi-user.target
 EOF
 
-
 %files
 %{_bindir}/odoo
 %{python3_sitelib}/%{name}-*.egg-info
 %{python3_sitelib}/%{name}
+%pycached %exclude %{python3_sitelib}/doc/cla/stats.py
+%pycached %exclude %{python3_sitelib}/setup/*.py
+%exclude %{python3_sitelib}/setup/odoo
+
+%changelog
+* %{build_date} Christophe Monniez <moc@odoo.com> - %{version}-%{release}
+- Latest updates
