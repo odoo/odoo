@@ -118,7 +118,7 @@ class IrModuleModule(models.Model):
             return False
         values = self.get_values_from_terp(terp)
         try:
-            icon_path = terp.manifest_cached.get('icon') or opj(terp.name, 'static/description/icon.png')
+            icon_path = terp.raw_value('icon') or opj(terp.name, 'static/description/icon.png')
             file_path(icon_path, env=self.env, check_exists=True)
             values['icon'] = '/' + icon_path
         except OSError:
