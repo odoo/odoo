@@ -4117,6 +4117,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation._onchange_date_from()
             self.assertEqual(allocation.number_of_days, 2.0)
 
+    @freeze_time('2025-01-01')
     def test_accrual_allocation_date_in_the_future(self):
         vals = {
             'milestone_date': 'after',
