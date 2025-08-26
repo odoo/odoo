@@ -57,7 +57,7 @@ registerWebsitePreviewTour('website_page_options', {
     },
     {
         content: "Enable the mobile view",
-        trigger: ".o_mobile_preview > a",
+        trigger: ".o_mobile_preview > button",
         run: "click",
     },
     {
@@ -71,7 +71,7 @@ registerWebsitePreviewTour('website_page_options', {
     },
     {
         content: "Disable the mobile view",
-        trigger: ".o_mobile_preview > a",
+        trigger: ".o_mobile_preview > button",
         run: "click",
     },
     ...clickOnEditAndWaitEditMode(),

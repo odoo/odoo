@@ -39,7 +39,7 @@ registerWebsitePreviewTour('edit_megamenu', {
     },
     {
         content: "Trigger the link dialog (click 'Add Mega Menu Item')",
-        trigger: '.modal-body a:eq(1)',
+        trigger: '.modal-body button:contains(Add Mega Menu Item)',
         run: "click",
     },
     {
@@ -136,7 +136,7 @@ registerWebsitePreviewTour("megamenu_active_nav_link", {
     },
     {
         content: "Trigger the link dialog (click 'Add Mega Menu Item')",
-        trigger: ".modal-body a:eq(1)",
+        trigger: ".modal-body button:contains(Add Mega Menu Item)",
         run: "click",
     },
     {
@@ -206,7 +206,7 @@ registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     },
     {
         content: "Trigger the link dialog (click 'Add Mega Menu Item')",
-        trigger: '.modal-body a:eq(1)',
+        trigger: '.modal-body button:contains(Add Mega Menu Item)',
         run: "click",
     },
     {

@@ -55,12 +55,12 @@
             <small class="float-end text-muted">
                 Drag to the right to get a submenu
             </small>
-            <a href="#" t-on-click="() => this.addMenu(false)">
+            <button class="btn btn-link p-0 fw-normal" t-on-click="() => this.addMenu(false)">
                 <i class="fa fa-plus-circle"/> Add Menu Item
-            </a><br/>
-            <a href="#" t-on-click="() => this.addMenu(true)">
+            </button><br/>
+            <button class="btn btn-link p-0 fw-normal" t-on-click="() => this.addMenu(true)">
                 <i class="fa fa-plus-circle"/> Add Mega Menu Item
-            </a>
+            </button>
         </div>
     </WebsiteDialog>
 </t>
