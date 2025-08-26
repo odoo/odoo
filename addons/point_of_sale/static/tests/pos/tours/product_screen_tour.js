@@ -894,6 +894,7 @@ registry.category("web_tour.tours").add("test_delete_line", {
                 },
             },
             inLeftSide([
+                ...ProductScreen.orderLineHas("Desk Organizer", "1"),
                 ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "1"),
                 Numpad.click("⌫"),
                 {
