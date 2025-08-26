@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, _
+from odoo.tools.misc import str2bool
 from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import UBL_NAMESPACES
 
@@ -460,7 +461,13 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
     def _export_invoice(self, invoice, convert_fixed_taxes=True):
         # Only for BIS3 invoices: if the 'account_edi_ubl_cii.use_new_dict_to_xml_helpers' param is set,
         # use the new dict_to_xml helpers.
-        if self._name == 'account.edi.xml.ubl_bis3' and self.env['ir.config_parameter'].sudo().get_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers'):
+        if (
+            self._name == 'account.edi.xml.ubl_bis3'
+            and str2bool(
+                self.env['ir.config_parameter'].sudo().get_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True),
+                default=True,
+            )
+        ):
             return self._export_invoice_new(invoice)
 
         return super()._export_invoice(invoice, convert_fixed_taxes=convert_fixed_taxes)

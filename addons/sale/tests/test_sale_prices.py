@@ -347,6 +347,69 @@ class TestSalePrices(SaleCommon):
         order_line.product_uom = new_uom
         self.assertEqual(order_line.price_total, 1800, "First pricelist rule not applied")
 
+    def test_pricelist_price_recompute_on_quantity_change(self):
+        """
+        Test price updates correctly when quantity changes with
+        pricelist based on another pricelist.
+        """
+        self._enable_pricelists()
+
+        pricelist_a = self.env['product.pricelist'].create({
+            'name': "Pricelist A",
+            'item_ids': [
+                Command.create({
+                    'applied_on': '3_global',
+                    'compute_price': 'fixed',
+                    'fixed_price': 0.75,
+                    'min_quantity': 0,
+                }),
+                Command.create({
+                    'applied_on': '3_global',
+                    'compute_price': 'fixed',
+                    'fixed_price': 0.50,
+                    'min_quantity': 1000,
+                }),
+            ],
+        })
+
+        pricelist_b = self.env['product.pricelist'].create({
+            'name': "Pricelist B",
+            'item_ids': [
+                Command.create({
+                    'applied_on': '3_global',
+                    'compute_price': 'percentage',
+                    'percent_price': -10,
+                    'base': 'pricelist',
+                    'base_pricelist_id': pricelist_a.id,
+                }),
+            ],
+        })
+
+        with Form(self.env['sale.order']) as order_form:
+            order_form.partner_id = self.partner
+            order_form.pricelist_id = pricelist_b
+            with order_form.order_line.new() as line_form:
+                line_form.product_id = self.product
+                self.assertEqual(line_form.price_unit, 0.83)
+                line_form.product_uom_qty = 1000
+                self.assertEqual(line_form.price_unit, 0.55)
+
+    def test_compute_price_unit_no_currency(self):
+        new_order = self.env['sale.order'].new({
+            'currency_id': False,
+            'pricelist_id': False,
+            'order_line': [Command.create({'product_id': self.product.id})],
+        })
+        new_line = new_order.order_line
+        self.assertEqual(new_line.price_unit, self.product.list_price)
+
+        new_line.price_unit = new_price = self.product.list_price + 0.5
+        new_line.product_uom_qty += 1.0
+        self.assertEqual(new_line.price_unit, new_price, "Manual unit price shouldn't change")
+
+        new_order._recompute_prices()
+        self.assertEqual(new_line.price_unit, self.product.list_price)
+
     def test_multi_currency_discount(self):
         """Verify the currency used for pricelist price & discount computation."""
         product_1 = self.product

@@ -14,6 +14,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
     @TestUBLCommon.setup_country("be")
     def setUpClass(cls):
         super().setUpClass()
+        cls.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', 'False')
 
         cls.company.vat = "BE0246697724"
 
