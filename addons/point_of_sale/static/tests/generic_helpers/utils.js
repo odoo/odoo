@@ -40,6 +40,7 @@ export function refresh() {
                     }
                 };
 
+<<<<<<< 904e7b347489fcfecbbd175b8d85f7adc863d7af
                 setTimeout(() => {
                     checkTransaction();
                 }, 305);
@@ -51,6 +52,32 @@ export function refresh() {
         "refresh page",
         true
     );
+||||||| f337573ffc2642524b50608e2990270c69e8e547
+            // Wait indexedDB debouncer
+            setTimeout(() => {
+                checkTransaction();
+            }, 305);
+
+            setTimeout(() => {
+                throw new Error("Timeout waiting indexedDB for transactions to finish");
+            }, 2000);
+        });
+    }, "refresh page");
+=======
+                // Wait indexedDB debouncer
+                setTimeout(() => {
+                    checkTransaction();
+                }, 305);
+
+                setTimeout(() => {
+                    throw new Error("Timeout waiting indexedDB for transactions to finish");
+                }, 2000);
+            });
+        },
+        "refresh page",
+        true
+    );
+>>>>>>> 857416a0fb215e9d4d570d2f990a2df8ce56d9fc
 }
 export function elementDoesNotExist(selector) {
     return {
