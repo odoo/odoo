@@ -13,8 +13,8 @@
             </th>
         </xpath>
 
-        <xpath expr="//section[@id='details']//t[@name='product_line_row']" position="inside">
-            <td class="text-center" t-if="display_remove">
+        <xpath expr="//section[@id='details']//tr[@name='tr_product']" position="inside">
+            <td t-if="display_remove" class="text-center">
                 <a t-if="line._can_be_edited_on_portal()"
                    t-att-data-line-id="line.id"
                    t-att-data-unlink="True"

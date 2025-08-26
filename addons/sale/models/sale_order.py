@@ -2,7 +2,6 @@
 
 import json
 import logging
-
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
@@ -11,7 +10,7 @@ from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request
-from odoo.tools import OrderedSet, SQL, float_is_zero, format_amount, is_html_empty
+from odoo.tools import SQL, OrderedSet, float_is_zero, format_amount, is_html_empty
 from odoo.tools.mail import html_keep_url
 from odoo.tools.misc import str2bool
 
@@ -1753,14 +1752,18 @@ class SaleOrder(models.Model):
         )
 
         def show_line(line):
-            if not line.is_downpayment:
-                return True
-            elif line.display_type and down_payment_lines:
-                return True  # Only show the down payment section if down payments were posted
-            elif line in down_payment_lines:
-                return True  # Only show posted down payments
-            else:
-                return False
+            if line.is_downpayment:
+                return (
+                    # Only show the down payment section if down payments were posted
+                    (line.display_type and down_payment_lines)
+                    # Only show posted down payments
+                    or line in down_payment_lines
+                )
+            return (
+                line.display_type == 'line_section'
+                or (line.display_type == 'line_subsection' and not line.parent_id.collapse_composition)
+                or not line.collapse_composition
+            )
 
         return self.order_line.filtered(show_line)
 
