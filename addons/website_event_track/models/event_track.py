@@ -25,7 +25,6 @@ except ImportError:
     vobject = None
 
 GOOGLE_CALENDAR_URL = 'https://www.google.com/calendar/render?'
-YAHOO_CALENDAR_URL = 'https://calendar.yahoo.com/?v=60&view=d&type=20&'
 
 
 class EventTrack(models.Model):
@@ -754,16 +753,7 @@ class EventTrack(models.Model):
             'location': location,
         }
 
-        yahoo_params = {
-            'title':  f'{self.event_id.name}: {self.name}',
-            'in_loc': location,
-            'st': url_date_begin,
-            'et': url_date_end,
-            'desc': shorten(html_to_inner_content(self.description), 1900) + f'\n\n{html_to_inner_content(self._get_track_calendar_reminder_times_warning())}'
-        }
-
         return {
             'google_url': GOOGLE_CALENDAR_URL + werkzeug.urls.url_encode(google_params),
             'iCal_url': f'{self.get_base_url()}/event/{self.event_id.id}/track/{self.id}/ics',
-            'yahoo_url': YAHOO_CALENDAR_URL + werkzeug.urls.url_encode(yahoo_params)
         }
