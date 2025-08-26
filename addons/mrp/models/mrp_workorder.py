@@ -481,6 +481,8 @@ class MrpWorkorder(models.Model):
                         workorder.production_id.with_context(force_date=True).write({
                             'date_finished': fields.Datetime.to_datetime(values['date_finished'])
                         })
+        if 'product_id' in values and values['product_id'] != self.production_id.product_id.id:
+            del values['product_id']
         return super(MrpWorkorder, self).write(values)
 
     @api.model_create_multi
