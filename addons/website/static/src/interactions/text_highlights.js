@@ -86,9 +86,6 @@ export class TextHighlight extends Interaction {
      * @param {HTMLElement} el
      */
     handleEl(el) {
-        if (this.observed.has(el)) {
-            return;
-        }
         this.observed.add(el);
         // The `ResizeObserver` cannot detect the width change on highlight
         // units (`.o_text_highlight_item`) as long as the width of the entire
