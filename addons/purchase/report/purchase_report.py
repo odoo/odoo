@@ -158,3 +158,12 @@ class PurchaseReport(models.Model):
             f_price=table.price_average,
             f_qty=table.qty_ordered,
         )
+
+    def action_open_purchase_order(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'purchase.order',
+            'res_id': self.order_id.id,
+            'views': [(False, 'form')],
+        }
