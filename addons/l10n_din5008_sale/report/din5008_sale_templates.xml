@@ -111,9 +111,5 @@
                 <t t-set="line_number" t-value="line_number+1"/>
             </t>
         </xpath>
-        <!--adding currency to unit price-->
-        <xpath expr="//td[@name='td_priceunit']/span" position="attributes">
-            <attribute name="t-options"  >{"widget": "monetary", "display_currency": line.currency_id}</attribute>
-        </xpath>
     </template>
 </odoo>
