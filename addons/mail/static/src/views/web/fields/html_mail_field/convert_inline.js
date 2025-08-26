@@ -1028,10 +1028,9 @@ function fontToImg(element) {
             const image = document.createElement("img");
             image.setAttribute("width", intrinsicWidth);
             image.setAttribute("height", intrinsicHeight);
-            // @todo @phoenix adapt controller to html_editor
             image.setAttribute(
                 "src",
-                `/web_editor/font_to_img/${content.charCodeAt(0)}/${encodeURIComponent(
+                `/mail/font_to_img/${content.charCodeAt(0)}/${encodeURIComponent(
                     color
                 )}/${encodeURIComponent(bg)}/${Math.max(1, Math.round(intrinsicWidth))}x${Math.max(
                     1,
