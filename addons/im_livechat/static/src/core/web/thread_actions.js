@@ -30,7 +30,7 @@ registerThreadAction("livechat-status", {
     },
     dropdown: {
         template: "im_livechat.LivechatStatusAction",
-        menuClass: "p-0 m-0 o-rounded-bubble",
+        menuClass: "p-0",
     },
     panelOuterClass: "o-livechat-ChannelInfoList bg-inherit",
     icon: (component) => {
