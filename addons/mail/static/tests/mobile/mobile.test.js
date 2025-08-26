@@ -15,13 +15,14 @@ import { describe, test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
 
-import { asyncStep, waitForSteps } from "@web/../tests/web_test_helpers";
+import { asyncStep, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("mobile");
 defineMailModels();
 
 test("auto-select 'Inbox' when discuss had channel as active thread", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     patchUiSize({ size: SIZES.SM });
     await start();

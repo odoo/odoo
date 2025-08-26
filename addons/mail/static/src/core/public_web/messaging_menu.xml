@@ -8,7 +8,7 @@
 <t t-name="mail.MessagingMenu.content">
     <div t-att-class="`${discussSystray.contentClass} o-mail-MessagingMenu ${ui.isSmall ? 'o-small' : ''}`">
         <t name="before-content"/>
-        <DiscussContent t-if="store.discuss.activeTab === 'inbox' and ui.isSmall"/>
+        <DiscussContent t-if="['inbox', 'starred'].includes(store.discuss.activeTab) and ui.isSmall"/>
         <div t-else="" class="o-mail-MessagingMenu-list d-flex flex-column overflow-auto o-scrollbar-thin flex-grow-1 list-group list-group-flush o-scrollbar-thin" t-ref="notification-list">
             <t t-foreach="threads" name="threads" t-as="thread" t-key="thread.localId">
                 <t t-set="message" t-value="thread.isChatChannel or (thread.channel_type === 'channel' and thread.needactionMessages.length === 0) ? thread.newestPersistentOfAllMessage : thread.needactionMessages.at(-1)"/>
@@ -66,7 +66,7 @@
         }" t-on-click="() => this.onClickNavTab(tab.id)">
             <i t-attf-class="p-1 fs-2 {{ tab.icon }}" t-att-class="{ 'o-opacity-35': store.discuss.activeTab !== tab.id }"/>
             <span class="smaller text-truncate" t-esc="tab.label" t-att-class="{ 'o-opacity-35': store.discuss.activeTab !== tab.id }"/>
-            <span t-if="tab.counter" class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabCounter overflow-visible d-inline-block" t-esc="tab.counter"/>
+            <span t-if="tab.counter" class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabCounter overflow-visible d-inline-block" t-att-class="{ 'o-starred': tab.id === 'starred' }" t-esc="tab.counter"/>
             <span t-elif="tab.channelHasUnread" class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabUnread overflow-visible d-inline-block ms-2"><i class="fa fa-circle"/></span>
         </button>
     </div>

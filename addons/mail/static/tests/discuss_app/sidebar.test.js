@@ -36,6 +36,7 @@ defineMailModels();
 
 test("toggling category button hide category items", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     pyEnv["discuss.channel"].create({
         name: "general",
         channel_type: "channel",
@@ -177,6 +178,7 @@ test("channel - states: open manually by clicking the title", async () => {
 
 test("sidebar: inbox with counter", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     pyEnv["mail.notification"].create({
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
@@ -188,6 +190,7 @@ test("sidebar: inbox with counter", async () => {
 
 test("default thread rendering", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["discuss.channel"].create([
         { name: "General", channel_type: "channel" },
@@ -208,7 +211,7 @@ test("default thread rendering", async () => {
     await contains(".o-mail-DiscussSidebar-item", { text: "General" });
     await contains("button.o-active", { text: "Inbox" });
     await contains(".o-mail-Thread", {
-        text: "Your inbox is emptyChange your preferences to receive new notifications in your inbox.",
+        text: "Congratulations, your inbox is empty New messages appear here.",
     });
     await click("button", { text: "Starred messages" });
     await contains("button.o-active", { text: "Starred messages" });
@@ -829,6 +832,7 @@ test("channel - states: open from the bus", async () => {
 
 test("channel - states: the active category item should be visible even if the category is closed", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     pyEnv["discuss.channel"].create({ name: "channel1" });
     await start();
     await openDiscuss();
@@ -971,6 +975,7 @@ test("chat - states: open from the bus", async () => {
 
 test("chat - states: the active category item should be visible even if the category is closed", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     pyEnv["discuss.channel"].create({ channel_type: "chat" });
     await start();
     await openDiscuss();
