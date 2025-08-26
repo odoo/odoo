@@ -5,4 +5,15 @@
         <field name="name">Display Serial &amp; Lot Number on Invoices</field>
     </record>
     
+    <record model="ir.rule" id="stock_avco_report_rule">
+        <field name="name">Stock Average Cost Report multi-company</field>
+        <field name="model_id" search="[('model','=','stock.avco.report')]" model="ir.model"/>
+        <field name="domain_force">[('company_id','in', company_ids)]</field>
+    </record>
+
+    <record model="ir.rule" id="product_value_rule">
+        <field name="name">Product Value multi-company</field>
+        <field name="model_id" search="[('model','=','product.value')]" model="ir.model"/>
+        <field name="domain_force">[('company_id','in', company_ids)]</field>
+    </record>
 </odoo>
