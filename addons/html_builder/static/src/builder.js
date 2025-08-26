@@ -23,6 +23,7 @@ import { useSnippets } from "@html_builder/snippets/snippet_service";
 import { setBuilderCSSVariables } from "@html_builder/utils/utils_css";
 import { withSequence } from "@html_editor/utils/resource";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
+import { isVisible } from "@html_builder/utils/utils";
 
 export class Builder extends Component {
     static template = "html_builder.Builder";
@@ -75,6 +76,7 @@ export class Builder extends Component {
         this.lastTrigerUpdateId = 0;
         this.editorBus = new EventBus();
         this.colorPresetToShow = null;
+        this.activeTargetEl = null;
 
         // TODO: maybe do a different config for the translate mode and the
         // "regular" mode.
@@ -130,6 +132,9 @@ export class Builder extends Component {
                         }
                         this.removeLoadingEffect?.();
                     },
+                    on_snippet_dropped_handlers: () => {
+                        this.activeTargetEl = null;
+                    },
                     change_current_options_containers_listeners: (currentOptionsContainers) => {
                         this.state.currentOptionsContainers = currentOptionsContainers;
                         if (!currentOptionsContainers.length) {
@@ -138,6 +143,7 @@ export class Builder extends Component {
                             this.setTab(this.noSelectionTab);
                             return;
                         }
+                        this.activeTargetEl = null;
                         this.setTab("customize");
                     },
                     lower_panel_entries: withSequence(20, {
@@ -263,11 +269,22 @@ export class Builder extends Component {
      * open.
      */
     onTabClick(tab, presetId = null) {
+        if (this.state.activeTab === tab) {
+            // If the tab is already active, do nothing.
+            return;
+        }
         this.setTab(tab);
         // Deactivate the options when clicking on the "BLOCKS" or "THEME" tabs.
         if (tab === "theme" || tab === "blocks") {
             this.colorPresetToShow = presetId;
+            this.activeTargetEl = this.activeTargetEl || this.getActiveTarget();
             this.editor.shared["builderOptions"].deactivateContainers();
+        } else if (this.activeTargetEl) {
+            if (isVisible(this.activeTargetEl)) {
+                // Reactivate the previously active element.
+                this.editor.shared["builderOptions"].updateContainers(this.activeTargetEl);
+            }
+            this.activeTargetEl = null;
         }
     }
 
@@ -302,5 +319,9 @@ export class Builder extends Component {
 
     editColorCombination(presetId) {
         this.onTabClick("theme", presetId);
+    }
+
+    getActiveTarget() {
+        return this.editor.shared["builderOptions"].getContainers().at(-1)?.element
     }
 }
