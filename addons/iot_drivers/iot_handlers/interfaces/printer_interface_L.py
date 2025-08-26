@@ -16,6 +16,7 @@ import re
 import time
 
 from odoo.addons.iot_drivers.interface import Interface
+from odoo.addons.iot_drivers.main import iot_devices
 
 _logger = logging.getLogger(__name__)
 
@@ -138,6 +139,14 @@ class PrinterInterface(Interface):
         sorted_printers = sorted(discovered_printers.values(), key=lambda printer: str(printer.get('ip')))
 
         for ip, printers_with_same_ip in groupby(sorted_printers, lambda printer: printer.get('ip')):
+            already_registered_identifier = next((
+                identifier for identifier, device in iot_devices.items()
+                if device.device_type == 'printer' and ip and ip == device.ip
+            ), None)
+            if already_registered_identifier:
+                result.append({'identifier': already_registered_identifier})
+                continue
+
             printers_with_same_ip = sorted(printers_with_same_ip, key=lambda printer: printer['identifier'])
             if ip is None or len(printers_with_same_ip) == 1:
                 result += printers_with_same_ip
