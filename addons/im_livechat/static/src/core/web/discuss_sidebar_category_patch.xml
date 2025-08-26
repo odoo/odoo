@@ -12,6 +12,7 @@
         <t t-set="btn" t-value="templateParams.btn"/>
         <t t-set="inThreadActions" t-value="templateParams.inThreadActions"/>
         <span class="o-livechat-LivechatStatusLabel fa fa-stack" t-att-title="btn.label" t-att-class="{
+            'o-xsmaller': !env.inLivechatInfoPanel,
             'ms-n1': inThreadActions,
             'o-warning': btn.status === 'waiting',
             'o-info': btn.status === 'need_help',
@@ -31,6 +32,7 @@
 
     <t t-name="im_livechat.LivechatStatusLabelOfThread">
         <span t-if="livechatThread.channel_type === 'livechat' and (['waiting', 'need_help'].includes(livechatThread.livechat_status) or livechatThread.livechat_end_dt)" class="o-livechat-LivechatStatusLabel fa fa-stack" t-att-title="livechatThread.livechatStatusLabel" t-att-class="{
+            'o-xsmaller': !env.inLivechatInfoPanel,
             'position-absolute top-0 start-0 z-1': env.inDiscussSidebar or env.inChatBubble,
             'm-n1': env.inDiscussSidebar,
             'm-n2': env.inChatBubble,
