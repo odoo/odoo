@@ -37,7 +37,7 @@ export function getColor(key) {
     return colorMap.get(key);
 }
 
-export function getFormattedDateSpan(start, end) {
+export function getFormattedDateSpan(start, end, options = {}) {
     const isSameDay = start.hasSame(end, "days");
 
     if (!isSameDay && start.hasSame(end, "month")) {
@@ -45,7 +45,7 @@ export function getFormattedDateSpan(start, end) {
         return start.toFormat("LLLL d") + "-" + end.toFormat("d, y");
     } else {
         return isSameDay
-            ? start.toFormat("DDD")
+            ? start.toFormat(options.sameDayFormat ?? "DDD")
             : start.toFormat("DDD") + " - " + end.toFormat("DDD");
     }
 }
