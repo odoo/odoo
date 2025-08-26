@@ -872,7 +872,7 @@ class AccountMoveLine(models.Model):
         AccountTax = self.env['account.tax']
         for line in self:
             # TODO remove the need of cogs lines to have a price_subtotal/price_total
-            if line.display_type not in ('product', 'cogs', 'non_deductible_product', 'non_deductible_product_total'):
+            if line.display_type not in ('product', 'cogs', 'non_deductible_product', 'non_deductible_product_total') or not line.move_id:
                 line.price_total = line.price_subtotal = False
                 continue
 
