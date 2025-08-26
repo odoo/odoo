@@ -32,7 +32,7 @@ import { compareListTypes, createList, insertListAfter, isListItem } from "./uti
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { withSequence } from "@html_editor/utils/resource";
 import { FONT_SIZE_CLASSES, getFontSizeOrClass } from "@html_editor/utils/formatting";
-import { getTextColorOrClass } from "@html_editor/utils/color";
+import { getTextColorOrClass, isColorGradient } from "@html_editor/utils/color";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 
 export class ListPlugin extends Plugin {
@@ -996,7 +996,7 @@ export class ListPlugin extends Plugin {
                 .map((n) => closestElement(n, "li"))
                 .filter(Boolean)
         );
-        if (!selectedNodes.size || mode !== "color") {
+        if (!selectedNodes.size || mode !== "color" || isColorGradient(color)) {
             return;
         }
         for (const list of selectedNodes) {
