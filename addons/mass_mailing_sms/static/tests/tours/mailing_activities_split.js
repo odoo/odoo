@@ -1,4 +1,3 @@
-import { queryAll } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('mailing_activities_split', {
@@ -15,12 +14,12 @@ registry.category("web_tour.tours").add('mailing_activities_split', {
         }, {
             content: 'Open Email Marketing record in the kanban view',
             trigger: '.o_list_renderer .o_data_cell:contains("New Email!")',
-            run: () => {
-                if (queryAll('.o_list_renderer .o_data_cell:contains("New SMS!")').length !== 0) {
-                    console.error('SMS Marketing record should not appear in this view');
-                }
-            },
-        }, {
+        },
+        {
+            content: "SMS Marketing record should not appear in this view",
+            trigger: "body:not(:has(.o_list_renderer .o_data_cell:contains(New SMS!)))",
+        },
+        {
             content: 'Open Activity Systray',
             trigger: '.o-mail-ActivityMenu-counter',
             run: "click",
@@ -31,11 +30,10 @@ registry.category("web_tour.tours").add('mailing_activities_split', {
         }, {
             content: 'Open SMS Marketing record in the kanban view',
             trigger: '.o_list_renderer .o_data_cell:contains("New SMS!")',
-            run: () => {
-                if (queryAll('.o_list_renderer .o_data_cell:contains("New Email!")').length !== 0) {
-                    console.error('Email Marketing record should not appear in this view');
-                }
-            },
-        }
+        },
+        {
+            content: "Email Marketing record should not appear in this view",
+            trigger: "body:not(:has(.o_list_renderer .o_data_cell:contains(New Email!)))",
+        },
     ],
 });

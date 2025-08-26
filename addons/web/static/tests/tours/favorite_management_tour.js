@@ -1,4 +1,3 @@
-import { queryAll } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("test_favorite_management", {
@@ -111,14 +110,14 @@ registry.category("web_tour.tours").add("test_favorite_management", {
         },
         {
             trigger: ".o_favorite_menu .o-dropdown-item:contains(Apps2)",
-            run() {
-                if (queryAll(".o_searchview_facet").length) {
-                    throw new Error("There should not be any facet inside the search bar");
-                }
-                if (queryAll(".o_favorite_menu .o-dropdown-item:contains(Apps1)").length) {
-                    throw new Error("The Apps1 filter should be deleted");
-                }
-            },
+        },
+        {
+            content: "There should not be any facet inside the search bar",
+            trigger: "body:not(:has(.o_searchview_facet))",
+        },
+        {
+            content: "The Apps1 filter should be deleted",
+            trigger: "body:not(:has(.o_favorite_menu .o-dropdown-item:contains(Apps1)))",
         },
     ],
 });

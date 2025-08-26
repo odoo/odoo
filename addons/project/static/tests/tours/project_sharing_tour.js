@@ -1,4 +1,4 @@
-import { delay } from "@odoo/hoot-dom";
+import { delay } from "@web/core/utils/concurrency";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 
@@ -244,7 +244,10 @@ registry.category("web_tour.tours").add("portal_project_sharing_chatter_mention_
         {
             trigger: "body:not(:has(.o-mail-Composer-suggestion))",
             run: async () => {
-                await delay(odoo.loader.modules.get("@mail/core/common/suggestion_hook").DELAY_FETCH);
+                const delay_fetch = odoo.loader.modules.get(
+                    "@mail/core/common/suggestion_hook"
+                ).DELAY_FETCH;
+                await delay(delay_fetch);
             },
         },
         { trigger: ".o-mail-Composer-input", run: "edit @Georges" },

@@ -1,4 +1,4 @@
-import { delay } from "@odoo/hoot-dom";
+import { delay } from "@web/core/utils/concurrency";
 import { registry } from "@web/core/registry";
 import { WORKER_STATE } from "@bus/services/worker_service";
 

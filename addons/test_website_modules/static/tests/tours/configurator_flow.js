@@ -1,4 +1,3 @@
-import { delay } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("configurator_flow", {
@@ -126,10 +125,6 @@ registry.category("web_tour.tours").add("configurator_flow", {
         })),
         {
             trigger: ":iframe h1:contains(your journey starts here)",
-            async run() {
-                //Wait assets are loaded
-                await delay(1000);
-            },
         },
     ],
 });

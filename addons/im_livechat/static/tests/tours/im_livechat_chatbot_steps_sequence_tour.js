@@ -1,7 +1,4 @@
-import { waitFor } from "@odoo/hoot-dom";
-
 import { registry } from "@web/core/registry";
-
 import { stepUtils } from "@web_tour/tour_utils";
 
 function createChatbotSteps(...stepMessages) {
@@ -17,8 +14,7 @@ function createChatbotSteps(...stepMessages) {
                     run: `edit ${message}`,
                 },
                 {
-                    trigger: `.modal textarea#message_0`,
-                    run: () => waitFor(`.modal textarea#message_0:value(${message})`),
+                    trigger: `.modal textarea#message_0:value(${message})`,
                 },
                 {
                     trigger: ".modal button:contains(Save & New)",
@@ -28,8 +24,7 @@ function createChatbotSteps(...stepMessages) {
                     trigger: `tr:contains(${message})`,
                 },
                 {
-                    trigger: ".modal textarea#message_0",
-                    run: () => waitFor(".modal textarea#message_0:empty"),
+                    trigger: ".modal textarea#message_0:empty",
                 },
             ])
             .flat(),
