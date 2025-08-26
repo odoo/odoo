@@ -13,7 +13,7 @@ class TestHtmlBuilderAssetsBundle(HttpCase):
         super().setUpClass()
         cls.bundle = cls.env["ir.qweb"]._get_asset_bundle("html_builder.assets", True)
 
-    def test_html_builder_assets_bundle_no_inside_scss(self):
+    def test_html_builder_assets_bundle_no_edit_scss(self):
         for file in self.bundle.files:
             filename = file["filename"]
-            self.assertFalse(filename.endswith("inside.scss"), msg="html_builder.assets must not contain *.inside.scss files. Remove " + filename)
+            self.assertFalse(filename.endswith("edit.scss"), msg="html_builder.assets must not contain *.edit.scss files. Remove " + filename)
