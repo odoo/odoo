@@ -545,8 +545,9 @@ class SaleOrder(models.Model):
     def _recompute_prices(self):
         """Recompute coupons/promotions after pricelist prices reset."""
         super()._recompute_prices()
-        if any(line.is_reward_line for line in self.order_line):
-            self._update_programs_and_rewards()
+        for order in self:
+            if any(line.is_reward_line for line in order.order_line):
+                order._update_programs_and_rewards()
 
     def _get_point_changes(self):
         """
