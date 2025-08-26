@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.web_editor.controllers.main import Web_Editor
+from odoo.addons.html_editor.controllers.main import HTML_Editor
 from odoo.addons.web_unsplash.controllers.main import Web_Unsplash
 
 import odoo.tests
@@ -18,13 +18,13 @@ class TestImageUploadProgress(odoo.tests.HttpCase):
     def test_02_image_upload_progress_unsplash(self):
         BASE_URL = self.base_url()
 
-        @http.route('/web_editor/media_library_search', type='jsonrpc', auth="user", website=True)
+        @http.route('/html_editor/media_library_search', type='jsonrpc', auth="user", website=True)
         def media_library_search(self, **params):
             return {"results": 0, "media": []}
         # because not preprocessed by ControllerType metaclass
         media_library_search.original_endpoint.routing_type = 'json'
         # disable undraw, no third party should be called in tests
-        self.patch(Web_Editor, 'media_library_search', media_library_search)
+        self.patch(HTML_Editor, 'media_library_search', media_library_search)
 
         @http.route("/web_unsplash/fetch_images", type='jsonrpc', auth="user")
         def fetch_unsplash_images(self, **post):
