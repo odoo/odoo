@@ -9,9 +9,6 @@ class ResUsers(models.Model):
 
     hours_last_month = fields.Float(related='employee_id.hours_last_month')
     hours_last_month_display = fields.Char(related='employee_id.hours_last_month_display')
-    attendance_state = fields.Selection(related='employee_id.attendance_state')
-    last_check_in = fields.Datetime(related='employee_id.last_attendance_id.check_in')
-    last_check_out = fields.Datetime(related='employee_id.last_attendance_id.check_out')
     total_overtime = fields.Float(related='employee_id.total_overtime')
     hours_last_month_overtime = fields.Float(related='employee_id.hours_last_month_overtime')
     attendance_manager_id = fields.Many2one(related='employee_id.attendance_manager_id', readonly=False)
@@ -22,9 +19,6 @@ class ResUsers(models.Model):
         return super().SELF_READABLE_FIELDS + [
             'hours_last_month',
             'hours_last_month_display',
-            'attendance_state',
-            'last_check_in',
-            'last_check_out',
             'total_overtime',
             'hours_last_month_overtime',
             'attendance_manager_id',
