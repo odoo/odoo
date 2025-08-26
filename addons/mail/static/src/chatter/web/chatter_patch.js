@@ -13,6 +13,7 @@ import { SearchMessageInput } from "@mail/core/common/search_message_input";
 import { SearchMessageResult } from "@mail/core/common/search_message_result";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { status, useEffect } from "@odoo/owl";
+import { PinnedMessagesPanel } from "@mail/discuss/message_pin/common/pinned_messages_panel";
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
@@ -34,6 +35,7 @@ Object.assign(Chatter.components, {
     Dropdown,
     FileUploader,
     FollowerList,
+    PinnedMessagesPanel,
     RecipientsInput,
     ScheduledMessage,
     SearchMessageInput,
@@ -79,6 +81,7 @@ patch(Chatter.prototype, {
     setup() {
         this.messageHighlight = useMessageScrolling();
         super.setup(...arguments);
+        this.state.pinnedMessagesActive = false;
         this.orm = useService("orm");
         this.keepLastSuggestedRecipientsUpdate = new KeepLast();
         /** @deprecated equivalent to partner_fields and primary_email_field on thread */
@@ -167,7 +170,15 @@ patch(Chatter.prototype, {
             () => [this.props.isChatterAside]
         );
     },
-
+    onClickPinnedMessages() {
+        this.state.pinnedMessagesActive = !this.state.pinnedMessagesActive;
+    },
+    get hasPinnedMessages() {
+        if (!this.state.thread?.pinnedMessages?.length) {
+            this.state.pinnedMessagesActive = false
+        }
+        return this.state.thread?.pinnedMessages?.length > 0;
+    },
     async updateRecipients(record, mode = this.state.composerType) {
         if (!record) {
             return;

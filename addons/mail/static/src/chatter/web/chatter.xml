@@ -32,6 +32,14 @@
                         <i class="oi oi-search" role="img"/>
                     </button>
                 </t>
+                <button t-if="hasPinnedMessages"
+                        class="btn btn-link text-action"
+                        aria-label="Pinned Messages"
+                        title="Pinned Messages"
+                        t-attf-class="o_Chatter_button {{ state.pinnedMessagesActive ? 'o-active' : '' }}"
+                        t-on-click="onClickPinnedMessages">
+                    <i class="fa fa-thumb-tack" role="img"/>
+                </button>
                 <button t-if="props.hasAttachmentPreview and state.thread.attachmentsInWebClientView.length" class="btn btn-link text-action" t-on-click="popoutAttachment">
                     <i class="fa fa-window-restore" aria-hidden="Pop out Attachments" title="Pop out Attachments"/>
                 </button>
@@ -63,6 +71,9 @@
                 </t>
                 <Composer composer="state.thread.composer" autofocus="true" className="state.composerType === 'message' ? '' : 'pt-4'" mode="'extended'" onPostCallback.bind="onPostCallback" onCloseFullComposerCallback.bind="onCloseFullComposerCallback" dropzoneRef="rootRef" type="state.composerType" t-key="props.threadId"/>
             </t>
+        </div>
+        <div t-if="state.pinnedMessagesActive and hasPinnedMessages" class="o-discuss-PinnedMessagesPanel bg-inherit">
+            <PinnedMessagesPanel thread="state.thread"/>
         </div>
         <div class="o-mail-Chatter-content d-flex flex-column flex-grow-1 bg-inherit">
             <t>

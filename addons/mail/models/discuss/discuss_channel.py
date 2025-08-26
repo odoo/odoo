@@ -983,7 +983,7 @@ class DiscussChannel(models.Model):
     #   - when a message is posted on a channel (to the channel, using _notify() method)
     # ------------------------------------------------------------
 
-    def set_message_pin(self, message_id, pinned):
+    def set_message_pin(self, message_id, pinned, model):
         """ (Un)pin a message on the channel and send a notification to the
         members.
         :param message_id: id of the message to be pinned.
@@ -992,7 +992,7 @@ class DiscussChannel(models.Model):
         self.ensure_one()
         message_to_update = self.env['mail.message'].search([
             ['id', '=', message_id],
-            ['model', '=', 'discuss.channel'],
+            ['model', '=', model],
             ['res_id', '=', self.id],
             ['pinned_at', '=' if pinned else '!=', False]
         ])

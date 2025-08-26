@@ -35,7 +35,7 @@ patch(Message.prototype, {
                         "discuss.channel",
                         "set_message_pin",
                         [this.thread.id],
-                        { message_id: this.id, pinned: true }
+                        { message_id: this.id, pinned: true, model: this.model}
                     );
                 },
             },
@@ -63,7 +63,7 @@ patch(Message.prototype, {
                         "discuss.channel",
                         "set_message_pin",
                         [this.thread.id],
-                        { message_id: this.id, pinned: false }
+                        { message_id: this.id, pinned: false, model: this.model }
                     );
                 },
             },
