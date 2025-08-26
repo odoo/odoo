@@ -5,6 +5,7 @@ import {
     defineMailModels,
     dragenterFiles,
     dropFiles,
+    focus,
     inputFiles,
     insertText,
     onRpcBefore,
@@ -29,7 +30,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { Composer } from "@mail/core/common/composer";
-import { queryFirst } from "@odoo/hoot-dom";
+import { edit, press, queryFirst } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -442,9 +443,15 @@ test('post message on channel with "Enter" keyboard shortcut', async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Test");
+    await focus(".o-mail-Composer-input");
+    await edit("Test");
     await contains(".o-mail-Message", { count: 0 });
-    triggerHotkey("Enter");
+    await press("Enter");
+    await contains(".o-mail-Message");
+    // check composition mode doesn't send message
+    await edit("test", { composition: true });
+    await press("Enter", { isComposing: true });
+    await animationFrame();
     await contains(".o-mail-Message");
 });
 
