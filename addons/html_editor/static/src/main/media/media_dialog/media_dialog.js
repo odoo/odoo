@@ -66,15 +66,19 @@ export class MediaDialog extends Component {
 
         this.state = useState({
             activeTab: this.initialActiveTab,
+            isSaving: false,
         });
 
         useEffect(
             (nbSelectedAttachments) => {
                 // Disable/enable the add button depending on whether some media
                 // are selected or not.
-                this.addButtonRef.el.toggleAttribute("disabled", !nbSelectedAttachments);
+                this.addButtonRef.el.toggleAttribute(
+                    "disabled",
+                    !nbSelectedAttachments || this.state.isSaving
+                );
             },
-            () => [this.selectedMedia[this.state.activeTab].length]
+            () => [this.selectedMedia[this.state.activeTab].length, this.state.isSaving]
         );
     }
 
@@ -297,6 +301,7 @@ export class MediaDialog extends Component {
             (this.state.activeTab !== TABS.ICONS.id ||
                 selectedMedia[0].initialIconChanged ||
                 !this.props.media);
+        this.state.isSaving = true;
         if (saveSelectedMedia) {
             const elements = await this.renderMedia(selectedMedia);
             if (this.props.multiImages) {
@@ -306,6 +311,7 @@ export class MediaDialog extends Component {
             }
         }
         this.props.close();
+        this.state.isSaving = false;
     }
 
     onTabChange(tab) {
