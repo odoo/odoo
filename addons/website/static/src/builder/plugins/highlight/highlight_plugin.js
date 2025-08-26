@@ -47,7 +47,6 @@ export class HighlightPlugin extends Plugin {
         normalize_handlers: (root) => {
             for (const node of root.querySelectorAll(".o_text_highlight")) {
                 // Signal to the interaction that there is (maybe) a new element
-                // (the interaction will ignore duplicates)
                 node.dispatchEvent(new Event("text_highlight_added", { bubbles: true }));
             }
         },
