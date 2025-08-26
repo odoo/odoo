@@ -38,6 +38,7 @@ import { FilePlugin } from "./main/media/file_plugin";
 import { IconPlugin } from "./main/media/icon_plugin";
 import { ImageCropPlugin } from "./main/media/image_crop_plugin";
 import { ImagePlugin } from "./main/media/image_plugin";
+import { ImageSavePlugin } from "./main/media/image_save_plugin";
 import { MediaPlugin } from "./main/media/media_plugin";
 import { MoveNodePlugin } from "./main/movenode_plugin";
 import { PowerButtonsPlugin } from "./main/power_buttons_plugin";
@@ -111,6 +112,7 @@ import { ContentEditablePlugin } from "./core/content_editable_plugin";
  * @property { import ("./main/media/image_crop_plugin").ImageCropShared } imageCrop
  * @property { import ("./main/media/image_post_process_plugin").ImagePostProcessShared } imagePostProcess
  * @property { import ("./main/banner_plugin").BannerShared } banner
+ * @property { import ("./main/media/image_save_plugin").ImageSaveShared } imageSave
  *
  * Others
  * @property { import("./others/collaboration/collaboration_odoo_plugin").CollaborationOdooShared } collaborationOdoo
@@ -152,6 +154,7 @@ export const MAIN_PLUGINS = [
     AlignPlugin,
     ListPlugin,
     MediaPlugin,
+    ImageSavePlugin,
     ShortCutPlugin,
     PowerboxPlugin,
     SearchPowerboxPlugin,
