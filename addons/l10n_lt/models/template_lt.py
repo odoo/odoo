@@ -11,7 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'account_account_template_2410',
             'property_account_payable_id': 'account_account_template_4430',
-            'property_stock_valuation_account_id': 'account_account_template_2040',
             'code_digits': '6',
         }
 
@@ -33,6 +32,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'account_tax_template_purchase_21',
                 'expense_account_id': 'account_account_template_6000',
                 'income_account_id': 'account_account_template_5000',
+                'account_stock_valuation_id': 'account_account_template_2040',
             },
         }
     def _setup_utility_bank_accounts(self, template_code, company, template_data):

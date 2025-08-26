@@ -13,7 +13,6 @@ class AccountChartTemplate(models.AbstractModel):
             'display_invoice_amount_total_words': True,
             'property_account_receivable_id': 'cuenta105_01',
             'property_account_payable_id': 'cuenta201_01',
-            'property_stock_valuation_account_id': 'cuenta115_01',
             'property_cash_basis_base_account_id': 'cuenta801_01_99',
         }
 
@@ -39,6 +38,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_account_id': 'cuenta601_84',
                 'income_account_id': 'cuenta401_01',
                 'account_cash_basis_base_account_id': 'cuenta801_01_99',
+                'account_stock_valuation_id': 'cuenta115_01',
             },
         }
 

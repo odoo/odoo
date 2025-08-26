@@ -12,7 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '8',
             'property_account_receivable_id': 'l10n_do_11030201',
             'property_account_payable_id': 'l10n_do_21010200',
-            'property_stock_valuation_account_id': 'l10n_do_11050100',
         }
 
     @template('do', 'res.company')
@@ -35,5 +34,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'tax_18_purch',
                 'income_account_id': 'l10n_do_41010100',
                 'expense_account_id': 'l10n_do_51010100',
+                'account_stock_valuation_id': 'l10n_do_11050100',
             },
         }

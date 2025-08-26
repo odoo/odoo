@@ -12,7 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_receivable_id': 'ec1102050101',
             'property_account_payable_id': 'ec210301',
             'journal_account_expense_categ_id': 'ec52022816',
-            'property_stock_valuation_account_id': 'ec110306',
             'loss_stock_valuation_account': 'ec510112',
             'production_stock_valuation_account': 'ec110302',
             'code_digits': '4',
@@ -37,6 +36,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'tax_vat_15_510_sup_01',
                 'expense_account_id': 'ec110307',
                 'income_account_id': 'ec410101',
+                'account_stock_valuation_id': 'ec110306',
             },
         }
 

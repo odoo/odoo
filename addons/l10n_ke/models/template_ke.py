@@ -11,7 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'ke1100',
             'property_account_payable_id': 'ke2100',
-            'property_stock_valuation_account_id': 'ke1001',
             'code_digits': '6',
         }
 
@@ -36,5 +35,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_exigibility': 'True',
                 'expense_account_id': 'ke5001',
                 'income_account_id': 'ke4001',
+                'account_stock_valuation_id': 'ke1001',
             },
         }

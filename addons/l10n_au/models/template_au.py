@@ -13,7 +13,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_receivable_id': 'au_11200',
             'property_stock_account_production_cost_id': 'au_11350',
             'property_account_payable_id': 'au_21200',
-            'property_stock_valuation_account_id': 'au_11330',
         }
 
     @template('au', 'res.company')
@@ -36,5 +35,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'au_tax_purchase_10_service',
                 'income_account_id': 'au_41110',
                 'expense_account_id': 'au_51110',
+                'account_stock_valuation_id': 'au_11330',
             },
         }

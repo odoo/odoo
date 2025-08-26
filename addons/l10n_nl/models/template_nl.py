@@ -12,7 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '6',
             'property_account_receivable_id': 'recv',
             'property_account_payable_id': 'pay',
-            'property_stock_valuation_account_id': '3200',
         }
 
     @template('nl', 'res.company')
@@ -35,5 +34,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'btw_21_buy',
                 'expense_account_id': '7001',
                 'income_account_id': '8001',
+                'account_stock_valuation_id': '3200',
             },
         }
