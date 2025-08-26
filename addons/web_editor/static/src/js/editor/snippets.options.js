@@ -1958,7 +1958,7 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
             noDocuments: true,
             isForBgVideo: true,
             vimeoPreviewIds: ['528686125', '430330731', '509869821', '397142251', '763851966', '486931161',
-                '499761556', '392935303', '728584384', '865314310', '511727912', '466830211'],
+                '499761556', '1092009120', '728584384', '865314310', '511727912', '466830211'],
             'res_model': $editable.data('oe-model'),
             'res_id': $editable.data('oe-id'),
             save,
@@ -4570,6 +4570,7 @@ registry.sizing = SnippetOptionWidget.extend({
         const self = this;
         const def = this._super.apply(this, arguments);
         let isMobile = weUtils.isMobileView(this.$target[0]);
+        const isRtl = this.options.direction === "rtl";
 
         this.$handles = this.$overlay.find('.o_handle');
 
@@ -4609,6 +4610,14 @@ registry.sizing = SnippetOptionWidget.extend({
             } else if ($handle.hasClass('se')) {
                 compass = 'se';
                 XY = 'YX';
+            }
+
+            if (isRtl) {
+                if (compass.includes("e")) {
+                    compass = compass.replace("e", "w");
+                } else if (compass.includes("w")) {
+                    compass = compass.replace("w", "e");
+                }
             }
 
             // Don't call the normal resize methods if we are in a grid and
@@ -4693,7 +4702,12 @@ registry.sizing = SnippetOptionWidget.extend({
                 for (const dir of directions) {
                     // dd is the number of pixels by which the mouse moved,
                     // compared to the initial position of the handle.
-                    const dd = ev['page' + dir.XY] - dir.xy + dir.resize[1][dir.begin];
+                    let ddRaw = ev["page" + dir.XY] - dir.xy;
+                    // In RTL mode, reverse only horizontal movement (X axis).
+                    if (dir.XY === "X" && isRtl) {
+                        ddRaw = -ddRaw;
+                    }
+                    const dd = ddRaw + dir.resize[1][dir.begin];
                     const next = dir.current + (dir.current + 1 === dir.resize[1].length ? 0 : 1);
                     const prev = dir.current ? (dir.current - 1) : 0;
 
@@ -7906,6 +7920,11 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
      */
     toggleBgImage(previewMode, widgetValue, params) {
         if (!widgetValue) {
+            // When background image with position "Repeat pattern" is removed,
+            // remove background size to avoid repeating gradient
+            const targetEl = this.$target[0];
+            targetEl.style.removeProperty("background-size");
+            targetEl.classList.remove("o_bg_img_opt_repeat");
             this.$target.find('> .o_we_bg_filter').remove();
             // TODO: use setWidgetValue instead of calling background directly when possible
             const [bgImageWidget] = this._requestUserValueWidgets('bg_image_opt');
@@ -8686,7 +8705,9 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
     backgroundType: function (previewMode, widgetValue, params) {
         this.$target.toggleClass('o_bg_img_opt_repeat', widgetValue === 'repeat-pattern');
         this.$target.css('background-position', '');
-        this.$target.css('background-size', widgetValue !== 'repeat-pattern' ? '' : '100px');
+        // Set image size to "100px" for repeating, and "cover" for gradient.
+        // Ensures gradient doesn’t repeat while image does.
+        this.$target[0].style.backgroundSize = widgetValue !== "repeat-pattern" ? "" : "100px, cover";
     },
     /**
      * Saves current background position and enables overlay.
@@ -8731,10 +8752,21 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
      * @override
      */
     selectStyle: function (previewMode, widgetValue, params) {
-        if (params.cssProperty === 'background-size'
-                && !this.$target.hasClass('o_bg_img_opt_repeat')) {
-            // Disable the option when the image is in cover mode, otherwise
-            // the background-size: auto style may be forced.
+        if (params.cssProperty === "background-size") {
+            const targetEl = this.$target[0];
+            if (!targetEl.classList.contains("o_bg_img_opt_repeat")) {
+                // Disable the option when the image is in cover mode, otherwise
+                // the background-size: auto style may be forced.
+                return;
+            }
+            const sizeLayers = getComputedStyle(targetEl)
+                .getPropertyValue("background-size")
+                .split(",")
+                .map((bgSize) => bgSize.trim());
+            // Update only the image layer's background-size (first layer)
+            // while keeping other layers (e.g., gradient) unchanged.
+            sizeLayers[0] = widgetValue;
+            targetEl.style.setProperty("background-size", sizeLayers.join(", "));
             return;
         }
         this._super(...arguments);
@@ -8754,8 +8786,17 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
      * @override
      */
     _computeWidgetState: function (methodName, params) {
-        if (methodName === 'backgroundType') {
-            return this.$target.css('background-repeat') === 'repeat' ? 'repeat-pattern' : 'cover';
+        const computedStyle = getComputedStyle(this.$target[0]);
+        if (methodName === "backgroundType") {
+            return computedStyle.backgroundRepeat.includes("no-repeat")
+                ? "cover"
+                : "repeat-pattern";
+        }
+        if (methodName === "selectStyle" && params.cssProperty === "background-size") {
+            const bgSize = computedStyle.getPropertyValue("background-size").trim();
+            // Handle multi-layer background (image + gradient)
+            // return first layer's size
+            return bgSize.split(",")[0].trim();
         }
         return this._super(...arguments);
     },
