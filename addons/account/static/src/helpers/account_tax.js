@@ -507,8 +507,7 @@ export const accountTaxHelpers = {
         // compare_amounts does not exist in numbers.js
         const are_amounts_equal = (a, b) =>
             floatIsZero(
-                roundPrecision(base_line.price_unit, currency_dp) -
-                    roundPrecision(extra_tax_data.price_unit, currency_dp),
+                roundPrecision(a, currency_dp) - roundPrecision(b, currency_dp),
                 currency_dp
             );
 
