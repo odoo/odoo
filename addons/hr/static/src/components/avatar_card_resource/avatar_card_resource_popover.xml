@@ -11,7 +11,7 @@
                 <!-- Employee is not present/connected and it is normal according to his work schedule -->
                 <i t-if="record.hr_icon_display == 'presence_absent'" class="fa fa-fw fa-circle text-warning" title="Absent" role="img" aria-label="Absent"/>
                 <!-- Employee is connected but according to his work schedule, he should not work for now  -->
-                <i t-if="record.hr_icon_display == 'presence_out_of_working_hour'" class="fa fa-fw fa-circle text-muted" title="Out of Working Hours" role="img" aria-label="Out of Working Hours"/>
+                <i t-if="record.hr_icon_display == 'presence_out_of_working_hour'" class="fa fa-fw fa-circle text-muted" title="Off-Hours" role="img" aria-label="Off-Hours"/>
             </span>
         </xpath>
     </t>
