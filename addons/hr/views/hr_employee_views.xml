@@ -110,32 +110,28 @@
                                 </div>
                             </button>
                         </div>
-                        <div class="row align-items-center">
-                            <div class="o_employee_avatar ms-2 p-0 h-100 mw-25">
-                                <field name="hr_icon_display" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
-                                <field name="image_1920" widget='image' class="m-0" options='{"size": [128,158], "zoom": true, "preview_image":"avatar_128"}'/>
+                        <div class="row flex-column flex-sm-row align-items-center">
+                            <div class="o_employee_avatar ms-2 p-0 h-100 mw-25 align-self-start align-self-sm-center">
+                                <field name="image_1920" widget='image' class="m-0" options='{"zoom": true, "preview_image":"avatar_128"}'/>
                                 <field name="show_hr_icon_display" invisible="1" />
                             </div>
-                            <div class="col">
-                                <div class="oe_title mw-75 ps-0 pe-2">
+                            <div class="align-self-start o_employee_form_header_info">
+                                <div class="oe_title ps-0 pe-2 mw-100">
                                     <h1 class="d-flex flex-row align-items-center">
                                         <field name="name" placeholder="Employee's Name"
                                             required="True" style="font-size: min(4vw, 2.6rem);"/>
-                                        <div invisible="not user_id" class="me-2">
-                                            <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
-                                        </div>
                                     </h1>
                                     <h5 class="d-flex align-items-baseline mb-0">
                                         <i class="fa fa-envelope fa-fw me-1 text-primary" title="Work Email"/>
-                                        <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com" string="Work Email" class="w-75"/>
+                                        <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com" string="Work Email"/>
                                     </h5>
                                     <h5 class="d-flex align-items-baseline mb-0">
                                         <i class="fa fa-phone fa-fw me-1 text-primary" title="Work Phone"/>
-                                        <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone"  class="w-75"/>
+                                        <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone"/>
                                     </h5>
                                     <h5 class="d-flex align-items-baseline mb-0">
                                         <i class="fa fa-mobile fa-fw me-1 text-primary" title="Work Mobile"/>
-                                        <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"  class="w-75"/>
+                                        <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"/>
                                     </h5>
                                     <h5>
                                         <i class="fa fa-tags fa-fw me-1 text-primary" title="Tags"/>
@@ -144,6 +140,12 @@
                                             placeholder="e.g. Founder, Motorized, Building B, ..." groups="hr.group_hr_user"/>
                                     </h5>
                                 </div>
+                            </div>
+                            <div class="align-self-start w-auto end-0 mt-2 d-flex align-items-center justify-content-end gap-2 o_presence_status_pill_wrapper">
+                                <div invisible="not user_id">
+                                    <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
+                                </div>
+                                <field name="hr_icon_display" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
                             </div>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
