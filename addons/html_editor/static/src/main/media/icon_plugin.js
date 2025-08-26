@@ -138,7 +138,6 @@ export class IconPlugin extends Plugin {
                 text: _t("Replace"),
             },
         ],
-        color_apply_overrides: this.applyIconColor.bind(this),
     };
 
     getTargetedIcon() {
@@ -190,15 +189,6 @@ export class IconPlugin extends Plugin {
             return;
         }
         return selectedIcon.classList.contains("fa-spin");
-    }
-
-    applyIconColor(color, mode) {
-        const selectedIcon = this.getTargetedIcon();
-        if (!selectedIcon) {
-            return;
-        }
-        this.dependencies.color.colorElement(selectedIcon, color, mode);
-        return true;
     }
 
     openIconDialog() {
