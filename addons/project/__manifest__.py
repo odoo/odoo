@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Project',
+    'name': 'Project Testing',
     'version': '1.3',
     'website': 'https://www.odoo.com/app/project',
     'category': 'Services/Project',
