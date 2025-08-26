@@ -37,6 +37,7 @@ import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { ListSelector } from "./list_selector";
 import { reactive } from "@odoo/owl";
 import { composeToolbarButton } from "../toolbar/toolbar";
+import { isColorGradient } from "@web/core/utils/colors";
 
 const listSelectorItems = [
     {
@@ -1030,7 +1031,7 @@ export class ListPlugin extends Plugin {
                 .map((n) => closestElement(n, "li"))
                 .filter(Boolean)
         );
-        if (!selectedNodes.size || mode !== "color") {
+        if (!selectedNodes.size || mode !== "color" || isColorGradient(color)) {
             return;
         }
         for (const list of selectedNodes) {
