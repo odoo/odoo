@@ -62,7 +62,10 @@
             t-att-data-title="record.title"
         >
             <span t-if="record.startHour"><t t-out="record.startHour" /></span>
-            <span t-esc="record.title"/>
+            <span>
+                <i area-hidden="true" t-if="record.titleIcon" t-attf-class="me-2 {{record.titleIcon}}"/>
+                <t t-esc="record.title"/>
+            </span>
         </a>
     </t>
 
