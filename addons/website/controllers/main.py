@@ -1202,6 +1202,155 @@ class Website(Home):
 
         return request.redirect('/')
 
+    # ------------------------------------------------------
+    # Assets Resources
+    # ------------------------------------------------------
+
+    @http.route("/website/get_assets_editor_resources", type="jsonrpc", auth="user", website=True)
+    def get_assets_editor_resources(self, key, get_views=True, get_scss=True, get_js=True, bundles=False, bundles_restriction=[], only_user_custom_files=True):
+        """
+        Transmit the resources the assets editor needs to work.
+
+        Params:
+            key (str): the key of the view the resources are related to
+
+            get_views (bool, default=True):
+                True if the views must be fetched
+
+            get_scss (bool, default=True):
+                True if the style must be fetched
+
+            get_js (bool, default=True):
+                True if the javascript must be fetched
+
+            bundles (bool, default=False):
+                True if the bundles views must be fetched
+
+            bundles_restriction (list, default=[]):
+                Names of the bundles in which to look for scss files
+                (if empty, search in all of them)
+
+            only_user_custom_files (bool, default=True):
+                True if only user custom files must be fetched
+
+        Returns:
+            dict: views, scss, js
+        """
+        # Related views must be fetched if the user wants the views and/or the style
+        views = request.env["ir.ui.view"].with_context(no_primary_children=True, __views_get_original_hierarchy=[]).get_related_views(key, bundles=bundles)
+        views = views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
+
+        scss_files_data_by_bundle = []
+        js_files_data_by_bundle = []
+
+        if get_scss:
+            scss_files_data_by_bundle = self._load_resources('scss', views, bundles_restriction, only_user_custom_files)
+        if get_js:
+            js_files_data_by_bundle = self._load_resources('js', views, bundles_restriction, only_user_custom_files)
+
+        return {
+            'views': get_views and views or [],
+            'scss': get_scss and scss_files_data_by_bundle or [],
+            'js': get_js and js_files_data_by_bundle or [],
+        }
+
+    def _load_resources(self, file_type, views, bundles_restriction, only_user_custom_files):
+        AssetsUtils = request.env['web_editor.assets']
+
+        files_data_by_bundle = []
+        t_call_assets_attribute = 't-js'
+        if file_type == 'scss':
+            t_call_assets_attribute = 't-css'
+
+        # Compile regex outside of the loop
+        # This will used to exclude library scss files from the result
+        excluded_url_matcher = re.compile(r"^(.+/lib/.+)|(.+import_bootstrap.+\.scss)$")
+
+        # First check the t-call-assets used in the related views
+        url_infos = dict()
+        for v in views:
+            for asset_call_node in etree.fromstring(v["arch"]).xpath("//t[@t-call-assets]"):
+                attr = asset_call_node.get(t_call_assets_attribute)
+                if attr and not json.loads(attr.lower()):
+                    continue
+                asset_name = asset_call_node.get("t-call-assets")
+
+                # Loop through bundle files to search for file info
+                files_data = []
+                for file_info in request.env["ir.qweb"]._get_asset_content(asset_name)[0]:
+                    if file_info["url"].rpartition('.')[2] != file_type:
+                        continue
+                    url = file_info["url"]
+
+                    # Exclude library files (see regex above)
+                    if excluded_url_matcher.match(url):
+                        continue
+
+                    # Check if the file is customized and get bundle/path info
+                    file_data = AssetsUtils._get_data_from_url(url)
+                    if not file_data:
+                        continue
+
+                    # Save info according to the filter (arch will be fetched later)
+                    url_infos[url] = file_data
+
+                    if '/user_custom_' in url \
+                            or file_data['customized'] \
+                            or file_type == 'scss' and not only_user_custom_files:
+                        files_data.append(url)
+
+                # scss data is returned sorted by bundle, with the bundles
+                # names and xmlids
+                if files_data:
+                    files_data_by_bundle.append([asset_name, files_data])
+
+        # Filter bundles/files:
+        # - A file which appears in multiple bundles only appears in the
+        #   first one (the first in the DOM)
+        # - Only keep bundles with files which appears in the asked bundles
+        #   and only keep those files
+        for i in range(0, len(files_data_by_bundle)):
+            bundle_1 = files_data_by_bundle[i]
+            for j in range(0, len(files_data_by_bundle)):
+                bundle_2 = files_data_by_bundle[j]
+                # In unwanted bundles, keep only the files which are in wanted bundles too (web._helpers)
+                if bundle_1[0] not in bundles_restriction and bundle_2[0] in bundles_restriction:
+                    bundle_1[1] = [item_1 for item_1 in bundle_1[1] if item_1 in bundle_2[1]]
+        for i in range(0, len(files_data_by_bundle)):
+            bundle_1 = files_data_by_bundle[i]
+            for j in range(i + 1, len(files_data_by_bundle)):
+                bundle_2 = files_data_by_bundle[j]
+                # In every bundle, keep only the files which were not found
+                # in previous bundles
+                bundle_2[1] = [item_2 for item_2 in bundle_2[1] if item_2 not in bundle_1[1]]
+
+        # Only keep bundles which still have files and that were requested
+        files_data_by_bundle = [
+            data for data in files_data_by_bundle
+            if (len(data[1]) > 0 and (not bundles_restriction or data[0] in bundles_restriction))
+        ]
+
+        # Fetch the arch of each kept file, in each bundle
+        urls = []
+        for bundle_data in files_data_by_bundle:
+            urls += bundle_data[1]
+        custom_attachments = AssetsUtils._get_custom_attachment(urls, op='in')
+
+        for bundle_data in files_data_by_bundle:
+            for i in range(0, len(bundle_data[1])):
+                url = bundle_data[1][i]
+                url_info = url_infos[url]
+
+                content = AssetsUtils._get_content_from_url(url, url_info, custom_attachments)
+
+                bundle_data[1][i] = {
+                    'url': "/%s/%s" % (url_info["module"], url_info["resource_path"]),
+                    'arch': content,
+                    'customized': url_info["customized"],
+                }
+
+        return files_data_by_bundle
+
 
 class WebsiteSession(Session):
 
