@@ -11,68 +11,59 @@
     <t t-name="im_livechat.LivechatStatusLabel">
         <t t-set="btn" t-value="templateParams.btn"/>
         <t t-set="inThreadActions" t-value="templateParams.inThreadActions"/>
-        <span class="o-livechat-LivechatStatusLabel fa fa-stack" t-att-title="btn.label" t-att-class="{
-            'o-xsmaller': !env.inLivechatInfoPanel,
-            'ms-n1': inThreadActions,
-            'o-warning': btn.status === 'waiting',
-            'o-info': btn.status === 'need_help',
+        <span class="o-livechat-LivechatStatusLabel fa" t-att-title="btn.label" t-att-class="{
+            'text-success': btn.status === 'in_progress',
+            'o-waiting text-warning': btn.status === 'waiting',
+            'o-help': btn.status === 'need_help',
         }">
-            <i class="fa fa-circle o-livechat-LivechatStatusLabel-bubble fa-stack-1x" t-att-class="{
-                'o-warning': btn.status === 'waiting',
-                'o-info': btn.status === 'need_help',
-                'o-text-white o-white': !btn.icon or btn.status === 'in_progress',
-            }"/>
-            <i t-if="btn.icon" class="fa-stack-1x o-livechat-LivechatStatusLabel-icon" t-attf-class="{{ btn.icon }}" t-att-class="{
-                'o-warning': btn.status === 'waiting',
-                'o-info': btn.status === 'need_help',
-                'o-white': !btn.icon or btn.status === 'in_progress',
-            }"/>
+            <i
+                 t-if="btn.icon"
+                 class="o-livechat-LivechatStatusLabel-icon"
+                 t-attf-class="{{ btn.icon }}"
+            />
         </span>
     </t>
 
     <t t-name="im_livechat.LivechatStatusLabelOfThread">
-        <span t-if="livechatThread.channel_type === 'livechat' and (['waiting', 'need_help'].includes(livechatThread.livechat_status) or livechatThread.livechat_end_dt)" class="o-livechat-LivechatStatusLabel fa fa-stack" t-att-title="livechatThread.livechatStatusLabel" t-att-class="{
-            'o-xsmaller': !env.inLivechatInfoPanel,
-            'position-absolute top-0 start-0 z-1': env.inDiscussSidebar or env.inChatBubble,
-            'm-n1': env.inDiscussSidebar,
-            'm-n2': env.inChatBubble,
-            'o-warning': livechatThread.livechat_status === 'waiting',
-            'o-info': livechatThread.livechat_status === 'need_help',
+        <span t-if="livechatThread.channel_type === 'livechat' and (['waiting', 'need_help'].includes(livechatThread.livechat_status) or livechatThread.livechat_end_dt)" class="o-livechat-LivechatStatusLabel" t-att-title="livechatThread.livechatStatusLabel" t-att-class="{
+            'o-livechat-LivechatStatusLabel-Sidebar position-absolute top-0 start-0': env.inDiscussSidebar or env.inChatBubble,
+            'end-0 bottom-0 rounded-2 border': env.inDiscussSidebar,
+            'm-n2 z-1': env.inChatBubble,
+            'text-warning': livechatThread.livechat_status === 'waiting',
+            'o-help': livechatThread.livechat_status === 'need_help',
+            'bg-warning': livechatThread.livechat_status === 'waiting' and env.inDiscussSidebar,
+            'bg-info': livechatThread.livechat_status === 'need_help' and env.inDiscussSidebar,
         }">
-            <i class="fa fa-circle o-livechat-LivechatStatusLabel-bubble fa-stack-1x" t-att-class="{
-                'o-warning': livechatThread.livechat_status === 'waiting',
-                'o-info': livechatThread.livechat_status === 'need_help',
-                'o-secondary o-white': livechatThread.livechat_end_dt,
-            }"/>
-            <i class="fa-stack-1x o-livechat-LivechatStatusLabel-icon" t-attf-class="{{ livechatThread.livechat_end_dt ? 'fa fa-flag-checkered' : store.livechatStatusButtons.find(btn => btn.status === livechatThread.livechat_status)?.icon }}" t-att-class="{
-                'o-warning': livechatThread.livechat_status === 'waiting',
-                'o-info': livechatThread.livechat_status === 'need_help',
+            <i t-if="!env.inDiscussSidebar" class="o-livechat-LivechatStatusLabel-icon fa-fw" t-attf-class="{{ livechatThread.livechat_end_dt ? 'fa fa-flag-checkered' : store.livechatStatusButtons.find(btn => btn.status === livechatThread.livechat_status)?.icon }}" t-att-class="{
                 'o-white': livechatThread.livechat_end_dt,
             }"/>
         </span>
     </t>
 
     <t t-name="im_livechat.LivechatStatusSelection">
-        <div class="o-livechat-LivechatStatusSelection btn-group d-flex flex-column o-rounded-bubble o-outline-secondary shadow-sm" t-ref="livechat-status-selection">
+        <div class="o-livechat-LivechatStatusSelection list-group" t-ref="livechat-status-selection">
             <t t-foreach="store.livechatStatusButtons" t-as="btn" t-key="btn.status">
+                <t t-set="isBtnActive" t-value="livechatThread.livechat_status === btn.status"/>
                 <button
-                    class="flex btn btn-sm btn-group-item px-2 btn-secondary d-flex align-items-center text-start m-0"
+                    class="list-group-item list-group-item-action d-flex align-items-center gap-2"
                     t-att-class="{
+                        'active': isBtnActive,
                         'o-inProgress': btn.status === 'in_progress',
-                        'active': livechatThread.livechat_status === btn.status,
-                        'fw-normal': livechatThread.livechat_status !== btn.status,
-                        'btn-warning': livechatThread.livechat_status === btn.status and btn.status === 'waiting',
-                        'btn-info': livechatThread.livechat_status === btn.status and btn.status === 'need_help',
-                        'rounded-0': !btn_first and !btn_last,
-                        'o-rounded-top-bubble rounded-bottom-0': btn_first,
-                        'o-rounded-bottom-bubble rounded-top-0': btn_last,
+                        'bg-view': isBtnActive and btn.status === 'in_progress',
+                        'o-need-help': isBtnActive and btn.status === 'need_help',
+                        'o-waiting bg-warning-subtle text-warning': isBtnActive and btn.status === 'waiting',
                     }"
                     t-on-click="() => livechatThread.updateLivechatStatus(btn.status)"
                 >
+                    <input
+                            type="radio"
+                            t-att-checked="isBtnActive"
+                            class="form-check-input m-0"
+                    />
+                    <span class="o-livechat-LivechatStatusSelection-Label text-truncate cursor-pointer flex-grow-1 " t-esc="btn.label"/>
                     <t t-call="im_livechat.LivechatStatusLabel">
                         <t t-set="templateParams" t-value="{ btn }"/>
                     </t>
-                    <span class="ms-2 text-truncate" t-esc="btn.label"/>
                 </button>
             </t>
         </div>
