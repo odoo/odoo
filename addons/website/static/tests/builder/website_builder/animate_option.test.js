@@ -1,6 +1,6 @@
 import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
 import { describe, expect, test } from "@odoo/hoot";
-import { queryFirst, waitFor } from "@odoo/hoot-dom";
+import { queryFirst, queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
@@ -541,5 +541,15 @@ describe("animate text in toolbar", () => {
         expect(":iframe span:eq(0)").toHaveText("b");
         expect(":iframe span:eq(1)").toHaveText("i");
         expect(":iframe .test").toHaveText("abcdefghij");
+    });
+
+    test("tool is active when text in span is selected even if there are unselected empty node at the end", async () => {
+        await setupWebsiteBuilder(
+            `<p class="test">a<span class="o_animated_text">bc<svg/></span>d</p>`
+        );
+        const span = queryOne(":iframe span");
+        setSelection({ anchorNode: span, anchorOffset: 0, focusNode: span, focusOffset: 1 });
+        await expandToolbar();
+        expect("button[title='Animate Text']").toHaveClass("active");
     });
 });
