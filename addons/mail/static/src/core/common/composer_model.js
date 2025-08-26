@@ -1,5 +1,6 @@
 import { fields, OR, Record } from "@mail/core/common/record";
 import { convertBrToLineBreak, prettifyMessageContent } from "@mail/utils/common/format";
+import { markup } from "@odoo/owl";
 
 export class Composer extends Record {
     static id = OR("thread", "message");
@@ -47,7 +48,7 @@ export class Composer extends Record {
             });
         },
     });
-    composerHtml = fields.Html("", {
+    composerHtml = fields.Html(markup("<p><br></p>"), {
         onUpdate() {
             if (this.updateFromText) {
                 return;

@@ -278,6 +278,7 @@ export class Composer extends Component {
     get wysiwygConfig() {
         return {
             content: this.props.composer.composerHtml,
+            placeholder: this.placeholder,
             Plugins: this.ui.isSmall ? MAIL_SMALL_UI_PLUGINS : MAIL_PLUGINS,
             classList: ["o-mail-Composer-html"],
             onChange: () => this.onChangeWysiwygContent(),
