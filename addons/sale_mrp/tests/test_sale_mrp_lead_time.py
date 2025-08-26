@@ -3,7 +3,7 @@
 
 from datetime import timedelta
 
-from odoo import fields
+from odoo import fields, Command
 from odoo.addons.stock.tests.common import TestStockCommon
 
 from odoo.tests import Form
@@ -179,3 +179,43 @@ class TestSaleMrpLeadTime(TestStockCommon):
             delta=timedelta(seconds=1),
             msg="Deadline date of manufacturing order should be equal to the deadline of sale picking"
         )
+
+    def test_mutiple_resupply_warehouse_delays(self):
+        """
+        Test the behavior of a sale order with multiple warehouse resupply routes
+        and ensure that manufacturing lead times is made into calculations only once
+        """
+        self.env.company.write({'manufacturing_lead': 3.0})
+        wh_supply_sale_order = self.env['stock.warehouse'].create({
+            'name': 'wh_supply_sale_order',
+            'code': 'wh_supply_sale_order',
+            'resupply_wh_ids': self.warehouse_1.ids,
+            'manufacture_to_resupply': False,
+        })
+        wh_supply_sale_order.resupply_route_ids.rule_ids[0].procure_method = 'mts_else_mto'
+        wh_supply_sale_order.resupply_route_ids.rule_ids.filtered(
+            lambda r: r.warehouse_id == self.warehouse_1
+        ).procure_method = 'mts_else_mto'
+        routes = [
+            wh_supply_sale_order.resupply_route_ids.id,
+            self.env.ref('stock.route_warehouse0_mto').id,
+            self.warehouse_1.manufacture_pull_id.route_id.id,
+        ]
+        product = self.env['product.product'].create({
+            'name': 'test',
+            'is_storable': True,
+            'route_ids': routes,
+        })
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_1.id,
+            'warehouse_id': wh_supply_sale_order.id,
+            'order_line': [
+                Command.create({
+                    'product_id': product.id,
+                    'tax_id': None,
+                    'price_unit': product.list_price,
+                }),
+            ]
+        })
+        order.action_confirm()
+        self.assertEqual(order.mrp_production_ids.date_finished, order.date_order - timedelta(days=3))
