@@ -3534,9 +3534,10 @@ class Properties(Field):
             assert self.definition.count(".") == 1
             self.definition_record, self.definition_record_field = self.definition.rsplit('.', 1)
 
-            # make the field computed, and set its dependencies
-            self._depends = (self.definition_record, )
-            self.compute = self._compute
+            if not self.inherited_field:
+                # make the field computed, and set its dependencies
+                self._depends = (self.definition_record, )
+                self.compute = self._compute
 
     def setup_related(self, model):
         super().setup_related(model)
