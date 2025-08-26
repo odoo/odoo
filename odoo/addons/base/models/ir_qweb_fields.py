@@ -13,7 +13,7 @@ from PIL import Image
 from lxml import etree, html
 
 from odoo import api, fields, models, tools
-from odoo.tools import posix_to_ldml, float_utils, format_date, format_duration
+from odoo.tools import posix_to_ldml, float_is_zero, float_utils, format_date, format_duration
 from odoo.tools.mail import safe_attrs
 from odoo.tools.misc import get_lang, babel_locale_parse
 from odoo.tools.mimetypes import guess_mimetype
@@ -480,6 +480,9 @@ class MonetaryConverter(models.AbstractModel):
             else:
                 company = self.env.company
             value = options['from_currency']._convert(value, display_currency, company, date)
+
+        if float_is_zero(value, precision_digits=display_currency.decimal_places):
+            value = 0.0
 
         lang = self.user_lang()
         formatted_amount = lang.format(fmt, display_currency.round(value), grouping=True)\
