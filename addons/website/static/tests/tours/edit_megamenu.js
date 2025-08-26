@@ -49,7 +49,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Trigger the link dialog (click 'Add Mega Menu Item')",
-            trigger: ".modal-body a:eq(1)",
+            trigger: ".modal-body button:contains(Add Mega Menu Item)",
             run: "click",
         },
         {
@@ -152,7 +152,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Trigger the link dialog (click 'Add Mega Menu Item')",
-            trigger: ".modal-body a:eq(1)",
+            trigger: ".modal-body button:contains(Add Mega Menu Item)",
             run: "click",
         },
         {
@@ -226,7 +226,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Trigger the link dialog (click 'Add Mega Menu Item')",
-            trigger: ".modal-body a:eq(1)",
+            trigger: ".modal-body button:contains(Add Mega Menu Item)",
             run: "click",
         },
         {
@@ -285,7 +285,7 @@ const createMegaMenu = function (name) {
     return [
         {
             content: "Create a new mega menu item",
-            trigger: ".modal-body a:eq(1)",
+            trigger: ".modal-body button:contains(Add Mega Menu Item)",
             run: "click",
         },
         {
@@ -304,7 +304,7 @@ const createDropdown = function (name) {
     return [
         {
             content: "Create a new menu item for the dropdown",
-            trigger: ".modal-body a:eq(0)",
+            trigger: ".modal-body button:contains(Add Menu Item)",
             run: "click",
         },
         {
@@ -322,7 +322,7 @@ const createDropdown = function (name) {
         },
         {
             content: "Create a new menu item for the dropdown item",
-            trigger: ".modal-body a:eq(0)",
+            trigger: ".modal-body button:contains(Add Menu Item)",
             run: "click",
         },
         {
@@ -470,7 +470,7 @@ registerWebsitePreviewTour(
         }),
         {
             content: "Switch to mobile view",
-            trigger: ".o_mobile_preview > a",
+            trigger: ".o_mobile_preview > button",
             run: "click",
         },
         openMenu(),

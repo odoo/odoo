@@ -51,7 +51,7 @@ registerWebsitePreviewTour(
         ...clickOnSave(),
         {
             content: "Publish your website",
-            trigger: ".o_menu_systray_item.o_website_publish_container a",
+            trigger: ".o_menu_systray_item.o_website_publish_container button",
             run: "click",
         },
         {
