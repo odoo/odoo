@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, _
 from odoo.exceptions import UserError
+from odoo.tools import format_datetime
 
 class AccountMoveSendWizard(models.TransientModel):
     _inherit = 'account.move.send.wizard'
@@ -22,6 +23,8 @@ class AccountMoveSendWizard(models.TransientModel):
                     addendum_disable_reason = _(' (Customer not on Peppol)')
                 elif peppol_partner.peppol_verification_state == 'not_verified':
                     addendum_disable_reason = _(' (no VAT)')
+                elif (quota_info := wizard._peppol_fetch_remaining_quota()) and quota_info[0] < 1:
+                    addendum_disable_reason = _(' (send quota reached, try again after {datetime})').format(datetime=format_datetime(self.env, quota_info[1]))
                 else:
                     addendum_disable_reason = ''
                 vals_not_valid = {'readonly': True, 'checked': False} if addendum_disable_reason else {}
