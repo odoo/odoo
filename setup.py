@@ -37,6 +37,7 @@ setup(
         'idna',
         'Jinja2',
         'lxml',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
+        'lxml_html_clean',
         'libsass',
         'MarkupSafe',
         'num2words',
