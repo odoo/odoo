@@ -160,18 +160,18 @@
                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" class="mt-2"/>
                         <footer class="pt-0">
                             <div>
-                                <a type="object" name="action_view_cards_shared" href="#" class="me-1">
+                                <button type="object" name="action_view_cards_shared" class="me-1 p-0">
                                     <span class="badge rounded-pill">
                                         <i class="fa fa-fw fa-share" aria-label="Shares" role="img" title="Shares"/>
                                         <field name="card_share_count"/>
                                     </span>
-                                </a>
-                                <a type="object" name="action_view_cards_clicked" href="#" class="me-1">
+                                </button>
+                                <button type="object" name="action_view_cards_clicked" class="me-1 p-0">
                                     <span class="badge rounded-pill">
                                         <i class="fa fa-fw fa-mouse-pointer" aria-label="Clicks" role="img" title="Clicks"/>
                                         <field name="target_url_click_count"/>
                                     </span>
-                                </a>
+                                </button>
                             </div>
                             <field name="user_id" class="ms-auto" widget="many2one_avatar_user"/>
                         </footer>

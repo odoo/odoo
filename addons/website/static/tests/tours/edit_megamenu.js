@@ -128,7 +128,7 @@ registerWebsitePreviewTour("megamenu_active_nav_link", {
     ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Home')", "Home"),
     {
         content: "Click on 'Link' to open Link Dialog",
-        trigger: ".o-we-linkpopover a.js_edit_menu",
+        trigger: ".o-we-linkpopover button.js_edit_menu",
         run: "click",
     },
     {
@@ -169,7 +169,7 @@ registerWebsitePreviewTour("megamenu_active_nav_link", {
     ...openLinkPopup(":iframe .s_mega_menu_odoo_menu .nav-link:contains('Laptops')", "Laptops"),
     {
         content: "Click on 'Edit Link'",
-        trigger: ".o-we-linkpopover a.o_we_edit_link",
+        trigger: ".o-we-linkpopover button.o_we_edit_link",
         run: "click",
     },
     {
@@ -198,7 +198,7 @@ registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     ...openLinkPopup(":iframe .top_menu .nav-item a", "Home"),
     {
         content: "Click on 'Link' to open Link Dialog",
-        trigger: ".o-we-linkpopover a.js_edit_menu",
+        trigger: ".o-we-linkpopover button.js_edit_menu",
         run: "click",
     },
     {
