@@ -4,7 +4,6 @@ from urllib.parse import urlencode
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import cleanup_xml_node
-from odoo.tools.sql import column_exists, create_column
 
 from odoo.addons.l10n_gr_edi.models.l10n_gr_edi_document import _make_mydata_request
 from odoo.addons.l10n_gr_edi.models.preferred_classification import (
@@ -87,22 +86,17 @@ class AccountMove(models.Model):
         store=True,
     )
 
-    def _auto_init(self):
-        """
-        Create all compute-stored fields here to avoid MemoryError when initializing on large databases.
-        """
-        for column_name, column_type in (
-            ('l10n_gr_edi_mark', 'varchar'),
-            ('l10n_gr_edi_cls_mark', 'varchar'),
-            ('l10n_gr_edi_state', 'varchar'),
-            ('l10n_gr_edi_inv_type', 'varchar'),
-            ('l10n_gr_edi_payment_method', 'varchar'),
-            ('l10n_gr_edi_attachment_id', 'int4'),
-        ):
-            if not column_exists(self.env.cr, 'account_move', column_name):
-                create_column(self.env.cr, 'account_move', column_name, column_type)
-
-        return super()._auto_init()
+    def _get_fields_to_skip_compute_on_init(self):
+        fields_to_skip_compute = super()._get_fields_to_skip_compute_on_init()
+        fields_to_skip_compute.update([
+            'l10n_gr_edi_mark',
+            'l10n_gr_edi_cls_mark',
+            'l10n_gr_edi_state',
+            'l10n_gr_edi_inv_type',
+            'l10n_gr_edi_payment_method',
+            'l10n_gr_edi_attachment_id',
+        ])
+        return fields_to_skip_compute
 
     ################################################################################
     # Standard Field Computes

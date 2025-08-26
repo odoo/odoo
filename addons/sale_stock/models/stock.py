@@ -4,7 +4,6 @@
 from collections import defaultdict
 
 from odoo import api, fields, models, _
-from odoo.tools.sql import column_exists, create_column
 
 
 class StockRoute(models.Model):
@@ -104,17 +103,12 @@ class StockPicking(models.Model):
             pg = self.env['procurement.group'].create(vals)
             self.group_id = pg
 
-    def _auto_init(self):
-        """
-        Create related field here, too slow
-        when computing it afterwards through _compute_related.
-
-        Since group_id.sale_id is created in this module,
-        no need for an UPDATE statement.
-        """
-        if not column_exists(self.env.cr, 'stock_picking', 'sale_id'):
-            create_column(self.env.cr, 'stock_picking', 'sale_id', 'int4')
-        return super()._auto_init()
+    def _get_fields_to_skip_compute_on_init(self):
+        fields_to_skip_compute = super()._get_fields_to_skip_compute_on_init()
+        fields_to_skip_compute.update([
+            'sale_id',
+        ])
+        return fields_to_skip_compute
 
     def _action_done(self):
         res = super()._action_done()

@@ -3407,6 +3407,13 @@ class BaseModel(metaclass=MetaModel):
         self.env.cr.execute(SQL('SELECT 1 FROM %s LIMIT 1', SQL.identifier(self._table)))
         return self.env.cr.rowcount
 
+    def _get_fields_to_skip_compute_on_init(self) -> set[str]:
+        """ To override when a model contains a computed stored field
+            that should not be computed when initializing the database.
+            This is usually done to avoid MemoryError on large databases.
+        """
+        return set()
+
     def _auto_init(self):
         """ Initialize the database schema of ``self``:
             - create the corresponding table,
@@ -3459,12 +3466,15 @@ class BaseModel(metaclass=MetaModel):
             # update the database schema for fields
             columns = sql.table_columns(cr, self._table)
             fields_to_compute = []
+            fields_to_skip_compute = self._get_fields_to_skip_compute_on_init()
 
             for field in sorted(self._fields.values(), key=lambda f: f.column_order):
                 if not field.store:
                     continue
                 if field.manual and not update_custom_fields:
                     continue            # don't update custom fields
+                if field.name in fields_to_skip_compute:
+                    continue
                 new = field.update_db(self, columns)
                 if new and field.compute:
                     fields_to_compute.append(field)

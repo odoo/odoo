@@ -9,13 +9,11 @@ from hashlib import sha256
 from json import dumps
 import logging
 from markupsafe import Markup
-import math
 import re
 import os
 from textwrap import shorten
 
 from odoo import api, fields, models, _, Command, SUPERUSER_ID, modules, tools
-from odoo.tools.sql import column_exists, create_column
 from odoo.addons.account.tools import format_structured_reference_iso
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
 from odoo.osv import expression
@@ -720,6 +718,13 @@ class AccountMove(models.Model):
         'unique_name', "", "Another entry with the same name already exists.",
     )]
 
+    def _get_fields_to_skip_compute_on_init(self):
+        fields_to_skip_compute = super()._get_fields_to_skip_compute_on_init()
+        fields_to_skip_compute.update([
+            'preferred_payment_method_line_id',
+        ])
+        return fields_to_skip_compute
+
     def _auto_init(self):
         super()._auto_init()
         if not index_exists(self.env.cr, 'account_move_checked_idx'):
@@ -739,9 +744,6 @@ class AccountMove(models.Model):
                                  ON account_move(name, journal_id)
                               WHERE (state = 'posted' AND name != '/')
             """)
-
-        if not column_exists(self.env.cr, "account_move", "preferred_payment_method_line_id"):
-            create_column(self.env.cr, "account_move", "preferred_payment_method_line_id", "int4")
 
     def init(self):
         super().init()

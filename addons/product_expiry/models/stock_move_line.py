@@ -4,7 +4,6 @@
 import datetime
 
 from odoo import api, fields, models
-from odoo.tools.sql import column_exists, create_column
 
 
 class StockMoveLine(models.Model):
@@ -18,15 +17,12 @@ class StockMoveLine(models.Model):
     use_expiration_date = fields.Boolean(
         string='Use Expiration Date', related='product_id.use_expiration_date')
 
-    def _auto_init(self):
-        """ Create column for 'expiration_date' here to avoid MemoryError when letting
-        the ORM compute it after module installation. Since both 'lot_id.expiration_date'
-        and 'product_id.use_expiration_date' are new fields introduced in this module,
-        there is no need for an UPDATE statement here.
-        """
-        if not column_exists(self._cr, "stock_move_line", "expiration_date"):
-            create_column(self._cr, "stock_move_line", "expiration_date", "timestamp")
-        return super()._auto_init()
+    def _get_fields_to_skip_compute_on_init(self):
+        fields_to_skip_compute = super()._get_fields_to_skip_compute_on_init()
+        fields_to_skip_compute.update([
+            'expiration_date',
+        ])
+        return fields_to_skip_compute
 
     @api.depends('product_id', 'lot_id.expiration_date', 'picking_id.scheduled_date')
     def _compute_expiration_date(self):

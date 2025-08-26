@@ -1,5 +1,4 @@
 from odoo import api, fields, models
-from odoo.tools.sql import column_exists, create_column
 from odoo.addons.l10n_it_edi_ndd.models.account_payment_methode_line import L10N_IT_PAYMENT_METHOD_SELECTION
 from odoo.addons.l10n_it_edi.models.account_move import get_text
 
@@ -22,14 +21,13 @@ class AccountMove(models.Model):
         copy=False,
     )
 
-    def _auto_init(self):
-        # Create compute stored field l10n_it_document_type and l10n_it_payment_method
-        # here to avoid timeout error on large databases.
-        if not column_exists(self.env.cr, 'account_move', 'l10n_it_payment_method'):
-            create_column(self.env.cr, 'account_move', 'l10n_it_payment_method', 'varchar')
-        if not column_exists(self.env.cr, 'account_move', 'l10n_it_document_type'):
-            create_column(self.env.cr, 'account_move', 'l10n_it_document_type', 'integer')
-        return super()._auto_init()
+    def _get_fields_to_skip_compute_on_init(self):
+        fields_to_skip_compute = super()._get_fields_to_skip_compute_on_init()
+        fields_to_skip_compute.update([
+            'l10n_it_payment_method',
+            'l10n_it_document_type',
+        ])
+        return fields_to_skip_compute
 
     @api.depends('line_ids.matching_number', 'payment_state', 'matched_payment_ids')
     def _compute_l10n_it_payment_method(self):

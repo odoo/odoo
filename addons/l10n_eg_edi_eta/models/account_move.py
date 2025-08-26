@@ -6,7 +6,6 @@ import json
 from odoo import api, models, fields, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import float_is_zero
-from odoo.tools.sql import column_exists, create_column
 from datetime import datetime
 
 _logger = logging.getLogger(__name__)
@@ -23,12 +22,13 @@ class AccountMove(models.Model):
     l10n_eg_signing_time = fields.Datetime('Signing Time', copy=False)
     l10n_eg_is_signed = fields.Boolean(copy=False)
 
-    def _auto_init(self):
-        if not column_exists(self.env.cr, "account_move", "l10n_eg_uuid"):
-            create_column(self.env.cr, "account_move", "l10n_eg_uuid", "VARCHAR")
-            # Since l10n_eg_uuid columns does not exist we can assume l10n_eg_submission_number doesn't exist either
-            create_column(self.env.cr, "account_move", "l10n_eg_submission_number", "VARCHAR")
-        return super()._auto_init()
+    def _get_fields_to_skip_compute_on_init(self):
+        fields_to_skip_compute = super()._get_fields_to_skip_compute_on_init()
+        fields_to_skip_compute.update([
+            'l10n_eg_uuid',
+            'l10n_eg_submission_number',
+        ])
+        return fields_to_skip_compute
 
     @api.depends('l10n_eg_eta_json_doc_id.raw')
     def _compute_eta_long_id(self):

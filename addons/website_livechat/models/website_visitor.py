@@ -5,7 +5,6 @@ from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import get_lang
-from odoo.tools.sql import column_exists, create_column
 
 
 class WebsiteVisitor(models.Model):
@@ -17,12 +16,12 @@ class WebsiteVisitor(models.Model):
                                        string="Visitor's livechat channels", readonly=True)
     session_count = fields.Integer('# Sessions', compute="_compute_session_count")
 
-    def _auto_init(self):
-        # Skip the computation of the field `livechat_operator_id` at the module installation
-        # We can assume no livechat operator attributed to visitor if it was not installed
-        if not column_exists(self.env.cr, "website_visitor", "livechat_operator_id"):
-            create_column(self.env.cr, "website_visitor", "livechat_operator_id", "int4")
-        return super()._auto_init()
+    def _get_fields_to_skip_compute_on_init(self):
+        fields_to_skip_compute = super()._get_fields_to_skip_compute_on_init()
+        fields_to_skip_compute.update([
+            'livechat_operator_id',
+        ])
+        return fields_to_skip_compute
 
     @api.depends('discuss_channel_ids.livechat_active', 'discuss_channel_ids.livechat_operator_id')
     def _compute_livechat_operator_id(self):
