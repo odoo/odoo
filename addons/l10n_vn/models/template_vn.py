@@ -12,7 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '4',
             'property_account_receivable_id': 'chart1311',
             'property_account_payable_id': 'chart3311',
-            'property_stock_valuation_account_id': 'chart1551',
             'display_invoice_amount_total_words': True,
         }
 
@@ -40,5 +39,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_production_wip_account_id': 'chart1542',
                 'default_cash_difference_income_account_id': 'chart711',
                 'default_cash_difference_expense_account_id': 'chart811',
+                'account_stock_valuation_id': 'chart1551',
             },
         }

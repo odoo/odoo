@@ -18,7 +18,6 @@ def _configure_journals(env):
                 for fname, value in full_data['template_data'].items()
                 if fname in [
                     'stock_journal',
-                    'stock_valuation_account_id',
                 ]
             }
         }

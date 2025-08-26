@@ -12,7 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '6',
             'property_account_receivable_id': 'tw_119100',
             'property_account_payable_id': 'tw_217100',
-            'property_stock_valuation_account_id': 'tw_123100',
         }
 
     @template('tw', 'res.company')
@@ -36,5 +35,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_account_id': 'tw_511100',
                 'income_account_id': 'tw_411100',
                 'tax_calculation_rounding_method': 'round_globally',
+                'account_stock_valuation_id': 'tw_123100',
             },
         }

@@ -15,7 +15,6 @@ class AccountChartTemplate(models.AbstractModel):
             'use_storno_accounting': True,
             'property_account_receivable_id': 'l10n_cn_common_account_1122',
             'property_account_payable_id': 'l10n_cn_common_account_2202',
-            'property_stock_valuation_account_id': 'l10n_cn_common_account_1405',
             'property_stock_account_production_cost_id': 'l10n_cn_common_account_1411',
         }
 
@@ -29,6 +28,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'deferred_expense_account_id': 'l10n_cn_common_account_1801',
                 'deferred_revenue_account_id': 'l10n_cn_common_account_2401',
                 'account_default_pos_receivable_account_id': 'l10n_cn_common_account_112201',
+                'account_stock_valuation_id': 'l10n_cn_common_account_1405',
             },
         }
 

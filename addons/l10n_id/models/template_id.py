@@ -11,7 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'l10n_id_11210010',
             'property_account_payable_id': 'l10n_id_21100010',
-            'property_stock_valuation_account_id': 'l10n_id_11300180',
             'code_digits': '8',
         }
 
@@ -33,5 +32,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'tax_PT1',
                 'expense_account_id': 'l10n_id_51000010',
                 'income_account_id': 'l10n_id_41000010',
+                'account_stock_valuation_id': 'l10n_id_11300180',
             },
         }

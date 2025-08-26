@@ -12,7 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '6',
             'property_account_receivable_id': 'account_110310',
             'property_account_payable_id': 'account_210210',
-            'property_stock_valuation_account_id': 'account_110610',
         }
 
     @template('cl', 'res.company')
@@ -32,5 +31,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'OTAX_19',
                 'expense_account_id': 'account_410235',
                 'income_account_id': 'account_310115',
+                'account_stock_valuation_id': 'account_110610',
             },
         }

@@ -11,7 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'l10n_ca_112110',
             'property_account_payable_id': 'l10n_ca_221110',
-            'property_stock_valuation_account_id': 'l10n_ca_121120',
         }
 
     @template('ca_2023', 'res.company')
@@ -45,5 +44,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': default_purchase_tax,
                 'income_account_id': 'l10n_ca_411100',
                 'expense_account_id': 'l10n_ca_511210',
+                'account_stock_valuation_id': 'l10n_ca_121120',
             },
         }

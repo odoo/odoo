@@ -12,7 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '6',
             'property_account_receivable_id': 'l10n_jp_126000',
             'property_account_payable_id': 'l10n_jp_220000',
-            'property_stock_valuation_account_id': 'l10n_jp_121100',
         }
 
     @template('jp', 'res.company')
@@ -37,5 +36,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_account_id': 'l10n_jp_510000',
                 'income_account_id': 'l10n_jp_410000',
                 'tax_calculation_rounding_method': 'round_globally',
+                'account_stock_valuation_id': 'l10n_jp_121100',
             },
         }

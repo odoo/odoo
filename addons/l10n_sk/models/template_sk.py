@@ -13,7 +13,6 @@ class AccountChartTemplate(models.AbstractModel):
             'use_storno_accounting': True,
             'property_account_receivable_id': 'chart_sk_311000',
             'property_account_payable_id': 'chart_sk_321000',
-            'property_stock_valuation_account_id': 'chart_sk_132000',
         }
 
     @template('sk', 'res.company')
@@ -35,5 +34,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'vs_tuz_23',
                 'expense_account_id': 'chart_sk_504000',
                 'income_account_id': 'chart_sk_604000',
+                'account_stock_valuation_id': 'chart_sk_132000',
             },
         }
