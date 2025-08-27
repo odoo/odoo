@@ -1,6 +1,6 @@
 import { Store as BaseStore, fields, makeStore, storeInsertFns } from "@mail/core/common/record";
 import { threadCompareRegistry } from "@mail/core/common/thread_compare";
-import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
+import { cleanTerm, generateEmojisOnHtml, prettifyMessageContent } from "@mail/utils/common/format";
 
 import { reactive } from "@odoo/owl";
 
@@ -560,7 +560,7 @@ export class Store extends BaseStore {
             partner_ids.push(...recipientIds);
         }
         postData = {
-            body: await prettifyMessageContent(body, { validMentions }),
+            body: await generateEmojisOnHtml(body),
             email_add_signature: emailAddSignature,
             message_type: "comment",
             subtype_xmlid: subtype,

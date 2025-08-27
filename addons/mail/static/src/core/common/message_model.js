@@ -533,7 +533,11 @@ export class Message extends Record {
         attachments = [],
         { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [] } = {}
     ) {
-        if (convertBrToLineBreak(this.body) === body && attachments.length === 0) {
+        if (
+            createElementWithContent("div", body).textContent ===
+                createElementWithContent("div", this.body).textContent &&
+            attachments.length === 0
+        ) {
             return;
         }
         const validMentions = this.store.getMentionsFromText(body, {
@@ -574,7 +578,7 @@ export class Message extends Record {
         }
         this.composer = {
             mentionedPartners: this.partner_ids,
-            composerText: text,
+            composerHtml: this.body,
             selection: {
                 start: text.length,
                 end: text.length,

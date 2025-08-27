@@ -1,4 +1,7 @@
-import { insertText as htmlInsertText } from "@html_editor/../tests/_helpers/user_actions";
+import {
+    insertText as htmlInsertText,
+    tripleClick,
+} from "@html_editor/../tests/_helpers/user_actions";
 
 import {
     SIZES,
@@ -1270,4 +1273,24 @@ test("html composer: send a message in a chatter", async () => {
     await htmlInsertText(editor, "Hello");
     await click(".o-mail-Composer-send:enabled");
     await click(".o-mail-Message[data-persistent]:contains(Hello)");
+});
+
+test.tags("html composer");
+test("html composer: send a message with styling", async () => {
+    await startServer();
+    await start();
+    const composerService = getService("mail.composer");
+    await openFormView("res.partner", serverState.partnerId);
+    await click("button", { text: "Send message" });
+    composerService.setHtmlComposer();
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "Hello");
+    await tripleClick(editor.editable.querySelector("p"));
+    await press("Control+b");
+    await click(".o-mail-Composer-send:enabled");
+    await click(".o-mail-Message[data-persistent] strong:contains(Hello)");
 });
