@@ -45,12 +45,12 @@ export class MultiCreatePopover extends Component {
         Object.assign(this.multiCreateData.timeRange, timeRange);
     }
 
-    async onAdd() {
+    async isValidMultiCreateData() {
         const isValid = await this.multiCreateData.record.checkValidity({
             displayNotification: true,
         });
         if (!isValid) {
-            return;
+            return false;
         }
         if (this.multiCreateData.timeRange) {
             const { start, end } = this.multiCreateData.timeRange;
@@ -59,7 +59,7 @@ export class MultiCreatePopover extends Component {
                     title: "User Error",
                     type: "warning",
                 });
-                return;
+                return false;
             }
             if (
                 luxon.DateTime.fromObject(start.toObject()) >
@@ -69,10 +69,17 @@ export class MultiCreatePopover extends Component {
                     title: "User Error",
                     type: "warning",
                 });
-                return;
+                return false;
             }
         }
-        this.props.onAdd(this.multiCreateData);
-        this.props.close();
+        return true;
+    }
+
+    async onAdd() {
+        const isValid = await this.isValidMultiCreateData();
+        if (isValid) {
+            this.props.onAdd(this.multiCreateData);
+            this.props.close();
+        }
     }
 }

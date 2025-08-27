@@ -1,8 +1,7 @@
-import { MultiSelectionButtons } from "@web/views/view_components/multi_selection_buttons";
-import { useService } from "@web/core/utils/hooks";
-import { useState } from "@odoo/owl";
 import { WorkEntryMultiCreatePopover } from "@hr_work_entry/views/work_entry_calendar/work_entry_multi_create_popover";
+import { useService } from "@web/core/utils/hooks";
 import { addFieldDependencies } from "@web/model/relational_model/utils";
+import { MultiSelectionButtons } from "@web/views/view_components/multi_selection_buttons";
 
 export class WorkEntryCalendarMultiSelectionButtons extends MultiSelectionButtons {
     static template = "hr_work_entry.WorkEntryCalendarMultiSelectionButtons";
@@ -12,22 +11,23 @@ export class WorkEntryCalendarMultiSelectionButtons extends MultiSelectionButton
     };
 
     setup() {
-        super.setup(...arguments);
-        this.orm = useService("orm");
+        super.setup();
         this.actionService = useService("action");
-        this.state = useState({ favoritesWorkEntries: null });
+    }
+
+    get favoritesWorkEntries() {
+        return this.props.reactive.userFavoritesWorkEntries;
     }
 
     /**
      * @override
      */
     getMultiCreatePopoverProps() {
-        return {
-            ...super.getMultiCreatePopoverProps(),
-            onReplace: (multiCreateData) => {
-                this.props.reactive.onQuickReplace(multiCreateData);
-            },
-        };
+        const props = super.getMultiCreatePopoverProps();
+        props.onQuickReplace = (values) => {
+            this.props.reactive.onQuickReplace(values);
+        }
+        return props;
     }
 
     /**
@@ -46,32 +46,16 @@ export class WorkEntryCalendarMultiSelectionButtons extends MultiSelectionButton
         );
     }
 
-    get favoritesWorkEntries() {
-        return this.props.reactive.userFavoritesWorkEntries;
-    }
-
-    createFakeMultiCreateData(workEntryType) {
-        const multiCreateData = {
-            timeRange: this.props.timeRange && { ...this.props.timeRange },
-            record: {
-                data: {
-                    employee_id: this.actionService.currentController.currentState.active_id,
-                    duration: -1,
-                    work_entry_type_id: workEntryType.id,
-                },
-                fields: {
-                    employee_id: { type: "many2one" },
-                    duration: { type: "float" },
-                    work_entry_type_id: { type: "many2one" },
-                },
-            },
+    makeValues(workEntryTypeId) {
+        return {
+            employee_id: this.actionService.currentController.currentState.active_id,
+            duration: -1,
+            work_entry_type_id: workEntryTypeId,
         };
-        multiCreateData.record.getChanges = () => multiCreateData.record.data;
-        return multiCreateData;
     }
 
-    async onQuickReplace(workEntryType) {
-        const multiCreateData = this.createFakeMultiCreateData(workEntryType);
-        this.props.reactive.onQuickReplace(multiCreateData);
+    async onQuickReplace(workEntryTypeId) {
+        const values = this.makeValues(workEntryTypeId);
+        this.props.reactive.onQuickReplace(values);
     }
 }
