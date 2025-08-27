@@ -27,11 +27,6 @@ class WebsiteSaleMegaMenuOptionPlugin extends Plugin {
         builder_actions: {
             ToggleFetchEcomCategoriesAction,
         },
-        dropzone_selector: {
-            selector: ".o_mega_menu .nav > .nav-link",
-            dropIn: ".o_mega_menu nav",
-            dropNear: ".o_mega_menu .nav-link",
-        },
     };
 }
 

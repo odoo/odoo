@@ -19,6 +19,11 @@ export class MegaMenuOptionPlugin extends Plugin {
                 },
             }),
         ],
+        dropzone_selector: {
+            selector: ".o_mega_menu .nav > .nav-link",
+            dropIn: ".o_mega_menu nav",
+            dropNear: ".o_mega_menu .nav-link",
+        },
         save_handlers: this.saveMegaMenuClasses.bind(this),
         no_parent_containers: ".o_mega_menu",
         is_unremovable_selector: ".o_mega_menu > section",
