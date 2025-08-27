@@ -491,6 +491,7 @@ const ALLOWED_GLOBAL_KEYS = [
     "ace", // Ace editor
     // Bootstrap.js is voluntarily ignored as it is deprecated
     "Chart", // Chart.js
+    "DiffMatchPatch", // Diff Match Patch
     "DOMPurify", // DOMPurify
     "FullCalendar", // Full Calendar
     "L", // Leaflet

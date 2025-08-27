@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 /**
  * @odoo
  * This file contains 2 modifications from the original 'diff_match_patch.js' file:
@@ -10,6 +8,7 @@
  * 2. this comment block has been prepended and an extra 'export' block has been
  *    appended at the end as to make it fit into the Odoo module system.
  */
+((exports) => {
 
 /**
  * Diff Match and Patch
@@ -1560,9 +1559,10 @@ diff_match_patch.patch_obj.prototype.toString = function () {
  * @odoo
  * Export main object and attach useful variables
  */
-
-export const DiffMatchPatch = Object.assign(diff_match_patch, {
+exports.DiffMatchPatch = Object.assign(diff_match_patch, {
     DIFF_DELETE,
     DIFF_INSERT,
-    DIFF_EQUAL
+    DIFF_EQUAL,
 });
+
+})(window.top);
