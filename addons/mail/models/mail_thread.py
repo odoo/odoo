@@ -74,8 +74,7 @@ class MailThread(models.AbstractModel):
 
      - _mail_flat_thread: if set to True, all messages without parent_id
        are automatically attached to the first message posted on the
-       resource. If set to False, the display of Chatter is done using
-       threads, and no parent_id is automatically set.
+       resource. If set to False, threads are supported and no parent is forced.
      - _mail_post_access: required document access when posting on the document.
        Equivalent to: 'create' rights on mail.message depends notably on
        document rights, which can be controller using this attribute. Defaults
@@ -119,7 +118,7 @@ class MailThread(models.AbstractModel):
     '''
     _name = 'mail.thread'
     _description = 'Email Thread'
-    _mail_flat_thread = True  # flatten the discussion history
+    _mail_flat_thread = True  # link orphan messages to the first message
     _mail_thread_customer = False  # subscribe customer when being in post recipients
     _mail_post_access = 'write'  # access required on the document to post on it
     _primary_email = 'email'  # Must be set for the models that can be created by alias
@@ -2951,32 +2950,23 @@ class MailThread(models.AbstractModel):
         return real_author
 
     def _message_compute_parent_id(self, parent_id):
-        # parent management, depending on ``_mail_flat_thread``
-        # ``_mail_flat_thread`` True: no free message. If no parent, find the first
-        # posted message and attach new message to it. If parent, get back to the first
-        # ancestor and attach it. We don't keep hierarchy (one level of threading).
-        # ``_mail_flat_thread`` False: free message = new thread (think of mailing lists).
-        # If parent get up one level to try to flatten threads without completely
-        # removing hierarchy.
+        """ Parent management, depending on ``_mail_flat_thread``. If "flat"
+        and no parent is given, link to ancestor. Otherwise just check it
+        is a valid parent for the thread, otherwise link to ancestor. """
         MailMessage_sudo = self.env['mail.message'].sudo()
-        if self._mail_flat_thread and not parent_id:
-            parent_message = MailMessage_sudo.search([('res_id', '=', self.id), ('model', '=', self._name), ('message_type', '!=', 'user_notification')], order="id ASC", limit=1)
+        current_ancestor = self.env['mail.message'].sudo()
+        if parent_id:
+            current_ancestor = MailMessage_sudo.search(
+                [('id', '=', parent_id), ('model', '=', self._name), ('res_id', '=', self.id)],
+            )
+        if self._mail_flat_thread and not current_ancestor:
             # parent_message searched in sudo for performance, only used for id.
             # Note that with sudo we will match message with internal subtypes.
-            parent_id = parent_message.id if parent_message else False
-        elif parent_id:
-            current_ancestor = MailMessage_sudo.search([('id', '=', parent_id), ('parent_id', '!=', False)])
-            if self._mail_flat_thread:
-                if current_ancestor:
-                    # avoid loops when finding ancestors
-                    processed_list = []
-                    while (current_ancestor.parent_id and current_ancestor.parent_id not in processed_list):
-                        processed_list.append(current_ancestor)
-                        current_ancestor = current_ancestor.parent_id
-                    parent_id = current_ancestor.id
-            else:
-                parent_id = current_ancestor.parent_id.id if current_ancestor.parent_id else parent_id
-        return parent_id
+            current_ancestor = MailMessage_sudo.search(
+                [('res_id', '=', self.id), ('model', '=', self._name), ('message_type', '!=', 'user_notification')],
+                order="id ASC", limit=1,
+            )
+        return current_ancestor.id
 
     def _message_compute_subject(self):
         """ Get the default subject for a message posted in this record's
