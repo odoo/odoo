@@ -259,6 +259,7 @@
             <field name="arch" type="xml">
                 <search string="Search history">
                     <field name="livechat_agent_partner_ids" string="Agent"/>
+                    <field name="description"/>
                     <field name="country_id"/>
                     <field name="livechat_lang_id"/>
                     <field name="livechat_expertise_ids" string="Expertise"/>
@@ -307,6 +308,7 @@
             <field name="arch" type="xml">
                 <list js_class="im_livechat.discuss_channel_looking_for_help_list" sample="1" string="History" create="false" default_order="create_date asc">
                     <field name="create_date" string="Date"/>
+                    <field name="description" string="Description" optional="show"/>
                     <field name="livechat_agent_history_ids" string="Agents" widget="many2many_tags_avatar" optional="show"/>
                     <field name="livechat_bot_history_ids" string="Bot" widget="many2many_tags_avatar" optional="hide"/>
                     <field name="livechat_customer_history_ids" string="Customer" widget="many2many_tags_avatar" optional="show"/>

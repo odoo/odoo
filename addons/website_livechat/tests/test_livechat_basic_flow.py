@@ -198,6 +198,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "country_id": False,
                         "create_uid": self.user_public.id,
                         "default_display_mode": False,
+                        "description": False,
                         "fetchChannelInfoState": "fetched",
                         "id": channel.id,
                         "invited_member_ids": [("ADD", [])],
