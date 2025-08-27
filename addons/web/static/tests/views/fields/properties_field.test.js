@@ -205,6 +205,7 @@ class ResCompany extends models.Model {
                     name: "property_1",
                     string: "My Char",
                     type: "char",
+                    suffix: "suffix",
                     view_in_cards: true,
                 },
                 {
@@ -1457,13 +1458,13 @@ test("properties: kanban view", async () => {
     });
 
     // check second card
-    expect(".o_kanban_record:nth-child(2) .o_card_property_field:nth-child(3) span").toHaveText(
+    expect(".o_kanban_record:nth-child(2) .o_card_property_field:nth-child(3)").toHaveText(
         "char value 4"
     );
-    expect(".o_kanban_record:nth-child(2) .o_card_property_field:nth-child(1) span").toHaveText(
-        "char value"
+    expect(".o_kanban_record:nth-child(2) .o_card_property_field:nth-child(1)").toHaveText(
+        "char value\nsuffix"
     );
-    expect(".o_kanban_record:nth-child(2) .o_card_property_field:nth-child(2) span").toHaveText(
+    expect(".o_kanban_record:nth-child(2) .o_card_property_field:nth-child(2)").toHaveText(
         "C"
     );
 
@@ -1561,8 +1562,8 @@ test("properties: kanban view with multiple sources of properties definitions", 
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
     expect(queryAllTexts(".o_kanban_record:not(.o_kanban_ghost)")).toEqual([
-        "Company 1\nfirst partner\nchar value\nB",
-        "Company 1\nsecond partner\nchar value\nC\nchar value 4",
+        "Company 1\nfirst partner\nchar value\nsuffix\nB",
+        "Company 1\nsecond partner\nchar value\nsuffix\nC\nchar value 4",
         "Company 1\nthird partner",
         "Company 1\nfourth partner",
         "Company 2\nother partner\nMy Integer\n1",
@@ -1872,6 +1873,43 @@ test("properties: default value date", async () => {
     await animationFrame();
     expect(".o_property_field_popover .o_field_property_definition_value input").toHaveValue(
         "01/03/2022"
+    );
+});
+
+test("properties: suffix", async () => {
+    onRpc("has_access", () => true);
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="properties"/>
+                    </group>
+                </sheet>
+            </form>`,
+        actionMenus: {},
+    });
+
+    expect(".o_field_properties").toHaveCount(1);
+
+    await toggleActionMenu();
+    await toggleMenuItem("Edit Properties");
+
+    await click(".o_field_property_add button");
+    await waitFor(".o_property_field_popover");
+
+    await click(".o_field_property_definition_suffix input");
+    await edit("kg", { confirm: "Enter" });
+    await animationFrame();
+    await closePopover();
+
+    expect(".o_field_properties .o_property_field:last .o_property_field_value_suffix").toHaveText(
+        "kg"
     );
 });
 

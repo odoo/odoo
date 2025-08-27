@@ -176,6 +176,19 @@
                         record="props.record"
                     />
                 </div>
+                <t t-if="state.propertyDefinition.type !== 'separator'">
+                    <div class="o_field_property_definition_suffix d-contents mb-3 mb-sm-0">
+                        <label class="o_form_label align-self-center text-900">Suffix</label>
+                        <input
+                            class="o_input"
+                            type="text"
+                            placeholder=""
+                            autocomplete="off"
+                            t-model="state.propertyDefinition.suffix"
+                            t-on-change="onSuffixChange"
+                        />
+                    </div>
+                </t>
                 <div t-if="state.propertyDefinition.type !== 'separator'"
                     class="o_field_property_definition_kanban d-contents mb-3 mb-sm-0">
                     <label t-att-for="getUniqueDomID('kanban')" class="o_form_label align-self-center text-900">

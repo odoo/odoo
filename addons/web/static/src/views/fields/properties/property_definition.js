@@ -344,6 +344,18 @@ export class PropertyDefinition extends Component {
     }
 
     /**
+     * @param {Event & { target: HTMLInputElement }} ev
+     */
+    onSuffixChange(ev) {
+        const propertyDefinition = {
+            ...this.state.propertyDefinition,
+            suffix: ev.target.value,
+        };
+        this.props.onChange(propertyDefinition);
+        this.state.propertyDefinition = propertyDefinition;
+    }
+
+    /**
      * We renamed / created / removed tags.
      *
      * @param {array} newTags
