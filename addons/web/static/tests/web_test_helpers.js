@@ -156,12 +156,20 @@ export function defineWebModels() {
 
 /**
  * @param {string} bundleName
+ * @param {{ once?: boolean }} [options]
  */
-export function preloadBundle(bundleName) {
+export function preloadBundle(bundleName, options) {
+    const once = options?.once || false;
     before(async function preloadBundle() {
+        if (once) {
+            odoo.loader.preventGlobalDefine = true;
+        }
         mockFetch(globalCachedFetch);
         await loadBundle(bundleName);
         mockFetch(null);
+        if (once) {
+            odoo.loader.preventGlobalDefine = false;
+        }
     });
 }
 
