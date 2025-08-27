@@ -467,6 +467,7 @@ const ALLOWED_GLOBAL_KEYS = [
     "Chart", // Chart.js
     "Cropper", // Cropper.js
     "DOMPurify", // DOMPurify
+    "Diff2Html",
     "FullCalendar", // Full Calendar
     "L", // Leaflet
     "lamejs", // LameJS
