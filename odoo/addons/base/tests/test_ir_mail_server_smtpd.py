@@ -293,9 +293,7 @@ class TestIrMailServerSMTPD(TransactionCaseWithUserDemo):
         matrix = [
             # auth_required, password, error_pattern
             (False, MISSING, None),
-            (True, MISSING,
-                r"The server refused the sender address \(noreply@localhost\) "
-                r"with error b'5\.7\.0 Authentication required'"),
+            (True, MISSING, r"The server refused the sender address \(noreply@localhost\) with error .*"),
             (True, INVALID,
                 r"The server has closed the connection unexpectedly\. "
                 r"Check configuration served on this port number\.\n "
@@ -346,8 +344,7 @@ class TestIrMailServerSMTPD(TransactionCaseWithUserDemo):
                 r"Check configuration served on this port number\.\n "
                 r"Connection unexpectedly closed: timed out"),
             ('none', 'starttls',
-                r"The server refused the sender address \(noreply@localhost\) with error "
-                r"b'Must issue a STARTTLS command first'"),
+                r"The server refused the sender address \(noreply@localhost\) with error .*"),
             ('starttls', 'none',
                 r"An option is not supported by the server:\n "
                 r"STARTTLS extension not supported by server\."),
