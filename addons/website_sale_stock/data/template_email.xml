@@ -1,30 +1,45 @@
 <?xml version="1.0" ?>
 <odoo>
     <template id="availability_email_body">
+        <t t-set="partner" t-value="object"/>
+        <t t-set="website" t-value="env['website'].get_current_website()"/>
         <div id="body">
-            <p>Dear Customer,</p>
-            <p>The following product is now available.</p>
-            <div style="display: flex; justify-content: center; width: 100%;">
-                <a t-attf-href="#{product.website_url}">
-                    <img t-attf-src="/web/image/product.product/#{product.id}/image_1920"/>
-                </a>
-            </div>
-            <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; width: 100%;">
-                <p t-out="product.name"/>
-                <p t-if="product.product_template_attribute_value_ids"
-                   style="margin-left: 0.5em;">
-                    (<t
-                    t-out="', '.join(product.product_template_attribute_value_ids.mapped('name'))"
-                    />)
-                </p>
-            </div>
-            <p t-out="product.description_sale"/>
-            <div style="display: flex; justify-content: center; width: 100%;">
-                <a t-attf-href="#{product.website_url}" t-attf-style="background-color: {{product.website_id.get_current_website().company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{product.website_id.get_current_website().company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-size:13px;">
+            <img t-att-src="website.image_url(website, 'logo')" style="display: block; height: 50px; margin: 0 0 16px;" alt="Logo"/>
+            <p>Hello <t t-out="partner.name"/>,</p>
+            <p>The product you were waiting for is now back in stock!</p>
+            <t t-if="not is_html_empty(user.signature)">
+                <div style="font-size: 14px; margin: 0 0 16px;"><t t-out="user.signature or ''">Mitchell Admin</t></div>
+            </t>
+            <div t-attf-style="margin-bottom: 22px; font-size: 14px;">
+                <a t-attf-href="#{product.website_url}" t-attf-style="background-color: {{product.website_id.get_current_website().company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{product.website_id.get_current_website().company_id.email_primary_color or '#fff'}}; border-radius: 5px; font-size:14px;">
                     Order Now
                 </a>
             </div>
-            <p>Regards,</p>
+            <div style="margin-bottom: 12px;">
+                <table width="100%" style="max-width: 590px; border-collapse: collapse; font-size: 14px;" role="presentation">
+                    <tr>
+                        <td width="24%" style="max-width: 120px; padding: 0 10px 10px 0; vertical-align: top;">
+                            <img t-att-src="website.image_url(product, 'image_1920')" style="width: 100px; height: 100px; object-fit: contain;" alt="Product image"/>
+                        </td>
+                        <td style="padding-bottom: 8px; vertical-align: top;">
+                            <h2 t-attf-style="mso-line-height-rule: exactly; margin: 0; font-size: 14px; color: {{
+                                website.company_id.email_secondary_color or '#875A7B'
+                            }};">
+                                <strong t-out="product.name or ''">Desk Combination</strong>
+                            </h2>
+                            <p t-if="product.product_template_attribute_value_ids" style="margin-left: 4px 0;">
+                                (<t
+                                t-out="', '.join(product.product_template_attribute_value_ids.mapped('name'))"
+                                />)
+                            </p>
+                            <t t-out="product.description_ecommerce"/>
+                        </td>
+                        <td width="19%" align="right" style="max-width: 100%; vertical-align: top;">
+                            <t t-out="product.list_price" t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </template>
 </odoo>

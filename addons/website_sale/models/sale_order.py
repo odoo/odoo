@@ -213,6 +213,8 @@ class SaleOrder(models.Model):
                 'default_model': 'sale.order',
                 'default_template_id': template_id,
                 'website_sale_send_recovery_email': True,
+                # Already shown in the header (see `_notify_get_recipients_groups`)
+                'hide_recovery_button': True,
             },
         }
 
