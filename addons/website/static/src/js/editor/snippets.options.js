@@ -4330,20 +4330,17 @@ options.registry.Button = options.Class.extend({
                 } else if (siblingButtonEl.classList.contains("btn-lg")) {
                     this.$target[0].classList.add("btn-lg");
                 }
-            } else {
+            } else if (!siblingButtonEl && !this.$target[0].closest("p")) {
                 // To align with the editor's behavior, we need to enclose the
-                // button in a <p> tag if it's not dropped within a <p> tag. We only
-                // put the dropped button in a <p> if it's not next to another
-                // button, because some snippets have buttons that aren't inside a
-                // <p> (e.g. s_text_cover).
+                // button in a <p> tag if it's not dropped within a <p> tag. We 
+                // only put the dropped button in a <p> if it's not next to 
+                // another button (i.e. no siblings), because some snippets have
+                // buttons that aren't inside a <p> (e.g. s_text_cover).
                 // TODO: this definitely needs to be fixed at web_editor level.
                 // Nothing should prevent adding buttons outside of a paragraph.
-                const btnContainerEl = this.$target[0].closest("p");
-                if (!btnContainerEl) {
-                    const paragraphEl = document.createElement("p");
-                    this.$target[0].parentNode.insertBefore(paragraphEl, this.$target[0]);
-                    paragraphEl.appendChild(this.$target[0]);
-                }
+                const paragraphEl = document.createElement("p");
+                this.$target[0].parentNode.insertBefore(paragraphEl, this.$target[0]);
+                paragraphEl.appendChild(this.$target[0]);
             }
             this.$target[0].classList.remove("s_custom_button");
         }
