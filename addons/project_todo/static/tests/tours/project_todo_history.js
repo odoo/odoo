@@ -27,7 +27,7 @@ function changeDescriptionContentAndSave(newContent) {
 }
 
 registry.category("web_tour.tours").add("project_todo_history_tour", {
-    url: "/odoo",
+    url: "/odoo?debug=1,tests",
     steps: () => [stepUtils.showAppsMenuItem(), {
         content: "Open the Todo app",
         trigger: ".o_app[data-menu-xmlid='project_todo.menu_todo_todos']",
@@ -65,44 +65,61 @@ registry.category("web_tour.tours").add("project_todo_history_tour", {
         content: "Open History Dialog",
         trigger: ".o_menu_item i.fa-history",
         run: "click",
+
     }, {
-        content: "Verify that 4 revisions are displayed (default empty description after the creation of the todo + 3 edits)",
+        trigger: ".modal .html-history-dialog.html-history-loaded",
+    }, {
+        content: "Verify that 5 revisions are displayed (default empty description after the creation of the todo + 3 edits)",
         trigger: ".modal .html-history-dialog .revision-list .btn",
         run: function () {
             const items = document.querySelectorAll(".revision-list .btn");
-            if (items.length !== 4) {
-                throw new Error('Expect 4 Revisions in the history dialog, got ' + items.length);
+            if (items.length !== 5) {
+                throw new Error('Expect 5 Revisions in the history dialog, got ' + items.length);
             }
         },
     }, {
-        content: "Verify that the active revision (revision 4) is related to the third edit",
-        trigger: `.modal .history-container .tab-pane:contains("${baseDescriptionContent} 2")`,
-        run: "click",
+        trigger: ".modal .html-history-dialog.html-history-loaded",
+    }, {
+        content: "Verify that the active revision (revision 4) is related to the current version",
+        trigger: ".modal .history-container .history-content-view .history-view-inner",
+        run: async function () {
+            if( this.anchor.textContent !== `${baseDescriptionContent} 3`) {
+                console.error(`Expect revision content to be "${baseDescriptionContent} 3", got "${this.anchor.textContent}"`);
+            }
+        },
     }, {
         content: "Go to the third revision related to the second edit",
-        trigger: ".modal .html-history-dialog .revision-list .btn:nth-child(2)",
+        trigger: ".modal .html-history-dialog .revision-list .btn:nth-child(3)",
         run: "click",
+    }, {
+        trigger: ".modal .html-history-dialog.html-history-loaded",
     }, {
         content: "Verify that the active revision is the one clicked in the previous step",
-        trigger: `.modal .history-container .tab-pane:contains("${baseDescriptionContent} 1")`,
-        run: "click",
+        trigger: ".modal .history-container .history-content-view .history-view-inner",
+        run: async function () {
+            if( this.anchor.textContent !== `${baseDescriptionContent} 1`) {
+                console.error(`Expect revision content to be "${baseDescriptionContent} 1", got "${this.anchor.textContent}"`);
+            }
+        },
     }, {
-        content: "Go to comparison tab",
-        trigger: ".modal .history-container .nav-item:contains(Comparison) a",
+        // click on the split comparison tab
+        trigger: '.history-container .history-view-top-bar a:contains(Comparison)',
         run: "click",
     }, {
         content: "Verify comparaison text",
-        trigger: ".modal .history-container .tab-pane",
+        trigger: ".modal .history-container .history-comparison-view",
         run: function () {
             const comparaisonHtml = this.anchor.innerHTML;
-            const correctHtml = `<added>${baseDescriptionContent} 1</added><removed>${baseDescriptionContent} 3</removed>`;
+            const correctHtml = `<added>${baseDescriptionContent} 3</added><removed>${baseDescriptionContent} 1</removed>`;
             if (!comparaisonHtml.includes(correctHtml)) {
                 console.error(`Expect comparison to be ${correctHtml}, got ${comparaisonHtml}`);
             }
         },
     }, {
+        trigger: ".modal .html-history-dialog.html-history-loaded",
+    }, {
         content: "Click on Restore History btn to get back to the selected revision in the previous step",
-        trigger: ".modal button.btn-primary:contains(/^Restore history$/)",
+        trigger: ".modal button.btn-primary:enabled",
         run: "click",
     }, {
         content: "Verify the confirmation dialog is opened",
