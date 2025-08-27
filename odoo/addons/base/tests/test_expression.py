@@ -1818,6 +1818,37 @@ class TestQueries(TransactionCase):
         ''']):
             Model.search([])
 
+    def test_access_rules_active_test_neg(self):
+        Model = self.env['res.partner'].with_user(self.env.ref('base.user_admin'))
+        self.env['ir.rule'].search([]).unlink()
+        self.env['ir.rule'].create([{
+            'name': 'partner users rule',
+            'model_id': self.env['ir.model']._get('res.partner').id,
+            'domain_force': str(['!', ('user_ids.login', 'not like', '%@%')]),
+        }, {
+            'name': 'partners rule',
+            'model_id': self.env['ir.model']._get('res.partner').id,
+            'domain_force': str(['!', ('write_uid.login', '!=', 'John')]),
+        }])
+        Model.search([])
+
+        with self.assertQueries(['''
+            SELECT "res_partner"."id"
+            FROM "res_partner"
+            LEFT JOIN "res_users" AS "res_partner__write_uid"
+            ON ("res_partner"."write_uid" = "res_partner__write_uid"."id")
+            WHERE "res_partner"."active" IS TRUE AND (
+            NOT EXISTS(SELECT FROM (
+                SELECT "res_users"."partner_id" AS __inverse
+                FROM "res_users"
+                WHERE "res_users"."login" NOT LIKE %s
+            ) AS __sub WHERE __inverse = "res_partner"."id")
+            AND ("res_partner"."write_uid" IS NULL OR "res_partner__write_uid"."login" IN %s)
+            )
+            ORDER BY "res_partner"."complete_name" ASC, "res_partner"."id" DESC
+        ''']):
+            Model.search([])
+
     def test_rec_names_search(self):
         Model = self.env['ir.model']
 
