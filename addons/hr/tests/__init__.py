@@ -2,6 +2,9 @@
 
 from . import test_attendances
 from . import test_calendar_sync
+from . import test_employee
+from . import test_employee_deletion
+from . import test_employee_ui
 from . import test_hr_employee
 from . import test_hr_employee_public
 from . import test_channel

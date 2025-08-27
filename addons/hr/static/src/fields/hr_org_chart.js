@@ -9,7 +9,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 
 class HrOrgChartPopover extends Component {
-    static template = "hr_org_chart.hr_orgchart_emp_popover";
+    static template = "hr.hr_orgchart_emp_popover";
     static props = {
         employee: Object,
         close: Function,
@@ -36,7 +36,7 @@ class HrOrgChartPopover extends Component {
 }
 
 export class HrOrgChart extends Component {
-    static template = "hr_org_chart.hr_org_chart";
+    static template = "hr.hr_org_chart";
     static props = {...standardFieldProps};
     async setup() {
         super.setup();
