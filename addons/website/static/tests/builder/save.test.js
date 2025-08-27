@@ -16,7 +16,7 @@ import {
     setupWebsiteBuilder,
     waitForEndOfOperation,
     wrapExample,
-} from "./website_helpers";
+} from "@website/../tests/builder/website_helpers";
 import { Component, xml } from "@odoo/owl";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";

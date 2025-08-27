@@ -4,7 +4,11 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { reactive, xml } from "@odoo/owl";
 import { contains, defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
-import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../../website_helpers";
+import {
+    addOption,
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
 
 class Test extends models.Model {
     _name = "test";

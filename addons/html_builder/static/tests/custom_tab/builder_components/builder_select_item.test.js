@@ -17,7 +17,7 @@ import {
     addOption,
     defineWebsiteModels,
     setupWebsiteBuilder,
-} from "../../website_helpers";
+} from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
 

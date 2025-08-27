@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
+import { defineWebsiteModels, setupWebsiteBuilder } from "@website/../tests/builder/website_helpers";
 import { waitFor } from "@odoo/hoot-dom";
 
 defineWebsiteModels();

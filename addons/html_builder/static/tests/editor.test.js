@@ -2,7 +2,10 @@ import { insertText, pasteHtml } from "@html_editor/../tests/_helpers/user_actio
 import { expect, test, describe } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
 import { click, manuallyDispatchProgrammaticEvent, waitFor, queryOne } from "@odoo/hoot-dom";
 import { isTextNode } from "@html_editor/utils/dom_info";
 import { parseHTML } from "@html_editor/utils/html";
