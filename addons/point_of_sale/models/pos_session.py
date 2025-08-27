@@ -102,49 +102,15 @@ class PosSession(models.Model):
         return super().write(vals)
 
     @api.model
-    def _load_pos_data_relations(self, model, fields):
-        model_fields = self.env[model]._fields
-        relations = {}
-
-        for name, params in model_fields.items():
-            if (name not in fields and len(fields)) or (params.manual and not len(fields)):
-                continue
-
-            if params.comodel_name:
-                relations[name] = {
-                    'name': name,
-                    'model': params.model_name,
-                    'compute': bool(params.compute),
-                    'related': bool(params.related),
-                    'relation': params.comodel_name,
-                    'type': params.type,
-                }
-                if params.type == 'many2one' and params.ondelete:
-                    relations[name]['ondelete'] = params.ondelete
-                if params.type == 'one2many' and params.inverse_name:
-                    relations[name]['inverse_name'] = params.inverse_name
-                if params.type == 'many2many':
-                    relations[name]['relation_table'] = self.env[model]._fields[name].relation
-            else:
-                relations[name] = {
-                    'name': name,
-                    'type': params.type,
-                    'compute': bool(params.compute),
-                    'related': bool(params.related),
-                }
-
-        return relations
-
-    @api.model
     def _load_pos_data_models(self, config):
         return ['pos.config', 'pos.preset', 'resource.calendar.attendance', 'pos.order', 'pos.order.line', 'pos.pack.operation.lot', 'pos.payment', 'pos.payment.method', 'pos.printer',
             'pos.category', 'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.template', 'product.product', 'product.attribute', 'product.attribute.custom.value',
             'product.template.attribute.line', 'product.template.attribute.value', 'product.combo', 'product.combo.item', 'res.users', 'res.partner', 'product.uom',
             'decimal.precision', 'uom.uom', 'res.country', 'res.country.state', 'res.lang', 'product.category', 'product.pricelist', 'product.pricelist.item',
-            'account.cash.rounding', 'account.fiscal.position', 'stock.picking.type', 'res.currency', 'pos.note', 'product.tag', 'ir.module.module', 'account.move', 'account.account']
+            'account.cash.rounding', 'account.fiscal.position', 'stock.picking.type', 'res.currency', 'pos.note', 'product.tag', 'account.move', 'account.account']
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
+    def _load_pos_data_domain(self, data):
         return [('id', '=', self.id)]
 
     @api.model
@@ -154,49 +120,96 @@ class PosSession(models.Model):
             'payment_method_ids', 'state', 'update_stock_at_closing', 'cash_register_balance_start', 'access_token'
         ]
 
-    def load_data(self, models_to_load):
-        response = {}
-        response['pos.session'] = self._load_pos_data_search_read(response, self.config_id)
+    def load_data(self, local_data={}):
+        """
+        data contains a dictionary with the following structure:
+        {
+            'models': [],
+            'records': {
+                'model.1': {id1: server_date1, id2: server_date2, ...},
+                'model.2': {id1: server_date1, id2: server_date2, ...},
+                ...
+            },
+            'search_params': {
+                'model.1': {
+                    'domain': domain,
+                    'offset': offset,
+                    'limit': limit,
+                }
+            },
+            'only_records': False, # if True, only returns the records
+        }
+        """
+        models = self._load_pos_data_models(self.config_id)
+        metadata = self._load_metadata(models, local_data.get('search_params', {}))
+        to_read = metadata
+        if local_data['models']:
+            to_read = {model: data for model, data in metadata.items() if model in local_data.get('models', [])}
+        data = self._read_from_metadata(to_read, local_data, self.config_id)
+        if local_data.get('only_records'):
+            return {model: d['records'] for model, d in data.items()}
+        elif local_data.get('records'):
+            # Add data to remove from the indexedDB
+            data_to_remove = self.filter_local_data({model: list(d.keys()) for model, d in local_data.get('records', {}).items()})
+            for model, ids in data_to_remove.items():
+                if model in data:
+                    data[model]['to_remove'] = ids
 
-        for model in self._load_pos_data_models(self.config_id):
-            if models_to_load and model not in models_to_load:
+        # If there are more models than last time, we need to add the metadata (especially fields and relations) to the response
+        for model, d in metadata.items():
+            if not model in data:
+                data[model] = {
+                    'records': [],
+                }
+            del d['records']
+            data[model].update(d)
+        return data
+
+    def _load_metadata(self, models, search_params={}):
+        records = {}
+        self._load_pos_metadata(records, search_params.get('pos.session', {'limit': 1}))
+        for model in models:
+            if model == 'pos.session':
                 continue
-
             try:
-                response[model] = self.env[model]._load_pos_data_search_read(response, self.config_id)
+                self.env[model]._load_pos_metadata(records, search_params.get(model, {}))
             except AccessError as e:
-                response[model] = []
+                records[model] = {
+                    **self.env[model]._load_pos_data_domain_and_dependencies(records),
+                    'records': self.env[model],
+                }
+                _logger.info("Could not load model %s due to AccessError: %s", model, e)
+        return records
+
+    @api.model
+    def _read_from_metadata(self, server_data, local_data, config_id):
+        response = {}
+        for model, data in server_data.items():
+            try:
+                del data['domain']
+                response[model] = self.env[model]._read_pos_data_from_metadata(data, local_data, config_id)
+            except AccessError as e:
+                response[model] = {
+                    **data,
+                    'records': [],
+                }
                 _logger.info("Could not load model %s due to AccessError: %s", model, e)
 
         return response
 
-    def load_data_params(self):
-        response = {}
-        fields = self._load_pos_data_fields(self.config_id)
-        response['pos.session'] = {
-            'fields': fields,
-            'relations': self._load_pos_data_relations('pos.session', fields)
-        }
-
-        for model in self._load_pos_data_models(self.config_id):
-            fields = self.env[model]._load_pos_data_fields(self.config_id)
-            response[model] = {
-                'fields': fields,
-                'relations': self._load_pos_data_relations(model, fields)
-            }
-
-        return response
-
     def filter_local_data(self, models_to_filter):
-        response = {}
+        non_existent_and_inactive_ids = {}
         for model, ids in models_to_filter.items():
-            existing_records = self.env[model].browse(ids).exists()
+            ids = list(map(int, ids))
+            try:
+                existing_active_records = self.env[model].search_read([('id', 'in', ids)], ['id'])
+            except AccessError:
+                continue
+            existing_active_records = [r['id'] for r in existing_active_records]
 
-            non_existent_ids = set(ids) - set(existing_records.ids)
-            inactive_ids = set(existing_records._unrelevant_records(self.config_id))
+            non_existent_and_inactive_ids[model] = list(set(ids) - set(existing_active_records))
 
-            response[model] = list(non_existent_ids | inactive_ids)
-        return response
+        return non_existent_and_inactive_ids
 
     def delete_opening_control_session(self):
         self.ensure_one()

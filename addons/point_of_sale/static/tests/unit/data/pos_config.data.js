@@ -11,6 +11,10 @@ export class PosConfig extends models.ServerModel {
         return [];
     }
 
+    _load_pos_data_dependencies() {
+        return [];
+    }
+
     register_new_device_identifier(self) {
         return {
             device_identifier: 1,

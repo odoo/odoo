@@ -16,22 +16,15 @@ class ProductTemplate(models.Model):
 
     self_order_visible = fields.Boolean(compute='_compute_self_order_visible')
 
-    def _load_pos_self_data_read(self, data, config):
-        domain = self._load_pos_self_data_domain(data, config)
+    @api.model
+    def _load_pos_self_data_read(self, records, config):
         fields = set(self._load_pos_self_data_fields(config))
-        products = self.search_read(
-            domain,
-            fields,
-            limit=config.get_limited_product_count(),
-            order='sequence,default_code,name',
-            load=False
-        )
+        products = records.sorted('sequence,default_code,name').read(fields, load=False)
 
-        combo_products = self.browse((p['id'] for p in products if p["type"] == "combo"))
+        combo_products = self.browse(p['id'] for p in products if p["type"] == "combo")
         combo_products_choice = self.search_read(
             [("id", 'in', combo_products.combo_ids.combo_item_ids.product_id.product_tmpl_id.ids), ("id", "not in", [p['id'] for p in products])],
             fields,
-            limit=config.get_limited_product_count(),
             order='sequence,default_code,name',
             load=False
         )
@@ -52,8 +45,8 @@ class ProductTemplate(models.Model):
         return params
 
     @api.model
-    def _load_pos_self_data_domain(self, data, config):
-        domain = super()._load_pos_self_data_domain(data, config)
+    def _load_pos_self_data_domain(self, data):
+        domain = super()._load_pos_self_data_domain(data)
         return Domain.AND([domain, [('self_order_available', '=', True)]])
 
     @api.onchange('available_in_pos')

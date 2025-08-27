@@ -18,6 +18,10 @@ export class PosPaymentMethod extends models.ServerModel {
         ];
     }
 
+    _load_pos_data_dependencies() {
+        return [];
+    }
+
     _records = [
         {
             id: 2,
@@ -30,6 +34,7 @@ export class PosPaymentMethod extends models.ServerModel {
             sequence: 1,
             payment_method_type: "none",
             default_qr: false,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 3,
@@ -42,6 +47,7 @@ export class PosPaymentMethod extends models.ServerModel {
             sequence: 2,
             payment_method_type: "none",
             default_qr: false,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 1,
@@ -54,6 +60,7 @@ export class PosPaymentMethod extends models.ServerModel {
             sequence: 0,
             payment_method_type: "none",
             default_qr: false,
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

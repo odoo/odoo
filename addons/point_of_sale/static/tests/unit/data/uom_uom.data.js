@@ -7,6 +7,10 @@ export class UomUom extends models.ServerModel {
         return ["id", "name", "factor", "is_pos_groupable", "parent_path", "rounding"];
     }
 
+    _load_pos_data_dependencies() {
+        return [];
+    }
+
     _records = [
         {
             id: 5,
@@ -15,6 +19,7 @@ export class UomUom extends models.ServerModel {
             is_pos_groupable: false,
             parent_path: "4/5/",
             rounding: 0.01,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 2,
@@ -23,6 +28,7 @@ export class UomUom extends models.ServerModel {
             is_pos_groupable: true,
             parent_path: "1/2/",
             rounding: 0.01,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 8,
@@ -31,6 +37,7 @@ export class UomUom extends models.ServerModel {
             is_pos_groupable: false,
             parent_path: "6/7/8/",
             rounding: 0.01,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 15,
@@ -39,6 +46,7 @@ export class UomUom extends models.ServerModel {
             is_pos_groupable: false,
             parent_path: "14/15/",
             rounding: 0.01,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 16,
@@ -47,6 +55,7 @@ export class UomUom extends models.ServerModel {
             is_pos_groupable: false,
             parent_path: "14/15/16/",
             rounding: 0.01,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 12,
@@ -55,6 +64,7 @@ export class UomUom extends models.ServerModel {
             is_pos_groupable: false,
             parent_path: "11/12/",
             rounding: 0.01,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 4,
@@ -63,6 +73,7 @@ export class UomUom extends models.ServerModel {
             is_pos_groupable: false,
             parent_path: "4/",
             rounding: 0.01,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 1,
@@ -71,6 +82,7 @@ export class UomUom extends models.ServerModel {
             is_pos_groupable: true,
             parent_path: "1/",
             rounding: 0.01,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 14,
@@ -79,6 +91,7 @@ export class UomUom extends models.ServerModel {
             is_pos_groupable: false,
             parent_path: "14/",
             rounding: 0.01,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 11,
@@ -87,6 +100,7 @@ export class UomUom extends models.ServerModel {
             is_pos_groupable: false,
             parent_path: "11/",
             rounding: 0.01,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 6,
@@ -95,6 +109,7 @@ export class UomUom extends models.ServerModel {
             is_pos_groupable: false,
             parent_path: "6/",
             rounding: 0.01,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 10,
@@ -103,6 +118,7 @@ export class UomUom extends models.ServerModel {
             is_pos_groupable: false,
             parent_path: "10/",
             rounding: 0.01,
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

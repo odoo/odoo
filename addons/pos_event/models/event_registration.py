@@ -29,7 +29,7 @@ class EventRegistration(models.Model):
         super()._compute_registration_status()
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
+    def _load_pos_data_domain(self, data):
         return False
 
     @api.model
@@ -59,3 +59,14 @@ class EventRegistration(models.Model):
         action['views'] = [(False, 'form')]
         action['res_id'] = self.pos_order_id.id
         return action
+
+    @api.model
+    def _load_data_relations(self, fields):
+        relations = super()._load_data_relations(fields)
+        # Force compute to False otherwise the frontend will not send the data
+        relations['email']['compute'] = False
+        relations['phone']['compute'] = False
+        relations['name']['compute'] = False
+        relations['company_name']['compute'] = False
+        relations['event_slot_id']['compute'] = False
+        return relations

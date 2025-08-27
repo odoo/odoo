@@ -3,7 +3,6 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_is_zero
 
 from itertools import groupby
 from collections import defaultdict
@@ -141,8 +140,8 @@ class StockPickingType(models.Model):
                 raise ValidationError(_("You cannot archive '%(picking_type)s' as it is used by POS configuration '%(config)s'.", picking_type=picking_type.name, config=pos_config.name))
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('id', '=', config.picking_type_id.id)]
+    def _load_pos_data_domain(self, data):
+        return [('id', '=', data['pos.config'].picking_type_id.id)]
 
     @api.model
     def _load_pos_data_fields(self, config):

@@ -7,6 +7,10 @@ export class ResourceCalendarAttendance extends models.ServerModel {
         return ["id", "hour_from", "hour_to", "dayofweek", "day_period"];
     }
 
+    _load_pos_data_dependencies() {
+        return [];
+    }
+
     _records = [
         {
             id: 1,
@@ -14,6 +18,7 @@ export class ResourceCalendarAttendance extends models.ServerModel {
             hour_to: 15,
             dayofweek: "1",
             day_period: "lunch",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 2,
@@ -21,6 +26,7 @@ export class ResourceCalendarAttendance extends models.ServerModel {
             hour_to: 22,
             dayofweek: "1",
             day_period: "evening",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 3,
@@ -28,6 +34,7 @@ export class ResourceCalendarAttendance extends models.ServerModel {
             hour_to: 15,
             dayofweek: "2",
             day_period: "lunch",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 4,
@@ -35,6 +42,7 @@ export class ResourceCalendarAttendance extends models.ServerModel {
             hour_to: 22,
             dayofweek: "2",
             day_period: "evening",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 5,
@@ -42,6 +50,7 @@ export class ResourceCalendarAttendance extends models.ServerModel {
             hour_to: 15,
             dayofweek: "3",
             day_period: "lunch",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 6,
@@ -49,6 +58,7 @@ export class ResourceCalendarAttendance extends models.ServerModel {
             hour_to: 22,
             dayofweek: "3",
             day_period: "evening",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 7,
@@ -56,6 +66,7 @@ export class ResourceCalendarAttendance extends models.ServerModel {
             hour_to: 15,
             dayofweek: "4",
             day_period: "lunch",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 8,
@@ -63,6 +74,7 @@ export class ResourceCalendarAttendance extends models.ServerModel {
             hour_to: 22,
             dayofweek: "4",
             day_period: "evening",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 9,
@@ -70,6 +82,7 @@ export class ResourceCalendarAttendance extends models.ServerModel {
             hour_to: 15,
             dayofweek: "5",
             day_period: "lunch",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 10,
@@ -77,6 +90,7 @@ export class ResourceCalendarAttendance extends models.ServerModel {
             hour_to: 22,
             dayofweek: "5",
             day_period: "evening",
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

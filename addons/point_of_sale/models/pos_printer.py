@@ -55,8 +55,8 @@ class PosPrinter(models.Model):
     )
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('id', 'in', config.printer_ids.ids)]
+    def _load_pos_data_domain(self, data):
+        return [('id', 'in', data['pos.config'].printer_ids.ids)]
 
     @api.model
     def _load_pos_data_fields(self, config):

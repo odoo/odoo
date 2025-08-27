@@ -250,17 +250,11 @@ export class PosStore extends WithLazyGetterTrap {
         ];
     }
 
-    async reloadData(fullReload = false) {
+    async reloadData() {
         const orders = this.models["pos.order"].getAll();
         this.device.saveUnusedNumber(orders);
         await this.data.resetIndexedDB();
-        const url = new URL(window.location.href);
-
-        if (fullReload) {
-            url.searchParams.set("limited_loading", "0");
-        }
-
-        window.location.href = url.href;
+        window.location.reload();
     }
 
     async showLoginScreen() {
@@ -599,10 +593,24 @@ export class PosStore extends WithLazyGetterTrap {
      * @returns {Promise<Object>}
      */
     async loadNewProducts(domain, offset = 0, limit = 0) {
+        const models = this.data.getRelatedModels("product.template");
+        const localData = await this.data.getCachedServerIdsFromIndexedDB(models);
+        const testLocalData = {
+            models: models,
+            records: localData,
+            search_params: {
+                "product.template": {
+                    domain: domain,
+                    offset: offset,
+                    limit: limit || false,
+                },
+            },
+            only_records: true,
+        };
         const result = await this.data.callRelated(
-            "product.template",
-            "load_product_from_pos",
-            [odoo.pos_config_id, domain, offset, limit],
+            "pos.session",
+            "load_data",
+            [odoo.pos_session_id, testLocalData],
             {},
             false
         );
@@ -1359,7 +1367,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     removePendingOrder(order) {
-        this.pendingOrder["create"].delete(order.id);
+        this.pendingOrder["create"].delete(order.uuid);
         this.pendingOrder["write"].delete(order.id);
         this.pendingOrder["delete"].delete(order.id);
         return true;
@@ -1445,21 +1453,6 @@ export class PosStore extends WithLazyGetterTrap {
             }
 
             this.postSyncAllOrders(newData["pos.order"]);
-
-            if (data["pos.session"].length > 0) {
-                // Replace the original session by the rescue one. And the rescue one will have
-                // a higher id than the original one since it's the last one created.
-                const sessions = this.models["pos.session"].sort((a, b) => a.id - b.id);
-                if (sessions.length > 1) {
-                    const sessionToDelete = sessions.slice(0, -1);
-                    this.models["pos.session"].deleteMany(sessionToDelete);
-                }
-                this.models["pos.order"]
-                    .getAll()
-                    .filter((order) => order.state === "draft")
-                    .forEach((order) => (order.session_id = this.session));
-            }
-
             orders.forEach((o) => this.removePendingOrder(o));
             return newData["pos.order"];
         } catch (error) {

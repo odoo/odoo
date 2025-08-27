@@ -7,6 +7,10 @@ export class AccountJournal extends models.ServerModel {
         return [];
     }
 
+    _load_pos_data_dependencies() {
+        return [];
+    }
+
     _records = [
         {
             id: 1,
@@ -14,6 +18,7 @@ export class AccountJournal extends models.ServerModel {
             type: "sale",
             code: "POS",
             company_id: 250,
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

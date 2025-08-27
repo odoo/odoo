@@ -46,8 +46,12 @@ class PosPayment(models.Model):
     _unique_uuid = models.Constraint('unique (uuid)', 'A payment with this uuid already exists')
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('pos_order_id', 'in', [order['id'] for order in data['pos.order']])]
+    def _load_pos_data_domain(self, data):
+        return [('pos_order_id', 'in', data['pos.order'].ids)]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['pos.order']
 
     @api.depends('amount', 'currency_id')
     def _compute_display_name(self):

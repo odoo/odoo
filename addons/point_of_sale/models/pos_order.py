@@ -54,8 +54,12 @@ class PosOrder(models.Model):
         raise UserError(_('No open session available. Please open a new session to capture the order.'))
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('state', '=', 'draft'), ('config_id', '=', config.id)]
+    def _load_pos_data_domain(self, data):
+        return [('state', '=', 'draft'), ('config_id', '=', data['pos.config'].id)]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['res.partner']
 
     @api.model
     def _process_order(self, order, existing_order):
@@ -1220,7 +1224,6 @@ class PosOrder(models.Model):
         account_moves = self.sudo().account_move | self.sudo().payment_ids.account_move_id
         return {
             'pos.order': self._load_pos_data_read(self, config) if config else [],
-            'pos.session': [],
             'pos.payment': self.env['pos.payment']._load_pos_data_read(self.payment_ids, config) if config else [],
             'pos.order.line': self.env['pos.order.line']._load_pos_data_read(self.lines, config) if config else [],
             'pos.pack.operation.lot': self.env['pos.pack.operation.lot']._load_pos_data_read(self.lines.pack_lot_ids, config) if config else [],
@@ -1505,8 +1508,12 @@ class PosOrderLine(models.Model):
     _unique_uuid = models.Constraint('unique (uuid)', 'An order line with this uuid already exists')
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('order_id', 'in', [order['id'] for order in data['pos.order']])]
+    def _load_pos_data_domain(self, data):
+        return [('order_id', 'in', data['pos.order'].ids)]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['pos.order']
 
     @api.model
     def _load_pos_data_fields(self, config):
@@ -1858,8 +1865,12 @@ class PosPackOperationLot(models.Model):
     product_id = fields.Many2one('product.product', related='pos_order_line_id.product_id', readonly=False)
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('pos_order_line_id', 'in', [line['id'] for line in data['pos.order.line']])]
+    def _load_pos_data_domain(self, data):
+        return [('pos_order_line_id', 'in', data['pos.order.line'].ids)]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['pos.order.line']
 
     @api.model
     def _load_pos_data_fields(self, config):
@@ -1878,8 +1889,8 @@ class AccountCashRounding(models.Model):
                 _("You are not allowed to change the cash rounding configuration while a pos session using it is already opened."))
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('id', '=', config.rounding_method.id)]
+    def _load_pos_data_domain(self, data):
+        return [('id', '=', data['pos.config'].rounding_method.id)]
 
     @api.model
     def _load_pos_data_fields(self, config):

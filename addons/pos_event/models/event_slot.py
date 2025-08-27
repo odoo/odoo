@@ -7,11 +7,11 @@ class EventSlot(models.Model):
     _inherit = ['event.slot', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
+    def _load_pos_data_domain(self, data):
         return [
             ('event_id.is_finished', '=', False),
-            ('event_id.company_id', '=', config.company_id.id),
-            ('event_id', 'in', [event['id'] for event in data['event.event']]),
+            ('event_id.company_id', '=', data['pos.config'].company_id.id),
+            ('event_id', 'in', data['event.event'].ids),
             ('start_datetime', '>=', fields.Datetime.now()),
         ]
 

@@ -7,9 +7,9 @@ class ProductPricelist(models.Model):
     _inherit = ['product.pricelist', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        pricelist_ids = [preset['pricelist_id'] for preset in data['pos.preset']]
-        return [('id', 'in', config._get_available_pricelists().ids + pricelist_ids)]
+    def _load_pos_data_domain(self, data):
+        pricelist_ids = data['pos.preset'].pricelist_id.ids
+        return [('id', 'in', data['pos.config']._get_available_pricelists().ids + pricelist_ids)]
 
     @api.model
     def _load_pos_data_fields(self, config):
@@ -21,11 +21,13 @@ class ProductPricelistItem(models.Model):
     _inherit = ['product.pricelist.item', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        product_tmpl_ids = [p['product_tmpl_id'] for p in data['product.product']]
-        product_ids = [p['id'] for p in data['product.product']]
-        product_categ = [c['id'] for c in data['product.category']]
-        pricelist_ids = [p['id'] for p in data['product.pricelist']]
+    def _load_pos_data_domain(self, data):
+
+        product_tmpl_ids = data['product.product'].product_tmpl_id.ids
+        product_ids = data['product.product'].ids
+        product_categ = data['product.category'].ids
+        pricelist_ids = data['product.pricelist'].ids
+
         now = fields.Datetime.now()
         return [
             ('pricelist_id', 'in', pricelist_ids),
@@ -35,6 +37,10 @@ class ProductPricelistItem(models.Model):
             '|', ('date_end', '=', False), ('date_end', '>=', now),
             '|', ('categ_id', '=', False), ('categ_id', 'in', product_categ),
         ]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['product.pricelist', 'product.product', 'product.category']
 
     @api.model
     def _load_pos_data_fields(self, config):

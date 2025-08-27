@@ -8,3 +8,7 @@ class ResCountryState(models.Model):
     @api.model
     def _load_pos_data_fields(self, config):
         return ['id', 'name', 'code', 'country_id']
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return [('id', 'in', data['res.country'].state_ids.ids + data['res.company'].state_id.ids)]

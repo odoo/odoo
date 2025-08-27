@@ -46,7 +46,6 @@ export class PosSession extends models.ServerModel {
             "res.currency",
             "pos.note",
             "product.tag",
-            "ir.module.module",
         ];
     }
 
@@ -66,66 +65,79 @@ export class PosSession extends models.ServerModel {
         ];
     }
 
+    _load_pos_data_dependencies() {
+        return [];
+    }
+
     // These methods are designed to be overridden to customize the POS data loading behavior using the provided `opts`.
     getModelsToLoad(opts) {
         return this._load_pos_data_models();
     }
 
     getModelFieldsToLoad(model, opts) {
-        return model._load_pos_data_fields();
+        const fields = model._load_pos_data_fields();
+        if (fields.length > 0) {
+            if (!fields.includes("id")) {
+                fields.push("id");
+            }
+
+            if (!fields.includes("write_date")) {
+                fields.push("write_date");
+            }
+        }
+        return fields;
+    }
+
+    getModelDependencies(model) {
+        return model._load_pos_data_dependencies();
     }
 
     processPosReadData(model, records, opts) {
         return (model._load_pos_data_read && model._load_pos_data_read(records)) || records;
     }
 
-    load_data_params(opts = {}) {
-        const modelToLoad = this.getModelsToLoad(opts);
-        const response = modelToLoad.reduce((acc, modelName) => {
-            acc[modelName] = {
-                fields: {},
-                relations: {},
+    _load_data_relations(model, fields) {
+        const response = {};
+        const serverModel = MockServer.env[model];
+        const posFields = this.getModelFieldsToLoad(serverModel, {});
+        const allFields = serverModel.fields_get();
+        const base = posFields.length ? posFields : Object.keys(allFields);
+
+        if (!base.includes("id")) {
+            base.push("id");
+        }
+
+        if (!base.includes("write_date")) {
+            base.push("write_date");
+        }
+
+        for (const fieldName of base) {
+            const field = allFields[fieldName];
+
+            if (!field) {
+                console.debug(`Field ${fieldName} not found in model ${model}`);
+                continue;
+            }
+
+            response[fieldName] = {
+                name: fieldName,
+                model: model,
+                compute: Boolean(field.compute),
+                related: Boolean(field.related),
+                type: field.type,
+                relation: field.relation,
+                inverse_name: field.inverse_fname_by_model_name?.[field.relation] || false,
             };
-            return acc;
-        }, {});
-
-        for (const model of modelToLoad) {
-            const serverModel = MockServer.env[model];
-            const posFields = this.getModelFieldsToLoad(serverModel, opts);
-            const allFields = serverModel.fields_get();
-            const base = posFields.length ? posFields : Object.keys(allFields);
-
-            if (!base.includes("id")) {
-                base.push("id");
-            }
-
-            for (const fieldName of base) {
-                const field = allFields[fieldName];
-
-                if (!field) {
-                    console.debug(`Field ${fieldName} not found in model ${model}`);
-                    continue;
-                }
-
-                response[model]["relations"][fieldName] = {
-                    name: fieldName,
-                    model: model,
-                    compute: Boolean(field.compute),
-                    related: Boolean(field.related),
-                    type: field.type,
-                    relation: field.relation,
-                    inverse_name: field.inverse_fname_by_model_name?.[field.relation] || false,
-                };
-            }
-
-            response[model]["fields"] = posFields;
         }
 
         return response;
     }
 
-    load_data(opts = {}) {
-        const modelToLoad = this.getModelsToLoad(opts);
+    load_data(session_id, local_data = {}) {
+        const modelToLoad =
+            local_data.models && local_data.models.length
+                ? local_data.models
+                : this.getModelsToLoad(local_data);
         const response = modelToLoad.reduce((acc, modelName) => {
             acc[modelName] = {};
             return acc;
@@ -133,11 +145,23 @@ export class PosSession extends models.ServerModel {
 
         for (const modelName of modelToLoad) {
             const model = MockServer.env[modelName];
-            const posFields = this.getModelFieldsToLoad(model, opts);
-            const records = model.search_read([], posFields, false, false, false, false);
-            response[modelName] = this.processPosReadData(model, records, opts);
+            response[modelName].dependencies = this.getModelDependencies(model, local_data);
+            response[modelName].fields = this.getModelFieldsToLoad(model, {});
+            response[modelName].relations = this._load_data_relations(
+                modelName,
+                response[modelName].fields
+            );
+            response[modelName].records = this.processPosReadData(
+                model,
+                model.search_read([], response[modelName].fields, false, false, false, false),
+                false
+            );
         }
-
+        if (local_data.only_records) {
+            return Object.fromEntries(
+                Object.entries(response).map(([model, value]) => [model, value.records])
+            );
+        }
         return response;
     }
 
@@ -169,6 +193,7 @@ export class PosSession extends models.ServerModel {
             update_stock_at_closing: false,
             cash_register_balance_start: 0.0,
             access_token: "e09c4843-c913-463a-959d-b9e235881201",
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

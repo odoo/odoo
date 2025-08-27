@@ -14,15 +14,12 @@ patch(DataServiceOptions.prototype, {
             },
         };
     },
-    get pohibitedAutoLoadedModels() {
+    get prohibitedAutoLoadedModels() {
         return [
-            ...super.pohibitedAutoLoadedModels,
+            ...super.prohibitedAutoLoadedModels,
             "loyalty.program",
             "loyalty.rule",
             "loyalty.reward",
         ];
-    },
-    get cleanupModels() {
-        return [...super.cleanupModels, "loyalty.program"];
     },
 });

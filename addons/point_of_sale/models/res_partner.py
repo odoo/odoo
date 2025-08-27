@@ -54,12 +54,12 @@ class ResPartner(models.Model):
         }
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
+    def _load_pos_data_domain(self, data):
         # Collect partner IDs from loaded orders
-        loaded_order_partner_ids = {order['partner_id'] for order in data['pos.order']}
+        loaded_order_partner_ids = set(data['pos.order'].partner_id.ids)
 
         # Extract partner IDs from the tuples returned by get_limited_partners_loading
-        limited_partner_ids = {partner[0] for partner in config.get_limited_partners_loading()}
+        limited_partner_ids = {partner[0] for partner in data['pos.config'].get_limited_partners_loading()}
 
         limited_partner_ids.add(self.env.user.partner_id.id)  # Ensure current user is included
         partner_ids = limited_partner_ids.union(loaded_order_partner_ids)

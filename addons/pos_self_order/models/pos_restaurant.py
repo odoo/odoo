@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import uuid
-from typing import Dict, Callable, List, Optional
 
 from odoo import api, fields, models
 
@@ -32,8 +31,8 @@ class RestaurantTable(models.Model):
         return ['table_number', 'identifier', 'floor_id']
 
     @api.model
-    def _load_pos_self_data_domain(self, data, config):
-        return [('floor_id', 'in', [floor['id'] for floor in data['restaurant.floor']])]
+    def _load_pos_self_data_domain(self, data):
+        return [('floor_id', 'in', data['restaurant.floor'].ids)]
 
 
 class RestaurantFloor(models.Model):
@@ -44,5 +43,5 @@ class RestaurantFloor(models.Model):
         return ['name', 'table_ids']
 
     @api.model
-    def _load_pos_self_data_domain(self, data, config):
-        return [('id', 'in', config.floor_ids.ids)]
+    def _load_pos_self_data_domain(self, data):
+        return [('id', 'in', data['pos.config'].floor_ids.ids)]

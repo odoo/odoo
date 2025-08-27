@@ -6,4 +6,8 @@ export class AccountMove extends models.ServerModel {
     _load_pos_data_fields() {
         return ["id"];
     }
+
+    _load_pos_data_dependencies() {
+        return [];
+    }
 }

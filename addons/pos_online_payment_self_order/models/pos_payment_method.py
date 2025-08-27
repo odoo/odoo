@@ -6,8 +6,9 @@ class PosPaymentMethod(models.Model):
     _inherit = "pos.payment.method"
 
     @api.model
-    def _load_pos_self_data_domain(self, data, config):
-        super_domain = super()._load_pos_self_data_domain(data, config)
+    def _load_pos_self_data_domain(self, data):
+        super_domain = super()._load_pos_self_data_domain(data)
+        config = data['pos.config']
 
         online_payment_domain = None
         if config.self_ordering_mode == 'kiosk':

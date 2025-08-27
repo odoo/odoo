@@ -38,9 +38,12 @@ class TestPOSLoyaltyProductLoading(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         current_session = self.main_pos_config.current_session_id
 
-        data = current_session.with_context(
-            pos_limited_loading=True,
-        ).load_data(['pos.config', 'product.template'])
+        data = current_session.load_data({
+            'models': ['pos.config', 'product.template'],
+            'records': {},
+            'search_params': {},
+            'only_records': True,
+        })
 
         self.assertNotIn(new_product.id, data['pos.config'][0]['_pos_special_products_ids'],
                         "Loyalty product should not be in _pos_special_products_ids when program is inactive.")
@@ -48,9 +51,12 @@ class TestPOSLoyaltyProductLoading(TestPointOfSaleHttpCommon):
         # Activate the program to ensure the product is loaded
         program.write({'active': True})
 
-        data = current_session.with_context(
-            pos_limited_loading=True,
-        ).load_data(['pos.config', 'product.template'])
+        data = current_session.load_data({
+            'models': ['pos.config', 'product.template'],
+            'records': {},
+            'search_params': {},
+            'only_records': True,
+        })
 
         self.assertIn(new_product.product_tmpl_id.id, [product['id'] for product in data['product.template']],
                         "Loyalty product should be loaded in the PoS session when program is active.")
@@ -61,9 +67,12 @@ class TestPOSLoyaltyProductLoading(TestPointOfSaleHttpCommon):
         # Make the product not available in the PoS
         new_product.write({'available_in_pos': False})
 
-        data = current_session.with_context(
-            pos_limited_loading=True,
-        ).load_data(['pos.config', 'product.template'])
+        data = current_session.load_data({
+            'models': ['pos.config', 'product.template'],
+            'records': {},
+            'search_params': {},
+            'only_records': True,
+        })
 
         self.assertIn(new_product.product_tmpl_id.id, [product['id'] for product in data['product.template']],
                         "Loyalty product should be loaded in the PoS session when it is used in a program, even if not available in the PoS.")

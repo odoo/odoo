@@ -2050,7 +2050,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(
             f'/pos/ui/{self.main_pos_config.id}',
             'test_reload_page_before_payment_with_customer_account',
-            login='pos_user'
+            login='pos_user',
+            debug=True,
         )
 
     def test_product_card_qty_precision(self):
@@ -2659,8 +2660,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'pricelist_id': test_pricelist.id,
         })
 
-        load_product_from_pos_stats = {'count': 0, 'items': {}}
-        product_template = self.env.registry.models['product.template']
+        load_data_from_pos_stats = {'count': 0, 'items': {}}
 
         # Test product exclusion
         cherry = generate_product_template_with_attributes('cherry', 2.00)
@@ -2689,29 +2689,31 @@ class TestUi(TestPointOfSaleHttpCommon):
         for index, variant in enumerate(cherry.product_variant_ids):
             variant.write({'barcode': f'cherry_{index}'})
 
-        @api.model
-        def load_product_from_pos_patch(self, config_id, domain, offset=0, limit=0):
-            load_product_from_pos_stats['count'] += 1
-            result = super(product_template, self).load_product_from_pos(config_id, domain, offset, limit)
-            lowered_name = result['product.template'][0]['display_name'].lower()
-            load_product_from_pos_stats['items'][lowered_name] = len(result['product.pricelist.item'])
+        def load_data_patch(self, local_data={}):
+            if 'product.template' in local_data.get('models', []) and len(local_data.get('search_params', {})) > 0:
+                load_data_from_pos_stats['count'] += 1
+            result = super(self.env.registry.models['pos.session'], self).load_data(local_data)
+            if 'product.template' in local_data.get('models', []) and len(local_data.get('search_params', {})) > 0:
+                lowered_name = result['product.template'][0]['display_name'].lower()
+                load_data_from_pos_stats['items'][lowered_name] = len(result['product.pricelist.item'])
             return result
-
-        with patch.object(product_template, "load_product_from_pos", load_product_from_pos_patch):
+        with patch.object(self.env.registry.models['pos.session'], "load_data", load_data_patch):
             self.start_pos_tour('test_pricelists_in_pos')
 
-        # Should load 6 different products, since 6 products were created
-        self.assertEqual(load_product_from_pos_stats['count'], 7)
+        # Should load 7 different products, since 7 products were created
+        # The stack count is 14 since load_data is called by the frontend (loadNewProducts)
+        # and by the backend (notify_synchronisation) after the frontend dispatch its new data
+        self.assertEqual(load_data_from_pos_stats['count'], 14)
 
         # Length of loaded pricelist items should correspond to the number of items linked
         # to the product template or product variant
         # Global rules are loaded at starting of the PoS
-        self.assertEqual(load_product_from_pos_stats['items']['banana'], 3, "Banana should have 3 pricelist items")
-        self.assertEqual(load_product_from_pos_stats['items']['apple'], 1, "Apple should have 1 pricelist item")
-        self.assertEqual(load_product_from_pos_stats['items']['pear'], 3, "Pear should have 3 pricelist items")
-        self.assertEqual(load_product_from_pos_stats['items']['lime'], 3, "Lime should have 3 pricelist items")
-        self.assertEqual(load_product_from_pos_stats['items']['orange'], 2, "Orange should have 2 pricelist items")
-        self.assertEqual(load_product_from_pos_stats['items']['kiwi'], 1, "Kiwi should have 1 pricelist item")
+        self.assertEqual(load_data_from_pos_stats['items']['banana'], 3, "Banana should have 3 pricelist items")
+        self.assertEqual(load_data_from_pos_stats['items']['apple'], 1, "Apple should have 1 pricelist item")
+        self.assertEqual(load_data_from_pos_stats['items']['pear'], 3, "Pear should have 3 pricelist items")
+        self.assertEqual(load_data_from_pos_stats['items']['lime'], 3, "Lime should have 3 pricelist items")
+        self.assertEqual(load_data_from_pos_stats['items']['orange'], 2, "Orange should have 2 pricelist items")
+        self.assertEqual(load_data_from_pos_stats['items']['kiwi'], 1, "Kiwi should have 1 pricelist item")
 
     def test_available_children_categories(self):
         parent_categ = self.env['pos.category'].create({
@@ -2742,7 +2744,12 @@ class TestUi(TestPointOfSaleHttpCommon):
             'iface_available_categ_ids': [(6, 0, [parent_categ.id, children_categs[1].id])],
         })
         self.main_pos_config.open_ui()
-        loaded_data = self.main_pos_config.current_session_id.load_data([])
+        loaded_data = self.main_pos_config.current_session_id.load_data({
+            'models': [],
+            'records': {},
+            'search_params': {},
+            'only_records': True,
+        })
         category_id = [category['id'] for category in loaded_data['pos.category']]
         self.assertNotIn(children_categs[0].id, category_id, "Child category is unavailable and shouldn't appear in the POS")
         self.assertIn(children_categs[1].id, category_id, "Child category is available and should appear in the POS")

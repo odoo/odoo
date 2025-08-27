@@ -7,6 +7,10 @@ export class PosPrinter extends models.ServerModel {
         return ["id", "name", "proxy_ip", "product_categories_ids", "printer_type"];
     }
 
+    _load_pos_data_dependencies() {
+        return [];
+    }
+
     _records = [
         {
             id: 1,
@@ -14,6 +18,7 @@ export class PosPrinter extends models.ServerModel {
             proxy_ip: false,
             product_categories_ids: [1, 2],
             printer_type: "epson_epos",
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

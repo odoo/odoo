@@ -70,90 +70,51 @@ class ProductTemplate(models.Model):
         }
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
+    def _load_pos_data_domain(self, data):
         domain = [
-            *self.env['product.template']._check_company_domain(config.company_id),
+            *self._check_company_domain(data['pos.config'].company_id),
             ('available_in_pos', '=', True),
             ('sale_ok', '=', True),
         ]
-        if config.limit_categories:
-            domain += [('pos_categ_ids', 'in', config.iface_available_categ_ids.ids)]
+        if data['pos.config'].limit_categories:
+            domain += [('pos_categ_ids', 'in', data['pos.config'].iface_available_categ_ids.ids)]
         return domain
 
     @api.model
-    def load_product_from_pos(self, config_id, domain, offset=0, limit=0):
-        load_archived = self.env.context.get('load_archived', False)
-        domain = Domain(domain)
-        config = self.env['pos.config'].browse(config_id)
-        product_tmpls = self._load_product_with_domain(domain, load_archived, offset, limit)
-
-        # product.combo and product.combo.item loading
-        for product_tmpl in product_tmpls:
-            if product_tmpl.type == 'combo':
-                product_tmpls += product_tmpl.combo_ids.combo_item_ids.product_id.product_tmpl_id
-
-        combo_domain = Domain('id', 'in', product_tmpls.combo_ids.ids)
-        combo_records = self.env['product.combo'].search(combo_domain)
-        combo_read = self.env['product.combo']._load_pos_data_read(combo_records, config)
-        combo_item_domain = Domain('combo_id', 'in', product_tmpls.combo_ids.ids)
-        combo_item_records = self.env['product.combo.item'].search(combo_item_domain)
-        combo_item_read = self.env['product.combo.item']._load_pos_data_read(combo_item_records, config)
-
-        products = product_tmpls.product_variant_ids
-
-        # product.pricelist_item & product.pricelist loading
-        pricelists = config.current_session_id.get_pos_ui_product_pricelist_item_by_product(
-            product_tmpls.ids,
-            products.ids,
-            config.id
-        )
-
-        # product.template.attribute.value & product.template.attribute.line loading
-        product_tmpl_attr_line = product_tmpls.attribute_line_ids
-        product_tmpl_attr_line_read = product_tmpl_attr_line._load_pos_data_read(product_tmpl_attr_line, config)
-        product_tmpl_attr_value = product_tmpls.attribute_line_ids.product_template_value_ids
-        product_tmpl_attr_value_read = product_tmpl_attr_value._load_pos_data_read(product_tmpl_attr_value, config)
-
-        # product.product loading
-        product_read = products._load_pos_data_read(products.with_context(display_default_code=False), config)
-
-        # product.template loading
-        product_tmpl_read = self._load_pos_data_read(product_tmpls, config)
-
-        # product.uom loading
-        packaging_domain = Domain('product_id', 'in', products.ids)
-        barcode_in_domain = any('barcode' in condition.field_expr for condition in domain.iter_conditions())
-
-        if barcode_in_domain:
-            barcode = [condition.value for condition in domain.iter_conditions() if 'barcode' in condition.field_expr]
-            flat = [item for sublist in barcode for item in sublist]
-            packaging_domain |= Domain('barcode', 'in', flat)
-
-        product_uom = self.env['product.uom']
-        packaging = product_uom.search(packaging_domain)
-        condition = packaging and packaging.product_id
-        packaging_read = product_uom._load_pos_data_read(packaging, config) if condition else []
-
-        # account.tax loading
-        account_tax = self.env['account.tax']
-        tax_domain = Domain(account_tax._check_company_domain(config.company_id.id))
-        tax_domain &= Domain('id', 'in', product_tmpls.taxes_id.ids)
-        tax_read = account_tax._load_pos_data_read(account_tax.search(tax_domain), config)
-
-        return {
-            **pricelists,
-            'account.tax': tax_read,
-            'product.product': product_read,
-            'product.template': product_tmpl_read,
-            'product.uom': packaging_read,
-            'product.combo': combo_read,
-            'product.combo.item': combo_item_read,
-            'product.template.attribute.value': product_tmpl_attr_value_read,
-            'product.template.attribute.line': product_tmpl_attr_line_read,
-        }
+    def _load_pos_data_dependencies(self):
+        # account.tax is added to ensure that taxes are loaded when loading product templates in the pos
+        return ['product.combo', 'pos.category', 'account.tax']
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def load_product_from_pos(self, config_id, domain, offset=0, limit=0):
+        if self.env.context.get('load_archived', False):
+            domain = Domain.AND([domain, ['|', ('active', '=', False), ('active', '=', True)]])
+        config = self.env['pos.config'].browse(config_id)
+
+        return config.current_session_id.load_data({
+            'models': ['product.pricelist',
+                       'product.pricelist.item',
+                       'account.tax',
+                       'product.product',
+                       'product.template',
+                       'product.uom',
+                       'product.combo',
+                       'product.combo.item',
+                       'product.template.attribute.value',
+                       'product.template.attribute.line'],
+            'records': {},
+            'search_params': {
+                'product.template': {
+                    'domain': domain,
+                    'offset': offset,
+                    'limit': limit or False,
+                },
+            },
+            'only_records': True,
+        })
+
+    @api.model
+    def _load_pos_data_fields(self, config):
         return [
             'id', 'display_name', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode', 'name', 'list_price', 'is_favorite',
             'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'tracking', 'type', 'service_tracking', 'is_storable',
@@ -161,44 +122,39 @@ class ProductTemplate(models.Model):
             'pos_optional_product_ids', 'sequence', 'product_tag_ids'
         ]
 
-    @api.model
-    def _load_pos_data_search_read(self, data, config):
+    def _load_pos_metadata(self, data, search_params={}):
+        result = self._load_pos_data_domain_and_dependencies(data)
+        config = data['pos.config']['records'][0]
         limit_count = config.get_limited_product_count()
-        pos_limited_loading = self.env.context.get('pos_limited_loading', True)
-        if limit_count and pos_limited_loading:
-            query = self._search(self._load_pos_data_domain(data, config), bypass_access=True)
-            sql = SQL(
-                """
-                    WITH pm AS (
-                        SELECT pp.product_tmpl_id,
-                            MAX(sml.write_date) date
-                        FROM stock_move_line sml
-                        JOIN product_product pp ON sml.product_id = pp.id
-                        GROUP BY pp.product_tmpl_id
-                    )
-                    SELECT product_template.id
-                        FROM %s
-                    LEFT JOIN pm ON product_template.id = pm.product_tmpl_id
-                        WHERE %s
-                    ORDER BY product_template.is_favorite DESC NULLS LAST,
-                        CASE WHEN product_template.type = 'service' THEN 1 ELSE 0 END DESC,
-                        pm.date DESC NULLS LAST,
-                        product_template.write_date DESC
-                    LIMIT %s
-                """,
-                query.from_clause,
-                query.where_clause or SQL("TRUE"),
-                limit_count,
-            )
-            product_tmpl_ids = [r[0] for r in self.env.execute_query(sql)]
-            products = self._load_product_with_domain([('id', 'in', product_tmpl_ids)])
-        else:
-            domain = self._load_pos_data_domain(data, config)
-            products = self._load_product_with_domain(domain)
+        query = self._search(search_params.get('domain', False) or result['domain'], bypass_access=True)
+        sql = SQL(
+            """
+                WITH pm AS (
+                    SELECT pp.product_tmpl_id,
+                        MAX(sml.write_date) date
+                    FROM stock_move_line sml
+                    JOIN product_product pp ON sml.product_id = pp.id
+                    GROUP BY pp.product_tmpl_id
+                )
+                SELECT product_template.id
+                    FROM %s
+                LEFT JOIN pm ON product_template.id = pm.product_tmpl_id
+                    WHERE %s
+                ORDER BY product_template.is_favorite DESC NULLS LAST,
+                    CASE WHEN product_template.type = 'service' THEN 1 ELSE 0 END DESC,
+                    pm.date DESC NULLS LAST,
+                    product_template.write_date DESC
+                LIMIT %s
+            """,
+            query.from_clause,
+            query.where_clause or SQL("TRUE"),
+            limit_count or SQL("ALL"),
+        )
+        product_tmpl_ids = [r[0] for r in self.env.execute_query(sql)]
+        products = self._load_product_with_domain([('id', 'in', product_tmpl_ids)])
 
         product_combo = products.filtered(lambda p: p['type'] == 'combo')
         products += product_combo.combo_ids.combo_item_ids.product_id.product_tmpl_id
-
         special_products = config._get_special_products().filtered(
                     lambda product: not product.sudo().company_id
                                     or product.sudo().company_id == self.env.company
@@ -209,11 +165,11 @@ class ProductTemplate(models.Model):
             if not tip_company_id or tip_company_id == self.env.company:
                 products += config.tip_product_id.product_tmpl_id
 
-        # Ensure optional products are loaded when configured.
-        if products.filtered(lambda p: p.pos_optional_product_ids):
-            products |= products.mapped("pos_optional_product_ids")
-
-        return self._load_pos_data_read(products, config)
+        data['product.template'] = {
+            **result,
+            'records': products,
+        }
+        return data
 
     @api.model
     def _load_pos_data_read(self, records, config):
@@ -223,12 +179,11 @@ class ProductTemplate(models.Model):
 
     def _load_product_with_domain(self, domain, load_archived=False, offset=0, limit=0):
         context = {**self.env.context, 'display_default_code': False, 'active_test': not load_archived}
-        domain = self._server_date_to_domain(domain)
         return self.with_context(context).search(
             domain,
             order='sequence,default_code,name',
             offset=offset,
-            limit=limit if limit else False
+            limit=limit or False
         )
 
     def _process_pos_ui_product_product(self, products, config_id):

@@ -20,8 +20,8 @@ class PosCourse(models.Model):
     )
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        pos_categ = config.iface_available_categ_ids.ids
+    def _load_pos_data_domain(self, data):
+        pos_categ = data['pos.config'].iface_available_categ_ids.ids
         available_categ_ids = pos_categ if len(pos_categ) else self.env['pos.category'].search([]).ids
         return [['category_ids', 'in', available_categ_ids]]
 
