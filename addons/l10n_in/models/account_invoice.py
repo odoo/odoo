@@ -195,8 +195,8 @@ class AccountMove(models.Model):
             return False
 
         FiscalPosition = self.env['account.fiscal.position']
-        draft_moves = self.filtered(lambda m: m.state == 'draft')
-        for state_id, moves in draft_moves.grouped(_get_fiscal_state).items():
+        draft_in_moves = self.filtered(lambda m: m.state == 'draft' and m.country_code == "IN")
+        for state_id, moves in draft_in_moves.grouped(_get_fiscal_state).items():
             if state_id:
                 virtual_partner = self.env['res.partner'].new({
                     'state_id': state_id.id,
@@ -209,6 +209,7 @@ class AccountMove(models.Model):
                     )._get_fiscal_position(virtual_partner)
             else:
                 super(AccountMove, moves)._compute_fiscal_position_id()
+        super(AccountMove, (self - draft_in_moves).filtered(lambda m: m.state == 'draft'))._compute_fiscal_position_id()
 
     @api.onchange('name')
     def _onchange_name_warning(self):
