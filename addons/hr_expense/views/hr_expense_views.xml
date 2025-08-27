@@ -130,8 +130,8 @@
                   <button name="action_submit_expenses" string="Create Report" type="object"
                           class="oe_highlight o_expense_submit" invisible="nb_attachment &lt;= 0 or sheet_id" data-hotkey="v"/>
                   <button name="action_view_sheet" type="object" string="View Report" class="oe_highlight" invisible="not sheet_id or nb_attachment &lt; 1" data-hotkey="w"/>
-                  <widget name="attach_document" string="Attach Receipt" action="attach_document" invisible="nb_attachment &lt; 1"/>
-                  <widget name="attach_document" string="Attach Receipt" action="attach_document" highlight="1" invisible="nb_attachment &gt;= 1"/>
+                  <widget name="expense_attach_document" string="Attach Receipt" action="attach_document" invisible="nb_attachment &lt; 1"/>
+                  <widget name="expense_attach_document" string="Attach Receipt" action="attach_document" highlight="1" invisible="nb_attachment &gt;= 1"/>
                   <button name="action_submit_expenses" string="Create Report" type="object" class="o_expense_submit"
                           invisible="nb_attachment &gt;= 1 or sheet_id" data-hotkey="v"/>
                   <field name="state" widget="statusbar" statusbar_visible="draft,reported,submitted,approved,done"

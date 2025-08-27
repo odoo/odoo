@@ -5,7 +5,7 @@ from markupsafe import Markup
 import werkzeug
 
 from odoo import api, fields, Command, models, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import email_split, float_repr, float_round, is_html_empty
 
 
@@ -15,6 +15,7 @@ class HrExpense(models.Model):
     _description = "Expense"
     _order = "date desc, id desc"
     _check_company_auto = True
+    _mail_post_access = 'read'
 
     @api.model
     def _default_employee_id(self):
@@ -554,9 +555,14 @@ class HrExpense(models.Model):
 
     def attach_document(self, **kwargs):
         """When an attachment is uploaded as a receipt, set it as the main attachment."""
-        if not self.has_access('write') or (self.sheet_id and not self.sheet_id.has_access('write')):
+        if not self.has_access('write') and self.employee_id.user_id != self.env.user:
+            raise AccessError(_("You don't have the access rights to modify this expense."))
+        if 'attachment_ids' not in kwargs or not kwargs['attachment_ids']:
             raise UserError(_("You don't have the rights to attach a document to a submitted expense. Please reset the expense report to draft first."))
-        self._message_set_main_attachment_id(self.env["ir.attachment"].browse(kwargs['attachment_ids'][-1:]), force=True)
+
+        attachment = self.env["ir.attachment"].browse(kwargs['attachment_ids'][-1:])
+        is_own_expense = self.employee_id.user_id == self.env.user
+        self.sudo(is_own_expense)._message_set_main_attachment_id(attachment, force=True)
 
     @api.model
     def create_expense_from_attachments(self, attachment_ids=None, view_type='list'):
