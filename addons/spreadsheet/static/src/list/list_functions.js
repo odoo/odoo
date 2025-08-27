@@ -39,14 +39,17 @@ const ODOO_LIST_HEADER = {
     description: _t("Get the header of a list."),
     args: [
         arg("list_id (string)", _t("ID of the list.")),
-        arg("field_name (string)", _t("Name of the field.")),
+        arg("field_name (string)", _t("Technical field name.")),
+        arg("field_display_name (string, optional)", _t("Name of the field.")),
     ],
     category: "Odoo",
-    compute: function (listId, fieldName) {
+    compute: function (listId, fieldName, fieldDisplayName) {
         const id = toString(listId);
         const field = toString(fieldName);
         assertListsExists(id, this.getters);
-        return this.getters.getListHeaderValue(id, field);
+        const displayName = toString(fieldDisplayName);
+        const translatedDisplayName = this.getters.getListHeaderValue(id, field);
+        return displayName || translatedDisplayName;
     },
     returns: ["NUMBER", "STRING"],
 };
