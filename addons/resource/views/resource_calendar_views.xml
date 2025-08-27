@@ -53,6 +53,15 @@
                     <group name="resource_details" col="2">
                         <group name="resource_working_hours">
                             <field name="schedule_type" widget="radio"/>
+                            <label for="switch_based_on_duration" string="Duration Based" class="o_form_label"/>
+                            <button name="switch_based_on_duration" invisible="duration_based or flexible_hours" type="object"
+                                icon="fa-square-o" title="Switch to Duration based attendance" class="btn p-0"
+                                confirm="Are you sure you want to switch to a Duration based attendance?"
+                                confirm-label="Switch"/>
+                            <button name="switch_based_on_duration" invisible="not duration_based or flexible_hours" type="object"
+                                icon="fa-check-square" title="Switch to fixed attendance" class="btn p-0"
+                                confirm="Are you sure you want to switch to a fixed attendance?"
+                                confirm-label="Switch"/>
                             <label for="full_time_required_hours" invisible="not company_id"/>
                             <label for="full_time_required_hours" string="Required Full Time" invisible="company_id"/>
                             <div>
@@ -134,7 +143,7 @@
                                     </div>
                                 </group>
                             </group>
-                            <field name="attendance_ids_1st_week" widget="section_one2many"/>
+                            <field name="attendance_ids_1st_week" widget="section_one2many" context="{'default_week_type':'0'}"/>
                         </page>
                         <page string="Week 2 Working Hours" name="working_hours" invisible="flexible_hours or not two_weeks_calendar">
                             <field name="two_weeks_explanation"/>
@@ -154,7 +163,7 @@
                                     </div>
                                 </group>
                             </group>
-                            <field name="attendance_ids_2nd_week" widget="section_one2many"/>
+                            <field name="attendance_ids_2nd_week" widget="section_one2many" context="{'default_week_type':'1'}"/>
                         </page>
                     </notebook>
                 </sheet>

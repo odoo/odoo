@@ -183,80 +183,6 @@ class TestCalendar(TestResourceCommon):
         )
         self.assertEqual(hours, 32)
 
-        # 2 weeks calendar with date_from and date_to to check work_hours
-        self.calendar_jules.write({
-            "attendance_ids": [
-                (5, 0, 0),
-                (0, 0, {
-                    "name": "Monday (morning)",
-                    "day_period": "morning",
-                    "dayofweek": "0",
-                    "week_type": "0",
-                    "hour_from": 8.0,
-                    "hour_to": 12.0,
-                    "date_from": "2022-01-01",
-                    "date_to": "2022-01-16"}),
-                (0, 0, {
-                    "name": "Monday (morning)",
-                    "day_period": "morning",
-                    "dayofweek": "0",
-                    "week_type": "0",
-                    "hour_from": 8.0,
-                    "hour_to": 12.0,
-                    "date_from": "2022-01-17"}),
-                (0, 0, {
-                    "name": "Monday (afternoon)",
-                    "day_period": "afternoon",
-                    "dayofweek": "0",
-                    "week_type": "0",
-                    "hour_from": 16.0,
-                    "hour_to": 20.0,
-                    "date_from": "2022-01-17"}),
-                (0, 0, {
-                    "name": "Monday (morning)",
-                    "day_period": "morning",
-                    "dayofweek": "0",
-                    "week_type": "1",
-                    "hour_from": 8.0,
-                    "hour_to": 12.0,
-                    "date_from": "2022-01-01",
-                    "date_to": "2022-01-16"}),
-                (0, 0, {
-                    "name": "Monday (afternoon)",
-                    "day_period": "afternoon",
-                    "dayofweek": "0",
-                    "week_type": "1",
-                    "hour_from": 16.0,
-                    "hour_to": 20.0,
-                    "date_from": "2022-01-01",
-                    "date_to": "2022-01-16"}),
-                (0, 0, {
-                    "name": "Monday (morning)",
-                    "day_period": "morning",
-                    "dayofweek": "0",
-                    "week_type": "1",
-                    "hour_from": 8.0,
-                    "hour_to": 12.0,
-                    "date_from": "2022-01-17"}),
-                (0, 0, {
-                    "name": "Monday (afternoon)",
-                    "day_period": "afternoon",
-                    "dayofweek": "0",
-                    "week_type": "1",
-                    "hour_from": 16.0,
-                    "hour_to": 20.0,
-                    "date_from": "2022-01-17"})]})
-        hours = self.calendar_jules.get_work_hours_count(
-            self.datetime_tz(2022, 1, 10, 0, 0, 0, tzinfo=self.jules.tz),
-            self.datetime_tz(2022, 1, 10, 23, 59, 59, tzinfo=self.jules.tz),
-        )
-        self.assertEqual(hours, 4)
-        hours = self.calendar_jules.get_work_hours_count(
-            self.datetime_tz(2022, 1, 17, 0, 0, 0, tzinfo=self.jules.tz),
-            self.datetime_tz(2022, 1, 17, 23, 59, 59, tzinfo=self.jules.tz),
-        )
-        self.assertEqual(hours, 8)
-
     def test_calendar_working_hours_count(self):
         calendar = self.env['resource.calendar'].create({
             'name': 'Standard 35 hours/week',
@@ -416,30 +342,6 @@ class TestCalendar(TestResourceCommon):
         end = self.datetime_tz(2020, 4, 3, 23, 0, 0, tzinfo=self.john.tz)
         calendar_dt = self.calendar_john._get_closest_work_time(dt, match_end=True)
         self.assertEqual(calendar_dt, end, "It should return the end of the closest attendance")
-
-        # with a resource specific attendance
-        self.env['resource.calendar.attendance'].create({
-            'name': 'Att4',
-            'calendar_id': self.calendar_john.id,
-            'dayofweek': '4',
-            'hour_from': 5,
-            'hour_to': 6,
-            'resource_id': self.john.resource_id.id,
-        })
-        dt = self.datetime_tz(2020, 4, 3, 5, 0, 0, tzinfo=self.john.tz)
-        start = self.datetime_tz(2020, 4, 3, 8, 0, 0, tzinfo=self.john.tz)
-        calendar_dt = self.calendar_john._get_closest_work_time(dt)
-        self.assertEqual(calendar_dt, start, "It should not take into account resouce specific attendances")
-
-        dt = self.datetime_tz(2020, 4, 3, 5, 0, 0, tzinfo=self.john.tz)
-        start = self.datetime_tz(2020, 4, 3, 5, 0, 0, tzinfo=self.john.tz)
-        calendar_dt = self.calendar_john._get_closest_work_time(dt, resource=self.john.resource_id)
-        self.assertEqual(calendar_dt, start, "It should have taken john's specific attendances")
-
-        dt = self.datetime_tz(2020, 4, 4, 1, 0, 0, tzinfo='UTC')  # The next day in UTC, but still the 3rd in john's timezone (America/Los_Angeles)
-        start = self.datetime_tz(2020, 4, 3, 16, 0, 0, tzinfo=self.john.tz)
-        calendar_dt = self.calendar_john._get_closest_work_time(dt, resource=self.john.resource_id)
-        self.assertEqual(calendar_dt, start, "It should have found the attendance on the 3rd April")
 
     def test_attendance_interval_edge_tz(self):
         # When genereting the attendance intervals in an edge timezone, the last interval shouldn't
