@@ -37,6 +37,14 @@ function toggleBackdrop(snippet) {
     return changeOption(`${snippet}`, "[data-action-id='setBackdrop'] .form-check-input");
 };
 
+const scrollIntoView = (selector) => ({
+    content: `Scroll into view to make sure snippet controls are visible`,
+    trigger: `:iframe ${selector}`,
+    run() {
+        this.anchor.scrollIntoView();
+    },
+});
+
 registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     url: "/",
     edition: true,
@@ -158,11 +166,13 @@ registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
         trigger: ":iframe #website_cookies_bar .modal-content .s_media_list",
         run: "click",
     },
+    scrollIntoView("#website_cookies_bar .s_media_list_item:last-child"),
     {
         content: "Remove the first Media List snippet in the Cookies Bar.",
         trigger: ".overlay .o_overlay_options .oe_snippet_remove",
         run: "click",
     },
+    scrollIntoView("#website_cookies_bar .s_media_list_item:last-child"),
     {
         content: "Remove the second Media List snippet in the Cookies Bar.",
         trigger: ".overlay .o_overlay_options .oe_snippet_remove",
