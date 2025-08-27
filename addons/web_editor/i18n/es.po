@@ -21,8 +21,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
-" ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: web_editor
@@ -2666,8 +2666,8 @@ msgid ""
 "session when the user clicks inside the text field (default), 'Start' when "
 "the record is loaded (could impact performance if set)."
 msgstr ""
-"Especifique cuando la colaboración comience. 'Foco' iniciará la colaboración"
-" cuando el usuario haga clic dentro del campo de texto (por defecto). "
+"Especifique cuando la colaboración comience. 'Foco' iniciará la colaboración "
+"cuando el usuario haga clic dentro del campo de texto (por defecto). "
 "'Empezar' cuando el registro se cargue (si está configurado, puede impactar "
 "en el rendimiento)."
 
@@ -2808,10 +2808,12 @@ msgstr "La URL proporcionada no es válida"
 #: code:addons/web_editor/static/src/js/wysiwyg/conflict_dialog.xml:0
 msgid ""
 "The version from the database will be used.\n"
-"                            If you need to keep your changes, copy the content below and edit the new document."
+"                            If you need to keep your changes, copy the "
+"content below and edit the new document."
 msgstr ""
 "Se usará la versión de la base de datos.\n"
-"                    Si necesita guardar sus cambios, copie el contenido a continuación y edite el nuevo documento."
+"                    Si necesita guardar sus cambios, copie el contenido a "
+"continuación y edite el nuevo documento."
 
 #. module: web_editor
 #. odoo-javascript
@@ -2997,8 +2999,7 @@ msgstr "Transformar la fotografía"
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 msgid "Transform the picture (click twice to reset transformation)"
 msgstr ""
-"Transforme la imagen (haga clic dos veces para restablecer la "
-"transformación)"
+"Transforme la imagen (haga clic dos veces para restablecer la transformación)"
 
 #. module: web_editor
 #. odoo-javascript
@@ -3154,6 +3155,13 @@ msgstr "Subprueba de convertidor del editor web"
 #: model:ir.model,name:web_editor.model_web_editor_converter_test
 msgid "Web Editor Converter Test"
 msgstr "Prueba de convertidor del editor web"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "WebP compression not supported on this browser"
+msgstr ""
 
 #. module: web_editor
 #. odoo-javascript
