@@ -296,10 +296,13 @@ export class LinkPopover extends Component {
     }
 
     get classes() {
-        if (!this.state.type) {
-            return "";
+        const className = [...this.props.linkElement.classList].filter(
+            (value) => !value.match(/^(btn.*|rounded-circle|flat|(text|bg)-(o-color-\d$|\d{3}$))$/)
+        );
+        if (this.state.type) {
+            className.push("btn", `btn-fill-${this.state.type}`);
         }
-        return `btn btn-fill-${this.state.type}`;
+        return className.join(" ");
     }
 
     async uploadFile() {
