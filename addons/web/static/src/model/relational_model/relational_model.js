@@ -320,14 +320,14 @@ export class RelationalModel extends Model {
                     if (root.config.isMonoRecord) {
                         if (!root.config.resId) {
                             // result is the response of the onchange rpc
-                            return root._setData(result.value);
+                            return root._setData(result.value, { keepChanges: true });
                         }
                         // result is the response of a web_read rpc
                         if (!result.length) {
                             // we read a record that no longer exists
                             throw new FetchRecordError([root.config.resId]);
                         }
-                        return root._setData(result[0]);
+                        return root._setData(result[0], { keepChanges: true });
                     }
 
                     // multi record case: either grouped or ungrouped
