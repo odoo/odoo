@@ -28,14 +28,15 @@ class PosPaymentMethod(models.Model):
         return super()._load_pos_data_fields(config) + ["qr_code_method"]
 
     @api.model
-    def _load_pos_self_data_domain(self, data, config):
+    def _load_pos_self_data_domain(self, data):
         """
         Add the QRIS method to the kiosk's payment options.
 
         A `bank_qr_code` method has no `payment_provider`, so the base self-order domain
         (cash OR provider) leaves it out; add it back for the kiosk.
         """
-        domain = super()._load_pos_self_data_domain(data, config)
+        domain = super()._load_pos_self_data_domain(data)
+        config = data["pos.config"]
         if config.self_ordering_mode != "kiosk":
             return domain
         qris_domain = Domain.AND([

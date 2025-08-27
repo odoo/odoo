@@ -334,6 +334,8 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         desk_organizer = self.env['product.template'].search([('name', '=', 'Desk Organizer')], limit=1)
         desk_organizer.write({'self_order_available': False})
 
+        self.pos_config.with_user(self.pos_user).open_ui()
+
         result = self.env['product.template'].load_product_from_pos(self.pos_config.id, [('id', '=', desk_organizer.id)])
         product_data = result['product.template'][0]
         self.assertEqual(product_data['self_order_available'], desk_organizer.self_order_available)

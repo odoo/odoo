@@ -42,14 +42,14 @@ test("combo price remains consistent when recomputing prices", async () => {
     const item3Line = childLines.find((l) => l.combo_item_id.id === 3);
 
     expect(item1Line.getQuantity()).toBe(2);
-    expect(item1Line.price_unit).toBe(3);
+    expect(item1Line.price_unit).toBe(100);
 
     expect(item3Line.getQuantity()).toBe(2);
     expect(item3Line.price_unit).toBe(200);
 
-    // Total = (0*2) + (3*2) + (200*2) = 0 + 6 + 400 = 406.
-    // Tax 25% -> 406 * 1.25 = 507.5.
-    expect(order.priceIncl).toBe(507.5);
+    // Total = (0*2) + (100*2) + (200*2) = 0 + 200 + 400 = 600.
+    // Tax 25% -> 600 * 1.25 = 750.
+    expect(order.priceIncl).toBe(750);
 
     order.setPricelist(pricelist90);
 
@@ -58,6 +58,6 @@ test("combo price remains consistent when recomputing prices", async () => {
 
     expect(item3Line.price_unit).toBeGreaterThan(0);
 
-    expect(order.priceIncl).not.toBe(507.5);
+    expect(order.priceIncl).not.toBe(750);
     expect(order.priceIncl).toBeGreaterThan(0);
 });

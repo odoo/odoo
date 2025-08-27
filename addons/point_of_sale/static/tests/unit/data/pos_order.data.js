@@ -1,7 +1,4 @@
 import { models, Command } from "@web/../tests/web_test_helpers";
-import { unmockedOrm } from "@web/../tests/_framework/module_set.hoot";
-
-let receiptTemplatesPromise;
 
 const { DateTime } = luxon;
 
@@ -15,6 +12,10 @@ export class PosOrder extends models.ServerModel {
 
     _load_pos_data_fields() {
         return [];
+    }
+
+    _load_pos_data_dependencies() {
+        return ["res.partner"];
     }
 
     cancel_order_from_pos(self) {
@@ -35,20 +36,6 @@ export class PosOrder extends models.ServerModel {
         const orderId = super.create(...arguments);
         this.write([orderId], { pos_reference: "000-0-000000" });
         return orderId;
-    }
-
-    async get_receipt_template_for_pos_frontend() {
-        if (!receiptTemplatesPromise) {
-            receiptTemplatesPromise = unmockedOrm(
-                "pos.order",
-                "get_receipt_template_for_pos_frontend",
-                [],
-                {}
-            ).catch(() => {
-                receiptTemplatesPromise = Promise.resolve([]);
-            });
-        }
-        return receiptTemplatesPromise;
     }
 
     sync_from_ui(data) {

@@ -151,7 +151,7 @@ test("test_pos_large_amount_confirmation_dialog: large payment asks for confirma
     await waitFor(".payment-screen");
 
     await Utils.clickPaymentMethod("Card");
-    await Utils.sendBufferKeys("1", "5");
+    await Utils.sendBufferKeys("1", "5", "0");
 
     await waitFor('.modal .modal-title:contains("Maximum Value reached")');
     await contains(".modal .modal-footer .btn-primary").click();
@@ -174,7 +174,7 @@ test("test_add_money_button_with_different_decimal_separator: +50 button works w
     await contains('.numpad button:contains("+50")').click();
     await animationFrame();
     await advanceTime(350);
-    expect(await Utils.selectedPaymentLineHasAmount("$53,45")).toBe(true);
+    expect(await Utils.selectedPaymentLineHasAmount("$165,00")).toBe(true);
 });
 
 test("PaymentScreenTour2: change without cash payment method shows error", async () => {

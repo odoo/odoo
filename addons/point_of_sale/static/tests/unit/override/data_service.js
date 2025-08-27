@@ -14,6 +14,8 @@ patch(PosData.prototype, {
             create: async () => ({}),
             reset: async () => ({}),
             readAll: async () => ({}),
+            readAllExceptStores: async () => ({}),
+            dbStores: [],
         };
         return super.setup(...arguments);
     },
@@ -30,6 +32,12 @@ patch(PosData.prototype, {
         return {};
     },
     async getLocalDataFromIndexedDB() {
+        return {};
+    },
+    async deleteRecordsInIndexedDB() {
+        return true;
+    },
+    async getCachedServerIdsFromIndexedDB() {
         return {};
     },
 });

@@ -12,6 +12,7 @@ export class StockPickingType extends models.ServerModel {
             id: 9,
             use_create_lots: true,
             use_existing_lots: true,
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

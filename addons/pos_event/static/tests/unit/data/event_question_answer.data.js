@@ -15,12 +15,14 @@ export class EventQuestionAnswer extends models.ServerModel {
             question_id: 4,
             name: "Male",
             sequence: 1,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 2,
             question_id: 4,
             name: "Female",
             sequence: 2,
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

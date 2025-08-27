@@ -530,7 +530,6 @@ test("ProductComboChangePricelist: changing pricelist updates combo price", asyn
         min_quantity: 0,
     });
     salePricelist.item_ids = [plItem];
-    salePricelist.computeRuleIndexes();
     store.config.available_pricelist_ids = [...store.config.available_pricelist_ids, salePricelist];
     store.config.use_pricelist = true;
     await animationFrame();

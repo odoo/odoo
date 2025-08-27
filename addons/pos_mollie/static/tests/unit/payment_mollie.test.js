@@ -30,7 +30,7 @@ const setupMollie = async () => {
     const mockMollieCreatePaymentWithStatus = (status) => {
         onRpc("pos.payment.method", "mollie_create_payment", ({ args }) => {
             expect(args[0]).toBe(paymentMethod.id);
-            expect(args[1]).toBe(17.85);
+            expect(args[1]).toBe(595);
             expect(args[2]).toBe(paymentLine.uuid);
             expect(args[3]).toBe(order.session_id.id);
             return { id: fakeMollieId, status, _links: {} };

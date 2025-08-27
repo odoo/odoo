@@ -43,4 +43,8 @@ export class PosOrderLine extends models.ServerModel {
             "write_date",
         ];
     }
+
+    _load_pos_data_dependencies() {
+        return ["pos.order"];
+    }
 }

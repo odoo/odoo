@@ -44,7 +44,7 @@ class LoyaltyReward(models.Model):
         return self.required_points
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
+    def _load_pos_data_domain(self, data):
         reward_product_tag_domain = [
             ('reward_product_tag_id', '!=', False),
             '|',
@@ -52,7 +52,7 @@ class LoyaltyReward(models.Model):
             ('reward_product_tag_id.product_product_ids.active', '=', True),
         ]
         return Domain.AND([
-            [('program_id', 'in', config._get_program_ids().ids)],
+            [('program_id', 'in', data['pos.config']._get_program_ids().ids)],
             Domain.OR([
                 [('reward_type', '!=', 'product')],
                 [('reward_product_id.active', '=', True)],

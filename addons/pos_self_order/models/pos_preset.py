@@ -17,7 +17,6 @@ class PosPreset(models.Model):
         default="counter",
         required=True,
     )
-
     delivery_from_address = fields.Char(
         string="Sender address",
         compute="_compute_delivery_from_address",
@@ -166,8 +165,8 @@ class PosPreset(models.Model):
 
     # will be overridden.
     @api.model
-    def _load_pos_self_data_domain(self, data, config):
-        return ['|', ('id', '=', config.default_preset_id.id), '&', ('available_in_self', '=', True), ('id', 'in', config.available_preset_ids.ids)]
+    def _load_pos_self_data_domain(self, data):
+        return ['|', ('id', '=', data['pos.config'].default_preset_id.id), '&', ('available_in_self', '=', True), ('id', 'in', data['pos.config'].available_preset_ids.ids)]
 
     @api.model
     def _load_pos_self_data_fields(self, config):

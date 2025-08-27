@@ -31,7 +31,7 @@ const getRandomProduct = () => {
             !p.isCombo() &&
             !p.isTracked() &&
             p.id !== posmodel.config.tip_product_id?.id &&
-            !posmodel.config._pos_special_products_ids?.includes(p.id)
+            !p._is_pos_special_product
     );
     return products[Math.floor(Math.random() * products.length)].name;
 };

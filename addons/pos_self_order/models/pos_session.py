@@ -18,8 +18,8 @@ class PosSession(models.Model):
         return ['id', 'user_id', 'config_id', 'payment_method_ids', 'state']
 
     @api.model
-    def _load_pos_self_data_domain(self, data, config):
-        return [('config_id', '=', config.id), ('state', 'not in', ['closed', 'closing_control'])]
+    def _load_pos_self_data_domain(self, data):
+        return [('config_id', '=', data['pos.config'].id), ('state', 'not in', ['closed', 'closing_control'])]
 
     def _load_pos_data_read(self, records, config):
         read_records = super()._load_pos_data_read(records, config)

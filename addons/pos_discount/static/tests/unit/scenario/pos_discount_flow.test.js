@@ -23,6 +23,7 @@ test("pos_discount_numpad: apply a fixed then a percentage global discount", asy
     await Utils.sendBufferKeys("4");
 
     const order = store.getOrder();
+    order.setPricelist(store.models["product.pricelist"].get(2));
     expect(order.lines).toHaveLength(1);
     expect(order.lines[0].qty).toBe(4);
     expect(order.totalDue).toBe(100);
@@ -96,6 +97,7 @@ test("PosDiscountServiceFeePresetSwitchTour: a global discount only reaches a fe
     await advanceTime(150);
 
     const order = store.getOrder();
+    order.setPricelist(store.models["product.pricelist"].get(2));
     const feeLines = () => order.serviceFeeLines;
     expect(feeLines()).toHaveLength(1);
     expect(feeLines()[0].price_unit).toBe(10); // 10% of 100.

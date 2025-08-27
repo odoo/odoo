@@ -31,5 +31,5 @@ class PosPrepLine(models.Model):
                 )
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('prep_order_id', 'in', [order['id'] for order in data['pos.prep.order']])]
+    def _load_pos_data_domain(self, data):
+        return [('prep_order_id', 'in', data['pos.prep.order'].ids)]

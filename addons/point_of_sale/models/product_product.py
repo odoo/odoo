@@ -24,8 +24,12 @@ class ProductProduct(models.Model):
         return new_product
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('product_tmpl_id', 'in', [p['id'] for p in data['product.template']])]
+    def _load_pos_data_domain(self, data):
+        return [('product_tmpl_id', 'in', data['product.template'].ids)]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['product.template.attribute.value', 'product.template']
 
     @api.model
     def _load_pos_data_fields(self, config):
@@ -46,6 +50,9 @@ class ProductProduct(models.Model):
         read_records = super()._load_pos_data_read(records, config)
         self._convert_pos_data_currency(read_records, config, 'lst_price', 'currency_id')
         self._convert_pos_data_currency(read_records, config, 'standard_price', 'cost_currency_id')
+        special_product_ids = config._get_special_products().ids
+        for product in read_records:
+            product['_is_pos_special_product'] = product['id'] in special_product_ids
         return read_records
 
     def _can_return_content(self, field_name=None, access_token=None):

@@ -15,7 +15,7 @@ describe("pos.order restaurant patches", () => {
         order.setCustomerCount(3);
         expect(order.getCustomerCount()).toBe(3);
         order.setCustomerCount(4);
-        expect(order.amountPerGuest()).toBe(4.4625);
+        expect(order.amountPerGuest()).toBe(148.75);
     });
 
     test("isDirectSale", async () => {

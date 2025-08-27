@@ -16,38 +16,48 @@ export class ProductTemplateAttributeValue extends models.ServerModel {
             "excluded_value_ids",
         ];
     }
+
+    _load_pos_data_dependencies() {
+        return ["product.attribute"];
+    }
     _records = [
         {
             id: 5,
             name: "Chocolate",
             attribute_id: 10,
+            write_date: "2023-06-01 10:00:00",
         },
         {
             id: 6,
             name: "Vanilla",
             attribute_id: 10,
             price_extra: 5,
+            write_date: "2023-06-01 10:00:00",
         },
         {
             id: 7,
             name: "Yes",
             is_custom: true,
             attribute_id: 11,
+            write_date: "2023-06-01 10:00:00",
         },
         {
             id: 8,
             name: "S",
             attribute_id: 7,
+            write_date: "2023-06-01 10:00:00",
         },
         {
             id: 9,
             name: "M",
             attribute_id: 7,
+            write_date: "2023-06-01 10:00:00",
         },
         {
             id: 10,
             name: "Standard",
             attribute_id: 12,
+            write_date: "2023-06-01 10:00:00",
         },
         {
             id: 11,

@@ -24,7 +24,7 @@ test("orderline.js", async () => {
     });
     const lineData = comp.lineScreenValues;
     expect(comp.line.id).toEqual(line.id);
-    expectFormattedPrice(comp.line.currencyDisplayPrice, "$ 10.35");
+    expectFormattedPrice(comp.line.currencyDisplayPrice, "$ 345.00");
     expect(lineData.internalNote).toEqual([
         {
             text: "Test 1",

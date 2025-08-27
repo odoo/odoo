@@ -27,7 +27,7 @@ test("pos_basic_order_02_decimal_order_quantity: decimal order quantity", async 
     expect(order.lines[0].qty).toBe(0.9);
     await Utils.sendBufferKeys("9");
     expect(order.lines[0].qty).toBe(0.99);
-    expect(Utils.getOrderTotal().includes("3.42")).toBe(true);
+    expect(Utils.getOrderTotal().includes("113.85")).toBe(true);
     await Utils.clickPayButton();
     await waitFor(".payment-screen");
     await Utils.clickPaymentMethod("Cash");
@@ -277,7 +277,6 @@ test("test_pricelist_multi_items_different_qty_thresholds: prefer highest matchi
         min_quantity: 2,
     });
     pricelist.item_ids = [item1, item2];
-    pricelist.computeRuleIndexes();
 
     store.config.pricelist_id = pricelist;
     store.config.available_pricelist_ids = [pricelist];
@@ -341,7 +340,6 @@ test("test_pricelist_parent_category_rule: pricelist applies to child category p
         min_quantity: 0,
     });
     pricelist.item_ids = [plItem];
-    pricelist.computeRuleIndexes();
 
     store.config.pricelist_id = pricelist;
     store.config.available_pricelist_ids = [pricelist];

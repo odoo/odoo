@@ -12,4 +12,8 @@ export class ProductAttributeCustomValue extends models.ServerModel {
             "uuid",
         ];
     }
+
+    _load_pos_data_dependencies() {
+        return ["pos.order.line"];
+    }
 }

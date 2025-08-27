@@ -13,7 +13,7 @@ test("Total on receipt always incl", async () => {
     await mountWithCleanup(FeedbackScreen, {
         props: { orderUuid: order.uuid },
     });
-    expect(".feedback-screen .amount-container .amount:only").toHaveText("$17.85");
+    expect(".feedback-screen .amount-container .amount:only").toHaveText("$595.00");
 });
 
 test("Total on receipt always incl with tax excluded", async () => {
@@ -23,7 +23,7 @@ test("Total on receipt always incl with tax excluded", async () => {
     await mountWithCleanup(FeedbackScreen, {
         props: { orderUuid: order.uuid },
     });
-    expect(".feedback-screen .amount-container .amount:only").toHaveText("$17.85");
+    expect(".feedback-screen .amount-container .amount:only").toHaveText("$595.00");
 });
 
 test("canEditPayment", async () => {

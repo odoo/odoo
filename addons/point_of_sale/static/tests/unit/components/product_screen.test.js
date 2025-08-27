@@ -28,8 +28,8 @@ test("_getProductByBarcode", async () => {
     const { store, order, productScreen } = await mountProductScreen();
     await productScreen.addProductToOrder(store.models["product.template"].get(5));
 
-    expect(order.displayPrice).toBe(3.45);
-    expect(productScreen.total).toBe("$\u00a03.45");
+    expect(order.displayPrice).toBe(115);
+    expect(productScreen.total).toBe("$\u00a0115.00");
     expect(productScreen.items).toBe("1");
 
     const productByBarcode = await productScreen._getProductByBarcode({ base_code: "test_test" });
@@ -53,15 +53,15 @@ test("fastValidate", async () => {
     const fastPaymentMethod = order.config.fast_payment_method_ids[0];
     await productScreen.addProductToOrder(store.models["product.template"].get(5));
 
-    expect(order.displayPrice).toBe(3.45);
-    expect(productScreen.total).toBe("$\u00a03.45");
+    expect(order.displayPrice).toBe(115);
+    expect(productScreen.total).toBe("$\u00a0115.00");
     expect(productScreen.items).toBe("1");
 
     await productScreen.fastValidate(fastPaymentMethod);
 
     expect(order.payment_ids[0].payment_method_id).toEqual(fastPaymentMethod);
     expect(order.state).toBe("paid");
-    expect(order.amount_paid).toBe(3.45);
+    expect(order.amount_paid).toBe(115);
 });
 
 test("long press on a product opens the product info popup", async () => {

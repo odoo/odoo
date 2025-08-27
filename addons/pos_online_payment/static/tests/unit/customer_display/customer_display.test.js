@@ -15,11 +15,11 @@ test("[Old Tour] CustomerDisplayTourOnlinePayment", async () => {
     pm.name = "Online";
     order.addPaymentline(pm);
     const QR_URL = "data:image/png;base64,iVBORw0KGgoAAAANSU/==";
-    order.onlinePaymentData = { amount: "$ 3.45", qrCode: QR_URL };
+    order.onlinePaymentData = { amount: "$ 115.00", qrCode: QR_URL };
 
-    await Assert.hasOrderLine({ productName: "TEST", price: "3.45" });
+    await Assert.hasOrderLine({ productName: "TEST", price: "115.00" });
     await Assert.hasOrderlineCount(1);
-    await Assert.hasPaymentLine("Online", "3.45");
+    await Assert.hasPaymentLine("Online", "115.00");
 
     expect(".qr-payment-card .qr-image").toHaveCount(1);
     // Finalize order
@@ -35,8 +35,8 @@ test("[Old Tour] CustomerDisplayTourOnlinePayment", async () => {
 
     // Create another order and Start online payment again
     await store.addLineToCurrentOrder({ product_tmpl_id: 6 });
-    order2.onlinePaymentData = { amount: "$ 3.75", qrCode: QR_URL };
-    await Assert.hasOrderLine({ productName: "TEST 2", price: "3.75" });
+    order2.onlinePaymentData = { amount: "$ 125.00", qrCode: QR_URL };
+    await Assert.hasOrderLine({ productName: "TEST 2", price: "125.00" });
     await Assert.hasOrderlineCount(1);
     expect(".qr-payment-card .qr-image").toHaveCount(1);
 });

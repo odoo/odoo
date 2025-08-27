@@ -1,13 +1,10 @@
-import { describe, expect, test, tick } from "@odoo/hoot";
-import { mockDate } from "@odoo/hoot-mock";
+import { describe, expect, test } from "@odoo/hoot";
+import { mockDate, tick } from "@odoo/hoot-mock";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
-import {
-    getFilledOrder,
-    setupPosEnv,
-    waitUntilOrdersSynced,
-} from "@point_of_sale/../tests/unit/utils";
+import { getFilledOrder, setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { MockServer } from "@web/../tests/web_test_helpers";
+import { waitUntil } from "@odoo/hoot-dom";
 
 const { DateTime } = luxon;
 
@@ -61,16 +58,16 @@ describe("restaurant pos_store.js", () => {
         order.table_id = table;
         expect(store.getPendingOrder().orderToCreate).toHaveLength(1);
         await store.unsetTable();
-        await waitUntilOrdersSynced(store);
-        expect(store.getPendingOrder().orderToCreate).toHaveLength(0);
+        await waitUntil(() => store.getPendingOrder().orderToCreate.length === 0);
+        await tick();
         expect(order.isDirty()).toBe(false);
         //Update the order
         order.setInternalNote("Test note");
         expect(order.isDirty()).toBe(true);
         await store.unsetTable();
-        await waitUntilOrdersSynced(store);
+        await waitUntil(() => store.getPendingOrder().orderToUpdate.length === 0);
+        await tick();
         expect(order.isDirty()).toBe(false);
-        expect(store.getPendingOrder().orderToUpdate).toHaveLength(0);
     });
 
     test("getChanges", async () => {

@@ -430,7 +430,7 @@ registry.category("web_tour.tours").add("test_order_invoice_search", {
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Desk Pad"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Partner Test 1"),
+            ProductScreen.clickCustomer("Partner Test 1", true),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickInvoiceButton(),

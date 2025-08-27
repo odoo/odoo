@@ -11,6 +11,7 @@ from . import test_pos_controller
 from . import test_pos_invoice_consolidation
 from . import test_pos_cash_difference_tax
 from . import test_pos_cash_rounding
+from . import test_pos_data_loading
 from . import test_pos_setup
 from . import test_pos_basic_config
 from . import test_pos_products_with_tax

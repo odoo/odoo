@@ -197,14 +197,26 @@ export class PartnerList extends Component {
         try {
             this.state.loading = true;
 
-            const result = await this.pos.data.callRelated("res.partner", "get_new_partner", [
-                this.pos.config.id,
-                domain,
-                offset,
-            ]);
+            const modelDomain = {
+                "res.partner": domain.length == 0 ? false : domain,
+            };
+            const modelOffset = {
+                "res.partner": offset,
+            };
+            const modelLimit = {
+                "res.partner": domain.length == 0 ? false : 100,
+            };
+            const result = await this.pos.data.loadRecordsFromPos(
+                ["res.partner", "account.fiscal.position"],
+                modelDomain,
+                modelOffset,
+                modelLimit,
+                {},
+                false
+            );
 
             this.globalState.offsetBySearch[this.state.query] =
-                offset + (result["res.partner"].length || 100);
+                offset + (modelLimit["res.partner"] || 0);
 
             for (const partner of result["res.partner"]) {
                 if (!this.loadedPartnerIds.has(partner.id)) {

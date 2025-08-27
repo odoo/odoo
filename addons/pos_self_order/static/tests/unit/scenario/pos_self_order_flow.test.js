@@ -782,7 +782,7 @@ test("self_mobile_each_table_takeaway_in: mobile table mode, order, cancel", asy
     await Utils.selectLocation("In");
     await Utils.clickProduct("Coca-Cola");
     await Utils.clickBtn("Checkout");
-    await Utils.checkProductInCart("Coca-Cola", "3.00", "1");
+    await Utils.checkProductInCart("Coca-Cola", "2.53", "1");
     await Utils.clickBtn("Order");
     await Utils.clickBtn("Ok");
     await Utils.checkIsNoBtn("Order Now");
@@ -823,7 +823,7 @@ test("self_mobile_each_counter_takeaway_in: mobile counter mode", async () => {
     await Utils.selectLocation("In");
     await Utils.clickProduct("Coca-Cola");
     await Utils.clickBtn("Checkout");
-    await Utils.checkProductInCart("Coca-Cola", "3.00", "1");
+    await Utils.checkProductInCart("Coca-Cola", "2.53", "1");
     await Utils.clickBtn("Order");
     await Utils.clickBtn("Ok");
     await Utils.checkIsNoBtn("Order Now");
@@ -859,18 +859,18 @@ test("self_mobile_meal_table_takeaway_in: meal mode, multiple orders, total/qty 
     await Utils.clickOrderNow();
     await Utils.selectLocation("In");
     await Utils.clickProduct("Coca-Cola");
-    await Utils.checkOrderTotal("3.00");
+    await Utils.checkOrderTotal("2.53");
     await Utils.checkProductQty("Coca-Cola", "1");
     await Utils.clickBtn("Checkout");
-    await Utils.checkProductInCart("Coca-Cola", "3.00", "1");
+    await Utils.checkProductInCart("Coca-Cola", "2.53", "1");
     await Utils.clickBtn("Order");
     await Utils.clickBtn("Ok");
     await Utils.clickBtn("Order Now");
     await Utils.clickProduct("Fanta");
-    await Utils.checkOrderTotal("3.00");
+    await Utils.checkOrderTotal("2.53");
     await Utils.checkProductQty("Fanta", "1");
     await Utils.clickBtn("Checkout");
-    await Utils.checkProductInCart("Fanta", "3.00", "1");
+    await Utils.checkProductInCart("Fanta", "2.53", "1");
     await Utils.clickBtn("Order");
     await Utils.checkConfirmationPage();
     await Utils.clickBtn("Ok");
@@ -917,19 +917,19 @@ test("self_mobile_meal_counter_takeaway_in: meal counter, confirm shown each tim
     await Utils.clickOrderNow();
     await Utils.selectLocation("In");
     await Utils.clickProduct("Coca-Cola");
-    await Utils.checkOrderTotal("3.00");
+    await Utils.checkOrderTotal("2.53");
     await Utils.checkProductQty("Coca-Cola", "1");
     await Utils.clickBtn("Checkout");
-    await Utils.checkProductInCart("Coca-Cola", "3.00", "1");
+    await Utils.checkProductInCart("Coca-Cola", "2.53", "1");
     await Utils.clickBtn("Order");
     await Utils.checkConfirmationPage();
     await Utils.clickBtn("Ok");
     await Utils.clickBtn("Order Now");
     await Utils.clickProduct("Fanta");
-    await Utils.checkOrderTotal("3.00");
+    await Utils.checkOrderTotal("2.53");
     await Utils.checkProductQty("Fanta", "1");
     await Utils.clickBtn("Checkout");
-    await Utils.checkProductInCart("Fanta", "3.00", "1");
+    await Utils.checkProductInCart("Fanta", "2.53", "1");
     await Utils.clickBtn("Order");
     await Utils.checkConfirmationPage();
     await Utils.clickBtn("Ok");
@@ -1060,7 +1060,7 @@ test("self_mobile_auto_table_selection_takeaway_in: auto table, no table selecto
     await Utils.selectLocation("In");
     await Utils.clickProduct("Coca-Cola");
     await Utils.clickBtn("Checkout");
-    await Utils.checkProductInCart("Coca-Cola", "3.00", "1");
+    await Utils.checkProductInCart("Coca-Cola", "2.53", "1");
     await Utils.clickBtn("Order");
     await Utils.checkNoTableSelector();
     await Utils.checkConfirmationPage();
@@ -1277,16 +1277,17 @@ test("test_self_order_pricelist: kiosk pricelist with fixed price", async () => 
         true
     );
     const colaTmpl = store.models["product.template"].get(200);
-    const itemId = store.models["product.pricelist.item"].create({
+    const pricelistId = store.models["product.pricelist"].create({
+        name: "Test pricelist",
+    });
+    store.models["product.pricelist.item"].create({
         compute_price: "fixed",
         fixed_price: 1,
         min_quantity: 3,
         product_tmpl_id: colaTmpl.id,
+        pricelist_id: pricelistId,
     });
-    const pricelistId = store.models["product.pricelist"].create({
-        name: "Test pricelist",
-        item_ids: [itemId],
-    });
+
     store.config.pricelist_id = pricelistId;
     store.config.available_pricelist_ids = [pricelistId];
     store.initProducts();

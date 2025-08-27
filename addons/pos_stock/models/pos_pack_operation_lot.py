@@ -13,8 +13,12 @@ class PosPackOperationLot(models.Model):
     product_id = fields.Many2one('product.product', related='pos_order_line_id.product_id', readonly=False)
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('pos_order_line_id', 'in', [line['id'] for line in data['pos.order.line']])]
+    def _load_pos_data_domain(self, data):
+        return [('pos_order_line_id', 'in', data['pos.order.line'].ids)]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['pos.order.line']
 
     @api.model
     def _load_pos_data_fields(self, config):

@@ -51,6 +51,7 @@ export class ResCompany extends webModels.ResCompany {
             city: "",
             zip: "",
             account_fiscal_country_id: 233,
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

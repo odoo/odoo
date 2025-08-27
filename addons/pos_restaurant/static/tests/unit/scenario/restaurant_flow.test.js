@@ -1372,14 +1372,16 @@ test("test_tip_after_payment: tip adjusts payment line based on remaining/change
         "Bank"
     );
     expect(
-        document.querySelector(".paymentline.selected .payment-amount").textContent.includes("2.45")
+        document
+            .querySelector(".paymentline.selected .payment-amount")
+            .textContent.includes("114.00")
     ).toBe(true);
 
     const lines1 = document.querySelectorAll(".paymentlines .paymentline");
     expect(lines1.length).toBe(2);
     expect(lines1[0].textContent).toInclude("2.00");
     expect(lines1[1].classList.contains("selected")).toBe(true);
-    expect(lines1[1].textContent).toInclude("2.45");
+    expect(lines1[1].textContent).toInclude("114.00");
 
     await contains(
         '.paymentlines .paymentline .payment-infos:has(.payment-name:contains("Bank")):has(.payment-amount:contains("2.00")) ~ .delete-button'
@@ -1389,7 +1391,7 @@ test("test_tip_after_payment: tip adjusts payment line based on remaining/change
     const lines2 = document.querySelectorAll(".paymentlines .paymentline");
     expect(lines2.length).toBe(1);
     expect(lines2[0].classList.contains("selected")).toBe(true);
-    expect(lines2[0].textContent.includes("2.45")).toBe(true);
+    expect(lines2[0].textContent.includes("114.00")).toBe(true);
 
     await Utils.sendBufferKeys("5");
     const lines3 = document.querySelectorAll(".paymentlines .paymentline");
@@ -1412,18 +1414,18 @@ test("test_tip_after_payment: tip adjusts payment line based on remaining/change
 
     const lines5 = document.querySelectorAll(".paymentlines .paymentline");
     expect(lines5.length).toBe(2);
-    expect(lines5[0].textContent.includes("5.45")).toBe(true);
+    expect(lines5[0].textContent.includes("6.00")).toBe(true);
     expect(lines5[1].classList.contains("selected")).toBe(true);
-    expect(lines5[1].textContent).toInclude("0.00");
+    expect(lines5[1].textContent).toInclude("111.00");
 
     await contains(
-        '.paymentlines .paymentline .payment-infos:has(.payment-name:contains("Bank")):has(.payment-amount:contains("5.45")) ~ .delete-button'
+        '.paymentlines .paymentline .payment-infos:has(.payment-name:contains("Bank")):has(.payment-amount:contains("6.00")) ~ .delete-button'
     ).click();
     await animationFrame();
 
     const lines6 = document.querySelectorAll(".paymentlines .paymentline");
     expect(lines6.length).toBe(1);
-    expect(lines6[0].textContent).toInclude("0.00");
+    expect(lines6[0].textContent).toInclude("111.00");
 
     await Utils.sendBufferKeys("5");
     await contains(".payment-screen .button:contains('Tip')").click();

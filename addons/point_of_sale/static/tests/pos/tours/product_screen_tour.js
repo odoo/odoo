@@ -407,6 +407,7 @@ registry.category("web_tour.tours").add("CustomerPopupTour", {
             negateStep(PartnerList.checkCustomerShown("Z partner to search")),
             PartnerList.searchCustomerValue("Z partner to search", true),
             ProductScreen.clickCustomer("Z partner to search"),
+            Dialog.isNot(),
             ProductScreen.clickPartnerButton(),
             negateStep(PartnerList.checkCustomerShown("Z partner to scroll")),
             PartnerList.scrollBottom(),
@@ -460,6 +461,15 @@ registry.category("web_tour.tours").add("test_product_create_update_from_fronten
             Dialog.is({ title: "Edit Product" }),
 
             // Edit the product with new details.
+            // First wait 1 seconds as the write_date timestamp is precise to the second,
+            // if the change is done in the same second as the creation, the product will not be updated.
+            {
+                trigger: "body",
+                run: () =>
+                    new Promise((resolve) => {
+                        setTimeout(resolve, 1000); // wait 1 second
+                    }),
+            },
             ProductScreen.editProductFromFrontend(
                 "Test Frontend Product Edited",
                 "710535977348",
@@ -683,6 +693,7 @@ registry.category("web_tour.tours").add("test_preset_timing_retail", {
             Chrome.presetTimingSlotHourNotExists("9:00am"),
             Chrome.selectPresetTimingSlotHour({ title: "delivery", hour: "5:00pm" }),
             Chrome.presetTimingSlotIs("5:00pm"),
+            Chrome.isSynced(),
             Chrome.clickOrders(),
             TicketScreen.nthRowContains(2, "002"),
             TicketScreen.nthRowContains(2, "Delivery", false),
@@ -692,6 +703,10 @@ registry.category("web_tour.tours").add("test_preset_timing_retail", {
                 trigger: "body",
                 run: async () => {
                     const latestOrder = posmodel.models["pos.order"].getAll()[0];
+                    if (typeof latestOrder.id !== "number") {
+                        // Wait for the order to be synced with the server.
+                        await new Promise((resolve) => setTimeout(resolve, 1500));
+                    }
                     await posmodel.data.call(
                         "pos.order",
                         "action_pos_order_cancel",
@@ -895,7 +910,7 @@ registry.category("web_tour.tours").add("test_default_fiscal_position_allowed", 
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Partner Test 1"),
+            ProductScreen.clickCustomer("Partner Test 1", true),
             ProductScreen.checkFiscalPosition("Allowed"),
             ProductScreen.clickControlButtonMore(),
             Chrome.endTour(),

@@ -24,7 +24,7 @@ test("validateOrder", async () => {
     await tick();
     expect(order.payment_ids[0].payment_method_id).toEqual(fastPaymentMethod);
     expect(order.state).toBe("paid");
-    expect(order.amount_paid).toBe(17.85);
+    expect(order.amount_paid).toBe(595);
     expect(order.lines.length).toBe(3); // Keep lines with zero quantity
 });
 test("isOrderValid", async () => {

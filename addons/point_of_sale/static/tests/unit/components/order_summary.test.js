@@ -27,14 +27,14 @@ test("Display tax include/exclude subtotal label", async () => {
     const total = queryOne(".total");
     const subtotal = queryAll(".subtotal");
     expect(subtotal).toHaveLength(0);
-    expect(total.innerHTML).toBe("$&nbsp;17.85");
+    expect(total.innerHTML).toBe("$&nbsp;595.00");
 
     order.config.iface_tax_included = "subtotal";
     await animationFrame();
     const total2 = queryOne(".total");
     const subtotal2 = queryOne(".subtotal");
-    expect(total2.innerHTML).toBe("$&nbsp;17.85");
-    expect(subtotal2.innerHTML).toBe("$&nbsp;15.00");
+    expect(total2.innerHTML).toBe("$&nbsp;595.00");
+    expect(subtotal2.innerHTML).toBe("$&nbsp;500.00");
 });
 
 test("setLinePrice: input is per-unit tax-included price, discount is preserved", async () => {

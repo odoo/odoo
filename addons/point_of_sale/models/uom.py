@@ -8,8 +8,8 @@ class UomUom(models.Model):
     is_pos_groupable = fields.Boolean(string='Group Products in POS', help="Check if you want to group products of this unit in point of sale orders")
 
     @api.model
-    def _load_pos_data_search_read(self, data, config):
-        return super(UomUom, self.with_context(active_test=False))._load_pos_data_search_read(data, config)
+    def _load_pos_metadata(self, data, search_params={}):
+        return super(UomUom, self.with_context(active_test=False))._load_pos_metadata(data, search_params)
 
     @api.model
     def _load_pos_data_fields(self, config):

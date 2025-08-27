@@ -74,9 +74,9 @@ test("Combo prices incl and excl", async () => {
 
     const [comboParentLine, comboChildLine] = order.lines;
 
-    expect(comboParentLine.comboTotalPrice).toBe(3.75);
-    expect(comboParentLine.comboTotalPriceWithoutTax).toBe(3);
+    expect(comboParentLine.comboTotalPrice).toBe(125);
+    expect(comboParentLine.comboTotalPriceWithoutTax).toBe(100);
 
-    expect(comboChildLine.comboTotalPrice).toBe(3.75);
-    expect(comboChildLine.comboTotalPriceWithoutTax).toBe(3);
+    expect(comboChildLine.comboTotalPrice).toBe(125);
+    expect(comboChildLine.comboTotalPriceWithoutTax).toBe(100);
 });

@@ -33,7 +33,6 @@ test("Nested Pricelists with different currencies", async () => {
         price_surcharge: 10,
     });
     basePricelist.update({ item_ids: [baseRule] });
-    basePricelist.computeRuleIndexes();
 
     // POS pricelist in MXN: based on USD pricelist + 25% discount
     const posPricelist = store.models["product.pricelist"].create({
@@ -48,7 +47,6 @@ test("Nested Pricelists with different currencies", async () => {
         base_pricelist_id: basePricelist,
     });
     posPricelist.update({ item_ids: [posRule] });
-    posPricelist.computeRuleIndexes();
 
     const productTemplate = store.models["product.template"].create({
         name: "Test Product",
@@ -88,7 +86,6 @@ test("Pricelist: Precedence Rules (Variant > Template > Category > Global)", asy
         fixed_price: 90,
     });
     pricelist.update({ item_ids: [globalRule] });
-    pricelist.computeRuleIndexes();
     expect(product.getPrice(pricelist, 1, 0, false, product)).toBe(90);
 
     // 2. Category Rule (should win over Global)
@@ -99,7 +96,6 @@ test("Pricelist: Precedence Rules (Variant > Template > Category > Global)", asy
         fixed_price: 80,
     });
     pricelist.update({ item_ids: [globalRule, categoryRule] });
-    pricelist.computeRuleIndexes();
     expect(product.getPrice(pricelist, 1, 0, false, product)).toBe(80);
 
     // 3. Template Rule (should win over Category)
@@ -110,7 +106,6 @@ test("Pricelist: Precedence Rules (Variant > Template > Category > Global)", asy
         fixed_price: 70,
     });
     pricelist.update({ item_ids: [globalRule, categoryRule, templateRule] });
-    pricelist.computeRuleIndexes();
     expect(product.getPrice(pricelist, 1, 0, false, product)).toBe(70);
 
     // 4. Variant Rule (should win over Template)
@@ -121,7 +116,6 @@ test("Pricelist: Precedence Rules (Variant > Template > Category > Global)", asy
         fixed_price: 60,
     });
     pricelist.update({ item_ids: [globalRule, categoryRule, templateRule, variantRule] });
-    pricelist.computeRuleIndexes();
     expect(product.getPrice(pricelist, 1, 0, false, product)).toBe(60);
 });
 
@@ -156,7 +150,6 @@ test("Pricelist: Min Quantity logic", async () => {
     });
 
     pricelist.update({ item_ids: [ruleSmall, ruleLarge] });
-    pricelist.computeRuleIndexes();
 
     // Qty 1 -> should use ruleSmall (50)
     expect(product.getPrice(pricelist, 1, 0, false, product)).toBe(50);
@@ -180,7 +173,6 @@ test("Pricelist: Nested Pricelists (Pricelist of Pricelist)", async () => {
         base: "list_price",
     });
     basePricelist.update({ item_ids: [baseRule] });
-    basePricelist.computeRuleIndexes();
 
     // Nested Pricelist: Base + another -5$ surcharge
     const nestedPricelist = store.models["product.pricelist"].create({
@@ -194,7 +186,6 @@ test("Pricelist: Nested Pricelists (Pricelist of Pricelist)", async () => {
         price_surcharge: 5,
     });
     nestedPricelist.update({ item_ids: [nestedRule] });
-    nestedPricelist.computeRuleIndexes();
 
     const productTemplate = store.models["product.template"].create({
         name: "Nested Test Product",

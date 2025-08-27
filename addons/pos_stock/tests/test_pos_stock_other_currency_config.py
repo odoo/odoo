@@ -98,7 +98,7 @@ class TestPoSOtherCurrencyConfig(TestPosStockCommon):
             return next((d for d in list_of_dicts if d.get(key) == value), None)
 
         self.other_currency_config.open_ui()
-        product = self.other_currency_config.current_session_id.load_data([])['product.product']
+        product = self.other_currency_config.current_session_id.load_data({'only_records': True})['product.product']
 
         self.assertAlmostEqual(find_by(product, 'id', self.product4.id)['lst_price'], 50.00)
         self.assertAlmostEqual(find_by(product, 'id', self.product5.id)['lst_price'], 100.00)

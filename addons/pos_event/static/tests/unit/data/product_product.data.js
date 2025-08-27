@@ -11,5 +11,6 @@ ProductProduct._records = [
         type: "service",
         service_tracking: "event",
         product_tmpl_id: 108,
+        write_date: "2025-01-01 10:00:00",
     },
 ];

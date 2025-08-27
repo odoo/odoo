@@ -51,6 +51,7 @@ export class LoyaltyReward extends models.ServerModel {
             reward_product_qty: 1,
             reward_product_uom_id: false,
             reward_product_domain: "[]",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 2,
@@ -73,6 +74,7 @@ export class LoyaltyReward extends models.ServerModel {
             reward_product_qty: 1,
             reward_product_uom_id: false,
             reward_product_domain: "[]",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 3,
@@ -86,7 +88,7 @@ export class LoyaltyReward extends models.ServerModel {
             discount_mode: "percent",
             discount_applicability: "order",
             all_discount_product_ids: [],
-            is_global_discount: true,
+            is_global_discount: false,
             discount_max_amount: 0,
             discount_line_product_id: 20,
             reward_product_id: 10,

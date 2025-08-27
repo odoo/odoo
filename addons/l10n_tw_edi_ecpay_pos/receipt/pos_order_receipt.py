@@ -2,7 +2,7 @@
 from urllib.parse import quote
 from zoneinfo import ZoneInfo
 
-from odoo import api, models
+from odoo import models
 
 from odoo.tools.date_utils import localized
 
@@ -10,16 +10,6 @@ from odoo.tools.date_utils import localized
 class PosOrderReceipt(models.AbstractModel):
     _inherit = 'pos.order.receipt'
     _description = 'Point of Sale Order Receipt Generator'
-
-    @api.model
-    def get_receipt_template_for_pos_frontend(self):
-        names = [
-            'l10n_tw_edi_ecpay_pos.ecpay_certificate_receipt',
-            'l10n_tw_edi_ecpay_pos.ecpay_transaction_receipt',
-        ]
-        return super().get_receipt_template_for_pos_frontend() + [
-            [name, self.env['ir.qweb']._get_template(name)[1]] for name in names
-        ]
 
     def _order_receipt_generate_line_data(self):
         lines = super()._order_receipt_generate_line_data()

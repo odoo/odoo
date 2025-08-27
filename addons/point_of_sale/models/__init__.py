@@ -14,6 +14,7 @@ from . import account_move_line
 from . import pos_bus_mixin
 from . import barcode_rule
 from . import digest
+from . import ir_ui_view
 from . import pos_category
 from . import pos_config
 from . import pos_order
@@ -32,7 +33,6 @@ from . import res_partner
 from . import res_company
 from . import res_config_settings
 from . import ir_http
-from . import ir_module_module
 from . import pos_payment
 from . import pos_payment_method
 from . import pos_bill

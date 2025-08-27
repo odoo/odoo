@@ -16,8 +16,8 @@ test("_buildDisplayPayload", async () => {
     expect(payload.selectedLineUuid).toBe(lines[1].uuid);
 
     const prices = payload.extra_data.prices;
-    expectFormattedPrice(prices.total_amount, "$ 17.85");
-    expectFormattedPrice(prices.tax_amount, "$ 2.85");
-    expectFormattedPrice(prices.subtotal_amount, "$ 15.00");
+    expectFormattedPrice(prices.total_amount, "$ 595.00");
+    expectFormattedPrice(prices.tax_amount, "$ 95.00");
+    expectFormattedPrice(prices.subtotal_amount, "$ 500.00");
     expect(payload.change).toBeEmpty();
 });
