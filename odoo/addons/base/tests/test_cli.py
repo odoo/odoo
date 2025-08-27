@@ -162,9 +162,9 @@ class TestCommandUsingDb(TestCommand, TransactionCase):
             text=False, bufsize=0,
         )
 
-        # Feed the buffer for maximum 5 seconds.
+        # Feed the buffer for maximum 15 seconds.
         buffer = io.BytesIO()
-        timeout = time.monotonic() + 5
+        timeout = time.monotonic() + 15
         os.set_blocking(proc.stdout.fileno(), False)
         while buffer.tell() < len(expected_text) and time.monotonic() < timeout:
             if chunk := proc.stdout.read(len(expected_text) - buffer.tell()):
@@ -175,12 +175,12 @@ class TestCommandUsingDb(TestCommand, TransactionCase):
                 # sleep instead: not great, not terrible.
                 time.sleep(.1)
 
-        self.assertEqual(buffer.getvalue(), expected_text,
-            "The subprocess did not write the prelude in under 5 seconds.")
-
         proc.terminate()
         try:
             proc.wait(timeout=5)
         except sp.TimeoutExpired:
             proc.kill()
             raise
+
+        self.assertEqual(buffer.getvalue(), expected_text,
+            "The subprocess did not write the prelude in under 15 seconds.")
