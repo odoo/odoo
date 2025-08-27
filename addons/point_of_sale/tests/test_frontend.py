@@ -3053,6 +3053,23 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.pos_user.write({'lang': 'fr_BE'})
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_add_money_button_with_different_decimal_separator', login="pos_user")
 
+    @freeze_time("2025-08-28 04:15:00")
+    def test_consistent_order_receipt_number_offline(self):
+        """
+        Tests that an order will have the same receipt number if it was done
+        online or offline, with only the last part of the receipt number being
+        an exception as the first number is 0 if it was done online and 1 if
+        it was done offline.
+        """
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_consistent_order_receipt_number_offline', login="pos_user")
+
+        orders = self.env['pos.order'].search([], order="id desc", limit=2)
+        # Online, with a 0
+        self.assertEqual(orders[1].pos_reference, f"2501-{orders[1].session_id.id:03d}-00001")
+        # Offline, with a 1 and no Order
+        self.assertEqual(orders[0].pos_reference, f"2501-{orders[0].session_id.id:03d}-10001")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
