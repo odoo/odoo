@@ -250,9 +250,21 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             providerId, providerCode, paymentOptionId, paymentMethodCode, flow
         );
 
-        // Display the prepared inline form if it is not empty.
+        // Display the prepared inline form if it contains visible elements.
+        const isVisible = element => {
+            if (
+                element.getAttribute('name') !== 'o_payment_inline_form' // Skip the container.
+                && element.classList.contains('d-none')
+            ) {
+                return false;
+            }
+            if (element.children.length === 0) {
+                return true; // The element is visible if it has no children.
+            }
+            return Array.from(element.children).some(child => isVisible(child));
+        };
         const inlineForm = this._getInlineForm(radio);
-        if (inlineForm && inlineForm.children.length > 0) {
+        if (inlineForm && isVisible(inlineForm)) {
             inlineForm.classList.remove('d-none');
         }
     },
