@@ -22,8 +22,8 @@ class PosBill(models.Model):
         return result.id, result.display_name
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return ['|', ('id', 'in', config.default_bill_ids.ids), ('pos_config_ids', '=', False)]
+    def _load_pos_data_domain(self, data):
+        return ['|', ('id', 'in', data['pos.config'].default_bill_ids.ids), ('pos_config_ids', '=', False)]
 
     @api.model
     def _load_pos_data_fields(self, config):

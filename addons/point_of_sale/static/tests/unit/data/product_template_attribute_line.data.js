@@ -6,4 +6,8 @@ export class ProductTemplateAttributeLine extends models.ServerModel {
     _load_pos_data_fields() {
         return ["display_name", "attribute_id", "product_template_value_ids"];
     }
+
+    _load_pos_data_dependencies() {
+        return [];
+    }
 }

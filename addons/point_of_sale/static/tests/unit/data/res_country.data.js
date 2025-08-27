@@ -7,6 +7,10 @@ export class ResCountry extends webModels.ResCountry {
         return ["id", "name", "code", "vat_label"];
     }
 
+    _load_pos_data_dependencies() {
+        return [];
+    }
+
     _records = [
         ...webModels.ResCountry._records,
         {
@@ -14,6 +18,7 @@ export class ResCountry extends webModels.ResCountry {
             name: "United States",
             code: "US",
             vat_label: "",
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

@@ -7,6 +7,10 @@ export class ProductCombo extends models.ServerModel {
         return ["id", "name", "combo_item_ids", "base_price", "qty_free", "qty_max"];
     }
 
+    _load_pos_data_dependencies() {
+        return [];
+    }
+
     _records = [
         {
             id: 1,
@@ -15,6 +19,7 @@ export class ProductCombo extends models.ServerModel {
             base_price: 100,
             qty_free: 0,
             qty_max: 10,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 2,
@@ -23,6 +28,7 @@ export class ProductCombo extends models.ServerModel {
             base_price: 200,
             qty_free: 1,
             qty_max: 1,
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

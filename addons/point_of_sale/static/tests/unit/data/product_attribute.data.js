@@ -14,6 +14,10 @@ export class ProductAttribute extends models.ServerModel {
         ];
     }
 
+    _load_pos_data_dependencies() {
+        return [];
+    }
+
     _records = [
         {
             id: 1,
@@ -22,6 +26,7 @@ export class ProductAttribute extends models.ServerModel {
             template_value_ids: [],
             attribute_line_ids: [],
             create_variant: "always",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 2,
@@ -30,6 +35,7 @@ export class ProductAttribute extends models.ServerModel {
             template_value_ids: [],
             attribute_line_ids: [],
             create_variant: "always",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 3,
@@ -38,6 +44,7 @@ export class ProductAttribute extends models.ServerModel {
             template_value_ids: [],
             attribute_line_ids: [],
             create_variant: "always",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 4,
@@ -46,6 +53,7 @@ export class ProductAttribute extends models.ServerModel {
             template_value_ids: [],
             attribute_line_ids: [],
             create_variant: "always",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 5,
@@ -54,6 +62,7 @@ export class ProductAttribute extends models.ServerModel {
             template_value_ids: [],
             attribute_line_ids: [],
             create_variant: "always",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 6,
@@ -62,6 +71,7 @@ export class ProductAttribute extends models.ServerModel {
             template_value_ids: [],
             attribute_line_ids: [],
             create_variant: "always",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 7,
@@ -70,6 +80,7 @@ export class ProductAttribute extends models.ServerModel {
             template_value_ids: [],
             attribute_line_ids: [],
             create_variant: "always",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 8,
@@ -78,6 +89,7 @@ export class ProductAttribute extends models.ServerModel {
             template_value_ids: [],
             attribute_line_ids: [],
             create_variant: "always",
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

@@ -24,6 +24,10 @@ export class SaleOrder extends models.ServerModel {
             "write_date",
         ];
     }
+
+    _load_pos_data_dependencies() {
+        return [];
+    }
 }
 
 patch(hootPosModels, [...hootPosModels, SaleOrder]);

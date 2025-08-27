@@ -7,10 +7,10 @@ class PosPaymentMethod(models.Model):
     _inherit = "pos.payment.method"
 
     @api.model
-    def _load_pos_self_data_domain(self, data, config):
-        domain = super()._load_pos_self_data_domain(data, config)
-        if config.self_ordering_mode == 'kiosk':
-            domain = Domain.OR([[('use_payment_terminal', '=', 'qfpay'), ('id', 'in', config.payment_method_ids.ids)], domain])
+    def _load_pos_self_data_domain(self, data):
+        domain = super()._load_pos_self_data_domain(data)
+        if data['pos.config'].self_ordering_mode == 'kiosk':
+            domain = Domain.OR([[('use_payment_terminal', '=', 'qfpay'), ('id', 'in', data['pos.config'].payment_method_ids.ids)], domain])
         return domain
 
     @api.model

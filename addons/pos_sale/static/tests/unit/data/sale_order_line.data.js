@@ -25,6 +25,10 @@ export class SaleOrderLine extends models.ServerModel {
             "is_repair_line",
         ];
     }
+
+    _load_pos_data_dependencies() {
+        return [];
+    }
 }
 
 patch(hootPosModels, [...hootPosModels, SaleOrderLine]);
