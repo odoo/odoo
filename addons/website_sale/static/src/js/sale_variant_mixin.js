@@ -361,7 +361,9 @@ var VariantMixin = {
         if ($pricePerUom.length) {
             if (isCombinationPossible && combination.base_unit_price != 0) {
                 $pricePerUom.parents(".o_base_unit_price_wrapper").removeClass("d-none");
-                $pricePerUom.text(this._priceToStr(combination.base_unit_price));
+                $pricePerUom.text(
+                    this._priceToStr(combination.base_unit_price, combination.currency_precision)
+                );
                 $parent.find(".oe_custom_base_unit:first").text(combination.base_unit_name);
             } else {
                 $pricePerUom.parents(".o_base_unit_price_wrapper").addClass("d-none");
@@ -402,8 +404,11 @@ var VariantMixin = {
         const $price = $parent.find(".oe_price:first .oe_currency_value");
         const $default_price = $parent.find(".oe_default_price:first .oe_currency_value");
         const $compare_price = $parent.find(".oe_compare_list_price")
-        $price.text(self._priceToStr(combination.price));
-        $default_price.text(self._priceToStr(combination.list_price));
+
+        const { price, list_price, currency_precision } = combination;
+        $price.parent().addClass('decimal_precision').attr('data-precision', currency_precision);
+        $price.text(self._priceToStr(price, currency_precision));
+        $default_price.text(self._priceToStr(list_price, currency_precision));
 
         this._toggleDisable($parent, isCombinationPossible);
 
@@ -454,12 +459,12 @@ var VariantMixin = {
      *
      * @private
      * @param {float} price
+     * @param {integer} precision
+     * @returns {string}
      */
-    _priceToStr: function (price) {
-        var precision = 2;
-
-        if ($('.decimal_precision').length) {
-            precision = parseInt($('.decimal_precision').last().data('precision'));
+    _priceToStr: function (price, precision) {
+        if (!Number.isInteger(precision)) {
+            precision = parseInt($('.decimal_precision:last').data('precision') ?? 2);
         }
         var formatted = price.toFixed(precision).split(".");
         const { thousandsSep, decimalPoint, grouping } = localization;
