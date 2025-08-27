@@ -16,7 +16,7 @@ patch(DiscussClientAction.prototype, {
             browser.history.replaceState(
                 browser.history.state,
                 null,
-                `/discuss/channel/${this.store.discuss_public_thread.id}${browser.location.search}`
+                `/discuss/channel/${this.store.discuss.thread.id}${browser.location.search}`
             );
         }
         browser.addEventListener("popstate", () => this.restoreDiscussThread(this.props));
