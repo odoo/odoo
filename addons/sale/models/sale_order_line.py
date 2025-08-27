@@ -316,14 +316,10 @@ class SaleOrderLine(models.Model):
     child_ids = fields.One2many(comodel_name='sale.order.line', inverse_name='parent_id')
     collapse_prices = fields.Boolean(
         string="Collapse Prices",
-        compute='_compute_section_visibility_fields',
-        store=True,
         copy=True,
     )  # Whether this section's lines' prices will be hidden in reports and in the portal.
     collapse_composition = fields.Boolean(
         string="Collapse Composition",
-        compute='_compute_section_visibility_fields',
-        store=True,
         copy=True,
     )  # Whether this section's lines will be hidden in reports and in the portal.
 
@@ -1195,20 +1191,6 @@ class SaleOrderLine(models.Model):
                 elif line in sale_order_lines:
                     line.parent_id = last_sub or last_section
 
-    @api.depends('parent_id')
-    def _compute_section_visibility_fields(self):
-        for order in self.grouped('order_id'):
-            for line in order.order_line.sorted('sequence'):
-                if line.display_type == 'line_section':
-                    continue
-
-                if line.display_type == 'line_subsection':
-                    line.collapse_prices = line.collapse_prices or line.parent_id.collapse_prices
-                    line.collapse_composition = line.collapse_composition or line.parent_id.collapse_composition
-                else:
-                    line.collapse_prices = line.parent_id.collapse_prices
-                    line.collapse_composition = line.parent_id.collapse_composition
-
     #=== CONSTRAINT METHODS ===#
 
     @api.constrains('combo_item_id')
@@ -1531,6 +1513,20 @@ class SaleOrderLine(models.Model):
             return self.parent_id.parent_id
 
         return self.parent_id
+
+    def _get_section_totals(self, totals_field):
+        """Return the total/subtotal amount sale order lines linked to section."""
+        self.ensure_one()
+        section_lines = self.child_ids + self.child_ids.child_ids
+        return sum(section_lines.mapped(totals_field))
+
+    def _has_taxes(self):
+        """Check if a line has taxes or not. For (sub)sections, check if any child line has taxes."""
+        self.ensure_one()
+        return bool(
+            self.tax_ids
+            or (self.display_type and any(line._has_taxes() for line in self.child_ids)),
+        )
 
     #=== CORE METHODS OVERRIDES ===#
 

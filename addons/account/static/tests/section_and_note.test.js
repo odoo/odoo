@@ -81,7 +81,7 @@ test("can add a line in a section", async () => {
                 <field
                     name="invoice_line_ids"
                     widget="section_and_note_one2many"
-                    options="{'display_type_field': 'display_type', 'section_content_field': 'name', 'note_content_field': 'name'}"
+                    options="{'subsections': True}"
                 >
                     <list editable="bottom">
                         <control>
@@ -144,7 +144,7 @@ test("can add a line in a subsection", async () => {
                 <field
                     name="invoice_line_ids"
                     widget="section_and_note_one2many"
-                    options="{'display_type_field': 'display_type', 'section_content_field': 'name', 'note_content_field': 'name'}"
+                    options="{'subsections': True}"
                 >
                     <list editable="bottom">
                         <control>
@@ -207,7 +207,7 @@ test("can add a subsection in a section", async () => {
                 <field
                     name="invoice_line_ids"
                     widget="section_and_note_one2many"
-                    options="{'display_type_field': 'display_type', 'section_content_field': 'name', 'note_content_field': 'name'}"
+                    options="{'subsections': True}"
                 >
                     <list editable="bottom">
                         <control>
@@ -261,7 +261,7 @@ test("can add a subsection in a section", async () => {
     expect(".o_is_line_subsection:contains(Aa)").toHaveCount(1);
 });
 
-test("can't add a subsection if value not in selection", async () => {
+test("can't add a subsection if value not in options", async () => {
     InvoiceLine._records[10].display_type = "line_section";
     InvoiceLine._fields.display_type = fields.Selection({
         default: false,
@@ -280,7 +280,6 @@ test("can't add a subsection if value not in selection", async () => {
                 <field
                     name="invoice_line_ids"
                     widget="section_and_note_one2many"
-                    options="{'display_type_field': 'display_type', 'section_content_field': 'name', 'note_content_field': 'name'}"
                 >
                     <list editable="bottom">
                         <control>
@@ -310,7 +309,7 @@ test("can add a section after another", async () => {
                 <field
                     name="invoice_line_ids"
                     widget="section_and_note_one2many"
-                    options="{'display_type_field': 'display_type', 'section_content_field': 'name', 'note_content_field': 'name'}"
+                    options="{'subsections': True}"
                 >
                     <list editable="bottom">
                         <control>
@@ -374,7 +373,7 @@ test("can add a subsection after another", async () => {
                 <field
                     name="invoice_line_ids"
                     widget="section_and_note_one2many"
-                    options="{'display_type_field': 'display_type', 'section_content_field': 'name', 'note_content_field': 'name'}"
+                    options="{'subsections': True}"
                 >
                     <list editable="bottom">
                         <control>
@@ -438,7 +437,7 @@ test("can delete sections", async () => {
                 <field
                     name="invoice_line_ids"
                     widget="section_and_note_one2many"
-                    options="{'display_type_field': 'display_type', 'section_content_field': 'name', 'note_content_field': 'name'}"
+                    options="{'subsections': True}"
                 >
                     <list editable="bottom">
                         <control>
@@ -484,7 +483,7 @@ test("can delete subsections", async () => {
                 <field
                     name="invoice_line_ids"
                     widget="section_and_note_one2many"
-                    options="{'display_type_field': 'display_type', 'section_content_field': 'name', 'note_content_field': 'name'}"
+                    options="{'subsections': True}"
                 >
                     <list editable="bottom">
                         <control>
@@ -541,7 +540,7 @@ test("can duplicate sections", async () => {
                 <field
                     name="invoice_line_ids"
                     widget="section_and_note_one2many"
-                    options="{'display_type_field': 'display_type', 'section_content_field': 'name', 'note_content_field': 'name'}"
+                    options="{'subsections': True}"
                 >
                     <list editable="bottom">
                         <control>
@@ -607,7 +606,7 @@ test("can duplicate subsections", async () => {
                 <field
                     name="invoice_line_ids"
                     widget="section_and_note_one2many"
-                    options="{'display_type_field': 'display_type', 'section_content_field': 'name', 'note_content_field': 'name'}"
+                    options="{'subsections': True}"
                 >
                     <list editable="bottom">
                         <control>
@@ -690,7 +689,7 @@ test("can resequence records inside sections", async () => {
                 <field
                     name="invoice_line_ids"
                     widget="section_and_note_one2many"
-                    options="{'display_type_field': 'display_type', 'section_content_field': 'name', 'note_content_field': 'name'}"
+                    options="{'subsections': True}"
                 >
                     <list editable="bottom">
                         <control>
@@ -784,7 +783,7 @@ test("resequence can be discarded", async () => {
                 <field
                     name="invoice_line_ids"
                     widget="section_and_note_one2many"
-                    options="{'display_type_field': 'display_type', 'section_content_field': 'name', 'note_content_field': 'name'}"
+                    options="{'subsections': True}"
                 >
                     <list editable="bottom">
                         <control>
@@ -860,7 +859,7 @@ test("can resequence sections", async () => {
                 <field
                     name="invoice_line_ids"
                     widget="section_and_note_one2many"
-                    options="{'display_type_field': 'display_type', 'section_content_field': 'name', 'note_content_field': 'name'}"
+                    options="{'subsections': True}"
                 >
                     <list editable="bottom">
                         <control>
@@ -901,7 +900,7 @@ test("add a section", async () => {
                 <field
                     name="invoice_line_ids"
                     widget="section_and_note_one2many"
-                    options="{'display_type_field': 'display_type', 'section_content_field': 'name', 'note_content_field': 'name'}"
+                    options="{'subsections': True}"
                 >
                     <list editable="bottom">
                         <control>
@@ -965,7 +964,7 @@ test("add note", async () => {
                 <field
                     name="invoice_line_ids"
                     widget="section_and_note_one2many"
-                    options="{'display_type_field': 'display_type', 'section_content_field': 'name', 'note_content_field': 'name'}"
+                    options="{'subsections': True}"
                 >
                     <list editable="bottom">
                         <control>
@@ -1029,7 +1028,7 @@ test("section_and_note_text widget", async () => {
                 <field
                     name="invoice_line_ids"
                     widget="section_and_note_one2many"
-                    options="{'display_type_field': 'display_type', 'section_content_field': 'name', 'note_content_field': 'name'}"
+                    options="{'subsections': True}"
                 >
                     <list editable="bottom">
                         <control>
@@ -1093,7 +1092,7 @@ test("sections with required content field", async () => {
                 <field
                     name="invoice_line_ids"
                     widget="section_and_note_one2many"
-                    options="{'display_type_field': 'display_type', 'section_content_field': 'name', 'note_content_field': 'name'}"
+                    options="{'subsections': True}"
                 >
                     <list editable="bottom">
                         <control>
@@ -1163,7 +1162,7 @@ test("sections duplicate with many2many", async () => {
                 <field
                     name="invoice_line_ids"
                     widget="section_and_note_one2many"
-                    options="{'display_type_field': 'display_type', 'section_content_field': 'name', 'note_content_field': 'name'}"
+                    options="{'subsections': True}"
                 >
                     <list editable="bottom">
                         <control>
@@ -1266,7 +1265,7 @@ test("swap sections and subsections", async () => {
                 <field
                     name="invoice_line_ids"
                     widget="section_and_note_one2many"
-                    options="{'display_type_field': 'display_type', 'section_content_field': 'name', 'note_content_field': 'name'}"
+                    options="{'subsections': True}"
                 >
                     <list editable="bottom">
                         <control>
