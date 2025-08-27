@@ -243,8 +243,9 @@ class ProductProduct(models.Model):
                 if at_date or move.is_dropship:
                     in_value = move._get_value(at_date=at_date)
                 if lot:
-                    total_qty = move._get_valued_qty(lot)
-                    in_value = in_value * in_qty / total_qty
+                    lot_qty = move._get_valued_qty(lot)
+                    in_value = in_value * lot_qty / in_qty
+                    in_qty = lot_qty
                 if quantity < 0 and quantity + in_qty >= 0:
                     positive_qty = quantity + in_qty
                     ratio = positive_qty / in_qty
