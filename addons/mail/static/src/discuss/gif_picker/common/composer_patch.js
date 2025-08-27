@@ -1,7 +1,7 @@
 import { Composer } from "@mail/core/common/composer";
 import { markEventHandled } from "@web/core/utils/misc";
 
-import { useRef } from "@odoo/owl";
+import { markup, useRef } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
@@ -37,9 +37,13 @@ const composerPatch = {
         markEventHandled(ev, "Composer.onClickAddGif");
     },
     async sendGifMessage(gif) {
-        await this._sendMessage(gif.url, {
-            parentId: this.props.composer.replyToMessage?.id,
-        });
+        const href = encodeURI(gif.url);
+        await this._sendMessage(
+            markup`<a href="${href}" target="_blank" rel="noreferrer noopener">${gif.url}</a>`,
+            {
+                parentId: this.props.composer.replyToMessage?.id,
+            }
+        );
     },
 };
 patch(Composer.prototype, composerPatch);

@@ -25,11 +25,9 @@ const messageUrlRegExp = new RegExp(`^${escapeRegExp(getOrigin())}/mail/message/
  * @param {string|ReturnType<markup>} rawBody
  * @param {Object} validMentions
  * @param {import("models").Persona[]} validMentions.partners
+ * @returns {string|ReturnType<markup>}
  */
-export async function prettifyMessageContent(
-    rawBody,
-    { validMentions = [], allowEmojiLoading = true } = {}
-) {
+export function prettifyMessageText(rawBody, { validMentions = [] } = {}) {
     let body = htmlTrim(rawBody);
     body = htmlReplace(body, /(\r|\n){2,}/g, () => markup`<br/><br/>`);
     body = htmlReplace(body, /(\r|\n)/g, () => markup`<br/>`);
@@ -42,10 +40,32 @@ export async function prettifyMessageContent(
     // as text internally and only make html enrichment at display time but
     // the current design makes this quite hard to do.
     body = generateMentionsLinks(body, validMentions);
+    body = parseAndTransform(body, addLink);
+    return body;
+}
+
+/**
+ * @param {string|ReturnType<markup>} htmlBody
+ */
+export async function generateEmojisOnHtml(htmlBody, { allowEmojiLoading = true } = {}) {
+    let body = htmlBody;
     if (allowEmojiLoading || odoo.loader.modules.get("@web/core/emoji_picker/emoji_data")) {
         body = await _generateEmojisOnHtml(body);
     }
-    body = parseAndTransform(body, addLink);
+    return body;
+}
+
+/**
+ * @param {string|ReturnType<markup>} rawBody
+ * @param {Object} validMentions
+ * @param {import("models").Persona[]} validMentions.partners
+ */
+export async function prettifyMessageContent(
+    rawBody,
+    { validMentions = [], allowEmojiLoading = true } = {}
+) {
+    let body = prettifyMessageText(rawBody, { validMentions });
+    body = await generateEmojisOnHtml(body, { allowEmojiLoading });
     return body;
 }
 

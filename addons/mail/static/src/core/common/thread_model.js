@@ -1,5 +1,5 @@
 import { AND, fields, Record } from "@mail/core/common/record";
-import { prettifyMessageContent } from "@mail/utils/common/format";
+import { generateEmojisOnHtml } from "@mail/utils/common/format";
 import { assignDefined } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
 
@@ -791,14 +791,14 @@ export class Thread extends Record {
         this.messages.add(message);
     }
 
-    /** @param {string} body
+    /**
+     *  @param {ReturnType<import("@odoo/owl").markup>} body
      *  @param {Object} extraData
      */
     async post(body, postData = {}, extraData = {}) {
         let tmpMsg;
         postData.attachments = postData.attachments ? [...postData.attachments] : []; // to not lose them on composer clear
-        const { attachments, parentId, mentionedChannels, mentionedPartners, mentionedRoles } =
-            postData;
+        const { attachments, parentId } = postData;
         const params = await this.store.getMessagePostParams({ body, postData, thread: this });
         Object.assign(params, extraData);
         const tmpId = this.store.getNextTemporaryId();
@@ -824,16 +824,9 @@ export class Thread extends Record {
             if (parentId) {
                 tmpData.parent_id = this.store["mail.message"].get(parentId);
             }
-            const prettyContent = await prettifyMessageContent(body, {
-                validMentions: this.store.getMentionsFromText(body, {
-                    mentionedChannels,
-                    mentionedPartners,
-                    mentionedRoles,
-                }),
-            });
             tmpMsg = this.store["mail.message"].insert({
                 ...tmpData,
-                body: prettyContent,
+                body: await generateEmojisOnHtml(body),
                 isPending: true,
                 thread: this,
             });
