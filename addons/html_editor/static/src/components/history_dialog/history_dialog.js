@@ -118,7 +118,7 @@ export class HistoryDialog extends Component {
                 "html_field_history_get_comparison_at_revision",
                 [this.props.recordId, this.props.versionedFieldName, revisionId]
             );
-            return markup(comparison);
+            return markup(this._removeExternalBlockHtml(comparison));
         }.bind(this)
     );
 
@@ -155,14 +155,16 @@ export class HistoryDialog extends Component {
                 if (!curentContent || !curentContent.length) {
                     return this.props.noContentHelper;
                 }
-                return markup(curentContent[0][this.props.versionedFieldName]);
+                return markup(
+                    this._removeExternalBlockHtml(curentContent[0][this.props.versionedFieldName])
+                );
             }
             const content = await this.orm.call(
                 this.props.recordModel,
                 "html_field_history_get_content_at_revision",
                 [this.props.recordId, this.props.versionedFieldName, revisionId]
             );
-            return markup(content);
+            return markup(this._removeExternalBlockHtml(content));
         }.bind(this)
     );
 
@@ -171,6 +173,14 @@ export class HistoryDialog extends Component {
         const restoredContent = await this.getRevisionContent(this.state.revisionId);
         this.props.restoreRequested(restoredContent, this.props.close);
         this.env.services.ui.unblock();
+    }
+
+    _removeExternalBlockHtml(str) {
+        const filteringRegex = /<[a-z ]+data-embedded="(?:(?!<).)+<\/[a-z]+>/gim;
+        return str.replace(
+            filteringRegex,
+            `<div class="embedded-history-dialog-placeholder">${_t("Dynamic element")}</div>`
+        );
     }
 
     /**
