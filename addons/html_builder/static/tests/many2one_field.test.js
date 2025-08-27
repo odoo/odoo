@@ -1,7 +1,9 @@
-import { expect, test } from "@odoo/hoot";
-import { setupHTMLBuilder } from "./helpers";
-import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
+import { expect, test, describe } from "@odoo/hoot";
 import { animationFrame, press } from "@odoo/hoot-dom";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
+
+describe.current.tags("desktop");
 
 test("should prevent edition in many2one field", async () => {
     await setupHTMLBuilder(

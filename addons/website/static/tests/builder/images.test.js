@@ -16,9 +16,9 @@ import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
-    dummyBase64Img,
     setupWebsiteBuilderOeId,
 } from "./website_helpers";
+import { dummyBase64Img } from "@html_builder/../tests/helpers";
 import { testImg } from "./image_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
