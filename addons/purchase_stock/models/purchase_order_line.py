@@ -377,6 +377,7 @@ class PurchaseOrderLine(models.Model):
         lines = self.filtered(
             lambda l: l.propagate_cancel == values['propagate_cancel']
             and (l.orderpoint_id == values['orderpoint_id'] if values['orderpoint_id'] and not values['move_dest_ids'] else True)
+            and ((not values.get('group_id') or self['move_dest_ids']) or l.group_id == values.get('group_id'))
         )
 
         # In case 'product_description_variants' is in the values, we also filter on the PO line

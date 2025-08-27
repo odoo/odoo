@@ -166,3 +166,69 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
         # A sales user cannot access the PO directly, despite viewing it's info in the report
         with self.assertRaises(AccessError, msg='Sales user is not allowed to access a PO'):
             po.with_user(self.user_salesperson).button_confirm()
+
+    def test_sale_order_with_mts_else_mto(self):
+        """ Create a sale order for a product with mts_else_mto route and
+        ensure the procurement/stock reservation follows mts_else_mto logic. """
+
+        seller = self.env['product.supplierinfo'].create({
+            'partner_id': self.partner.id,
+            'price': 15.0,
+        })
+
+        mts_else_mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mts_else_mto_route.active = True
+        mts_else_mto_route.rule_ids.procure_method = 'mts_else_mto'
+
+        product_mtso = self.env['product.product'].create({
+            'name': 'Product_mtso',
+            'is_storable': False,
+            'route_ids': [Command.set([mts_else_mto_route.id, self.env.ref('purchase_stock.route_warehouse0_buy').id])],
+            'seller_ids': [Command.set([seller.id])],
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'user_id': self.user_salesperson.id,
+            'order_line': [Command.create({
+                'product_id': product_mtso.id,
+                'product_uom_qty': 2,
+                'product_uom': product_mtso.uom_id.id,
+                'price_unit': 100.0,
+            })]
+        })
+
+        sale_order.action_confirm()
+
+        sale_order_2 = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': product_mtso.id,
+                'product_uom_qty': 4,
+                'price_unit': 120.0,
+            })]
+        })
+
+        sale_order_2.action_confirm()
+
+        stock_moves = self.env['stock.move'].search([
+            ('product_id', '=', product_mtso.id),
+            ('group_id', '=', sale_order.procurement_group_id.id),
+        ])
+
+        purchase_lines = self.env['purchase.order.line'].search([
+            ('product_id', '=', product_mtso.id),
+        ])
+
+        self.assertTrue(stock_moves)
+        self.assertRecordValues(purchase_lines, [{'product_uom_qty': 2.0}, {'product_uom_qty': 4.0}])
+        self.assertEqual(len(purchase_lines), 2)
+        self.assertEqual(purchase_lines.order_id.sale_order_count, 2)
+        self.assertEqual(sale_order.purchase_order_count, 1)
+        self.assertEqual(sale_order_2.purchase_order_count, 1)
+
+        sale_order_2.order_line.product_uom_qty = 6
+        self.assertRecordValues(purchase_lines, [{'product_uom_qty': 2.0}, {'product_uom_qty': 6.0}])
+        self.assertEqual(len(purchase_lines), 2)
+        self.assertEqual(purchase_lines.order_id.sale_order_count, 2)
+        self.assertEqual(sale_order_2.purchase_order_count, 1)
