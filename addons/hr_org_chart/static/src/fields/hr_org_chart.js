@@ -55,7 +55,7 @@ export class HrOrgChart extends Component {
                 record.data.parent_id && record.data.parent_id[0]
                     ? record.data.parent_id[0]
                     : false;
-            const newEmployeeId = record.data.id || false;
+            const newEmployeeId = record.resId || record.data.id || false;
             if (this.lastParent !== newParentId || this.state.employee_id !== newEmployeeId) {
                 this.lastParent = newParentId;
                 this.max_level = null; // Reset max_level to default
