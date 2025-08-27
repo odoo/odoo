@@ -827,7 +827,7 @@ class Website(Home):
             req.raise_for_status()
             response = req.content
         except OSError:
-            return []
+            return json.dumps([])
         xmlroot = ET.fromstring(response)
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
 
