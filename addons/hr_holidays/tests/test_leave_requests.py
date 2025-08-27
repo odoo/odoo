@@ -1265,14 +1265,15 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.employee_emp.user_id = user_portal
 
         # As a manager, create a leave request for the employee linked to a portal user
-        leave = self.env['hr.leave'].with_user(self.user_hrmanager_id).create({
-            'name': 'Holiday Request',
-            'employee_id': self.employee_emp_id,
-            'holiday_status_id': self.holidays_type_1.id,
-            'date_from': (datetime.today() - relativedelta(days=1)),
-            'date_to': datetime.today(),
-            'number_of_days': 1,
-        })
+        with freeze_time('2025, 1, 8'):
+            leave = self.env['hr.leave'].with_user(self.user_hrmanager_id).create({
+                'name': 'Holiday Request',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.holidays_type_1.id,
+                'request_date_from': (datetime.today() - relativedelta(days=7)),
+                'request_date_to': datetime.today(),
+                'number_of_days': 1,
+            })
 
         # Assert the employee cannot approve his own leave request
         with self.assertRaises(AccessError):
