@@ -34,7 +34,6 @@ export class PosPrinterService extends PrinterService {
             return false;
         }
     }
-
     async printHtml() {
         this.setPrinter(this.hardware_proxy.printer);
         try {

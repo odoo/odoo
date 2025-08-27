@@ -38,10 +38,6 @@ export class PaymentScreen extends Component {
         this.notification = useService("notification");
         this.hardwareProxy = useService("hardware_proxy");
         this.printer = useService("printer");
-        if (this.pos.config.use_server_printer) {
-            this.printer.useServerPrinter = true; //TO REMOVE
-            this.printer.posConfigId = this.pos.config.id;
-        }
         this.payment_methods_from_config = this.pos.config.payment_method_ids
             .slice()
             .sort((a, b) => a.sequence - b.sequence);

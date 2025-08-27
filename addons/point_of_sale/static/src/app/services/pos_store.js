@@ -1078,7 +1078,6 @@ export class PosStore extends WithLazyGetterTrap {
             return new EpsonPrinter({ ip: printerConfig.epson_printer_ip });
         }
         else if (printerType === "epson_server_direct_print") {
-            debugger;
             return new EpsonServerDirectPrinter({
                 epsonServerReceiptQueueUrl: this.config.epson_server_receipt_queue_url,
                 access_token: this.config.access_token,
@@ -1678,7 +1677,6 @@ export class PosStore extends WithLazyGetterTrap {
         order = this.getOrder(),
         printBillActionTriggered = false,
     } = {}) {
-        console.log("Printing receipt", this.printer)
         const result = await this.printer.print(
             OrderReceipt,
             {
