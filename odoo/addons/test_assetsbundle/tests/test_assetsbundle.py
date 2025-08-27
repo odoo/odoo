@@ -9,6 +9,7 @@ import textwrap
 import pathlib
 import lxml
 import base64
+import unittest
 
 import odoo.modules
 from odoo import api
@@ -2051,6 +2052,7 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
         self.assertEqual(len(qweb_keys), 1, "lazy_load shouldn't create another entry")
 
 @tagged('-at_install', 'post_install')
+@unittest.skipIf(os.getenv("ODOO_FAKETIME_TEST_MODE"), "This test cannot work with faketime")
 class TestErrorManagement(HttpCase):
 
     def test_assets_bundle_css_error_backend(self):
