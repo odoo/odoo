@@ -8,7 +8,6 @@ export class SaveTranslationPlugin extends Plugin {
 
     resources = {
         save_elements_overrides: withSequence(20, this.saveTranslationElements.bind(this)),
-        group_element_save_handlers: withSequence(20, () => ""),
     };
 
     /**
