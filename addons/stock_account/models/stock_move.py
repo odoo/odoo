@@ -217,6 +217,16 @@ class StockMove(models.Model):
             # Outgoing moves
             if not move._is_out():
                 continue
+            if move.product_id.lot_valuated:
+                value = 0.0
+                for move_line in move.move_line_ids:
+                    if move_line.lot_id:
+                        value += move_line.lot_id.standard_price * move_line.quantity_product_uom
+                    else:
+                        value += move.product_id.standard_price * move_line.quantity_product_uom
+                move.value = value
+                continue
+
             if move.product_id.cost_method == 'fifo':
                 move.value = move.product_id._run_fifo(move.quantity)
             else:
