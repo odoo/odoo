@@ -195,7 +195,8 @@ class AccountMove(models.Model):
             return False
 
         FiscalPosition = self.env['account.fiscal.position']
-        for state_id, moves in self.grouped(_get_fiscal_state).items():
+        draft_moves = self.filtered(lambda m: m.state == 'draft')
+        for state_id, moves in draft_moves.grouped(_get_fiscal_state).items():
             if state_id:
                 virtual_partner = self.env['res.partner'].new({
                     'state_id': state_id.id,
