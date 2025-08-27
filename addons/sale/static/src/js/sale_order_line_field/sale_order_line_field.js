@@ -16,6 +16,11 @@ import { CharField } from '@web/views/fields/char/char_field';
 export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRender {
     static recordRowTemplate = 'sale.ListRenderer.RecordRow';
 
+    setup(){
+        super.setup();
+        this.priceColumns.push('discount');
+    }
+
     /**
      * Product description widget logic
      */
@@ -88,6 +93,10 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
 
     shouldDuplicateSectionItem(record) {
         return !this.isCombo(record) && !this.isComboItem(record);
+    }
+
+    displayDeleteIcon(record){
+        return super.displayDeleteIcon(record) && !this.isComboItem(record);
     }
 }
 
