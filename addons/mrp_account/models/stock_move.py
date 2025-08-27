@@ -52,10 +52,10 @@ class StockMove(models.Model):
         unbuild_svls = svls.filtered('stock_move_id.unbuild_id')
         unbuild_cost_correction_move_list = list()
         for svl in unbuild_svls:
-            build_time_unit_cost = svl.stock_move_id.unbuild_id.mo_id.move_finished_ids.filtered(
-                lambda m: m.product_id == svl.product_id
-            ).stock_valuation_layer_ids.unit_cost
-            unbuild_difference = svl.unit_cost - build_time_unit_cost
+            build_time_value = sum(
+                svl.stock_move_id.origin_returned_move_id.stock_valuation_layer_ids.mapped("value")
+            )
+            unbuild_difference = svl.value - build_time_value
             if svl.product_id.valuation == 'real_time' and not svl.currency_id.is_zero(unbuild_difference):
                 product_accounts = svl.product_id.product_tmpl_id.get_product_accounts()
                 valuation_account, production_account = (

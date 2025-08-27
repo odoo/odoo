@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests import tagged, Form
+from odoo import Command
 
 
 @tagged('post_install', '-at_install')
@@ -179,3 +180,53 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
         # Check that he can validate the landed cost without an access error
         landed_cost.with_user(stock_manager).button_validate()
         self.assertEqual(landed_cost.state, 'done')
+
+    def test_unbuild_MO_with_landed_cost(self):
+        consu_comp = self.env['product.product'].create({
+            'name': 'consu comp',
+            'type': 'consu',
+            'standard_price': 3.0,
+        })
+        final_prod = self.product_refrigerator
+        final_prod.categ_id.property_cost_method = 'average'
+        bom = self.env['mrp.bom'].create({
+            'product_id': final_prod.id,
+            'product_tmpl_id': final_prod.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': consu_comp.id,
+                    'product_qty': 10,
+                }),
+            ]
+        })
+
+        mo = self.env['mrp.production'].create({
+            'product_qty': 1.0,
+            'bom_id': bom.id,
+        })
+        mo.action_confirm()
+        mo.button_mark_done()
+        landed_cost = self.env['stock.landed.cost'].create({
+            'target_model': 'manufacturing',
+            'mrp_production_ids': [mo.id],
+            'cost_lines': [
+                Command.create({
+                    'name': 'landed cost',
+                    'split_method': 'equal',
+                    'price_unit': 8,
+                    'product_id': self.landed_cost.id,
+                })
+            ]
+        })
+        landed_cost.compute_landed_cost()
+        landed_cost.button_validate()
+
+        action = mo.button_unbuild()
+        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard.product_qty = 1
+        unbuild = wizard.save()
+        unbuild.action_validate()
+        self.assertEqual(unbuild.produce_line_ids.filtered(lambda m: m.product_id == final_prod).stock_valuation_layer_ids.unit_cost, 38)
