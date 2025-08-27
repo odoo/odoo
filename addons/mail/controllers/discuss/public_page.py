@@ -104,9 +104,9 @@ class PublicPageController(http.Controller):
     def _response_discuss_public_template(self, store: Store, channel):
         store.add_global_values(
             companyName=request.env.company.name,
-            discuss_public_thread=Store.One(channel),
             inPublicPage=True,
         )
+        store.add_singleton_values("DiscussApp", {"thread": store.One(channel)})
         return request.render(
             "mail.discuss_public_channel_template",
             {
