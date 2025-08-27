@@ -833,6 +833,7 @@ class Picking(models.Model):
                         'greutateNeta': move.weight,
                         'greutateBruta': self._l10n_ro_edi_stock_get_gross_weight(move),
                         'valoareLeiFaraTva': product.list_price,
+                        'move_id': move.id,
                     }
                     for move in data['stock_move_ids'] for product in move.product_id
                 ],
