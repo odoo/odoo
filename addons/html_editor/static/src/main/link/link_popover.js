@@ -182,6 +182,7 @@ export class LinkPopover extends Component {
                         },
                     },
                     {
+                        env: this.__owl__.childEnv,
                         onClose: this.onChange.bind(this),
                     }
                 );

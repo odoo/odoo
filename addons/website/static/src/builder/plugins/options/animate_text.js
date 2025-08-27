@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillDestroy, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, useChildSubEnv, useRef, useState } from "@odoo/owl";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { AnimateOption } from "./animate_option";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -48,17 +48,17 @@ export class AnimateText extends Component {
         this.updateState();
 
         this.root = useRef("root");
+        useChildSubEnv({
+            dependencyManager: new DependencyManager(),
+            getEditingElement: () => this.activeElement,
+            getEditingElements: () => (this.activeElement ? [this.activeElement] : []),
+            weContext: {},
+            editor: this.props.config.editor,
+            editorBus: this.props.config.editorBus,
+            services: this.props.config.editor.services,
+        });
         this.popover = usePopover(AnimateTextPopover, {
-            env: {
-                ...this.env,
-                dependencyManager: new DependencyManager(),
-                getEditingElement: () => this.activeElement,
-                getEditingElements: () => (this.activeElement ? [this.activeElement] : []),
-                weContext: {},
-                editor: this.props.config.editor,
-                editorBus: this.props.config.editorBus,
-                services: this.props.config.editor.services,
-            },
+            env: this.__owl__.childEnv,
             onClose: () => {
                 if (!this.props.config.editor.isDestroyed) {
                     this.updateState();
