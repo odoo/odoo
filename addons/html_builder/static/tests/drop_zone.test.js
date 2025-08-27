@@ -1,10 +1,10 @@
+import {
+    setupHTMLBuilder,
+    waitForEndOfOperation,
+    confirmAddSnippet,
+} from "@html_builder/../tests/helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
-import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
-import {
-    confirmAddSnippet,
-    waitForEndOfOperation,
-} from "@website/../tests/builder/website_helpers";
 
 describe.current.tags("desktop");
 
@@ -13,7 +13,7 @@ const dropzone = (hovered = false) => {
     return `<div class="oe_drop_zone oe_insert${highlightClass}" data-editor-message-default="true" data-editor-message="DRAG BUILDING BLOCKS HERE"></div>`;
 };
 
-test("#wrap element has the 'DRAG BUILDING BLOCKS HERE' message", async () => {
+test("wrapper element has the 'DRAG BUILDING BLOCKS HERE' message", async () => {
     const { contentEl } = await setupHTMLBuilder("");
     expect(contentEl).toHaveAttribute("data-editor-message", "DRAG BUILDING BLOCKS HERE");
 });

@@ -1,10 +1,10 @@
+import { waitForEndOfOperation } from "@html_builder/../tests/helpers";
 import { expect, test } from "@odoo/hoot";
 import { waitForNone } from "@odoo/hoot-dom";
 import { contains, dataURItoBlob, onRpc } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
-    waitForEndOfOperation,
 } from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();

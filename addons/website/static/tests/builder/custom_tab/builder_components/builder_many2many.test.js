@@ -1,15 +1,14 @@
+import { addBuilderAction, addBuilderOption } from "@html_builder/../tests/helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import { xml } from "@odoo/owl";
-import { delay } from "@web/core/utils/concurrency";
 import { contains, defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
+import { delay } from "@web/core/utils/concurrency";
 import {
-    addActionOption,
-    addOption,
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
-import { BuilderAction } from "@html_builder/core/builder_action";
 
 class Test extends models.Model {
     _name = "test";
@@ -30,7 +29,7 @@ test("many2many: find tag, select tag, unselect tag", async () => {
         [2, "Second"],
         [3, "Third"],
     ]);
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderMany2Many dataAttributeAction="'test'" model="'test'" limit="10"/>`,
     });
@@ -83,7 +82,7 @@ test("many2many: async load", async () => {
         [2, "Second"],
         [3, "Third"],
     ]);
-    addActionOption({
+    addBuilderAction({
         testAction: class extends BuilderAction {
             static id = "testAction";
             async load({ value }) {
@@ -100,7 +99,7 @@ test("many2many: async load", async () => {
             }
         },
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderMany2Many action="'testAction'" model="'test'" limit="10"/>`,
     });

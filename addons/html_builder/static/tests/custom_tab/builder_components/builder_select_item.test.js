@@ -1,6 +1,11 @@
+import {
+    addBuilderAction,
+    addBuilderOption,
+    setupHTMLBuilder,
+} from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
-import { expect, test } from "@odoo/hoot";
+import { expect, test, describe } from "@odoo/hoot";
 import {
     animationFrame,
     click,
@@ -12,17 +17,11 @@ import {
 } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
-import {
-    addActionOption,
-    addOption,
-    defineWebsiteModels,
-    setupWebsiteBuilder,
-} from "@website/../tests/builder/website_helpers";
 
-defineWebsiteModels();
+describe.current.tags("desktop");
 
 test("call a specific action with some params and value (BuilderSelectItem)", async () => {
-    addActionOption({
+    addBuilderAction({
         customAction: class extends BuilderAction {
             static id = "customAction";
             apply({ params: { mainParam: testParam }, value }) {
@@ -30,14 +29,14 @@ test("call a specific action with some params and value (BuilderSelectItem)", as
             }
         },
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`
                     <BuilderSelect>
                         <BuilderSelectItem action="'customAction'" actionParam="'myParam'" actionValue="'myValue'">MyAction</BuilderSelectItem>
                     </BuilderSelect>`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeVisible();
     await click(".we-bg-options-container .dropdown");
@@ -49,7 +48,7 @@ test("call a specific action with some params and value (BuilderSelectItem)", as
     expect.verifySteps(["customAction myParam myValue", "customAction myParam myValue"]);
 });
 test("set the label of the select from the active select item and be updated on undo/redo", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`
                     <BuilderSelect attributeAction="'customAttribute'">
@@ -58,7 +57,7 @@ test("set the label of the select from the active select item and be updated on 
                         <BuilderSelectItem attributeActionValue="'b'">B</BuilderSelectItem>
                     </BuilderSelect>`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target" customAttribute="a">x</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target" customAttribute="a">x</div>`);
     setSelection({
         anchorNode: queryFirst(":iframe .test-options-target").childNodes[0],
         anchorOffset: 0,
@@ -77,7 +76,7 @@ test("set the label of the select from the active select item and be updated on 
     expect(".we-bg-options-container .dropdown").toHaveText("B");
 });
 test("consider the priority of the select item", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`
                     <BuilderSelect>
@@ -86,7 +85,7 @@ test("consider the priority of the select item", async () => {
                         <BuilderSelectItem classAction="'a b'">A B</BuilderSelectItem>
                     </BuilderSelect>`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target a">x</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target a">x</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeVisible();
 
@@ -101,11 +100,11 @@ test("consider the priority of the select item", async () => {
     expect(".we-bg-options-container .dropdown").toHaveText("A B");
 });
 test("hide/display BuilderSelect based on applyTo", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".parent-target",
         template: xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
     });
-    addOption({
+    addBuilderOption({
         selector: ".parent-target",
         template: xml`
                 <BuilderSelect applyTo="'.my-custom-class'">
@@ -113,7 +112,7 @@ test("hide/display BuilderSelect based on applyTo", async () => {
                     <BuilderSelectItem classAction="'b'">B</BuilderSelectItem>
                 </BuilderSelect>`,
     });
-    const { getEditableContent } = await setupWebsiteBuilder(
+    const { getEditableContent } = await setupHTMLBuilder(
         `<div class="parent-target"><div class="child-target b">b</div></div>`
     );
     const editableContent = getEditableContent();
@@ -135,11 +134,11 @@ test("hide/display BuilderSelect based on applyTo", async () => {
 });
 
 test("hide/display BuilderSelectItem base on applyTo", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".parent-target",
         template: xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
     });
-    addOption({
+    addBuilderOption({
         selector: ".parent-target",
         template: xml`
                 <BuilderSelect>
@@ -148,7 +147,7 @@ test("hide/display BuilderSelectItem base on applyTo", async () => {
                     <BuilderSelectItem classAction="'c'">C</BuilderSelectItem>
                 </BuilderSelect>`,
     });
-    const { getEditableContent } = await setupWebsiteBuilder(
+    const { getEditableContent } = await setupHTMLBuilder(
         `<div class="parent-target"><div class="child-target o-paragraph">b</div></div>`
     );
     const editableContent = getEditableContent();
@@ -171,20 +170,18 @@ test("hide/display BuilderSelectItem base on applyTo", async () => {
 });
 
 test("hide/display BuilderSelect base on applyTo in BuilderSelectItem", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".parent-target",
         template: xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
     });
-    addOption({
+    addBuilderOption({
         selector: ".parent-target",
         template: xml`
                 <BuilderSelect>
                     <BuilderSelectItem applyTo="'.my-custom-class'" classAction="'a'">A</BuilderSelectItem>
                 </BuilderSelect>`,
     });
-    await setupWebsiteBuilder(
-        `<div class="parent-target"><div class="child-target b">b</div></div>`
-    );
+    await setupHTMLBuilder(`<div class="parent-target"><div class="child-target b">b</div></div>`);
     await contains(":iframe .parent-target").click();
     expect(".options-container button.dropdown-toggle").not.toBeVisible();
 
@@ -193,7 +190,7 @@ test("hide/display BuilderSelect base on applyTo in BuilderSelectItem", async ()
 });
 
 test("use BuilderSelect with styleAction", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".parent-target",
         template: xml`
                 <BuilderSelect styleAction="'border-style'">
@@ -202,7 +199,7 @@ test("use BuilderSelect with styleAction", async () => {
                     <BuilderSelectItem styleActionValue="'none'">none</BuilderSelectItem>
                 </BuilderSelect>`,
     });
-    const { getEditableContent } = await setupWebsiteBuilder(`<div class="parent-target">b</div>`);
+    const { getEditableContent } = await setupHTMLBuilder(`<div class="parent-target">b</div>`);
     const editableContent = getEditableContent();
     await contains(":iframe .parent-target").click();
     expect(".we-bg-options-container .dropdown").toHaveText("none");
@@ -221,7 +218,7 @@ test("use BuilderSelect with styleAction", async () => {
     expect(".we-bg-options-container .dropdown").toHaveText("dotted");
 });
 test("do not put inline style on an element which already has this style through css stylesheets", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test",
         template: xml`
                 <BuilderSelect applyTo="'hr'" styleAction="'border-top-style'">
@@ -229,7 +226,7 @@ test("do not put inline style on an element which already has this style through
                     <BuilderSelectItem styleActionValue="'inset'">inset</BuilderSelectItem>
                 </BuilderSelect>`,
     });
-    await setupWebsiteBuilder(`
+    await setupHTMLBuilder(`
             <div class="test">
                 <hr class="w-100">
             </div>
@@ -244,7 +241,7 @@ test("do not put inline style on an element which already has this style through
     expect(":iframe hr").not.toHaveStyle("border-top-style", { inline: true });
 });
 test("revert a preview when cancelling a BuilderSelect by clicking outside of it", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test",
         template: xml`
                 <BuilderSelect dataAttributeAction="'choice'">
@@ -252,7 +249,7 @@ test("revert a preview when cancelling a BuilderSelect by clicking outside of it
                     <BuilderSelectItem dataAttributeActionValue="'1'">1</BuilderSelectItem>
                 </BuilderSelect>`,
     });
-    await setupWebsiteBuilder(`<div class="test">Test</div>`);
+    await setupHTMLBuilder(`<div class="test">Test</div>`);
     await contains(":iframe .test").click();
     expect(":iframe .test").not.toHaveAttribute("data-choice");
     await contains(".we-bg-options-container .dropdown").click();
@@ -262,7 +259,7 @@ test("revert a preview when cancelling a BuilderSelect by clicking outside of it
     expect(":iframe .test").not.toHaveAttribute("data-choice");
 });
 test("revert a preview when cancelling a BuilderSelect with escape", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test",
         template: xml`
                 <BuilderSelect dataAttributeAction="'choice'">
@@ -270,7 +267,7 @@ test("revert a preview when cancelling a BuilderSelect with escape", async () =>
                     <BuilderSelectItem dataAttributeActionValue="'1'">1</BuilderSelectItem>
                 </BuilderSelect>`,
     });
-    await setupWebsiteBuilder(`<div class="test">Test</div>`);
+    await setupHTMLBuilder(`<div class="test">Test</div>`);
     await contains(":iframe .test").click();
     expect(":iframe .test").not.toHaveAttribute("data-choice");
     await contains(".we-bg-options-container .dropdown").click();
@@ -280,7 +277,7 @@ test("revert a preview when cancelling a BuilderSelect with escape", async () =>
     expect(":iframe .test").not.toHaveAttribute("data-choice");
 });
 test("preview when cycling through options with the keyboard", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test",
         template: xml`
                 <BuilderSelect dataAttributeAction="'choice'">
@@ -288,7 +285,7 @@ test("preview when cycling through options with the keyboard", async () => {
                     <BuilderSelectItem dataAttributeActionValue="'1'">1</BuilderSelectItem>
                 </BuilderSelect>`,
     });
-    await setupWebsiteBuilder(`<div class="test">Test</div>`);
+    await setupHTMLBuilder(`<div class="test">Test</div>`);
     await contains(":iframe .test").click();
     expect(":iframe .test").not.toHaveAttribute("data-choice");
     await contains(".we-bg-options-container .dropdown").press("enter");
@@ -296,7 +293,7 @@ test("preview when cycling through options with the keyboard", async () => {
     expect(":iframe .test").toHaveAttribute("data-choice", "0");
 });
 test("revert a preview selected with the keyboard when cancelling with escape", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test",
         template: xml`
                 <BuilderSelect dataAttributeAction="'choice'">
@@ -304,7 +301,7 @@ test("revert a preview selected with the keyboard when cancelling with escape", 
                     <BuilderSelectItem dataAttributeActionValue="'1'">1</BuilderSelectItem>
                 </BuilderSelect>`,
     });
-    await setupWebsiteBuilder(`<div class="test">Test</div>`);
+    await setupHTMLBuilder(`<div class="test">Test</div>`);
     await contains(":iframe .test").click();
     expect(":iframe .test").not.toHaveAttribute("data-choice");
     await contains(".we-bg-options-container .dropdown").press("enter");
@@ -316,7 +313,7 @@ test("revert a preview selected with the keyboard when cancelling with escape", 
 });
 
 test("isApplied shouldn't be called when the element is removed from the DOM", async () => {
-    addActionOption({
+    addBuilderAction({
         customAction: class extends BuilderAction {
             static id = "customAction";
             isApplied({ editingElement: el }) {
@@ -324,7 +321,7 @@ test("isApplied shouldn't be called when the element is removed from the DOM", a
             }
         },
     });
-    addOption({
+    addBuilderOption({
         selector: ".test",
         template: xml`
                 <BuilderSelect action="'customAction'">
@@ -332,7 +329,7 @@ test("isApplied shouldn't be called when the element is removed from the DOM", a
                     <BuilderSelectItem actionParam="'1'">1</BuilderSelectItem>
                 </BuilderSelect>`,
     });
-    await setupWebsiteBuilder(`<div class="test">Test</div>`);
+    await setupHTMLBuilder(`<div class="test">Test</div>`);
     await contains(":iframe .test").click();
     await contains(".fa-trash ").click();
     expect(":iframe .test").toHaveCount(0);
