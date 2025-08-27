@@ -925,6 +925,19 @@ export class DiscussChannel extends models.ServerModel {
         return result;
     }
 
+    /** @type {typeof models.Model["prototype"]["unlink"]} */
+    unlink(idOrIds) {
+        const kwargs = getKwArgs(arguments, "ids");
+        ({ ids: idOrIds } = kwargs);
+
+        const ids = ensureArray(idOrIds);
+        const channels = this.browse(ids);
+        for (const channel of channels) {
+            this.env["bus.bus"]._sendone(channel, "discuss.channel/delete", { id: channel.id });
+        }
+        return super.unlink(...arguments);
+    }
+
     /**
      * @param {number[]} ids
      * @param {number[]} partner_ids

@@ -1315,3 +1315,13 @@ test("failure is removed from messaging menu when message is deleted", async () 
     pyEnv["mail.message"].unlink([messageId]);
     await contains(".o-mail-NotificationItem", { count: 0 });
 });
+
+test("group chat deleted while messaging menu is open", async () => {
+    const pyEnv = await startServer();
+    const groupId = pyEnv["discuss.channel"].create({ channel_type: "group" });
+    await start();
+    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+    await contains(".o-mail-NotificationItem");
+    pyEnv["discuss.channel"].unlink(groupId);
+    await contains(".o-mail-NotificationItem", { count: 0 });
+});

@@ -118,7 +118,7 @@ export class MessagingMenu extends Component {
     }
 
     get threads() {
-        return this.store.menuThreads;
+        return this.store.menuThreads.filter((t) => t);
     }
 
     /**
