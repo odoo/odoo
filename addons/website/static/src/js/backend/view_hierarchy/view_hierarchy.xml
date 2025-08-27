@@ -12,14 +12,14 @@
             <div class="o_tree_container ms-2 container mt-2" style="margin-bottom: 50px;">
                 <div t-if="siblingViews.length > 0" class="alert alert-info m-1 p-1">
                     Multiple tree exists for this view
-                    <a t-foreach="siblingViews" t-as="siblingView" t-key="siblingView.id" href="#" class="o_load_hierarchy" t-on-click.stop.prevent="() => this.onShowHierarchy(siblingView.id)">
+                    <button t-foreach="siblingViews" t-as="siblingView" t-key="siblingView.id" class="o_load_hierarchy btn btn-link p-0" t-on-click.stop.prevent="() => this.onShowHierarchy(siblingView.id)">
                         <i class="oi oi-arrow-right me-1"/>
                         <t t-esc="siblingView.display_name"/>
                         &lt;<t t-esc="siblingView.key"/>&gt;
                         <t t-if="siblingView.website_id">
                             [<t t-esc="siblingView.website_id[1]"/>]
                         </t>
-                    </a>
+                    </button>
                 </div>
                 <t t-set="viewTree" t-value="state.viewTree"/>
                 <t t-call="website.report_viewhierarchy_children"/>
@@ -37,12 +37,12 @@
             <t t-esc="viewTree.name"/> (<span class="fw-bold" t-esc="viewTree.key"/>)
             <span class="o_text_orange" t-if="viewTree.website_name" t-esc="`[${viewTree.website_name}]`"/>
         </span>
-        <a href="#" t-on-click.stop.prevent="() => this.openFormView(viewTree.id)">
+        <button class="border-0 bg-transparent p-0" t-on-click.stop.prevent="() => this.openFormView(viewTree.id)">
             <i class="fa fa-eye ms-2 text-muted" title="Go to View"/>
-        </a>
-        <a class="o_show_diff" href="#" t-on-click.stop.prevent="() => this.onShowDiffClick(viewTree.id)">
+        </button>
+        <button class="o_show_diff border-0 bg-transparent p-0" t-on-click.stop.prevent="() => this.onShowDiffClick(viewTree.id)">
             <i class="fa fa-files-o ms-2 text-muted" title="Show Arch Diff"/>
-        </a>
+        </button>
         <t t-if="state.searchedView.id === viewTree.id">
             <span class="o_tab_hint text-info ms-auto small fst-italic pe-2">Press &lt;Tab&gt; for next [<t t-esc="state.searchedView.index+1"/>/<t t-esc="state.searchedView.total"/>]</span>
         </t>
