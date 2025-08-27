@@ -163,7 +163,7 @@ export class Base {
         }
     }
 
-    setDirty() {
+    setDirty(skip = false) {
         if (typeof this.id === "number") {
             this.models.commands[this.model.modelName].update.add(this.id);
         }

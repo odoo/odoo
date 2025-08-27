@@ -736,6 +736,12 @@ export class PosOrderline extends Base {
     isSelected() {
         return this.order_id?.uiState?.selected_orderline_uuid === this.uuid;
     }
+    setDirty(skip = false) {
+        if (this.isPartOfCombo && !skip) {
+            this.getAllLinesInCombo().forEach((line) => line.setDirty(true));
+        }
+        super.setDirty(skip);
+    }
 }
 
 registry.category("pos_available_models").add(PosOrderline.pythonModel, PosOrderline);
