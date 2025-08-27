@@ -164,6 +164,39 @@ test("Toolbar should not overflow scroll container at the bottom", async () => {
     expect(toolbar).not.toBeVisible();
 });
 
+test.tags("desktop");
+test("Toolbar visibility should be updated when editable is resized", async () => {
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "test",
+        arch: `
+            <form>
+                <field name="name"/>
+                <field name="txt" widget="html" options="{'height': 300}"/>
+            </form>`,
+    });
+
+    const lastP = queryOne(".odoo-editor-editable p:last-child");
+    // Scroll down to bottom
+    lastP.scrollIntoView();
+
+    // Select last paragraph
+    setSelection({ anchorNode: lastP, anchorOffset: 0, focusNode: lastP, focusOffset: 1 });
+
+    // Toolbar should be visible
+    const toolbar = await waitFor(".o-we-toolbar");
+    expect(toolbar).toBeVisible();
+
+    // Resize editable (which is the scroll container)
+    const editable = queryOne(".odoo-editor-editable");
+    editable.style.height = "150px";
+
+    // Toolbar now overflows the bottom of the container and should be hidden
+    await waitFor(".o-we-toolbar:not(:visible)");
+    expect(toolbar).not.toBeVisible();
+});
+
 describe("powerbox", () => {
     let editor;
     beforeEach(() =>

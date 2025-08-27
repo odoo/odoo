@@ -99,6 +99,9 @@ export class EditorOverlay extends Component {
         }
         const topDocument = editable.ownerDocument.defaultView.top.document;
         const container = closestScrollable(editable) || topDocument.documentElement;
+        const resizeObserver = new ResizeObserver(() => position.unlock());
+        resizeObserver.observe(container);
+        onWillDestroy(() => resizeObserver.disconnect());
         const positionOptions = {
             position: "bottom-start",
             container: container,
