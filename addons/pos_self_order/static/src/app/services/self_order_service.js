@@ -2,7 +2,6 @@ import { Reactive } from "@web/core/utils/reactive";
 import { ConnectionLostError, RPCError, rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { formatCurrency as webFormatCurrency } from "@web/core/currency";
-import { attributeFormatter } from "@pos_self_order/app/utils";
 import { markup } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
@@ -839,20 +838,6 @@ export class SelfOrder extends Reactive {
 
     isTaxesIncludedInPrice() {
         return this.config.iface_tax_included === "total";
-    }
-    getSelectedAttributes(line) {
-        const attributeValues = line.attribute_value_ids;
-        const customAttr = line.custom_attribute_value_ids;
-        return attributeFormatter(
-            this.models["product.attribute"].getAllBy("id"),
-            attributeValues,
-            customAttr
-        );
-    }
-    getFullProductName(line) {
-        const attrs = this.getSelectedAttributes(line);
-        const attrsStr = " (" + attrs.map((a) => a.value).join(", ") + ")";
-        return line.full_product_name + (attrs.length ? attrsStr : "");
     }
     showDownloadButton(order) {
         return this.config.self_ordering_mode === "mobile" && order.state === "paid";
