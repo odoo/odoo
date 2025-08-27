@@ -1246,7 +1246,7 @@ export class PosStore extends WithLazyGetterTrap {
                 error instanceof ConnectionAbortedError ||
                 error instanceof RPCError
             ) {
-                return this.getNextOrderRefsLocal(_t("Order"), order);
+                return this.getNextOrderRefsLocal("", order);
             } else {
                 throw error;
             }
@@ -1266,7 +1266,7 @@ export class PosStore extends WithLazyGetterTrap {
         const SSS = this.session.id.toString().padStart(3, "0");
         const F = "1";
         const OOOO = sequenceNumber.toString().padStart(4, "0");
-        const posReference = `${refPrefix} ${YY}${LL}-${SSS}-${F}${OOOO}`;
+        const posReference = `${YY}${LL}-${SSS}-${F}${OOOO}`;
         order.pos_reference = posReference;
         order.sequence_number = sequenceNumber;
         order.tracking_number = trackingNumber;
