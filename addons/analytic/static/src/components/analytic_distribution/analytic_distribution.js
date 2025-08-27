@@ -44,6 +44,7 @@ export class AnalyticDistribution extends Component {
         force_applicability: { type: String, optional: true },
         allow_save: { type: Boolean, optional: true },
         multi_edit: { type: Boolean, optional: true },
+        placeholder: { type: String, optional: true },
     }
 
     setup(){
@@ -710,9 +711,15 @@ export const analyticDistribution = {
             name: "account_field",
             type: "field",
             availableTypes: ["many2one"],
-        }
+        },
+        {
+            label: _t("Dynamic Placeholder"),
+            name: "placeholder_field",
+            type: "field",
+            availableTypes: ["char"],
+        },
     ],
-    extractProps: ({ attrs, options }) => ({
+    extractProps: ({ attrs, options, placeholder }) => ({
         business_domain: options.business_domain,
         account_field: options.account_field,
         product_field: options.product_field,
@@ -721,6 +728,7 @@ export const analyticDistribution = {
         force_applicability: options.force_applicability,
         allow_save: !options.disable_save,
         multi_edit: options.multi_edit,
+        placeholder: placeholder,
     }),
 };
 

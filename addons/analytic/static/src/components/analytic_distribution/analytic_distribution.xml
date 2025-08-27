@@ -5,7 +5,7 @@
         <div class="o_field_tags d-inline-flex flex-wrap mw-100" t-att-class="{'o_tags_input o_input': !props.readonly}" t-ref="analyticDistribution" t-on-keydown="onWidgetKeydown">
             <TagsList tags="planSummaryTags()"/>
             <div t-if="!props.readonly" class="o_input_dropdown d-inline-flex w-100" tabindex="0" t-ref="mainElement" t-on-focus="onMainElementFocus" t-on-click="onMainElementFocus">
-                <span class="analytic_distribution_placeholder"/>
+                <span class="analytic_distribution_placeholder"><t t-if="!state.formattedData.length" t-esc="props.placeholder"/></span>
                 <span class="o_dropdown_button" />
                 <t t-call="analytic.AnalyticDistributionPopup"/>
             </div>
