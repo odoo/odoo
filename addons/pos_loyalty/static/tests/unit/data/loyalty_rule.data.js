@@ -22,6 +22,10 @@ export class LoyaltyRule extends models.ServerModel {
         ];
     }
 
+    _load_pos_data_dependencies() {
+        return [];
+    }
+
     _records = [
         {
             id: 1,
@@ -37,6 +41,7 @@ export class LoyaltyRule extends models.ServerModel {
             minimum_amount_tax_mode: "incl",
             mode: "auto",
             code: false,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 2,
@@ -52,6 +57,7 @@ export class LoyaltyRule extends models.ServerModel {
             minimum_amount_tax_mode: "excl",
             mode: "auto",
             code: false,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 3,
@@ -67,6 +73,7 @@ export class LoyaltyRule extends models.ServerModel {
             minimum_amount_tax_mode: "excl",
             mode: "with_code",
             code: "EXPIRED",
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

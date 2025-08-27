@@ -9,9 +9,25 @@ export class PosCourse extends models.ServerModel {
         return ["name", "sequence", "category_ids"];
     }
 
+    _load_pos_data_dependencies() {
+        return [];
+    }
+
     _records = [
-        { id: 1, name: "Default Course 1", sequence: 1, category_ids: [1] },
-        { id: 2, name: "Default Course 2", sequence: 2, category_ids: [2] },
+        {
+            id: 1,
+            name: "Default Course 1",
+            sequence: 1,
+            category_ids: [1],
+            write_date: "2025-01-01 10:00:00",
+        },
+        {
+            id: 2,
+            name: "Default Course 2",
+            sequence: 2,
+            category_ids: [2],
+            write_date: "2025-01-01 10:00:00",
+        },
     ];
 }
 

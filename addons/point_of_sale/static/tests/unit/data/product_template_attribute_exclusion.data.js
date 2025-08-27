@@ -6,4 +6,8 @@ export class ProductTemplateAttributeExclusion extends models.ServerModel {
     _load_pos_data_fields() {
         return ["value_ids", "product_template_attribute_value_id"];
     }
+
+    _load_pos_data_dependencies() {
+        return [];
+    }
 }

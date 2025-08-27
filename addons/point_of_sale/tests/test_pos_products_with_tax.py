@@ -666,23 +666,28 @@ class TestPoSProductsWithTax(TestPoSCommon):
         # - Product no tax from XX      => tax from Branch X should be set
         # - Product no tax from branch  => 2 taxes from parent company should be set
         # - Product no tax              => no tax should be set
-        pos_data = pos_session.load_data([])
+        pos_data = pos_session.load_data({
+            'models': [],
+            'records': {},
+            'search_params': {},
+            'only_records': False,
+        })
         self.assertEqual(
-            next(iter(filter(lambda p: p['id'] == product_all_taxes.product_tmpl_id.id, pos_data['product.template'])))['taxes_id'],
+            next(iter(filter(lambda p: p['id'] == product_all_taxes.product_tmpl_id.id, pos_data['product.template']['records'])))['taxes_id'],
             tax_xx.ids
         )
         self.assertEqual(
-            next(iter(filter(lambda p: p['id'] == product_no_xx_tax.product_tmpl_id.id, pos_data['product.template'])))['taxes_id'],
+            next(iter(filter(lambda p: p['id'] == product_no_xx_tax.product_tmpl_id.id, pos_data['product.template']['records'])))['taxes_id'],
             tax_x.ids
         )
-        tax_data_no_branch = next(iter(filter(lambda p: p['id'] == product_no_branch_tax.product_tmpl_id.id, pos_data['product.template'])))['taxes_id']
+        tax_data_no_branch = next(iter(filter(lambda p: p['id'] == product_no_branch_tax.product_tmpl_id.id, pos_data['product.template']['records'])))['taxes_id']
         tax_data_no_branch.sort()
         self.assertEqual(
             tax_data_no_branch,
             (tax_a + tax_b).ids
         )
         self.assertEqual(
-            next(iter(filter(lambda p: p['id'] == product_no_tax.product_tmpl_id.id, pos_data['product.template'])))['taxes_id'],
+            next(iter(filter(lambda p: p['id'] == product_no_tax.product_tmpl_id.id, pos_data['product.template']['records'])))['taxes_id'],
             []
         )
 

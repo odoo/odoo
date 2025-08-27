@@ -5,11 +5,12 @@ import { MockServer } from "@web/../tests/web_test_helpers";
 
 export const getModelDefinitions = () => {
     const session = MockServer.current._models["pos.session"];
-    const params = session.load_data_params();
-    return Object.entries(params).reduce((acc, [modelName, params]) => {
-        acc[modelName] = params.relations;
-        return acc;
-    }, {});
+    const modelsToLoad = session.getModelsToLoad({});
+    const response = {};
+    for (const model of modelsToLoad) {
+        response[model] = session._load_data_relations(model, []);
+    }
+    return response;
 };
 
 let generatedModels = null;

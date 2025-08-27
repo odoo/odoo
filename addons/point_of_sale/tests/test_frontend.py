@@ -2671,7 +2671,12 @@ class TestUi(TestPointOfSaleHttpCommon):
             'iface_available_categ_ids': [(6, 0, [parent_categ.id, children_categs[1].id])],
         })
         self.main_pos_config.open_ui()
-        loaded_data = self.main_pos_config.current_session_id.load_data([])
+        loaded_data = self.main_pos_config.current_session_id.load_data({
+            'models': [],
+            'records': {},
+            'search_params': {},
+            'only_records': True,
+        })
         category_id = [category['id'] for category in loaded_data['pos.category']]
         self.assertNotIn(children_categs[0].id, category_id, "Child category is unavailable and shouldn't appear in the POS")
         self.assertIn(children_categs[1].id, category_id, "Child category is available and should appear in the POS")

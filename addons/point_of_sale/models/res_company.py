@@ -29,8 +29,8 @@ class ResCompany(models.Model):
         required=True)
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('id', '=', config.company_id.id)]
+    def _load_pos_data_domain(self, data):
+        return [('id', '=', data['pos.config'].company_id.id)]
 
     @api.model
     def _load_pos_data_fields(self, config):

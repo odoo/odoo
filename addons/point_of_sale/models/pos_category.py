@@ -37,10 +37,10 @@ class PosCategory(models.Model):
     has_image = fields.Boolean(compute='_compute_has_image')
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
+    def _load_pos_data_domain(self, data):
         domain = []
-        if config.limit_categories:
-            domain += [('id', 'in', config.iface_available_categ_ids.ids)]
+        if data['pos.config'].limit_categories:
+            domain += [('id', 'in', data['pos.config'].iface_available_categ_ids.ids)]
         return domain
 
     @api.model

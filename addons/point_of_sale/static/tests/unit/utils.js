@@ -18,7 +18,6 @@ export const setupPosEnv = async () => {
         db: "pos",
         isEnterprise: true,
     };
-
     await makeDialogMockEnv();
     const store = getService("pos");
     store.setCashier(store.user);
