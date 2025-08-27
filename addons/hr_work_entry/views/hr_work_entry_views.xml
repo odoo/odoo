@@ -33,8 +33,9 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <field name="duration" widget="float_time"/>
                     <field name="work_entry_type_id" widget="many2one_work_entry_type"/>
+                    <label for="duration" />
+                    <div class='d-flex'><field name="duration" widget="float_time"/>hours</div>
                     <field name="name" string="Description" placeholder="Additional Description..."/>
                 </group>
                 <field name="employee_id" invisible="1"/>
