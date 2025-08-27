@@ -42,15 +42,15 @@
     <!-- Theme "Event" default template -->
     <template id="theme_event_template">
         <style id="design-element">
-            h3 {
-                color: #2b3b58;
-                font-size: 18px;
-                font-weight: bolder;
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+                --h3-color: #2b3b58;
+                --h3-font-size: 18px;
+                --h3-font-weight: bolder;
             }
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
         <t t-set="website_url_or_none" t-value="(company_id.website) or '#'"/>
-        <div class="s_header_social o_mail_block_header_social o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_header_social" style="background-color: rgb(26, 36, 54) !important;" data-name="Header Social">
+        <section class="s_header_social o_mail_block_header_social o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_header_social" style="background-color: rgb(26, 36, 54) !important;" data-name="Header Social">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-4">
@@ -66,7 +66,7 @@
                             <span class="fa fa-linkedin text-white" style="background-color: rgb(43, 59, 88) !important;"/>
                         </a>&amp;nbsp;&amp;nbsp;
                         <a style="margin-left:10px" title="X" href="https://twitter.com/Odoo">
-                            <span class="fa fa-twitter text-white" style="background-color: rgb(43, 59, 88) !important;"/>​
+                            <span class="fa fa-twitter text-white" style="background-color: rgb(43, 59, 88) !important;"/>
                         </a>&amp;nbsp;&amp;nbsp;
                         <a style="margin-left:10px" title="Instagram" href="https://www.instagram.com/explore/tags/odoo/">
                             <span class="fa fa-instagram text-white" style="background-color: rgb(43, 59, 88) !important;"/>
@@ -77,16 +77,16 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="s_text_block o_mail_snippet_general pb16 pt32" style="background-color: rgb(43, 59, 88) !important; padding-left: 15px; padding-right: 15px;" data-snippet="s_text_block" data-name="Text">
+        </section>
+        <section class="s_text_block o_mail_snippet_general pb16 pt32" style="background-color: rgb(43, 59, 88) !important; padding-left: 15px; padding-right: 15px;" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <p><font style="color: rgb(255, 255, 255);">Hi there!</font></p>
                 <p><font style="color: rgb(255, 255, 255);">The next edition of <span style="font-weight: bolder;">Odoo Experience Online</span> is coming soon!
                     <br/>To stir up your curiosity, have a look at all the great talks scheduled and highlighted in our agenda!</font>
                 </p>
             </div>
-        </div>
-        <div class="s_media_list o_mail_snippet_general o_cc o_cc2 pb16 pt0" style="background-color: rgb(43, 59, 88) !important; padding-left: 15px; padding-right: 15px;" data-snippet="s_media_list" data-vcss="001" data-name="Media List">
+        </section>
+        <section class="s_media_list o_mail_snippet_general o_cc o_cc2 pb16 pt0" style="background-color: rgb(43, 59, 88) !important; padding-left: 15px; padding-right: 15px;" data-snippet="s_media_list" data-vcss="001" data-name="Media List">
             <div class="container">
                 <div class="row s_nb_column_fixed">
                     <div class="col-lg-12 s_media_list_item pt0 pb0" data-name="Media item">
@@ -139,8 +139,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="s_call_to_action o_mail_snippet_general o_cc o_cc3 pt40 pb40" style="background-color: rgb(26, 36, 54) !important;" data-snippet="s_call_to_action" data-name="Call to Action">
+        </section>
+        <section class="s_call_to_action o_mail_snippet_general o_cc o_cc3 pt40 pb40" style="background-color: rgb(26, 36, 54) !important;" data-snippet="s_call_to_action" data-name="Call to Action">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12" style="border-color: rgb(56, 62, 69) !important;">
@@ -152,8 +152,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-200 pt16 pb16" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
+        </section>
+        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-200 pt16 pb16" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12 o_mail_footer_links pt8 pb8" style="text-align: center;">
@@ -168,44 +168,38 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     </template>
 
     <!-- Theme "Blogging" default template -->
     <template id="theme_blogging_template">
         <style id="design-element">
-            h1 {
-                font-weight: bolder;
-                color: #36a6d2;
-                font-family: Courier New, Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
-            }
-            h2 {
-                font-weight: bolder;
-                font-family: Courier New, Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
-            }
-            h3 {
-                font-size: 18px;
-                font-weight: bolder;
-                color: #36a6d2;
-                font-family: Courier New, Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
-            }
-            p, p > *, li, li > * {
-                color: #adadad;
-            }
-            a:not(.btn), a.btn.btn-link {
-                color: #36a6d2;
-            }
-            a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
-                background-color: #36a6d2;
-                border-color: #36a6d2;
-            }
-            hr {
-                border-top-color: #e9ecef !important;
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+                --h1-font-weight: bolder;
+                --h1-color: #36a6d2;
+                --h1-font-family: Courier New, Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+
+                --h2-font-weight: bolder;
+                --h2-font-family: Courier New, Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+
+                --h3-font-size: 18px;
+                --h3-font-weight: bolder;
+                --h3-color: #36a6d2;
+                --h3-font-family: Courier New, Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+
+                --text-color: #adadad;
+
+                --link-color: #36a6d2;
+
+                --btn-primary-background-color: #36a6d2;
+                --btn-primary-border-color: #36a6d2;
+
+                --separator-border-color: #e9ecef !important;
             }
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
         <t t-set="website_url_or_none" t-value="(company_id.website) or '#'"/>
-        <div class="s_header_social o_mail_block_header_social o_mail_snippet_general pt40 pb32" data-snippet="s_mail_block_header_social" data-name="Header Social">
+        <section class="s_header_social o_mail_block_header_social o_mail_snippet_general pt40 pb32" data-snippet="s_mail_block_header_social" data-name="Header Social">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-4">
@@ -215,15 +209,15 @@
                     </div>
                     <div class="col-lg-8 o_mail_header_social" style="text-align:right;">
                         <a title="Facebook" href="https://www.facebook.com/Odoo">
-                            <span class="fa fa-facebook" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>​
+                            <span class="fa fa-facebook" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>
                         </a>
                         &amp;nbsp; &amp;nbsp;
                         <a style="margin-left:10px" title="LinkedIn" href="https://www.linkedin.com/company/odoo">
-                            <span class="fa fa-linkedin" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>​
+                            <span class="fa fa-linkedin" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>
                         </a>
                         &amp;nbsp; &amp;nbsp;
                         <a style="margin-left:10px" title="X" href="https://twitter.com/Odoo">
-                            <span class="fa fa-twitter" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>​
+                            <span class="fa fa-twitter" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>
                         </a>
                         &amp;nbsp; &amp;nbsp;
                         <a style="margin-left:10px" title="Instagram" href="https://www.instagram.com/explore/tags/odoo/">
@@ -237,11 +231,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
         <div class="s_hr o_mail_snippet_general pt0 pb0" data-snippet="s_hr" data-name="Separator">
             <hr class="s_hr_1px s_hr_solid"/>
         </div>
-        <div class="s_text_image o_mail_snippet_general" data-snippet="s_text_image" data-name="Text - Image">
+        <section class="s_text_image o_mail_snippet_general" data-snippet="s_text_image" data-name="Text - Image">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-7 pt16 pb16">
@@ -255,11 +249,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
         <div class="s_hr o_mail_snippet_general pt0 pb16" data-snippet="s_hr" data-name="Separator">
             <hr class="s_hr_1px s_hr_solid"/>
         </div>
-        <div class="s_media_list o_mail_snippet_general o_cc o_cc2 pb0 pt0 bg-white" style="padding-left: 15px; padding-right: 15px;" data-snippet="s_media_list" data-vcss="001" data-name="Media List">
+        <section class="s_media_list o_mail_snippet_general o_cc o_cc2 pb0 pt0 bg-white" style="padding-left: 15px; padding-right: 15px;" data-snippet="s_media_list" data-vcss="001" data-name="Media List">
             <div class="container">
                 <div class="row s_nb_column_fixed s_col_no_bgcolor">
                     <div class="col-lg-12 s_media_list_item pb0 pt0" data-name="Media item">
@@ -320,11 +314,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
         <div class="s_hr o_mail_snippet_general pt16 pb0" data-snippet="s_hr" data-name="Separator">
             <hr class="s_hr_1px s_hr_solid"/>
         </div>
-        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_footer_social" data-name="Footer Social Center">
+        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_footer_social" data-name="Footer Social Center">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12 o_mail_footer_links pt8 pb8" style="text-align: center;">
@@ -339,48 +333,41 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     </template>
 
     <!-- Theme "Coupon" default template -->
     <template id="theme_coupon_template">
         <style id="design-element">
-            h1 {
-                font-size: 48px;
-                font-weight: bolder;
-                font-family: Georgia, Times, "Times New Roman", serif;
-            }
-            h2 {
-                font-family: Georgia, Times, "Times New Roman", serif;
-            }
-            h3 {
-                font-size: 18px;
-                font-weight: bolder;
-                font-family: Georgia, Times, "Times New Roman", serif;
-            }
-            p, p > *, li, li > * {
-                font-family: Georgia, Times, "Times New Roman", serif;
-            }
-            a:not(.btn), a.btn.btn-link {
-                color: #C69678;
-            }
-            a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
-                background-color: #C69678;
-                border-color: #C69678;
-            }
-            a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary {
-                background-color: #fadcc0;
-                color: #242530;
-                border-color: #c69678;
-            }
-            hr {
-                border-top-color: #c69678 !important;
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+
+                --h1-font-size: 48px;
+                --h1-font-weight: bolder;
+                --h1-font-family: Georgia, Times, "Times New Roman", serif;
+
+                --h2-font-family: Georgia, Times, "Times New Roman", serif;
+
+                --h3-font-size: 18px;
+                --h3-font-weight: bolder;
+                --h3-font-family: Georgia, Times, "Times New Roman", serif;
+
+                --text-font-family: Georgia, Times, "Times New Roman", serif;
+
+                --link-color: #C69678;
+
+                --btn-primary-background-color: #C69678;
+                --btn-primary-border-color: #C69678;
+                --btn-secondary-background-color: #fadcc0;
+                --btn-secondary-color: #242530;
+                --btn-secondary-border-color: #c69678;
+
+                --separator-border-color: #c69678 !important;
             }
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
         <t t-set="future_date" t-value="(datetime.date.today() + datetime.timedelta(days=30))"/>
         <t t-set="website_url_or_none" t-value="(company_id.website) or '#'"/>
-        <div class="s_header_logo o_mail_block_header_logo o_mail_snippet_general" data-snippet="s_mail_block_header_logo" data-name="Centered Logo" style="background-color: rgb(36, 37, 48) !important;">
+        <section class="s_header_logo o_mail_block_header_logo o_mail_snippet_general" data-snippet="s_mail_block_header_logo" data-name="Centered Logo" style="background-color: rgb(36, 37, 48) !important;">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-4" style="text-align: center;">
@@ -398,10 +385,10 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="s_cover o_mail_snippet_general" data-snippet="s_cover" data-name="Cover" style="background-color: rgb(36, 37, 48) !important;">
+        </section>
+        <section class="s_cover o_mail_snippet_general" data-snippet="s_cover" data-name="Cover" style="background-color: rgb(36, 37, 48) !important;">
             <img src="/mass_mailing_themes/static/src/img/theme_coupon/vip_banner_part1.png" alt="Cover" class="img-fluid w-100 mx-auto"/>
-        </div>
+        </section>
         <div class="s_hr o_mail_snippet_general pt0 pb16" data-snippet="s_hr" data-name="Separator" style="background-color: rgb(36, 37, 48) !important;">
             <hr class="s_hr_1px s_hr_solid"/>
         </div>
@@ -414,14 +401,14 @@
         <div class="s_hr o_mail_snippet_general pt16 pb0" data-snippet="s_hr" data-name="Separator" style="background-color: rgb(36, 37, 48) !important;">
             <hr class="s_hr_1px s_hr_solid"/>
         </div>
-        <div class="s_cover o_mail_snippet_general" data-snippet="s_cover" data-name="Cover" style="background-color: rgb(36, 37, 48) !important;">
+        <section class="s_cover o_mail_snippet_general" data-snippet="s_cover" data-name="Cover" style="background-color: rgb(36, 37, 48) !important;">
             <img src="/mass_mailing_themes/static/src/img/theme_coupon/vip_banner_part2.png" alt="Cover" class="img-fluid w-100 mx-auto"/>
-        </div>
-        <div class="s_discount2 o_mail_block_discount2 o_mail_snippet_general pt32 pb32" data-snippet="s_coupon_code" data-name="Promo Code" style="background-color: rgb(36, 37, 48) !important; text-align: center; padding-left: 15px; padding-right: 15px;">
+        </section>
+        <section class="s_discount2 o_mail_block_discount2 o_mail_snippet_general pt32 pb32" data-snippet="s_coupon_code" data-name="Promo Code" style="background-color: rgb(36, 37, 48) !important; text-align: center; padding-left: 15px; padding-right: 15px;">
             <p style="text-align: center; color: white;">Here's your coupon code*:</p>
             <table border="0" cellpadding="0" cellspacing="0" align="center" class="border" style="background-color: rgb(36, 37, 48) !important; border-collapse: collapse; border-color: rgb(198, 150, 120) !important;">
                 <tr>
-                    <td width="50" height="50" align="center" class="o_mail_no_resize" style="min-width: 50px; max-width: 5.6rem; width: 50px !important; background-color: rgb(198, 150, 120) !important; text-align: center;"><i class="fa fa-2x fa-ticket" style="color: rgb(36, 37, 48) !important;"/>​</td>
+                    <td width="50" height="50" align="center" class="o_mail_no_resize" style="min-width: 50px; max-width: 5.6rem; width: 50px !important; background-color: rgb(198, 150, 120) !important; text-align: center;"><i class="fa fa-2x fa-ticket" style="color: rgb(36, 37, 48) !important;"/></td>
                     <td width="200" height="50" align="center" style="min-width: 150px; width: 200px;"><p class="mb0"><span style="font-weight: bolder; color: white;">VIP10</span></p></td>
                 </tr>
             </table>
@@ -431,8 +418,8 @@
             <p style="text-align:center;">
                 <a class="btn btn-primary btn-lg" t-att-href="website_url_or_none">Redeem it now</a>
             </p>
-        </div>
-        <div class="s_call_to_action o_mail_snippet_general o_cc o_cc3 pt24 pb24" data-snippet="s_call_to_action" data-name="Call to Action" style="background-color: rgb(36, 37, 48) !important;">
+        </section>
+        <section class="s_call_to_action o_mail_snippet_general o_cc o_cc3 pt24 pb24" data-snippet="s_call_to_action" data-name="Call to Action" style="background-color: rgb(36, 37, 48) !important;">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-10 offset-lg-1 border pt24 pb16" style="border-width: 2px !important; border-color: rgb(198, 150, 120) !important;">
@@ -444,8 +431,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_footer_social" data-name="Footer Center" style="background-color: rgb(36, 37, 48) !important;">
+        </section>
+        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_footer_social" data-name="Footer Center" style="background-color: rgb(36, 37, 48) !important;">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12" style="text-align: center;" t-translation="off">
@@ -479,39 +466,34 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     </template>
 
     <!-- Theme "Magazine" default template -->
     <template id="theme_magazine_template">
         <style id="design-element">
-            h1 {
-                font-weight: bolder;
-                font-family: Tahoma, Verdana, Segoe, sans-serif;
-            }
-            h2 {
-                font-size: 18px;
-                font-weight: bolder;
-                font-family: Tahoma, Verdana, Segoe, sans-serif;
-            }
-            h3 {
-                font-size: 14px;
-                font-weight: bolder;
-                color: #ffffff;
-                font-family: Tahoma, Verdana, Segoe, sans-serif;
-            }
-            p, p > *, li, li > * {
-                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            }
-            a:not(.btn), a.btn.btn-link {
-                color: #6c757d;
-            }
-            hr {
-                border-top-color: #ced4da !important;
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+                --h1-font-weight: bolder;
+                --h1-font-family: Tahoma, Verdana, Segoe, sans-serif;
+
+                --h2-font-size: 18px;
+                --h2-font-weight: bolder;
+                --h2-font-family: Tahoma, Verdana, Segoe, sans-serif;
+
+                --h3-font-size: 14px;
+                --h3-font-weight: bolder;
+                --h3-color: #ffffff;
+                --h3-font-family: Tahoma, Verdana, Segoe, sans-serif;
+
+                --text-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+                --link-color: #6c757d;
+
+                --separator-border-color: #ced4da !important;
             }
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
-        <div class="s_header_logo o_mail_block_header_logo o_mail_snippet_general bg-white pt32 pb16" data-snippet="s_mail_block_header_logo" data-name="Centered Logo">
+        <section class="s_header_logo o_mail_block_header_logo o_mail_snippet_general bg-white pt32 pb16" data-snippet="s_mail_block_header_logo" data-name="Centered Logo">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-3">
@@ -530,11 +512,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
         <div class="s_hr o_mail_snippet_general pb32" data-snippet="s_hr" data-name="Separator">
             <hr class="s_hr_1px s_hr_solid"/>
         </div>
-        <div class="s_text_image o_mail_snippet_general" data-snippet="s_text_image" data-name="Image - Text">
+        <section class="s_text_image o_mail_snippet_general" data-snippet="s_text_image" data-name="Image - Text">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-8 px-0">
@@ -574,11 +556,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
         <div class="s_hr o_mail_snippet_general pt32 pb32" data-snippet="s_hr" data-name="Separator">
             <hr class="s_hr_1px s_hr_solid"/>
         </div>
-        <div class="s_mail_product_list o_mail_snippet_general pt0" data-snippet="s_product_list" data-name="Items">
+        <section class="s_mail_product_list o_mail_snippet_general pt0" data-snippet="s_product_list" data-name="Items">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 o_cc">
@@ -609,11 +591,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
         <div class="s_hr o_mail_snippet_general pt16 pb32" data-snippet="s_hr" data-name="Separator">
             <hr class="s_hr_1px s_hr_solid"/>
         </div>
-        <div class="s_text_image o_mail_snippet_general" data-snippet="s_text_image" data-name="Text - Image">
+        <section class="s_text_image o_mail_snippet_general" data-snippet="s_text_image" data-name="Text - Image">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-6 o_cc pt16 pb16">
@@ -631,11 +613,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
         <div class="s_hr o_mail_snippet_general pt32 pb16" data-snippet="s_hr" data-name="Separator">
             <hr class="s_hr_1px s_hr_solid"/>
         </div>
-        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
+        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12" style="text-align: center;" t-translation="off">
@@ -669,40 +651,40 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     </template>
 
     <!-- Theme "Big News" default template -->
     <template id="theme_bignews_template">
         <style id="design-element">
-            h1 {
-                font-size: 36px;
-                font-weight: bolder;
-                font-style: italic;
-                color: #BA0013;
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+                --h1-font-size: 36px;
+                --h1-font-weight: bolder;
+                --h1-font-style: italic;
+                --h1-color: #BA0013;
             }
             h2 {
-                font-size: 14px;
-                font-weight: bolder;
+                --h2-font-size: 14px;
+                --h2-font-weight: bolder;
             }
             h3 {
-                font-size: 18px;
-                font-weight: bolder;
+                --h3-font-size: 18px;
+                --h3-font-weight: bolder;
             }
             p, p > *, li, li > * {
-                color: #6c757d;
+                --text-color: #6c757d;
             }
             a:not(.btn), a.btn.btn-link{
-                color: #BA0013;
+                --link-color: #BA0013;
             }
             a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
-                background-color: #BA0013;
-                border-color: #BA0013;
+                --btn-primary-background-color: #BA0013;
+                --btn-primary-border-color: #BA0013;
             }
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
         <t t-set="future_date" t-value="(datetime.date.today() + datetime.timedelta(days=30))"/>
-        <div class="s_header_logo o_mail_block_header_logo o_mail_snippet_general pt16 pb16 bg-200" data-snippet="s_mail_block_header_logo" data-name="Header Logo">
+        <section class="s_header_logo o_mail_block_header_logo o_mail_snippet_general pt16 pb16 bg-200" data-snippet="s_mail_block_header_logo" data-name="Header Logo">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-4"></div>
@@ -714,16 +696,16 @@
                     <div class="col-lg-4" style="text-align:right"></div>
                 </div>
             </div>
-        </div>
-        <div class="s_title o_mail_snippet_general pt32 pb16" data-snippet="s_title" data-name="Title">
+        </section>
+        <section class="s_title o_mail_snippet_general pt32 pb16" data-snippet="s_title" data-name="Title">
             <div class="container s_allow_columns">
                 <h1 style="text-align: center;">WE'RE MOVING</h1>
             </div>
-        </div>
-        <div class="s_cover o_mail_snippet_general pt0" data-snippet="s_cover" data-name="Cover">
+        </section>
+        <section class="s_cover o_mail_snippet_general pt0" data-snippet="s_cover" data-name="Cover">
             <img src="/mass_mailing_themes/static/src/img/theme_bignews/s_default_image_cover.jpg" alt="Cover image" class="img-fluid w-100 mx-auto" style="padding: 15px;"/>
-        </div>
-        <div class="s_text_block o_mail_snippet_general pt32 pb32" data-snippet="s_text_block" data-name="Text" style="padding-left: 15px; padding-right: 15px;">
+        </section>
+        <section class="s_text_block o_mail_snippet_general pt32 pb32" data-snippet="s_text_block" data-name="Text" style="padding-left: 15px; padding-right: 15px;">
             <div class="container s_allow_columns">
                 <h2>BEGINNING <t t-out="future_date.strftime('%B %d').upper()" /></h2>
                 <p>We are proud to announce that due to our remarkable growth in the Springfield area, we are moving to a new location on July 1.
@@ -739,25 +721,25 @@
                     <a role="button" href="#" class="btn btn-primary">READ MORE</a>
                 </p>
             </div>
-        </div>
-        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-200 pt16 pb16" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
+        </section>
+        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-200 pt16 pb16" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12" style="text-align: center;" t-translation="off">
                         <a aria-label="Facebook" title="Facebook" href="https://www.facebook.com/Odoo">
-                            <span class="fa fa-facebook" style="color: rgb(186, 0, 19) !important;"/>​
+                            <span class="fa fa-facebook" style="color: rgb(186, 0, 19) !important;"/>
                         </a>&amp;nbsp;&amp;nbsp;
                         <a style="margin-left:10px" aria-label="LinkedIn" title="LinkedIn" href="https://www.linkedin.com/company/odoo">
-                            <span class="fa fa-linkedin" style="color: rgb(186, 0, 19) !important;"/>​
+                            <span class="fa fa-linkedin" style="color: rgb(186, 0, 19) !important;"/>
                         </a>&amp;nbsp;&amp;nbsp;
                         <a style="margin-left:10px" aria-label="X" title="X" href="https://twitter.com/Odoo">
-                            <span class="fa fa-twitter" style="color: rgb(186, 0, 19) !important;"/>​
+                            <span class="fa fa-twitter" style="color: rgb(186, 0, 19) !important;"/>
                         </a>&amp;nbsp;&amp;nbsp;
                         <a style="margin-left:10px" aria-label="Instagram" title="Instagram" href="https://www.instagram.com/explore/tags/odoo/">
-                            <span class="fa fa-instagram" style="color: rgb(186, 0, 19) !important;"/>​
+                            <span class="fa fa-instagram" style="color: rgb(186, 0, 19) !important;"/>
                         </a>&amp;nbsp;&amp;nbsp;
                         <a style="margin-left:10px" aria-label="TikTok" title="TikTok" href="https://www.tiktok.com/@odoo">
-                            <span class="fa fa-tiktok" style="color: rgb(186, 0, 19) !important;"/>​
+                            <span class="fa fa-tiktok" style="color: rgb(186, 0, 19) !important;"/>
                         </a>
                     </div>
                 </div>
@@ -774,36 +756,31 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     </template>
 
     <!-- Theme "Promotion" default template -->
     <template id="theme_promotion_template">
         <style id="design-element">
-            h1 {
-                font-weight: bolder;
-            }
-            h2 {
-                font-weight: bolder;
-            }
-            h3 {
-                font-size: 18px;
-                font-weight: bolder;
-            }
-            a:not(.btn), a.btn.btn-link {
-                color: #000000;
-            }
-            a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
-                background-color: #000000;
-                border-color: #000000;
-            }
-            hr {
-                width: 75%;
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+                --h1-font-weight: bolder;
+
+                --h2-font-weight: bolder;
+
+                --h3-font-size: 18px;
+                --h3-font-weight: bolder;
+
+                --link-color: #000000;
+
+                --btn-primary-background-color: #000000;
+                --btn-primary-border-color: #000000;
+
+                --separator-width: 75%;
             }
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
         <t t-set="website_url_or_none" t-value="(company_id.website) or '#'"/>
-        <div class="s_header_text_social o_mail_block_header_text_social o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_header_text_social" data-name="Left Text">
+        <section class="s_header_text_social o_mail_block_header_text_social o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_header_text_social" data-name="Left Text">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-4 pt16 pb16">
@@ -820,8 +797,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="s_title o_mail_snippet_general pt72 pb80" data-snippet="s_title" data-name="Title" style="background-color: rgb(255, 187, 0) !important;">
+        </section>
+        <section class="s_title o_mail_snippet_general pt72 pb80" data-snippet="s_title" data-name="Title" style="background-color: rgb(255, 187, 0) !important;">
             <div class="container s_allow_columns">
                 <h1 style="text-align:center">
                         <font style="font-size: 62px; background-color: rgb(255, 255, 255);">&amp;nbsp;10% OFF&amp;nbsp;</font>
@@ -829,8 +806,8 @@
                         <font style="font-size: 62px; background-color: rgb(255, 255, 255);">&amp;nbsp;SALES&amp;nbsp;</font>
                 </h1>
             </div>
-        </div>
-        <div class="s_discount2 o_mail_block_discount2 o_mail_snippet_general pt32 pb32" data-name="Promo Code" style="padding-left: 15px; padding-right: 15px;">
+        </section>
+        <section class="s_discount2 o_mail_block_discount2 o_mail_snippet_general pt32 pb32" data-name="Promo Code" style="padding-left: 15px; padding-right: 15px;">
             <h2 style="text-align: center;">GET 10%&amp;nbsp;OFF</h2>
             <p style="text-align: center;">
                 Valid on all sales prices in our webshop.
@@ -845,11 +822,11 @@
             <p style="text-align:center;">
                 <a role="button" class="btn btn-primary btn-lg" t-att-href="website_url_or_none">Visit the website</a>
             </p>
-        </div>
+        </section>
         <div class="s_hr pt16 pb16" data-snippet="s_hr" data-name="Separator">
             <hr class="s_hr_1px s_hr_solid"/>
         </div>
-        <div class="s_features o_mail_snippet_general" data-snippet="s_features" data-name="Features">
+        <section class="s_features o_mail_snippet_general" data-snippet="s_features" data-name="Features">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-4 pt16 pb16" style="text-align:center;">
@@ -867,8 +844,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_left o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_footer_social_left" data-name="Footer Left" style="background-color: rgb(255, 187, 0) !important;">
+        </section>
+        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_left o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_footer_social_left" data-name="Footer Left" style="background-color: rgb(255, 187, 0) !important;">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6">
@@ -892,7 +869,7 @@
                                 <span class="fa fa-linkedin bg-black" style="color: rgb(255, 187, 0) !important;"/>
                             </a>&amp;nbsp;&amp;nbsp;
                             <a style="margin-left:10px" aria-label="X" title="X" href="https://twitter.com/Odoo">
-                                <span class="fa fa-twitter bg-black" style="color: rgb(255, 187, 0) !important;"/>​
+                                <span class="fa fa-twitter bg-black" style="color: rgb(255, 187, 0) !important;"/>
                             </a>&amp;nbsp;&amp;nbsp;
                             <a aria-label="Instagram" title="Instagram" href="https://www.instagram.com/explore/tags/odoo/">
                                 <span class="fa fa-instagram bg-black" style="color: rgb(255, 187, 0) !important;"/>
@@ -907,46 +884,41 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     </template>
 
     <!-- Theme "CoffeeBreak" default template -->
     <template id="theme_coffeebreak_template">
         <style id="design-element">
-            h1 {
-                font-size: 42px;
-                font-weight: bolder;
-                color: #543427;
-                font-family: Georgia, Times, "Times New Roman", serif;
-            }
-            h2 {
-                font-size: 14px;
-                color: #937853;
-            }
-            h3 {
-                font-size: 14px;
-                font-weight: bolder;
-                color: #543427;
-            }
-            a:not(.btn), a.btn.btn-link {
-                text-decoration-line: underline;
-                color: #397B21;
-            }
-            a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
-                color: #543427;
-                background-color: #D3C5B1;
-                border-color: #D3C5B1;
-            }
-            a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary {
-                color: #FFFFFF;
-                background-color: #543427;
-                border-color: #543427;
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+                --h1-font-size: 42px;
+                --h1-font-weight: bolder;
+                --h1-color: #543427;
+                --h1-font-family: Georgia, Times, "Times New Roman", serif;
+
+                --h2-font-size: 14px;
+                --h2-color: #937853;
+
+                --h3-font-size: 14px;
+                --h3-font-weight: bolder;
+                --h3-color: #543427;
+
+                --link-text-decoration-line: underline;
+                --link-color: #397B21;
+
+                --btn-primary-color: #543427;
+                --btn-primary-background-color: #D3C5B1;
+                --btn-primary-border-color: #D3C5B1;
+
+                --btn-secondary-color: #FFFFFF;
+                --btn-secondary-background-color: #543427;
+                --btn-secondary-border-color: #543427;
             }
             hr {
                 background-color: rgba(0,0,0,0);
             }
         </style>
-        <div class="s_header_social o_mail_block_header_social o_mail_snippet_general" style="background-color: rgb(238, 233, 226) !important;" data-snippet="s_mail_block_header_social" data-name="Left Logo">
+        <section class="s_header_social o_mail_block_header_social o_mail_snippet_general" style="background-color: rgb(238, 233, 226) !important;" data-snippet="s_mail_block_header_social" data-name="Left Logo">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 pt16 pb16">
@@ -956,34 +928,34 @@
                     </div>
                     <div class="col-lg-4 o_mail_header_social" style="text-align: right">
                             <a aria-label="Facebook" title="Facebook" target="_blank" href="https://www.facebook.com/Odoo">
-                                <span class="fa fa-facebook" style="color: rgb(84, 52, 39) !important; background-color: rgb(211, 197, 177) !important;">​</span>
+                                <span class="fa fa-facebook" style="color: rgb(84, 52, 39) !important; background-color: rgb(211, 197, 177) !important;"></span>
                             </a>&amp;nbsp;&amp;nbsp;
                             <a style="margin-left:10px" aria-label="X" title="X" target="_blank" href="https://twitter.com/Odoo">
-                                <span class="fa fa-twitter" style="color: rgb(84, 52, 39) !important; background-color: rgb(211, 197, 177) !important;">​</span>
+                                <span class="fa fa-twitter" style="color: rgb(84, 52, 39) !important; background-color: rgb(211, 197, 177) !important;"></span>
                             </a>&amp;nbsp;&amp;nbsp;
                             <a style="margin-left:10px" aria-label="Instagram" title="Instagram" target="_blank" href="https://www.instagram.com/explore/tags/odoo/" contenteditable="true">
-                                <span class="fa fa-instagram" style="color: rgb(84, 52, 39) !important; background-color: rgb(211, 197, 177) !important;">​</span>
+                                <span class="fa fa-instagram" style="color: rgb(84, 52, 39) !important; background-color: rgb(211, 197, 177) !important;"></span>
                             </a>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="s_title o_mail_snippet_general pt16 pb16" data-snippet="s_title" data-name="Title">
+        </section>
+        <section class="s_title o_mail_snippet_general pt16 pb16" data-snippet="s_title" data-name="Title">
             <div class="container s_allow_columns">
                 <h1 class="text-center">Company News</h1>
                 <h2 class="text-center">28 Jan 2022</h2>
             </div>
-        </div>
+        </section>
         <div class="s_hr o_mail_snippet_general pt16 pb0" style="background-color: rgb(238, 233, 226) !important;" data-snippet="s_hr" data-name="Separator">
             <hr class="s_hr_1px s_hr_solid" style="border-color: rgba(0,0,0,0)"/>
         </div>
-        <div class="s_cover o_mail_snippet_general" data-snippet="s_cover" data-name="Cover">
+        <section class="s_cover o_mail_snippet_general" data-snippet="s_cover" data-name="Cover">
             <img src="/mass_mailing_themes/static/src/img/theme_coffeebreak/s_default_image_block_banner.jpg" alt="Cover image" class="img-fluid w-100 mx-auto"/>
-        </div>
+        </section>
         <div class="s_hr o_mail_snippet_general pt16 pb0" style="background-color: rgb(238, 233, 226) !important;" data-snippet="s_hr" data-name="Separator">
             <hr class="s_hr_1px s_hr_solid" style="border-color: rgba(0,0,0,0)"/>
         </div>
-        <div class="s_text_block o_mail_snippet_general pt40 pb40 px-3" data-snippet="s_text_block" data-name="Text">
+        <section class="s_text_block o_mail_snippet_general pt40 pb40 px-3" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <div class="row">
                     <div class="col-lg-5 offset-lg-1">
@@ -1001,11 +973,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
         <div class="s_hr o_mail_snippet_general pt16 pb0" style="background-color: rgb(238, 233, 226) !important;" data-snippet="s_hr" data-name="Separator">
             <hr class="s_hr_1px s_hr_solid" style="border-color: rgba(0,0,0,0)"/>
         </div>
-        <div class="s_text_image o_mail_snippet_general pt32 pb32" data-snippet="s_image_text" data-name="Image - Text">
+        <section class="s_text_image o_mail_snippet_general pt32 pb32" data-snippet="s_image_text" data-name="Image - Text">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-10 offset-lg-1 px-0">
@@ -1023,11 +995,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
         <div class="s_hr o_mail_snippet_general pt16 pb0" style="background-color: rgb(238, 233, 226) !important;" data-snippet="s_hr" data-name="Separator">
             <hr class="s_hr_1px s_hr_solid" style="border-color: rgba(0,0,0,0)"/>
         </div>
-        <div class="s_text_block o_mail_snippet_general pt40 pb32" data-snippet="s_text_block" data-name="Text">
+        <section class="s_text_block o_mail_snippet_general pt40 pb32" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <div class="row">
                     <div class="offset-lg-1 col-lg-10">
@@ -1055,11 +1027,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
         <div class="s_hr o_mail_snippet_general pt16 pb0" style="background-color: rgb(238, 233, 226) !important;" data-snippet="s_hr" data-name="Separator">
             <hr class="s_hr_1px s_hr_solid" style="border-color: rgba(0,0,0,0)"/>
         </div>
-        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general o_cc o_cc5 pt24 pb24" style="background-color: rgb(84, 52, 39) !important;" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
+        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general o_cc o_cc5 pt24 pb24" style="background-color: rgb(84, 52, 39) !important;" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
             <div class="container">
                 <div class="row">
                     <div class="col-10 offset-lg-1">
@@ -1077,52 +1049,46 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     </template>
 
     <!-- Theme "Newsletter" default template -->
     <template id="theme_newsletter_template">
         <style id="design-element">
-            h1 {
-                color: #CE0000;
-                font-size: 54px;
-            }
-            h2{
-                font-weight: bolder;
-            }
-            h3 {
-                font-size: 16px;
-                font-weight: bolder;
-            }
-            p, p > *, li, li > * {
-                font-size: 16px;
-            }
-            a:not(.btn), a.btn.btn-link {
-                text-decoration-line: underline;
-                color: #212529;
-            }
-            a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
-                background-color: #CE0000;
-                border-color: #CE0000;
-            }
-            a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary {
-                color: #CE0000;
-                background-color: #FFFFFF;
-                border-color: #CE0000;
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+                --h1-color: #CE0000;
+                --h1-font-size: 54px;
+
+                --h2-font-weight: bolder;
+
+                --h3-font-size: 16px;
+                --h3-font-weight: bolder;
+
+                --text-font-size: 16px;
+
+                --link-text-decoration-line: underline;
+                --link-color: #212529;
+
+                --btn-primary-background-color: #CE0000;
+                --btn-primary-border-color: #CE0000;
+
+                --btn-secondary-color: #CE0000;
+                --btn-secondary-background-color: #FFFFFF;
+                --btn-secondary-border-color: #CE0000;
             }
         </style>
-        <div class="o_snippet_view_in_browser o_mail_snippet_general pt16 pb0" style="text-align: left; padding-left: 15px; padding-right: 15px; color: rgb(183, 191, 199) !important" data-snippet="s_mail_block_header_view" data-name="View Online"><a href="/view" class="" target="_blank" data-bs-original-title="" title="">View Online</a> - <span style="color: rgb(183, 191, 199); font-size: 12.25px" t-out="datetime.datetime.now().strftime('%B %d %Y')"></span></div>
-        <div class="s_title o_mail_snippet_general pt32 pb32" data-snippet="s_title" data-name="Title" style="background-color: rgb(255, 255, 255) !important;">
+        <section class="o_snippet_view_in_browser o_mail_snippet_general pt16 pb0" style="text-align: left; padding-left: 15px; padding-right: 15px; color: rgb(183, 191, 199) !important" data-snippet="s_mail_block_header_view" data-name="View Online"><a href="/view" class="" target="_blank" data-bs-original-title="" title="">View Online</a> - <span style="color: rgb(183, 191, 199); font-size: 12.25px" t-out="datetime.datetime.now().strftime('%B %d %Y')"></span></section>
+        <section class="s_title o_mail_snippet_general pt32 pb32" data-snippet="s_title" data-name="Title" style="background-color: rgb(255, 255, 255) !important;">
             <div class="container s_allow_columns">
                 <h1 style="text-align:center" class="">Weekly Musings</h1>
             </div>
-        </div>
-        <div class="s_title o_mail_snippet_general px-3 pb0 pt0" data-snippet="s_title" data-name="Title">
+        </section>
+        <section class="s_title o_mail_snippet_general px-3 pb0 pt0" data-snippet="s_title" data-name="Title">
             <div class="container s_allow_columns">
                     <h2 style="" class="">The story of Odoo</h2>
             </div>
-        </div>
-        <div class="s_header_social o_mail_block_header_social o_mail_snippet_general bg-white px-3 pt24 pb24" style="" data-snippet="s_mail_block_header_social" data-name="Left Logo">
+        </section>
+        <section class="s_header_social o_mail_block_header_social o_mail_snippet_general bg-white px-3 pt24 pb24" style="" data-snippet="s_mail_block_header_social" data-name="Left Logo">
             <div class="container" style="">
                 <div class="col-lg-12 o_mail_header_social" style="background-color: rgb(255, 255, 255) !important; text-align: left;">
                     <a aria-label="Facebook" target="_blank" href="https://www.facebook.com/Odoo" data-original-title="Facebook" rel="noreferrer">
@@ -1136,18 +1102,18 @@
                     </a>
                 </div>
             </div>
-        </div>
-         <div class="s_text_block o_mail_snippet_general px-3 pb24" data-snippet="s_text_block" data-name="Text">
+        </section>
+        <section class="s_text_block o_mail_snippet_general px-3 pb24" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <p style="font-size: 14px;" class="small text-muted">Musings on the week from <a style="font-size: 14px;" href="https://twitter.com/fpodoo?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor">@fpodoo</a></p>
             </div>
-        </div>
-        <div class="s_title o_mail_snippet_general px-3 pb0 pt0" data-snippet="s_title" data-name="Title">
+        </section>
+        <section class="s_title o_mail_snippet_general px-3 pb0 pt0" data-snippet="s_title" data-name="Title">
             <div class="container s_allow_columns">
                 <h3>Making companies a better place, one app at a time</h3>
             </div>
-        </div>
-        <div class="s_text_block o_mail_snippet_general px-3 pt16 pb24 " data-snippet="s_text_block" data-name="Text">
+        </section>
+        <section class="s_text_block o_mail_snippet_general px-3 pt16 pb24 " data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <p>I needed to change the world. I wanted to... You know how it is when you are young; you have big dreams, a lot of energy and naive stupidity. My dream was to lead the enterprise management market with a fully open source software (I also wanted to get 100 employees before 30 years old with a self-financed company but I failed this one by only a few months).</p>
                 <p>To fuel my motivation, I had to pick someone to fight against. In business, it's like a playground. When you arrive in a new school, if you want to quickly become the leader, you must choose the class bully, the older guy who terrorizes small boys, and kick his butt in front of everyone. That was my strategy with SAP, the enterprise software giant.</p>
@@ -1157,16 +1123,16 @@
                 <p>As we worked hard, things started to evolve. We were developing dozens of modules for OpenERP, the open source community was growing and I was even able to pay all employees' salaries at the end of the month without fear (which was a situation I struggled with for 4 years).</p>
                 <p>In 2010, we had a 100+ employees selling services on OpenERP and a powerful but ugly product. This is what happens when delivering services to customers distracts you from building an exceptional product. It was time to do a pivot in the business model.</p>
             </div>
-        </div>
-        <div class="s_cover o_mail_snippet_general" data-snippet="s_cover" data-name="Cover">
+        </section>
+        <section class="s_cover o_mail_snippet_general" data-snippet="s_cover" data-name="Cover">
             <img src="/mass_mailing_themes/static/src/img/theme_newsletter/s_default_image_block_banner.jpg" alt="Cover image" class="img-fluid w-100 mx-auto"/>
-        </div>
-        <div class="s_title o_mail_snippet_general px-3 pb0 pt0" data-snippet="s_title" data-name="Title">
+        </section>
+        <section class="s_title o_mail_snippet_general px-3 pb0 pt0" data-snippet="s_title" data-name="Title">
             <div class="container s_allow_columns">
                 <h3>The Pivot</h3>
             </div>
-        </div>
-        <div class="s_text_block o_mail_snippet_general px-3 pt16 pb24" data-snippet="s_text_block" data-name="Text">
+        </section>
+        <section class="s_text_block o_mail_snippet_general px-3 pt16 pb24" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <p>We wanted to switch from a service company to a software publisher company. This would allow us to increase our efforts in our research and development activities. As a result, <a href="https://accounts.openerp.com/blog/OpenERP-Blog-Post-1/post/Open-Source-Free-as-in-Freedom-not-free-as-in-Free-services-119" target="_blank">we changed our business model</a> and decided to stop our services for customers and focus on building a strong partner network and maintenance offer. This would cost money, so I had to raise a few million euros.</p>
                 <p>After a few months of pitching investors, I got roughly 10 LOI from different VCs. We chose Sofinnova Partners, the biggest European VC, and Xavier Niel the founder of Iliad, the only company in France funded in the past 10 years to have reached the 1 billion EUR valuation.</p>
@@ -1174,16 +1140,16 @@
                 <p>The night before receiving the warrants in front of the notary, my wife checked the contracts. She asked me what would be the taxation on these warrants. I rang the lawyer and guess what? Belgium is probably the only country in the world where you have to pay taxes on warrants when you receive them, even if you never reach the conditions to convert them into shares. If I had accepted these warrants, I would have had to pay a 12.5% tax on 9.8 m€; resulting in a tax of 1.2m€ to pay in 18 months! So, my wife is worth 1.2 million EUR. I would have ended up a homeless person without her, as I still did not have a salary at that time.</p>
                 <p>We changed the deal and I got the 3 million EUR. It allowed me to recruit a rocking management team.</p>
             </div>
-        </div>
-        <div class="s_cover o_mail_snippet_general pb24" data-snippet="s_cover" data-name="Cover">
+        </section>
+        <section class="s_cover o_mail_snippet_general pb24" data-snippet="s_cover" data-name="Cover">
             <img src="/mass_mailing_themes/static/src/img/theme_newsletter/s_default_image_block_banner_2.jpg" alt="Cover image" class="img-fluid w-100 mx-auto"/>
-        </div>
-        <div class="s_title o_mail_snippet_general px-3 pb0 pt0" data-snippet="s_title" data-name="Title">
+        </section>
+        <section class="s_title o_mail_snippet_general px-3 pb0 pt0" data-snippet="s_title" data-name="Title">
             <div class="container s_allow_columns">
                 <h3>Being a Mature Company</h3>
             </div>
-        </div>
-        <div class="s_text_block o_mail_snippet_general px-3 pt16 pb24" data-snippet="s_text_block" data-name="Text">
+        </section>
+        <section class="s_text_block o_mail_snippet_general px-3 pt16 pb24" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <p>With this money in our bank account, we boosted two departments: R&amp;D and Sales. We burned 2 million EUR in 18 months, mostly in salaries. The company started to grow even faster. We developed a partner network of 500 partners in 100 countries and we started to sign contracts with 6 zeros.</p>
                 <p>Then, things became different. You know, tedious things like handling human resources, board meetings, dealing with big customer contracts, traveling to launch international subsidiaries. We did boring stuff like budgets, career paths, management meetings, etc.</p>
@@ -1191,13 +1157,13 @@
                 <p>But one day, someone (I don't remember who, I have a goldfish memory) made a graph of the monthly turnover of the past 2 years. It was like waking up from a nightmare. In fact, it was not that bad, we had multiplied the monthly turnover by 10 over the span of roughly two years! This is when we understood that OpenERP is a marathon, not a sprint. Only 100% growth a year is ok... if you can keep the rhythm for several years. </p>
                 <p>As usual, I should have listened to my wife. She is way more lucid than I am. Every week I complained to her "It's not good enough, we should grow faster, what am I missing?" and she used to reply: "But you already are the fastest growing company in Belgium!" (Deloitte awarded us as <a href="https://accounts.openerp.com/blog/OpenERP-Blog-1/post/Three-Awards-for-OpenERP-in-2013-139" target="_blank">the fastest growing company of Belgium</a> with 1549% growth of the turnover between 2007 and 2011).</p>
             </div>
-        </div>
-        <div class="s_title o_mail_snippet_general px-3 pb0 pt0" data-snippet="s_title" data-name="Title">
+        </section>
+        <section class="s_title o_mail_snippet_general px-3 pb0 pt0" data-snippet="s_title" data-name="Title">
             <div class="container s_allow_columns">
                 <h3>Changing the World</h3>
             </div>
-        </div>
-        <div class="s_text_block o_mail_snippet_general px-3 pt16 pb24" data-snippet="s_text_block" data-name="Text">
+        </section>
+        <section class="s_text_block o_mail_snippet_general px-3 pt16 pb24" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <p>Then the dream started to become reality. We started to get clues that what we did would change the world:</p>
                 <ul>
@@ -1210,27 +1176,27 @@
                 </ul>
                 <p>Something is happening... And it's big!</p>
             </div>
-        </div>
-        <div class="s_title o_mail_snippet_general px-3 pb0 pt0" data-snippet="s_title" data-name="Title">
+        </section>
+        <section class="s_title o_mail_snippet_general px-3 pb0 pt0" data-snippet="s_title" data-name="Title">
             <div class="container s_allow_columns">
                 <h3>New Financing in 2014</h3>
             </div>
-        </div>
-        <div class="s_text_block o_mail_snippet_general px-3 pt16 pb24" data-snippet="s_text_block" data-name="Text">
+        </section>
+        <section class="s_text_block o_mail_snippet_general px-3 pt16 pb24" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <p>After years of rapid growth, we achieved another amazing goal - we secured a new round of 10 Million USD of financing, jointly provided by leading venture capital firms XAnge (France), SRIW (Belgium), Sofinnova (France), and the management team.</p>
                 <p>The new financing will support the acceleration of the outstanding growth the company has seen over the last years, enabling the doubling of the commercial force and increased R&amp;D staff - already 100+ people strong. </p>
             </div>
-        </div>
-        <div class="s_cover o_mail_snippet_general pb24" data-snippet="s_cover" data-name="Cover">
+        </section>
+        <section class="s_cover o_mail_snippet_general pb24" data-snippet="s_cover" data-name="Cover">
             <img src="/mass_mailing_themes/static/src/img/theme_newsletter/s_default_image_block_banner_3.jpg" alt="Cover image" class="img-fluid w-100 mx-auto"/>
-        </div>
-        <div class="s_title o_mail_snippet_general px-3 pb0 pt0" data-snippet="s_title" data-name="Title">
+        </section>
+        <section class="s_title o_mail_snippet_general px-3 pb0 pt0" data-snippet="s_title" data-name="Title">
             <div class="container s_allow_columns">
                 <h3>The Rise of Odoo</h3>
             </div>
-        </div>
-        <div class="s_text_block o_mail_snippet_general px-3 pt16" data-snippet="s_text_block" data-name="Text">
+        </section>
+        <section class="s_text_block o_mail_snippet_general px-3 pt16" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <p>After having disrupted the ERP market, OpenERP moved far beyond the boundaries of traditional ERP players. The integration of business activities is no longer restricted to sales, accounting, inventory and procurements. In June 2014, we released version 8 with awesome CMS &amp; eCommerce, a Point of Sale, an integrated Business Intelligence engine and much more (3000+ modules).</p>
                 <p>Our exceptional technology allowed us to move to newer markets (CMS &amp; eCommerce) and propose a product that disrupts existing open source players (Wordpress, Magento, etc). The OpenERP CMS is so good that even top competitors admitted it publicly when we released the beta version.</p>
@@ -1239,34 +1205,34 @@
                 <p>In May 2014, we renamed the company and product to Odoo.</p>
                 <p>And a new story just started...</p>
             </div>
-        </div>
-        <div class="s_text_block o_mail_snippet_general pb16 px-3" data-snippet="s_text_block" data-name="Text">
+        </section>
+        <section class="s_text_block o_mail_snippet_general pb16 px-3" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <img src="/mass_mailing_themes/static/src/img/theme_newsletter/FPsignature.gif" style="width: 125px" alt=""/>
                 <p style="text-align:center;" class="pt32">
                     <a role="button" href="#" class="btn btn-primary btn-lg" target="_blank">&amp;nbsp;&amp;nbsp;Comment on this post&amp;nbsp;&amp;nbsp;</a>
                 </p>
             </div>
-        </div>
-        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general o_cc o_cc1 pt0 pb0" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
+        </section>
+        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general o_cc o_cc1 pt0 pb0" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
             <div class="container">
                 <div class="col-lg-12 o_mail_footer_social pt0 pb0" style="text-align: center;">
-                    <a aria-label="Facebook" class="text-white" target="_blank" href="https://www.facebook.com/Odoo" data-original-title="Facebook" rel="noreferrer">
+                    <a aria-label="Facebook" target="_blank" href="https://www.facebook.com/Odoo" data-original-title="Facebook" rel="noreferrer">
                         <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_newsletter/social-facebook.png" data-attachment-id="435" data-original-id="435" data-original-src="/mass_mailing_themes/static/src/img/theme_newsletter/social-facebook.png" data-mimetype="image/png" style="width: 30px;"/>
                     </a>&amp;nbsp;&amp;nbsp;
-                    <a class="text-white" aria-label="X" target="_blank" href="https://twitter.com/Odoo" data-original-title="X" rel="noreferrer">
+                    <a aria-label="X" target="_blank" href="https://twitter.com/Odoo" data-original-title="X" rel="noreferrer">
                         <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_newsletter/social-twitter.png" data-attachment-id="436" data-original-id="436" data-original-src="/mass_mailing_themes/static/src/img/theme_newsletter/social-twitter.png" data-mimetype="image/png" style="width: 30px;"/>
                     </a>&amp;nbsp;&amp;nbsp;
-                    <a class="text-white" aria-label="Instagram" target="_blank" href="https://www.linkedin.com/company/odoo" data-original-title="Linkedin" rel="noreferrer">
+                    <a aria-label="Instagram" target="_blank" href="https://www.linkedin.com/company/odoo" data-original-title="Linkedin" rel="noreferrer">
                         <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_newsletter/social-linkedin.png" data-attachment-id="437" data-original-id="437" data-original-src="/mass_mailing_themes/static/src/img/theme_newsletter/social-linkedin.png" data-mimetype="image/png" style="width: 30px;"/>
                     </a>
                 </div>
             </div>
-        </div>
+        </section>
         <div class="s_hr o_mail_snippet_general pt16 pb16" data-snippet="s_hr" data-name="Separator">
             <hr class="s_hr_1px s_hr_solid" style="border-top-color: rgb(108, 117, 125) !important;"/>
         </div>
-        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general o_cc o_cc1 pt0 pb0" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
+        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general o_cc o_cc1 pt0 pb0" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
             <div class="container" style="text-align: center; color:rgb(183, 191, 199) !important;">
                 <span style="font-size: 12px;"><font style="color: rgb(183, 191, 199);">8000 Marina Blvd, Suite 300</font></span>
                 <br/>
@@ -1276,28 +1242,25 @@
                 <br/>
                 <span style="font-size: 12px;"><font style="color: rgb(183, 191, 199);">To unsubscribe, </font></span><a href="/unsubscribe_from_list" target="_blank"><span style="font-size: 12px;"><font style="color: rgb(183, 191, 199);">click here</font></span></a><span style="font-size: 12px;"><font style="color: rgb(183, 191, 199);">.</font></span>
             </div>
-        </div>
+        </section>
     </template>
 
     <!-- Roadshow 1 -->
     <template id="theme_roadshow1_template">
         <style id="design-element">
-            h1 {
-                font-size: 24px;
-                font-weight: bolder;
-            }
-            h2 {
-                font-size: 21px;
-            }
-            h3 {
-                font-size: 18px;
-                font-weight: bolder;
-            }
-            a:not(.btn), a.btn.btn-link {
-                color: #35979c;
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+                --h1-font-size: 24px;
+                --h1-font-weight: bolder;
+
+                --h2-font-size: 21px;
+
+                --h3-font-size: 18px;
+                --h3-font-weight: bolder;
+
+                --link-color: #35979c;
             }
         </style>
-        <div class="s_text_block o_mail_snippet_general pt40 px-3 pb0" data-snippet="s_text_block" data-name="Text">
+        <section class="s_text_block o_mail_snippet_general pt40 px-3 pb0" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <div class="s_title o_mail_snippet_general pb0 pt0" data-snippet="s_title" data-name="Title">
                     <div class="container s_allow_columns">
@@ -1306,8 +1269,8 @@
                 </div>
                 <p>Odoo invites you on <span class="font-weight: bolder">[date]</span> at <span class="font-weight: bolder">[time]</span> for their infamous roadshow in <span class="font-weight: bolder">[city]</span>: an event that combines learning and networking in a casual afterwork-like atmosphere.</p>
             </div>
-        </div>
-        <div class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
+        </section>
+        <section class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <p>Registration is free, but mandatory:</p>
                 <p style="text-align: center;">
@@ -1319,23 +1282,23 @@
                     </span>
                 </p>
             </div>
-        </div>
-        <div class="s_text_block o_mail_snippet_general px-3 pt0 pb0" data-snippet="s_text_block" data-name="Text">
+        </section>
+        <section class="s_text_block o_mail_snippet_general px-3 pt0 pb0" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <p>Discover Odoo, the all-in-one management platform, and its apps designed to improve employees' daily tasks. From sales and deliveries, to logistics, marketing and accounting ; learn what are the best available options to digitize your company.</p>
             </div>
-        </div>
-        <div class="s_text_block o_mail_snippet_general px-3 pt0 pb0" data-snippet="s_text_block" data-name="Text">
+        </section>
+        <section class="s_text_block o_mail_snippet_general px-3 pt0 pb0" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <p>[speaker] and [speaker] will rely on a unique demo concept in which YOU lead the demo and choose what you wish to see. They'll show how to tackle the challenge using the best tools, live. You will be amazed!</p>
             </div>
-        </div>
-        <div class="s_text_block o_mail_snippet_general px-3 pt0 pb0" data-snippet="s_text_block" data-name="Text">
+        </section>
+        <section class="s_text_block o_mail_snippet_general px-3 pt0 pb0" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <p>You may then take part in round table discussions with experts who will give you their tips and tricks to help digitize companies. We'll wrap up the event with a networking session including a walking dinner.</p>
             </div>
-        </div>
-        <div class="s_title o_mail_snippet_general pb0 pt8" data-snippet="s_title" data-name="Title">
+        </section>
+        <section class="s_title o_mail_snippet_general pb0 pt8" data-snippet="s_title" data-name="Title">
             <div class="container s_allow_columns">
                 <div class="row">
                     <div class="offset-lg-2 col-lg-8">
@@ -1347,11 +1310,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
         <div class="s_hr o_mail_snippet_general pb16 pt4" data-snippet="s_hr" data-name="Separator">
             <hr class="s_hr_1px s_hr_solid w-50"/>
         </div>
-        <div class="s_text_block o_mail_snippet_general px-3 pt8 pb32" data-snippet="s_text_block" data-name="Text">
+        <section class="s_text_block o_mail_snippet_general px-3 pt8 pb32" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <table class="mx-auto">
                     <tr style="vertical-align:top">
@@ -1396,8 +1359,8 @@
                     </tr>
                 </table>
             </div>
-        </div>
-        <div class="s_text_block o_mail_snippet_general px-3 pt0 pb4" data-snippet="s_text_block" data-name="Text">
+        </section>
+        <section class="s_text_block o_mail_snippet_general px-3 pt0 pb4" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <p>For more information, check the event page : <a href="#" target="_blank" rel="noreferrer">[link]</a>.</p>
                 <p>We're on the starting blocks to prepare an incredible event for you!
@@ -1408,28 +1371,25 @@
                 <p>[speaker] &amp; [speaker]</p>
                 <p><span style="font-style: italic;"><font class="text-600">The first 20 participants will get a free copy of our business game "Scale-Up".</font></span></p>
             </div>
-        </div>
+        </section>
     </template>
 
     <!-- Roadshow 2 -->
     <template id="theme_roadshow2_template">
         <style id="design-element">
-            h1 {
-                font-size: 24px;
-                font-weight: bolder;
-            }
-            h2 {
-                font-size: 21px;
-            }
-            h3 {
-                font-size: 18px;
-                font-weight: bolder;
-            }
-            a:not(.btn), a.btn.btn-link {
-                color: #35979c;
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+                --h1-font-size: 24px;
+                --h1-font-weight: bolder;
+
+                --h2-font-size: 21px;
+
+                --h3-font-size: 18px;
+                --h3-font-weight: bolder;
+
+                --link-color: #35979c;
             }
         </style>
-        <div class="s_text_block o_mail_snippet_general px-3 pt40 pb0" data-snippet="s_text_block" data-name="Text">
+        <section class="s_text_block o_mail_snippet_general px-3 pt40 pb0" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <div class="s_title o_mail_snippet_general pb0 pt0" data-snippet="s_title" data-name="Title">
                     <div class="container s_allow_columns">
@@ -1443,15 +1403,15 @@
                 </ul>
                 <p>Don't hesitate to send us more!</p>
             </div>
-        </div>
-        <div class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
+        </section>
+        <section class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <p>You had the chance to discover Odoo during a full 3 hours, how great is that?
                     <br/>Now that you've seen Odoo in action and asked some questions, you likely need more information to move forward in your project and to work with us. You'll find additional points just below.
                 </p>
             </div>
-        </div>
-        <div class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
+        </section>
+        <section class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <div class="s_title o_mail_snippet_general pb0 pt0" data-snippet="s_title" data-name="Title">
                     <div class="container s_allow_columns">
@@ -1460,8 +1420,8 @@
                 </div>
                 <p>If you wish to evaluate Odoo while taking into account your company's specific needs, you can book a free appointment with one of our <a href="https://odoo.com/r/meeting" target="_blank">Odoo Experts</a> or <a href="https://odoo.com/page/tour" target="_blank">watch our videos about the product</a>.</p>
             </div>
-        </div>
-        <div class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
+        </section>
+        <section class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <p>Here are the links to our sponsors' websites if you wish to meet them:</p>
                 <ul>
@@ -1472,8 +1432,8 @@
                 </ul>
                 <p>You may test Odoo for free by clicking <a href="https://odoo.com/trial" target="_blank">here</a>.</p>
             </div>
-        </div>
-        <div class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
+        </section>
+        <section class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <div class="s_title o_mail_snippet_general pb0 pt0" data-snippet="s_title" data-name="Title">
                     <div class="container s_allow_columns">
@@ -1483,19 +1443,19 @@
                 <p>If you wish to become a partner and offer your services in [country], take a look at <a href="https://odoo.com/r/meeting" target="_blank">this page</a>.</p>
                 <p>Learn more about our pricing <a href="https://odoo.com/r/meeting" target="_blank">here</a>.</p>
             </div>
-        </div>
-        <div class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
+        </section>
+        <section class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <p>You may then take part in round table discussions with experts who will give you their tips and tricks to help digitize companies. We'll wrap up the event with a networking session including a walking dinner.</p>
             </div>
-        </div>
-        <div class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
+        </section>
+        <section class="s_text_block o_mail_snippet_general px-3 pt8 pb0" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <p>Thank you, once again, for your attendance at yesterday's event.</p>
                 <p>--</p>
                 <p>[speaker] &amp; [speaker]</p>
             </div>
-        </div>
+        </section>
     </template>
 
     <!-- Training -->
@@ -1504,35 +1464,29 @@
             * :not(.fa) {
                 font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif !important;
             }
-            h1 {
-                color: rgb(255, 255, 255);
-                font-size: 39px;
-            }
-            h3 {
-                color: rgb(20, 102, 184);
-            }
-            p, p > *, li, li > * {
-                color: rgb(91, 119, 143);
-                font-size: 14px;
-            }
-            a:not(.btn), a.btn.btn-link {
-                color: rgb(20, 102, 184);
-            }
-            a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
-                color: rgb(255, 255, 255);
-                background-color: rgb(67, 128, 219);
-                font-size: 14px;
-            }
-            a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary {
-                color: rgb(255, 255, 255);
-                background-color: rgb(255, 152, 0);
-            }
-            hr {
-                border-top-color: rgb(67, 129, 219);
-                border-top-width: 2px;
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+                --h1-color: rgb(255, 255, 255);
+                --h1-font-size: 39px;
+
+                --h3-color: rgb(20, 102, 184);
+
+                --text-color: rgb(91, 119, 143);
+                --text-font-size: 16px;
+
+                --link-color: rgb(20, 102, 184);
+
+                --btn-primary-color: rgb(255, 255, 255);
+                --btn-primary-background-color: rgb(67, 128, 219);
+                --btn-primary-font-size: 14px;
+
+                --btn-secondary-color: rgb(255, 255, 255);
+                --btn-secondary-background-color: rgb(255, 152, 0);
+
+                --separator-border-color: rgb(67, 129, 219);
+                --separator-border-top-width: 2px;
             }
         </style>
-        <div class="s_header_logo o_mail_block_header_logo o_mail_snippet_general" data-snippet="s_mail_block_header_logo" data-name="Centered Logo" style="background-color: rgb(220, 234, 255);">
+        <section class="s_header_logo o_mail_block_header_logo o_mail_snippet_general" data-snippet="s_mail_block_header_logo" data-name="Centered Logo" style="background-color: rgb(220, 234, 255);">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-4"></div>
@@ -1544,11 +1498,11 @@
                     <div class="col-lg-4" style="text-align: right;"></div>
                 </div>
             </div>
-        </div>
-        <div class="s_picture o_mail_snippet_general pt48 px-3 o_cc o_cc2 pb0" data-snippet="s_picture" data-name="Picture" placeholder="Type &quot;/&quot; for commands" style="background-color: rgb(67, 128, 219);">
+        </section>
+        <section class="s_picture o_mail_snippet_general pt48 px-3 o_cc o_cc2 pb0" data-snippet="s_picture" data-name="Picture" placeholder="Type &quot;/&quot; for commands" style="background-color: rgb(67, 128, 219);">
             <img class="img-fluid o_we_custom_image" src="/web_editor/image_shape/mass_mailing_themes.s_default_image_block_image/web_editor/composition/composition_organic_line.svg?c1=%23FF9800" data-shape="web_editor/composition/composition_organic_line" data-file-name="picture-composition_organic_line.svg" data-shape-colors="#FF9800;;;;" data-format-mimetype="image/jpeg"/>
-        </div>
-        <div class="s_title o_mail_snippet_general pt32 pb0" data-snippet="s_title" data-name="Title" style="background-color: rgb(67, 128, 219);">
+        </section>
+        <section class="s_title o_mail_snippet_general pt32 pb0" data-snippet="s_title" data-name="Title" style="background-color: rgb(67, 128, 219);">
             <div class="container s_allow_columns">
                 <div class="row">
                     <div class="col-lg-10 offset-lg-1 pb32">
@@ -1556,8 +1510,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="s_mail_block_event o_mail_snippet_general bg-white" data-snippet="s_event" data-name="Event">
+        </section>
+        <section class="s_mail_block_event o_mail_snippet_general bg-white" data-snippet="s_event" data-name="Event">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="s_col_no_bgcolor pt32 offset-lg-1 col-lg-10 pb0" style="padding-left: 0px; padding-right: 0px;">
@@ -1569,7 +1523,7 @@
                                     </div>
                                 </div>
                                 <p><span style="font-weight: bolder;">25 September 2022 - 4:30 PM</span></p>
-                                <p><i class="fa fa-map-marker"/> London, United Kingdom​</p>
+                                <p><i class="fa fa-map-marker"/> London, United Kingdom</p>
                             </div>
                         </div>
                     </div>
@@ -1585,25 +1539,25 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="container s_allow_columns">
+        </section>
+        <section class="container s_allow_columns">
             <div class="row">
                 <div class="offset-lg-1 col-lg-10">
                     <p><img src="/mass_mailing_themes/static/src/img/theme_training/s_default_image_block_banner.jpg" class="img img-fluid o_we_custom_image" data-original-id="347" data-original-src="/mass_mailing_themes/static/src/img/theme_training/s_default_image_block_banner.jpg" data-mimetype="image/jpeg" style="width: 658px;"/></p>
                 </div>
             </div>
-        </div>
-        <div class="s_cover o_mail_snippet_general" data-snippet="s_cover" data-name="Cover" style="background-color: rgb(220, 234, 255);">
+        </section>
+        <section class="s_cover o_mail_snippet_general" data-snippet="s_cover" data-name="Cover" style="background-color: rgb(220, 234, 255);">
             <div class="container">
                 <div class="row">
-                    <div class="oe_img_bg o_bg_img_center pb88 pt104" style="background-image: url('/mass_mailing_themes/static/src/img/theme_training/see_you_soon.svg');">
+                    <div class="oe_img_bg o_bg_img_center pb88 pt104 col-lg-12" style="background-image: url('/mass_mailing_themes/static/src/img/theme_training/see_you_soon.svg');">
                         <div class="o_we_bg_filter" style="background-image: linear-gradient(0deg, rgb(67, 128, 219) 0%, rgba(67, 128, 219, 0.4) 100%);"/>
                         <h1 style="text-align: center;">See you soon !</h1>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="s_text_block o_mail_snippet_general px-3 pt16 pb0" data-snippet="s_text_block" data-name="Text" style="background-color: rgb(220, 234, 255);">
+        </section>
+        <section class="s_text_block o_mail_snippet_general px-3 pt16 pb0" data-snippet="s_text_block" data-name="Text" style="background-color: rgb(220, 234, 255);">
             <div class="container s_allow_columns">
                 <p style="text-align: center">
                     <span style="font-size: 10px;">
@@ -1615,22 +1569,22 @@
                     <hr class="s_hr_1px s_hr_solid w-50" contenteditable="false"/>
                 </div>
             </div>
-        </div>
-        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general" data-snippet="s_mail_block_footer_social" data-name="Footer Center" style="background-color: rgb(220, 234, 255); text-align: center;">
+        </section>
+        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general" data-snippet="s_mail_block_footer_social" data-name="Footer Center" style="background-color: rgb(220, 234, 255); text-align: center;">
             <div class="container">
                 <div class="row">
                     <div class="col-lg o_mail_footer_social pt8 pb8">
                         <a aria-label="Facebook" title="Facebook" href="https://www.facebook.com/Odoo">
-                            <span class="fa fa-facebook" contenteditable="false">​</span>
+                            <span class="fa fa-facebook" contenteditable="false"></span>
                         </a>
                         <a style="margin-left:10px" aria-label="LinkedIn" title="LinkedIn" href="https://www.linkedin.com/company/odoo">
-                            <span class="fa fa-linkedin" contenteditable="false">​</span>
+                            <span class="fa fa-linkedin" contenteditable="false"></span>
                         </a>
                         <a style="margin-left:10px" aria-label="X" title="X" href="https://twitter.com/Odoo">
-                            <span class="fa fa-twitter" contenteditable="false">​</span>
+                            <span class="fa fa-twitter" contenteditable="false"></span>
                         </a>
                         <a style="margin-left:10px" aria-label="Instagram" title="Instagram" href="https://www.instagram.com/explore/tags/odoo/">
-                            <span class="fa fa-instagram" contenteditable="false">​</span>
+                            <span class="fa fa-instagram" contenteditable="false"></span>
                         </a>
                     </div>
                 </div>
@@ -1647,6 +1601,6 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     </template>
 </odoo>
