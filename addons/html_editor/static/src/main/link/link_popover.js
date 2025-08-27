@@ -73,7 +73,8 @@ export class LinkPopover extends Component {
                 this.props.type ||
                 this.props.linkElement.className
                     .match(/btn(-[a-z0-9_-]*)(primary|secondary)/)
-                    ?.pop() || "",
+                    ?.pop() ||
+                "",
             buttonSize: this.props.linkElement.className.match(/btn-(sm|lg)/)?.[1] || "",
             buttonStyle: this.initButtonStyle(this.props.linkElement.className),
             isImage: this.props.isImage,
@@ -114,12 +115,7 @@ export class LinkPopover extends Component {
         this.state.url = deducedUrl
             ? this.correctLink(deducedUrl)
             : this.correctLink(this.state.url);
-        this.props.onApply(
-            this.state.url,
-            this.state.label,
-            this.classes,
-            this.state.attachmentId
-        );
+        this.props.onApply(this.state.url, this.state.label, this.classes, this.state.attachmentId);
     }
     onClickEdit() {
         this.state.editing = true;
@@ -296,20 +292,23 @@ export class LinkPopover extends Component {
     }
 
     get classes() {
+        const className = [...this.props.linkElement.classList].filter(
+            (value) => !value.match(/^(btn.*|rounded-circle|flat|(text|bg)-(o-color-\d$|\d{3}$))$/)
+        );
         const shapes = this.state.buttonStyle ? this.state.buttonStyle.split(",") : [];
         const style = ["outline", "fill"].includes(shapes[0]) ? `${shapes[0]}-` : "fill-";
-        const shapeClasses = shapes.slice(style ? 1 : 0).join(" ");
-        if (!this.state.type) {
-            return "";
+        const shapeClasses = shapes.slice(style ? 1 : 0);
+
+        if (this.state.type) {
+            className.push("btn", `btn-${style}${this.state.type}`);
         }
-        let className = `btn btn-${style}${this.state.type}`;
-        if (shapeClasses) {
-            className += ` ${shapeClasses}`;
+        if (shapeClasses.length) {
+            className.push(...shapeClasses);
         }
         if (this.state.buttonSize) {
-            className += ` btn-${this.state.buttonSize}`;
+            className.push(`btn-${this.state.buttonSize}`);
         }
-        return className;
+        return className.join(" ");
     }
 
     async uploadFile() {
