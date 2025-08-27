@@ -72,15 +72,15 @@ test("Should change the shape color of an image", async () => {
     );
     expect(`[data-label="Colors"] .o_we_color_preview:nth-child(2)`).toHaveAttribute(
         "style",
-        `background-color: #2D3142`
+        `background-color: #F0CDA8`
     );
     expect(`[data-label="Colors"] .o_we_color_preview:nth-child(3)`).toHaveAttribute(
         "style",
-        `background-color: #F3F2F2`
+        `background-color: #F6F5F4`
     );
     expect(`[data-label="Colors"] .o_we_color_preview:nth-child(4)`).toHaveAttribute(
         "style",
-        `background-color: #111827`
+        `background-color: #1B1319`
     );
 
     expect(`:iframe .test-options-target img`).toHaveAttribute(
@@ -89,7 +89,7 @@ test("Should change the shape color of an image", async () => {
     );
     expect(`:iframe .test-options-target img`).toHaveAttribute(
         "data-shape-colors",
-        "#714B67;#2D3142;#F3F2F2;;#111827"
+        "#714B67;#F0CDA8;#F6F5F4;;#1B1319"
     );
 
     await contains(`[data-label="Colors"] .o_we_color_preview:nth-child(1)`).click();
@@ -105,7 +105,7 @@ test("Should change the shape color of an image", async () => {
     );
     expect(`:iframe .test-options-target img`).toHaveAttribute(
         "data-shape-colors",
-        "#FF0000;#2D3142;#F3F2F2;;#111827"
+        "#FF0000;#F0CDA8;#F6F5F4;;#1B1319"
     );
 });
 test("Should change the shape color of an image with a class color", async () => {
@@ -135,15 +135,15 @@ test("Should change the shape color of an image with a class color", async () =>
     );
     expect(`[data-label="Colors"] .o_we_color_preview:nth-child(2)`).toHaveAttribute(
         "style",
-        `background-color: #2D3142`
+        `background-color: #F0CDA8`
     );
     expect(`[data-label="Colors"] .o_we_color_preview:nth-child(3)`).toHaveAttribute(
         "style",
-        `background-color: #F3F2F2`
+        `background-color: #F6F5F4`
     );
     expect(`[data-label="Colors"] .o_we_color_preview:nth-child(4)`).toHaveAttribute(
         "style",
-        `background-color: #111827`
+        `background-color: #1B1319`
     );
 
     expect(`:iframe .test-options-target img`).toHaveAttribute(
@@ -152,7 +152,7 @@ test("Should change the shape color of an image with a class color", async () =>
     );
     expect(`:iframe .test-options-target img`).toHaveAttribute(
         "data-shape-colors",
-        "#714B67;#2D3142;#F3F2F2;;#111827"
+        "#714B67;#F0CDA8;#F6F5F4;;#1B1319"
     );
 
     await contains(`[data-label="Colors"] .o_we_color_preview:nth-child(1)`).click();
@@ -165,11 +165,11 @@ test("Should change the shape color of an image with a class color", async () =>
 
     expect(`[data-label="Colors"] .o_we_color_preview:nth-child(1)`).toHaveAttribute(
         "style",
-        `background-color: #2D3142`
+        `background-color: #F0CDA8`
     );
     expect(`:iframe .test-options-target img`).toHaveAttribute(
         "data-shape-colors",
-        "#2D3142;#2D3142;#F3F2F2;;#111827"
+        "#F0CDA8;#F0CDA8;#F6F5F4;;#1B1319"
     );
 });
 test("Should not show transform action on shape that cannot bet transformed", async () => {

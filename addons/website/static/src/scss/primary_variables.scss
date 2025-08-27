@@ -17,7 +17,7 @@ $o-base-color-palette: map-merge($o-base-color-palette, (
     'header-sales_three-custom': null,
     'header-sales_four': 1,
     'header-sales_four-custom': null,
-    'footer': 5, // o_cc5
+    'footer': 2, // o_cc2
     'footer-custom': null,
     'copyright': null,
     'copyright-custom': null,
@@ -61,7 +61,8 @@ $o-theme-figcaption-opacity: 0.6;
 $o-color-palettes: map-merge($o-color-palettes,
     (
         'base-1': map-merge(map-get($o-color-palettes, 'base-1'), (
-            'copyright-custom': 'black-15',
+            'menu': 1,
+            'footer': 2,
         )),
         'base-2': map-merge(map-get($o-color-palettes, 'base-2'), (
             'menu': 2,
