@@ -35,8 +35,8 @@ class ResCompany(models.Model):
             record.receipt_address = ", ".join(filter(None, [record.street, record.city, record.state_id.code, record.zip]))
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('id', '=', config.company_id.id)]
+    def _load_pos_data_domain(self, data):
+        return [('id', '=', data['pos.config'].company_id.id)]
 
     @api.model
     def _load_pos_data_fields(self, config):

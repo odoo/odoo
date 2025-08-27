@@ -13,6 +13,7 @@ export class PosPrinter extends models.ServerModel {
             name: "Printer",
             product_categories_ids: [1, 2],
             printer_type: "epson_epos",
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

@@ -14,12 +14,14 @@ export class ResUsers extends MailResUsers {
             name: "Administrator",
             partner_id: 3,
             role: "manager",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 3,
             name: "User1",
             partner_id: 4,
             role: "cashier",
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 

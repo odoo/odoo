@@ -58,12 +58,14 @@ export class PosPreset extends models.ServerModel {
             name: "Name Required Preset",
             identification: "name",
             use_timing: false,
+            write_date: "2025-07-03 14:34:07",
         },
         {
             id: 4,
             name: "Address Required Preset",
             identification: "address",
             use_timing: false,
+            write_date: "2025-07-03 14:34:07",
         },
     ];
 }

@@ -11,25 +11,6 @@ class PosOrderReceipt(models.AbstractModel):
     _description = 'Point of Sale Order Receipt Generator'
 
     @api.model
-    def get_receipt_template_for_pos_frontend(self):
-        names = [
-            'point_of_sale.pos_order_receipt_header',
-            'point_of_sale.pos_order_receipt_style',
-            'point_of_sale.company_info_receipt',
-            'point_of_sale.pos_orderline_receipt_information',
-            'point_of_sale.pos_orderline_receipt',
-            'point_of_sale.pos_order_receipt_footer',
-            'point_of_sale.pos_order_receipt',
-            'point_of_sale.pos_order_change_receipt',
-            'point_of_sale.pos_order_change_receipt_line',
-            'point_of_sale.pos_cash_move_receipt',
-            'point_of_sale.pos_tip_receipt',
-            'point_of_sale.pos_sale_details_receipt',
-            'point_of_sale.pos_sale_details_receipt_product_line',
-        ]
-        return [[name, self.env['ir.qweb']._get_template(name)[1]] for name in names]
-
-    @api.model
     def _order_receipt_format_currency(self, amount):
         return self.currency_id.format(amount).replace('\xa0', ' ')  # Wkhtmltoimage does not support non-breaking spaces
 

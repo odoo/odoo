@@ -370,7 +370,7 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
             return next((d for d in list_of_dicts if d.get(key) == value), None)
 
         self.other_currency_config.open_ui()
-        product = self.other_currency_config.current_session_id.load_data([])['product.product']
+        product = self.other_currency_config.current_session_id.load_data({'only_records': True})['product.product']
 
         self.assertAlmostEqual(find_by(product, 'id', self.product1.id)['lst_price'], 5.00)
         self.assertAlmostEqual(find_by(product, 'id', self.product2.id)['lst_price'], 10.00)
@@ -382,6 +382,6 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
 
     def test_pos_data_standard_price_converted(self):
         self.other_currency_config.open_ui()
-        res = self.other_currency_config.current_session_id.load_data({})
+        res = self.other_currency_config.current_session_id.load_data({'only_records': True})
         product1_data = next(filter(lambda product: product['display_name'] == "Product 1", res['product.product']))
         self.assertEqual(product1_data['standard_price'], 2.5)  # standard price should be converted

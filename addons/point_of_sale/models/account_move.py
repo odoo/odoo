@@ -110,7 +110,7 @@ class AccountMove(models.Model):
         return result or ['id', 'name']
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
+    def _load_pos_data_domain(self, data):
         return False
 
 class AccountMoveLine(models.Model):

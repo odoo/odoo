@@ -15,5 +15,6 @@ ProductTemplate._records = [
         uom_id: 1,
         available_in_pos: true,
         active: true,
+        write_date: "2025-01-01 10:00:00",
     },
 ];

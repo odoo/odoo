@@ -26,7 +26,6 @@ export const setupPosEnv = async () => {
         db: `pos-${uuidv4()}`, // Avoid indexedDB conflicts
         isEnterprise: true,
     };
-
     await makeDialogMockEnv();
     const store = getService("pos");
     store.setCashier(store.user);

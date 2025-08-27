@@ -180,5 +180,5 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
         self.start_tour(
             "/pos/ui?config_id=%d" % self.main_pos_config.id,
             "test_archived_product_removed_and_order_is_refunded",
-            login="pos_admin"
+            login="pos_admin",
         )

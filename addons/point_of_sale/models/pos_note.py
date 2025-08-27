@@ -27,7 +27,8 @@ class PosNote(models.Model):
         return vals_list
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
+    def _load_pos_data_domain(self, data):
+        config = data['pos.config']
         return [('id', 'in', config.note_ids.ids)] if config.note_ids else []
 
     @api.model

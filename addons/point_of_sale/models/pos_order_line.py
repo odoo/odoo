@@ -66,8 +66,12 @@ class PosOrderLine(models.Model):
     _unique_uuid = models.Constraint('unique (uuid)', 'An order line with this uuid already exists')
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('order_id', 'in', [order['id'] for order in data['pos.order']]), ('product_id.active', '=', True)]
+    def _load_pos_data_domain(self, data):
+        return [('order_id', 'in', data['pos.order'].ids), ('product_id.active', '=', True)]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['pos.order']
 
     @api.model
     def _load_pos_data_fields(self, config):

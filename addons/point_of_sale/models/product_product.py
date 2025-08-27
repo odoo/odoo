@@ -25,8 +25,12 @@ class ProductProduct(models.Model):
         return new_product
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('product_tmpl_id', 'in', [p['id'] for p in data['product.template']])]
+    def _load_pos_data_domain(self, data):
+        return [('product_tmpl_id', 'in', data['product.template'].ids)]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['product.template.attribute.value', 'product.template']
 
     @api.model
     def _load_pos_data_fields(self, config):
@@ -55,14 +59,19 @@ class ProductProduct(models.Model):
     def _load_pos_data_read(self, records, config):
         read_records = super()._load_pos_data_read(records, config)
         different_currency = config.currency_id != self.env.company.currency_id
-        if different_currency:
-            for product in read_records:
+        special_product_ids = config._get_special_products().ids
+        for product in read_records:
+            if different_currency:
                 product['lst_price'] = self.env.company.currency_id._convert(
                     product['lst_price'], config.currency_id, self.env.company, fields.Date.today()
                 )
                 product['standard_price'] = self.env.company.currency_id._convert(
                     product['standard_price'], config.currency_id, self.env.company, fields.Date.today()
                 )
+            if product['id'] in special_product_ids:
+                product['_is_pos_special_product'] = True
+            else:
+                product['_is_pos_special_product'] = False
         return read_records
 
     def _can_return_content(self, field_name=None, access_token=None):

@@ -8,11 +8,9 @@ class ProductComboItem(models.Model):
     _inherit = ['product.combo.item', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [
-            ('product_id.active', '=', True),
-            ('id', 'in', list(set().union(*[combo.get('combo_item_ids') for combo in data['product.combo']]))),
-        ]
+    def _load_pos_data_domain(self, data):
+        combo_item_ids = data['product.combo'].combo_item_ids.ids
+        return [('product_id.active', '=', True), ('id', 'in', combo_item_ids)]
 
     @api.model
     def _load_pos_data_fields(self, config):

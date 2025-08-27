@@ -33,7 +33,7 @@ describe("initProducts", () => {
         const models = store.models;
         const tipProductTmpl = models["product.template"].get(1);
 
-        expect(store.config._pos_special_products_ids.includes(tipProductTmpl.id)).toBe(true);
+        expect(tipProductTmpl.product_variant_ids[0]._is_pos_special_product).toBe(true);
 
         models["product.template"].get(14).pos_categ_ids = [];
         store.initData();

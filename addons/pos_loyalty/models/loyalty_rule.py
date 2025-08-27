@@ -20,8 +20,8 @@ class LoyaltyRule(models.Model):
     )
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('program_id', 'in', config._get_program_ids().ids)]
+    def _load_pos_data_domain(self, data):
+        return [('program_id', 'in', data['pos.config']._get_program_ids().ids)]
 
     @api.model
     def _load_pos_data_fields(self, config):

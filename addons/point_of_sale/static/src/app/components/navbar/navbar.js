@@ -4,7 +4,6 @@ import { useService } from "@web/core/utils/hooks";
 import { isDisplayStandalone } from "@web/core/browser/feature_detection";
 
 import { CashierName } from "@point_of_sale/app/components/navbar/cashier_name/cashier_name";
-import { SyncPopup } from "@point_of_sale/app/components/popups/sync_popup/sync_popup";
 import { SaleDetailsButton } from "@point_of_sale/app/components/navbar/sale_details_button/sale_details_button";
 import { Component, onMounted } from "@odoo/owl";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
@@ -28,7 +27,6 @@ export class Navbar extends Component {
         Input,
         Dropdown,
         DropdownItem,
-        SyncPopup,
         OrderTabs,
     };
     static props = {};
@@ -152,13 +150,6 @@ export class Navbar extends Component {
         }
         const deviceUuid = localStorage.getItem("device_uuid");
         return `/pos_customer_display/${this.pos.config.id}/${deviceUuid}`;
-    }
-
-    async reloadProducts() {
-        this.dialog.add(SyncPopup, {
-            title: _t("Reload Data"),
-            confirm: (fullReload) => this.pos.reloadData(fullReload),
-        });
     }
 
     openCustomerDisplay() {

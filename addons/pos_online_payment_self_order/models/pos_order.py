@@ -11,9 +11,6 @@ class PosOrder(models.Model):
     def get_order_to_print(self):
         self.ensure_one()
 
-        # Lock the line
-        self.env.cr.execute("SELECT id FROM pos_order WHERE id = %s FOR UPDATE NOWAIT", (self.id,))
-
         if self.nb_print > 0:
             raise ValueError("This order has already been printed automatically.")
 

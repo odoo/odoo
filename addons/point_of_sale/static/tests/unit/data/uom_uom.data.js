@@ -14,6 +14,7 @@ export class UomUom extends models.ServerModel {
             factor: 8.0,
             is_pos_groupable: false,
             parent_path: "4/5/",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 2,
@@ -21,6 +22,7 @@ export class UomUom extends models.ServerModel {
             factor: 6.0,
             is_pos_groupable: true,
             parent_path: "1/2/",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 8,
@@ -28,6 +30,7 @@ export class UomUom extends models.ServerModel {
             factor: 1000.0,
             is_pos_groupable: false,
             parent_path: "6/7/8/",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 15,
@@ -35,6 +38,7 @@ export class UomUom extends models.ServerModel {
             factor: 1000.0,
             is_pos_groupable: false,
             parent_path: "14/15/",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 16,
@@ -42,6 +46,7 @@ export class UomUom extends models.ServerModel {
             factor: 1000000.0,
             is_pos_groupable: false,
             parent_path: "14/15/16/",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 12,
@@ -49,6 +54,7 @@ export class UomUom extends models.ServerModel {
             factor: 1000.0,
             is_pos_groupable: false,
             parent_path: "11/12/",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 4,
@@ -56,6 +62,7 @@ export class UomUom extends models.ServerModel {
             factor: 1.0,
             is_pos_groupable: false,
             parent_path: "4/",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 1,
@@ -63,6 +70,7 @@ export class UomUom extends models.ServerModel {
             factor: 1.0,
             is_pos_groupable: true,
             parent_path: "1/",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 14,
@@ -70,6 +78,7 @@ export class UomUom extends models.ServerModel {
             factor: 1.0,
             is_pos_groupable: false,
             parent_path: "14/",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 11,
@@ -77,6 +86,7 @@ export class UomUom extends models.ServerModel {
             factor: 1.0,
             is_pos_groupable: false,
             parent_path: "11/",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 6,
@@ -84,6 +94,7 @@ export class UomUom extends models.ServerModel {
             factor: 1.0,
             is_pos_groupable: false,
             parent_path: "6/",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 10,
@@ -91,6 +102,7 @@ export class UomUom extends models.ServerModel {
             factor: 1.0,
             is_pos_groupable: false,
             parent_path: "10/",
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

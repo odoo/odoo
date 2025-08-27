@@ -42,13 +42,13 @@ import { StockPickingType } from "./stock_picking_type.data";
 import { ResCurrency } from "./res_currency.data";
 import { PosNote } from "./pos_note.data";
 import { ProductTag } from "./product_tag.data";
-import { IrModuleModule } from "./ir_module_module.data";
 import { AccountJournal } from "./account_journal.data";
 import { IrSequence } from "./ir_sequence.data";
 import { StockWarehouse } from "./stock_warehouse.data";
 import { StockRoute } from "./stock_route.data";
 import { BarcodeNomenclature } from "./barcode_nomenclature.data";
 import { ProductAttributeValue } from "./product_attribute_value.data";
+import { IrUiView } from "./ir_ui_view.data";
 
 export const hootPosModels = [
     ResCountry,
@@ -96,10 +96,10 @@ export const hootPosModels = [
     StockPickingType,
     IrSequence,
     PosNote,
-    IrModuleModule,
     AccountJournal,
     ResourceCalendar,
     BarcodeNomenclature,
+    IrUiView,
 ];
 
 export const definePosModels = () => {

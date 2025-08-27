@@ -455,8 +455,9 @@ export class SelfOrder extends Reactive {
         this.productByCategIds = this.models["product.template"].getAllBy("pos_categ_ids");
 
         const excludedProductTemplateIds = new Set(
-            this.config._pos_special_products_ids
-                .map((id) => this.models["product.product"].get(id)?.product_tmpl_id?.id)
+            this.models["product.product"]
+                .filter((p) => p._is_pos_special_product)
+                .map((p) => p.product_tmpl_id?.id)
                 .filter(Boolean)
         );
 

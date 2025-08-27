@@ -17,8 +17,12 @@ class ProductAttributeCustomValue(models.Model):
     pos_order_line_id = fields.Many2one('pos.order.line', string="PoS Order Line", ondelete='cascade', index='btree_not_null')
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('pos_order_line_id', 'in', [line['id'] for line in data['pos.order.line']])]
+    def _load_pos_data_domain(self, data):
+        return [('pos_order_line_id', 'in', data['pos.order.line'].ids)]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['pos.order.line']
 
     @api.model
     def _load_pos_data_fields(self, config):
@@ -34,9 +38,12 @@ class ProductTemplateAttributeLine(models.Model):
         return ['display_name', 'attribute_id', 'product_template_value_ids']
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        loaded_product_tmpl_ids = list({p['id'] for p in data['product.template']})
-        return [('product_tmpl_id', 'in', loaded_product_tmpl_ids)]
+    def _load_pos_data_domain(self, data):
+        return [('product_tmpl_id', 'in', data['product.template'].ids)]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['product.template', 'product.template.attribute.value']
 
 
 class ProductTemplateAttributeValue(models.Model):
@@ -44,14 +51,18 @@ class ProductTemplateAttributeValue(models.Model):
     _inherit = ['product.template.attribute.value', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        ptav_ids = {ptav_id for p in data['product.product'] for ptav_id in p['product_template_variant_value_ids']}
-        ptav_ids.update({ptav_id for ptal in data['product.template.attribute.line'] for ptav_id in ptal['product_template_value_ids']})
+    def _load_pos_data_domain(self, data):
+        ptav_ids = data['product.product'].product_template_variant_value_ids.ids + data['product.template.attribute.line'].product_template_value_ids.ids
+
         return [
             ('ptav_active', '=', True),
-            ('attribute_id', 'in', [attr['id'] for attr in data['product.attribute']]),
+            ('attribute_id', 'in', data['product.attribute'].ids),
             ('id', 'in', list(ptav_ids)),
         ]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['product.attribute']
 
     @api.model
     def _load_pos_data_fields(self, config):

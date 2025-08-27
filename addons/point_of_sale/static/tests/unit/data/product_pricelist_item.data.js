@@ -49,6 +49,7 @@ export class ProductPricelistItem extends models.ServerModel {
             base: "list_price",
             categ_id: false,
             min_quantity: 0.0,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 2,

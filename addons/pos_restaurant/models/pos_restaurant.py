@@ -36,8 +36,8 @@ class RestaurantFloor(models.Model):
     floor_plan_layout = fields.Json(string='Floor Plan Layout')
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('pos_config_ids', '=', config.id)]
+    def _load_pos_data_domain(self, data):
+        return [('pos_config_ids', '=', data['pos.config'].id)]
 
     @api.model
     def _load_pos_data_fields(self, config):
@@ -143,8 +143,8 @@ class RestaurantTable(models.Model):
             table.display_name = f"{table.floor_id.name}, {table.table_number}"
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('active', '=', True), ('floor_id', 'in', config.floor_ids.ids)]
+    def _load_pos_data_domain(self, data):
+        return [('active', '=', True), ('floor_id', 'in', data['pos.config'].floor_ids.ids)]
 
     @api.model
     def _load_pos_data_fields(self, config):

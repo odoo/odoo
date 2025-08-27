@@ -31,22 +31,6 @@ class ResPartner(models.Model):
             data_list[partner.id].append(stat_info)
         return data_list
 
-    @api.model
-    def get_new_partner(self, config_id, domain, offset):
-        config = self.env['pos.config'].browse(config_id)
-        if len(domain) == 0:
-            limited_partner_ids = {partner[0] for partner in config.get_limited_partners_loading(offset)}
-            domain += [('id', 'in', list(limited_partner_ids))]
-            new_partners = self.search(domain)
-        else:
-            # If search domain is not empty, we need to search inside all partners
-            new_partners = self.search(domain, offset=offset, limit=100)
-        fiscal_positions = new_partners.fiscal_position_id
-        return {
-            'res.partner': self._load_pos_data_read(new_partners, config),
-            'account.fiscal.position': self.env['account.fiscal.position']._load_pos_data_read(fiscal_positions, config),
-        }
-
     @api.constrains('barcode')
     def _check_barcode_prefix(self):
         for partner in self:
@@ -56,12 +40,12 @@ class ResPartner(models.Model):
             })
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
+    def _load_pos_data_domain(self, data):
         # Collect partner IDs from loaded orders
-        loaded_order_partner_ids = {order['partner_id'] for order in data['pos.order']}
+        loaded_order_partner_ids = set(data['pos.order'].partner_id.ids)
 
         # Extract partner IDs from the tuples returned by get_limited_partners_loading
-        limited_partner_ids = {partner[0] for partner in config.get_limited_partners_loading()}
+        limited_partner_ids = {partner[0] for partner in data['pos.config'].get_limited_partners_loading()}
 
         limited_partner_ids.add(self.env.user.partner_id.id)  # Ensure current user is included
         partner_ids = limited_partner_ids.union(loaded_order_partner_ids)

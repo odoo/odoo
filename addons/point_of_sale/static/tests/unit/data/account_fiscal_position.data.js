@@ -13,11 +13,13 @@ export class AccountFiscalPosition extends models.ServerModel {
             name: "Domestic",
             display_name: "Domestic",
             tax_ids: [1],
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 2,
             name: "No tax fp",
             display_name: "No tax fp",
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

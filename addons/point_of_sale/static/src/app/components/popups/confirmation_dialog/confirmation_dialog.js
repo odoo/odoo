@@ -1,9 +1,7 @@
 import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { patch } from "@web/core/utils/patch";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
-import { SyncPopup } from "@point_of_sale/app/components/popups/sync_popup/sync_popup";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { _t } from "@web/core/l10n/translation";
 
 patch(ConfirmationDialog.prototype, {
     setup() {
@@ -31,10 +29,7 @@ patch(ConfirmationDialog.prototype, {
                 logPosMessage("Failed to sync orders:", error);
             }
         }
-        this.pos.dialog.add(SyncPopup, {
-            title: _t("Reload Data"),
-            confirm: (fullReload) => this.pos.reloadData(fullReload),
-        });
+        this.pos.reloadData();
     },
 });
 

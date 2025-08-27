@@ -68,8 +68,8 @@
                                 <DropdownItem t-if="showCashMoveButton and this.pos.cashier._role != 'minimal'" onSelected="() => this.pos.cashMove()">
                                     <i class="fa fa-fw fa-money" aria-hidden="true" /> Cash In/Out
                                 </DropdownItem>
-                                <DropdownItem t-if="!this.pos.data.network.offline" onSelected="() => this.reloadProducts()">
-                                    <i class="fa fa-fw fa-refresh" aria-hidden="true" /> Reload Data
+                                <DropdownItem t-if="!this.pos.data.network.offline" onSelected="() => this.pos.reloadData()">
+                                    <i class="fa fa-fw fa-refresh" aria-hidden="true" /> Reset POS
                                 </DropdownItem>
                                 <DropdownItem t-if="showCreateProductButton" onSelected="() => this.pos.editProduct()">
                                     <i class="fa fa-fw fa-plus" aria-hidden="true" /> Create Product

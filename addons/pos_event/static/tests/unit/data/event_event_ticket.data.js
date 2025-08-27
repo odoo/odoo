@@ -31,6 +31,7 @@ export class EventEventTicket extends models.ServerModel {
             seats_max: 5,
             start_sale_datetime: "2019-03-10 11:00:00",
             end_sale_datetime: "2019-03-15 12:00:00",
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 2,

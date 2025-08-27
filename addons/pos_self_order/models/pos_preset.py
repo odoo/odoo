@@ -11,7 +11,7 @@ class PosPreset(models.Model):
         default="counter",
         required=True,
     )
-    
+
     mail_template_id = fields.Many2one(
         string="Email Confirmation",
         comodel_name='mail.template',
@@ -20,15 +20,15 @@ class PosPreset(models.Model):
 
     # will be overridden.
     @api.model
-    def _load_pos_self_data_domain(self, data, config):
-        return ['|', ('id', '=', config.default_preset_id.id), '&', ('available_in_self', '=', True), ('id', 'in', config.available_preset_ids.ids)]
+    def _load_pos_self_data_domain(self, data):
+        return ['|', ('id', '=', data['pos.config'].default_preset_id.id), '&', ('available_in_self', '=', True), ('id', 'in', data['pos.config'].available_preset_ids.ids)]
 
     @api.model
     def _load_pos_self_data_fields(self, config):
         params = super()._load_pos_self_data_fields(config)
         params.extend(['service_at', 'mail_template_id'])
         return params
-    
+
     @api.model
     def _load_pos_data_fields(self, config):
         params = super()._load_pos_data_fields(config)

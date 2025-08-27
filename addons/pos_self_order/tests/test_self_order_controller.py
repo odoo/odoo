@@ -242,7 +242,7 @@ class TestSelfOrderController(SelfOrderCommonTest):
         data = self.make_request_to_controller('/pos-self/data/' + str(self.pos_config.id), {
             'access_token': self.pos_config.access_token,
         })
-        loaded_category_ids = [category['id'] for category in data['pos.category']]
+        loaded_category_ids = [category['id'] for category in data['pos.category']['records']]
         self.assertIn(mool_categ.id, loaded_category_ids, "The category linked to the printer should be loaded")
         self.assertIn(adgu_categ.id, loaded_category_ids, "The category linked to the printer should be loaded")
         self.assertIn(manv_categ.id, loaded_category_ids, "The category linked to the printer should be loaded")

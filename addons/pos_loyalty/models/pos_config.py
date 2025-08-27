@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -126,3 +126,24 @@ class PosConfig(models.Model):
                 'has_source_order': coupon._has_source_order(),
             },
         }
+
+    @api.model
+    def _load_pos_data_read(self, records, config):
+        read_records = super()._load_pos_data_read(records, config)
+        if not read_records:
+            return read_records
+
+        # Identify special loyalty products (e.g., gift cards, e-wallets) to be displayed in the POS
+        loyality_products = config.get_record_by_ref([
+            'loyalty.gift_card_product_50',
+            'loyalty.ewallet_product_50',
+        ])
+        special_display_products = self.env['product.product'].search([('id', 'in', loyality_products)])
+        # Include trigger products from loyalty programs of type 'gift_card' or 'ewallet'
+        special_display_products += self.env['loyalty.program'].search([
+            ('program_type', 'in', ['ewallet']),
+            ('pos_config_ids', 'in', [False, config.id]),
+        ]).trigger_product_ids
+        read_records[0]['_pos_special_display_products_ids'] = special_display_products.product_tmpl_id.ids
+
+        return read_records

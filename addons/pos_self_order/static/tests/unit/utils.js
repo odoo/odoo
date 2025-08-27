@@ -14,18 +14,12 @@ import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { unpatchSelf } from "@pos_self_order/app/services/data_service";
 
 export function initMockRpc() {
-    onRpc("/pos-self/relations/1", () =>
-        MockServer.env["pos.session"].load_data_params({ self_ordering: true })
-    );
-    onRpc("/pos-self/data/1", () =>
-        MockServer.env["pos.session"].load_data({ self_ordering: true })
-    );
-    onRpc("/pos-self/receipt-template/1", () => []);
+    onRpc("/pos-self/data/1", () => MockServer.env["pos.config"].load_self_data());
 
     const mockProcssOrder = async (request) => {
         const { params } = await request.json();
         const response = MockServer.env["pos.order"].sync_from_ui([params.order]);
-        const models = MockServer.env["pos.session"]._load_self_data_models();
+        const models = MockServer.env["pos.config"]._load_self_data_models();
         return Object.fromEntries(Object.entries(response).filter(([key]) => models.includes(key)));
     };
 
