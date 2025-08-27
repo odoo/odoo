@@ -34,7 +34,12 @@ import {
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { createElementWithContent, htmlJoin, setElementContent } from "@web/core/utils/html";
+import {
+    createElementWithContent,
+    htmlJoin,
+    isHtmlEmpty,
+    setElementContent,
+} from "@web/core/utils/html";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { isEmail } from "@web/core/utils/strings";
 import { isDisplayStandalone, isIOS, isMobileOS } from "@web/core/browser/feature_detection";
@@ -365,7 +370,7 @@ export class Composer extends Component {
         const attachments = this.props.composer.attachments;
         return (
             !this.state.active ||
-            (!this.props.composer.composerText && attachments.length === 0) ||
+            (isHtmlEmpty(this.props.composer.composerHtml) && attachments.length === 0) ||
             attachments.some(({ uploading }) => Boolean(uploading))
         );
     }
@@ -699,7 +704,7 @@ export class Composer extends Component {
                 type: "warning",
             });
         } else if (
-            this.props.composer.composerText.trim() ||
+            !isHtmlEmpty(this.props.composer.composerHtml) ||
             attachments.length > 0 ||
             (this.message && this.message.attachment_ids.length > 0)
         ) {
@@ -707,7 +712,7 @@ export class Composer extends Component {
                 return;
             }
             this.state.active = false;
-            await cb(this.props.composer.composerText);
+            await cb(this.props.composer.composerHtml);
             if (this.props.onPostCallback) {
                 this.props.onPostCallback();
             }
@@ -762,7 +767,7 @@ export class Composer extends Component {
      */
 
     /**
-     * @param {string} value message body
+     * @param {ReturnType<markup>} value message body
      * @param {postData} postData Message meta data info
      * @param {extraData} extraData Message extra meta data info needed by other modules
      */
