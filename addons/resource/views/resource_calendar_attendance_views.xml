@@ -11,11 +11,10 @@
                 <field name="name" invisible="display_type == 'line_section'"/>
                 <field name="dayofweek"/>
                 <field name="day_period"/>
-                <field name="hour_from" widget="float_time"/>
-                <field name="hour_to" widget="float_time"/>
-                <field name="duration_days" optional="show"/>
-                <field name="date_from" optional="hide"/>
-                <field name="date_to" optional="hide"/>
+                <field name="duration_hours" force_save="1" column_invisible="not parent.duration_based"/>
+                <field name="hour_from" widget="float_time" readonly="duration_based"/>
+                <field name="hour_to" widget="float_time" readonly="duration_based"/>
+                <field name="duration_days" optional="show" readonly="1"/>
                 <field name="week_type" readonly="1" force_save="1" optional="hide"/>
             </list>
         </field>
@@ -29,8 +28,6 @@
                 <sheet>
                 <group>
                     <field name="name"/>
-                    <field name="date_from"/>
-                    <field name="date_to"/>
                     <field name="dayofweek"/>
                     <label for="hour_from" string="Hours"/>
                     <div class="o_row">
