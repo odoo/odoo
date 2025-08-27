@@ -857,7 +857,7 @@ class PropertiesDefinition(Field):
 
     REQUIRED_KEYS = ('name', 'type')
     ALLOWED_KEYS = (
-        'name', 'string', 'type', 'comodel', 'default',
+        'name', 'string', 'type', 'comodel', 'default', 'suffix',
         'selection', 'tags', 'domain', 'view_in_cards', 'fold_by_default',
         'currency_field'
     )
