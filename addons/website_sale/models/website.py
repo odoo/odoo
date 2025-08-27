@@ -795,15 +795,20 @@ class Website(models.Model):
         return steps
 
     def _get_checkout_step_values(self, href=None):
-        href = href or request.httprequest.path
+        def rewrite(path):
+            return self.env['ir.http'].url_rewrite(path)[0]
+        href = rewrite(href) if href else request.httprequest.path
         # /shop/address is associated with the delivery step
-        if href == '/shop/address':
-            href = '/shop/checkout'
+        if href == rewrite('/shop/address'):
+            href = rewrite('/shop/checkout')
 
         allowed_steps_domain = self._get_allowed_steps_domain()
-        current_step = request.env['website.checkout.step'].sudo().search(
-            Domain.AND([allowed_steps_domain, [('step_href', '=', href)]]), limit=1
-        )
+        current_step = request.env['website.checkout.step'].sudo()
+        for step in current_step.search(allowed_steps_domain):
+            if rewrite(step.step_href) == href:
+                current_step = step
+                href = step.step_href
+                break
         next_step = current_step._get_next_checkout_step(allowed_steps_domain)
         previous_step = current_step._get_previous_checkout_step(allowed_steps_domain)
 
@@ -812,7 +817,7 @@ class Website(models.Model):
         if next_step.step_href == '/shop/checkout':
             next_href = '/shop/checkout?try_skip_step=true'
         # redirect handled by '/shop/address/submit' route when all values are properly filled
-        if request.httprequest.path == '/shop/address':
+        if request.httprequest.path == rewrite('/shop/address'):
             next_href = False
 
         return {
