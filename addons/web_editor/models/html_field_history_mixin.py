@@ -4,7 +4,7 @@
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
-from .diff_utils import apply_patch, generate_comparison, generate_patch
+from .diff_utils import apply_patch, generate_comparison, generate_patch, generate_unified_diff
 
 
 class HtmlFieldHistoryMixin(models.AbstractModel):
@@ -113,7 +113,6 @@ class HtmlFieldHistoryMixin(models.AbstractModel):
         :return: string: the restored content
         """
         self.ensure_one()
-
         revisions = [
             i
             for i in self.html_field_history[field_name]
@@ -141,4 +140,21 @@ class HtmlFieldHistoryMixin(models.AbstractModel):
             field_name, revision_id
         )
 
-        return generate_comparison(self[field_name] or "", restored_content)
+        return generate_comparison(restored_content, self[field_name] or "")
+
+    def html_field_history_get_unified_diff_at_revision(self, field_name, revision_id):
+        """For the requested field,
+        Get a unified diff between the current content of the field and the
+        content restored at the requested revision_id.
+
+        :param str field_name: the name of the field
+        :param int revision_id: id of the last revision to compare
+
+        :return: string: the unified diff
+        """
+        self.ensure_one()
+        restored_content = self.html_field_history_get_content_at_revision(
+            field_name, revision_id
+        )
+
+        return generate_unified_diff(self[field_name] or "", restored_content)

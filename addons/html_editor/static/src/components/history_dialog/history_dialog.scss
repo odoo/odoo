@@ -1,4 +1,37 @@
+.html-history-dialog-container {
+    margin-left: 10px;
+    margin-right: 10px;
+}
 .html-history-dialog {
+    .history-view-top-bar {
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+        background-color: #f7f7f7;
+        border-bottom: 1px solid #ddd;
+
+        >div {
+            flex-grow: 6;
+            &.toggle-view-btns {
+                flex-grow: 1;
+                padding-right: 10px;
+                width: 220px;
+            }
+            &:last-child {
+                flex-grow: 1;
+                text-align: right;
+                width: 180px;
+                .fa {
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+    .history-view-inner {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-top: 0;
+    }
     .history-container {
         --border-color: #ddd;
         margin-left: 240px;
@@ -26,27 +59,84 @@
         }
     }
     .revision-list {
-        margin: 38px 0 0 8px;
         overflow: auto;
         max-height: 100%;
         width: 220px;
         float : left;
 
         .btn {
-            border-radius: 0;
+            --Avatar-size: 24px;
             display: block;
             text-align: left;
-            width: 220px;
+            width: 200px;
             margin-bottom: 8px;
             position: relative;
-            &:before {
-                content: '\f105';
-                font-family: 'FontAwesome';
+            padding-left: 18px;
+            margin-left: 12px;
+            color: #555;
+            border-radius: 6px;
+            .o_avatar  {
                 position: absolute;
-                right : 8px;
-                top: 0;
-                font-size: 34px;
+                right: 6px;
+                top: 3px;
+                opacity: 0.5;
             }
+            &:hover {
+                background-color: rgba($primary, .20);;
+            }
+            &:after {
+                content: ' ';
+                position: absolute;
+                left : -1px;
+                top: -16px;
+                border-left: 2px solid;
+                border-color: $secondary;
+                height: 24px;
+            }
+            &:before {
+                font-family: 'FontAwesome';
+                content: '\f068';
+                position: absolute;
+                left : -12px;
+                top: 4px;
+                font-size: 12px;
+                text-align: center;
+                border-radius: 12px;
+                width: 24px;
+                height: 24px;
+                line-height: 24px;
+                background-color: $secondary;
+                z-index: 10;
+            }
+            &.targeted {
+                color: lighten($primary, 20%);
+                &:before {
+                    color: white;
+                    content: '\f00c';
+                    background-color: lighten($primary, 20%);
+                }
+                &:after {
+                    border-color: lighten($primary, 20%);
+                }
+            }
+            &.selected {
+                color: $primary;
+                &:before {
+                    color: white;
+                    content: '\f0da';
+                    background-color: $primary;
+                }
+                &:after {
+                    border-color: $primary;
+                }
+                .o_avatar {
+                    opacity: 1;
+                }
+            }
+            &:first-child:after {
+                content: none !important;
+            }
+
         }
     }
 }

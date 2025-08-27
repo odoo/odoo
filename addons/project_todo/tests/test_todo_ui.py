@@ -72,4 +72,4 @@ class TestTodoUi(HttpCaseWithUserDemo):
             'project_id': False
         })
 
-        self.start_tour('/odoo', 'project_todo_history_tour', login='admin')
+        self.start_tour('/odoo?debug=1', 'project_todo_history_tour', login='admin')

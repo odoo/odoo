@@ -3,11 +3,12 @@ import { Notebook } from "@web/core/notebook/notebook";
 import { formatDateTime } from "@web/core/l10n/dates";
 import { useService } from "@web/core/utils/hooks";
 import { memoize } from "@web/core/utils/functions";
-import { Component, onMounted, useState, markup } from "@odoo/owl";
+import { Component, onMounted, useState, markup, onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
 import { READONLY_MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
+import { browser } from "@web/core/browser/browser";
 import { loadBundle } from "@web/core/assets";
 
 const { DateTime } = luxon;
@@ -27,6 +28,8 @@ export class HistoryDialog extends Component {
         embeddedComponents: { Array, optional: true },
     };
 
+    DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
+
     static defaultProps = {
         title: _t("History"),
         noContentHelper: markup(""),
@@ -35,6 +38,8 @@ export class HistoryDialog extends Component {
 
     state = useState({
         revisionsData: [],
+        currentView: "content", // "content" or "comparison"
+        isComparisonSplit: false, // true for side-by-side, false for unified diff
         revisionContent: null,
         revisionComparison: null,
         revisionId: null,
@@ -42,11 +47,37 @@ export class HistoryDialog extends Component {
     });
 
     setup() {
-        this.size = "xl";
+        this.size = "fullscreen";
         this.title = this.props.title;
         this.orm = useService("orm");
-        this.notebookTabs = [_t("Content"), _t("Comparison")];
 
+        onWillStart(async () => {
+            // We include the current document version as the first revision,
+            // and we shift the rest of the metadata to be more logical for the user.
+            let revisionId = -1;
+            const revisionData = [];
+            for (const metadata of this.props.historyMetadata) {
+                revisionData.push({ ...metadata, revision_id: revisionId });
+                revisionId = metadata["revision_id"];
+            }
+            // add the initial revision data based on the record creation date and user
+            const record = await this.orm.read(
+                this.props.recordModel,
+                [this.props.recordId],
+                ["create_date", "create_uid"]
+            );
+            revisionData.push({
+                revision_id: revisionId,
+                create_date: DateTime.fromFormat(
+                    record[0]["create_date"],
+                    "yyyy-MM-dd HH:mm:ss"
+                ).toISO(),
+                create_uid: record[0]["create_uid"][0],
+                create_user_name: record[0]["create_uid"][1],
+            });
+
+            this.state.revisionsData = revisionData;
+        });
         onMounted(() => this.init());
     }
 
@@ -58,12 +89,11 @@ export class HistoryDialog extends Component {
     }
 
     async init() {
-        this.state.revisionsData = this.props.historyMetadata;
         // Load diff2html only in debug mode, as the side-by-side comparison is only available in debug mode.
         if (this.env.debug) {
             await loadBundle("html_editor.assets_history_diff");
         }
-        await this.updateCurrentRevision(this.props.historyMetadata[0]["revision_id"]);
+        await this.updateCurrentRevision(this.state.revisionsData[0]["revision_id"]);
     }
 
     async updateCurrentRevision(revisionId) {
@@ -80,18 +110,21 @@ export class HistoryDialog extends Component {
 
     getRevisionComparison = memoize(
         async function getRevisionComparison(revisionId) {
+            if (revisionId === -1) {
+                return "";
+            }
             const comparison = await this.orm.call(
                 this.props.recordModel,
                 "html_field_history_get_comparison_at_revision",
                 [this.props.recordId, this.props.versionedFieldName, revisionId]
             );
-            return markup(this._removeExternalBlockHtml(comparison));
+            return markup(comparison);
         }.bind(this)
     );
 
     getRevisionComparisonSplit = memoize(
         async function getRevisionComparisonSplit(revisionId) {
-            if (!this.env.debug) {
+            if (!this.env.debug || revisionId === -1) {
                 return "";
             }
             let unifiedDiffString = await this.orm.call(
@@ -113,6 +146,17 @@ export class HistoryDialog extends Component {
 
     getRevisionContent = memoize(
         async function getRevisionContent(revisionId) {
+            if (revisionId === -1) {
+                const curentContent = await this.orm.read(
+                    this.props.recordModel,
+                    [this.props.recordId],
+                    [this.props.versionedFieldName]
+                );
+                if (!curentContent || !curentContent.length) {
+                    return this.props.noContentHelper;
+                }
+                return markup(curentContent[0][this.props.versionedFieldName]);
+            }
             const content = await this.orm.call(
                 this.props.recordModel,
                 "html_field_history_get_content_at_revision",
@@ -133,8 +177,37 @@ export class HistoryDialog extends Component {
      * Getters
      **/
     getRevisionDate(revision) {
+        if (!revision || !revision["create_date"]) {
+            return "--";
+        }
         return formatDateTime(
-            DateTime.fromISO(revision["create_date"], { zone: "utc" }).setZone(user.tz)
+            DateTime.fromISO(revision["create_date"], { zone: "utc" }).setZone(user.tz),
+            { showSeconds: false }
         );
+    }
+    getRevisionClasses(revision) {
+        let classesStr = "btn";
+
+        if (
+            this.state.revisionId !== -1 &&
+            (this.state.revisionId < revision.revision_id || revision.revision_id === -1)
+        ) {
+            classesStr += " targeted";
+        } else if (this.state.revisionId === revision.revision_id) {
+            classesStr += " selected";
+        }
+
+        return classesStr;
+    }
+    getRevisionAuthorAvatar(revision) {
+        if (!revision || !revision["create_uid"]) {
+            return this.DEFAULT_AVATAR;
+        }
+        return `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${revision["create_uid"]}`;
+    }
+
+    get currentRevision() {
+        const id = this.state?.revisionId || this.state.revisionsData[0]["revision_id"];
+        return this.state.revisionsData.find((revision) => revision["revision_id"] === id);
     }
 }

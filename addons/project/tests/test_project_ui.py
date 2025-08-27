@@ -31,7 +31,7 @@ class TestUi(odoo.tests.HttpCase):
             'project_id': project2.id,
         })
 
-        self.start_tour('/odoo', 'project_task_history_tour', login='admin')
+        self.start_tour('/odoo?debug=1', 'project_task_history_tour', login='admin')
 
     def test_project_task_last_history_steps(self):
         """This tour will check that the history works properly."""
