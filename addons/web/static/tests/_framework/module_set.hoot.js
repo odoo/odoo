@@ -365,6 +365,7 @@ async function __gcAndLogMemory(label, testCount) {
 /** @extends {OdooModuleLoader} */
 class ModuleSetLoader extends loader.constructor {
     cleanups = [];
+    preventGlobalDefine = false;
 
     /**
      * @param {ModuleSet} moduleSet
@@ -412,7 +413,7 @@ class ModuleSetLoader extends loader.constructor {
      * @type {typeof loader["define"]}
      */
     define(name, deps, factory) {
-        if (!loader.factories.has(name)) {
+        if (!this.preventGlobalDefine && !loader.factories.has(name)) {
             // Lazy-loaded modules are added to the main loader for next ModuleSetLoader
             // instances.
             loader.define(name, deps, factory, true);
