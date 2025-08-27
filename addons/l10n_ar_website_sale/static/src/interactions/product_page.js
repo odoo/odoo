@@ -16,7 +16,10 @@ patch(ProductPage.prototype, {
             '.o_l10n_ar_price_tax_excluded .oe_currency_value'
         );
         if (currencyValue) {
-            currencyValue.textContent = this._priceToStr(combination.l10n_ar_price_tax_excluded);
+            currencyValue.textContent = this._priceToStr(
+                combination.l10n_ar_price_tax_excluded,
+                combination.currency_precision
+            );
         }
     },
 });
