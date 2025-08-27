@@ -130,12 +130,15 @@ export class SavePlugin extends Plugin {
 
         // TODO: Restore the delay translation feature once it's fixed, see
         // commit msg for more info.
-        const delay = delayTranslations ? { delay_translations: false } : {};
-        const context = {
-            website_id: this.services.website.currentWebsite.id,
-            lang: this.services.website.currentWebsite.metadata.lang,
-            ...delay,
-        };
+        let context = {};
+        if (this.services.website) {
+            const delay = delayTranslations ? { delay_translations: false } : {};
+            context = {
+                website_id: this.services.website.currentWebsite.id,
+                lang: this.services.website.currentWebsite.metadata.lang,
+                ...delay,
+            };
+        }
 
         escapeTextNodes(el);
         return this.services.orm.call(

@@ -1,3 +1,4 @@
+import { addBuilderOption } from "@html_builder/../tests/helpers";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -5,7 +6,6 @@ import { reactive, xml } from "@odoo/owl";
 import { contains, defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
 import {
-    addOption,
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
@@ -38,7 +38,7 @@ test("basic many2many: find tag, select tag, unselect tag", async () => {
         };
     }
     const selection = reactive([]);
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         Component: TestComponent,
         props: {

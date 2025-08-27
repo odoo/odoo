@@ -1,3 +1,8 @@
+import {
+    addBuilderOption,
+    addBuilderAction,
+    setupHTMLBuilder,
+} from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Operation } from "@html_builder/core/operation";
 import { HistoryPlugin } from "@html_editor/core/history_plugin";
@@ -5,14 +10,8 @@ import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, Deferred, delay, hover, press, tick } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import {
-    addActionOption,
-    addOption,
-    defineWebsiteModels,
-    setupWebsiteBuilder,
-} from "@website/../tests/builder/website_helpers";
 
-defineWebsiteModels();
+describe.current.tags("desktop");
 
 describe("Operation", () => {
     test("handle 3 concurrent cancellable operations (with delay)", async () => {
@@ -90,7 +89,7 @@ describe("Operation", () => {
 describe("Block editable", () => {
     test("Doing an operation should block the editable during its execution", async () => {
         const customActionDef = new Deferred();
-        addActionOption({
+        addBuilderAction({
             customAction: class extends BuilderAction {
                 static id = "customAction";
                 load() {
@@ -101,11 +100,11 @@ describe("Block editable", () => {
                 }
             },
         });
-        addOption({
+        addBuilderOption({
             selector: ".test-options-target",
             template: xml`<BuilderButton action="'customAction'"/>`,
         });
-        await setupWebsiteBuilder(`<div class="test-options-target">TEST</div>`, {
+        await setupHTMLBuilder(`<div class="test-options-target">TEST</div>`, {
             loadIframeBundles: true,
         });
 
@@ -140,7 +139,7 @@ describe("Async operations", () => {
 
     test("In clickable component, revert is awaited before applying the next apply", async () => {
         const applyDelay = 1000;
-        addActionOption({
+        addBuilderAction({
             customAction: class extends BuilderAction {
                 static id = "customAction";
                 async apply({ editingElement, value }) {
@@ -157,7 +156,7 @@ describe("Async operations", () => {
                 }
             },
         });
-        addOption({
+        addBuilderOption({
             selector: ".test-options-target",
             template: xml`
                 <BuilderRow label.translate="Type">
@@ -169,7 +168,7 @@ describe("Async operations", () => {
             `,
         });
 
-        await setupWebsiteBuilder(`<div class="test-options-target">TEST</div>`);
+        await setupHTMLBuilder(`<div class="test-options-target">TEST</div>`);
         await contains(":iframe .test-options-target").click();
         await contains(".options-container [data-label='Type'] .btn-secondary ").click();
         await hover(".popover [data-action-value='first']");
@@ -186,7 +185,7 @@ describe("Async operations", () => {
 
     test("In ColorPicker, revert is awaited before applying the next apply", async () => {
         const applyDelay = 1000;
-        addActionOption({
+        addBuilderAction({
             customAction: class extends BuilderAction {
                 static id = "customAction";
                 async apply({ editingElement }) {
@@ -203,14 +202,14 @@ describe("Async operations", () => {
                 }
             },
         });
-        addOption({
+        addBuilderOption({
             selector: ".test-options-target",
             template: xml`<BuilderRow>
                 <BuilderColorPicker enabledTabs="['solid']" styleAction="'background-color'" action="'customAction'"/>
             </BuilderRow>`,
         });
 
-        await setupWebsiteBuilder(`<div class="test-options-target">TEST</div>`);
+        await setupHTMLBuilder(`<div class="test-options-target">TEST</div>`);
         await contains(":iframe .test-options-target").click();
 
         await contains(".we-bg-options-container .o_we_color_preview").click();
@@ -237,16 +236,16 @@ describe("Operation that will fail", () => {
                 throw new Error("This action should crash");
             }
         }
-        addActionOption({
+        addBuilderAction({
             TestAction,
         });
-        addOption({
+        addBuilderOption({
             selector: ".test-options-target",
             template: xml`
                 <BuilderButton action="'testAction'"/>
                 <BuilderButton classAction="'test'"/>`,
         });
-        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
         await contains("[data-action-id='testAction']").hover();
         await contains("[data-class-action='test']").click();
@@ -265,16 +264,16 @@ describe("Operation that will fail", () => {
                 throw new Error("This action should crash");
             }
         }
-        addActionOption({
+        addBuilderAction({
             TestAction,
         });
-        addOption({
+        addBuilderOption({
             selector: ".test-options-target",
             template: xml`
                 <BuilderButton action="'testAction'"/>
                 <BuilderButton classAction="'test'"/>`,
         });
-        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
         await contains("[data-action-id='testAction']").click();
         await contains("[data-class-action='test']").click();
