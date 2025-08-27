@@ -17,21 +17,19 @@ registry.category("web_tour.tours").add('mailing_editor', {
     run: "click",
 }, {
     content: 'choose the theme "empty" to edit the mailing with snippets',
-    trigger: '[name="body_arch"] :iframe #empty',
+    trigger: '[name="body_arch"] .o_mailing_template_preview_wrapper [data-name="empty"]',
     run: "click",
 }, {
     content: 'wait for the editor to be rendered',
     trigger: '[name="body_arch"] :iframe .o_editable[data-editor-message="DRAG BUILDING BLOCKS HERE"]',
 }, {
-    content: 'drag the "Title" snippet from the design panel and drop it in the editor',
-    trigger: '[name="body_arch"] #oe_snippets [name="Title"] .oe_snippet_thumbnail',
-    async run(helpers) {
-        await helpers.drag_and_drop(`[name="body_arch"] :iframe .o_editable`, {
-            position: {
-                top: 340,
-            },
-        });
-    },
+    trigger: '.o_snippet[name="Headings"] button',
+    content: 'Click the "Headings" snippet category to drop a snippet in the editor',
+    run: "click",
+}, {
+    trigger: ":iframe .o_snippet_preview_wrap:has(.s_title)",
+    content: "Select the Title Snippet",
+    run: "click",
 }, {
     content: 'wait for the snippet menu to finish the drop process',
     trigger: 'body:not(:has(.o_we_ongoing_insertion))',
