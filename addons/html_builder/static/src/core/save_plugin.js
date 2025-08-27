@@ -29,7 +29,6 @@ export class SavePlugin extends Plugin {
             //     root is the clone of a node that was o_dirty
             // }
         ],
-        group_element_save_handlers: withSequence(30, this.groupElementHandler.bind(this)),
         save_element_handlers: [
             // async (el) => {
             //     called when saving an element (in parallel to saving the view)
@@ -65,7 +64,6 @@ export class SavePlugin extends Plugin {
         }
     }
     async _save() {
-        // TODO: implement the "group by" feature for save
         const dirtyEls = [];
         for (const getDirtyEls of this.getResource("get_dirty_els")) {
             dirtyEls.push(...getDirtyEls());
@@ -73,6 +71,7 @@ export class SavePlugin extends Plugin {
         // Group elements to save if possible
         const groupedElements = groupBy(dirtyEls, (dirtyEl) => {
             const model = dirtyEl.dataset.oeModel;
+            const recordId = dirtyEl.dataset.oeId;
             const field = dirtyEl.dataset.oeField;
 
             // There are elements which have no linked model as something
@@ -82,12 +81,8 @@ export class SavePlugin extends Plugin {
                 return uniqueId("special-element-to-save-");
             }
 
-            const groupElementHandler = this.getResource("group_element_save_handlers")[0];
-            // If not defined, group elements which are from the same field of
-            // the same record.
-            return (
-                groupElementHandler(model, field) || `${model}::${dirtyEl.dataset.oeId}::${field}`
-            );
+            // Group elements which are from the same field of the same record.
+            return `${model}::${recordId}::${field}`;
         });
         const saveProms = Object.values(groupedElements).map(async (dirtyEls) => {
             const cleanedEls = dirtyEls.map((dirtyEl) => {
@@ -101,22 +96,16 @@ export class SavePlugin extends Plugin {
                     return;
                 }
             }
-            const proms = this.getResource("save_element_handlers")
-                .map((saveElementHandler) => saveElementHandler(cleanedEls[0]))
-                .filter(Boolean);
-            if (!proms.length) {
-                console.warn("no save_element_handlers for dirty element", cleanedEls[0]);
+            for (const cleanedEl of cleanedEls) {
+                for (const saveElementHandler of this.getResource("save_element_handlers")) {
+                    await saveElementHandler(cleanedEl);
+                }
             }
-            await Promise.all(proms);
         });
         // used to track dirty out of the editable scope, like header, footer or wrapwrap
         const willSaves = this.getResource("save_handlers").map((c) => c());
         await Promise.all(saveProms.concat(willSaves));
         this.dependencies.history.reset();
-    }
-
-    groupElementHandler(model, field) {
-        return model === "ir.ui.view" && field === "arch" ? uniqueId("view-part-to-save-") : "";
     }
 
     /**
