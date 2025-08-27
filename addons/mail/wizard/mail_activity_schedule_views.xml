@@ -52,7 +52,7 @@
                                 <field name="date_deadline" string="Due Date"/>
                                 <field name="activity_user_id" widget="many2one_avatar_user" placeholder="Unassigned"/>
                                 <field name="res_model" widget="activity_model_selector" string="Link to"
-                                    invisible="id or context.get('active_model')"/>
+                                    invisible="id or context.get('active_model')" required="activity_user_id != context.get('uid')"/>
                             </group>
                             <field name="note" class="oe-bordered-editor embedded-editor-height-4" placeholder="Log a note..."/>
                         </group>
