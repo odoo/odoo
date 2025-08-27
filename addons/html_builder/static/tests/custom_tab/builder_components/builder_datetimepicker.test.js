@@ -1,17 +1,13 @@
-import { expect, test } from "@odoo/hoot";
+import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
+import { expect, test, describe } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
-import {
-    addOption,
-    defineWebsiteModels,
-    setupWebsiteBuilder,
-} from "@website/../tests/builder/website_helpers";
 const { DateTime } = luxon;
 
-const TIME_TOLERANCE = 2;
+describe.current.tags("desktop");
 
-defineWebsiteModels();
+const TIME_TOLERANCE = 2;
 
 // To avoid indeterminism in tests, we use a tolerance
 function isExpectedDateTime({
@@ -26,11 +22,11 @@ function isExpectedDateTime({
 }
 
 test("opens DateTimePicker on focus, closes on blur", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderDateTimePicker dataAttributeAction="'date'"/>`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
     await contains(".we-bg-options-container input").click();
@@ -40,15 +36,15 @@ test("opens DateTimePicker on focus, closes on blur", async () => {
 });
 
 test("defaults to now if undefined", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderDateTimePicker dataAttributeAction="'date'" acceptEmptyDate="false"/>`,
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderCheckbox classAction="'checkbox-action'"/>`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
     let dateString = queryOne(".we-bg-options-container input.o-hb-input-base").value;
@@ -60,11 +56,11 @@ test("defaults to now if undefined", async () => {
 });
 
 test("defaults to last one when invalid date provided", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderDateTimePicker dataAttributeAction="'date'"/>`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target" data-date="1554219400">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target" data-date="1554219400">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".we-bg-options-container input").toHaveValue("04/02/2019 16:36:40");
 
@@ -79,11 +75,11 @@ test("defaults to last one when invalid date provided", async () => {
 });
 
 test("defaults to last one when invalid date provided (date)", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderDateTimePicker type="'date'" dataAttributeAction="'date'"/>`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target" data-date="1554219400">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target" data-date="1554219400">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".we-bg-options-container input").toHaveValue("04/02/2019");
 
@@ -98,11 +94,11 @@ test("defaults to last one when invalid date provided (date)", async () => {
 });
 
 test("defaults to now when no date is selected", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderDateTimePicker dataAttributeAction="'date'" acceptEmptyDate="false"/>`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     await contains(".we-bg-options-container input").edit("04/01/2019 10:00:00");
     expect(".we-bg-options-container input").toHaveValue("04/01/2019 10:00:00");
@@ -113,11 +109,11 @@ test("defaults to now when no date is selected", async () => {
 });
 
 test("defaults to now when clicking on clear button", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderDateTimePicker dataAttributeAction="'date'" acceptEmptyDate="false"/>`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     await contains(".we-bg-options-container input").edit("04/01/2019 10:00:00");
     expect(".we-bg-options-container input").toHaveValue("04/01/2019 10:00:00");
@@ -132,11 +128,11 @@ test("defaults to now when clicking on clear button", async () => {
 });
 
 test("selects a date and properly applies it", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderDateTimePicker dataAttributeAction="'date'" acceptEmptyDate="false"/>`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
     await contains(".we-bg-options-container input").click();
@@ -153,11 +149,11 @@ test("selects a date and properly applies it", async () => {
 });
 
 test("selects a date and synchronize the input field, while still in preview", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderDateTimePicker dataAttributeAction="'date'" acceptEmptyDate="false"/>`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     await contains(".we-bg-options-container input").click();
     await contains(".o_date_item_cell.o_today + .o_date_item_cell").click();
@@ -172,11 +168,11 @@ test("selects a date and synchronize the input field, while still in preview", a
 });
 
 test("edit a date with the datetime picker should correctly apply the mutation", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderDateTimePicker dataAttributeAction="'date'"/>`,
     });
-    await setupWebsiteBuilder(`
+    await setupHTMLBuilder(`
         <div class="test-options-target" data-date="1554219400">b</div>
         <div class="another-target">c</div>`);
     await contains(":iframe .test-options-target").click();

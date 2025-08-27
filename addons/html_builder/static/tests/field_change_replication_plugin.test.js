@@ -1,11 +1,13 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { setupHTMLBuilder } from "./helpers";
-import { queryOne } from "@odoo/hoot-dom";
+import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
+import { describe, expect, test } from "@odoo/hoot";
+import { queryOne } from "@odoo/hoot-dom";
+
+describe.current.tags("desktop");
 
 describe("replicate changes", () => {
     test("translated elements", async () => {
-        const { editor } = await setupHTMLBuilder("", {
+        const { getEditor } = await setupHTMLBuilder("", {
             headerContent: `
             <div class="test-1">
                 <span data-oe-model="ir.ui.view" data-oe-id="600" data-oe-field="arch_db" data-oe-translation-state="translated" data-oe-translation-source-sha="4242">Contactez-nous</span>
@@ -16,12 +18,13 @@ describe("replicate changes", () => {
         `,
         });
         queryOne(":iframe .test-2 span").append(" ici");
+        const editor = getEditor();
         editor.shared.history.addStep();
         expect(":iframe span:contains(Contactez-nous ici)").toHaveCount(2);
     });
 
     test("link and non-link elements", async () => {
-        const { editor } = await setupHTMLBuilder(
+        const { getEditor } = await setupHTMLBuilder(
             `
             <div class="test-4">
                 <a data-oe-xpath="/t[1]/nav[1]/div[1]/div[1]/t[2]/ul[1]/li[2]/a[1]/" href="/blog/travel-1" data-oe-model="blog.blog" data-oe-id="1" data-oe-field="name" data-oe-type="char" data-oe-expression="nav_blog.name">Travel</a>
@@ -41,6 +44,7 @@ describe("replicate changes", () => {
         `,
             }
         );
+        const editor = getEditor();
         queryOne(":iframe .test-1 b").append(" Abroad");
         editor.shared.history.addStep();
         expect(":iframe .test-1 b").toHaveText("Travel Abroad");
@@ -57,7 +61,7 @@ describe("replicate changes", () => {
     });
 
     test("menu items", async () => {
-        const { editor } = await setupHTMLBuilder("", {
+        const { getEditor } = await setupHTMLBuilder("", {
             headerContent: `
             <div class="test-1">
                 <span data-oe-model="website.menu" data-oe-id="5" data-oe-field="name" data-oe-type="char" data-oe-expression="submenu.name">Home</span>
@@ -68,12 +72,13 @@ describe("replicate changes", () => {
         `,
         });
         queryOne(":iframe .test-1 span").append("y");
+        const editor = getEditor();
         editor.shared.history.addStep();
         expect(":iframe span:contains(Homey)").toHaveCount(2);
     });
 
     test("contact", async () => {
-        const { editor } = await setupHTMLBuilder("", {
+        const { getEditor } = await setupHTMLBuilder("", {
             headerContent: `
             <div class="test-1">
                 <span data-oe-xpath="/t[1]/div[1]/div[2]/span[1]" data-oe-model="blog.post" data-oe-id="1" data-oe-field="author_id" data-oe-type="contact" data-oe-expression="blog_post.author_id" data-oe-many2one-id="3" data-oe-many2one-model="res.partner" data-oe-contact-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;name&quot;], &quot;tagName&quot;: &quot;span&quot;, &quot;expression&quot;: &quot;blog_post.author_id&quot;, &quot;type&quot;: &quot;contact&quot;, &quot;inherit_branding&quot;: true, &quot;translate&quot;: false}">
@@ -102,13 +107,14 @@ describe("replicate changes", () => {
         `,
         });
         queryOne(":iframe .test-1 > *").append("changed");
+        const editor = getEditor();
         editor.shared.history.addStep();
         expect(":iframe .test-1 > *").toHaveText(/changed/);
         expect(":iframe .test-2 > *").toHaveText(/changed/);
     });
 
     test("should not add o_dirty marks on the ones receiving the replicated changes", async () => {
-        const { editor } = await setupHTMLBuilder("", {
+        const { getEditor } = await setupHTMLBuilder("", {
             headerContent: `
             <div class="test-1">
                 <span data-oe-model="ir.ui.view" data-oe-id="600" data-oe-field="arch_db" data-oe-translation-state="translated" data-oe-translation-source-sha="4242">Contactez-nous</span>
@@ -125,6 +131,7 @@ describe("replicate changes", () => {
         const span2 = queryOne(":iframe .test-2 span");
         const span3 = queryOne(":iframe .test-3 span");
 
+        const editor = getEditor();
         span2.append(" ici");
         editor.shared.history.addStep();
         expect(span1).not.toHaveClass("o_dirty");
@@ -147,7 +154,7 @@ describe("replicate changes", () => {
     });
 
     test("changing several of occurences at the same time should converge to the same value", async () => {
-        const { editor } = await setupHTMLBuilder("", {
+        const { getEditor } = await setupHTMLBuilder("", {
             headerContent: `
             <div class="test-1">
                 <span data-oe-model="ir.ui.view" data-oe-id="600" data-oe-field="arch_db" data-oe-translation-state="translated" data-oe-translation-source-sha="4242">Contactez-nous</span>
@@ -166,6 +173,7 @@ describe("replicate changes", () => {
 
         span2.append(" ici");
         span1.append("!");
+        const editor = getEditor();
         editor.shared.history.addStep();
         expect(span1).toHaveClass("o_dirty");
         expect(span2).toHaveClass("o_dirty");

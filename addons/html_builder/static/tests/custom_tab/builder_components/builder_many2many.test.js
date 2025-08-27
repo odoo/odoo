@@ -1,15 +1,14 @@
-import { expect, test } from "@odoo/hoot";
+import {
+    addBuilderAction,
+    addBuilderOption,
+    setupHTMLBuilder,
+} from "@html_builder/../tests/helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
+import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import { xml } from "@odoo/owl";
-import { delay } from "@web/core/utils/concurrency";
 import { contains, defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
-import {
-    addActionOption,
-    addOption,
-    defineWebsiteModels,
-    setupWebsiteBuilder,
-} from "@website/../tests/builder/website_helpers";
-import { BuilderAction } from "@html_builder/core/builder_action";
+import { delay } from "@web/core/utils/concurrency";
 
 class Test extends models.Model {
     _name = "test";
@@ -21,7 +20,7 @@ class Test extends models.Model {
     name = fields.Char();
 }
 
-defineWebsiteModels();
+describe.current.tags("desktop");
 defineModels([Test]);
 
 test("many2many: find tag, select tag, unselect tag", async () => {
@@ -30,11 +29,11 @@ test("many2many: find tag, select tag, unselect tag", async () => {
         [2, "Second"],
         [3, "Third"],
     ]);
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderMany2Many dataAttributeAction="'test'" model="'test'" limit="10"/>`,
     });
-    const { getEditableContent } = await setupWebsiteBuilder(
+    const { getEditableContent } = await setupHTMLBuilder(
         `<div class="test-options-target">b</div>`
     );
     const editableContent = getEditableContent();
@@ -82,7 +81,7 @@ test("many2many: async load", async () => {
         [2, "Second"],
         [3, "Third"],
     ]);
-    addActionOption({
+    addBuilderAction({
         testAction: class extends BuilderAction {
             static id = "testAction";
             async load({ value }) {
@@ -99,11 +98,11 @@ test("many2many: async load", async () => {
             }
         },
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderMany2Many action="'testAction'" model="'test'" limit="10"/>`,
     });
-    const { getEditableContent } = await setupWebsiteBuilder(
+    const { getEditableContent } = await setupHTMLBuilder(
         `<div class="test-options-target">b</div>`
     );
     const editableContent = getEditableContent();

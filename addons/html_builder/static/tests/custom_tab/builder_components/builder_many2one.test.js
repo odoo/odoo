@@ -1,15 +1,14 @@
-import { expect, test } from "@odoo/hoot";
+import {
+    addBuilderAction,
+    addBuilderOption,
+    setupHTMLBuilder,
+} from "@html_builder/../tests/helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent, useGetItemValue } from "@html_builder/core/utils";
+import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import { xml } from "@odoo/owl";
 import { contains, defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
-import {
-    addActionOption,
-    addOption,
-    defineWebsiteModels,
-    setupWebsiteBuilder,
-} from "@website/../tests/builder/website_helpers";
-import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent, useGetItemValue } from "@html_builder/core/utils";
 
 class Test extends models.Model {
     _name = "test";
@@ -21,7 +20,7 @@ class Test extends models.Model {
     name = fields.Char();
 }
 
-defineWebsiteModels();
+describe.current.tags("desktop");
 defineModels([Test]);
 
 test("many2one: async load", async () => {
@@ -32,7 +31,7 @@ test("many2one: async load", async () => {
         [2, "Second"],
         [3, "Third"],
     ]);
-    addActionOption({
+    addBuilderAction({
         testAction: class extends BuilderAction {
             static id = "testAction";
             setup() {
@@ -52,11 +51,11 @@ test("many2one: async load", async () => {
             }
         },
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderMany2One action="'testAction'" model="'test'" limit="10"/>`,
     });
-    const { getEditableContent } = await setupWebsiteBuilder(
+    const { getEditableContent } = await setupHTMLBuilder(
         `<div class="test-options-target">b</div>`
     );
     const editableContent = getEditableContent();
@@ -84,7 +83,7 @@ test("dependency definition should not be outdated", async () => {
         [2, "Second"],
         [3, "Third"],
     ]);
-    addActionOption({
+    addBuilderAction({
         testAction: class extends BuilderAction {
             static id = "testAction";
             apply({ editingElement, value }) {
@@ -109,11 +108,11 @@ test("dependency definition should not be outdated", async () => {
             return value && JSON.parse(value);
         }
     }
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         Component: TestMany2One,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
 
     await contains(":iframe .test-options-target").click();
 

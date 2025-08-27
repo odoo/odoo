@@ -1,14 +1,10 @@
+import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { BaseOptionComponent } from "@html_builder/core/utils";
-import { expect, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { reactive, xml } from "@odoo/owl";
 import { contains, defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
-import {
-    addOption,
-    defineWebsiteModels,
-    setupWebsiteBuilder,
-} from "@website/../tests/builder/website_helpers";
 
 class Test extends models.Model {
     _name = "test";
@@ -20,7 +16,7 @@ class Test extends models.Model {
     name = fields.Char();
 }
 
-defineWebsiteModels();
+describe.current.tags("desktop");
 defineModels([Test]);
 
 test.tags("focus required");
@@ -38,7 +34,7 @@ test("basic many2many: find tag, select tag, unselect tag", async () => {
         };
     }
     const selection = reactive([]);
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         Component: TestComponent,
         props: {
@@ -51,7 +47,7 @@ test("basic many2many: find tag, select tag, unselect tag", async () => {
             },
         },
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
 
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeDisplayed();
