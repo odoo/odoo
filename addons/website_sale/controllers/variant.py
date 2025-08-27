@@ -30,6 +30,7 @@ class WebsiteSaleVariantController(Controller):
             add_qty=add_qty,
             uom_id=uom_id,
         )
+        combination_info['currency_precision'] = combination_info['currency'].decimal_places
 
         # Pop data only computed to ease server-side computations.
         for key in ('product_taxes', 'taxes', 'currency', 'date', 'combination'):
