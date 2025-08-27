@@ -21,12 +21,11 @@ export class WorkEntryCalendarModel extends CalendarModel {
         await super.updateData(...arguments);
     }
 
-    async multiReplaceRecords(multiCreateData, dates, records) {
+    async multiReplaceRecords(values, dates, records) {
         if (!dates.length) {
             return;
         }
         const new_records = [];
-        const values = await multiCreateData.record.getChanges();
         const quickreplace = (values.duration < 0);
         const newly_generated_entries = [];
         for (const date of dates) {
@@ -71,7 +70,7 @@ export class WorkEntryCalendarModel extends CalendarModel {
         }));
         await this.orm.call("hr.work.entry.regeneration.wizard", "regenerate_work_entries", [
             [],
-            [...cellsFormattedData],
+            cellsFormattedData,
             recordIds,
         ]);
         return this.load();

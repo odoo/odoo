@@ -4,11 +4,15 @@ export class WorkEntryMultiCreatePopover extends MultiCreatePopover {
     static template = "hr_work_entry.WorkEntryMultiCreatePopover";
     static props = {
         ...MultiCreatePopover.props,
-        onReplace: Function,
+        onQuickReplace: Function,
     };
 
     async onReplace() {
-        this.props.onReplace(this.multiCreateData);
-        this.props.close();
+        const isValid = await this.isValidMultiCreateData();
+        if (isValid) {
+            const values = await this.multiCreateData.record.getChanges();
+            this.props.onQuickReplace(values);
+            this.props.close();
+        }
     }
 }
