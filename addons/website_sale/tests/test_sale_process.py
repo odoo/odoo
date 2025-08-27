@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import lxml.html
 
 from odoo.fields import Command
 from odoo.tests import tagged
@@ -169,6 +170,35 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
             'website_published': True
         })
         self.start_tour("/shop", 'google_analytics_add_to_cart')
+
+    def test_checkout_with_rewrite(self):
+        # check that checkout page can be open with step rewritten
+        self.env['website.rewrite'].create({
+            'name': 'Test Address Rename',
+            'redirect_type': '308',
+            'url_from': '/shop/address',
+            'url_to': '/test/address',
+        })
+        self.env['website.rewrite'].create({
+            'name': 'Test Checkout Rename',
+            'redirect_type': '308',
+            'url_from': '/shop/checkout',
+            'url_to': '/test/checkout',
+        })
+        self._create_so(partner_id=self.user_demo.partner_id.id)
+        self.authenticate('demo', 'demo')
+        response = self.url_open('/shop/address')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.url[-13:], '/test/address')
+
+        # check that navigation (next and previous checkout steps) are correct
+        allowed_steps_domain = self.website._get_allowed_steps_domain()
+        checkout_step = self.env.ref('website_sale.checkout_step_delivery')
+        previous_step = checkout_step._get_previous_checkout_step(allowed_steps_domain)
+        next_step = checkout_step._get_next_checkout_step(allowed_steps_domain)
+        root = lxml.html.fromstring(response.content)
+        self.assertEqual(len(root.xpath(f'//a[@href="{previous_step.step_href}"]//span[text()="{previous_step.back_button_label}"]')), 1)
+        self.assertEqual(len(root.xpath(f'//a[@name="website_sale_main_button"][not(@href)]//span[text()="{next_step.main_button_label}"]')), 1)
 
     def test_update_same_address_billing_shipping_edit(self):
         ''' Phone field should be required when updating an adress for billing and shipping '''
