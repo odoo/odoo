@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 
 from odoo.cli.command import commands, load_addons_commands, load_internal_commands
-from odoo.tests import BaseCase, Like, TransactionCase
+from odoo.tests import BaseCase, TransactionCase
 from odoo.tools import config, file_path
 
 
@@ -129,13 +129,9 @@ class TestCommand(BaseCase):
             )
         self.assertFalse(shell.wait(), "exited with a non 0 code")
 
-        self.assertEqual(shell.stdout.read().splitlines(), [
-            Like("No environment set..."),
-            Like("odoo: <module 'odoo' ...>"),
-            Like("openerp: <module 'odoo' ...>"),
-            ">>> Hello from Python!",
-            '>>> '
-        ])
+        # we skip local variables as they differ based on configuration (e.g.: if a database is specified or not)
+        lines = [line for line in shell.stdout.read().splitlines() if line.startswith('>>>')]
+        self.assertEqual(lines, [">>> Hello from Python!", '>>> '])
 
 
 class TestCommandUsingDb(TestCommand, TransactionCase):
