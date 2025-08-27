@@ -7,6 +7,7 @@ import { execCommand } from "../_helpers/userCommands";
 import { expandToolbar } from "../_helpers/toolbar";
 import { unformat } from "../_helpers/format";
 import { expectElementCount } from "../_helpers/ui_expectations";
+import { FONT_SIZE_CLASSES } from "@html_editor/utils/formatting";
 
 test("should do nothing if no format is set", async () => {
     await testEditor({
@@ -1105,5 +1106,84 @@ describe("removeFormat must not remove non-style classes", () => {
                 contentAfter: "<p>[test]</p>",
             });
         }
+    });
+});
+
+describe("Display classes", () => {
+    const tagDefaultClasses = {
+        h1: "h1",
+        h2: "h2",
+        h3: "h3",
+        h4: "h4",
+        h5: "h5",
+        h6: "h6",
+        p: "o_default_font_size",
+        div: "o_default_font_size",
+    };
+    for (const [tag, defaultClass] of Object.entries(tagDefaultClasses)) {
+        test(`should remove style of display classes from completely selected ${tag} element`, async () => {
+            for (const fontClass of FONT_SIZE_CLASSES) {
+                await testEditor({
+                    contentBefore: `<${tag} class="${fontClass}">[abc]</${tag}>`,
+                    stepFunction: (editor) => execCommand(editor, "removeFormat"),
+                    contentAfter: `<${tag}>[abc]</${tag}>`,
+                });
+            }
+        });
+        test(`should remove style of display classes from partially selected ${tag} element`, async () => {
+            for (const fontClass of FONT_SIZE_CLASSES) {
+                await testEditor({
+                    contentBefore: `<${tag} class="${fontClass}">a[b]c</${tag}>`,
+                    stepFunction: (editor) => execCommand(editor, "removeFormat"),
+                    contentAfter: `<${tag} class="${fontClass}">a<span class="${defaultClass}">[b]</span>c</${tag}>`,
+                });
+            }
+        });
+    }
+});
+
+describe("typography classes", () => {
+    test("remove format buttons should be disabled for style applied through typography classes", async () => {
+        await setupEditor(
+            unformat(`
+                <h1 class="display-1">[abc</h1>
+                <h2 class="display-2">def</h2>
+                <h3 class="display-3">ghi</h3>
+                <h4 class="display-4">jkl</h4>
+                <h5 class="lead">mno</h5>
+                <h6 class="h1">pqr</h6>
+                <p class="h2">stu</p>
+                <div class="h3">vwx]</div>
+            `)
+        );
+        await expandToolbar();
+        await expectElementCount(".o-we-toolbar", 1);
+        expect(".btn[name='remove_format']").toHaveCount(1); // remove format
+        expect(".btn[name='remove_format']").toHaveClass("disabled"); // remove format button should be disabled
+    });
+    test("should not remove style if applied using typography classes", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <h1 class="display-1">[abc</h1>
+                <h2 class="display-2">def</h2>
+                <h3 class="display-3">ghi</h3>
+                <h4 class="display-4">jkl</h4>
+                <h5 class="lead">mno</h5>
+                <h6 class="h1">pqr</h6>
+                <p class="h2">stu</p>
+                <div class="h3">vwx]</div>
+            `),
+            stepFunction: (editor) => execCommand(editor, "removeFormat"),
+            contentAfter: unformat(`
+                <h1 class="display-1">[abc</h1>
+                <h2 class="display-2">def</h2>
+                <h3 class="display-3">ghi</h3>
+                <h4 class="display-4">jkl</h4>
+                <h5 class="lead">mno</h5>
+                <h6 class="h1">pqr</h6>
+                <p class="h2">stu</p>
+                <div class="h3">vwx]</div>
+            `),
+        });
     });
 });

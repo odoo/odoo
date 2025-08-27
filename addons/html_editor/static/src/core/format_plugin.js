@@ -11,7 +11,6 @@ import {
     isElement,
     isEmptyBlock,
     isEmptyTextNode,
-    isParagraphRelatedElement,
     isSelfClosingElement,
     isTextNode,
     isVisibleTextNode,
@@ -162,7 +161,7 @@ export class FormatPlugin extends Plugin {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         normalize_handlers: this.normalize.bind(this),
         selectionchange_handlers: this.removeEmptyInlineElement.bind(this),
-        set_tag_handlers: this.removeFontSizeFormat.bind(this),
+        before_set_tag_handlers: this.removeFontSizeFormat.bind(this),
         before_insert_processors: this.unwrapEmptyFormat.bind(this),
 
         intangible_char_for_keyboard_navigation_predicates: (_, char) => char === "\u200b",
@@ -211,12 +210,8 @@ export class FormatPlugin extends Plugin {
         this.dependencies.history.addStep();
     }
 
-    removeFontSizeFormat(els) {
-        if (els.every((el) => isParagraphRelatedElement(el))) {
-            const targetedNodes = this.dependencies.selection.getTargetedNodes();
-            this.removeFormats(["fontSize", "setFontSizeClassName"], targetedNodes);
-            this.dependencies.history.addStep();
-        }
+    removeFontSizeFormat(el) {
+        this.removeFormats(["fontSize", "setFontSizeClassName"], [el, ...descendants(el)]);
     }
 
     /**
@@ -378,8 +373,20 @@ export class FormatPlugin extends Plugin {
 
             const firstBlockOrClassHasFormat = formatSpec.isFormatted(parentNode, formatProps);
             if (firstBlockOrClassHasFormat && !applyStyle) {
-                formatSpec.addNeutralStyle &&
-                    formatSpec.addNeutralStyle(getOrCreateSpan(node, inlineAncestors));
+                const isParentNodeBlockAndCompletelySelected =
+                    isBlock(parentNode) &&
+                    this.dependencies.selection.areNodeContentsFullySelected(parentNode);
+                if (
+                    isParentNodeBlockAndCompletelySelected &&
+                    formatName === "setFontSizeClassName"
+                ) {
+                    for (const node of [parentNode, ...descendants(parentNode).filter(isElement)]) {
+                        removeFormat(node, formatSpec);
+                    }
+                } else {
+                    formatSpec.addNeutralStyle &&
+                        formatSpec.addNeutralStyle(getOrCreateSpan(node, inlineAncestors));
+                }
             } else if (
                 (!firstBlockOrClassHasFormat || parentNode.nodeName === "LI") &&
                 applyStyle
