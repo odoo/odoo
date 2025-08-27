@@ -2,7 +2,7 @@
 
 // By default, hide `o_add_wishlist` buttons when inside a product
 // entry. Show them when `o_wsale_products_opt_has_wishlist` is applied.
-.o_add_wishlist {
+:where(.oe_product_cart) .o_add_wishlist {
     display: var(--o-wsale-wishlist-btn-display, none);
 }
 
