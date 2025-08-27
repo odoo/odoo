@@ -1,20 +1,19 @@
-import { expect, test } from "@odoo/hoot";
-import { Plugin } from "@html_editor/plugin";
-import { contains } from "@web/../tests/web_test_helpers";
 import {
-    addActionOption,
-    addOption,
-    addPlugin,
-    defineWebsiteModels,
-    setupWebsiteBuilder,
-} from "@website/../tests/builder/website_helpers";
-import { xml } from "@odoo/owl";
+    addBuilderPlugin,
+    addBuilderOption,
+    addBuilderAction,
+    setupHTMLBuilder,
+} from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { Plugin } from "@html_editor/plugin";
+import { expect, test, describe } from "@odoo/hoot";
+import { xml } from "@odoo/owl";
+import { contains } from "@web/../tests/web_test_helpers";
 
-defineWebsiteModels();
+describe.current.tags("desktop");
 
 test("Undo/Redo correctly restores the stored container target", async () => {
-    addActionOption({
+    addBuilderAction({
         customAction: class extends BuilderAction {
             static id = "customAction";
             apply({ editingElement }) {
@@ -22,11 +21,11 @@ test("Undo/Redo correctly restores the stored container target", async () => {
             }
         },
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderButton action="'customAction'">Test</BuilderButton>`,
     });
-    await setupWebsiteBuilder(`
+    await setupHTMLBuilder(`
         <div data-name="Target 1" class="test-options-target target1">
             Homepage
         </div>
@@ -49,7 +48,7 @@ test("Undo/Redo correctly restores the stored container target", async () => {
 });
 
 test("Undo/Redo multiple actions always restores the action container target", async () => {
-    addActionOption({
+    addBuilderAction({
         customAction: class extends BuilderAction {
             static id = "customAction";
             apply({ editingElement }) {
@@ -57,11 +56,11 @@ test("Undo/Redo multiple actions always restores the action container target", a
             }
         },
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderButton action="'customAction'">Test</BuilderButton>`,
     });
-    await setupWebsiteBuilder(`
+    await setupHTMLBuilder(`
         <div data-name="Target 1" class="test-options-target target1">
             Homepage
         </div>
@@ -94,7 +93,7 @@ test("Undo/Redo multiple actions always restores the action container target", a
 
 test("Undo/Redo an action that activates another target restores the old one on undo and the new one on redo", async () => {
     let editor;
-    addActionOption({
+    addBuilderAction({
         customAction: class extends BuilderAction {
             static id = "customAction";
             apply({ editingElement }) {
@@ -103,11 +102,11 @@ test("Undo/Redo an action that activates another target restores the old one on 
             }
         },
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderButton action="'customAction'">Test</BuilderButton>`,
     });
-    const { getEditor } = await setupWebsiteBuilder(`
+    const { getEditor } = await setupHTMLBuilder(`
         <div data-name="Target 1" class="test-options-target target1">
             Homepage
         </div>
@@ -131,7 +130,7 @@ test("Undo/Redo an action that activates another target restores the old one on 
 
 test("Undo/Redo an action that deactivates the containers restores the old one on undo and deactivates again on redo", async () => {
     let editor;
-    addActionOption({
+    addBuilderAction({
         customAction: class extends BuilderAction {
             static id = "customAction";
             apply({ editingElement }) {
@@ -140,11 +139,11 @@ test("Undo/Redo an action that deactivates the containers restores the old one o
             }
         },
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderButton action="'customAction'">Test</BuilderButton>`,
     });
-    const { getEditor } = await setupWebsiteBuilder(`
+    const { getEditor } = await setupHTMLBuilder(`
         <div data-name="Target 1" class="test-options-target target1">
             Homepage
         </div>
@@ -165,7 +164,7 @@ test("Undo/Redo an action that deactivates the containers restores the old one o
 });
 
 test("Containers fallback to a valid ancestor if the target disappears and restore it on undo", async () => {
-    addActionOption({
+    addBuilderAction({
         targetAction: class extends BuilderAction {
             static id = "targetAction";
             apply({ editingElement }) {
@@ -179,15 +178,15 @@ test("Containers fallback to a valid ancestor if the target disappears and resto
             }
         },
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderButton action="'targetAction'">Test</BuilderButton>`,
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-ancestor",
         template: xml`<BuilderButton action="'ancestorAction'">Ancestor selected</BuilderButton>`,
     });
-    await setupWebsiteBuilder(`
+    await setupHTMLBuilder(`
         <div data-name="Ancestor" class="test-ancestor">
             Hey I'm an ancestor
             <div data-name="Target 1" class="test-options-target target1">
@@ -211,11 +210,11 @@ test("Containers fallback to a valid ancestor if the target disappears and resto
 });
 
 test("Do not activate/update containers if the element clicked is excluded", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderButton classAction="'test'">Test</BuilderButton>`,
     });
-    await setupWebsiteBuilder(`
+    await setupHTMLBuilder(`
         <div data-name="Target 1" class="test-options-target target1 o_we_no_overlay">
             Homepage
         </div>
@@ -236,25 +235,25 @@ test("Do not activate/update containers if the element clicked is excluded", asy
 
 test("Do not show parent container for no_parent_containers targets", async () => {
     class TestPlugin extends Plugin {
-            static id = "test";
-            resources = {
-                no_parent_containers: ".test-child-target",
-            };
-        }
-    addPlugin(TestPlugin);
-    addOption({
+        static id = "test";
+        resources = {
+            no_parent_containers: ".test-child-target",
+        };
+    }
+    addBuilderPlugin(TestPlugin);
+    addBuilderOption({
         selector: ".test-parent-target",
         template: xml`<BuilderButton classAction="'test'">Test</BuilderButton>`,
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-child-target",
         template: xml`<BuilderButton classAction="'test'">Test</BuilderButton>`,
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-grand-child-target",
         template: xml`<BuilderButton classAction="'test'">Test</BuilderButton>`,
     });
-    await setupWebsiteBuilder(`
+    await setupHTMLBuilder(`
         <div data-name="Parent" class="test-parent-target">
             Parent
             <div data-name="Child" class="test-child-target">

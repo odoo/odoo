@@ -1,20 +1,16 @@
-import { expect, test } from "@odoo/hoot";
+import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
+import { expect, test, describe } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
-import {
-    addOption,
-    defineWebsiteModels,
-    setupWebsiteBuilder,
-} from "@website/../tests/builder/website_helpers";
 
-defineWebsiteModels();
+describe.current.tags("desktop");
 
 test("Click on checkbox", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderCheckbox classAction="'checkbox-action'"/>`,
     });
-    const { getEditableContent } = await setupWebsiteBuilder(
+    const { getEditableContent } = await setupHTMLBuilder(
         `<div class="test-options-target o-paragraph">b</div>`
     );
     const editableContent = getEditableContent();
@@ -35,15 +31,15 @@ test("Click on checkbox", async () => {
     expect(editableContent).toHaveInnerHTML(`<div class="test-options-target o-paragraph">b</div>`);
 });
 test("hide/display base on applyTo", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".parent-target",
         template: xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
     });
-    addOption({
+    addBuilderOption({
         selector: ".parent-target",
         template: xml`<BuilderCheckbox classAction="'checkbox-action'" applyTo="'.my-custom-class'"/>`,
     });
-    const { getEditableContent } = await setupWebsiteBuilder(
+    const { getEditableContent } = await setupHTMLBuilder(
         `<div class="parent-target"><div class="child-target b">b</div></div>`
     );
     const editableContent = getEditableContent();
@@ -64,11 +60,11 @@ test("hide/display base on applyTo", async () => {
 });
 
 test("click on BuilderCheckbox with inverseAction", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderCheckbox classAction="'my-custom-class'" inverseAction="true"/>`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(":iframe .test-options-target").not.toHaveClass("my-custom-class");
     expect(".o-checkbox .form-check-input:checked").toHaveCount(1);

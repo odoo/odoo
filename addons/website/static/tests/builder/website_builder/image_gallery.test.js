@@ -3,11 +3,13 @@ import { click, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains, dataURItoBlob, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
-    dummyBase64Img,
     setupWebsiteBuilder,
-    confirmAddSnippet,
-    waitForEndOfOperation,
 } from "@website/../tests/builder/website_helpers";
+import {
+    confirmAddSnippet,
+    dummyBase64Img,
+    waitForEndOfOperation,
+} from "@html_builder/../tests/helpers";
 import { uniqueId } from "@web/core/utils/functions";
 
 defineWebsiteModels();
