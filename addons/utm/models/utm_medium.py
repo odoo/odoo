@@ -5,6 +5,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
+import re
+
 
 class UtmMedium(models.Model):
     _name = 'utm.medium'
@@ -49,14 +51,15 @@ class UtmMedium(models.Model):
                 ))
 
     def _fetch_or_create_utm_medium(self, name, module='utm'):
+        name_normalized = re.sub(r"[\s|.]", "_", name.lower())
         try:
-            return self.env.ref(f'{module}.utm_medium_{name}')
+            return self.env.ref(f'{module}.utm_medium_{name_normalized}')
         except ValueError:
             utm_medium = self.sudo().env['utm.medium'].create({
-                'name': self.SELF_REQUIRED_UTM_MEDIUMS_REF.get(f'{module}.utm_medium_{name}', name)
+                'name': self.SELF_REQUIRED_UTM_MEDIUMS_REF.get(f'{module}.utm_medium_{name_normalized}', name)
             })
             self.sudo().env['ir.model.data'].create({
-                'name': f'utm_medium_{name}',
+                'name': f'utm_medium_{name_normalized}',
                 'module': module,
                 'res_id': utm_medium.id,
                 'model': 'utm.medium',
