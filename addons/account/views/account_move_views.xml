@@ -476,7 +476,7 @@
                     <field name="made_sequence_gap" column_invisible="True"/>
                     <field name="invoice_date" string="Invoice Date" optional="hide" readonly="state != 'draft'"/>
                     <field name="date" readonly="state in ['cancel', 'posted']"/>
-                    <field name="name" decoration-danger="made_sequence_gap and state == 'posted'" widget="char_with_placeholder_field_to_check" placeholder="/"/>
+                    <field name="name" decoration-danger="made_sequence_gap and state == 'posted'" widget="char_with_placeholder_field_to_check" placeholder="/" readonly="state != 'draft'"/>
                     <field name="checked" column_invisible="True" groups="account.group_account_user"/> <!-- To be used for Reviewed badge display, see char_with_placeholder_field_to_check -->
                     <field name="partner_id" optional="show" readonly="state != 'draft'"/>
                     <field name="ref" optional="show"/>
