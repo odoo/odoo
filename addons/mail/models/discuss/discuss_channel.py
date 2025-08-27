@@ -464,6 +464,9 @@ class DiscussChannel(models.Model):
             return field_description
 
         def get_field_value(channel, field_description):
+            if isinstance(field_description, Store.Attr):
+                if field_description.predicate and not field_description.predicate(channel):
+                    return None
             if isinstance(field_description, Store.Relation):
                 return field_description._get_value(channel).records
             if isinstance(field_description, Store.Attr):

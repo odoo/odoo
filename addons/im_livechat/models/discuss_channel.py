@@ -396,6 +396,7 @@ class DiscussChannel(models.Model):
             ),
         )
         field_names["internal_users"].extend([
+            Store.Attr("description", predicate=is_livechat_channel),
             Store.Attr("livechat_note", predicate=is_livechat_channel),
             Store.Attr("livechat_status", predicate=is_livechat_channel),
             Store.Many("livechat_expertise_ids", ["name"], predicate=is_livechat_channel),
@@ -426,6 +427,7 @@ class DiscussChannel(models.Model):
                 )
             )
             fields.extend([
+                Store.Attr("description", predicate=is_livechat_channel),
                 Store.Attr("livechat_note", predicate=is_livechat_channel),
                 Store.Attr("livechat_outcome", predicate=is_livechat_channel),
                 Store.Attr("livechat_status", predicate=is_livechat_channel),
