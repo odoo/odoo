@@ -159,10 +159,41 @@ export class EditorOverlay extends Component {
         if (this.env.isSmall) {
             return;
         }
-        const containerRect = container.getBoundingClientRect();
-        const shouldBeVisible = solution.top >= containerRect.top;
+        const shouldBeVisible = this.shouldOverlayBeVisible(overlayElement, solution, container);
         overlayElement.style.visibility = shouldBeVisible ? "visible" : "hidden";
         this.overlayState.isOverlayVisible = shouldBeVisible;
+    }
+
+    /**
+     * @param {HTMLElement} overlayElement
+     * @param {Object} solution
+     * @param {HTMLElement} container
+     */
+    shouldOverlayBeVisible(overlayElement, solution, container) {
+        const containerRect = container.getBoundingClientRect();
+        const overflowsTop = solution.top < containerRect.top;
+        const overflowsBottom = solution.top + overlayElement.offsetHeight > containerRect.bottom;
+        const canFlip = this.props.positionOptions?.flip ?? true;
+        if (overflowsTop) {
+            if (overflowsBottom) {
+                // Overlay is bigger than the cointainer. Hiding it would it
+                // make always invisible.
+                return true;
+            }
+            if (solution.direction === "top" && canFlip) {
+                // Scrolling down will make overlay eventually flip and no longer overflow
+                return true;
+            }
+            return false;
+        }
+        if (overflowsBottom) {
+            if (solution.direction === "bottom" && canFlip) {
+                // Scrolling up will make overlay eventually flip and no longer overflow
+                return true;
+            }
+            return false;
+        }
+        return true;
     }
 }
 
