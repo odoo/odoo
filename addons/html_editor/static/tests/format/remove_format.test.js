@@ -1043,3 +1043,47 @@ describe("list", () => {
         });
     });
 });
+
+describe("removeFormat must not remove non-style classes", () => {
+    test("does not remove non-color classes", async () => {
+        await testEditor({
+            contentBefore: '<p><font class="text-wrap">[test]</font></p>',
+            stepFunction: (editor) => execCommand(editor, "removeFormat"),
+            contentAfter: '<p><font class="text-wrap">[test]</font></p>',
+        });
+        await testEditor({
+            contentBefore: '<p><font class="text-center">[test]</font></p>',
+            stepFunction: (editor) => execCommand(editor, "removeFormat"),
+            contentAfter: '<p><font class="text-center">[test]</font></p>',
+        });
+        await testEditor({
+            contentBefore: '<p><font class="text-align">[test]</font></p>',
+            stepFunction: (editor) => execCommand(editor, "removeFormat"),
+            contentAfter: '<p><font class="text-align">[test]</font></p>',
+        });
+    });
+
+    test("removes all supported color classes", async () => {
+        const classes = [
+            "text-primary",
+            "text-secondary",
+            "text-success",
+            "text-danger",
+            "text-warning",
+            "text-info",
+            "text-light",
+            "text-muted",
+            "text-white",
+            "text-black",
+            "text-o-color-1",
+            "text-100",
+        ];
+        for (const cls of classes) {
+            await testEditor({
+                contentBefore: `<p><font class="${cls}">[test]</font></p>`,
+                stepFunction: (editor) => execCommand(editor, "removeFormat"),
+                contentAfter: "<p>[test]</p>",
+            });
+        }
+    });
+});
