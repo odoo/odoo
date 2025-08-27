@@ -18,7 +18,7 @@
                 <button class="small btn btn-secondary rounded-1"
                         t-attf-class="o_gantt_color_#{workEntry.color}"
                         t-attf-data-tooltip="Replace by #{workEntry.display_name}"
-                        t-on-click="() => this.onQuickReplace(workEntry)">
+                        t-on-click="() => this.onQuickReplace(workEntry.id)">
                     <t t-if="workEntry.display_code" t-out="workEntry.display_code"/>
                     <t t-else="" t-out="workEntry.display_name"/>
                 </button>

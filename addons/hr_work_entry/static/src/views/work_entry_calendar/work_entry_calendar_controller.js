@@ -153,8 +153,8 @@ export class WorkEntryCalendarController extends CalendarController {
             this.selectedCells
         ).length;
         this.multiSelectionButtonsReactive.selection = this.getSelectedRecords(this.selectedCells);
-        this.multiSelectionButtonsReactive.onQuickReplace = (multiCreateData) => {
-            this.onMultiReplace(multiCreateData, this.selectedCells);
+        this.multiSelectionButtonsReactive.onQuickReplace = (values) => {
+            this.onMultiReplace(values, this.selectedCells);
         };
         this.multiSelectionButtonsReactive.onQuickReset = () => {
             this.onResetWorkEntries(this.selectedCells);
@@ -181,11 +181,11 @@ export class WorkEntryCalendarController extends CalendarController {
         );
     }
 
-    onMultiReplace(multiCreateData, selectedCells) {
+    onMultiReplace(values, selectedCells) {
         const records = this.getSelectedRecords(selectedCells);
         const dates = this.getDatesWithoutValidatedWorkEntry(selectedCells, records);
         return this.model.multiReplaceRecords(
-            multiCreateData,
+            values,
             dates,
             records.filter((r) => r.state !== "validated")
         );
