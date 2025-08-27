@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="s_hr" name="Separator" inherit_id="web_editor.s_hr" primary="True">
-    <xpath expr="//div[hasclass('s_hr')]" position="attributes">
-        <attribute name="class" add="o_mail_snippet_general pt16 pb16" remove="pt32 pb32" separator=" "/>
-    </xpath>
-    <xpath expr="//hr" position="attributes">
-        <attribute name="class" remove="w-100 mx-auto" separator=" "/>
-    </xpath>
+<template id="s_hr" name="Separator">
+    <div class="s_hr o_mail_snippet_general pt16 pb16">
+        <hr class="w-100 mx-auto"/>
+    </div>
 </template>
 
 <record id="mass_mailing.s_hr_000_scss" model="ir.asset">
