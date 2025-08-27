@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.tests import HttpCase, tagged, new_test_user
 
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
@@ -49,3 +49,37 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
         })
         self.start_tour("/odoo", 'hr_expense_access_rights_test_tour', login="test-expense")
         self.assertRecordValues(expense, [{'state': 'submitted'}])
+
+    def test_expense_user_cant_approve_own_expense(self):
+        expense = self.env['hr.expense'].with_user(self.expense_user_employee).create({
+            'name': "Superboy costume washing",
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_a.id,
+            'quantity': 1,
+            'price_unit': 1,
+        })
+        expense.with_user(self.expense_user_employee).action_submit()
+        with self.assertRaises(UserError):
+            expense.with_user(self.expense_user_employee).action_approve()
+
+    def test_expense_team_approver_cant_approve_expense_of_employee_he_does_not_manage(self):
+        another_standard_user = new_test_user(self.env, login='another_standard_user', groups='base.group_user')
+        another_standard_user_team_approver = new_test_user(self.env, login='another_standard_user_manager', groups='base.group_user,hr_expense.group_hr_expense_team_approver')
+
+        another_employee = self.env['hr.employee'].sudo().create({
+            'name': 'another_employee',
+            'user_id': another_standard_user.id,
+            'work_contact_id': another_standard_user.partner_id.id,
+            'expense_manager_id': self.expense_user_manager.id,
+        }).sudo(False)
+
+        expense = self.env['hr.expense'].with_user(another_standard_user).create({
+            'name': "Superboy costume washing",
+            'employee_id': another_employee.id,
+            'product_id': self.product_a.id,
+            'quantity': 1,
+            'price_unit': 1,
+        })
+        expense.with_user(another_standard_user).action_submit()
+        with self.assertRaises(AccessError):
+            expense.with_user(another_standard_user_team_approver).action_approve()
