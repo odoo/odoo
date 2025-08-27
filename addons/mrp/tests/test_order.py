@@ -2488,7 +2488,7 @@ class TestMrpOrder(TestMrpCommon):
         mo.bom_id = bom
         mo = mo.save()
 
-        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["ready", "ready"])  # default is ready
+        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["blocked", "blocked"])  # default is blocked
 
         mo.action_confirm()
         mo.action_assign()
@@ -3496,7 +3496,7 @@ class TestMrpOrder(TestMrpCommon):
         mo_backorder.button_plan()
 
         self.assertEqual(mo_backorder.workorder_ids[0].state, 'cancel')
-        self.assertEqual(mo_backorder.workorder_ids[1].state, 'ready')
+        self.assertEqual(mo_backorder.workorder_ids[1].state, 'blocked')
         self.assertEqual(mo_backorder.workorder_ids[2].state, 'blocked')
         self.assertFalse(mo_backorder.workorder_ids[0].date_start)
         self.assertEqual(mo_backorder.workorder_ids[1].date_start, datetime(2023, 3, 1, 12, 0))

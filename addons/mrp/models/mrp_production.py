@@ -558,7 +558,7 @@ class MrpProduction(models.Model):
         produce and all work orders has been finished.
         """
         for production in self:
-            if not production.state or production.state == 'draft' or not production.product_uom_id or not (production.id or production._origin.id):
+            if not production.state or (production.state == 'draft' and not self.env.context.get('skip_compute_move_raw_ids')) or not production.product_uom_id or not (production.id or production._origin.id):
                 production.state = 'draft'
             elif production.state == 'cancel' or (production.move_finished_ids and all(move.state == 'cancel' for move in production.move_finished_ids)):
                 production.state = 'cancel'
@@ -762,7 +762,7 @@ class MrpProduction(models.Model):
     @api.depends('company_id', 'bom_id', 'product_id', 'product_qty', 'product_uom_id', 'location_src_id', 'never_product_template_attribute_value_ids')
     def _compute_move_raw_ids(self):
         for production in self:
-            if production.state != 'draft' or self.env.context.get('skip_compute_move_raw_ids'):
+            if self.env.context.get('skip_compute_move_raw_ids') or production.state != 'draft':
                 continue
             list_move_raw = [Command.link(move.id) for move in production.move_raw_ids.filtered(lambda m: not m.bom_line_id)]
             if not production.bom_id and not production._origin.product_id:
@@ -1320,8 +1320,6 @@ class MrpProduction(models.Model):
             if qty_producing_uom != qty_production_uom and not (qty_producing_uom == 0 and self._origin.qty_producing != self.qty_producing):
                 self.qty_producing = self.product_id.uom_id._compute_quantity(len(self.lot_producing_ids), self.product_uom_id, rounding_method='HALF-UP')
 
-    # def _update_moves_qty_done(self, pick_manual_consumption_moves=True):
-        """ Updates the quantity done of the raw and finished moves based on the workorders. """
         # waiting for a preproduction move before assignement
         is_waiting = self.warehouse_id.manufacture_steps != 'mrp_one_step' and self.picking_ids.filtered(lambda p: p.picking_type_id == self.warehouse_id.pbm_type_id and p.state not in ('done', 'cancel'))
 
@@ -2080,7 +2078,8 @@ class MrpProduction(models.Model):
         moves_to_consume.write({'picked': True})
 
         workorders_to_cancel = self.env['mrp.workorder']
-        self.workorder_ids.duration_expected = 0.0  # Reset duration_expected to allow recomputation of original WO
+        for workorder in self.workorder_ids:
+            workorder.duration_expected = workorder._get_duration_expected()
         for production in self:
             initial_qty = initial_qty_by_production[production]
             initial_workorder_remaining_qty = []

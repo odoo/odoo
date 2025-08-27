@@ -255,9 +255,9 @@ class MrpWorkorder(models.Model):
     def _compute_qty_ready(self):
         mo_ids_to_backorder = self.env.context.get('mo_ids_to_backorder', [])
         for workorder in self:
-            if self.env.context.get('skip_backorder') and mo_ids_to_backorder and workorder.production_id.backorder_ids:
+            if self.env.context.get('skip_backorder') and mo_ids_to_backorder and workorder.production_id.procurement_group_id.mrp_production_ids:
                 # When creating a workorder from a backorder MO, workorder dependencies are not set, which leads to wrong qty_ready computation (and then to a wrong state).
-                previous_mo_ids = list(filter(lambda mo_id : mo_id in workorder.production_id.backorder_ids.ids, mo_ids_to_backorder))
+                previous_mo_ids = list(filter(lambda mo_id: mo_id in workorder.production_id.procurement_group_id.mrp_production_ids.ids, mo_ids_to_backorder))
                 wo_to_bypass = workorder.id == [min(workorder.production_id.workorder_ids.ids)] if not workorder.allow_workorder_dependencies else len(workorder.operation_id.blocked_by_operation_ids) == 0
                 if not wo_to_bypass and workorder.id != min(workorder.production_id.workorder_ids.ids) and previous_mo_ids and any(mo_id < workorder.production_id.id for mo_id in previous_mo_ids):
                     workorder.qty_ready = 0

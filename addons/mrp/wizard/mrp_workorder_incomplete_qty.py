@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -50,6 +50,5 @@ class MrpWorkorderIncompleteQty(models.TransientModel):
                 raise ValidationError(str(e)) from e
         else:
             raise ValidationError(
-                f"Method '{self.calling_method}' is not allowed or not found."
-                "Please check the context or the method name."
+            _("Method '%(method_name)s' is not allowed or not found. Please check the context or the method name.", method_name=self.calling_method)
             )
