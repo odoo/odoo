@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { queryFirst, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilderWithSnippet } from "../website_helpers";
+import { defineWebsiteModels, setupWebsiteBuilderWithSnippet } from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
 
