@@ -1130,7 +1130,8 @@
                                            'default_display_type': 'product',
                                            'quick_encoding_vals': quick_encoding_vals,
                                        }" readonly="state != 'draft'"
-                                       aggregated_fields="price_subtotal,price_total">
+                                       aggregated_fields="price_subtotal,price_total"
+                                       options="{'hide_composition': True, 'hide_prices': True, 'subsections': True}">
                                     <list name="journal_items" editable="bottom" string="Journal Items" default_order="sequence, id">
                                         <control>
                                             <create name="add_line_control" string="Add a line"/>

@@ -119,10 +119,12 @@
                             <t t-set="current_section" t-value="line"/>
                             <t t-set="current_subsection" t-value="None"/>
                             <t t-set="line_padding" t-value="0"/>
+                            <t t-set="collapse_prices" t-value="line.collapse_prices"/>
                         </t>
                         <t t-elif="is_subsection">
                             <t t-set="current_subsection" t-value="line"/>
                             <t t-set="line_padding" t-value="2"/>
+                            <t t-set="collapse_prices" t-value="collapse_prices or line.collapse_prices"/>
                         </t>
                         <t t-else="">
                             <t
@@ -143,14 +145,22 @@
                                 name="tr_section"
                                 t-att-class="'fw-bolder o_line_section' if is_section else 'fw-bold o_line_subsection'"
                             >
+                                <t t-set="show_section_total" t-value="is_section or not line.parent_id.collapse_prices"/>
+                                <t
+                                    t-set="section_name_colspan"
+                                    t-value="3 + (1 if display_discount else 0) + (1 if display_taxes else 0)"
+                                />
+                                <t t-if="not show_section_total">
+                                    <t t-set="section_name_colspan" t-value="99"/>
+                                </t>
                                 <td
                                     name="td_section_name"
-                                    t-att-colspan="3 + (1 if display_discount else 0) + (1 if display_taxes else 0)"
+                                    t-att-colspan="section_name_colspan"
                                     t-att-class="padding_class"
                                 >
                                     <span t-field="line.name">A section title</span>
                                 </td>
-                                <td name="td_section_price" class="text-end o_price_total">
+                                <td t-if="show_section_total" name="td_section_price" class="text-end o_price_total">
                                     <span
                                         name="price_subtotal_section"
                                         t-out="line._get_section_totals(price_field)"
@@ -196,7 +206,7 @@
                                 </td>
                                 <td name="td_product_priceunit" class="text-end text-nowrap">
                                     <span
-                                        t-if="not line.collapse_prices"
+                                        t-if="not collapse_prices"
                                         t-field="line.price_unit"
                                         t-options="{'widget': 'monetary', 'display_currency': line.currency_id}"
                                     >
@@ -204,7 +214,7 @@
                                     </span>
                                 </td>
                                 <td t-if="display_discount" name="td_product_discount" class="text-end">
-                                    <t t-if="not line.collapse_prices">
+                                    <t t-if="not collapse_prices">
                                         <!-- ! Always check collapse_prices separately; keep discount condition below for XPath -->
                                         <span t-field="line.discount">-</span>
                                     </t>
@@ -214,7 +224,7 @@
                                     <span t-out="taxes">Tax 15%</span>
                                 </td>
                                 <td t-if="not line.is_downpayment" name="td_product_subtotal" class="text-end o_price_total">
-                                    <t t-if="not line.collapse_prices">
+                                    <t t-if="not collapse_prices">
                                         <span
                                             t-if="price_field == 'price_subtotal'"
                                             t-field="line.price_subtotal"

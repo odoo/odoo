@@ -242,7 +242,8 @@
                                 widget="product_label_section_and_note_field_o2m"
                                 mode="list,kanban"
                                 context="{'default_state': 'draft'}"
-                                readonly="state == 'cancel' or locked">
+                                readonly="state == 'cancel' or locked"
+                                options="{ 'subsections': True }">
                                 <list string="Purchase Order Lines" editable="bottom" limit="200"
                                       decoration-warning="purchase_line_warn_msg">
                                     <control>
