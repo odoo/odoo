@@ -51,9 +51,16 @@ export class HrOrgChart extends Component {
         this._onEmployeeSubRedirect = onEmployeeSubRedirect();
 
         useRecordObserver(async (record) => {
+            // employee and parent IDs are based on the model context:
+            // - If the widget is used in the context of a `res.users` form:
+            //     - employee_id     = record.data.employee_id?.id
+            //     - parent_id       = record.data.employee_parent_id?.id
+            // - If the widget is used in the context of a `hr.employee` or `hr.employee.public` form:
+            //     - employee_id     = record.resId
+            //     - parent_id       = record.data.parent_id?.id
             const newParentId =
-                record.data.parent_id?.id || record.data.employee_parent_id?.id || false;
-            const newEmployeeId = record.resId || record.data.id || false;
+                record.data.employee_parent_id?.id || record.data.parent_id?.id || false;
+            const newEmployeeId = record.data.employee_id?.id || record.resId || false;
             if (this.lastParent !== newParentId || this.state.employee_id !== newEmployeeId) {
                 this.lastParent = newParentId;
                 this.max_level = null; // Reset max_level to default
