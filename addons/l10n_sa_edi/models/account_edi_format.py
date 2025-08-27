@@ -186,7 +186,7 @@ class AccountEdiFormat(models.Model):
                 'blocking_level': 'warning' if is_warning else 'error',
                 'status_code': status_code,
             }
-        if not clearance_data.get('error'):
+        if not clearance_data.get('error') and clearance_data.get("status_code") != 409:
             return self._l10n_sa_assert_clearance_status(invoice, clearance_data)
         return clearance_data
 
@@ -353,8 +353,8 @@ class AccountEdiFormat(models.Model):
         if response_data.get('error'):
 
             # If the request was rejected, we save the signed xml content as an attachment
-            if response_data.get('rejected'):
-                invoice._l10n_sa_log_results(submitted_xml, response_data, error=True)
+            # If request timedout, just log note a warning message
+            invoice._l10n_sa_log_results(submitted_xml, response_data, error=response_data.get('rejected'))
 
             # If the request returned an exception (Timeout, ValueError... etc.) it means we're not sure if the
             # invoice was successfully cleared/reported, and thus we keep the Index Chain.

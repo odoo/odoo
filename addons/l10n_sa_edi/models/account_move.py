@@ -177,10 +177,10 @@ class AccountMove(models.Model):
             Save submitted invoice XML hash in case of either Rejection or Acceptance.
         """
         self.ensure_one()
-        self.journal_id.l10n_sa_latest_submission_hash = self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_generate_invoice_xml_hash(
-            xml_content)
-        bootstrap_cls, title, content = ("success", _("Invoice Successfully Submitted to ZATCA"),
-                                         "" if (not error or not response_data) else response_data)
+        if not response_data.get("excepted"):
+            self.journal_id.l10n_sa_latest_submission_hash = self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_generate_invoice_xml_hash(xml_content)
+        bootstrap_cls, title, subtitle, content = ("success", _("Invoice Successfully Submitted to ZATCA"), "", "" if (not error or not response_data) else response_data)
+        status_code = response_data.get('status_code')
         attachment = False
         if error:
             xml_filename = self.env['account.edi.xml.ubl_21.zatca']._export_invoice_filename(self)
@@ -195,35 +195,48 @@ class AccountMove(models.Model):
                 'mimetype': 'application/xml',
             })
             bootstrap_cls, title = ("danger", _("Invoice was rejected by ZATCA"))
-            error_msg = response_data['error']
-            content = Markup("""
-                <p class='mb-0'>
-                    %s
-                </p>
-                <hr>
-                <p class='mb-0'>
-                    %s
-                </p>
-            """) % (_('The invoice was rejected by ZATCA. Please, check the response below:'), error_msg)
+            subtitle = _('The invoice was rejected by ZATCA. Please, check the response below:')
+            content = response_data['error']
         if response_data and response_data.get('validationResults', {}).get('warningMessages'):
-            status_code = response_data.get('status_code')
             bootstrap_cls, title = ("warning", _("Invoice was Accepted by ZATCA (with Warnings)"))
-            content = Markup("""
-                <p class='mb-0'>
-                    %s
-                </p>
-                <hr>
-                <p class='mb-0'>
-                    <b>%s</b>%s
-                </p>
-            """) % (_('The invoice was accepted by ZATCA, but returned warnings. Please, check the response below:'),
-                    f"[{status_code}] " if status_code else "",
-                    Markup("<br/>").join([Markup("<b>%s</b> : %s") % (m['code'], m['message']) for m in response_data['validationResults']['warningMessages']]))
+            subtitle = _('The invoice was accepted by ZATCA, but returned warnings. Please, check the response below:')
+            content = Markup("""<b>%(status_code)s</b>%(errors)s""") % {
+                "status_code": f"[{status_code}] " if status_code else "",
+                "errors": Markup("<br/>").join([
+                    Markup("<b>%(code)s</b> : %(message)s") % {
+                        "code": m['code'],
+                        "message": m['message'],
+                    } for m in response_data['validationResults']['warningMessages']
+                ])
+            }
+        if response_data.get("error") and response_data.get("excepted"):
+            bootstrap_cls, title = ("warning", _("Warning: Unable to Retrieve a Response from ZATCA"))
+            subtitle = _('Unable to retrieve response from ZATCA. Please, check the response below:')
+            content = response_data['error']
+        if status_code == 409:
+            bootstrap_cls, title = ("warning", _("Warning: Invoice was already successfully reported to ZATCA"))
+            subtitle = _("This invoice was already successfully reported to ZATCA. Please, check the response below:")
+            content = Markup("""<b>%(status_code)s</b>%(errors)s""") % {
+                "status_code": f"[{status_code}] " if status_code else "",
+                "errors": Markup("<br/>").join([
+                    Markup("<b>%(code)s</b> : %(message)s") % {
+                        "code": m['code'],
+                        "message": m['message'],
+                    } for m in response_data['validationResults']['errorMessages']
+                ])
+            }
         self.with_context(no_new_invoice=True).message_post(body=Markup("""
                 <div role='alert' class='alert alert-%s'>
-                    <h4 class='alert-heading'>%s</h4>%s
+                    <h4 class='alert-heading'>%s</h4>
+                    <p class='mb-0'>
+                        %s
+                    </p>
+                    %s
+                    <p class='mb-0'>
+                        %s
+                    </p>
                 </div>
-            """) % (bootstrap_cls, title, content),
+            """) % (bootstrap_cls, title, subtitle, Markup("<hr>") if content else "", content),
             attachment_ids=attachment and [attachment.id] or []
         )
 
