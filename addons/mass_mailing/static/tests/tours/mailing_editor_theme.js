@@ -1,6 +1,7 @@
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
-import { boundariesIn, setSelection } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
+import { boundariesIn } from "@html_editor/utils/position";
+import { setSelection } from "@html_editor/../tests/_helpers/selection";
 
 registry.category("web_tour.tours").add('mailing_editor_theme', {
     url: '/odoo',
@@ -32,19 +33,19 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
             run: "click",
         },
         {
-            trigger: ":iframe .o_mail_theme_selector_new",
+            trigger: ".o_mailing_template_preview_wrapper",
         },
         {
             content: "Pick the basic theme",
-            trigger: ':iframe #basic',
+            trigger: '.o_mailing_template_preview_wrapper [data-name="basic"]',
             run: "click",
         },
         {
-            trigger: ":iframe html:not(:has(.o_mail_theme_selector_new))",
+            trigger: "html:not(:has(.o_mailing_template_preview_wrapper))",
         },
         {
             content: "Make sure the snippets menu is hidden",
-            trigger: 'html:has(#oe_snippets.d-none)',
+            trigger: "html:not(:has(.o-snippets-menu))",
         },
         ...stepUtils.saveForm(),
         {
@@ -53,7 +54,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
             run: "click",
         },
         {
-            trigger: ":iframe .o_mail_theme_selector_new",
+            trigger: ".o_mailing_template_preview_wrapper",
         },
         {
             content: "Fill in Subject",
@@ -72,12 +73,12 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         },
         {
             content: "Pick the newsletter theme",
-            trigger: ':iframe #newsletter',
+            trigger: '.o_mailing_template_preview_wrapper [data-name="newsletter"]',
             run: "click",
         },
         {
             content: "Make sure the snippets menu is displayed",
-            trigger: '#oe_snippets',
+            trigger: ".o-snippets-menu",
         },
         ...stepUtils.discardForm(),
         {
@@ -87,7 +88,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         },
         {
             content: "Make sure the snippets menu is hidden",
-            trigger: 'html:has(#oe_snippets.d-none)',
+            trigger: "html:not(:has(.o-snippets-menu))",
         },
         {
             content: "Add some content to be selected afterwards",
@@ -98,21 +99,34 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
             content: "Select text",
             trigger: ':iframe p:contains(content)',
             run() {
-                setSelection(...boundariesIn(this.anchor), false);
+                const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesIn(
+                    this.anchor
+                );
+                setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
             }
         },
         {
             content: "Make sure the floating toolbar is visible",
-            trigger: '#toolbar.oe-floating[style*="visible"]',
+            trigger: '.overlay:has(.o-we-toolbar)[style*="visible"]',
+        },
+        {
+            content: "Expand Toolbar",
+            trigger: ".o-we-toolbar button[name='expand_toolbar']",
+            run: "click",
         },
         {
             content: "Open the color picker",
-            trigger: '#toolbar #oe-text-color',
+            trigger: ".o-select-color-foreground",
+            run: "click",
+        },
+        {
+            content: "Open Solid tab",
+            trigger: ".btn-tab.solid-tab",
             run: "click",
         },
         {
             content: "Pick a color",
-            trigger: '#toolbar button[data-color="o-color-1"]',
+            trigger: '.o_font_color_selector button[data-color="o-color-1"]',
             run: "click",
         },
         {
@@ -132,18 +146,21 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         },
         {
             content: "Make sure the snippets menu is hidden",
-            trigger: 'html:has(#oe_snippets.d-none)',
+            trigger: "html:not(:has(.o-snippets-menu))",
         },
         {
             content: "Select content",
             trigger: ':iframe p:contains(content)',
             run() {
-                setSelection(...boundariesIn(this.anchor), false);
+                const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesIn(
+                    this.anchor
+                );
+                setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
             }
         },
         {
             content: "Make sure the floating toolbar is visible",
-            trigger: '#toolbar.oe-floating[style*="visible"]',
+            trigger: '.overlay:has(.o-we-toolbar)[style*="visible"]',
         },
     ],
 });

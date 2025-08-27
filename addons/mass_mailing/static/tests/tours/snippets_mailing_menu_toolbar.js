@@ -16,12 +16,12 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar', {
     },
     {
         content: "Wait for the theme selector to load.",
-        trigger: ':iframe .o_mail_theme_selector_new',
+        trigger: '.o_mailing_template_preview_wrapper',
         run: "click",
     },
     {
         content: "Make sure there does not exist a floating toolbar",
-        trigger: 'iframe',
+        trigger: "iframe:not(:visible)",
         run: function () {
             const iframeDocument = this.anchor.contentDocument;
             if (iframeDocument.querySelector('#toolbar.oe-floating')) {
@@ -31,22 +31,22 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar', {
     },
     {
         content: "Make sure the empty template is an option on non-mobile devices.",
-        trigger: ':iframe #empty',
+        trigger: '.o_mailing_template_preview_wrapper [data-name="empty"]',
     },
     {
         content: "Click on the default 'welcome' template.",
-        trigger: ':iframe #default',
+        trigger: '.o_mailing_template_preview_wrapper [data-name="default"]',
         run: "click",
     },
     { // necessary to wait for the cursor to be placed in the first p
       // and to avoid leaving the page before the selection is added
         content: "Wait for template selection event to be over.",
-        trigger: ':iframe .o_editable.theme_selection_done',
+        trigger: ":iframe .odoo-editor-editable .o_editable",
         run: "click",
     },
     {
         content: "Make sure the snippets menu is not hidden",
-        trigger: '#oe_snippets:not(.d-none)',
+        trigger: ".o-snippets-menu",
     },
     {
         content: "Wait for .s_text_block to be populated",
@@ -69,7 +69,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar', {
     },
     {
         content: "Make sure the toolbar is there",
-        trigger: '#oe_snippets .o_we_customize_panel #toolbar',
+        trigger: ".overlay .o-we-toolbar",
     },
     ...stepUtils.discardForm(),
     ],

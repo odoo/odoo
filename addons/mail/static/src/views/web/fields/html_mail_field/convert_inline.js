@@ -33,7 +33,6 @@ function commonParentGet(node1, node2, root = undefined) {
 //--------------------------------------------------------------------------
 
 const RE_COL_MATCH = /(^| )col(-[\w\d]+)*( |$)/;
-const RE_COMMAS_OUTSIDE_PARENTHESES = /,(?![^(]*?\))/g;
 const RE_OFFSET_MATCH = /(^| )offset(-[\w\d]+)*( |$)/;
 const RE_PADDING_MATCH = /[ ]*padding[^;]*;/g;
 const RE_PADDING = /([\d.]+)/;
@@ -1281,7 +1280,7 @@ export function getCSSRules(doc) {
             for (const subRule of subRules) {
                 const selectorText = subRule.selectorText || "";
                 // Split selectors, making sure not to split at commas in parentheses.
-                for (const selector of selectorText.split(RE_COMMAS_OUTSIDE_PARENTHESES)) {
+                for (const selector of splitSelectorAroundCommasOutsideParentheses(selectorText)) {
                     if (selector && !SELECTORS_IGNORE.test(selector)) {
                         cssRules.push({ selector: selector.trim(), rawRule: subRule });
                         if (selector === "body") {
@@ -1990,4 +1989,49 @@ function removeBlacklistedStyles(rule, node) {
         styles[key] = value;
     }
     return styles;
+}
+
+export function splitSelectorAroundCommasOutsideParentheses(selector) {
+    if (selector.indexOf(",") === -1) {
+        return [selector].filter(Boolean);
+    }
+    const result = [];
+    let start = 0;
+    let depth = 0;
+    let inString;
+    for (let i = 0; i < selector.length; i++) {
+        const char = selector[i];
+        if (inString) {
+            if (char === inString && selector[i - 1] !== "\\") {
+                inString = undefined;
+            }
+            continue;
+        }
+        switch (char) {
+            case "'":
+            case '"':
+                inString = char;
+                break;
+            case "(":
+                depth++;
+                break;
+            case ")":
+                depth--;
+                if (depth < 0) {
+                    return [selector];
+                }
+                break;
+            case ",":
+                if (depth === 0) {
+                    result.push(selector.slice(start, i));
+                    start = i + 1;
+                }
+                break;
+        }
+    }
+    if (depth > 0) {
+        return [selector];
+    }
+    result.push(selector.slice(start));
+    return result.filter(Boolean);
 }
