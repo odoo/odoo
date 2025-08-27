@@ -17,13 +17,9 @@
                             <field name="department_id" groups="hr.group_hr_manager"/>
                         </group>
                         <group name="top_info_right">
-                            <label for="contract_type_id" string="Contract Type"/>
-                            <div class="o_row" name="contract_type">
-                                <field name="contract_type_id" class="oe_inline" nolabel="1"/>
-                                <div class="mx-3 flex-grow-0">─</div>
-                                <field name="structure_type_id" class="oe_inline" nolabel="1"
-                                       domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
-                            </div>
+                            <field name="contract_type_id" string="Contract Type" placeholder="Contract Type"/>
+                            <field name="structure_type_id" string="Pay Category" placeholder="Pay Category"
+                                    domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
                             <field name="resource_calendar_id"/>
                             <field name="hr_responsible_id" widget="many2one_avatar_user" groups="hr.group_hr_user"/>
                         </group>
