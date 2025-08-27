@@ -68,7 +68,8 @@ export function isColorCombinationName(name) {
     return !isNaN(number) && number % 100 !== 0;
 }
 
-export const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/;
+export const TEXT_CLASSES_REGEX =
+    /\btext-(primary|secondary|success|danger|warning|info|light|dark|body|muted|white|black|reset|gradient|opacity-\d{1,3}|o-[^\s]+|\d+)\b/;
 export const BG_CLASSES_REGEX = /\bbg-[^\s]*\b/;
 
 /**
