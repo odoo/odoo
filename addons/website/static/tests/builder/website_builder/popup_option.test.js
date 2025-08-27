@@ -6,7 +6,7 @@ import {
     defineWebsiteModels,
     insertCategorySnippet,
     setupWebsiteBuilder,
-} from "../website_helpers";
+} from "@website/../tests/builder/website_helpers";
 import { Plugin } from "@html_editor/plugin";
 import { insertText, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";

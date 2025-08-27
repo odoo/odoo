@@ -11,7 +11,11 @@ import {
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import { OPEN_DELAY } from "@web/core/tooltip/tooltip_service";
-import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../../website_helpers";
+import {
+    addOption,
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
 
 describe("website tests", () => {
     defineWebsiteModels();

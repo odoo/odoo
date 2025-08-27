@@ -5,7 +5,7 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
-} from "../website_helpers";
+} from "@website/../tests/builder/website_helpers";
 import { patch } from "@web/core/utils/patch";
 import { IrModel } from "@web/../tests/_framework/mock_server/mock_models/ir_model";
 import { _t } from "@web/core/l10n/translation";

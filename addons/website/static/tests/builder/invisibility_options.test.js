@@ -5,7 +5,7 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
-} from "../website_helpers";
+} from "@website/../tests/builder/website_helpers";
 import { insertText, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 

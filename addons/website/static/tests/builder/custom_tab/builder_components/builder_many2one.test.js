@@ -7,7 +7,7 @@ import {
     addOption,
     defineWebsiteModels,
     setupWebsiteBuilder,
-} from "../../website_helpers";
+} from "@website/../tests/builder/website_helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent, useGetItemValue } from "@html_builder/core/utils";
 
