@@ -76,7 +76,7 @@
                             <t t-component="threadActions.activeAction.actionPanelComponent" thread="thread" t-props="threadActions.activeAction.actionPanelComponentProps"/>
                         </div>
                     </t>
-                    <div t-elif="(!ui.isSmall or store.discuss.activeTab === 'notification') and store.discuss.hasRestoredThread" class="d-flex flex-grow-1 align-items-center justify-content-center w-100">
+                    <div t-elif="(!ui.isSmall or store.discuss.activeTab === 'all') and store.discuss.hasRestoredThread" class="d-flex flex-grow-1 align-items-center justify-content-center w-100">
                         <h4 class="text-muted"><b><i>No conversation selected.</i></b></h4>
                     </div>
                 </t>

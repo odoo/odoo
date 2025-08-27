@@ -64,9 +64,9 @@ patch(MessagingMenu.prototype, {
     get hasPreviews() {
         return (
             this.threads.length > 0 ||
-            (this.store.failures.length > 0 && this.store.discuss.activeTab === "notification") ||
-            (this.shouldAskPushPermission && this.store.discuss.activeTab === "notification") ||
-            (this.canPromptToInstall && this.store.discuss.activeTab === "notification")
+            (this.store.failures.length > 0 && this.store.discuss.activeTab === "all") ||
+            (this.shouldAskPushPermission && this.store.discuss.activeTab === "all") ||
+            (this.canPromptToInstall && this.store.discuss.activeTab === "all")
         );
     },
     get installationRequest() {
@@ -78,7 +78,7 @@ patch(MessagingMenu.prototype, {
             },
             iconSrc: this.store.odoobot.avatarUrl,
             partner: this.store.odoobot,
-            isShown: this.store.discuss.activeTab === "notification" && this.canPromptToInstall,
+            isShown: this.store.discuss.activeTab === "all" && this.canPromptToInstall,
         };
     },
     get notificationRequest() {
@@ -87,16 +87,15 @@ patch(MessagingMenu.prototype, {
             displayName: _t("Turn on notifications"),
             iconSrc: this.store.odoobot.avatarUrl,
             partner: this.store.odoobot,
-            isShown:
-                this.store.discuss.activeTab === "notification" && this.shouldAskPushPermission,
+            isShown: this.store.discuss.activeTab === "all" && this.shouldAskPushPermission,
         };
     },
     get _tabs() {
         return [
             {
-                icon: "fa fa-envelope",
-                id: "notification",
-                label: _t("Notifications"),
+                icon: this.ui.isSmall ? "fa fa-home" : "fa fa-envelope",
+                id: "all",
+                label: this.ui.isSmall ? _t("Home") : _t("All"),
                 sequence: 10,
             },
             {

@@ -169,7 +169,7 @@ export class Store extends BaseStore {
                 threads = threads.filter(({ channel_type }) =>
                     this.tabToThreadType("mailbox").includes(channel_type)
                 );
-            } else if (tab !== "notification") {
+            } else if (tab !== "all") {
                 threads = threads.filter(({ channel_type }) =>
                     this.tabToThreadType(tab).includes(channel_type)
                 );
