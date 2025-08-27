@@ -18,7 +18,7 @@ class StockLot(models.Model):
         Used to compute margins on sale orders."""
     )
 
-    @api.depends('product_id.lot_valuated')
+    @api.depends('product_id.lot_valuated', 'product_id.product_tmpl_id.lot_valuated')
     @api.depends_context('to_date', 'company')
     def _compute_value(self):
         """Compute totals of multiple svl related values"""
@@ -63,9 +63,14 @@ class StockLot(models.Model):
     def _update_standard_price(self):
         # TODO: Add extra value and extra quantity kwargs to avoid total recomputation
         for lot in self:
-            if lot.product_id.cost_method == 'standard':
+            lot = lot.with_context(disable_auto_revaluation=True)
+            if not lot.product_id.lot_valuated:
                 continue
-            lot.with_context(disable_auto_revaluation=True).standard_price = lot.product_id._run_avco(lot=lot)[0]
+            if lot.product_id.cost_method == 'standard':
+                if not lot.standard_price:
+                    lot.standard_price = lot.product_id.standard_price
+                continue
+            lot.standard_price = lot.product_id._run_avco(lot=lot)[0]
 
     def _change_standard_price(self, old_price):
         """Helper to create the stock valuation layers and the account moves

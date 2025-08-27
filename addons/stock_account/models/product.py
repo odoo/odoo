@@ -67,6 +67,14 @@ class ProductTemplate(models.Model):
                 product_template.company_id
             ).property_valuation
 
+    def write(self, vals):
+        res = super().write(vals)
+        if 'lot_valuated' in vals:
+            self.env['stock.lot'].search([
+                ('product_id', 'in', self.product_variant_ids.ids),
+            ])._update_standard_price()
+        return res
+
     # -------------------------------------------------------------------------
     # Misc.
     # -------------------------------------------------------------------------
