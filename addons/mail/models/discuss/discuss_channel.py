@@ -980,17 +980,6 @@ class DiscussChannel(models.Model):
                 self._action_unfollow(p)
         return super()._message_receive_bounce(email, partner)
 
-    def _message_compute_parent_id(self, parent_id):
-        # super() unravels the chain of parents to set parent_id as the first
-        # ancestor. We don't want that in channel.
-        if not parent_id:
-            return parent_id
-        return self.env['mail.message'].search(
-            [('id', '=', parent_id),
-             ('model', '=', self._name),
-             ('res_id', '=', self.id)
-            ]).id
-
     def _get_allowed_message_params(self):
         return super()._get_allowed_message_params() | {"special_mentions", "parent_id"}
 
