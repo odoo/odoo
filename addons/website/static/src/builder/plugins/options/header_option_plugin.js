@@ -108,13 +108,13 @@ export class StyleActionHeaderAction extends StyleAction {
     getValue(...args) {
         const { params } = args[0];
         const value = super.getValue(...args);
-        if (params.mainParam === "border-width") {
+        if (params.mainParam.endsWith("border-width")) {
             return value.replace(/(^|\s)0px/gi, "").trim() || value;
         }
         return value;
     }
     async apply({ params, value }) {
-        const styleName = params.mainParam;
+        const styleName = params.mainParam.replace("--box-", "");
 
         if (styleName === "border-color") {
             return this.dependencies.customizeWebsite.customizeWebsiteColors({
