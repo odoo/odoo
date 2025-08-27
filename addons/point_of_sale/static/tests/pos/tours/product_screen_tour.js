@@ -1150,3 +1150,24 @@ registry.category("web_tour.tours").add("test_product_info_product_inventory", {
             ]),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_consistent_order_receipt_number_offline", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            OfflineUtil.setOfflineMode(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            Dialog.confirm("Continue with limited functionality"),
+            ReceiptScreen.clickNextOrder(),
+            OfflineUtil.setOnlineMode(),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
