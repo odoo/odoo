@@ -16,41 +16,31 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_tabs', {
     },
     {
         content: "Click on the 'Start From Scratch' template.",
-        trigger: ':iframe #empty',
+        trigger: '.o_mailing_template_preview_wrapper [data-name="empty"]',
         run: "click",
     },
     {
         content: "Click on the 'Design' tab.",
-        trigger: '.o_we_customize_design_btn',
-        run: "click",
-    },
-    {
-        content: "Click on the empty 'DRAG BUILDING BLOCKS HERE' area.",
-        trigger: ':iframe .oe_structure.o_mail_no_options',
-        run: "click",
-    },
-    {
-        content: "Click on the 'Design' tab.",
-        trigger: '.o_we_customize_design_btn',
+        trigger: 'button[data-name="theme"]',
         run: "click",
     },
     {
         content: "Verify that the customize panel is not empty.",
-        trigger: '.o_we_customize_panel .snippet-option-DesignTab',
+        trigger: ".o_design_tab:not(:empty)",
     },
     {
         content: "Click on the style tab.",
-        trigger: '.o_we_customize_snippet_btn',
+        trigger: 'button[data-name="customize"]',
         run: "click",
     },
     {
         content: "Click on the 'Design' tab.",
-        trigger: '.o_we_customize_design_btn',
+        trigger: 'button[data-name="theme"]',
         run: "click",
     },
     {
         content: "Verify that the customize panel is not empty.",
-        trigger: '.o_we_customize_panel .snippet-option-DesignTab',
+        trigger: ".tab-content .o_design_tab:not(:empty)",
     },
     ...stepUtils.discardForm(),
 ]});

@@ -11,6 +11,7 @@
     'depends': [
         'contacts',
         'mail',
+        'html_builder',
         'utm',
         'link_tracker',
         'web_editor',
@@ -94,14 +95,29 @@
     ],
     'application': True,
     'assets': {
-        'mass_mailing.iframe_css_assets_edit': [
+        'mass_mailing.assets_builder': [
+            # lazy builder assets NOT applied in iframe
+            ('include', 'html_builder.assets'),
+            ('remove', 'web/static/fonts/fonts.scss'),
+            'mass_mailing/static/src/builder/**/*',
+        ],
+        'mass_mailing.assets_iframe_style': [
+            # minimal style assets required to view the mail content
+            # convert_inline ONLY uses this and inline styles.
+            # TODO EGGMAIL: reduce included bundles
             ('include', 'mass_mailing.assets_mail_themes'),
             ('include', 'web.assets_frontend'),
             ('after', 'web/static/lib/bootstrap/scss/_maps.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
             ('include', 'web_editor.backend_assets_wysiwyg'),
             ('include', 'mass_mailing.assets_snippets_menu'),
-
+            ('include', 'web_editor.wysiwyg_iframe_editor_assets'),
+            ('include', 'html_builder.inside_builder_style'),
             'mass_mailing/static/src/scss/mass_mailing_mail.scss',
+            'mass_mailing/static/src/iframe_assets/**/*',
+            'mass_mailing/static/src/theme_assets/**/*',
+        ],
+        'html_builder.iframe_add_dialog': [
+            'mass_mailing/static/src/builder/snippet_viewer/*.scss',
         ],
         'mass_mailing.iframe_css_assets_readonly': [
             'mass_mailing/static/src/scss/mass_mailing_mail.scss',
@@ -119,6 +135,9 @@
             'mass_mailing/static/src/scss/mass_mailing.wysiwyg.scss',
         ],
         'web.assets_backend': [
+            'mass_mailing/static/src/fields/**/*',
+            'mass_mailing/static/src/themes/**/*',
+            'mass_mailing/static/src/iframe/**/*',
             'mass_mailing/static/src/scss/mailing_filter_widget.scss',
             'mass_mailing/static/src/scss/mass_mailing.scss',
             'mass_mailing/static/src/scss/mass_mailing_mobile.scss',
@@ -162,6 +181,7 @@
             'mass_mailing/static/src/js/tours/**/*',
         ],
         'web.assets_tests': [
+            'html_editor/static/tests/_helpers/selection.js',
             'mass_mailing/static/tests/tours/**/*',
         ],
         'web.qunit_suite_tests': [
@@ -172,7 +192,9 @@
             'mass_mailing/static/tests/mass_mailing_html_tests.js',
         ],
         'web.assets_unit_tests': [
+            ('include', 'mass_mailing.assets_builder'),
             'mass_mailing/static/tests/mass_mailing_favourite_filter.test.js',
+            'mass_mailing/static/tests/mass_mailing_html_field.test.js',
         ],
     },
     'author': 'Odoo S.A.',
