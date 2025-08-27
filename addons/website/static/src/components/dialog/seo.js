@@ -267,10 +267,10 @@ class SEOPreview extends Component {
     };
 
     get description() {
-        if (this.props.description.length > 160) {
+        if (this.props.description?.length > 160) {
             return this.props.description.substring(0, 159) + '…';
         }
-        return this.props.description;
+        return this.props.description || "";
     }
 }
 class TitleDescription extends Component {
