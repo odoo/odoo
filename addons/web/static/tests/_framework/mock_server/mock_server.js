@@ -886,7 +886,13 @@ export class MockServer {
 
             // Find duplicate models
             if (model._name in this._models) {
-                Object.setPrototypeOf(Object.getPrototypeOf(model), this._models[model._name]);
+                const existingModel = this._models[model._name];
+                // Add fields added from parent, since public class instance fields
+                // are not included in the prototype.
+                for (const fieldName in existingModel._fields) {
+                    model._fields[fieldName] ??= existingModel._fields[fieldName];
+                }
+                Object.setPrototypeOf(Object.getPrototypeOf(model), existingModel);
             } else if (model._name in this.env) {
                 throw new MockServerError(
                     `cannot register model "${model._name}": a server environment property with the same name already exists`
