@@ -268,13 +268,19 @@ const VariantMixin = {
      */
     _onChangeCombination(ev, parent, combination) {
         const isCombinationPossible = !!combination.is_combination_possible;
+        const precision = combination.currency_precision;
+        const productPrice = parent.querySelector('.product_price');
+        if (productPrice && !productPrice.classList.contains('decimal_precision')) {
+            productPrice.classList.add('decimal_precision');
+            productPrice.dataset.precision = precision;
+        }
         const pricePerUom = parent.querySelector('.o_base_unit_price')
             ?.querySelector('.oe_currency_value');
         if (pricePerUom) {
             const hasPrice = isCombinationPossible && combination.base_unit_price !== 0;
             pricePerUom.closest('.o_base_unit_price_wrapper').classList.toggle('d-none', !hasPrice);
             if (hasPrice) {
-                pricePerUom.textContent = this._priceToStr(combination.base_unit_price);
+                pricePerUom.textContent = this._priceToStr(combination.base_unit_price, precision);
                 const unit = parent.querySelector('.oe_custom_base_unit');
                 if (unit) {
                     unit.textContent = combination.base_unit_name;
@@ -295,7 +301,6 @@ const VariantMixin = {
         const addToCart = parent.querySelector('#add_to_cart_wrap');
         const contactUsButton = parent.closest('#product_details')
             ?.querySelector('#contact_us_wrapper');
-        const productPrice = parent.querySelector('.product_price');
         const quantity = parent.querySelector('.css_quantity');
         const productUnavailable = parent.querySelector('#product_unavailable');
 
@@ -322,10 +327,10 @@ const VariantMixin = {
             ?.querySelector('.oe_currency_value');
         const comparePrice = parent.querySelector('.oe_compare_list_price');
         if (price) {
-            price.textContent = this._priceToStr(combination.price);
+            price.textContent = this._priceToStr(combination.price, precision);
         }
         if (defaultPrice) {
-            defaultPrice.textContent = this._priceToStr(combination.list_price);
+            defaultPrice.textContent = this._priceToStr(combination.list_price, precision);
             defaultPrice.closest('.oe_website_sale').classList
                 .toggle('discount', combination.has_discounted_price);
             defaultPrice.parentElement.classList
@@ -362,14 +367,14 @@ const VariantMixin = {
      *
      * @private
      * @param {float} price
+     * @param {integer} precision
+     * @returns {string}
      */
-    _priceToStr(price) {
-        let precision = 2;
-
-        if (this.el.querySelector('.decimal_precision')) {
-            precision = parseInt(Array.from(
-                this.el.querySelectorAll('.decimal_precision')
-            ).at(-1).dataset.precision);
+    _priceToStr: function (price, precision) {
+        if (!Number.isInteger(precision)) {
+            precision = parseInt(
+                this.el.querySelector('.decimal_precision:last-of-type')?.dataset.precision ?? 2
+            );
         }
         const formatted = price.toFixed(precision).split('.');
         const { thousandsSep, decimalPoint, grouping } = localization;
