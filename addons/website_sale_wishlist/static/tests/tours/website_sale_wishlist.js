@@ -90,7 +90,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
         {
             content: "remove Customizable Desk (TEST)",
-            trigger: 'tr:contains("Customizable Desk") .o_wish_rm:first',
+            trigger: '.o_wish_rm:first',
             run: "click",
         },
         {
@@ -180,7 +180,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             trigger: '.my_wish_quantity:contains(1)',
         },
         {
-            trigger: '.oe_product_cart:contains("Bottle") .o_add_wishlist.disabled:not(:visible)',
+            trigger: '.o_wsale_product_grid_wrapper:contains("Bottle") .o_add_wishlist.disabled',
         },
         {
             content: "Click on product",
@@ -224,15 +224,15 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
         {
             content: "Check wishlist contains first variant",
-            trigger: '#o_comparelist_table tr:contains("red")',
+            trigger: '#o_comparelist_table .oe_product_cart a:contains("red")',
         },
         {
             content: "Check wishlist contains second variant",
-            trigger: '#o_comparelist_table tr:contains("blue")',
+            trigger: '#o_comparelist_table .oe_product_cart a:contains("blue")',
         },
         {
             content: "Check wishlist contains third variant, then go to login",
-            trigger: '#o_comparelist_table tr:contains("black")',
+            trigger: '#o_comparelist_table .oe_product_cart a:contains("black")',
             run: function () {
                 window.location.href = "/web/login";
             },
@@ -279,7 +279,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
         {
             content: "Check there is wishlist button on product from /shop",
-            trigger: ".oe_product_cart:contains(Bottle) .o_add_wishlist:not(:visible)",
+            trigger: ".o_wsale_product_grid_wrapper:contains(Bottle) .o_add_wishlist",
         },
         {
             content: "Click on product",
@@ -410,7 +410,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
         {
             content: "The product is in the wishlist",
-            trigger: '.oe_product_cart .o_wsale_product_btn:has(.o_add_wishlist[disabled]):not(:visible)',
+            trigger: '.oe_product_cart .o_wsale_product_btn:has(.o_add_wishlist[disabled])',
         },
         {
             content: "Go to the wishlist",
@@ -437,7 +437,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
         {
             content: "The product is not in the wishlist",
-            trigger: '.oe_product_cart .o_wsale_product_btn:not(:has(.o_add_wishlist[disabled])):not(:visible)',
+            trigger: '.oe_product_cart .o_wsale_product_btn:not(:has(.o_add_wishlist[disabled]))',
         },
     ]
 });
