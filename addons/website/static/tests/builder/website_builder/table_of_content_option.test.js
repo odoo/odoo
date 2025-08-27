@@ -7,7 +7,7 @@ import {
     defineWebsiteModels,
     insertStructureSnippet,
     setupWebsiteBuilderWithSnippet,
-} from "../website_helpers";
+} from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
 

@@ -7,7 +7,7 @@ import {
     setupWebsiteBuilder,
     confirmAddSnippet,
     waitForEndOfOperation,
-} from "../website_helpers";
+} from "@website/../tests/builder/website_helpers";
 import { uniqueId } from "@web/core/utils/functions";
 
 defineWebsiteModels();

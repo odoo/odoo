@@ -5,7 +5,7 @@ import {
     setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
     waitForEndOfOperation,
-} from "../website_helpers";
+} from "@website/../tests/builder/website_helpers";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { click, queryOne } from "@odoo/hoot-dom";
 

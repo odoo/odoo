@@ -6,7 +6,7 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
     waitForEndOfOperation,
-} from "../website_helpers";
+} from "@website/../tests/builder/website_helpers";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 
 defineWebsiteModels();
