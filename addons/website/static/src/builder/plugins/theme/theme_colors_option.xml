@@ -55,7 +55,7 @@
                                     <Img class="'h-100'" src="'/website/static/src/img/snippets_options/palette.svg'"/>
                                 </t>
                                 <t t-foreach="palettes" t-as="palette" t-key="palette.name">
-                                    <BuilderSelectItem actionValue="palette.name">
+                                    <BuilderSelectItem actionValue="`'${palette.name}'`">
                                         <div class="o-color-palette-pill d-flex flex-row border rounded-pill overflow-hidden">
                                             <t t-foreach="palette.colors" t-as="color" t-key="color">
                                                 <span class="w-100" t-attf-style="background-color: {{color}};"></span>
