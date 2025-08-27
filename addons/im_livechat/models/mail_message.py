@@ -1,25 +1,9 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from odoo import api, fields, models
+from odoo import models
 from odoo.addons.mail.tools.discuss import Store
 
 
 class MailMessage(models.Model):
     _inherit = 'mail.message'
-
-    parent_author_name = fields.Char(compute="_compute_parent_author_name")
-    parent_body = fields.Html(compute="_compute_parent_body")
-
-    @api.depends('parent_id')
-    def _compute_parent_author_name(self):
-        for message in self:
-            author = message.parent_id.author_id or message.parent_id.author_guest_id
-            message.parent_author_name = author.name if author else False
-
-    @api.depends('parent_id.body')
-    def _compute_parent_body(self):
-        for message in self:
-            message.parent_body = message.parent_id.body if message.parent_id else False
 
     def _to_store_defaults(self, target):
         return super()._to_store_defaults(target) + ["chatbot_current_step"]
