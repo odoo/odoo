@@ -1255,6 +1255,7 @@ export class PosStore extends WithLazyGetterTrap {
     createOrderIfNeeded(data) {
         return this.createNewOrder(data);
     }
+<<<<<<< 74be754f7e954d2727c92ae88dc13990f36cab0a
     setNextOrderRefs(order) {
         const deviceIdentifier = this.device.identifier;
         const number = `${this.device.useNext()}`.padStart(6, "0");
@@ -1262,6 +1263,85 @@ export class PosStore extends WithLazyGetterTrap {
         const year2Digits = DateTime.now().year.toString().slice(-2);
         const posReference = `${year2Digits}${deviceIdentifier}-${configId}-${number}`;
 
+||||||| 6df8dfe6ebd6ee1c3aa32d30bd2af3f03b60968f
+    async getNextOrderRefs(order) {
+        try {
+            const [pos_reference, sequence_number, tracking_number] = await this.data.call(
+                "pos.session",
+                "get_next_order_refs",
+                [[this.session.id], parseInt(odoo.login_number, 10), null, ""]
+            );
+            order.pos_reference = pos_reference;
+            order.sequence_number = sequence_number;
+            order.tracking_number = tracking_number;
+            return true;
+        } catch (error) {
+            if (
+                error instanceof ConnectionLostError ||
+                error instanceof ConnectionAbortedError ||
+                error instanceof RPCError
+            ) {
+                return this.getNextOrderRefsLocal(_t("Order"), order);
+            } else {
+                throw error;
+            }
+        } finally {
+            this.data.debouncedSynchronizeLocalDataInIndexedDB();
+        }
+    }
+    /**
+     * Return value of this method is used when the client is offline.
+     * Side-effect: increments the order counter.
+     */
+    getNextOrderRefsLocal(refPrefix, order) {
+        const sequenceNumber = this.orderCounter.next();
+        const trackingNumber = sequenceNumber.toString().padStart(3, "0");
+        const YY = new Date().getFullYear().toString().slice(-2);
+        const LL = (odoo.login_number % 100).toString().padStart(2, "0");
+        const SSS = this.session.id.toString().padStart(3, "0");
+        const F = "1";
+        const OOOO = sequenceNumber.toString().padStart(4, "0");
+        const posReference = `${refPrefix} ${YY}${LL}-${SSS}-${F}${OOOO}`;
+=======
+    async getNextOrderRefs(order) {
+        try {
+            const [pos_reference, sequence_number, tracking_number] = await this.data.call(
+                "pos.session",
+                "get_next_order_refs",
+                [[this.session.id], parseInt(odoo.login_number, 10), null, ""]
+            );
+            order.pos_reference = pos_reference;
+            order.sequence_number = sequence_number;
+            order.tracking_number = tracking_number;
+            return true;
+        } catch (error) {
+            if (
+                error instanceof ConnectionLostError ||
+                error instanceof ConnectionAbortedError ||
+                error instanceof RPCError
+            ) {
+                return this.getNextOrderRefsLocal("", order);
+            } else {
+                throw error;
+            }
+        } finally {
+            this.data.debouncedSynchronizeLocalDataInIndexedDB();
+        }
+    }
+    /**
+     * Return value of this method is used when the client is offline.
+     * Side-effect: increments the order counter.
+     */
+    getNextOrderRefsLocal(refPrefix, order) {
+        const sequenceNumber = this.orderCounter.next();
+        const trackingNumber = sequenceNumber.toString().padStart(3, "0");
+        const YY = new Date().getFullYear().toString().slice(-2);
+        const LL = (odoo.login_number % 100).toString().padStart(2, "0");
+        const SSS = this.session.id.toString().padStart(3, "0");
+        const F = "1";
+        const OOOO = sequenceNumber.toString().padStart(4, "0");
+        const posReference = `${YY}${LL}-${SSS}-${F}${OOOO}`;
+>>>>>>> c364298aa39a8ad7bd3c9db68376d9c9f510f303
         order.pos_reference = posReference;
         order.tracking_number = deviceIdentifier + `${parseInt(number) % 1000}`.padStart(3, "0");
     }
