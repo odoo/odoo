@@ -21,10 +21,11 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 
+import { markup } from "@odoo/owl";
+import { Domain } from "@web/core/domain";
+import { notificationService } from "@web/core/notifications/notification_service";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { WebClient } from "@web/webclient/webclient";
-import { notificationService } from "@web/core/notifications/notification_service";
-import { markup } from "@odoo/owl";
 
 class Event extends models.Model {
     name = fields.Char();
@@ -843,4 +844,18 @@ test("multi_create: test required attribute in form", async () => {
     await edit("Test required");
     await multiCreatePopoverClickAddButton();
     expect.verifySteps(["Test required_2019-03-04", "Test required_2019-03-04"]);
+});
+
+test.tags("desktop");
+test(`multi_create: no button "Delete" if no record selected`, async () => {
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        domain: Domain.FALSE.toList(),
+    });
+    expect("o_multi_selection_buttons").toHaveCount(0);
+
+    await contains(".fc-day[data-date='2019-03-04']").click();
+    expect(".o_multi_selection_buttons").toHaveCount(1);
+    expect(".o_multi_selection_buttons .btn .fa-trash").toHaveCount(0);
 });
