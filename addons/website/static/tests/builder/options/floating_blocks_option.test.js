@@ -1,4 +1,4 @@
-import { defineWebsiteModels, setupWebsiteBuilderWithSnippet } from "../website_helpers";
+import { defineWebsiteModels, setupWebsiteBuilderWithSnippet } from "@website/../tests/builder/website_helpers";
 import { expect, test } from "@odoo/hoot";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 

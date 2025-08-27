@@ -8,7 +8,7 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
-} from "../website_helpers";
+} from "@website/../tests/builder/website_helpers";
 
 class HrJob extends models.Model {
     _name = "hr.job";
