@@ -1498,7 +1498,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                         subtype_xmlid='mail.mt_comment',
                         partner_ids=[self.partner_2.id],
                     )
-                self.assertEqual(new_msg.parent_id, initial_msg, 'message_post: flatten error')
+                self.assertEqual(new_msg.parent_id, msg)
                 self.assertEqual(new_msg.partner_ids, self.partner_2)
                 self.assertSentEmail(
                     self.user_employee.partner_id,
