@@ -43,6 +43,10 @@ This addon provides an extensible, maintainable editor.
             'html_editor/static/src/services/**/*',
             ('remove', 'html_editor/static/src/**/*.dark.scss'),
         ],
+        'html_editor.assets_history_diff': [
+            'html_editor/static/lib/diff2html/diff2html.min.css',
+            'html_editor/static/lib/diff2html/diff2html.min.js',
+        ],
         'html_editor.assets_media_dialog': [
             # Bundle to use the media dialog in the backend and the frontend
             'html_editor/static/src/components/switch/**/*',
