@@ -1,14 +1,10 @@
+import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { BuilderList } from "@html_builder/core/building_blocks/builder_list";
-import { expect, test } from "@odoo/hoot";
+import { expect, test, describe } from "@odoo/hoot";
 import { Component, onError, xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
-import {
-    addOption,
-    defineWebsiteModels,
-    setupWebsiteBuilder,
-} from "@website/../tests/builder/website_helpers";
 
-defineWebsiteModels();
+describe.current.tags("desktop");
 
 const defaultValue = { value: "75", title: "default title" };
 const defaultValueStr = JSON.stringify(defaultValue).replaceAll('"', "'");
@@ -20,7 +16,7 @@ function defaultValueWithIds(ids) {
 }
 
 test("writes a list of numbers to a data attribute", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderList
                           dataAttributeAction="'list'"
@@ -28,7 +24,7 @@ test("writes a list of numbers to a data attribute", async () => {
                           default="${defaultValueStr}"
                       />`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
     await contains(".we-bg-options-container .builder_list_add_item").click();
@@ -51,7 +47,7 @@ test("writes a list of numbers to a data attribute", async () => {
 });
 
 test("supports arbitrary number of text and number inputs on entries", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderList
                           dataAttributeAction="'list'"
@@ -59,7 +55,7 @@ test("supports arbitrary number of text and number inputs on entries", async () 
                           default="{ a: '4', b: '3', c: '2', d: '1' }"
                       />`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     await contains(".we-bg-options-container .builder_list_add_item").click();
     expect(".we-bg-options-container input[type=number]").toHaveCount(2);
@@ -79,7 +75,7 @@ test("supports arbitrary number of text and number inputs on entries", async () 
 });
 
 test("delete an item", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderList
                           dataAttributeAction="'list'"
@@ -87,7 +83,7 @@ test("delete an item", async () => {
                           default="${defaultValueStr}"
                       />`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
     await contains(".we-bg-options-container .builder_list_add_item").click();
@@ -100,7 +96,7 @@ test("delete an item", async () => {
 });
 
 test("reorder items", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderList
                           dataAttributeAction="'list'"
@@ -108,7 +104,7 @@ test("reorder items", async () => {
                           default="${defaultValueStr}"
                       />`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
     await contains(".we-bg-options-container .builder_list_add_item").click();
@@ -155,11 +151,11 @@ async function testBuilderListFaultyProps(template) {
             });
         }
     }
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         Component: Test,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect.verifySteps(["threw"]);
 }
@@ -213,7 +209,7 @@ test("throws error if itemShape contains reserved key '_id'", async () => {
 });
 
 test("hides hiddenProperties from options", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderList
                           dataAttributeAction="'list'"
@@ -222,7 +218,7 @@ test("hides hiddenProperties from options", async () => {
                           hiddenProperties="['b', 'c']"
                       />`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
     await contains(".we-bg-options-container .builder_list_add_item").click();
@@ -271,11 +267,11 @@ test("do not lose id when adjusting 'selected'", async () => {
             ]);
         }
     }
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         Component: Test,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
     await contains(".we-bg-options-container .bl-dropdown-toggle").click();

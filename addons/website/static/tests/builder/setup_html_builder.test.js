@@ -1,13 +1,9 @@
-import {
-    defineWebsiteModels,
-    exampleWebsiteContent,
-    modifyText,
-    setupWebsiteBuilder,
-} from "./website_helpers";
+import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, waitFor } from "@odoo/hoot-dom";
 import { patchWithCleanup, contains } from "@web/../tests/web_test_helpers";
 import { WebsiteBuilder } from "@website/builder/website_builder";
+import { modifyText, exampleContent } from "@html_builder/../tests/helpers";
 
 defineWebsiteModels();
 
@@ -27,7 +23,7 @@ test("history back", async () => {
     });
     // Navigating back in the browser history should not lead to a warning popup
     // if the website was not edited.
-    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleWebsiteContent);
+    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleContent);
     builder.onBeforeLeave();
     await animationFrame();
     expect(".modal-content:contains('If you proceed, your changes will be lost')").toHaveCount(0);

@@ -1,21 +1,17 @@
-import { patchWithCleanupImg } from "@html_builder/../tests/helpers";
+import {
+    confirmAddSnippet,
+    getSnippetStructure,
+    getSnippetView,
+    patchWithCleanupImg,
+    waitForEndOfOperation,
+} from "@html_builder/../tests/helpers";
 import { Builder } from "@html_builder/builder";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
-import { setContent } from "@html_editor/../tests/_helpers/selection";
-import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { defineMailModels, startServer } from "@mail/../tests/mail_test_helpers";
 import { after, describe } from "@odoo/hoot";
-import {
-    advanceTime,
-    animationFrame,
-    click,
-    queryOne,
-    tick,
-    waitFor,
-    waitForNone,
-} from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, click, queryOne, tick, waitFor } from "@odoo/hoot-dom";
 import {
     contains,
     defineModels,
@@ -54,12 +50,8 @@ class IrUiView extends models.Model {
 
 export const setupWebsiteBuilderOeId = 539;
 
-export const exampleWebsiteContent = '<h1 class="title">Hello</h1>';
-
 export const invisibleEl =
     '<div class="s_invisible_el o_snippet_invisible" data-name="Invisible Element" data-invisible="1"></div>';
-
-export const wrapExample = `<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${exampleWebsiteContent}</div>`;
 
 export function defineWebsiteModels() {
     describe.current.tags("desktop");
@@ -393,56 +385,6 @@ export function addDropZoneSelector(selector) {
     });
 }
 
-export async function modifyText(editor, editableContent) {
-    setContent(editableContent, '<h1 class="title">H[]ello</h1>');
-    editor.shared.history.addStep();
-    await insertText(editor, "1");
-}
-
-export function getSnippetView(snippets) {
-    const { snippet_groups, snippet_custom, snippet_structure, snippet_content } = snippets;
-    return `
-    <snippets id="snippet_groups" string="Categories">
-        ${(snippet_groups || []).join("")}
-    </snippets>
-    <snippets id="snippet_structure" string="Structure">
-        ${(snippet_structure || []).join("")}
-    </snippets>
-    <snippets id="snippet_custom" string="Custom">
-        ${(snippet_custom || []).join("")}
-    </snippets>
-    <snippets id="snippet_content" string="Inner Content">
-        ${(snippet_content || []).join("")}
-    </snippets>`;
-}
-
-export function getSnippetStructure({
-    name,
-    content,
-    keywords = [],
-    groupName,
-    imagePreview = "",
-    moduleId = "",
-    moduleDisplayName = "",
-}) {
-    keywords = keywords.join(", ");
-    return `<div name="${name}" data-oe-snippet-id="123" data-o-image-preview="${imagePreview}" data-oe-keywords="${keywords}" data-o-group="${groupName}" data-module-id="${moduleId}" data-module-display-name="${moduleDisplayName}">${content}</div>`;
-}
-
-export function getInnerContent({
-    name,
-    content,
-    keywords = [],
-    imagePreview = "",
-    thumbnail = "",
-}) {
-    keywords = keywords.join(", ");
-    return `<div name="${name}" data-oe-type="snippet" data-oe-snippet-id="456" data-o-image-preview="${imagePreview}" data-oe-thumbnail="${thumbnail}" data-oe-keywords="${keywords}">${content}</div>`;
-}
-
-export const dummyBase64Img =
-    "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
-
 export async function setupWebsiteBuilderWithDummySnippet(content) {
     const getSnippetEl = (withColoredLevelClass = false) => {
         const className = withColoredLevelClass ? "s_test o_colored_level" : "s_test";
@@ -468,16 +410,6 @@ export async function setupWebsiteBuilderWithDummySnippet(content) {
     const snippetContent = getSnippetEl(true);
 
     return { getEditor, getEditableContent, openBuilderSidebar, snippetContent };
-}
-
-export async function confirmAddSnippet(snippetName) {
-    let previewSelector = `.o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap`;
-    if (snippetName) {
-        previewSelector += ":has([data-snippet='" + snippetName + "'])";
-    }
-    await waitForSnippetDialog();
-    await contains(previewSelector).click();
-    await animationFrame();
 }
 
 export async function insertCategorySnippet({ group, snippet } = {}) {
@@ -539,27 +471,4 @@ export async function insertStructureSnippet(editor, snippetName) {
     const parentEl = editor.editable.querySelector("#wrap") || editor.editable;
     parentEl.append(snippetEl);
     editor.shared.history.addStep();
-}
-
-/**
- * Returns the dragged helper when drag and dropping snippets.
- */
-export function getDragHelper() {
-    return document.body.querySelector(".o_draggable_dragging .o_snippet_thumbnail");
-}
-
-/**
- * Returns the dragged helper when drag and dropping elements from the page.
- */
-export function getDragMoveHelper() {
-    return document.body.querySelector(".o_drag_move_helper");
-}
-
-/**
- * Waits for the loading element added by the mutex to be removed, indicating
- * that the operation is over.
- */
-export async function waitForEndOfOperation() {
-    await waitForNone(":iframe .o_loading_screen", { timeout: 600 });
-    await animationFrame();
 }

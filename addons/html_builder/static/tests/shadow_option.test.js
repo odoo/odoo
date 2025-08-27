@@ -1,16 +1,16 @@
-import { expect, test } from "@odoo/hoot";
+import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
+import { expect, test, describe } from "@odoo/hoot";
 import { queryAllTexts, queryAllValues, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
-import { addBuilderOption, setupHTMLBuilder, addBuilderPlugin } from "./helpers";
-import { ShadowOptionPlugin } from "@html_builder/plugins/shadow_option_plugin";
+
+describe.current.tags("desktop");
 
 test("edit box-shadow with ShadowOption", async () => {
     addBuilderOption({
         selector: ".test-options-target",
         template: xml`<ShadowOption/>`,
     });
-    addBuilderPlugin(ShadowOptionPlugin);
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     await waitFor(".hb-row");

@@ -1,5 +1,7 @@
-import { expect, test } from "@odoo/hoot";
-import { setupHTMLBuilder } from "./helpers";
+import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
+import { expect, test, describe } from "@odoo/hoot";
+
+describe.current.tags("desktop");
 
 test("section with containers should not be contenteditable, but there containers should, unless outside o_editable", async () => {
     await setupHTMLBuilder(

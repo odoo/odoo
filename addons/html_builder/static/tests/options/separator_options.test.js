@@ -1,14 +1,11 @@
-import {
-    defineWebsiteModels,
-    setupWebsiteBuilder,
-} from "@website/../tests/builder/website_helpers";
-import { expect, test } from "@odoo/hoot";
+import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
+import { expect, test, describe } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
 
-defineWebsiteModels();
+describe.current.tags("desktop");
 
 test("change width of separator", async () => {
-    await setupWebsiteBuilder(`
+    await setupHTMLBuilder(`
             <div class="s_hr">
                 <hr class="w-100">
             </div>

@@ -1,13 +1,9 @@
-import { expect, test } from "@odoo/hoot";
+import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
+import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { xml } from "@odoo/owl";
-import { delay } from "@web/core/utils/concurrency";
 import { contains, defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
-import {
-    addOption,
-    defineWebsiteModels,
-    setupWebsiteBuilder,
-} from "@website/../tests/builder/website_helpers";
+import { delay } from "@web/core/utils/concurrency";
 
 class Test extends models.Model {
     _name = "test";
@@ -32,7 +28,7 @@ class TestBase extends models.Model {
     });
 }
 
-defineWebsiteModels();
+describe.current.tags("desktop");
 defineModels([Test, TestBase]);
 
 test("model many2many: find tag, select tag, unselect tag", async () => {
@@ -41,11 +37,11 @@ test("model many2many: find tag, select tag, unselect tag", async () => {
         [2, "Second"],
         [3, "Third"],
     ]);
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<ModelMany2Many baseModel="'test.base'" m2oField="'rel'" recordId="1"/>`,
     });
-    const { getEditor } = await setupWebsiteBuilder(
+    const { getEditor } = await setupHTMLBuilder(
         `<div class="test-options-target" data-res-model="test.base" data-res-id="1">b</div>`
     );
 

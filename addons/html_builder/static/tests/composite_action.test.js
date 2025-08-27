@@ -1,17 +1,18 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { xml } from "@odoo/owl";
-import { contains } from "@web/../tests/web_test_helpers";
 import {
     addBuilderAction,
     addBuilderOption,
     setupHTMLBuilder,
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { describe, expect, test } from "@odoo/hoot";
+import { xml } from "@odoo/owl";
+import { contains } from "@web/../tests/web_test_helpers";
 
 // TODO: test composite with each spec: prepare, load, getValue
 // TODO: test reloadComposite
 
 describe.current.tags("desktop");
+
 test("can call 2 separate actions with composite action", async () => {
     class Action1 extends BuilderAction {
         static id = "action1";
@@ -137,6 +138,7 @@ test("composite action's isApplied returns false if no action defined it", async
         "action: class2", // apply
     ]);
 });
+
 test("composite action's isApplied returns true if at least one action defined it", async () => {
     class Action1 extends BuilderAction {
         static id = "action1";

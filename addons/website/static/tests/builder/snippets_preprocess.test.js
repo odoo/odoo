@@ -1,13 +1,12 @@
 import { expect, test } from "@odoo/hoot";
 import { registry } from "@web/core/registry";
 import { contains } from "@web/../tests/web_test_helpers";
+import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import {
     confirmAddSnippet,
-    defineWebsiteModels,
     getDragHelper,
-    setupWebsiteBuilder,
     waitForEndOfOperation,
-} from "./website_helpers";
+} from "@html_builder/../tests/helpers";
 
 defineWebsiteModels();
 

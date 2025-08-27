@@ -1,3 +1,10 @@
+import {
+    setupHTMLBuilder,
+    getDragHelper,
+    waitForEndOfOperation,
+} from "@html_builder/../tests/helpers";
+import { BuilderOptionsPlugin } from "@html_builder/core/builder_options_plugin";
+import { Operation } from "@html_builder/core/operation";
 import { describe, expect, test } from "@odoo/hoot";
 import {
     animationFrame,
@@ -9,9 +16,6 @@ import {
     waitFor,
 } from "@odoo/hoot-dom";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { setupHTMLBuilder, getDragHelper, waitForEndOfOperation } from "../helpers";
-import { Operation } from "@html_builder/core/operation";
-import { BuilderOptionsPlugin } from "@html_builder/core/builder_options_plugin";
 import { loadBundle } from "@web/core/assets";
 
 describe.current.tags("desktop");

@@ -1,20 +1,16 @@
+import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
-import {
-    addOption,
-    defineWebsiteModels,
-    setupWebsiteBuilder,
-} from "@website/../tests/builder/website_helpers";
 
-defineWebsiteModels();
+describe.current.tags("desktop");
 
 describe("useDomState", () => {
     test("Should not update the state of an async useDomState if a new step has been made", async () => {
         let currentResolve;
-        addOption({
+        addBuilderOption({
             selector: ".test-options-target",
             Component: class extends BaseOptionComponent {
                 static template = xml`<div t-att-data-letter="getLetter()"/>`;
@@ -35,7 +31,7 @@ describe("useDomState", () => {
                 }
             },
         });
-        const { getEditor } = await setupWebsiteBuilder(`<div class="test-options-target">a</div>`);
+        const { getEditor } = await setupHTMLBuilder(`<div class="test-options-target">a</div>`);
         await animationFrame();
         await contains(":iframe .test-options-target").click();
         const editor = getEditor();

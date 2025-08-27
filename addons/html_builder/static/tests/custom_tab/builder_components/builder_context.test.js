@@ -1,18 +1,17 @@
-import { expect, test } from "@odoo/hoot";
+import {
+    addBuilderAction,
+    addBuilderOption,
+    setupHTMLBuilder,
+} from "@html_builder/../tests/helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
+import { expect, test, describe } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
-import {
-    addActionOption,
-    addOption,
-    defineWebsiteModels,
-    setupWebsiteBuilder,
-} from "@website/../tests/builder/website_helpers";
-import { BuilderAction } from "@html_builder/core/builder_action";
 
-defineWebsiteModels();
+describe.current.tags("desktop");
 
 test("should pass the context", async () => {
-    addActionOption({
+    addBuilderAction({
         customAction: class extends BuilderAction {
             static id = "customAction";
             apply({ params: { mainParam: testParam }, value }) {
@@ -20,7 +19,7 @@ test("should pass the context", async () => {
             }
         },
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`
             <BuilderContext action="'customAction'" actionParam="'myParam'">
@@ -28,7 +27,7 @@ test("should pass the context", async () => {
             </BuilderContext>
         `,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     await contains(".we-bg-options-container button").click();
     // The function `apply` should be called twice (on hover (for preview), then, on click).

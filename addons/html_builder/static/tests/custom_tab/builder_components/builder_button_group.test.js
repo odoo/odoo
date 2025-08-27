@@ -1,13 +1,13 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { hover } from "@odoo/hoot-dom";
-import { xml } from "@odoo/owl";
-import { contains } from "@web/../tests/web_test_helpers";
 import {
     addBuilderAction,
     addBuilderOption,
     setupHTMLBuilder,
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { describe, expect, test } from "@odoo/hoot";
+import { hover } from "@odoo/hoot-dom";
+import { xml } from "@odoo/owl";
+import { contains } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 

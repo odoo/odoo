@@ -1,26 +1,25 @@
-import { expect, test } from "@odoo/hoot";
+import {
+    addBuilderAction,
+    addBuilderOption,
+    setupHTMLBuilder,
+} from "@html_builder/../tests/helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
+import { expect, test, describe } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
-import {
-    addActionOption,
-    addOption,
-    defineWebsiteModels,
-    setupWebsiteBuilder,
-} from "@website/../tests/builder/website_helpers";
-import { BuilderAction } from "@html_builder/core/builder_action";
 
-defineWebsiteModels();
+describe.current.tags("desktop");
 
 test("hide/display base on applyTo", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".parent-target",
         template: xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
     });
-    addOption({
+    addBuilderOption({
         selector: ".parent-target",
         template: xml`<BuilderTextInput applyTo="'.my-custom-class'" action="'customAction'"/>`,
     });
-    addActionOption({
+    addBuilderAction({
         customAction: class extends BuilderAction {
             static id = "customAction";
             getValue() {
@@ -29,7 +28,7 @@ test("hide/display base on applyTo", async () => {
         },
     });
 
-    const { getEditableContent } = await setupWebsiteBuilder(
+    const { getEditableContent } = await setupHTMLBuilder(
         `<div class="parent-target"><div class="child-target">b</div></div>`
     );
     const editableContent = getEditableContent();

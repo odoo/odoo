@@ -3,23 +3,26 @@ import { CORE_PLUGINS } from "@html_builder/core/core_plugins";
 import { Img } from "@html_builder/core/img";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { unformat } from "@html_editor/../tests/_helpers/format";
+import { setContent } from "@html_editor/../tests/_helpers/selection";
+import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
+import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { after } from "@odoo/hoot";
-import { animationFrame, waitForNone, queryOne, waitFor, advanceTime } from "@odoo/hoot-dom";
+import { animationFrame, waitForNone, queryOne, waitFor, advanceTime, tick } from "@odoo/hoot-dom";
 import { Component, onMounted, useRef, useState, useSubEnv, xml } from "@odoo/owl";
 import {
+    contains,
     defineModels,
     models,
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
+import { loadBundle } from "@web/core/assets";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
-import { loadBundle } from "@web/core/assets";
-import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 
 export function patchWithCleanupImg() {
     const defaultImg =
@@ -35,7 +38,7 @@ export function patchWithCleanupImg() {
     });
 }
 
-function getSnippetView(snippets) {
+export function getSnippetView(snippets) {
     const { snippet_groups, snippet_custom, snippet_structure, snippet_content } = snippets;
     return `
     <snippets id="snippet_groups" string="Categories">
@@ -50,6 +53,17 @@ function getSnippetView(snippets) {
     <snippets id="snippet_content" string="Inner Content">
         ${(snippet_content || []).join("")}
     </snippets>`;
+}
+
+export function getInnerContent({
+    name,
+    content,
+    keywords = [],
+    imagePreview = "",
+    thumbnail = "",
+}) {
+    keywords = keywords.join(", ");
+    return `<div name="${name}" data-oe-type="snippet" data-oe-snippet-id="456" data-o-image-preview="${imagePreview}" data-oe-thumbnail="${thumbnail}" data-oe-keywords="${keywords}">${content}</div>`;
 }
 
 /**
@@ -160,8 +174,15 @@ class IrUiView extends models.Model {
  * @param {String} options.headerContent
  * @param {*} options.snippetContent
  * @param {*} options.dropzoneSelectors
+ * @param {*} options.snippets
  * @param {*} options.styleContent
- * @returns {Promise<{ editor: Editor, contentEl: HTMLElement, builderEl: HTMLElement, snippetContent: String}>}
+ * @returns {Promise<{
+ * getEditor: () => Editor,
+ * getEditableContent: () => HTMLElement,
+ * contentEl: HTMLElement,
+ * builderEl: HTMLElement,
+ * waitDomUpdated: () => Promise<void>
+ * }>}
 }}
  */
 export async function setupHTMLBuilder(
@@ -221,21 +242,47 @@ export async function setupHTMLBuilder(
         Plugins.push(P);
     }
 
-    const BuilderTestPlugins = registry.category("builder-test-plugins").getAll();
-    Plugins.push(...BuilderTestPlugins);
+    const BuilderPlugins = registry.category("builder-plugins").getAll();
+    Plugins.push(...BuilderPlugins);
+
+    let lastUpdatePromise;
+    const waitDomUpdated = async () => {
+        // The tick ensures that lastUpdatePromise has correctly been assigned
+        await tick();
+        await lastUpdatePromise;
+        await animationFrame();
+    };
+    patchWithCleanup(Builder.prototype, {
+        setup() {
+            super.setup();
+            patchWithCleanup(this.env.editorBus, {
+                trigger(eventName, detail) {
+                    if (eventName === "DOM_UPDATED") {
+                        lastUpdatePromise = detail.updatePromise;
+                    }
+                    return super.trigger(eventName, detail);
+                },
+            });
+        },
+    });
 
     let _resolve;
     const prom = new Promise((resolve) => {
         _resolve = resolve;
     });
 
+    let editableContent;
     // hack to get a promise that resolves when editor is ready
     patchWithCleanup(SetupEditorPlugin.prototype, {
         setup() {
             super.setup();
             _resolve();
+            editableContent = this.getEditableElements(
+                '.oe_structure.oe_empty, [data-oe-type="html"]'
+            )[0];
         },
     });
+
     let attachedEditor;
     const comp = await mountWithCleanup(BuilderContainer, {
         props: {
@@ -259,16 +306,18 @@ export async function setupHTMLBuilder(
     await prom;
     await animationFrame();
     return {
-        editor: attachedEditor,
+        getEditor: () => attachedEditor,
+        getEditableContent: () => editableContent,
         contentEl: comp.iframeRef.el.contentDocument.body.firstChild.firstChild,
         builderEl: comp.env.builderRef.el.querySelector(".o-website-builder_sidebar"),
+        waitDomUpdated,
     };
 }
 
 export function addBuilderPlugin(Plugin) {
-    registry.category("builder-test-plugins").add(Plugin.id, Plugin);
+    registry.category("builder-plugins").add(Plugin.id, Plugin);
     after(() => {
-        registry.category("builder-test-plugins").remove(Plugin.id);
+        registry.category("builder-plugins").remove(Plugin.id);
     });
 }
 
@@ -277,20 +326,28 @@ export function addBuilderOption({
     exclude,
     applyTo,
     template,
-    OptionComponent,
+    Component,
     sequence,
     cleanForSave,
     props,
+    editableOnly,
+    title,
+    reloadTarget,
 }) {
     const pluginId = uniqueId("test-option");
     const option = {
-        OptionComponent: OptionComponent,
+        pluginId,
+        OptionComponent: Component,
         template,
         selector,
         exclude,
         applyTo,
+        sequence,
         cleanForSave,
         props,
+        editableOnly,
+        title,
+        reloadTarget,
     };
 
     const P = {
@@ -335,8 +392,7 @@ export function getDragMoveHelper() {
  * that the operation is over.
  */
 export async function waitForEndOfOperation() {
-    advanceTime(500);
-    advanceTime(50);
+    await advanceTime(500);
     await waitForNone(":iframe .o_loading_screen");
     await animationFrame();
 }
@@ -351,9 +407,9 @@ export function addDropZoneSelector(selector) {
         };
     }
 
-    registry.category("website-plugins").add(pluginId, P);
+    registry.category("builder-plugins").add(pluginId, P);
     after(() => {
-        registry.category("website-plugins").remove(P);
+        registry.category("builder-plugins").remove(P);
     });
 }
 
@@ -368,6 +424,12 @@ export async function waitForSnippetDialog() {
         js: false,
     });
     await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe");
+}
+
+export async function modifyText(editor, editableContent) {
+    setContent(editableContent, '<h1 class="title">H[]ello</h1>');
+    editor.shared.history.addStep();
+    await insertText(editor, "1");
 }
 
 // Snippet Testing Helpers
@@ -435,6 +497,23 @@ export function createTestSnippets({ snippets: snippetConfigs = [], withName = f
     });
 }
 
+export async function confirmAddSnippet(snippetName) {
+    let previewSelector = `.o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap`;
+    if (snippetName) {
+        previewSelector += ":has([data-snippet='" + snippetName + "'])";
+    }
+    await waitForSnippetDialog();
+    await contains(previewSelector).click();
+    await animationFrame();
+}
+
+export const dummyBase64Img =
+    "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
+
+export const exampleContent = '<h1 class="title">Hello</h1>';
+
+export const wrapExample = `<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${exampleContent}</div>`;
+
 export async function setupHTMLBuilderWithDummySnippet(content) {
     const snippetEl = `<section class="s_test" data-snippet="s_test" data-name="Test">
             <div class="test_a"></div>
@@ -460,7 +539,6 @@ export async function setupHTMLBuilderWithDummySnippet(content) {
             ),
         },
     };
-    const { contentEl } = await setupHTMLBuilder(content || "", snippetsStructure);
 
-    return { contentEl };
+    return await setupHTMLBuilder(content || "", snippetsStructure);
 }

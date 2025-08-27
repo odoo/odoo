@@ -1,12 +1,9 @@
-import {
-    defineWebsiteModels,
-    setupWebsiteBuilder,
-} from "@website/../tests/builder/website_helpers";
-import { expect, test } from "@odoo/hoot";
+import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
+import { expect, test, describe } from "@odoo/hoot";
 import { animationFrame, clear, click, fill, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 
-defineWebsiteModels();
+describe.current.tags("desktop");
 
 const websiteContent = `
     <div class="s_rating pt16 pb16" data-icon="fa-star" data-snippet="s_rating" data-name="Rating">
@@ -25,7 +22,7 @@ const websiteContent = `
     </div>`;
 
 test("change rating score", async () => {
-    await setupWebsiteBuilder(websiteContent);
+    await setupHTMLBuilder(websiteContent);
     expect(":iframe .s_rating .s_rating_active_icons i").toHaveCount(3);
     expect(":iframe .s_rating .s_rating_inactive_icons i").toHaveCount(2);
     await contains(":iframe .s_rating").click();
@@ -62,7 +59,7 @@ test("change rating score", async () => {
     );
 });
 test("Ensure order of operations when clicking very fast on two options", async () => {
-    await setupWebsiteBuilder(websiteContent);
+    await setupHTMLBuilder(websiteContent);
     await contains(":iframe .s_rating").click();
     await waitFor("[data-label='Icon']");
     expect("[data-label='Icon'] .dropdown-toggle").toHaveText("Stars");
