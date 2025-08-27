@@ -4,49 +4,203 @@
         <record id="mail_template_sale_cart_recovery" model="mail.template">
             <field name="name">Ecommerce: Cart Recovery</field>
             <field name="model_id" ref="sale.model_sale_order"/>
-            <field name="subject">You left items in your cart!</field>
+            <field name="subject">Your cart is waiting</field>
             <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted or '') }}</field>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
             <field name="description">If the setting is set, sent to authenticated visitors who abandoned their cart</field>
+            <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
-<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 0px; background-color: white; color: #454748; border-collapse:separate;">
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 590px; padding: 0px; background-color: white; color: #454748; border-collapse: collapse;" role="presentation">
 <tbody>
     <!-- CONTENT -->
     <tr>
         <td align="center" style="min-width: 590px;">
-            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:separate;">
-                <tr><td valign="top" style="font-size: 13px;">
-                    <h1 style="color:#A9A9A9;">THERE'S SOMETHING IN YOUR CART.</h1>
-                    Would you like to complete your purchase?<br/><br/>
-                    <t t-if="object.order_line">
-                        <t t-foreach="object.website_order_line" t-as="line">
-                            <hr/>
-                            <table width="100%">
-                                <tr>
-                                    <td style="padding: 10px; width:150px;">
-                                        <img t-attf-src="/web/image/product.product/{{ line.product_id.id }}/image_128" style="width: 100px; height: 100px; object-fit: contain;" alt="Product image"></img>
-                                    </td>
-                                    <td>
-                                        <strong t-out="line.product_id.display_name or ''">[FURN_7800] Desk Combination</strong><br/><t t-out="line.name or ''">[FURN_7800] Desk Combination Desk combination, black-brown: chair + desk + drawer.</t>
-                                    </td>
-                                    <td width="100px" align="right">
-                                        <t t-out="int(line.product_uom_qty) or ''">10000</t> <t t-out="line.product_uom_id.name or ''">Units</t>
-                                    </td>
-                                </tr>
-                            </table>
-                        </t>
-                        <hr/>
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:collapse;" role="presentation">
+                <tr><td valign="top" style="font-size: 14px;">
+                    <t t-set="color" t-value="object.company_id.email_secondary_color or '#875A7B'"/>
+                    <t
+                        t-if="'website_id' in object and object.website_id"
+                        t-set="logo_src"
+                        t-value="object.website_id.image_url(object.website_id, 'logo')"
+                    />
+                    <t t-else="" t-set="logo_src" t-valuef="/logo.png?company=#{object.company_id.id}"/>
+                    <img t-att-src="logo_src" style="display: block; height: 50px; margin: 0 0 16px;" alt="Logo"/>
+                    <p style="margin: 0 0 12px; line-height: 18px;">
+                        Hello <t t-out="object.partner_id.display_name or ''">Johnny Tester</t>,
+                        <br/><br/>
+                        You did not complete your online order.<br/>
+                        Do you have any question about our products?<br/>
+                        Just reply to this email to discuss!<br/>
+                    </p>
+                    <t t-if="not is_html_empty(user.signature)">
+                        <div style="font-size: 14px; margin: 0 0 16px;"><t t-out="user.signature or ''">Mitchell Admin</t></div>
                     </t>
-                    <div style="text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;">
-                        <a t-attf-href="{{ object.get_base_url() }}/shop/cart?id={{ object.id }}&amp;access_token={{ object.access_token }}"
-                            target="_blank"
-                            t-attf-style="background-color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-size:13px;">
-                            Resume order
-                        </a>
-                    </div>
+                    <t t-if="'hide_recovery_button' not in ctx">
+                        <div t-attf-style="margin-bottom: 22px; font-size: 14px;">
+                            <a t-attf-href="{{ object.get_base_url() }}/shop/cart?id={{ object.id }}&amp;access_token={{ object.access_token }}"
+                                target="_blank"
+                                t-attf-style="background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{object.company_id.email_primary_color or '#fff'}}; border-radius: 5px; font-size:14px;">
+                                Resume order
+                            </a>
+                        </div>
+                    </t>
+                    <t t-if="object.order_line">
+                        <!-- The following loop is also used in the addons > sale > data > mail_template_data.xml file because we want the same layout. -->
+                        <t t-foreach="object.order_line" t-as="line">
+                            <t t-if="(not hasattr(line, 'is_delivery') or not line.is_delivery) and not line.combo_item_id">
+                                <table width="100%" style="max-width: 590px; color: #454748; font-size: 14px; border-collapse: collapse;" role="presentation">
+                                    <tr>
+                                        <td width="24%" style="max-width: 120px; padding: 0 10px 10px 0; vertical-align: top;">
+                                            <img t-attf-src="/web/image/product.product/{{ line.product_id.id }}/image_128" style="width: 100px; height: 100px; object-fit: contain;" alt="Product image"></img>
+                                        </td>
+                                        <td align="left" style="vertical-align: top; padding-bottom: 22px;">
+                                            <h3 t-attf-style="mso-line-height-rule:exactly; margin:0; font-size: 14px; color: {{color}}; {{'margin-bottom: 6px;' if line.product_type == 'combo' else ''}}">
+                                                <strong t-out="line.product_id.name or ''">Taking care of Trees Course</strong>
+                                                <span t-if="line.product_id.product_template_attribute_value_ids" style="color: #6c757d;">
+                                                    <t t-out="', '.join(line.product_id.product_template_attribute_value_ids.mapped('name'))" />
+                                                </span>
+                                            </h3>
+                                            <t t-set="combo_line_idx" t-value="0"/>
+                                            <t t-set="totalComboLines" t-value="0"/>
+                                            <t t-set="line_idx" t-value="line_index"/>
+                                            <t t-foreach="object.order_line" t-as="combo_liness">
+                                                <t t-if="(not hasattr(line, 'is_delivery') or not line.is_delivery) and (combo_liness.linked_line_id.id == line.id) and line_idx == line_index">
+                                                    <t t-if="combo_liness.linked_line_id.id == line.id and combo_liness.id != line.id">
+                                                        <t t-set="totalComboLines" t-value="totalComboLines + 1"/>
+                                                    </t>
+                                                </t>
+                                            </t>
+                                            <t t-foreach="object.order_line" t-as="combo_line">
+                                                <t t-if="(not hasattr(line, 'is_delivery') or not line.is_delivery) and (combo_line.linked_line_id.id == line.id) and combo_line.combo_item_id and line_idx == line_index">
+                                                        <t t-set="borderRadiusStyle" t-value="''"/>
+                                                        <t t-set="borderTopStyle" t-value="''"/>
+                                                        <t t-set="borderBottomStyle" t-value="''"/>
+
+                                                        <t t-if="combo_line.linked_line_id.id == line.id and combo_line.id != line.id">
+                                                            <t t-set="combo_line_idx" t-value="combo_line_idx + 1"/>
+                                                        </t>
+                                                        <t t-elif="combo_line.id == line.id and line_idx != line_index">
+                                                            <t t-set="combo_line_idx" t-value="0"/>
+                                                        </t>
+                                                        <t t-if="combo_line_idx == 1">
+                                                            <t t-if="totalComboLines != 1">
+                                                                <t t-set="borderRadiusStyle" t-value="'border-radius: 6px 6px 0 0;'"/>
+                                                                <t t-set="borderBottomStyle" t-value="'border-bottom: none;'"/>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <t t-set="borderRadiusStyle" t-value="'border-radius: 6px;'"/>
+                                                            </t>
+                                                        </t>
+                                                        <t t-elif="totalComboLines == combo_line_idx">
+                                                            <t t-set="borderRadiusStyle" t-value="'border-radius: 0 0 6px 6px;'"/>
+                                                            <t t-if="totalComboLines != 2">
+                                                                <t t-set="borderTopStyle" t-value="'border-top: none;'"/>
+                                                            </t>
+                                                        </t>
+                                                        <div t-attf-style="width: 100%; border: 1px solid #dee2e6; padding: 5px 8px; {{ borderRadiusStyle }} {{ borderBottomStyle }} {{ borderTopStyle }}">
+                                                                    <t t-out="combo_line.product_id.name or ''">Taking care of Trees Course</t>
+                                                                    <span t-if="combo_line.product_id.product_template_attribute_value_ids" style="color: #6c757d;">
+                                                                        <t t-out="', '.join(combo_line.product_id.product_template_attribute_value_ids.mapped('name'))" />
+                                                                    </span>
+                                                                    -
+                                                                    <span>
+                                                                        <t t-out="int(combo_line.product_uom_qty) or ''">10000</t>
+                                                                        <t t-out="combo_line.product_uom_id.name or ''" t-if="combo_line.order_id.create_uid._has_group('uom.group_uom')"></t>
+                                                                    </span>
+                                                                    <p t-if="hasattr(combo_line, 'is_rental') and combo_line.is_rental and combo_line.id == line.id" style="color: #6c757d;">
+                                                                        <t t-out="combo_line._get_rental_pricing_description() or ''"/><br/>
+                                                                    </p>
+                                                                    <t t-if="(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or (hasattr(combo_line, 'event_id') and combo_line.event_id) or (hasattr(combo_line, 'calendar_event_id') and combo_line.calendar_event_id)">
+                                                                        <t
+                                                                            t-set="description_lines"
+                                                                            t-value="combo_line.get_description_following_lines()"
+                                                                        />
+                                                                        <div t-if="description_lines" style="color: #6c757d;">
+                                                                            <t t-foreach="description_lines" t-as="description_line">
+                                                                                <p
+                                                                                    t-if="description_line"
+                                                                                    t-out="description_line"
+                                                                                    style="margin: 4px 0 0;"
+                                                                                />
+                                                                            </t>
+                                                                        </div>
+                                                                    </t>
+                                                        </div>
+                                                    </t>
+                                                <t t-elif="not(combo_line.linked_line_id) and combo_line.id == line.id">
+                                                    <p t-if="hasattr(line, 'is_rental') and line.is_rental" style="margin: 4px 0 0; color: #6c757d;">
+                                                        <t t-out="line._get_rental_pricing_description() or ''"/><br/>
+                                                    </p>
+                                                    <t t-if="(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or (hasattr(combo_line, 'event_id') and combo_line.event_id) or (hasattr(combo_line, 'calendar_event_id') and combo_line.calendar_event_id)">
+                                                        <t
+                                                            t-set="product_description_lines"
+                                                            t-value="line.get_description_following_lines()"
+                                                        />
+                                                        <div t-if="product_description_lines" style="color: #6c757d;">
+                                                            <t t-foreach="product_description_lines" t-as="product_description_line">
+                                                                <p
+                                                                    t-if="product_description_line"
+                                                                    t-out="product_description_line"
+                                                                    style="margin: 4px 0 0;"
+                                                                />
+                                                            </t>
+                                                        </div>
+                                                    </t>
+                                                </t>
+                                            </t>
+                                            <span style="display: inline-block;  margin-top: 4px; padding: 4px 8px; border-radius: 20px; background-color: #e9ecef; color: #454748; font-size: 12px;">
+                                                <t t-out="int(line.product_uom_qty) or ''">10000</t>
+                                                <t t-out="line.product_uom_id.name or ''" t-if="line.order_id.create_uid._has_group('uom.group_uom')"></t>
+                                            </span>
+                                        </td>
+                                        <td width="19%" align="right" style="max-width: 100px; vertical-align: top;">
+                                            <t t-if="line.product_type == 'combo'">
+                                                <span t-out="format_amount(line._get_cart_display_price(), object.currency_id) or ''">$ 10.00</span>
+                                            </t>
+                                            <t t-else="">
+                                                <span style="white-space: nowrap;">
+                                                    <t t-if="object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'">
+                                                        <t t-out="format_amount(line.price_subtotal, object.currency_id) or ''">$ 10.00</t>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <t t-out="format_amount(line.price_total, object.currency_id) or ''">$ 10.00</t>
+                                                    </t>
+                                                </span>
+                                            </t>
+                                            <t t-if="hasattr(line, 'recurring_invoice') and line.recurring_invoice">
+                                                <br/>
+                                                <t t-out="line.subscription_plan_id.billing_period_display_sentence or ''"/>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </t>
+                        </t>
+                        <table width="100%" role="presentation" style="font-size: 14px; border-collapse:collapse;">
+                            <tr>
+                                <td style="padding-top: 8px;  border-top: 1px solid #dee2e6; color: #495057;">Delivery</td>
+                                <td style="padding-top: 8px;  border-top: 1px solid #dee2e6; text-align: right; color: #495057;" width="100px" align="right">
+                                    <t t-out="format_amount(object.amount_delivery, object.currency_id) or ''">-</t>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top: 4px; color: #495057;">Subtotal</td>
+                                <td style="padding-top: 4px; text-align: right; color: #495057;" width="100px" align="right"><t t-out="format_amount(object.amount_untaxed, object.currency_id) or ''">-</t></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px 0 8px 0; color: #495057;">Taxes</td>
+                                <td style="padding: 4px 0 8px 0; text-align: right; color: #495057;" width="100px" align="right"><t t-out="format_amount(object.amount_tax, object.currency_id) or ''">-</t></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top: 8px; border-top: 1px solid #343a40;"><strong>Total</strong></td>
+                                <td style="padding-top: 8px; border-top: 1px solid #343a40; text-align: right" width="100px" align="right">
+                                    <strong t-out="format_amount(object.amount_total, object.currency_id) or ''">-</strong>
+                                </td>
+                            </tr>
+                        </table>
+                    </t>
                     <t t-set="company" t-value="object.company_id or object.user_id.company_id or user.company_id"/>
-                    <div style="text-align: center;"><strong>Thank you for shopping with <t t-out="company.name or ''">My Company (San Francisco)</t>!</strong></div>
                 </td></tr>
             </table>
         </td>

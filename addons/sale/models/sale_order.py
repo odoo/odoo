@@ -1259,7 +1259,7 @@ class SaleOrder(models.Model):
             # Send the email synchronously.
             self.with_context(force_send=True).message_post_with_source(
                 mail_template,
-                email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
+                email_layout_xmlid='mail.mail_notification_light',
                 subtype_xmlid='mail.mt_comment',
             )
 

@@ -4,7 +4,7 @@
         <record id="email_template_edi_sale" model="mail.template">
             <field name="name">Sales: Send Quotation</field>
             <field name="model_id" ref="sale.model_sale_order"/>
-            <field name="subject">{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and 'Quotation' or 'Order' }} (Ref {{ object.name or 'n/a' }})</field>
+            <field name="subject">{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and 'Quotation' or 'Order' }} {{ object.name or 'n/a' }}</field>
             <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
@@ -86,257 +86,266 @@
         <record id="mail_template_sale_confirmation" model="mail.template">
             <field name="name">Sales: Order Confirmation</field>
             <field name="model_id" ref="sale.model_sale_order"/>
-            <field name="subject">{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state == 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a' }})</field>
+            <field name="subject">{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state == 'pending') and 'Pending Order' or 'Order' }} {{ object.name or 'n/a' }}</field>
             <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
             <field name="description">Sent to customers on order confirmation</field>
             <field name="body_html" type="html">
-<div style="margin: 0px; padding: 0px;">
-    <p style="margin: 0px; padding: 0px; font-size: 12px;">
-        Hello,
-        <br/><br/>
-        <t t-set="tx_sudo" t-value="object.get_portal_last_transaction()"/>
-        Your order <span style="font-weight:bold;" t-out="object.name or ''">S00049</span> amounting in <span style="font-weight:bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span>
-        <t t-if="object.state == 'sale' or (tx_sudo and tx_sudo.state in ('done', 'authorized'))">
-            has been confirmed.<br/>
-            Thank you for your trust!
-        </t>
-        <t t-elif="tx_sudo and tx_sudo.state == 'pending'">
-            is pending. It will be confirmed when the payment is received.
-            <t t-if="object.reference">
-                Your payment reference is <span style="font-weight:bold;" t-out="object.reference or ''"></span>.
-            </t>
-        </t>
-        <br/>
-        <t t-set="documents" t-value="object._get_product_documents()"/>
-        <t t-if="documents">
-            <br/>
-            <t t-if="len(documents)>1">
-                Here are some additional documents that may interest you:
-            </t>
-            <t t-else="">
-                Here is an additional document that may interest you:
-            </t>
-            <ul style="margin-bottom: 0;">
-                <t t-foreach="documents" t-as="document">
-                    <li style="font-size: 13px;">
-                        <a t-out="document.ir_attachment_id.name"
-                            t-att-href="object.get_portal_url('/document/' + str(document.id))"
-                            t-att-target="target"/>
-                    </li>
-                </t>
-            </ul>
-        </t>
-        <br/>
-        Do not hesitate to contact us if you have any questions.
-        <t t-if="not is_html_empty(object.user_id.signature)">
-            <div>--<br/><t t-out="object.user_id.signature or ''">Mitchell Admin</t></div>
-        </t>
-    </p>
-<t t-if="hasattr(object, 'website_id') and object.website_id">
-    <div style="margin: 0px; padding: 0px;">
-        <table width="100%" style="color: #454748; font-size: 12px; border-collapse: collapse; white-space: nowrap;">
-            <tr style="border-bottom: 2px solid #dee2e6;">
-                <td style="width: 150px;"><span style="font-weight:bold;">Products</span></td>
-                <td></td>
-                <td width="15%" align="center"><span style="font-weight:bold;">Quantity</span></td>
-                <td width="20%" align="right">
-                    <span style="font-weight:bold;">
-                        <t t-if="object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'">
-                            Tax Excl.
+                <div style="margin: 0px; padding: 0px;">
+                    <t t-set="color" t-value="object.company_id.email_secondary_color or '#875A7B'"/>
+                    <t
+                            t-if="'website_id' in object and object.website_id"
+                            t-set="logo_src"
+                            t-value="object.website_id.image_url(object.website_id, 'logo')"
+                        />
+                    <t t-else="" t-set="logo_src" t-valuef="/logo.png?company=#{object.company_id.id}"/>
+                    <img t-att-src="logo_src" style="display: block; height: 50px; margin: 0 0 16px;" alt="Logo"/>
+                    <p style="margin: 0 0 12px; padding: 0px; line-height: 18px; font-size: 14px;">
+                        Hello <t t-out="object.partner_id.display_name or ''">Johnny Tester</t>,
+                        <br/><br/>
+                        <t t-set="tx_sudo" t-value="object.get_portal_last_transaction()"/>
+                        Your order <span style="font-weight:bold;" t-out="object.name or ''">S00049</span>
+                        <t t-if="object.state == 'sale' or (tx_sudo and tx_sudo.state in ('done', 'authorized'))">
+                            has been confirmed.<br/>
+                            Thank you for your trust.
                         </t>
-                        <t t-else="">
-                            Tax Incl.
-                        </t>
-                    </span>
-                </td>
-            </tr>
-        </table>
-        <t t-set="current_subtotal" t-value="0"/>
-        <t t-foreach="object.order_line" t-as="line">
-            <t
-                t-set="line_subtotal"
-                t-value="
-                    line.price_subtotal
-                    if object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'
-                    else line.price_total
-                "
-            />
-            <t t-set="current_subtotal" t-value="current_subtotal + line_subtotal"/>
-            <t
-                t-if="(not hasattr(line, 'is_delivery') or not line.is_delivery) and (
-                    line.display_type in ['line_section', 'line_subsection', 'line_note']
-                    or line.product_type == 'combo'
-                )"
-            >
-                <table width="100%" style="color: #454748; font-size: 12px; border-collapse: collapse;">
-                    <t t-set="loop_cycle_number" t-value="loop_cycle_number or 0" />
-                    <tr t-att-style="'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'">
-                        <t t-set="loop_cycle_number" t-value="loop_cycle_number + 1" />
-                        <td colspan="4">
-                            <t t-if="line.display_type in ('line_section', 'line_subsection') or line.product_type == 'combo'">
-                                <span t-att-style="'font-weight:bold;' if line.display_type == 'line_subsection' else 'font-weight:bolder;'" t-out="line.name or ''">Taking care of Trees Course</span>
-                                <t t-set="current_section" t-value="line"/>
-                                <t t-set="current_subtotal" t-value="0"/>
+                        <t t-elif="tx_sudo and tx_sudo.state == 'pending'">
+                            is pending. It will be confirmed when the payment is received.
+                            <t t-if="object.reference">
+                                Your payment reference is <span style="font-weight:bold;" t-out="object.reference or ''"></span>.
                             </t>
-                            <t t-elif="line.display_type == 'line_note'">
-                                <i t-out="line.name or ''">Taking care of Trees Course</i>
+                        </t>
+                        <br/>
+                        <t t-set="documents" t-value="object._get_product_documents()"/>
+                        <t t-if="documents">
+                            <br/>
+                            <t t-if="len(documents)>1">
+                                Here are some additional documents that may interest you:
                             </t>
-                        </td>
-                    </tr>
-                </table>
-            </t>
-            <t t-elif="(not hasattr(line, 'is_delivery') or not line.is_delivery)">
-                <table width="100%" style="color: #454748; font-size: 12px; border-collapse: collapse;">
-                    <t t-set="loop_cycle_number" t-value="loop_cycle_number or 0" />
-                    <tr t-att-style="'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'">
-                        <t t-set="loop_cycle_number" t-value="loop_cycle_number + 1" />
-                        <td style="width: 150px;">
-                            <img
-                                t-attf-src="/web/image/product.product/{{ line.product_id.id }}/image_128"
-                                t-attf-style="width: 64px; height: {{object.website_id and object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: cover; object-position: center;"
-                                alt="Product image"
-                            />
-                        </td>
-                        <td align="left" t-out="line.product_id.name or ''">	Taking care of Trees Course</td>
-                        <td width="15%" align="center" t-out="line.product_uom_qty or ''">1</td>
-                        <td width="20%" align="right"><span style="font-weight:bold; white-space: nowrap;">
-                        <t t-if="object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'">
-                            <t t-out="format_amount(line.price_reduce_taxexcl, object.currency_id) or ''">$ 10.00</t>
+                            <t t-else="">
+                                Here is an additional document that may interest you:
+                            </t>
+                            <ul style="margin-bottom: 0;">
+                                <t t-foreach="documents" t-as="document">
+                                    <li style="font-size: 14px;">
+                                        <a t-out="document.ir_attachment_id.name"
+                                            t-att-href="object.get_portal_url('/document/' + str(document.id))"
+                                            t-att-target="target"/>
+                                    </li>
+                                </t>
+                            </ul>
                         </t>
-                        <t t-else="">
-                            <t t-out="format_amount(line.price_reduce_taxinc, object.currency_id) or ''">$ 10.00</t>
+                        <t t-if="not is_html_empty(object.user_id.signature)">
+                            <div style="font-size: 14px; margin: 0 0 16px;"><t t-out="object.user_id.signature or ''">Mitchell Admin</t></div>
                         </t>
-                        </span></td>
-                    </tr>
-                </table>
-            </t>
-            <t
-                t-if="current_section and (
-                    line_last
-                    or object.order_line[line_index+1].display_type in ('line_section', 'line_subsection')
-                    or object.order_line[line_index+1].product_type == 'combo'
-                    or (
-                        line.combo_item_id
-                        and not object.order_line[line_index+1].combo_item_id
-                    )
-                ) and not line.is_downpayment"
-            >
-                <t t-set="current_section" t-value="None"/>
-                <table width="100%" style="color: #454748; font-size: 12px; border-collapse: collapse;">
-                    <t t-set="loop_cycle_number" t-value="loop_cycle_number or 0"/>
-                    <tr t-att-style="'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'">
-                        <t t-set="loop_cycle_number" t-value="loop_cycle_number + 1"/>
-                        <td style="width: 100%" align="right">
-                            <span style="font-weight: bold;">Subtotal:</span>
-                            <span t-out="format_amount(current_subtotal, object.currency_id) or ''">$ 10.00</span>
-                        </td>
-                    </tr>
-                </table>
-            </t>
-        </t>
-    </div>
-    <div style="margin: 0px; padding: 0px;" t-if="hasattr(object, 'carrier_id') and object.carrier_id">
-        <table width="100%" style="color: #454748; font-size: 12px; border-spacing: 0px 4px; white-space: nowrap;" align="right">
-            <tr>
-                <td style="width: 60%"/>
-                <td style="width: 30%; border-top: 1px solid #dee2e6;" align="right"><span style="font-weight:bold;">Delivery:</span></td>
-                <td style="width: 10%; border-top: 1px solid #dee2e6;" align="right" t-out="format_amount(object.amount_delivery, object.currency_id) or ''">$ 0.00</td>
-            </tr>
-            <tr>
-                <td style="width: 60%"/>
-                <td style="width: 30%;" align="right"><span style="font-weight:bold;">Untaxed Amount:</span></td>
-                <td style="width: 10%;" align="right" t-out="format_amount(object.amount_untaxed, object.currency_id) or ''">$ 10.00</td>
-            </tr>
-        </table>
-    </div>
-    <div style="margin: 0px; padding: 0px;" t-else="">
-        <table width="100%" style="color: #454748; font-size: 12px; border-spacing: 0px 4px; white-space: nowrap;" align="right">
-            <tr>
-                <td style="width: 60%"/>
-                <td style="width: 30%; border-top: 1px solid #dee2e6;" align="right"><span style="font-weight:bold;">Untaxed Amount:</span></td>
-                <td style="width: 10%; border-top: 1px solid #dee2e6;" align="right" t-out="format_amount(object.amount_untaxed, object.currency_id) or ''">$ 10.00</td>
-            </tr>
-        </table>
-    </div>
-    <div style="margin: 0px; padding: 0px;">
-        <table width="100%" style="color: #454748; font-size: 12px; border-spacing: 0px 4px; white-space: nowrap;" align="right">
-            <tr>
-                <td style="width: 60%"/>
-                <td style="width: 30%;" align="right"><span style="font-weight:bold;">Taxes:</span></td>
-                <td style="width: 10%;" align="right" t-out="format_amount(object.amount_tax, object.currency_id) or ''">$ 0.00</td>
-            </tr>
-            <tr>
-                <td style="width: 60%"/>
-                <td style="width: 30%; border-top: 1px solid #dee2e6;" align="right"><span style="font-weight:bold;">Total:</span></td>
-                <td style="width: 10%; border-top: 1px solid #dee2e6;" align="right" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</td>
-            </tr>
-        </table>
-    </div>
-    <div t-if="object.partner_invoice_id" style="margin: 0px; padding: 0px;">
-        <table width="100%" style="color: #454748; font-size: 12px;">
-            <tr>
-                <td style="padding-top: 10px;">
-                    <span style="font-weight:bold;">Bill to:</span>
-                    <t t-out="object.partner_invoice_id.street or ''">1201 S Figueroa St</t>
-                    <t t-out="object.partner_invoice_id.city or ''">Los Angeles</t>
-                    <t t-out="object.partner_invoice_id.state_id.name or ''">California</t>
-                    <t t-out="object.partner_invoice_id.zip or ''">90015</t>
-                    <t t-out="object.partner_invoice_id.country_id.name or ''">United States</t>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span style="font-weight:bold;">Payment Method:</span>
-                    <t t-if="tx_sudo.token_id">
-                        <t t-out="tx_sudo.token_id.display_name or ''"></t>
+                    </p>
+                    <t t-if="hasattr(object, 'website_id') and object.website_id">
+                        <div style="margin: 0px; padding: 0px;">
+                            <!-- The following loop is also used in the addons > sale > data > mail_template_data.xml file because we want the same layout. -->
+                            <t t-foreach="object.order_line" t-as="line">
+                                <t t-if="(not hasattr(line, 'is_delivery') or not line.is_delivery) and not line.combo_item_id">
+                                    <table width="100%" style="max-width: 590px; font-size: 14px; border-collapse: collapse;" role="presentation">
+                                        <tr>
+                                            <td width="24%" style="max-width: 120px; padding: 0 10px 10px 0; vertical-align: top;">
+                                                <img t-attf-src="/web/image/product.product/{{ line.product_id.id }}/image_128" t-attf-style="width: 64px; height: {{object.website_id and object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: cover; object-position: center;" alt="Product image"></img>
+                                            </td>
+                                            <td align="left" style="vertical-align: top; padding-bottom: 22px;">
+                                                <h3 t-attf-style="mso-line-height-rule:exactly; margin:0; font-size: 14px; {{'margin-bottom: 6px;' if line.product_type == 'combo' else ''}}">
+                                                    <strong t-out="line.product_id.name or ''" t-attf-style="color: #{color};">Taking care of Trees Course</strong>
+                                                    <span t-if="line.product_id.product_template_attribute_value_ids" style="opacity: 0.5;">
+                                                        <t t-out="', '.join(line.product_id.product_template_attribute_value_ids.mapped('name'))" />
+                                                    </span>
+                                                </h3>
+                                                <t t-set="combo_line_idx" t-value="0"/>
+                                                <t t-set="totalComboLines" t-value="0"/>
+                                                <t t-set="line_idx" t-value="line_index"/>
+                                                <t t-foreach="object.order_line" t-as="combo_liness">
+                                                    <t t-if="(not hasattr(line, 'is_delivery') or not line.is_delivery) and (combo_liness.linked_line_id.id == line.id) and line_idx == line_index">
+                                                        <t t-if="combo_liness.linked_line_id.id == line.id and combo_liness.id != line.id">
+                                                            <t t-set="totalComboLines" t-value="totalComboLines + 1"/>
+                                                        </t>
+                                                    </t>
+                                                </t>
+                                                <t t-foreach="object.order_line" t-as="combo_line">
+                                                    <t t-if="(not hasattr(line, 'is_delivery') or not line.is_delivery) and (combo_line.linked_line_id.id == line.id) and combo_line.combo_item_id and line_idx == line_index">
+                                                            <t t-set="borderRadiusStyle" t-value="''"/>
+                                                            <t t-set="borderTopStyle" t-value="''"/>
+                                                            <t t-set="borderBottomStyle" t-value="''"/>
+
+                                                            <t t-if="combo_line.linked_line_id.id == line.id and combo_line.id != line.id">
+                                                                <t t-set="combo_line_idx" t-value="combo_line_idx + 1"/>
+                                                            </t>
+                                                            <t t-elif="combo_line.id == line.id and line_idx != line_index">
+                                                                <t t-set="combo_line_idx" t-value="0"/>
+                                                            </t>
+                                                            <t t-if="combo_line_idx == 1">
+                                                                <t t-if="totalComboLines != 1">
+                                                                    <t t-set="borderRadiusStyle" t-value="'border-radius: 6px 6px 0 0;'"/>
+                                                                    <t t-set="borderBottomStyle" t-value="'border-bottom: none;'"/>
+                                                                </t>
+                                                                <t t-else="">
+                                                                    <t t-set="borderRadiusStyle" t-value="'border-radius: 6px;'"/>
+                                                                </t>
+                                                            </t>
+                                                            <t t-elif="totalComboLines == combo_line_idx">
+                                                                <t t-set="borderRadiusStyle" t-value="'border-radius: 0 0 6px 6px;'"/>
+                                                                <t t-if="totalComboLines != 2">
+                                                                    <t t-set="borderTopStyle" t-value="'border-top: none;'"/>
+                                                                </t>
+                                                            </t>
+                                                            <div t-attf-style="width: 100%; border: 1px solid #dee2e6; padding: 5px 8px; {{ borderRadiusStyle }} {{ borderBottomStyle }} {{ borderTopStyle }}">
+                                                                        <t t-out="combo_line.product_id.name or ''">Taking care of Trees Course</t>
+                                                                        <span t-if="combo_line.product_id.product_template_attribute_value_ids" style="opacity: 0.5;">
+                                                                            <t t-out="', '.join(combo_line.product_id.product_template_attribute_value_ids.mapped('name'))" />
+                                                                        </span>
+                                                                        -
+                                                                        <span>
+                                                                            <t t-out="int(combo_line.product_uom_qty) or ''">10000</t>
+                                                                            <t t-out="combo_line.product_uom_id.name or ''" t-if="combo_line.order_id.create_uid._has_group('uom.group_uom')"></t>
+                                                                        </span>
+                                                                        <p t-if="hasattr(combo_line, 'is_rental') and combo_line.is_rental and combo_line.id == line.id" style="opacity: 0.7;">
+                                                                            <t t-out="combo_line._get_rental_pricing_description() or ''"/><br/>
+                                                                        </p>
+                                                                        <t t-if="(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or (hasattr(combo_line, 'event_id') and combo_line.event_id) or (hasattr(combo_line, 'calendar_event_id') and combo_line.calendar_event_id)">
+                                                                            <t
+                                                                                t-set="description_lines"
+                                                                                t-value="combo_line.get_description_following_lines()"
+                                                                            />
+                                                                            <div t-if="description_lines" style="opacity: 0.7;">
+                                                                                <t t-foreach="description_lines" t-as="description_line">
+                                                                                    <p
+                                                                                        t-if="description_line"
+                                                                                        t-out="description_line"
+                                                                                        style="margin: 4px 0 0;"
+                                                                                    />
+                                                                                </t>
+                                                                            </div>
+                                                                        </t>
+                                                            </div>
+                                                        </t>
+                                                    <t t-elif="not(combo_line.linked_line_id) and combo_line.id == line.id">
+                                                        <p t-if="hasattr(line, 'is_rental') and line.is_rental" style="margin: 4px 0 0; opacity: 0.7;">
+                                                            <t t-out="line._get_rental_pricing_description() or ''"/><br/>
+                                                        </p>
+                                                        <t t-if="(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or (hasattr(combo_line, 'event_id') and combo_line.event_id) or (hasattr(combo_line, 'calendar_event_id') and combo_line.calendar_event_id)">
+                                                            <t
+                                                                t-set="product_description_lines"
+                                                                t-value="line.get_description_following_lines()"
+                                                            />
+                                                            <div t-if="product_description_lines" style="opacity: 0.7;">
+                                                                <t t-foreach="product_description_lines" t-as="product_description_line">
+                                                                    <p
+                                                                        t-if="product_description_line"
+                                                                        t-out="product_description_line"
+                                                                        style="margin: 4px 0 0;"
+                                                                    />
+                                                                </t>
+                                                            </div>
+                                                        </t>
+                                                    </t>
+                                                </t>
+                                                <span style="display: inline-block;  margin-top: 4px; padding: 4px 8px; border-radius: 20px; background-color: #e9ecef; color: #454748; font-size: 12px;">
+                                                    <t t-out="int(line.product_uom_qty) or ''">10000</t>
+                                                    <t t-out="line.product_uom_id.name or ''" t-if="line.order_id.create_uid._has_group('uom.group_uom')"></t>
+                                                </span>
+                                            </td>
+                                            <td width="19%" align="right" style="max-width: 100px; vertical-align: top;">
+                                                <t t-if="line.product_type == 'combo'">
+                                                    <span t-out="format_amount(line._get_cart_display_price(), object.currency_id) or ''">$ 10.00</span>
+                                                </t>
+                                                <t t-else="">
+                                                    <span style="white-space: nowrap;">
+                                                        <t t-if="object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'">
+                                                            <t t-out="format_amount(line.price_subtotal, object.currency_id) or ''">$ 10.00</t>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <t t-out="format_amount(line.price_total, object.currency_id) or ''">$ 10.00</t>
+                                                        </t>
+                                                    </span>
+                                                </t>
+                                                <t t-if="hasattr(line, 'recurring_invoice') and line.recurring_invoice">
+                                                    <br/>
+                                                    <t t-out="line.subscription_plan_id.billing_period_display_sentence or ''"/>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </t>
+                            </t>
+                        </div>
+                        <div style="margin: 10px 0 16px; padding: 0px;">
+                            <table width="100%" t-if="hasattr(object, 'carrier_id') and object.carrier_id" style="max-width: 590px; font-size: 14px; border-spacing: 0px 4px; white-space: nowrap;" role="presentation">
+                                <tr>
+                                    <td style="padding-top: 8px; width: 50%; border-top: 1px solid #dee2e6;" align="left">Delivery</td>
+                                    <td style="padding-top: 8px; width: 50%; border-top: 1px solid #dee2e6;" align="right" t-out="format_amount(object.amount_delivery, object.currency_id) or ''">$ 0.00</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 50%;" align="left">Untaxed Amount</td>
+                                    <td style="width: 50%;" align="right" t-out="format_amount(object.amount_untaxed, object.currency_id) or ''">$ 10.00</td>
+                                </tr>
+                            </table>
+                            <table width="100%" t-else="" style="max-width: 590px; opacity: 0.8; font-size: 14px; border-spacing: 0px 4px; white-space: nowrap;" role="presentation">
+                                <tr>
+                                    <td style="width: 50%; border-top: 1px solid #dee2e6;" align="left">Untaxed Amount</td>
+                                    <td style="width: 50%; border-top: 1px solid #dee2e6;" align="right" t-out="format_amount(object.amount_untaxed, object.currency_id) or ''">$ 10.00</td>
+                                </tr>
+                            </table>
+                            <table width="100%" style="max-width: 590px; font-size: 14px; border-spacing: 0px; white-space: nowrap;" role="presentation">
+                                <tr>
+                                    <td style="width: 20%; padding-bottom: 8px;" align="left">Taxes:</td>
+                                    <td style="width: 80%; padding-bottom: 8px;" align="right" t-out="format_amount(object.amount_tax, object.currency_id) or ''">$ 0.00</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%; padding-top: 4px; border-top: 1px solid #343a40; opacity: 0.9;" align="left"><strong>Total</strong></td>
+                                    <td style="width: 80%; padding-top: 4px; border-top: 1px solid #343a40; font-weight: bold; " align="right">
+                                        <span style="display: inline-block; margin-right: 4px; padding: 4px 8px; border: 1px solid #dee2e6; border-radius: 4px;">
+                                            <span style="opacity: 0.9;">Paid with</span>
+                                            <span t-attf-style="color: #{color}; font-weight: bold;">
+                                                <t t-out="tx_sudo.provider_id.sudo().name or ''"></t>
+                                            </span>
+                                        </span>
+                                        <span style="opacity: 0.9;"><t t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</t></span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <table t-if="object.partner_shipping_id and not object.only_services" width="295" style="vertical-align: top; font-size: 14px; margin-bottom: 12px;" align="left" role="presentation">
+                            <tr>
+                                <td style="padding-bottom: 4px; font-weight: bold;">
+                                    <span style="opacity: 0.9;">Delivery with</span>
+                                    <span t-attf-style="color: {{color}}; opacity: 1;"><t t-out="object.carrier_id.name or ''"></t></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="opacity: 0.9;">
+                                    <t t-out="object.partner_shipping_id.street or ''">1201 S Figueroa St</t><br/>
+                                    <t t-out="object.partner_shipping_id.city or ''">Los Angeles</t>
+                                    <t t-out="object.partner_shipping_id.state_id.name or ''">California</t>
+                                    <t t-out="object.partner_shipping_id.zip or ''">90015</t><br/>
+                                    <t t-out="object.partner_shipping_id.country_id.name or ''">United States</t>
+                                </td>
+                            </tr>
+                        </table>
+                        <table t-if="object.partner_invoice_id" width="295" style="vertical-align: top; opacity: 0.8; font-size: 14px;" align="left" role="presentation">
+                            <tr>
+                                <td style="padding-bottom: 4px;">
+                                    <span style="font-weight:bold;">Billing</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <t t-out="object.partner_invoice_id.street or ''">1201 S Figueroa St</t><br/>
+                                    <t t-out="object.partner_invoice_id.city or ''">Los Angeles</t>
+                                    <t t-out="object.partner_invoice_id.state_id.name or ''">California</t>
+                                    <t t-out="object.partner_invoice_id.zip or ''">90015</t><br/>
+                                    <t t-out="object.partner_invoice_id.country_id.name or ''">United States</t>
+                                </td>
+                            </tr>
+                        </table>
                     </t>
-                    <t t-else="">
-                        <t t-out="tx_sudo.provider_id.sudo().name or ''"></t>
-                    </t>
-                    (<t t-out="format_amount(tx_sudo.amount, object.currency_id) or ''">$ 10.00</t>)
-                </td>
-            </tr>
-        </table>
-    </div>
-    <div t-if="object.partner_shipping_id and not object.only_services" style="margin: 0px; padding: 0px;">
-        <table width="100%" style="color: #454748; font-size: 12px;">
-            <tr>
-                <td>
-                    <br/>
-                    <span style="font-weight:bold;">Ship to:</span>
-                    <t t-out="object.partner_shipping_id.street or ''">1201 S Figueroa St</t>
-                    <t t-out="object.partner_shipping_id.city or ''">Los Angeles</t>
-                    <t t-out="object.partner_shipping_id.state_id.name or ''">California</t>
-                    <t t-out="object.partner_shipping_id.zip or ''">90015</t>
-                    <t t-out="object.partner_shipping_id.country_id.name or ''">United States</t>
-                </td>
-            </tr>
-        </table>
-        <table t-if="hasattr(object, 'carrier_id') and object.carrier_id" width="100%" style="color: #454748; font-size: 12px;">
-            <tr>
-                <td>
-                    <span style="font-weight:bold;">Delivery Method:</span>
-                    <t t-out="object.carrier_id.name or ''"></t>
-                    <t t-if="object.amount_delivery == 0.0">
-                        (Free)
-                    </t>
-                    <t t-else="">
-                        (<t t-out="format_amount(object.amount_delivery, object.currency_id) or ''">$ 10.00</t>)
-                    </t>
-                </td>
-            </tr>
-            <tr t-if="object.carrier_id.carrier_description">
-                <td>
-                    <strong>Delivery Description:</strong>
-                    <t t-out="object.carrier_id.carrier_description"/>
-                </td>
-            </tr>
-        </table>
-    </div>
-</t>
-</div></field>
+                </div>
+            </field>
             <field name="report_template_ids" eval="[(4, ref('sale.action_report_saleorder'))]"/>
             <field name="auto_delete" eval="True"/>
         </record>
