@@ -104,9 +104,9 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
         desk_fabrics_attribute = cls.env['product.attribute'].create({
             'name': 'Fabric',
             'display_type': 'select',
-            'create_variant': 'no_variant',
+            'create_variant': 'always',
         })
-        desk_fabrics_leather = cls.env['product.attribute.value'].create({
+        cls.desk_fabrics_leather = cls.env['product.attribute.value'].create({
             'name': 'Leather',
             'attribute_id': desk_fabrics_attribute.id,
         })
@@ -118,7 +118,7 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
         cls.env['product.template.attribute.line'].create({
             'product_tmpl_id': cls.desk_organizer.product_tmpl_id.id,
             'attribute_id': desk_fabrics_attribute.id,
-            'value_ids': [(6, 0, [desk_fabrics_leather.id, desk_fabrics_other.id])]
+            'value_ids': [(6, 0, [cls.desk_fabrics_leather.id, desk_fabrics_other.id])]
         })
 
     def _add_tax_to_product_from_different_company(self):

@@ -78,7 +78,9 @@ export class ComboPage extends Component {
             (c) =>
                 c.qty_max > 1 ||
                 c.combo_item_ids.length > 1 ||
-                (c.combo_item_ids.some((c) => c.product_id.attribute_line_ids.length !== 0) &&
+                (c.combo_item_ids.some(
+                    (c) => this.getValidAttributeLineIds(c.product_id).length !== 0
+                ) &&
                     !c.combo_item_ids.every((c) => c.product_id.isCombo()))
         );
     }
@@ -114,7 +116,7 @@ export class ComboPage extends Component {
         selection.item = item;
         selection.qty = 1;
 
-        if (product.attribute_line_ids.length > 0) {
+        if (this.getValidAttributeLineIds(product).length > 0) {
             this.currentChoiceState.displayAttributesOfItem = item;
         } else if (!this.hasMultiItemSelection) {
             this.next();
@@ -205,13 +207,13 @@ export class ComboPage extends Component {
         const product = comboItem.product_id;
         const selection = this.state.selectedValues[product.id];
 
-        if (product.attribute_line_ids.length === 0) {
+        if (this.getValidAttributeLineIds(product).length === 0) {
             return false;
         }
         if (!selection) {
             return true;
         }
-        return selection.hasMissingAttributeValues(product.attribute_line_ids);
+        return selection.hasMissingAttributeValues(this.getValidAttributeLineIds(product));
     }
 
     changeQuantity(increase) {
@@ -285,7 +287,8 @@ export class ComboPage extends Component {
             const selectedItem = this.getSelectedItems()[0];
             if (selectedItem) {
                 // Display attributes of the selected item, if any are available
-                const hasAttributes = selectedItem.item.product_id.attribute_line_ids.length > 0;
+                const hasAttributes =
+                    this.getValidAttributeLineIds(selectedItem.item.product_id).length > 0;
                 if (hasAttributes) {
                     this.currentChoiceState.displayAttributesOfItem = selectedItem.item;
                     newSectionDisplayed = true;
@@ -349,6 +352,21 @@ export class ComboPage extends Component {
         }, 1);
     }
 
+    getSelectedAttributeValues(selectedValues, line, product) {
+        if (line.attribute_id.create_variant === "always") {
+            const productTemplateVariantValueIds = product.product_template_variant_value_ids;
+            return productTemplateVariantValueIds
+                ? [
+                      Object.values(productTemplateVariantValueIds).find(
+                          (att) => att.attribute_line_id.id == att.attribute_line_id.id
+                      ),
+                  ]
+                : false;
+        } else {
+            return selectedValues?.getSelectedAttributeValues(line);
+        }
+    }
+
     getSelection() {
         return this.comboChoices.map((choice, index) => {
             const choiceState = this.state.choices[index];
@@ -360,7 +378,8 @@ export class ComboPage extends Component {
                 const selectedValues = this.state.selectedValues[product.id];
 
                 for (const line of product.attribute_line_ids) {
-                    const selected = selectedValues?.getSelectedAttributeValues(line) ?? [];
+                    const selected =
+                        this.getSelectedAttributeValues(selectedValues, line, product) ?? [];
                     if (selected.length > 0) {
                         selectedAttributes.push({
                             attribute_line_id: line,
@@ -450,4 +469,10 @@ export class ComboPage extends Component {
             order.lastChangesSent[this.selfOrder.editedLine.uuid]
         );
     }*/
+
+    getValidAttributeLineIds(product) {
+        return product.attribute_line_ids.filter(
+            (line) => line.attribute_id.create_variant !== "always"
+        );
+    }
 }

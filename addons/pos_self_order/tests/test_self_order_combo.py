@@ -10,9 +10,12 @@ from odoo.fields import Command
 class TestSelfOrderCombo(SelfOrderCommonTest):
     def test_self_order_combo(self):
         setup_product_combo_items(self)
+        leather_desk_organizer = self.desk_organizer.product_variant_ids.filtered(
+            lambda v: self.desk_fabrics_leather.id in v.product_template_attribute_value_ids.mapped('product_attribute_value_id').ids
+        )
         self.env["product.combo.item"].create(
             {
-                "product_id": self.desk_organizer.id,
+                "product_id": leather_desk_organizer.id,
                 "extra_price": 0,
                 "combo_id": self.desk_accessories_combo.id,
             }

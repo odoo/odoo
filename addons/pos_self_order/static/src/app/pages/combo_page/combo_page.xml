@@ -103,13 +103,13 @@
                                 <img class="object-fit-cover" t-attf-src="/web/image/product.product/{{ product.id }}/image_512?unique=#{product.write_date}"  loading="lazy"/>
                             </div>
                             <div class="o_self_variant_description d-flex flex-column justify-content-center">
-                                <h2 t-esc="product.name" class="mb-0 text-white"/>
+                                <h2 t-esc="product.display_name" class="mb-0 text-white"/>
                                 <span t-if="product.public_description" t-out="product.productDescriptionMarkup" class="product-description mt-1"/>
                             </div>
                         </div>
                         <!-- Attributes -->
                         <div class="">
-                            <AttributeSelection t-if="product.attribute_line_ids.length" productTemplate="product" onSelection="onAttributeSelection" />
+                            <AttributeSelection t-if="getValidAttributeLineIds(product).length" productTemplate="product" onSelection="onAttributeSelection" hideAlwaysVariants="true" />
                         </div>
                     </div>
 

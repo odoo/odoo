@@ -4,7 +4,7 @@ import { AttributeSelectionHelper } from "./attribute_selection_helper";
 
 export class AttributeSelection extends Component {
     static template = "pos_self_order.AttributeSelection";
-    static props = ["productTemplate", "onSelection?"];
+    static props = ["productTemplate", "onSelection?", "hideAlwaysVariants?"];
 
     setup() {
         this.selfOrder = useSelfOrder();
@@ -96,5 +96,14 @@ export class AttributeSelection extends Component {
         const priceExtra = value.price_extra;
         const sign = priceExtra < 0 ? "- " : "+ ";
         return sign + this.selfOrder.formatMonetary(Math.abs(priceExtra));
+    }
+    get validAttributeLineIds() {
+        if (this.props.hideAlwaysVariants) {
+            return this.props.productTemplate.attribute_line_ids.filter(
+                (line) => line.attribute_id.create_variant !== "always"
+            );
+        } else {
+            return this.props.productTemplate.attribute_line_ids;
+        }
     }
 }

@@ -9,11 +9,8 @@ registry.category("web_tour.tours").add("self_combo_selector", {
         ProductPage.clickProduct("Office Combo"),
         ...ProductPage.setupCombo([
             {
-                product: "Desk Organizer",
-                attributes: [
-                    { name: "Size", value: "M" },
-                    { name: "Fabric", value: "Leather" },
-                ],
+                product: "Desk Organizer (Leather)",
+                attributes: [{ name: "Size", value: "M" }],
             },
             {
                 product: "Combo Product 5",

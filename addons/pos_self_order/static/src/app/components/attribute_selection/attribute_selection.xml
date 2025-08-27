@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.AttributeSelection">
-         <t t-foreach="props.productTemplate.attribute_line_ids" t-as="attribute" t-key="attribute.id">
-             <h2 class="text-start py-3 m-0" t-out="attribute.attribute_id.name"/>
-             <div class="self_order_attribute_selection row pb-3">
+         <t t-foreach="validAttributeLineIds" t-as="attribute" t-key="attribute.id">
+            <h2 class="text-start py-3 m-0" t-out="attribute.attribute_id.name"/>
+            <div class="self_order_attribute_selection row pb-3">
                 <t t-foreach="availableAttributeValue(attribute)" t-as="value" t-key="value.id">
                     <t t-set="valueSelected" t-value="isValueSelected(attribute,value)"/>
                     <div class="d-flex col-12 col-md-6 col-lg-4">
@@ -13,15 +13,15 @@
                             t-attf-class="{{ valueSelected ? 'o_self_box_selected text-bg-primary': '' }}">
                             <span t-esc="value.name" class="fs-4"/>
                             <span t-if="shouldShowPriceExtra(value)" t-esc="formatExtraPrice(value)" class="fs-5  "
-                                 t-att-class="{ 'text-reset opacity-75' : valueSelected, 'text-primary': !valueSelected  }"/>
+                                t-att-class="{ 'text-reset opacity-75' : valueSelected, 'text-primary': !valueSelected  }"/>
                         </button>
                     </div>
                 </t>
-                 <t t-set="customValue" t-value="getCustomSelectedValue(attribute)"/>
-                 <div t-if="customValue">
-                     <input type="text" t-model="selectedValues.getCustomValue(attribute,customValue).custom_value" class="form-control px-3 py-3 rounded-4 bg-white shadow-sm mt-2" t-ref="customValueInput" placeholder="Enter your custom value" />
-                 </div>
+                <t t-set="customValue" t-value="getCustomSelectedValue(attribute)"/>
+                <div t-if="customValue">
+                    <input type="text" t-model="selectedValues.getCustomValue(attribute,customValue).custom_value" class="form-control px-3 py-3 rounded-4 bg-white shadow-sm mt-2" t-ref="customValueInput" placeholder="Enter your custom value" />
+                </div>
             </div>
-          </t>
+        </t>
     </t>
 </templates>
