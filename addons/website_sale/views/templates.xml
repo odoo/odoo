@@ -477,13 +477,22 @@
     <template id="products_breadcrumb" name="Products Breadcrumb">
         <ol t-if="category" t-attf-class="breadcrumb #{_classes}">
             <li class="breadcrumb-item">
-                <a t-att-href="keep(shop_path)">Products</a>
+                <a
+                    t-att-class="'d-none d-lg-inline' if len(category.parents_and_self) &gt; 1 else ''"
+                    t-att-href="keep(shop_path)"
+                >
+                    Products
+                </a>
+                <span t-if="len(category.parents_and_self) &gt; 1" class="d-lg-none">...</span>
             </li>
             <t t-foreach="category.parents_and_self" t-as="cat">
                 <li t-if="cat == category" class="breadcrumb-item">
                     <span class="d-inline-block" t-field="cat.name"/>
                 </li>
-                <li t-else="" class="breadcrumb-item">
+                <li
+                    t-else=""
+                    t-attf-class="breadcrumb-item {{cat_index &lt; cat_size - 2 and 'd-none d-lg-inline'}}"
+                >
                     <a
                         t-att-href="keep('%s/category/%s' % (shop_path, slug(cat)))"
                         t-field="cat.name"
@@ -631,22 +640,13 @@
                                 <t t-if="category and not search" t-call="website_sale.products_breadcrumb">
                                     <t
                                         t-set="_classes"
-                                        t-valuef="d-none d-lg-flex w-100 p-0 mb-0 small"
+                                        t-valuef="w-100 p-0 mb-0 small {{not opt_wsale_show_category_title and 'mb-2 mb-lg-0'}}"
                                     />
                                 </t>
                                 <h1
                                     t-if="category or search"
                                     t-attf-class="o_wsale_category_title d-flex gap-1 align-items-center mb-0 lh-lg {{search and bool(category) and 'mb-2'}} {{search and 'o_wsale_category_title_is_search base-fs font-sans-serif' or 'fs-3'}}"
                                 >
-                                    <a
-                                        t-if="(search and not category) or (not search and category)"
-                                        t-attf-class="btn ps-0 pe-2 {{not search and 'd-lg-none'}}"
-                                        t-att-href="keep('%s/category/%s' % (shop_path, slug(category.parent_id))) if category.parent_id else keep(shop_path, search=0)"
-                                        role="button"
-                                        t-attf-title="Back to {{category.parent_id and category.parent_id.name or 'Shop'}}"
-                                    >
-                                        <i class="oi oi-chevron-left" role="img"/>
-                                    </a>
                                     <t t-if="search and category">
                                         <span class="text-muted">Searching</span>
                                         <span class="badge text-bg-info fw-normal base-fs">
