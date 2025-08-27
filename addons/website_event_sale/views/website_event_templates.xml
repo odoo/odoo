@@ -19,20 +19,20 @@
                 <del t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
                      class="text-danger me-1"
                      t-field="ticket.price"
-                     t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                     t-options="{'widget': 'monetary', 'from_currency': ticket.currency_id, 'display_currency': website.currency_id}"/>
                 <del t-else=""
                      class="text-danger me-1"
                      t-field="ticket.price_incl"
-                     t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                     t-options="{'widget': 'monetary', 'from_currency': ticket.currency_id, 'display_currency': website.currency_id}"/>
             </t>
             <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
                   class="fs-6"
                   t-field="ticket.price_reduce"
-                  t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                  t-options="{'widget': 'monetary', 'from_currency': ticket.currency_id, 'display_currency': website.currency_id}"/>
             <span t-else=""
                   t-field="ticket.price_reduce_taxinc"
                   class="fs-6"
-                  t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                  t-options="{'widget': 'monetary', 'from_currency': ticket.currency_id, 'display_currency': website.currency_id}"/>
             <span itemprop="price" class="d-none" t-out="ticket.price"/>
             <span itemprop="priceCurrency" class="d-none" t-out="website.currency_id.name"/>
         </t>
@@ -46,10 +46,10 @@
         <t t-if="highest_price > 0">
             <small class="text-muted">
                 From
-                <span t-out="lowest_price" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                <span t-out="lowest_price" t-options="{'widget': 'monetary', 'from_currency': ticket.currency_id, 'display_currency': website.currency_id}"/>
                 <t t-if="lowest_price != highest_price">
                     to
-                    <span t-out="highest_price" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                    <span t-out="highest_price" t-options="{'widget': 'monetary', 'from_currency': ticket.currency_id, 'display_currency': website.currency_id}"/>
                 </t>
             </small>
         </t>
@@ -62,20 +62,20 @@
                     <del t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
                          class="text-danger me-1"
                          t-field="tickets.price"
-                         t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                         t-options="{'widget': 'monetary', 'from_currency': tickets.currency_id, 'display_currency': website.currency_id}"/>
                     <del t-else=""
                          class="text-danger me-1"
                          t-field="tickets.price_incl"
-                         t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                         t-options="{'widget': 'monetary', 'from_currency': tickets.currency_id, 'display_currency': website.currency_id}"/>
                 </t>
                 <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
                       class="badge text-bg-secondary fs-6"
                       t-field="tickets.price_reduce"
-                      t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                      t-options="{'widget': 'monetary', 'from_currency': tickets.currency_id, 'display_currency': website.currency_id}"/>
                 <span t-else=""
                       class="badge text-bg-secondary fs-6"
                       t-field="tickets.price_reduce_taxinc"
-                      t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                      t-options="{'widget': 'monetary', 'from_currency': tickets.currency_id, 'display_currency': website.currency_id}"/>
                 <span itemprop="price" class="d-none" t-out="tickets.price"/>
                 <span itemprop="priceCurrency" class="d-none" t-out="website.currency_id.name"/>
             </t>
