@@ -616,6 +616,7 @@ export class DomPlugin extends Plugin {
                 if (newCandidate.matches(baseContainerGlobalSelector) && isListItemElement(block)) {
                     continue;
                 }
+                this.dispatchTo("before_set_tag_handlers", block);
                 const newEl = this.setTagName(block, tagName);
                 cursors.remapNode(block, newEl);
                 // We want to be able to edit the case `<h2 class="h3">`
@@ -639,7 +640,6 @@ export class DomPlugin extends Plugin {
             }
         }
         cursors.restore();
-        this.dispatchTo("set_tag_handlers", newEls);
         this.dependencies.history.addStep();
     }
 
