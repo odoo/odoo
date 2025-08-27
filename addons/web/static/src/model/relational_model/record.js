@@ -95,18 +95,18 @@ export class Record extends DataPoint {
      * @param {RecordType<string, unknown>} data
      * @param {FieldSpecifications} [params]
      */
-    _setData(data, { orderBys } = {}) {
+    _setData(data, { orderBys, keepChanges } = {}) {
         this._isEvalContextReady = false;
         if (this.resId) {
             this._values = this._parseServerValues(data, { orderBys });
-            this._changes = markRaw({});
             Object.assign(this._textValues, this._getTextValues(data));
         } else {
-            this._values = markRaw({});
             const allVals = { ...this._getDefaultValues(), ...data };
-            this._initialChanges = markRaw(this._parseServerValues(allVals, { orderBys }));
-            this._changes = markRaw({ ...this._initialChanges });
+            this._values = markRaw(this._parseServerValues(allVals, { orderBys }));
             Object.assign(this._textValues, this._getTextValues(allVals));
+        }
+        if (!keepChanges) {
+            this._changes = markRaw({});
         }
         this.dirty = false;
         this.data = { ...this._values, ...this._changes };
@@ -198,10 +198,10 @@ export class Record extends DataPoint {
             } else {
                 this.model._updateConfig(this.config, { resId: false }, { reload: false });
                 this.dirty = false;
-                this._changes = markRaw(this._parseServerValues(this._getDefaultValues()));
-                this._values = markRaw({});
+                this._changes = markRaw({});
+                this._values = markRaw(this._parseServerValues(this._getDefaultValues()));
                 this._textValues = markRaw({});
-                this.data = { ...this._changes };
+                this.data = { ...this._values };
                 this._setEvalContext();
             }
         });
@@ -632,7 +632,7 @@ export class Record extends DataPoint {
             this._textValues = markRaw({ ...this._savePoint.textValues });
         } else {
             this.dirty = false;
-            this._changes = markRaw(this.isNew ? { ...this._initialChanges } : {});
+            this._changes = markRaw({});
             this._textValues = markRaw({ ...this._initialTextValues });
         }
         this.data = { ...this._values, ...this._changes };
@@ -704,6 +704,10 @@ export class Record extends DataPoint {
      * @param {FieldSpecifications} [params]
      */
     _getChanges(changes = this._changes, { withReadonly } = {}) {
+        if (!this.resId) {
+            // Apply the initial changes when the record is new
+            changes = { ...this._values, ...changes };
+        }
         const result = {};
         for (const [fieldName, value] of Object.entries(changes)) {
             const field = this.fields[fieldName];

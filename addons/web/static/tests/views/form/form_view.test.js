@@ -13144,3 +13144,131 @@ test(`cached web_read: don't cache if action have cache:false`, async () => {
     expect(`.o_last_breadcrumb_item`).toHaveText("new first record");
     expect.verifySteps(["web_read", "web_read", "web_read"]);
 });
+
+test(`cached web_read - don't loose changes`, async () => {
+    let def = null;
+    onRpc("web_read", async () => {
+        expect.step("web_read");
+        return def;
+    });
+
+    Partner._views = {
+        form: `<form><field name="foo"/></form>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            res_id: 1,
+            views: [[false, "form"]],
+            cache: true, // true is the default !
+        },
+        {
+            id: 2,
+            name: "Partner",
+            res_model: "partner",
+            res_id: 2,
+            views: [[false, "form"]],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    // Open and Cache the first action
+    await getService("action").doAction(1);
+    expect(`.o_field_char input`).toHaveValue("yop");
+    expect(`.o_last_breadcrumb_item`).toHaveText("first record");
+
+    // Open and Cache the second action
+    await getService("action").doAction(2);
+    expect(`.o_field_char input`).toHaveValue("blip");
+    expect(`.o_last_breadcrumb_item`).toHaveText("second record");
+
+    def = new Deferred();
+
+    // Come back to the first action
+    getService("action").doAction(1);
+    await animationFrame();
+    // The record is shown even if the rpc is not finish (cached values)
+    expect(`.o_field_char input`).toHaveValue("yop");
+    expect(`.o_last_breadcrumb_item`).toHaveText("first record");
+
+    // Edit the field while the rpc is pending
+    await contains(`.o_field_widget[name=foo] input`).edit("This is yop");
+
+    // The rpc returns differnt values.
+    def.resolve([{ id: 1, foo: "new yop", display_name: "new first record" }]);
+    await animationFrame();
+
+    // The record is updated with the new values and the edition is kept
+    expect(`.o_field_char input`).toHaveValue("This is yop");
+    expect(`.o_last_breadcrumb_item`).toHaveText("new first record");
+    expect.verifySteps(["web_read", "web_read", "web_read"]);
+});
+
+test(`cached onchange - don't loose changes`, async () => {
+    let def = null;
+    onRpc("onchange", async () => {
+        expect.step("onchange");
+        return def;
+    });
+
+    Partner._views = {
+        form: `<form><field name="foo"/></form>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            views: [[false, "form"]],
+            cache: true, // true is the default !
+        },
+        {
+            id: 2,
+            name: "Partner",
+            res_model: "partner",
+            res_id: 2,
+            views: [[false, "form"]],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    // Open and Cache the first action
+    await getService("action").doAction(1);
+    expect(`.o_field_char input`).toHaveValue("My little Foo Value");
+    expect(`.o_last_breadcrumb_item`).toHaveText("New");
+
+    // Open and Cache the second action
+    await getService("action").doAction(2);
+    expect(`.o_field_char input`).toHaveValue("blip");
+    expect(`.o_last_breadcrumb_item`).toHaveText("second record");
+
+    def = new Deferred();
+
+    // Come back to the first action
+    getService("action").doAction(1);
+    await animationFrame();
+    // The record is shown even if the rpc is not finish (cached values)
+    expect(`.o_field_char input`).toHaveValue("My little Foo Value");
+    expect(`.o_last_breadcrumb_item`).toHaveText("New");
+
+    // Edit the field while the rpc is pending
+    await contains(`.o_field_widget[name=foo] input`).edit("This is yop");
+
+    // The rpc returns differnt values.
+    def.resolve({
+        value: {
+            foo: "My New little Foo Value",
+            display_name: "",
+        },
+    });
+    await animationFrame();
+
+    // The record is updated with the new values and the edition is kept
+    expect(`.o_field_char input`).toHaveValue("This is yop");
+    expect(`.o_last_breadcrumb_item`).toHaveText("New");
+    expect.verifySteps(["onchange", "onchange"]);
+});
