@@ -30,7 +30,7 @@ class WebsiteEventController(http.Controller):
 
     def _get_events_search_options(self, slug_tags, **post):
         return {
-            'displayDescription': False,
+            'displayDescription': True,
             'displayDetail': False,
             'displayExtraDetail': False,
             'displayExtraLink': False,
