@@ -156,6 +156,12 @@ describe("Selection collapsed", () => {
                     stepFunction: splitBlock,
                     contentAfter: "<p>[]<br></p>",
                 });
+                await testEditor({
+                    contentBefore: "<ol><li>ab</li><li><p>[]<br></p><ol><li>cd</li></ol></li></ol>",
+                    stepFunction: splitBlock,
+                    contentAfter:
+                        '<ol><li>ab</li></ol><p>[]<br></p><ol><li class="oe-nested"><ol><li>cd</li></ol></li></ol>',
+                });
             });
 
             test("should remove a list set to bold", async () => {
@@ -327,6 +333,12 @@ describe("Selection collapsed", () => {
                     contentBefore: "<ul><li><p>[]<br></p></li></ul>",
                     stepFunction: splitBlock,
                     contentAfter: "<p>[]<br></p>",
+                });
+                await testEditor({
+                    contentBefore: "<ul><li>ab</li><li><p>[]<br></p><ul><li>cd</li></ul></li></ul>",
+                    stepFunction: splitBlock,
+                    contentAfter:
+                        '<ul><li>ab</li></ul><p>[]<br></p><ul><li class="oe-nested"><ul><li>cd</li></ul></li></ul>',
                 });
             });
 
@@ -547,6 +559,13 @@ describe("Selection collapsed", () => {
                         '<ul class="o_checklist"><li class="o_checked"><p>[]<br></p></li></ul>',
                     stepFunction: splitBlock,
                     contentAfter: "<p>[]<br></p>",
+                });
+                await testEditor({
+                    contentBefore:
+                        '<ul class="o_checklist"><li>ab</li><li><p>[]<br></p><ul class="o_checklist"><li>cd</li></ul></li></ul>',
+                    stepFunction: splitBlock,
+                    contentAfter:
+                        '<ul class="o_checklist"><li>ab</li></ul><p>[]<br></p><ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li>cd</li></ul></li></ul>',
                 });
             });
 

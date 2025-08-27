@@ -923,7 +923,7 @@ export class ListPlugin extends Plugin {
         if (!closestLI || isBlockUnsplittable) {
             return;
         }
-        if (isEmptyBlock(closestLI)) {
+        if (isEmptyBlock(closestBlock(params.targetNode))) {
             this.outdentLI(closestLI);
             return true;
         }
