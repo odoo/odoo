@@ -1764,8 +1764,7 @@ class SaleOrder(models.Model):
                 )
             return (
                 line.display_type == 'line_section'
-                or (line.display_type == 'line_subsection' and not line.parent_id.collapse_composition)
-                or not line.collapse_composition
+                or not line.parent_id.collapse_composition
             )
 
         return self.order_line.filtered(show_line)
