@@ -11,7 +11,7 @@ class TestAuthSignupFlowWith2faEnforced(HttpCaseWithUserPortal, HttpCaseWithUser
 
     def setUp(self):
         super().setUp()
-        self.env['res.config.settings'].create(
+        a = self.env['res.config.settings'].create(
             {
                 # Activate free signup
                 'auth_signup_uninvited': 'b2c',
@@ -19,7 +19,8 @@ class TestAuthSignupFlowWith2faEnforced(HttpCaseWithUserPortal, HttpCaseWithUser
                 'auth_totp_enforce': True,
                 'auth_totp_policy': 'all_required',
             }
-        ).execute()
+        )
+        a.execute()
 
     def test_signup_with_2fa_enforced(self):
         """

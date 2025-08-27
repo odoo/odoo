@@ -2,6 +2,7 @@ from . import (
     test_attributes,
     test_autovacuum,
     test_company_checks,
+    test_config_settings,
     test_domain,
     test_fields,
     test_indexed_translation,
