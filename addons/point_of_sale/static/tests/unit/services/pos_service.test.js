@@ -679,12 +679,12 @@ describe("pos_store.js", () => {
 
         // Case 2: Rounding enabled, not limited to cash
         const { cashPm: cash1, cardPm: card1 } = prepareRoundingVals(store, 0.05, "HALF-UP", false);
-        expect(store.getPaymentMethodFmtAmount(cash1, order)).toBe("$ 17.85");
-        expect(store.getPaymentMethodFmtAmount(card1, order)).toBe("$ 17.85");
+        expect(store.getPaymentMethodFmtAmount(cash1, order)).toBe("$ 595.00");
+        expect(store.getPaymentMethodFmtAmount(card1, order)).toBe("$ 595.00");
 
         // Case 3: Rounding enabled, only for cash
         const { cashPm: cash2, cardPm: card2 } = prepareRoundingVals(store, 0.05, "HALF-UP", true);
-        expect(store.getPaymentMethodFmtAmount(cash2, order)).toBe("$ 17.85");
+        expect(store.getPaymentMethodFmtAmount(cash2, order)).toBe("$ 595.00");
         expect(store.getPaymentMethodFmtAmount(card2, order)).toBeEmpty();
     });
 

@@ -75,7 +75,6 @@ test("FeedbackScreenDiscountWithPricelistTour: discount display with multiple pr
         min_quantity: 0,
     });
     basePricelist.item_ids = [store.models["product.pricelist.item"].get(10)];
-    basePricelist.computeRuleIndexes();
 
     const specialPricelist = store.models["product.pricelist"].create({
         id: 11,
@@ -93,7 +92,6 @@ test("FeedbackScreenDiscountWithPricelistTour: discount display with multiple pr
         min_quantity: 0,
     });
     specialPricelist.item_ids = [store.models["product.pricelist.item"].get(11)];
-    specialPricelist.computeRuleIndexes();
 
     store.config.pricelist_id = basePricelist;
     store.config.available_pricelist_ids = [basePricelist, specialPricelist];
@@ -123,10 +121,10 @@ test("FeedbackScreenDiscountWithPricelistTour: discount display with multiple pr
     await waitFor(".product-screen");
 
     await Utils.clickDisplayedProduct("Test Product Priceclist");
-    await Utils.sendBufferKeys("Price");
+    store.numpadMode = "price";
     await Utils.sendBufferKeys("9");
     expect(
-        Utils.hasOrderline({ productName: "Test Product Priceclist", price: "27", quantity: "9" })
+        Utils.hasOrderline({ productName: "Test Product Priceclist", price: "9", quantity: "1" })
     ).toBe(true);
     await Utils.clickPayButton();
     await waitFor(".payment-screen");

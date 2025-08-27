@@ -18,7 +18,7 @@ test("test_refund_line_keep_attributes: refund keeps variant attributes", async 
             productName: "Cake",
             quantity: "1",
             attributeLine: "Chocolate",
-            price: "3.00",
+            price: "10.00",
         })
     ).toBe(true);
     await Utils.ensurePane("left");
@@ -59,7 +59,7 @@ test("test_refund_line_keep_attributes: refund keeps variant attributes", async 
             productName: "Cake",
             quantity: "-1",
             attributeLine: "Chocolate",
-            price: "3.00",
+            price: "10.00",
         })
     ).toBe(true);
 });

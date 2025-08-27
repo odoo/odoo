@@ -104,7 +104,8 @@ class PosPrinter(models.Model):
                 rec.use_cashdrawer = False
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
+    def _load_pos_data_domain(self, data):
+        config = data['pos.config']
         return [('id', 'in', config.preparation_printer_ids.ids + config.receipt_printer_ids.ids)]
 
     @api.model

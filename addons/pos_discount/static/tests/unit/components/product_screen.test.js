@@ -27,7 +27,7 @@ test("getNumpadButtons", async () => {
         .filter((button) => ["quantity", "discount"].includes(button.value))
         .map((button) => button.disabled);
     expect(Math.abs(order.discountLines[0].priceIncl).toString()).toBe(
-        (order.lines[0].priceIncl * 0.1).toPrecision(2)
+        (order.lines[0].priceIncl * 0.1).toPrecision(3)
     );
 
     expect(receivedButtonsDisableStatue).toEqual([true, true]);
@@ -51,21 +51,21 @@ test("addProductToOrder reapplies the global discount", async () => {
     });
 
     await productScreen.addProductToOrder(product);
-    expectFormattedPrice(productScreen.total, "$ 3.45");
-    expect(order.priceIncl).toBe(3.45);
-    expect(order.priceExcl).toBe(3);
-    expect(order.amountTaxes).toBe(0.45);
+    expectFormattedPrice(productScreen.total, "$ 115.00");
+    expect(order.priceIncl).toBe(115);
+    expect(order.priceExcl).toBe(100);
+    expect(order.amountTaxes).toBe(15);
 
     await store.applyDiscount(10);
-    expectFormattedPrice(productScreen.total, "$ 3.10");
-    expect(order.priceIncl).toBe(3.1);
-    expect(order.priceExcl).toBe(2.7);
-    expect(order.amountTaxes).toBe(0.4);
+    expectFormattedPrice(productScreen.total, "$ 103.50");
+    expect(order.priceIncl).toBe(103.5);
+    expect(order.priceExcl).toBe(90);
+    expect(order.amountTaxes).toBe(13.5);
 
     await productScreen.addProductToOrder(product);
     await animationFrame();
-    expectFormattedPrice(productScreen.total, "$ 6.21");
-    expect(order.priceIncl).toBeCloseTo(6.21, { margin: 1e-12 });
-    expect(order.priceExcl).toBe(5.4);
-    expect(order.amountTaxes).toBe(0.81);
+    expectFormattedPrice(productScreen.total, "$ 207.00");
+    expect(order.priceIncl).toBe(207);
+    expect(order.priceExcl).toBe(180);
+    expect(order.amountTaxes).toBe(27);
 });

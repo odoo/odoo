@@ -298,11 +298,11 @@ class PosConfig(models.Model):
             'account.tax.group', 'res.country', 'product.category', 'product.pricelist', 'product.pricelist.item', 'res.currency', 'account.fiscal.position',
             'res.lang', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.line', 'product.template.attribute.value', 'product.tag',
             'decimal.precision', 'uom.uom', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding',
-            'res.country', 'res.country.state', 'mail.template', 'pos.snooze', 'pos.prep.order', 'pos.prep.line']
+            'res.country', 'res.country.state', 'mail.template', 'pos.snooze', 'pos.prep.order', 'pos.prep.line', 'ir.ui.view']
 
     @api.model
-    def _load_pos_self_data_domain(self, data, config):
-        return [('id', '=', config.id)]
+    def _load_pos_self_data_domain(self, data):
+        return [('id', '=', data['pos.config'].id)]
 
     @api.model
     def _load_pos_self_data_read(self, records, config):
@@ -312,7 +312,6 @@ class PosConfig(models.Model):
         record = read_records[0]
         record['_self_ordering_image_home_ids'] = config.self_ordering_image_home_ids.read(['mimetype'])
         record['_self_ordering_image_background_ids'] = config.self_ordering_image_background_ids.ids
-        record['_pos_special_products_ids'] = config._get_special_products().ids
         record['_self_order_pos'] = True
         google_places_api_key = self.env['ir.config_parameter'].sudo().get_str('google_address_autocomplete.google_places_api_key')
         record['_has_google_places_api_key'] = bool(google_places_api_key)
@@ -320,33 +319,29 @@ class PosConfig(models.Model):
         return read_records
 
     def load_self_data(self):
-        response = {}
-        response['pos.config'] = self.env['pos.config']._load_pos_self_data_search_read(response, self)
+        metadata = self._load_self_metadata()
+        return self._read_pos_self_data_from_metadata(metadata, self)
 
-        for model in self._load_self_data_models():
-            try:
-                response[model] = self.env[model]._load_pos_self_data_search_read(response, self)
-            except AccessError:
-                response[model] = []
-
-        return response
-
-    def load_data_params(self):
-        response = {}
+    def _load_self_metadata(self):
+        models = self._load_self_data_models()
+        records = {}
         fields = self._load_pos_self_data_fields(self)
-        response['pos.config'] = {
+        domain = [('id', '=', self.id)]
+        records['pos.config'] = {
+            'domain': domain,
             'fields': fields,
-            'relations': self.env['pos.session']._load_pos_data_relations('pos.config', fields)
+            'records': self.search(domain, limit=1),
+            'relations': self._load_data_relations(fields),
         }
-
-        for model in self._load_self_data_models():
-            fields = self.env[model]._load_pos_self_data_fields(self)
-            response[model] = {
-                'fields': fields,
-                'relations': self.env['pos.session']._load_pos_data_relations(model, fields)
-            }
-
-        return response
+        for model in models:
+            try:
+                self.env[model]._load_pos_self_metadata(records, {})
+            except AccessError:
+                records[model] = {
+                    **self.env[model]._load_pos_self_data_domain_and_relations(records),
+                    'records': self.env[model],
+                }
+        return records
 
     def _compute_self_ordering_url(self):
         for record in self:
@@ -403,7 +398,7 @@ class PosConfig(models.Model):
     def has_valid_self_payment_method(self):
         """ Checks if the POS config has a valid payment method (terminal or online). """
         self.ensure_one()
-        domain = self.payment_method_ids._load_pos_self_data_domain({}, self)
+        domain = self.payment_method_ids._load_pos_self_data_domain({'pos.config': self})
         return bool(self.payment_method_ids.filtered_domain(domain))
 
     @api.model

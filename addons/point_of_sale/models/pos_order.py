@@ -55,8 +55,12 @@ class PosOrder(models.Model):
         raise UserError(_('No open session available. Please open a new session to capture the order.'))
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('state', '=', 'draft'), ('config_id', '=', config.id)]
+    def _load_pos_data_domain(self, data):
+        return [('state', '=', 'draft'), ('config_id', '=', data['pos.config'].id)]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['res.partner']
 
     @api.model
     def _process_order(self, order, existing_order):
@@ -937,7 +941,6 @@ class PosOrder(models.Model):
         account_moves = self.sudo().account_move | self.sudo().payment_ids.account_move_id | self.session_id.sale_move_ids | self.session_id.refund_move_ids
         return {
             'pos.order': self._load_pos_data_read(self, config) if config else [],
-            'pos.session': [],
             'pos.payment': self.env['pos.payment']._load_pos_data_read(self.payment_ids, config) if config else [],
             'pos.order.line': self.env['pos.order.line']._load_pos_data_read(self.lines, config) if config else [],
             'product.attribute.custom.value': self.env['product.attribute.custom.value']._load_pos_data_read(self.lines.custom_attribute_value_ids, config) if config else [],

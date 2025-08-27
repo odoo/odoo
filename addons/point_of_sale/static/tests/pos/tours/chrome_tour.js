@@ -184,7 +184,7 @@ registry.category("web_tour.tours").add("test_reload_page_before_payment_with_cu
             refresh(),
             ProductScreen.productIsDisplayed("Desk Organizer"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Partner Test 1"),
+            ProductScreen.clickCustomer("Partner Test 1", true),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Customer Account"),
             PaymentScreen.clickValidate(),
@@ -215,7 +215,7 @@ registry.category("web_tour.tours").add("test_edit_paid_order", {
             FeedbackScreen.clickEditPayment(),
             // Add customer
             PaymentScreen.clickPartnerButton(),
-            PaymentScreen.clickCustomer("Partner Test 1"),
+            PaymentScreen.clickCustomer("Partner Test 1", true),
             PaymentScreen.clickInvoiceButton(),
             {
                 content: "wait for 200 ms",

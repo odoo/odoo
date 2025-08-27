@@ -12,13 +12,15 @@ export class ProductPricelist extends models.ServerModel {
             id: 1,
             name: "Test Pricelist A",
             display_name: "Test Pricelist A (USD)",
-            item_ids: [1],
+            item_ids: [],
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 2,
             name: "Test Pricelist B",
             display_name: "Test Pricelist B (USD)",
             item_ids: [1],
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 3,

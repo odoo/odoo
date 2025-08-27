@@ -51,13 +51,13 @@ describe("onClickSaleOrder", () => {
 
         expect(currentOrder.lines[0].product_id.id).toBe(5);
         expect(currentOrder.lines[0].qty).toBe(3);
-        expect(currentOrder.lines[0].price_unit).toBe(3);
-        expect(currentOrder.lines[0].prices.total_excluded).toBe(9);
+        expect(currentOrder.lines[0].price_unit).toBe(100);
+        expect(currentOrder.lines[0].prices.total_excluded).toBe(300);
 
         expect(currentOrder.lines[1].product_id.id).toBe(6);
         expect(currentOrder.lines[1].qty).toBe(2);
-        expect(currentOrder.lines[1].price_unit).toBe(3);
-        expect(currentOrder.lines[1].prices.total_excluded).toBe(6);
+        expect(currentOrder.lines[1].price_unit).toBe(100);
+        expect(currentOrder.lines[1].prices.total_excluded).toBe(200);
 
         expect(currentOrder.lines[2].product_id.id).toBe(5);
         expect(currentOrder.lines[2].qty).toBe(5);
@@ -98,13 +98,13 @@ describe("onClickSaleOrder", () => {
 
         expect(currentOrder.lines[0].product_id.id).toBe(5);
         expect(currentOrder.lines[0].qty).toBe(3);
-        expect(currentOrder.lines[0].price_unit).toBe(3);
-        expect(currentOrder.lines[0].prices.total_excluded).toBe(9);
+        expect(currentOrder.lines[0].price_unit).toBe(100);
+        expect(currentOrder.lines[0].prices.total_excluded).toBe(300);
 
         expect(currentOrder.lines[1].product_id.id).toBe(6);
         expect(currentOrder.lines[1].qty).toBe(2);
-        expect(currentOrder.lines[1].price_unit).toBe(3);
-        expect(currentOrder.lines[1].prices.total_excluded).toBe(6);
+        expect(currentOrder.lines[1].price_unit).toBe(100);
+        expect(currentOrder.lines[1].prices.total_excluded).toBe(200);
 
         expect(currentOrder.lines[2].product_id.id).toBe(105);
         expect(currentOrder.lines[2].qty).toBe(1);
@@ -152,13 +152,13 @@ describe("onClickSaleOrder", () => {
 
         expect(currentOrder.lines[0].product_id.id).toBe(5);
         expect(currentOrder.lines[0].qty).toBe(3);
-        expect(currentOrder.lines[0].price_unit).toBe(3);
-        expect(currentOrder.lines[0].prices.total_excluded).toBe(9);
+        expect(currentOrder.lines[0].price_unit).toBe(100);
+        expect(currentOrder.lines[0].prices.total_excluded).toBe(300);
 
         expect(currentOrder.lines[1].product_id.id).toBe(6);
         expect(currentOrder.lines[1].qty).toBe(2);
-        expect(currentOrder.lines[1].price_unit).toBe(3);
-        expect(currentOrder.lines[1].prices.total_excluded).toBe(6);
+        expect(currentOrder.lines[1].price_unit).toBe(100);
+        expect(currentOrder.lines[1].prices.total_excluded).toBe(200);
 
         expect(currentOrder.lines[2].product_id.id).toBe(105);
         expect(currentOrder.lines[2].qty).toBe(1);

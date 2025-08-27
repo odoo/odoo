@@ -13,8 +13,13 @@ class ProductCombo(models.Model):
     is_upsell = fields.Boolean(string="Is Upsell", default=False, help="Indicates if the combo is an upsell to the customer. This can be compared to a minimum quantity of 0.")
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('id', 'in', list(set().union(*[product.get('combo_ids') for product in data['product.template']])))]
+    def _load_pos_data_domain(self, data):
+        combo_ids = data['product.template'].combo_ids.ids
+        return [('id', 'in', combo_ids)]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['product.combo.item']
 
     @api.model
     def _load_pos_data_fields(self, config):

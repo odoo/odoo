@@ -153,40 +153,6 @@ class PosSession(models.Model):
         return super().write(vals)
 
     @api.model
-    def _load_pos_data_relations(self, model, fields):
-        model_fields = self.env[model]._fields
-        relations = {}
-
-        for name, params in model_fields.items():
-            if (name not in fields and len(fields)) or (params.manual and not len(fields)):
-                continue
-
-            if params.relational:
-                relations[name] = {
-                    'name': name,
-                    'model': params.model_name,
-                    'compute': bool(params.compute),
-                    'related': bool(params.related),
-                    'relation': params.comodel_name,
-                    'type': params.type,
-                }
-                if params.type == 'many2one' and params.ondelete:
-                    relations[name]['ondelete'] = params.ondelete
-                if params.type == 'one2many' and params.inverse_name:
-                    relations[name]['inverse_name'] = params.inverse_name
-                if params.type == 'many2many':
-                    relations[name]['relation_table'] = self.env[model]._fields[name].relation
-            else:
-                relations[name] = {
-                    'name': name,
-                    'type': params.type,
-                    'compute': bool(params.compute),
-                    'related': bool(params.related),
-                }
-
-        return relations
-
-    @api.model
     def _load_pos_data_models(self, config):
         return [
             'pos.config', 'pos.preset', 'resource.calendar.attendance', 'pos.order',
@@ -198,12 +164,11 @@ class PosSession(models.Model):
             'product.uom', 'decimal.precision', 'uom.uom', 'res.country', 'res.country.state',
             'res.lang', 'product.category', 'product.pricelist', 'product.pricelist.item',
             'account.cash.rounding', 'account.fiscal.position', 'res.currency', 'pos.note',
-            'product.tag', 'ir.module.module', 'account.move', 'account.account',
-            'pos.snooze', 'pos.prep.order', 'pos.prep.line',
-        ]
+            'product.tag', 'account.move', 'account.account',
+            'pos.snooze', 'pos.prep.order', 'pos.prep.line', 'ir.ui.view']
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
+    def _load_pos_data_domain(self, data):
         return [('id', '=', self.id)]
 
     @api.model
@@ -213,49 +178,110 @@ class PosSession(models.Model):
             'payment_method_ids', 'state', 'access_token',
         ]
 
-    def load_data(self, models_to_load):
-        response = {}
-        response['pos.session'] = self._load_pos_data_search_read(response, self.config_id)
+    def load_data(self, local_data={}):
+        """
+        Load POS data for the session, optionally scoped by what the client already holds.
 
-        for model in self._load_pos_data_models(self.config_id):
-            if models_to_load and model not in models_to_load:
+        param local_data: dict with the following optional keys:
+
+        - ``models`` (list): restrict the response to these model names only.
+        - ``records`` (dict): per-model mapping of ``{id: write_date}`` already in the client cache;
+          used to compute records that should be removed locally, or updated.
+        - ``search_params`` (dict): per-model overrides for ``domain``, ``offset``, ``limit``, and ``context`` passed to ``_load_pos_metadata``.
+        - ``only_records`` (bool): if ``True``, return ``{model: [records]}`` without metadata (fields, relations, etc.).
+
+        :return: A dictionary where the keys are the model names and the values are list of records
+         if ``only_records`` is ``True``, or a dictionary with the following keys:
+
+        - ``records``: list of records
+        - ``fields``: list of fields
+        - ``relations``: list of relations
+        - ``to_remove``: list of ids that should be removed from the client cache.
+          Present only if local_data['records'] is not empty.
+        """
+        default_params = {
+            'models': [],
+            'records': {},
+            'search_params': {},
+            'only_records': False,
+        }
+        local_data = default_params | local_data
+        models = self._load_pos_data_models(self.config_id)
+        metadata = self._load_metadata(models, local_data['search_params'])
+        to_read = metadata
+        if local_data['models']:
+            to_read = {model: data for model, data in metadata.items() if model in local_data['models']}
+        data = self._read_from_metadata(to_read, local_data, self.config_id)
+        if local_data['only_records']:
+            return {model: d['records'] for model, d in data.items()}
+        if local_data['records']:
+            # Add data to remove from the indexedDB
+            data_to_remove = self.filter_local_data({model: list(d.keys()) for model, d in local_data['records'].items()})
+            for model, ids in data_to_remove.items():
+                if model in data:
+                    data[model]['to_remove'] = ids
+
+        # If there are more models than last time, we need to add the metadata (especially fields and relations) to the response
+        for model, d in metadata.items():
+            if not model in data:
+                data[model] = {
+                    'records': [],
+                }
+            del d['records']
+            data[model].update(d)
+        return data
+
+    def _load_metadata(self, models, search_params={}):
+        records = {}
+        self._load_pos_metadata(records, search_params.get('pos.session', {'limit': 1}))
+        self.env['pos.config']._load_pos_metadata(records, search_params.get('pos.config', {'limit': 1}))
+        for model in models:
+            if model in ['pos.session', 'pos.config']:
                 continue
-
             try:
-                response[model] = self.env[model]._load_pos_data_search_read(response, self.config_id)
+                params = search_params.get(model, {})
+                context = {**self.env.context, **params.get('context', {})}
+                self.env[model].with_context(context)._load_pos_metadata(records, params)
             except AccessError as e:
-                response[model] = []
+                records[model] = {
+                    **self.env[model]._load_pos_data_domain_and_dependencies(records),
+                    'records': self.env[model],
+                }
+                if model != 'ir.ui.view':
+                    # The model ir.ui.view can rarely be accessed so it will raise a warning
+                    # almost every single time. We load it only to load the templates.
+                    _logger.info("Could not load model %s due to AccessError: %s", model, e)
+        return records
+
+    @api.model
+    def _read_from_metadata(self, server_data, local_data, config_id):
+        response = {}
+        for model, data in server_data.items():
+            try:
+                del data['domain']
+                response[model] = self.env[model]._read_pos_data_from_metadata(data, local_data, config_id)
+            except AccessError as e:
+                response[model] = {
+                    **data,
+                    'records': [],
+                }
                 _logger.info("Could not load model %s due to AccessError: %s", model, e)
 
         return response
 
-    def load_data_params(self):
-        response = {}
-        fields = self._load_pos_data_fields(self.config_id)
-        response['pos.session'] = {
-            'fields': fields,
-            'relations': self._load_pos_data_relations('pos.session', fields),
-        }
-
-        for model in self._load_pos_data_models(self.config_id):
-            fields = self.env[model]._load_pos_data_fields(self.config_id)
-            response[model] = {
-                'fields': fields,
-                'relations': self._load_pos_data_relations(model, fields),
-            }
-
-        return response
-
     def filter_local_data(self, models_to_filter):
-        response = {}
+        non_existent_and_inactive_ids = {}
         for model, ids in models_to_filter.items():
-            existing_records = self.env[model].browse(ids).exists()
+            ids = list(map(int, ids))
+            try:
+                existing_active_records = self.env[model].search_read([('id', 'in', ids)], ['id'])
+            except AccessError:
+                continue
+            existing_active_records = [r['id'] for r in existing_active_records]
 
-            non_existent_ids = set(ids) - set(existing_records.ids)
-            inactive_ids = set(existing_records._unrelevant_records(self.config_id))
+            non_existent_and_inactive_ids[model] = list(set(ids) - set(existing_active_records))
 
-            response[model] = list(non_existent_ids | inactive_ids)
-        return response
+        return non_existent_and_inactive_ids
 
     def delete_opening_control_session(self):
         self.ensure_one()

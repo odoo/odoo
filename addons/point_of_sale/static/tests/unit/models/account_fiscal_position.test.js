@@ -58,7 +58,6 @@ test("getProductInfo: VAT uses pricelist price and fiscal-position-mapped tax", 
         fixed_price: 200,
     });
     pricelist.update({ item_ids: [pricelistItem] });
-    pricelist.computeRuleIndexes();
 
     const productTemplate = models["product.template"].create({
         name: "Test product",

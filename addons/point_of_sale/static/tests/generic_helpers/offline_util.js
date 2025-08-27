@@ -1,3 +1,5 @@
+/* global posmodel */
+
 import { run } from "@point_of_sale/../tests/generic_helpers/utils";
 import { ConnectionLostError } from "@web/core/network/rpc";
 
@@ -5,7 +7,7 @@ const originalFetch = window.fetch;
 const originalSend = XMLHttpRequest.prototype.send;
 const originalConsoleError = console.error;
 
-export function setOfflineMode() {
+export function setOfflineMode(doNotShownPopup = false) {
     return run(() => {
         window.fetch = () => {
             throw new ConnectionLostError();
@@ -21,6 +23,9 @@ export function setOfflineMode() {
                 originalConsoleError.apply(console, args);
             }
         };
+        if (doNotShownPopup) {
+            posmodel.data.network.warningTriggered = true;
+        }
     }, "Offline mode is now enabled");
 }
 

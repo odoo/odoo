@@ -226,13 +226,13 @@ test("addPaymentline", async () => {
     const result = order.addPaymentline(cashPaymentMethod);
     const cashPaymentLine = result.data;
     expect(cashPaymentLine.payment_method_id.id).toBe(cashPaymentMethod.id);
-    expect(cashPaymentLine.amount).toBe(17.85);
+    expect(cashPaymentLine.amount).toBe(595);
     // Update the cash payment line amount to 10 to confirm that the second created cash payment
-    // line will take the remaining amount to pay (7.85)
+    // line will take the remaining amount to pay (585)
     cashPaymentLine.setAmount(10);
     const result2 = order.addPaymentline(cashPaymentMethod);
     expect(result2.data.payment_method_id.id).toBe(cashPaymentMethod.id);
-    expect(result2.data.amount).toBe(7.85);
+    expect(result2.data.amount).toBe(585);
 });
 
 test("getTotalDiscount", async () => {
@@ -241,9 +241,9 @@ test("getTotalDiscount", async () => {
     const discount = order.getTotalDiscount();
     expect(discount).toBe(0);
     const taxTotals = order.prices.taxDetails;
-    expect(taxTotals.base_amount).toBe(15);
-    expect(taxTotals.total_amount).toBe(17.85);
-    expect(taxTotals.tax_amount_currency).toBe(2.85);
+    expect(taxTotals.base_amount).toBe(500);
+    expect(taxTotals.total_amount).toBe(595);
+    expect(taxTotals.tax_amount_currency).toBe(95);
 
     //Compute total of discount on the order
     const line1 = order.lines[0];
@@ -251,11 +251,11 @@ test("getTotalDiscount", async () => {
     line1.setDiscount(20);
     line2.setDiscount(50);
 
-    expect(order.getTotalDiscount()).toBe(5.82);
+    expect(order.getTotalDiscount()).toBe(194);
     const taxTotalsWDiscount = order.prices.taxDetails;
-    expect(taxTotalsWDiscount.base_amount).toBe(10.2);
-    expect(taxTotalsWDiscount.total_amount).toBe(12.03);
-    expect(taxTotalsWDiscount.tax_amount_currency).toBe(1.83);
+    expect(taxTotalsWDiscount.base_amount).toBe(340);
+    expect(taxTotalsWDiscount.total_amount).toBe(401);
+    expect(taxTotalsWDiscount.tax_amount_currency).toBe(61);
 });
 
 test("preventRoundingErrorsCombo", async () => {
@@ -449,42 +449,42 @@ test("[get prices] check prices and taxes", async () => {
 
     // Check taxes on order base_amount is 15 with 15% taxes
     const orderTaxes = data.taxDetails;
-    expect(orderTaxes.base_amount).toBe(15.0);
-    expect(orderTaxes.total_amount).toBe(17.85);
-    expect(orderTaxes.tax_amount).toBe(2.85);
+    expect(orderTaxes.base_amount).toBe(500);
+    expect(orderTaxes.total_amount).toBe(595);
+    expect(orderTaxes.tax_amount).toBe(95);
 
     // Order prices data also return the prices of all lines
     // Check first line with a price_unit of 3 and 3 qty
     const line1Data = data.baseLineByLineUuids[order.lines[0].uuid].tax_details;
-    expect(line1Data.total_excluded).toBe(9.0);
-    expect(line1Data.total_included).toBe(10.35);
-    expect(line1Data.taxes_data[0].tax_amount).toBe(1.35);
+    expect(line1Data.total_excluded).toBe(300);
+    expect(line1Data.total_included).toBe(345);
+    expect(line1Data.taxes_data[0].tax_amount).toBe(45);
 
     // Check second line with a price_unit of 3 and 2 qty
     const line2Data = data.baseLineByLineUuids[order.lines[1].uuid].tax_details;
-    expect(line2Data.total_excluded).toBe(6.0);
-    expect(line2Data.total_included).toBe(7.5);
-    expect(line2Data.taxes_data[0].tax_amount).toBe(1.5);
+    expect(line2Data.total_excluded).toBe(200);
+    expect(line2Data.total_included).toBe(250);
+    expect(line2Data.taxes_data[0].tax_amount).toBe(50);
 
     // Check with a discount on first line of 30%
     order.lines[0].setDiscount(30);
     const dataWDiscount = order.prices;
     const orderTaxesWDiscount = dataWDiscount.taxDetails;
-    expect(orderTaxesWDiscount.base_amount).toBe(12.3);
-    expect(orderTaxesWDiscount.total_amount).toBe(14.75);
-    expect(orderTaxesWDiscount.tax_amount).toBe(2.45);
+    expect(orderTaxesWDiscount.base_amount).toBe(410);
+    expect(orderTaxesWDiscount.total_amount).toBe(491.5);
+    expect(orderTaxesWDiscount.tax_amount).toBe(81.5);
 
     // Check first line with a price_unit of 3, 3 qty and 30% discount
     const line1DataWDiscount = dataWDiscount.baseLineByLineUuids[order.lines[0].uuid].tax_details;
-    expect(line1DataWDiscount.total_excluded).toBe(6.3);
-    expect(line1DataWDiscount.total_included).toBe(7.25);
-    expect(line1DataWDiscount.taxes_data[0].tax_amount).toBe(0.95);
-    expect(line1DataWDiscount.discount_amount).toBe(3.1);
+    expect(line1DataWDiscount.total_excluded).toBe(210);
+    expect(line1DataWDiscount.total_included).toBe(241.5);
+    expect(line1DataWDiscount.taxes_data[0].tax_amount).toBe(31.5);
+    expect(line1DataWDiscount.discount_amount).toBe(103.5);
 
     // No discount values should still represent the line without discount
-    expect(line1DataWDiscount.no_discount_total_excluded).toBe(9.0);
-    expect(line1DataWDiscount.no_discount_total_included).toBe(10.35);
-    expect(line1DataWDiscount.no_discount_taxes_data[0].tax_amount).toBe(1.35);
+    expect(line1DataWDiscount.no_discount_total_excluded).toBe(300);
+    expect(line1DataWDiscount.no_discount_total_included).toBe(345);
+    expect(line1DataWDiscount.no_discount_taxes_data[0].tax_amount).toBe(45);
 });
 
 test("showChange remains true when change line name is translated", async () => {

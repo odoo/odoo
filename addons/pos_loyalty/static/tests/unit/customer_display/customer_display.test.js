@@ -16,7 +16,7 @@ test("[Old Tour] test_customer_display_loyalty_points", async () => {
 
     const product = store.models["product.template"].get(5);
     await store.addLineToCurrentOrder({ product_tmpl_id: product });
-    await Assert.hasOrderLine({ productName: "TEST", price: "$ 3.45" });
+    await Assert.hasOrderLine({ productName: "TEST", price: "$ 115.00" });
 
     // Add partner: card 4 already carries a 3-point balance on program 7.
     const partner = store.models["res.partner"].get(1);

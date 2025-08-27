@@ -26,6 +26,7 @@ export class ResCurrency extends webModels.ResCurrency {
             rate: 1.0,
             decimal_places: 2,
             iso_numeric: 840,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 125,

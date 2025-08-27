@@ -234,11 +234,30 @@ class PosConfig(models.Model):
 
     def _notify_synchronisation(self, session_id, device_identifier, records={}, deleted_record_ids=None):
         self.ensure_one()
-        static_records = {}
+        models = []
+        search_params = {}
 
         for model, ids in records.items():
-            records = self.env[model].browse(ids).exists()
-            static_records[model] = self.env[model]._load_pos_data_read(records, self)
+            models.append(model)
+            search_params[model] = {
+                'domain': [('id', 'in', ids)],
+            }
+
+        if len(models) == 0:
+            self._notify('SYNCHRONISATION', {
+                'static_records': {},
+                'session_id': session_id,
+                'device_identifier': device_identifier,
+                'records': records,
+            })
+            return
+
+        static_records = self.current_session_id.load_data({
+            'models': models,
+            'records': {},
+            'search_params': search_params,
+            'only_records': True,
+        })
 
         self._notify('SYNCHRONISATION', {
             'static_records': static_records,
@@ -288,8 +307,8 @@ class PosConfig(models.Model):
         }
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('id', '=', config.id)]
+    def _load_pos_data_domain(self, data):
+        return [('id', '=', data['pos.session'].config_id.id)]
 
     @api.model
     def _load_pos_data_read(self, records, config):
@@ -307,7 +326,6 @@ class PosConfig(models.Model):
         record['_data_server_date'] = self.env.context.get('pos_last_server_date') or self.env.cr.now()
         record['_has_cash_move_perm'] = self.env.user._has_cash_move_permission()
         record['_has_cash_delete_perm'] = self.env.user._has_cash_delete_permission()
-        record['_pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
         record["_unit_uom_id"] = self.env.ref('uom.product_uom_unit').id
 
         session = config.current_session_id
@@ -316,7 +334,7 @@ class PosConfig(models.Model):
 
         # Add custom fields for 'formula' taxes.
         # We can ignore data for _load_pos_data_domain since isn't needed in the domain computation of account.tax
-        taxes = self.env['account.tax'].search(self.env['account.tax']._load_pos_data_domain({}, config))
+        taxes = self.env['account.tax'].search(self.env['account.tax']._load_pos_data_domain({'pos.config': config}))
         product_fields = taxes._eval_taxes_computation_prepare_product_fields()
         record['_product_default_values'] = \
             self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(product_fields)
@@ -1020,21 +1038,8 @@ class PosConfig(models.Model):
             'type': 'ir.actions.act_window',
         }
 
-    def get_limited_product_count(self):
+    def _get_limited_product_count(self):
         return self.env['ir.config_parameter'].sudo().get_int('point_of_sale.limited_product_count') or DEFAULT_LIMIT_LOAD_PRODUCT
-
-    def get_product_loading_info(self):
-        """Return total product.template count matching the PoS domain and the configured loading limit.
-
-        Used by the frontend to warn the user before triggering a full sync when the product
-        count exceeds the configured limit or crosses the dangerous threshold (20 000+).
-        """
-        self.ensure_one()
-        ProductTemplate = self.env['product.template']
-        domain = ProductTemplate._load_pos_data_domain({}, self)
-        total_count = ProductTemplate.search_count(domain)
-        limit = self.get_limited_product_count()
-        return {'total_count': total_count, 'limit': limit}
 
     def _get_limited_partner_count(self):
         return self.env['ir.config_parameter'].sudo().get_int('point_of_sale.limited_customer_count') or DEFAULT_LIMIT_LOAD_PARTNER

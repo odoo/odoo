@@ -44,7 +44,7 @@ export class PosSession extends models.ServerModel {
             "res.currency",
             "pos.note",
             "product.tag",
-            "ir.module.module",
+            "ir.ui.view",
             "pos.prep.order",
             "pos.prep.line",
             "pos.snooze",
@@ -71,60 +71,74 @@ export class PosSession extends models.ServerModel {
     }
 
     getModelFieldsToLoad(model, opts) {
-        return model._load_pos_data_fields();
+        const fields = model._load_pos_data_fields();
+        if (fields.length > 0) {
+            if (!fields.includes("id")) {
+                fields.push("id");
+            }
+
+            if (!fields.includes("write_date")) {
+                fields.push("write_date");
+            }
+        }
+        return fields;
     }
 
-    processPosReadData(model, records, opts) {
-        return (model._load_pos_data_read && model._load_pos_data_read(records)) || records;
+    getModelDependencies(model) {
+        return model._load_pos_data_dependencies ? model._load_pos_data_dependencies() : [];
     }
 
-    load_data_params(opts = {}) {
-        const modelToLoad = this.getModelsToLoad(opts);
-        const response = modelToLoad.reduce((acc, modelName) => {
-            acc[modelName] = {
-                fields: {},
-                relations: {},
+    async processPosReadData(model, records, opts) {
+        for (const record of records) {
+            if (!record.write_date) {
+                record.write_date = "2025-01-01 10:00:00";
+            }
+        }
+        return (model._load_pos_data_read && (await model._load_pos_data_read(records))) || records;
+    }
+
+    _load_data_relations(model, fields) {
+        const response = {};
+        const serverModel = MockServer.env[model];
+        const posFields = fields.length ? fields : this.getModelFieldsToLoad(serverModel, {});
+        const allFields = serverModel.fields_get();
+        const base = posFields.length ? posFields : Object.keys(allFields);
+
+        if (!base.includes("id")) {
+            base.push("id");
+        }
+
+        if (!base.includes("write_date")) {
+            base.push("write_date");
+        }
+
+        for (const fieldName of base) {
+            const field = allFields[fieldName];
+
+            if (!field) {
+                console.debug(`Field ${fieldName} not found in model ${model}`);
+                continue;
+            }
+
+            response[fieldName] = {
+                name: fieldName,
+                model: model,
+                compute: Boolean(field.compute),
+                related: Boolean(field.related),
+                type: field.type,
+                relation: field.relation,
+                inverse_name: field.inverse_fname_by_model_name?.[field.relation] || false,
             };
-            return acc;
-        }, {});
-
-        for (const model of modelToLoad) {
-            const serverModel = MockServer.env[model];
-            const posFields = this.getModelFieldsToLoad(serverModel, opts);
-            const allFields = serverModel.fields_get();
-            const base = posFields.length ? posFields : Object.keys(allFields);
-
-            if (!base.includes("id")) {
-                base.push("id");
-            }
-
-            for (const fieldName of base) {
-                const field = allFields[fieldName];
-
-                if (!field) {
-                    console.debug(`Field ${fieldName} not found in model ${model}`);
-                    continue;
-                }
-
-                response[model]["relations"][fieldName] = {
-                    name: fieldName,
-                    model: model,
-                    compute: Boolean(field.compute),
-                    related: Boolean(field.related),
-                    type: field.type,
-                    relation: field.relation,
-                    inverse_name: field.inverse_fname_by_model_name?.[field.relation] || false,
-                };
-            }
-
-            response[model]["fields"] = posFields;
         }
 
         return response;
     }
 
-    load_data(opts = {}) {
-        const modelToLoad = this.getModelsToLoad(opts);
+    async load_data(session_id, local_data = {}) {
+        const modelToLoad =
+            local_data.models && local_data.models.length
+                ? local_data.models
+                : this.getModelsToLoad(local_data);
         const response = modelToLoad.reduce((acc, modelName) => {
             acc[modelName] = {};
             return acc;
@@ -132,11 +146,23 @@ export class PosSession extends models.ServerModel {
 
         for (const modelName of modelToLoad) {
             const model = MockServer.env[modelName];
-            const posFields = this.getModelFieldsToLoad(model, opts);
-            const records = model.search_read([], posFields, false, false, false, false);
-            response[modelName] = this.processPosReadData(model, records, opts);
+            response[modelName].dependencies = this.getModelDependencies(model, local_data);
+            response[modelName].fields = this.getModelFieldsToLoad(model, {});
+            response[modelName].relations = this._load_data_relations(
+                modelName,
+                response[modelName].fields
+            );
+            response[modelName].records = await this.processPosReadData(
+                model,
+                model.search_read([], response[modelName].fields, false, false, false, false),
+                false
+            );
         }
-
+        if (local_data.only_records) {
+            return Object.fromEntries(
+                Object.entries(response).map(([model, value]) => [model, value.records])
+            );
+        }
         return response;
     }
 
@@ -147,7 +173,6 @@ export class PosSession extends models.ServerModel {
         data[0]["_data_server_date"] = "2025-07-03 12:40:15";
         data[0]["_has_cash_move_perm"] = true;
         data[0]["_has_available_products"] = true;
-        data[0]["_pos_special_products_ids"] = [];
         return data;
     }
 
@@ -206,6 +231,7 @@ export class PosSession extends models.ServerModel {
             payment_method_ids: [2, 1],
             state: "opened",
             access_token: "e09c4843-c913-463a-959d-b9e235881201",
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }

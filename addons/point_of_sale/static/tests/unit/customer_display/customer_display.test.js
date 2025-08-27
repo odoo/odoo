@@ -34,12 +34,12 @@ test("customer display renders selected line, notes and total", async () => {
         note: '[{"text":"VIP","colorIndex":2}]',
     });
 
-    await Assert.hasOrderLine({ productName: "TEST", price: "3.45", withClass: ".selected" });
+    await Assert.hasOrderLine({ productName: "TEST", price: "115.00", withClass: ".selected" });
     await Assert.hasOrderlineCount(1);
 
     expect(".customer-note").toHaveText("No onions");
     expect(".internal-note-container").toHaveText("VIP");
-    Assert.hasTotal({ total: "3.45", subtotal: "3.00", taxes: "0.45" });
+    Assert.hasTotal({ total: "115.00", subtotal: "100.00", taxes: "15.00" });
 });
 
 test("customer display screen saver", async () => {
@@ -55,18 +55,18 @@ test("CustomerDisplayTour: full customer display flow with products and payments
     // Line1 - unselected line
     await store.addLineToCurrentOrder({ product_tmpl_id: 5 });
     order.deselectOrderline();
-    await Assert.hasOrderLine({ productName: "TEST", price: "3.45", withoutClass: ".selected" });
+    await Assert.hasOrderLine({ productName: "TEST", price: "115.00", withoutClass: ".selected" });
     await Assert.hasOrderlineCount(1);
     expect(display.data().selectedLineUuid).toBeEmpty();
     // Line2 - selected line
     await store.addLineToCurrentOrder({ product_tmpl_id: 6 });
-    await Assert.hasOrderLine({ productName: "TEST 2", price: "3.75", withClass: ".selected" });
+    await Assert.hasOrderLine({ productName: "TEST 2", price: "125.00", withClass: ".selected" });
     await Assert.hasOrderlineCount(2);
     expect(display.data().selectedLineUuid).toBe(order.lines[1].uuid);
     // add payment Line
     const cashPm = store.models["pos.payment.method"].get(1);
     order.addPaymentline(cashPm);
-    await Assert.hasPaymentLine("Cash", "7.20");
+    await Assert.hasPaymentLine("Cash", "240.00");
     // Pay Order
     await store.validateOrder();
     await Assert.checkThankyou();
@@ -124,10 +124,10 @@ test("CustomerDisplayTourWithQr: customer display shows QR code for payment", as
     product.to_weight = true;
     await store.addLineToCurrentOrder({ product_tmpl_id: product });
     // UI Check
-    await Assert.hasOrderLine({ productName: "TEST", price: "24.87", quantity: "7.21" });
+    await Assert.hasOrderLine({ productName: "TEST", price: "829.15", quantity: "7.21" });
     expect(".o_customer_display_scale").toHaveCount(1);
     expect(".o_customer_display_scale h4").toHaveText("Weighing Product:TEST");
     expect(".o_customer_display_scale:contains('Gross Weight: 7.21 Units)").toHaveCount(1);
-    expect(".o_customer_display_scale .product-price").toHaveText("$ 3.45 / Units");
-    expect(".o_customer_display_scale .computed-price").toHaveText("$ 24.87");
+    expect(".o_customer_display_scale .product-price").toHaveText("$ 115.00 / Units");
+    expect(".o_customer_display_scale .computed-price").toHaveText("$ 829.15");
 });

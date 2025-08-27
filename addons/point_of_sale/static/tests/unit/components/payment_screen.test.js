@@ -17,14 +17,14 @@ test("Change always incl", async () => {
         props: { orderUuid: order.uuid },
     });
     await comp.addNewPaymentLine(firstPm);
-    order.payment_ids[0].setAmount(20);
+    order.payment_ids[0].setAmount(1000);
     await animationFrame();
     const total = queryOne(".amount");
-    expectFormattedPrice(total.attributes.amount.value, "$ -2.15");
+    expectFormattedPrice(total.attributes.amount.value, "$ -405.00");
     order.config.iface_tax_included = "subtotal";
     await animationFrame();
     const subtotal = queryOne(".amount");
-    expectFormattedPrice(subtotal.attributes.amount.value, "$ -2.15");
+    expectFormattedPrice(subtotal.attributes.amount.value, "$ -405.00");
 });
 
 test("showPaymentMethod", async () => {
@@ -72,8 +72,8 @@ test("addTip startingValue uses locale decimal separator on overpayment", async 
     const order = await getFilledOrder(store);
     const cashPm = store.models["pos.payment.method"].get(1);
     const { data: paymentLine } = order.addPaymentline(cashPm);
-    paymentLine.setAmount(22);
-    expect(Math.abs(order.change)).toBe(4.15);
+    paymentLine.setAmount(1000);
+    expect(Math.abs(order.change)).toBe(405);
 
     let capturedStartingValue;
     const screen = {
@@ -92,5 +92,5 @@ test("addTip startingValue uses locale decimal separator on overpayment", async 
         value: capturedStartingValue,
         type: "fixed",
     });
-    expect(tipAmount).toBe(4.15);
+    expect(tipAmount).toBe(405);
 });

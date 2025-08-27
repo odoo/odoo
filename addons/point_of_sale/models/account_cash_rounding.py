@@ -19,8 +19,8 @@ class AccountCashRounding(models.Model):
                 _("You are not allowed to change the rounding configuration while a pos session using it is already opened. Make sure to close all open pos session before proceeding."))
 
     @api.model
-    def _load_pos_data_domain(self, data, config):
-        return [('id', '=', config.rounding_method.id)]
+    def _load_pos_data_domain(self, data):
+        return [('id', '=', data['pos.config'].rounding_method.id)]
 
     @api.model
     def _load_pos_data_fields(self, config):

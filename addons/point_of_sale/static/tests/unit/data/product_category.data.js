@@ -12,21 +12,25 @@ export class ProductCategory extends models.ServerModel {
             id: 2,
             name: "Expenses",
             parent_id: false,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 4,
             name: "Food",
             parent_id: false,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 1,
             name: "Goods",
             parent_id: false,
+            write_date: "2025-01-01 10:00:00",
         },
         {
             id: 3,
             name: "Services",
             parent_id: false,
+            write_date: "2025-01-01 10:00:00",
         },
     ];
 }
