@@ -8,6 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
 import { READONLY_MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
+import { loadBundle } from "@web/core/assets";
 
 const { DateTime } = luxon;
 
@@ -58,6 +59,10 @@ export class HistoryDialog extends Component {
 
     async init() {
         this.state.revisionsData = this.props.historyMetadata;
+        // Load diff2html only in debug mode, as the side-by-side comparison is only available in debug mode.
+        if (this.env.debug) {
+            await loadBundle("html_editor.assets_history_diff");
+        }
         await this.updateCurrentRevision(this.props.historyMetadata[0]["revision_id"]);
     }
 
@@ -69,6 +74,7 @@ export class HistoryDialog extends Component {
         this.state.revisionId = revisionId;
         this.state.revisionContent = await this.getRevisionContent(revisionId);
         this.state.revisionComparison = await this.getRevisionComparison(revisionId);
+        this.state.revisionComparisonSplit = await this.getRevisionComparisonSplit(revisionId);
         this.state.revisionLoading = false;
     }
 
@@ -79,7 +85,29 @@ export class HistoryDialog extends Component {
                 "html_field_history_get_comparison_at_revision",
                 [this.props.recordId, this.props.versionedFieldName, revisionId]
             );
-            return markup(comparison);
+            return markup(this._removeExternalBlockHtml(comparison));
+        }.bind(this)
+    );
+
+    getRevisionComparisonSplit = memoize(
+        async function getRevisionComparisonSplit(revisionId) {
+            if (!this.env.debug) {
+                return "";
+            }
+            let unifiedDiffString = await this.orm.call(
+                this.props.recordModel,
+                "html_field_history_get_unified_diff_at_revision",
+                [this.props.recordId, this.props.versionedFieldName, revisionId]
+            );
+            // Remove unnecessary linebreaks
+            unifiedDiffString = unifiedDiffString.replace(/^\s*[\r\n]/gm, "");
+            // eslint-disable-next-line no-undef
+            const diffHtml = Diff2Html.html(unifiedDiffString, {
+                drawFileList: false,
+                matching: "lines",
+                outputFormat: "side-by-side",
+            });
+            return markup(diffHtml);
         }.bind(this)
     );
 

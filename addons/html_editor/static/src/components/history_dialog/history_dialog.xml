@@ -49,12 +49,18 @@
                                 </div>
                             </t>
                             <t t-elif="state.revisionComparison?.length">
-                                <div class="pe-none">
+                                <div t-attf-class="history-comparison-split #{state.isComparisonSplit ? '' : 'd-none'}">
+                                    <HtmlViewer config="getConfig('revisionComparisonSplit')"/>
+                                </div>
+                                <div t-attf-class="pe-none history-comparison-unified #{state.isComparisonSplit ? 'd-none' : ''}">
                                     <HtmlViewer config="getConfig('revisionComparison')"/>
                                 </div>
                             </t>
-                        </t>
-                    </Notebook>
+                            <t t-else="">
+                                <span class="text-muted fst-italic">This is the current version, nothing to compare.</span>
+                            </t>
+                        </div>
+                    </div>
                 </div>
             </div>
             <t t-set-slot="footer">
