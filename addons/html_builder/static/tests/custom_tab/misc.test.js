@@ -1,30 +1,29 @@
+import {
+    addBuilderAction,
+    addBuilderOption,
+    setupHTMLBuilder,
+} from "@html_builder/../tests/helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { OptionsContainer } from "@html_builder/sidebar/option_container";
 import { setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { Component, onWillStart, xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { OptionsContainer } from "@html_builder/sidebar/option_container";
-import {
-    addActionOption,
-    addOption,
-    defineWebsiteModels,
-    setupWebsiteBuilder,
-} from "@website/../tests/builder/website_helpers";
-import { BuilderAction } from "@html_builder/core/builder_action";
 
-defineWebsiteModels();
+describe.current.tags("desktop");
 
 test("Open custom tab with template option", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`
         <BuilderRow label="'Row 1'">
             Test
         </BuilderRow>`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeVisible();
     expect(queryAllTexts(".options-container > div")).toEqual(["Yop", "Row 1\nTest"]);
@@ -38,18 +37,18 @@ test("Open custom tab with Component option", async () => {
             </BuilderRow>`;
         static props = {};
     }
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         Component: TestOption,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeVisible();
     expect(queryAllTexts(".options-container > div")).toEqual(["Yop", "Row 1\nTest"]);
 });
 
 test("OptionContainer should display custom title", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`
         <BuilderRow label="'Row 1'">
@@ -57,30 +56,30 @@ test("OptionContainer should display custom title", async () => {
         </BuilderRow>`,
         title: "My custom title",
     });
-    await setupWebsiteBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeVisible();
     expect(queryAllTexts(".options-container > div")).toEqual(["My custom title", "Row 1\nTest"]);
 });
 
 test("Don't display option base on exclude", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         exclude: ".test-exclude",
         template: xml`<BuilderRow label="'Row 1'">a</BuilderRow>`,
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         exclude: ".test-exclude-2",
         template: xml`<BuilderRow label="'Row 2'">b</BuilderRow>`,
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderRow label="'Row 3'">
             <BuilderButton classAction="'test-exclude-2'">c</BuilderButton>
         </BuilderRow>`,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target test-exclude">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target test-exclude">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(queryAllTexts(".options-container .hb-row")).toEqual(["Row 2\nb", "Row 3\nc"]);
 
@@ -89,19 +88,19 @@ test("Don't display option base on exclude", async () => {
 });
 
 test("Don't display option base on applyTo", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         applyTo: ".test-target",
         template: xml`<BuilderRow label="'Row 1'">
             <BuilderButton classAction="'test-target-2'">a</BuilderButton>
         </BuilderRow>`,
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         applyTo: ".test-target-2",
         template: xml`<BuilderRow label="'Row 2'">b</BuilderRow>`,
     });
-    await setupWebsiteBuilder(`
+    await setupHTMLBuilder(`
         <div class="test-options-target">
             <div class="test-target">b</div>
         </div>`);
@@ -114,22 +113,22 @@ test("Don't display option base on applyTo", async () => {
 });
 
 test("basic multi options containers", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`
         <BuilderRow label="'Row 1'">A</BuilderRow>`,
     });
-    addOption({
+    addBuilderOption({
         selector: ".a",
         template: xml`
         <BuilderRow label="'Row 2'">B</BuilderRow>`,
     });
-    addOption({
+    addBuilderOption({
         selector: ".main",
         template: xml`
         <BuilderRow label="'Row 3'">C</BuilderRow>`,
     });
-    await setupWebsiteBuilder(`<div class="main"><p class="test-options-target a">b</p></div>`);
+    await setupHTMLBuilder(`<div class="main"><p class="test-options-target a">b</p></div>`);
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toHaveCount(2);
     expect(queryAllTexts(".options-container:first .we-bg-options-container > div > div")).toEqual([
@@ -142,14 +141,14 @@ test("basic multi options containers", async () => {
 });
 
 test("option that matches several elements", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".a",
         template: xml`<BuilderRow label="'Row'">
             <BuilderButton classAction="'my-custom-class'">Test</BuilderButton>
         </BuilderRow>`,
     });
 
-    await setupWebsiteBuilder(`<div class="a"><div class="a test-target">b</div></div>`);
+    await setupHTMLBuilder(`<div class="a"><div class="a test-target">b</div></div>`);
     await contains(":iframe .test-target").click();
     expect(".options-container:not(.d-none)").toHaveCount(2);
     expect(queryAllTexts(".options-container:not(.d-none)")).toEqual([
@@ -159,7 +158,7 @@ test("option that matches several elements", async () => {
 });
 
 test("Snippets options respect sequencing", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`
         <BuilderRow label="'Row 2'">
@@ -167,7 +166,7 @@ test("Snippets options respect sequencing", async () => {
         </BuilderRow>`,
         sequence: 2,
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`
         <BuilderRow label="'Row 1'">
@@ -175,7 +174,7 @@ test("Snippets options respect sequencing", async () => {
         </BuilderRow>`,
         sequence: 1,
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`
         <BuilderRow label="'Row 3'">
@@ -183,7 +182,7 @@ test("Snippets options respect sequencing", async () => {
         </BuilderRow>`,
         sequence: 3,
     });
-    await setupWebsiteBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeVisible();
     expect(queryAllTexts(".options-container .we-bg-options-container > div > div")).toEqual([
@@ -197,19 +196,19 @@ test("Snippets options respect sequencing", async () => {
 });
 
 test("hide empty OptionContainer and display OptionContainer with content", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".parent-target",
         template: xml`<BuilderRow label="'Row 1'">
             <BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>
         </BuilderRow>`,
     });
-    addOption({
+    addBuilderOption({
         selector: ".parent-target > div",
         template: xml`<BuilderRow label="'Row 3'">
             <BuilderButton applyTo="'.my-custom-class'" classAction="'test'"/>
         </BuilderRow>`,
     });
-    await setupWebsiteBuilder(
+    await setupHTMLBuilder(
         `<div class="parent-target"><div><div class="child-target">b</div></div></div>`
     );
 
@@ -221,14 +220,14 @@ test("hide empty OptionContainer and display OptionContainer with content", asyn
 });
 
 test("hide empty OptionContainer and display OptionContainer with content (with BuilderButtonGroup)", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".parent-target",
         template: xml`<BuilderRow label="'Row 1'">
             <BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>
         </BuilderRow>`,
     });
 
-    addOption({
+    addBuilderOption({
         selector: ".parent-target > div",
         template: xml`
             <BuilderRow label="'Row 2'">
@@ -238,7 +237,7 @@ test("hide empty OptionContainer and display OptionContainer with content (with 
             </BuilderRow>`,
     });
 
-    await setupWebsiteBuilder(
+    await setupHTMLBuilder(
         `<div class="parent-target"><div><div class="child-target">b</div></div></div>`
     );
     await contains(":iframe .parent-target > div").click();
@@ -250,14 +249,14 @@ test("hide empty OptionContainer and display OptionContainer with content (with 
 });
 
 test("hide empty OptionContainer and display OptionContainer with content (with BuilderButtonGroup) - 2", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".parent-target",
         template: xml`<BuilderRow label="'Row 1'">
             <BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>
         </BuilderRow>`,
     });
 
-    addOption({
+    addBuilderOption({
         selector: ".parent-target > div",
         template: xml`
             <BuilderRow label="'Row 2'">
@@ -267,7 +266,7 @@ test("hide empty OptionContainer and display OptionContainer with content (with 
             </BuilderRow>`,
     });
 
-    await setupWebsiteBuilder(
+    await setupHTMLBuilder(
         `<div class="parent-target"><div><div class="child-target">b</div></div></div>`
     );
     await contains(":iframe .parent-target > div").click();
@@ -279,39 +278,39 @@ test("hide empty OptionContainer and display OptionContainer with content (with 
 });
 
 test("fallback on the 'Blocks' tab if no option match the selected element", async () => {
-    await setupWebsiteBuilder(`<div class="parent-target"><div class="child-target">b</div></div>`);
+    await setupHTMLBuilder(`<div class="parent-target"><div class="child-target">b</div></div>`);
     await contains(":iframe .parent-target > div").click();
     expect(".o-snippets-tabs button:contains('Blocks')").toHaveClass("active");
 });
 
 test("display empty message if no option container is visible", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".parent-target",
         template: xml`<BuilderRow label="'Row 1'">
             <BuilderButton applyTo="'.invalid'" classAction="'my-custom-class'"/>
         </BuilderRow>`,
     });
 
-    await setupWebsiteBuilder(`<div class="parent-target"><div class="child-target">b</div></div>`);
+    await setupHTMLBuilder(`<div class="parent-target"><div class="child-target">b</div></div>`);
     await contains(":iframe .parent-target > div").click();
     await animationFrame();
     expect(".o_customize_tab").toHaveText("Select a block on your page to style it.");
 });
 test("hide/display option base on selector", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".parent-target",
         template: xml`<BuilderRow label="'Row 1'">
             <BuilderButton classAction="'my-custom-class'"/>
         </BuilderRow>`,
     });
-    addOption({
+    addBuilderOption({
         selector: ".my-custom-class",
         template: xml`<BuilderRow label="'Row 2'">
             <BuilderButton classAction="'test'"/>
         </BuilderRow>`,
     });
 
-    await setupWebsiteBuilder(`<div class="parent-target"><div class="child-target">b</div></div>`);
+    await setupHTMLBuilder(`<div class="parent-target"><div class="child-target">b</div></div>`);
     await contains(":iframe .parent-target").click();
     expect("[data-class-action='test']").not.toHaveCount();
 
@@ -320,27 +319,27 @@ test("hide/display option base on selector", async () => {
 });
 
 test("hide/display option container base on selector", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".parent-target",
         template: xml`<BuilderRow label="'Row 1'">
             <BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>
         </BuilderRow>`,
     });
-    addOption({
+    addBuilderOption({
         selector: ".my-custom-class",
         template: xml`<BuilderRow label="'Row 2'">
             <BuilderButton classAction="'test'"/>
         </BuilderRow>`,
     });
 
-    addOption({
+    addBuilderOption({
         selector: ".sub-child-target",
         template: xml`<BuilderRow label="'Row 3'">
             <BuilderButton classAction="'another-custom-class'"/>
         </BuilderRow>`,
     });
 
-    await setupWebsiteBuilder(`
+    await setupHTMLBuilder(`
         <div class="parent-target">
             <div class="child-target">
                 <div class="sub-child-target">b</div>
@@ -357,7 +356,7 @@ test("hide/display option container base on selector", async () => {
 });
 
 test("don't rerender the OptionsContainer every time you click on the same element", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".parent-target",
         template: xml`<BuilderRow label="'Row 1'">
             <BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>
@@ -373,7 +372,7 @@ test("don't rerender the OptionsContainer every time you click on the same eleme
         },
     });
 
-    await setupWebsiteBuilder(`
+    await setupHTMLBuilder(`
         <div class="parent-target">
             <div class="child-target">
                 <div class="sub-child-target">b</div>
@@ -388,23 +387,31 @@ test("don't rerender the OptionsContainer every time you click on the same eleme
 });
 
 test("no need to define 'isApplied' method for custom action if the widget already has a generic action", async () => {
-    addOption({
+    addBuilderAction({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            apply({ editingElement, value }) {
+                editingElement.textContent = value;
+            }
+        },
+    });
+    addBuilderOption({
         selector: ".s_test",
         template: xml`
         <BuilderRow label.translate="Type">
             <BuilderSelect>
-                <BuilderSelectItem classAction="'alert-info'" action="'alertIcon'" actionParam="'fa-info-circle'">Info</BuilderSelectItem>
+                <BuilderSelectItem classAction="'A-class'" action="'customAction'" actionParam="'A'">A</BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
     `,
     });
 
-    await setupWebsiteBuilder(`
-        <div class="s_test alert-info">
+    await setupHTMLBuilder(`
+        <div class="s_test A-class">
         a
         </div>`);
     await contains(":iframe .s_test").click();
-    expect(".options-container [data-class-action='alert-info']").toHaveText("Info");
+    expect(".options-container [data-class-action='A-class']").toHaveText("A");
 });
 
 test("useDomState callback shouldn't be called when the editingElement is removed", async () => {
@@ -423,16 +430,16 @@ test("useDomState callback shouldn't be called when the editingElement is remove
             });
         }
     }
-    addOption({
+    addBuilderOption({
         selector: ".s_test",
         editableOnly: false,
         Component: TestOption,
     });
-    addOption({
+    addBuilderOption({
         selector: "*",
         template: xml`<BuilderButton action="'addTestSnippet'">Add</BuilderButton>`,
     });
-    addActionOption({
+    addBuilderAction({
         addTestSnippet: class extends BuilderAction {
             static id = "addTestSnippet";
             apply({ editingElement }) {
@@ -445,7 +452,7 @@ test("useDomState callback shouldn't be called when the editingElement is remove
         },
     });
 
-    const { getEditor } = await setupWebsiteBuilder(`<div class="s_dummy">Hello</div>`);
+    const { getEditor } = await setupHTMLBuilder(`<div class="s_dummy">Hello</div>`);
     editor = getEditor();
     await contains(":iframe .s_dummy").click();
     await contains("[data-action-id='addTestSnippet']").click();
@@ -464,7 +471,7 @@ test("useDomState callback shouldn't be called when the editingElement is remove
 });
 
 test("Update editing elements at dom change with multiple levels of applyTo", async () => {
-    addActionOption({
+    addBuilderAction({
         customAction: class extends BuilderAction {
             static id = "customAction";
             apply({ editingElement }) {
@@ -474,7 +481,7 @@ test("Update editing elements at dom change with multiple levels of applyTo", as
             }
         },
     });
-    addOption({
+    addBuilderOption({
         selector: ".parent-target",
         template: xml`<BuilderRow label="'Row 1'" applyTo="'.child-target'">
             <BuilderButton action="'customAction'" />
@@ -482,7 +489,7 @@ test("Update editing elements at dom change with multiple levels of applyTo", as
         </BuilderRow>`,
     });
 
-    await setupWebsiteBuilder(`
+    await setupHTMLBuilder(`
         <div class="parent-target">
             <div class="child-target">
                 <div class="sub-child-target">b</div>
@@ -495,20 +502,20 @@ test("Update editing elements at dom change with multiple levels of applyTo", as
 });
 
 test("An option should only appear if its target is inside an editable area, unless specified otherwise", async () => {
-    addOption({
+    addBuilderOption({
         selector: ".test-target",
         template: xml`
             <BuilderButton classAction="'dummy-class-a'">Option A</BuilderButton>
         `,
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-target",
         editableOnly: false,
         template: xml`
             <BuilderButton classAction="'dummy-class-b'">Option B</BuilderButton>
         `,
     });
-    const { getEditor } = await setupWebsiteBuilder(`<div></div>`);
+    const { getEditor } = await setupHTMLBuilder(`<div></div>`);
     const editor = getEditor();
     setContent(
         editor.editable,
@@ -533,7 +540,7 @@ test("An option should only appear if its target is inside an editable area, unl
 
 describe("isActiveItem", () => {
     test("a button should not be visible if its dependency isn't (with undo)", async () => {
-        addOption({
+        addBuilderOption({
             selector: ".test-options-target",
             template: xml`
                 <BuilderButton attributeAction="'my-attribute1'" attributeActionValue="'x'" id="'id1'">b1</BuilderButton>
@@ -542,7 +549,7 @@ describe("isActiveItem", () => {
                 <BuilderButton attributeAction="'my-attribute2'" attributeActionValue="'2'" t-if="this.isActiveItem('id2')">b4</BuilderButton>
             `,
         });
-        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
         setSelection({
             anchorNode: queryFirst(":iframe .test-options-target").childNodes[0],
             anchorOffset: 0,
@@ -592,7 +599,7 @@ describe("isActiveItem", () => {
         ).not.toHaveCount();
     });
     test("a button should not be visible if its dependency isn't (in a BuilderSelect with priority)", async () => {
-        addOption({
+        addBuilderOption({
             selector: ".test-options-target",
             template: xml`
                 <BuilderSelect>
@@ -603,7 +610,7 @@ describe("isActiveItem", () => {
                 <BuilderButton classAction="'b2'" t-if="this.isActiveItem('y')">b2</BuilderButton>
             `,
         });
-        await setupWebsiteBuilder(`<div class="test-options-target a">a</div>`);
+        await setupHTMLBuilder(`<div class="test-options-target a">a</div>`);
         setSelection({
             anchorNode: queryFirst(":iframe .test-options-target").childNodes[0],
             anchorOffset: 0,
@@ -623,14 +630,14 @@ describe("isActiveItem", () => {
         expect("[data-class-action='b2']").toBeVisible();
     });
     test("a button should not be visible if the dependency is active", async () => {
-        addOption({
+        addBuilderOption({
             selector: ".test-options-target",
             template: xml`
                 <BuilderButton attributeAction="'my-attribute1'" attributeActionValue="'x'" id="'id1'">b1</BuilderButton>
                 <BuilderButton attributeAction="'my-attribute2'" attributeActionValue="'1'" t-if="!this.isActiveItem('id1')">b3</BuilderButton>
             `,
         });
-        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
         expect(".options-container").toBeVisible();
         expect(
@@ -645,7 +652,7 @@ describe("isActiveItem", () => {
         ).not.toHaveCount();
     });
     test("a button should not be visible if the dependency is active (when a dependency is added after a dependent)", async () => {
-        addOption({
+        addBuilderOption({
             selector: ".test-options-target",
             template: xml`
                 <BuilderButton attributeAction="'my-attribute2'" attributeActionValue="'1'" t-if="this.isActiveItem('id')">b1</BuilderButton>
@@ -655,7 +662,7 @@ describe("isActiveItem", () => {
                 </BuilderRow>
             `,
         });
-        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
         expect(".options-container").toBeVisible();
         expect(
@@ -675,7 +682,7 @@ describe("isActiveItem", () => {
         ).not.toHaveCount();
     });
     test("a button should not be visible if its dependency is removed from the DOM", async () => {
-        addOption({
+        addBuilderOption({
             selector: ".test-options-target",
             template: xml`
                 <BuilderButton classAction="'my-class1'" id="'id1'">b1</BuilderButton>
@@ -683,7 +690,7 @@ describe("isActiveItem", () => {
                 <BuilderButton classAction="'my-class3'" t-if="this.isActiveItem('id2')">b3</BuilderButton>
             `,
         });
-        await setupWebsiteBuilder(`<div class="test-options-target my-class1 my-class2">b</div>`);
+        await setupHTMLBuilder(`<div class="test-options-target my-class1 my-class2">b</div>`);
         await contains(":iframe .test-options-target").click();
         await contains("[data-class-action='my-class1']").click();
         // Wait 2 animation frames: one for id2 to be removed and another for

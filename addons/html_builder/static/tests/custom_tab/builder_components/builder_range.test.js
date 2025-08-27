@@ -1,21 +1,20 @@
-import { expect, test } from "@odoo/hoot";
+import {
+    addBuilderAction,
+    addBuilderOption,
+    setupHTMLBuilder,
+} from "@html_builder/../tests/helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
+import { HistoryPlugin } from "@html_editor/core/history_plugin";
+import { expect, test, describe } from "@odoo/hoot";
 import { advanceTime, animationFrame, click, freezeTime, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
-import {
-    addActionOption,
-    addOption,
-    defineWebsiteModels,
-    setupWebsiteBuilder,
-} from "@website/../tests/builder/website_helpers";
-import { BuilderAction } from "@html_builder/core/builder_action";
-import { HistoryPlugin } from "@html_editor/core/history_plugin";
 
-defineWebsiteModels();
+describe.current.tags("desktop");
 
 test("should commit changes", async () => {
-    addActionOption({
+    addBuilderAction({
         customAction: class extends BuilderAction {
             static id = "customAction";
             getValue({ editingElement }) {
@@ -27,11 +26,11 @@ test("should commit changes", async () => {
             }
         },
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderRange action="'customAction'" displayRangeValue="true"/>`,
     });
-    await setupWebsiteBuilder(`
+    await setupHTMLBuilder(`
         <div class="test-options-target">10</div>
     `);
     await contains(":iframe .test-options-target").click();
@@ -52,7 +51,7 @@ test("should commit changes", async () => {
 });
 
 test("range input should step up or down with arrow keys", async () => {
-    addActionOption({
+    addBuilderAction({
         customAction: class extends BuilderAction {
             static id = "customAction";
             getValue({ editingElement }) {
@@ -64,11 +63,11 @@ test("range input should step up or down with arrow keys", async () => {
             }
         },
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderRange action="'customAction'" step="2" displayRangeValue="true"/>`,
     });
-    await setupWebsiteBuilder(`
+    await setupHTMLBuilder(`
         <div class="test-options-target">10</div>
     `);
     await contains(":iframe .test-options-target").click();
@@ -105,7 +104,7 @@ test("keeping an arrow key pressed should commit only once", async () => {
             return res;
         },
     });
-    addActionOption({
+    addBuilderAction({
         customAction: class extends BuilderAction {
             static id = "customAction";
             getValue({ editingElement }) {
@@ -117,12 +116,12 @@ test("keeping an arrow key pressed should commit only once", async () => {
             }
         },
     });
-    addOption({
+    addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderRange action="'customAction'" step="2" displayRangeValue="true"/>`,
     });
     freezeTime();
-    await setupWebsiteBuilder(`
+    await setupHTMLBuilder(`
         <div class="test-options-target">10</div>
     `);
     await contains(":iframe .test-options-target").click();

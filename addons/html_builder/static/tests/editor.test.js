@@ -1,11 +1,11 @@
+import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
+import { setSelection } from "@html_editor/../tests/_helpers/selection";
+import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
 import { insertText, pasteHtml } from "@html_editor/../tests/_helpers/user_actions";
+import { FontPlugin } from "@html_editor/main/font/font_plugin";
+import { isTextNode } from "@html_editor/utils/dom_info";
+import { parseHTML } from "@html_editor/utils/html";
 import { expect, test, describe } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-mock";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import {
-    defineWebsiteModels,
-    setupWebsiteBuilder,
-} from "@website/../tests/builder/website_helpers";
 import {
     click,
     manuallyDispatchProgrammaticEvent,
@@ -13,16 +13,13 @@ import {
     queryOne,
     waitForNone,
 } from "@odoo/hoot-dom";
-import { isTextNode } from "@html_editor/utils/dom_info";
-import { parseHTML } from "@html_editor/utils/html";
-import { setSelection } from "@html_editor/../tests/_helpers/selection";
-import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
-import { FontPlugin } from "@html_editor/main/font/font_plugin";
+import { animationFrame } from "@odoo/hoot-mock";
+import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-defineWebsiteModels();
+describe.current.tags("desktop");
 
 test("should add an icon from the media modal dialog", async () => {
-    const { getEditor } = await setupWebsiteBuilder(`<p>x</p>`);
+    const { getEditor } = await setupHTMLBuilder(`<p>x</p>`);
     const editor = getEditor();
     const p = editor.document.querySelector("p");
     editor.shared.selection.focusEditable();
@@ -45,7 +42,7 @@ test("should delete text forward", async () => {
         await manuallyDispatchProgrammaticEvent(editor.editable, "keydown", { key });
         await manuallyDispatchProgrammaticEvent(editor.editable, "keyup", { key });
     };
-    const { getEditor } = await setupWebsiteBuilder(`<p>abc</p><p>def</p>`);
+    const { getEditor } = await setupHTMLBuilder(`<p>abc</p><p>def</p>`);
     const editor = getEditor();
     const p = editor.editable.querySelector("p");
     editor.shared.selection.setSelection({ anchorNode: p, anchorOffset: 1 });
@@ -58,7 +55,7 @@ test("should delete text forward", async () => {
 });
 
 test("unsplittable node predicates should not crash when called with text node argument", async () => {
-    const { getEditor } = await setupWebsiteBuilder(`<p>abc</p>`);
+    const { getEditor } = await setupHTMLBuilder(`<p>abc</p>`);
     const editor = getEditor();
     const textNode = editor.editable.querySelector("p").firstChild;
     expect(isTextNode(textNode)).toBe(true);
@@ -68,7 +65,7 @@ test("unsplittable node predicates should not crash when called with text node a
 });
 
 test("should set contenteditable to false on .o_not_editable elements", async () => {
-    const { getEditor } = await setupWebsiteBuilder(`
+    const { getEditor } = await setupHTMLBuilder(`
         <div class="o_not_editable">
             <p>abc</p>
         </div>
@@ -91,7 +88,7 @@ test("should set contenteditable to false on .o_not_editable elements", async ()
 });
 
 test("should preserve iframe in the toolbar's font size input", async () => {
-    const { getEditor } = await setupWebsiteBuilder(`
+    const { getEditor } = await setupHTMLBuilder(`
         <section class="s_text_block pt40 pb40 o_colored_level" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <p>Some text.</p>
@@ -145,7 +142,7 @@ test("should preserve iframe in the toolbar's font size input", async () => {
 });
 
 test("should apply default table classes on paste", async () => {
-    const { getEditor } = await setupWebsiteBuilder(`<p><br></p>`);
+    const { getEditor } = await setupHTMLBuilder(`<p><br></p>`);
     const editor = getEditor();
     const p = editor.document.querySelector("p");
     editor.shared.selection.focusEditable();
@@ -159,7 +156,7 @@ test("should apply default table classes on paste", async () => {
 
 describe("toolbar dropdowns", () => {
     const setup = async () => {
-        const { getEditor } = await setupWebsiteBuilder(`<p>abc</p>`);
+        const { getEditor } = await setupHTMLBuilder(`<p>abc</p>`);
         const editor = getEditor();
         const p = editor.editable.querySelector("p");
         setSelection({ anchorNode: p, anchorOffset: 0, focusOffset: 1 });
@@ -234,7 +231,7 @@ describe("toolbar dropdowns", () => {
 
 describe("font types", () => {
     test("Header 1 Display 1 to 4 are available", async () => {
-        const { getEditor } = await setupWebsiteBuilder(`<p>abc</p>`);
+        const { getEditor } = await setupHTMLBuilder(`<p>abc</p>`);
         const editor = getEditor();
         const p = editor.editable.querySelector("p");
         setSelection({ anchorNode: p, anchorOffset: 0, focusOffset: 1 });
@@ -252,7 +249,7 @@ describe("font types", () => {
         });
     });
     test("'Light' is available", async () => {
-        const { getEditor } = await setupWebsiteBuilder(`<p>abc</p>`);
+        const { getEditor } = await setupHTMLBuilder(`<p>abc</p>`);
         const editor = getEditor();
         const p = editor.editable.querySelector("p");
         setSelection({ anchorNode: p, anchorOffset: 0, focusOffset: 1 });
@@ -266,7 +263,7 @@ describe("font types", () => {
         expect(editor.editable.querySelector("p")).toHaveClass("lead");
     });
     test("'Small' is available", async () => {
-        const { getEditor } = await setupWebsiteBuilder(`<p>abc</p>`);
+        const { getEditor } = await setupHTMLBuilder(`<p>abc</p>`);
         const editor = getEditor();
         const p = editor.editable.querySelector("p");
         setSelection({ anchorNode: p, anchorOffset: 0, focusOffset: 1 });
