@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 import requests
 import logging
+import hmac
+import hashlib
+from urllib.parse import urlencode
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
@@ -104,17 +108,22 @@ class GeoCoder(models.AbstractModel):
         :return: (latitude, longitude) or None if not found
         """
         apikey = self.env['ir.config_parameter'].sudo().get_param('base_geolocalize.google_map_api_key')
+        signing_secret = self.env['ir.config_parameter'].sudo().get_param('base_geolocalize.google_map_api_signing_secret')
         if not apikey:
             raise UserError(_(
                 "API key for GeoCoding (Places) required.\n"
                 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
             ))
-        url = "https://maps.googleapis.com/maps/api/geocode/json"
+        base_url = "https://maps.googleapis.com"
+        url_path = "/maps/api/geocode/json"
         params = {'sensor': 'false', 'address': addr, 'key': apikey}
         if kw.get('force_country'):
             params['components'] = 'country:%s' % kw['force_country']
         try:
-            result = requests.get(url, params).json()
+            if isinstance(signing_secret, str) and signing_secret.strip():
+                params['signature'] = self._sign_path_and_params(url_path, params, signing_secret)
+
+            result = requests.get(f"{base_url}{url_path}", params).json()
         except Exception as e:
             self._raise_query_error(e)
 
@@ -157,3 +166,25 @@ class GeoCoder(models.AbstractModel):
 
     def _raise_query_error(self, error):
         raise UserError(_('Error with geolocation server: %s', error))
+
+    def _sign_path_and_params(self, url_path: str, params: dict[str, str], signing_secret: str) -> str:
+        """ Sign a url_path + query params with a URL-safe base64-encoded HMAC-SHA1 signature.
+
+        :param url_path: the path and query part of the URL to sign (e.g. "/maps/api/geocode/json?address=...")
+        :param signing_secret: the URL-safe base64-encoded signing secret provided by Google
+        :return: the URL-safe base64-encoded signature
+        """
+
+        # Decode the private key into its binary format
+        decoded_key = base64.urlsafe_b64decode(signing_secret)
+
+        # build the path + params into full string to be signed
+        full_path = f"{url_path}?{urlencode(params)}"
+
+        # Create a signature using the private key and the URL-encoded string using HMAC SHA1. This signature will be binary.
+        signature = hmac.new(decoded_key, full_path.encode('utf-8'), hashlib.sha1)
+
+        # Encode the binary signature into base64 for use within a URL
+        encoded_signature = base64.urlsafe_b64encode(signature.digest())
+
+        return encoded_signature.decode('utf-8')
