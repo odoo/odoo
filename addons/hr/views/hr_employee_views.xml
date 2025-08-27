@@ -295,13 +295,9 @@
                                         <div class="o_row" name="wage">
                                             <field name="wage" class="oe_inline o_hr_narrow_field" nolabel="1"/>
                                         </div>
-                                        <label for="contract_type_id" string="Contract Type"/>
-                                        <div class="o_row" name="contract_type">
-                                            <field name="contract_type_id" class="oe_inline o_hr_narrow_field" nolabel="1" placeholder="Contract Type"/>
-                                            <div class="mx-3 flex-grow-0">─</div>
-                                            <field name="structure_type_id" class="oe_inline" nolabel="1" placeholder="Salary Structure Type"
-                                                    domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
-                                        </div>
+                                        <field name="contract_type_id" string="Contract Type" placeholder="Contract Type"/>
+                                        <field name="structure_type_id" string="Pay Category" placeholder="Pay Category"
+                                                domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
 
                                         <separator name="schedule" string="Schedule"/>
                                         <field name="resource_calendar_id" help="The default working hours are set in configuration."/>
