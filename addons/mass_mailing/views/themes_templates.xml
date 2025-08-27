@@ -18,20 +18,14 @@
     <!-- Default Theme -->
     <template id="theme_default_template">
         <style id="design-element">
-            h2 {
-                font-weight: bolder;
-            }
-            p, p > *, li, li > * {
-                color: #6c757d;
-            }
-            a:not(.btn), a.btn.btn-link {
-                font-weight: bolder;
-            }
-            hr {
-                border-top-color: #ced4da !important;
+            .o_layout .o_mail_wrapper .o_mail_wrapper_td {
+                --h2-font-weight: bolder;
+                --text-color: #6c757d;
+                --link-font-weight: bolder;
+                --separator-border-color: #ced4da !important;
             }
         </style>
-        <div class="s_header_logo o_mail_block_header_logo o_mail_snippet_general pt16 pb16">
+        <section class="s_header_logo o_mail_block_header_logo o_mail_snippet_general pt16 pb16" data-snippet="s_header_logo" data-name="Centered Logo">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-4"/>
@@ -43,8 +37,8 @@
                     <div class="col-lg-4" style="text-align: right;"/>
                 </div>
             </div>
-        </div>
-        <div class="s_text_block o_mail_snippet_general pt40 pb16" style="padding-left: 15px; padding-right: 15px;">
+        </section>
+        <section class="s_text_block o_mail_snippet_general pt40 pb16" style="padding-left: 15px; padding-right: 15px;" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <h2>Thank you for joining us!</h2>
                 <p><br/>We want to take this opportunity to welcome you to our ever-growing community!
@@ -57,7 +51,7 @@
                     <a role="button" href="#" class="btn btn-primary">LOGIN</a>
                 </p>
             </div>
-        </div>
+        </section>
         <div class="s_hr pt16 pb16" data-snippet="s_hr" data-name="Separator">
             <hr class="s_hr_1px s_hr_solid"/>
         </div>
