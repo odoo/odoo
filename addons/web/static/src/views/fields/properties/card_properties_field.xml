@@ -28,6 +28,7 @@
                         onTagsChange.bind="() => {}"
                         record="props.record"
                     />
+                    <span class="o_property_field_value_suffix" t-if="propertyConfiguration.suffix" t-out="propertyConfiguration.suffix"/>
                 </div>
             </div>
         </div>
