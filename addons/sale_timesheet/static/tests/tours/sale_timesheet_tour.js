@@ -51,7 +51,10 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: 'button.o_kanban_add',
     content: 'Click on Add button to create the column.',
     run: "click",
-}, {
+},{
+    content: "wait the new column is created",
+    trigger: ".o_kanban_renderer .o_kanban_group .o_kanban_header_title:contains(to do)",
+},{
     trigger: 'button.o-kanban-button-new',
     content: 'Click on Create button to create a task into your project.',
     run: "click",
