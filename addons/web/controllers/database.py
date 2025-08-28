@@ -68,7 +68,7 @@ class Database(http.Controller):
             request.env.cr.close()
         return self._render_template()
 
-    @http.route('/web/database/create', type='http', auth="none", methods=['POST'], csrf=False)
+    @http.route('/web/database/create', type='http', auth="none", methods=['POST'])
     def create(self, master_pwd, name, lang, password, **post):
         insecure = odoo.tools.config.verify_admin_password('admin')
         if insecure and master_pwd:
@@ -91,7 +91,7 @@ class Database(http.Controller):
             error = "Database creation error: %s" % (str(e) or repr(e))
         return self._render_template(error=error)
 
-    @http.route('/web/database/duplicate', type='http', auth="none", methods=['POST'], csrf=False)
+    @http.route('/web/database/duplicate', type='http', auth="none", methods=['POST'])
     def duplicate(self, master_pwd, name, new_name, neutralize_database=False):
         insecure = odoo.tools.config.verify_admin_password('admin')
         if insecure and master_pwd:
@@ -108,7 +108,7 @@ class Database(http.Controller):
             error = "Database duplication error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
-    @http.route('/web/database/drop', type='http', auth="none", methods=['POST'], csrf=False)
+    @http.route('/web/database/drop', type='http', auth="none", methods=['POST'])
     def drop(self, master_pwd, name):
         insecure = odoo.tools.config.verify_admin_password('admin')
         if insecure and master_pwd:
@@ -123,7 +123,7 @@ class Database(http.Controller):
             error = "Database deletion error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
-    @http.route('/web/database/backup', type='http', auth="none", methods=['POST'], csrf=False)
+    @http.route('/web/database/backup', type='http', auth="none", methods=['POST'])
     def backup(self, master_pwd, name, backup_format='zip'):
         insecure = odoo.tools.config.verify_admin_password('admin')
         if insecure and master_pwd:
@@ -146,7 +146,7 @@ class Database(http.Controller):
             error = "Database backup error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
-    @http.route('/web/database/restore', type='http', auth="none", methods=['POST'], csrf=False, max_content_length=None)
+    @http.route('/web/database/restore', type='http', auth="none", methods=['POST'], max_content_length=None)
     def restore(self, master_pwd, backup_file, name, copy=False, neutralize_database=False):
         insecure = odoo.tools.config.verify_admin_password('admin')
         if insecure and master_pwd:
@@ -165,7 +165,7 @@ class Database(http.Controller):
             if data_file:
                 os.unlink(data_file.name)
 
-    @http.route('/web/database/change_password', type='http', auth="none", methods=['POST'], csrf=False)
+    @http.route('/web/database/change_password', type='http', auth="none", methods=['POST'])
     def change_password(self, master_pwd, master_pwd_new):
         try:
             dispatch_rpc('db', 'change_admin_password', [master_pwd, master_pwd_new])

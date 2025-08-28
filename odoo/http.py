@@ -1948,6 +1948,13 @@ class Request:
             case _:
                 pass  # fallback to legacy csrf
 
+        _logger.runbot(
+            "csrf fallback: Sec-Fetch-Site=%r, Origin=%r, Host=%r",
+            headers.get('Sec-Fetch-Site'),
+            headers.get('Origin'),
+            headers.get('Host'),
+            stack_info=True,
+        )
         if not csrf:
             return False
 
