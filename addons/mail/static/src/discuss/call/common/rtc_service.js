@@ -1086,7 +1086,10 @@ export class Rtc extends Record {
                     const session = await this.store["discuss.channel.rtc.session"].getWhenReady(
                         sessionId
                     );
-                    if (!session || !this.state.channel) {
+                    if (!this.selfSession || !this.state.channel) {
+                        return;
+                    }
+                    if (!session) {
                         this.log(
                             this.selfSession,
                             `track received for unknown session ${sessionId} (${this.state.connectionType})`
