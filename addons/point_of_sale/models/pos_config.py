@@ -884,40 +884,6 @@ class PosConfig(models.Model):
                 'type': 'ir.actions.act_window',
             }
 
-    def _link_same_non_cash_payment_methods(self, source_config):
-        pms = source_config.payment_method_ids.filtered(lambda pm: not pm.is_cash_count)
-        if pms:
-            self.payment_method_ids = [Command.link(pm.id) for pm in pms]
-
-    def _is_journal_exist(self, journal_code, name, company_id):
-        account_journal = self.env['account.journal']
-        existing_journal = account_journal.search([
-            ('name', '=', name),
-            ('code', '=', journal_code),
-            ('company_id', '=', company_id),
-        ], limit=1)
-
-        return existing_journal.id or account_journal.create({
-            'name': name,
-            'code': journal_code,
-            'type': 'cash',
-            'company_id': company_id,
-        }).id
-
-    def _is_pos_pm_exist(self, name, journal_id, company_id):
-        pos_payment = self.env['pos.payment.method']
-        existing_pos_cash_pm = pos_payment.search([
-            ('name', '=', name),
-            ('journal_id', '=', journal_id),
-            ('company_id', '=', company_id),
-        ], limit=1)
-
-        return existing_pos_cash_pm.id or pos_payment.create({
-            'name': name,
-            'journal_id': journal_id,
-            'company_id': company_id,
-        }).id
-
     def get_limited_product_count(self):
         return self.env['ir.config_parameter'].sudo().get_int('point_of_sale.limited_product_count') or DEFAULT_LIMIT_LOAD_PRODUCT
 

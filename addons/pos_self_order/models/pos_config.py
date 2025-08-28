@@ -270,15 +270,6 @@ class PosConfig(models.Model):
             "target": "new",
         }
 
-    def _get_self_ordering_attachment(self, images):
-        encoded_images = []
-        for image in images:
-            encoded_images.append({
-                'id': image.id,
-                'data': image.sudo().datas.decode('utf-8'),
-            })
-        return encoded_images
-
     def _load_self_data_models(self):
         return ['pos.session', 'pos.preset', 'resource.calendar.attendance', 'pos.order', 'pos.order.line', 'pos.payment', 'pos.payment.method', 'res.partner',
             'res.currency', 'pos.category', 'product.template', 'product.product', 'product.combo', 'product.combo.item', 'res.company', 'account.tax',
@@ -335,20 +326,6 @@ class PosConfig(models.Model):
             }
 
         return response
-
-    def _split_qr_codes_list(self, floors: List[Dict], cols: int) -> List[Dict]:
-        """
-        :floors: the list of floors
-        :cols: the number of qr codes per row
-        """
-        self.ensure_one()
-        return [
-            {
-                "name": floor.get("name"),
-                "rows_of_tables": list(split_every(cols, floor["tables"], list)),
-            }
-            for floor in floors
-        ]
 
     def _compute_self_ordering_url(self):
         for record in self:

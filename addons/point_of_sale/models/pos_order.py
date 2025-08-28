@@ -1519,10 +1519,6 @@ class PosOrderLine(models.Model):
             'extra_tax_data', 'write_date',
         ]
 
-    @api.model
-    def _is_field_accepted(self, field):
-        return field in self._fields and not field in ['combo_parent_id', 'combo_line_ids']
-
     @api.depends('refund_orderline_ids', 'refund_orderline_ids.order_id.state')
     def _compute_refund_qty(self):
         for orderline in self:

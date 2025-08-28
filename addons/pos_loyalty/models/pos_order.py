@@ -282,11 +282,6 @@ class PosOrder(models.Model):
         for item in items_to_remove:
             coupon_data.pop(item)
 
-    def _get_fields_for_order_line(self):
-        fields = super(PosOrder, self)._get_fields_for_order_line()
-        fields.extend(['is_reward_line', 'reward_id', 'coupon_id', 'reward_identifier_code', 'points_cost'])
-        return fields
-
     def _add_mail_attachment(self, name, ticket, basic_receipt):
         attachment = super()._add_mail_attachment(name, ticket, basic_receipt)
         gift_card_programs = self.config_id._get_program_ids().filtered(lambda p: p.program_type == 'gift_card' and
