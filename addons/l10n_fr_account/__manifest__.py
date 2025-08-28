@@ -32,6 +32,7 @@ configuration of their taxes and fiscal positions manually.
         'base_iban',
         'base_vat',
         'account',
+        'account_edi_ubl_cii',
         'l10n_fr',
     ],
     'auto_install': ['account'],

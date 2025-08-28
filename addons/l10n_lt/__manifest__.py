@@ -21,6 +21,7 @@ This module also includes:
     'category': 'Accounting/Localizations/Account Charts',
     'depends': [
         'account',
+        'account_edi_ubl_cii',
     ],
     'auto_install': ['account'],
     'data': [
