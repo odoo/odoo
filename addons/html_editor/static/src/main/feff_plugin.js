@@ -11,6 +11,7 @@ import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 /**
  * @typedef { Object } FeffShared
  * @property { FeffPlugin['addFeff'] } addFeff
+ * @property { FeffPlugin['removeFeffs'] } removeFeffs
  */
 
 /**

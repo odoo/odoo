@@ -20,6 +20,13 @@ import { withSequence } from "@html_editor/utils/resource";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { childNodeIndex } from "@html_editor/utils/position";
 
+/**
+ * @typedef { Object } BaseContainerShared
+ * @property { BaseContainerPlugin['createBaseContainer'] } createBaseContainer
+ * @property { BaseContainerPlugin['getDefaultNodeName'] } getDefaultNodeName
+ * @property { BaseContainerPlugin['isCandidateForBaseContainer'] } isCandidateForBaseContainer
+ */
+
 export class BaseContainerPlugin extends Plugin {
     static id = "baseContainer";
     static shared = ["createBaseContainer", "getDefaultNodeName", "isCandidateForBaseContainer"];
