@@ -251,6 +251,19 @@ class TestPaymentTransaction(PaymentCommon):
                 "'done'."
         )
 
+    def test_processing_does_not_apply_updates_when_amount_data_is_invalid(self):
+        tx = self._create_transaction('redirect', state='draft', amount=100)
+        with patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._extract_amount_data', return_value={'amount': 10, 'currency_code': 'USD'}
+        ), patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._apply_updates'
+        ) as apply_updates_mock:
+            tx._process('test', {})
+        self.assertEqual(tx.state, 'error')
+        self.assertEqual(apply_updates_mock.call_count, 0)
+
     def test_processing_tokenizes_validated_transaction(self):
         """Test that `_process` tokenizes 'authorized' and 'done' transactions when possible."""
         self.provider.support_manual_capture = 'partial'
