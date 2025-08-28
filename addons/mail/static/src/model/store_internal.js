@@ -5,7 +5,7 @@ import { markup, toRaw } from "@odoo/owl";
 import { RecordInternal } from "./record_internal";
 import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
 import { htmlEscape } from "@web/core/utils/html";
-import { IS_DELETING_SYM, isCommand, isMany } from "./misc";
+import { IS_DELETED_SYM, IS_DELETING_SYM, isCommand, isMany } from "./misc";
 
 const Markup = markup().constructor;
 
@@ -123,6 +123,8 @@ export class StoreInternal extends RecordInternal {
                 /** @type {import("./record").Record} */
                 const [record] = params;
                 record._[IS_DELETING_SYM] = true;
+                record._[IS_DELETED_SYM] = true;
+                delete record.Model.records[record.localId];
                 if (!this.RHD_QUEUE.has(record)) {
                     this.RHD_QUEUE.set(record, true);
                 }
