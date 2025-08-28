@@ -171,6 +171,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
         content:  "Send the form",
         trigger:  ".s_website_form_send",
         run: "click",
+        expectUnloadPage: true,
     },
     {
         content:  "Check form is submitted without errors",
