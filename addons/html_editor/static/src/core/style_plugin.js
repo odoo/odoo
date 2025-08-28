@@ -1,6 +1,11 @@
 import { Plugin } from "@html_editor/plugin";
 import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
 
+/**
+ * @typedef { Object } StyleShared
+ * @property { StylePlugin['setBackgroundImageUrl'] } setBackgroundImageUrl
+ */
+
 export class StylePlugin extends Plugin {
     static id = "style";
     static shared = ["setBackgroundImageUrl"];
