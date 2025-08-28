@@ -63,7 +63,10 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'redsys':
             return super()._get_specific_rendering_values(processing_values)
 
-        encoded_merchant_parameters = self._redsys_prepare_merchant_parameters()
+        merchant_parameters = self._redsys_prepare_merchant_parameters()
+        encoded_merchant_parameters = base64.b64encode(
+            json.dumps(merchant_parameters).encode()
+        ).decode()
         signature = self.provider_id._redsys_calculate_signature(
             encoded_merchant_parameters, self.reference, self.provider_id.redsys_secret_key
         )
@@ -75,10 +78,9 @@ class PaymentTransaction(models.Model):
         }
 
     def _redsys_prepare_merchant_parameters(self):
-        """Create the merchant parameters payload based on the transaction values and return it in
-        Base64-encoded format.
+        """Create the merchant parameters payload based on the transaction values.
 
-        :return: The encoded merchant parameters.
+        :return: The merchant parameters.
         :rtype: str
         """
         converted_amount = payment_utils.to_minor_currency_units(self.amount, self.currency_id)
@@ -108,13 +110,7 @@ class PaymentTransaction(models.Model):
                 'email': self.partner_email,
             }
         }
-
-        # Encode the parameters in Base64.
-        encoded_merchant_parameters = base64.b64encode(
-            json.dumps(merchant_parameters).encode()
-        ).decode()
-
-        return encoded_merchant_parameters
+        return merchant_parameters
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):
