@@ -2,7 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useErrorHandlers, useTrackedAsync } from "@point_of_sale/app/utils/hooks";
 import { registry } from "@web/core/registry";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
-import { useState, Component, onMounted } from "@odoo/owl";
+import { useState, Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -28,13 +28,6 @@ export class ReceiptScreen extends Component {
         this.sendReceipt = useTrackedAsync(this._sendReceiptToCustomer.bind(this));
         this.doFullPrint = useTrackedAsync(() => this.pos.printReceipt());
         this.doBasicPrint = useTrackedAsync(() => this.pos.printReceipt({ basic: true }));
-        onMounted(() => {
-            const order = this.pos.get_order();
-
-            if (!this.pos.config.module_pos_restaurant) {
-                this.pos.checkPreparationStateAndSentOrderInPreparation(order);
-            }
-        });
     }
 
     _addNewOrder() {
