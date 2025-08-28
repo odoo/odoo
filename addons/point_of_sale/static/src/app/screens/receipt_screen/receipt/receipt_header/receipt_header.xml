@@ -37,7 +37,7 @@
                 </div>
             </div>
         </div>
-        <div t-if="order?.presetDateTime" class="pt-2">
+        <div t-if="order?.presetDateTime" class="pt-2 text-center">
             <span>
                 <t t-out="order.preset_id.name"/>: <t t-out="order.presetDateTime"/>
             </span>
