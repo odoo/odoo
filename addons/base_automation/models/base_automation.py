@@ -69,6 +69,14 @@ DATE_RANGE_FACTOR = {
     False: 0,
 }
 
+TIMEDELTA_TYPES = {
+    'minutes': lambda interval: datetime.timedelta(minutes=interval),
+    'hours': lambda interval: datetime.timedelta(hours=interval),
+    'days': lambda interval: datetime.timedelta(days=interval),
+    'weeks': lambda interval: datetime.timedelta(weeks=interval),
+    'months': lambda interval: datetime.timedelta(days=30 * interval),
+}
+
 CREATE_TRIGGERS = [
     'on_create',
     'on_create_or_write',
@@ -650,11 +658,17 @@ class BaseAutomation(models.Model):
                 return
             automations = self.with_context(active_test=True).search([('trigger', 'in', TIME_TRIGGERS)])
             interval_number, interval_type = self._get_cron_interval(automations)
-            cron.write({
-                'active': bool(automations),
-                'interval_type': interval_type,
-                'interval_number': interval_number,
-            })
+            vals = {'active': bool(automations)}
+
+            actual_cron_timedelta = TIMEDELTA_TYPES[cron.interval_type](cron.interval_number)
+            new_cron_timedelta = TIMEDELTA_TYPES[interval_type](interval_number)
+            if new_cron_timedelta < actual_cron_timedelta:
+                # we only update the cron interval if the new delay is shorter than the current one
+                vals.update({
+                    'interval_type': interval_type,
+                    'interval_number': interval_number,
+                })
+            cron.write(vals)
 
     def _update_registry(self):
         """ Update the registry after a modification on automation rules. """
