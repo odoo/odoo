@@ -14,11 +14,8 @@ from odoo.addons.iot_drivers.driver import Driver
 from odoo.addons.iot_drivers.main import iot_devices
 from odoo.addons.iot_drivers.tools import helpers, route
 from odoo.addons.iot_drivers.tools.helpers import Orientation
-from odoo.tools.misc import file_path
 
 _logger = logging.getLogger(__name__)
-
-MIN_IMAGE_VERSION_WAYLAND = 25.03
 
 
 class DisplayDriver(Driver):
@@ -32,14 +29,14 @@ class DisplayDriver(Driver):
         self.owner = False
         self.customer_display_data = {}
         self.url, self.orientation = helpers.load_browser_state()
-        if self.device_identifier != 'distant_display':
-            self._x_screen = device.get('x_screen', '0')
-            self.browser = Browser(
-                self.url or 'http://localhost:8069/status/',
-                self._x_screen,
-                os.environ.copy(),
-            )
-            self.update_url(self.get_url_from_db())
+
+        self._x_screen = device.get('x_screen', '0')
+        self.browser = Browser(
+            self.url or 'http://localhost:8069/status/',
+            self._x_screen,
+            os.environ.copy(),
+        )
+        self.update_url(self.get_url_from_db())
 
         self._actions.update({
             'update_url': self._action_update_url,
@@ -63,7 +60,7 @@ class DisplayDriver(Driver):
         return len(displays) and iot_devices[displays[0]]
 
     def run(self):
-        while self.device_identifier != 'distant_display' and not self._stopped.is_set() and "pos_customer_display" not in self.url:
+        while not self._stopped.is_set() and "pos_customer_display" not in self.url:
             time.sleep(60)
             if self.url != 'http://localhost:8069/status/' and self.browser.state != BrowserState.KIOSK:
                 # Refresh the page every minute
@@ -97,66 +94,50 @@ class DisplayDriver(Driver):
             return response.content.decode('utf8')
 
     def _action_update_url(self, data):
-        if self.device_identifier != 'distant_display':
-            self.update_url(data.get('url'))
+        self.update_url(data.get('url'))
 
     def _action_display_refresh(self, data):
-        if self.device_identifier != 'distant_display':
-            self.browser.refresh()
+        self.browser.refresh()
 
     def _action_open_kiosk(self, data):
-        if self.device_identifier != 'distant_display':
-            origin = helpers.get_odoo_server_url()
-            self.update_url(f"{origin}/pos-self/{data.get('pos_id')}?access_token={data.get('access_token')}")
-            self.set_orientation(Orientation.RIGHT)
+        origin = helpers.get_odoo_server_url()
+        self.update_url(f"{origin}/pos-self/{data.get('pos_id')}?access_token={data.get('access_token')}")
+        self.set_orientation(Orientation.RIGHT)
 
     def _action_rotate_screen(self, data):
-        if self.device_identifier == 'distant_display':
-            return
-
         orientation = data.get('orientation', 'NORMAL').upper()
         self.set_orientation(Orientation[orientation])
 
     def _action_open_customer_display(self, data):
-        if self.device_identifier == 'distant_display' or not data.get('pos_id') or not data.get('access_token'):
+        if not data.get('pos_id') or not data.get('access_token'):
             return
 
         origin = helpers.get_odoo_server_url() or http.request.httprequest.origin
         self.update_url(f"{origin}/pos_customer_display/{data['pos_id']}/{data['access_token']}")
 
     def _action_close_customer_display(self, data):
-        if self.device_identifier == 'distant_display':
-            return
-
         helpers.update_conf({"browser_url": "", "screen_orientation": ""})
         self.browser.disable_kiosk_mode()
         self.update_url()
 
     def _action_set_customer_display(self, data):
-        if self.device_identifier == 'distant_display' or not data.get('data'):
+        if not data.get('data'):
             return
 
         self.data['customer_display_data'] = data['data']
 
     def set_orientation(self, orientation=Orientation.NORMAL):
-        if self.device_identifier == 'distant_display':
-            return
-
         if type(orientation) is not Orientation:
             raise TypeError("orientation must be of type Orientation")
 
-        if float(helpers.get_version()[1:]) >= MIN_IMAGE_VERSION_WAYLAND:
-            subprocess.run(['wlr-randr', '--output', self.device_identifier, '--transform', orientation.value], check=True)
-            # Update touchscreen mapping to this display
-            subprocess.run(
-                ['sed', '-i', f's/HDMI-A-[12]/{self.device_identifier}/', '/home/odoo/.config/labwc/rc.xml'],
-                check=False,
-            )
-            # Tell labwc to reload its configuration
-            subprocess.run(['pkill', '-HUP', 'labwc'], check=False)
-        else:
-            subprocess.run(['xrandr', '-o', orientation.name.lower()], check=True)
-            subprocess.run([file_path('iot_drivers/tools/sync_touchscreen.sh'), str(int(self._x_screen) + 1)], check=False)
+        subprocess.run(['wlr-randr', '--output', self.device_identifier, '--transform', orientation.value], check=True)
+        # Update touchscreen mapping to this display
+        subprocess.run(
+            ['sed', '-i', f's/HDMI-A-[12]/{self.device_identifier}/', '/home/odoo/.config/labwc/rc.xml'],
+            check=False,
+        )
+        # Tell labwc to reload its configuration
+        subprocess.run(['pkill', '-HUP', 'labwc'], check=False)
         helpers.save_browser_state(orientation=orientation)
 
 
