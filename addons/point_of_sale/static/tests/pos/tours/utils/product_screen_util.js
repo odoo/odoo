@@ -209,7 +209,11 @@ export function clickPartnerButton() {
     ];
 }
 export function clickCustomer(name) {
-    return [PartnerList.clickPartner(name), { ...back(), isActive: ["mobile"] }];
+    return [
+        ...PartnerList.searchCustomerValue(name),
+        PartnerList.clickPartner(name),
+        { ...back(), isActive: ["mobile"] },
+    ];
 }
 export function selectPreset(selectedPreset, presetToSelect) {
     return [

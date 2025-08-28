@@ -1,4 +1,3 @@
-import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
 import * as PosLoyalty from "@pos_loyalty/../tests/tours/utils/pos_loyalty_util";
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
@@ -141,7 +140,6 @@ registry.category("web_tour.tours").add("PosLoyaltyChangeRewardQty", {
         [
             Chrome.startPoS(),
             ProductScreen.clickPartnerButton(),
-            PartnerList.searchCustomerValue("DDD Test Partner"),
             ProductScreen.clickCustomer("DDD Test Partner"),
             ProductScreen.addOrderline("Desk Organizer", "1"),
             PosLoyalty.isRewardButtonHighlighted(true),
