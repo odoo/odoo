@@ -32,6 +32,13 @@
                         <i class="oi oi-search" role="img"/>
                     </button>
                 </t>
+                <button t-if="hasPinnedMessages"
+                        class="btn btn-link text-action"
+                        aria-label="Pinned Messages"
+                        title="Pinned Messages"
+                        t-on-click="onClickPinnedMessages">
+                    <i class="fa fa-thumb-tack" role="img"/>
+                </button>
                 <button t-if="props.hasAttachmentPreview and state.thread.attachmentsInWebClientView.length" class="btn btn-link text-action" t-on-click="popoutAttachment">
                     <i class="fa fa-window-restore" aria-hidden="Pop out Attachments" title="Pop out Attachments"/>
                 </button>
@@ -66,13 +73,13 @@
         </div>
         <div class="o-mail-Chatter-content d-flex flex-column flex-grow-1 bg-inherit">
             <t>
-                <t t-if="props.has_activities and activities.length and !messageSearch.searching and !messageSearch.searched">
+                <t t-if="props.has_activities and activities.length and !messageSearch.searching and !messageSearch.searched and !state.ispinnedMessagesActive">
                     <t t-call="mail.ActivityList"/>
                 </t>
-                <t t-if="scheduledMessages.length">
+                <t t-if="scheduledMessages.length  and !state.ispinnedMessagesActive">
                     <t t-call="mail.ScheduledMessagesList"/>
                 </t>
-                <div t-if="state.isAttachmentBoxOpened" class="o-mail-AttachmentBox position-relative">
+                <div t-if="state.isAttachmentBoxOpened  and !state.ispinnedMessagesActive" class="o-mail-AttachmentBox position-relative">
                     <div class="d-flex align-items-center">
                         <hr class="flex-grow-1"/>
                         <span class="p-3 fw-bold">
@@ -96,6 +103,23 @@
                     </div>
                 </div>
                 <SearchMessageResult t-if="messageSearch.searching or messageSearch.searched" thread="state.thread"  messageSearch="messageSearch" onClickJump.bind="closeSearch"/>
+                <div t-elif="state.ispinnedMessagesActive and hasPinnedMessages" class="o-mail-PinnedMessagesPanel bg-inherit">
+                    <div class="d-flex align-items-center">
+                        <hr class="flex-grow-1"/>
+                        <span class="p-3 fw-bold">
+                            Pinned Messages
+                        </span>
+                        <hr class="flex-grow-1"/>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <MessageCardList 
+                            messages="state.thread.pinnedMessages" 
+                            thread="state.thread" 
+                            mode="'pin'"
+                            onClickJump.bind="closePinnedMessages"
+                        />
+                    </div>
+                </div>
                 <Thread t-else="" thread="state.thread" t-key="state.thread.localId" order="'desc'" scrollRef="rootRef" jumpPresent="state.jumpThreadPresent"/>
             </t>
         </div>

@@ -938,7 +938,7 @@ test("Can scroll to notification", async () => {
     await tick(); // wait for the scroll to first unread to complete
     await isInViewportOf(".o-mail-Message:contains(message 59)", ".o-mail-Thread");
     await click("[title='Pinned Messages']");
-    await click(".o-discuss-PinnedMessagesPanel a[role='button']", { text: "Jump" });
+    await click(".o-mail-PinnedMessagesPanel a[role='button']", { text: "Jump" });
     await isInViewportOf(".o-mail-NotificationMessage:contains(notification 0)", ".o-mail-Thread");
 });
 

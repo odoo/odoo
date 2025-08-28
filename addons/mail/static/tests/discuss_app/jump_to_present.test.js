@@ -279,7 +279,7 @@ test("when triggering jump to present, keeps showing old messages until recent o
     await openDiscuss(channelId);
     await waitForSteps(["/discuss/channel/messages"]);
     await click("[title='Pinned Messages']");
-    await click(".o-discuss-PinnedMessagesPanel a[role='button']", { text: "Jump" });
+    await click(".o-mail-PinnedMessagesPanel a[role='button']", { text: "Jump" });
     await contains(".o-mail-Thread .o-mail-Message", { text: "first-message" });
     await animationFrame();
     slowMessageFetchDeferred = new Deferred();

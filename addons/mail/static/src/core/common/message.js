@@ -357,7 +357,10 @@ export class Message extends Component {
     }
 
     get isAlignedRight() {
-        return Boolean(this.env.inChatWindow && this.props.message.isSelfAuthored);
+        return (
+            !this.env.messageCard &&
+            Boolean(this.env.inChatWindow && this.props.message.isSelfAuthored)
+        );
     }
 
     get isMobileOS() {
@@ -394,7 +397,7 @@ export class Message extends Component {
      * @returns {boolean}
      */
     get shouldDisplayAuthorName() {
-        if (!this.env.inChatWindow) {
+        if (!this.env.inChatWindow || this.env.messageCard) {
             return true;
         }
         if (this.message.isSelfAuthored) {

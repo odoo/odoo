@@ -27,6 +27,15 @@ export function messageActionOpenFullComposer(title, context, component) {
     });
 }
 
+registerMessageAction("pin", {
+    condition: ({store, thread}) =>store.self_partner && thread?.model !== "mail.box",
+    icon: "fa fa-thumb-tack",
+    iconLarge: "fa fa-lg fa-thumb-tack",
+    name: ({ message }) => (message.pinned_at ? _t("Unpin") : _t("Pin")),
+    onSelected: ({ message }) => message.pin(),
+    sequence: 65,
+});
+
 registerMessageAction("reply-all", {
     condition: ({ message, thread }) => message.canReplyAll(thread),
     icon: "fa fa-reply",

@@ -248,6 +248,38 @@ export class Thread extends Record {
      *  @type {integer|undefined}
      */
     pid;
+    /** @type {"loaded"|"loading"|"error"|undefined} */
+    pinnedMessagesState = undefined;
+    pinnedMessages = fields.Many("mail.message", {
+        compute() {
+            return this.allMessages.filter((m) => m.pinned_at);
+        },
+        sort: (m1, m2) => {
+            if (m1.pinned_at === m2.pinned_at) {
+                return m1.id - m2.id;
+            }
+            return m1.pinned_at < m2.pinned_at ? 1 : -1;
+        },
+    });
+
+    async fetchPinnedMessages() {
+        if (["loaded", "loading"].includes(this.pinnedMessagesState)) {
+            return;
+        }
+        this.pinnedMessagesState = "loading";
+        let data;
+        try {
+            data = await rpc("/mail/thread/pinned_messages", {
+                thread_id: this.id,
+                thread_model: this.model,
+            });
+        } catch (e) {
+            this.pinnedMessagesState = "error";
+            throw e;
+        }
+        this.store.insert(data);
+        this.pinnedMessagesState = "loaded";
+    }
 
     get accessRestrictedToGroupText() {
         if (!this.group_public_id?.full_name) {
