@@ -145,7 +145,7 @@ class MailThread(models.AbstractModel):
 
     def _notify_thread_by_sms(self, message, recipients_data, msg_vals=False,
                               sms_content=None, sms_numbers=None, sms_pid_to_number=None,
-                              resend_existing=False, put_in_queue=False, **kwargs):
+                              put_in_queue=False, **kwargs):
         """ Notification method: by SMS.
 
         :param record message: <mail.message> record being notified. May be
@@ -164,8 +164,6 @@ class MailThread(models.AbstractModel):
           and classic recipients;
         :param pid_to_number: force a number to notify for a given partner ID
           instead of taking its mobile / phone number;
-        :param resend_existing: check for existing notifications to update based on
-          mailed recipient, otherwise create new notifications;
         :param put_in_queue: use cron to send queued SMS instead of sending them
           directly;
         """
@@ -211,22 +209,8 @@ class MailThread(models.AbstractModel):
             ) for n in tocreate_numbers if n not in existing_partners_numbers]
 
         # create sms and notification
-        existing_pids, existing_numbers = [], []
         if sms_create_vals:
             sms_all |= self.env['sms.sms'].sudo().create(sms_create_vals)
-
-            if resend_existing:
-                existing = self.env['mail.notification'].sudo().search([
-                    '|', ('res_partner_id', 'in', partner_ids),
-                    '&', ('res_partner_id', '=', False), ('sms_number', 'in', sms_numbers),
-                    ('notification_type', '=', 'sms'),
-                    ('mail_message_id', 'in', message.ids),
-                ])
-                for n in existing:
-                    if n.res_partner_id.id in partner_ids and n.mail_message_id == message:
-                        existing_pids.append(n.res_partner_id.id)
-                    if not n.res_partner_id and n.sms_number in sms_numbers and n.mail_message_id == message:
-                        existing_numbers.append(n.sms_number)
 
             notif_create_values = [{
                 'author_id': message.author_id.id,
@@ -239,23 +223,9 @@ class MailThread(models.AbstractModel):
                 'is_read': True,  # discard Inbox notification
                 'notification_status': 'ready' if sms.state == 'outgoing' else 'exception',
                 'failure_type': '' if sms.state == 'outgoing' else sms.failure_type,
-            } for sms in sms_all if (sms.partner_id and sms.partner_id.id not in existing_pids) or (not sms.partner_id and sms.number not in existing_numbers)]
+            } for sms in sms_all]
             if notif_create_values:
                 self.env['mail.notification'].sudo().create(notif_create_values)
-
-            if existing_pids or existing_numbers:
-                for sms in sms_all:
-                    notif = next((n for n in existing if
-                                 (n.res_partner_id.id in existing_pids and n.res_partner_id.id == sms.partner_id.id) or
-                                 (not n.res_partner_id and n.sms_number in existing_numbers and n.sms_number == sms.number)), False)
-                    if notif:
-                        notif.write({
-                            'notification_type': 'sms',
-                            'notification_status': 'ready',
-                            'sms_id_int': sms.id,
-                            'sms_tracker_ids': [Command.create({'sms_uuid': sms.uuid})],
-                            'sms_number': sms.number,
-                        })
 
         if sms_all and not put_in_queue:
             sms_all.filtered(lambda sms: sms.state == 'outgoing').send(raise_exception=False)
