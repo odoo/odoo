@@ -3,6 +3,7 @@
 from datetime import datetime, timedelta
 from lxml import etree
 from werkzeug.exceptions import NotFound
+from unittest import skip
 from urllib.parse import urlparse
 
 from odoo import Command
@@ -12,6 +13,8 @@ from odoo.addons.website_sale.tests.common import MockRequest
 from odoo.addons.website_sale.tests.common_gmc import WebsiteSaleGMCCommon
 
 
+# TODO re-enable GMC tests
+@skip("GMC feature disabled")
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
 
