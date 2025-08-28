@@ -6,6 +6,7 @@ import { getRunner } from "../main_runner";
 import { patchWindow } from "../mock/window";
 import { generateStyleSheets, setColorRoot } from "./hoot_colors";
 import { HootMain } from "./hoot_main";
+import { HootFixtureElement } from "../core/fixture";
 
 /**
  * @typedef {"failed" | "passed" | "skipped" | "todo"} StatusFilter
@@ -133,6 +134,7 @@ export async function setupHootUI() {
 
     await waitForDocument(document);
 
+    document.head.appendChild(HootFixtureElement.styleElement);
     document.body.appendChild(container);
 
     const promises = [
