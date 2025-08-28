@@ -1535,16 +1535,6 @@ class PosSession(models.Model):
 
         return new_amounts
 
-    def _round_amounts(self, amounts):
-        new_amounts = {}
-        for key, amount in amounts.items():
-            if key == 'amount_converted':
-                # round the amount_converted using the company currency.
-                new_amounts[key] = self.company_id.currency_id.round(amount)
-            else:
-                new_amounts[key] = self.currency_id.round(amount)
-        return new_amounts
-
     def _credit_amounts(self, partial_move_line_vals, amount, amount_converted, force_company_currency=False):
         """ `partial_move_line_vals` is completed by `credit`ing the given amounts.
 
@@ -1784,58 +1774,6 @@ class PosSession(models.Model):
         absl.unlink()
         self.log_partner_message(partner_id, action, "CASH_IN_OUT_UNLINK")
 
-    def _get_attributes_by_ptal_id(self):
-        # performance trick: prefetch fields with search_fetch() and fetch()
-        product_attributes = self.env['product.attribute'].search_fetch(
-            [('create_variant', '=', 'no_variant')],
-            ['name', 'display_type'],
-        )
-        product_template_attribute_values = self.env['product.template.attribute.value'].search_fetch(
-            [('attribute_id', 'in', product_attributes.ids)],
-            ['attribute_id', 'attribute_line_id', 'product_attribute_value_id', 'price_extra'],
-        )
-        product_template_attribute_values.product_attribute_value_id.fetch(['name', 'is_custom', 'html_color', 'image'])
-
-        key1 = lambda ptav: (ptav.attribute_line_id.id, ptav.attribute_id.id)
-        key2 = lambda ptav: (ptav.attribute_line_id.id, ptav.attribute_id)
-        res = {}
-        for key, group in groupby(sorted(product_template_attribute_values, key=key1), key=key2):
-            attribute_line_id, attribute = key
-            values = [{**ptav.product_attribute_value_id.read(['name', 'is_custom', 'html_color', 'image'])[0],
-                       'price_extra': ptav.price_extra,
-                       # id of a value should be from the "product.template.attribute.value" record
-                       'id': ptav.id,
-                       } for ptav in list(group)]
-            res[attribute_line_id] = {
-                'id': attribute_line_id,
-                'name': attribute.name,
-                'display_type': attribute.display_type,
-                'values': values,
-                'sequence': attribute.sequence,
-            }
-
-        return res
-
-    def _get_partners_domain(self):
-        return []
-
-    def find_product_by_barcode(self, barcode, config_id):
-        # Kept for backward compatibility.
-        return self.env['product.template'].load_product_from_pos(config_id, [
-            '|',
-            ('product_variant_ids.barcode', '=', barcode),
-            ('barcode', '=', barcode),
-            ('available_in_pos', '=', True),
-            ('sale_ok', '=', True),
-        ])
-
-    def get_total_discount(self):
-        amount = 0
-        for line in self.env['pos.order.line'].search([('order_id', 'in', self._get_closed_orders().ids), ('discount', '>', 0)]):
-            amount += line._get_discount_amount()
-
-        return amount
-
     def _get_invoice_total_list(self):
         invoice_list = []
         for order in self.order_ids.filtered(lambda o: o.is_invoiced):
@@ -1864,9 +1802,6 @@ class PosSession(models.Model):
             body = _('Cash move deleted: %s', action)
 
         self.message_post(body=body, author_id=partner_id)
-
-    def _pos_has_valid_product(self):
-        return self.env['product.product'].sudo().search_count([('available_in_pos', '=', True), ('list_price', '>=', 0), ('id', 'not in', self.env['pos.config']._get_special_products().ids), '|', ('active', '=', False), ('active', '=', True)], limit=1) > 0
 
     def _get_closed_orders(self):
         return self.order_ids.filtered(lambda o: o.state not in ['draft', 'cancel'])

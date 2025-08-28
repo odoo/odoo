@@ -210,12 +210,6 @@ class PosOrder(models.Model):
         self.env['l10n_es_edi_verifactu.document'].trigger_next_batch()
         return document_map
 
-    def _order_fields(self, ui_order):
-        # EXTENDS 'point_of_sale'
-        vals = super()._order_fields(ui_order)
-        vals['l10n_es_edi_verifactu_refund_reason'] = ui_order.get('l10n_es_edi_verifactu_refund_reason', False)
-        return vals
-
     def _process_saved_order(self, draft):
         self.ensure_one()
         if self.l10n_es_edi_verifactu_required:

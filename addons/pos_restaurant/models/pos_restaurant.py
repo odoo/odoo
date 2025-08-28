@@ -55,10 +55,6 @@ class RestaurantFloor(models.Model):
 
         return super().write(vals)
 
-    def rename_floor(self, new_name):
-        for floor in self:
-            floor.name = new_name
-
     @api.model
     def sync_from_ui(self, name, background_color, config_id):
         floor_fields = {
