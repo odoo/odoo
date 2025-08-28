@@ -114,17 +114,16 @@ class PeppolConfigWizard(models.TransientModel):
         """Interpret changes to the services, and add or remove them on the IAP accordingly."""
         self.ensure_one()
 
-        # Update company details
-        if self.account_peppol_contact_email != self.company_id.account_peppol_contact_email:
-            params = {
-                'update_data': {
-                    'peppol_contact_email': self.account_peppol_contact_email,
-                }
+        # Update email unconditionally. account_peppol_contact_email is a related field so changes can't be detected
+        params = {
+            'update_data': {
+                'peppol_contact_email': self.account_peppol_contact_email,
             }
-            self.account_peppol_edi_user._call_peppol_proxy(
-                endpoint='/api/peppol/1/update_user',
-                params=params,
-            )
+        }
+        self.account_peppol_edi_user._call_peppol_proxy(
+            endpoint='/api/peppol/1/update_user',
+            params=params,
+        )
 
         # Update services
         if self.account_peppol_proxy_state == 'receiver':
