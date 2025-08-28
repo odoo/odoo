@@ -109,6 +109,11 @@ class MockDateTimeFormat extends DateTimeFormat {
         });
     }
 
+    /** @type {Intl.DateTimeFormat["format"]} */
+    format(date) {
+        return super.format(date || new MockDate());
+    }
+
     resolvedOptions() {
         return {
             ...super.resolvedOptions(),
