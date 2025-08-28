@@ -260,7 +260,7 @@ class PosConfig(models.Model):
         return self.search_read(domain, fields, load=False)
 
     def _post_read_pos_data(self, data):
-        if not data[0]['use_pricelist']:
+        if data and not data[0]['use_pricelist']:
             data[0]['pricelist_id'] = False
         return super()._post_read_pos_data(data)
 
