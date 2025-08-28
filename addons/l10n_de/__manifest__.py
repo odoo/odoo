@@ -21,6 +21,7 @@ By default, the audit trail is enabled for GoBD compliance.
         'base_vat',
         'l10n_din5008',
         'account',
+        'account_edi_ubl_cii',
     ],
     'auto_install': ['account'],
     'data': [
