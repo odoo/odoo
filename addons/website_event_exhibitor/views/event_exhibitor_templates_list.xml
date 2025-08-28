@@ -78,9 +78,9 @@
     active="True">
     <xpath expr="//div[hasclass('o_wesponsor_topbar_filters')]" position="inside">
         <div class="dropdown flex-grow-1">
-            <a href="#" role="button" class="btn btn-light dropdown-toggle w-100" data-bs-toggle="dropdown">
+            <button class="btn btn-light dropdown-toggle w-100" data-bs-toggle="dropdown">
                 By Country
-            </a>
+            </button>
             <div class="dropdown-menu">
                 <span t-att-data-post="'/event/%s/exhibitors?%s' % (slug(event), keep_query('*', countries=''))"
                      t-attf-class="post_link cursor-pointer dropdown-item d-flex align-items-center justify-content-between #{'active' if not search_countries else ''}">
@@ -143,9 +143,9 @@
     active="True">
     <xpath expr="//div[hasclass('o_wesponsor_topbar_filters')]" position="inside">
         <div class="dropdown flex-grow-1">
-            <a href="#" role="button" class="btn btn-light dropdown-toggle w-100" data-bs-toggle="dropdown">
+            <button class="btn btn-light dropdown-toggle w-100" data-bs-toggle="dropdown">
                 By Level
-            </a>
+            </button>
             <div class="dropdown-menu">
                 <span t-att-data-post="'/event/%s/exhibitors?%s' % (slug(event), keep_query('*', sponsorships=''))"
                      t-attf-class="post_link cursor-pointer dropdown-item d-flex align-items-center justify-content-between #{'active' if not search_sponsorships else ''}">
@@ -284,12 +284,12 @@
             t-att-data-event-is-ongoing="sponsor.event_id.is_ongoing"
             t-att-data-sponsor-is-ongoing="sponsor.is_in_opening_hours"
             t-att-data-user-event-manager="is_event_user">
-            <a href="#" class="btn btn-primary h3">
+            <button class="btn btn-primary h3">
                 <t t-if="sponsor.exhibitor_type != 'online'">
                     More info
                 </t>
                 <t t-else="">Connect</t>
-            </a>
+            </button>
         </div>
     </article>
 </template>
