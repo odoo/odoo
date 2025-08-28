@@ -231,6 +231,7 @@ class StockPicking(models.Model):
             'drivers': drivers,
             'default_tckn': '22222222222',
             'dispatch_scenario': 'TEMELIRSALIYE',
+            'copy_indicator': 'false',
         }
         xml_content = self.env['ir.qweb']._render(
             'l10n_tr_nilvera_edispatch.l10n_tr_edispatch_format',
