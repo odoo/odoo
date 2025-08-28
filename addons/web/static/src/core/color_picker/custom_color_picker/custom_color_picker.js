@@ -30,6 +30,8 @@ export class CustomColorPicker extends Component {
         onInputEnter: { type: Function, optional: true },
         showRgbaField: { type: Boolean, optional: true },
         defaultOpacity: { type: Number, optional: true },
+        setOnCloseCallback: { type: Function, optional: true },
+        setOperationCallbacks: { type: Function, optional: true },
     };
     static defaultProps = {
         document: window.document,
@@ -59,6 +61,7 @@ export class CustomColorPicker extends Component {
         this.colorComponents = {};
         this.uniqueId = uniqueId("colorpicker");
         this.selectedHexValue = "";
+        this.shouldSetSelectedColor = false;
         this.lastFocusedSliderEl = undefined;
         if (!this.props.selectedColor) {
             this.props.selectedColor = this.props.defaultColor;
@@ -97,7 +100,32 @@ export class CustomColorPicker extends Component {
         for (const doc of documents) {
             useExternalListener(doc, "pointermove", this.throttleOnPointerMove);
             useExternalListener(doc, "pointerup", this.onPointerUp.bind(this));
+            useExternalListener(doc, "keydown", this.onEscapeKeydown.bind(this), { capture: true });
         }
+        // Apply the previewed custom color when the popover is closed.
+        this.props.setOnCloseCallback?.(() => {
+            if (this.shouldSetSelectedColor) {
+                this._colorSelected();
+            }
+        });
+        this.props.setOperationCallbacks?.({
+            getPreviewColor: () => {
+                if (this.shouldSetSelectedColor) {
+                    return this.colorComponents.hex;
+                }
+            },
+            onApplyCallback: () => {
+                this.shouldSetSelectedColor = false;
+            },
+            // Reapply the current custom color preview after reverting a preview.
+            // Typical usecase: 1) modify the custom color, 2) hover one of the
+            // black-white tints, 3) hover out.
+            onPreviewRevertCallback: () => {
+                if (this.previewActive && this.shouldSetSelectedColor) {
+                    this.props.onColorPreview(this.colorComponents);
+                }
+            },
+        });
         onMounted(async () => {
             const rgba =
                 convertCSSColorToRgba(this.props.selectedColor) ||
@@ -184,6 +212,19 @@ export class CustomColorPicker extends Component {
             value = max;
         }
         return clamp(value, min, max);
+    }
+    /**
+     * Selects and applies a currently previewed color if "Enter" was pressed.
+     *
+     * @param {String} hotkey
+     */
+    selectColorOnEnter(hotkey) {
+        if (hotkey === "enter" && this.shouldSetSelectedColor) {
+            this.pickerFlag = false;
+            this.sliderFlag = false;
+            this.opacitySliderFlag = false;
+            this._colorSelected();
+        }
     }
 
     //--------------------------------------------------------------------------
@@ -411,7 +452,8 @@ export class CustomColorPicker extends Component {
     }
     onPointerUp() {
         if (this.pickerFlag || this.sliderFlag || this.opacitySliderFlag) {
-            this._colorSelected();
+            this.shouldSetSelectedColor = true;
+            this._updateCssColor();
         }
         this.pickerFlag = false;
         this.sliderFlag = false;
@@ -420,6 +462,18 @@ export class CustomColorPicker extends Component {
         if (this.lastFocusedSliderEl) {
             this.lastFocusedSliderEl.focus();
             this.lastFocusedSliderEl = undefined;
+        }
+    }
+    /**
+     * Removes the close callback on Escape, so that a preview is cancelled with
+     * escape instead of being applied.
+     *
+     * @param {KeydownEvent} ev
+     */
+    onEscapeKeydown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (hotkey === "escape") {
+            this.props.setOnCloseCallback?.(() => {});
         }
     }
     /**
@@ -467,6 +521,7 @@ export class CustomColorPicker extends Component {
      */
     onPickerKeydown(ev) {
         const hotkey = getActiveHotkey(ev);
+        this.selectColorOnEnter(hotkey);
         if (!this.getAllowedHotkeys(ARROW_KEYS).includes(hotkey)) {
             return;
         }
@@ -491,6 +546,7 @@ export class CustomColorPicker extends Component {
 
         this._updateHsl(this.colorComponents.hue, saturation, lightness);
         this._updateUI();
+        this.shouldSetSelectedColor = true;
     }
     /**
      * Updates color when user starts clicking on slider.
@@ -531,6 +587,7 @@ export class CustomColorPicker extends Component {
      */
     onSliderKeydown(ev) {
         const hotkey = getActiveHotkey(ev);
+        this.selectColorOnEnter(hotkey);
         if (!this.getAllowedHotkeys(SLIDER_KEYS).includes(hotkey)) {
             return;
         }
@@ -541,6 +598,7 @@ export class CustomColorPicker extends Component {
         });
         this._updateHsl(hue, this.colorComponents.saturation, this.colorComponents.lightness);
         this._updateUI();
+        this.shouldSetSelectedColor = true;
     }
     /**
      * Updates opacity when user starts clicking on opacity slider.
@@ -580,6 +638,7 @@ export class CustomColorPicker extends Component {
      */
     onOpacitySliderKeydown(ev) {
         const hotkey = getActiveHotkey(ev);
+        this.selectColorOnEnter(hotkey);
         if (!this.getAllowedHotkeys(SLIDER_KEYS).includes(hotkey)) {
             return;
         }
@@ -587,6 +646,7 @@ export class CustomColorPicker extends Component {
 
         this._updateOpacity(opacity);
         this._updateUI();
+        this.shouldSetSelectedColor = true;
     }
     /**
      * Called when input value is changed -> Updates UI: Set picker and slider
