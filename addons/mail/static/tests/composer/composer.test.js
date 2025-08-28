@@ -136,7 +136,7 @@ test("composer input placeholder in channel thread", async () => {
     );
 });
 
-test("add an emoji", async () => {
+test("[text composer] add an emoji", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "swamp-safari" });
     await start();
@@ -144,6 +144,19 @@ test("add an emoji", async () => {
     await click("button[title='Add Emojis']");
     await click(".o-Emoji", { text: "😤" });
     await contains(".o-mail-Composer-input", { value: "😤" });
+});
+
+test.tags("html composer");
+test("add an emoji", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "swamp-safari" });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await click("button[title='Add Emojis']");
+    await click(".o-Emoji", { text: "😤" });
+    await contains(".o-mail-Composer-html.odoo-editor-editable", { text: "😤" });
 });
 
 test("emojis are auto-substituted from text", async () => {
@@ -163,7 +176,7 @@ test("emojis are auto-substituted from text", async () => {
 });
 
 test.tags("focus required");
-test("Exiting emoji picker brings the focus back to the Composer textarea", async () => {
+test("[text composer] Exiting emoji picker brings the focus back to the Composer textarea", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
@@ -174,7 +187,21 @@ test("Exiting emoji picker brings the focus back to the Composer textarea", asyn
     await contains(".o-mail-Composer-input:focus");
 });
 
-test("add an emoji after some text", async () => {
+test.tags("focus required", "html composer");
+test("Exiting emoji picker brings the focus back to the Composer textarea", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    await start();
+    await openDiscuss(channelId);
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await click("button[title='Add Emojis']");
+    await contains(".o-mail-Composer-html.odoo-editor-editable:not(:focus)");
+    triggerHotkey("Escape");
+    await contains(".o-mail-Composer-html.odoo-editor-editable:focus");
+});
+
+test("[text composer] add an emoji after some text", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "beyblade-room" });
     await start();
@@ -184,6 +211,26 @@ test("add an emoji after some text", async () => {
     await click("button[title='Add Emojis']");
     await click(".o-Emoji", { text: "🤑" });
     await contains(".o-mail-Composer-input", { value: "Blabla🤑" });
+});
+
+test.tags("html composer");
+test("add an emoji after some text", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "beyblade-room" });
+    await start();
+    await openDiscuss(channelId);
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "Blabla");
+    await contains(".o-mail-Composer-html.odoo-editor-editable", { text: "Blabla" });
+    await click("button[title='Add Emojis']");
+    await click(".o-Emoji", { text: "🤑" });
+    await contains(".o-mail-Composer-html.odoo-editor-editable", { text: "Blabla🤑" });
 });
 
 test("add emoji replaces (keyboard) text selection", async () => {
