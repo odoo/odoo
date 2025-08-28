@@ -301,6 +301,60 @@ class TestFiscalPosition(common.TransactionCase):
         })
         self.assertEqual(fp.map_tax(tax), tax)
 
+    def test_domestic_fp(self):
+        """
+        check if the domestic fiscal position is well computed in different scenarios.
+        """
+        country_group, a_country_group = self.env['res.country.group'].create([{
+            'name': "One country group",
+        }, {
+            'name': "Alphabetically first country_group",
+        }])
+        my_country = self.env['res.country'].create({
+            'name': "Neverland",
+            'code': 'PP',
+            'country_group_ids': [Command.set(country_group.ids + a_country_group.ids)],
+        })
+        self.env.company.country_id = my_country
+
+        # AT case - no sequence, one country_id
+        fp_1, fp_2, fp_3 = self.env['account.fiscal.position'].create([{
+            'name': 'FP First',
+            'country_group_id': country_group.id,
+        }, {
+            'name': 'FP Second',
+            'country_id': my_country.id,
+        }, {
+            'name': 'FP 3',
+            'country_group_id': country_group.id,
+        }])
+        self.assertEqual(self.env.company.domestic_fiscal_position_id, fp_2)
+
+        # SA case - same sequence, one country_id
+        (fp_1 + fp_2 + fp_3).write({'sequence': 10})
+        fp_1.write({
+            'country_id': my_country.id,
+            'country_group_id': False,
+        })
+        fp_2.write({'country_id': False})
+        self.assertEqual(self.env.company.domestic_fiscal_position_id, fp_1)
+
+        # NL case - different sequence, both country_group_id and country_id on a fp
+        (fp_1 + fp_2).write({'country_group_id': country_group.id})
+        fp_1.write({'country_id': False})
+        fp_2.write({'country_id': my_country.id})
+        fp_3.write({'country_group_id': a_country_group.id})
+        self.assertEqual(self.env.company.domestic_fiscal_position_id, fp_2)
+
+        fp_2.write({'sequence': 20})
+        self.assertEqual(self.env.company.domestic_fiscal_position_id, fp_1)
+
+        # CH/LI case - one fp with country_group_id only, nothing for others
+        fp_1.write({'sequence': 30})
+        fp_2.write({'country_id': False})
+        fp_3.write({'country_group_id': False})
+        self.assertEqual(self.env.company.domestic_fiscal_position_id, fp_2)
+
     def test_fiscal_position_constraint(self):
         """
         Test fiscal position constraint by updating the record
