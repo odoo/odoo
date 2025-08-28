@@ -13,6 +13,7 @@ from odoo.addons.account.models.account_move import MAX_HASH_VERSION
 from odoo.addons.account.models.product import ACCOUNT_DOMAIN
 from odoo.addons.account.models.partner import _ref_company_registry
 from odoo.addons.base_vat.models.res_partner import _ref_vat
+from odoo.fields import Domain
 
 
 MONTH_SELECTION = [
@@ -346,10 +347,16 @@ class ResCompany(models.Model):
         for company in self:
             company.force_restrictive_audit_trail = False
 
-    @api.depends('fiscal_position_ids', 'fiscal_position_ids.sequence', 'fiscal_position_ids.country_id')
+    @api.depends('fiscal_position_ids', 'fiscal_position_ids.sequence', 'fiscal_position_ids.country_id', 'fiscal_position_ids.country_group_id')
     def _compute_domestic_fiscal_position_id(self):
         for company in self:
-            potential_domestic_fps = company.fiscal_position_ids.filtered_domain([('country_id', '=', company.country_id.id)]).sorted('sequence')
+            potential_domestic_fps = company.fiscal_position_ids.filtered_domain(
+            Domain('country_id', '=', company.country_id.id)
+            | Domain([
+                    ('country_id', '=', False),
+                    ('country_group_id', 'in', company.country_id.country_group_ids.ids),
+                ]),
+            ).sorted(lambda x: x.country_id.id or float('inf')).sorted('sequence')
             company.domestic_fiscal_position_id = potential_domestic_fps[0] if potential_domestic_fps else False
 
     @api.depends('fiscal_position_ids.foreign_vat')
