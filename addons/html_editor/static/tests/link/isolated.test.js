@@ -141,9 +141,7 @@ describe("should position the cursor outside the link", () => {
     });
 
     test("clicking before the link's text content", async () => {
-        const { el, editor } = await setupEditor(
-            '<p><a href="http://test.test/">te[]st</a></p>'
-        );
+        const { el, editor } = await setupEditor('<p><a href="http://test.test/">te[]st</a></p>');
         expect(getContent(el)).toBe(
             '<p>\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeffte[]st\ufeff</a>\ufeff</p>'
         );
@@ -178,9 +176,7 @@ describe("should position the cursor outside the link", () => {
     });
 
     test(" clicking after the link's text content", async () => {
-        const { el, editor } = await setupEditor(
-            '<p><a href="http://test.test/">t[]est</a></p>'
-        );
+        const { el, editor } = await setupEditor('<p><a href="http://test.test/">t[]est</a></p>');
         expect(getContent(el)).toBe(
             '<p>\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufefft[]est\ufeff</a>\ufeff</p>'
         );
@@ -338,8 +334,7 @@ test("should not zwnbsp-pad link with block fontawesome", async () => {
 
 test("should not zwnbsp-pad link with image", async () => {
     await testEditor({
-        contentBefore:
-            '<p>a<a href="http://test.test/">[]<img style="display: inline;"></a>b</p>',
+        contentBefore: '<p>a<a href="http://test.test/">[]<img style="display: inline;"></a>b</p>',
         contentBeforeEdit:
             '<p>a<a href="http://test.test/">[]<img style="display: inline;"></a>b</p>',
     });

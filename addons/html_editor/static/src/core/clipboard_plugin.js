@@ -709,7 +709,6 @@ function getImageUrl(file) {
     });
 }
 
-
 /**
  * Add origin to relative img src.
  * @param {string} origin
