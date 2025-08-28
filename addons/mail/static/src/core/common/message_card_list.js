@@ -35,6 +35,7 @@ export class MessageCardList extends Component {
 
     setup() {
         super.setup();
+        this.store = useService("mail.store");
         this.ui = useService("ui");
         useSubEnv({ messageCard: true });
         useVisible("load-more", (isVisible) => {
@@ -42,6 +43,10 @@ export class MessageCardList extends Component {
                 this.props.onLoadMoreVisible?.();
             }
         });
+    }
+    
+    isGuestUser() {
+        return this.store.self?.Model?.name === 'MailGuest';
     }
 
     /**
