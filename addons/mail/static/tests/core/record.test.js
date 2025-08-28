@@ -1229,3 +1229,111 @@ test("Can assign new record on Many field with One inverse", async () => {
     expectRecord(file2.thread).toEqual(thread);
     expect(file1.thread).toBe(undefined);
 });
+
+test("Deleted records are not returned by 'Model.records' nor 'Model.get()'", async () => {
+    /**
+     * Record has a 2-step record deletion:
+     * - "soft" deletion, where the record is flagged for deletion but object is not removed from the store system structurally
+     * - "hard" deletion, where the object is fully removed from store system structurally
+     * The soft "deletion" is useful for stuffs like onDelete() hooks that tell which record has been removed from a relation,
+     * with object reference, even when the record will be hard-deleted as a consequence.
+     * `Model.records` and `Model.get()` are intended for business-code uses, therefore they should make sure to not return
+     * records that are soft-deleted, as this could lead to critical section where business code is using a deleted record.
+     */
+    function assertExists(store) {
+        const msg = store.Message.get("msg-1");
+        if (msg) {
+            expect(toRaw(msg).exists()).toBe(true);
+        }
+        for (const msg of Object.values(store.Message.records)) {
+            expect(toRaw(msg).exists()).toBe(true);
+        }
+    }
+    let deleting = false;
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        messages = fields.Many("Message", { inverse: "thread" });
+        get hasMessages() {
+            return this.messages.length > 0;
+        }
+    }).register(localRegistry);
+    (class Message extends Record {
+        static id = "content";
+        content;
+        thread = fields.One("Thread");
+    }).register(localRegistry);
+    (class DiscussApp extends Record {
+        static id = "id";
+        id;
+        thread = fields.One("Thread");
+        allMessagesInStore = fields.Many("Message", {
+            compute() {
+                if (deleting) {
+                    expect.step("allMessagesInStore:compute");
+                    expect(this._lastAllMessagesInStore.some((m) => m.exists())).toBe(false);
+                }
+                expect(this.thread.hasMessages).toBe(
+                    Boolean(Object.values(store.Message.records).length > 0)
+                );
+                assertExists(this.store);
+                const allMessagesInStore = Object.values(store.Message.records);
+                toRaw(this)._raw._lastAllMessagesInStore = allMessagesInStore;
+                return allMessagesInStore;
+            },
+            eager: true,
+        });
+        _lastAllMessagesInStore;
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert({ name: "General" });
+    store.DiscussApp.insert({ thread });
+    const message = store.Message.insert({ content: "msg-1", thread });
+    expectRecord(thread.messages[0]).toEqual(message);
+    expectRecord(store.Message.get("msg-1")).toEqual(message);
+    expectRecord(store.Message.records[message.localId]).toEqual(message);
+    deleting = true;
+    message.delete();
+    deleting = false;
+    expect.verifySteps(["allMessagesInStore:compute"]);
+    assertExists(store);
+    expect(thread.messages.length).toEqual(0);
+});
+
+test("Delete record with side-effect compute to insert it should have resulting record with only insert data (old data is removed)'", async () => {
+    /**
+     * Record has a 2-step record deletion:
+     * - "soft" deletion, where the record is flagged for deletion but object is not removed from the store system structurally
+     * - "hard" deletion, where the object is fully removed from store system structurally
+     * The soft "deletion" is useful for stuffs like onDelete() hooks that tell which record has been removed from a relation,
+     * with object reference, even when the record will be hard-deleted as a consequence.
+     * `Model.records` and `Model.get()` are intended for business-code uses, therefore they should make sure to not return
+     * records that are soft-deleted, as this could lead to critical section where business code is using a deleted record.
+     */
+    (class DiscussApp extends Record {
+        static id;
+        state = fields.One("DiscussAppState", {
+            compute: () => ({}),
+            onDelete() {
+                this.state = {};
+            },
+        });
+    }).register(localRegistry);
+    (class DiscussAppState extends Record {
+        static id;
+        status = "init";
+        thread = fields.One("Thread");
+    }).register(localRegistry);
+    (class Thread extends Record {
+        static id = "name";
+        name;
+    }).register(localRegistry);
+    const store = await start();
+    const discussApp = store.DiscussApp.insert();
+    discussApp.state = { thread: "General", status: "ready" };
+    expect(discussApp.state.status).toEqual("ready");
+    expectRecord(discussApp.state.thread).toEqual(store.Thread.get("General"));
+    discussApp.state.delete();
+    expect(discussApp.state.status).toEqual("init");
+    expect(discussApp.state.thread).toBe(undefined);
+});
