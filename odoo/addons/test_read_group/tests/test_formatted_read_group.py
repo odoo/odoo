@@ -4,7 +4,7 @@ from pytz import UTC, timezone
 import babel
 
 from odoo.tests import common, new_test_user
-from odoo import Command
+from odoo import Command, fields
 
 
 class TestFormattedReadGroup(common.TransactionCase):
@@ -2033,12 +2033,43 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
         cls.usd.active = True
         cls.eur = cls.env.ref('base.EUR')
         cls.eur.active = True
+        cls.stn = cls.env.ref("base.STN")
+        cls.stn.active = False
 
         cls.MonetaryAggRelated = cls.env['test_read_group.aggregate.monetary.related']
         cls.MonetaryAgg = cls.env['test_read_group.aggregate.monetary']
 
-        cls.related_model_usd = cls.MonetaryAggRelated.create({'stored_currency_id': cls.usd.id})
-        cls.related_model_eur = cls.MonetaryAggRelated.create({'stored_currency_id': cls.eur.id})
+        cls.MonetaryAgg.create([
+            {
+                "name": "key1",  # 1 $
+                "currency_id": cls.usd.id,
+                "total_in_currency_id": 1.00,
+            },
+            {
+                "name": "key3",  # 2 $
+                "currency_id": cls.usd.id,
+                "total_in_currency_id": 2.00,
+            },
+            {
+                "name": "key1",  # 1 €
+                "currency_id": cls.eur.id,
+                "total_in_currency_id": 1.00,
+            },
+            {
+                "name": "key2",  # 2 €
+                "currency_id": cls.eur.id,
+                "total_in_currency_id": 2.00,
+            },
+            {
+                "name": "key1",  # 1 (no currency)
+                "total_in_currency_id": 1.00,
+            },
+            {
+                "name": "key2",  # 1 Db (no active currency)
+                "currency_id": cls.stn.id,
+                "total_in_currency_id": 1.00,
+            },
+        ])
 
     def test_monetary_fields_agg_in_fields_get(self):
         field_infos = self.MonetaryAgg.fields_get()
@@ -2046,3 +2077,159 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
         self.assertEqual(field_infos['total_in_currency_id'].get('aggregator'), 'sum')
         self.assertEqual(field_infos['total_in_related_stored_currency_id'].get('aggregator'), 'sum')
         self.assertFalse(field_infos['total_in_related_non_stored_currency_id'].get('aggregator'), False)
+
+    def test_sum_monetary_rated_us(self):
+
+        self.env['res.currency.rate'].create([
+            {
+                'currency_id': self.eur.id,
+                'name': fields.Date.context_today(self),
+                'rate': 0.8,  # 1 $ = 0.8 eur, 1 eur = 1.25 $
+            },
+            {
+                'currency_id': self.stn.id,
+                'name': fields.Date.context_today(self),
+                'rate': 20,  # 1 $ = 20 Db, 1 Db = 0.05 $
+            },
+        ])
+
+        aggregates = [
+            # The webclient should ask these 3 aggregates
+            'total_in_currency_id:sum',
+            'currency_id:array_agg_distinct',
+            'total_in_currency_id:sum_currency',
+        ]
+        # warmup
+        self.MonetaryAgg.formatted_read_group([], [], aggregates)
+
+        with self.assertQueries(["""
+            SELECT
+                SUM("test_read_group_aggregate_monetary"."total_in_currency_id"),
+                ARRAY_AGG(
+                    DISTINCT "test_read_group_aggregate_monetary"."currency_id"
+                    ORDER BY "test_read_group_aggregate_monetary"."currency_id"
+                ),
+                SUM("test_read_group_aggregate_monetary"."total_in_currency_id" / COALESCE("test_read_group_aggregate_monetary__rates"."rate", 1.0))
+            FROM
+                "test_read_group_aggregate_monetary"
+                LEFT JOIN (
+                    SELECT DISTINCT ON ("res_currency_rate"."currency_id")
+                        "res_currency_rate"."currency_id",
+                        "res_currency_rate"."rate"
+                    FROM "res_currency_rate"
+                    WHERE "res_currency_rate"."company_id" IS NULL OR "res_currency_rate"."company_id" = %s
+                    ORDER BY
+                        "res_currency_rate"."currency_id",
+                        "res_currency_rate"."company_id",
+                        CASE WHEN "res_currency_rate"."name" <= %s THEN "res_currency_rate"."name" END DESC,
+                        CASE WHEN "res_currency_rate"."name" > %s THEN "res_currency_rate"."name" END ASC
+                ) AS "test_read_group_aggregate_monetary__rates" ON (
+                    "test_read_group_aggregate_monetary"."currency_id" = "test_read_group_aggregate_monetary__rates"."currency_id"
+                )
+        """]):
+            self.assertEqual(
+                self.MonetaryAgg.formatted_read_group([], [], aggregates),
+                [
+                    {
+                        'total_in_currency_id:sum': 8.0,
+                        'currency_id:array_agg_distinct': (self.usd + self.eur + self.stn).ids + [None],
+                        # 3 $ + 3 euro + 1 Db + 1 no currency = 7.8 $
+                        'total_in_currency_id:sum_currency': 3 + 3 * 1.25 + 0.05 + 1,
+                        '__extra_domain': [(1, '=', 1)],
+                    },
+                ]
+            )
+
+        self.assertEqual(
+            self.MonetaryAgg.formatted_read_group([], ['name'], aggregates),
+            [
+                {
+                    'name': 'key1',
+                    'total_in_currency_id:sum': 3,
+                    'currency_id:array_agg_distinct': (self.usd + self.eur).ids + [None],
+                    'total_in_currency_id:sum_currency': 2 + 1.25,  # 2 $ + 1 euro
+                    '__extra_domain': [('name', '=', 'key1')],
+                },
+                {
+                    'name': 'key2',
+                    'total_in_currency_id:sum': 3,
+                    'currency_id:array_agg_distinct': (self.eur + self.stn).ids,
+                    'total_in_currency_id:sum_currency': 0.05 + 2 * 1.25,  # 1 Db + 2 eur
+                    '__extra_domain': [('name', '=', 'key2')],
+                },
+                {
+                    'name': 'key3',
+                    'total_in_currency_id:sum': 2,
+                    'currency_id:array_agg_distinct': self.usd.ids,
+                    'total_in_currency_id:sum_currency': 2.0,  # 2 $
+                    '__extra_domain': [('name', '=', 'key3')],
+                },
+            ],
+        )
+
+        # Test grouping_sets code path
+        grouping_sets = [[], ['name'], ['currency_id'], ['name', 'currency_id']]
+        self.assertEqual(
+            self.MonetaryAgg.formatted_read_grouping_sets([], grouping_sets, aggregates),
+            [self.MonetaryAgg.formatted_read_group([], groupy, aggregates) for groupy in grouping_sets],
+        )
+
+    def test_sum_monetary_rated_eur_company(self):
+        self.env.company.currency_id = self.eur
+        self.env['res.currency.rate'].create([
+            {
+                'currency_id': self.usd.id,
+                'name': fields.Date.context_today(self),
+                'rate': 1.25,  # 1 $ = 0.8 eur, 1 eur = 1.25 $
+            },
+            {
+                'currency_id': self.stn.id,
+                'name': fields.Date.context_today(self),
+                'rate': 25,  # 1 eur = 25 Db, 1 Db = 0.04 eur
+            },
+        ])
+
+        aggregates = [
+            # The webclient should ask these 3 aggregates
+            'total_in_currency_id:sum',
+            'currency_id:array_agg_distinct',
+            'total_in_currency_id:sum_currency',
+        ]
+        self.MonetaryAgg.formatted_read_group([], [], aggregates)
+        with self.assertQueries(["""
+            SELECT
+                SUM("test_read_group_aggregate_monetary"."total_in_currency_id"),
+                ARRAY_AGG(
+                    DISTINCT "test_read_group_aggregate_monetary"."currency_id"
+                    ORDER BY "test_read_group_aggregate_monetary"."currency_id"
+                ),
+                SUM("test_read_group_aggregate_monetary"."total_in_currency_id" / COALESCE("test_read_group_aggregate_monetary__rates"."rate", 1.0))
+            FROM
+                "test_read_group_aggregate_monetary"
+                LEFT JOIN (
+                    SELECT DISTINCT ON ("res_currency_rate"."currency_id")
+                        "res_currency_rate"."currency_id",
+                        "res_currency_rate"."rate"
+                    FROM "res_currency_rate"
+                    WHERE "res_currency_rate"."company_id" IS NULL OR "res_currency_rate"."company_id" = %s
+                    ORDER BY
+                        "res_currency_rate"."currency_id",
+                        "res_currency_rate"."company_id",
+                        CASE WHEN "res_currency_rate"."name" <= %s THEN "res_currency_rate"."name" END DESC,
+                        CASE WHEN "res_currency_rate"."name" > %s THEN "res_currency_rate"."name" END ASC
+                ) AS "test_read_group_aggregate_monetary__rates" ON (
+                    "test_read_group_aggregate_monetary"."currency_id" = "test_read_group_aggregate_monetary__rates"."currency_id"
+                )
+        """]):
+            self.assertEqual(
+                self.MonetaryAgg.formatted_read_group([], [], aggregates),
+                [{
+                    'total_in_currency_id:sum': 8.0,
+                    'currency_id:array_agg_distinct': (self.usd + self.eur + self.stn).ids + [None],
+                    'total_in_currency_id:sum_currency':
+                        # 3 $ + 3 euro + 1 Db + 1 no currency = 6.44 euro
+                        (3 * 0.8) + 3 + (1 * 0.05 * 0.8) +
+                        1,  # Do nothing, if no currency is set
+                    '__extra_domain': [(1, '=', 1)],
+                }],
+            )
