@@ -1,4 +1,5 @@
 /** @odoo-module */
+/* global posmodel */
 
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
@@ -6,6 +7,8 @@ import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScr
 import * as combo from "@point_of_sale/../tests/tours/helpers/ComboPopupMethods";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import * as ProductConfigurator from "@point_of_sale/../tests/tours/helpers/ProductConfiguratorTourMethods";
+import * as Numpad from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
+import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import { inLeftSide } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
 
@@ -137,4 +140,78 @@ registry.category("web_tour.tours").add("test_combo_with_custom_attribute", {
         ...inLeftSide(Order.hasLine({productName: "Custom Attr Product (Custom Value: asf)"})),
         ProductScreen.isShown(),
     ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_combo_disallowLineQuantityChange", {
+    steps: () =>
+        [
+            {
+                content: "replace disallowLineQuantityChange to be true",
+                trigger: "body",
+                run: () => {
+                    posmodel.disallowLineQuantityChange = () => true;
+                },
+            },
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            combo.confirm(),
+            inLeftSide([
+                Numpad.click("⌫"),
+                {
+                    content: "Click 0",
+                    trigger: ".popup div.numpad.row button.col:not(:contains('+')):contains('0')",
+                    run: "click",
+                    mobile: false,
+                },
+                {
+                    content: "Validate the popup",
+                    trigger: ".payment-input-number",
+                    run: "text 0",
+                    mobile: true,
+                },
+                ...Chrome.confirmPopup(),
+                ...Order.doesNotHaveLine(),
+            ]),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_combo_disallowLineQuantityChange_2", {
+    steps: () =>
+        [
+            {
+                content: "replace disallowLineQuantityChange to be true",
+                trigger: "body",
+                run: () => {
+                    posmodel.disallowLineQuantityChange = () => true;
+                },
+            },
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            combo.confirm(),
+            inLeftSide([
+                Numpad.click("2"),
+                {
+                    content: "Click 2",
+                    trigger: ".popup div.numpad.row button.col:not(:contains('+')):contains('2')",
+                    run: "click",
+                    mobile: false,
+                },
+                {
+                    content: "Validate the popup",
+                    trigger: ".payment-input-number",
+                    run: "text 2",
+                    mobile: true,
+                },
+                ...Chrome.confirmPopup(),
+                Order.hasTotal("94.67"),
+                ...Order.hasLine({ productName: "Combo Product 2", quantity: "2" }),
+                ...Order.hasLine({ productName: "Combo Product 4", quantity: "2" }),
+                ...Order.hasLine({ productName: "Combo Product 6", quantity: "2" }),
+            ]),
+        ].flat(),
 });
