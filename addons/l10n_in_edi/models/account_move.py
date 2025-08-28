@@ -7,7 +7,7 @@ from collections import defaultdict
 
 from markupsafe import Markup
 
-from odoo import Command, _, api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, LockError, UserError
 from odoo.tools import float_is_zero, float_compare
 
@@ -36,17 +36,51 @@ class AccountMove(models.Model):
         tracking=True,
         readonly=True,
     )
-    l10n_in_edi_attachment_id = fields.Many2one(
+    l10n_in_edi_request_attachment_id = fields.Many2one(
         comodel_name='ir.attachment',
-        string="E-Invoice(IN) Attachment",
-        compute=lambda self: self._compute_linked_attachment_id(
-            'l10n_in_edi_attachment_id',
-            'l10n_in_edi_attachment_file'
-        ),
-        depends=['l10n_in_edi_attachment_file']
+        string="E-Invoice(IN) Request Attachment",
+        compute=lambda self: self._compute_linked_attachment_id('l10n_in_edi_request_attachment_id', 'l10n_in_edi_request_attachment_file'),
+        depends=['l10n_in_edi_request_attachment_file'],
+        store=True
     )
-    l10n_in_edi_attachment_file = fields.Binary(
-        string="E-Invoice(IN) File",
+    l10n_in_edi_request_attachment_file = fields.Binary(
+        string="E-Invoice(IN) Request File",
+        attachment=True,
+        copy=False
+    )
+    l10n_in_edi_response_attachment_id = fields.Many2one(
+        comodel_name='ir.attachment',
+        string="E-Invoice(IN) Response Attachment",
+        compute=lambda self: self._compute_linked_attachment_id('l10n_in_edi_response_attachment_id', 'l10n_in_edi_response_attachment_file'),
+        depends=['l10n_in_edi_response_attachment_file'],
+        store=True
+    )
+    l10n_in_edi_response_attachment_file = fields.Binary(
+        string="E-Invoice(IN) Response File",
+        attachment=True,
+        copy=False
+    )
+    l10n_in_edi_request_cancellation_attachment_id = fields.Many2one(
+        comodel_name='ir.attachment',
+        string="E-Invoice(IN) Cancellation Request Attachment",
+        compute=lambda self: self._compute_linked_attachment_id('l10n_in_edi_request_cancellation_attachment_id', 'l10n_in_edi_request_cancellation_attachment_file'),
+        depends=['l10n_in_edi_request_cancellation_attachment_file'],
+        store=True
+    )
+    l10n_in_edi_request_cancellation_attachment_file = fields.Binary(
+        string="E-Invoice(IN) Cancellation Request File",
+        attachment=True,
+        copy=False
+    )
+    l10n_in_edi_response_cancellation_attachment_id = fields.Many2one(
+        comodel_name='ir.attachment',
+        string="E-Invoice(IN) Response Cancellation Attachment",
+        compute=lambda self: self._compute_linked_attachment_id('l10n_in_edi_response_cancellation_attachment_id', 'l10n_in_edi_response_cancellation_attachment_file'),
+        depends=['l10n_in_edi_response_cancellation_attachment_file'],
+        store=True
+    )
+    l10n_in_edi_response_cancellation_attachment_file = fields.Binary(
+        string="E-Invoice(IN) Response Cancellation File",
         attachment=True,
         copy=False
     )
@@ -81,10 +115,13 @@ class AccountMove(models.Model):
     #  Action Methods
     def action_export_l10n_in_edi_content_json(self):
         self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'url': f'/web/content/account.move/{self.id}/l10n_in_edi_content'
-        }
+        if self.l10n_in_edi_status == 'sent':
+            target_attachment = self.l10n_in_edi_request_attachment_id if self.l10n_in_edi_error else self.l10n_in_edi_response_attachment_id
+        elif self.l10n_in_edi_status == 'cancelled':
+            target_attachment = self.l10n_in_edi_request_cancellation_attachment_id if self.l10n_in_edi_error else self.l10n_in_edi_response_cancellation_attachment_id
+        if not target_attachment:
+            raise UserError(_("JSON Attachment not found for this invoice."))
+        return target_attachment.action_download_l10n_in_government_document_json(target_attachment.id)
 
     def button_request_cancel(self):
         if self._l10n_in_edi_need_cancel_request():
@@ -160,8 +197,8 @@ class AccountMove(models.Model):
 
     def _get_l10n_in_edi_response_json(self):
         self.ensure_one()
-        if self.l10n_in_edi_attachment_id:
-            return json.loads(self.l10n_in_edi_attachment_id.sudo().raw.decode("utf-8"))
+        if self.l10n_in_edi_response_attachment_id:
+            return json.loads(self.l10n_in_edi_response_attachment_id.sudo().raw.decode("utf-8"))
         return {}
 
     def _l10n_in_lock_invoice(self):
@@ -206,6 +243,13 @@ class AccountMove(models.Model):
                 return partner_validation
         self._l10n_in_lock_invoice()
         generate_json = self._l10n_in_edi_generate_invoice_json()
+        self.l10n_in_edi_request_attachment_id = self.env['ir.attachment']._l10n_in_generate_json_attachment({
+            'name': f"{self.name.replace('/', '_')}_sent_request.json",
+            'raw': generate_json,
+            'res_model': self._name,
+            'res_id': self.id,
+            'company_id': self.company_id.id,
+        })
         response = self._l10n_in_edi_connect_to_server(
             url_end_point='generate',
             json_payload=generate_json
@@ -285,16 +329,12 @@ class AccountMove(models.Model):
                 # avoid return `l10n_in_edi_error` because as a html field
                 # values are sanitized with `<p>` tag
                 return msg
-        data = response.get("data", {})
-        json_dump = json.dumps(data)
         json_name = "%s_einvoice.json" % (self.name.replace("/", "_"))
-        attachment = self.env["ir.attachment"].create({
+        self.l10n_in_edi_response_attachment_id = self.env["ir.attachment"]._l10n_in_generate_json_attachment({
             'name': json_name,
-            'raw': json_dump.encode(),
+            'raw': response.get("data", {}),
             'res_model': self._name,
-            'res_field': 'l10n_in_edi_attachment_file',
             'res_id': self.id,
-            'mimetype': 'application/json',
             'company_id': self.company_id.id,
         })
         self.l10n_in_edi_status = 'sent'
@@ -323,6 +363,13 @@ class AccountMove(models.Model):
             "CnlRsn": self.l10n_in_edi_cancel_reason,
             "CnlRem": self.l10n_in_edi_cancel_remarks,
         }
+        self.l10n_in_edi_request_cancellation_attachment_id = self.env['ir.attachment']._l10n_in_generate_json_attachment({
+            'name': f"{self.name.replace('/', '_')}_cancel_request.json",
+            'raw': cancel_json,
+            'res_model': self._name,
+            'res_id': self.id,
+            'company_id': self.company_id.id,
+        })
         response = self._l10n_in_edi_connect_to_server(url_end_point='cancel', json_payload=cancel_json)
         # Creating a lambda function so it fetches the odoobot id only when needed
         _get_odoobot_id = (
@@ -356,16 +403,15 @@ class AccountMove(models.Model):
                     )
                 )
         if "error" not in response:
-            json_dump = json.dumps(response.get('data', {}))
+            json_data = response.get('data', {})
             json_name = "%s_cancel_einvoice.json" % (self.name.replace("/", "_"))
-            if json_dump:
-                attachment = self.env['ir.attachment'].create({
+            if json_data:
+                self.l10n_in_edi_response_cancellation_attachment_id = self.env['ir.attachment']._l10n_in_generate_json_attachment({
                     'name': json_name,
-                    'raw': json_dump.encode(),
+                    'raw': json_data,
                     'res_model': self._name,
-                    'res_field': 'l10n_in_edi_attachment_file',
                     'res_id': self.id,
-                    'mimetype': 'application/json',
+                    'company_id': self.company_id.id,
                 })
             self.message_post(author_id=_get_odoobot_id(self), body=_(
                 "E-Invoice has been cancelled successfully. "

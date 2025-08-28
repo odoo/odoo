@@ -141,12 +141,54 @@ class L10nInEwaybill(models.Model):
     cancel_remarks = fields.Char("Cancel remarks", copy=False, tracking=True)
 
     # Attachment
-    attachment_id = fields.Many2one(
-        'ir.attachment',
-        compute=lambda self: self._compute_linked_attachment_id('attachment_id', 'attachment_file'),
-        depends=['attachment_file'],
+    request_attachment_id = fields.Many2one(
+        comodel_name='ir.attachment',
+        string="Ewaybill Request Attachment",
+        compute=lambda self: self._compute_linked_attachment_id('request_attachment_id', 'request_attachment_file'),
+        depends=['request_attachment_file'],
+        store=True
     )
-    attachment_file = fields.Binary(copy=False, attachment=True)
+    request_attachment_file = fields.Binary(
+        string="Ewaybill Request File",
+        attachment=True,
+        copy=False
+    )
+    response_attachment_id = fields.Many2one(
+        comodel_name='ir.attachment',
+        string="Ewaybill Response Attachment",
+        compute=lambda self: self._compute_linked_attachment_id('response_attachment_id', 'response_attachment_file'),
+        depends=['response_attachment_file'],
+        store=True
+    )
+    response_attachment_file = fields.Binary(
+        string="Ewaybill Response File",
+        attachment=True,
+        copy=False
+    )
+    request_cancellation_attachment_id = fields.Many2one(
+        comodel_name='ir.attachment',
+        string="Ewaybill Cancellation Request Attachment",
+        compute=lambda self: self._compute_linked_attachment_id('request_cancellation_attachment_id', 'request_cancellation_attachment_file'),
+        depends=['request_cancellation_attachment_file'],
+        store=True
+    )
+    request_cancellation_attachment_file = fields.Binary(
+        string="Ewaybill Cancellation Request File",
+        attachment=True,
+        copy=False
+    )
+    response_cancellation_attachment_id = fields.Many2one(
+        comodel_name='ir.attachment',
+        string="Ewaybill Response Cancellation Attachment",
+        compute=lambda self: self._compute_linked_attachment_id('response_cancellation_attachment_id', 'response_cancellation_attachment_file'),
+        depends=['response_cancellation_attachment_file'],
+        store=True
+    )
+    response_cancellation_attachment_file = fields.Binary(
+        string="Ewaybill Response Cancellation File",
+        attachment=True,
+        copy=False
+    )
 
     # ------------Generic compute methods to be overriden in l10n_in_ewaybill_stock module---------------
 
@@ -273,10 +315,13 @@ class L10nInEwaybill(models.Model):
 
     def action_export_content_json(self):
         self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'url': '/web/content/l10n.in.ewaybill/%s/content' % self.id
-        }
+        if self.state == 'generated':
+            target_attachment = self.request_attachment_id if self.error_message else self.response_attachment_id
+        elif self.state == 'cancel':
+            target_attachment = self.request_cancellation_attachment_id if self.error_message else self.response_cancellation_attachment_id
+        if not target_attachment:
+            raise UserError(_("JSON Attachment not found for this e-Way Bill."))
+        return target_attachment.action_download_l10n_in_government_document_json(target_attachment.id)
 
     def action_generate_ewaybill(self):
         for ewaybill in self:
@@ -465,15 +510,17 @@ class L10nInEwaybill(models.Model):
             name = f'ewaybill_{ewb_name}.json'
         else:
             name = f'ewaybill_{ewb_name}_cancel.json'
-        attachment = self.env['ir.attachment'].create({
+        attachment = self.env['ir.attachment']._l10n_in_generate_json_attachment({
             'name': name,
-            'mimetype': 'application/json',
-            'raw': json.dumps(response),
+            'raw': response.get('data', {}),
             'res_model': self._name,
             'res_id': self.id,
-            'res_field': 'attachment_file',
-            'company_id': self.company_id.id
+            'company_id': self.company_id.id,
         })
+        if is_cancel:
+            self.response_cancellation_attachment_id = attachment.id
+        else:
+            self.response_attachment_id = attachment.id
         self.message_post(
             author_id=self.env.ref('base.partner_root').id,
             attachment_ids=attachment.ids
@@ -485,6 +532,13 @@ class L10nInEwaybill(models.Model):
             'cancelRsnCode': int(self.cancel_reason),
             'cancelRmrk': self.cancel_remarks,
         }
+        self.request_cancellation_attachment_id = self.env['ir.attachment']._l10n_in_generate_json_attachment({
+            'name': f"{self.document_number}_cancel_request.json",
+            'raw': cancel_json,
+            'res_model': self._name,
+            'res_id': self.id,
+            'company_id': self.company_id.id,
+        })
         ewb_api = EWayBillApi(self.company_id)
         if self.error_message and self.blocking_level == 'error':
             self.message_post(body=_(
@@ -513,11 +567,19 @@ class L10nInEwaybill(models.Model):
 
     def _generate_ewaybill(self):
         self.ensure_one()
+        generate_json = self._ewaybill_generate_direct_json()
+        self.request_attachment_id = self.env['ir.attachment']._l10n_in_generate_json_attachment({
+            'name': f"{self.document_number}_sent_request.json",
+            'raw': generate_json,
+            'res_model': self._name,
+            'res_id': self.id,
+            'company_id': self.company_id.id,
+        })
         self._log_retry_message_on_generate()
         ewb_api = EWayBillApi(self.company_id)
         self._lock_ewaybill()
         try:
-            response = ewb_api._ewaybill_generate(self._ewaybill_generate_direct_json())
+            response = ewb_api._ewaybill_generate(generate_json)
         except EWayBillError as error:
             self._handle_error(error)
             return False
@@ -695,9 +757,9 @@ class L10nInEwaybill(models.Model):
         see https://github.com/odoo/upgrade/pull/6624 for futher information
         """
         self.ensure_one()
-        if self.attachment_id:
+        if self.response_attachment_id:
             try:
-                res_json = json.loads(self.attachment_id.raw.decode("utf-8"))
+                res_json = json.loads(self.response_attachment_id.raw.decode("utf-8"))
             except ValueError:
                 return False
             ewb_name = res_json.get("ewayBillNo") or res_json.get("EwbNo")
