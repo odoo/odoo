@@ -3,9 +3,19 @@ import { Base, createRelatedModels } from "@point_of_sale/app/models/related_mod
 import { registry } from "@web/core/registry";
 import { Mutex } from "@web/core/utils/concurrency";
 import { markRaw } from "@odoo/owl";
+<<<<<<< 6e781f113dc2145623e92f8292af0493f6154861:addons/point_of_sale/static/src/app/services/data_service.js
 import { debounce } from "@web/core/utils/timing";
 import IndexedDB from "../models/utils/indexed_db";
 import { DataServiceOptions } from "../models/data_service_options";
+||||||| 1b7ba2e2da07164fb3911dd9bddcd843cca8eb33:addons/point_of_sale/static/src/app/models/data_service.js
+import { batched } from "@web/core/utils/timing";
+import IndexedDB from "./utils/indexed_db";
+import { DataServiceOptions } from "./data_service_options";
+=======
+import { debounce } from "@web/core/utils/timing";
+import IndexedDB from "./utils/indexed_db";
+import { DataServiceOptions } from "./data_service_options";
+>>>>>>> b97195cb2e71d1d185e9d6f558e64f31200ae0d3:addons/point_of_sale/static/src/app/models/data_service.js
 import { getOnNotified, uuidv4 } from "@point_of_sale/utils";
 import { browser } from "@web/core/browser/browser";
 import { ConnectionLostError, rpc, RPCError } from "@web/core/network/rpc";
@@ -49,8 +59,49 @@ export class PosData extends Reactive {
             await this.checkConnectivity();
         }
 
+<<<<<<< 6e781f113dc2145623e92f8292af0493f6154861:addons/point_of_sale/static/src/app/services/data_service.js
         this.initializeWebsocket();
         await this.intializeDataRelation();
+||||||| 1b7ba2e2da07164fb3911dd9bddcd843cca8eb33:addons/point_of_sale/static/src/app/models/data_service.js
+        effect(
+            batched((records) => {
+                this.syncDataWithIndexedDB(records);
+            }),
+            [this.records]
+        );
+
+        browser.addEventListener("online", () => {
+            if (this.network.offline) {
+                this.network.offline = false;
+                this.network.warningTriggered = false; // Avoid the display of the offline popup multiple times
+            }
+
+            this.syncData();
+        });
+
+        browser.addEventListener("offline", () => {
+            this.network.offline = true;
+        });
+=======
+        this._debouncedSync = debounce((records) => {
+            this.syncDataWithIndexedDB(records);
+        }, 200);
+
+        effect(this._debouncedSync, [this.records]);
+
+        browser.addEventListener("online", () => {
+            if (this.network.offline) {
+                this.network.offline = false;
+                this.network.warningTriggered = false; // Avoid the display of the offline popup multiple times
+            }
+
+            this.syncData();
+        });
+
+        browser.addEventListener("offline", () => {
+            this.network.offline = true;
+        });
+>>>>>>> b97195cb2e71d1d185e9d6f558e64f31200ae0d3:addons/point_of_sale/static/src/app/models/data_service.js
 
         browser.addEventListener("online", () => this.checkConnectivity());
         browser.addEventListener("offline", () => this.checkConnectivity());
