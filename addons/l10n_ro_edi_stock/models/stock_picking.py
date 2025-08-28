@@ -937,7 +937,7 @@ class Picking(models.Model):
         This is used to calculate the 'valoareLeiFaraTva' field in the eTransport document."""
         product = move.product_id
         currency = product.currency_id
-        res = product.taxes_id.filtered(lambda t: t.company_id == self.env.company).compute_all(
+        res = product.taxes_id.filtered(lambda t: t.company_id == move.company_id).compute_all(
             product.list_price, product=product, partner=self.env['res.partner']
         )
         excluded = res['total_excluded']
