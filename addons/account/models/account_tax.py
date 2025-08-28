@@ -106,7 +106,7 @@ class AccountTax(models.Model):
     _check_company_domain = models.check_company_domain_parent_of
 
     name = fields.Char(string='Tax Name', required=True, translate=True, tracking=True)
-    name_searchable = fields.Char(store=False, search='_search_name',
+    name_searchable = fields.Char(store=False, search='_search_name',  # TODO remove in master
           help="This dummy field lets us use another search method on the field 'name'."
                "This allows more freedom on how to search the 'name' compared to 'filter_domain'."
                "See '_search_name' and '_parse_name_search' for why this is not possible with 'filter_domain'.")
@@ -555,8 +555,12 @@ class AccountTax(models.Model):
         when using `like` or `ilike`.
         """
         def preprocess_name(cond):
-            if cond.field_expr == 'name' and cond.operator in ('like', 'ilike') and isinstance(cond.value, str):
-                return Domain('name', cond.operator, AccountTax._parse_name_search(cond.value))
+            if (
+                cond.field_expr in ('name', 'display_name')
+                and cond.operator in ('like', 'ilike')
+                and isinstance(cond.value, str)
+            ):
+                return Domain(cond.field_expr, cond.operator, AccountTax._parse_name_search(cond.value))
             return cond
         domain = Domain(domain).map_conditions(preprocess_name)
         return super()._search(domain, offset, limit, order)
