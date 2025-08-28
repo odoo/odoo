@@ -542,7 +542,7 @@ class Meeting(models.Model):
     def create(self, vals_list):
         # Prevent sending update notification when _inverse_dates is called
         self = self.with_context(is_calendar_event_new=True)
-        defaults = self.default_get([
+        defaults = self.browse().default_get([
             'activity_ids', 'allday', 'description', 'name', 'partner_ids',
             'res_model_id', 'res_id', 'start', 'user_id',
         ])
@@ -957,10 +957,14 @@ class Meeting(models.Model):
         public_users_settings_ids = self.env['res.users.settings'].sudo().search(
             [('calendar_default_privacy', '!=', 'private')]).ids
         # display public, confidential events and events with default privacy when owner's default privacy is not private
-        return [
-            '|', '|', '|', ('privacy', '=', 'public'), ('privacy', '=', 'confidential'), ('user_id', '=', self.env.user.id),
-            '&', ('privacy', '=', False), ('user_id.res_users_settings_id', 'in', public_users_settings_ids)
-        ]
+        return ['|', '|',
+            ('privacy', 'in', ['public', 'confidential']),
+            ('user_id', '=', self.env.user.id),
+            '&',
+                ('privacy', '=', False),
+                '|',
+                    ('user_id', '=', False),
+                    ('user_id.res_users_settings_id', 'in', public_users_settings_ids)]
 
     def _is_event_over(self):
         """Check if the event is over. This method is used to check if the event
@@ -1132,7 +1136,7 @@ class Meeting(models.Model):
         events_to_notify = self.env['calendar.event']
         triggers_by_events = {}
         for event in self:
-            existing_trigger = event.recurrence_id.trigger_id
+            existing_trigger = event.recurrence_id.sudo().trigger_id
             for alarm in (alarm for alarm in event.alarm_ids if alarm.alarm_type in alarm_types):
                 at = event.start - timedelta(minutes=alarm.duration_minutes)
                 create_trigger = not existing_trigger or existing_trigger and existing_trigger.call_at != at

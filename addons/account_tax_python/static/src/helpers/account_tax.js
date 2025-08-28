@@ -22,7 +22,7 @@ patch(accountTaxHelpers, {
         return evaluateExpr(tax.formula_decoded_info.js_formula, formula_context);
     },
 
-    /** override **/
+    // EXTENDS 'account'
     eval_tax_amount_fixed_amount(tax, batch, raw_base, evaluation_context) {
         if (tax.amount_type === "code") {
             return this.eval_tax_amount_formula(tax, raw_base, evaluation_context);

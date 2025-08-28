@@ -38,7 +38,7 @@ export class ReceiptScreen extends Component {
     }
 
     _addNewOrder() {
-        this.pos.add_new_order();
+        this.pos.selectEmptyOrder();
     }
     actionSendReceiptOnEmail() {
         this.sendReceipt.call({

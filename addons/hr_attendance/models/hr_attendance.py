@@ -480,6 +480,11 @@ class HrAttendance(models.Model):
             not self.env.user.has_group('hr_attendance.group_hr_attendance_officer'):
             raise AccessError(_("Do not have access, user cannot edit the attendances that are not his own."))
         attendances_dates = self._get_attendances_dates()
+
+        if vals.get('check_out') and self.out_mode == 'technical':
+            vals.update({'out_mode': 'manual'})
+        if vals.get('check_in') and self.in_mode == 'technical':
+            vals.update({'in_mode': 'manual'})
         result = super(HrAttendance, self).write(vals)
         if any(field in vals for field in ['employee_id', 'check_in', 'check_out']):
             # Merge attendance dates before and after write to recompute the
@@ -674,7 +679,10 @@ class HrAttendance(models.Model):
         if not self.env.user.has_group('hr_attendance.group_hr_attendance_manager'):
             employee_domain = AND([employee_domain, [('attendance_manager_id', '=', self.env.user.id)]])
         if not user_domain:
-            return self.env['hr.employee'].search(employee_domain)
+            # Workaround to make it work only for list view.
+            if 'gantt_start_date' in self.env.context:
+                return self.env['hr.employee'].search(employee_domain)
+            return resources & self.env['hr.employee'].search(employee_domain)
         else:
             employee_name_domain = []
             for leaf in user_domain:

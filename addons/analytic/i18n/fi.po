@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* analytic
-# 
+#
 # Translators:
 # Tiffany Chang, 2024
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2024
@@ -22,19 +22,19 @@
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Jessica Jakara, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-07 20:36+0000\n"
+"POT-Creation-Date: 2025-08-15 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: analytic
@@ -42,6 +42,12 @@ msgstr ""
 #: code:addons/analytic/models/analytic_account.py:0
 msgid "%s (copy)"
 msgstr "%s (kopio)"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_line.py:0
+msgid "%s analytic lines created"
+msgstr ""
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
@@ -158,6 +164,7 @@ msgstr "Analyyttisten tilien määrä"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__analytic_distribution
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution
 msgid "Analytic Distribution"
 msgstr "Analyyttinen jakelu"
@@ -229,6 +236,7 @@ msgstr "Analyyttiset suunnitelmat"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_precision
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__analytic_precision
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_precision
 msgid "Analytic Precision"
 msgstr "Analyyttinen tarkkuus"
@@ -509,6 +517,12 @@ msgid "Domain"
 msgstr "Verkkotunnus"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Don't update"
+msgstr ""
+
+#. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_rd_finance
 msgid "Finance"
 msgstr "Taloushallinto"
@@ -574,11 +588,13 @@ msgstr "Jos valittu, joitakin viestejä ei ole toimitettu."
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sales orders and projects are implemented using\n"
-"                analytic accounts. You can track costs and revenues to analyse\n"
+"                analytic accounts. You can track costs and revenues to "
+"analyse\n"
 "                your margins easily."
 msgstr ""
 "Odoossa myyntitilaukset ja projektit käsitellään käyttämällä\n"
-"                analyyttisiä tilejä. Voit seurata kustannuksia ja tuloja analysoidaksesi\n"
+"                analyyttisiä tilejä. Voit seurata kustannuksia ja tuloja "
+"analysoidaksesi\n"
 "                katteitasi helposti."
 
 #. module: analytic
@@ -649,6 +665,12 @@ msgstr "Millennium Industries"
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__business_domain__general
 msgid "Miscellaneous"
 msgstr "Sekalaiset"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Multi edit"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__name
@@ -811,14 +833,19 @@ msgstr "Tutkimus ja tuotekehitys"
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sales orders\n"
-"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                invoices. Customer invoices can be created based on sales "
+"orders\n"
+"                (fixed price invoices), on timesheets (based on the work "
+"done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 "Tulot luodaan automaattisesti, kun luot asiakkaan\n"
-"                laskuja. Asiakaslaskut voidaan luoda myyntitilausten perusteella\n"
-"                (kiinteähintaiset laskut), työaikataulujen perusteella (tehdyn työn perusteella) tai\n"
-"                kulujen perusteella (esim. matkakulujen uudelleen laskuttaminen)."
+"                laskuja. Asiakaslaskut voidaan luoda myyntitilausten "
+"perusteella\n"
+"                (kiinteähintaiset laskut), työaikataulujen perusteella "
+"(tehdyn työn perusteella) tai\n"
+"                kulujen perusteella (esim. matkakulujen uudelleen "
+"laskuttaminen)."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__root_id
@@ -928,6 +955,12 @@ msgid "UoM Category"
 msgstr "Mittayksikön luokka"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Update"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
 msgid "User"
 msgstr "Käyttäjä"
@@ -936,8 +969,8 @@ msgstr "Käyttäjä"
 #. odoo-python
 #: code:addons/analytic/models/analytic_account.py:0
 msgid ""
-"Whoa there! Making this change would wipe out your current data. Let's avoid"
-" that, shall we?"
+"Whoa there! Making this change would wipe out your current data. Let's avoid "
+"that, shall we?"
 msgstr ""
 "Hei, hetkinen! Tämän muutoksen tekeminen poistaisi nykyiset tietosi. "
 "Koitetaan välttää se, okei?"
@@ -966,8 +999,7 @@ msgid ""
 "company but a model shared between companies or with a different company"
 msgstr ""
 "Olet määritellyt jakelun, jossa analyyttiset tilit kuuluvat tietylle "
-"yritykselle, mutta malli on jaettu yritysten välillä tai eri yrityksen "
-"kanssa"
+"yritykselle, mutta malli on jaettu yritysten välillä tai eri yrityksen kanssa"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form

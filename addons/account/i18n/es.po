@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account
+# * account
 #
 # Translators:
 # Fernanda Alvarez, 2024
@@ -12,21 +12,23 @@
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2025
 # Wil Odoo, 2025
 # Larissa Manderfeld, 2025
-#
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 18:37+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Larissa Manderfeld, 2025\n"
-"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
+"POT-Creation-Date: 2025-08-15 18:36+0000\n"
+"PO-Revision-Date: 2025-08-25 10:09+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-18/account/"
+"es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
-"1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -5064,7 +5066,7 @@ msgstr "Datos dañados en el asiento contable con id %(id)s (%(name)s). "
 #: model:account.account,name:account.1_cost_of_goods_sold
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__cogs
 msgid "Cost of Goods Sold"
-msgstr "Costo de bienes vendidos"
+msgstr "Coste de bienes vendidos"
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_production
@@ -6649,7 +6651,7 @@ msgstr "Mostrar pestaña de mapeo"
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__display_name
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre para mostrar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__display_pdf_report_id
@@ -7552,7 +7554,7 @@ msgstr "Filtro de múltiples NIF"
 #. odoo-python
 #: code:addons/account/models/account_root.py:0
 msgid "Filter on the Account or its Display Name instead"
-msgstr "Filtre por la cuenta o su nombre mostrado"
+msgstr "Filtre por la cuenta o su nombre para mostrar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
@@ -8147,11 +8149,11 @@ msgstr "Agrupa pagos en un solo lote para facilitar el proceso de conciliación"
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid ""
-"Groupby feature isn't supported by aggregation engine. Please remove the "
-"groupby value on '%s'"
+"Groupby feature isn't supported by '%(engine)s' engine. Please remove the "
+"groupby value on '%(report_line)s'"
 msgstr ""
-"La función de \"agrupar por\" no es compatible con el motor de agregación. "
-"Elimine el valor de \"agrupar por\" en \"%s\""
+"La función de agrupación no es compatible con el motor %(engine)s. Elimine "
+"el valor de agrupación en %(report_line)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__grouping_key
@@ -13561,8 +13563,9 @@ msgstr "Revertido"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+#, fuzzy
 msgid "Reversed on"
-msgstr ""
+msgstr "Revertido el"
 
 #. module: account
 #. odoo-python
@@ -19779,6 +19782,13 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Comprobante de pago (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "Groupby feature isn't supported by aggregation engine. Please remove the "
+#~ "groupby value on '%s'"
+#~ msgstr ""
+#~ "La función de \"agrupar por\" no es compatible con el motor de "
+#~ "agregación. Elimine el valor de \"agrupar por\" en \"%s\""
 
 #~ msgid "IBAN: BE76 4294 6878 9995"
 #~ msgstr "IBAN: BE76 4294 6878 9995"

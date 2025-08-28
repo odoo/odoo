@@ -43,7 +43,7 @@ class IrQWeb(models.AbstractModel):
         irQweb = super()._prepare_frontend_environment(values)
 
         current_website = request.website
-        editable = irQweb.env.user.has_group('website.group_website_designer')
+        editable = has_group_designer = irQweb.env.user.has_group('website.group_website_designer')
         has_group_restricted_editor = irQweb.env.user.has_group('website.group_website_restricted_editor')
         if not editable and has_group_restricted_editor and 'main_object' in values:
             try:
@@ -89,7 +89,7 @@ class IrQWeb(models.AbstractModel):
 
         irQweb = irQweb.with_context(website_id=current_website.id)
         if 'inherit_branding' not in irQweb.env.context and not self.env.context.get('rendering_bundle'):
-            if editable:
+            if has_group_designer and editable:
                 # in edit mode add branding on ir.ui.view tag nodes
                 irQweb = irQweb.with_context(inherit_branding=True)
             elif has_group_restricted_editor:
@@ -167,7 +167,7 @@ class IrQWeb(models.AbstractModel):
         name = self.URL_ATTRS.get(tagName)
         if request:
             value = atts.get(name) if name else None
-            if value is not None and value is not False:
+            if value not in (None, False, ()):
                 atts[name] = self.env['ir.http']._url_for(str(value))
 
             # Adapt background-image URL in the same way as image src.
@@ -179,9 +179,9 @@ class IrQWeb(models.AbstractModel):
         data_name = f'data-{name}'
         if name and (name in atts or data_name in atts):
             atts = OrderedDict(atts)
-            if name in atts:
+            if name in atts and atts[name] not in (False, None, ()):
                 atts[name] = website.get_cdn_url(atts[name])
-            if data_name in atts:
+            if data_name in atts and atts[data_name] not in (False, None, ()):
                 atts[data_name] = website.get_cdn_url(atts[data_name])
         atts = self._adapt_style_background_image(atts, website.get_cdn_url)
 

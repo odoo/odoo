@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account
+# * account
 #
 # Translators:
 # Larissa Manderfeld, 2024
@@ -9,22 +9,24 @@
 # Wil Odoo, 2025
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # Fernanda Alvarez, 2025
-#
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 18:37+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Fernanda Alvarez, 2025\n"
-"Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/"
-"41243/es_419/)\n"
+"POT-Creation-Date: 2025-08-15 18:36+0000\n"
+"PO-Revision-Date: 2025-08-25 22:20+0000\n"
+"Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
+"Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
+"odoo-18/account/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
-"1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -1964,7 +1966,7 @@ msgstr "Moneda de la cuenta"
 #. module: account
 #: model:onboarding.onboarding,name:account.onboarding_onboarding_account_dashboard
 msgid "Account Dashboard Onboarding"
-msgstr "Integración del tablero de contabilidad"
+msgstr "Introducción al tablero de contabilidad"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_view_activity
@@ -3289,7 +3291,7 @@ msgstr "Aplicar solo si el país de entrega coincide con el grupo."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_id
 msgid "Apply only if delivery country matches."
-msgstr "Aplicar solo si el país de entrega coincide."
+msgstr "Aplicar solo si el país de entrega que coincide."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
@@ -8156,11 +8158,11 @@ msgstr "Agrupa pagos en un solo lote para facilitar el proceso de conciliación"
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid ""
-"Groupby feature isn't supported by aggregation engine. Please remove the "
-"groupby value on '%s'"
+"Groupby feature isn't supported by '%(engine)s' engine. Please remove the "
+"groupby value on '%(report_line)s'"
 msgstr ""
-"La función de \"agrupar por\" no es compatible con el motor de agregación. "
-"Elimina el valor de \"agrupar por\" en \"%s\""
+"La función de grupos no es compatible con el motor %(engine)s. Elimina el "
+"valor correspondiente en %(report_line)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__grouping_key
@@ -9328,7 +9330,7 @@ msgstr "Factura validada"
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_date
 #: model:ir.model.fields,field_description:account.field_account_move_line__invoice_date
 msgid "Invoice/Bill Date"
-msgstr "Fecha de factura"
+msgstr "Fecha de la factura"
 
 #. module: account
 #: model:mail.template,name:account.email_template_edi_invoice
@@ -19779,6 +19781,13 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Pago recibido (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "Groupby feature isn't supported by aggregation engine. Please remove the "
+#~ "groupby value on '%s'"
+#~ msgstr ""
+#~ "La función de \"agrupar por\" no es compatible con el motor de "
+#~ "agregación. Elimina el valor de \"agrupar por\" en \"%s\""
 
 #~ msgid "IBAN: BE76 4294 6878 9995"
 #~ msgstr "IBAN: BE76 4294 6878 9995"

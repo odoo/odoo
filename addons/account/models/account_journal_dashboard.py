@@ -738,6 +738,7 @@ class account_journal(models.Model):
             *self.env['account.move']._check_company_domain(self.env.companies),
             ('journal_id', 'in', self.ids),
             ('checked', '=', False),
+            ('state', '=', 'posted'),
         ])
 
     def _count_results_and_sum_amounts(self, results_dict, target_currency):

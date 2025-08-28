@@ -735,6 +735,49 @@ test("should remove all formats when having multiple formats (3)", async () => {
     });
 });
 
+test("should remove color from entire list item when fully selected", async () => {
+    await testEditor({
+        contentBefore: '<ul><li style="color: rgb(255, 0, 0);">[abcd]</li></ul>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: "<ul><li>[abcd]</li></ul>",
+    });
+});
+
+test("should remove color only from selected text within a list item", async () => {
+    await testEditor({
+        contentBefore: '<ul><li style="color: rgb(255, 0, 0);">a[bc]d</li></ul>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter:
+            '<ul><li><font style="color: rgb(255, 0, 0);">a</font>[bc]<font style="color: rgb(255, 0, 0);">d</font></li></ul>',
+    });
+});
+
+test("should remove color from entire heading when fully selected", async () => {
+    await testEditor({
+        contentBefore: '<ul><h1 style="color: rgb(255, 0, 0);">[abcd]</h1></ul>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: "<ul><h1>[abcd]</h1></ul>",
+    });
+});
+
+test("should remove color only from selected text within a heading", async () => {
+    await testEditor({
+        contentBefore: '<ul><h1 style="color: rgb(255, 0, 0);">a[bc]d</h1></ul>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter:
+            '<ul><h1><font style="color: rgb(255, 0, 0);">a</font>[bc]<font style="color: rgb(255, 0, 0);">d</font></h1></ul>',
+    });
+});
+
+test("should remove gradient color from span element", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><span style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[ab]</span></p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: "<p>[ab]</p>",
+    });
+});
+
 describe("Toolbar", () => {
     async function removeFormatClick() {
         await expectElementCount(".o-we-toolbar", 1);

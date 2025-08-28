@@ -1157,6 +1157,8 @@ class Cache:
             cache_value = field_cache[record._ids[0]]
             if field.translate and cache_value is not None:
                 lang = (record.env.lang or 'en_US') if field.translate is True else record.env._lang
+                if not (field.compute or field.store and record._origin):
+                    return cache_value.get(lang, cache_value.get('en_US'))
                 return cache_value[lang]
             return cache_value
         except KeyError:
@@ -1183,6 +1185,8 @@ class Cache:
             lang = record.env.lang or 'en_US'
             cache_value = field_cache.get(record_id) or {}
             cache_value[lang] = value
+            if not (field.compute or field.store and record._origin):
+                cache_value.setdefault('en_US', value)
             value = cache_value
 
         field_cache[record_id] = value
@@ -1215,15 +1219,17 @@ class Cache:
         """
         if field.translate:
             # only for model translated fields
-            lang = records.env.lang or 'en_US'
+            lang = (records.env.lang or 'en_US') if dirty else records.env._lang
             field_cache = self._get_field_cache(records, field)
             cache_values = []
-            for id_, value in zip(records._ids, values):
+            for record, value in zip(records, values):
                 if value is None:
                     cache_values.append(None)
                 else:
-                    cache_value = field_cache.get(id_) or {}
+                    cache_value = field_cache.get(record.id) or {}
                     cache_value[lang] = value
+                    if not (field.compute or field.store and record._origin):
+                        cache_value.setdefault('en_US', value)
                     cache_values.append(cache_value)
             values = cache_values
 
@@ -1357,7 +1363,7 @@ class Cache:
         """ Return the subset of ``records`` that has not ``value`` for ``field``. """
         field_cache = self._get_field_cache(records, field)
         if field.translate:
-            lang = records.env.lang or 'en_US'
+            lang = (records.env.lang or 'en_US') if field.translate is True else records.env._lang
 
             def get_value(id_):
                 cache_value = field_cache[id_]

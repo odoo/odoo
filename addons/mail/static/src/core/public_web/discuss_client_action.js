@@ -4,6 +4,7 @@ import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { router } from "@web/core/browser/router";
 
 /**
  * @typedef {Object} Props
@@ -63,9 +64,12 @@ export class DiscussClientAction extends Component {
         const [model, id] = this.parseActiveId(rawActiveId);
         const activeThread = await this.store.Thread.getOrFetch({ model, id });
         if (activeThread && activeThread.notEq(this.store.discuss.thread)) {
-            if (props.action?.params?.highlight_message_id) {
-                activeThread.highlightMessage = props.action.params.highlight_message_id;
-                delete props.action.params.highlight_message_id;
+            const highlight_message_id =
+                props.action?.params?.highlight_message_id || router.current.highlight_message_id;
+            if (highlight_message_id) {
+                activeThread.highlightMessage = highlight_message_id;
+                delete props.action?.params?.highlight_message_id;
+                delete router.current?.highlight_message_id;
             }
             activeThread.setAsDiscussThread(false);
         }

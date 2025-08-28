@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale
-# 
+# * sale
+#
 # Translators:
 # Tiffany Chang, 2024
 # Özlem Atalay <ozlema@eskayazilim.com.tr>, 2024
@@ -38,20 +38,22 @@
 # Deniz Guvener_Odoo <degu@odoo.com>, 2025
 # Wil Odoo, 2025
 # Ediz Duman <neps1192@gmail.com>, 2025
-# 
+# "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-11 18:39+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2025\n"
-"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"PO-Revision-Date: 2025-08-13 12:20+0000\n"
+"Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-18/sale/tr/>"
+"\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard___data_fetched
@@ -940,6 +942,9 @@ msgid ""
 "                                                By paying,\n"
 "                                            </span>"
 msgstr ""
+"<span id=\"o_sale_portal_use_amount_total\">\n"
+"                                                Ödeyerek,\n"
+"                                            </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -958,6 +963,8 @@ msgid ""
 "<span invisible=\"advance_payment_method != 'percentage'\" "
 "class=\"oe_inline\">% </span>"
 msgstr ""
+"<span invisible=\"advance_payment_method != 'percentage'\" class="
+"\"oe_inline\">% </span>"
 
 #. module: sale
 #: model_terms:web_tour.tour,rainbow_man_message:sale.sale_tour
@@ -965,6 +972,9 @@ msgid ""
 "<span><b>Congratulations</b>, your first quotation is sent!<br>Check your email to validate the quote.\n"
 "        </span>"
 msgstr ""
+"<span><b>Tebrikler</b>, ilk teklifiniz gönderildi!<br>Teklifi onaylamak için "
+"e-postanızı kontrol edin.\n"
+"        </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -994,7 +1004,7 @@ msgstr "<span>İnd.%</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_document_kanban
 msgid "<span>Sales visibility</span>"
-msgstr ""
+msgstr "<span>Satış görünürlüğü</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -1004,12 +1014,12 @@ msgstr "<span>Vergiler</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span>Warning: This quote contains archived product(s)</span>"
-msgstr ""
+msgstr "<span>Uyarı: Bu teklif,  arşivlenmiş ürün(ler) içeriyor</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span>Warning: this order might be a duplicate of</span>"
-msgstr ""
+msgstr "<span>Uyarı: Bu sipariş şunun yineleneni olabilir:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1060,7 +1070,7 @@ msgstr "<strong>Bu teklif iptal edilmiştir.</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference</strong>"
-msgstr ""
+msgstr "<strong>Referansınız</strong>"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
@@ -1071,7 +1081,7 @@ msgstr "Onaylanmış bir müşteri siparişi için bir onay tarihi gerekir."
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "A line on these orders missing a product, you cannot confirm it."
-msgstr ""
+msgstr "Bu siparişlerde bir satırda ürün eksik, onaylayamazsınız."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1086,12 +1096,15 @@ msgid ""
 "A sale order line's combo item must be among its linked line's available "
 "combo items."
 msgstr ""
+"Bir satış siparişi satırının kombo öğesi, bağlı satırın mevcut kombo öğeleri "
+"arasında olmalıdır."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "A sale order line's product must match its combo item's product."
 msgstr ""
+"Bir satış siparişi satırındaki ürün, kombo öğesinin ürünüyle eşleşmelidir."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1159,6 +1172,14 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Ürün yapılandırmasına göre teslim edilen miktar şu yöntemlerle otomatik "
+"olarak hesaplanabilir:\n"
+"  - Manuel: miktar satırda elle belirlenir\n"
+"  - Giderlerden Analitik: miktar, muhasebeleştirilmiş giderlerin toplamından "
+"alınır\n"
+"  - Çalışma Çizelgesi: miktar, bu satış satırına bağlı görevlerde kaydedilen "
+"saatlerin toplamıdır\n"
+"  - Stok Hareketleri: miktar, onaylanmış sevkiyatlardan alınır\n"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_chart_template
@@ -1218,6 +1239,9 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                (e.g. \"Delivery scheduling\", \"Order Payment Follow-up\", ...)"
 msgstr ""
+"Etkinlik planları, birkaç tıklama ile bir etkinlik listesini atamak için "
+"kullanılır\n"
+"                (örn. \"Teslimat planlama\", \"Sipariş Ödemesi Takibi\", ...)"
 
 #. module: sale
 #. odoo-javascript
@@ -1243,7 +1267,7 @@ msgstr "Bir Bölüm Ekle"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add note"
-msgstr ""
+msgstr "Not ekle"
 
 #. module: sale
 #. odoo-javascript
@@ -1255,7 +1279,7 @@ msgstr "Ekle"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_list/product_list.js:0
 msgid "Add optional products"
-msgstr ""
+msgstr "Opsiyonel ürün ekle"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1265,7 +1289,7 @@ msgstr "Ürün Ekle"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add section"
-msgstr ""
+msgstr "Bölüm ekle"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1293,6 +1317,16 @@ msgid ""
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
 "Inside quote: The document will be included in the pdf of the quotation and sale order between the header pages and the quote table. "
 msgstr ""
+"Bir satış kapsamında müşterilerinizle belge paylaşmanızı sağlar.\n"
+"Bu belgeyi satış müşterisiyle paylaşmak istemiyorsanız boş bırakın.\n"
+"Teklifte: Belge müşterilere gönderilir ve istedikleri zaman erişilebilir "
+"olur.\n"
+"örn. Bu seçenek, Ürün tanım dosyalarını paylaşmak için yararlı olabilir.\n"
+"Sipariş onayında: Belge müşterilere gönderilir ve erişilebilir olur.\n"
+"örn. Bu seçenek, Kullanıcı Kılavuzu veya e-ticaretten satın alınan dijital "
+"içerikleri paylaşmak için yararlı olabilir. \n"
+"Teklif içinde: Belge, teklif ve satış siparişi PDF’inin başlık sayfaları ile "
+"teklif tablosu arasına eklenir. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1395,7 +1429,7 @@ msgstr "İptal etmek istediğinizden emin misiniz?"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Are you sure you want to cancel the selected item?"
-msgstr ""
+msgstr "Seçilen öğeyi iptal etmek istediğinizden emin misiniz?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1480,7 +1514,7 @@ msgstr "Doküman Referansına Göre"
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Beat competitors with stunning quotations!"
-msgstr ""
+msgstr "Rakiplerinizi etkileyici teklifler ile geride bırakın!"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__block
@@ -1500,6 +1534,8 @@ msgid ""
 "Boost sales with online payments or signatures, upsells, and a great "
 "customer portal."
 msgstr ""
+"Çevrim içi ödemeler veya imzalar, yukarı satışlar ve harika bir müşteri "
+"portalı ile satışları artırın."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1518,22 +1554,22 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Build your first quotation right here!"
-msgstr ""
+msgstr "İlk teklifinizi hemen burada oluşturun!"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying a <u>down payment</u> of"
-msgstr ""
+msgstr "<u>Ön ödeme</u> yaparak"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying,"
-msgstr ""
+msgstr "Ödeyerek,"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By signing, you confirm acceptance on behalf of"
-msgstr ""
+msgstr "İmzalayarak, şu kişi adına kabul ettiğinizi onaylarsınız:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
@@ -1602,6 +1638,18 @@ msgid ""
 "   • For consumable or storable products, open the product, go to the 'General Information' tab and change the 'Invoicing Policy' from 'Delivered Quantities' to 'Ordered Quantities'.\n"
 "   • For services (and other products), change the 'Invoicing Policy' to 'Prepaid/Fixed Price'.\n"
 msgstr ""
+"Fatura oluşturulamaz. Faturalanacak öğe yok.\n"
+"\n"
+"Bu sorunu çözmek için lütfen şunları kontrol edin:\n"
+"   • Ürünleri faturalamadan önce teslim edildiklerinden emin olun.\n"
+"   • Ürünün faturalama politikası doğru şekilde yapılandırılmış olmalıdır.\n"
+"\n"
+"Bunun yerine sipariş edilen miktarlara göre faturalama yapmak istiyorsanız:\n"
+"   • Tüketilebilir veya depolanabilir ürünlerde, ürünü açın, 'Genel "
+"Bilgiler' sekmesine gidin ve 'Faturalama Politikası'nı 'Teslim Edilen "
+"Miktarlar'dan 'Sipariş Edilen Miktarlar'a değiştirin.\n"
+"   • Hizmetlerde (ve diğer ürünlerde) 'Faturalama Politikası'nı 'Ön Ödemeli/"
+"Sabit Fiyat' olarak değiştirin.\n"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1631,12 +1679,14 @@ msgid ""
 "adjustments in the details of the lines. You might consider updating the "
 "prices."
 msgstr ""
+"Mevcut bir teklifin şirketini değiştirmek, satır ayrıntılarında bazı elle "
+"düzenlemeler gerektirebilir. Fiyatları güncellemeyi düşünebilirsiniz."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Check a sample. It's clean!"
-msgstr ""
+msgstr "Bir örneği kontrol edin. Temiz görünüyor!"
 
 #. module: sale
 #. odoo-javascript
@@ -1707,6 +1757,9 @@ msgid ""
 "Compute shipping costs and ship with DHL<br/>\n"
 "                                    <strong>(please go to Home&gt;Apps to install)</strong>"
 msgstr ""
+"Kargo maliyetlerini hesaplayın ve DHL ile gönderin<br/>\n"
+"                                    <strong>(yüklemek için lütfen Ana "
+"Sayfa&gt;Uygulamalar'a gidin)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1719,6 +1772,9 @@ msgid ""
 "Compute shipping costs and ship with FedEx<br/>\n"
 "                                    <strong>(please go to Home&gt;Apps to install)</strong>"
 msgstr ""
+"FedEx ile gönderim maliyetlerini hesapla ve gönder<br/>\n"
+"                                    <strong>(yüklemek için Ana "
+"Sayfa>Uygulamalar'a gidin)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1733,7 +1789,7 @@ msgstr "Nakliye masraflarını hesaplayın ve Shiprocket ile gönderin"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Starshipit"
-msgstr ""
+msgstr "Starshipit ile gönderim maliyetlerini hesapla ve gönder"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1741,6 +1797,9 @@ msgid ""
 "Compute shipping costs and ship with UPS<br/>\n"
 "                                    <strong>(please go to Home&gt;Apps to install)</strong>"
 msgstr ""
+"UPS ile gönderim maliyetlerini hesapla ve gönder<br/>\n"
+"                                    <strong>(yüklemek için Ana "
+"Sayfa>Uygulamalar'a gidin)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1748,6 +1807,9 @@ msgid ""
 "Compute shipping costs and ship with USPS<br/>\n"
 "                                    <strong>(please go to Home&gt;Apps to install)</strong>"
 msgstr ""
+"USPS ile gönderim maliyetlerini hesapla ve gönder<br/>\n"
+"                                    <strong>(yüklemek için Ana "
+"Sayfa>Uygulamalar'a gidin)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1851,7 +1913,7 @@ msgstr "Faturalar Oluştur"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
 msgid "Create a Sale Order Activity Plan"
-msgstr ""
+msgstr "Satış Siparişi Faaliyet Planı oluşturun"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
@@ -1874,7 +1936,7 @@ msgstr "Yeni bir teklif oluşturun, Yeni bir satışın ilk adımı için!"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Create invoice(s)"
-msgstr ""
+msgstr "Fatura(lar) oluşturun"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
@@ -2027,7 +2089,7 @@ msgstr "Müşteri Posta Kodu"
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
 msgid "Customer needs to pay at least %(amount)s to confirm the order."
-msgstr ""
+msgstr "Müşteri siparişi onaylamak için en az %(amount)s ödemelidir."
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_customer
@@ -2038,7 +2100,7 @@ msgstr "Müşteriler"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "DHL Connector"
-msgstr ""
+msgstr "DHL Bağlayıcı"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
@@ -2063,6 +2125,8 @@ msgid ""
 "Days between quotation proposal and expiration. 0 days means automatic "
 "expiration is disabled"
 msgstr ""
+"Teklif önerisi ile sona erme arasındaki gün sayısı. 0 gün, otomatik sona "
+"ermenin devre dışı bırakıldığını gösterir"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
@@ -2097,11 +2161,14 @@ msgid ""
 "Default period during which the quote is valid and can still be accepted by "
 "the customer. The default can be changed per order or template."
 msgstr ""
+"Teklifin geçerli olduğu ve müşteri tarafından hala kabul edilebileceği "
+"varsayılan süre. Varsayılan değer sipariş veya şablon bazında "
+"değiştirilebilir."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_discount_product_id
 msgid "Default product used for discounts"
-msgstr ""
+msgstr "İndirimler için kullanılan varsayılan ürün"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2242,7 +2309,7 @@ msgstr "Satış Satırında İndirim"
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Discount- On products with the following taxes %(taxes)s"
-msgstr ""
+msgstr "İndirim – Aşağıdaki vergilere tabi ürünlerde: %(taxes)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2313,13 +2380,13 @@ msgstr "Peşinat"
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Down Payment (Cancelled)"
-msgstr ""
+msgstr "Peşinat (İptal Edildi)"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Down Payment (ref: %(reference)s on %(date)s)"
-msgstr ""
+msgstr "Peşinat (ref: %(reference)s, %(date)s tarihinde)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
@@ -2352,13 +2419,13 @@ msgstr "Peşinat (yüzde)"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Down payment <br/>"
-msgstr ""
+msgstr "Peşinat<br/>"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 msgid "Down payment invoice"
-msgstr ""
+msgstr "Peşinat faturası"
 
 #. module: sale
 #. odoo-python
@@ -2378,7 +2445,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_category__property_account_downpayment_categ_id
 msgid "Downpayment Account"
-msgstr ""
+msgstr "Peşinat Hesabı"
 
 #. module: sale
 #. odoo-python
@@ -2395,7 +2462,7 @@ msgstr "Çoklanmış Dökümanlar"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__duplicated_order_ids
 msgid "Duplicated Order"
-msgstr ""
+msgstr "Çoğaltılmış Sipariş"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
@@ -2432,7 +2499,7 @@ msgstr "Fatura hazır olduğunda müşteriye gönderilen e-posta."
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_template_attribute_line/product_template_attribute_line.js:0
 msgid "Enter a customized value"
-msgstr ""
+msgstr "Özel bir değer girin"
 
 #. module: sale
 #. odoo-python
@@ -2440,6 +2507,8 @@ msgstr ""
 msgid ""
 "Error importing attachment '%(file_name)s' as order (decoder=%(decoder)s)"
 msgstr ""
+"Ek '%(file_name)s' sipariş olarak içe aktarılırken hata oluştu "
+"(decoder=%(decoder)s)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -2585,7 +2654,7 @@ msgstr "Online ödeme onaylandığında faturayı otomatik olarak oluşturun"
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Generated Orders"
-msgstr ""
+msgstr "Oluşturulan Siparişler"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2601,7 +2670,7 @@ msgstr "Global İndirim"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Go ahead and send the quotation."
-msgstr ""
+msgstr "Fiyat teklifini gönderin."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_type
@@ -2637,7 +2706,7 @@ msgstr "Aktif Fiyat Listesi Var"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_archived_products
 msgid "Has Archived Products"
-msgstr ""
+msgstr "Arşivlenmiş Ürünleri Mevcut"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__has_confirmed_order
@@ -2734,7 +2803,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Immediate"
-msgstr ""
+msgstr "Anında"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2971,7 +3040,7 @@ msgstr "Takipçi mi"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_product_archived
 msgid "Is Product Archived"
-msgstr ""
+msgstr "Ürün Arşivlendi mi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_downpayment
@@ -2999,7 +3068,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Issued Date"
-msgstr ""
+msgstr "Düzenlenme Tarihi"
 
 #. module: sale
 #. odoo-python
@@ -3072,7 +3141,7 @@ msgstr "Müşterilerinize sizinle çalıştıkları tüm konular için bir porta
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Let’s create a beautiful quotation in a few clicks ."
-msgstr ""
+msgstr "Haydi, yalnızca birkaç tıklamayla güzel görünen bir teklif oluşturalım."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_line_id
@@ -3082,12 +3151,12 @@ msgstr "Bağlantılı Sipariş Satırı"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_line_ids
 msgid "Linked Order Lines"
-msgstr ""
+msgstr "Bağlantılı Sipariş Kalemleri"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_virtual_id
 msgid "Linked Virtual"
-msgstr ""
+msgstr "Bağlantılı Sanal"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3121,16 +3190,20 @@ msgid ""
 "Make your quote attractive by adding header pages, product descriptions and "
 "footer pages to your quote."
 msgstr ""
+"Teklifinize kapak sayfaları, ürün açıklamaları ve alt bilgi sayfaları "
+"ekleyerek teklifinizi cazip hale getirin."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Promotions, Coupons, Loyalty cards, Gift cards & eWallet"
 msgstr ""
+"Promosyonları, Kuponları, Sadakat Kartlarını, Hediye Kartlarını ve e-Cüzdanı "
+"yönetin"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Sales & teams targets and commissions"
-msgstr ""
+msgstr "Satış ve ekip hedefleri ile komisyonlarını yönetin"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
@@ -3301,7 +3374,7 @@ msgstr "Hiçbir ek sağlanmadı"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "No further requirements for this payment"
-msgstr ""
+msgstr "Bu ödeme için başka gereklilik yok"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3388,12 +3461,12 @@ msgstr "Tüm Satırlarda"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on_sale__sale_order
 msgid "On confirmed order"
-msgstr ""
+msgstr "Onaylanmış siparişte"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on_sale__quotation
 msgid "On quote"
-msgstr ""
+msgstr "Teklifte"
 
 #. module: sale
 #. odoo-python
@@ -3402,6 +3475,10 @@ msgid ""
 "Once a sales order is confirmed, you can't remove one of its lines (we need to track if something gets invoiced or delivered).\n"
 "                Set the quantity to 0 instead."
 msgstr ""
+"Bir satış siparişi onaylandıktan sonra, satırlarından birini kaldıramazsınız "
+"(bir şeyin faturalandırılıp faturalandırılmadığını veya teslim edilip "
+"edilmediğini izlememiz gerekir).\n"
+"                Bunun yerine miktarı 0 olarak ayarlayın."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -3453,7 +3530,7 @@ msgstr "Online İmza"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_invoiced
 msgid "Only confirmed down payments are considered."
-msgstr ""
+msgstr "Yalnızca onaylanmış peşinatlar dikkate alınır."
 
 #. module: sale
 #. odoo-python
@@ -3564,7 +3641,7 @@ msgstr "Sipariş Tarihi: Son 365 Gün"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__invoice_status
 msgid "Order Invoice Status"
-msgstr ""
+msgstr "Sipariş Fatura Durumu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
@@ -3643,7 +3720,7 @@ msgstr "Arttırılacak Satışlar"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Oscar Morgan"
-msgstr ""
+msgstr "Oscar Morgan"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3756,7 +3833,7 @@ msgstr "Ödeme İşlemleri"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_paid
 msgid "Payment Transactions Amount"
-msgstr ""
+msgstr "Ödeme İşlemleri Tutarı"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -3778,14 +3855,14 @@ msgstr "Portal Erişim URL"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_sale_order__prepayment_percent
 msgid "Prepayment percentage"
-msgstr ""
+msgstr "Ön ödeme yüzdesi"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/res_company.py:0
 #: code:addons/sale/models/sale_order.py:0
 msgid "Prepayment percentage must be a valid percentage."
-msgstr ""
+msgstr "Ön ödeme yüzdesi geçerli bir yüzde olmalıdır."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3872,7 +3949,7 @@ msgstr "Ürünler"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__product_catalog_product_is_in_sale_order
 msgid "Product Catalog Product Is In Sale Order"
-msgstr ""
+msgstr "Ürün Kataloğu Ürünü Satış Siparişinde"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_categories
@@ -3967,7 +4044,7 @@ msgstr "Ürünler"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Promotions, Loyalty & Gift Card"
-msgstr ""
+msgstr "Promosyonlar, Sadakat ve Hediye Kartı"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
@@ -4062,7 +4139,7 @@ msgstr "Gönderilen"
 #. odoo-python
 #: code:addons/sale/wizard/res_config_settings.py:0
 msgid "Quotation Validity is required and must be greater or equal to 0."
-msgstr ""
+msgstr "Teklif Geçerliliği gerekli olup 0 veya daha büyük olmalıdır."
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_viewed
@@ -4133,7 +4210,7 @@ msgstr "Değerlendirmeler"
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__expense_policy
 msgid "Re-Invoice Costs"
-msgstr ""
+msgstr "Maliyetleri Yeniden Faturalandırın"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
@@ -4201,12 +4278,12 @@ msgstr "Raporlama"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_payment
 msgid "Request a online payment from the customer to confirm the order."
-msgstr ""
+msgstr "Siparişi onaylamak için müşteriden çevrim içi ödeme talep edin."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_signature
 msgid "Request a online signature from the customer to confirm the order."
-msgstr ""
+msgstr "Siparişi onaylamak için müşteriden çevrim içi imza talep edin."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4214,6 +4291,8 @@ msgid ""
 "Request a payment to confirm orders, in full (100%) or partial. The default "
 "can be changed per order or template."
 msgstr ""
+"Siparişleri onaylamak için tam (%100) veya kısmi ödeme talep edin. "
+"Varsayılan değer sipariş veya şablon bazında değiştirilebilir."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4221,6 +4300,8 @@ msgid ""
 "Request customers to sign quotations to validate orders. The default can be "
 "changed per order or template."
 msgstr ""
+"Siparişleri doğrulamak için müşterilerden teklifleri imzalamalarını talep "
+"edin. Varsayılan değer sipariş veya şablon bazında değiştirilebilir."
 
 #. module: sale
 #. odoo-python
@@ -4257,7 +4338,7 @@ msgstr "SMS İleti hatası"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "SO0000"
-msgstr ""
+msgstr "SO0000"
 
 #. module: sale
 #. odoo-javascript
@@ -4268,7 +4349,7 @@ msgstr "Satış"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_document__attached_on_sale
 msgid "Sale : Visible at"
-msgstr ""
+msgstr "Satış: Görünürlük Konumu"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -4294,7 +4375,7 @@ msgstr "Sipariş Sayısı"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_plan_action_sale_order
 msgid "Sale Order Plans"
-msgstr ""
+msgstr "Satış Siparişi Planları"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
@@ -4369,7 +4450,7 @@ msgstr "Müşterilere Göre Satış Analizi"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
 msgid "Sales Analysis By Products"
-msgstr ""
+msgstr "Ürün Bazında Satış Analizi"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
@@ -4566,7 +4647,7 @@ msgstr "Satış Siparişi Ara"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Search a customer name, or create one on the fly."
-msgstr ""
+msgstr "Bir müşteri arayın veya anında oluşturun."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_section
@@ -4661,6 +4742,10 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Accounting tab)."
 msgstr ""
+"Bir ürünle ilgili belirli bilgi veya içerik (talimatlar, kurallar, "
+"bağlantılar, medya vb.) paylaşmanız gerektiğinde e-posta göndermek "
+"faydalıdır. E-posta şablonunu ürün detay formundan (Muhasebe sekmesinde) "
+"oluşturup ayarlayın."
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_cancellation
@@ -4678,6 +4763,7 @@ msgid ""
 "Sent to customers when a payment is received but doesn't immediately confirm"
 " their order"
 msgstr ""
+"Ödeme alındığında ancak siparişi hemen onaylamadığında müşterilere gönderilir"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -4721,7 +4807,7 @@ msgstr "Teslimat Adresi"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_shiprocket
 msgid "Shiprocket Connector"
-msgstr ""
+msgstr "Shiprocket Bağlayıcı"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4789,12 +4875,14 @@ msgid ""
 "Some confirmed orders are selected. Their related documents might be\n"
 "                        affected by the cancellation."
 msgstr ""
+"Bazı onaylanmış siparişler seçildi. İlgili belgeler\n"
+"                         iptalden etkilenebilir."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Some orders are not in a state requiring confirmation."
-msgstr ""
+msgstr "Bazı siparişler onay gerektiren bir durumda değil."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__source_id
@@ -4817,7 +4905,7 @@ msgstr "Spesifik E-Posta"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_starshipit
 msgid "Starshipit Connector"
-msgstr ""
+msgstr "Starshipit Bağlayıcı"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__state
@@ -4876,6 +4964,8 @@ msgid ""
 "Sum of transactions made in through the online payment form that are in the "
 "state 'done' or 'authorized' and linked to this order."
 msgstr ""
+"Bu siparişle bağlantılı olarak, çevrim içi ödeme formu üzerinden yapılan ve "
+"durumu 'tamamlandı' veya 'yetkilendirildi' olan işlemlerin toplamı."
 
 #. module: sale
 #: model:ir.model,name:sale.model_ir_config_parameter
@@ -4945,7 +5035,7 @@ msgstr "Vergiler"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_discount__tax_ids
 msgid "Taxes to add on the discount line."
-msgstr ""
+msgstr "İndirim satırına eklenecek vergiler."
 
 #. module: sale
 #. odoo-python
@@ -4960,7 +5050,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__technical_price_unit
 msgid "Technical Price Unit"
-msgstr ""
+msgstr "Teknik Fiyat Birimi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5013,6 +5103,8 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced is cancelled. You cannot register"
 " an expense on a cancelled Sales Order."
 msgstr ""
+"Yeniden faturalandırılacak %(order)s Satış Siparişi iptal edildi. İptal "
+"edilmiş bir Satış Siparişine gider kaydedemezsiniz."
 
 #. module: sale
 #. odoo-python
@@ -5021,6 +5113,8 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced is currently locked. You cannot "
 "register an expense on a locked Sales Order."
 msgstr ""
+"Yeniden faturalandırılacak %(order)s Satış Siparişi şu anda kilitli. Kilitli "
+"bir Satış Siparişine gider kaydedemezsiniz."
 
 #. module: sale
 #. odoo-python
@@ -5029,6 +5123,8 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced must be validated before "
 "registering expenses."
 msgstr ""
+"Gider kaydetmeden önce yeniden faturalandırılacak %(order)s Satış "
+"Siparişinin onaylanması gerekir."
 
 #. module: sale
 #. odoo-python
@@ -5040,6 +5136,7 @@ msgstr "Erişim tokenı geçersiz."
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_to_invoice
 msgid "The amount to invoice = Sale Order Total - Confirmed Down Payments."
 msgstr ""
+"Faturalandırılacak tutar = Satış Siparişi Toplamı - Onaylanmış Ön Ödemeler."
 
 #. module: sale
 #. odoo-python
@@ -5048,6 +5145,8 @@ msgid ""
 "The company is required, please select one before making any other changes "
 "to the sale order."
 msgstr ""
+"Şirket bilgisi zorunludur, satış siparişinde başka değişiklik yapmadan önce "
+"lütfen birini seçin."
 
 #. module: sale
 #. odoo-python
@@ -5062,7 +5161,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "The fixed amount to be invoiced in advance."
-msgstr ""
+msgstr "Peşin olarak faturalandırılacak sabit tutar."
 
 #. module: sale
 #. odoo-python
@@ -5100,6 +5199,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "The new invoice will deduct draft invoices linked to this sale order."
 msgstr ""
+"Yeni fatura, bu satış siparişiyle bağlantılı taslak faturaları düşecektir."
 
 #. module: sale
 #. odoo-python
@@ -5108,11 +5208,13 @@ msgid ""
 "The number of selected combo items must match the number of available combo "
 "choices."
 msgstr ""
+"Seçilen kombo öğelerinin sayısı, mevcut kombo seçeneklerinin sayısıyla "
+"eşleşmelidir."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "The order is not in a state requiring customer payment."
-msgstr ""
+msgstr "Sipariş, müşteri ödemesi gerektiren bir durumda değil."
 
 #. module: sale
 #. odoo-python
@@ -5134,31 +5236,31 @@ msgstr "Bu satış siparişinin ödeme iletişimi."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "The payment should also be transmitted with love"
-msgstr ""
+msgstr "Ödeme ayrıca sevgiyle iletilmelidir"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
 msgid "The percentage of amount to be invoiced in advance."
-msgstr ""
+msgstr "Peşin olarak faturalandırılacak tutarın yüzdesi."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__prepayment_percent
 msgid ""
 "The percentage of the amount needed that must be paid by the customer to "
 "confirm the order."
-msgstr ""
+msgstr "Siparişi onaylamak için müşterinin ödemesi gereken tutarın yüzdesi."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,help:sale.field_res_config_settings__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
-msgstr ""
+msgstr "Teklifleri onaylamak için ödenmesi gereken tutarın yüzdesi."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "The product (%(product)s) has incompatible values: %(value_list)s"
-msgstr ""
+msgstr "Ürün (%(product)s) uyumsuz değerlere sahip: %(value_list)s"
 
 #. module: sale
 #. odoo-python
@@ -5180,7 +5282,7 @@ msgstr "Şu anda hesabınızda hiç teklif yok."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "There are currently no sales orders for your account."
-msgstr ""
+msgstr "Hesabınızda şu anda herhangi bir satış siparişi bulunmamaktadır."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -5195,11 +5297,14 @@ msgid ""
 "yet. You can either use a per-line discount, or ask an administrator to "
 "grant the discount the first time."
 msgstr ""
+"Henüz bu şirket için yapılandırılmış bir indirim ürünü görünmüyor. Satır "
+"bazlı indirim kullanabilir veya bir yöneticiden ilk seferinde indirimi "
+"tanımlamasını isteyebilirsiniz."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_category__property_account_downpayment_categ_id
 msgid "This account will be used on Downpayment invoices."
-msgstr ""
+msgstr "Bu hesap, Ön Ödeme faturalarında kullanılacaktır."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5252,13 +5357,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
 msgid "This option or combination of options is not available"
-msgstr ""
+msgstr "Bu seçenek veya seçenek kombinasyonu mevcut değil"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
 msgid "This payment will confirm the quotation."
-msgstr ""
+msgstr "Bu ödeme, teklifi onaylayacaktır."
 
 #. module: sale
 #. odoo-python
@@ -5418,7 +5523,7 @@ msgstr "İşlemler"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__translated_product_name
 msgid "Translated Product Name"
-msgstr ""
+msgstr "Çevrilmiş Ürün Adı"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__type_name
@@ -5439,12 +5544,12 @@ msgstr "Kayıtlardaki istisna etkinliğinin türü."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a customer..."
-msgstr ""
+msgstr "Bir müşteri bulmak için yazın..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a product..."
-msgstr ""
+msgstr "Bir ürün bulmak için yazın..."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
@@ -5467,7 +5572,7 @@ msgstr "UTM Kampanyası"
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__amount_to_invoice
 msgid "Un-invoiced Balance"
-msgstr ""
+msgstr "Faturalanmamış Bakiye"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_unit
@@ -5585,6 +5690,9 @@ msgid ""
 "Validated expenses, vendor bills, or stock pickings (set up to track costs) "
 "can be invoiced to the customer at either cost or sales price."
 msgstr ""
+"Onaylanmış giderler, tedarikçi faturaları veya stok hareketleri (maliyet "
+"takibi için ayarlanmış) müşteriye maliyet veya satış fiyatı üzerinden "
+"faturalandırılabilir."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__validity_date
@@ -5592,6 +5700,8 @@ msgid ""
 "Validity of the order, after that you will not able to sign & pay the "
 "quotation."
 msgstr ""
+"Siparişin geçerlilik süresi; bu süreden sonra teklifi imzalayıp "
+"ödeyemezsiniz."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5674,7 +5784,7 @@ msgstr "Websitesi iletişim geçmişi"
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "You can invoice goods before they are delivered."
-msgstr ""
+msgstr "Ürünleri teslim edilmeden önce faturalandırabilirsiniz."
 
 #. module: sale
 #. odoo-python
@@ -5715,7 +5825,7 @@ msgstr "Kilitli bir siparişi iptal edemezsiniz. Lütfen önce kilidini açın."
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "You cannot change the pricelist of a confirmed order !"
-msgstr ""
+msgstr "Onaylanmış bir siparişin fiyat listesi değiştirilemez!"
 
 #. module: sale
 #. odoo-python
@@ -5742,7 +5852,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "You cannot modify the product of this order line."
-msgstr ""
+msgstr "Bu sipariş satırındaki ürünü değiştiremezsiniz."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
@@ -5778,7 +5888,7 @@ msgstr "Referansınız:"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
 msgid "Your browser does not support iframe."
-msgstr ""
+msgstr "Tarayıcınız iframe desteklemiyor."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5820,7 +5930,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "add the price of your product."
-msgstr ""
+msgstr "ürününüzün fiyatını ekleyin."
 
 #. module: sale
 #: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
@@ -5857,12 +5967,12 @@ msgstr "bu Satış Siparişi için."
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "let's continue"
-msgstr ""
+msgstr "devam edelim"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "quote."
-msgstr ""
+msgstr "fiyat teklifi."
 
 #. module: sale
 #. odoo-python
@@ -5876,6 +5986,8 @@ msgid ""
 "selected\n"
 "                    items?"
 msgstr ""
+"seçilen\n"
+"                    öğeler?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -5885,7 +5997,7 @@ msgstr "Birimler"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "you confirm acceptance on the behalf of"
-msgstr ""
+msgstr "adına kabul ettiğinizi onaylıyorsunuz"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation

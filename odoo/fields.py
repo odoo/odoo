@@ -1949,7 +1949,12 @@ class _String(Field[str | typing.Literal[False]]):
 
         # not dirty fields
         if not dirty:
-            cache.update_raw(records, self, [{lang: cache_value} for _id in records._ids], dirty=False)
+            if self.compute and self.inverse:
+                # invalidate the values in other languages to force their recomputation
+                values = [{lang: cache_value} for _id in records._ids]
+                cache.update_raw(records, self, values, dirty=False)
+            else:
+                cache.update(records, self, itertools.repeat(cache_value), dirty=False)
             return
 
         # model translation
@@ -2576,6 +2581,11 @@ class Binary(Field):
             super().compute_value(records)
 
     def read(self, records):
+        def _encode(s: str | bool) -> bytes | bool:
+            if isinstance(s, str):
+                return s.encode("utf-8")
+            return s
+
         # values are stored in attachments, retrieve them
         assert self.attachment
         domain = [
@@ -2583,9 +2593,9 @@ class Binary(Field):
             ('res_field', '=', self.name),
             ('res_id', 'in', records.ids),
         ]
-        # Note: the 'bin_size' flag is handled by the field 'datas' itself
+        bin_size = records.env.context.get('bin_size')
         data = {
-            att.res_id: att.datas
+            att.res_id: _encode(human_size(att.file_size)) if bin_size else att.datas
             for att in records.env['ir.attachment'].sudo().search(domain)
         }
         records.env.cache.insert_missing(records, self, map(data.get, records._ids))
@@ -3524,9 +3534,10 @@ class Properties(Field):
             assert self.definition.count(".") == 1
             self.definition_record, self.definition_record_field = self.definition.rsplit('.', 1)
 
-            # make the field computed, and set its dependencies
-            self._depends = (self.definition_record, )
-            self.compute = self._compute
+            if not self.inherited_field:
+                # make the field computed, and set its dependencies
+                self._depends = (self.definition_record, )
+                self.compute = self._compute
 
     def setup_related(self, model):
         super().setup_related(model)

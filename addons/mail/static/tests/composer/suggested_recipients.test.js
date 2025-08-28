@@ -237,7 +237,7 @@ test("suggest recipient on 'Send message' composer (all checked by default)", as
     let partners = pyEnv["res.partner"].search_read([["email", "=", "john@test.be"]]);
     expect(partners).toHaveLength(0);
     await insertText(".o-mail-Composer-input", "Dummy Message");
-    await click(".o-mail-Composer-send");
+    await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Followers-counter", { text: "2" });
     partners = pyEnv["res.partner"].search_read([["email", "=", "john@test.be"]]);
     expect(partners).toHaveLength(1);
@@ -262,7 +262,7 @@ test("suggest recipient on 'Send message' composer (recipient checked/unchecked)
     const partners = pyEnv["res.partner"].search_read([["email", "=", "john@test.be"]]);
     expect(partners).toHaveLength(1);
     await insertText(".o-mail-Composer-input", "Dummy Message");
-    await click(".o-mail-Composer-send");
+    await click(".o-mail-Composer-send:enabled");
     await tick();
     await contains(".o-mail-Followers-counter", { text: "1" });
 });

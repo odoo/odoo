@@ -36,6 +36,7 @@
                                 <strong class="me-1" t-esc="authorName"/>
                             </span>
                             <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
+                            <t t-if="isAlignedRight and message.is_note" t-call="mail.Message.actions"/>
                             <small t-if="!message.is_transient" class="o-mail-Message-date o-xsmaller" t-att-title="message.datetimeShort">
                                 <t t-if="message.isPending" t-call="mail.Message.pendingStatus"/>
                                 <t t-else="" t-out="message.dateSimpleWithDay"/>
@@ -54,7 +55,7 @@
                                 </span>
                             </div>
                             <t t-if="isAlignedRight" t-call="mail.Message.notification"/>
-                            <t t-if="message.is_note" t-call="mail.Message.actions"/>
+                            <t t-if="!isAlignedRight and message.is_note" t-call="mail.Message.actions"/>
                         </div>
                         <div
                             class="o-mail-Message-contentContainer position-relative d-flex"

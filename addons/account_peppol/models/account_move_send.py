@@ -81,7 +81,7 @@ class AccountMoveSend(models.AbstractModel):
     def _get_default_invoice_edi_format(self, move, **kwargs) -> str:
         # EXTENDS 'account' - default on bis3 if Peppol is set but no format on the partner
         invoice_edi_format = super()._get_default_invoice_edi_format(move, **kwargs)
-        if 'peppol' in kwargs.get('sending_methods', []):
+        if 'peppol' in kwargs.get('sending_methods', {}):
             return move.partner_id.with_company(move.company_id)._get_peppol_edi_format()
         return invoice_edi_format
 

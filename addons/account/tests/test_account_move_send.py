@@ -162,7 +162,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         with self.mock_mail_gateway(mail_unlink_sent=False):
             self.env['account.move.send']._generate_and_send_invoices(
                 test_moves,
-                sending_methods=['email'],
+                sending_methods={'email'},
                 mail_template=move_template,
             )
 
@@ -1092,9 +1092,9 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard = self.create_send_and_print(invoice)
         
         expected_results = {
-            'sending_methods': ['email'],
+            'sending_methods': {'email'},
             'invoice_edi_format': False,
-            'extra_edis': [],
+            'extra_edis': {},
             'pdf_report': self.env.ref('account.account_invoices'),
             'author_user_id': self.env.user.id,
             'author_partner_id': self.env.user.partner_id.id,

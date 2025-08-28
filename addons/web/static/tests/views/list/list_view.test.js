@@ -16686,3 +16686,20 @@ test(`hide pager in the list view with sample data`, async () => {
     expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_cp_pager").not.toHaveCount();
 });
+
+test(`basic open record with allowOpenAction`, async () => {
+    mockService("action", {
+        doActionButton(params) {
+            const { name } = params;
+            expect.step(`execute_action: ${name}`, params);
+        },
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list action="test_action" type="object"><field name="foo"/></list>`,
+        allowOpenAction: false,
+    });
+    await contains(".o_field_cell").click();
+    expect.verifySteps([]);
+});

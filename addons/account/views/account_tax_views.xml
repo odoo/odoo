@@ -38,7 +38,9 @@
             <field name="arch" type="xml">
                 <list editable="bottom" create="1" delete="1">
                     <field name="sequence" widget="handle"/>
-                    <field name="factor_percent" invisible="repartition_type == 'base'"/>
+                    <field name="factor_percent"
+                           invisible="repartition_type == 'base'"
+                           widget="account_tax_repartition_line_factor_percent"/>
                     <field name="repartition_type"/>
                     <field name="account_id" invisible="repartition_type == 'base'" options="{'no_create': True}"/>
                     <field name="tag_ids"

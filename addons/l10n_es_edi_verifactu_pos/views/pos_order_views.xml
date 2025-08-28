@@ -39,12 +39,7 @@
                 <xpath expr="//header" position="inside">
                     <button name="l10n_es_edi_verifactu_button_send" type="object"
                             string="Send Veri*Factu"
-                            invisible="account_move or not l10n_es_edi_verifactu_required"/>
-                    <button name="l10n_es_edi_verifactu_button_cancel"
-                            string="Request Veri*Factu Cancellation"
-                            type="object"
-                            groups="account.group_account_invoice"
-                            invisible="not l10n_es_edi_verifactu_show_cancel_button"/>
+                            invisible="account_move or not l10n_es_edi_verifactu_required or l10n_es_edi_verifactu_state in ('registered_with_errors', 'accepted')"/>
                 </xpath>
                 <xpath expr="//header" position="after">
                     <div class="alert alert-info" role="alert"

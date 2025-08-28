@@ -764,3 +764,287 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
             f"{self.analytic_account_1.id}": 30,
             f"{self.analytic_account_2.id}": 60,
         })
+
+    def test_analytic_dynamic_update(self):
+        plan1 = self.analytic_account_1.plan_id._column_name()
+        plan2 = self.analytic_account_3.plan_id._column_name()
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '2023-01-01',
+            'invoice_date': '2023-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 100.0,
+                    'analytic_distribution': {
+                        self.analytic_account_1.id: 40,
+                        self.analytic_account_2.id: 60,
+                    },
+                }),
+            ],
+        })
+        invoice_line = invoice.invoice_line_ids
+
+        for comment, init, update, expect in [(
+            "Add a distribution on a previously empty plan",
+            {
+                f"{self.analytic_account_1.id}": 40,
+                f"{self.analytic_account_2.id}": 60,
+            }, {
+                '__update__': [plan2],
+                f"{self.analytic_account_3.id}": 25,
+                f"{self.analytic_account_4.id}": 75,
+            }, {
+                f"{self.analytic_account_1.id},{self.analytic_account_3.id}": 10,
+                f"{self.analytic_account_2.id},{self.analytic_account_3.id}": 15,
+                f"{self.analytic_account_1.id},{self.analytic_account_4.id}": 30,
+                f"{self.analytic_account_2.id},{self.analytic_account_4.id}": 45,
+            },
+        ), (
+            "Add a distribution on a previously empty plan, both less than 100%",
+            {
+                f"{self.analytic_account_1.id}": 20,
+                f"{self.analytic_account_2.id}": 30,
+            }, {
+                '__update__': [plan2],
+                f"{self.analytic_account_3.id}": 10,
+                f"{self.analytic_account_4.id}": 40,
+            }, {
+                f"{self.analytic_account_1.id},{self.analytic_account_3.id}": 4,
+                f"{self.analytic_account_2.id},{self.analytic_account_3.id}": 6,
+                f"{self.analytic_account_1.id},{self.analytic_account_4.id}": 16,
+                f"{self.analytic_account_2.id},{self.analytic_account_4.id}": 24,
+            },
+        ), (
+            "Add a distribution on a previously empty plan, both more than 100%",
+            {
+                f"{self.analytic_account_1.id}": 200,
+                f"{self.analytic_account_2.id}": 300,
+            }, {
+                '__update__': [plan2],
+                f"{self.analytic_account_3.id}": 100,
+                f"{self.analytic_account_4.id}": 400,
+            }, {
+                f"{self.analytic_account_1.id},{self.analytic_account_3.id}": 40,
+                f"{self.analytic_account_2.id},{self.analytic_account_3.id}": 60,
+                f"{self.analytic_account_1.id},{self.analytic_account_4.id}": 160,
+                f"{self.analytic_account_2.id},{self.analytic_account_4.id}": 240,
+            },
+        ), (
+            "Update the percentage of one plan without changing the other",
+            {
+                f"{self.analytic_account_1.id},{self.analytic_account_3.id}": 10,
+                f"{self.analytic_account_2.id},{self.analytic_account_3.id}": 15,
+                f"{self.analytic_account_1.id},{self.analytic_account_4.id}": 30,
+                f"{self.analytic_account_2.id},{self.analytic_account_4.id}": 45,
+            }, {
+                '__update__': [plan1, plan2],
+                f"{self.analytic_account_1.id},{self.analytic_account_3.id}": 15,
+                f"{self.analytic_account_2.id},{self.analytic_account_3.id}": 10,
+                f"{self.analytic_account_1.id},{self.analytic_account_4.id}": 45,
+                f"{self.analytic_account_2.id},{self.analytic_account_4.id}": 30,
+            }, {
+                f"{self.analytic_account_1.id},{self.analytic_account_3.id}": 15,
+                f"{self.analytic_account_2.id},{self.analytic_account_3.id}": 10,
+                f"{self.analytic_account_1.id},{self.analytic_account_4.id}": 45,
+                f"{self.analytic_account_2.id},{self.analytic_account_4.id}": 30,
+            },
+        ), (
+            "Update the percentage on both plans at the same time",
+            {
+                f"{self.analytic_account_1.id},{self.analytic_account_3.id}": 10,
+                f"{self.analytic_account_2.id},{self.analytic_account_3.id}": 15,
+                f"{self.analytic_account_1.id},{self.analytic_account_4.id}": 30,
+                f"{self.analytic_account_2.id},{self.analytic_account_4.id}": 45,
+            }, {
+                '__update__': [plan1, plan2],
+                f"{self.analytic_account_1.id},{self.analytic_account_3.id}": 45,
+                f"{self.analytic_account_2.id},{self.analytic_account_3.id}": 30,
+                f"{self.analytic_account_1.id},{self.analytic_account_4.id}": 15,
+                f"{self.analytic_account_2.id},{self.analytic_account_4.id}": 10,
+            }, {
+                f"{self.analytic_account_1.id},{self.analytic_account_3.id}": 45,
+                f"{self.analytic_account_2.id},{self.analytic_account_3.id}": 30,
+                f"{self.analytic_account_1.id},{self.analytic_account_4.id}": 15,
+                f"{self.analytic_account_2.id},{self.analytic_account_4.id}": 10,
+            },
+        ), (
+            "Remove everything set on plan 1",
+            {
+                f"{self.analytic_account_1.id},{self.analytic_account_3.id}": 45,
+                f"{self.analytic_account_2.id},{self.analytic_account_3.id}": 30,
+                f"{self.analytic_account_1.id},{self.analytic_account_4.id}": 15,
+                f"{self.analytic_account_2.id},{self.analytic_account_4.id}": 10,
+            }, {
+                '__update__': [plan1],
+            }, {
+                f"{self.analytic_account_3.id}": 75,
+                f"{self.analytic_account_4.id}": 25,
+            },
+        ), (
+            "Nothing changes because there is nothing in __update__",
+            {
+                f"{self.analytic_account_1.id}": 40,
+                f"{self.analytic_account_2.id}": 60,
+            }, {
+                '__update__': [],
+            }, {
+                f"{self.analytic_account_1.id}": 40,
+                f"{self.analytic_account_2.id}": 60,
+            },
+        ), (
+            "remove everything because __update__ is not set",
+            {
+                f"{self.analytic_account_1.id}": 40,
+                f"{self.analytic_account_2.id}": 60,
+            }, {
+            }, False,
+        ), (
+            "Add a distribution on a previously empty plan, with more than 100%",
+            {
+                f"{self.analytic_account_1.id}": 40,
+                f"{self.analytic_account_2.id}": 60,
+            }, {
+                '__update__': [plan2],
+                f"{self.analytic_account_3.id}": 33,
+                f"{self.analytic_account_4.id}": 167,
+            }, {
+                f"{self.analytic_account_1.id},{self.analytic_account_3.id}": 6.6,
+                f"{self.analytic_account_1.id},{self.analytic_account_4.id}": 33.4,
+                f"{self.analytic_account_2.id},{self.analytic_account_3.id}": 9.9,
+                f"{self.analytic_account_2.id},{self.analytic_account_4.id}": 50.1,
+                f"{self.analytic_account_3.id}": 16.5,
+                f"{self.analytic_account_4.id}": 83.5,
+            },
+        ), (
+            "Add a distribution on a previously empty plan, with previous values more than 100%",
+            {
+                f"{self.analytic_account_3.id}": 33,
+                f"{self.analytic_account_4.id}": 167,
+            }, {
+                '__update__': [plan1],
+                f"{self.analytic_account_1.id}": 40,
+                f"{self.analytic_account_2.id}": 60,
+            }, {
+                f"{self.analytic_account_3.id},{self.analytic_account_1.id}": 6.6,
+                f"{self.analytic_account_4.id},{self.analytic_account_1.id}": 33.4,
+                f"{self.analytic_account_3.id},{self.analytic_account_2.id}": 9.9,
+                f"{self.analytic_account_4.id},{self.analytic_account_2.id}": 50.1,
+                f"{self.analytic_account_3.id}": 16.5,
+                f"{self.analytic_account_4.id}": 83.5,
+            },
+        ), (
+            "Add a distribution on a previously empty plan, with less than 100%",
+            {
+                f"{self.analytic_account_1.id}": 40,
+                f"{self.analytic_account_2.id}": 60,
+            }, {
+                '__update__': [plan2],
+                f"{self.analytic_account_3.id}": 20,
+                f"{self.analytic_account_4.id}": 30,
+            }, {
+                f"{self.analytic_account_1.id},{self.analytic_account_3.id}": 8,
+                f"{self.analytic_account_1.id},{self.analytic_account_4.id}": 12,
+                f"{self.analytic_account_2.id},{self.analytic_account_3.id}": 12,
+                f"{self.analytic_account_2.id},{self.analytic_account_4.id}": 18,
+                f"{self.analytic_account_1.id}": 20,
+                f"{self.analytic_account_2.id}": 30,
+            },
+        ), (
+            "Add a distribution on a previously empty plan, with previous values less than 100%",
+            {
+                f"{self.analytic_account_3.id}": 20,
+                f"{self.analytic_account_4.id}": 30,
+            }, {
+                '__update__': [plan1],
+                f"{self.analytic_account_1.id}": 40,
+                f"{self.analytic_account_2.id}": 60,
+            }, {
+                f"{self.analytic_account_3.id},{self.analytic_account_1.id}": 8,
+                f"{self.analytic_account_4.id},{self.analytic_account_1.id}": 12,
+                f"{self.analytic_account_3.id},{self.analytic_account_2.id}": 12,
+                f"{self.analytic_account_4.id},{self.analytic_account_2.id}": 18,
+                f"{self.analytic_account_1.id}": 20,
+                f"{self.analytic_account_2.id}": 30,
+            },
+        )]:
+            with self.subTest(comment=comment):
+                invoice_line.analytic_distribution = init
+                invoice_line.flush_recordset(['analytic_distribution'])
+                invoice_line.analytic_distribution = update
+                self.assertEqual(invoice_line.analytic_distribution, expect)
+
+    def test_move_with_analytic_lines(self):
+        """
+        Ensure that, if analytic lines are created when a move is in draft state (as happens when importing a move
+        with analytics), the analytic lines are unlinked. AMLs should still have the correct analytic distribution.
+        """
+        # Create a move with commands to create analytic lines
+        journal_entry = self.env['account.move'].create({
+            'move_type': 'entry',
+            'line_ids': [
+                Command.create({
+                    'name': 'debit',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'debit': 2000.0,
+                    'credit': 0.0,
+                    'analytic_line_ids': [Command.create({
+                        'name': 'Analytic Line 1',
+                        'account_id': self.analytic_account_a.id,
+                        'amount': -2000,
+                        self.analytic_plan_1._column_name(): self.analytic_account_1.id,
+                        self.analytic_plan_2._column_name(): self.analytic_account_3.id,
+                    })],
+                }),
+                Command.create({
+                    'name': 'credit',
+                    'account_id': self.company_data['default_account_expense'].id,
+                    'debit': 0.0,
+                    'credit': 2000.0,
+                    'analytic_line_ids': [Command.create({
+                        'name': 'Analytic Line 2',
+                        'account_id': self.analytic_account_a.id,
+                        'amount': 2000.0,
+                        self.analytic_plan_1._column_name(): False,
+                        self.analytic_plan_2._column_name(): False,
+                    })],
+                }),
+            ],
+        })
+
+        # No analytic line should be created at this point
+        self.assertFalse(self.get_analytic_lines(journal_entry))
+
+        # Confirm that the analytic distribution was correctly set based on the analytic_line_ids values
+        self.assertRecordValues(journal_entry.line_ids, [
+            {'analytic_distribution': {
+                f"{self.analytic_account_a.id},{self.analytic_account_1.id},{self.analytic_account_3.id}": 100.0,
+            }},
+            {'analytic_distribution': {f"{self.analytic_account_a.id}": 100.0}},
+        ])
+
+        # Write to an existing draft move, with a command to create analytic lines
+        journal_entry.line_ids[0].write({
+            'analytic_line_ids': [Command.create({
+                'name': 'Analytic Line 1',
+                'account_id': False,
+                'amount': -2000,
+                self.analytic_plan_1._column_name(): self.analytic_account_1.id,
+                self.analytic_plan_2._column_name(): False,
+            })],
+        })
+
+        # Still no analytic line
+        self.assertFalse(self.get_analytic_lines(journal_entry))
+
+        # Confirm that the analytic distribution is correct
+        self.assertRecordValues(journal_entry.line_ids, [
+            {'analytic_distribution': {f"{self.analytic_account_1.id}": 100.0}},
+            {'analytic_distribution': {f"{self.analytic_account_a.id}": 100.0}},
+        ])
+
+        # After posting the move, the analytic line should be created as usual
+        journal_entry.action_post()
+        self.assertTrue(self.get_analytic_lines(journal_entry))

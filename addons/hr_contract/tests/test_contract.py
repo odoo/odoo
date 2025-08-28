@@ -32,6 +32,28 @@ class TestHrContracts(TestContractCommon):
             'company_id': cls.company_2.id,
         })
 
+        cls.resource_calendar_part_time = cls.env['resource.calendar'].create([{
+            'name': "Test Calendar: Part Time",
+            'two_weeks_calendar': False,
+            'attendance_ids': [(5, 0, 0)] + [(0, 0, {
+                'name': "Attendance",
+                'dayofweek': dayofweek,
+                'hour_from': hour_from,
+                'hour_to': hour_to,
+                'day_period': day_period,
+            }) for dayofweek, hour_from, hour_to, day_period in [
+                ("0", 8.0, 12.0, "morning"),
+                ("0", 12.0, 13.0, "lunch"),
+                ("0", 13.0, 16.6, "afternoon"),
+                ("1", 8.0, 12.0, "morning"),
+                ("1", 12.0, 13.0, "lunch"),
+                ("1", 13.0, 16.6, "afternoon"),
+                ("2", 8.0, 12.0, "morning"),
+                ("2", 12.0, 13.0, "lunch"),
+                ("2", 13.0, 16.6, "afternoon"),
+            ]],
+        }])
+
     def create_contract(self, state, kanban_state, start, end=None, employee_id=None):
         return self.env['hr.contract'].create({
             'name': 'Contract',
@@ -228,3 +250,62 @@ class TestHrContracts(TestContractCommon):
             calendar2,
             "Leave under active contract should update",
         )
+
+    def test_contract_unusual_days(self):
+        """
+        Test case to ensure the correct contract (and its resource calendar) is selected
+        for calculating unusual days when an employee has overlapping contracts.
+
+        Test Flow:
+        - Contract A (Part-time): Thursday and Friday off
+        - Contract B (Full-time): Normal weekdays
+
+        Case 1: Contract A is running (open), Contract B is new (draft)
+            ➤ Expected: Part-time calendar from Contract A should apply
+
+        Case 2: Both contracts are in draft
+            ➤ Expected: The contract with the latest create_date should be selected (Contract B)
+        """
+
+        def get_expected_days(calendar_type):
+            if calendar_type == 'part_time':
+                return {
+                    '2024-11-01': True,   # Friday
+                    '2024-11-02': True,   # Saturday
+                    '2024-11-03': True,   # Sunday
+                    '2024-11-04': False,  # Monday
+                    '2024-11-05': False,  # Tuesday
+                    '2024-11-06': False,  # Wednesday
+                    '2024-11-07': True,   # Thursday
+                    '2024-11-08': True,   # Friday
+                    '2024-11-09': True,   # Saturday
+                    '2024-11-10': True    # Sunday
+                }
+            return {
+                '2024-11-01': False,   # Friday
+                '2024-11-02': True,    # Saturday
+                '2024-11-03': True,    # Sunday
+                '2024-11-04': False,   # Monday
+                '2024-11-05': False,   # Tuesday
+                '2024-11-06': False,   # Wednesday
+                '2024-11-07': False,   # Thursday
+                '2024-11-08': False,   # Friday
+                '2024-11-09': True,    # Saturday
+                '2024-11-10': True     # Sunday
+            }
+
+        # Create overlapping contracts
+        contract_1 = self.create_contract('open', 'normal', date(2024, 1, 1), date(2024, 11, 10), self.employee.id)
+        self.create_contract('draft', 'normal', date(2024, 1, 1), date(2024, 11, 10), self.employee.id)
+
+        # Assign part-time calendar to contract_1
+        contract_1.resource_calendar_id = self.resource_calendar_part_time.id
+
+        # Case 1: Contract 1 (open) should be used
+        result = self.employee._get_unusual_days('2024-11-01 01:00:00', '2024-11-10 22:00:00')
+        self.assertEqual(result, get_expected_days('part_time'), 'Part-time calendar should be selected (Contract A)')
+
+        # Case 2: Both contracts are in draft → most recently created should apply (contract_2)
+        contract_1.state = 'draft'
+        result = self.employee._get_unusual_days('2024-11-01 01:00:00', '2024-11-10 22:00:00')
+        self.assertEqual(result, get_expected_days('full_time'), 'Full-time calendar should be selected (Contract B)')

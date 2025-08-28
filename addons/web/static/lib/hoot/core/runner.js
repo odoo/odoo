@@ -1927,20 +1927,24 @@ export class Runner {
         let remaining = $keys(idSpecs);
         while (remaining.length) {
             const id = remaining.shift();
-            if ($abs(idSpecs[id]) !== INCLUDE_LEVEL.url) {
+            const value = idSpecs[id];
+            if ($abs(value) !== INCLUDE_LEVEL.url) {
                 continue;
             }
             const item = this.suites.get(id) || this.tests.get(id);
             if (!item) {
-                const applied = this._include(idSpecs, [id], 0);
-                if (applied) {
-                    logger.warn(
-                        `Test runner did not find job with ID "${id}": it has been removed from the URL`
-                    );
-                } else {
-                    logger.warn(
-                        `Test runner did not find job with ID "${id}": it has been ignored from the current run`
-                    );
+                const couldRemove = this._include(idSpecs, [id], 0);
+                if (value > 0) {
+                    // Only log warning for not-found *included* jobs
+                    if (couldRemove) {
+                        logger.warn(
+                            `Test runner did not find job with ID "${id}": it has been removed from the URL`
+                        );
+                    } else {
+                        logger.warn(
+                            `Test runner did not find job with ID "${id}": it has been ignored from the current run`
+                        );
+                    }
                 }
                 hasChanged = true;
             }

@@ -588,6 +588,6 @@ registry.category("web_tour.tours").add("test_scan_loyalty_card_select_customer"
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             scan_barcode("0444-e050-4548"),
-            ProductScreen.customerIsSelected("Test Partner"),
+            ProductScreen.customerIsSelected("A Test Partner"),
         ].flat(),
 });

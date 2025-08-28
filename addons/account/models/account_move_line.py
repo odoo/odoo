@@ -661,7 +661,7 @@ class AccountMoveLine(models.Model):
     def _compute_currency_rate(self):
         for line in self:
             if line.move_id.is_invoice(include_receipts=True):
-                line.currency_rate = line.move_id.invoice_currency_rate
+                line.currency_rate = line.move_id.invoice_currency_rate or 1.0
             elif line.currency_id:
                 line.currency_rate = self.env['res.currency']._get_conversion_rate(
                     from_currency=line.company_currency_id,
@@ -687,7 +687,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             if line.amount_currency is False:
                 line.amount_currency = line.currency_id.round(line.balance * line.currency_rate)
-            if line.currency_id == line.company_id.currency_id:
+            if line.currency_id == line.company_id.currency_id and not line.move_id.is_invoice(True):
                 line.amount_currency = line.balance
 
     @api.depends_context('order_cumulated_balance', 'domain_cumulated_balance')
@@ -1188,6 +1188,15 @@ class AccountMoveLine(models.Model):
         lines_to_modify = self.env['account.move.line'].browse([
             line.id for line in self if line.parent_state == "posted"
         ]).with_context(skip_analytic_sync=True)
+        old_distributions = dict(self.env.execute_query(SQL(
+            "SELECT id, analytic_distribution FROM account_move_line WHERE id = ANY(%s)",
+            self.ids,
+        )))
+        for line in self:
+            line.analytic_distribution = self._merge_distribution(
+                old_distribution=old_distributions.get(line._origin.id) or {},
+                new_distribution=line.analytic_distribution or {},
+            )
         lines_to_modify.analytic_line_ids.unlink()
         lines_to_modify._create_analytic_lines()
 
@@ -1498,6 +1507,13 @@ class AccountMoveLine(models.Model):
         after = existing()
         for line in after:
             if (
+                (changed('balance') or changed('move_type'))
+                 and not self.env.is_protected(self._fields['amount_currency'], line)
+                 and (not changed('amount_currency') or (line not in before and not line.amount_currency))
+                 and line.currency_id == line.company_id.currency_id
+            ):
+                line.amount_currency = line.balance
+            if (
                 (changed('amount_currency') or changed('currency_rate') or changed('move_type'))
                 and not self.env.is_protected(self._fields['balance'], line)
                 and (not changed('balance') or (line not in before and not line.balance))
@@ -1543,6 +1559,8 @@ class AccountMoveLine(models.Model):
 
         lines.move_id._synchronize_business_models(['line_ids'])
         lines._check_constrains_account_id_journal_id()
+        # Remove analytic lines created for draft AMLs, after analytic_distribution has been updated
+        lines.filtered(lambda l: l.parent_state == 'draft').analytic_line_ids.with_context(skip_analytic_sync=True).unlink()
         return lines
 
     def write(self, vals):
@@ -1648,6 +1666,8 @@ class AccountMoveLine(models.Model):
                                 body=msg,
                                 tracking_value_ids=tracking_value_ids
                             )
+            if not self.env.context.get('skip_analytic_sync'):
+                self.filtered(lambda l: l.parent_state == 'draft').analytic_line_ids.with_context(skip_analytic_sync=True).unlink()
 
         return result
 
@@ -2097,10 +2117,7 @@ class AccountMoveLine(models.Model):
                 and company_currency.compare_amounts(partial_credit_amount, partial_debit_amount_range[2]) <= 0
                 and company_currency.compare_amounts(partial_credit_amount, partial_debit_amount_range[0]) >= 0
             ):
-                if debit_fully_matched:
-                    partial_amount = remaining_debit_amount
-                else:
-                    partial_amount = -remaining_credit_amount
+                partial_amount = min(remaining_debit_amount, -remaining_credit_amount)
                 partial_debit_amount = partial_amount
                 partial_credit_amount = partial_amount
 
@@ -2301,7 +2318,9 @@ class AccountMoveLine(models.Model):
         all_results = []
 
         def process_amls(amls):
-            remaining_amls = amls.filtered(lambda aml: aml.id not in all_fully_reconciled_aml_ids)
+            remaining_amls = amls.filtered(lambda aml: aml.id not in all_fully_reconciled_aml_ids).sorted(
+                lambda aml: (aml.partner_id and aml.partner_id.id) or False
+            )
             amls_results, fully_reconciled_aml_ids = self._prepare_reconciliation_amls(
                 [
                     amls_values_map[aml]

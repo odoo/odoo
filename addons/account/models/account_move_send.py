@@ -3,6 +3,7 @@ from markupsafe import Markup
 
 from odoo import _, api, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.misc import OrderedSet
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -18,7 +19,7 @@ class AccountMoveSend(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     @api.model
-    def _get_default_sending_method(self, move) -> set:
+    def _get_default_sending_method(self, move) -> str:
         """ By default, we use the sending method set on the partner or email. """
         return move.partner_id.with_company(move.company_id).invoice_sending_method or 'email'
 
@@ -169,6 +170,8 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _get_default_mail_attachments_widget(self, move, mail_template, invoice_edi_format=None, extra_edis=None, pdf_report=None):
+        if extra_edis is None:
+            extra_edis = {}
         return self._get_placeholder_mail_attachments_data(move, invoice_edi_format=invoice_edi_format, extra_edis=extra_edis) \
             + self._get_placeholder_mail_template_dynamic_attachments_data(move, mail_template, pdf_report=pdf_report) \
             + self._get_invoice_extra_attachments_data(move) \
@@ -692,7 +695,7 @@ class AccountMoveSend(models.AbstractModel):
         self._check_invoice_report(moves, **custom_settings)
         assert all(
             sending_method in dict(self.env['res.partner']._fields['invoice_sending_method'].selection)
-            for sending_method in custom_settings.get('sending_methods', [])
+            for sending_method in OrderedSet(custom_settings.get('sending_methods', ()))
         ) if 'sending_methods' in custom_settings else True
 
     @api.model

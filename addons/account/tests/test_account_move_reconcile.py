@@ -2045,6 +2045,128 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     ]
                 self.assertRecordValues(partials.sorted('amount'), expected_partials)
 
+    def test_full_reconcile_foreign_currency_rounding_difference_credit_larger(self):
+        # Full reconciliation between 2 lines with same currency + same amount currency
+        # If the balance is different, an exchange move should be reconciled with the
+        # line having the largest absolute balance
+
+        foreign_currency = self.env['res.currency'].create({
+            'name': "Bread",
+            'symbol': '🍞',
+            'rounding': 0.01,
+            'rate_ids': [
+                Command.create({'name': '2019-06-01', 'rate': 0.648587}),
+            ],
+        })
+
+        rec_pay_account = self.company_data['default_account_receivable'].copy()
+        self.assertTrue(rec_pay_account.reconcile)
+
+        line_1 = self.create_line_for_reconciliation(-44.41, -28.8, foreign_currency, '2019-06-01', rec_pay_account)
+        line_2 = self.create_line_for_reconciliation(44.4, 28.8, foreign_currency, '2019-06-01', rec_pay_account)
+        amls = line_1 + line_2
+        amls.reconcile()
+
+        full_reconcile = amls.full_reconcile_id
+        self.assertTrue(full_reconcile)
+
+        partials = self._get_partials(amls)
+        exchange_move = partials.exchange_move_id
+
+        self.assertRecordValues(exchange_move.line_ids, [
+            {
+                'debit': 0.01,
+                'credit': 0.0,
+                'amount_currency': 0.0,
+                'currency_id': foreign_currency.id,
+                'account_id': line_1.account_id.id,
+            },
+            {
+                'debit': 0.0,
+                'credit': 0.01,
+                'amount_currency': 0.0,
+                'currency_id': foreign_currency.id,
+                'account_id': self.exch_income_account.id,
+            },
+        ])
+        self.assertRecordValues(partials.sorted('amount'), [
+            {
+                'amount': 0.01,
+                'debit_amount_currency': 0.0,
+                'credit_amount_currency': 0.0,
+                'debit_move_id': exchange_move.line_ids.sorted('balance')[1].id,
+                'credit_move_id': line_1.id,
+            },
+            {
+                'amount': 44.40,
+                'debit_amount_currency': 28.8,
+                'credit_amount_currency': 28.8,
+                'debit_move_id': line_2.id,
+                'credit_move_id': line_1.id,
+            },
+        ])
+
+    def test_full_reconcile_foreign_currency_rounding_difference_debit_larger(self):
+        # Full reconciliation between 2 lines with same currency + same amount currency
+        # If the balance is different, an exchange move should be reconciled with the
+        # line having the largest absolute balance
+
+        foreign_currency = self.env['res.currency'].create({
+            'name': "Bread",
+            'symbol': '🍞',
+            'rounding': 0.01,
+            'rate_ids': [
+                Command.create({'name': '2019-06-01', 'rate': 0.648587}),
+            ],
+        })
+
+        rec_pay_account = self.company_data['default_account_receivable'].copy()
+        self.assertTrue(rec_pay_account.reconcile)
+
+        line_1 = self.create_line_for_reconciliation(-44.4, -28.8, foreign_currency, '2019-06-01', rec_pay_account)
+        line_2 = self.create_line_for_reconciliation(44.41, 28.8, foreign_currency, '2019-06-01', rec_pay_account)
+        amls = line_1 + line_2
+        amls.reconcile()
+
+        full_reconcile = amls.full_reconcile_id
+        self.assertTrue(full_reconcile)
+
+        partials = self._get_partials(amls)
+        exchange_move = partials.exchange_move_id
+
+        self.assertRecordValues(exchange_move.line_ids, [
+            {
+                'debit': 0.0,
+                'credit': 0.01,
+                'amount_currency': 0.0,
+                'currency_id': foreign_currency.id,
+                'account_id': line_2.account_id.id,
+            },
+            {
+                'debit': 0.01,
+                'credit': 0.0,
+                'amount_currency': 0.0,
+                'currency_id': foreign_currency.id,
+                'account_id': self.exch_expense_account.id,
+            },
+        ])
+        self.assertRecordValues(partials.sorted('amount'), [
+            {
+                'amount': 0.01,
+                'debit_amount_currency': 0.0,
+                'credit_amount_currency': 0.0,
+                'debit_move_id': line_2.id,
+                'credit_move_id': exchange_move.line_ids.sorted('balance')[0].id,
+            },
+            {
+                'amount': 44.40,
+                'debit_amount_currency': 28.8,
+                'credit_amount_currency': 28.8,
+                'debit_move_id': line_2.id,
+                'credit_move_id': line_1.id,
+            },
+        ])
+
     def test_reconcile_special_mexican_workflow_1(self):
         comp_curr = self.company_data['currency']
         foreign_curr = self.env['res.currency'].create({
@@ -5507,3 +5629,22 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertEqual(invoice_line.matching_number, payment_line.matching_number)
         self.assertEqual(payment_line.matching_number, currency_exchange_line.matching_number)
         self.assertEqual(currency_exchange_line.amount_residual, 0)
+
+    def test_partial_reconcile_amounts_of_several_matching_lines(self):
+        """ Test that the amounts of the partial reconcile records are matched by partner in priority. """
+        comp_curr = self.company_data['currency']
+        partner_c = self.partner_a.copy()
+        line_1 = self.create_line_for_reconciliation(1000.0, 1000.0, comp_curr, '2016-01-01', partner=self.partner_a)
+        line_2 = self.create_line_for_reconciliation(1001.0, 1001.0, comp_curr, '2016-01-01', partner=self.partner_b)
+        line_3 = self.create_line_for_reconciliation(1002.0, 1002.0, comp_curr, '2016-01-01', partner=partner_c)
+        line_4 = self.create_line_for_reconciliation(-1002.0, -1002.0, comp_curr, '2016-01-01', partner=partner_c)
+        line_5 = self.create_line_for_reconciliation(-1001.0, -1001.0, comp_curr, '2016-01-01', partner=self.partner_b)
+        line_6 = self.create_line_for_reconciliation(-1000.0, -1000.0, comp_curr, '2016-01-01', partner=self.partner_a)
+        lines = line_1 + line_2 + line_3 + line_4 + line_5 + line_6
+        lines.reconcile()
+        reconciliation_lines = lines.full_reconcile_id.partial_reconcile_ids.sorted('amount')
+        self.assertRecordValues(reconciliation_lines, [
+            {'amount': 1000.0, 'debit_move_id': line_1.id, 'credit_move_id': line_6.id},
+            {'amount': 1001.0, 'debit_move_id': line_2.id, 'credit_move_id': line_5.id},
+            {'amount': 1002.0, 'debit_move_id': line_3.id, 'credit_move_id': line_4.id},
+        ])

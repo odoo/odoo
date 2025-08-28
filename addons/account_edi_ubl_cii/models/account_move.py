@@ -14,7 +14,7 @@ class AccountMove(models.Model):
         comodel_name='ir.attachment',
         string="Attachment",
         compute=lambda self: self._compute_linked_attachment_id('ubl_cii_xml_id', 'ubl_cii_xml_file'),
-        depends=['ubl_cii_xml_id']
+        depends=['ubl_cii_xml_file']
     )
     ubl_cii_xml_file = fields.Binary(
         attachment=True,

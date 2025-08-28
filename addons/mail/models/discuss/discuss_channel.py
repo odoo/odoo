@@ -764,6 +764,22 @@ class Channel(models.Model):
         considered. """
         raise UserError(_('Adding followers on channels is not possible. Consider adding members instead.'))
 
+    def _get_access_action(self, access_uid=None, force_website=False):
+        """ Redirect to Discuss instead of form view. """
+        self.ensure_one()
+        if not self.env.user._is_internal() or force_website:
+            return {
+                "type": "ir.actions.act_url",
+                "url": f"/discuss/channel/{self.id}",
+                "target": "self",
+                "target_type": "public",
+            }
+        return {
+            "type": "ir.actions.act_url",
+            "url": f"/odoo/action-mail.action_discuss?active_id={self.id}",
+            "target": "self",
+        }
+
     # ------------------------------------------------------------
     # BROADCAST
     # ------------------------------------------------------------

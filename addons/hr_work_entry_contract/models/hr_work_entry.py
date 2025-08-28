@@ -167,7 +167,7 @@ class HrWorkEntry(models.Model):
 
         outside_entries = self.env['hr.work.entry']
         for calendar, entries in entries_by_calendar.items():
-            if calendar.flexible_hours:
+            if not calendar or calendar.flexible_hours:
                 continue
             datetime_start = min(entries.mapped('date_start'))
             datetime_stop = max(entries.mapped('date_stop'))

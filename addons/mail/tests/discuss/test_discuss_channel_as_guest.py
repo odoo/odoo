@@ -44,12 +44,16 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
 
     def _open_channel_page_as_user(self, login):
         self.start_tour(self.channel.invitation_url, self.tour, login=login)
+        # Update the body to a unique value to ensure the second run does not confuse the 2 messages.
+        self.channel._get_last_messages().body = "a-very-unique-body-in-channel"
         # Second run of the tour as the first call has side effects, like creating user settings or adding members to
         # the channel, so we need to run it again to test different parts of the code.
         self.start_tour(self.channel.invitation_url, self.tour, login=login)
 
     def _open_group_page_as_user(self, login):
         self.start_tour(self.group.invitation_url, self.tour, login=login)
+        # Update the body to a unique value to ensure the second run does not confuse the 2 messages.
+        self.channel._get_last_messages().body = "a-very-unique-body-in-group"
         # Second run of the tour as the first call has side effects, like creating user settings or adding members to
         # the channel, so we need to run it again to test different parts of the code.
         self.start_tour(self.group.invitation_url, self.tour, login=login)

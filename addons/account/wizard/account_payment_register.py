@@ -180,6 +180,10 @@ class AccountPaymentRegister(models.TransientModel):
         if len(lines.move_id) == 1:
             move = lines.move_id
             label = move.payment_reference or move.ref or move.name
+        elif any(move.is_outbound() for move in lines.move_id):
+            # outgoing payments references should use moves references
+            labels = {move.payment_reference or move.ref or move.name for move in lines.move_id}
+            return ', '.join(sorted(filter(lambda l: l, labels)))
         else:
             label = self.company_id.get_next_batch_payment_communication()
         return label
