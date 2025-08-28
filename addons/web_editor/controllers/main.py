@@ -78,26 +78,28 @@ class Web_Editor(http.Controller):
         """
         # For custom icons, use the corresponding custom font
         if icon.isdigit():
-            if int(icon) == 57467:
-                font = "/web/static/fonts/tiktok_only.woff"
-            elif int(icon) == 61593:  # F099
-                icon = "59392"  # E800
-                font = "/web/static/fonts/twitter_x_only.woff"
-            elif int(icon) == 61569:  # F081
-                icon = "59395"  # E803
-                font = "/web/static/fonts/twitter_x_only.woff"
-            elif int(icon) == 59651:
-                font = "/web/static/fonts/bluesky_only.woff"
-            elif int(icon) == 59648:
-                font = "/web/static/fonts/discord_only.woff"
-            elif int(icon) == 59649:
-                font = "/web/static/fonts/google_play_only.woff"
-            elif int(icon) == 59652:
-                font = "/web/static/fonts/kickstarter_only.woff"
-            elif int(icon) == 59650:
-                font = "/web/static/fonts/strava_only.woff"
-            elif int(icon) == 59653:
-                font = "/web/static/fonts/threads_only.woff"
+            oi_font_char_codes = [
+                # Replacement of existing Twitter icons by X icons (the route
+                # here receives the old icon code always, but the replacement
+                # one is also considered for consistency anyway).
+                ("61569", "59464"),  # F081 -> E848: fa-twitter-square
+                ("61593", "59418"),  # F099 -> E81A: fa-twitter
+
+                # Addition of new icons
+                "59407",  # E80F: fa-strava
+                "59409",  # E811: fa-discord
+                "59416",  # E818: fa-threads
+                "59417",  # E819: fa-kickstarter
+                "59419",  # E81B: fa-tiktok
+                "59420",  # E81C: fa-bluesky
+                "59421",  # E81D: fa-google-play
+            ]
+            for data in oi_font_char_codes:
+                old_and_new_char_codes = data if isinstance(data, tuple) else (data, data)
+                if icon in old_and_new_char_codes:
+                    icon = old_and_new_char_codes[-1]
+                    font = "/web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff"
+                    break
 
         size = max(width, height, 1) if width else size
         width = width or size
