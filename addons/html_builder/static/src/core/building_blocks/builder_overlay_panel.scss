@@ -1,0 +1,42 @@
+.hb-overlay-panel {
+    .hb-overlay-panel-top {
+        background-color: $o-we-bg-lighter;
+
+        .hb-overlay-panel-header {
+            @include o-position-sticky(0px);
+            z-index: 10;
+            background-color: $o-we-bg-light;
+
+            .hb-overlay-panel-label {
+                color: $o-we-fg-light;
+                &:hover {
+                    color: $o-we-fg-lighter
+                }
+            }
+        }
+    }
+}
+
+.options-container-overlay {
+    background-color: $o-we-bg-darker !important;
+    z-index: $zindex-offcanvas;
+    width: $o-we-sidebar-width;
+
+    animation: 0.2s ease-in-out;
+    &.slideIn {
+        @keyframes fromLeft {
+            from {
+                transform: translate(100%);
+            } 
+        }
+        animation-name: fromLeft;
+    }
+    &.slideOut {
+        @keyframes toRight {
+            to {
+                transform: translate(100%);
+            } 
+        }
+        animation-name: toRight;
+    }
+}

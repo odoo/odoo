@@ -2,41 +2,46 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.BackgroundOption">
-    <!-- BackgroundToggler -->
-    <BuilderRow label.translate="Background" t-if="props.withColors or props.withImages">
-    <!-- todo adapt when colorpicker is implemented: snippet_options_background_color_widget-->
-        <t t-if="props.withColors" t-call="html_builder.BackgroundColorWidgetOption"/>
-        <t t-if="props.withImages">
-            <BuilderButton
-                action="'toggleBgImage'"
-                title.translate="Image"
-                preview="false"
-                className="'ms-auto fa fa-fw fa-camera px-2'"
-                id="'toggle_bg_image_id'"
-            />
-            <t t-if="props.withShapes">
+    <BuilderOverlayPanel
+        label.translate="Background"
+        class="'btn-primary'"
+    >
+        <!-- BackgroundToggler -->
+        <BuilderRow label.translate="Background" t-if="props.withColors or props.withImages">
+        <!-- todo adapt when colorpicker is implemented: snippet_options_background_color_widget-->
+            <t t-if="props.withColors" t-call="html_builder.BackgroundColorWidgetOption"/>
+            <t t-if="props.withImages">
                 <BuilderButton
-                    action="'toggleBgShape'"
+                    action="'toggleBgImage'"
+                    title.translate="Image"
                     preview="false"
-                    id="'toggle_bg_shape_id'"
-                    iconImg="'/html_builder/static/img/options/bg_shape.svg'"
-                    className="'px-2'"
-                    title.translate="Shape"
+                    className="'ms-auto fa fa-fw fa-camera px-2'"
+                    id="'toggle_bg_image_id'"
                 />
+                <t t-if="props.withShapes">
+                    <BuilderButton
+                        action="'toggleBgShape'"
+                        preview="false"
+                        id="'toggle_bg_shape_id'"
+                        iconImg="'/html_builder/static/img/options/bg_shape.svg'"
+                        className="'px-2'"
+                        title.translate="Shape"
+                    />
+                </t>
             </t>
-        </t>
-    </BuilderRow>
-    <t t-if="props.withImages">
-        <BackgroundImageOption/>
-        <BackgroundPositionOption/>
-        <ImageFilterOption level="2"/>
-        <ImageFormatOption level="2" computeMaxDisplayWidth="this.computeMaxDisplayWidth"/>
-        <!-- Color filter -->
-        <BuilderRow t-if="this.showColorFilter()" label.translate="Color Filter" level="2">
-            <!-- TODO handle data-opacity="0.5" -->
-            <BuilderColorPicker action="'selectFilterColor'" enabledTabs="['custom', 'gradient']" selectedTab="'gradient'"/>
         </BuilderRow>
-        <BackgroundShapeOption t-if="props.withShapes"/>
-    </t>
+        <t t-if="props.withImages">
+            <BackgroundImageOption/>
+            <BackgroundPositionOption/>
+            <ImageFilterOption level="2"/>
+            <ImageFormatOption level="2" computeMaxDisplayWidth="this.computeMaxDisplayWidth"/>
+            <!-- Color filter -->
+            <BuilderRow t-if="this.showColorFilter()" label.translate="Color Filter" level="2">
+                <!-- TODO handle data-opacity="0.5" -->
+                <BuilderColorPicker action="'selectFilterColor'" enabledTabs="['custom', 'gradient']" selectedTab="'gradient'"/>
+            </BuilderRow>
+            <BackgroundShapeOption t-if="props.withShapes"/>
+        </t>
+    </BuilderOverlayPanel>
 </t>
 </templates>

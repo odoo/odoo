@@ -4,14 +4,18 @@
 <t t-name="html_builder.ImageShapeOption">
     <BuilderRow label.translate="Shape">
         <div class="btn-group o-hb-button-group">
-            <div
-                class="o-hb-btn btn btn-secondary o-dropdown dropdown-toggle dropdown"
-                t-att-class="{'border-end-0 rounded-end-0': state.hasShape}"
-                role="button"
-                tabindex="0"
-                t-on-click="this.showImageShapes"
-                t-out="state.shapeLabel"
-            />
+            <BuilderOverlayPanel
+                label.translate="Shape"
+                withRow="false"
+                fullHeight="true"
+            >
+                <ShapeSelector
+                    shapeActionId="'setImageShape'"
+                    buttonWrapperClassName="'o-hb-img-shape-btn'"
+                    selectorTitle.translate="Shapes"
+                    shapeGroups="getFilteredGroups()"
+                />
+            </BuilderOverlayPanel>
             <BuilderButton
                 action="'setImageShape'"
                 actionValue=""

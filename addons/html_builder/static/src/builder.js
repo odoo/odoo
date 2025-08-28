@@ -130,6 +130,9 @@ export class Builder extends Component {
                         this.removeLoadingEffect?.();
                     },
                     change_current_options_containers_listeners: (currentOptionsContainers) => {
+                        document
+                            .querySelectorAll(".options-container-overlay")
+                            .forEach((el) => el.remove());
                         this.state.currentOptionsContainers = currentOptionsContainers;
                         if (!currentOptionsContainers.length) {
                             // If there is no option, fallback on the current
