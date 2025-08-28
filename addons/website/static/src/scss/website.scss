@@ -405,20 +405,21 @@ body {
     background: var(--NavLinkWithBackground-bg-color, rgba(var(--#{$variable-prefix}emphasis-color-rgb), .05));
 }
 
-// Apply background color to the offcanvas menu
-.o_navbar_mobile {
-    $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
-    height: 100dvh;
-    background-color: $-navbar-mobile-bg-color;
+$-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
 
-    // Make offcanvas close btn above mega menu
-    .btn-close {
-        z-index: $o-mega-menu-btn-close-zindex;
-    }
-
+// Mixin for accordion style in vertical menu (e.g. mobile menu, sidebar header)
+@mixin accordion-style-vertical-menu {
     .top_menu > .accordion {
         ul > li > a.nav-link {
             background-color: inherit;
+
+            &.active {
+                color: var(--navbar-active-color);
+            }
+
+            &:hover {
+                color: var(--nav-link-hover-color);
+            }
         }
 
         .accordion-button {
@@ -437,6 +438,25 @@ body {
                 content: '\e839';
             }
         }
+    }
+}
+
+// Apply background color to the offcanvas menu
+.o_navbar_mobile {
+    height: 100dvh;
+    background-color: $-navbar-mobile-bg-color;
+
+    // Make offcanvas close btn above mega menu
+    .btn-close {
+        z-index: $o-mega-menu-btn-close-zindex;
+    }
+
+    @include accordion-style-vertical-menu;
+}
+
+@if o-website-value('header-template') == 'sidebar' {
+    @include media-breakpoint-up(lg) {
+        @include accordion-style-vertical-menu;
     }
 }
 
@@ -1824,10 +1844,6 @@ header {
 
     .o_mega_menu_left .o_mega_menu {
         inset: 0 auto 0 0 !important;
-    }
-
-    .list-group-item-action.active {
-        color: var(--o-cc1-btn-primary-text) !important;
     }
 }
 
