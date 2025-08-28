@@ -223,7 +223,7 @@ async function autoHideMenu(el, options) {
         dropdownMenu.className = 'dropdown-menu';
         extraItemsToggle.className = 'nav-item dropdown o_extra_menu_items';
         extraItemsToggle.setAttribute("role", "presentation");
-        extraItemsToggleIcon.className = 'fa fa-plus';
+        extraItemsToggleIcon.className = 'oi oi-plus';
         const extraItemsToggleAriaLabel = el.closest("[data-extra-items-toggle-aria-label]")
             ?.dataset.extraItemsToggleAriaLabel;
         Object.entries({
