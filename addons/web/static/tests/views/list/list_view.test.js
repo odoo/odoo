@@ -19142,6 +19142,20 @@ test(`multi_edit: edit field with operator with localization`, async () => {
 });
 
 test.tags("desktop");
+test(`list_view: leave edition when click on searchbar dropdown`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list editable="top"><field name="foo"/></list>`,
+    });
+    await contains(".o_data_cell").click();
+    await contains(".o_data_cell input").edit("blabla", { confirm: false });
+    await contains(".o_searchview_dropdown_toggler").click();
+    expect(`.o_data_cell:eq(0)`).toHaveText("blabla");
+    expect(`.o_control_panel_breadcrumbs .o_list_button_add`).toHaveCount(1);
+});
+
+test.tags("desktop");
 test(`basic open record with allowOpenAction`, async () => {
     mockService("action", {
         doActionButton(params) {

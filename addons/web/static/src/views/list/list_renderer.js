@@ -144,7 +144,7 @@ export class ListRenderer extends Component {
         this.keyDebugOpenView = `debug_open_view,${key}`;
         this.cellClassByColumn = {};
         this.groupByButtons = this.props.archInfo.groupBy.buttons;
-        useExternalListener(document, "click", this.onGlobalClick.bind(this));
+        useExternalListener(window, "click", this.onGlobalClick.bind(this), { capture: true });
         this.tableRef = useRef("table");
 
         this.longTouchTimer = null;
@@ -2135,8 +2135,24 @@ export class ListRenderer extends Component {
         if (target.closest(".o_datetime_picker")) {
             return;
         }
-        // Legacy autocomplete
-        if (ev.target.closest(".ui-autocomplete")) {
+        // Save, Discard
+        if (
+            target.closest(".o_list_button_save") ||
+            target.closest(".o_list_button_discard") ||
+            target.closest(".o_form_status_indicator_buttons")
+        ) {
+            return;
+        }
+        // Add row
+        if (target.closest(".o_field_x2many_list_row_add a")) {
+            return;
+        }
+        // Optional columns
+        if (target.closest(".o_optional_columns_dropdown")) {
+            return;
+        }
+        // Overlay
+        if (this.rootRef.el.closest(".o-overlay-item") !== target.closest(".o-overlay-item")) {
             return;
         }
         this.props.list.leaveEditMode();
