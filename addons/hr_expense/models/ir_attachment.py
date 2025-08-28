@@ -1,5 +1,6 @@
 from odoo import api, models
 from odoo.exceptions import AccessError
+from odoo.tools.misc import clean_context
 
 
 class IrAttachment(models.Model):
@@ -30,7 +31,17 @@ class IrAttachment(models.Model):
             vals for vals in expense_attachments
             if vals['res_id'] in user_expenses.ids and not expenses.browse(vals['res_id']).has_access('write')  # to not over sudo
         ]
-        attachments = super(IrAttachment, self.sudo()).create(user_expense_attachments).sudo(self.env.su)
+        attachments = super(
+            IrAttachment,
+            self.sudo().with_context(clean_context(self.env.context)),
+        ).create([
+            {
+                'name': vals['name'],
+                'raw': vals['raw'],
+                'res_id': vals['res_id'],
+                'res_model': 'hr.expense',
+            } for vals in user_expense_attachments
+        ]).sudo(self.env.su).with_context(self.env.context)
 
         remaining_vals_list = [vals for vals in vals_list if vals not in user_expense_attachments]
         if remaining_vals_list:
