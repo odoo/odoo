@@ -226,7 +226,7 @@ export class ProductConfiguratorDialog extends Component {
         if (product.quantity === quantity) {
             return false;
         }
-        const { price } = await this._updateCombination(product, quantity, product.uom_id);
+        const { price } = await this._updateCombination(product, quantity, product.uom.id);
         product.quantity = quantity;
         product.price = parseFloat(price);
 
@@ -276,7 +276,7 @@ export class ProductConfiguratorDialog extends Component {
         }
         this._checkExclusions(product);
         if (this._isPossibleCombination(product)) {
-            const updatedValues = await this._updateCombination(product, product.quantity, product.uom_id);
+            const updatedValues = await this._updateCombination(product, product.quantity, product.uom.id);
             Object.assign(product, updatedValues);
             // When a combination should exist but was deleted from the database, it should not be
             // selectable and considered as an exclusion.
