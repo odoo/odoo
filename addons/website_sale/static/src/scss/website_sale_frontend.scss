@@ -32,11 +32,19 @@
                 width: 128px;
             }
 
-            li img{
-                border: 1px solid #CED4DA;
+            li > div {
+                background: $body-bg;
 
-                &.active {
-                    border-color: #35979c;
+                img {
+                    border: 4px solid transparent;
+
+                    &:not(.active, :hover) {
+                        opacity: 0.5;
+                    }
+
+                    &.active {
+                        border-color: $primary;
+                    }
                 }
             }
         }
