@@ -62,7 +62,7 @@ def get_certificate_end_date():
     return str(cert_end_date)
 
 
-def download_odoo_certificate():
+def download_odoo_certificate(retry=0):
     """Send a request to Odoo with customer db_uuid and enterprise_code
     to get a true certificate
     """
@@ -73,18 +73,19 @@ def download_odoo_certificate():
     enterprise_code = get_conf('enterprise_code')
     if not db_uuid:
         return None
-
     try:
         response = requests.post(
             'https://www.odoo.com/odoo-enterprise/iot/x509',
             json={'params': {'db_uuid': db_uuid, 'enterprise_code': enterprise_code}},
-            timeout=10,
+            timeout=95,  # let's encrypt library timeout
         )
         response.raise_for_status()
         response_body = response.json()
-    except (requests.exceptions.RequestException, ValueError):
-        _logger.exception("An error occurred while trying to reach odoo.com")
-        return None
+    except (requests.exceptions.RequestException, ValueError) as e:
+        _logger.warning("An error occurred while trying to reach odoo.com to get a new certificate: %s", e)
+        if retry < 5:
+            return download_odoo_certificate(retry=retry + 1)
+        return _logger.exception("Maximum attempt to download the odoo.com certificate reached")
 
     server_error = response_body.get('error')
     if server_error:
