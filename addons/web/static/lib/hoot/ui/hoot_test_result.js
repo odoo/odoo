@@ -293,9 +293,12 @@ export class HootTestResult extends Component {
                         </button>
                     </nav>
                     <t t-if="state.showCode">
-                        <pre
-                            class="p-2 m-2 mt-0 rounded bg-white text-black dark:bg-black dark:text-white animate-slide-down overflow-auto"
-                        ><code class="language-javascript" t-out="props.test.code" /></pre>
+                        <div class="m-2 mt-0 rounded animate-slide-down overflow-auto">
+                            <pre
+                                class="language-javascript"
+                                style="margin: 0"
+                            ><code class="language-javascript" t-out="props.test.code" /></pre>
+                        </div>
                     </t>
                 </div>
             </t>
