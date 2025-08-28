@@ -6,7 +6,6 @@ from odoo.addons.iot_drivers.tools import helpers
 
 
 _logger = logging.getLogger(__name__)
-MIN_IMAGE_VERSION = 24.10
 
 CHROMIUM_ARGS = [
     '--incognito',
@@ -39,9 +38,8 @@ class Browser:
         :param kiosk: Whether the browser should be in kiosk mode
         """
         self.url = url
-        # helpers.get_version returns a string formatted as: <L|W><version> (L: Linux, W: Windows)
-        self.browser = 'chromium-browser' if float(helpers.get_version()[1:]) >= MIN_IMAGE_VERSION else 'firefox'
-        self.browser_process_name = 'chromium' if self.browser == 'chromium-browser' else self.browser
+        self.browser = 'chromium-browser'
+        self.browser_process_name = 'chromium'
         self.state = BrowserState.NORMAL
         self._x_screen = _x_screen
         self._set_environment(env)
@@ -69,7 +67,7 @@ class Browser:
         # Reopen to take new url or additional args into account
         self.close_browser()
 
-        browser_args = list(CHROMIUM_ARGS) if self.browser == 'chromium-browser' else []
+        browser_args = list(CHROMIUM_ARGS)
 
         if state == BrowserState.KIOSK:
             browser_args.extend(["--kiosk", "--touch-events"])
@@ -84,10 +82,6 @@ class Browser:
             ],
             env=self.env,
         )
-
-        if self.browser == 'firefox' and state == BrowserState.FULLSCREEN:
-            # Firefox does not support fullscreen via command line argument, so we use a keypress
-            self.xdotool_keystroke('F11')
 
         helpers.save_browser_state(url=self.url)
 
