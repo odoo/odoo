@@ -13,6 +13,8 @@
         menuClass="'o-hb-select-dropdown o-hb-selectMany2X-dropdown'"
         searchClass="'o-hb-selectMany2x-search-input'"
         togglerClass="'o-hb-selectMany2X-toggle btn-secondary'"
+        menuRef="selectMenuRef"
+        onNavigated="(choice) => this.props.preview?.(value)"
     >
         <t t-out="props.message"/>
         <t t-set-slot="bottomArea" t-slot-scope="select">

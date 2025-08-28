@@ -1,5 +1,5 @@
 import { Component, useState, onWillUpdateProps } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { useChildRef, useRefListener, useService } from "@web/core/utils/hooks";
 import { useCachedModel } from "@html_builder/core/cached_model_utils";
 import { _t } from "@web/core/l10n/translation";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
@@ -61,6 +61,9 @@ export class SelectMany2X extends Component {
                 this.state.searchResults = [];
             }
         });
+
+        this.selectMenuRef = useChildRef();
+        useRefListener(this.selectMenuRef, "pointerleave", () => this.props.revert?.());
     }
     searchInvalidationKey(props) {
         return JSON.stringify([props.model, props.fields, props.domain]);
