@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillDestroy, useRef, useState, useSubEnv } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, useRef, useSubEnv } from "@odoo/owl";
 import { Editor } from "./editor";
 import { Toolbar } from "./main/toolbar/toolbar";
 import { useChildRef, useSpellCheck } from "@web/core/utils/hooks";
@@ -43,9 +43,6 @@ export class Wysiwyg extends Component {
     };
 
     setup() {
-        this.state = useState({
-            showToolbar: false,
-        });
         this.overlayRef = useChildRef();
         useSubEnv({
             localOverlayContainerKey: uniqueId("wysiwyg"),
@@ -60,9 +57,6 @@ export class Wysiwyg extends Component {
         });
 
         onMounted(() => {
-            // now that component is mounted, editor is attached to el, and
-            // plugins are started, so we can allow the toolbar to be displayed
-            this.state.showToolbar = true;
             /** @type { any } **/
             const el = contentRef.el;
 
