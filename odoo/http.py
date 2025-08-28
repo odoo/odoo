@@ -738,8 +738,8 @@ def route(route=None, **routing):
         route applies to. If not specified, all methods are allowed.
     :param str cors: The Access-Control-Allow-Origin cors directive value.
     :param bool csrf: Whether CSRF protection should be enabled for the
-        route. Enabled by default for ``'http'``-type requests, disabled
-        by default for ``'jsonrpc'``-type requests.
+        route. Enabled by default for ``'http'`` endpoints, not applicable
+        to ``'jsonrpc'`` endpoints.
     :param Union[bool, Callable[[registry, request], bool]] readonly:
         Whether this endpoint should open a cursor on a read-only
         replica instead of (by default) the primary read/write database.

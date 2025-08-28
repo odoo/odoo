@@ -9,7 +9,7 @@ from odoo.http import Controller, route, request, Response
 class ImportModule(Controller):
     @route(
         '/base_import_module/login_upload',
-        type='http', auth='none', methods=['POST'], csrf=False, save_session=False)
+        type='http', auth='none', methods=['POST'], save_session=False)
     def login_upload(self, login, password, force='', mod_file=None, **kw):
         try:
             if not request.db:
