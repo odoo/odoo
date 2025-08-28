@@ -1,5 +1,5 @@
 import { Record } from "./record";
-import { IS_DELETED_SYM, STORE_SYM, modelRegistry } from "./misc";
+import { STORE_SYM, modelRegistry } from "./misc";
 import { reactive, toRaw } from "@odoo/owl";
 
 /** @typedef {import("./record_list").RecordList} RecordList */
@@ -41,6 +41,7 @@ export class Store extends Record {
             this.handleError(err);
         }
         this._.UPDATE--;
+        const deletingRecordsByLocalId = new Map();
         if (this._.UPDATE === 0) {
             // pretend an increased update cycle so that nothing in queue creates many small update cycles
             this._.UPDATE++;
@@ -146,7 +147,9 @@ export class Store extends Record {
                     RD_QUEUE.delete(record);
                     for (const [localId, names] of record._.uses.data.entries()) {
                         for (const [name2, count] of names.entries()) {
-                            const usingRecord2 = toRaw(this.recordByLocalId).get(localId);
+                            const usingRecord2 =
+                                toRaw(this.recordByLocalId).get(localId) ||
+                                deletingRecordsByLocalId.get(localId);
                             if (!usingRecord2) {
                                 // record already deleted, clean inverses
                                 record._.uses.data.delete(localId);
@@ -161,6 +164,8 @@ export class Store extends Record {
                             }
                         }
                     }
+                    deletingRecordsByLocalId.set(record.localId, record);
+                    this.recordByLocalId.delete(record.localId);
                     this._.ADD_QUEUE("hard_delete", toRaw(record));
                 }
                 while (RHD_QUEUE.size > 0) {
@@ -168,9 +173,7 @@ export class Store extends Record {
                     /** @type {Record} */
                     const record = RHD_QUEUE.keys().next().value;
                     RHD_QUEUE.delete(record);
-                    record._[IS_DELETED_SYM] = true;
-                    delete record.Model.records[record.localId];
-                    this.recordByLocalId.delete(record.localId);
+                    deletingRecordsByLocalId.delete(record.localId);
                 }
             }
             this._.UPDATE--;
