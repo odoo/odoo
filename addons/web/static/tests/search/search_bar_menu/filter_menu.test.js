@@ -1064,3 +1064,25 @@ test(`"in range" facets`, async () => {
         ["birthday", "<", "today +1d"],
     ]);
 });
+
+test(`Custom filter with "&"" as value`, async function () {
+    serverState.debug = "1";
+    Foo._fields.active = fields.Boolean();
+
+    onRpc("/web/domain/validate", () => true);
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "foo",
+        searchMenuTypes: ["filter"],
+        searchViewId: false,
+        searchViewArch: `<search />`,
+    });
+    expect(getFacetTexts()).toEqual([]);
+    expect(searchBar.env.searchModel.domain).toEqual([]);
+
+    await toggleSearchBarMenu();
+    await openAddCustomFilterDialog();
+    await contains(`.o_domain_selector_debug_container textarea`).edit(`[("foo", "ilike", "&")]`);
+    await contains(".modal footer button").click();
+    expect(getFacetTexts()).toEqual([`Foo contains &`]);
+    expect(searchBar.env.searchModel.domain).toEqual([["foo", "ilike", "&"]]);
+});
