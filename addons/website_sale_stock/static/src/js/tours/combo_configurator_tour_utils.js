@@ -5,7 +5,7 @@ function assertQuantityNotAvailable(productName) {
         content: `Assert that the requested quantity isn't available for ${productName}`,
         trigger: `
             ${configuratorTourUtils.comboItemSelector(productName, ['unselectable-card'])}
-            span:contains("Requested quantity not available")
+            span:contains("Out of Stock")
         `,
     };
 }
