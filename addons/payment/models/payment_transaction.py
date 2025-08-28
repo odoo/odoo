@@ -734,6 +734,8 @@ class PaymentTransaction(models.Model):
         if tx:
             tx.ensure_one()
             tx._validate_amount(payment_data)
+            if tx.state == 'error':
+                return tx
             tx._apply_updates(payment_data)
             if tx.tokenize and tx.state in {'authorized', 'done'}:
                 tx._tokenize(payment_data)
@@ -780,8 +782,6 @@ class PaymentTransaction(models.Model):
 
         :param dict payment_data: The payment data sent by the provider.
         :return: None
-        :raise ValidationError: If the transaction's amount and currency don't match the ones from
-                                the payment data.
         """
         self.ensure_one()
 
@@ -796,7 +796,7 @@ class PaymentTransaction(models.Model):
         if not amount or not currency_code:
             error_message = _("The amount or currency is missing from the payment data.")
             self._set_error(error_message)
-            raise ValidationError(error_message)
+            return
 
         # Negate the amount for refunds, as refunds have a negative amount in Odoo, but all
         # providers send a positive one.
@@ -810,14 +810,13 @@ class PaymentTransaction(models.Model):
                 "The amount from the payment data doesn't match the one from the transaction."
             )
             self._set_error(error_message)
-            raise ValidationError(error_message)
+            return
 
         if currency_code != self.currency_id.name:
             error_message = _(
                 "The currency from the payment data doesn't match the one from the transaction."
             )
             self._set_error(error_message)
-            raise ValidationError(error_message)
 
     def _extract_amount_data(self, payment_data):
         """Extract the amount, currency and rounding precision from the payment data.
