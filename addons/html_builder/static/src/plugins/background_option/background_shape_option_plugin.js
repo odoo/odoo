@@ -1,4 +1,4 @@
-import { getValueFromVar, isMobileView } from "@html_builder/utils/utils";
+import { getValueFromVar } from "@html_builder/utils/utils";
 import { normalizeColor } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
@@ -370,7 +370,7 @@ class ToggleBgShapeAction extends BaseAnimationAction {
         }
         // Only show on mobile by default if toggled from mobile
         // view.
-        const showOnMobile = isMobileView(editingElement);
+        const showOnMobile = this.config.isMobileView(editingElement);
         this.createShapeContainer(editingElement, shapeToSelect);
         const applyShapeParams = {
             shape: shapeToSelect,

@@ -211,6 +211,7 @@ export class MassMailingHtmlField extends HtmlField {
         delete config.Plugins;
         return {
             ...config,
+            mobileBreakpoint: "md",
             onEditorReady: () => this.commitChanges(),
         };
     }

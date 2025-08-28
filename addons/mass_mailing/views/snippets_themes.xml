@@ -97,12 +97,12 @@
     <section class="s_header_social o_mail_block_header_social o_mail_snippet_general pt16 pb16" data-name="Left Logo">
         <div class="container">
             <div class="row">
-                <div class="col-lg-4 pt16 pb16">
+                <div class="col-md-4 pt16 pb16">
                     <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;float:none;" target="_blank">
                          <img t-if="company_id.logo" border="0" t-att-src="image_data_uri(company_id.logo)" style="height:auto;max-width:100%;" />
                     </a>
                 </div>
-                <div class="col-lg-8 o_mail_header_social" style="text-align: right;">
+                <div class="col-md-8 o_mail_header_social" style="text-align: right;">
                     <t t-call="mass_mailing.social_links"/>
                 </div>
             </div>
@@ -114,14 +114,14 @@
     <section class="s_header_text_social o_mail_block_header_text_social o_mail_snippet_general" data-name="Left Text">
         <div class="container">
             <div class="row">
-                <div class="col-lg-4 pt16 pb16">
+                <div class="col-md-4 pt16 pb16">
                     <h1>
                         <a t-att-href="(company_id.website) or '#'" target="_blank">
                             My Company
                         </a>
                     </h1>
                 </div>
-                <div class="col-lg-8 o_mail_header_social" style="text-align: right;">
+                <div class="col-md-8 o_mail_header_social" style="text-align: right;">
                     <t t-call="mass_mailing.social_links"/>
                 </div>
             </div>
@@ -133,13 +133,13 @@
     <section class="s_header_logo o_mail_block_header_logo o_mail_snippet_general" data-name="Centered Logo">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3"/>
-                <div class="col-lg-6" style="text-align: center;">
+                <div class="col-md-3"/>
+                <div class="col-md-6" style="text-align: center;">
                     <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;" target="_blank">
                         <img t-if="company_id.logo" border="0" t-att-src="image_data_uri(company_id.logo)" style="height:auto;max-width:100%;"/>
                     </a>
                 </div>
-                <div class="col-lg-3" style="text-align: right;"/>
+                <div class="col-md-3" style="text-align: right;"/>
             </div>
         </div>
     </section>
@@ -157,14 +157,14 @@
     <section class="s_discount1 o_mail_block_discount1 o_mail_snippet_general pt0 pb16" data-name="Discount Offer">
         <div class="container">
             <div class="row">
-                <div class="col-lg-6 pt16">
+                <div class="col-md-6 pt16">
                     <h3 style="text-align: center;"><font class="text-o-color-2"><span style="font-weight:bolder;">-20%</span></font></h3>
                     <p style="text-align: center;">ON YOUR NEXT ORDER!</p>
                     <div style="text-align: center;">
                         <a role="button" href="#" class="btn btn-primary">Redeem Discount!</a>
                     </div>
                 </div>
-                <div class="col-lg-6 pt16">
+                <div class="col-md-6 pt16">
                     <p>We are continuing to grow and we miss seeing you be a part of it! We've increased store hours and have lot's of new brands available. To welcome you back please accept this 20% discount on you next purchase by clicking the button.</p>
                 </div>
             </div>
@@ -176,17 +176,17 @@
     <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-200 pt16" data-name="Footer Center">
         <div class="container">
             <div class="row">
-                <div class="col-lg o_mail_footer_social" style="text-align: center;">
+                <div class="col-md o_mail_footer_social" style="text-align: center;">
                     <t t-call="mass_mailing.social_links"/>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg o_mail_footer_links" style="text-align: center;">
+                <div class="col-md o_mail_footer_links" style="text-align: center;">
                     <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg">
+                <div class="col-md">
                     <p style="text-align: center;">
                         © <t t-esc="datetime.datetime.now().year"/> All Rights Reserved
                     </p>
@@ -200,7 +200,7 @@
     <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_left o_mail_snippet_general pt16" data-name="Footer Left">
         <div class="container">
             <div class="row">
-                <div class="col-lg o_mail_footer_description">
+                <div class="col-md o_mail_footer_description">
                     <p t-if="res_company">
                         <strong><t t-esc="res_company.partner_id.name"/></strong>
                     </p>
@@ -208,7 +208,7 @@
                         <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
                     </div>
                 </div>
-                <div class="col-lg" align="right">
+                <div class="col-md" align="right">
                     <div class="o_mail_footer_social pb16"><t t-call="mass_mailing.social_links"/></div>
                     <p class="o_mail_footer_copy">© <t t-esc="datetime.datetime.now().year"/> All Rights Reserved</p>
                 </div>
