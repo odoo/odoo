@@ -217,15 +217,15 @@ class TestAutomation(TransactionCaseWithUserDemo):
         self.assertRecordValues(cron, [{
             'active': True,
             'interval_type': 'minutes',
-            'interval_number': 12,  # 10% of automation1 delay
+            'interval_number': 6,  # did not change as the new delay is higher
         }])
 
         # Disable automation1
         automation1.active = False
         self.assertRecordValues(cron, [{
             'active': False,
-            'interval_type': 'hours',
-            'interval_number': 4,
+            'interval_type': 'minutes',
+            'interval_number': 6,  # did not change as the new delay is higher
         }])
 
         # Enable automation1 and automation2
@@ -234,7 +234,7 @@ class TestAutomation(TransactionCaseWithUserDemo):
         self.assertRecordValues(cron, [{
             'active': True,
             'interval_type': 'minutes',
-            'interval_number': 6,  # 10% of least delay (automation2)
+            'interval_number': 6,  # still 10% of automation2 delay
         }])
 
         # Create another automation with no delay
@@ -249,7 +249,7 @@ class TestAutomation(TransactionCaseWithUserDemo):
         self.assertRecordValues(cron, [{
             'active': True,
             'interval_type': 'minutes',
-            'interval_number': 6,  # should have not changed
+            'interval_number': 6,  # should have not changed either
         }])
 
     def test_computed_on_scheduled_action(self):
