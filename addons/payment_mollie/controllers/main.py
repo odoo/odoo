@@ -38,7 +38,7 @@ class MollieController(http.Controller):
         self._verify_and_process(data)
         return request.redirect('/payment/status')
 
-    @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
+    @http.route(_webhook_url, type='http', auth='public', methods=['POST'])
     def mollie_webhook(self, **data):
         """Process the payment data sent by Mollie to the webhook.
 

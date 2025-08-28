@@ -41,7 +41,7 @@ class NuveiController(http.Controller):
             tx_sudo._process('nuvei', data)
         return request.redirect('/payment/status')
 
-    @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
+    @http.route(_webhook_url, type='http', auth='public', methods=['POST'])
     def nuvei_webhook(self, **data):
         """Process the payment data sent by Nuvei to the webhook.
 

@@ -34,7 +34,7 @@ class RedsysController(http.Controller):
             tx_sudo._process('redsys', data)
         return request.redirect('/payment/status')
 
-    @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
+    @http.route(_webhook_url, type='http', auth='public', methods=['POST'])
     def redsys_webhook(self, **encoded_data):
         """Process the payment data sent by Redsys to the webhook.
 

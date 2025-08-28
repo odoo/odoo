@@ -42,7 +42,7 @@ class APSController(http.Controller):
             tx_sudo._process('aps', data)
         return request.redirect('/payment/status')
 
-    @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
+    @http.route(_webhook_url, type='http', auth='public', methods=['POST'])
     def aps_webhook(self, **data):
         """Process the payment data sent by APS to the webhook.
 

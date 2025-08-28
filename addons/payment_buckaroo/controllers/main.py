@@ -46,7 +46,7 @@ class BuckarooController(http.Controller):
             tx_sudo._process('buckaroo', data)
         return request.redirect('/payment/status')
 
-    @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
+    @http.route(_webhook_url, type='http', auth='public', methods=['POST'])
     def buckaroo_webhook(self, **raw_data):
         """Process the payment data sent by Buckaroo to the webhook.
 

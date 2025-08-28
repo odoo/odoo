@@ -63,7 +63,7 @@ class StripeController(http.Controller):
         with mute_logger('werkzeug'):  # avoid logging secret URL params
             return request.redirect('/payment/status')
 
-    @http.route(_webhook_url, type='http', methods=['POST'], auth='public', csrf=False)
+    @http.route(_webhook_url, type='http', methods=['POST'], auth='public')
     def stripe_webhook(self):
         """Process the payment data sent by Stripe to the webhook.
 
@@ -219,7 +219,7 @@ class StripeController(http.Controller):
             _logger.warning("Received payment data with invalid signature")
             raise Forbidden()
 
-    @http.route(_apple_pay_domain_association_url, type='http', auth='public', csrf=False)
+    @http.route(_apple_pay_domain_association_url, type='http', auth='public')
     def stripe_apple_pay_get_domain_association_file(self):
         """ Get the domain association file for Stripe's Apple Pay.
 

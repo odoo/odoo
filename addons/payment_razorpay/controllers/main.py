@@ -55,7 +55,7 @@ class RazorpayController(http.Controller):
         # Redirect the user to the status page.
         return request.redirect('/payment/status')
 
-    @http.route(_webhook_url, type='http', methods=['POST'], auth='public', csrf=False)
+    @http.route(_webhook_url, type='http', methods=['POST'], auth='public')
     def razorpay_webhook(self):
         """Process the payment data sent by Razorpay to the webhook.
 

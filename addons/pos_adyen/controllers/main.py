@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 
 class PosAdyenController(http.Controller):
 
-    @http.route('/pos_adyen/notification', type='jsonrpc', methods=['POST'], auth='public', csrf=False, save_session=False)
+    @http.route('/pos_adyen/notification', type='jsonrpc', methods=['POST'], auth='public', save_session=False)
     def notification(self):
         data = json.loads(request.httprequest.data)
 

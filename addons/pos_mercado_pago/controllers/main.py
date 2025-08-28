@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PosMercadoPagoWebhook(http.Controller):
-    @http.route('/pos_mercado_pago/notification', methods=['POST'], type="http", auth="none", csrf=False)
+    @http.route('/pos_mercado_pago/notification', methods=['POST'], type="http", auth="none")
     def notification(self):
         """ Process the notification sent by Mercado Pago
 

@@ -34,7 +34,7 @@ class PaymobController(http.Controller):
             tx_sudo._process('paymob', data)
         return request.redirect('/payment/status')
 
-    @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
+    @http.route(_webhook_url, type='http', auth='public', methods=['POST'])
     def paymob_webhook(self, **data):
         """Process the payment data sent by Paymob to the webhook.
 

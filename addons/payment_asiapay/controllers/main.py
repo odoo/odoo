@@ -28,7 +28,7 @@ class AsiaPayController(http.Controller):
         # reference and AsiaPay doesn't expose an endpoint to fetch the data from the API.
         return request.redirect('/payment/status')
 
-    @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
+    @http.route(_webhook_url, type='http', auth='public', methods=['POST'])
     def asiapay_webhook(self, **data):
         """Process the payment data sent by AsiaPay to the webhook.
 

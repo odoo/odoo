@@ -45,7 +45,7 @@ class PaypalController(http.Controller):
             )
             tx_sudo._process('paypal', normalized_response)
 
-    @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
+    @http.route(_webhook_url, type='http', auth='public', methods=['POST'])
     def paypal_webhook(self):
         """Process the payment data sent by PayPal to the webhook.
 

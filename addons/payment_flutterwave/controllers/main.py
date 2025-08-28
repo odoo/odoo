@@ -46,7 +46,7 @@ class FlutterwaveController(http.Controller):
         data = json.loads(response) if response else {}
         return self.flutterwave_return_from_checkout(**data)
 
-    @http.route(_webhook_url, type='http', methods=['POST'], auth='public', csrf=False)
+    @http.route(_webhook_url, type='http', methods=['POST'], auth='public')
     def flutterwave_webhook(self):
         """Process the payment data sent by Flutterwave to the webhook.
 
