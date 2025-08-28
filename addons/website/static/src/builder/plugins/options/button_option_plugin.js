@@ -101,12 +101,12 @@ class ButtonOptionPlugin extends Plugin {
                 if (siblingButtonEl.classList.contains("rounded-circle")) {
                     editingElement.classList.add("rounded-circle");
                 }
-            } else {
+            } else if (!siblingButtonEl) {
                 // To align with the editor's behavior, we need to enclose the
-                // button in a <p> tag if it's not dropped within a <p> tag. We only
-                // put the dropped button in a <p> if it's not next to another
-                // button, because some snippets have buttons that aren't inside a
-                // <p> (e.g. s_text_cover).
+                // button in a <p> tag if it's not dropped within a <p> tag. We
+                // only put the dropped button in a <p> if it's not next to
+                // another button, because some snippets have buttons that are
+                // not inside a <p> (e.g. s_text_cover).
                 // TODO: this definitely needs to be fixed at web_editor level.
                 // Nothing should prevent adding buttons outside of a paragraph.
                 const btnContainerEl = editingElement.closest("p");
