@@ -22,6 +22,8 @@ export class MegaMenuOptionPlugin extends Plugin {
         save_handlers: this.saveMegaMenuClasses.bind(this),
         no_parent_containers: ".o_mega_menu",
         is_unremovable_selector: ".o_mega_menu > section",
+        unsplittable_node_predicates: (node) =>
+            node?.nodeType === Node.ELEMENT_NODE && node.matches(".o_mega_menu .nav > .nav-link"), //avoid merge
     };
 
     getTemplatePrefix() {
