@@ -8,7 +8,6 @@ import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { tourRecorderState } from "./tour_recorder_state";
 
-export const TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY = "tour_recorder_active";
 const PRECISE_IDENTIFIERS = ["data-menu-xmlid", "name", "contenteditable"];
 const ODOO_CLASS_REGEX = /^oe?(-|_)[\w-]+$/;
 const VALIDATING_KEYS = ["Enter", "Tab"];

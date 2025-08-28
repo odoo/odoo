@@ -3,18 +3,15 @@ import { browser } from "@web/core/browser/browser";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
-import { TourPointer } from "@web_tour/js/tour_pointer/tour_pointer";
+import { loadBundle } from "@web/core/assets";
 import { createPointerState } from "@web_tour/js/tour_pointer/tour_pointer_state";
 import { tourState } from "@web_tour/js/tour_state";
-import { TourInteractive } from "@web_tour/js/tour_interactive/tour_interactive";
-import { TourAutomatic } from "@web_tour/js/tour_automatic/tour_automatic";
 import { callWithUnloadCheck } from "@web_tour/js/utils/tour_utils";
 import {
+    tourRecorderState,
     TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY,
-    TourRecorder,
-} from "@web_tour/js/tour_recorder/tour_recorder";
+} from "@web_tour/js/tour_recorder/tour_recorder_state";
 import { redirect } from "@web/core/utils/urls";
-import { tourRecorderState } from "@web_tour/js/tour_recorder/tour_recorder_state";
 
 class OnboardingItem extends Component {
     static components = { DropdownItem };
@@ -162,7 +159,7 @@ export const tourService = {
                 }
             });
             if (!willUnload) {
-                resumeTour();
+                await resumeTour();
             }
         }
 
@@ -179,20 +176,31 @@ export const tourService = {
             }
 
             tour.steps.forEach((step) => validateStep(step));
-            pointer.stop = overlay.add(
-                TourPointer,
-                {
-                    pointerState: pointer.state,
-                    bounce: !(tourConfig.mode === "auto" && tourConfig.keepWatchBrowser),
-                },
-                {
-                    sequence: 1100, // sequence based on bootstrap z-index values.
-                }
-            );
 
             if (tourConfig.mode === "auto") {
+                await loadBundle("web_tour.automatic", { css: false });
+                const { TourAutomatic } = odoo.loader.modules.get(
+                    "@web_tour/js/tour_automatic/tour_automatic"
+                );
                 new TourAutomatic(tour).start();
             } else {
+                await loadBundle("web_tour.interactive");
+                const { TourPointer } = odoo.loader.modules.get(
+                    "@web_tour/js/tour_pointer/tour_pointer"
+                );
+                pointer.stop = overlay.add(
+                    TourPointer,
+                    {
+                        pointerState: pointer.state,
+                        bounce: !(tourConfig.mode === "auto" && tourConfig.keepWatchBrowser),
+                    },
+                    {
+                        sequence: 1100, // sequence based on bootstrap z-index values.
+                    }
+                );
+                const { TourInteractive } = odoo.loader.modules.get(
+                    "@web_tour/js/tour_interactive/tour_interactive"
+                );
                 new TourInteractive(tour).start(pointer, async () => {
                     pointer.stop();
                     tourState.clear();
@@ -218,19 +226,27 @@ export const tourService = {
             }
         }
 
-        function startTourRecorder() {
-            if (!browser.localStorage.getItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY)) {
-                const remove = overlay.add(
-                    TourRecorder,
-                    {
-                        onClose: () => {
-                            remove();
-                            browser.localStorage.removeItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY);
-                            tourRecorderState.clear();
-                        },
+        async function tourRecorder() {
+            await loadBundle("web_tour.recorder");
+            const { TourRecorder } = odoo.loader.modules.get(
+                "@web_tour/js/tour_recorder/tour_recorder"
+            );
+            const remove = overlay.add(
+                TourRecorder,
+                {
+                    onClose: () => {
+                        remove();
+                        browser.localStorage.removeItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY);
+                        tourRecorderState.clear();
                     },
-                    { sequence: 99999 }
-                );
+                },
+                { sequence: 99999 }
+            );
+        }
+
+        async function startTourRecorder() {
+            if (!browser.localStorage.getItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY)) {
+                await tourRecorder();
             }
             browser.localStorage.setItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY, "1");
         }
@@ -259,17 +275,7 @@ export const tourService = {
                 browser.localStorage.getItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY) &&
                 !session.is_public
             ) {
-                const remove = overlay.add(
-                    TourRecorder,
-                    {
-                        onClose: () => {
-                            remove();
-                            browser.localStorage.removeItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY);
-                            tourRecorderState.clear();
-                        },
-                    },
-                    { sequence: 99999 }
-                );
+                await tourRecorder();
             }
         }
 

@@ -3,12 +3,14 @@
 import { afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, queryFirst } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
-import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { mountWithCleanup, patchWithCleanup, preloadBundle } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { Macro } from "@web/core/macro";
 import { registry } from "@web/core/registry";
 
 describe.current.tags("desktop");
+
+preloadBundle("web_tour.automatic");
 
 const mainErrorMessage = (trigger) =>
     `ERROR during perform action:\nPotential non deterministic behavior found in 300ms for trigger ${trigger}.`;
