@@ -1903,3 +1903,29 @@ class TestPackagePropagation(TestPackingCommon):
         self.assertEqual(delivery.move_line_ids.result_package_id, pack)
         self.assertTrue(delivery.move_line_ids.is_entire_pack)
         self.assertEqual(pack.package_dest_id, container)
+
+    def test_remove_part_of_entire_pack(self):
+        """ Checks that removing quantity from an entire pack removes its `is_entire_pack` flag for all of its move lines,
+            while keeping the other ones untouched.
+        """
+        pack1, pack2 = self.env['stock.package'].create([{
+            'name': name,
+        } for name in ['pack1', 'pack2']])
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 5, package_id=pack1)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 3, package_id=pack1)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 1, package_id=pack2)
+
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+
+        delivery.action_add_entire_packs(pack1 | pack2)
+        self.assertEqual(delivery.move_line_ids.mapped('is_entire_pack'), [True, True, True])
+
+        # Remove some quantity from one move line. The package should not be considered as 'entire' for both move lines.
+        pack1_ml = delivery.move_line_ids.filtered(lambda ml: ml.package_id == pack1)
+        pack1_ml[0].quantity = 1
+        self.assertEqual(pack1_ml.mapped('is_entire_pack'), [False, False])
+        self.assertTrue(delivery.move_line_ids.filtered(lambda ml: ml.package_id == pack2).is_entire_pack)
