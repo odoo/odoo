@@ -56,6 +56,7 @@ import { mockCrypto } from "./crypto";
 const {
     EventTarget,
     HTMLAnchorElement,
+    MutationObserver,
     Number: { isNaN: $isNaN, parseFloat: $parseFloat },
     Object: {
         assign: $assign,
@@ -333,6 +334,22 @@ function mockedRemoveEventListener(...args) {
         return;
     }
     return removeEventListener.call(this, ...args);
+}
+
+/**
+ * @param {MutationRecord[]} mutations
+ */
+function observeAddedNodes(mutations) {
+    const runner = getRunner();
+    for (const mutation of mutations) {
+        for (const node of mutation.addedNodes) {
+            if (runner.dry) {
+                node.remove();
+            } else {
+                runner.after(node.remove.bind(node));
+            }
+        }
+    }
 }
 
 /**
@@ -636,8 +653,23 @@ export function setupWindow() {
     view.addEventListener("resize", onWindowResize);
 }
 
-export function watchListeners() {
-    const targets = getWatchedEventTargets(getWindow());
+/**
+ * @param {typeof globalThis} [view=getWindow()]
+ */
+export function watchAddedNodes(view = getWindow()) {
+    const observer = new MutationObserver(observeAddedNodes);
+    observer.observe(view.document.head, { childList: true });
+
+    return function unwatchAddedNodes() {
+        observer.disconnect();
+    };
+}
+
+/**
+ * @param {typeof globalThis} [view=getWindow()]
+ */
+export function watchListeners(view = getWindow()) {
+    const targets = getWatchedEventTargets(view);
     for (const target of targets) {
         target.addEventListener = mockedAddEventListener;
         target.removeEventListener = mockedRemoveEventListener;
