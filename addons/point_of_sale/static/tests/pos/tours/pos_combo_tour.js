@@ -1,3 +1,5 @@
+/* global posmodel */
+
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
@@ -167,5 +169,84 @@ registry.category("web_tour.tours").add("ProductComboChangePricelist", {
             ]),
             ProductScreen.totalAmountIs("42.60"),
             ProductScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_combo_disallowLineQuantityChange", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            {
+                content: "replace disallowLineQuantityChange to be true",
+                trigger: "body",
+                run: () => {
+                    posmodel.disallowLineQuantityChange = () => true;
+                },
+            },
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            inLeftSide(
+                [
+                    Numpad.click("⌫"),
+                    {
+                        content: "Click 0",
+                        trigger:
+                            ".modal-content div.numpad button:not(:contains('+')):contains('0')",
+                        run: "click",
+                    },
+                    Chrome.confirmPopup(),
+                    Order.doesNotHaveLine(),
+                ].flat()
+            ),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_combo_disallowLineQuantityChange_2", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            {
+                content: "replace disallowLineQuantityChange to be true",
+                trigger: "body",
+                run: () => {
+                    posmodel.disallowLineQuantityChange = () => true;
+                },
+            },
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            inLeftSide(
+                [
+                    Numpad.click("2"),
+                    {
+                        content: "Click 2",
+                        trigger:
+                            ".modal-content div.numpad button:not(:contains('+')):contains('2')",
+                        run: "click",
+                    },
+                    Chrome.confirmPopup(),
+                    Order.hasLine({ productName: "Combo Product 2", quantity: "2" }),
+                    Order.hasLine({ productName: "Combo Product 4", quantity: "2" }),
+                    Order.hasLine({ productName: "Combo Product 6", quantity: "2" }),
+                    Numpad.click("1"),
+                    {
+                        content: "Click 1",
+                        trigger:
+                            ".modal-content div.numpad button:not(:contains('+')):contains('1')",
+                        run: "click",
+                    },
+                    Chrome.confirmPopup(),
+                    Order.hasLine({ productName: "Combo Product 2", quantity: "1" }),
+                    Order.hasLine({ productName: "Combo Product 4", quantity: "1" }),
+                    Order.hasLine({ productName: "Combo Product 6", quantity: "1" }),
+                ].flat()
+            ),
+            Order.hasTotal("47.33"),
         ].flat(),
 });

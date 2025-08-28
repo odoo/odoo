@@ -282,7 +282,10 @@ export class OrderSummary extends Component {
             const selectedLine = this.currentOrder.getSelectedOrderline();
             const currentQuantity = selectedLine.getQuantity();
             if (newQuantity >= currentQuantity) {
-                selectedLine.setQuantity(newQuantity);
+                selectedLine.setQuantity(newQuantity, selectedLine.isPartOfCombo());
+                for (const line of selectedLine.combo_line_ids ?? []) {
+                    line.setQuantity(newQuantity, true);
+                }
             } else if (newQuantity >= selectedLine.uiState.savedQuantity) {
                 await this.handleDecreaseUnsavedLine(newQuantity);
             } else {
@@ -295,7 +298,10 @@ export class OrderSummary extends Component {
     async handleDecreaseUnsavedLine(newQuantity) {
         const selectedLine = this.currentOrder.getSelectedOrderline();
         const decreaseQuantity = selectedLine.getQuantity() - newQuantity;
-        selectedLine.setQuantity(newQuantity);
+        selectedLine.setQuantity(newQuantity, selectedLine.isPartOfCombo());
+        for (const line of selectedLine.combo_line_ids ?? []) {
+            line.setQuantity(newQuantity, true);
+        }
         return decreaseQuantity;
     }
     async handleDecreaseLine(newQuantity) {
