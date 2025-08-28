@@ -75,7 +75,7 @@
             <t t-foreach="items" t-as="itemInfo" t-key="itemInfo.id">
                 <t t-set="arInfo" t-value="getActiveRangeInfo(itemInfo)" />
                 <div
-                    class="o_date_item_cell o_datetime_button o_center"
+                    class="o_date_item_cell o_datetime_button o_center cursor-pointer"
                     t-att-class="{
                         o_selected: arInfo.isSelected,
                         o_select_start: arInfo.isSelectStart,
