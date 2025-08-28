@@ -1,8 +1,8 @@
 // ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
 
 import { describe, dryRun, globals, start, stop } from "@odoo/hoot";
-import { Deferred } from "@odoo/hoot-dom";
-import { watchKeys, watchListeners } from "@odoo/hoot-mock";
+import { Deferred, delay } from "@odoo/hoot-dom";
+import { watchAddedNodes, watchKeys, watchListeners } from "@odoo/hoot-mock";
 
 import { mockBrowserFactory } from "./mock_browser.hoot";
 import { mockCurrencyFactory } from "./mock_currency.hoot";
@@ -112,7 +112,7 @@ async function describeDrySuite(fileSuffix, entryPoints) {
         });
     }
 
-    moduleSetLoader.cleanup();
+    await moduleSetLoader.cleanup();
 }
 
 /**
@@ -426,7 +426,11 @@ class ModuleSetLoader extends loader.constructor {
         return !filter || filter(name) || R_DEFAULT_MODULE.test(name);
     }
 
-    cleanup() {
+    async cleanup() {
+        // Wait for side-effects to be properly caught up by the different "watchers"
+        // (like mutation records).
+        await delay();
+
         odoo.define = define;
         odoo.loader = loader;
 
@@ -456,7 +460,8 @@ class ModuleSetLoader extends loader.constructor {
         this.cleanups.push(
             watchKeys(window.odoo),
             watchKeys(window, ALLOWED_GLOBAL_KEYS),
-            watchListeners()
+            watchListeners(window),
+            watchAddedNodes(window)
         );
 
         // Load module set modules (without entry point)
@@ -707,7 +712,8 @@ export async function runTests(options) {
         // Run recently added tests
         const running = await start(suite);
 
-        moduleSetLoader.cleanup();
+        await moduleSetLoader.cleanup();
+
         lastSuiteName = suite.fullName;
         lastNumberTests = suite.reporting.tests;
 

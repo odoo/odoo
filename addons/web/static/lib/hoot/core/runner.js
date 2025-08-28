@@ -2,7 +2,7 @@
 
 import { on, setFrameRate } from "@odoo/hoot-dom";
 import { markRaw, reactive, toRaw } from "@odoo/owl";
-import { cleanupDOM } from "@web/../lib/hoot-dom/helpers/dom";
+import { cleanupDOM, defineRootNode } from "@web/../lib/hoot-dom/helpers/dom";
 import { cleanupEvents, enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
 import { cleanupTime, setupTime } from "@web/../lib/hoot-dom/helpers/time";
 import { exposeHelpers, isInstanceOf, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
@@ -1892,9 +1892,8 @@ export class Runner {
         }
 
         // Register default hooks
-        this.beforeAll(this.fixture.globalSetup);
+        this.beforeAll(defineRootNode.bind(null, this.fixture.get));
         this.afterAll(
-            this.fixture.globalCleanup,
             // Warn user events
             !this.debug && on(window, "pointermove", warnUserEvent),
             !this.debug && on(window, "pointerdown", warnUserEvent),

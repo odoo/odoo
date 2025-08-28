@@ -10,7 +10,7 @@ import {
     normalizeColors,
     normalizeRem,
 } from "@mail/views/web/fields/html_mail_field/convert_inline";
-import { afterEach, beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
 import { enableTransitions } from "@odoo/hoot-mock";
 import {
     getGridHtml,
@@ -850,14 +850,9 @@ describe("Convert classes to inline styles", () => {
         editable = document.createElement("div");
 
         styleEl = document.createElement("style");
-        styleEl.type = "text/css";
         styleEl.title = "test-stylesheet";
         document.head.appendChild(styleEl);
         styleSheet = [...document.styleSheets].find((sheet) => sheet.title === "test-stylesheet");
-    });
-    afterEach(() => {
-        // @todo to adapt when hoot has a better way to remove it
-        document.head.removeChild(styleEl);
     });
 
     test("convert Bootstrap classes to inline styles", async () => {
