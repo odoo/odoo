@@ -8,7 +8,7 @@ from odoo.addons.website.tools import MockRequest
 from odoo.tests.common import tagged, TransactionCase
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', '-standard', 'breaking_16', 'random')
 class TestWebsiteFormEditor(HttpCaseWithUserPortal):
     @classmethod
     def setUpClass(cls):

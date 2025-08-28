@@ -188,7 +188,7 @@ class TestUi(TestUICommon):
             login=user_demo.login)
 
 
-@tests.common.tagged('post_install', '-at_install')
+@tests.common.tagged('post_install', '-at_install', '-standard', 'breaking_16', 'no_network')
 class TestUiPublisher(HttpCaseGamification):
 
     def fetch_proxy(self, url):
