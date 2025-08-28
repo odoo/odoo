@@ -93,9 +93,9 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="name" string="Description" placeholder="Additional Description..." readonly="state == 'validated'"/>
                             <field name="work_entry_type_id" readonly="state == 'validated'" options="{'no_create': True, 'no_open': True}" widget="many2one_work_entry_type"/>
                             <field name="employee_id" readonly="state != 'draft'" widget="many2one_avatar_employee"/>
+                            <field name="name" placeholder="Additional Description..." readonly="state == 'validated'"/>
                         </group>
                         <group>
                             <field name="date" readonly="state != 'draft'"/>
@@ -190,6 +190,8 @@
                 <filter name="current_month" string="Current Month" domain="[
                     ('date', '&gt;=', '=1d'),
                     ('date', '&lt;', '=1d +1m')]"/>
+                <separator/>
+                <filter name="name" string="With Description" domain="[('name', '!=', False)]"/>
                 <separator/>
                 <filter name="group_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
                 <filter name="group_department" string="Department" context="{'group_by': 'department_id'}"/>

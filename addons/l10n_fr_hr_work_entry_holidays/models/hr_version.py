@@ -54,7 +54,6 @@ class HrVersion(models.Model):
                     employee_dates.add(vals['date_stop'].date())
                 leave_work_entry_type = leave.holiday_status_id.work_entry_type_id
                 result += [{
-                    'name': '%s%s' % (leave_work_entry_type.name + ': ' if leave_work_entry_type else "", employee.name),
                     'date_start': interval[0].astimezone(pytz.utc).replace(tzinfo=None),
                     'date_stop': interval[1].astimezone(pytz.utc).replace(tzinfo=None),
                     'work_entry_type_id': leave_work_entry_type.id,
