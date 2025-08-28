@@ -37,11 +37,14 @@ async function applyProduct(record, product) {
         ptal => ptal.create_variant === "no_variant"
     ).flatMap(ptal => ptal.selected_attribute_value_ids);
 
+    const { product_uom_id } = record.data;
     // We use `_update` (not locked) instead of `update` (locked) so that multiple records can be
     // updated in parallel (for performance).
     await record._update({
         product_id: [product.id, product.display_name],
         product_uom_qty: product.quantity,
+        // Preserve `product_uom_id` iff set
+        ...(product_uom_id ? { product_uom_id } : {}),
         product_no_variant_attribute_value_ids: [x2ManyCommands.set(noVariantPTAVIds)],
         product_custom_attribute_value_ids: customAttributesCommands,
     });
