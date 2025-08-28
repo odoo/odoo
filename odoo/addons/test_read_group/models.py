@@ -20,6 +20,7 @@ class Test_Read_GroupAggregateBoolean(models.Model):
     bool_or = fields.Boolean(default=False, aggregator='bool_or')
     bool_array = fields.Boolean(default=False, aggregator='array_agg')
 
+
 class TestReadGroupAggregateMonetaryRelated(models.Model):
     _name = 'test_read_group.aggregate.monetary.related'
     _description = 'To test related currency fields in Monetary aggregates'
@@ -36,6 +37,7 @@ class TestReadGroupAggregateMonetaryRelated(models.Model):
         for record in self:
             record.non_stored_currency_id = self.env.ref('base.EUR')
 
+
 class Test_Read_GroupAggregateMonetary(models.Model):
     _name = 'test_read_group.aggregate.monetary'
     _description = 'Group Test Read Monetary Aggregate'
@@ -46,16 +48,15 @@ class Test_Read_GroupAggregateMonetary(models.Model):
     currency_id = fields.Many2one('res.currency')
     related_stored_currency_id = fields.Many2one(
         related='related_model_id.stored_currency_id',
-        store=False,
     )
     related_non_stored_currency_id = fields.Many2one(
         related='related_model_id.non_stored_currency_id',
-        store=False,
     )
 
     total_in_currency_id = fields.Monetary(currency_field='currency_id')
     total_in_related_stored_currency_id = fields.Monetary(currency_field='related_stored_currency_id')
     total_in_related_non_stored_currency_id = fields.Monetary(currency_field='related_non_stored_currency_id')
+
 
 class Test_Read_GroupAggregate(models.Model):
     _name = 'test_read_group.aggregate'
