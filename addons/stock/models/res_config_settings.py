@@ -61,9 +61,9 @@ class ResConfigSettings(models.TransientModel):
             self.replenish_on_order = route.active
 
     def _inverse_replenish_on_order(self):
-        route = self.env.ref('stock.route_warehouse0_mto', raise_if_not_found=False).sudo()
+        route = self.env.ref('stock.route_warehouse0_mto', raise_if_not_found=False)
         if route:
-            route.active = self.replenish_on_order
+            route.sudo().active = self.replenish_on_order
 
     @api.onchange('group_stock_multi_locations')
     def _onchange_group_stock_multi_locations(self):
