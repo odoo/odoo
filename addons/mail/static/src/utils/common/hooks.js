@@ -501,7 +501,7 @@ export function useSelection({ refName, model, preserveOnClickAwayPredicate = ()
         },
         moveCursor(position) {
             model.start = model.end = position;
-            if (!ui.isSmall) {
+            if (ref.el && !ui.isSmall) {
                 // In mobile, selection seems to adjust correctly.
                 // Don't programmatically adjust, otherwise it shows soft keyboard!
                 ref.el.selectionStart = ref.el.selectionEnd = position;
