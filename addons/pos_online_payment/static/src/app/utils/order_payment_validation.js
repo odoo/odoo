@@ -231,7 +231,7 @@ patch(OrderPaymentValidation.prototype, {
             }
         }
 
-        await this.beforePostPushOrderResolve([this.order.id]);
+        await this.postPushOrderResolve([this.order.id]);
 
         await this.afterOrderValidation(true);
         const nextPage = this.nextPage;
