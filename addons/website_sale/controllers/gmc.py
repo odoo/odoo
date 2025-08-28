@@ -52,11 +52,7 @@ class GoogleMerchantCenter(Controller):
         website_homepage = website._get_website_pages(
             [('url', '=', homepage_url), ('website_id', '!=', False)], limit=1,
         )
-        products = request.env['product.product'].search(Domain.AND([
-            Domain('is_published', '=', True),
-            Domain('type', 'in', ('consu', 'combo')),
-            website.website_domain(),
-        ]))
+        products = request.env['product.product']
         gmc_data = {
             'title': website_homepage.website_meta_title or website.name,
             'link': url_join(website.get_base_url(), request.env['ir.http']._url_lang(homepage_url)),
