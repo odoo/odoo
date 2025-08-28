@@ -62,7 +62,9 @@ export class ActivityMenu extends Component {
 
     async signInOut() {
         this.dropdown.close();
-        if (!isIosApp()) { // iOS app lacks permissions to call `getCurrentPosition`
+        const trackingEnabled = this.employee && this.employee.device_tracking_enabled;
+        if (trackingEnabled && !isIosApp() && navigator.geolocation) {
+            // iOS app lacks permissions to call `getCurrentPosition`
             navigator.geolocation.getCurrentPosition(
                 async ({coords: {latitude, longitude}}) => {
                     this.employee = await rpc("/hr_attendance/systray_check_in_out", {
