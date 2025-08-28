@@ -22,3 +22,7 @@ class ProductTemplate(models.Model):
 
     def _service_tracking_blacklist(self):
         return super()._service_tracking_blacklist() + ['course']
+
+    @api.model
+    def _get_saleable_tracking_types(self):
+        return super()._get_saleable_tracking_types() + ['course']
