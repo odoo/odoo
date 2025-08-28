@@ -284,12 +284,19 @@ class TestChannelInternals(MailCommon, HttpCase):
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_channel_recipients_mention(self):
-        """ Posting a message on a classic channel should support mentioning somebody """
+        """Posting a message on a channel should not send emails to internal users with notification type email"""
+        no_user_partner = self.env["res.partner"].create({"name": "No User", "email": "nouser@example.com"})
+        message = None
         with self.mock_mail_gateway():
-            self.test_channel.message_post(
-                body="Test", partner_ids=self.test_partner.ids,
+            message = self.test_channel.message_post(
+                body="Test", partner_ids=[self.test_partner.id, no_user_partner.id],
                 message_type='comment', subtype_xmlid='mail.mt_comment')
-        self.assertSentEmail(self.test_channel.env.user.partner_id, [self.test_partner])
+        self.assertSentEmail(self.test_channel.env.user.partner_id, [no_user_partner])
+        mentions_notif = self.env["mail.notification"].search([
+            ("mail_message_id", "=", message.id),
+            ("res_partner_id", "=", self.test_partner.id),
+        ])
+        self.assertEqual(len(mentions_notif), 1, "Shoule have Inbox notification for the mentioned internal user")
 
     @mute_logger('odoo.models.unlink')
     def test_channel_user_synchronize(self):
