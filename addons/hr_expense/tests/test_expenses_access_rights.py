@@ -89,10 +89,10 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
             },
             files={'ufile': ('salut.txt', b"Salut !\n", 'text/plain')},
         )
-        expense.with_user(standard_user).attach_document(attachment_ids=[data['id'] for data in response_user.json()['data']['ir.attachment']])
+        expense.with_user(standard_user).attach_document(attachment_ids=[data['id'] for data in response_user.json()['data']['store_data']['ir.attachment']])
         self.assertEqual(response_user.status_code, 200)
         self.assertEqual(len(expense.attachment_ids), 1)
-        self.assertEqual(expense.message_main_attachment_id.id, response_user.json()['data']['ir.attachment'][0]['id'])
+        self.assertEqual(expense.message_main_attachment_id.id, response_user.json()['data']['store_data']['ir.attachment'][0]['id'])
 
         self.authenticate(another_standard_user.login, another_standard_user.login)
         response_user2 = self.url_open("/mail/attachment/upload",
@@ -107,7 +107,7 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
             expense.with_user(another_standard_user).attach_document(attachment_ids=None)
         self.assertEqual(response_user2.status_code, 404)
         self.assertEqual(len(expense.attachment_ids), 1)  # No new attachment
-        self.assertEqual(expense.message_main_attachment_id.id, response_user.json()['data']['ir.attachment'][0]['id'])
+        self.assertEqual(expense.message_main_attachment_id.id, response_user.json()['data']['store_data']['ir.attachment'][0]['id'])
 
         self.authenticate(standard_user_manager.login, standard_user_manager.login)
         response_manager = self.url_open("/mail/attachment/upload",
@@ -118,10 +118,10 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
             },
             files={'ufile': ('manager.txt', b"Manager\n", 'text/plain')},
         )
-        expense.with_user(standard_user_manager).attach_document(attachment_ids=[data['id'] for data in response_manager.json()['data']['ir.attachment']])
+        expense.with_user(standard_user_manager).attach_document(attachment_ids=[data['id'] for data in response_manager.json()['data']['store_data']['ir.attachment']])
         self.assertEqual(response_manager.status_code, 200)
         self.assertEqual(len(expense.attachment_ids), 2)
-        self.assertEqual(expense.message_main_attachment_id.id, response_manager.json()['data']['ir.attachment'][0]['id'])
+        self.assertEqual(expense.message_main_attachment_id.id, response_manager.json()['data']['store_data']['ir.attachment'][0]['id'])
 
         self.authenticate(admin_user.login, admin_user.login)
         response_admin = self.url_open("/mail/attachment/upload",
@@ -132,10 +132,10 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
             },
             files={'ufile': ('admin.txt', b"Admin\n", 'text/plain')},
         )
-        expense.with_user(admin_user).attach_document(attachment_ids=[data['id'] for data in response_admin.json()['data']['ir.attachment']])
+        expense.with_user(admin_user).attach_document(attachment_ids=[data['id'] for data in response_admin.json()['data']['store_data']['ir.attachment']])
         self.assertEqual(response_admin.status_code, 200)
         self.assertEqual(len(expense.attachment_ids), 3)
-        self.assertEqual(expense.message_main_attachment_id.id, response_admin.json()['data']['ir.attachment'][0]['id'])
+        self.assertEqual(expense.message_main_attachment_id.id, response_admin.json()['data']['store_data']['ir.attachment'][0]['id'])
 
     def test_expense_user_cant_approve_own_expense(self):
         expense = self.env['hr.expense'].with_user(self.expense_user_employee).create({
