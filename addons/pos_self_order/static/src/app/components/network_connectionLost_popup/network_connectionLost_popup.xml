@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.NetworkConnectionLostPopup">
+        <div class="self_order_network_popup o_dialog">
+            <div role="dialog" class="modal d-block" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body p-4 overflow-visible">
+                            <div class="position-absolute top-0 start-50 translate-middle px-4 py-3 rounded-4 border border-white border-5"
+                                t-att-class="state.online ? 'text-bg-success' : 'text-bg-danger'">
+                                <i t-att-class="state.online ? 'fa fa-check-circle' : 'fa fa-wifi'" aria-hidden="true"/>
+                            </div>
+                            <div class="mt-4 text-center">
+                                <h1>
+                                    <t t-if="state.online">Connection restored</t>
+                                    <t t-else="">Internet Connection Lost</t>
+                                </h1>
+                                <span class="text-muted">
+                                    <t t-if="state.online">
+                                        You are back online. You can complete your order now.
+                                    </t>
+                                    <t t-else="">
+                                        It seems that the network connection was lost.<br/>Do not refresh the page.
+                                    </t>
+                                </span>
+                                <div class="display-6 my-3 pb-3 fw-bold text-center"
+                                    t-att-class="state.online ? 'text-success' : 'text-danger'">
+                                    <t t-if="state.online"><i class="fa fa-check-circle"/> Online</t>
+                                    <t t-elif="state.retrying">
+                                        <i class="fa fa-spinner fa-spin"></i> Retrying...
+                                    </t>
+                                    <t t-else="">
+                                        <t t-esc="getRetryText(state.time)"/>
+                                    </t>
+                                </div>
+
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center w-100">
+                                <button type="button" class="btn btn-primary btn-lg popup_button" t-on-click="() => props.close()">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
