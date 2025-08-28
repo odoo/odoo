@@ -731,7 +731,12 @@ export class SearchModel extends EventBus {
         const getFieldDef = await this.makeGetFieldDef(this.resModel, constructTree(domain));
         const tree = treeFromDomain(domain, { distributeNot: !this.isDebugMode, getFieldDef });
         const trees =
-            !tree.negate && tree.value === "&" && tree.children.length > 0 ? tree.children : [tree];
+            !tree.negate &&
+            tree.type === "connector" &&
+            tree.value === "&" &&
+            tree.children.length > 0
+                ? tree.children
+                : [tree];
         const promises = trees.map(async (tree) => {
             const [description, tooltip] = await Promise.all([
                 this.getDomainTreeDescription(this.resModel, tree),
