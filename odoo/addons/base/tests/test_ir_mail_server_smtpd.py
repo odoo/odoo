@@ -7,6 +7,7 @@ import ssl
 import unittest
 import warnings
 from base64 import b64encode
+from os import getenv
 from pathlib import Path
 from socket import getaddrinfo  # keep a reference on the non-patched function
 from unittest.mock import patch
@@ -29,6 +30,11 @@ except ImportError:
 PASSWORD = 'secretpassword'
 _openssl = shutil.which('openssl')
 _logger = logging.getLogger(__name__)
+
+if getenv('ODOO_RUNBOT') and not _openssl:
+    _logger.warning("detected runbot environment but openssl not found in PATH, TestIrMailServerSMTPD will be skipped")
+if getenv('ODOO_RUNBOT') and not aiosmtpd:
+    _logger.warning("detected runbot environment but aiosmtpd not installed, TestIrMailServerSMTPD will be skipped")
 
 
 def _find_free_local_address():
