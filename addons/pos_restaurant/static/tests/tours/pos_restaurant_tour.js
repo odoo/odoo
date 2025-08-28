@@ -13,7 +13,12 @@ import * as ProductScreenPos from "@point_of_sale/../tests/tours/utils/product_s
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/product_screen_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
 import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
-import { inLeftSide, negateStep, waitForLoading } from "@point_of_sale/../tests/tours/utils/common";
+import {
+    inLeftSide,
+    negateStep,
+    waitForLoading,
+    refresh,
+} from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 import { delay } from "@odoo/hoot-dom";
@@ -780,5 +785,26 @@ registry.category("web_tour.tours").add("test_combo_synchronisation", {
                 content: "Check if there still has combo lines",
                 trigger: ".orderline-combo",
             },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_reload_order_line_removed", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("5"),
+            inLeftSide([
+                ...ProductScreen.clickLine("Coca-Cola"),
+                Numpad.click("⌫"),
+                Numpad.click("⌫"),
+                ...Order.doesNotHaveLine(),
+            ]),
+            refresh(),
+            FloorScreen.clickTable("5"),
+            inLeftSide(Order.hasLine({ productName: "Coca-Cola", quantity: 1 })),
         ].flat(),
 });

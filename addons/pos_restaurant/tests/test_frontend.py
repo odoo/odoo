@@ -265,9 +265,6 @@ class TestFrontend(TestFrontendCommon):
         order_tips.sort()
         self.assertEqual(order_tips, [0.0, 0.4, 1.0, 1.0, 1.5])
 
-        order1 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0001')], limit=1, order='id desc')
-        self.assertEqual(order1.payment_ids.amount, 2.4)
-
         order4 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0004')], limit=1, order='id desc')
         self.assertEqual(order4.customer_count, 2)
 
@@ -545,3 +542,9 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.is_order_printer = False
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_combo_synchronisation')
+
+    def test_reload_order_line_removed(self):
+        """ This test checks that when a saved order line is removed but not yet synced to the backend,
+            if PoS gets reloaded, the order line gets back
+        """
+        self.start_pos_tour('test_reload_order_line_removed')

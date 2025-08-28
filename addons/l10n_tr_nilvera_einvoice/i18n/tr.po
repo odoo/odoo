@@ -22,21 +22,21 @@ msgstr "Hesap Hareketi Yollandı"
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
-#: code:addons/l10n_tr_nilvera_einvoice/wizard/account_move_send.py:0
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 #, python-format
 msgid "Check data on Invoice(s)"
 msgstr "Fatura(lar)daki Verileri Kontrol Edin"
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
-#: code:addons/l10n_tr_nilvera_einvoice/wizard/account_move_send.py:0
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 #, python-format
 msgid "Check data on Partner(s)"
 msgstr "Ortak(lar) hakkındaki verileri kontrol edin"
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
-#: code:addons/l10n_tr_nilvera_einvoice/wizard/account_move_send.py:0
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 #, python-format
 msgid "Check reference on Partner(s)"
 msgstr "Ortak(lar) üzerindeki referansı kontrol edin"
@@ -147,7 +147,7 @@ msgstr "Başarılı"
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
-#: code:addons/l10n_tr_nilvera_einvoice/wizard/account_move_send.py:0
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 #, python-format
 msgid ""
 "The following E-Invoice partner(s) must have the reference field set to the "
@@ -158,7 +158,7 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
-#: code:addons/l10n_tr_nilvera_einvoice/wizard/account_move_send.py:0
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 #, python-format
 msgid ""
 "The following invoice(s) need to have the same Start Date and End Date on "
@@ -169,7 +169,7 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
-#: code:addons/l10n_tr_nilvera_einvoice/wizard/account_move_send.py:0
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 #, python-format
 msgid ""
 "The following partner(s) are either not Turkish or are missing one of the "
@@ -236,15 +236,16 @@ msgstr "Bilinmiyor"
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
-#: code:addons/l10n_tr_nilvera_einvoice/wizard/account_move_send.py:0
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 #, python-format
 msgid "View Invoice(s)"
 msgstr "Fatura(ları) Görüntüle"
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
-#: code:addons/l10n_tr_nilvera_einvoice/wizard/account_move_send.py:0
-#: code:addons/l10n_tr_nilvera_einvoice/wizard/account_move_send.py:0
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 #, python-format
 msgid "View Partner(s)"
 msgstr "Ortak(lar)ı Görüntüle"
@@ -262,3 +263,13 @@ msgid "You cannot reset to draft an entry that has been sent to Nilvera."
 msgstr ""
 "Nilvera'ya gönderilmiş bir girişi taslak haline getirmek için "
 "sıfırlayamazsınız."
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
+#, python-format
+msgid ""
+"Nilvera portal cannot process negative quantity nor negative price on "
+"invoice lines"
+msgstr ""
+"Nilvera portalı, fatura satırlarında negatif miktar veya negatif fiyat işleyemez."

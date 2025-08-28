@@ -202,7 +202,8 @@ export class MassMailingWysiwyg extends Wysiwyg {
      */
     _getEditorOptions() {
         const options = super._getEditorOptions(...arguments);
-        const finalOptions = { ...options, autoActivateContentEditable: false, allowCommandVideo: false };
+        const direction = options.document.body.matches(".o_rtl") ? "rtl" : "ltr" ;
+        const finalOptions = { ...options, autoActivateContentEditable: false, allowCommandVideo: false, direction: direction };
         return finalOptions;
     }
 }

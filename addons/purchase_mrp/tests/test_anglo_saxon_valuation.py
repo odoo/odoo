@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Date, Datetime
-from odoo.tools import float_is_zero, mute_logger
+from odoo.tools import mute_logger
 from odoo.tests import Form, tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
@@ -279,7 +279,8 @@ class TestAngloSaxonValuationPurchaseMRP(AccountTestInvoicingCommon):
     def test_average_cost_unbuild_valuation(self):
         """ Ensure that an unbuild for some avg cost product won't leave the `Cost of Production`
         journal in an imbalanced state if the std price of that product has changed since the MO
-        was completed (i.e., since build time).
+        was completed (i.e., since build time). Also make sure the manufactured product's
+        `standard_price` is correct after the unbuild.
         """
         def make_purchase_and_production(product_ids, price_units):
             purchase_orders = self.env['purchase.order'].create([{
@@ -335,15 +336,23 @@ class TestAngloSaxonValuationPurchaseMRP(AccountTestInvoicingCommon):
         })
         production_1 = make_purchase_and_production([comp_1.id, comp_2.id], [50, 40])
         make_purchase_and_production([comp_1.id, comp_2.id], [55, 45])
+        make_purchase_and_production([comp_1.id, comp_2.id], [71, 32])
+        make_purchase_and_production([comp_1.id, comp_2.id], [71, 32])
         action = production_1.button_unbuild()
         wizard = Form(self.env[action['res_model']].with_context(action['context']))
         wizard.product_qty = 1
         wizard = wizard.save()
         wizard.action_validate()
-        self.assertTrue(float_is_zero(
-            sum(self.env['account.move.line'].search([
-                ('account_id', '=', cost_of_production_account.id),
-                ('product_id', 'in', (final_product.id, comp_1.id, comp_2.id)),
-            ]).mapped('balance')),
-            precision_rounding=self.env.company.currency_id.rounding
-        ))
+        svls = self.env['stock.valuation.layer'].search([('product_id', '=', final_product.id)])
+        expected_std_price = sum(svls.mapped('value')) / sum(svls.mapped('remaining_qty'))
+        cost_of_production_balance = sum(self.env['account.move.line'].search([
+            ('account_id', '=', cost_of_production_account.id),
+            ('product_id', 'in', (final_product.id, comp_1.id, comp_2.id)),
+        ]).mapped('balance'))
+
+        self.assertAlmostEqual(
+            final_product.standard_price,
+            expected_std_price,
+            delta=svls.currency_id.rounding,
+        )
+        self.assertTrue(self.env.company.currency_id.is_zero(cost_of_production_balance))
