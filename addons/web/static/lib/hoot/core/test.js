@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { reactive } from "@odoo/owl";
+import { markup, reactive } from "@odoo/owl";
 import { HootError, stringify } from "../hoot_utils";
 import { Job } from "./job";
 import { Tag } from "./tag";
@@ -62,6 +62,14 @@ export class Test extends Job {
         if (!this.formatted) {
             this.formatted = true;
             this.runFnString = this.formatFunctionSource(this.runFnString);
+            if (window.Prism) {
+                const highlighted = window.Prism.highlight(
+                    this.runFnString,
+                    Prism.languages.javascript,
+                    "javascript"
+                );
+                this.runFnString = markup(highlighted);
+            }
         }
         return this.runFnString;
     }
