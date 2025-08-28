@@ -534,6 +534,10 @@ class StockMoveLine(models.Model):
         if packages_to_check:
             # Clear the dest from packages if not linked to any active picking
             packages_to_check.filtered(lambda p: p.package_dest_id and not p.picking_ids).package_dest_id = False
+        if updates or 'quantity' in vals:
+            # Updated fields could imply that entire packs are no longer entire.
+            if mls_to_update := self._get_lines_not_entire_pack():
+                mls_to_update.write({'is_entire_pack': False})
 
         # As stock_account values according to a move's `product_uom_qty`, we consider that any
         # done stock move should have its `quantity_done` equals to its `product_uom_qty`, and
@@ -1059,6 +1063,22 @@ class StockMoveLine(models.Model):
                 'res_id': wiz.id,
                 'target': 'new'
             }
+
+    def _get_lines_not_entire_pack(self):
+        """ Checks within self for move lines that should no longer be considered as entire packs.
+        """
+        relevant_move_lines = self.filtered(lambda ml: ml.is_entire_pack)
+        if not relevant_move_lines:
+            return False
+
+        # If `result_package_id` was either removed or changed, cannot be considered as an entire pack anymore.
+        ids_to_update = set(relevant_move_lines.filtered(lambda ml: ml.package_id != ml.result_package_id).ids)
+        for package, move_lines in relevant_move_lines.grouped('package_id').items():
+            pickings = move_lines.picking_id
+            if not pickings._is_single_transfer() or not pickings._check_move_lines_map_quant_package(package):
+                ids_to_update.update(pickings.move_line_ids.filtered(lambda ml: ml.package_id == package).ids)
+
+        return self.env['stock.move.line'].browse(ids_to_update)
 
     def _put_in_pack(self, package_id=False, package_type_id=False, package_name=False):
         if package_id:
