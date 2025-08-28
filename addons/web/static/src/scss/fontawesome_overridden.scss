@@ -1,139 +1,74 @@
-// This is a patch of the font awesome library to add TikTok & Twitter icons.
-@font-face {
-    font-family: 'FontAwesome-tiktok-only';
-    src: url('../../fonts/tiktok_only.woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: block;
+// Some icons that we wanted to complete the font-awesome library have been
+// imported into Odoo UI Icons (oi-*), but we keep some old fa variant classes
+// to maintain compatibility.
+%additional-fa-classes {
+    font-family: 'odoo_ui_icons' !important;
 }
-
-@font-face {
-    font-family: 'FontAwesome-twitter-x-only';
-    src: url('../../fonts/twitter_x_only.woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: block;
-}
-
-@font-face {
-    font-family: 'FontAwesome-discord-only';
-    src: url('../../fonts/discord_only.woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: block;
-}
-
-@font-face {
-    font-family: "FontAwesome-kickstarter-only";
-    src: url("../../fonts/kickstarter_only.woff");
-    font-weight: normal;
-    font-style: normal;
-    font-display: block;
-}
-
-@font-face {
-    font-family: "FontAwesome-google-play-only";
-    src: url("../../fonts/google_play_only.woff");
-    font-weight: normal;
-    font-style: normal;
-    font-display: block;
-}
-
-@font-face {
-    font-family: "FontAwesome-strava-only";
-    src: url("../../fonts/strava_only.woff");
-    font-weight: normal;
-    font-style: normal;
-    font-display: block;
-}
-
-@font-face {
-    font-family: "FontAwesome-bluesky-only";
-    src: url("../../fonts/bluesky_only.woff");
-    font-weight: normal;
-    font-style: normal;
-    font-display: block;
-}
-@font-face {
-    font-family: "FontAwesome-threads-only";
-    src: url("../../fonts/threads_only.woff");
-    font-weight: normal;
-    font-style: normal;
-    font-display: block;
-}
-
 .fa.fa-tiktok {
-    font-family: 'FontAwesome-tiktok-only' !important;
+    @extend %additional-fa-classes;
 
-    &:before {
-        content: '\e07b';
+    &::before {
+        content: '\e81b';
     }
 }
-
 // Don't write `.fa.fa-twitter` or this will be considered like a new icon in
 // the media dialog. The css here is just about overriding the existing twitter
 // icon and should not be considered as a new icon, otherwise those icons will
 // be shown twice in the media dialog. Grep: `iconsParser` and `fontIcons`.
 .fa-twitter.fa {
-    font-family: 'FontAwesome-twitter-x-only' !important;
+    @extend %additional-fa-classes;
 
-    &:before {
-        content: '\e800';
+    &::before {
+        content: '\e81a';
     }
 }
 .fa-twitter-square.fa {
-    font-family: 'FontAwesome-twitter-x-only' !important;
+    @extend %additional-fa-classes;
 
-    &:before {
-        content: '\e803';
+    &::before {
+        content: '\e848';
     }
 }
-
 .fa.fa-discord {
-    font-family: 'FontAwesome-discord-only' !important;
+    @extend %additional-fa-classes;
 
-    &:before {
-        content: '\e900';
+    &::before {
+        content: '\e811';
     }
 }
+.fa.fa-google-play {
+    @extend %additional-fa-classes;
 
-.fa.fa-google-play{
-    font-family: "FontAwesome-google-play-only" !important;
-
-    &:before {
-        content: "\e901";
+    &::before {
+        content: "\e81d";
     }
 }
+.fa.fa-strava {
+    @extend %additional-fa-classes;
 
-.fa.fa-strava{
-    font-family: "FontAwesome-strava-only" !important;
-
-    &:before {
-        content: "\e902";
+    &::before {
+        content: "\e80f";
     }
 }
+.fa.fa-bluesky {
+    @extend %additional-fa-classes;
 
-.fa.fa-bluesky{
-    font-family: "FontAwesome-bluesky-only" !important;
-
-    &:before {
-        content: "\e903";
+    &::before {
+        content: "\e81c";
     }
 }
+.fa.fa-kickstarter {
+    @extend %additional-fa-classes;
 
-.fa.fa-kickstarter{
-    font-family: "FontAwesome-kickstarter-only" !important;
-
-    &:before {
-        content: "\e904";
+    &::before {
+        content: "\e819";
     }
 }
-
 .fa.fa-threads {
-    font-family: "FontAwesome-threads-only" !important;
+    @extend %additional-fa-classes;
 
-    &:before {
-        content: "\e905";
+    &::before {
+        content: "\e818";
     }
 }
 
