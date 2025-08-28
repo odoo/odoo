@@ -22,6 +22,8 @@ class accordionOptionPlugin extends Plugin {
             DefineCustomIconAction,
             CustomAccordionIconAction,
         },
+        force_not_editable_selector: [".accordion-button"],
+        force_editable_selector: [".accordion-button span"],
     };
 }
 
