@@ -625,6 +625,7 @@ export class Message extends Record {
         const data = await rpc("/mail/message/update_content", {
             message_id: this.id,
             update_data: this.removeParams,
+            ...this.thread.rpcParams,
         });
         this.store.insert(data);
         if (this.thread && removeFromThread) {

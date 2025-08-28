@@ -62,3 +62,9 @@ class TestUIPortal(TestPortal):
             "load_more_tour",
             login=self.user_employee.login,
         )
+
+    def test_message_actions_without_login(self):
+        self.start_tour(
+            f"/my/test_portal_records/{self.record_portal.id}?token={self.record_portal._portal_ensure_token()}",
+            "message_actions_tour",
+        )
