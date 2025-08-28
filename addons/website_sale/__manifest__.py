@@ -32,6 +32,7 @@
         'views/product_tile_templates.xml',
         'views/delivery_form_templates.xml',
         'views/gmc_templates.xml',
+        'views/sale_portal_templates.xml',
         'views/templates.xml',
 
         # Model views.
