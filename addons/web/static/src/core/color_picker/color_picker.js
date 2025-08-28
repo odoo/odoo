@@ -60,6 +60,8 @@ export class ColorPicker extends Component {
         applyColorPreview: Function,
         applyColorResetPreview: Function,
         editColorCombination: { type: Function, optional: true },
+        setOnCloseCallback: { type: Function, optional: true },
+        setOperationCallbacks: { type: Function, optional: true },
         enabledTabs: { type: Array, optional: true },
         colorPrefix: { type: String },
         themeColorPrefix: { type: String, optional: true },
@@ -76,6 +78,7 @@ export class ColorPicker extends Component {
         enabledTabs: ["solid", "gradient", "custom"],
         showRgbaField: false,
         themeColorPrefix: "",
+        setOnCloseCallback: () => {},
     };
     applyOpacityToGradient = applyOpacityToGradient;
 
@@ -90,9 +93,14 @@ export class ColorPicker extends Component {
 
         this.defaultColor = this.props.state.selectedColor;
         this.focusedBtn = null;
+        this.onApplyCallback = () => {};
+        this.onPreviewRevertCallback = () => {};
+        this.getPreviewColor = () => {};
+
         this.state = useState({
             activeTab: this.getDefaultTab(),
             currentCustomColor: this.props.state.selectedColor,
+            currentColorPreview: undefined,
             showGradientPicker: false,
         });
         this.usedCustomColors = this.props.getUsedCustomColors();
@@ -122,6 +130,9 @@ export class ColorPicker extends Component {
 
     setTab(tab) {
         this.state.activeTab = tab;
+        // Reset the preview revert callback, as it is tab-specific.
+        this.setOperationCallbacks({ onPreviewRevertCallback: () => {} });
+        this.applyColorResetPreview();
     }
 
     processColorFromEvent(ev) {
@@ -135,11 +146,34 @@ export class ColorPicker extends Component {
         }
         return color;
     }
+    /**
+     * @param {Object} cbs - callbacks
+     * @param {Function} cbs.onApplyCallback
+     * @param {Function} cbs.onPreviewRevertCallback
+     */
+    setOperationCallbacks(cbs) {
+        // The gradient colorpicker has a nested ColorPicker. We need to use the
+        // `setOperationCallbacks` from the parent ColorPicker for it to be
+        // impacted.
+        if (this.props.setOperationCallbacks) {
+            this.props.setOperationCallbacks(cbs);
+        }
+        if (cbs.onApplyCallback) {
+            this.onApplyCallback = cbs.onApplyCallback;
+        }
+        if (cbs.onPreviewRevertCallback) {
+            this.onPreviewRevertCallback = cbs.onPreviewRevertCallback;
+        }
+        if (cbs.getPreviewColor) {
+            this.getPreviewColor = cbs.getPreviewColor;
+        }
+    }
 
     applyColor(color) {
         this.state.currentCustomColor = color;
         this.props.applyColor(color);
         this.defaultColorSet = this.getDefaultColorSet();
+        this.onApplyCallback();
     }
 
     onColorApply(ev) {
@@ -151,14 +185,16 @@ export class ColorPicker extends Component {
         this.props.close();
     }
 
-    onColorPreview(ev) {
-        const color = ev.hex ? ev.hex : this.processColorFromEvent(ev);
-        this.props.applyColorPreview(color);
+    applyColorResetPreview() {
+        this.props.applyColorResetPreview();
+        this.state.currentColorPreview = undefined;
+        this.onPreviewRevertCallback();
     }
 
-    onCustomColorPreview(ev) {
-        this.props.applyColorResetPreview();
-        this.onColorPreview(ev);
+    onColorPreview(ev) {
+        const color = ev.hex || ev.gradient || this.processColorFromEvent(ev);
+        this.props.applyColorPreview(color);
+        this.state.currentColorPreview = this.getPreviewColor();
     }
 
     onColorHover(ev) {
@@ -172,7 +208,7 @@ export class ColorPicker extends Component {
         if (!this.isColorButton(this.getTarget(ev))) {
             return;
         }
-        this.props.applyColorResetPreview();
+        this.applyColorResetPreview();
     }
     getTarget(ev) {
         const target = ev.target.closest(`[data-color]`);
@@ -204,7 +240,7 @@ export class ColorPicker extends Component {
             return;
         }
         const activeEl = document.activeElement;
-        this.props.applyColorResetPreview();
+        this.applyColorResetPreview();
         if (document.activeElement !== activeEl) {
             // The focus was lost during revert. Reset it where it should be.
             ev.relatedTarget.focus();
@@ -314,6 +350,20 @@ export class ColorPicker extends Component {
 }
 
 export function useColorPicker(refName, props, options = {}) {
+    // Callback to be overridden by child components (e.g. custom color picker).
+    let onCloseCallback = () => {};
+    const setOnCloseCallback = (cb) => {
+        onCloseCallback = cb;
+    };
+    props.setOnCloseCallback = setOnCloseCallback;
+    if (options.onClose) {
+        const onClose = options.onClose;
+        options.onClose = () => {
+            onCloseCallback();
+            onClose();
+        };
+    }
+
     const colorPicker = usePopover(ColorPicker, options);
     const root = useRef(refName);
 
