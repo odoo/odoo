@@ -1361,7 +1361,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'list_price': 1000,
             'taxes_id': [(6, 0, [tax.id])],
         })
-        
+
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenInvoiceOrder', login="pos_user")
 
@@ -1372,7 +1372,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         invoice = self.env['account.move'].search([('invoice_origin', '=', order.name)], limit=1)
         self.assertTrue(invoice)
-        self.assertFalse(invoice.invoice_payment_term_id) 
+        self.assertFalse(invoice.invoice_payment_term_id)
 
         self.assertAlmostEqual(order.amount_total, invoice.amount_total, places=2, msg="Order and Invoice amounts do not match.")
 
@@ -1381,6 +1381,12 @@ class TestUi(TestPointOfSaleHttpCommon):
         setup_pos_combo_items(self)
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_combo_with_custom_attribute', login="pos_user")
+
+    def test_combo_disallowLineQuantityChange(self):
+        setup_pos_combo_items(self)
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_combo_disallowLineQuantityChange', login="pos_user")
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_combo_disallowLineQuantityChange_2', login="pos_user")
 
     def test_draft_order_deletion_with_printer(self):
         self.env['pos.printer'].create({
