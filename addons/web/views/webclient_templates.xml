@@ -22,7 +22,8 @@
         <title t-esc="title or 'Odoo'"/>
         <link type="image/x-icon" rel="shortcut icon" t-att-href="x_icon or '/web/static/img/favicon.ico'"/>
         <script id="web.layout.odooscript" type="text/javascript">
-            var odoo = {
+            window.odoo = {
+                ...window.odoo,
                 csrf_token: "<t t-nocache="The csrf token must always be up to date." t-esc="request.csrf_token(None)"/>",
                 debug: "<t t-esc="debug"/>",
             };
@@ -41,7 +42,6 @@
       </xpath>
       <xpath expr="//head/link[last()]" position="after">
         <link rel="preload" href="/web/static/src/libs/fontawesome/fonts/fontawesome-webfont.woff2?v=4.7.0" as="font" crossorigin=""/>
-        <t t-call-assets="web.assets_frontend" t-js="false"/>
       </xpath>
       <xpath expr="//head/script[@id='web.layout.odooscript']" position="after">
         <script t-nocache="Session information should always be up to date." type="text/javascript">
@@ -51,6 +51,7 @@
                 document.cookie = `tz=${userTZ}; path=/`;
             }
         </script>
+        <t t-call-assets="web.assets_frontend" t-js="false"/>
         <t t-call-assets="web.assets_frontend_minimal" t-css="false" defer_load="True"/>
         <t t-call="web.conditional_assets_tests">
             <t t-set="ignore_missing_deps" t-value="True"/>

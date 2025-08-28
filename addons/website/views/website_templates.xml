@@ -2984,7 +2984,7 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
 </template>
 
 <template id="iframefallback" inherit_id="web.layout" primary="True">
-    <xpath expr="//head/link[last()]" position="after">
+    <xpath expr="//head/script[@id='web.layout.odooscript']" position="after">
         <t t-call-assets="web.assets_frontend" t-js="false"/>
         <t t-call-assets="website.assets_wysiwyg" t-js="false"/>
     </xpath>

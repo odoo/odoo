@@ -2870,7 +2870,7 @@ class IrQweb(models.AbstractModel):
         """
         _logger.runbot('Pregenerating assets bundles')
 
-        js_bundles, css_bundles = self._get_bundles_to_pregenarate()
+        js_bundles, css_bundles = self._get_bundles_to_pregenerate()
 
         links = []
         start = time.time()
@@ -2883,7 +2883,7 @@ class IrQweb(models.AbstractModel):
         _logger.info('CSS Assets bundles generated in %s seconds', time.time()-start)
         return links
 
-    def _get_bundles_to_pregenarate(self):
+    def _get_bundles_to_pregenerate(self):
         """
         Returns the list of bundles to pregenerate.
         """

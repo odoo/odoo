@@ -12,12 +12,14 @@
                 <meta name="mobile-web-app-capable" content="yes" />
                 <link rel="icon" href="/point_of_sale/static/src/img/favicon.ico" type="image/x-icon"/>
                 <script type="text/javascript">
-                    var odoo =
-                    <t t-out="json.dumps({
-                        'csrf_token': request.csrf_token(None),
-                        '__session_info__': session_info,
-                        'debug': debug,
-                    })" />;
+                    window.odoo = {
+                        ...window.odoo,
+                        ...<t t-out="json.dumps({
+                            'csrf_token': request.csrf_token(None),
+                            '__session_info__': session_info,
+                            'debug': debug,
+                        })"/>,
+                    };
                 </script>
                 <t t-call-assets="point_of_sale.customer_display_assets" />
                 <t t-if="'tests' in debug or test_mode_enabled" t-call-assets="point_of_sale.customer_display_assets_test" />

@@ -5,8 +5,8 @@ from odoo import models
 class IrQweb(models.AbstractModel):
     _inherit = "ir.qweb"
 
-    def _get_bundles_to_pregenarate(self):
-        js_assets, css_assets = super()._get_bundles_to_pregenarate()
+    def _get_bundles_to_pregenerate(self):
+        js_assets, css_assets = super()._get_bundles_to_pregenerate()
         assets = {
             'web_editor.assets_snippets_menu',
             'web_editor.backend_assets_wysiwyg',
