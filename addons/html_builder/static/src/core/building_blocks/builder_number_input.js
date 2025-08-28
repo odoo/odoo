@@ -27,6 +27,7 @@ export class BuilderNumberInput extends Component {
         max: { type: Number, optional: true },
         composable: { type: Boolean, optional: true },
         applyWithUnit: { type: Boolean, optional: true },
+        removeDecimal: { type: Boolean, optional: true },
     };
     static components = { BuilderComponent, BuilderTextInputBase };
     static defaultProps = {
@@ -87,8 +88,15 @@ export class BuilderNumberInput extends Component {
                     getHtmlStyle(this.env.getEditingElement().ownerDocument)
                 );
             }
+            if (this.props.removeDecimal) {
+                value = this.removeDecimalDigits(value);
+            }
             return value;
         });
+    }
+
+    removeDecimalDigits(value) {
+        return Math.floor(value);
     }
 
     clampValue(value) {

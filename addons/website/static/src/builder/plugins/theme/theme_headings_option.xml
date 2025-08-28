@@ -8,16 +8,16 @@
         <!-- We don't use `display-font-sizes.5` and `display-font-sizes.6` -->
         <t t-set="used_display_font_sizes" t-value="[1, 2, 3, 4]"/>
         <BuilderRow label.translate="Font Size" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput title.translate="Heading 1" actionParam="'h1-font-size'" default="null" unit="'px'" saveUnit="'rem'"/>
+            <BuilderNumberInput title.translate="Heading 1" actionParam="'h1-font-size'" default="null" unit="'px'" saveUnit="'rem'" removeDecimal="true"/>
             <t t-set-slot="collapse">
                 <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
                     <BuilderRow level="1" label="heading_label + ' ' + depth">
-                        <BuilderNumberInput actionParam="'h' + depth + '-font-size'" default="null" unit="'px'" saveUnit="'rem'"/>
+                        <BuilderNumberInput actionParam="'h' + depth + '-font-size'" default="null" unit="'px'" saveUnit="'rem'" removeDecimal="true"/>
                     </BuilderRow>
                 </t>
                 <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
                     <BuilderRow level="1" label="display_label + ' ' + depth">
-                        <BuilderNumberInput actionParam="'display-' + depth + '-font-size'" default="null" unit="'px'" saveUnit="'rem'"/>
+                        <BuilderNumberInput actionParam="'display-' + depth + '-font-size'" default="null" unit="'px'" saveUnit="'rem'" removeDecimal="true"/>
                     </BuilderRow>
                 </t>
             </t>
