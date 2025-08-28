@@ -77,6 +77,7 @@ import { ContentEditablePlugin } from "./core/content_editable_plugin";
  * @typedef { Object } SharedMethods
  *
  * Core
+ * @property { import("./core/base_container_plugin").BaseContainerShared } baseContainer
  * @property { import("./core/clipboard_plugin").ClipboardShared } clipboard
  * @property { import("./core/delete_plugin").DeleteShared } delete
  * @property { import("./core/dialog_plugin").DialogShared } dialog
@@ -89,7 +90,9 @@ import { ContentEditablePlugin } from "./core/content_editable_plugin";
  * @property { import("./core/sanitize_plugin").SanitizeShared } sanitize
  * @property { import("./core/selection_plugin").SelectionShared } selection
  * @property { import("./core/split_plugin").SplitShared } split
+ * @property { import("./core/style_plugin").StyleShared } style
  * @property { import("./core/user_command_plugin").UserCommandShared } userCommand
+
  *
  * Main
  * @property { import("./main/font/color_plugin").ColorShared } color
@@ -103,6 +106,10 @@ import { ContentEditablePlugin } from "./core/content_editable_plugin";
  * @property { import ("./main/local_overlay_plugin").LocalOverlayShared } localOverlay
  * @property { import ("./main/tabulation_plugin").TabulationShared } tabulation
  * @property { import ("./main/feff_plugin").FeffShared } feff
+ * @property { import ("./main/media/image_plugin").ImageShared } image
+ * @property { import ("./main/media/image_crop_plugin").ImageCropShared } imageCrop
+ * @property { import ("./main/media/image_post_process_plugin").ImagePostProcessShared } imagePostProcess
+ * @property { import ("./main/banner_plugin").BannerShared } banner
  *
  * Others
  * @property { import("./others/collaboration/collaboration_odoo_plugin").CollaborationOdooShared } collaborationOdoo

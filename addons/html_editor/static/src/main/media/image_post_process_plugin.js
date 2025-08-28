@@ -13,6 +13,12 @@ import { getAffineApproximation, getProjective } from "@html_editor/utils/perspe
 
 export const DEFAULT_IMAGE_QUALITY = "75";
 
+/**
+ * @typedef { Object } ImagePostProcessShared
+ * @property { ImagePostProcessPlugin['processImage'] } processImage
+ * @property { ImagePostProcessPlugin['getProcessedImageSize'] } getProcessedImageSize
+ */
+
 export class ImagePostProcessPlugin extends Plugin {
     static id = "imagePostProcess";
     static dependencies = ["style"];

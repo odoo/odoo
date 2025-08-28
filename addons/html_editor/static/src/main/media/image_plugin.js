@@ -34,6 +34,13 @@ const IMAGE_SIZE = [
     { name: "25%", value: "25%" },
 ];
 
+/**
+ * @typedef { Object } ImageShared
+ * @property { ImagePlugin['getTargetedImage'] } getTargetedImage
+ * @property { ImagePlugin['previewImage'] } previewImage
+ * @property { ImagePlugin['resetImageTransformation'] } resetImageTransformation
+ */
+
 export class ImagePlugin extends Plugin {
     static id = "image";
     static dependencies = ["history", "link", "powerbox", "dom", "selection", "overlay"];
