@@ -137,6 +137,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         for (const sectionRecord of sectionRecords) {
             commands.push(x2ManyCommands.update(sectionRecord.resId || sectionRecord._virtualId, {
                 collapse_prices: !record.data.collapse_prices,
+                collapse_composition: false,
             }));
         }
         await this.props.list.applyCommands(commands, { sort: true });
@@ -147,6 +148,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         const commands = [];
         for (const sectionRecord of sectionRecords) {
             commands.push(x2ManyCommands.update(sectionRecord.resId || sectionRecord._virtualId, {
+                collapse_prices: false,
                 collapse_composition: !record.data.collapse_composition,
             }));
         }
