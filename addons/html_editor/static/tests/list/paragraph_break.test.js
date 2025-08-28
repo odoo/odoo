@@ -6,12 +6,12 @@ import { insertText, splitBlock } from "../_helpers/user_actions";
 const base64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
 
-before(() => {
-    return document.fonts.add(new FontFace(
-        "Roboto",
-        "url(/web/static/fonts/google/Roboto/Roboto-Regular.ttf)",
-    )).ready;
-});
+before(
+    () =>
+        document.fonts.add(
+            new FontFace("Roboto", "url(/web/static/fonts/google/Roboto/Roboto-Regular.ttf)")
+        ).ready
+);
 
 describe("Selection collapsed", () => {
     describe("Ordered", () => {

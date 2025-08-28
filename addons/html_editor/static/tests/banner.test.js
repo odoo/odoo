@@ -34,7 +34,6 @@ test("should insert a banner with focus inside followed by a paragraph", async (
     await insertText(editor, "banner");
     await animationFrame();
     await expectElementCount(".o-we-powerbox", 0);
-
 });
 
 test("press 'ctrl+a' inside a banner should select all the banner content", async () => {

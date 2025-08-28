@@ -4,12 +4,12 @@ import { unformat } from "../_helpers/format";
 import { bold, deleteBackward, keydownShiftTab } from "../_helpers/user_actions";
 import { getContent } from "../_helpers/selection";
 
-before(() => {
-    return document.fonts.add(new FontFace(
-        "Roboto",
-        "url(/web/static/fonts/google/Roboto/Roboto-Regular.ttf)",
-    )).ready;
-});
+before(
+    () =>
+        document.fonts.add(
+            new FontFace("Roboto", "url(/web/static/fonts/google/Roboto/Roboto-Regular.ttf)")
+        ).ready
+);
 
 describe("Regular list", () => {
     test.tags("font-dependent");
