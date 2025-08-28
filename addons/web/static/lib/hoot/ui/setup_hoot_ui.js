@@ -1,12 +1,17 @@
 /** @odoo-module */
 
 import { mount, reactive } from "@odoo/owl";
+import { HootFixtureElement } from "../core/fixture";
 import { waitForDocument } from "../hoot_utils";
 import { getRunner } from "../main_runner";
 import { patchWindow } from "../mock/window";
-import { generateStyleSheets, setColorRoot } from "./hoot_colors";
+import {
+    generateStyleSheets,
+    getColorScheme,
+    onColorSchemeChange,
+    setColorRoot,
+} from "./hoot_colors";
 import { HootMain } from "./hoot_main";
-import { HootFixtureElement } from "../core/fixture";
 
 /**
  * @typedef {"failed" | "passed" | "skipped" | "todo"} StatusFilter
@@ -47,6 +52,11 @@ function createStyleElement(content) {
     const style = document.createElement("style");
     style.innerText = content;
     return style;
+}
+
+function getPrismStyleUrl() {
+    const theme = getColorScheme() === "dark" ? "okaida" : "default";
+    return `/web/static/lib/prismjs/themes/${theme}.css`;
 }
 
 function loadAsset(tagName, attributes) {
@@ -158,9 +168,15 @@ export async function setupHootUI() {
             colorStyleContent += `${selector}{${content}}`;
         }
 
+        const prismStyleLink = createLinkElement(getPrismStyleUrl());
+        onColorSchemeChange(() => {
+            prismStyleLink.href = getPrismStyleUrl();
+        });
+
         container.shadowRoot.append(
             createStyleElement(colorStyleContent),
             createLinkElement("/web/static/src/libs/fontawesome/css/font-awesome.css"),
+            prismStyleLink,
             // Hoot-specific style is loaded last to take priority over other stylesheets
             createLinkElement("/web/static/lib/hoot/ui/hoot_style.css")
         );

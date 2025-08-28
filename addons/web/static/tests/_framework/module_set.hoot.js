@@ -507,6 +507,7 @@ const ALLOWED_GLOBAL_KEYS = [
     "owl", // Owl
     "pdfjsLib", // PDF JS
     "Popper", // Popper
+    "Prism", // PrismJS
     "SignaturePad", // Signature Pad
     "StackTrace", // StackTrace
     "ZXing", // ZXing
