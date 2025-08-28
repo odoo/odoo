@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { getElementsWithOption, isMobileView } from "@html_builder/utils/utils";
+import { getElementsWithOption } from "@html_builder/utils/utils";
 import { withSequence } from "@html_editor/utils/resource";
 
 const invisibleElementsSelector =
@@ -9,7 +9,12 @@ const deviceInvisibleSelector = ".o_snippet_mobile_invisible, .o_snippet_desktop
 export class VisibilityPlugin extends Plugin {
     static id = "visibility";
     static dependencies = ["builderOptions", "disableSnippets"];
-    static shared = ["toggleTargetVisibility", "onOptionVisibilityUpdate", "hideElement"];
+    static shared = [
+        "getVisibleSibling",
+        "toggleTargetVisibility",
+        "onOptionVisibilityUpdate",
+        "hideElement",
+    ];
     resources = {
         on_mobile_preview_clicked: withSequence(10, this.onMobilePreviewClicked.bind(this)),
         system_attributes: ["data-invisible"],
@@ -24,7 +29,7 @@ export class VisibilityPlugin extends Plugin {
         // really hidden, and remove it from the ones that are in fact visible,
         // depending on if we are in mobile preview or not, so the DOM is
         // consistent.
-        const isMobilePreview = isMobileView(this.editable);
+        const isMobilePreview = this.config.isMobileView(this.editable);
         this.editable.querySelectorAll(deviceInvisibleSelector).forEach((invisibleEl) => {
             const isMobileHidden = invisibleEl.matches(".o_snippet_mobile_invisible");
             const isDesktopHidden = invisibleEl.matches(".o_snippet_desktop_invisible");
@@ -34,6 +39,25 @@ export class VisibilityPlugin extends Plugin {
                 invisibleEl.removeAttribute("data-invisible");
             }
         });
+    }
+
+    getVisibleSibling(target, direction) {
+        const siblingEls = [...target.parentNode.children];
+        const visibleSiblingEls = siblingEls.filter(
+            (el) => window.getComputedStyle(el).display !== "none"
+        );
+        const targetMobileOrder = target.style.order;
+        // On mobile, if the target has a mobile order (which is independent
+        // from desktop), consider these orders instead of the DOM order.
+        if (targetMobileOrder && this.config.isMobileView(target)) {
+            visibleSiblingEls.sort((a, b) => parseInt(a.style.order) - parseInt(b.style.order));
+        }
+        const targetIndex = visibleSiblingEls.indexOf(target);
+        const siblingIndex = direction === "prev" ? targetIndex - 1 : targetIndex + 1;
+        if (siblingIndex === -1 || siblingIndex === visibleSiblingEls.length) {
+            return false;
+        }
+        return visibleSiblingEls[siblingIndex];
     }
 
     /**
@@ -134,7 +158,7 @@ export class VisibilityPlugin extends Plugin {
             considerDeviceVisibility &&
             editingEl.matches(".o_snippet_mobile_invisible, .o_snippet_desktop_invisible")
         ) {
-            const isMobilePreview = isMobileView(editingEl);
+            const isMobilePreview = this.config.isMobileView(editingEl);
             const isMobileHidden = editingEl.classList.contains("o_snippet_mobile_invisible");
             show = isMobilePreview !== isMobileHidden;
         }

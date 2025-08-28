@@ -5,17 +5,18 @@
  * @private
  * @param {HTMLCollection} columnEls - elements in the .row container
  * @param {boolean} isMobile
+ * @param {String} mobileBreakpoint - bootstrap breakpoint (sm - md - lg)
  * @returns {integer|string} number of columns or "custom"
  */
-export function getNbColumns(columnEls, isMobile) {
+export function getNbColumns(columnEls, isMobile, mobileBreakpoint) {
     if (!columnEls) {
         return 0;
     }
-    if (areColsCustomized(columnEls, isMobile)) {
+    if (areColsCustomized(columnEls, isMobile, mobileBreakpoint)) {
         return "custom";
     }
 
-    const resolutionModifier = isMobile ? "" : "lg-";
+    const resolutionModifier = isMobile ? "" : `${mobileBreakpoint}-`;
     const colRegex = new RegExp(`(?:^|\\s+)col-${resolutionModifier}(\\d{1,2})(?!\\S)`);
     const colSize = parseInt(columnEls[0].className.match(colRegex)?.[1] || 12);
     const offsetSize = getFirstItem(columnEls, isMobile).classList.contains(
@@ -43,11 +44,12 @@ export function getFirstItem(columnEls, isMobile) {
  *
  * @private
  * @param {HTMLCollection} columnEls - elements in the .row container
+ * @param {String} mobileBreakpoint - bootstrap breakpoint (sm - md - lg)
  */
-export function addMobileOrders(columnEls) {
+export function addMobileOrders(columnEls, mobileBreakpoint) {
     for (let i = 0; i < columnEls.length; i++) {
         columnEls[i].style.order = i;
-        columnEls[i].classList.add("order-lg-0");
+        columnEls[i].classList.add(`order-${mobileBreakpoint}-0`);
     }
 }
 /**
@@ -55,11 +57,12 @@ export function addMobileOrders(columnEls) {
  *
  * @private
  * @param {HTMLCollection} columnEls - elements in the .row container
+ * @param {String} mobileBreakpoint - bootstrap breakpoint (sm - md - lg)
  */
-export function removeMobileOrders(columnEls) {
+export function removeMobileOrders(columnEls, mobileBreakpoint) {
     for (const el of columnEls) {
         el.style.order = "";
-        el.classList.remove("order-lg-0");
+        el.classList.remove(`order-${mobileBreakpoint}-0`);
     }
 }
 /**
@@ -68,10 +71,11 @@ export function removeMobileOrders(columnEls) {
  * @private
  * @param {HTMLElement} columnEls
  * @param {boolean} isMobile
+ * @param {String} mobileBreakpoint - bootstrap breakpoint (sm - md - lg)
  * @returns {boolean}
  */
-export function areColsCustomized(columnEls, isMobile) {
-    const resolutionModifier = isMobile ? "" : "lg-";
+export function areColsCustomized(columnEls, isMobile, mobileBreakpoint) {
+    const resolutionModifier = isMobile ? "" : `${mobileBreakpoint}-`;
     const colRegex = new RegExp(`(?:^|\\s+)col-${resolutionModifier}(\\d{1,2})(?!\\S)`);
     const colSize = parseInt(columnEls[0].className.match(colRegex)?.[1] || 12);
 
