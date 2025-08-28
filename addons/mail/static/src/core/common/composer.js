@@ -47,6 +47,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useComposerActions } from "./composer_actions";
 import { ActionList } from "./action_list";
+import { lastLeaf } from "@html_editor/utils/dom_traversal";
 
 const EDIT_CLICK_TYPE = {
     CANCEL: "cancel",
@@ -190,6 +191,9 @@ export class Composer extends Component {
                     this.selection.restore();
                     this.ref.el.focus();
                 }
+                if (focus && this.editor) {
+                    this.editor.shared.selection.focusEditable();
+                }
             },
             () => [this.props.autofocus + this.props.composer.autofocus, this.props.placeholder]
         );
@@ -248,7 +252,9 @@ export class Composer extends Component {
             if (!this.editor?.editable) {
                 return;
             }
-            setElementContent(this.editor?.editable, composerHtml);
+            setElementContent(this.editor.editable, composerHtml);
+            this.editor.shared.selection.setCursorEnd(lastLeaf(this.editor.editable));
+            this.editor.shared.history.addStep();
         });
         void composerProxy.composerHtml; // start observing
     }
@@ -287,6 +293,10 @@ export class Composer extends Component {
             Plugins: this.ui.isSmall ? MAIL_SMALL_UI_PLUGINS : MAIL_PLUGINS,
             classList: ["o-mail-Composer-html"],
             onChange: () => this.onChangeWysiwygContent(),
+            onEditorReady: () => {
+                this.editor.shared.selection.setCursorEnd(lastLeaf(this.editor.editable));
+                this.editor.shared.history.addStep();
+            },
         };
     }
 
@@ -841,11 +851,16 @@ export class Composer extends Component {
 
     addEmoji(str) {
         const composer = toRaw(this.props.composer);
-        const composerText = composer.composerText;
-        const firstPart = composerText.slice(0, composer.selection.start);
-        const secondPart = composerText.slice(composer.selection.end, composerText.length);
-        composer.composerText = firstPart + str + secondPart;
-        this.selection.moveCursor((firstPart + str).length);
+        if (this.editor) {
+            this.editor.shared.dom.insert(str);
+            this.editor.shared.history.addStep();
+        } else {
+            const composerText = composer.composerText;
+            const firstPart = composerText.slice(0, composer.selection.start);
+            const secondPart = composerText.slice(composer.selection.end, composerText.length);
+            composer.composerText = firstPart + str + secondPart;
+            this.selection.moveCursor((firstPart + str).length);
+        }
         if (this.ui.isSmall && !this.env.inChatter) {
             return false;
         } else {
