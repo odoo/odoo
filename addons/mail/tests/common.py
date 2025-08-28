@@ -426,7 +426,11 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 f"From: {mail['email_from']} - To {mail['email_to']}"
                 for mail in self._mails
             )
-            raise AssertionError(f'sent mail not found for email_to {emails_to} from {email_from}\n{debug_info}')
+            raise AssertionError(
+                f'sent mail not found for email_to {emails_to} from {email_from}'
+                f'(optional: subject {subject})'
+                f'\n--MOCK DATA\n{debug_info}'
+            )
 
         return sent_email
 
@@ -550,42 +554,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             )
             raise AssertionError(
                 f'mail.mail not found for message {mail_message} / status {status} / email_to {email_to} / '
-                f'author {author} ({email_from})\n{debug_info}'
-            )
-        return mail
-
-    def _find_mail_mail_wemails(self, email_to_all, status, mail_message=None, author=None, content=None, email_from=None):
-        """ Find a mail.mail record based on various parameters, notably a list
-        of email to (string emails).
-
-        :param email_to_all: comma-separated or python list of email addresses comprising either
-          all email_to addresses of the message, all emails of the recipients or all emails of both;
-
-        :return mail: a ``mail.mail`` record generated during the mock and matching
-          given parameters and filters;
-        """
-        filtered = self._filter_mail(status=status, mail_message=mail_message, author=author, content=content, email_from=email_from)
-
-        if isinstance(email_to_all, str):
-            email_to_all = email_split(email_to_all)
-        email_to = (
-            {email_normalize(email) or email for email in email_to_all or []} - {''}
-        ) or ([email_to_all] if email_to_all else set())
-
-        for mail in filtered:
-            mail_email_addrs = set(email_normalize_all(mail.email_to or '')) or ({mail.email_to} if mail.email_to else set())
-            mail_partner_email_addrs = {email_normalize(email) or email for email in mail.recipient_ids.mapped('email')}
-
-            if email_to == mail_email_addrs | mail_partner_email_addrs:
-                break
-        else:
-            debug_info = '\n'.join(
-                f'From: {mail.author_id} ({mail.email_from}) - To: {mail.email_to} / {sorted(mail.recipient_ids.mapped("email"))} (State: {mail.state})'
-                for mail in self._new_mails
-            )
-            raise AssertionError(
-                f'mail.mail not found for message {mail_message} / status {status} / email_to {email_to} / '
-                f'author {author} ({email_from})\n{debug_info}'
+                f'author {author} ({email_from})\n-- MOCK DATA\n{debug_info}'
             )
         return mail
 
@@ -728,7 +697,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         if recipients:
             found_mail = self._find_mail_mail_wpartners(recipients, status, mail_message=mail_message, author=author, content=content, email_from=email_from)
         else:
-            found_mail = self._find_mail_mail_wemail(email_to_all, status, mail_message=mail_message, author=author, content=content, email_from=email_from)
+            mail_email_to = ','.join(email_to_all)
+            found_mail = self._find_mail_mail_wemail(mail_email_to, status, mail_message=mail_message, author=author, content=content, email_from=email_from)
 
         self.assertTrue(bool(found_mail))
         self._assertMailMail(

@@ -150,6 +150,8 @@ class MailMessage(models.Model):
     # email recipients of incoming emails: comma separated list of emails (not necessarily normalized)
     incoming_email_to = fields.Text('Emails To')
     incoming_email_cc = fields.Char('Emails Cc')
+    # email recipients of outgoing emails: comma separated list of emails (not necessarily normalized)
+    outgoing_email_to = fields.Char('emails To')
     # list of partner having a notification. Caution: list may change over time because of notif gc cron.
     # mainly usefull for testing
     notified_partner_ids = fields.Many2many(

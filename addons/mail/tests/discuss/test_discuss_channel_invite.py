@@ -25,7 +25,7 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         self.assertMailMail(
             self.env["res.partner"],
             status=None,
-            email_to_all="unknown_email@test.com",
+            email_to_all=["unknown_email@test.com"],
             author=bob.partner_id,
             email_values={
                 "subject": f"{bob.name} has invited you to a channel",
@@ -54,7 +54,7 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         self.assertMailMail(
             self.env["res.partner"],
             status=None,
-            email_to_all="other@test.com",
+            email_to_all=["other@test.com"],
             author=bob.partner_id,
         )
         self.assertNoMail(self.env["res.partner"], "bob@test.com")
@@ -96,7 +96,7 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
                 self.assertMailMail(
                     self.env["res.partner"],
                     status=None,
-                    email_to_all="some@email.com",
+                    email_to_all=["some@email.com"],
                     email_values={"model": "discuss.channel", "res_id": channel.id},
                 )
 
