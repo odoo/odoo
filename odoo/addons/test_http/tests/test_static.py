@@ -424,6 +424,7 @@ class TestHttpStatic(TestHttpStaticCommon):
         for field in ('glyph_attach', 'glyph_inline', 'glyph_related', 'glyph_compute'):
             earth[field] = data
             res = self.url_open(f'/web/image/test_http.stargate/{earth.id}/{field}')
+            res.raise_for_status()
             self.assertEqual(res.headers['Content-Type'], 'application/octet-stream')  # Shouldn't be text/html
             self.assertEqual(res.headers['Content-Security-Policy'], "default-src 'none'")
 

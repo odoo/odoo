@@ -244,17 +244,31 @@ class IrAttachment(models.Model):
         self._set_attachment_data(lambda attach: base64.b64decode(attach.datas or b''))
 
     def _set_attachment_data(self, asbytes):
+        old_fnames = []
+        checksum_raw_map = {}
+
         for attach in self:
             # compute the fields that depend on datas
             bin_data = asbytes(attach)
             vals = self._get_datas_related_values(bin_data, attach.mimetype)
+            if bin_data:
+                checksum_raw_map[vals['checksum']] = bin_data
 
             # take current location in filestore to possibly garbage-collect it
-            fname = attach.store_fname
+            if attach.store_fname:
+                old_fnames.append(attach.store_fname)
+
             # write as superuser, as user probably does not have write access
             super(IrAttachment, attach.sudo()).write(vals)
-            if fname:
+
+        if self._storage() != 'db':
+            # before touching the filestore, flush to prevent the GC from
+            # running until the end of the transaction
+            self.flush_recordset(['checksum', 'store_fname'])
+            for fname in old_fnames:
                 self._file_delete(fname)
+            for checksum, raw in checksum_raw_map.items():
+                self._file_write(raw, checksum)
 
     def _get_datas_related_values(self, data, mimetype):
         checksum = self._compute_checksum(data)
@@ -270,7 +284,7 @@ class IrAttachment(models.Model):
             'db_datas': data,
         }
         if data and self._storage() != 'db':
-            values['store_fname'] = self._file_write(data, values['checksum'])
+            values['store_fname'], _full_path = self._get_path(data, checksum)
             values['db_datas'] = False
         return values
 
@@ -633,6 +647,7 @@ class IrAttachment(models.Model):
             in vals.items()
             if key not in ('file_size', 'checksum', 'store_fname')
         } for vals in vals_list]
+        checksum_raw_map = {}
 
         for values in vals_list:
             values = self._check_contents(values)
@@ -641,10 +656,11 @@ class IrAttachment(models.Model):
                 if isinstance(raw, str):
                     # b64decode handles str input but raw needs explicit encoding
                     raw = raw.encode()
-                values.update(self._get_datas_related_values(
-                    raw or base64.b64decode(datas or b''),
-                    values['mimetype']
-                ))
+                elif not raw:
+                    raw = base64.b64decode(datas or b'')
+                values.update(self._get_datas_related_values(raw, values['mimetype']))
+                if raw:
+                    checksum_raw_map[values['checksum']] = raw
 
             # 'check()' only uses res_model and res_id from values, and make an exists.
             # We can group the values by model, res_id to make only one query when
@@ -657,6 +673,9 @@ class IrAttachment(models.Model):
         for res_model, res_id in record_tuple_set:
             Attachments.check('create', values={'res_model':res_model, 'res_id':res_id})
         records = super().create(vals_list)
+        if self._storage() != 'db':
+            for checksum, raw in checksum_raw_map.items():
+                self._file_write(raw, checksum)
         records._check_serving_attachments()
         return records
 
