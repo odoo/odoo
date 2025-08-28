@@ -121,7 +121,7 @@ class AccountMove(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('partner_id.vat', 'partner_id.country_id', 'partner_id.l10n_in_gst_treatment')
+    @api.depends('partner_id')
     def _compute_l10n_in_gst_treatment(self):
         for invoice in self.filtered(lambda m: m.country_code == 'IN' and m.state == 'draft'):
             partner = invoice.partner_id
