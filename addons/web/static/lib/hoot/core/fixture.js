@@ -1,17 +1,13 @@
 /** @odoo-module */
 
+import { animationFrame } from "@odoo/hoot-dom";
 import { App } from "@odoo/owl";
-import {
-    defineRootNode,
-    getActiveElement,
-    getCurrentDimensions,
-} from "@web/../lib/hoot-dom/helpers/dom";
+import { getActiveElement, getCurrentDimensions } from "@web/../lib/hoot-dom/helpers/dom";
 import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
 import { isInstanceOf } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { HootError } from "../hoot_utils";
 import { subscribeToTransitionChange } from "../mock/animation";
 import { getViewPortHeight, getViewPortWidth } from "../mock/window";
-import { animationFrame } from "@odoo/hoot-dom";
 
 /**
  * @typedef {Parameters<typeof import("@odoo/owl").mount>[2] & {
@@ -102,15 +98,6 @@ export function makeFixtureManager(runner) {
         return currentFixture;
     }
 
-    function globalCleanup() {
-        HootFixtureElement.styleElement.remove();
-    }
-
-    function globalSetup() {
-        defineRootNode(getFixture);
-        document.head.appendChild(HootFixtureElement.styleElement);
-    }
-
     async function setup() {
         allowFixture = true;
 
@@ -127,8 +114,6 @@ export function makeFixtureManager(runner) {
 
     return {
         cleanup,
-        globalCleanup,
-        globalSetup,
         setup,
         get: getFixture,
     };
@@ -145,6 +130,8 @@ export class HootFixtureElement extends HTMLElement {
 
     static {
         customElements.define(this.TAG_NAME, this);
+
+        this.styleElement.id = "hoot-fixture-style";
         this.styleElement.textContent = /* css */ `
             ${this.TAG_NAME} {
                 position: fixed !important;
