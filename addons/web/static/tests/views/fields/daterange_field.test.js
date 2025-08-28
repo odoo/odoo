@@ -70,6 +70,22 @@ beforeEach(() => {
     disableAnimations();
 });
 
+test("Datetime field without daterange widget", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="datetime"/>
+            </form>`,
+    });
+
+    await contains("button[data-field=datetime]").click();
+    expect(".o_datetime_picker").toBeDisplayed();
+    expect(".o_toggle_range").toHaveCount(0);
+});
+
 test.tags("desktop");
 test("Datetime field - interaction with the datepicker", async () => {
     Partner._records[0].datetime_end = "2017-03-13 00:00:00";
