@@ -462,6 +462,7 @@ This module provides the core of the Odoo Web Client.
         # Lazy-loaded assets needed by test framework when not in headless mode
         'web.assets_unit_tests_setup_ui': [
             "web/static/lib/diff_match_patch/diff_match_patch.js",
+            "web/static/lib/prismjs/prism.js",
         ],
         # Unit test files
         'web.assets_unit_tests': [
