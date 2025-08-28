@@ -104,10 +104,6 @@ class AccountTax(models.Model):
     _check_company_domain = models.check_company_domain_parent_of
 
     name = fields.Char(string='Tax Name', required=True, translate=True, tracking=True)
-    name_searchable = fields.Char(store=False, search='_search_name',
-          help="This dummy field lets us use another search method on the field 'name'."
-               "This allows more freedom on how to search the 'name' compared to 'filter_domain'."
-               "See '_search_name' and '_parse_name_search' for why this is not possible with 'filter_domain'.")
     type_tax_use = fields.Selection(TYPE_TAX_USE, string='Tax Type', required=True, default="sale", tracking=True,
         help="Determines where the tax is selectable. Note: 'None' means a tax can't be used by itself, however it can still be used in a group. 'adjustment' is used to perform tax adjustment.")
     tax_scope = fields.Selection([('service', 'Services'), ('consu', 'Goods')], string="Tax Scope", help="Restrict the use of taxes to a type of product.")
@@ -563,18 +559,15 @@ class AccountTax(models.Model):
         when using `like` or `ilike`.
         """
         def preprocess_name(cond):
-            if cond.field_expr == 'name' and cond.operator in ('like', 'ilike') and isinstance(cond.value, str):
-                return Domain('name', cond.operator, AccountTax._parse_name_search(cond.value))
+            if (
+                cond.field_expr in ('name', 'display_name')
+                and cond.operator in ('like', 'ilike')
+                and isinstance(cond.value, str)
+            ):
+                return Domain(cond.field_expr, cond.operator, AccountTax._parse_name_search(cond.value))
             return cond
         domain = Domain(domain).map_conditions(preprocess_name)
         return super()._search(domain, *args, **kwargs)
-
-    def _search_name(self, operator, value):
-        if isinstance(value, str):
-            value = AccountTax._parse_name_search(value)
-        elif isinstance(value, Iterable):
-            value = [AccountTax._parse_name_search(v) if isinstance(v, str) else v for v in value]
-        return [('name', operator, value)]
 
     def _check_repartition_lines(self, lines):
         self.ensure_one()
