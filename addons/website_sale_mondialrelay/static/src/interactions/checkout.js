@@ -21,9 +21,13 @@ patch(Checkout.prototype, {
             '#btn_confirm_relay': { 't-on-click': this.onClickBtnConfirmRelay.bind(this) },
         });
         this.mondialRelayModal = undefined;
-        this.useDeliveryAsBillingTooltip = new Tooltip(
-            this.el.querySelector('#use_delivery_as_billing_label')
-        );
+        this.useDeliveryAsBillingTooltip = undefined;
+        const useDeliveryAsBillingLabel = this.el.querySelector('#use_delivery_as_billing_label');
+        if (useDeliveryAsBillingLabel) {
+            this.useDeliveryAsBillingTooltip = window.Tooltip
+                .getOrCreateInstance(useDeliveryAsBillingLabel);
+            this.registerCleanup(() => this.useDeliveryAsBillingTooltip.dispose());
+        }
         this._adaptUseDeliveryAsBillingToggle();
     },
 
@@ -89,8 +93,8 @@ patch(Checkout.prototype, {
             );
             this.useDeliveryAsBillingToggle.disabled = requireSeparateBillingAddress;
             requireSeparateBillingAddress
-                ? this.useDeliveryAsBillingTooltip.enable()
-                : this.useDeliveryAsBillingTooltip.disable();
+                ? this.useDeliveryAsBillingTooltip?.enable()
+                : this.useDeliveryAsBillingTooltip?.disable();
         }
     },
 
