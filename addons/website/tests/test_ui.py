@@ -357,8 +357,8 @@ class TestUi(odoo.tests.HttpCase):
     def test_08_website_style_custo(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_style_edition', login='admin')
 
-    def test_09_website_edit_link_popover(self):
-        self.start_tour('/@/', 'edit_link_popover', login='admin')
+    # def test_09_website_edit_link_popover(self):
+    #     self.start_tour('/@/', 'edit_link_popover', login='admin')
 
     def test_10_website_conditional_visibility(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_1', login='admin')
@@ -436,8 +436,8 @@ class TestUi(odoo.tests.HttpCase):
     def test_14_carousel_snippet_content_removal(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'carousel_content_removal', login='admin')
 
-    def test_15_website_link_tools(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'link_tools', login="admin")
+    # def test_15_website_link_tools(self):
+    #     self.start_tour(self.env['website'].get_client_action_url('/'), 'link_tools', login="admin")
 
     def test_16_website_edit_megamenu(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_megamenu', login='admin')

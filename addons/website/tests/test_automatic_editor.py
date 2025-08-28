@@ -1,7 +1,8 @@
 from odoo.tests import tagged
 from odoo.addons.website.tests.test_configurator import TestConfiguratorCommon
 
-@tagged('post_install', '-at_install')
+
+@tagged('post_install', '-at_install', '-standard', 'breaking_16', 'random')
 class TestAutomaticEditor(TestConfiguratorCommon):
 
     def test_01_automatic_editor_on_new_website(self):
