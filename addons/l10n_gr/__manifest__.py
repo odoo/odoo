@@ -17,6 +17,7 @@ Greek accounting chart and localization.
         'account',
         'base_iban',
         'base_vat',
+        'account_edi_ubl_cii',
     ],
     'auto_install': ['account'],
     'data': [

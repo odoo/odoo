@@ -20,6 +20,7 @@ Tento modul definuje:
     """,
     'depends': [
         'account',
+        'account_edi_ubl_cii',
         'base_iban',
         'base_vat',
     ],
