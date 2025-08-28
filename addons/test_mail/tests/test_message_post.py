@@ -806,9 +806,12 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
     def test_message_post(self):
         self.user_employee_2.write({'notification_type': 'inbox'})
         test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+        additional_to = '"Michel Boitaclous" <michel@boitaclous.fr>'
 
         with self.assertSinglePostNotifications(
-                [{'partner': self.partner_employee_2, 'type': 'inbox'}],
+                [
+                    {'partner': self.partner_employee_2, 'type': 'inbox'},
+                ],
                 message_info={
                     'content': 'Body',
                     'message_values': {
@@ -828,7 +831,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                     },
                 },
             ):
-            new_message = test_record.message_post(
+            _new_message = test_record.message_post(
                 body='Body',
                 incoming_email_cc='"Leo Pol" <leo@test.example.com>, fab@test.example.com',
                 incoming_email_to='"Gaby Tlair" <gab@test.example.com>, ted@test.example.com',
@@ -840,45 +843,60 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
 
         # subscribe partner_1, check notifications
         test_record.message_subscribe(self.partner_1.ids)
+        exp_headers = {
+            'Return-Path': f'{self.alias_bounce}@{self.alias_domain}',
+            'X-Custom': 'Done',  # mail.test.simple override
+            # contains external people: partner_1 (follower) and asked outgoing email
+            'X-Msg-To-Add': f'{additional_to},{self.partner_1.email_formatted}',
+            'X-Odoo-Objects': f'{test_record._name}-{test_record.id}',
+        }
         with self.assertSinglePostNotifications(
-                [{'partner': self.partner_employee_2, 'type': 'inbox'},
-                 {'partner': self.partner_1, 'type': 'email'}],
+                [
+                    {'partner': self.partner_employee_2, 'type': 'inbox'},
+                    {'partner': self.partner_1, 'type': 'email'},
+                    {'email_to': ['michel@boitaclous.fr'], 'partner': self.env['res.partner'], 'type': 'email'},
+                ],
                 message_info={
                     'content': 'NewBody',
+                    'mail_mail_values': {
+                        'headers': exp_headers,
+                    },
                     'email_values': {
-                        'headers': {
-                            'Return-Path': f'{self.alias_bounce}@{self.alias_domain}',
-                        },
+                        'headers': exp_headers,
                     },
                     'message_values': {
                         'notified_partner_ids': self.partner_1 + self.partner_employee_2,
+                        'outgoing_email_to': additional_to,
                     },
                 },
-                mail_unlink_sent=True
+                mail_unlink_sent=False,
             ):
-            new_message = test_record.message_post(
+            _new_message = test_record.message_post(
                 body='NewBody',
                 message_type='comment',
+                outgoing_email_to=additional_to,
                 subtype_xmlid='mail.mt_comment',
                 partner_ids=[self.partner_employee_2.id],
             )
 
-        # notifications emails should have been deleted
-        self.assertFalse(self.env['mail.mail'].sudo().search_count([('mail_message_id', '=', new_message.id)]))
-
         with self.assertSinglePostNotifications(
-                [{'partner': self.partner_1, 'type': 'email'},
-                 {'partner': self.partner_portal, 'type': 'email'}],
+                [
+                    {'partner': self.partner_1, 'type': 'email'},
+                    {'partner': self.partner_portal, 'type': 'email'},
+                ],
                 message_info={
                     'content': 'ToPortal',
-                }
+                },
+                mail_unlink_sent=True,  # check notification are unlinked
             ):
-            test_record.message_post(
+            last_message = test_record.message_post(
                 body='ToPortal',
                 message_type='comment',
                 subtype_xmlid='mail.mt_comment',
                 partner_ids=self.partner_portal.ids,
             )
+        # notifications emails should have been deleted
+        self.assertFalse(self.env['mail.mail'].sudo().search_count([('mail_message_id', '=', last_message.id)]))
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink', 'odoo.tests')
     @users('employee')
@@ -1123,6 +1141,47 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                     self.user_employee.partner_id,
                     [self.partner_1],
                     email_to=expected_to,
+                )
+
+    @users('employee')
+    def test_message_post_recipients_to_email_address(self):
+        """ Test support of posting with emails, not only partners. """
+        test_record = self.test_record.with_env(self.env)
+        email_to_lst = [
+            '"Dade" <das.deboulonneur@fleurus.example.com>',
+            '"Dide" <die.deboulonneur@fleurus.example.com>',
+        ]
+        email_to_normalized_lst = [
+            'das.deboulonneur@fleurus.example.com',
+            'die.deboulonneur@fleurus.example.com',
+        ]
+        self.assertFalse(self.env['res.partner'].search([('email_normalized', 'in', email_to_normalized_lst)]))
+
+        for partner_ids, exp_partner_mail in [
+            (self.partner_1.ids, self.partner_1),
+            ([], self.env['res.partner']),
+        ]:
+            with self.subTest(partner_ids=partner_ids):
+                with self.mock_mail_gateway():
+                    test_record.message_post(
+                        body='Test with email recipients',
+                        message_type='comment',
+                        partner_ids=partner_ids,
+                        outgoing_email_to=','.join(email_to_lst),
+                        subject='Email recipients',
+                        subtype_xmlid='mt_comment',
+                    )
+                for partner in exp_partner_mail:
+                    # one mail for the asked recipient
+                    self.assertMailMail(
+                        partner, 'sent',
+                        author=self.partner_employee,
+                    )
+                # one mail to all emails
+                self.assertMailMail(
+                    self.env['res.partner'], 'sent',
+                    author=self.partner_employee,
+                    email_to_all=email_to_normalized_lst,
                 )
 
     @users('employee')
