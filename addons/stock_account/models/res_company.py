@@ -249,8 +249,8 @@ class ResCompany(models.Model):
         accounts = accounting_data_today.keys() | accounting_data_last_period.keys()
 
         for account in accounts:
-            variation_acc = account.account_variation_id
-            expense_acc = account.account_expense_id
+            variation_acc = account.account_stock_variation_id
+            expense_acc = account.account_stock_expense_id
 
             if not variation_acc or not expense_acc:
                 continue
