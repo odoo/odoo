@@ -134,8 +134,9 @@ export function cleanUpGrid(rowEl, columnEl, dragHelperEl, backgroundGridEl) {
  * @param {Element} containerEl element with the class "container"
  * @param {Function} preserveSelection called to preserve the text selection
  *   when needed
+ * @param {String} mobileBreakpoint - bootstrap breakpoint (sm - md - lg)
  */
-export function toggleGridMode(containerEl, preserveSelection) {
+export function toggleGridMode(containerEl, preserveSelection, mobileBreakpoint) {
     let rowEl = containerEl.querySelector(":scope > .row");
     const outOfRowEls = [...containerEl.children].filter((el) => !el.classList.contains("row"));
 
@@ -148,7 +149,7 @@ export function toggleGridMode(containerEl, preserveSelection) {
     // be placed in the grid.
     if (rowEl && outOfRowEls.length > 0) {
         const columnEl = document.createElement("div");
-        columnEl.classList.add("col-lg-12");
+        columnEl.classList.add(`col-${mobileBreakpoint}-12`);
         for (let i = outOfRowEls.length - 1; i >= 0; i--) {
             columnEl.prepend(outOfRowEls[i]);
         }
@@ -161,7 +162,7 @@ export function toggleGridMode(containerEl, preserveSelection) {
         rowEl.classList.add("row");
 
         const columnEl = document.createElement("div");
-        columnEl.classList.add("col-lg-12");
+        columnEl.classList.add(`col-${mobileBreakpoint}-12`);
 
         const containerChildren = containerEl.children;
         // Looping backwards because elements are removed, so the indexes are
@@ -178,7 +179,7 @@ export function toggleGridMode(containerEl, preserveSelection) {
     const columnEls = rowEl.children;
     const columnSize = rowEl.clientWidth / 12;
     rowEl.style.position = "relative";
-    const rowCount = placeColumns(columnEls, rowSize, 0, columnSize, 0) - 1;
+    const rowCount = placeColumns(columnEls, rowSize, 0, columnSize, 0, mobileBreakpoint) - 1;
     rowEl.style.removeProperty("position");
     rowEl.dataset.rowCount = rowCount;
 
@@ -199,9 +200,10 @@ export function toggleGridMode(containerEl, preserveSelection) {
  * @param {Number} rowGap
  * @param {Number} columnSize
  * @param {Number} columnGap
+ * @param {String} mobileBreakpoint - bootstrap breakpoint (sm - md - lg)
  * @returns {Number}
  */
-function placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
+function placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap, mobileBreakpoint) {
     let maxRowEnd = 0;
     const columnSpans = [];
     let zIndex = 1;
@@ -262,7 +264,7 @@ function placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
         columnEl.classList.add("o_grid_item");
 
         // Adding the grid classes.
-        columnEl.classList.add(`g-col-lg-${columnSpan}`, `g-height-${rowSpan}`);
+        columnEl.classList.add(`g-col-${mobileBreakpoint}-${columnSpan}`, `g-height-${rowSpan}`);
         // Setting the initial z-index.
         columnEl.style.zIndex = zIndex++;
         // Setting the paddings.
@@ -280,10 +282,12 @@ function placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
 
     for (const [i, columnEl] of [...columnEls].entries()) {
         // Removing padding and offset classes.
-        const regex = /^(((pt|pb)\d{1,3}$)|col-lg-|offset-lg-)/;
+        const regex = new RegExp(
+            `^(((pt|pb)\\d{1,3}$)|col-${mobileBreakpoint}-|offset-${mobileBreakpoint}-)`
+        );
         const toRemove = [...columnEl.classList].filter((c) => regex.test(c));
         columnEl.classList.remove(...toRemove);
-        columnEl.classList.add("col-lg-" + columnSpans[i]);
+        columnEl.classList.add(`col-${mobileBreakpoint}-` + columnSpans[i]);
 
         // If the column only has an image, convert it.
         if (imageColumns[i]) {
@@ -317,9 +321,10 @@ export function reloadLazyImages(columnEl) {
  * @param {HTMLElement} columnEl
  * @param {Number} columnWidth the width in pixels of the column
  * @param {Number} columnHeight the height in pixels of the column
+ * @param {String} mobileBreakpoint - bootstrap breakpoint (sm - md - lg)
  * @returns {Object}
  */
-export function convertColumnToGrid(rowEl, columnEl, columnWidth, columnHeight) {
+export function convertColumnToGrid(rowEl, columnEl, columnWidth, columnHeight, mobileBreakpoint) {
     // First, checking if the column only contains an image and if it is the
     // case, converting it.
     if (checkIfImageColumn(columnEl)) {
@@ -345,7 +350,11 @@ export function convertColumnToGrid(rowEl, columnEl, columnWidth, columnHeight) 
     columnEl.classList.remove(...toRemove);
 
     // Adding the grid classes.
-    columnEl.classList.add(`g-col-lg-${columnSpan}`, `g-height-${rowSpan}`, `col-lg-${columnSpan}`);
+    columnEl.classList.add(
+        `g-col-${mobileBreakpoint}-${columnSpan}`,
+        `g-height-${rowSpan}`,
+        `col-${mobileBreakpoint}-${columnSpan}`
+    );
     columnEl.classList.add("o_grid_item");
 
     return { columnSpan, rowSpan };
@@ -355,9 +364,12 @@ export function convertColumnToGrid(rowEl, columnEl, columnWidth, columnHeight) 
  * column.
  *
  * @param {Element} columnEl
+ * @param {String} mobileBreakpoint - bootstrap breakpoint (sm - md - lg)
  */
-export function convertToNormalColumn(columnEl) {
-    const gridSizeClasses = columnEl.className.match(/(g-col-lg|g-height)-[0-9]+/g);
+export function convertToNormalColumn(columnEl, mobileBreakpoint) {
+    const gridSizeClasses = columnEl.className.match(
+        new RegExp(`(g-col-${mobileBreakpoint}|g-height)-[0-9]+`, "g")
+    );
     columnEl.classList.remove(
         "o_grid_item",
         "o_grid_item_image",

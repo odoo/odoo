@@ -128,7 +128,7 @@ export function addTables(element) {
             const padding = "34px"; // This is what's needed to align the content with Apple Mail's header.
             style.textContent =
                 `@media{@media{.o_basic_theme div.o_apple_wrapper_padding{padding:${snippet.style.padding};}}}` +
-                `@media(min-width:961px){@media{@media{.o_basic_theme div.o_apple_wrapper_padding{padding-left:${padding};}}}}`;
+                `@media(min-width:737px){@media{@media{.o_basic_theme div.o_apple_wrapper_padding{padding-left:${padding};}}}}`;
             div.before(style);
         }
         table.appendChild(row);
@@ -1277,7 +1277,7 @@ export function getCSSRules(doc) {
             const conditionText = rule.conditionText;
             const minWidthMatch = conditionText && conditionText.match(/\(min-width *: *(\d+)/);
             const minWidth = minWidthMatch && +(minWidthMatch[1] || "0");
-            if (minWidth && minWidth >= 992) {
+            if (minWidth && minWidth >= 768) {
                 // Large min-width media queries should be included.
                 // eg., .container has a default max-width for all screens.
                 let mediaRules;
