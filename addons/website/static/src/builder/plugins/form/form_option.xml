@@ -303,7 +303,7 @@
                 <BuilderSelectItem dataAttributeActionValue="'!selected'">Is not equal to</BuilderSelectItem>
             </BuilderSelect>
         </div>
-        <div class="d-flex position-relative p-1 px-2 ps-3 hb-row">
+        <div class="d-flex position-relative p-1 px-2 ps-3 hb-row" data-name="hidden_condition_additional_text">
             <BuilderSelect t-if="state.conditionValueList and (domStateDependency.type === 'checkbox' || domStateDependency.type === 'radio' || domStateDependency.nodeName === 'SELECT')"
                 id="'hidden_condition_no_text_opt'" preview="false" dataAttributeAction="'visibilityCondition'"
             >
