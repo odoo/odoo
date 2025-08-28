@@ -11,10 +11,6 @@ class ProxyController(http.Controller):
     def hello(self):
         return "ping"
 
-    @route.iot_route('/hw_proxy/handshake', type='jsonrpc', cors='*')
-    def handshake(self):
-        return True
-
     @route.iot_route('/hw_proxy/status_json', type='jsonrpc', cors='*')
     def status_json(self):
         return {

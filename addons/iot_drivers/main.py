@@ -97,9 +97,6 @@ class Manager(Thread):
                 'subtype': device.device_subtype if device.device_type == 'printer' else '',
             }
         devices_list.update(self.previous_unsupported_devices)
-        devices_list_to_send = {
-            key: value for key, value in devices_list.items() if key != 'distant_display'
-        }  # Don't send distant_display to the db
 
         delay = .5
         max_retries = 5
@@ -107,7 +104,7 @@ class Manager(Thread):
             try:
                 response = requests.post(
                     server_url + "/iot/setup",
-                    json={'params': {'iot_box': iot_box, 'devices': devices_list_to_send}},
+                    json={'params': {'iot_box': iot_box, 'devices': devices_list}},
                     timeout=5,
                 )
                 response.raise_for_status()
