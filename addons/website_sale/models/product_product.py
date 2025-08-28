@@ -199,7 +199,15 @@ class ProductProduct(models.Model):
 
     def _prepare_feed_items(self, format='gmc'):
         """
-        Shared feed item builder for supported platforms: 'gmc', 'meta'.
+        Shared feed item builder for supported platforms:
+            - `gmc`: https://support.google.com/merchants/answer/7052112
+            - `meta`: https://www.facebook.com/business/help/120325381656392?id=725943027795860
+        Note: Depends on:
+            - `request.pricelist` to compute price and shipping informations,
+            - `request.website` to compute links, and
+            - `request.lang` to compute text based information (name, description, etc.) and links
+        :return: a dictionary for each product in this recordset.
+        :rtype: dict[product.product, dict]
         """
         records = self.with_context(lang=request.lang.code)
         base_url = request.website.get_base_url()
@@ -217,7 +225,7 @@ class ProductProduct(models.Model):
                 **product._prepare_feed_additional_info(format=format),
                 **price_info,
                 **product._prepare_feed_shipping_info(
-                    delivery_methods, all_countries, format=format,
+                    delivery_methods, all_countries,
                 ),
             }
 
@@ -235,7 +243,7 @@ class ProductProduct(models.Model):
         formatted_url = urlparse(self.website_url)._replace(query=pricelist_url).geturl()
         product_url = url_join(base_url, self.env['ir.http']._url_lang(formatted_url))
 
-        return {
+        info = {
             'id': self.default_code or self.id,
             'title': self.with_context(display_default_code=False).display_name,
             'description': self.website_meta_description or self.description_sale,
@@ -246,32 +254,6 @@ class ProductProduct(models.Model):
             'additional_image_link': [
                 url_join(base_url, url) for url in self._get_extra_image_1920_urls()[:10]
             ],
-        }
-
-    def _get_image_1920_url(self):
-        """ Returns the local url of the product main image.
-        Note: self.ensure_one()
-        :rtype: str
-        """
-        self.ensure_one()
-        return self.env['website'].image_url(self, 'image_1920')
-
-    def _get_extra_image_1920_urls(self):
-        """ Returns the local url of the product additional images, no videos. This includes the
-        variant specific images first and then the template images.
-        Note: self.ensure_one()
-        :rtype: list[str]
-        """
-        self.ensure_one()
-        return [
-            self.env['website'].image_url(extra_image, 'image_1920')
-            for extra_image in self.product_variant_image_ids + self.product_template_image_ids
-            if extra_image.image_128  # only images, no video urls
-        ]
-
-    def _prepare_feed_additional_info(self, format='gmc'):
-        self.ensure_one()
-        info = {
             'product_type': [
                 category.replace('/', '>')  # Both platforms use > for hierarchy
                 for category in (
@@ -294,9 +276,37 @@ class ProductProduct(models.Model):
         else:
             info['identifier_exists'] = 'no'
 
+        return info
+
+    def _get_image_1920_url(self):
+        """ Returns the local url of the product main image.
+
+        Note: self.ensure_one()
+
+        :rtype: str
+        """
+        self.ensure_one()
+        return self.env['website'].image_url(self, 'image_1920')
+
+    def _get_extra_image_1920_urls(self):
+        """ Returns the local url of the product additional images, no videos. This includes the
+        variant specific images first and then the template images.
+        Note: self.ensure_one()
+        :rtype: list[str]
+        """
+        self.ensure_one()
+        return [
+            self.env['website'].image_url(extra_image, 'image_1920')
+            for extra_image in self.product_variant_image_ids + self.product_template_image_ids
+            if extra_image.image_128  # only images, no video urls
+        ]
+
+    def _prepare_feed_additional_info(self, format='gmc'):
+        self.ensure_one()
+
         match format:
             case 'gmc':
-                info.update({
+                return {
                     'is_bundle': 'yes' if self.type == 'combo' else 'no',
                     'availability': 'in_stock',
                     'custom_label': [
@@ -306,17 +316,15 @@ class ProductProduct(models.Model):
                             self.all_product_tag_ids.sorted('sequence').mapped('name')[:5],
                         )
                     ],
-                })
+                }
             case 'meta':
-                info.update({
-                'internal_label': [
-                    tag.name.lower().strip().replace(' ', '_')
-                    for tag in self.all_product_tag_ids
-                ],
-                'availability': 'in stock',
-            })
-
-        return info
+                return {
+                    'internal_label': [
+                        tag.name.lower().strip().replace(' ', '_')
+                        for tag in self.all_product_tag_ids
+                    ],
+                    'availability': 'in stock',
+                }
 
     def _prepare_price_info(self, format='google'):
         """ Prepare all the price related information for XML Feeds.
@@ -395,7 +403,7 @@ class ProductProduct(models.Model):
 
         return price_info
 
-    def _prepare_feed_shipping_info(self, delivery_methods, countries, format):
+    def _prepare_feed_shipping_info(self, delivery_methods, countries):
         """
         Prepare GMC/Meta-compliant shipping info for XML feeds.
         GMC:

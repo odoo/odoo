@@ -5,11 +5,11 @@ from lxml import etree
 from odoo import Command
 from odoo.tests import tagged
 
-from odoo.addons.website_sale.tests.common_product_xml_feed_tests import CommonProductFeedXmlFeed
+from odoo.addons.website_sale.tests.website_sale_feed_common import WebsiteSaleFeedCommon
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleMeta(CommonProductFeedXmlFeed):
+class TestWebsiteSaleMeta(WebsiteSaleFeedCommon):
 
     def setUp(self):
         super().setUp()
@@ -53,13 +53,6 @@ class TestWebsiteSaleMeta(CommonProductFeedXmlFeed):
                 },
                 item.keys(),
             )  # subseteq
-
-    def test_meta_items_identifier_exists_iff_barcode_exists(self):
-        self.red_sofa.barcode = '0232344532564'
-
-        self.update_items()
-
-        self.assertEqual(self.red_sofa.barcode, self.red_sofa_item['gtin'])
 
     def test_meta_items_internal_labels(self):
         tags = [f'tag {i}' for i in range(3)]

@@ -11,7 +11,7 @@ class TestWebsiteSaleStockGMC(WebsiteSaleFeedCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.feed_type = "gmc"
+        cls.feed_type = 'gmc'
         cls.website.warehouse_id = cls.env.ref('stock.warehouse0')
         cls.stock_loc = cls.website.warehouse_id.lot_stock_id
         cls.supplier_loc = cls.env.ref('stock.stock_location_suppliers')

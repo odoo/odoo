@@ -2,7 +2,6 @@
 
 from . import test_address
 from . import test_common
-from . import common_product_xml_feed_tests
 from . import test_customize
 from . import test_delivery_controller
 from . import test_delivery_ui

@@ -44,12 +44,6 @@ class DeliveryCarrier(models.Model):
             'currency': tmp_order.currency_id,
             'states': ResCountryState,
         })
-        all_filtered_countries = countries if any(not dm.country_ids for dm in self) else self.country_ids & countries
-        states_per_country = dict(ResCountryState._read_group(
-            domain=[('country_id', 'in', all_filtered_countries.ids)],
-            groupby=['country_id'],
-            aggregates=['id:recordset'],
-        ))
 
         for dm in self:
             if dm.country_ids:
@@ -58,10 +52,7 @@ class DeliveryCarrier(models.Model):
                 filtered_countries = countries
             for country in filtered_countries:
                 # Filter only the states belonging to this country
-                filtered_states = (
-                    dm.state_ids & states_per_country.get(country, ResCountryState)
-                    if dm.state_ids else []
-                )
+                filtered_states = dm.state_ids & country.state_ids
                 tmp_partner.country_id = country
                 # Only used to restrict on the address, therefore testing the first state is enough
                 tmp_partner.state_id = filtered_states[:1]

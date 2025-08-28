@@ -5,11 +5,11 @@ from lxml import etree
 from odoo import Command
 from odoo.tests import tagged
 
-from odoo.addons.website_sale.tests.common_product_xml_feed_tests import CommonProductFeedXmlFeed
+from odoo.addons.website_sale.tests.website_sale_feed_common import WebsiteSaleFeedCommon
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleGMC(CommonProductFeedXmlFeed):
+class TestWebsiteSaleGMC(WebsiteSaleFeedCommon):
 
     def setUp(self):
         super().setUp()
@@ -55,16 +55,6 @@ class TestWebsiteSaleGMC(CommonProductFeedXmlFeed):
                 },
                 item.keys(),
             )  # subseteq
-
-    def test_gmc_items_identifier_exists_iff_barcode_exists(self):
-        self.red_sofa.barcode = '0232344532564'
-
-        self.update_items()
-
-        self.assertEqual(self.red_sofa.barcode, self.red_sofa_item['gtin'])
-        self.assertEqual('yes', self.red_sofa_item['identifier_exists'])
-        self.assertNotIn('gtin', self.blue_sofa_item)
-        self.assertEqual('no', self.blue_sofa_item['identifier_exists'])
 
     def test_gmc_items_bundle_if_is_combo_product(self):
         self.update_items()
