@@ -1,6 +1,6 @@
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
-import { expect, test } from "@odoo/hoot";
-import { animationFrame, click, Deferred, hover, press, tick } from "@odoo/hoot-dom";
+import { before, describe, expect, test } from "@odoo/hoot";
+import { animationFrame, click, Deferred, hover, press, tick, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
@@ -227,6 +227,7 @@ test("should apply transparent color if no color is defined", async () => {
                 return editingElement.dataset.color;
             }
             apply({ editingElement, value }) {
+                expect.step("apply");
                 editingElement.dataset.color = value;
             }
         },
@@ -246,5 +247,130 @@ test("should apply transparent color if no color is defined", async () => {
     await contains(".o-overlay-item .o_color_pick_area").click({ top: "50%", left: "50%" });
     expect(".o-overlay-item .o_hex_input").not.toHaveValue("#FFFFFF00");
     expect(":iframe .test-options-target").toHaveAttribute("data-color");
-    expect.verifySteps(["getValue"]);
+    expect.verifySteps(["apply"]); // Preview
+    await contains(".options-container-header").click(); // Close the popover by clicking outside.
+    expect.verifySteps(["apply", "getValue"]); // Commit
+});
+
+describe("Custom colorpicker: preview and commit", () => {
+    before(() => {
+        addActionOption({
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.dataset.color;
+                }
+                apply({ editingElement, value }) {
+                    expect.step("apply");
+                    editingElement.dataset.color = value;
+                }
+            },
+        });
+        addOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderColorPicker action="'customAction'"/>`,
+        });
+    });
+
+    /****************************************
+     *************** POINTER ***************
+     ***************************************/
+
+    test("should preview while modifying custom pickers with mouse", async () => {
+        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        expect(".options-container").toBeDisplayed();
+        await contains(".we-bg-options-container .o_we_color_preview").click();
+        await contains(".o-overlay-item button:contains('Custom')").click();
+        expect(":iframe .test-options-target").not.toHaveAttribute("data-color");
+        await contains(".o-overlay-item .o_color_pick_area").click({ top: "50%", left: "50%" });
+        expect(":iframe .test-options-target").toHaveAttribute("data-color");
+        expect.verifySteps(["apply"]); // Only once: preview
+        await contains(".o-overlay-item .o_color_slider").click({ top: "50%", left: "50%" });
+        expect.verifySteps(["apply"]); // Only once: preview
+        await contains(".o-overlay-item .o_opacity_slider").click({ top: "50%", left: "50%" });
+        expect.verifySteps(["apply"]); // Only once: preview
+        expect(":iframe .test-options-target").toHaveAttribute("data-color");
+        // Make sure it was just a preview: close with escape
+        await press("escape"); // Undo preview
+        await animationFrame();
+        expect(":iframe .test-options-target").not.toHaveAttribute("data-color");
+    });
+
+    test("should commit when popover is closed by clicking outside", async () => {
+        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        expect(".options-container").toBeDisplayed();
+        await contains(".we-bg-options-container .o_we_color_preview").click();
+        await contains(".o-overlay-item button:contains('Custom')").click();
+        expect(":iframe .test-options-target").not.toHaveAttribute("data-color");
+        await contains(".o-overlay-item .o_color_pick_area").click({ top: "50%", left: "50%" });
+        expect(":iframe .test-options-target").toHaveAttribute("data-color");
+        expect.verifySteps(["apply"]); // Only once: preview
+        await contains(".options-container-header").click(); // Close the popover by clicking outside.
+        expect.verifySteps(["apply"]); // Commit
+        expect(":iframe .test-options-target").toHaveAttribute("data-color");
+    });
+
+    /****************************************
+     *************** KEYBOARD ***************
+     ***************************************/
+    const prepareKeyboardSetup = async () => {
+        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        expect(".options-container").toBeDisplayed();
+        await contains(".we-bg-options-container .o_we_color_preview").click();
+        await waitFor(".o-overlay-item button:contains('Custom')");
+        await press("Tab");
+        await press("Enter");
+        await waitFor(".o-overlay-item .o_color_pick_area");
+        expect(":iframe .test-options-target").not.toHaveAttribute("data-color");
+        // Press shift+tab until it gets to the colorpicker area.
+        for (let i = 0; i < 9; i++) {
+            await press("Tab", { shiftKey: true });
+        }
+        expect(".o-overlay-item .o_color_pick_area .o_picker_pointer").toBeFocused();
+    };
+
+    test("should preview while modifying custom pickers with keyboard", async () => {
+        await prepareKeyboardSetup();
+        await press("ArrowRight");
+        await animationFrame();
+        expect.verifySteps(["apply"]); // Preview
+        await press("ArrowDown");
+        await animationFrame();
+        expect.verifySteps(["apply"]); // Preview
+        expect(":iframe .test-options-target").toHaveAttribute("data-color");
+        await press("Tab"); // focus color slider
+        expect(".o-overlay-item .o_color_slider .o_slider_pointer").toBeFocused();
+        await press("ArrowUp");
+        await animationFrame();
+        expect.verifySteps(["apply"]); // Preview
+        await press("Tab"); // focus opacity slider
+        expect(".o-overlay-item .o_opacity_slider .o_opacity_pointer").toBeFocused();
+        await press("ArrowDown");
+        await animationFrame();
+        expect.verifySteps(["apply"]); // Preview
+        // Make sure it was just a preview: close with escape
+        await press("escape");
+        await animationFrame();
+        expect(":iframe .test-options-target").not.toHaveAttribute("data-color");
+    });
+
+    test("should commit when validating with 'Enter'", async () => {
+        await prepareKeyboardSetup();
+        await press("ArrowRight");
+        await animationFrame();
+        expect.verifySteps(["apply"]); // Preview
+        await press("ArrowDown");
+        await animationFrame();
+        expect.verifySteps(["apply"]); // Preview
+        expect(":iframe .test-options-target").toHaveAttribute("data-color");
+        await press("Enter"); // Validate
+        await animationFrame();
+        expect.verifySteps(["apply"]) // Commit
+        await press("escape");
+        await animationFrame();
+        expect(":iframe .test-options-target").toHaveAttribute("data-color");
+    });
 });

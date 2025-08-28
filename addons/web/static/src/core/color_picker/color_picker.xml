@@ -37,7 +37,7 @@
                 t-on-click="onColorApply"
                 t-on-mouseover="onColorHover"
                 t-on-mouseout="onColorHoverOut"
-                t-on-mouseleave="() => this.props.applyColorResetPreview()"
+                t-on-mouseleave="() => this.applyColorResetPreview()"
                 t-on-focusin="onColorFocusin"
                 t-on-focusout="onColorFocusout"
                 >
@@ -75,7 +75,7 @@
                 t-on-focusout="onColorFocusout">
                 <div class="o_colorpicker_section">
                     <t t-foreach="DEFAULT_THEME_COLOR_VARS" t-as="color" t-key="color">
-                        <button t-att-data-color="color" t-att-class="{'selected': color === defaultColorSet}" 
+                        <button t-att-data-color="color" t-att-class="{'selected': color === defaultColorSet}"
                             t-att-style="`background-color: var(--${props.themeColorPrefix + color})` + (color_index === 3 ? '; grid-column: 5' : '')" class="btn p-0 o_color_button"/>
                     </t>
                 </div>
@@ -96,6 +96,7 @@
                         <button t-if="color !== this.state.currentCustomColor?.toLowerCase()" class="o_color_button btn p-0" t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
                     </t>
                     <button t-if="!defaultColorSet" class="o_color_button btn p-0" t-att-class="{'selected': defaultColorSet === false}" t-att-data-color="this.state.currentCustomColor" t-attf-style="background-color: {{this.state.currentCustomColor}}"/>
+                    <button t-if="!!state.currentColorPreview" class="o_color_button btn p-0" t-att-class="{ 'selected': !!state.currentColorPreview }" t-att-data-color="this.state.currentColorPreview" t-attf-style="background-color: {{this.state.currentColorPreview}}"/>
                 </div>
                 <t t-foreach="Object.values(this.grayscales)" t-as="grayscaleColors" t-key="grayscaleColors">
                     <div class="o_colorpicker_section" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut" t-on-focusin="onColorFocusin" t-on-focusout="onColorHoverOut">
@@ -106,8 +107,10 @@
                 </t>
                 <CustomColorPicker
                     selectedColor="this.state.currentCustomColor"
+                    setOnCloseCallback.bind="props.setOnCloseCallback"
+                    setOperationCallbacks.bind="setOperationCallbacks"
                     onColorSelect.bind="(color) => this.applyColor(color.hex)"
-                    onColorPreview.bind="onCustomColorPreview"
+                    onColorPreview.bind="onColorPreview"
                     showRgbaField="props.showRgbaField"
                     noTransparency="props.noTransparency"
                     defaultOpacity="props.defaultOpacity" />
@@ -128,7 +131,12 @@
                     class="w-50 border btn mb-2 o_custom_gradient_button" t-att-class="{'selected': currentGradient and !gradientsWithOpacity.includes(currentGradient)}" t-att-data-color="currentGradient" t-on-click="this.toggleGradientPicker" title="Define a custom gradient">
                     Custom
                 </button>
-                <GradientPicker t-if="state.showGradientPicker" onGradientChange.bind="applyColor" selectedGradient="getCurrentGradientColor()"/>
+                <GradientPicker t-if="state.showGradientPicker"
+                    onGradientChange.bind="applyColor"
+                    onGradientPreview.bind="onColorPreview"
+                    setOnCloseCallback.bind="props.setOnCloseCallback"
+                    setOperationCallbacks.bind="setOperationCallbacks"
+                    selectedGradient="getCurrentGradientColor()"/>
             </div>
         </t>
     </div>

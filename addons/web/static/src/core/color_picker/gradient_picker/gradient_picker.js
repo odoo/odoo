@@ -12,6 +12,9 @@ export class GradientPicker extends Component {
     static template = "web.GradientPicker";
     static props = {
         onGradientChange: { type: Function, optional: true },
+        onGradientPreview: { type: Function, optional: true },
+        setOnCloseCallback: { type: Function, optional: true },
+        setOperationCallbacks: { type: Function, optional: true },
         selectedGradient: { type: String, optional: true },
         noTransparency: { type: Boolean, optional: true },
     };
@@ -113,6 +116,12 @@ export class GradientPicker extends Component {
         this.onColorGradientChange();
     }
 
+    onColorPreview(color) {
+        const hex = rgbaToHex(color.cssColor);
+        this.colors[this.state.currentColorIndex].hex = hex;
+        this.onColorGradientPreview();
+    }
+
     onSizeChange(size) {
         this.state.size = size;
         this.onColorGradientChange();
@@ -207,6 +216,11 @@ export class GradientPicker extends Component {
     onColorGradientChange() {
         this.updateCssGradients();
         this.props?.onGradientChange(this.cssGradients[this.state.type]);
+    }
+
+    onColorGradientPreview() {
+        this.updateCssGradients();
+        this.props.onGradientPreview?.({ gradient: this.cssGradients[this.state.type] });
     }
 
     get currentColorHex() {
