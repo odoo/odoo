@@ -77,6 +77,7 @@ class HrAttendance(models.Model):
                                 readonly=True,
                                 default='manual')
     expected_hours = fields.Float(compute="_compute_expected_hours", store=True, aggregator="sum")
+    device_tracking_enabled = fields.Boolean(related="employee_id.company_id.attendance_device_tracking")
 
     @api.depends("worked_hours", "overtime_hours")
     def _compute_expected_hours(self):
