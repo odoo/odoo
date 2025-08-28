@@ -393,7 +393,7 @@ export function clickPartnerButton() {
 }
 
 export function clickCustomer(name) {
-    return [PartnerList.clickPartner(name)];
+    return [...PartnerList.searchCustomerValue(name), PartnerList.clickPartner(name)];
 }
 
 export function shippingLaterHighlighted() {
