@@ -110,6 +110,8 @@ export class StyleActionHeaderAction extends StyleAction {
         const value = super.getValue(...args);
         if (params.mainParam === "border-width") {
             return value.replace(/(^|\s)0px/gi, "").trim() || value;
+        } else if (params.mainParam === "--box-border-width") {
+            return value.replace(/(^|\s)0px/gi, "").trim() || value;
         }
         return value;
     }
@@ -119,6 +121,14 @@ export class StyleActionHeaderAction extends StyleAction {
         if (styleName === "border-color") {
             return this.dependencies.customizeWebsite.customizeWebsiteColors({
                 "menu-border-color": value,
+            });
+        } else if (styleName === "--box-border-width") {
+            return this.dependencies.customizeWebsite.customizeWebsiteVariables({
+                "menu-border-width": value,
+            });
+        } else if (styleName === "--box-border-radius") {
+            return this.dependencies.customizeWebsite.customizeWebsiteVariables({
+                "menu-border-radius": value,
             });
         }
         return this.dependencies.customizeWebsite.customizeWebsiteVariables({
