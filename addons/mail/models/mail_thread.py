@@ -3131,7 +3131,6 @@ class MailThread(models.AbstractModel):
             'notify_author',
             'notify_author_mention',
             'notify_skip_followers',
-            'resend_existing',
             'scheduled_date',
             'send_after_commit',
             'skip_existing',
@@ -3335,7 +3334,7 @@ class MailThread(models.AbstractModel):
                                 model_description=False, force_email_company=False, force_email_lang=False,  # rendering
                                 force_record_name=False,  # rendering
                                 subtitles=None,  # rendering
-                                resend_existing=False, force_send=True, send_after_commit=True,  # email send
+                                force_send=True, send_after_commit=True,  # email send
                                 **kwargs):
         """ Method to send emails notifications linked to a message.
 
@@ -3359,8 +3358,6 @@ class MailThread(models.AbstractModel):
           related record's display_name;
         :param list subtitles: optional list set as template value "subtitles";
 
-        :param bool resend_existing: check for existing notifications to update
-          based on mailed recipient, otherwise create new notifications;
         :param bool force_send: send emails directly instead of using queue;
         :param bool send_after_commit: if force_send, tells to send emails after
           the transaction has been committed using a post-commit hook;
@@ -3419,19 +3416,6 @@ class MailThread(models.AbstractModel):
                 new_email = SafeMail.create(mail_values)
 
                 if new_email and recipients_ids_chunk:
-                    tocreate_recipient_ids = list(recipients_ids_chunk)
-                    if resend_existing:
-                        existing_notifications = self.env['mail.notification'].sudo().search([
-                            ('mail_message_id', '=', message.id),
-                            ('notification_type', '=', 'email'),
-                            ('res_partner_id', 'in', tocreate_recipient_ids)
-                        ])
-                        if existing_notifications:
-                            tocreate_recipient_ids = [rid for rid in recipients_ids_chunk if rid not in existing_notifications.mapped('res_partner_id.id')]
-                            existing_notifications.write({
-                                'notification_status': 'ready',
-                                'mail_mail_id': new_email.id,
-                            })
                     notif_create_values += [{
                         'author_id': message.author_id.id,
                         'is_read': True,  # discard Inbox notification
@@ -3440,7 +3424,7 @@ class MailThread(models.AbstractModel):
                         'notification_status': 'ready',
                         'notification_type': 'email',
                         'res_partner_id': recipient_id,
-                    } for recipient_id in tocreate_recipient_ids]
+                    } for recipient_id in recipients_ids_chunk]
                 emails += new_email
 
         if notif_create_values:
