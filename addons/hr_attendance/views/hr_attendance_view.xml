@@ -145,11 +145,11 @@
                             <group>
                                 <group>
                                     <field name="in_mode"/>
-                                    <field name="in_ip_address" invisible="in_mode == 'manual'"/>
-                                    <field name="in_browser" invisible="in_mode == 'manual'"/>
+                                    <field name="in_ip_address" invisible="in_mode == 'manual' or not device_tracking_enabled"/>
+                                    <field name="in_browser" invisible="in_mode == 'manual' or not device_tracking_enabled"/>
                                 </group>
                             </group>
-                            <group invisible="in_mode == 'manual'">
+                            <group invisible="in_mode == 'manual' or not device_tracking_enabled">
                                 <field name="in_location"/>
                                 <label for="in_latitude" string="GPS Coordinates"/>
                                 <div>
@@ -176,11 +176,11 @@
                             <group>
                                 <group>
                                     <field name="out_mode" string="Mode"/>
-                                    <field name="out_ip_address" string="IP Address" invisible="in_mode == 'manual'"/>
-                                    <field name="out_browser" string="Browser" invisible="in_mode == 'manual'"/>
+                                    <field name="out_ip_address" string="IP Address" invisible="in_mode == 'manual' or not device_tracking_enabled"/>
+                                    <field name="out_browser" string="Browser" invisible="in_mode == 'manual' or not device_tracking_enabled"/>
                                 </group>
                             </group>
-                            <group invisible="out_mode == 'manual'">
+                            <group invisible="out_mode == 'manual' or not device_tracking_enabled">
                                 <field name="out_location"/>
                                 <label for="out_latitude" string="GPS Coordinates"/>
                                 <div>

@@ -27,6 +27,7 @@ class HrAttendance(http.Controller):
                 'last_check_in': employee.last_check_in,
                 'attendance_state': employee.attendance_state,
                 'display_systray': employee.company_id.attendance_from_systray,
+                'device_tracking_enabled': employee.company_id.attendance_device_tracking,
             }
         return response
 
@@ -46,13 +47,18 @@ class HrAttendance(http.Controller):
                     ('employee_id', '=', employee.id), ('date', '=', datetime.date.today()),
                     ('adjustment', '=', False)]).duration or 0,
                 'use_pin': employee.company_id.attendance_kiosk_use_pin,
-                'display_overtime': employee.company_id.hr_attendance_display_overtime
+                'display_overtime': employee.company_id.hr_attendance_display_overtime,
+                'device_tracking_enabled': employee.company_id.attendance_device_tracking,
             }
         return response
 
     @staticmethod
-    def _get_geoip_response(mode, latitude=False, longitude=False):
-        # First try to reverse lookup the country and city through coordinates
+    def _get_geoip_response(mode, latitude=False, longitude=False, device_tracking_enabled=True):
+        response = {'mode': mode}
+
+        if not device_tracking_enabled:
+            return response
+
         if latitude and longitude:
             geo_obj = request.env['base.geocoder']
             location_request = geo_obj._call_openstreetmap_reverse(latitude, longitude)
@@ -67,14 +73,16 @@ class HrAttendance(http.Controller):
                 location = f"{city}, {country}"
             else:
                 location = _('Unknown')
-        return {
+
+        response.update({
             'location': location,
             'latitude': latitude or request.geoip.location.latitude or False,
             'longitude': longitude or request.geoip.location.longitude or False,
             'ip_address': request.geoip.ip,
             'browser': request.httprequest.user_agent.browser,
-            'mode': mode
-        }
+        })
+
+        return response
 
     @http.route('/hr_attendance/kiosk_mode_menu/<int:company_id>', auth='user', type='http')
     def kiosk_menu_item_action(self, company_id):
@@ -165,6 +173,7 @@ class HrAttendance(http.Controller):
                         'kiosk_mode': kiosk_mode,
                         'from_trial_mode': from_trial_mode,
                         'barcode_source': company.attendance_barcode_source,
+                        'device_tracking_enabled': company.attendance_device_tracking,
                         'lang': py_to_js_locale(company.partner_id.lang or company.env.lang),
                         'server_version_info': version_info.get('server_version_info'),
                     },
@@ -186,7 +195,7 @@ class HrAttendance(http.Controller):
         if company:
             employee = request.env['hr.employee'].sudo().search([('barcode', '=', barcode), ('company_id', '=', company.id)], limit=1)
             if employee:
-                employee._attendance_action_change(self._get_geoip_response('kiosk'))
+                employee._attendance_action_change(self._get_geoip_response('kiosk', device_tracking_enabled=company.attendance_device_tracking))
                 return self._get_employee_info_response(employee)
         return {}
 
@@ -196,7 +205,7 @@ class HrAttendance(http.Controller):
         if company:
             employee = request.env['hr.employee'].sudo().browse(employee_id)
             if employee.company_id == company and ((not company.attendance_kiosk_use_pin) or (employee.pin == pin_code)):
-                employee.sudo()._attendance_action_change(self._get_geoip_response('kiosk', latitude=latitude, longitude=longitude))
+                employee.sudo()._attendance_action_change(self._get_geoip_response('kiosk', latitude=latitude, longitude=longitude, device_tracking_enabled=company.attendance_device_tracking))
                 return self._get_employee_info_response(employee)
         return {}
 
@@ -223,7 +232,8 @@ class HrAttendance(http.Controller):
         employee = request.env.user.employee_id
         geo_ip_response = self._get_geoip_response(mode='systray',
                                                   latitude=latitude,
-                                                  longitude=longitude)
+                                                  longitude=longitude,
+                                                  device_tracking_enabled=employee.company_id.attendance_device_tracking)
         employee._attendance_action_change(geo_ip_response)
         return self._get_employee_info_response(employee)
 

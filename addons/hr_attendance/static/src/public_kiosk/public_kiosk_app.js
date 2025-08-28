@@ -28,6 +28,7 @@ class kioskAttendanceApp extends Component{
         barcodeSource: { type: String },
         fromTrialMode: { type: Boolean },
         activeDisplay: { type: String },
+        deviceTrackingEnabled: { type: Boolean },
     };
     static components = {
         KioskBarcodeScanner,
@@ -134,30 +135,30 @@ class kioskAttendanceApp extends Component{
     }
 
     async makeRpcWithGeolocation(route, params) {
-        if (!isIosApp()) { // iOS app lacks permissions to call `getCurrentPosition`
-            return new Promise((resolve) => {
-                navigator.geolocation.getCurrentPosition(
-                    async ({ coords: { latitude, longitude } }) => {
-                        const result = await rpc(route, {
-                            ...params,
-                            latitude,
-                            longitude,
-                        });
-                        resolve(result);
-                    },
-                    async (err) => {
-                        const result = await rpc(route, {
-                            ...params
-                        });
-                        resolve(result);
-                    },
-                    { enableHighAccuracy: true }
-                );
-            });
+        if (!this.props.deviceTrackingEnabled || !navigator.geolocation || isIosApp()) {
+            // iOS app lacks permissions or tracking disabled
+            return rpc(route, { ...params });
         }
-        else {
-            return rpc(route, {...params})
-        }
+
+        return new Promise((resolve) => {
+            navigator.geolocation.getCurrentPosition(
+                async ({ coords: { latitude, longitude } }) => {
+                    const result = await rpc(route, {
+                        ...params,
+                        latitude,
+                        longitude,
+                    });
+                    resolve(result);
+                },
+                async (err) => {
+                    const result = await rpc(route, {
+                        ...params
+                    });
+                    resolve(result);
+                },
+                { enableHighAccuracy: true }
+            );
+        });
     }
 
     async onManualSelection(employeeId, enteredPin) {
@@ -231,6 +232,7 @@ export async function createPublicKioskAttendance(document, kiosk_backend_info) 
                 kioskMode: kiosk_backend_info.kiosk_mode,
                 barcodeSource: kiosk_backend_info.barcode_source,
                 fromTrialMode: kiosk_backend_info.from_trial_mode,
+                deviceTrackingEnabled: kiosk_backend_info.device_tracking_enabled,
             },
         dev: env.debug,
         translateFn: appTranslateFn,
