@@ -29,6 +29,7 @@ export class PosOrder extends Base {
         this.name = vals.name || "/";
         this.nb_print = vals.nb_print || 0;
         this.to_invoice = vals.to_invoice || false;
+        this.setShippingDate(vals.shipping_date);
         this.state = vals.state || "draft";
 
         if (!vals.last_order_preparation_change) {
