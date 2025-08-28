@@ -2,7 +2,7 @@ import base64
 import pytz
 from datetime import date, datetime
 
-from odoo import _, api, fields, models, exceptions
+from odoo import _, api, exceptions, fields, models, modules
 
 from .card_template import TEMPLATE_DIMENSIONS
 
@@ -334,6 +334,15 @@ class CardCampaign(models.Model):
             [self._render_field('body_html', record.ids, add_context={'card_campaign': self})[record.id]],
             *TEMPLATE_DIMENSIONS
         )[0]
+
+        # None means there was a logged error at image rendering time.
+        # Tests also do not render by default, in that case ignore.
+        if image_bytes is None and not modules.module.current_test:
+            raise exceptions.UserError(_(
+                'An error occured while rendering a card for %(record_name)s. '
+                'Try again or check the server logs for more details.',
+                record_name=record.display_name
+            ))
         return image_bytes and base64.b64encode(image_bytes)
 
     # ==========================================================================
