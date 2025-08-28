@@ -170,21 +170,13 @@ class GeoCoder(models.AbstractModel):
     def _sign_path_and_params(self, url_path: str, params: dict[str, str], signing_secret: str) -> str:
         """ Sign a url_path + query params with a URL-safe base64-encoded HMAC-SHA1 signature.
 
-        :param url_path: the path and query part of the URL to sign (e.g. "/maps/api/geocode/json?address=...")
+        :param url_path: the path and query part of the URL to sign (e.g. "/maps/api/geocode/json")
+        :param params: the query parameters to include in the signature
         :param signing_secret: the URL-safe base64-encoded signing secret provided by Google
         :return: the URL-safe base64-encoded signature
         """
-
-        # Decode the private key into its binary format
         decoded_key = base64.urlsafe_b64decode(signing_secret)
-
-        # build the path + params into full string to be signed
         full_path = f"{url_path}?{urlencode(params)}"
-
-        # Create a signature using the private key and the URL-encoded string using HMAC SHA1. This signature will be binary.
         signature = hmac.new(decoded_key, full_path.encode('utf-8'), hashlib.sha1)
-
-        # Encode the binary signature into base64 for use within a URL
         encoded_signature = base64.urlsafe_b64encode(signature.digest())
-
         return encoded_signature.decode('utf-8')
