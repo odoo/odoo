@@ -328,10 +328,14 @@ class TestRecruitment(TransactionCase):
         ])
 
         applicant_get_refuse_reason = self.env['applicant.get.refuse.reason'].create([{
-            'refuse_reason_id': refuse_reason.id,
+            'refuse_reason_id': self.env.ref('hr_recruitment.refuse_reason_2').id,
             'applicant_ids': [app_1.id],
             'duplicates': True
         }])
+
+        with Form(applicant_get_refuse_reason) as wizard:
+            wizard.refuse_reason_id = refuse_reason
+
         applicant_get_refuse_reason.action_refuse_reason_apply()
         self.assertFalse(self.env['hr.applicant'].search([('email_from', 'ilike', 'laurie.poiret@aol.ru')]))
         self.assertEqual(
