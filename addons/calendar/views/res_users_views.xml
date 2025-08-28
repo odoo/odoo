@@ -10,6 +10,10 @@
                 <xpath expr="//field[@name='tz']" position="after">
                     <field name="calendar_default_privacy" readonly="0" string="Privacy" invisible="share"/>
                 </xpath>
+                <group name="calendar_preferences" position="inside">
+                    <separator name="calendar_synchronization" string="External Calendars" invisible="1"/>
+                    <widget name="calendar_sync_buttons" colspan="2" invisible="1"/>
+                </group>
             </field>
         </record>
         <!-- Update User form !-->

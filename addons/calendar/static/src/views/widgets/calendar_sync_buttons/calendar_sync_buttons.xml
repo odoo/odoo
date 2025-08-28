@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="calendar.calendarSyncButtons">
+        <t t-set="googleSyncStatus" t-value="this.googleSyncStatus"/>
+        <t t-set="microsoftSyncStatus" t-value="this.microsoftSyncStatus"/>
+
+        <div id="header_synchronization_settings" class="d-flex o_calendar_sync_buttons">
+            <t t-if="(this.googleCredentialStatus or this.microsoftCredentialStatus or true)
+            and (!googleSyncStatus or ['sync_stopped', 'missing_credentials'].includes(googleSyncStatus))
+            and (!microsoftSyncStatus or ['sync_stopped', 'missing_credentials'].includes(microsoftSyncStatus))">
+                <h5 id="synchronize_with" class="text-nowrap align-self-center me-2 my-0" >Synchronize with</h5>
+            </t>
+            <t t-elif="(this.googleCredentialsSet and googleSyncStatus == 'sync_active')
+            or (this.microsoftCredentialsSet and microsoftSyncStatus == 'sync_active')">
+                <div id="google_calendar_sync" class="o_calendar_sync mx-1 d-inline-flex">
+                    <button class="btn text-nowrap"
+                    t-on-click="googleSyncStatus == 'sync_active' ? onStopGoogleSynchronization : onStopMicrosoftSynchronization">
+                        <div>
+                            <i id="check_symbol" class='fa fa-check px-1 o_text_green o_calendar_check'/>
+                            <i id="stop_symbol" class='fa fa-square px-1 o_text_red o_calendar_stop'/>
+                            <span id="check_text" class='o_calendar_check'>
+                                <t t-if="googleSyncStatus == 'sync_active'">Google</t>
+                                <t t-else="">Outlook</t>
+                            </span>
+                            <span id="stop_text" class="o_text_red o_calendar_stop">Stop synchro</span>
+                        </div>
+                    </button>
+                </div>
+            </t>
+            <t t-elif="googleSyncStatus == 'sync_paused' or microsoftSyncStatus =='sync_paused'">
+                <button class="btn text-nowrap" t-on-click="googleSyncStatus == 'sync_paused' ? onUnpauseGoogleSynchronization : onUnpauseMicrosoftSynchronization">
+                    <div>
+                        <i id="pause_symbol" class='fa fa-pause px-1 o_text_orange o_calendar_pause'/>
+                        <i id="stop_symbol" class='fa fa-square px-1 o_text_red o_calendar_stop'/>
+                        <span id="pause_text" class='o_text_orange o_calendar_pause'>Synchro is paused</span>
+                        <span id="stop_text" class="o_text_red o_calendar_stop">Stop synchro</span>
+                    </div>
+                </button>
+            </t>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="google_calendar.calendarSyncButtons" t-inherit="calendar.calendarSyncButtons" t-inherit-mode="extension">
+        <!-- Credentials configured: show 'Google' button concatenated with the 'Synchronize with' label. -->
+        <xpath expr="//div[@id='header_synchronization_settings']//h5[@id='synchronize_with']" position="after">
+            <!-- <a t-if="this.googleCredentialsSet and !this.state.googleSyncIsDone and !this.state.googleSyncIsPaused" -->
+            <a t-on-click="onGoogleSyncCalendar" role="button"
+                class="o_calendar_sync_button btn btn-sm bg-transparent border-info d-inline-flex align-items-center mx-1">
+                <img src="/google_calendar/static/src/img/google-calendar.svg"/>
+                <small class="ms-1">Google</small>
+            </a>
+        </xpath>
+    </t>
+</templates>
