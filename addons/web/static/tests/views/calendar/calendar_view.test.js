@@ -2125,6 +2125,130 @@ test(`rendering, with many2many on mobile`, async () => {
     expect(`.modal img`).toHaveCount(5);
 });
 
+test.tags("desktop");
+test(`set filter with many2many field on desktop`, async () => {
+    Event._fields.attendee_ids = fields.Many2many({
+        relation: "calendar.partner",
+        default: [[6, 0, [1]]],
+    });
+    Event._records[0].attendee_ids = [1, 2, 3, 4, 5];
+    CalendarPartner._records.push({ id: 5, name: "partner 5", image: "EEE" });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop" all_day="is_all_day" event_open_popup="1">
+                <field name="attendee_ids" filters="1"/>
+            </calendar>
+        `,
+    });
+    expect(`.o_calendar_filter_item`).toHaveCount(5);
+    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+
+    await toggleSectionFilter("attendee_ids");
+    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
+    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(0);
+
+    await toggleFilter("attendee_ids", "1");
+    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
+    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+});
+
+test.tags("mobile");
+test(`set filter with many2many field on mobile`, async () => {
+    Event._fields.attendee_ids = fields.Many2many({
+        relation: "calendar.partner",
+        default: [[6, 0, [1]]],
+    });
+    Event._records[0].attendee_ids = [1, 2, 3, 4, 5];
+    CalendarPartner._records.push({ id: 5, name: "partner 5", image: "EEE" });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop" all_day="is_all_day" event_open_popup="1">
+                <field name="attendee_ids" filters="1"/>
+            </calendar>
+        `,
+    });
+    await contains(`.o_filter`).click();
+    expect(`.o_calendar_filter_item`).toHaveCount(5);
+    await contains(`.o_filter`).click();
+    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+
+    await toggleSectionFilter("attendee_ids");
+    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
+    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(0);
+
+    await toggleFilter("attendee_ids", "1");
+    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
+    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+});
+
+test.tags("desktop");
+test(`set filter with one2many field on desktop`, async () => {
+    Event._fields.attendee_ids = fields.One2many({
+        relation: "calendar.partner",
+        default: [[6, 0, [1]]],
+    });
+    Event._records[0].attendee_ids = [1, 2, 3, 4, 5];
+    CalendarPartner._records.push({ id: 5, name: "partner 5", image: "EEE" });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop" all_day="is_all_day" event_open_popup="1">
+                <field name="attendee_ids" filters="1"/>
+            </calendar>
+        `,
+    });
+    expect(`.o_calendar_filter_item`).toHaveCount(5);
+    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+
+    await toggleSectionFilter("attendee_ids");
+    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
+    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(0);
+
+    await toggleFilter("attendee_ids", "1");
+    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
+    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+});
+
+test.tags("mobile");
+test(`set filter with one2many field on mobile`, async () => {
+    Event._fields.attendee_ids = fields.One2many({
+        relation: "calendar.partner",
+        default: [[6, 0, [1]]],
+    });
+    Event._records[0].attendee_ids = [1, 2, 3, 4, 5];
+    CalendarPartner._records.push({ id: 5, name: "partner 5", image: "EEE" });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop" all_day="is_all_day" event_open_popup="1">
+                <field name="attendee_ids" filters="1"/>
+            </calendar>
+        `,
+    });
+    await contains(`.o_filter`).click();
+    expect(`.o_calendar_filter_item`).toHaveCount(5);
+    await contains(`.o_filter`).click();
+    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(1);
+    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+
+    await toggleSectionFilter("attendee_ids");
+    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
+    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(0);
+
+    await toggleFilter("attendee_ids", "1");
+    expect(`.o_event[data-event-id="1"] .fc-event-main`).toHaveCount(0);
+    expect(`.o_event[data-event-id="3"] .fc-event-main`).toHaveCount(1);
+});
+
 test(`open form view`, async () => {
     let expectedRequest;
     mockService("action", {
