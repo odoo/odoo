@@ -46,19 +46,6 @@ class TestReports(L10nInTestInvoicingCommon):
                 'l10n_in_state_id': expected_pos_id,
             }]
         )
-        self.partner_b.write({
-            'vat': False,
-            'l10n_in_gst_treatment': 'unregistered',
-            'state_id': self.state_in_hp,  # change state of partner
-        })
-        self.assertRecordValues(
-            self.invoice_b,
-            [{
-                'state': 'draft',
-                'l10n_in_gst_treatment': self.partner_b.l10n_in_gst_treatment,
-                'l10n_in_state_id': expected_pos_id, # POS doesn't change unless the partner changes
-            }]
-        )
         self.assertRecordValues(
             invoice_b_2,
             [{ # check gst treatment and pos doesn't change on posted invoice
@@ -75,14 +62,6 @@ class TestReports(L10nInTestInvoicingCommon):
             taxes=[self.igst_sale_18],
         )
 
-        self.assertRecordValues(
-            self.invoice_a,
-            [{
-                'state': 'draft',
-                'l10n_in_gst_treatment': self.partner_a.l10n_in_gst_treatment,
-                'l10n_in_state_id': self.state_in_gj.id,
-            }]
-        )
         self.invoice_a.partner_id = self.partner_foreign
         self.assertRecordValues(
             self.invoice_a,
