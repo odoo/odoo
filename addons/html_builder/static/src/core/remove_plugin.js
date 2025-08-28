@@ -1,7 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
-import { getVisibleSibling } from "./move_plugin";
 import { unremovableNodePredicates as deletePluginPredicates } from "@html_editor/core/delete_plugin";
 import { isUnremovableQWebElement as qwebPluginPredicate } from "@html_editor/others/qweb_plugin";
 import { isEditable } from "@html_builder/utils/utils";
@@ -27,7 +26,7 @@ const layoutElementsSelector = [
 
 export class RemovePlugin extends Plugin {
     static id = "remove";
-    static dependencies = ["builderOptions"];
+    static dependencies = ["builderOptions", "visibility"];
     resources = {
         get_overlay_buttons: withSequence(3, {
             getButtons: this.getActiveOverlayButtons.bind(this),
@@ -129,8 +128,11 @@ export class RemovePlugin extends Plugin {
 
         // Get the parent and the previous and next visible siblings.
         let parentEl = toRemoveEl.parentElement;
-        const previousSiblingEl = getVisibleSibling(toRemoveEl, "prev");
-        const nextSiblingEl = getVisibleSibling(toRemoveEl, "next");
+        const previousSiblingEl = this.dependencies.visibility.getVisibleSibling(
+            toRemoveEl,
+            "prev"
+        );
+        const nextSiblingEl = this.dependencies.visibility.getVisibleSibling(toRemoveEl, "next");
         if (parentEl.matches(".o_editable:not(body)")) {
             // If we target the editable, we want to reset the selection to the
             // body. If the editable has options, we do not want to show them.

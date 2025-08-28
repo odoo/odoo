@@ -16,7 +16,6 @@ import {
     toggleGridMode,
     hasGridLayoutOption,
 } from "@html_builder/utils/grid_layout_utils";
-import { isMobileView } from "@html_builder/utils/utils";
 import { isElement } from "@html_editor/utils/dom_info";
 
 const gridItemSelector = ".row.o_grid_mode > div.o_grid_item";
@@ -76,7 +75,7 @@ export class GridLayoutPlugin extends Plugin {
 
         const buttons = [];
         this.overlayTarget = target;
-        if (!isMobileView(this.overlayTarget)) {
+        if (!this.config.isMobileView(this.overlayTarget)) {
             buttons.push(
                 {
                     class: "o_send_back oi",
@@ -140,7 +139,7 @@ export class GridLayoutPlugin extends Plugin {
      */
     adjustGridItem(el) {
         const gridItemEl = el.closest(".o_grid_item");
-        if (gridItemEl && gridItemEl !== el && !isMobileView(gridItemEl)) {
+        if (gridItemEl && gridItemEl !== el && !this.config.isMobileView(gridItemEl)) {
             const rowEl = gridItemEl.parentElement;
             const { rowGap, rowSize } = getGridProperties(rowEl);
             const { rowStart, rowEnd } = getGridItemProperties(gridItemEl);
@@ -212,7 +211,7 @@ export class GridLayoutPlugin extends Plugin {
         // The columns move handles are not visible in mobile view to prevent
         // dragging them.
         const isColumn = targetEl.parentElement?.classList.contains("row");
-        if (isColumn && isMobileView(targetEl)) {
+        if (isColumn && this.config.isMobileView(targetEl)) {
             return false;
         }
         return true;
@@ -242,7 +241,7 @@ export class GridLayoutPlugin extends Plugin {
                 // Toggle the grid mode if it is not already on.
                 if (!isRowInGridMode) {
                     const preserveSelection = this.dependencies.selection.preserveSelection;
-                    toggleGridMode(containerEl, preserveSelection);
+                    toggleGridMode(containerEl, preserveSelection, this.config.mobileBreakpoint);
                 }
                 const gridItemProps = getGridItemProperties(columnEl);
 
@@ -292,7 +291,13 @@ export class GridLayoutPlugin extends Plugin {
         // grid item and store its dimensions.
         if (!columnEl.classList.contains("o_grid_item")) {
             const { columnWidth, columnHeight } = dragState;
-            const spans = convertColumnToGrid(rowEl, columnEl, columnWidth, columnHeight);
+            const spans = convertColumnToGrid(
+                rowEl,
+                columnEl,
+                columnWidth,
+                columnHeight,
+                this.config.mobileBreakpoint
+            );
             dragState.columnSpan = spans.columnSpan;
             dragState.rowSpan = spans.rowSpan;
         }
@@ -397,7 +402,7 @@ export class GridLayoutPlugin extends Plugin {
             resizeGrid(rowEl);
         } else if (columnEl.classList.contains("o_grid_item")) {
             // Case when dropping a grid item in a non-grid dropzone.
-            convertToNormalColumn(columnEl);
+            convertToNormalColumn(columnEl, this.config.mobileBreakpoint);
         }
     }
 
@@ -416,7 +421,13 @@ export class GridLayoutPlugin extends Plugin {
             // grid item and store its dimensions.
             if (!columnEl.classList.contains("o_grid_item")) {
                 const { columnWidth, columnHeight } = dragState;
-                const spans = convertColumnToGrid(rowEl, columnEl, columnWidth, columnHeight);
+                const spans = convertColumnToGrid(
+                    rowEl,
+                    columnEl,
+                    columnWidth,
+                    columnHeight,
+                    this.config.mobileBreakpoint
+                );
                 dragState.columnSpan = spans.columnSpan;
                 dragState.rowSpan = spans.rowSpan;
             }
@@ -434,7 +445,7 @@ export class GridLayoutPlugin extends Plugin {
             resizeGrid(rowEl);
         } else if (columnEl.classList.contains("o_grid_item")) {
             // Case when a grid item is dropped near a non-grid dropzone.
-            convertToNormalColumn(columnEl);
+            convertToNormalColumn(columnEl, this.config.mobileBreakpoint);
         }
     }
 
