@@ -56,8 +56,7 @@ export function checkContactValues(name, address = "", phone = "", mobile = "", 
 
     return steps;
 }
-
-export function searchCustomerValue(val) {
+export function searchCustomer(val) {
     return [
         {
             isActive: ["mobile"],
@@ -70,6 +69,11 @@ export function searchCustomerValue(val) {
             trigger: `.modal-dialog .input-group input`,
             run: `edit ${val}`,
         },
+    ];
+}
+export function searchCustomerValue(val) {
+    return [
+        ...searchCustomer(val),
         {
             content: `Click on search more if present`,
             trigger: `.search-more-button > button, .partner-list .partner-info:nth-child(1):contains("${val}")`,
@@ -80,6 +84,36 @@ export function searchCustomerValue(val) {
         {
             content: `Check "${val}" is shown`,
             trigger: `.partner-list .partner-info:nth-child(1):contains("${val}")`,
+        },
+    ];
+}
+export function selectFormDiscard() {
+    return [
+        {
+            trigger: "button.o_form_button_cancel",
+            content: "Click on discard the customer form",
+            run: "click",
+        },
+    ];
+}
+
+export function checkInputForm(fieldName, expectedValue) {
+    return [
+        {
+            trigger: `div[name="${fieldName}"] .o_input`,
+            content: `Check if "${expectedValue}" in form div "${fieldName}"`,
+            run: function () {
+                const input = document.querySelector(`div[name="${fieldName}"] .o_input`);
+                if (!input) {
+                    console.error(`Element div[name="${fieldName}"] .o_input not found`);
+                    return;
+                }
+                if (input.value !== expectedValue) {
+                    console.error(
+                        `Validation failed: expected "${expectedValue}", got "${input.value}"`
+                    );
+                }
+            },
         },
     ];
 }

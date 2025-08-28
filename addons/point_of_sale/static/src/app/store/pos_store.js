@@ -1855,7 +1855,20 @@ export class PosStore extends Reactive {
         });
     }
     editPartnerContext(partner) {
-        return {};
+        const context = {};
+        if (this.partnerSearchContext) {
+            const isPhoneNumber = /^[0-9]+$/.test(
+                this.partnerSearchContext.replace(/[+\s().-]/g, "")
+            );
+            if (isPhoneNumber) {
+                context.default_phone = this.partnerSearchContext;
+                context.default_focus = "phone";
+            } else {
+                context.default_name = this.partnerSearchContext;
+                context.default_focus = "name";
+            }
+        }
+        return context;
     }
     /**
      * @param {import("@point_of_sale/app/models/res_partner").ResPartner?} partner leave undefined to create a new partner

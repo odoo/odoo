@@ -16,6 +16,7 @@ import {
 } from "@point_of_sale/../tests/tours/utils/common";
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/tours/utils/product_configurator_util";
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
+import * as Utils from "@point_of_sale/../tests/tours/utils/common";
 
 registry.category("web_tour.tours").add("ProductScreenTour", {
     steps: () =>
@@ -709,5 +710,23 @@ registry.category("web_tour.tours").add("test_pos_ui_round_globally", {
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
             Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosCustomerSearchPrefilledOnCreate", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            PartnerList.searchCustomer("test customer"),
+            Utils.selectButton("Create"),
+            PartnerList.checkInputForm("name", "test customer"),
+            PartnerList.selectFormDiscard(),
+
+            PartnerList.searchCustomer("+(123) 45.67-89"),
+            Utils.selectButton("Create"),
+            PartnerList.checkInputForm("phone", "+(123) 45.67-89"),
+            PartnerList.selectFormDiscard(),
         ].flat(),
 });

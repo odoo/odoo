@@ -71,6 +71,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
                 (4, cls.env.ref('base.group_user').id),
                 (4, cls.env.ref('point_of_sale.group_pos_user').id),
                 (4, cls.env.ref('stock.group_stock_user').id),
+                (4, cls.env.ref('base.group_partner_manager').id),
             ],
             'tz': 'America/New_York',
         })
@@ -2115,6 +2116,10 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertAlmostEqual(lines[2].balance, 56.41)
         self.assertAlmostEqual(lines[3].balance, 352.59)
         self.assertAlmostEqual(lines[4].balance, 7771.01)
+
+    def test_customer_search_prefilled_on_create(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('PosCustomerSearchPrefilledOnCreate')
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
