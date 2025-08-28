@@ -3089,6 +3089,35 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour("test_lot_refund_lower_qty")
 
+<<<<<<< 50e3d8d42c61d55ce31ba22bb3b2d75bc4a8c820
+||||||| e5476d80e71df5bbccce34b2fe78e28d883d713c
+    def test_product_ref_displayed(self):
+        self.env['product.product'].create({
+            'name': 'Test name',
+            'available_in_pos': True,
+            'default_code': 'Test ref',
+            'list_price': 10,
+        })
+        # Need to log as admin to be able to edit the product info
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_product_ref_displayed', login="pos_admin")
+
+=======
+    def test_product_ref_displayed(self):
+        self.env['product.product'].create({
+            'name': 'Test name',
+            'available_in_pos': True,
+            'default_code': 'Test ref',
+            'list_price': 10,
+        })
+        # Need to log as admin to be able to edit the product info
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_product_ref_displayed', login="pos_admin")
+
+    def test_combo_disallowLineQuantityChange(self):
+        setup_product_combo_items(self)
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_combo_disallowLineQuantityChange', login="pos_user")
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_combo_disallowLineQuantityChange_2', login="pos_user")
+
+>>>>>>> 56ee7fe482b3fa013421c019bd05cb89189c2cbc
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):

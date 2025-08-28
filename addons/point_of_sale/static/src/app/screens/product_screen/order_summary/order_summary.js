@@ -281,7 +281,16 @@ export class OrderSummary extends Component {
             }
             const currentQuantity = selectedLine.getQuantity();
             if (newQuantity >= currentQuantity) {
+<<<<<<< 50e3d8d42c61d55ce31ba22bb3b2d75bc4a8c820
                 selectedLine.setQuantity(newQuantity, Boolean(selectedLine.combo_line_ids?.length));
+||||||| e5476d80e71df5bbccce34b2fe78e28d883d713c
+                selectedLine.setQuantity(newQuantity);
+=======
+                selectedLine.setQuantity(newQuantity, selectedLine.isPartOfCombo());
+                for (const line of selectedLine.combo_line_ids ?? []) {
+                    line.setQuantity(newQuantity, true);
+                }
+>>>>>>> 56ee7fe482b3fa013421c019bd05cb89189c2cbc
             } else if (newQuantity >= selectedLine.uiState.savedQuantity) {
                 await this.handleDecreaseUnsavedLine(newQuantity);
             } else {
@@ -297,7 +306,16 @@ export class OrderSummary extends Component {
             selectedLine = selectedLine.combo_parent_id;
         }
         const decreaseQuantity = selectedLine.getQuantity() - newQuantity;
+<<<<<<< 50e3d8d42c61d55ce31ba22bb3b2d75bc4a8c820
         selectedLine.setQuantity(newQuantity, Boolean(selectedLine.combo_line_ids?.length));
+||||||| e5476d80e71df5bbccce34b2fe78e28d883d713c
+        selectedLine.setQuantity(newQuantity);
+=======
+        selectedLine.setQuantity(newQuantity, selectedLine.isPartOfCombo());
+        for (const line of selectedLine.combo_line_ids ?? []) {
+            line.setQuantity(newQuantity, true);
+        }
+>>>>>>> 56ee7fe482b3fa013421c019bd05cb89189c2cbc
         return decreaseQuantity;
     }
     async handleDecreaseLine(newQuantity) {
