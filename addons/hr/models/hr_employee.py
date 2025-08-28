@@ -359,7 +359,9 @@ class HrEmployee(models.Model):
     @api.depends('current_version_id')
     @api.depends_context('version_id')
     def _compute_version_id(self):
-        context_version = self.env['hr.version'].browse(self.env.context.get('version_id', False))
+        context_version_id = self.env.context.get('version_id', False)
+        context_version = self.env['hr.version'].browse(context_version_id).exists() if context_version_id else self.env['hr.version']
+
         for employee in self:
             if context_version.employee_id == self:
                 version = context_version

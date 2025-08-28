@@ -480,6 +480,27 @@ class TestHrVersion(TransactionCase):
             self.assertEqual(version.job_id.id, jobB.id)
             self.assertEqual(version.contract_date_end, date(2020, 9, 30))
 
+    def test_delete_version(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+        })
+        v1 = employee.version_id
+        v2 = employee.create_version({
+            'date_version': '2021-01-01',
+        })
+        v3 = employee.create_version({
+            'date_version': '2022-01-01',
+        })
+        self.assertEqual(employee.current_version_id, v3)
+
+        v3.unlink()
+        self.assertEqual(employee.current_version_id, v2)
+        v1.unlink()
+        self.assertEqual(employee.current_version_id, v2)
+        with self.assertRaises(ValidationError):
+            v2.unlink()
+
     def test_multi_edit_multi_employees_no_contract(self):
         """
         Test the multi-edit when there is one version per employee, without contract
