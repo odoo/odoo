@@ -130,13 +130,9 @@ test("Hotkeys on Theme and Blocks tab", async () => {
     expect("[data-name=blocks]").toHaveClass("active");
     expect("[data-name=theme]").not.toHaveClass("active");
     await press(["alt", "2"]);
-    await animationFrame();
-    await animationFrame();
-    expect("[data-name=blocks]").not.toHaveClass("active");
+    await waitFor("[data-name=blocks]:not(.active)");
     expect("[data-name=theme]").toHaveClass("active");
     await press(["alt", "1"]);
-    await animationFrame();
-    await animationFrame();
+    await waitFor("[data-name=theme]:not(.active)");
     expect("[data-name=blocks]").toHaveClass("active");
-    expect("[data-name=theme]").not.toHaveClass("active");
 });
