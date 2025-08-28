@@ -279,7 +279,7 @@ class MassMailController(http.Controller):
             'lists_public': lists_public,
         }
 
-    @http.route('/mailing/list/update', type='jsonrpc', auth='public', csrf=True)
+    @http.route('/mailing/list/update', type='jsonrpc', auth='public')
     def mailing_update_list_subscription(self, mailing_id=None, document_id=None,
                                          email=None, hash_token=None,
                                          lists_optin_ids=None, **post):
@@ -310,7 +310,7 @@ class MassMailController(http.Controller):
 
         return len(lists_to_optout)
 
-    @http.route('/mailing/feedback', type='jsonrpc', auth='public', csrf=True)
+    @http.route('/mailing/feedback', type='jsonrpc', auth='public')
     def mailing_send_feedback(self, mailing_id=None, document_id=None,
                               email=None, hash_token=None,
                               last_action=None,

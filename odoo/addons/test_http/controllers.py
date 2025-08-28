@@ -85,7 +85,7 @@ class TestHttp(http.Controller):
     def echo_http_post(self, **kwargs):
         return str(kwargs)
 
-    @http.route('/test_http/echo-http-csrf', type='http', auth='none', methods=['POST'], csrf=True)
+    @http.route('/test_http/echo-http-csrf', type='http', auth='none', methods=['POST'])
     def echo_http_csrf(self, **kwargs):
         return str(kwargs)
 
