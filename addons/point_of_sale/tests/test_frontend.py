@@ -82,6 +82,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
                 (4, cls.env.ref('base.group_user').id),
                 (4, cls.env.ref('point_of_sale.group_pos_user').id),
                 (4, cls.env.ref('stock.group_stock_user').id),
+                (4, cls.env.ref('base.group_partner_manager').id),
             ],
             'tz': 'America/New_York',
         })
@@ -2299,6 +2300,12 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_orderline_merge_with_higher_price_precision', login="pos_user")
+
+    def test_customer_search_prefilled_on_create(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        with self.assertLogs(level='WARNING') as log_catcher:
+            self.start_pos_tour('test_customer_search_prefilled_on_create')
+        self.assertTrue(all("Missing widget" in output for output in log_catcher.output))
 
 
 # This class just runs the same tests as above but with mobile emulation

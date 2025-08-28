@@ -803,3 +803,31 @@ registry.category("web_tour.tours").add("test_orderline_merge_with_higher_price_
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_customer_search_prefilled_on_create", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            PartnerList.searchCustomer("test customer"),
+            {
+                content: "Wait",
+                trigger: ".modal-dialog",
+                timeout: 100,
+            },
+            PartnerList.clickPartnerCreateBtn(),
+            PartnerList.checkInputForm("name", "test customer"),
+            PartnerList.selectFormDiscard(),
+
+            PartnerList.searchCustomer("+(123) 45.67-89"),
+            {
+                content: "Wait",
+                trigger: ".modal-dialog",
+                timeout: 100,
+            },
+            PartnerList.clickPartnerCreateBtn(),
+            PartnerList.checkInputForm("phone", "+(123) 45.67-89"),
+            PartnerList.selectFormDiscard(),
+        ].flat(),
+});
