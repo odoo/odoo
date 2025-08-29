@@ -38,9 +38,12 @@ class TestMailingTest(TestMassMailCommon):
     @mute_logger('odoo.addons.mail.models.mail_render_mixin')
     def test_mailing_test_button(self):
         mailing = self.test_mailing_bl.with_env(self.env)
+        model = mailing.mailing_model_real
+        record = self.test_records[0]
         mailing_test = self.env['mailing.mailing.test'].create({
             'email_to': 'test@test.com',
             'mass_mailing_id': mailing.id,
+            'preview_record_ref': f'{model},{record.id}',
         })
 
         with self.mock_mail_gateway():
@@ -48,26 +51,25 @@ class TestMailingTest(TestMassMailCommon):
 
         # not great but matches send_mail_test, maybe that should be a method
         # on mailing_test?
-        record = self.env[mailing.mailing_model_real].search([], limit=1)
-        first_child = lxml.html.fromstring(self._mails.pop()['body']).xpath('//body/*[1]')[0]
-        self.assertEqual(first_child.tag, 'div')
-        self.assertIn('display:none', first_child.get('style'),
+        preview_div = lxml.html.fragments_fromstring(self._mails.pop()['body'])[0]
+        self.assertEqual(preview_div.tag, 'div')
+        self.assertIn('display:none', preview_div.get('style'),
                       "the preview node should be hidden")
-        self.assertEqual(first_child.text.strip(), "Preview " + record.name,
+        self.assertEqual(preview_div.text.strip(), "Preview " + record.name,
                          "the preview node should contain the preview text")
 
         # Test if bad inline_template in the subject raises an error
         mailing.write({'subject': 'Subject {{ object.name_id.id }}'})
-        with self.mock_mail_gateway(), self.assertRaises(Exception):
-            mailing_test.send_mail_test()
+        with self.assertRaises(Exception):
+            mailing_test._compute_preview_body()
 
         # Test if bad inline_template in the body raises an error
         mailing.write({
             'subject': 'Subject {{ object.name }}',
             'body_html': '<p>Hello <t t-out="object.name_id.id"/></p>',
         })
-        with self.mock_mail_gateway(), self.assertRaises(Exception):
-            mailing_test.send_mail_test()
+        with self.assertRaises(Exception):
+            mailing_test._compute_preview_body()
 
         # Test if bad inline_template in the preview raises an error
         mailing.write({
@@ -86,9 +88,12 @@ class TestMailingTest(TestMassMailCommon):
         This also checks that other links containing the /view route aren't replaced along the way.
         """
         mailing = self.test_mailing_bl.with_env(self.env)
+        model = mailing.mailing_model_real
+        record = self.test_records[0]
         mailing_test = self.env['mailing.mailing.test'].create({
             'email_to': 'test@test.com',
             'mass_mailing_id': mailing.id,
+            'preview_record_ref': f'{model},{record.id}',
         })
         # Test if link snippets are correctly converted
         mailing.write({
@@ -124,18 +129,19 @@ class TestMailingTest(TestMassMailCommon):
             'body_html': '<p>Hello {{ object.name }} <t t-out="object.name"/></p>',
             'subject': 'Subject {{ object.name }} <t t-out="object.name"/>',
         })
+        model = mailing.mailing_model_real
+        record = self.test_records[1]
         mailing_test = self.env['mailing.mailing.test'].create({
             'email_to': 'test@test.com',
             'mass_mailing_id': mailing.id,
+            'preview_record_ref': f'{model},{record.id}',
         })
 
         with self.mock_mail_gateway():
             mailing_test.send_mail_test()
 
-        expected_test_record = self.env[mailing.mailing_model_real].search([], limit=1)
-        self.assertEqual(expected_test_record, self.test_records[0], 'Should take first found one')
-        expected_subject = f'Subject {expected_test_record.name} <t t-out="object.name"/>'
-        expected_body = 'Hello {{ object.name }}' + f' {expected_test_record.name}'
+        expected_subject = f'Subject {record.name} <t t-out="object.name"/>'
+        expected_body = 'Hello {{ object.name }}' + f' {record.name}'
 
         self.assertSentEmail(self.env.user.partner_id, ['test@test.com'],
             subject='[TEST] %s' % expected_subject,
@@ -148,7 +154,7 @@ class TestMailingTest(TestMassMailCommon):
 
         self.assertSentEmail(
             self.env.user.partner_id,
-            [expected_test_record.email_from],
+            [record.email_from],
             subject=expected_subject,
             body_content=expected_body,
         )
@@ -160,6 +166,27 @@ class TestMailingTest(TestMassMailCommon):
             'test@test.com',
             "Should use the value of the previous record's email_to as default",
         )
+
+    def test_mailing_test_email_parsing(self):
+        """ Test input email parsing """
+        mailing = self.test_mailing_bl.with_env(self.env)
+        mailing_test = self.env['mailing.mailing.test'].create({
+            'email_to': '"Roul, the great" <roul@test.com>, test1@test.com\n'
+                        'test2@test.com, test3@test.com\n'
+                        'invalid_email',
+            'mass_mailing_id': mailing.id,
+        })
+        with self.mock_mail_gateway():
+            mailing_test.send_mail_test()
+
+        # Check valid emails
+        self.assertEqual(len(self._mails), 4)
+        recipients = {mail['email_to'][0] for mail in self._mails}
+        self.assertEqual(recipients, {'roul@test.com', 'test1@test.com', 'test2@test.com', 'test3@test.com'})
+
+        # Check invalid emails
+        last_message = mailing.message_ids[0]
+        self.assertIn('Mailing addresses incorrect: invalid_email', last_message.body)
 
 
 @tagged('mailing_manage', 'twilio')

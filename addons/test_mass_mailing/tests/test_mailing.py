@@ -142,7 +142,7 @@ class TestMassMailing(TestMassMailCommon):
         self.assertEqual(recipients[1].message_bounce, 0)
         self.gateway_mail_trace_bounce(mailing, recipients[1])
         mailing.invalidate_recordset()
-        self.assertMailingStatistics(mailing, expected=5, delivered=4, sent=5, opened=1, clicked=1, bounced=1)
+        self.assertMailingStatistics(mailing, expected=5, delivered=4, sent=5, opened=1, clicked=1, bounced=1, failed=1)
         self.assertEqual(recipients[1].message_bounce, 1)
         self.assertMailTraces([{
             'email': 'test.record.01@test.example.com',

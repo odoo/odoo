@@ -104,11 +104,11 @@ class MailingMailing(models.Model):
     # BUSINESS / VIEWS ACTIONS
     # --------------------------------------------------
 
-    def action_retry_failed(self):
+    def action_retry_failed(self, extra_domain=None):
         mass_sms = self.filtered(lambda m: m.mailing_type == 'sms')
         if mass_sms:
             mass_sms.action_retry_failed_sms()
-        return super(MailingMailing, self - mass_sms).action_retry_failed()
+        return super(MailingMailing, self - mass_sms).action_retry_failed(extra_domain=extra_domain)
 
     def action_retry_failed_sms(self):
         failed_sms = self.env['sms.sms'].sudo().search([
