@@ -602,8 +602,14 @@ export class PosStore extends WithLazyGetterTrap {
         const orderPathUuid = this.router.state.params.orderUuid;
         const order = this.models["pos.order"].find((order) => order.uuid === orderPathUuid);
         if (orderPathUuid && !order) {
-            const result = await this.data.call("pos.order", "read_pos_data_uuid", [orderPathUuid]);
-            this.models.loadConnectedData(result);
+            await this.data.callRelated(
+                "pos.order",
+                "read_pos_orders",
+                [[["uuid", "=", orderPathUuid]]],
+                {},
+                false,
+                true
+            );
             const order = this.models["pos.order"].find((order) => order.uuid === orderPathUuid);
             if (order) {
                 this.setOrder(order);
@@ -1472,7 +1478,15 @@ export class PosStore extends WithLazyGetterTrap {
         ]);
     }
     async loadServerOrders(domain) {
-        const orders = await this.data.searchRead("pos.order", domain);
+        const result = await this.data.callRelated(
+            "pos.order",
+            "read_pos_orders",
+            [domain],
+            {},
+            false,
+            true
+        );
+        const orders = result["pos.order"] || [];
         for (const order of orders) {
             order.config_id = this.config;
             order.session_id = this.session;
@@ -2067,10 +2081,13 @@ export class PosStore extends WithLazyGetterTrap {
             resModel: "pos.order",
             resId: order.id,
             onRecordSaved: async (record) => {
-                await this.data.read("pos.order", [record.evalContext.id]);
-                await this.data.read(
-                    "pos.payment",
-                    order.payment_ids.map((p) => p.id)
+                await this.data.callRelated(
+                    "pos.order",
+                    "read_pos_orders",
+                    [[["id", "=", record.evalContext.id]]],
+                    {},
+                    false,
+                    true
                 );
                 this.action.doAction({
                     type: "ir.actions.act_window_close",

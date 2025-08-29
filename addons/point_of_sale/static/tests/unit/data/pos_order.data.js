@@ -11,6 +11,12 @@ export class PosOrder extends models.ServerModel {
         };
     }
 
+    read_pos_orders(domain) {
+        const results = this.search(domain, this._load_pos_data_fields(), false);
+        const ids = results.filter((record) => record.state === "draft").map((record) => record.id);
+        return this.read_pos_data(ids);
+    }
+
     _load_pos_data_fields() {
         return [];
     }

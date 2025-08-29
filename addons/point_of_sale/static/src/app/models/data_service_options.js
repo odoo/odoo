@@ -65,6 +65,8 @@ export class DataServiceOptions {
 
     get pohibitedAutoLoadedModels() {
         return [
+            "pos.order", // Cannot be auto-loaded can cause infinite loop
+            "pos.order.line", // Cannot be auto-loaded can cause infinite loop
             "pos.session",
             "pos.config",
             "res.users",
