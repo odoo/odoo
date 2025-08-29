@@ -4,11 +4,13 @@
 from odoo import Command
 
 from odoo.tests import common, tagged, Form
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tools import mute_logger
 from datetime import datetime
 
 
-class TestDropship(common.TransactionCase):
+@tagged('post_install', '-at_install')
+class TestDropship(AccountTestInvoicingCommon):
 
     @classmethod
     def setUpClass(cls):
