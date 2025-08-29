@@ -192,8 +192,7 @@ class OdooTestResult(object):
         return length
 
     def __repr__(self):
-        return ("<%s.%s run=%i errors=%i failures=%i>" %
-                (self.__class__.__module__, self.__class__.__qualname__, self.testsRun, len(self.errors_count), len(self.failures_count)))
+        return f"<{self.__class__.__module__}.{self.__class__.__qualname__} run={self.testsRun} errors={self.errors_count} failures={self.failures_count}>"
 
     def __str__(self):
         return f'{self.failures_count} failed, {self.errors_count} error(s) of {self.testsRun} tests'

@@ -3700,3 +3700,39 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         bill.action_post()
         svls = self.env['stock.valuation.layer'].search([])
         self.assertRecordValues(svls, [{'value': 0, 'quantity': 2}])
+
+    def test_standard_valuation_return_credit_note(self):
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 1.0,
+                    'product_uom': self.product1.uom_po_id.id,
+                    'price_unit': 100.0,
+                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                }),
+            ],
+        })
+        po.button_confirm()
+        receipt_po = po.picking_ids[0]
+        receipt_po.button_validate()
+
+        self._bill(po)  # Bill
+        self._return(receipt_po)
+        self._bill(po)  # Refund
+
+        in_stock_amls = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id)], order='id')
+        self.assertRecordValues(in_stock_amls, [
+            # Receive and Vendor Bill 1 @ 100
+            {'debit': 100.0, 'credit': 0.0, 'reconciled': True},
+            {'debit': 0.0, 'credit': 100.0, 'reconciled': True},
+            # Return and Vendor Credit Note 1 @ 100
+            {'debit': 0.0, 'credit': 100.0, 'reconciled': True},
+            {'debit': 100.0, 'credit': 0.0, 'reconciled': True},
+        ])
