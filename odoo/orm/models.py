@@ -5558,6 +5558,7 @@ class BaseModel(metaclass=MetaModel):
         if len(rows) != len(ids):
             raise LockError(self.env._("Cannot grab a lock on records"))
 
+    @api.private
     def try_lock_for_update(self, *, allow_referencing: bool = False, limit: int | None = None) -> Self:
         """ Grab an exclusive write-lock on some rows with the given ids.
 
