@@ -11,6 +11,7 @@ import { isInstanceOf } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { HootError } from "../hoot_utils";
 import { subscribeToTransitionChange } from "../mock/animation";
 import { getViewPortHeight, getViewPortWidth } from "../mock/window";
+import { animationFrame } from "@odoo/hoot-dom";
 
 /**
  * @typedef {Parameters<typeof import("@odoo/owl").mount>[2] & {
@@ -110,7 +111,7 @@ export function makeFixtureManager(runner) {
         document.head.appendChild(HootFixtureElement.styleElement);
     }
 
-    function setup() {
+    async function setup() {
         allowFixture = true;
 
         if (shouldPrepareNextFixture) {
@@ -119,6 +120,8 @@ export function makeFixtureManager(runner) {
             // Reset focus & selection
             getActiveElement().blur();
             getSelection().removeAllRanges();
+            // Wait for selectionchange events to expire before any actual testing.
+            await animationFrame();
         }
     }
 
