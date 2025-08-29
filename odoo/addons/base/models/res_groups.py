@@ -130,12 +130,13 @@ class ResGroups(models.Model):
 
         if isinstance(operand, str):
             def make_operand(val): return val
-            operand = [operand]
+            operands = [operand]
         else:
             def make_operand(val): return [val]
+            operands = operand
 
         where_domains = [Domain('name', operator, operand)]
-        for group in operand:
+        for group in operands:
             if not group:
                 continue
             domain = Domain('name', operator, make_operand(group))
