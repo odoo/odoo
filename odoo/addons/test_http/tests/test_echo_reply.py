@@ -39,11 +39,13 @@ class TestHttpEchoReplyHttpNoDB(TestHttpBase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, '{}')
 
-
+    @mute_logger('odoo.http')
     def test_echohttp5_post_csrf(self):
         res = self.nodb_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor'})
-        self.assertEqual(res.status_code, 303)
-        self.assertURLEqual(res.headers.get('Location'), '/web/database/selector')
+        self.assertEqual(res.status_code, 200)
+
+        res = self.nodb_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor'}, headers={'Sec-Fetch-Site': 'cross-origin'})
+        self.assertEqual(res.status_code, 400)
 
     def test_echohttp6_json_over_http(self):
         payload = json.dumps({'commander': 'Thor'})
