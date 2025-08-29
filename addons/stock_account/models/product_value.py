@@ -33,7 +33,8 @@ class ProductValue(models.Model):
         string='Current Value', currency_field='currency_id',
         related='move_id.value')
     current_value_details = fields.Char(string='Current Value Details', compute="_compute_current_value_details")
-    current_value_description = fields.Char(string='Current Value Description', compute="_compute_current_value_description")
+    current_value_description = fields.Text(string='Current Value Description', compute="_compute_value_description")
+    computed_value_description = fields.Text(string='Computed Value Description', compute="_compute_value_description")
 
     @api.depends('move_id', 'lot_id', 'product_id')
     def _compute_company_id(self):
@@ -59,13 +60,19 @@ class ProductValue(models.Model):
             product_value.current_value_details = _("For %(quantity)s %(uom)s (%(price_unit)s per %(uom)s)",
                 quantity=quantity, uom=uom, price_unit=price_unit)
 
-    def _compute_current_value_description(self):
+    def _compute_value_description(self):
         for product_value in self:
             if not product_value.move_id:
                 product_value.current_value_description = False
+                product_value.computed_value_description = False
                 continue
-            product_value.current_value_description = product_value.move_id._get_value_data(
-                add_computed_value_to_description=True)['description']
+            product_value.current_value_description = product_value.move_id._get_value_data()['description']
+            computed_value_data = product_value.move_id._get_value_data(ignore_manual_update=True)
+            if computed_value_data['description'] == product_value.current_value_description:
+                product_value.computed_value_description = False
+            else:
+                value = product_value.currency_id.format(computed_value_data['value'])
+                product_value.computed_value_description = _('Computed value: %(value)s\n%(description)s', value=value, description=computed_value_data['description'])
 
     @api.model_create_multi
     def create(self, vals_list):
