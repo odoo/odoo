@@ -17,7 +17,9 @@
 
         &.o-inline {
             &:where(:has(i:first-child:last-child)) {
-                height: ($btn-font-size * $btn-line-height) + $btn-padding-y * 2;
+                $_btn-height: calc((#{$btn-font-size} * #{$btn-line-height}) + #{$btn-padding-y} * 2);
+
+                height: var(--o-mail-ActionList-Button-height, #{$_btn-height});
                 aspect-ratio: var(--o-mail-ActionList-Button-aspect-ratio, 1.1);
                 opacity: var(--o-mail-ActionList-Button-opacity);
                 line-height: 1;

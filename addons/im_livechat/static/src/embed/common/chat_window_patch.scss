@@ -3,3 +3,15 @@
         color: inherit !important;
     }
 }
+
+.o-mail-ChatWindow-header .o-mail-ActionList {
+    button {
+        --btn-color: var(--o-mail-livechat-btn-color);
+        --btn-hover-color: var(--o-mail-livechat-btn-color);
+        --btn-active-color: var(--o-mail-livechat-btn-color);
+
+        &:not(:hover, &:focus-visible, &:active) {
+            --o-mail-ActionList-Button-opacity: #{$o-opacity-muted};
+        }
+    }
+}
