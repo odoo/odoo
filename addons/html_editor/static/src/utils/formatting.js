@@ -203,7 +203,7 @@ export function convertNumericToUnit(value, unitFrom, unitTo, htmlStyle) {
     if (converter === undefined) {
         throw new Error(`Cannot convert '${unitFrom}' units into '${unitTo}' units !`);
     }
-    return parseFloat((value * converter(htmlStyle)).toFixed(3));
+    return parseFloat((value * converter(htmlStyle)).toFixed(5));
 }
 
 export function getHtmlStyle(document) {
