@@ -261,7 +261,9 @@ class MergePartnerAutomatic(models.TransientModel):
         values_by_company = defaultdict(dict)   # {company: vals}
         for column in model_fields:
             field = dst_partner._fields[column]
-            if field.type not in ('many2many', 'one2many') and field.compute is None:
+            if field.type not in ("many2many", "one2many") and (
+                field.compute is None or (field.compute is not None and field.store)
+            ):
                 for item in itertools.chain(src_partners, [dst_partner]):
                     if item[column]:
                         if field.type == 'reference':
