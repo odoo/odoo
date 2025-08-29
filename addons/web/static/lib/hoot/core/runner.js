@@ -1418,9 +1418,13 @@ export class Runner {
     _erase(job, canEraseParent = false) {
         job.minimize();
         if (job instanceof Suite) {
-            this.suites.delete(job.id);
+            if (!job.reporting.failed) {
+                this.suites.delete(job.id);
+            }
         } else {
-            this.tests.delete(job.id);
+            if (job.results.every((result) => result.pass)) {
+                this.tests.delete(job.id);
+            }
         }
         if (canEraseParent && job.parent) {
             const jobIndex = job.parent.jobs.indexOf(job);
