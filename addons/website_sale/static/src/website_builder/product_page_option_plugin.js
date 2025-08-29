@@ -127,7 +127,6 @@ export class BasePreviewableProductPageAction extends PreviewableWebsiteConfigAc
             this.dependencies.productPageOption.forceCarouselRedraw();
         }
         if (!isPreviewing) {
-            await this.handlePreCommit(value, params);
             await this.makeRpcCall(value);
         }
     }
@@ -137,9 +136,6 @@ export class BasePreviewableProductPageAction extends PreviewableWebsiteConfigAc
             await rpc("/shop/config/website", { [this.constructor.rpcParameterName]: value });
         }
     }
-
-    // To be overridden for custom logic prior RPC calls
-    async handlePreCommit(value, params) {}
 }
 export class ProductPageContainerWidthAction extends BasePreviewableProductPageAction {
     static id = "productPageContainerWidth";
@@ -165,17 +161,6 @@ export class ProductPageImageRatioMobileAction extends BasePreviewableProductPag
 export class ProductPageImageWidthAction extends BasePreviewableProductPageAction {
     static id = "productPageImageWidth";
     static rpcParameterName = "product_page_image_width";
-
-    async handlePreCommit(value, params) {
-        if (value === "100_pc") {
-            const defaultZoomOption = "website_sale.product_picture_magnify_click";
-            await super.apply({
-                params: {
-                    views: this.dependencies.productPageOption.getDisabledOtherZoomViews(defaultZoomOption),
-                },
-            });
-        }
-    }
 }
 
 export class ProductPageImageGridSpacingAction extends BasePreviewableProductPageAction {
