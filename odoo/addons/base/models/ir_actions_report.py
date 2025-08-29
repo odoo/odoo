@@ -24,7 +24,7 @@ import subprocess
 import re
 import json
 
-from lxml import etree
+from lxml import etree, html
 from contextlib import closing
 from reportlab.graphics.barcode import createBarcodeDrawing
 from reportlab.pdfbase.pdfmetrics import getFont, TypeFace
@@ -497,6 +497,56 @@ class IrActionsReport(models.Model):
                     output_images.append(output_file.read())
         return output_images
 
+    def adjust_link_clickable_position(self, html_string):
+        """
+        Fixing wkhtmltopdf by injecting a <script> tag into the HTML to fix
+        clickable areas for links. The idea here is:
+
+        While PDFs automatically recognize text chunk that start with `www.` and
+        properly place a clickable area on them and wkhtmltopdf fails to properly
+        place clickable areas on `a` tags when using the `--margin-top` argument.
+        We do a small hack here by adding the same link on top of the original
+        link with the prefix `www.` instead of the protocol and make it transparent
+        with bottom padding. Its clickable area will be well placed and the
+        element will cover the original link text, making it visually clickable.
+
+        The only drawback is that when having multiple links on the same page
+        they might not work properly (they will be concatenated). See for more
+        details: https://github.com/wkhtmltopdf/wkhtmltopdf/issues/1692
+
+        :param html_string: The input HTML string.
+        :return: Modified HTML string.
+        """
+        tree = html.fromstring(html_string)
+
+        script = etree.Element("script")
+        script.text = r"""
+        document.addEventListener("DOMContentLoaded", function() {
+            var allLinks = document.querySelectorAll("a");
+            var i = 0;
+            var LEFT_OFFSET = 45;
+            for (i = 0; i < allLinks.length; i++) {
+                var currentLink = allLinks[i];
+                var linkBoundingRect = currentLink.getBoundingClientRect();
+                var urlSpan = document.createElement('span');
+                urlSpan.textContent = currentLink
+                    .getAttribute('href')
+                    .replace(/^(?:[a-z]+:\/\/)?/, 'www.');
+                urlSpan.style.position = 'absolute';
+                urlSpan.style.marginTop = -(linkBoundingRect.height / 2) + 'px';
+                urlSpan.style.color = 'transparent';
+                urlSpan.style.marginLeft = -LEFT_OFFSET + 'px';
+                var replacementSpan = document.createElement('span');
+                currentLink.parentNode.insertBefore(replacementSpan, currentLink);
+                replacementSpan.appendChild(urlSpan);
+            }
+        });
+        """
+        head = tree.find(".//head")
+        head.append(script)
+
+        return etree.tostring(tree, pretty_print=True, encoding="unicode", method="html")
+
     @api.model
     def _run_wkhtmltopdf(
             self,
@@ -562,6 +612,7 @@ class IrActionsReport(models.Model):
             temporary_files.append(head_file_path)
             files_command_args.extend(['--header-html', head_file_path])
         if footer:
+            footer = self.adjust_link_clickable_position(footer)
             foot_file_fd, foot_file_path = tempfile.mkstemp(suffix='.html', prefix='report.footer.tmp.')
             with closing(os.fdopen(foot_file_fd, 'wb')) as foot_file:
                 foot_file.write(footer.encode())
