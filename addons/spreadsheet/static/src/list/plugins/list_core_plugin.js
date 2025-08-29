@@ -235,11 +235,14 @@ export class ListCorePlugin extends OdooCorePlugin {
     _insertHeaders(sheetId, anchor, id, columns) {
         let [col, row] = anchor;
         for (const column of columns) {
+            const content = column.string
+                ? `=ODOO.LIST.HEADER(${id},"${column.name}","${column.string}")`
+                : `=ODOO.LIST.HEADER(${id},"${column.name}")`;
             this.dispatch("UPDATE_CELL", {
                 sheetId,
                 col,
                 row,
-                content: `=ODOO.LIST.HEADER(${id},"${column.name}")`,
+                content,
             });
             col++;
         }

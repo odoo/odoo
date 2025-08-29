@@ -70,7 +70,7 @@
       "cells": {
         "A7": "[Invoiced by Month](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[\"&\",[\"state\",\"not in\",[\"draft\",\"cancel\"]],\"|\",[\"move_type\",\"=\",\"out_invoice\"],[\"move_type\",\"=\",\"out_refund\"]],\"context\":{\"group_by\":[\"invoice_date\"],\"graph_measure\":\"price_subtotal\",\"graph_mode\":\"line\",\"graph_groupbys\":[\"invoice_date:month\"]},\"modelName\":\"account.invoice.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices Analysis\",\"positional\":true})",
         "A23": "[Top Invoices](odoo://view/{\"viewType\":\"list\",\"action\":{\"domain\":[\"&\",[\"state\",\"not in\",[\"draft\",\"cancel\"]],[\"move_type\",\"=\",\"out_invoice\"]],\"context\":{\"group_by\":[]},\"modelName\":\"account.move\",\"views\":[[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices\"})",
-        "A24": "=_t(\"Reference\")",
+        "A24": "=ODOO.LIST.HEADER(1, \"name\", _t(\"Reference\"))",
         "A25": "=ODOO.LIST(1,1,\"name\")",
         "A26": "=ODOO.LIST(1,2,\"name\")",
         "A27": "=ODOO.LIST(1,3,\"name\")",
@@ -105,7 +105,7 @@
         "A58": "=PIVOT.HEADER(3,\"#product_id\",8)",
         "A59": "=PIVOT.HEADER(3,\"#product_id\",9)",
         "A60": "=PIVOT.HEADER(3,\"#product_id\",10)",
-        "B24": "=_t(\"Salesperson\")",
+        "B24": "=ODOO.LIST.HEADER(1, \"user_id\", _t(\"Salesperson\"))",
         "B25": "=ODOO.LIST(1,1,\"user_id\")",
         "B26": "=ODOO.LIST(1,2,\"user_id\")",
         "B27": "=ODOO.LIST(1,3,\"user_id\")",
@@ -138,7 +138,7 @@
         "B58": "=PIVOT.VALUE(3,\"price_subtotal\",\"#product_id\",8)",
         "B59": "=PIVOT.VALUE(3,\"price_subtotal\",\"#product_id\",9)",
         "B60": "=PIVOT.VALUE(3,\"price_subtotal\",\"#product_id\",10)",
-        "C24": "=_t(\"Status\")",
+        "C24": "=ODOO.LIST.HEADER(1, \"payment_state\", _t(\"Status\"))",
         "C25": "=ODOO.LIST(1,1,\"payment_state\")",
         "C26": "=ODOO.LIST(1,2,\"payment_state\")",
         "C27": "=ODOO.LIST(1,3,\"payment_state\")",
@@ -171,7 +171,7 @@
         "C58": "=iferror(if(B58,B58/PIVOT.VALUE(3,\"price_subtotal\"),\"\"))",
         "C59": "=iferror(if(B59,B59/PIVOT.VALUE(3,\"price_subtotal\"),\"\"))",
         "C60": "=iferror(if(B60,B60/PIVOT.VALUE(3,\"price_subtotal\"),\"\"))",
-        "D24": "=_t(\"Customer\")",
+        "D24": "=ODOO.LIST.HEADER(1, \"partner_id\", _t(\"Customer\"))",
         "D25": "=ODOO.LIST(1,1,\"partner_id\")",
         "D26": "=ODOO.LIST(1,2,\"partner_id\")",
         "D27": "=ODOO.LIST(1,3,\"partner_id\")",
@@ -206,7 +206,7 @@
         "E58": "=PIVOT.HEADER(4,\"#invoice_user_id\",8)",
         "E59": "=PIVOT.HEADER(4,\"#invoice_user_id\",9)",
         "E60": "=PIVOT.HEADER(4,\"#invoice_user_id\",10)",
-        "F24": "=_t(\"Date\")",
+        "F24": "=ODOO.LIST.HEADER(1, \"invoice_date\", _t(\"Date\"))",
         "F25": "=ODOO.LIST(1,1,\"invoice_date\")",
         "F26": "=ODOO.LIST(1,2,\"invoice_date\")",
         "F27": "=ODOO.LIST(1,3,\"invoice_date\")",
@@ -239,7 +239,7 @@
         "F58": "=PIVOT.VALUE(4,\"price_subtotal\",\"#invoice_user_id\",8)",
         "F59": "=PIVOT.VALUE(4,\"price_subtotal\",\"#invoice_user_id\",9)",
         "F60": "=PIVOT.VALUE(4,\"price_subtotal\",\"#invoice_user_id\",10)",
-        "G24": "=_t(\"Amount\")",
+        "G24": "=ODOO.LIST.HEADER(1, \"amount_untaxed_signed\", _t(\"Amount\"))",
         "G25": "=ODOO.LIST(1,1,\"amount_untaxed_signed\")",
         "G26": "=ODOO.LIST(1,2,\"amount_untaxed_signed\")",
         "G27": "=ODOO.LIST(1,3,\"amount_untaxed_signed\")",
@@ -684,7 +684,11 @@
         ],
         "&",
         ["product_categ_id", "!=", false],
-        ["move_type", "in", ["out_invoice", "out_refund"]]
+        [
+          "move_type",
+          "in",
+          ["out_invoice", "out_refund"]
+        ]
       ],
       "id": "1",
       "measures": [
@@ -724,7 +728,11 @@
         ],
         "&",
         ["country_id", "!=", false],
-        ["move_type", "in", ["out_invoice", "out_refund"]]
+        [
+          "move_type",
+          "in",
+          ["out_invoice", "out_refund"]
+        ]
       ],
       "id": "2",
       "measures": [
@@ -764,7 +772,11 @@
         ],
         "&",
         ["product_id", "!=", false],
-        ["move_type", "in", ["out_invoice", "out_refund"]]
+        [
+          "move_type",
+          "in",
+          ["out_invoice", "out_refund"]
+        ]
       ],
       "id": "3",
       "measures": [
@@ -804,7 +816,11 @@
         ],
         "&",
         ["invoice_user_id", "!=", false],
-        ["move_type", "in", ["out_invoice", "out_refund"]]
+        [
+          "move_type",
+          "in",
+          ["out_invoice", "out_refund"]
+        ]
       ],
       "id": "4",
       "measures": [
