@@ -765,7 +765,7 @@ class ProductProduct(models.Model):
         sellers = self._get_filtered_sellers(partner_id=partner_id, quantity=quantity, date=date, uom_id=uom_id, params=params)
         res = self.env['product.supplierinfo']
         for seller in sellers:
-            if not res or res.partner_id == seller.partner_id:
+            if not res or res.partner_id == seller.partner_id or not partner_id:
                 res |= seller
         return res and res.sorted(sort_function)[:1]
 
