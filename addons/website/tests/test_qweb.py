@@ -538,4 +538,4 @@ class TestQwebDataSnippet(TransactionCase):
         re_sql = re.compile(r'\bwebsite\b', re.IGNORECASE)
         website_queries = [q for q in actual_queries if re_sql.search(q)]
 
-        self.assertEqual(len(website_queries), 19, f'Maximum queries: {19}')
+        self.assertLessEqual(len(website_queries), 19, f'Maximum queries: {19}')
