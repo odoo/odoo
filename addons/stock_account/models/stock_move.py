@@ -475,7 +475,7 @@ class StockMove(models.Model):
         :return: True if an account move should be created, False otherwise.
         """
         self.ensure_one()
-        return self.is_valued\
+        return self.product_id.is_storable and self.is_valued\
         and (self.location_dest_id.valuation_account_id or self.location_id.valuation_account_id)\
         and self.product_id.valuation == 'real_time'
 
