@@ -49,7 +49,6 @@ class StockAverageCostReport(models.AbstractModel):
         tools.drop_view_if_exists(self.env.cr, 'stock_avco_report')
         query = """
 CREATE OR REPLACE VIEW stock_avco_report AS (
--- Part 1: Select regular IN and OUT stock moves
 SELECT
     sm.id,
     sm.product_id,
@@ -69,12 +68,23 @@ FROM
     stock_move sm
 LEFT JOIN
     stock_picking picking ON sm.picking_id = picking.id
+LEFT JOIN
+    product_product pp ON sm.product_id = pp.id
+LEFT JOIN
+    product_template pt ON pp.product_tmpl_id = pt.id
+LEFT JOIN
+    product_category pc ON pt.categ_id = pc.id
+LEFT JOIN
+    res_company company ON sm.company_id = company.id
 WHERE
     sm.state = 'done'
-    AND sm.is_in = TRUE OR sm.is_out = TRUE
+    AND (sm.is_in = TRUE OR sm.is_out = TRUE)
+    -- Ignore moves for standard cost method. Only display the list of cost updates
+    AND (
+        (pt.categ_id IS NOT NULL AND pc.property_cost_method ->> company.id::text IN ('fifo', 'average'))
+        OR (pt.categ_id IS NULL AND company.cost_method IN ('fifo', 'average'))
+    )
 UNION ALL
-
--- Part 2: Select Value Adjustments
 SELECT
     pv.id,
     pv.product_id,
@@ -96,7 +106,6 @@ WHERE
         self.env.cr.execute(query)
 
     def _compute_cumulative_fields(self):
-
         for records in self.grouped(lambda m: (m.product_id, m.company_id)).values():
             records = records.sorted('date, id')
             total_value = 0.0
