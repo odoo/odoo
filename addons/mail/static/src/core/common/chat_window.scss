@@ -35,7 +35,23 @@
 }
 
 .o-mail-ChatWindow-header {
-    --border-opacity: .25;
+    --o-mail-ActionList-Button-height: auto;
+
+    .o-mail-ActionList-group {
+        gap: map-get($spacers, 3);
+
+        button:not(:hover, &:focus-visible, &:active):not(.btn-success) {
+            --o-mail-ActionList-Button-opacity: #{$o-opacity-muted};
+        }
+
+        @include media-breakpoint-up(md) {
+            gap: map-get($spacers, 2);
+
+            button[name="fold-chat-window"] {
+                margin-inline-start: map-get($spacers, 2) !important;
+            }
+        }
+    }
 
     .o-mail-ChatWindow-threadAvatar img {
         height: $o-mail-Avatar-sizeSmall;
