@@ -35,13 +35,13 @@ class TestWebsiteSaleStockGMC(WebsiteSaleGMCCommon):
     def test_gmc_items_keep_website_stock_separate(self):
         self.blue_sofa.allow_out_of_stock_order = False
         # setup second website with seperate stock
-        website_2_warehouse = self.env['stock.warehouse'].create({'name': 'Stock 2', 'code': 'WH2'})
-        website_2 = self.env['website'].create({
+        warehouse2 = self.env['stock.warehouse'].create({'name': 'Stock 2', 'code': 'WH2'})
+        self.gmc_feed.website_id = self.env['website'].create({
             'name': 'Website Test 2',
             'domain': 'https://my-website.net',
-            'warehouse_id': website_2_warehouse.id,
+            'warehouse_id': warehouse2.id,
         })
 
-        self.update_items(website=website_2)
+        self.update_items()
 
         self.assertEqual('out_of_stock', self.red_sofa_item['availability'])

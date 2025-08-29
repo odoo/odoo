@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
-from odoo.tools.urls import urljoin as url_join
+from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
@@ -20,6 +19,13 @@ class ResConfigSettings(models.TransientModel):
         group='base.group_user',
         help="Add a strikethrough price to your /shop and product pages for comparison purposes."
              "It will not be displayed if pricelists apply."
+    )
+    group_gmc_feed = fields.Boolean(
+        string="Google Merchant Center",
+        implied_group='website_sale.group_product_feed',
+        group='base.group_user',
+        related='website_id.enabled_gmc_src',
+        readonly=False,
     )
 
     # Modules
@@ -82,26 +88,12 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
 
-    enabled_gmc_src = fields.Boolean(
-        string="Google Merchant Center",
-        related='website_id.enabled_gmc_src',
-        readonly=False,
-    )
-    gmc_xml_url = fields.Char(compute='_compute_gmc_xml_url')
-
-    #=== COMPUTE METHODS ===#
+    # === COMPUTE METHODS === #
 
     @api.depends('website_id.account_on_checkout')
     def _compute_account_on_checkout(self):
         for record in self:
             record.account_on_checkout = record.website_id.account_on_checkout or 'disabled'
-
-    @api.depends('website_domain')
-    def _compute_gmc_xml_url(self):
-        for config in self:
-            # Uses `config.get_base_url()` which fallbacks to `web․base․url` if `website_domain` is
-            # not set.
-            config.gmc_xml_url = url_join(config.get_base_url(), '/gmc.xml')
 
     def _inverse_account_on_checkout(self):
         for record in self:
@@ -114,7 +106,23 @@ class ResConfigSettings(models.TransientModel):
             else:
                 record.website_id.auth_signup_uninvited = 'b2b'
 
-    #=== ACTION METHODS ===#
+    # === CRUD METHODS === #
+
+    def set_values(self):
+        super().set_values()
+        if self.website_id:
+            website = self.with_context(website_id=self.website_id.id).website_id
+
+            # Pre-populate the website feeds if none already exists.
+            if (
+                self.group_gmc_feed
+                and not self.env['product.feed'].search_count(
+                    [('website_id', '=', website.id)], limit=1
+                )
+            ):
+                website._populate_product_feeds()
+
+    # === ACTION METHODS === #
 
     def action_view_delivery_provider_modules(self):
         return self.env['delivery.carrier'].install_more_provider()
@@ -122,7 +130,7 @@ class ResConfigSettings(models.TransientModel):
     @api.readonly
     def action_open_abandoned_cart_mail_template(self):
         return {
-            'name': _("Customize Email Templates"),
+            'name': self.env._("Customize Email Templates"),
             'type': 'ir.actions.act_window',
             'res_model': 'mail.template',
             'view_id': False,
@@ -140,10 +148,28 @@ class ResConfigSettings(models.TransientModel):
     @api.readonly
     def action_open_sale_mail_templates(self):
         return {
-            'name': _("Customize Email Templates"),
+            'name': self.env._("Customize Email Templates"),
             'type': 'ir.actions.act_window',
             'domain': [('model', '=', 'sale.order')],
             'res_model': 'mail.template',
             'view_id': False,
             'view_mode': 'list,form',
+        }
+
+    @api.readonly
+    def action_open_product_feeds(self):
+        """Open the list view to manage the feed specific to the current website."""
+        self.ensure_one()
+        return {
+            'name': self.env._("Product Feeds"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'product.feed',
+            'views': [(False, 'list')],
+            'target': 'new',
+            'context': {
+                'default_website_id': self.website_id.id,
+                'default_lang_id': self.website_id.default_lang_id.id,
+                'hide_website_column': True,
+            },
+            'domain': [('website_id', '=', self.website_id.id)],
         }

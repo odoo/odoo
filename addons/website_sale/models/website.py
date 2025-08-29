@@ -265,11 +265,6 @@ class Website(models.Model):
         default=_default_confirmation_email_template,
     )
 
-    _check_gmc_ecommerce_access = models.Constraint(
-        'CHECK (NOT enabled_gmc_src OR ecommerce_access = \'everyone\')',
-        "eCommerce must be accessible to all users for Google Merchant Center to operate properly.",
-    )
-
     #=== COMPUTE METHODS ===#
 
     def _compute_pricelist_ids(self):
@@ -1053,3 +1048,12 @@ class Website(models.Model):
             case '4_5':
                 return '96px'
         return '64px'
+
+    def _populate_product_feeds(self):
+        """Populate product feeds for the website with default values."""
+        for website in self:
+            website.env['product.feed'].create({
+                'name': website.env._("GMC 1"),
+                'website_id': website.id,
+                'lang_id': website.default_lang_id.id,
+            })
