@@ -10,10 +10,10 @@
         </BuilderSelect>
     </BuilderRow>    
     <t t-if="isActiveItem('overTheContent')">
-        <BuilderRow label.translate="Background" level="2" t-if="props.doesPageOptionExist('header_color')">
+        <BuilderRow label.translate="Background" level="1" t-if="props.doesPageOptionExist('header_color')">
             <BuilderColorPicker action="'setPageWebsiteDirty'" styleAction="'background-color'" enabledTabs="['custom']"/>
         </BuilderRow>
-        <BuilderRow label.translate="Text Color" level="2" t-if="props.doesPageOptionExist('header_text_color')">
+        <BuilderRow label.translate="Text Color" level="1" t-if="props.doesPageOptionExist('header_text_color')">
             <BuilderColorPicker action="'setPageWebsiteDirty'" styleAction="'color'" enabledTabs="['solid', 'custom']"/>
         </BuilderRow>
     </t>
