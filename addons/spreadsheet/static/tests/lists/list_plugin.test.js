@@ -70,6 +70,13 @@ test("List field name should not be empty", async () => {
     expect(getEvaluatedCell(model, "A1").message).toBe("The field name should not be empty.");
 });
 
+test("ODOO.LIST.HEADER with a custom header string", async () => {
+    const { model } = await createSpreadsheetWithList();
+    setCellContent(model, "A1", '=ODOO.LIST.HEADER(1,"foo","My custom header")');
+    await waitForDataLoaded(model);
+    expect(getCellValue(model, "A1")).toBe("My custom header");
+});
+
 test("Return display name of selection field", async () => {
     const { model } = await createSpreadsheetWithList({
         model: "res.currency",
