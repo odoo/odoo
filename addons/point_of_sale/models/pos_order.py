@@ -1169,13 +1169,17 @@ class PosOrder(models.Model):
         return pos_order_ids.read_pos_data(orders, config)
 
     @api.model
+    def read_pos_orders(self, domain=False):
+        orders = self.search(domain)
+        config_id = orders[0].config_id if orders else False
+        return orders.read_pos_data([], config_id) if config_id else {'pos.order': []}
+
+    @api.model
     def read_pos_data_uuid(self, uuid):
-        order = self.search([('uuid', '=', uuid)], limit=1)
-        if not order:
-            return {}
-        return order.read_pos_data([], order.config_id)
+        return self.read_pos_orders([('uuid', '=', uuid)])
 
     def read_pos_data(self, data, config):
+        # If the previous session is closed, the order will get a new session_id due to _get_valid_session in _process_order
         account_moves = self.sudo().account_move | self.sudo().payment_ids.account_move_id
         return {
             'pos.order': self._load_pos_data_read(self, config) if config else [],
