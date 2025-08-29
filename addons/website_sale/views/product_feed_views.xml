@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_feed_search" model="ir.ui.view">
+        <field name="name">product.feed.view.search</field>
+        <field name="model">product.feed</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="website_id" groups="website.group_multi_website"/>
+                <field name="pricelist_id" groups="product.group_product_pricelist"/>
+                <field name="lang_id"/>
+                <field name="product_category_ids"/>
+                <group>
+                    <filter
+                        name="groupby_website"
+                        string="Website"
+                        context="{'group_by': 'website_id'}"
+                        groups="website.group_multi_website"
+                    />
+                    <filter
+                        name="groupby_pricelist"
+                        string="Pricelist"
+                        context="{'group_by': 'pricelist_id'}"
+                        groups="product.group_product_pricelist"
+                    />
+                    <filter
+                        name="groupby_lang"
+                        string="Language"
+                        context="{'group_by': 'lang_id'}"
+                    />
+                    <filter
+                        name="groupby_product_category"
+                        string="eCommerce Category"
+                        context="{'group_by': 'product_category_ids'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="product_feed_list" model="ir.ui.view">
+        <field name="name">product.feed.view.list</field>
+        <field name="model">product.feed</field>
+        <field name="arch" type="xml">
+            <list string="Product Feeds" editable="top" multi_edit="True">
+                <field name="name"/>
+                <field
+                    name="website_id"
+                    column_invisible="context.get('hide_website_column')"
+                    groups="website.group_multi_website"
+                    options="{'no_create': True}"
+                />
+                <field
+                    name="pricelist_id"
+                    placeholder="Default"
+                    options="{'no_create': True}"
+                    groups="product.group_product_pricelist"
+                />
+                <field name="lang_id" options="{'no_create': True}"/>
+                <field
+                    name="product_category_ids"
+                    placeholder="All Categories"
+                    widget="many2many_tags"
+                    options="{'no_create': True}"
+                />
+                <!-- The `o_field_handle` class disables the o-text-overflow styling added by the
+                     list renderer, which, if not disabled, causes misalignment of the icon. -->
+                <field
+                    name="url"
+                    string="Copy URL"
+                    widget="CopyClipboardButton"
+                    class="o_field_handle"
+                    width="100px"
+                    nolabel="1"
+                    options="{'btn_class': 'primary btn-sm'}"
+                />
+            </list>
+        </field>
+    </record>
+
+    <record id="product_feed_form" model="ir.ui.view">
+        <field name="name">product.feed.view.form</field>
+        <field name="model">product.feed</field>
+        <field name="arch" type="xml">
+            <form string="Product Feed">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <div name="button_box">
+                        <field name="url" string="Copy URL" widget="CopyClipboardButton"/>
+                    </div>
+                    <group>
+                        <field name="website_id"/>
+                        <field name="pricelist_id" placeholder="Default" groups="product.group_product_pricelist"/>
+                        <field name="lang_id" options="{'no_create': True}"/>
+                        <field
+                            name="product_category_ids"
+                            placeholder="All Categories"
+                            widget="many2many_tags"
+                        />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_product_feeds" model="ir.actions.act_window">
+        <field name="name">Product Feeds</field>
+        <field name="res_model">product.feed</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_invalidate_cache" model="ir.actions.server">
+        <field name="name">Reset Cache</field>
+        <field name="model_id" ref="model_product_feed"/>
+        <field name="binding_model_id" ref="website_sale.model_product_feed"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_invalidate_cache()</field>
+        <field name="group_ids" eval="[Command.link(ref('base.group_no_one'))]"/>
+    </record>
+
+</odoo>

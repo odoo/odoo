@@ -2,43 +2,36 @@
 
 from datetime import datetime, timedelta
 from lxml import etree
-from werkzeug.exceptions import NotFound
-from unittest import skip
 from urllib.parse import urlparse
 
-from odoo import Command
+from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 
 from odoo.addons.website_sale.tests.common import MockRequest
 from odoo.addons.website_sale.tests.common_gmc import WebsiteSaleGMCCommon
 
 
-# TODO re-enable GMC tests
-@skip("GMC feature disabled")
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
 
     def test_gmc_xml_accessible_if_gmc_setting_enabled(self):
-        response = self.url_open('/gmc.xml')
+        response = self.url_open(self.gmc_feed.url)
 
         self.assertEqual(200, response.status_code)
 
     def test_gmc_xml_not_found_if_gmc_setting_disabled(self):
         self.website.enabled_gmc_src = False
 
-        with self.assertRaises(NotFound), MockRequest(
-            self.env,
-            website=self.website,
-            website_sale_current_pl=self.pricelist.id,
-        ):
-            self.WebsiteSaleGMCController.gmc_data_source()
+        response = self.url_open(self.gmc_feed.url)
+
+        self.assertEqual(404, response.status_code, 'Not Found')
 
     def test_gmc_xml_correct_xml_format(self):
-        response = self.url_open('/gmc.xml')
+        response = self.url_open(self.gmc_feed.url)
 
         gmc_xml = etree.XML(response.content)  # assert valid xml
         self.assertEqual(self.website.name, gmc_xml.xpath('//title')[0].text)
-        self.assertURLEqual('/', gmc_xml.xpath('//link')[0].text)
+        self.assertURLEqual('/en', gmc_xml.xpath('//link')[0].text)
         self.assertEqual(
             'This is the homepage of the website',
             gmc_xml.xpath('//description')[0].text,
@@ -47,10 +40,11 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
     def test_gmc_xml_localization(self):
         fr_lang = self.env['res.lang']._activate_lang('fr_FR')
         self.website.language_ids += fr_lang
+        self.gmc_feed.lang_id = fr_lang
         self.red_sofa.with_context(lang=fr_lang.code).name = 'Canapé'
         self.color_attribute_red.with_context(lang=fr_lang.code).name = 'rouge'
 
-        self.update_items(lang=fr_lang.code)
+        self.update_items()
 
         self.assertRegex(
             self.parse_http_location(self.red_sofa_item['link']).path,
@@ -63,14 +57,15 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         )
 
     def test_gmc_xml_pricelist(self):
-        self._create_pricelist(
-            name="EUR",
-            currency_id=self.eur_currency.id,
-            selectable=True,
-        )
-        response = self.url_open('/gmc-eur.xml')
-        self.assertEqual(200, response.status_code)
-        gmc_xml = etree.XML(response.content)
+        self.gmc_feed.pricelist_id = self.eur_pricelist
+
+        with MockRequest(
+            self.env,
+            website=self.website,
+            website_sale_current_pl=self.pricelist.id,
+        ):
+            gmc_xml = etree.XML(self.gmc_feed._render_gmc_feed().encode())
+
         self.assertEqual(
             '1100.0 EUR',  # 1000.0 * 1.1 (EUR rate)
             gmc_xml.xpath(
@@ -92,7 +87,6 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
                     'availability',
                     'price',
                     'identifier_exists',
-                    'shipping',
                 },
                 item.keys(),
             )  # subseteq
@@ -105,7 +99,17 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         self.assertEqual(self.red_sofa.code, self.red_sofa_item['id'])
         self.assertEqual(self.blue_sofa.id, self.blue_sofa_item['id'])
 
-    def test_gmc_items_link_redirects_to_correct_product(self):
+    def test_gmc_items_link_redirects_to_correct_product_case_default_pricelist(self):
+        self.update_items()
+
+        for product in self.red_sofa + self.blue_sofa:
+            response = self.url_open(self.items[product]['link'])
+
+            self.assertEqual(200, response.status_code)
+            self.assertURLEqual(product.website_url, response.url)
+
+    def test_gmc_items_link_redirects_to_correct_product_case_specific_pricelist(self):
+        self.gmc_feed.pricelist_id = self.eur_pricelist
         self.update_items()
 
         for product in self.red_sofa + self.blue_sofa:
@@ -114,7 +118,10 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
             self.assertEqual(200, response.status_code)
             url = urlparse(product.website_url)
             self.assertURLEqual(
-                f'{url.path}?pricelist={self.pricelist.id}#{url.fragment}',
+                f'{url.path}'
+                 f'?attribute_values={",".join(str(i) for i in product.product_template_attribute_value_ids.product_attribute_value_id.ids)}'
+                 f'&pricelist={self.eur_pricelist.id}'
+                 f'#{url.fragment}',
                 response.url,
             )
 
@@ -133,7 +140,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         )
 
     def test_gmc_items_prices_match_website_prices_christmas(self):
-        self.christmas_pricelist = self._create_pricelist(
+        self.gmc_feed.pricelist_id = self._create_pricelist(
             name="EUR Christmas Sales",
             currency_id=self.eur_currency.id,
             selectable=True,
@@ -152,7 +159,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
             ],
         )
 
-        self.update_items(pricelist=self.christmas_pricelist)
+        self.update_items()
 
         # 1000.0 (list_price) * 1.1 (EUR rate) - 10% (discount)
         self.assertEqual('990.0 EUR', self.red_sofa_item['sale_price'])
@@ -161,6 +168,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         # 100.0 (list_price) * 1.1 (EUR rate)
         self.assertEqual('110.0 EUR', self.items[self.blanket]['price'])
         self.assertNotIn('sale_price', self.items[self.blanket])  # no discount
+        self.assertNotEqual(self.red_sofa_item['link'], self.blue_sofa_item['link'])
         self.start_tour(
             self.red_sofa_item['link'],
             'website_sale_gmc_check_advertised_prices_red_sofa_christmas',
@@ -216,13 +224,12 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
     def test_gmc_items_sorted_types(self):
         # Furnitures / Sofas
         # Furnitures / Indoor Furnitures / Indoor Sofas
-        sofas_categ = self._create_public_category([
+        furnitures_categ, sofas_categ = self._create_public_category([
             {'name': 'Furnitures'},
             {'name': 'Sofas', 'sequence': 1},
         ])
         indoor_sofas_categ = self._create_public_category([
-            {'name': 'Furnitures'},
-            {'name': 'Indoor Furnitures'},
+            {'name': 'Indoor Furnitures', 'parent_id': furnitures_categ.id},
             {'name': 'Indoor Sofas', 'sequence': 2},
         ])
         self.public_categories = sofas_categ + indoor_sofas_categ
@@ -260,6 +267,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
                 for attr in (self.color_attribute_green + self.size_attribute_l)
             ],
             'list_price': 49.0,
+            'is_published': True,
         }).product_variant_ids
         self.products |= product_one_variant
 
@@ -301,89 +309,6 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
 
         self.assertEqual(5, len(self.red_sofa_item['custom_label']))
 
-    def test_01_gmc_items_best_shipping_rate_per_country(self):
-        self._prepare_carrier(
-            self._prepare_carrier_product(list_price=2.99),
-            name="Local Shipping",
-            country_ids=[Command.set(self.country_be.ids)],
-            website_published=True,
-            fixed_price=2.99,
-        )
-
-        self.update_items()
-
-        # Red sofa only gets a reduced delivery for Belgium
-        self.assertDictEqual(
-            {rate['country']: rate['price'] for rate in self.red_sofa_item['shipping']},
-            {'BE': '2.99 USD', 'LU': '5.0 USD', 'GB': '5.0 USD'},
-        )
-        # Blue sofa price is $1200 -> free over
-        self.assertDictEqual(
-            {rate['country']: rate['price'] for rate in self.blue_sofa_item['shipping']},
-            {'BE': '0.0 USD', 'LU': '0.0 USD', 'GB': '0.0 USD'},
-        )
-
-    def test_02_gmc_items_best_shipping_rate_per_country(self):
-        self._prepare_carrier(
-            self._prepare_carrier_product(list_price=2.99),
-            name="Local Free above $100",
-            country_ids=[Command.set(self.country_be.ids)],
-            free_over=True,
-            amount=100.0,
-            max_weight=20.0,
-            website_published=True,
-        )
-        heavy_product = self._create_product(name="Heavy product", weight=100.0)
-        self.products += heavy_product
-
-        self.update_items()
-
-        # Free over in Belgium
-        self.assertDictEqual(
-            {rate['country']: rate['price'] for rate in self.red_sofa_item['shipping']},
-            {'BE': '0.0 USD', 'LU': '5.0 USD', 'GB': '5.0 USD'},
-        )
-        # Too heavy for free over in Belgium
-        self.assertDictEqual(
-            {rate['country']: rate['price'] for rate in self.items[heavy_product]['shipping']},
-            {'BE': '5.0 USD', 'LU': '5.0 USD', 'GB': '5.0 USD'},
-        )
-
-    def test_gmc_items_best_free_shipping_threshold(self):
-        self._prepare_carrier(
-            self._prepare_carrier_product(list_price=10.0),
-            name="Local Carrier",
-            country_ids=[Command.set(self.country_be.ids)],
-            free_over=True,
-            amount=100.0,
-            website_published=True,
-        )
-
-        self.update_items()
-
-        # In Belgium
-        self.assertListEqual(
-            ['100.0 USD', '100.0 USD'],
-            [
-                threshold['price_threshold']
-                for threshold in (
-                    self.red_sofa_item['free_shipping_threshold'][:1]
-                    + self.blue_sofa_item['free_shipping_threshold'][:1]
-                )
-            ],
-        )
-        # Outside Belgium
-        self.assertListEqual(
-            ['1200.0 USD', '1200.0 USD', '1200.0 USD', '1200.0 USD'],
-            [
-                threshold['price_threshold']
-                for threshold in (
-                    self.red_sofa_item['free_shipping_threshold'][1:]
-                    + self.blue_sofa_item['free_shipping_threshold'][1:]
-                )
-            ],
-        )
-
     def test_gmc_items_default_availability_in_stock(self):
         self.update_items()
 
@@ -402,6 +327,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
             'uom_id': uom_litre.id,
             'base_unit_count': 6.0,
             'base_unit_id': base_unit_litre.id,
+            'is_published': True,
         }])
         self.products |= six_pack
         return six_pack

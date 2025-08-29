@@ -1,13 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-import io
-from PIL import Image
 import time
 
 from odoo.fields import Command
 
-from odoo.addons.website_sale.controllers.gmc import GoogleMerchantCenter
+from odoo.addons.website_sale.controllers.product_feed import ProductFeed
 from odoo.addons.product.tests.common import ProductVariantsCommon
 from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
@@ -17,8 +14,14 @@ class WebsiteSaleGMCCommon(ProductVariantsCommon, WebsiteSaleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.WebsiteSaleGMCController = GoogleMerchantCenter()
+        cls.ProductFeedController = ProductFeed()
         cls.website.enabled_gmc_src = True
+
+        cls.gmc_feed = cls.env['product.feed'].create({
+            'name': "GMC",
+            'website_id': cls.website.id,
+            'lang_id': cls.website.default_lang_id.id,
+        })
 
         # Prepare products
         cls.product_template_sofa.list_price = 1000.0
@@ -58,45 +61,24 @@ class WebsiteSaleGMCCommon(ProductVariantsCommon, WebsiteSaleCommon):
             'active': True,
             'rate_ids': [
                 Command.clear(),
-                Command.create({'name': time.strftime('%Y-%m-%d'),'rate': 1.1})
+                Command.create({'name': time.strftime('%Y-%m-%d'), 'rate': 1.1})
             ],
         })
+        cls.eur_pricelist = cls._create_pricelist(
+            name="EUR",
+            currency_id=cls.eur_currency.id,
+            selectable=True,
+        )
 
-        # Prepare delivery methods
-        cls.delivery_countries = cls.env['res.country'].search([('code', 'in', ('BE', 'LU', 'GB'))])
-        cls.carrier.write({
-            'country_ids': [Command.set(cls.delivery_countries.ids)],  # limit computation overhead
-            'free_over': True,
-            'amount': 1200.0,
-            'website_published': True,
-        })
-        cls.carrier.product_id.list_price = 5.0
-
-    def update_items(self, website=None, pricelist=None, **ctx):
-        website = website or self.website
-        pricelist = pricelist or self.pricelist
+    def update_items(self, feed=None):
+        feed = feed or self.gmc_feed
+        feed = feed.with_context(lang=feed.lang_id.code)
         with MockRequest(
-            self.env,
-            context=ctx,
-            website=website,
-            website_sale_current_pl=pricelist.id,
+            feed.env,
+            website=feed.website_id,
+            website_sale_current_pl=feed.pricelist_id.id,
         ):
-            self.items = self.products._prepare_gmc_items()
+            self.items = feed._prepare_gmc_items()
+
         self.red_sofa_item = self.items[self.red_sofa]
         self.blue_sofa_item = self.items[self.blue_sofa]
-
-    def _create_image(self, color):
-        f = io.BytesIO()
-        Image.new('RGB', (1920, 1080), color).save(f, 'JPEG')
-        f.seek(0)
-        return base64.b64encode(f.read())
-
-    def _create_public_category(self, list_vals):
-        """ Create a hierarchical chain of `public.product.category`
-
-        :return: the last category in the chain (leaf)
-        """
-        categs = self.env['product.public.category'].create(list_vals)
-        for i in range(0, len(categs) - 1):
-            categs[i].parent_id = categs[i + 1]
-        return categs[-1]

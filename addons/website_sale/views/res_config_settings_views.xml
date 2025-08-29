@@ -243,20 +243,22 @@
                     <field name="module_website_sale_collect"/>
                 </setting>
             </block>
-                        <setting id="google_analytics_setting" position="after">
+            <setting id="google_analytics_setting" position="after">
                 <setting
                     id="google_merchant_center_setting"
                     help="Connect your eCommerce via a product file."
-                    documentation="/applications/websites/ecommerce/products/catalog.html#multi-channel-promotion"
-                    invisible="1"
+                    documentation="/applications/websites/ecommerce/google_merchant_center.html"
                 >
-                    <field name="enabled_gmc_src"/>
-                    <field
-                        name="gmc_xml_url"
-                        string="Copy file link"
-                        widget="CopyClipboardButton"
-                        invisible="not enabled_gmc_src"
-                    />
+                    <field name="group_gmc_feed"/>
+                    <div class="mt8" invisible="not group_gmc_feed">
+                        <button
+                            type="object"
+                            name="action_open_product_feeds"
+                            string="Manage feeds"
+                            class="btn-link"
+                            icon="oi-arrow-right"
+                        />
+                    </div>
                 </setting>
             </setting>
         </field>
