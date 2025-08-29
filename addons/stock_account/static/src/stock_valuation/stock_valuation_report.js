@@ -95,20 +95,24 @@ export class StockValuationReport extends Component {
         );
     }
 
-    async openInventoryLoss() {
+    openStockMoveLineView(title, usage) {
         const domain = [
             "|",
-            ["location_id.usage", "=", "inventory"],
-            ["location_dest_id.usage", "=", "inventory"],
+            ["location_id.usage", "=", usage],
+            ["location_dest_id.usage", "=", usage],
         ];
         return this.actionService.doAction({
-            name: _t("Inventory Loss"),
+            name: title,
             type: "ir.actions.act_window",
             res_model: "stock.move.line",
             domain,
             views: [[false, 'list'], [false, 'form']],
             target: 'current',
         });
+    }
+
+    openInventoryLoss() {
+        return this.openStockMoveLineView(_t("Inventory Loss"), "inventory");
     }
 
     openStockReport() {
