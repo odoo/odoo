@@ -15,11 +15,6 @@ class StockAverageCostReport(models.AbstractModel):
 
     reference = fields.Char(string='Reference', required=True)
     description = fields.Text(string='Description', required=True)
-    type = fields.Selection([
-        ('incoming', 'Incoming'),
-        ('outgoing', 'Outgoing'),
-        ('adjustement', 'Adjustement'),
-    ], string='Type', required=True)
 
     res_model_name = fields.Selection([
         ('stock.move', 'Stock Move'),
@@ -27,8 +22,9 @@ class StockAverageCostReport(models.AbstractModel):
     ], string='Resource Model Name', required=True)
 
     quantity = fields.Float(string='Added Quantity', required=True)
-    value = fields.Float(string='Added Value', required=True)
+    value = fields.Float(string='Value', required=True)
 
+    added_value = fields.Float(string='Added Value', compute='_compute_cumulative_fields')
     total_quantity = fields.Float(string='Total Quantity', compute='_compute_cumulative_fields')
     total_value = fields.Float(string='Total Value', compute='_compute_cumulative_fields')
     avco_value = fields.Float(string='AVCO Value', compute='_compute_cumulative_fields')
@@ -50,20 +46,16 @@ class StockAverageCostReport(models.AbstractModel):
         query = """
 CREATE OR REPLACE VIEW stock_avco_report AS (
 SELECT
-    sm.id,
+    sm.id AS id,
     sm.product_id,
     sm.date,
     picking.user_id,
     sm.company_id,
     sm.reference,
-    sm.value,
-    sm.quantity,
+    CASE WHEN sm.is_in THEN sm.value ELSE -sm.value END AS value,
+    CASE WHEN sm.is_in THEN sm.quantity ELSE -sm.quantity END AS quantity,
     'stock.move' AS res_model_name,
-    'Operation' AS description,
-    CASE
-        WHEN sm.is_in THEN 'incoming'
-        WHEN sm.is_out THEN 'outgoing'
-    END AS type
+    'Operation' AS description
 FROM
     stock_move sm
 LEFT JOIN
@@ -86,7 +78,7 @@ WHERE
     )
 UNION ALL
 SELECT
-    pv.id,
+    -pv.id,
     pv.product_id,
     pv.date,
     pv.user_id,
@@ -95,8 +87,7 @@ SELECT
     pv.value,
     0 AS quantity, -- Set quantity to 0 as requested,
     'product.value' AS res_model_name,
-    pv.description,
-    'adjustment' AS type
+    pv.description
 FROM
     product_value pv
 WHERE
@@ -108,19 +99,21 @@ WHERE
     def _compute_cumulative_fields(self):
         for records in self.grouped(lambda m: (m.product_id, m.company_id)).values():
             records = records.sorted('date, id')
+            added_value = 0.0
             total_value = 0.0
             total_quantity = 0.0
             avco = 0.0
             for record in records:
-                if record.type == 'incoming':
+                if record.res_model_name == 'stock.move':
+                    added_value = record.value
                     total_value += record.value
                     total_quantity += record.quantity
-                    avco = total_value / total_quantity if total_quantity else 0.0
-                elif record.type == 'outgoing':
-                    total_value -= record.quantity * avco
-                    total_quantity -= record.quantity
-                elif record.type == 'adjustment':
-                    total_value = record.value
+                elif record.res_model_name == 'product.value':
+                    added_value = (record.value * total_quantity) - total_value
+                    total_value = record.value * total_quantity
+
+                avco = total_value / total_quantity if total_quantity else 0.0
+                record.added_value = added_value
                 record.total_value = total_value
                 record.total_quantity = total_quantity
                 record.avco_value = avco

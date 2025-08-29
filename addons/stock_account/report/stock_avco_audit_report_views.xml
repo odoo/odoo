@@ -8,11 +8,12 @@
                 <field name="product_id"/>
                 <field name="date"/>
                 <field name="description"/>
-                <field name="quantity"/>
-                <field name="value"/>
-                <field name="total_value"/>
-                <field name="total_quantity"/>
-                <field name="avco_value"/>
+                <field name="quantity" column_invisible="context.get('cost_method') == 'standard'"/>
+                <field name="added_value" column_invisible="context.get('cost_method') == 'standard'"/>
+                <field name="value" string="Unit Cost" column_invisible="context.get('cost_method') != 'standard'"/>
+                <field name="total_value" column_invisible="context.get('cost_method') == 'standard'"/>
+                <field name="total_quantity" column_invisible="context.get('cost_method') == 'standard'"/>
+                <field name="avco_value" column_invisible="context.get('cost_method') == 'standard'"/>
             </list>
         </field>
     </record>
