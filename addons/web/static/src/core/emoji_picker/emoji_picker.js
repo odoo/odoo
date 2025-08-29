@@ -136,12 +136,12 @@ export class EmojiPicker extends Component {
                 : this.categories[0].sortId;
         });
         onMounted(() => {
-            this.navbarResizeObserver = new ResizeObserver(() => this.adaptNavbar());
-            this.navbarResizeObserver.observe(this.navbarRef.el);
-            this.adaptNavbar();
             if (this.emojis.length === 0) {
                 return;
             }
+            this.navbarResizeObserver = new ResizeObserver(() => this.adaptNavbar());
+            this.navbarResizeObserver.observe(this.navbarRef.el);
+            this.adaptNavbar();
             this.highlightActiveCategory();
             if (this.props.storeScroll) {
                 this.gridRef.el.scrollTop = this.props.storeScroll.get();
@@ -204,7 +204,7 @@ export class EmojiPicker extends Component {
             () => [this.searchTerm]
         );
         onWillUnmount(() => {
-            this.navbarResizeObserver.disconnect();
+            this.navbarResizeObserver?.disconnect();
             if (!this.gridRef.el) {
                 return;
             }
@@ -335,6 +335,9 @@ export class EmojiPicker extends Component {
      * navigation of the emoji picker.
      */
     updateEmojiPickerRepr() {
+        if (this.emojis.length === 0) {
+            return;
+        }
         const emojiEls = Array.from(this.gridRef.el.querySelectorAll(".o-Emoji"));
         const emojiRects = emojiEls.map((el) => el.getBoundingClientRect());
         this.emojiMatrix = [];
