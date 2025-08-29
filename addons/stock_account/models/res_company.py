@@ -125,7 +125,7 @@ class ResCompany(models.Model):
 
     @api.model
     def _cron_post_stock_valuation(self):
-        domain = Domain([('inventory_period', '=', 'daily')])
+        domain = Domain([('inventory_period', '=', 'daily'), ('inventory_valuation', '!=', 'real_time')])
         if fields.Date.today() == fields.Date.today() + relativedelta(day=31):
             domain = domain & Domain([('inventory_period', '=', 'monthly')])
         companies = self.env['res.company'].search(domain)
@@ -160,12 +160,20 @@ class ResCompany(models.Model):
         valued_location = self.env['stock.location'].search([('valuation_account_id', '!=', False)])
 
         moves_in_by_location = self.env['stock.move']._read_group(
-            [('is_out', '=', True), ('location_dest_id', 'in', valued_location.ids)],
+            [
+                ('is_out', '=', True),
+                ('location_dest_id', 'in', valued_location.ids),
+                ('product_id.is_storable', '=', True),
+            ],
             ['location_dest_id'],
             ['value:sum'],
         )
         moves_out_by_location = self.env['stock.move']._read_group(
-            [('is_in', '=', True), ('location_id', 'in', valued_location.ids)],
+            [
+                ('is_in', '=', True),
+                ('location_id', 'in', valued_location.ids),
+                ('product_id.is_storable', '=', True),
+            ],
             ['location_id'],
             ['value:sum'],
         )
