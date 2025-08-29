@@ -6,6 +6,7 @@
             <div class="popover-body o_form_view">
                 <div t-if="this.multiCreateData.timeRange" class="d-flex align-items-baseline gap-2">
                     <TimePicker
+                        inputCssClass="'o_input'"
                         value="this.multiCreateData.timeRange.start"
                         onChange="(time) => this.setMultiCreateTimeRange({start: time})"
                         onInvalid="() => this.setMultiCreateTimeRange({start: null})"
@@ -13,6 +14,7 @@
                     />
                     <i class="fa fa-arrow-right"/>
                     <TimePicker
+                        inputCssClass="'o_input'"
                         value="this.multiCreateData.timeRange.end"
                         onChange="(time) => this.setMultiCreateTimeRange({end: time})"
                         onInvalid="() => this.setMultiCreateTimeRange({end: null})"
@@ -20,7 +22,7 @@
                     />
                 </div>
                 <Record t-props="multiCreateRecordProps" t-slot-scope="data">
-                    <FormRenderer record="data.record" archInfo="multiCreateArchInfo" class="'p-0 pt-2'"/>
+                    <FormRenderer record="data.record" archInfo="multiCreateArchInfo" class="'p-0 pt-3'"/>
                 </Record>
             </div>
             <div class="popover-footer p-3 pt-0 d-flex gap-1">
