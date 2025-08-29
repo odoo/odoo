@@ -9,5 +9,5 @@ class Website(models.Model):
 
     def get_suggested_controllers(self):
         suggested_controllers = super(Website, self).get_suggested_controllers()
-        suggested_controllers.append((_('Resellers'), self.env['ir.http']._url_for('/partners'), 'website_crm_partner_assign'))
+        suggested_controllers.append((_('Partners'), self.env['ir.http']._url_for('/partners'), 'website_partnership'))
         return suggested_controllers

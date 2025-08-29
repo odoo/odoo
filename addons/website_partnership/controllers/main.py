@@ -8,10 +8,8 @@ from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
 from odoo.tools.translate import _
 
 
-
 class WebsitePartnership(WebsitePartnerPage):
     _references_per_page = 40
-
 
     def _get_partners_values(self, grade=None, page=0, references_per_page=20, **post):
         partner_obj = request.env['res.partner']
@@ -59,12 +57,13 @@ class WebsitePartnership(WebsitePartnerPage):
             url=url, total=partner_count, page=page, step=references_per_page, scope=7,
             url_args=url_args)
 
+        print(base_partner_domain)
         # search partners matching current search parameters
         partner_ids = partner_obj.sudo().search(
             base_partner_domain, order="complete_name ASC, id ASC",
             offset=pager['offset'], limit=references_per_page)
         partners = partner_ids.sudo()
-
+        print(partner_ids)
         values = {
             'grades': grades,
             'current_grade': grade,
@@ -90,7 +89,7 @@ class WebsitePartnership(WebsitePartnerPage):
             references_per_page=self._references_per_page,
             **post
         )
-        return request.render("website_partnership.index", values, status=values.get('partners') and 200 or 404)
+        return request.render("website_partnership.index_layout", values, status=values.get('partners') and 200 or 404)
 
     # Do not use semantic controller due to sudo()
     @route()
@@ -113,5 +112,5 @@ class WebsitePartnership(WebsitePartnerPage):
                     'partner': partner,
                     'current_grade': current_grade,
                 }
-                return request.render("website_partnership.partner", values)
+                return request.render("website_partnership.partner_page", values)
         raise request.not_found()

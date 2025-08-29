@@ -16,12 +16,15 @@ To publish a partner, set a *Level* in their contact form (in the Partner Assign
         'security/ir_rule.xml',
         'views/res_partner_grade_views.xml',
         'views/website_partnership_templates.xml',
+        'views/snippets.xml',
     ],
     'demo': [
         'demo/res_partner_grade_demo.xml',
     ],
     'assets': {
         'web.assets_tests': [
+            'website_partnership/static/src/website_builder/**/*',
+            'website_partnership/static/src/website_builder/*',
             'website_partnership/static/tests/tours/*',
         ],
     },
