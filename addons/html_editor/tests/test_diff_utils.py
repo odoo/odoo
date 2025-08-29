@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
 
 from odoo.tests.common import BaseCase
-from odoo.addons.web_editor.models.diff_utils import (
+from odoo.addons.html_editor.models.diff_utils import (
     generate_patch,
     generate_comparison,
     apply_patch,

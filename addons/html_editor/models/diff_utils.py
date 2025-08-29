@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -57,7 +56,7 @@ def apply_patch(initial_content, patch):
 
     :return: string: the patched content
     """
-    if patch == "":
+    if not patch:
         return initial_content
 
     # Replace break line in initial content to ensure they don't interfere with
@@ -241,8 +240,8 @@ def _format_line_index(start, end):
     if not length:
         start -= 1
     if length <= 1:
-        return "{}{}".format(PATCH_OPERATION_LINE_AT, start)
-    return "{}{},{}".format(PATCH_OPERATION_LINE_AT, start, start + length - 1)
+        return "%s%s" % (PATCH_OPERATION_LINE_AT, start)
+    return "%s%s,%s" % (PATCH_OPERATION_LINE_AT, start, start + length - 1)
 
 
 def _patch_generator(new_content, old_content):
@@ -310,7 +309,7 @@ def generate_patch(new_content, old_content):
 def _remove_html_attribute(html_content, attributes_to_remove):
     for attribute in attributes_to_remove:
         html_content = re.sub(
-            r' {}="[^"]*"'.format(attribute), "", html_content
+            r' %s="[^"]*"' % attribute, "", html_content
         )
 
     return html_content
