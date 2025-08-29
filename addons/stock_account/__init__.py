@@ -1,9 +1,33 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import fields
 
 from . import models
 from . import report
 from . import wizard
+
+
+def _post_init_hook(env):
+    _configure_journals(env)
+    _create_product_value(env)
+
+
+def _create_product_value(env):
+    product_vals_list = []
+    products = env['product.product'].search([('type', '=', 'consu')])
+    for company in env['res.company'].search([]):
+        products = products.with_company(company)
+        product_vals_list += [
+            {
+                'product_id': product.id,
+                'value': product.standard_price,
+                'date': fields.Date.today(),
+                'company_id': company.id,
+                'description': 'Initial cost',
+            }
+            for product in products if not product.company_id or product.company_id == company
+        ]
+    env['product.value'].create(product_vals_list)
 
 
 def _configure_journals(env):
