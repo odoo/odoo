@@ -166,9 +166,10 @@ body.editor_enable:not(.o_basic_theme) .odoo-editor-editable {
         var(--box-border-bottom-width)
         var(--box-border-left-width) !important;
 }
-// TODO this should probably be done for all bootstrap "border" classes like
-// "rounded" classes below? At the moment, it was not done because builder
-// options do not allow to set those but layouts could?
+// TODO this should probably be done for all bootstrap "border" *sizes* classes
+// like "rounded" classes below. At the moment, it was not done because builder
+// options do not allow to set those yet, but layouts could(?).
+// See ROUNDED_SIZES_CLASSES_ONLY.
 .border {
     @extend %box-border-width-rules;
 }
@@ -196,12 +197,16 @@ body.editor_enable:not(.o_basic_theme) .odoo-editor-editable {
         var(--box-border-bottom-right-radius)
         var(--box-border-bottom-left-radius) !important;
 }
-$utilities-radius-keys: ("rounded", "rounded-top", "rounded-end", "rounded-bottom", "rounded-start") !default;
-@each $direction in $utilities-radius-keys {
-    @each $size, $value in $rounded-sizes {
-        $class-suffix: if($size == null, "", "-#{$size}");
-        .#{$direction}#{$class-suffix} {
-            @extend %box-border-radius-rules;
-        }
+// Note: we do not support partial border-radius classes using CSS variables
+// just yet. We could (at the cost of dividing the `%box-border-radius-rules`
+// into 4 or 5 parts), but this is not necessary at the moment. They can be used
+// in layouts but we do not allow edition of their radius via the builder: when
+// we do, we normally should always prefer to give the user full control over
+// the 4 directions, by switching to the `rounded` or a `rounded-{SIZE}` class.
+// See ROUNDED_SIZES_CLASSES_ONLY.
+@each $size, $value in map-get(map-get($utilities, 'rounded'), 'values') {
+    $class-suffix: if($size == null, "", "-#{$size}");
+    .rounded#{$class-suffix} {
+        @extend %box-border-radius-rules;
     }
-};
+}
