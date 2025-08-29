@@ -8,4 +8,14 @@ export class RottingKanbanRenderer extends KanbanRenderer {
         KanbanRecord: RottingKanbanRecord,
         KanbanHeader: RottingKanbanHeader,
     };
+    /**
+     * @override
+     */
+    getGroupClasses(group, isGroupProcessing) {
+        let classes = super.getGroupClasses(group, isGroupProcessing);
+        if (this.props.progressBarState && this.props.progressBarState.rotIsFiltered[group.id]) {
+            classes += " o_kanban_group_show o_kanban_group_show_rotting";
+        }
+        return classes;
+    }
 }
