@@ -6,15 +6,14 @@ from odoo.addons.website_sale.tests.website_sale_feed_common import WebsiteSaleF
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleStockGMC(WebsiteSaleFeedCommon):
+class TestWebsiteSaleStockMeta(WebsiteSaleFeedCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.feed_type = 'gmc'
+        cls.feed_type = "meta"
         cls.website.warehouse_id = cls.env.ref('stock.warehouse0')
         cls.stock_loc = cls.website.warehouse_id.lot_stock_id
-        cls.supplier_loc = cls.env.ref('stock.stock_location_suppliers')
         (cls.blue_sofa + cls.red_sofa + cls.blanket).write({
             'is_storable': True,
             'allow_out_of_stock_order': False,
@@ -25,24 +24,24 @@ class TestWebsiteSaleStockGMC(WebsiteSaleFeedCommon):
             'quantity': 10.0,
             'location_id': cls.stock_loc.id,
         })
+        cls.env.user.write({'group_ids': [(4, cls.env.ref('stock.group_stock_user').id)]})
 
-    def test_gmc_items_availability_check_stock(self):
+    def test_meta_stock_info_sold_out(self):
+        """Ensure 'out of stock' and quantity 0 when sold out."""
         self.update_items()
+        self.assertEqual('in stock', self.blue_sofa_item['availability'])
+        self.assertEqual('out of stock', self.items[self.blanket]['availability'])
+        self.assertEqual('in stock', self.red_sofa_item['availability'])  # allow out_of_stock
 
-        self.assertEqual('in_stock', self.blue_sofa_item['availability'])
-        self.assertEqual('out_of_stock', self.items[self.blanket]['availability'])
-        self.assertEqual('in_stock', self.red_sofa_item['availability']) # allow_out_of_stock_order
-
-    def test_gmc_items_keep_website_stock_separate(self):
+    def test_meta_items_keep_website_stock_separate(self):
         self.blue_sofa.allow_out_of_stock_order = False
         # setup second website with seperate stock
-        website_2_warehouse = self.env['stock.warehouse'].create({'name': 'Stock 2', 'code': 'WH2'})
+        warehouse_2 = self.env['stock.warehouse'].create({'name': 'Stock 2', 'code': 'WH2'})
         website_2 = self.env['website'].create({
             'name': 'Website Test 2',
             'domain': 'https://my-website.net',
-            'warehouse_id': website_2_warehouse.id,
+            'warehouse_id': warehouse_2.id,
         })
-
         self.update_items(website=website_2)
 
-        self.assertEqual('out_of_stock', self.red_sofa_item['availability'])
+        self.assertEqual('out of stock', self.red_sofa_item['availability'])

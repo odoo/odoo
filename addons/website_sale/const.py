@@ -283,7 +283,7 @@ PRODUCT_PAGE_STYLE_MAPPING = {
 
 # Google Merchant Center
 
-GMC_SUPPORTED_UOM = {
+PRODUCT_FEED_SUPPORTED_UOM = {
     'oz',
     'lb',
     'mg',
@@ -291,6 +291,7 @@ GMC_SUPPORTED_UOM = {
     'kg',
     'floz',
     'pt',
+    'ct',
     'qt',
     'gal',
     'ml',
@@ -306,6 +307,6 @@ GMC_SUPPORTED_UOM = {
     'sqm',
 }
 
-GMC_BASE_MEASURE = re.compile(r'(?P<base_count>\d+)?\s*(?P<base_unit>[a-z]+)')
+BASE_MEASURE = re.compile(r'(?P<base_count>\d+)?\s*(?P<base_unit>[a-z]+)')
 
 SHOP_PATH = '/shop'

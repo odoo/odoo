@@ -98,6 +98,13 @@ class ResConfigSettings(models.TransientModel):
     )
     gmc_xml_url = fields.Char(compute='_compute_gmc_xml_url')
 
+    enabled_meta_src = fields.Boolean(
+        string="Meta Catalog Feed Source",
+        related='website_id.enabled_meta_src',
+        readonly=False
+    )
+    meta_xml_url = fields.Char(compute='_compute_meta_xml_url')
+
     #=== COMPUTE METHODS ===#
 
     @api.depends('website_id.account_on_checkout')
@@ -127,6 +134,11 @@ class ResConfigSettings(models.TransientModel):
             # Uses `config.get_base_url()` which fallbacks to `web․base․url` if `website_domain` is
             # not set.
             config.gmc_xml_url = url_join(config.get_base_url(), '/gmc.xml')
+
+    @api.depends('website_domain')
+    def _compute_meta_xml_url(self):
+        for config in self:
+            config.meta_xml_url = url_join(config.get_base_url(), '/meta.xml')
 
     def _inverse_account_on_checkout(self):
         for record in self:

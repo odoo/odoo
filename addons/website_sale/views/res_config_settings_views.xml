@@ -310,6 +310,18 @@
                         invisible="not enabled_gmc_src"
                     />
                 </setting>
+                <setting
+                    id="meta_setting"
+                    help="Connect your eCommerce to Meta via a product file."
+                >
+                    <field name="enabled_meta_src"/>
+                    <field
+                        name="meta_xml_url"
+                        string="Copy file link"
+                        widget="CopyClipboardButton"
+                        invisible="not enabled_meta_src"
+                    />
+                </setting>
             </setting>
         </field>
     </record>
