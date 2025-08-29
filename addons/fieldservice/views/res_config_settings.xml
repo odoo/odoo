@@ -1,0 +1,247 @@
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.fsm</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="40" />
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app
+                    data-string="Field Service"
+                    string="Field Service"
+                    name="fieldservice"
+                    groups="fieldservice.group_fsm_manager"
+                >
+                    <block title="Service Locations" name="locations_setting_container">
+                        <setting
+                            string="Manage Territories"
+                            help="Manage territories, branches, districts and regions"
+                        >
+                            <field name="group_fsm_territory" />
+                        </setting>
+                        <setting
+                            string="Auto-fill the workers on the location"
+                            help="Auto-populate the preferred workers of a location based on the territory"
+                        >
+                            <field name="auto_populate_persons_on_location" />
+                        </setting>
+                        <setting
+                            string="Manage Distribution"
+                            help="Manage your distribution structure"
+                        >
+                            <field name="module_fieldservice_distribution" />
+                        </setting>
+                        <setting
+                            string="FSM Location Builder"
+                            help="Create multiple FSM Locations at once using Location Builder Wizard"
+                        >
+                            <field name="module_fieldservice_location_builder" />
+                        </setting>
+                        <setting
+                            string="Search Location By Hierarchy"
+                            help="Search Locations based on their full hierarchy name"
+                        >
+                            <field name="search_on_complete_name" />
+                        </setting>
+                    </block>
+
+                    <block title="Equipments" name="equipments_setting_container">
+                        <setting
+                            string="Manage Equipments"
+                            help="Manage equipments at the service location"
+                        >
+                            <field name="group_fsm_equipment" />
+                        </setting>
+                    </block>
+
+                    <block title="Workers" name="workers_setting_container">
+                        <setting
+                            string="Manage Teams"
+                            help="Manage different teams of Field Service workers"
+                        >
+                            <field name="group_fsm_team" />
+                        </setting>
+                        <setting
+                            string="Manage Categories"
+                            help="Manage different categories of Field Service workers"
+                        >
+                            <field name="group_fsm_category" />
+                        </setting>
+                        <setting
+                            string="Manage Skills"
+                            help="Make sure to send the right worker with the appropriate skills"
+                        >
+                            <field name="module_fieldservice_skill" />
+                        </setting>
+                        <setting
+                            string="Purchase Field Services"
+                            help="Manage subcontractors with pricelists"
+                        >
+                            <field name="module_fieldservice_purchase" />
+                        </setting>
+                    </block>
+
+                    <block title="Vehicles" name="vehicle_setting_container">
+                        <setting
+                            string="Manage Vehicles"
+                            help="Manage vehicles for Field Service operations"
+                        >
+                            <field name="module_fieldservice_vehicle" />
+                        </setting>
+                        <setting
+                            string="Link to Fleet Vehicles"
+                            help="Link Field Service vehicles with Fleet vehicles"
+                        >
+                            <field name="module_fieldservice_fleet" />
+                        </setting>
+                    </block>
+
+                    <block title="Service Orders" name="order_setting_container">
+                        <setting
+                            string="Auto-fill the equipments on the order"
+                            help="Auto-populate the equipments on the order based on the location content"
+                            invisible="not group_fsm_equipment"
+                        >
+                            <field name="auto_populate_equipments_on_order" />
+                        </setting>
+                        <setting
+                            string="Manage Tags"
+                            help="Manage tags on service orders"
+                        >
+                            <field name="group_fsm_tag" />
+                        </setting>
+                        <setting
+                            string="Manage Order Templates"
+                            help="Manage templates"
+                        >
+                            <field name="group_fsm_template" />
+                        </setting>
+                        <setting
+                            string="Manage Order Sub-Statuses"
+                            help="Manage sub-status of orders"
+                        >
+                            <field name="module_fieldservice_substatus" />
+                        </setting>
+                        <setting
+                            string="Manage Recurring Orders"
+                            help="Manage recurrence of field service orders"
+                        >
+                            <field name="module_fieldservice_recurring" />
+                        </setting>
+                        <setting
+                            string="Invoice your Service Orders"
+                            help="Create vendor bills and customer invoices when completing service orders."
+                        >
+                            <field name="module_fieldservice_account" />
+                        </setting>
+                        <setting
+                            string="Manage Inventory Logistics"
+                            help="Manage materials and stock operations. Automatically activate Lots &amp; Serial Numbers."
+                        >
+                            <field name="module_fieldservice_stock" />
+                        </setting>
+                        <setting
+                            string="Sell Field Service Orders"
+                            help="Sell products that generate field service orders"
+                        >
+                            <field name="module_fieldservice_sale" />
+                        </setting>
+                        <setting
+                            string="Manage Agreements"
+                            help="Manage agreements and contracts"
+                        >
+                            <field name="module_fieldservice_agreement" />
+                        </setting>
+                        <setting
+                            string="Manage Maintenance Requests"
+                            help="Link your FSM orders to maintenance requests"
+                            invisible="not group_fsm_equipment"
+                        >
+                            <field name="module_fieldservice_maintenance" />
+                        </setting>
+                        <setting
+                            string="MRP Repair"
+                            help="Link your FSM orders to MRP repair orders"
+                            invisible="not group_fsm_equipment"
+                        >
+                            <field name="module_fieldservice_repair" />
+                        </setting>
+                        <setting
+                            string="Projects and Tasks"
+                            help="Link your FSM orders to Projects and Project Tasks"
+                        >
+                            <field name="module_fieldservice_project" />
+                        </setting>
+                        <setting
+                            string="CRM"
+                            help="Create FSM Orders from Opportunities"
+                        >
+                            <field name="module_fieldservice_crm" />
+                        </setting>
+                        <setting
+                            string="Manage Order Activities"
+                            help="Manage activities"
+                        >
+                            <field name="module_fieldservice_activity" />
+                        </setting>
+                        <setting
+                            string="Manage Order Sizes"
+                            help="Manage sizes for orders and locations"
+                        >
+                            <field name="module_fieldservice_size" />
+                        </setting>
+                        <setting string="Allow Field Service Web Timeline View">
+                            <field name="module_fieldservice_web_timeline_view" />
+                        </setting>
+                    </block>
+
+                    <block title="Routes" name="route_setting_container">
+                        <setting
+                            string="Manage routes of your workers"
+                            help="Automatically creates a day route when an order is assigned and scheduled"
+                        >
+                            <field name="module_fieldservice_route" />
+                        </setting>
+                        <setting
+                            string="Check collected payments"
+                            help="Check the amount collected by the worker during the route"
+                            invisible="not module_fieldservice_route"
+                        >
+                            <field name="module_fieldservice_route_account" />
+                        </setting>
+                        <setting
+                            string="Check inventory"
+                            help="Check the inventory of the vehicle at the end of the route"
+                            invisible="not module_fieldservice_route"
+                        >
+                            <field name="module_fieldservice_route_stock" />
+                        </setting>
+                    </block>
+
+                    <block title="Mapping Tools" name="mapping_setting_container">
+                        <setting
+                            string="Use GeoEngine with OpenStreetMap"
+                            help="Display locations and orders on a map with OpenStreetMap"
+                        >
+                            <field name="module_fieldservice_geoengine" />
+                        </setting>
+                        <setting
+                            string="Allow Field Service Google Maps"
+                            help="Display locations and orders on a map with Google Maps"
+                        >
+                            <field name="module_fieldservice_google_map" />
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+    <record id="action_fsm_config" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'fieldservice'}</field>
+    </record>
+</odoo>

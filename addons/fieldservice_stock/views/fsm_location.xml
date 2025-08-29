@@ -1,0 +1,20 @@
+<odoo>
+    <!-- Copyright (C) 2018 Brian McMaster
+         Copyright (C) 2019 Open Source Integrators
+         License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+    <record id="fsm_location_stock_form_view" model="ir.ui.view">
+        <field name="model">fsm.location</field>
+        <field name="inherit_id" ref="fieldservice.fsm_location_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='contact_id']" position="before">
+                <field name="shipping_address_id" />
+            </xpath>
+            <xpath expr="//form/sheet/group/group[2]" position="inside">
+                <field
+                    name="inventory_location_id"
+                    domain="[('usage', 'in', ['internal', 'supplier', 'customer'])]"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

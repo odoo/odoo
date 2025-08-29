@@ -1,0 +1,51 @@
+<odoo>
+    <!-- Field Service Tag -->
+    <record id="fsm_tag_list_view" model="ir.ui.view">
+        <field name="name">Tags</field>
+        <field name="model">fsm.tag</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="full_name" />
+                <field name="company_id" groups="base.group_multi_company" />
+            </list>
+        </field>
+    </record>
+    <record id="fsm_tag_form_view" model="ir.ui.view">
+        <field name="name">Tag</field>
+        <field name="model">fsm.tag</field>
+        <field name="arch" type="xml">
+            <form string="tag">
+                <sheet>
+                    <label for="name" class="oe_edit_only" />
+                    <h1>
+                        <field name="name" />
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="parent_id" />
+                        </group>
+                        <group>
+                            <field name="color" groups="base.group_no_one" />
+                            <field
+                                name="company_id"
+                                options="{'no_create': True}"
+                                groups="base.group_multi_company"
+                            />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_fsm_tag" model="ir.actions.act_window">
+        <field name="name">Tags</field>
+        <field name="res_model">fsm.tag</field>
+        <field name="view_id" ref="fsm_tag_list_view" />
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a tag.
+            </p>
+        </field>
+    </record>
+</odoo>

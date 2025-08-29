@@ -1,0 +1,11 @@
+<odoo>
+    <record id="fsm_stage_form_view" model="ir.ui.view">
+        <field name="model">fsm.stage</field>
+        <field name="inherit_id" ref="fieldservice.fsm_stage_form_view" />
+        <field name="arch" type="xml">
+            <field name="is_default" position="after">
+                <field name="is_invoiceable" />
+            </field>
+        </field>
+    </record>
+</odoo>

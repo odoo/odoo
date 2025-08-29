@@ -1,0 +1,257 @@
+<odoo>
+    <!-- Field Service Equipment -->
+    <record id="fsm_equipment_search_view" model="ir.ui.view">
+        <field name="name">fsm.equipment.search</field>
+        <field name="model">fsm.equipment</field>
+        <field name="arch" type="xml">
+            <search string="Equipments">
+                <field name="name" string="FSM Equipment Name" />
+                <field name="location_id" />
+                <field name="current_location_id" required="True" />
+                <field name="branch_id" />
+                <field name="district_id" />
+                <field name="region_id" />
+                <field name="person_id" />
+                <group expand="0" string="Group By">
+                    <filter
+                        name="person_id"
+                        string="Worker"
+                        domain=""
+                        context="{'group_by':'person_id'}"
+                    />
+                    <filter
+                        name="territory_id"
+                        string="Territory"
+                        domain=""
+                        context="{'group_by':'territory_id'}"
+                        groups="fieldservice.group_fsm_territory"
+                    />
+                    <filter
+                        name="branch_id"
+                        string="Branch"
+                        domain=""
+                        context="{'group_by':'branch_id'}"
+                        groups="fieldservice.group_fsm_territory"
+                    />
+                    <filter
+                        name="district_id"
+                        string="District"
+                        domain=""
+                        context="{'group_by':'district_id'}"
+                        groups="fieldservice.group_fsm_territory"
+                    />
+                    <filter
+                        name="region_id"
+                        string="Region"
+                        domain=""
+                        context="{'group_by':'region_id'}"
+                        groups="fieldservice.group_fsm_territory"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="fsm_equipment_list_view" model="ir.ui.view">
+        <field name="name">fsm.equipment.list</field>
+        <field name="model">fsm.equipment</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="person_id" />
+                <field name="location_id" />
+                <field name="current_location_id" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="stage_id" />
+            </list>
+        </field>
+    </record>
+    <record id="fsm_equipment_form_view" model="ir.ui.view">
+        <field name="name">fsm.equipment.form</field>
+        <field name="model">fsm.equipment</field>
+        <field name="arch" type="xml">
+            <form string="Equipment">
+                <header>
+                    <button
+                        id="previous_stage"
+                        name="previous_stage"
+                        string="Previous Stage"
+                        class="oe_highlight"
+                        type="object"
+                        groups="fieldservice.group_fsm_dispatcher"
+                    />
+                    <button
+                        id="next_stage"
+                        name="next_stage"
+                        string="Next Stage"
+                        class="oe_highlight"
+                        type="object"
+                        groups="fieldservice.group_fsm_dispatcher"
+                    />
+                    <field
+                        name="stage_id"
+                        widget="statusbar"
+                        domain="[('stage_type', '=', 'equipment')]"
+                    />
+                </header>
+                <sheet>
+                    <label for="name" class="oe_edit_only" />
+                    <h1>
+                        <field name="name" />
+                    </h1>
+                    <group id="main">
+                        <group id="main-left">
+                            <field name="parent_id" />
+                            <field name="person_id" />
+                            <field name="location_id" />
+                            <field name="current_location_id" />
+                        </group>
+                        <group id="main-right">
+                            <field name="managed_by_id" />
+                            <field name="owned_by_id" />
+                            <field
+                                name="company_id"
+                                options="{'no_create': True}"
+                                groups="base.group_multi_company"
+                            />
+                        </group>
+                    </group>
+                    <group id="secondary" />
+                    <notebook>
+                        <page string="Notes">
+                            <field name="notes" nolabel="1" />
+                        </page>
+                        <page string="Location">
+                            <group>
+                                <group>
+                                    <field name="territory_id" />
+                                    <field name="branch_id" />
+                                    <field name="district_id" />
+                                    <field name="region_id" />
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Children">
+                            <field name="child_ids">
+                                <list>
+                                    <field name="name" />
+                                    <field name="person_id" />
+                                    <field name="location_id" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter />
+            </form>
+        </field>
+    </record>
+    <!-- Field Service Equipment -->
+    <record id="action_fsm_equipment" model="ir.actions.act_window">
+        <field name="name">Field Service Equipment</field>
+        <field name="res_model">fsm.equipment</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="fsm_equipment_search_view" />
+        <field name="context">{'default_location_id':
+            context.get('location_id', False)}
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a Field Service Equipment here.
+            </p>
+        </field>
+    </record>
+    <!-- Field Service Equipment Dashboard -->
+    <record id="fsm_equipment_kanban_view" model="ir.ui.view">
+        <field name="name">fsm.equipment.kanban</field>
+        <field name="model">fsm.equipment</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="person_id" class="o_kanban_small_column">
+                <field name="name" />
+                <field name="location_id" />
+                <field name="person_id" />
+                <field name="color" />
+                <templates>
+                    <t t-name="card">
+                        <div
+                            t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click"
+                        >
+                            <div class="oe_kanban_content">
+                                <div>
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name" />
+                                    </strong>
+                                </div>
+                                <div>
+                                    <field name="location_id" />
+                                </div>
+                                <div>
+                                    <field name="person_id" />
+                                </div>
+                            </div>
+                            <div class="oe_clear" />
+                        </div>
+                    </t>
+                    <t t-name="kanban-menu">
+                        <div class="container">
+                            <div class="o_kanban_card_manage_settings row">
+                                <div role="menuitem" aria-haspopup="true" class="col-6">
+                                    <ul
+                                        class="oe_kanban_colorpicker"
+                                        data-field="color"
+                                        role="popup"
+                                    />
+                                </div>
+                                <div role="menuitem" class="col-4">
+                                    <a
+                                        class="dropdown-item"
+                                        role="menuitem"
+                                        type="edit"
+                                    >Edit</a>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="action_fsm_dash_equipment" model="ir.actions.act_window">
+        <field name="name">Field Service Equipment</field>
+        <field name="res_model">fsm.equipment</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a Field Service Equipment here.
+            </p>
+        </field>
+    </record>
+    <!-- Reporting -->
+    <record id="fsm_equipment_graph_view" model="ir.ui.view">
+        <field name="name">fsm.equipment.graph</field>
+        <field name="model">fsm.equipment</field>
+        <field name="arch" type="xml">
+            <graph string="Equipments" type="bar">
+                <field name="person_id" type="row" />
+            </graph>
+        </field>
+    </record>
+    <record id="fsm_equipment_pivot_view" model="ir.ui.view">
+        <field name="name">fsm.equipment.pivot</field>
+        <field name="model">fsm.equipment</field>
+        <field name="arch" type="xml">
+            <pivot string="Equipments" display_quantity="true">
+                <field name="person_id" type="row" />
+            </pivot>
+        </field>
+    </record>
+    <record id="action_fsm_report_equipment" model="ir.actions.act_window">
+        <field name="name">Equipments</field>
+        <field name="res_model">fsm.equipment</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="help" type="html">
+            <p>
+                Equipments Report
+            </p>
+        </field>
+    </record>
+</odoo>

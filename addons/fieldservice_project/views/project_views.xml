@@ -1,0 +1,61 @@
+<odoo>
+    <record id="fieldservice_project_view_form" model="ir.ui.view">
+        <field name="name">project.fieldservice.form</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project" />
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Service Orders" groups="fieldservice.group_fsm_user">
+                    <button
+                        name="action_create_order"
+                        string="Create FSM Order"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    <field name="fsm_order_ids">
+                        <list create="false">
+                            <field name="name" style="pointer-events:none;" />
+                            <field name="stage_id" style="pointer-events:none;" />
+                            <field name="location_id" style="pointer-events:none;" />
+                            <field name="project_task_id" />
+                            <field name="person_id" style="pointer-events:none;" />
+                            <field
+                                name="scheduled_date_start"
+                                style="pointer-events:none;"
+                            />
+                            <button
+                                name="action_view_order"
+                                string="View FSM Order"
+                                type="object"
+                                class="project_column"
+                            />
+                        </list>
+                    </field>
+                </page>
+            </notebook>
+            <field name="partner_id" position="before">
+                <field name="fsm_location_id" />
+            </field>
+        </field>
+    </record>
+    <record id="fieldservice_project_view_list" model="ir.ui.view">
+        <field name="name">project.fieldservice.list</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project" />
+        <field name="arch" type="xml">
+            <field name="partner_id" position="before">
+                <field name="fsm_location_id" />
+            </field>
+        </field>
+    </record>
+    <record id="fieldservice_project_view_search" model="ir.ui.view">
+        <field name="name">project.fieldservice.search</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_project_filter" />
+        <field name="arch" type="xml">
+            <field name="partner_id" position="before">
+                <field name="fsm_location_id" />
+            </field>
+        </field>
+    </record>
+</odoo>

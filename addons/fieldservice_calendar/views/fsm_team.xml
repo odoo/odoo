@@ -1,0 +1,12 @@
+<odoo>
+    <record id="view_team_form" model="ir.ui.view">
+        <field name="name">fsm.team.form</field>
+        <field name="model">fsm.team</field>
+        <field name="inherit_id" ref="fieldservice.view_team_form" />
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="calendar_user_id" />
+            </field>
+        </field>
+    </record>
+</odoo>

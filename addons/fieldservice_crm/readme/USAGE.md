@@ -1,0 +1,5 @@
+- User must have Field Service User permissions
+- Go to CRM app
+- Create a new Opportunity
+- Click the FS Orders Smart Button
+- Create a Field Service Order

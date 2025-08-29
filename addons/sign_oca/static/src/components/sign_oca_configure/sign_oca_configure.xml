@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="sign_oca.SignOcaConfigureButtons">
+        <button class="btn btn-primary"><i
+            class="fa fa-question-circle"
+        /> Help</button>
+        <!--
+        <div
+            >In order to add a new field, do a right click over the PDF page. You will be able to select the field that you will import</div>
+            <div
+            >Then, you can move and resize the fields over the PDF page using the move icons.</div>
+            <div
+            >If you do a click over a field, you will be able to change the default configurations of the field</div>
+            <div>Data is saved automatically when editing</div>-->
+    </t>
+    <t t-name="sign_oca.SignOcaConfigureHelpDialog">
+        <div>
+            <div
+            >In order to add a new field, do a right click over the PDF page. You will be able to select the field that you will import</div>
+            <div
+            >Then, you can move and resize the fields over the PDF page using the move icons.</div>
+            <div
+            >If you do a click over a field, you will be able to change the default configurations of the field</div>
+            <div>Data is saved automatically when editing</div>
+        </div>
+    </t>
+    <t t-name="sign_oca.sign_iframe_field_configure">
+        <div
+            t-attf-class="o_sign_oca_field #{required? 'sign_oca_field_required': ''}"
+            t-attf-data-field="id"
+            t-attf-style="position:absolute;top:#{position_y}%; left: #{position_x}%; width: #{width}%;height: #{height}%"
+        >
+            <span
+                class="fa fa-arrows o_sign_oca_draggable"
+                role="img"
+                aria-label="Signature configuration"
+                title="Signature configuration"
+            />
+            <div class="o_sign_oca_resize fa fa-arrows-alt" style="z-index: 90;" />
+            <span class="o_sign_placeholder" t-out="name" />
+        </div>
+    </t>
+    <t t-name="sign_oca.sign_iframe_contextmenu">
+        <div
+            class="o_sign_oca_context_menu"
+            t-attf-style="top: #{top};left: #{left};position: absolute"
+        >
+            <div
+                class="o_sign_oca_button_header"
+            >Click on the field that you want to add</div>
+            <t t-foreach="info.fields" t-as="field" t-key="field.id">
+                <div
+                    class="o_sign_oca_context_menu_item"
+                    t-att-data-field="field.id"
+                    t-out="field.name"
+                    t-att-data-page="page_id"
+                />
+            </t>
+        </div>
+    </t>
+    <t
+        t-name="sign_oca.SignOcaConfigure"
+        t-inherit="sign_oca.SignOcaPdfCommon"
+        t-inherit-mode="primary"
+    >
+        <xpath expr="//iframe" position="before">
+            <ControlPanel display="{}" />
+            <div
+                class="alert alert-warning row"
+                role="alert"
+                style="margin: 0px"
+                t-if="!isMobile"
+            >
+                In order to add a new field, do a right click over the PDF page. You will be able to select the field that you will import.
+                Then, you can move and resize the fields over the PDF page using the move icons.
+                If you do a click over a field, you will be able to change the default configurations of the field<br
+            />
+                Data is saved automatically when editing.
+            </div>
+        </xpath>
+    </t>
+</templates>

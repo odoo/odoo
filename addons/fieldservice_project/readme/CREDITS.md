@@ -1,0 +1,2 @@
+- Patrick Wilson \<<pwilson@pavlovmedia.com>\>
+- Open Source Integrators \<<contact@opensourceintegrators.com>\>

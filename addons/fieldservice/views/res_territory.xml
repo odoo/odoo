@@ -1,0 +1,26 @@
+<odoo>
+    <record id="res_territory_form_view_inherit" model="ir.ui.view">
+        <field name="name">res.territory.form.inherit</field>
+        <field name="model">res.territory</field>
+        <field name="inherit_id" ref="base_territory.res_territory_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group/group[1]" position="after">
+                <group>
+                    <field name="person_id" />
+                </group>
+            </xpath>
+            <notebook position="inside">
+                <page string="Field Service Workers">
+                    <field name="person_ids">
+                        <list>
+                            <field name="name" />
+                            <field name="category_ids" widget="many2many_tags" />
+                            <field name="phone" />
+                            <field name="email" />
+                        </list>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

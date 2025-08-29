@@ -1,0 +1,74 @@
+<odoo>
+    <record id="account_invoice_form" model="ir.ui.view">
+        <field name="name">FSM order.invoice.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    name="action_view_fsm_orders"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-map"
+                    invisible="fsm_order_count == 0"
+                    groups="fieldservice.group_fsm_user"
+                >
+                    <field
+                        name="fsm_order_count"
+                        widget="statinfo"
+                        string="FSM Orders"
+                    />
+                </button>
+            </div>
+        </field>
+    </record>
+    <!-- Vendor Bill List View -->
+    <record id="vendor_bill_list_view_fso" model="ir.ui.view">
+        <field name="name">vendor.bill.list.view.fso</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_origin']" position="after">
+                <field
+                    name="fsm_order_ids"
+                    widget="many2many_tags"
+                    groups="fieldservice.group_fsm_user"
+                />
+            </xpath>
+        </field>
+    </record>
+    <!-- Vendor Bill Form View -->
+    <record id="vendor_bill_form_view_fso" model="ir.ui.view">
+        <field name="name">vendor.bill.form.view.fso</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='other_info']" position="inside">
+                <group
+                    string="Field Service Orders"
+                    groups="fieldservice.group_fsm_user"
+                >
+                    <field name="fsm_order_ids" nolabel="1" />
+                </group>
+            </xpath>
+            <xpath expr="//list//field[@name='price_total']" position="after">
+                <field name="fsm_order_ids" widget="many2many_tags" optional="hide" />
+            </xpath>
+        </field>
+    </record>
+    <!-- Invoice Search View -->
+    <record id="invoice_search_view_fso" model="ir.ui.view">
+        <field name="name">invoice.search.view.fso</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_move_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field
+                    name="fsm_order_ids"
+                    string="FSM Orders"
+                    groups="fieldservice.group_fsm_user"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

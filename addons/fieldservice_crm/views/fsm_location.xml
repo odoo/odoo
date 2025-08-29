@@ -1,0 +1,28 @@
+<!-- Copyright 2019 Patrick Wilson <patrickraymondwilson@gmail.com
+    License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="fsm_location_crm_form_view" model="ir.ui.view">
+        <field name="name">fsm.location.crm.form</field>
+        <field name="model">fsm.location</field>
+        <field name="inherit_id" ref="fieldservice.fsm_location_form_view" />
+        <field name="arch" type="xml">
+            <div class="oe_button_box" position="inside">
+                <button
+                    class="oe_stat_button o_res_partner_tip_opp"
+                    type="action"
+                    name="%(crm.crm_lead_opportunities)d"
+                    icon="fa-star"
+                    groups="sales_team.group_sale_salesman"
+                    context="{'search_default_fsm_location_id': id,
+                              'default_fsm_location_id': id}"
+                >
+                    <field
+                        string="Opportunities"
+                        name="opportunity_count"
+                        widget="statinfo"
+                    />
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>

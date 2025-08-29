@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 公司部門表單視圖 -->
+    <record id="company_department_form_view" model="ir.ui.view">
+        <field name="name">company.department.form</field>
+        <field name="model">company.department</field>
+        <field name="arch" type="xml">
+            <form string="公司部門">
+                <sheet>
+                    <!-- 狀態標示 -->
+                    <widget name="web_ribbon" title="已停用" bg_color="bg-danger" 
+                            invisible="active"/>
+                    
+                    <!-- 標題區域 -->
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="部門名稱"/>
+                        </h1>
+                        <div class="oe_edit_only">
+                            <field name="company_id" placeholder="選擇公司"/>
+                        </div>
+                    </div>
+
+                    <!-- 統計資訊區域 -->
+                    <div class="oe_button_box" name="button_box">
+                        <!-- 聯絡人統計 -->
+                        <button name="action_open_contacts"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-users">
+                            <field name="contact_count" widget="statinfo" 
+                                   string="聯絡人"/>
+                        </button>
+                        
+                        <!-- 設備統計 -->
+                        <button name="action_open_equipments"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-cogs">
+                            <field name="equipment_count" widget="statinfo" 
+                                   string="設備"/>
+                        </button>
+                    </div>
+
+                    <!-- 主要欄位區域 -->
+                    <group>
+                        <group string="基本資訊">
+                            <field name="code"/>
+                            <field name="parent_id"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                        
+                        <group string="主要聯絡資訊">
+                            <field name="phone" widget="phone"/>
+                            <field name="mobile" widget="phone"/>
+                            <field name="email" widget="email"/>
+                            <field name="fax"/>
+                            <field name="website" widget="url"/>
+                        </group>
+                    </group>
+
+                    <!-- 地址資訊 -->
+                    <group string="地址資訊">
+                        <label for="street" string="地址"/>
+                        <div class="o_address_format">
+                            <field name="street" placeholder="街道地址"/>
+                            <field name="street2" placeholder="地址2"/>
+                            <field name="city" placeholder="城市"/>
+                            <field name="state_id" class="o_address_state" placeholder="省/州" 
+                                   options="{'no_open': True}" 
+                                   context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
+                            <field name="zip" placeholder="郵遞區號"/>
+                            <field name="country_id" placeholder="國家" class="o_address_country" 
+                                   options="{'no_open': True, 'no_create': True}"/>
+                        </div>
+                    </group>
+
+                    <!-- 描述欄位 -->
+                    <field name="description" placeholder="部門描述、職責或備註..."/>
+                    
+                    <!-- 下級部門清單 -->
+                    <field name="child_ids" mode="list" string="下級部門" 
+                           invisible="not child_ids">
+                        <list>
+                            <field name="sequence" widget="handle"/>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="phone"/>
+                            <field name="contact_count" string="聯絡人"/>
+                            <field name="active"/>
+                        </list>
+                    </field>
+
+                </sheet>
+                
+                <!-- 訊息和活動區域 -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- 公司部門樹狀視圖 -->
+    <record id="company_department_tree_view" model="ir.ui.view">
+        <field name="name">company.department.tree</field>
+        <field name="model">company.department</field>
+        <field name="arch" type="xml">
+            <list string="公司部門" multi_edit="1">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code" optional="show"/>
+                <field name="company_id"/>
+                <field name="parent_id" optional="hide"/>
+                <field name="phone" optional="show"/>
+                <field name="email" optional="show"/>
+                <field name="contact_count" string="聯絡人" optional="show"/>
+                <field name="equipment_count" string="設備" optional="hide"/>
+                <field name="active" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- 公司部門看板視圖 -->
+    <record id="company_department_kanban_view" model="ir.ui.view">
+        <field name="name">company.department.kanban</field>
+        <field name="model">company.department</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="id"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="company_id"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="contact_count"/>
+                <field name="equipment_count"/>
+                <field name="active"/>
+                
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <!-- 停用標示 -->
+                            <div class="ribbon ribbon-top-right" 
+                                 t-if="!record.active.raw_value">
+                                <span class="bg-danger">停用</span>
+                            </div>
+                            
+                            <!-- 卡片內容 -->
+                            <div class="oe_kanban_content">
+                                <div class="oe_kanban_details">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                    
+                                    <div class="o_kanban_record_subtitle">
+                                        <field name="company_id"/>
+                                        <span t-if="record.code.raw_value">
+                                            (<field name="code"/>)
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="oe_kanban_bottom_left">
+                                        <span t-if="record.phone.raw_value">
+                                            <i class="fa fa-phone" title="電話"/> <field name="phone"/>
+                                        </span>
+                                        <br t-if="record.phone.raw_value"/>
+                                        <span t-if="record.email.raw_value">
+                                            <i class="fa fa-envelope" title="電子郵件"/> <field name="email"/>
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="oe_kanban_bottom_right">
+                                        <span class="badge badge-pill">
+                                            <i class="fa fa-users" title="聯絡人數"/> <field name="contact_count"/> 人
+                                        </span>
+                                        <span class="badge badge-pill" 
+                                              t-if="record.equipment_count.raw_value > 0">
+                                            <i class="fa fa-cogs" title="設備數"/> <field name="equipment_count"/> 設備
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- 公司部門搜尋視圖 -->
+    <record id="company_department_search_view" model="ir.ui.view">
+        <field name="name">company.department.search</field>
+        <field name="model">company.department</field>
+        <field name="arch" type="xml">
+            <search>
+                <!-- 搜尋欄位 -->
+                <field name="name" string="部門名稱"/>
+                <field name="code" string="部門代碼"/>
+                <field name="company_id" string="公司"/>
+                <field name="parent_id" string="上級部門"/>
+                
+                <!-- 預設篩選 -->
+                <filter string="啟用中" name="active" domain="[('active', '=', True)]"/>
+                <filter string="已停用" name="inactive" domain="[('active', '=', False)]"/>
+                
+                <separator/>
+                <filter string="頂級部門" name="parent_departments" 
+                        domain="[('parent_id', '=', False)]"/>
+                <filter string="子部門" name="child_departments" 
+                        domain="[('parent_id', '!=', False)]"/>
+                
+                <separator/>
+                <filter string="有聯絡人" name="has_contacts" 
+                        domain="[('contact_count', '>', 0)]"/>
+                <filter string="有設備" name="has_equipment" 
+                        domain="[('equipment_count', '>', 0)]"/>
+
+                <!-- 群組 -->
+                <group expand="0" string="群組依據">
+                    <filter string="公司" name="group_company" 
+                            context="{'group_by': 'company_id'}"/>
+                    <filter string="上級部門" name="group_parent" 
+                            context="{'group_by': 'parent_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- 公司部門動作 -->
+    <record id="company_department_action" model="ir.actions.act_window">
+        <field name="name">公司部門</field>
+        <field name="res_model">company.department</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('company_department_tree_view')}),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('company_department_kanban_view')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('company_department_form_view')})]"/>
+        <field name="search_view_id" ref="company_department_search_view"/>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                建立第一個部門
+            </p>
+            <p>
+                部門管理可以幫助您組織客戶公司的組織架構，<br/>
+                並將聯絡人和設備歸類到正確的部門。
+            </p>
+        </field>
+    </record>
+
+</odoo>

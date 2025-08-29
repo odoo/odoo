@@ -1,0 +1,28 @@
+<odoo noupdate="1">
+    <!-- Worker states -->
+    <record id="worker_stage_1" model="fsm.stage">
+        <field name="name">Worker Stage 1</field>
+        <field name="sequence">1</field>
+        <field name="stage_type">worker</field>
+    </record>
+    <record id="worker_stage_2" model="fsm.stage">
+        <field name="name">Worker Stage 2</field>
+        <field name="sequence">2</field>
+        <field name="stage_type">worker</field>
+    </record>
+    <record id="worker_stage_3" model="fsm.stage">
+        <field name="name">Worker Stage 3</field>
+        <field name="sequence">3</field>
+        <field name="stage_type">worker</field>
+    </record>
+    <!-- persons -->
+    <record id="person_1" model="fsm.person">
+        <field name="name">Worker 1</field>
+    </record>
+    <record id="person_2" model="fsm.person">
+        <field name="name">Worker 2</field>
+    </record>
+    <record id="person_3" model="fsm.person">
+        <field name="name">Worker 3</field>
+    </record>
+</odoo>

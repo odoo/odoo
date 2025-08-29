@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="sign_field_name" model="sign.oca.field">
+        <field name="name">Name</field>
+        <field name="field_type">text</field>
+        <field name="default_value">name</field>
+    </record>
+    <record id="sign_field_email" model="sign.oca.field">
+        <field name="name">Email</field>
+        <field name="field_type">text</field>
+        <field name="default_value">email</field>
+    </record>
+    <record id="sign_field_phone" model="sign.oca.field">
+        <field name="name">Phone</field>
+        <field name="field_type">text</field>
+        <field name="default_value">phone</field>
+    </record>
+    <record id="sign_field_text" model="sign.oca.field">
+        <field name="name">Text</field>
+        <field name="field_type">text</field>
+    </record>
+    <record id="sign_field_signature" model="sign.oca.field">
+        <field name="name">Signature</field>
+        <field name="field_type">signature</field>
+    </record>
+    <record id="sign_field_check" model="sign.oca.field">
+        <field name="name">Check</field>
+        <field name="field_type">check</field>
+    </record>
+    <record id="sign_role_customer" model="sign.oca.role">
+        <field name="name">Customer</field>
+        <field name="domain">[]</field>
+    </record>
+    <record id="sign_role_employee" model="sign.oca.role">
+        <field name="name">Employee</field>
+    </record>
+</odoo>

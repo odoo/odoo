@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+  <t t-name="sign_oca.SignOcaConfigureFieldDialog">
+        <Dialog size="'md'" title="props.title" modalRef="modalRef">
+            <div class="o_sign_oca_field_edition">
+                <label for="field_id">Field</label>
+                <div class="o_sign_oca_field_edition_value">
+                    <select name="field_id">
+                        <t t-foreach="props.info.fields" t-as="field" t-key="field.id">
+                            <option
+                                t-att-value="field.id"
+                                t-out="field.name"
+                                t-att-selected="props.item.field_id === field.id ? 'selected': None"
+                            />
+                        </t>
+                    </select>
+                </div>
+                <label for="role_id">Filled by</label>
+                <div class="o_sign_oca_field_edition_value">
+                    <select name="role_id">
+                        <t t-foreach="props.info.roles" t-as="role" t-key="role.id">
+                            <option
+                                t-att-value="role.id"
+                                t-out="role.name"
+                                t-att-selected="props.item.role_id === role.id ? 'selected': None"
+                            />
+                        </t>
+                    </select>
+                </div>
+                <label for="required">Required</label>
+                <div class="o_sign_oca_field_edition_value">
+                    <input
+                        name="required"
+                        type="checkbox"
+                        t-att-checked="props.item.required? 'checked': undefined"
+                    />
+                </div>
+                <label for="placeholder">Placeholder</label>
+                <div class="o_sign_oca_field_edition_value">
+                    <input
+                        type="text"
+                        name="placeholder"
+                        t-att-value="props.item.placeholder || ''"
+                    />
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="_confirm">Save</button>
+                <button class="btn btn-danger" t-on-click="_delete">Delete</button>
+                <button class="btn btn-secondary" t-on-click="_cancel">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

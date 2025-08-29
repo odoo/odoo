@@ -1,0 +1,24 @@
+<odoo>
+    <record id="view_fsm_order_form_inherit_account" model="ir.ui.view">
+        <field name="model">fsm.order</field>
+        <field name="inherit_id" ref="fieldservice.fsm_order_form" />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    name="action_view_invoices"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-pencil-square-o"
+                    invisible="invoice_count == 0"
+                    groups="account.group_account_invoice"
+                >
+                    <field
+                        name="invoice_count"
+                        widget="statinfo"
+                        string="Invoices/Bills"
+                    />
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>

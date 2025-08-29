@@ -1,0 +1,30 @@
+<odoo>
+    <!-- Territory Tree View -->
+    <record id="res_territory_wh_list_view" model="ir.ui.view">
+        <field name="name">res.territory.warehouse.list</field>
+        <field name="model">res.territory</field>
+        <field name="inherit_id" ref="base_territory.res_territory_tree_view" />
+        <field name="arch" type="xml">
+            <field name="branch_id" position="after">
+                <field
+                    name="warehouse_id"
+                    groups="stock.group_stock_multi_warehouses"
+                />
+            </field>
+        </field>
+    </record>
+    <!-- Territory Form View -->
+    <record id="res_territory_wh_form_view" model="ir.ui.view">
+        <field name="name">res.territory.warehouse.form</field>
+        <field name="model">res.territory</field>
+        <field name="inherit_id" ref="base_territory.res_territory_form_view" />
+        <field name="arch" type="xml">
+            <field name="person_id" position="after">
+                <field
+                    name="warehouse_id"
+                    groups="stock.group_stock_multi_warehouses"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>

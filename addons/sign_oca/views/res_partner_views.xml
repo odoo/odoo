@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.form (in sign_oca)</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    class="oe_stat_button"
+                    type="object"
+                    name="action_show_signer_ids"
+                    invisible="signer_count == 0"
+                    icon="fa-pencil"
+                    groups="sign_oca.sign_oca_group_user"
+                >
+                    <field
+                        string="Sign Requests"
+                        name="signer_count"
+                        widget="statinfo"
+                        groups="sign_oca.sign_oca_group_user"
+                    />
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>

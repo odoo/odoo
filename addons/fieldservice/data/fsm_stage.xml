@@ -1,0 +1,26 @@
+<odoo noupdate="1">
+    <record id="fsm_stage_new" model="fsm.stage">
+        <field name="name">New</field>
+        <field name="sequence">10</field>
+        <field name="is_default">True</field>
+        <field name="stage_type">order</field>
+        <field name="custom_color">#ECF0F1</field>
+    </record>
+    <record id="fsm_stage_completed" model="fsm.stage">
+        <field name="name">Completed</field>
+        <field name="sequence">80</field>
+        <field name="stage_type">order</field>
+        <field name="is_closed">True</field>
+        <field name="is_default">True</field>
+        <field name="custom_color">#7F8C8D</field>
+    </record>
+    <record id="fsm_stage_cancelled" model="fsm.stage">
+        <field name="name">Cancelled</field>
+        <field name="sequence">100</field>
+        <field name="fold">True</field>
+        <field name="stage_type">order</field>
+        <field name="is_closed">True</field>
+        <field name="is_default">True</field>
+        <field name="custom_color">#1C2833</field>
+    </record>
+</odoo>

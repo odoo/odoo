@@ -1,0 +1,43 @@
+.o_sign_oca_iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+html .o_web_client > .o_action_manager > .o_sign_oca_content {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+html
+    .o_web_client
+    > .o_action_manager
+    > .o_action
+    > .o_content:has(.o_sign_oca_content) {
+    overflow: unset;
+}
+
+.o_sign_oca_field_edition {
+    label {
+        display: inline-block;
+        max-width: 100%;
+        margin-bottom: 5px;
+        font-weight: bold;
+        font-size: 1em;
+    }
+    .o_sign_oca_field_edition_value {
+        margin-bottom: 10px;
+        max-width: 100%;
+        input[type="text"] {
+            max-width: 100%;
+        }
+    }
+}
+.o_sign_oca_action.o_action {
+    .o_control_panel {
+        .o_cp_bottom {
+            display: none;
+        }
+    }
+}

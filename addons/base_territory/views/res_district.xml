@@ -1,0 +1,46 @@
+<odoo>
+    <!-- District Tree View -->
+    <record id="res_district_tree_view" model="ir.ui.view">
+        <field name="name">res.district.tree</field>
+        <field name="model">res.district</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="region_id" />
+            </list>
+        </field>
+    </record>
+    <!-- District Form View -->
+    <record id="res_district_form_view" model="ir.ui.view">
+        <field name="name">res.district.form</field>
+        <field name="model">res.district</field>
+        <field name="arch" type="xml">
+            <form string="District">
+                <sheet>
+                    <label for="name" class="oe_edit_only" />
+                    <h1>
+                        <field name="name" />
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="description" />
+                            <field name="region_id" />
+                        </group>
+                        <group>
+                            <field
+                                name="partner_id"
+                                domain="[('is_company', '=', False)]"
+                            />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_res_district" model="ir.actions.act_window">
+        <field name="name">Districts</field>
+        <field name="res_model">res.district</field>
+        <field name="view_id" ref="res_district_tree_view" />
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

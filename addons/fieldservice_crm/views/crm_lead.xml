@@ -1,0 +1,62 @@
+<!-- Copyright 2019 Patrick Wilson <patrickraymondwilson@gmail.com
+    License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="fieldservice_crm_form_view" model="ir.ui.view">
+        <field name="name">fieldservice.crm.form</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form" />
+        <field eval="1" name="priority" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button
+                    class="oe_stat_button o_res_partner_tip_opp"
+                    type="action"
+                    invisible="type == 'lead'"
+                    name="%(fieldservice.action_fsm_dash_order)d"
+                    icon="fa-truck"
+                    groups="fieldservice.group_fsm_user"
+                    context="{'search_default_opportunity_id': id,
+                              'default_location_id': fsm_location_id}"
+                >
+                    <field
+                        string="FS Orders"
+                        name="fsm_order_count"
+                        widget="statinfo"
+                    />
+                </button>
+            </xpath>
+            <xpath
+                expr="//group[@name='lead_partner']/field[@name='partner_id']"
+                position="after"
+            >
+                <field name="fsm_location_id" groups="fieldservice.group_fsm_user" />
+            </xpath>
+            <xpath
+                expr="//group[@name='opportunity_partner']/field[@name='partner_id']"
+                position="after"
+            >
+                <field name="fsm_location_id" groups="fieldservice.group_fsm_user" />
+            </xpath>
+        </field>
+    </record>
+    <record id="fieldservice_crm_list_view" model="ir.ui.view">
+        <field name="name">fieldservice.crm.list</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_tree_view_oppor" />
+        <field name="arch" type="xml">
+            <field name="partner_id" position="before">
+                <field name="fsm_location_id" />
+            </field>
+        </field>
+    </record>
+    <record id="fieldservice_crm_view_search" model="ir.ui.view">
+        <field name="name">crm.fieldservice.search</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter" />
+        <field name="arch" type="xml">
+            <field name="partner_id" position="before">
+                <field name="fsm_location_id" />
+            </field>
+        </field>
+    </record>
+</odoo>

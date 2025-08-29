@@ -1,0 +1,97 @@
+<odoo>
+    <!-- Field Service Stage -->
+    <record id="fsm_stage_list_view" model="ir.ui.view">
+        <field name="name">Stages</field>
+        <field name="model">fsm.stage</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle" groups="base.group_no_one" />
+                <field name="name" />
+                <field name="stage_type" />
+                <field name="is_closed" />
+                <field name="custom_color" />
+            </list>
+        </field>
+    </record>
+    <record id="fsm_stage_form_view" model="ir.ui.view">
+        <field name="name">Stage</field>
+        <field name="model">fsm.stage</field>
+        <field name="arch" type="xml">
+            <form string="Stage">
+                <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        invisible="active"
+                    />
+                    <group>
+                        <group>
+                            <field name="active" invisible="1" />
+                            <field name="name" />
+                            <field name="sequence" />
+                            <field
+                                name="team_ids"
+                                widget="many2many_tags"
+                                groups="fieldservice.group_fsm_team"
+                            />
+                            <field name="stage_type" />
+                        </group>
+                        <group>
+                            <field name="custom_color" />
+                            <field name="fold" />
+                            <field name="is_closed" />
+                            <field name="is_default" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                        </group>
+                    </group>
+                    <group string="Stage Description and Tooltips">
+                        <p class="text-muted" colspan="2">
+                            You can add a description to help your coworkers understand the meaning and purpose of the stage.
+                        </p>
+                        <field
+                            name="description"
+                            placeholder="Add a description..."
+                            nolabel="1"
+                            colspan="2"
+                        />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_fsm_stage" model="ir.actions.act_window">
+        <field name="name">Stages</field>
+        <field name="res_model">fsm.stage</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_group_stage_type': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Stage.
+            </p>
+        </field>
+    </record>
+    <record id="fsm_stage_search_view" model="ir.ui.view">
+        <field name="name">fsm.stage.search</field>
+        <field name="model">fsm.stage</field>
+        <field name="arch" type="xml">
+            <search string="Search FSM Workers">
+                <field name="name" />
+                <filter
+                    string="Archived"
+                    name="inactive"
+                    domain="[('active', '=', False)]"
+                />
+                <filter
+                    name="group_stage_type"
+                    string="Type"
+                    domain="[]"
+                    context="{'group_by':'stage_type'}"
+                />
+            </search>
+        </field>
+    </record>
+</odoo>

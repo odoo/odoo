@@ -1,0 +1,44 @@
+<odoo>
+    <!-- Region Tree View -->
+    <record id="res_region_tree_view" model="ir.ui.view">
+        <field name="name">res.region.tree</field>
+        <field name="model">res.region</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+            </list>
+        </field>
+    </record>
+    <!-- Region Form View -->
+    <record id="res_region_form_view" model="ir.ui.view">
+        <field name="name">res.region.form</field>
+        <field name="model">res.region</field>
+        <field name="arch" type="xml">
+            <form string="Region">
+                <sheet>
+                    <label for="name" class="oe_edit_only" />
+                    <h1>
+                        <field name="name" />
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="description" />
+                        </group>
+                        <group>
+                            <field
+                                name="partner_id"
+                                domain="[('is_company', '=', False)]"
+                            />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_res_region" model="ir.actions.act_window">
+        <field name="name">Regions</field>
+        <field name="res_model">res.region</field>
+        <field name="view_id" ref="res_region_tree_view" />
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

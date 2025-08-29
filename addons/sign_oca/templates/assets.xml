@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="portal_sign_document">
+        <t t-call="web.layout">
+            <t t-set="html_data" t-value="{'lang': sign_oca_backend_info['lang']}" />
+            <t t-set="head">
+                <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1, user-scalable=no"
+                />
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    t-att-value="request.csrf_token()"
+                />
+                <t t-call-assets="oca_sign.assets_frontend_sign" t-js="false" />
+                <t t-call-assets="oca_sign.assets_frontend_sign" t-css="false" />
+                <script type="text/javascript">
+                    odoo.define("sign.document_portal", ["@sign_oca/components/sign_oca_pdf_portal/sign_oca_pdf_portal.esm"], function (require) {
+                    var { initDocumentToSign } = require("@sign_oca/components/sign_oca_pdf_portal/sign_oca_pdf_portal.esm");
+                    initDocumentToSign(document, <t
+                    t-out="json.dumps(sign_oca_backend_info)"
+                />);
+                    });
+                </script>
+            </t>
+            <t t-set="body" />
+            <body class="o_web_client o_portal_sign_document_body" />
+        </t>
+    </template>
+    <template id="portal_sign_document_signed">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <t t-call-assets="oca_sign.assets_frontend_sign" t-js="false" />
+            </t>
+
+            <div class="container">
+                <div class="o_logo">
+                    <img
+                        t-attf-src="/web/binary/company_logo?company={{ company.id }}"
+                        alt="Logo"
+                    />
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Thanks for signing <t
+                            t-out="signer.request_id.name"
+                        /> document</h2>
+                    </div>
+                    <div class="card-body">
+                        <t t-if="signer.request_id.state == 'signed'">
+                            You should have received an email with the final document.<br
+                        />
+                            Check on your mailbox.
+                        </t>
+                        <t t-elif="signer.request_id.state == 'cancel'">
+                            The document has been cancelled
+                        </t>
+                        <t t-else="">
+                            As soon as all signers have signed the document, you will receive an email with the full document
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    <template t-name="sign_oca_template_mail">
+        <div>
+            <span>
+                <t t-out="record.create_uid.name" />
+                (<a
+                t-att-href="'mailto:%s?subject=%s' % (record.create_uid.email, 'Re: %s' % subject)"
+                style="color:#428BCA; text-decoration:none;"
+                target="_blank"
+            >
+                <t t-out="record.create_uid.email" />
+            </a>)
+                has requested your signature on a document.
+            </span>
+            <span t-if="body">
+                <div
+                    style="margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; background-color: #F1F1F1;"
+                >
+                    <span>
+                        <t t-out="body" />
+                    </span>
+                </div>
+            </span>
+            <span>
+                <div style="margin:16px auto; text-align:center;">
+                    <a
+                        t-att-href="link"
+                        style="padding: 8px 16px 8px 16px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color: #FFFFFF;"
+                    >
+                        Sign document
+                    </a>
+                </div>
+            </span>
+            <span>
+                <div style="opacity: 0.7;">
+                    <strong
+                >Warning</strong> do not forward this email to other people!<br />
+                    They will be able to access this document and sign it as yourself.<br
+                />
+                </div>
+            </span>
+        </div>
+    </template>
+</odoo>

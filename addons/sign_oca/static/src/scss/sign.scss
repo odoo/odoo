@@ -1,0 +1,48 @@
+.o_sign_oca_field {
+    background-color: rgba(0, 128, 128, 0.3);
+    &.sign_oca_field_required {
+        background-color: rgba(255, 113, 113, 0.5);
+    }
+    &.sign_oca_selected {
+        background-color: rgba(0, 128, 128, 0.5) !important;
+    }
+    .o_placeholder {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    input {
+        border: transparent;
+        background-color: transparent;
+    }
+}
+.o_sign_oca_field_config {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+.o_sign_oca_draggable {
+    cursor: move;
+}
+.o_sign_oca_resize {
+    cursor: se-resize;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+.o_sign_oca_context_menu {
+    position: absolute;
+    background-color: rgba(0, 128, 128, 0.3);
+    top: 0;
+    left: 0;
+    .o_sign_oca_button_header {
+        padding: 0.3em;
+    }
+    .o_sign_oca_context_menu_item {
+        padding: 0.3em;
+        background-color: rgba(0, 128, 128, 0.4);
+    }
+}

@@ -1,0 +1,37 @@
+<odoo>
+    <record id="fieldservice_project_task_view_form" model="ir.ui.view">
+        <field name="name">project.task.fieldservice.form</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2" />
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Service Orders" groups="fieldservice.group_fsm_user">
+                    <button
+                        name="action_create_order"
+                        string="Create FSM Order"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    <field name="fsm_order_ids">
+                        <list create="false">
+                            <field name="name" style="pointer-events:none;" />
+                            <field name="stage_id" style="pointer-events:none;" />
+                            <field name="location_id" style="pointer-events:none;" />
+                            <field name="person_id" style="pointer-events:none;" />
+                            <field
+                                name="scheduled_date_start"
+                                style="pointer-events:none;"
+                            />
+                            <button
+                                name="action_view_order"
+                                string="View FSM Order"
+                                type="object"
+                                class="project_column"
+                            />
+                        </list>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

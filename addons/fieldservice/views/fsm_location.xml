@@ -1,0 +1,353 @@
+<odoo>
+    <!-- Field Service Location Tree View-->
+    <record id="fsm_location_list_view" model="ir.ui.view">
+        <field name="name">fsm.location.list</field>
+        <field name="model">fsm.location</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="ref" />
+                <field name="complete_name" />
+                <field
+                    name="category_id"
+                    widget="many2many_tags"
+                    options="{'color_field': 'color'}"
+                />
+                <field name="stage_id" />
+                <field name="street" />
+                <field name="street2" />
+                <field name="city" />
+                <field name="state_id" />
+                <field name="zip" />
+                <field name="territory_id" groups="fieldservice.group_fsm_territory" />
+                <field name="owner_id" />
+            </list>
+        </field>
+    </record>
+    <!-- Field Service Location Form View-->
+    <record id="fsm_location_form_view" model="ir.ui.view">
+        <field name="name">fsm.location.form</field>
+        <field name="model">fsm.location</field>
+        <field name="arch" type="xml">
+            <form string="Location">
+                <header>
+                    <button
+                        id="previous_stage"
+                        name="previous_stage"
+                        string="Previous Stage"
+                        class="oe_highlight"
+                        type="object"
+                        groups="fieldservice.group_fsm_dispatcher"
+                    />
+                    <button
+                        id="next_stage"
+                        name="next_stage"
+                        string="Next Stage"
+                        class="oe_highlight"
+                        type="object"
+                        groups="fieldservice.group_fsm_dispatcher"
+                    />
+                    <field
+                        name="stage_id"
+                        widget="statusbar"
+                        domain="[('stage_type', '=', 'location')]"
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            type="object"
+                            name="action_view_sublocation"
+                            class="oe_stat_button"
+                            icon="fa-location-arrow"
+                        >
+                            <field
+                                name="sublocation_count"
+                                widget="statinfo"
+                                string="Sub-Locations"
+                            />
+                        </button>
+                        <button
+                            type="object"
+                            name="action_view_equipment"
+                            class="oe_stat_button"
+                            icon="fa-briefcase"
+                            groups="fieldservice.group_fsm_equipment"
+                        >
+                            <field
+                                name="equipment_count"
+                                widget="statinfo"
+                                string="Equipment"
+                            />
+                        </button>
+                        <button
+                            type="object"
+                            name="action_view_contacts"
+                            class="oe_stat_button"
+                            icon="fa-user-circle-o"
+                            groups="base.group_user"
+                            context="{'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id}"
+                        >
+                            <field
+                                name="contact_count"
+                                widget="statinfo"
+                                string="Contacts"
+                            />
+                        </button>
+                    </div>
+                    <label for="name" class="oe_edit_only" />
+                    <h1>
+                        <field name="name" required="True" />
+                    </h1>
+                    <group>
+                        <group id="main-left">
+                            <field name="id" invisible="1" />
+                            <field name="fsm_parent_id" domain="[('id', '!=', id)]" />
+                            <field
+                                name="partner_id"
+                                groups="base.group_no_one"
+                                readonly="1"
+                            />
+                            <field name="owner_id" />
+                            <field
+                                name="contact_id"
+                                context="{'default_service_location_id': id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id}"
+                            />
+                            <field name="phone" widget="phone" />
+                            <field name="email" widget="email" />
+                            <label for="street" string="Address" />
+                            <div class="o_address_format">
+                                <field
+                                    name="street"
+                                    placeholder="Street..."
+                                    class="o_address_street"
+                                />
+                                <field
+                                    name="street2"
+                                    placeholder="Street 2..."
+                                    class="o_address_street"
+                                />
+                                <field
+                                    name="city"
+                                    placeholder="City"
+                                    class="o_address_city"
+                                />
+                                <field
+                                    name="state_id"
+                                    class="o_address_state"
+                                    placeholder="State"
+                                    options="{&quot;no_open&quot;: True}"
+                                    context="{'country_id': country_id, 'zip': zip}"
+                                />
+                                <field
+                                    name="zip"
+                                    placeholder="ZIP"
+                                    class="o_address_zip"
+                                />
+                                <field
+                                    name="country_id"
+                                    placeholder="Country"
+                                    class="o_address_country"
+                                    options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
+                                />
+                            </div>
+                        </group>
+                        <group id="main-right">
+                            <field name="ref" />
+                            <field name="description" />
+                            <field name="tz" />
+                            <field name="calendar_id" />
+                            <field
+                                name="category_id"
+                                widget="many2many_tags"
+                                options="{'color_field': 'color'}"
+                            />
+                        </group>
+                    </group>
+                    <group string="General Notes">
+                        <field name="notes" nolabel="1" colspan="2" widget="html" />
+                    </group>
+                    <notebook>
+                        <page string="Directions" name="directions">
+                            <field
+                                name="direction"
+                                nolabel="1"
+                                colspan="2"
+                                widget="html"
+                            />
+                        </page>
+                        <page
+                            string="Territory"
+                            name="territory"
+                            groups="fieldservice.group_fsm_territory"
+                        >
+                            <group id="territory">
+                                <group id="territory-left">
+                                    <field name="territory_id" />
+                                    <field name="branch_id" />
+                                    <field name="district_id" />
+                                    <field name="region_id" />
+                                </group>
+                                <group id="territory-right">
+                                    <field name="territory_manager_id" />
+                                    <field name="branch_manager_id" />
+                                    <field name="district_manager_id" />
+                                    <field name="region_manager_id" />
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Preferred Workers" name="preferred_workers">
+                            <field name="person_ids" nolabel="1">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle" />
+                                    <field name="person_id" />
+                                    <field name="phone" />
+                                    <field name="email" />
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Others" id="others-page" name="others">
+                            <group id="others">
+                                <group id="others-left" />
+                                <group id="others-right" />
+                            </group>
+                        </page>
+                        <page string="Geo Location" name="geo_location">
+                            <group id="get_locate">
+                                <group string="Geolocation">
+                                    <label
+                                        for="date_localization"
+                                        string="Geo Location"
+                                    />
+                                    <div>
+                                        <span>Lat: <field
+                                            name="partner_latitude"
+                                            nolabel="1"
+                                            class="oe_inline"
+                                        /></span>
+                                        <br />
+                                        <span>Long: <field
+                                            name="partner_longitude"
+                                            nolabel="1"
+                                            class="oe_inline"
+                                        /></span>
+                                        <br />
+                                        <span
+                                            invisible="not date_localization"
+                                        >Updated on:
+                                            <field
+                                            name="date_localization"
+                                            nolabel="1"
+                                            readonly="1"
+                                            class="oe_inline"
+                                        />
+                                            <br />
+                                        </span>
+                                        <button
+                                            invisible="(partner_latitude != 0) or (partner_longitude != 0)"
+                                            icon="fa-gear"
+                                            string="Compute based on address"
+                                            title="Compute Localization"
+                                            name="geo_localize"
+                                            type="object"
+                                            class="btn btn-link p-0"
+                                        />
+                                        <button
+                                            invisible="partner_latitude == partner_longitude == 0"
+                                            icon="fa-refresh"
+                                            string="Refresh"
+                                            title="Refresh Localization"
+                                            name="geo_localize"
+                                            type="object"
+                                            class="btn btn-link p-0"
+                                        />
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter />
+            </form>
+        </field>
+    </record>
+    <!-- Field Service Location Search View-->
+    <record id="fsm_location_search_view" model="ir.ui.view">
+        <field name="name">fsm.location.search</field>
+        <field name="model">fsm.location</field>
+        <field name="arch" type="xml">
+            <search string="Search FSM Location">
+                <field
+                    name="name"
+                    filter_domain="['|', ('ref', 'ilike', self), ('name', 'ilike', self)]"
+                    string="Location"
+                />
+                <field name="partner_id" />
+                <field name="owner_id" />
+                <field name="partner_latitude" />
+                <field name="partner_longitude" />
+                <field name="territory_id" groups="fieldservice.group_fsm_territory" />
+                <field name="branch_id" />
+                <field name="district_id" />
+                <field name="region_id" />
+                <field name="street" />
+                <field name="street2" />
+                <field name="city" />
+                <field name="state_id" />
+                <field name="zip" />
+                <field name="country_id" />
+                <field name="description" />
+                <field name="tz" />
+                <field name="category_id" />
+                <field name="ref" />
+                <group expand="0" string="Group By">
+                    <filter
+                        name="owner_id"
+                        string="Owner"
+                        domain="[]"
+                        context="{'group_by':'owner_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="action_fsm_location" model="ir.actions.act_window">
+        <field name="name">Service Locations</field>
+        <field name="res_model">fsm.location</field>
+        <field name="view_id" ref="fsm_location_list_view" />
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="fsm_location_search_view" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Service Location
+            </p>
+        </field>
+    </record>
+    <record id="fsm_location_graph_view" model="ir.ui.view">
+        <field name="name">fsm.location.graph</field>
+        <field name="model">fsm.location</field>
+        <field name="arch" type="xml">
+            <graph string="FSM Locations" type="bar">
+                <field name="stage_id" type="row" />
+            </graph>
+        </field>
+    </record>
+    <record id="fsm_location_pivot_view" model="ir.ui.view">
+        <field name="name">fsm.location.pivot</field>
+        <field name="model">fsm.location</field>
+        <field name="arch" type="xml">
+            <pivot string="FSM Locations" display_quantity="true">
+                <field name="stage_id" type="row" />
+            </pivot>
+        </field>
+    </record>
+    <record id="action_fsm_report_location" model="ir.actions.act_window">
+        <field name="name">Locations</field>
+        <field name="res_model">fsm.location</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="help" type="html">
+            <p>
+                Location Reports.
+            </p>
+        </field>
+    </record>
+</odoo>

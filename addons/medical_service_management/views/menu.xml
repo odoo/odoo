@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 主選單：醫療設備服務管理 -->
+    <menuitem id="medical_service_management_menu_root"
+              name="醫療設備服務管理"
+              sequence="5"/>
+
+    <!-- 聯絡人管理主選單 -->
+    <menuitem id="medical_service_contacts_menu"
+              name="聯絡人管理"
+              parent="medical_service_management_menu_root"
+              sequence="10"/>
+
+    <!-- 客戶公司選單項目 -->
+    <menuitem id="medical_service_companies_menu"
+              name="客戶公司"
+              parent="medical_service_contacts_menu"
+              action="base.action_partner_form"
+              sequence="10"/>
+
+    <!-- 公司部門選單項目 -->
+    <menuitem id="medical_service_departments_menu"
+              name="公司部門"
+              parent="medical_service_contacts_menu"
+              action="company_department_action"
+              sequence="20"/>
+
+    <!-- 聯絡人選單項目 -->
+    <menuitem id="medical_service_contacts_menu_item"
+              name="聯絡人"
+              parent="medical_service_contacts_menu"
+              action="company_contact_action"
+              sequence="30"/>
+
+    <!-- 設備管理主選單（預留給後續模組） -->
+    <!-- 
+         注意：此選單架構預留給未來的設備管理擴展模組使用
+         需要安裝 fieldservice 和相關擴展模組才能啟用具體功能
+    -->
+    <!--
+    <menuitem id="medical_service_equipment_menu"
+              name="設備管理"
+              parent="medical_service_management_menu_root"
+              sequence="20"/>
+    -->
+
+    <!-- 服務管理主選單（預留給後續模組） -->
+    <!-- 
+         注意：此選單架構預留給未來的服務工單擴展模組使用
+         需要安裝 fieldservice 和相關擴展模組才能啟用具體功能
+    -->
+    <!--
+    <menuitem id="medical_service_orders_menu"
+              name="服務管理"
+              parent="medical_service_management_menu_root"
+              sequence="30"/>
+    -->
+
+    <!-- 配置選單（預留給後續模組） -->
+    <!-- 
+         注意：配置選單架構預留給未來的擴展模組使用
+         基礎聯絡人模組暫不需要額外配置項目
+         擴展模組可在此處添加相關配置選單
+    -->
+    <!--
+    <menuitem id="medical_service_configuration_menu"
+              name="配置"
+              parent="medical_service_management_menu_root"
+              sequence="90"/>
+    -->
+
+</odoo>

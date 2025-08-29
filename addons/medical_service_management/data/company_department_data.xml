@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- 預設聯絡人分類標籤 -->
+        <record id="category_medical_director" model="res.partner.category">
+            <field name="name">醫療主管</field>
+            <field name="color">1</field>
+        </record>
+
+        <record id="category_equipment_manager" model="res.partner.category">
+            <field name="name">設備負責人</field>
+            <field name="color">2</field>
+        </record>
+
+        <record id="category_maintenance_contact" model="res.partner.category">
+            <field name="name">維護聯絡人</field>
+            <field name="color">3</field>
+        </record>
+
+        <record id="category_procurement" model="res.partner.category">
+            <field name="name">採購人員</field>
+            <field name="color">4</field>
+        </record>
+
+        <record id="category_it_support" model="res.partner.category">
+            <field name="name">資訊人員</field>
+            <field name="color">5</field>
+        </record>
+
+    </data>
+</odoo>

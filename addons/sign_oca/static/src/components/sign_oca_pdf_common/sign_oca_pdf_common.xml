@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="sign_oca.SignOcaPdfCommon">
+        <div class="o_sign_oca_content">
+            <iframe
+                class="o_sign_oca_iframe"
+                t-att-src="viewer_url"
+                t-ref="sign_oca_iframe"
+            />
+        </div>
+    </t>
+    <t t-name="sign_oca.sign_iframe_field">
+        <div
+            t-attf-class="o_sign_oca_field #{required? 'sign_oca_field_required': ''}"
+            t-att-data-field="id"
+            t-attf-style="position:absolute;top:#{position_y}%; left: #{position_x}%; width: #{width}%;height: #{height}%"
+        />
+    </t>
+</templates>

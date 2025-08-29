@@ -1,0 +1,74 @@
+<odoo>
+    <!-- Field Service Location Person Tree View-->
+    <record id="fsm_location_person_list_view" model="ir.ui.view">
+        <field name="name">fsm.location.person.list</field>
+        <field name="model">fsm.location.person</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" />
+                <field name="location_id" />
+                <field name="person_id" />
+            </list>
+        </field>
+    </record>
+    <!-- Field Service Location Person Form View-->
+    <record id="fsm_location_person_form_view" model="ir.ui.view">
+        <field name="name">fsm.location.person.form</field>
+        <field name="model">fsm.location.person</field>
+        <field name="arch" type="xml">
+            <form string="Location Worker">
+                <sheet>
+                    <group>
+                        <group id="main-left">
+                            <field name="location_id" />
+                            <field name="owner_id" />
+                            <field name="contact_id" />
+                        </group>
+                        <group id="main-right">
+                            <field name="person_id" />
+                            <field name="phone" />
+                            <field name="email" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Field Service Location Person Search View-->
+    <record id="fsm_location_person_search_view" model="ir.ui.view">
+        <field name="name">fsm.location.person.search</field>
+        <field name="model">fsm.location.person</field>
+        <field name="arch" type="xml">
+            <search string="Search Location Worker">
+                <field name="location_id" />
+                <field name="person_id" />
+                <group expand="0" string="Group By">
+                    <filter
+                        name="location_id"
+                        string="Location"
+                        domain="[]"
+                        context="{'group_by': 'location_id'}"
+                    />
+                    <filter
+                        name="person_id"
+                        string="Worker"
+                        domain="[]"
+                        context="{'group_by': 'person_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="action_fsm_location_person" model="ir.actions.act_window">
+        <field name="name">Location Persons</field>
+        <field name="res_model">fsm.location.person</field>
+        <field name="view_id" ref="fsm_location_person_list_view" />
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="fsm_location_person_search_view" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create the linked locations of a worker.
+            </p>
+        </field>
+    </record>
+</odoo>

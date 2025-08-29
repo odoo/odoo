@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="action_report_signature_certificate" model="ir.actions.report">
+        <field name="name">Signature Certificate</field>
+        <field name="model">sign.oca.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sign_oca.report_signature_certificate</field>
+        <field name="report_file">sign_oca.report_signature_certificate</field>
+        <field name="print_report_name">'Signature Certificate'</field>
+        <field name="binding_model_id" ref="model_sign_oca_request" />
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

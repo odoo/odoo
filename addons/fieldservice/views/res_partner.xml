@@ -1,0 +1,66 @@
+<odoo>
+    <!-- Customers -->
+    <record id="action_fsm_customer" model="ir.actions.act_window">
+        <field name="name">Customers</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field
+            name="context"
+        >{'search_default_customer': 1, 'default_customer_rank': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Customer.
+            </p>
+        </field>
+    </record>
+    <!-- Field Service Fields -->
+    <record id="fsm_partner_fields" model="ir.ui.view">
+        <field name="name">res.partner.fsm.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    class="oe_stat_button"
+                    type="object"
+                    invisible="owned_location_count == 0"
+                    name="action_open_owned_locations"
+                    icon="fa-map-marker"
+                    context="{'default_owner_id': id}"
+                    groups="fieldservice.group_fsm_user"
+                >
+                    <field
+                        string="Owned Locations"
+                        name="owned_location_count"
+                        widget="statinfo"
+                    />
+                </button>
+            </div>
+            <notebook position="inside">
+                <page string="Field Service" groups="fieldservice.group_fsm_user_own">
+                    <group>
+                        <group>
+                            <field name="fsm_location" readonly="1" />
+                            <field name="fsm_person" readonly="1" />
+                            <field
+                                name="service_location_id"
+                                context="{'default_contact_id': id}"
+                            />
+                        </group>
+                        <group />
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+    <record id="res_partner_search_reference" model="ir.ui.view">
+        <field name="name">res.partner.search.reference</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter" />
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="ref" />
+            </field>
+        </field>
+    </record>
+</odoo>

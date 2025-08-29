@@ -1,0 +1,17 @@
+<odoo noupdate="1">
+    <record id="test_region" model="res.region">
+        <field name="name">Test Region</field>
+    </record>
+    <record id="test_district" model="res.district">
+        <field name="name">Test District</field>
+        <field name="region_id" eval="ref('test_region')" />
+    </record>
+    <record id="test_branch" model="res.branch">
+        <field name="name">Test Branch</field>
+        <field name="district_id" eval="ref('test_district')" />
+    </record>
+    <record id="test_territory" model="res.territory">
+        <field name="name">Test Territory</field>
+        <field name="branch_id" eval="ref('test_branch')" />
+    </record>
+</odoo>

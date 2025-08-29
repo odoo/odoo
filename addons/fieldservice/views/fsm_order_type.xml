@@ -1,0 +1,37 @@
+<odoo>
+    <!-- FSM Order Type Tree View -->
+    <record id="fsm_order_type_list_view" model="ir.ui.view">
+        <field name="name">fsm.order.type.list</field>
+        <field name="model">fsm.order.type</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="internal_type" />
+            </list>
+        </field>
+    </record>
+    <!-- FSM Order Type Form View -->
+    <record id="fsm_order_type_form_view" model="ir.ui.view">
+        <field name="name">fsm.order.type.form</field>
+        <field name="model">fsm.order.type</field>
+        <field name="arch" type="xml">
+            <form string="Type">
+                <sheet>
+                    <label for="name" class="oe_edit_only" />
+                    <h1>
+                        <field name="name" />
+                    </h1>
+                    <group>
+                        <field name="internal_type" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_fsm_order_type" model="ir.actions.act_window">
+        <field name="name">Order Types</field>
+        <field name="res_model">fsm.order.type</field>
+        <field name="view_id" ref="fsm_order_type_list_view" />
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

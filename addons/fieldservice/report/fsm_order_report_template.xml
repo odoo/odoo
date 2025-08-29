@@ -1,0 +1,61 @@
+<odoo>
+    <template id="report_fsm_order_document">
+        <t t-call="web.external_layout">
+            <t t-set="address">
+                <div
+                    t-field="doc.location_id.partner_id"
+                    t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;, &quot;email&quot;]}"
+                />
+            </t>
+            <div t-if="doc.date_end and doc.stage_id.is_closed" class="col-xs-3">
+                <strong>Date Completed:</strong>
+                <p t-field="doc.date_end" />
+            </div>
+            <div class="page">
+                <div class="oe_structure" id="oe_structure_1" />
+                <hr />
+                <h2>
+                    FS Order #
+                    <span t-field="doc.name" />
+                    <t t-if="doc.template_id"> (<span t-field="doc.template_id.name" />)
+                    </t>
+                </h2>
+                <div>
+                    <t t-if="doc.stage_id.name == 'Scheduled'">
+                        <div t-if="doc.stage_id">
+                            <strong>ETA:</strong>
+                            <span
+                                t-field="doc.scheduled_date_start"
+                                t-options="{'widget': 'datetime', 'tz': doc.location_id.tz}"
+                            />
+                        </div>
+                    </t>
+                    <div t-if="doc.person_id">
+                        <strong>Assigned To:</strong>
+                        <span t-field="doc.person_id" />
+                    </div>
+                </div>
+                <div t-if="doc.description" id="description">
+                    <h3>Description</h3>
+                    <p t-field="doc.description" />
+                </div>
+                <div t-if="doc.todo" id="instruction">
+                    <h3>Instructions</h3>
+                    <p t-out="doc.todo" />
+                </div>
+                <div t-if="doc.resolution" id="resolution">
+                    <h3>Resolution Notes</h3>
+                    <p t-field="doc.resolution" />
+                </div>
+                <div class="oe_structure" id="oe_structure_1" />
+            </div>
+        </t>
+    </template>
+    <template id="report_fsm_order">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="fieldservice.report_fsm_order_document" />
+            </t>
+        </t>
+    </template>
+</odoo>

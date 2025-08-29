@@ -1,0 +1,52 @@
+<odoo noupdate="1">
+    <!-- res.partner -->
+    <record id="test_partner" model="res.partner">
+        <field name="name">Test Partner</field>
+        <field name="phone">123</field>
+        <field name="email">tp@email.com</field>
+    </record>
+    <record id="test_loc_partner" model="res.partner">
+        <field name="name">Test Loc Partner</field>
+        <field name="phone">ABC</field>
+        <field name="email">tlp@email.com</field>
+    </record>
+    <record id="location_partner_1" model="res.partner">
+        <field name="name">Loc Partner 1</field>
+    </record>
+    <record id="location_partner_2" model="res.partner">
+        <field name="name">Loc Partner 1</field>
+    </record>
+    <record id="location_partner_3" model="res.partner">
+        <field name="name">Loc Partner 1</field>
+    </record>
+    <!-- res.partner with contacts -->
+    <record id="s1" model="res.partner">
+        <field name="name">sub partner 1</field>
+        <field name="type">contact</field>
+    </record>
+    <record id="s2" model="res.partner">
+        <field name="name">sub partner 2</field>
+        <field name="type">invoice</field>
+    </record>
+    <record id="s3" model="res.partner">
+        <field name="name">sub partner 3</field>
+        <field name="type">delivery</field>
+    </record>
+    <record id="s4" model="res.partner">
+        <field name="name">sub partner 4</field>
+        <field name="type">other</field>
+    </record>
+    <record id="test_parent_partner" model="res.partner">
+        <field name="name">Parent Partner</field>
+        <field
+            name="child_ids"
+            eval="[(6, 0, [ref('s1'), ref('s2'), ref('s3'), ref('s4')])]"
+        />
+    </record>
+    <!-- fsm.person -->
+    <record id="test_person" model="fsm.person">
+        <field name="name">Test Person</field>
+        <field name="phone">123</field>
+        <field name="email">tp@email.com</field>
+    </record>
+</odoo>

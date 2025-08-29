@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2023 Dixmit
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <!-- TODO
+    <record model="sign.oca.template" id="sign_oca_template_demo_1">
+       <field name="name">...</field>
+    </record>
+    -->
+    <record id="sign_role_supervisor" model="sign.oca.role">
+        <field name="name">Supervisor</field>
+        <field name="partner_selection_policy">default</field>
+        <field name="default_partner_id" ref="base.res_partner_12" />
+    </record>
+</odoo>

@@ -1,0 +1,54 @@
+<odoo>
+    <!-- Territory Tree View -->
+    <record id="res_territory_tree_view" model="ir.ui.view">
+        <field name="name">res.territory.tree</field>
+        <field name="model">res.territory</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="branch_id" />
+            </list>
+        </field>
+    </record>
+    <!-- Territory Form View -->
+    <record id="res_territory_form_view" model="ir.ui.view">
+        <field name="name">res.territory.form</field>
+        <field name="model">res.territory</field>
+        <field name="arch" type="xml">
+            <form string="Territory">
+                <sheet>
+                    <label for="name" class="oe_edit_only" />
+                    <h1>
+                        <field name="name" />
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="description" />
+                            <field name="branch_id" />
+                            <field name="type" />
+                        </group>
+                    </group>
+                    <group>
+                        <field name="zip_codes" invisible="type != 'zip'" />
+                        <field
+                            name="country_ids"
+                            invisible="type != 'country'"
+                            widget="many2many_tags"
+                        />
+                    </group>
+                    <notebook>
+                        <page string="Definition">
+                            <field name="description" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_res_territory" model="ir.actions.act_window">
+        <field name="name">Territories</field>
+        <field name="res_model">res.territory</field>
+        <field name="view_id" ref="res_territory_tree_view" />
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

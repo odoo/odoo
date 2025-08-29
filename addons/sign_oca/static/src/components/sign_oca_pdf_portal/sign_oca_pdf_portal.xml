@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="sign_oca.SignOcaPdfPortal">
+        <MainComponentsContainer />
+        <div class="o_sign_oca_content">
+            <header>
+                <div class="container-fluid">
+                    <div class="d-flex justify-content-between flex-fill">
+                        <div class="col-lg-4 justify-content-start">
+                            <div class="o_logo">
+                                <a href="/">
+                                    <img src="/logo.png" alt="Logo" loading="lazy" />
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 mobile-hide">
+                            <div
+                                class="o_oca_sign_portal_info justify-content-center"
+                                style="width: 100%; height: 100%"
+                            >
+                                Please Review And Act On This Document
+                            </div>
+                        </div>
+                        <div class="col-lg-4" />
+                    </div>
+                </div>
+            </header>
+            <iframe
+                class="o_sign_oca_iframe"
+                t-att-src="viewer_url"
+                t-ref="sign_oca_iframe"
+            />
+            <div
+                class="o_sign_oca_footer"
+                t-ref="sign_oca_footer"
+                style="display:none;"
+            >
+                <div class="o_sign_validation_buttons justify-content-center">
+                    <button
+                        class="btn btn-primary"
+                        id="sign_oca_button"
+                        t-on-click="(ev) => this._onClickSign(ev)"
+                    >Validate &amp; Send document</button>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

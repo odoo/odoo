@@ -1,0 +1,11 @@
+<odoo>
+    <record id="view_fsm_order_form_inherit_calendar" model="ir.ui.view">
+        <field name="model">fsm.order</field>
+        <field name="inherit_id" ref="fieldservice.fsm_order_form" />
+        <field name="arch" type="xml">
+            <field name="location_id" position="before">
+                <field name="calendar_event_id" />
+            </field>
+        </field>
+    </record>
+</odoo>

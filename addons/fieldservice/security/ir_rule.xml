@@ -1,0 +1,61 @@
+<odoo>
+    <!-- Copyright (C) 2019 Open Source Integrators
+         License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+    <record id="fsm_order_comp_rule" model="ir.rule">
+        <field name="name">FSM Orders Entry</field>
+        <field name="model_id" ref="model_fsm_order" />
+        <field name="global" eval="True" />
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+
+    <record id="fsm_order_own_rule" model="ir.rule">
+        <field name="name">FSM Orders Entry (only own)</field>
+        <field name="model_id" ref="model_fsm_order" />
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        <field name="groups" eval="[(4, ref('fieldservice.group_fsm_user_own'))]" />
+    </record>
+
+    <record id="fsm_order_user" model="ir.rule">
+        <field name="name">FSM Orders Entry</field>
+        <field name="model_id" ref="model_fsm_order" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('fieldservice.group_fsm_user'))]" />
+    </record>
+
+    <record id="fsm_template_comp_rule" model="ir.rule">
+        <field name="name">FSM Templates Entry</field>
+        <field name="model_id" ref="model_fsm_template" />
+        <field name="global" eval="True" />
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+    <record id="fsm_team_comp_rule" model="ir.rule">
+        <field name="name">FSM Teams Entry</field>
+        <field name="model_id" ref="model_fsm_team" />
+        <field name="global" eval="True" />
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+    <record id="fsm_tag_comp_rule" model="ir.rule">
+        <field name="name">FSM Tags Entry</field>
+        <field name="model_id" ref="model_fsm_tag" />
+        <field name="global" eval="True" />
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+    <record id="fsm_category_comp_rule" model="ir.rule">
+        <field name="name">FSM Categories Entry</field>
+        <field name="model_id" ref="model_fsm_category" />
+        <field name="global" eval="True" />
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+    <record id="fsm_equipment_comp_rule" model="ir.rule">
+        <field name="name">FSM Equipments Entry</field>
+        <field name="model_id" ref="model_fsm_equipment" />
+        <field name="global" eval="True" />
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+    <record id="fsm_stage_comp_rule" model="ir.rule">
+        <field name="name">FSM Stage Entry</field>
+        <field name="model_id" ref="model_fsm_stage" />
+        <field name="global" eval="True" />
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+</odoo>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- 示範客戶公司 -->
+        <record id="demo_hospital_main" model="res.partner">
+            <field name="name">台北榮民總醫院</field>
+            <field name="is_company">True</field>
+            <field name="street">台北市北投區石牌路二段201號</field>
+            <field name="city">台北市</field>
+            <field name="zip">11217</field>
+            <field name="country_id" ref="base.tw"/>
+            <field name="phone">+886-2-2875-7524</field>
+            <field name="email">service@vghtpe.gov.tw</field>
+            <field name="website">https://www.vghtpe.gov.tw</field>
+            <field name="x_tax_id">03312108</field>
+            <field name="x_payment_method">monthly</field>
+            <field name="x_payment_currency">TWD</field>
+            <field name="x_payment_bank">bot</field>
+            <field name="x_payment_account">123456789</field>
+        </record>
+
+        <record id="demo_hospital_branch" model="res.partner">
+            <field name="name">台北榮民總醫院 員山分院</field>
+            <field name="is_company">True</field>
+            <field name="street">宜蘭縣員山鄉內城村榮光路386號</field>
+            <field name="city">宜蘭縣</field>
+            <field name="zip">26447</field>
+            <field name="country_id" ref="base.tw"/>
+            <field name="phone">+886-3-922-2141</field>
+            <field name="email">service@vghtpe.gov.tw</field>
+            <field name="x_tax_id">03312108</field>
+            <field name="x_payment_method">monthly</field>
+            <field name="x_payment_currency">TWD</field>
+        </record>
+
+        <!-- 示範部門結構 -->
+        <record id="demo_department_medical" model="company.department">
+            <field name="name">醫療部</field>
+            <field name="code">MED</field>
+            <field name="company_id" ref="demo_hospital_main"/>
+            <field name="sequence">10</field>
+            <field name="phone">+886-2-2875-7525</field>
+            <field name="email">medical@vghtpe.gov.tw</field>
+        </record>
+
+        <record id="demo_department_cardiology" model="company.department">
+            <field name="name">心臟內科</field>
+            <field name="code">CARD</field>
+            <field name="company_id" ref="demo_hospital_main"/>
+            <field name="parent_id" ref="demo_department_medical"/>
+            <field name="sequence">10</field>
+            <field name="phone">+886-2-2875-7101</field>
+            <field name="email">cardiology@vghtpe.gov.tw</field>
+        </record>
+
+        <record id="demo_department_radiology" model="company.department">
+            <field name="name">放射科</field>
+            <field name="code">RAD</field>
+            <field name="company_id" ref="demo_hospital_main"/>
+            <field name="parent_id" ref="demo_department_medical"/>
+            <field name="sequence">20</field>
+            <field name="phone">+886-2-2875-7200</field>
+            <field name="email">radiology@vghtpe.gov.tv</field>
+        </record>
+
+        <record id="demo_department_admin" model="company.department">
+            <field name="name">行政部</field>
+            <field name="code">ADMIN</field>
+            <field name="company_id" ref="demo_hospital_main"/>
+            <field name="sequence">20</field>
+            <field name="phone">+886-2-2875-7500</field>
+            <field name="email">admin@vghtpe.gov.tw</field>
+        </record>
+
+        <record id="demo_department_procurement" model="company.department">
+            <field name="name">採購組</field>
+            <field name="code">PROC</field>
+            <field name="company_id" ref="demo_hospital_main"/>
+            <field name="parent_id" ref="demo_department_admin"/>
+            <field name="sequence">10</field>
+            <field name="phone">+886-2-2875-7510</field>
+            <field name="email">procurement@vghtpe.gov.tw</field>
+        </record>
+
+        <record id="demo_department_it" model="company.department">
+            <field name="name">資訊室</field>
+            <field name="code">IT</field>
+            <field name="company_id" ref="demo_hospital_main"/>
+            <field name="parent_id" ref="demo_department_admin"/>
+            <field name="sequence">20</field>
+            <field name="phone">+886-2-2875-7520</field>
+            <field name="email">it@vghtpe.gov.tw</field>
+        </record>
+
+        <!-- 示範聯絡人 -->
+        <record id="demo_contact_medical_director" model="company.contact">
+            <field name="name">王大明</field>
+            <field name="function">醫療部主任</field>
+            <field name="company_id" ref="demo_hospital_main"/>
+            <field name="department_id" ref="demo_department_medical"/>
+            <field name="phone">+886-2-2875-7525</field>
+            <field name="mobile">+886-912-345-678</field>
+            <field name="email">wang.daming@vghtpe.gov.tw</field>
+            <field name="communication_preference">mobile</field>
+            <field name="category_ids" eval="[(6, 0, [ref('category_medical_director')])]"/>
+        </record>
+
+        <record id="demo_contact_cardiology_head" model="company.contact">
+            <field name="name">李美華</field>
+            <field name="function">心臟內科主任</field>
+            <field name="company_id" ref="demo_hospital_main"/>
+            <field name="department_id" ref="demo_department_cardiology"/>
+            <field name="phone">+886-2-2875-7101</field>
+            <field name="mobile">+886-923-456-789</field>
+            <field name="email">li.meihua@vghtpe.gov.tw</field>
+            <field name="communication_preference">email</field>
+            <field name="category_ids" eval="[(6, 0, [ref('category_medical_director'), ref('category_equipment_manager')])]"/>
+        </record>
+
+        <record id="demo_contact_rad_tech" model="company.contact">
+            <field name="name">陳志強</field>
+            <field name="function">放射師</field>
+            <field name="company_id" ref="demo_hospital_main"/>
+            <field name="department_id" ref="demo_department_radiology"/>
+            <field name="phone">+886-2-2875-7200</field>
+            <field name="extension">2201</field>
+            <field name="mobile">+886-934-567-890</field>
+            <field name="email">chen.zhiqiang@vghtpe.gov.tw</field>
+            <field name="communication_preference">phone</field>
+            <field name="category_ids" eval="[(6, 0, [ref('category_equipment_manager'), ref('category_maintenance_contact')])]"/>
+        </record>
+
+        <record id="demo_contact_procurement_manager" model="company.contact">
+            <field name="name">林秀娟</field>
+            <field name="function">採購組長</field>
+            <field name="company_id" ref="demo_hospital_main"/>
+            <field name="department_id" ref="demo_department_procurement"/>
+            <field name="phone">+886-2-2875-7510</field>
+            <field name="mobile">+886-945-678-901</field>
+            <field name="email">lin.xiujuan@vghtpe.gov.tw</field>
+            <field name="communication_preference">email</field>
+            <field name="category_ids" eval="[(6, 0, [ref('category_procurement')])]"/>
+        </record>
+
+        <record id="demo_contact_it_manager" model="company.contact">
+            <field name="name">張偉民</field>
+            <field name="function">資訊室主任</field>
+            <field name="company_id" ref="demo_hospital_main"/>
+            <field name="department_id" ref="demo_department_it"/>
+            <field name="phone">+886-2-2875-7520</field>
+            <field name="mobile">+886-956-789-012</field>
+            <field name="email">zhang.weimin@vghtpe.gov.tw</field>
+            <field name="communication_preference">mobile</field>
+            <field name="category_ids" eval="[(6, 0, [ref('category_it_support')])]"/>
+        </record>
+
+        <!-- 獨立聯絡人（沒有部門歸屬） -->
+        <record id="demo_contact_independent" model="company.contact">
+            <field name="name">黃建國</field>
+            <field name="function">設備維護顧問</field>
+            <field name="company_id" ref="demo_hospital_main"/>
+            <field name="mobile">+886-967-890-123</field>
+            <field name="email">huang.jianguo@consultant.com</field>
+            <field name="communication_preference">mobile</field>
+            <field name="category_ids" eval="[(6, 0, [ref('category_maintenance_contact')])]"/>
+            <field name="note">外部設備維護顧問，負責高階醫療設備的定期維護和故障排除。</field>
+        </record>
+
+        <!-- 分院聯絡人 -->
+        <record id="demo_contact_branch_manager" model="company.contact">
+            <field name="name">周雅琪</field>
+            <field name="function">分院主任</field>
+            <field name="company_id" ref="demo_hospital_branch"/>
+            <field name="phone">+886-3-922-2141</field>
+            <field name="mobile">+886-978-901-234</field>
+            <field name="email">zhou.yaqi@vghtpe.gov.tw</field>
+            <field name="communication_preference">mobile</field>
+            <field name="category_ids" eval="[(6, 0, [ref('category_medical_director'), ref('category_equipment_manager')])]"/>
+        </record>
+
+    </data>
+</odoo>

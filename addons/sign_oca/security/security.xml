@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Application -->
+    <record id="sign_oca_module_category" model="ir.module.category">
+        <field name="name">Sign</field>
+    </record>
+    <!-- Access Groups -->
+    <record id="sign_oca_group_user" model="res.groups">
+        <field name="name">User: Own Documents Only</field>
+        <field name="category_id" ref="sign_oca_module_category" />
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+    </record>
+    <record id="sign_oca_group_manager" model="res.groups">
+        <field name="name">User: All Documents</field>
+        <field name="category_id" ref="sign_oca_module_category" />
+        <field name="implied_ids" eval="[(4, ref('sign_oca_group_user'))]" />
+    </record>
+    <record id="sign_oca_group_admin" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="sign_oca_module_category" />
+        <field name="implied_ids" eval="[(4, ref('sign_oca_group_manager'))]" />
+        <field
+            name="users"
+            eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"
+        />
+    </record>
+    <!-- Record Rules -->
+    <record id="sign_oca_request_signer_rule_base_user_read" model="ir.rule">
+        <field name="name">Sign Request base users: read</field>
+        <field name="model_id" ref="model_sign_oca_request_signer" />
+        <field
+            name="domain_force"
+        >[('partner_id', 'child_of', [user.partner_id.commercial_partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]" />
+        <field name="perm_read" eval="1" />
+        <field name="perm_create" eval="0" />
+        <field name="perm_write" eval="0" />
+        <field name="perm_unlink" eval="0" />
+    </record>
+    <!-- Company Record Rules -->
+    <record id="sign_oca_request_rule_company" model="ir.rule">
+        <field name="name">Sign Request Company</field>
+        <field name="model_id" ref="model_sign_oca_request" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="sign_oca_request_signer_rule_company" model="ir.rule">
+        <field name="name">Sign Request Signer Company</field>
+        <field name="model_id" ref="model_sign_oca_request_signer" />
+        <field
+            name="domain_force"
+        >[('request_id.company_id', 'in', company_ids)]</field>
+    </record>
+    <!-- User Record Rules -->
+    <record id="sign_oca_request_rule_user_read" model="ir.rule">
+        <field name="name">Sign Request user: read</field>
+        <field name="model_id" ref="model_sign_oca_request" />
+        <field
+            name="domain_force"
+        >[('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('sign_oca_group_user'))]" />
+        <field name="perm_read" eval="1" />
+        <field name="perm_create" eval="0" />
+        <field name="perm_write" eval="0" />
+        <field name="perm_unlink" eval="0" />
+    </record>
+    <record id="sign_oca_request_signer_rule_user_read" model="ir.rule">
+        <field name="name">Sign Request Signer user: read</field>
+        <field name="model_id" ref="model_sign_oca_request_signer" />
+        <field
+            name="domain_force"
+        >[('request_id.message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('sign_oca_group_user'))]" />
+        <field name="perm_read" eval="1" />
+        <field name="perm_create" eval="0" />
+        <field name="perm_write" eval="0" />
+        <field name="perm_unlink" eval="0" />
+    </record>
+    <!-- Manager record rules !-->
+    <record id="sign_oca_request_rule_manager_read" model="ir.rule">
+        <field name="name">Sign Request manager: read</field>
+        <field name="model_id" ref="model_sign_oca_request" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('sign_oca_group_manager'))]" />
+        <field name="perm_read" eval="1" />
+        <field name="perm_create" eval="0" />
+        <field name="perm_write" eval="0" />
+        <field name="perm_unlink" eval="0" />
+    </record>
+    <record id="sign_oca_request_signer_rule_manager_read" model="ir.rule">
+        <field name="name">Sign Request Signer manager: read</field>
+        <field name="model_id" ref="model_sign_oca_request_signer" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('sign_oca_group_manager'))]" />
+        <field name="perm_read" eval="1" />
+        <field name="perm_create" eval="0" />
+        <field name="perm_write" eval="0" />
+        <field name="perm_unlink" eval="0" />
+    </record>
+</odoo>

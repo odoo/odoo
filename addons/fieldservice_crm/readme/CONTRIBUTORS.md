@@ -1,0 +1,4 @@
+- Patrick Wilson \<<patrickraymondwilson@gmail.com>\>
+- Freni Patel \<<fpatel@opensourceintegrators.com>\>
+- [APSL](https://apsl.tech):
+  - Antoni Marroig   \<<amarroig@apsl.net>\>

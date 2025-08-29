@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2023 Dixmit
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="sign_oca_template_form_view">
+        <field name="name">sign.oca.template.form (in sign_oca)</field>
+        <field name="model">sign.oca.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <!-- TODO -->
+                </header>
+                <sheet>
+                    <div name="button_box" class="oe_button_box">
+                        <button
+                            name="configure"
+                            type="object"
+                            icon="fa-wrench"
+                            string="Configure"
+                            groups="sign_oca.sign_oca_group_admin"
+                        />
+                        <button
+                            name="%(sign_oca.sign_oca_request_template_act_window)s"
+                            type="action"
+                            icon="fa-file-text-o"
+                        >
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field
+                                    name="request_count"
+                                /> Requests</span>
+                            </div>
+                        </button>
+                        <button
+                            name="%(sign_oca_template_generate_act_window)s"
+                            type="action"
+                            string="Send to sign"
+                            icon="fa-paper-plane"
+                        />
+                    </div>
+                    <group>
+                        <field name="name" />
+                        <field name="data" filename="filename" />
+                        <field name="filename" invisible="1" />
+                        <field name="model_id" groups="sign_oca.sign_oca_group_admin" />
+                        <field name="ask_location" />
+                    </group>
+                    <notebook>
+                        <page name="items" string="Fields">
+                            <field name="item_ids">
+                                <list editable="bottom">
+                                    <field name="field_id" />
+                                    <field name="role_id" />
+                                    <field name="required" />
+                                    <field name="page" />
+                                    <field name="position_x" />
+                                    <field name="position_y" />
+                                    <field name="width" />
+                                    <field name="height" />
+                                </list>
+
+                                <form>
+                                    <sheet>
+                                        <group>
+                                            <group>
+                                                <field name="field_id" />
+                                                <field name="role_id" />
+                                                <field name="required" />
+                                            </group>
+                                            <group>
+                                                <field name="page" />
+                                                <field name="position_x" />
+                                                <field name="position_y" />
+                                                <field name="width" />
+                                                <field name="height" />
+                                            </group>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter />
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="sign_oca_template_search_view">
+        <field name="name">sign.oca.template.search (in sign_oca)</field>
+        <field name="model">sign.oca.template</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="sign_oca_template_kanban_view">
+        <field name="name">sign.oca.template.kanban (in sign_oca)</field>
+        <field name="model">sign.oca.template</field>
+        <field name="arch" type="xml">
+            <kanban quick_create="false" default_order="create_date desc">
+                <field name="name" />
+                <field name="create_date" />
+                <field name="create_uid" />
+                <templates>
+                    <t t-name="card">
+                        <div>
+                            <field class="fw-bolder" name="display_name" />
+                            <footer>
+                                <div class="row mt-2">
+                                    <div class="col-9">
+                                        <button
+                                            name="configure"
+                                            type="object"
+                                            class="btn btn-secondary btn-sm me-2"
+                                            groups="sign_oca.sign_oca_group_admin"
+                                        >Configure</button>
+                                        <button
+                                            name="%(sign_oca_template_generate_act_window)s"
+                                            type="action"
+                                            class="btn btn-primary btn-sm me-2"
+                                        >Send</button>
+                                        <button
+                                            name="%(sign_oca_template_generate_act_window)s"
+                                            type="action"
+                                            context="{'default_sign_now': 1}"
+                                            class="btn btn-primary btn-sm me-2"
+                                        >Sign Now</button>
+                                    </div>
+                                    <div class="col-3">
+                                        <field
+                                            name="create_uid"
+                                            widget="many2one_avatar_user"
+                                        />
+                                    </div>
+                                </div>
+                            </footer>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="sign_oca_template_tree_view">
+        <field name="name">sign.oca.template.list (in sign_oca)</field>
+        <field name="model">sign.oca.template</field>
+        <field name="arch" type="xml">
+            <list>
+                <!-- TODO -->
+                <field name="name" />
+                <field name="model_id" groups="sign_oca.sign_oca_group_admin" />
+                <button name="configure" type="object" string="Configure" />
+                <button
+                    name="%(sign_oca_template_generate_act_window)s"
+                    type="action"
+                    string="Send"
+                />
+                <button
+                    name="%(sign_oca_template_generate_act_window)s"
+                    type="action"
+                    string="Sign now"
+                    context="{'default_sign_now': 1}"
+                />
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="sign_oca_template_act_window">
+        <field name="name">Templates</field>
+        <!-- TODO -->
+        <field name="res_model">sign.oca.template</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record model="ir.ui.menu" id="sign_oca_template_menu">
+        <field name="name">Templates</field>
+        <field name="parent_id" ref="sign_oca_root_menu" />
+        <!-- TODO -->
+        <field name="action" ref="sign_oca_template_act_window" />
+        <field name="sequence" eval="16" />
+        <!-- TODO -->
+    </record>
+</odoo>

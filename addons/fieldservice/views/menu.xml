@@ -1,0 +1,190 @@
+<odoo>
+    <!-- Main Menu -->
+    <menuitem
+        id="root"
+        name="Field Service"
+        sequence="10"
+        groups="group_fsm_user_own"
+        web_icon="fieldservice,static/description/icon.png"
+    />
+    <menuitem id="dashboard" name="Dashboard" sequence="10" parent="root" />
+    <menuitem id="operations" name="Operations" sequence="20" parent="root" />
+    <menuitem id="data" name="Master Data" sequence="30" parent="root" />
+    <menuitem
+        id="reporting"
+        name="Reporting"
+        sequence="40"
+        parent="root"
+        groups="group_fsm_dispatcher"
+    />
+    <menuitem
+        id="config"
+        name="Configuration"
+        sequence="100"
+        parent="root"
+        groups="group_fsm_manager"
+    />
+    <!-- Dashboard Menu -->
+    <menuitem
+        id="menu_fsm_dash_team"
+        name="Teams"
+        action="action_team_dashboard"
+        parent="dashboard"
+        sequence="10"
+        groups="group_fsm_team"
+    />
+    <menuitem
+        id="menu_fsm_dash_order"
+        name="Orders"
+        action="action_fsm_dash_order"
+        parent="dashboard"
+        sequence="20"
+    />
+    <menuitem
+        id="menu_fsm_dash_equipment"
+        name="Equipments"
+        action="action_fsm_dash_equipment"
+        parent="dashboard"
+        sequence="50"
+        groups="group_fsm_equipment"
+    />
+    <!-- Operations Menu -->
+    <menuitem
+        id="menu_fsm_operation_order"
+        name="All Orders"
+        action="action_fsm_operation_order"
+        parent="operations"
+        sequence="30"
+    />
+    <!-- Master Data Menu -->
+    <menuitem
+        id="menu_fsm_customer"
+        name="Customers"
+        action="action_fsm_customer"
+        parent="data"
+        sequence="10"
+    />
+    <menuitem
+        id="menu_fsm_fsm_location"
+        name="Locations"
+        action="action_fsm_location"
+        parent="data"
+        sequence="20"
+    />
+    <menuitem
+        id="menu_fsm_person"
+        name="Workers"
+        action="action_fsm_person"
+        parent="data"
+        sequence="30"
+    />
+    <menuitem
+        id="menu_fsm_equipment"
+        name="Equipments"
+        action="action_fsm_equipment"
+        parent="data"
+        sequence="80"
+        groups="group_fsm_equipment"
+    />
+    <menuitem
+        id="menu_fsm_location_person"
+        name="Location Workers"
+        action="action_fsm_location_person"
+        parent="data"
+        sequence="85"
+    />
+    <menuitem
+        id="menu_fsm_template"
+        name="Templates"
+        action="action_fsm_template"
+        parent="data"
+        sequence="90"
+        groups="group_fsm_template"
+    />
+    <!-- Reporting Menu -->
+    <menuitem
+        id="menu_fsm_report_order"
+        name="Orders"
+        action="action_fsm_report_order"
+        parent="reporting"
+        sequence="10"
+    />
+    <menuitem
+        id="menu_fsm_report_equipment"
+        name="Equipments"
+        action="action_fsm_report_equipment"
+        parent="reporting"
+        sequence="40"
+        groups="group_fsm_equipment"
+    />
+    <menuitem
+        id="menu_fsm_report_location"
+        name="Locations"
+        action="action_fsm_report_location"
+        parent="reporting"
+        sequence="50"
+    />
+    <!-- Configuration Menu -->
+    <menuitem
+        id="settings"
+        name="Settings"
+        sequence="10"
+        parent="config"
+        action="action_fsm_config"
+    />
+    <menuitem
+        id="menu_fsm_stage"
+        name="Stages"
+        action="action_fsm_stage"
+        parent="config"
+        sequence="20"
+    />
+    <!-- Config / Orders -->
+    <menuitem id="menu_fsm_config_order" name="Orders" parent="config" sequence="30" />
+    <menuitem
+        id="menu_fsm_tag"
+        name="Tags"
+        action="action_fsm_tag"
+        parent="menu_fsm_config_order"
+        sequence="30"
+        groups="fieldservice.group_fsm_tag"
+    />
+    <menuitem
+        id="menu_fsm_order_type"
+        name="Order Types"
+        action="action_fsm_order_type"
+        parent="menu_fsm_config_order"
+        sequence="30"
+        groups="fieldservice.group_fsm_manager"
+    />
+    <!-- Config / Locations -->
+    <menuitem
+        id="menu_fsm_config_location"
+        name="Locations"
+        parent="config"
+        sequence="40"
+    />
+    <!-- Config / Workers -->
+    <menuitem
+        id="menu_fsm_config_person"
+        name="Workers"
+        parent="config"
+        sequence="60"
+    />
+    <menuitem
+        id="menu_fsm_team"
+        name="Teams"
+        action="action_team_settings"
+        parent="menu_fsm_config_person"
+        sequence="10"
+        groups="fieldservice.group_fsm_team"
+    />
+    <menuitem
+        id="menu_hr_skill"
+        name="Categories"
+        action="action_fsm_category"
+        parent="menu_fsm_config_person"
+        sequence="70"
+        groups="group_fsm_category"
+    />
+</odoo>

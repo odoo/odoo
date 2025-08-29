@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 聯絡人表單視圖 -->
+    <record id="company_contact_form_view" model="ir.ui.view">
+        <field name="name">company.contact.form</field>
+        <field name="model">company.contact</field>
+        <field name="arch" type="xml">
+            <form string="聯絡人">
+                <sheet>
+                    <!-- 狀態標示 -->
+                    <widget name="web_ribbon" title="已停用" bg_color="bg-danger" 
+                            invisible="active"/>
+                    
+                    <!-- 標題區域 -->
+                    <div class="oe_title">
+                        <field name="title_id" options="{'no_create': True}" 
+                               placeholder="稱謂"/>
+                        <h1>
+                            <field name="name" placeholder="聯絡人姓名"/>
+                        </h1>
+                        <field name="function" placeholder="職位/職務"/>
+                    </div>
+
+                    <!-- 統計資訊按鈕 -->
+                    <div class="oe_button_box" name="button_box">
+                        <!-- 服務工單統計 -->
+                        <button name="action_open_service_orders"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-wrench"
+                                invisible="service_order_count == 0">
+                            <field name="service_order_count" widget="statinfo" 
+                                   string="服務工單"/>
+                        </button>
+                        
+                        <!-- 發送郵件按鈕 -->
+                        <button name="action_send_email"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-envelope"
+                                invisible="not email">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">發送</span>
+                                <span class="o_stat_text">郵件</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- 主要資訊區域 -->
+                    <group>
+                        <group string="歸屬資訊">
+                            <field name="company_id" options="{'no_create': True}"/>
+                            <field name="department_id" 
+                                   domain="[('company_id', '=', company_id)]"
+                                   options="{'no_create': True}"/>
+                            <field name="active"/>
+                        </group>
+                        
+                        <group string="主要聯絡資訊">
+                            <field name="phone" widget="phone"/>
+                            <field name="mobile" widget="phone"/>
+                            <field name="email" widget="email"/>
+                            <field name="fax"/>
+                            <field name="extension"/>
+                        </group>
+                    </group>
+
+                    <!-- 通訊偏好和設定 -->
+                    <group>
+                        <group string="通訊偏好">
+                            <field name="communication_preference"/>
+                            <field name="lang"/>
+                            <field name="tz"/>
+                        </group>
+                        
+                        <group string="分類和服務">
+                            <field name="category_ids" widget="many2many_tags" 
+                                   options="{'color_field': 'color'}"/>
+                            <field name="last_service_date" readonly="1" 
+                                   invisible="not last_service_date"/>
+                        </group>
+                    </group>
+
+                    <!-- 備註 -->
+                    <field name="note" placeholder="關於此聯絡人的備註資訊..."/>
+
+                </sheet>
+                
+                <!-- 訊息和活動 -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- 聯絡人樹狀視圖 -->
+    <record id="company_contact_tree_view" model="ir.ui.view">
+        <field name="name">company.contact.tree</field>
+        <field name="model">company.contact</field>
+        <field name="arch" type="xml">
+            <list string="聯絡人" multi_edit="1">
+                <field name="name"/>
+                <field name="function" optional="show"/>
+                <field name="company_id" optional="show"/>
+                <field name="department_id" optional="show"/>
+                <field name="phone" optional="show"/>
+                <field name="mobile" optional="show"/>
+                <field name="email" optional="show"/>
+                <field name="communication_preference" optional="hide"/>
+                <field name="service_order_count" string="工單數" optional="hide"/>
+                <field name="last_service_date" optional="hide"/>
+                <field name="active" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- 聯絡人看板視圖 -->
+    <record id="company_contact_kanban_view" model="ir.ui.view">
+        <field name="name">company.contact.kanban</field>
+        <field name="model">company.contact</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="id"/>
+                <field name="name"/>
+                <field name="function"/>
+                <field name="company_id"/>
+                <field name="department_id"/>
+                <field name="phone"/>
+                <field name="mobile"/>
+                <field name="email"/>
+                <field name="communication_preference"/>
+                <field name="service_order_count"/>
+                <field name="active"/>
+                
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <!-- 停用標示 -->
+                            <div class="ribbon ribbon-top-right" 
+                                 t-if="!record.active.raw_value">
+                                <span class="bg-danger">停用</span>
+                            </div>
+                            
+                            <!-- 卡片頭部 -->
+                            <div class="oe_kanban_content">
+                                <!-- 姓名和職位 -->
+                                <div class="oe_kanban_details">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                    
+                                    <div class="o_kanban_record_subtitle">
+                                        <span t-if="record.function.raw_value">
+                                            <field name="function"/>
+                                        </span>
+                                    </div>
+                                    
+                                    <!-- 所屬資訊 -->
+                                    <div class="o_kanban_record_body">
+                                        <span t-if="record.company_id.raw_value">
+                                            <i class="fa fa-building" title="公司"/> <field name="company_id"/>
+                                        </span>
+                                        <br t-if="record.company_id.raw_value"/>
+                                        <span t-if="record.department_id.raw_value">
+                                            <i class="fa fa-sitemap" title="部門"/> <field name="department_id"/>
+                                        </span>
+                                    </div>
+                                    
+                                    <!-- 聯絡方式 -->
+                                    <div class="oe_kanban_bottom_left">
+                                        <!-- 顯示偏好的聯絡方式 -->
+                                        <span t-if="record.communication_preference.raw_value == 'phone' and record.phone.raw_value">
+                                            <i class="fa fa-phone text-primary" title="電話"/> <field name="phone"/>
+                                        </span>
+                                        <span t-if="record.communication_preference.raw_value == 'mobile' and record.mobile.raw_value">
+                                            <i class="fa fa-mobile text-success" title="手機"/> <field name="mobile"/>
+                                        </span>
+                                        <span t-if="record.communication_preference.raw_value == 'email' and record.email.raw_value">
+                                            <i class="fa fa-envelope text-info" title="郵件"/> <field name="email"/>
+                                        </span>
+                                        
+                                        <!-- 沒有偏好設定時顯示可用的聯絡方式 -->
+                                        <span t-if="!record.communication_preference.raw_value">
+                                            <span t-if="record.mobile.raw_value">
+                                                <i class="fa fa-mobile" title="手機"/> <field name="mobile"/>
+                                            </span>
+                                            <span t-if="!record.mobile.raw_value and record.phone.raw_value">
+                                                <i class="fa fa-phone" title="電話"/> <field name="phone"/>
+                                            </span>
+                                            <span t-if="!record.mobile.raw_value and !record.phone.raw_value and record.email.raw_value">
+                                                <i class="fa fa-envelope" title="郵件"/> <field name="email"/>
+                                            </span>
+                                        </span>
+                                    </div>
+                                    
+                                    <!-- 服務統計 -->
+                                    <div class="oe_kanban_bottom_right">
+                                        <span class="badge badge-pill" 
+                                              t-if="record.service_order_count.raw_value > 0">
+                                            <i class="fa fa-wrench" title="服務工單"/> <field name="service_order_count"/> 工單
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- 聯絡人搜尋視圖 -->
+    <record id="company_contact_search_view" model="ir.ui.view">
+        <field name="name">company.contact.search</field>
+        <field name="model">company.contact</field>
+        <field name="arch" type="xml">
+            <search>
+                <!-- 搜尋欄位 -->
+                <field name="name" string="姓名"/>
+                <field name="function" string="職位"/>
+                <field name="company_id" string="公司"/>
+                <field name="department_id" string="部門"/>
+                <field name="phone" string="電話"/>
+                <field name="mobile" string="手機"/>
+                <field name="email" string="Email"/>
+                
+                <!-- 預設篩選 -->
+                <filter string="啟用中" name="active" domain="[('active', '=', True)]"/>
+                <filter string="已停用" name="inactive" domain="[('active', '=', False)]"/>
+                
+                <separator/>
+                <filter string="有公司" name="has_company" 
+                        domain="[('company_id', '!=', False)]"/>
+                <filter string="有部門" name="has_department" 
+                        domain="[('department_id', '!=', False)]"/>
+                <filter string="無歸屬" name="no_assignment" 
+                        domain="[('company_id', '=', False), ('department_id', '=', False)]"/>
+                
+                <separator/>
+                <filter string="有服務記錄" name="has_service" 
+                        domain="[('service_order_count', '>', 0)]"/>
+                
+                <!-- 通訊方式篩選 -->
+                <separator/>
+                <filter string="有手機" name="has_mobile" 
+                        domain="[('mobile', '!=', False)]"/>
+                <filter string="有Email" name="has_email" 
+                        domain="[('email', '!=', False)]"/>
+                <filter string="偏好手機聯絡" name="prefer_mobile" 
+                        domain="[('communication_preference', '=', 'mobile')]"/>
+                <filter string="偏好Email聯絡" name="prefer_email" 
+                        domain="[('communication_preference', '=', 'email')]"/>
+
+                <!-- 群組 -->
+                <group expand="0" string="群組依據">
+                    <filter string="公司" name="group_company" 
+                            context="{'group_by': 'company_id'}"/>
+                    <filter string="部門" name="group_department" 
+                            context="{'group_by': 'department_id'}"/>
+                    <filter string="職位" name="group_function" 
+                            context="{'group_by': 'function'}"/>
+                    <filter string="聯絡偏好" name="group_communication" 
+                            context="{'group_by': 'communication_preference'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- 聯絡人動作 -->
+    <record id="company_contact_action" model="ir.actions.act_window">
+        <field name="name">聯絡人</field>
+        <field name="res_model">company.contact</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="company_contact_search_view"/>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                新增第一個聯絡人
+            </p>
+            <p>
+                聯絡人管理讓您能夠維護客戶公司的重要聯絡資訊，<br/>
+                並與服務工單和設備管理系統整合。
+            </p>
+            <p>
+                <strong>小提示：</strong> 聯絡人可以靈活地歸屬於公司或部門，<br/>
+                也可以保持獨立狀態方便管理。
+            </p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,19 @@
+<odoo>
+    <record id="view_res_country_extended_region_form" model="ir.ui.view">
+        <field name="name">view_res_country_extended_region_form</field>
+        <field name="model">res.country</field>
+        <field name="inherit_id" ref="base.view_country_form" />
+        <field name="arch" type="xml">
+            <field name="state_ids" position="after">
+                <label for="region_ids" />
+                <field name="region_ids">
+                    <list editable="bottom">
+                        <field name="name" />
+                        <field name="description" />
+                        <field name="partner_id" />
+                    </list>
+                </field>
+            </field>
+        </field>
+    </record>
+</odoo>

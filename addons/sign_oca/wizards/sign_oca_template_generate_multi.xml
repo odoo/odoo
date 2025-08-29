@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2023 Tecnativa - Víctor Martínez
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="sign_oca_template_generate_multi_form_view" model="ir.ui.view">
+        <field name="name">sign.oca.template.generate.multi.form</field>
+        <field name="model">sign.oca.template.generate.multi</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="model" invisible="1" />
+                    <field name="template_id" />
+                    <field name="message" />
+                </group>
+                <footer>
+                    <button
+                        name="generate"
+                        string="Generate"
+                        class="btn-primary"
+                        type="object"
+                    />
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record
+        id="sign_oca_template_generate_multi_act_window"
+        model="ir.actions.act_window"
+    >
+        <field name="name">Sign Oca Template Generate Multi</field>
+        <field name="res_model">sign.oca.template.generate.multi</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

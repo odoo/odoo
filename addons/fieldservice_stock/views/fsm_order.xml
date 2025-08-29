@@ -1,0 +1,74 @@
+<odoo>
+    <record id="view_fsm_order_form_inherit_stock" model="ir.ui.view">
+        <field name="name">fsm.order.form.stock</field>
+        <field name="model">fsm.order</field>
+        <field name="inherit_id" ref="fieldservice.fsm_order_form" />
+        <field name="arch" type="xml">
+            <div class="oe_button_box" position="inside">
+                <field name="picking_ids" invisible="1" />
+                <button
+                    type="object"
+                    name="action_view_delivery"
+                    class="oe_stat_button"
+                    icon="fa-truck"
+                    invisible="delivery_count == 0"
+                    groups="base.group_user"
+                >
+                    <field
+                        name="delivery_count"
+                        widget="statinfo"
+                        string="Deliveries"
+                    />
+                </button>
+                <button
+                    type="object"
+                    name="action_view_returns"
+                    class="oe_stat_button"
+                    icon="fa-truck"
+                    invisible="return_count == 0"
+                    groups="base.group_user"
+                >
+                    <field name="return_count" widget="statinfo" string="Returns" />
+                </button>
+            </div>
+            <xpath expr="//notebook/page[1]" position="after">
+                <page string="Inventory" id="stock">
+                    <group groups="stock.group_stock_user">
+                        <group id="stock-left">
+                            <field
+                                name="warehouse_id"
+                                groups="stock.group_stock_multi_warehouses"
+                            />
+                        </group>
+                        <group id="stock-right" />
+                    </group>
+                    <field name="move_ids" readonly="1" invisible="move_ids == False">
+                        <list
+                            decoration-muted="state == 'cancel'"
+                            default_order='date, picking_id, sequence'
+                        >
+                            <field name="reference" />
+                            <field name="date" widget="date" />
+                            <field name="picking_id" string="Reference" invisible="1" />
+                            <field name="sequence" invisible="1" />
+                            <field name="origin" />
+                            <field name="product_id" />
+                            <field name="product_uom_qty" string="Requested Quantity" />
+                            <field name="quantity" string="Quantity" />
+                            <field
+                                name="product_uom"
+                                options="{'no_open': True, 'no_create': True}"
+                                string="Unit of Measure"
+                                groups="uom.group_uom"
+                            />
+                            <field name="location_id" invisible="1" />
+                            <field name="location_dest_id" invisible="1" />
+                            <field name="create_date" invisible="1" />
+                            <field name="state" />
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
