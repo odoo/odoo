@@ -187,7 +187,7 @@ export class WorkEntryCalendarController extends CalendarController {
         return this.model.multiReplaceRecords(
             multiCreateData,
             dates,
-            records.filter((r) => r.state !== "validated").map((r) => r.id)
+            records.filter((r) => r.state !== "validated")
         );
     }
 
