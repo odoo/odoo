@@ -15,6 +15,7 @@ To publish a partner, set a *Level* in their contact form (in the Partner Assign
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'views/res_partner_grade_views.xml',
+        'views/website_partnership_templates.xml',
     ],
     'demo': [
         'demo/res_partner_grade_demo.xml',
