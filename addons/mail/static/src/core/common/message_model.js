@@ -533,9 +533,10 @@ export class Message extends Record {
         attachments = [],
         { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [] } = {}
     ) {
+        const bodyEl = createElementWithContent("div", this.body);
+        bodyEl.querySelector("span.o-mail-Message-edited")?.remove();
         if (
-            createElementWithContent("div", body).textContent ===
-                createElementWithContent("div", this.body).textContent &&
+            createElementWithContent("div", body).innerHTML === bodyEl.innerHTML &&
             attachments.length === 0
         ) {
             return;

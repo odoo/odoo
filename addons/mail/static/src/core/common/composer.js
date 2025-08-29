@@ -842,6 +842,9 @@ export class Composer extends Component {
         this.updateFromEditor = true;
         // markup: editor content is trusted
         this.props.composer.composerHtml = markup(this.editor.getContent());
+        if (!this.props.composer.isDirty) {
+            this.props.composer.isDirty = true;
+        }
         this.updateFromEditor = false;
     }
 
