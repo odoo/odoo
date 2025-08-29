@@ -1239,9 +1239,9 @@ class SlideSlide(models.Model):
 
     def _default_website_meta(self):
         res = super()._default_website_meta()
-        res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
-        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = html2plaintext(self.description)
-        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = self.env['website'].image_url(self, 'image_1024')
+        res['default_opengraph']['og:title'] = self.name
+        res['default_opengraph']['og:description'] = html2plaintext(self.description)
+        res['default_opengraph']['og:image'] = self.env['website'].image_url(self, 'image_1024')
         res['default_meta_description'] = html2plaintext(self.description)
         return res
 

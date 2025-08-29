@@ -198,9 +198,8 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     # menu and layout
                     'website_menu': 1,
                     'ir_ui_view': 2,
-                    'res_company': 1,
                 }
-                expected_query_count = 10
+                expected_query_count = 9
                 self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf)
                 self.assertEqual(self._get_url_hot_query(self.page.url), expected_query_count)
                 self.menu.unlink()  # page being or not in menu shouldn't add queries
@@ -223,9 +222,8 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     # menu and layout
                     'website_menu': 1,
                     'ir_ui_view': 2,
-                    'res_company': 1,
                 }
-                expected_query_count = 10
+                expected_query_count = 9
                 insert_tables_perf = {}
                 if not readonly_enabled:
                     insert_tables_perf = {
@@ -254,9 +252,8 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     'website': 1,
                     # layout
                     'ir_ui_view': 2,
-                    'res_company': 1,
                 }
-                expected_query_count = 8
+                expected_query_count = 7
                 insert_tables_perf = {}
                 if not readonly_enabled:
                     insert_tables_perf = {
@@ -305,12 +302,9 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             'website': 1,
             'website_menu': 1,
             'ir_ui_view': 2,
-            # Check if `view.track` to track visitor or not
-            # layout content (company name, logo)
-            'res_company': 1,
         }
-        self._check_url_hot_query(self.page.url, 10, select_tables_perf)
-        self.assertEqual(self._get_url_hot_query(self.page.url), 10)
+        self._check_url_hot_query(self.page.url, 9, select_tables_perf)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 9)
 
 @tagged('-at_install', 'post_install')
 class TestWebsitePerformancePost(UtilPerf):

@@ -42,7 +42,6 @@ class WebsiteSeoMetadata(models.AbstractModel):
             images instead of default images
         """
         self.ensure_one()
-        company = request.website.company_id.sudo()
         title = request.website.name
         if 'name' in self:
             title = '%s | %s' % (self.name, title)
@@ -57,14 +56,9 @@ class WebsiteSeoMetadata(models.AbstractModel):
             'og:url': url_join(request.website.domain or request.httprequest.url_root, self.env['ir.http']._url_for(request.httprequest.path)),
             'og:image': request.website.image_url(request.website, img_field),
         }
-        # Default meta for Twitter
         default_twitter = {
             'twitter:card': 'summary_large_image',
-            'twitter:title': title,
-            'twitter:image': request.website.image_url(request.website, img_field, size='300x300'),
         }
-        if company.social_twitter:
-            default_twitter['twitter:site'] = "@%s" % company.social_twitter.split('/')[-1]
 
         return {
             'default_opengraph': default_opengraph,
@@ -85,12 +79,9 @@ class WebsiteSeoMetadata(models.AbstractModel):
         opengraph_meta, twitter_meta = default_meta['default_opengraph'], default_meta['default_twitter']
         if self.website_meta_title:
             opengraph_meta['og:title'] = self.website_meta_title
-            twitter_meta['twitter:title'] = self.website_meta_title
         if self.website_meta_description:
             opengraph_meta['og:description'] = self.website_meta_description
-            twitter_meta['twitter:description'] = self.website_meta_description
         opengraph_meta['og:image'] = url_join(root_url, self.env['ir.http']._url_for(self.website_meta_og_img or opengraph_meta['og:image']))
-        twitter_meta['twitter:image'] = url_join(root_url, self.env['ir.http']._url_for(self.website_meta_og_img or twitter_meta['twitter:image']))
         return {
             'opengraph_meta': opengraph_meta,
             'twitter_meta': twitter_meta,
