@@ -23,12 +23,12 @@
         }
     }
 
-    &:hover [data-snippet="s_ecomm_categories_showcase"] {
+    &:is(:hover, :focus-visible) [data-snippet="s_ecomm_categories_showcase"] {
         .s_ecomm_categories_showcase_wrapper {
             .s_ecomm_categories_showcase_block {
                 flex: 1;
 
-                &:nth-child(2):hover, &:nth-child(2) {
+                &:nth-child(2) {
                     flex: 3;
                 }
             }
