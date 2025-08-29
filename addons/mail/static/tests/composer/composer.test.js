@@ -392,7 +392,7 @@ test("composer text input cleared on message post", async () => {
     await contains(".o-mail-Composer-input", { value: "" });
 });
 
-test("send message only once when ENTER twice quickly", async () => {
+test("[text composer] send message only once when ENTER twice quickly", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "nether-picnic" });
     await start();
@@ -401,6 +401,25 @@ test("send message only once when ENTER twice quickly", async () => {
     press("Enter");
     press("Enter");
     await contains(".o-mail-Message");
+});
+
+test.tags("html composer");
+test("send message only once when ENTER twice quickly", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "nether-picnic" });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "test message");
+    press("Enter");
+    press("Enter");
+    await contains(".o-mail-Message", { count: 1 });
 });
 
 test("Show send button in mobile", async () => {
@@ -535,7 +554,7 @@ test("composer suggestion should match with input selection", async () => {
     await contains(".o-mail-Composer-suggestion", { text: "Luigi" });
 });
 
-test('do not post message on channel with "SHIFT-Enter" keyboard shortcut', async () => {
+test('[text composer] do not post message on channel with "SHIFT-Enter" keyboard shortcut', async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     await start();
@@ -547,7 +566,27 @@ test('do not post message on channel with "SHIFT-Enter" keyboard shortcut', asyn
     await contains(".o-mail-Message", { count: 0 });
 });
 
-test('post message on channel with "Enter" keyboard shortcut', async () => {
+test.tags("html composer");
+test("do not post message on channel with 'SHIFT-Enter' keyboard shortcut", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer(); // Enable HTML composer mode
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "Test");
+    await contains(".o-mail-Message", { count: 0 });
+    triggerHotkey("shift+Enter");
+    await tick(); // Wait for potential message posting
+    await contains(".o-mail-Message", { count: 0 });
+});
+
+test('[text composer] post message on channel with "Enter" keyboard shortcut', async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     await start();
@@ -559,6 +598,29 @@ test('post message on channel with "Enter" keyboard shortcut', async () => {
     await contains(".o-mail-Message");
     // check composition mode doesn't send message
     await edit("test", { composition: true });
+    await press("Enter", { isComposing: true });
+    await animationFrame();
+    await contains(".o-mail-Message");
+});
+
+test.tags("html composer");
+test("post message on channel with 'Enter' keyboard shortcut", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "Test");
+    await contains(".o-mail-Message", { count: 0 });
+    await press("Enter");
+    await contains(".o-mail-Message");
+    await htmlInsertText(editor, "test");
     await press("Enter", { isComposing: true });
     await animationFrame();
     await contains(".o-mail-Message");
@@ -670,7 +732,7 @@ test("composer text input placeholder should contain correspondent name when thr
 });
 
 test.tags("focus required");
-test("quick edit last self-message from UP arrow", async () => {
+test("[text composer] quick edit last self-message from UP arrow", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     pyEnv["mail.message"].create({
@@ -692,6 +754,43 @@ test("quick edit last self-message from UP arrow", async () => {
     await contains(".o-mail-Composer-input:focus");
     // non-empty composer should not trigger quick edit
     await insertText(".o-mail-Composer-input", "Shrek");
+    triggerHotkey("ArrowUp");
+    // Navigable List relies on useEffect, which behaves with 2 animation frames
+    // Wait 2 animation frames to make sure it doesn't show quick edit
+    await tick();
+    await tick();
+    await contains(".o-mail-Message .o-mail-Composer", { count: 0 });
+});
+
+test.tags("focus required", "html composer");
+test("quick edit last self-message from UP arrow", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "Test",
+        attachment_ids: [],
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message-content", { text: "Test" });
+    await contains(".o-mail-Message .o-mail-Composer", { count: 0 });
+    triggerHotkey("ArrowUp");
+    await contains(".o-mail-Message .o-mail-Composer");
+    triggerHotkey("Escape");
+    await contains(".o-mail-Message .o-mail-Composer", { count: 0 });
+    await contains(".o-mail-Composer-html.odoo-editor-editable:focus");
+    // Non-empty composer should not trigger quick edit
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "Shrek");
     triggerHotkey("ArrowUp");
     // Navigable List relies on useEffect, which behaves with 2 animation frames
     // Wait 2 animation frames to make sure it doesn't show quick edit
