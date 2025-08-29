@@ -1,6 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 from contextlib import contextmanager
+import io
+from PIL import Image
 
 from odoo.fields import Command
 from odoo.tools import lazy
@@ -123,3 +126,29 @@ class WebsiteSaleCommon(ProductCommon, DeliveryCommon):
         if 'website_published' not in kwargs:
             kwargs['website_published'] = True
         return super()._create_product(**kwargs)
+
+    @classmethod
+    def _create_public_category(cls, list_vals):
+        """Create a hierarchical chain of `public.product.category`.
+
+        For example::
+
+            # Furnitures / Sofas
+            self._create_public_category([
+                {'name': 'Furnitures'}, {'name': 'Sofas'}
+            ])
+
+        :return: The created categories.
+        :rtype: public.product.category
+        """
+        categs = cls.env['product.public.category'].create(list_vals)
+        for i in range(0, len(categs) - 1):
+            categs[i].parent_id = categs[i + 1]
+        return categs
+
+    @classmethod
+    def _create_image(cls, color):
+        f = io.BytesIO()
+        Image.new('RGB', (1920, 1080), color).save(f, 'JPEG')
+        f.seek(0)
+        return base64.b64encode(f.read())

@@ -18,13 +18,6 @@
                         <g:price t-out="item['price']"/>
                         <g:identifier_exists t-out="item['identifier_exists']"/>
                         <g:gtin t-if="'gtin' in item" t-out="item['gtin']"/>
-                        <t t-foreach="item['shipping']" t-as="shipping">
-                            <g:shipping>
-                                <g:country t-out="shipping['country']"/>
-                                <g:service t-out="shipping['service']"/>
-                                <g:price t-out="shipping['price']"/>
-                            </g:shipping>
-                        </t>
 
                         <!-- Optional -->
                         <g:sale_price t-if="'sale_price' in item" t-out="item['sale_price']"/>
@@ -63,12 +56,6 @@
                                 <g:attribute_name t-out="name_value[0]"/>
                                 <g:attribute_value t-out="name_value[1]"/>
                             </g:product_detail>
-                        </t>
-                        <t name="shippings" t-foreach="item['free_shipping_threshold']" t-as="shipping">
-                            <g:free_shipping_threshold>
-                                <g:country t-out="shipping['country']"/>
-                                <g:price_threshold t-out="shipping['price_threshold']"/>
-                            </g:free_shipping_threshold>
                         </t>
                     </item>
                 </t>

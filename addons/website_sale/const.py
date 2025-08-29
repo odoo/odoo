@@ -365,31 +365,6 @@ PRODUCT_PAGE_STYLE_MAPPING = {
     },
 }
 
-# Google Merchant Center
-
-GMC_SUPPORTED_UOM = {
-    'oz',
-    'lb',
-    'mg',
-    'g',
-    'kg',
-    'floz',
-    'pt',
-    'qt',
-    'gal',
-    'ml',
-    'cl',
-    'l',
-    'cbm',
-    'in',
-    'ft',
-    'yd',
-    'cm',
-    'm',
-    'sqft',
-    'sqm',
-}
-
 SNIPPET_DEFAULTS = {
     'website_sale.s_dynamic_snippet_products': {
         'filter_xmlid': 'website_sale.dynamic_filter_newest_products',
@@ -431,6 +406,33 @@ SNIPPET_DEFAULTS = {
     },
 }
 
+PRODUCT_FEED_SOFT_LIMIT = 5000
+PRODUCT_FEED_HARD_LIMIT = 6000
+
+# Google Merchant Center
+GMC_SUPPORTED_UOM = {
+    'oz',
+    'lb',
+    'mg',
+    'g',
+    'kg',
+    'floz',
+    'pt',
+    'ct',
+    'qt',
+    'gal',
+    'ml',
+    'cl',
+    'l',
+    'cbm',
+    'in',
+    'ft',
+    'yd',
+    'cm',
+    'm',
+    'sqft',
+    'sqm',
+}
 GMC_BASE_MEASURE = re.compile(r'(?P<base_count>\d+)?\s*(?P<base_unit>[a-z]+)')
 
 SHOP_PATH = '/shop'
