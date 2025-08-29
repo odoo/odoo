@@ -217,7 +217,7 @@ export function convertRgbaToCSSColor(r, g, b, a) {
  */
 export function convertCSSColorToRgba(cssColor = "") {
     // Check if cssColor is a rgba() or rgb() color
-    const rgba = cssColor.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
+    const rgba = cssColor.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d*(?:\.\d+)?))?\)$/);
     if (rgba) {
         if (rgba[4] === undefined) {
             rgba[4] = 1;
