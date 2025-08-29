@@ -158,19 +158,6 @@ class ResConfigSettings(models.TransientModel):
 
         company.partner_id._check_peppol_eas()
 
-        if (
-            (participant_info := company.partner_id._check_peppol_participant_exists(edi_identification, check_company=True))
-            and not self.account_peppol_migration_key
-        ):
-            error_msg = _(
-                "A participant with these details has already been registered on the network. "
-                "If you have previously registered to a Peppol service, please deregister."
-            )
-
-            if isinstance(participant_info, str):
-                error_msg += _("The Peppol service that is used is likely to be %s.", participant_info)
-            raise UserError(error_msg)
-
         edi_user = edi_proxy_client.sudo()._register_proxy_user(company, 'peppol', self.account_peppol_edi_mode)
         self.account_peppol_proxy_state = 'not_verified'
 
