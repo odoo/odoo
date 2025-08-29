@@ -80,4 +80,3 @@ class ResPartner(models.Model):
                     seen_partners.add(partner)
                 assign_partner = assign_partner.parent_id
                 partner = partner.parent_id
-
