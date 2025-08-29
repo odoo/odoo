@@ -1,11 +1,13 @@
 import { CalendarController } from "@web/views/calendar/calendar_controller";
 import { useMultiSelectionButtons } from "@web/views/view_components/multi_selection_buttons";
 import { CallbackRecorder } from "@web/search/action_hook";
-import { useBus } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { WorkEntryCalendarMultiSelectionButtons } from "@hr_work_entry/views/work_entry_calendar/work_entry_multi_selection_buttons";
 import { onWillRender } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useWorkEntry } from "@hr_work_entry/views/work_entry_hook";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { _t } from "@web/core/l10n/translation";
 const { DateTime } = luxon;
 
 export class WorkEntryCalendarController extends CalendarController {
@@ -22,6 +24,7 @@ export class WorkEntryCalendarController extends CalendarController {
             onClose: this.model.load.bind(this.model),
         });
         this.onRegenerateWorkEntries = onRegenerateWorkEntries;
+        this.dialogService = useService("dialog");
 
         onWillRender(async () => {
             const userFavoritesWorkEntriesIds = await this.orm.formattedReadGroup(
@@ -51,12 +54,38 @@ export class WorkEntryCalendarController extends CalendarController {
     }
 
     async splitRecord(record) {
-        const split_work_entry_id = await this.orm.call("hr.work.entry", "action_split", [
-            record.id,
-        ]);
-        if (split_work_entry_id) {
-            await this.editRecord({ ...record, id: split_work_entry_id });
-        }
+        this.dialogService.add(
+            FormViewDialog,
+            {
+                title: _t("Split Work Entry"),
+                resModel: "hr.work.entry",
+                onRecordSave: async (_record) => {
+                    await this.orm.call("hr.work.entry", "action_split", [
+                        record.id,
+                        {
+                            duration: _record.data.duration,
+                            work_entry_type_id: _record.data.work_entry_type_id.id,
+                            name: _record.data.name,
+                        },
+                    ]);
+                    return true;
+                },
+                context: {
+                    form_view_ref: "hr_work_entry.hr_work_entry_calendar_gantt_view_form",
+                    default_duration: record.rawRecord.duration / 2,
+                    default_name: record.rawRecord.name,
+                    default_work_entry_type_id: record.rawRecord.work_entry_type_id?.[0],
+                    default_employee_id: record.rawRecord.employee_id?.[0],
+                    default_date: record.rawRecord.date,
+                },
+                canExpand: false,
+            },
+            {
+                onClose: () => {
+                    this.model.load();
+                },
+            }
+        );
     }
 
     /**

@@ -114,6 +114,27 @@
         </field>
     </record>
 
+    <record id="hr_work_entry_calendar_gantt_view_form" model="ir.ui.view">
+        <field name="name">hr.work.entry.form</field>
+        <field name="model">hr.work.entry</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="hr_work_entry.hr_work_entry_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='employee_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='company_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="hr_work_entry_view_tree" model="ir.ui.view">
         <field name="name">hr.work.entry.list</field>
         <field name="model">hr.work.entry</field>
