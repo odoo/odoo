@@ -17,6 +17,7 @@ class ResConfigSettings(models.TransientModel):
     peppol_external_provider = fields.Char(related='company_id.peppol_external_provider', readonly=False)
     peppol_use_parent_company = fields.Boolean(compute='_compute_peppol_use_parent_company')
     peppol_parent_company_name = fields.Char(related='company_id.peppol_parent_company_id.name', string="Peppol Parent Company Name")
+    account_is_token_out_of_sync = fields.Boolean(related='account_peppol_edi_user.is_token_out_of_sync', readonly=False)
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -77,3 +78,16 @@ class ResConfigSettings(models.TransientModel):
                 }
             }
         return True
+
+    def button_reconnect_this_database(self):
+        """Re-establish an out-of-sync connection"""
+        self.ensure_one()
+        self.account_peppol_edi_user._peppol_out_of_sync_reconnect_this_database()
+
+    def button_disconnect_this_database(self):
+        """Disconnect the current database from the Peppol network.
+        This does not delete or affect the IAP connection, which will remain intact.
+        So don't use this to deregister the participant/connection.
+        """
+        self.ensure_one()
+        self.account_peppol_edi_user._peppol_out_of_sync_disconnect_this_database()
