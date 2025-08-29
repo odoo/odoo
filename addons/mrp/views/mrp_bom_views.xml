@@ -121,7 +121,7 @@
                             invisible="type != 'normal'"
                             groups="mrp.group_mrp_byproducts">
                             <field name="byproduct_ids" context="{'form_view_ref' : 'mrp.mrp_bom_byproduct_form_view', 'default_bom_id': id}">
-                                <list string="By-products"  editable="top">
+                                <list string="By-products" editable="bottom">
                                     <control>
                                         <create string="Add a line"/>
                                         <button name="action_add_from_catalog" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
