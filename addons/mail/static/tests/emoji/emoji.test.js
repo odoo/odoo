@@ -1,4 +1,9 @@
-import { patchTranslations, preloadBundle, serverState } from "@web/../tests/web_test_helpers";
+import {
+    patchTranslations,
+    patchWithCleanup,
+    preloadBundle,
+    serverState,
+} from "@web/../tests/web_test_helpers";
 
 import {
     click,
@@ -19,17 +24,20 @@ describe.current.tags("desktop");
 defineMailModels();
 preloadBundle("web.assets_emoji");
 
-test("emoji picker works well with translation with double quotes", async () => {
+test("emoji picker correctly handles translations with special characters", async () => {
     patchTranslations({
         "Japanese “here” button": `Bouton "ici" japonais`,
+        "heavy dollar sign": `Symbole du dollar\nlourd`,
     });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
     await openDiscuss(channelId);
     await click("button[title='Add Emojis']");
-    await insertText("input[placeholder='Search emoji']", "ici");
+    await insertText(".o-EmojiPicker-search input", "ici");
     await contains(`.o-Emoji[title='Bouton "ici" japonais']`);
+    await insertText(".o-EmojiPicker-search input", "dollar", { replace: true });
+    await contains(`.o-Emoji[title*='Symbole du dollar']`);
 });
 
 test("search emoji from keywords", async () => {
@@ -231,4 +239,19 @@ test("shortcodes shown in emoji title in message", async () => {
     await contains(".o-mail-Message", { text: "💑😇" });
     await contains(".o-mail-Message span[title=':couple_with_heart:']", { text: "💑" });
     await contains(".o-mail-Message span[title=':innocent: :halo:']", { text: "😇" });
+});
+
+test("Emoji picker shows failure to load emojis", async () => {
+    // Simulate failure to load emojis
+    patchWithCleanup(odoo.loader.modules.get("@web/core/emoji_picker/emoji_data"), {
+        getEmojis() {
+            return [];
+        },
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Add Emojis']");
+    await contains(".o-EmojiPicker", { text: "😵‍💫Failed to load emojis..." });
 });
