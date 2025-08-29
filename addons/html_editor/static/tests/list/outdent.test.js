@@ -534,6 +534,56 @@ describe("with selection collapsed", () => {
                 <p>[]<br></p>`),
         });
     });
+    test("should correctly merge list items when outdenting nested list", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <ol>
+                    <li>
+                        <div>abc</div>
+                        <ol>
+                            <li>def</li>
+                            <li class="oe-nested">
+                                <div>[]ghi</div>
+                                <ol>
+                                    <li>jkl</li>
+                                </ol>
+                            </li>
+                            <li>mno</li>
+                        </ol>
+                    </li>
+                    <li>pqr</li>
+                </ol>
+            `),
+            stepFunction: (editor) => {
+                keydownShiftTab(editor);
+                keydownShiftTab(editor);
+            },
+            contentAfter: unformat(`
+                <ol>
+                    <li>
+                        <div>abc</div>
+                        <ol>
+                            <li>def</li>
+                        </ol>
+                    </li>
+                </ol>
+                <div>[]ghi</div>
+                <ol>
+                    <li class="oe-nested">
+                        <ol>
+                            <li class="oe-nested">
+                                <ol>
+                                    <li>jkl</li>
+                                </ol>
+                            </li>
+                            <li>mno</li>
+                        </ol>
+                    </li>
+                    <li>pqr</li>
+                </ol>
+            `),
+        });
+    });
 });
 
 describe("with selection", () => {
