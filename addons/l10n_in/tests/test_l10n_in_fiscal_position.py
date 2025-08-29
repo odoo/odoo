@@ -148,83 +148,83 @@ class TestFiscal(L10nInTestInvoicingCommon):
         In Purchase Document: Compare place of supply with vendor state
         '''
 
-        self.env.company = self.default_company
-        template = self.env['account.chart.template']
-        company_state = self.env.company.state_id
-        other_state = self.env['res.country.state'].search([
-            ('id', '!=', company_state.id),
-            ('country_id', '=', company_state.country_id.id)
-        ], limit=1)
+        with self._set_env_company(self.default_company):
+            template = self.env['account.chart.template']
+            company_state = self.env.company.state_id
+            other_state = self.env['res.country.state'].search([
+                ('id', '!=', company_state.id),
+                ('country_id', '=', company_state.country_id.id)
+            ], limit=1)
 
-        # Sub-test: Intra-State
-        with self.subTest(scenario="Intra-State"):
-            self.partner_a.write({'state_id': company_state.id})
-            vendor_bill = self._assert_invoice_fiscal_position(
-                fiscal_position_ref='fiscal_position_in_intra_state',
-                partner=self.partner_a,
-                move_type='in_invoice',
-                post=False,
-            )
-            self.partner_a.write({'state_id': other_state.id})
-            vendor_bill.write({'l10n_in_state_id': other_state.id})
-            self.assertEqual(
-                vendor_bill.fiscal_position_id,
-                template.ref('fiscal_position_in_intra_state')
-            )
+            # Sub-test: Intra-State
+            with self.subTest(scenario="Intra-State"):
+                self.partner_a.write({'state_id': company_state.id})
+                vendor_bill = self._assert_invoice_fiscal_position(
+                    fiscal_position_ref='fiscal_position_in_intra_state',
+                    partner=self.partner_a,
+                    move_type='in_invoice',
+                    post=False,
+                )
+                self.partner_a.write({'state_id': other_state.id})
+                vendor_bill.write({'l10n_in_state_id': other_state.id})
+                self.assertEqual(
+                    vendor_bill.fiscal_position_id,
+                    template.ref('fiscal_position_in_intra_state')
+                )
 
-        # Sub-test: Inter-State
-        with self.subTest(scenario="Inter-State"):
-            self.partner_a.write({'state_id': other_state.id})
-            vendor_bill = self._assert_invoice_fiscal_position(
-                fiscal_position_ref='fiscal_position_in_inter_state',
-                partner=self.partner_a,
-                move_type='in_invoice',
-                post=False,
-            )
-            self.partner_a.write({'state_id': company_state.id})
-            vendor_bill.write({'l10n_in_state_id': other_state.id})
-            self.assertEqual(
-                vendor_bill.fiscal_position_id,
-                template.ref('fiscal_position_in_inter_state')
-            )
+            # Sub-test: Inter-State
+            with self.subTest(scenario="Inter-State"):
+                self.partner_a.write({'state_id': other_state.id})
+                vendor_bill = self._assert_invoice_fiscal_position(
+                    fiscal_position_ref='fiscal_position_in_inter_state',
+                    partner=self.partner_a,
+                    move_type='in_invoice',
+                    post=False,
+                )
+                self.partner_a.write({'state_id': company_state.id})
+                vendor_bill.write({'l10n_in_state_id': other_state.id})
+                self.assertEqual(
+                    vendor_bill.fiscal_position_id,
+                    template.ref('fiscal_position_in_inter_state')
+                )
 
-        # Sub-test: Export/SEZ (Outside India)
-        with self.subTest(scenario="Export/SEZ"):
-            vendor_bill = self._assert_invoice_fiscal_position(
-                fiscal_position_ref='fiscal_position_in_export_sez_in',
-                partner=self.partner_foreign,
-                move_type='in_invoice',
-                post=False,
-            )
-            vendor_bill.write({'l10n_in_state_id': self.env.ref('l10n_in.state_in_oc').id})  # Other Country State
-            self.assertEqual(
-                vendor_bill.fiscal_position_id,
-                template.ref('fiscal_position_in_export_sez_in')
-            )
-            # Here fpos should Inter-State. But due to `l10n_in_gst_treatment` it will be Export/SEZ
-            self.partner_a.write({'state_id': other_state.id})
-            vendor_bill.write({
-                'partner_id': self.partner_a.id,  # Inter-State Partner
-                'l10n_in_state_id': company_state.id,  # Company State
-                'l10n_in_gst_treatment': 'special_economic_zone',
-            })
-            self.assertEqual(
-                vendor_bill.fiscal_position_id,
-                template.ref('fiscal_position_in_export_sez_in')
-            )
+            # Sub-test: Export/SEZ (Outside India)
+            with self.subTest(scenario="Export/SEZ"):
+                vendor_bill = self._assert_invoice_fiscal_position(
+                    fiscal_position_ref='fiscal_position_in_export_sez_in',
+                    partner=self.partner_foreign,
+                    move_type='in_invoice',
+                    post=False,
+                )
+                vendor_bill.write({'l10n_in_state_id': self.env.ref('l10n_in.state_in_oc').id})  # Other Country State
+                self.assertEqual(
+                    vendor_bill.fiscal_position_id,
+                    template.ref('fiscal_position_in_export_sez_in')
+                )
+                # Here fpos should Inter-State. But due to `l10n_in_gst_treatment` it will be Export/SEZ
+                self.partner_a.write({'state_id': other_state.id})
+                vendor_bill.write({
+                    'partner_id': self.partner_a.id,  # Inter-State Partner
+                    'l10n_in_state_id': company_state.id,  # Company State
+                    'l10n_in_gst_treatment': 'special_economic_zone',
+                })
+                self.assertEqual(
+                    vendor_bill.fiscal_position_id,
+                    template.ref('fiscal_position_in_export_sez_in')
+                )
 
-        # Sub-test: Manual Partner Fiscal Check
-        with self.subTest(scenario="Manual Partner Fiscal Check"):
-            # Here fpos should Inter-State. But due to `property_account_position_id` it will be Export/SEZ
-            self.partner_a.write({
-                'state_id': company_state.id,  # Intra-State Partner
-                'property_account_position_id': template.ref('fiscal_position_in_export_sez_in').id
-            })
-            vendor_bill_4 = self._assert_invoice_fiscal_position(
-                fiscal_position_ref='fiscal_position_in_export_sez_in',
-                partner=self.partner_a,
-                move_type='in_invoice',
-            )
+            # Sub-test: Manual Partner Fiscal Check
+            with self.subTest(scenario="Manual Partner Fiscal Check"):
+                # Here fpos should be Intra-State. But due to `property_account_position_id` it will be Export/SEZ
+                self.partner_a.write({
+                    'state_id': company_state.id,  # Intra-State Partner
+                    'property_account_position_id': template.ref('fiscal_position_in_export_sez_in').id
+                })
+                self._assert_invoice_fiscal_position(
+                    fiscal_position_ref='fiscal_position_in_export_sez_in',
+                    partner=self.partner_a,
+                    move_type='in_invoice',
+                )
 
     def test_l10n_in_company_with_no_vat(self):
         """
