@@ -62,6 +62,12 @@ class AccountTaxGroup(models.Model):
     )
     pos_receipt_label = fields.Char(string='PoS receipt label')
 
+    @api.constrains('tax_payable_account_id', 'tax_receivable_account_id')
+    def _constrains_payable_receivable_account(self):
+        for tax_group in self:
+            if tax_group.tax_payable_account_id and tax_group.tax_payable_account_id == tax_group.tax_receivable_account_id:
+                raise UserError(self.env._("You cannot use the same account as receivable and payable accounts."))
+
     @api.depends('company_id')
     def _compute_country_id(self):
         for group in self:
