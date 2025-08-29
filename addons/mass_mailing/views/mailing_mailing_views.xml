@@ -71,19 +71,54 @@
                         <button name="action_retry_failed" type="object" invisible="state != 'done' or failed == 0" string="Retry" data-hotkey="y"/>
                         <button name="action_duplicate" type="object" class="btn-secondary" string="Duplicate"
                             data-hotkey="d" invisible="state != 'done'"/>
-                        <button name="action_test" type="object" class="btn-secondary" string="Test" data-hotkey="k"/>
+                        <button name="action_preview" type="object" class="btn-secondary" string="Preview &amp; Test" data-hotkey="k" invisible="is_body_empty"/>
                         <button name="action_cancel" type="object" invisible="state != 'in_queue'" class="btn-secondary" string="Cancel" data-hotkey="x"/>
                         <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,in_queue,sending,done"/>
                     </header>
                     <div class="alert alert-info o_mass_mailing_alert_message" role="alert"
                             invisible="state not in ['in_queue', 'done'] and sent == 0 and canceled == 0 and scheduled == 0 and failed == 0 and not warning_message">
+                        <div class="o_mails_in_queue" invisible="state != 'in_queue'">
+                            <strong invisible="next_departure_is_past or schedule_type == 'now'">
+                                <span name="next_departure_text">This mailing is scheduled for </span>
+                                <field name="next_departure" class="oe_inline"/>.
+                            </strong>
+                            <strong invisible="not next_departure_is_past or schedule_type == 'now'" class="d-flex align-items-center">
+                                <field name="next_departure_is_past" invisible="1"/>
+                                <span name="refresh_text">This mailing will be sent as soon as possible.</span>
+                                <button name="action_reload" type="object" class="btn btn-link pe-0">
+                                    <u>Refresh <i class="fa fa-refresh ms-1"/></u>
+                                </button>
+                            </strong>
+                            <strong invisible="schedule_type != 'now'" class="d-flex align-items-center">
+                                <field name="next_departure_is_past" invisible="1"/>
+                                <field name="schedule_type" invisible="1"/>
+                                <span name="mailing_schedule_type_now_text">This mailing will be sent as soon as possible.</span>
+                                <button name="action_reload" type="object" class="btn btn-link pe-0">
+                                    <u>Refresh <i class="fa fa-refresh ms-1"/></u>
+                                </button>
+                            </strong>
+                        </div>
+
+                        <div class="o_mails_sent" invisible="sent == 0 and state in ('draft', 'test', 'in_queue')">
+                            <button class="btn btn-link p-0"
+                                    name="action_view_traces_sent"
+                                    type="object">
+                                <strong>
+                                    <field name="sent" class="oe_inline me-2"/>
+                                    <span name="sent">emails have been sent.</span>
+                                </strong>
+                            </button>
+                            <strong class="d-block" invisible="mailing_type == 'mail' or not ab_testing_enabled or state != 'done' or sent != 0 or failed != 0 or canceled != 0">
+                                <span name="ab_test_text">There wasn't enough recipients given to this mailing. </span>
+                            </strong>
+                        </div>
                         <div class="o_mails_canceled" invisible="canceled == 0">
                             <button class="btn btn-link p-0"
                                     name="action_view_traces_canceled"
                                     type="object">
                                 <strong>
                                     <field name="canceled" class="oe_inline me-2"/>
-                                    <span name="canceled_text">emails have been cancelled and will not be sent.</span>
+                                    <span name="canceled_text">emails have been cancelled.</span>
                                 </strong>
                             </button>
                         </div>
@@ -107,51 +142,17 @@
                                 </strong>
                             </button>
                         </div>
-                        <div class="o_mails_sent" invisible="sent == 0 and state in ('draft', 'test', 'in_queue')">
-                            <button class="btn btn-link p-0"
-                                    name="action_view_traces_sent"
-                                    type="object">
-                                <strong>
-                                    <field name="sent" class="oe_inline me-2"/>
-                                    <span name="sent">emails have been sent.</span>
-                                </strong>
-                            </button>
-                            <strong class="d-block" invisible="mailing_type == 'mail' or not ab_testing_enabled or state != 'done' or sent != 0 or failed != 0 or canceled != 0">
-                                <span name="ab_test_text">There wasn't enough recipients given to this mailing. </span>
-                            </strong>
-                        </div>
                         <div class="o_mails_failed" invisible="state != 'done' or failed == 0">
                             <button class="btn btn-link p-0"
                                     name="action_view_traces_failed"
                                     type="object">
                                 <strong>
                                     <field name="failed" class="oe_inline me-2"/>
-                                    <span name="failed_text">emails could not be sent.</span>
+                                    <span name="failed_text">emails failed.</span>
                             </strong>
                             </button>
                         </div>
 
-                        <div class="o_mails_in_queue" invisible="state != 'in_queue'">
-                            <strong invisible="next_departure_is_past or schedule_type == 'now'">
-                                <span name="next_departure_text">This mailing is scheduled for </span>
-                                <field name="next_departure" class="oe_inline"/>.
-                            </strong>
-                            <strong invisible="not next_departure_is_past or schedule_type == 'now'" class="d-flex align-items-center">
-                                <field name="next_departure_is_past" invisible="1"/>
-                                <span name="refresh_text">This mailing will be sent as soon as possible.</span>
-                                <button name="action_reload" type="object" class="btn btn-link pe-0">
-                                    <u>Refresh <i class="fa fa-refresh ms-1"/></u>
-                                </button>
-                            </strong>
-                            <strong invisible="schedule_type != 'now'" class="d-flex align-items-center">
-                                <field name="next_departure_is_past" invisible="1"/>
-                                <field name="schedule_type" invisible="1"/>
-                                <span name="mailing_schedule_type_now_text">This mailing will be sent as soon as possible.</span>
-                                <button name="action_reload" type="object" class="btn btn-link pe-0">
-                                    <u>Refresh <i class="fa fa-refresh ms-1"/></u>
-                                </button>
-                            </strong>
-                        </div>
                         <div invisible="not warning_message">
                             <strong><field name="warning_message"/></strong>
                         </div>
@@ -322,7 +323,7 @@
                                         <field class="o_text_overflow" name="preview" string="Preview Text"
                                             options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'mailing_model_real'}"
                                             readonly="state in ('sending', 'done')"
-                                            widget="char_emojis" placeholder="e.g. Check it out before it's too late!"/>
+                                            widget="char_emojis" placeholder="This text will appear in inboxes, next to the subject"/>
                                         <field name="email_from" readonly="state in ('sending', 'done')"/>
                                         <label for="reply_to"/>
                                         <div name="reply_to_details">

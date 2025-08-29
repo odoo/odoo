@@ -58,7 +58,8 @@ class TestMailingStatistics(TestMassMailCommon):
         self.assertEqual(mailing.clicked, 3)
         self.assertEqual(mailing.clicks_ratio, 30)
         self.assertEqual(mailing.delivered, 10)
-        self.assertEqual(mailing.failed, 1)
+        # failed = 1 error + 1 bounce
+        self.assertEqual(mailing.failed, 2)
         self.assertEqual(mailing.opened, 4)
         self.assertEqual(mailing.opened_ratio, 40)
         self.assertEqual(mailing.replied, 3)

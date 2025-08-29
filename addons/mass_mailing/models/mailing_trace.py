@@ -132,6 +132,12 @@ class MailingTrace(models.Model):
                 values['mail_mail_id_int'] = values['mail_mail_id']
         return super().create(vals_list)
 
+    def action_retry_failed(self):
+        traces = self.filtered(lambda t: t.trace_status in ("error", "cancel", "bounce"))
+        if not traces:
+            return
+        traces.mass_mailing_id.action_retry_failed([("mailing_trace_ids", "in", traces.ids)])
+
     def action_view_contact(self):
         self.ensure_one()
         return {

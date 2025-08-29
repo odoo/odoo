@@ -79,10 +79,7 @@ class MailingMailing(models.Model):
         'Subject', required=True, translate=False)
     preview = fields.Char(
         'Preview', translate=False,
-        render_engine='inline_template', render_options={'post_process': True},
-        help='Catchy preview sentence that encourages recipients to open this email.\n'
-             'In most inboxes, this is displayed next to the subject.\n'
-             'Keep it empty if you prefer the first characters of your email content to appear instead.')
+        render_engine='inline_template', render_options={'post_process': True})
     email_from = fields.Char(
         string='Send From',
         compute='_compute_email_from', readonly=False, store=True, precompute=True)
@@ -332,13 +329,13 @@ class MailingMailing(models.Model):
                 'opened': line['open'] + line['reply'],
                 'replied': line['reply'],
                 'bounced': line['bounce'],
-                'failed': line['error'],
+                'failed': line['error'] + line['bounce'],
                 'clicked': line['links_click_datetime'],
                 'sent': line['sent_datetime'],
             }
             total = (values['expected'] - values['canceled']) or 1
-            total_no_error = (values['expected'] - values['canceled'] - values['bounced'] - values['failed']) or 1
-            total_sent = (values['expected'] - values['canceled'] - values['failed']) or 1
+            total_no_error = (values['expected'] - values['canceled'] - values['failed']) or 1
+            total_sent = (values['expected'] - values['canceled'] - values['failed'] + values['bounced']) or 1
             values['received_ratio'] = float_round(100.0 * values['delivered'] / total, precision_digits=2)
             values['opened_ratio'] = float_round(100.0 * values['opened'] / total_no_error, precision_digits=2)
             values['replied_ratio'] = float_round(100.0 * values['replied'] / total_no_error, precision_digits=2)
@@ -602,11 +599,11 @@ class MailingMailing(models.Model):
             }
         return False
 
-    def action_test(self):
+    def action_preview(self):
         self.ensure_one()
-        ctx = dict(self.env.context, default_mass_mailing_id=self.id, dialog_size='medium')
+        ctx = dict(self.env.context, default_mass_mailing_id=self.id, dialog_size='extra-large')
         return {
-            'name': _('Test Mailing'),
+            'name': _('Preview & Test'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'mailing.mailing.test',
@@ -640,21 +637,21 @@ class MailingMailing(models.Model):
     def action_cancel(self):
         self.write({'state': 'draft', 'schedule_date': False, 'schedule_type': 'now', 'next_departure': False})
 
-    def action_retry_failed(self):
+    def action_retry_failed(self, extra_domain=None):
         """ Remove all failed emails and their traces, and try sending them again."""
         # Use batching to prevent cache overfill in unlink()
         batch_size = 1000
-        failed_emails = self.env['mail.mail'].sudo().with_context(prefetch_fields=False).search([
+        base_domain = [
             ('mailing_id', 'in', self.ids),
             ('state', '=', 'exception')
-        ], limit=batch_size)
+        ]
+        domain = Domain(base_domain) & Domain(extra_domain or Domain.TRUE)
+        failed_emails = self.env['mail.mail'].sudo().with_context(prefetch_fields=False).search(domain, limit=batch_size)
         while failed_emails:
             failed_emails.mapped('mailing_trace_ids').unlink()
             failed_emails.unlink()
-            failed_emails = failed_emails.search([
-                ('mailing_id', 'in', self.ids),
-                ('state', '=', 'exception')
-            ], limit=batch_size)
+            self.env.invalidate_all()
+            failed_emails = failed_emails.search(domain, limit=batch_size)
         self.action_put_in_queue()
 
     def action_view_link_trackers(self):
@@ -682,7 +679,9 @@ class MailingMailing(models.Model):
         return self._action_view_traces_filtered('canceled')
 
     def action_view_traces_failed(self):
-        return self._action_view_traces_filtered('failed')
+        action = self._action_view_traces_filtered('bounced')
+        action['context']['search_default_filter_error'] = True
+        return action
 
     def action_view_traces_process(self):
         return self._action_view_traces_filtered('process')

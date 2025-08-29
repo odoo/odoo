@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from email.utils import getaddresses
 from markupsafe import Markup
 
-from odoo import _, fields, models, tools
-from odoo.tools.misc import file_open
+from odoo import _, api, fields, models, tools
 
 
 class MailingMailingTest(models.TransientModel):
@@ -23,9 +23,75 @@ class MailingMailingTest(models.TransientModel):
             ('create_uid', '=', self.env.uid),
         ], order='create_date desc', limit=1).email_to or self.env.user.email_formatted
 
-    email_to = fields.Text(string='Recipients', required=True,
-                           help='Carriage-return-separated list of email addresses.', default=_default_email_to)
+    def _get_model_selection(self):
+        """ Return mailing enabled models to use in selection values.
+        It will act like a list of allowed models for Reference field. """
+        result = self.env['ir.model'].sudo().search([('is_mailing_enabled', '=', True)])
+        return [(model.model, model.name) for model in result]
+
+    email_to = fields.Text(string='Recipients', required=True, default=_default_email_to)
     mass_mailing_id = fields.Many2one('mailing.mailing', string='Mailing', required=True, ondelete='cascade')
+    email_from = fields.Char(string='From', compute='_compute_mailing_preview')
+    subject = fields.Char(string='Subject', compute='_compute_mailing_preview')
+    preview_text = fields.Char(string='Preview Text', compute='_compute_mailing_preview')
+    reply_to = fields.Char(string='Reply To', compute='_compute_mailing_preview')
+    body_html = fields.Html(string='Preview Body', compute='_compute_mailing_preview', sanitize='email_outgoing')
+    preview_record_ref = fields.Reference(
+        string='Preview for',
+        compute='_compute_preview_record_ref',
+        readonly=False,
+        selection='_get_model_selection',
+        store=True,
+    )
+
+    @api.depends('mass_mailing_id')
+    def _compute_preview_record_ref(self):
+        to_reset = self.filtered(lambda t: not t.mass_mailing_id.mailing_model_real)
+        if to_reset:
+            to_reset.preview_record_ref = False
+
+        for test in (self - to_reset):
+            mailing = test.mass_mailing_id
+            res = self.env[mailing.mailing_model_real].search([], limit=1)
+            test.preview_record_ref = f'{mailing.mailing_model_real},{res.id}' if res else False
+
+    @api.depends('mass_mailing_id', 'preview_record_ref')
+    def _compute_mailing_preview(self):
+        to_reset = self.filtered(lambda t: not t.mass_mailing_id)
+        if to_reset:
+            to_reset.update({
+                'email_from': False,
+                'subject': False,
+                'body_html': False,
+                'preview_text': False,
+                'reply_to': False,
+            })
+
+        for record in (self - to_reset):
+            mailing = record.mass_mailing_id
+            if record.preview_record_ref:
+                composer_values = {
+                    'composition_mode': 'mass_mail',
+                    'model': mailing.mailing_model_real,
+                    'email_from': mailing.email_from,
+                    'subject': mailing.subject,
+                    'body': mailing.body_html,
+                }
+                composer = self.env['mail.compose.message'].with_context(
+                    default_email_from=mailing.email_from,
+                ).new(composer_values)
+                mail_values = composer._prepare_mail_values(record.preview_record_ref.ids)[record.preview_record_ref.id]
+                record.email_from = mail_values['email_from']
+                record.reply_to = mail_values['reply_to']
+                record.subject = mail_values['subject']
+                record.body_html = mail_values['body_html']
+                record.preview_text = mailing._render_field('preview', record.preview_record_ref.ids)[record.preview_record_ref.id]
+            else:
+                record.email_from = mailing.email_from
+                record.reply_to = mailing.reply_to
+                record.subject = mailing.subject
+                record.body_html = mailing.body_html
+                record.preview_text = mailing.preview
 
     def send_mail_test(self):
         self.ensure_one()
@@ -36,53 +102,37 @@ class MailingMailingTest(models.TransientModel):
         mails_sudo = self.env['mail.mail'].sudo()
         valid_emails = []
         invalid_candidates = []
-        for candidate in self.email_to.splitlines():
-            test_email = tools.email_split(candidate)
-            if test_email:
-                valid_emails.append(test_email[0])
-            else:
-                invalid_candidates.append(candidate)
+        for line in self.email_to.splitlines():
+            for name, email in getaddresses([line]):
+                test_email = tools.email_split(email)
+                if test_email:
+                    valid_emails.append(test_email[0])
+                else:
+                    invalid_candidates.append(email or name)
 
         mailing = self.mass_mailing_id
-        record = self.env[mailing.mailing_model_real].search([], limit=1)
+        body = mailing._prepend_preview(self.body_html or '', self.preview_text)
+        subject = _('[TEST] %(mailing_subject)s', mailing_subject=self.subject)
 
-        # If there is atleast 1 record for the model used in this mailing, then we use this one to render the template
-        # Downside: Qweb syntax is only tested when there is atleast one record of the mailing's model
-        if record:
-            # Returns a proper error if there is a syntax error with Qweb
-            # do not force lang, will simply use user context
-            body = mailing._render_field('body_html', record.ids, compute_lang=False, options={'preserve_comments': True})[record.id]
-            preview = mailing._render_field('preview', record.ids, compute_lang=False)[record.id]
-            full_body = mailing._prepend_preview(Markup(body), preview)
-            subject = mailing._render_field('subject', record.ids, compute_lang=False)[record.id]
-        else:
-            full_body = mailing._prepend_preview(mailing.body_html, mailing.preview)
-            subject = mailing.subject
-        subject = _('[TEST] %(mailing_subject)s', mailing_subject=subject)
-
-        # Convert links in absolute URLs before the application of the shortener
-        full_body = self.env['mail.render.mixin']._replace_local_links(full_body)
-
-        with file_open("mass_mailing/static/src/scss/mass_mailing_mail.scss", "r") as fd:
-            styles = fd.read()
         for valid_email in valid_emails:
             mail_values = {
-                'email_from': mailing.email_from,
-                'reply_to': mailing.reply_to,
+                'email_from': self.email_from,
+                'reply_to': self.reply_to,
                 'email_to': valid_email,
                 'subject': subject,
-                'body_html': self.env['ir.qweb']._render('mass_mailing.mass_mailing_mail_layout', {
-                    'body': full_body,
-                    'mailing_style': Markup(f'<style>{styles}</style>'),
-                }, minimal_qcontext=True),
+                'body_html': body,
                 'is_notification': True,
                 'mailing_id': mailing.id,
-                'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
+                'attachment_ids': [
+                    (4, attachment.id) for attachment in mailing.attachment_ids
+                ],
                 'auto_delete': False,  # they are manually deleted after notifying the document
                 'mail_server_id': mailing.mail_server_id.id,
-                'model': record._name,
-                'res_id': record.id,
             }
+            if self.preview_record_ref:
+                mail_values['model'] = self.preview_record_ref._name
+                mail_values['res_id'] = self.preview_record_ref.id
+
             mail = self.env['mail.mail'].sudo().create(mail_values)
             mails_sudo |= mail
         mails_sudo.with_context({'mailing_test_mail': True}).send()
@@ -102,6 +152,7 @@ class MailingMailingTest(models.TransientModel):
                     (Markup("<br/>") + mail_sudo.failure_reason)
                 )
 
+        success_count = len(mails_sudo.filtered(lambda m: m.state == 'sent'))
         # manually delete the emails since we passed 'auto_delete: False'
         mails_sudo.unlink()
 
@@ -110,4 +161,24 @@ class MailingMailingTest(models.TransientModel):
                 [Markup('<li>%s</li>') % notification_message for notification_message in notification_messages]
             ))
 
-        return True
+        total = len(valid_emails) + len(invalid_candidates)
+        failed_count = total - success_count
+        if failed_count > 0:
+            notif_message = _(
+                'Test mailing successfully sent to %(success)s recipients, and %(failed)s failed.',
+                success=success_count, failed=failed_count,
+            )
+        else:
+            notif_message = _(
+                'Test mailing successfully sent to %(success)s recipients.',
+                success=success_count,
+            )
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'info',
+                'message': notif_message,
+            },
+        }

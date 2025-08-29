@@ -1,30 +1,47 @@
 <?xml version="1.0"?>
 <odoo>
 
-        <record model="ir.ui.view" id="view_mail_mass_mailing_test_form">
-            <field name="name">mailing.mailing.test.form</field>
-            <field name="model">mailing.mailing.test</field>
-            <field name="arch" type="xml">
-                <form string="Send a Sample Mail">
-                    <p class="text-muted">
-                        Send a sample mailing for testing purpose to the address below.
-                    </p>
+    <record model="ir.ui.view" id="view_mail_mass_mailing_test_form">
+        <field name="name">mailing.mailing.test.form</field>
+        <field name="model">mailing.mailing.test</field>
+        <field name="arch" type="xml">
+            <form string="Preview &amp; Test" js_class="mailing_preview_form_view">
+                <sheet>
                     <group>
-                        <field name="email_to" placeholder="email1@example.com&#10;email2@example.com"/>
+                        <field name="email_from"/>
+                        <label for="subject" string="Subject"/>
+                        <div class="d-flex">
+                            <field name="subject" class="w-auto me-1 fw-bold"/>
+                            <field name="preview_text" class="text-muted w-auto"/>
+                        </div>
+                        <field name="reply_to"/>
                     </group>
-                    <footer>
-                        <button string="Send test" name="send_mail_test" type="object" class="btn-primary" data-hotkey="q"/>
-                        <button class="btn-secondary" special="cancel" data-hotkey="x"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
+                    <div class="row">
+                        <div class="col-12 col-lg-8 d-flex align-items-center gap-2">
+                            <label for="email_to" string="Send a copy to" class="text-nowrap"/>
+                            <field name="email_to" widget="char" class="border p-1 m-0 w-50"
+                                placeholder="email1@example.com, email2@example.com"/>
+                            <button name="send_mail_test" type="object" string="Send Test" class="btn-secondary text-nowrap"/>
+                        </div>
+                        <div class="col-12 col-lg-4 d-flex align-items-center justify-content-end gap-2">
+                            <widget name="mailing_preview_display_mode_toggle"/>
+                            <field name="preview_record_ref" nolabel="1" class="w-100"
+                                   options="{'hide_model': True, 'no_create': True, 'no_open': True}"
+                                   widget="mail_preview_record_field"/>
+                        </div>
+                    </div>
+                    <field name="body_html" class="w-100" widget="mailing_preview_iframe"/>
+                </sheet>
+                <footer/>
+            </form>
+        </field>
+    </record>
 
-        <record id="action_mail_mass_mailing_test" model="ir.actions.act_window">
-            <field name="name">Mailing Test</field>
-            <field name="res_model">mailing.mailing.test</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
+    <record id="action_mail_mass_mailing_test" model="ir.actions.act_window">
+        <field name="name">Mailing Test</field>
+        <field name="res_model">mailing.mailing.test</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
 
 </odoo>

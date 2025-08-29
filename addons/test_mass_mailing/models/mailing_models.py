@@ -53,6 +53,7 @@ class MailingTestBlacklist(models.Model):
     _inherit = ['mail.thread.blacklist']
     _order = 'name ASC, id DESC'
     _primary_email = 'email_from'
+    _mailing_enabled = True
 
     name = fields.Char()
     email_from = fields.Char()

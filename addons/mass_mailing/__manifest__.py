@@ -146,6 +146,8 @@
             'mass_mailing/static/src/xml/mailing_portal_subscription_form.xml',
         ],
         'web.assets_backend': [
+            'mass_mailing/static/src/components/**/*',
+            'mass_mailing/static/src/views/mailing_preview_form_view.js',
             'mass_mailing/static/src/editor/**/*',
             'mass_mailing/static/src/fields/**/*',
             'mass_mailing/static/src/themes/*',
