@@ -9,8 +9,7 @@ class StockMove(models.Model):
     def _get_value_data(self,
         forced_std_price=False,
         at_date=False,
-        ignore_manual_update=False,
-        add_computed_value_to_description=False):
+        ignore_manual_update=False):
         self.ensure_one()
         if self.production_id:
             valued_qty = self._get_valued_qty()
@@ -19,7 +18,7 @@ class StockMove(models.Model):
                 'quantity': valued_qty,
                 'description': _('From Production Order %(reference)s', reference=self.production_id.name),
             }
-        return super()._get_value_data(forced_std_price, at_date, ignore_manual_update, add_computed_value_to_description)
+        return super()._get_value_data(forced_std_price, at_date, ignore_manual_update)
 
     def _get_value_from_production(self, quantity):
         # TODO: Maybe move _cal_price here

@@ -242,8 +242,7 @@ class StockMove(models.Model):
     def _get_value_data(self,
         forced_std_price=False,
         at_date=False,
-        ignore_manual_update=False,
-        add_computed_value_to_description=False):
+        ignore_manual_update=False):
         """Returns the value and the quantity valued on the move
         In priority order:
         - Take value from accounting documents (invoices, bills)
@@ -266,8 +265,7 @@ class StockMove(models.Model):
 
         if not ignore_manual_update:
             manual_data = self._get_manual_value(
-                remaining_qty, at_date,
-                add_computed_value_to_description=add_computed_value_to_description)
+                remaining_qty, at_date)
             value += manual_data['value']
             remaining_qty -= manual_data['quantity']
             if manual_data.get('description'):
@@ -321,7 +319,7 @@ class StockMove(models.Model):
             return self.quantity
         return 0
 
-    def _get_manual_value(self, quantity, at_date=None, add_computed_value_to_description=False):
+    def _get_manual_value(self, quantity, at_date=None):
         valuation_data = dict(VALUATION_DICT)
         domain = Domain([('move_id', '=', self.id)])
         if at_date:
@@ -330,14 +328,12 @@ class StockMove(models.Model):
         if manual_value:
             valuation_data['value'] = manual_value.value
             valuation_data['quantity'] = quantity
-            description = _('Adjusted on %(date)s by %(user)s',
+            description = _("Adjusted on %(date)s by %(user)s",
                 date=manual_value.date,
                 user=manual_value.user_id.name,
             )
-            if add_computed_value_to_description:
-                description += _(', Computed = %(computed_value)s%(currency_symbol)s)',
-                computed_value=self._get_value_data(ignore_manual_update=True)['value'],
-                currency_symbol=manual_value.currency_id.symbol)
+            if manual_value.description:
+                description += "\n" + manual_value.description
             valuation_data['description'] = description
         return valuation_data
 
@@ -365,7 +361,7 @@ class StockMove(models.Model):
             'description': _("%(quantity)s %(uom)s at product's standard price %(price)s",
                 quantity=quantity,
                 uom=self.product_id.uom_id.name,
-                price=std_price,
+                price=self.company_currency_id.format(std_price),
             ),
         }
 
