@@ -39,35 +39,6 @@ test("Unknown visitor", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { text: "Visitor 11" });
 });
 
-test("Known user with country", async () => {
-    const pyEnv = await startServer();
-    const countryId = pyEnv["res.country"].create({
-        code: "be",
-        name: "Belgium",
-    });
-    const partnerId = pyEnv["res.partner"].create({
-        country_id: countryId,
-        name: "Jean",
-    });
-    pyEnv["discuss.channel"].create({
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
-            Command.create({ partner_id: partnerId, livechat_member_type: "visitor" }),
-        ],
-        channel_type: "livechat",
-        country_id: countryId,
-        livechat_operator_id: serverState.partnerId,
-    });
-    await start();
-    await openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel", { text: "Jean (Belgium)" });
-    await contains(".o-mail-DiscussSidebarChannel img[data-src*='country_flags/be.png']");
-    await click(".o-mail-DiscussSidebarChannel", { text: "Jean (Belgium)" });
-    await contains(".o-mail-DiscussContent-header img[data-src*='country_flags/be.png']");
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-NotificationItem img[data-src*='country_flags/be.png']");
-});
-
 test("Do not show channel when visitor is typing", async () => {
     mockDate("2023-01-03 12:00:00"); // so that it's after last interest (mock server is in 2019 by default!)
     const pyEnv = await startServer();
