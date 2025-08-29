@@ -5,16 +5,8 @@ export class RottingColumnProgress extends ColumnProgress {
     static props = {
         ...ColumnProgress.props,
         progressBarState: { type: Object },
+        onRotIconClicked: { type: Function },
     };
-
-    setup() {
-        super.setup();
-        const rottingFilter = Object.values(this.env.searchModel.searchItems).find(
-            (filter) =>
-                filter.name === "filter_rotting" || filter.domain === "[('is_rotting', '=', True)]"
-        );
-        this.rottingFilterAvailable = !!rottingFilter;
-    }
 
     getRottingGroupCount(group) {
         const isRottingField = group._config.fields.is_rotting;
@@ -31,13 +23,7 @@ export class RottingColumnProgress extends ColumnProgress {
      * Checks that a filter verifying rotting status exists for the current set view.
      * If that filter exists, it is toggled.
      */
-    async onRotIconClick() {
-        const rottingFilter = Object.values(this.env.searchModel.searchItems).find(
-            (filter) =>
-                filter.name === "filter_rotting" || filter.domain === "[('is_rotting', '=', True)]"
-        );
-        if (rottingFilter) {
-            this.env.searchModel.toggleSearchItem(rottingFilter.id);
-        }
+    async onRottingIconClick() {
+        await this.props.onRotIconClicked(this.props.group);
     }
 }
