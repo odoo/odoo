@@ -348,10 +348,8 @@ class AccountMoveLine(models.Model):
         'account.move.line',
         string="Parent Section Line",
         compute='_compute_parent_id',
-        index='btree_not_null',
-        store=True,
+        compute_sudo=True,
     )
-    child_ids = fields.One2many(comodel_name='account.move.line', inverse_name='parent_id')
     product_id = fields.Many2one(
         comodel_name='product.product',
         string='Product',
@@ -1177,24 +1175,25 @@ class AccountMoveLine(models.Model):
             )
             line.reconciled_lines_excluding_exchange_diff_ids = all_lines - excluded_ids
 
-    @api.depends('move_id.invoice_line_ids.move_id')
     def _compute_parent_id(self):
-        amls = set(self)
-        for move in self.grouped('move_id'):
+        for move, lines in self.grouped('move_id').items():
+            if not move:
+                lines.parent_id = False
+                continue
             last_section = False
             last_sub = False
-            for line in move.invoice_line_ids.sorted('sequence'):
+            for line in move.line_ids.sorted('sequence'):
                 if line.display_type == 'line_section':
                     last_section = line
-                    if line in amls:
-                        line.parent_id = False
+                    line.parent_id = False
                     last_sub = False
                 elif line.display_type == 'line_subsection':
-                    if line in amls:
-                        line.parent_id = last_section
+                    line.parent_id = last_section
                     last_sub = line
-                elif line in amls:
+                elif line.display_type in {'line_note', 'product'}:
                     line.parent_id = last_sub or last_section
+                else:
+                    line.parent_id = False
 
     @api.depends('move_id.move_type')
     def _compute_no_followup(self):
@@ -3371,7 +3370,7 @@ class AccountMoveLine(models.Model):
         """
         self.ensure_one()
 
-        section_lines = self.move_id.invoice_line_ids.filtered_domain([('id', 'child_of', self.id), ('id', '!=', self.id)])
+        section_lines = self.move_id.invoice_line_ids.filtered(lambda l: (l.parent_id == self or l.parent_id.parent_id == self) and l != self)
         result = []
         for taxes, lines in groupby(section_lines, key=lambda l: l.tax_ids):
             amls = sum(lines, start=self.env['account.move.line'])
@@ -3398,8 +3397,7 @@ class AccountMoveLine(models.Model):
                     treated_lines = []
                     for line in amls.sorted('sequence'):
                         if line.display_type == 'line_subsection' and not self.collapse_composition and line.collapse_composition:
-                            # In case we have a section in hide prices, and a subsection in hide composition
-                            sub_section_lines = amls.filtered_domain([('id', 'child_of', line), ('id', '!=', line.id)])
+                            sub_section_lines = amls.filtered(lambda l: (l.parent_id == self or l.parent_id.parent_id == self) and l != self)
                             result.append({
                                 'name': line.name,
                                 'price_subtotal': sum(l.price_subtotal for l in sub_section_lines),
@@ -3408,7 +3406,6 @@ class AccountMoveLine(models.Model):
                                 'original_display_type': line.display_type,
                                 'quantity': 1,
                                 'discount': line.discount,
-                                'colspan': 1,
                             })
                             treated_lines.extend(sub_section_lines)
                         elif line not in treated_lines:
@@ -3421,7 +3418,6 @@ class AccountMoveLine(models.Model):
                                 'line_uom': line.product_uom_id,
                                 'product_uom': line.product_id.uom_id,
                                 'discount': line.discount,
-                                'colspan': line.get_column_to_exclude_for_colspan_calculation(),
                             })
 
         return result or [{
@@ -3431,11 +3427,10 @@ class AccountMoveLine(models.Model):
             'price_total': 0.0,
             'quantity': 0,
             'display_type': 'product',
-            'colspan': 1,
         }]
 
     def get_section_subtotal(self):
-        section_lines = self.child_ids + self.child_ids.child_ids
+        section_lines = self._get_section_lines()
         return sum(section_lines.mapped('price_subtotal'))
 
     def get_column_to_exclude_for_colspan_calculation(self, taxes=None):
@@ -3447,6 +3442,22 @@ class AccountMoveLine(models.Model):
             return self.parent_id.parent_id
 
         return self.parent_id
+
+    def _get_section_lines(self):
+        self.ensure_one()
+        return self.move_id.invoice_line_ids.filtered(self._is_line_in_section)
+
+    def _is_line_in_section(self, line):
+        """Return whether the line is a direct or indirect child of the section."""
+        self.ensure_one()
+        is_direct_child = line.parent_id == self
+        is_indirect_child = (
+            self.display_type == 'line_section'
+            and line.parent_id
+            and line.parent_id.display_type == 'line_subsection'
+            and line.parent_id.parent_id == self
+        )
+        return is_direct_child or is_indirect_child
 
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS

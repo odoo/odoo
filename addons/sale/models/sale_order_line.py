@@ -309,18 +309,16 @@ class SaleOrderLine(models.Model):
         string="Parent Section Line",
         comodel_name='sale.order.line',
         compute='_compute_parent_id',
-        index='btree_not_null',
-        store=True,
     )  # The section or subsection this line belongs to.
-    # The lines (not sections) that belong to this section or subsection.
-    child_ids = fields.One2many(comodel_name='sale.order.line', inverse_name='parent_id')
     collapse_prices = fields.Boolean(
         string="Collapse Prices",
         copy=True,
+        default=False,
     )  # Whether this section's lines' prices will be hidden in reports and in the portal.
     collapse_composition = fields.Boolean(
         string="Collapse Composition",
         copy=True,
+        default=False,
     )  # Whether this section's lines will be hidden in reports and in the portal.
 
     #=== COMPUTE METHODS ===#
@@ -1172,10 +1170,12 @@ class SaleOrderLine(models.Model):
             # line.ids checks whether it's a new record not yet saved
             line.product_uom_readonly = line.ids and line.state in ['sale', 'cancel']
 
-    @api.depends('order_id.order_line.order_id')
     def _compute_parent_id(self):
         sale_order_lines = set(self)
-        for order in self.grouped('order_id'):
+        for order, lines in self.grouped('order_id').items():
+            if not order:
+                lines.parent_id = False
+                continue
             last_section = False
             last_sub = False
             for line in order.order_line.sorted('sequence'):
@@ -1464,15 +1464,11 @@ class SaleOrderLine(models.Model):
         """Return a tax-wise summary of sales order lines linked to section.
 
         Group lines by their tax IDs and computes subtotal and total for each group.
-
-        :param bool display_taxes: whether tax details are shown. If not, it is meaningless to
-            group amounts by taxes and the section amount should be aggregated on one report line.
         """
         self.ensure_one()
 
-        section_lines = (self.child_ids + self.child_ids.child_ids).filtered(
-            lambda sol: not sol.display_type
-        )
+        section_lines = self.order_id.order_line.filtered(self._is_line_in_section)
+
         if display_taxes:
             res = [
                 {
@@ -1494,20 +1490,6 @@ class SaleOrderLine(models.Model):
             'price_total': 0.0,
         }]
 
-    def _get_section_totals(self, totals_field):
-        """Return the total/subtotal amount sale order lines linked to section."""
-        self.ensure_one()
-        section_lines = self.child_ids + self.child_ids.child_ids
-        return sum(section_lines.mapped(totals_field))
-
-    def _has_taxes(self):
-        """Check if a line has taxes or not. For (sub)sections, check if any child line has taxes."""
-        self.ensure_one()
-        return bool(
-            self.tax_ids
-            or (self.display_type and any(line._has_taxes() for line in self.child_ids)),
-        )
-
     def get_parent_section_line(self):
         if not self.display_type and self.parent_id.display_type == 'line_subsection':
             return self.parent_id.parent_id
@@ -1517,7 +1499,7 @@ class SaleOrderLine(models.Model):
     def _get_section_totals(self, totals_field):
         """Return the total/subtotal amount sale order lines linked to section."""
         self.ensure_one()
-        section_lines = self.child_ids + self.child_ids.child_ids
+        section_lines = self._get_section_lines()
         return sum(section_lines.mapped(totals_field))
 
     def _has_taxes(self):
@@ -1525,8 +1507,24 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         return bool(
             self.tax_ids
-            or (self.display_type and any(line._has_taxes() for line in self.child_ids)),
+            or (self.display_type and any(line._has_taxes() for line in self._get_section_lines())),
         )
+
+    def _get_section_lines(self):
+        self.ensure_one()
+        return self.order_id.order_line.filtered(self._is_line_in_section)
+
+    def _is_line_in_section(self, line):
+        """Return whether the line is a direct or indirect child of the section."""
+        self.ensure_one()
+        is_direct_child = line.parent_id == self and not line.display_type
+        is_indirect_child = (
+            self.display_type == 'line_section'
+            and line.parent_id
+            and line.parent_id.display_type == 'line_subsection'
+            and line.parent_id.parent_id == self
+        )
+        return is_direct_child or is_indirect_child
 
     #=== CORE METHODS OVERRIDES ===#
 
