@@ -82,7 +82,8 @@ export class DragAndDropPlugin extends Plugin {
                         this.draggableComponentImgs = this.initDragAndDrop(
                             "img",
                             ".o_draggable",
-                            this.overlayTarget
+                            this.overlayTarget,
+                            true
                         );
                     }
                 },
@@ -98,9 +99,11 @@ export class DragAndDropPlugin extends Plugin {
      * @param {String} elementsSelector a selector targeting the element that
      *   will be dragged
      * @param {HTMLElement} element the element to listen for drag events
+     * @param {Boolean} [fromIframe=false] true if the dragged element is in the
+     *   iframe
      * @returns {Object}
      */
-    initDragAndDrop(handleSelector, elementsSelector, element) {
+    initDragAndDrop(handleSelector, elementsSelector, element, fromIframe = false) {
         let dropzoneEls = [];
         let dragAndDropResolve;
 
@@ -134,7 +137,8 @@ export class DragAndDropPlugin extends Plugin {
                     height: "24px",
                 });
                 document.body.append(draggedEl);
-                helperOffset.x = 12;
+                const iframeRect = this.document.defaultView.frameElement.getBoundingClientRect();
+                helperOffset.x = 12 - (fromIframe ? iframeRect.x : 0);
                 helperOffset.y = 12;
                 return draggedEl;
             },
