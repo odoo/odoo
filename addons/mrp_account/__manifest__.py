@@ -32,6 +32,11 @@ If the automated inventory valuation is active, the necessary accounting entries
     'demo': [
         'data/mrp_account_demo.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'mrp_account/static/src/**/*',
+        ],
+    },
     'installable': True,
     'auto_install': True,
     'post_init_hook': '_configure_journals',
