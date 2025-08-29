@@ -12,7 +12,7 @@ from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools import format_datetime, format_date, groupby, SQL
+from odoo.tools import format_datetime, format_date, groupby, OrderedSet, SQL
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 
@@ -873,15 +873,23 @@ class StockPicking(models.Model):
         for picking in self:
             picking.weight_bulk = picking_weights[picking.id]
 
-    @api.depends('move_line_ids.result_package_id', 'move_line_ids.result_package_id.shipping_weight', 'weight_bulk')
+    @api.depends('move_line_ids.result_package_id', 'move_line_ids.result_package_id.shipping_weight', 'move_line_ids.result_package_id.outermost_package_id.shipping_weight', 'weight_bulk')
     def _compute_shipping_weight(self):
         for picking in self:
             # if shipping weight is not assigned => default to calculated product weight
             packages_weight = picking.move_line_ids.result_package_id.sudo()._get_weight(picking.id)
-            picking.shipping_weight = (
-                picking.weight_bulk +
-                sum(pack.shipping_weight or packages_weight[pack] for pack in picking.move_line_ids.result_package_id)
-            )
+
+            shipping_weight = picking.weight_bulk
+            relevant_packages = picking.move_line_ids.result_package_id.mapped(lambda p: p.outermost_package_id or p)
+            children_packages_by_pack = relevant_packages._get_all_children_package_dest_ids()[0]
+            for package in relevant_packages:
+                if package.shipping_weight:
+                    shipping_weight += package.shipping_weight
+                else:
+                    shipping_weight += package.package_type_id.base_weight
+                    shipping_weight += sum(packages_weight[pack] for pack in self.env['stock.package'].browse(children_packages_by_pack[package]))
+
+            picking.shipping_weight = shipping_weight
 
     def _compute_shipping_volume(self):
         for picking in self:

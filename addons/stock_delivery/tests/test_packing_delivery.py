@@ -36,7 +36,7 @@ class TestPacking(TestPackingCommon):
         })
 
     def test_put_in_pack_weight_wizard(self):
-        """ Check that de default weight is correctly set by default when using the 'choose.delivery.package' wizard.
+        """ Check that de default weight is correctly set by default when using the 'stock.put.in.pack' wizard.
         This purpose of this wizard is to set the delivery package type and weight before validating the package.
         """
         self.env['stock.quant']._update_available_quantity(self.product_aw, self.stock_location, 20.0)
@@ -67,6 +67,7 @@ class TestPacking(TestPackingCommon):
             'location_dest_id': self.customer_location.id,
             'picked': True,
         })
+        self.assertEqual(picking_ship.shipping_weight, 13.5)  # 2.4 * 5 + 0.3 * 5
         pack_action = picking_ship.action_put_in_pack()
         pack_action_ctx = pack_action['context']
         pack_action_model = pack_action['res_model']
@@ -89,6 +90,66 @@ class TestPacking(TestPackingCommon):
 
         pack_wiz = self.env['stock.put.in.pack'].with_context(pack_action_ctx).create({})
         self.assertEqual(pack_wiz.shipping_weight, 1.5)
+        pack_wiz.shipping_weight = 5
+        pack_wiz.action_put_in_pack()
+
+        self.assertEqual(picking_ship.shipping_weight, 17)  # 2.4 * 5 + 5
+
+    def test_pack_in_pack_weight_wizard(self):
+        """ Check that de default weight is correctly set by default when using the 'stock.put.in.pack' wizard on packages.
+        """
+        package_type = self.env['stock.package.type'].create({'name': 'Locked Box'})
+        self.env['stock.quant']._update_available_quantity(self.product_aw, self.stock_location, 5.0)
+        self.env['stock.quant']._update_available_quantity(self.product_bw, self.stock_location, 5.0)
+
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'carrier_id': self.test_carrier.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.product_aw.id,
+                    'product_uom_qty': 5,
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.customer_location.id,
+                }),
+                Command.create({
+                    'product_id': self.product_bw.id,
+                    'product_uom_qty': 5,
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.customer_location.id,
+                }),
+            ],
+        })
+        delivery.action_confirm()
+        self.assertEqual(delivery.shipping_weight, 13.5)  # 2.4 * 5 + 0.3 * 5
+
+        # Picks the first product (aw) and put it in a pack
+        delivery.move_ids.filtered(lambda m: m.product_id == self.product_aw).picked = True
+        wizard = Form.from_action(self.env, delivery.action_put_in_pack())
+        self.assertEqual(wizard.shipping_weight, 12)  # 2.4 * 5
+        wizard.package_type_id = package_type
+        wizard.shipping_weight = 15
+        wizard.save().action_put_in_pack()
+        self.assertEqual(delivery.shipping_weight, 16.5)  # 15 + 0.3 * 5
+
+        # Picks the second product (bw) and put in in a pack
+        delivery.move_ids.picked = True
+        wizard = Form.from_action(self.env, delivery.action_put_in_pack())
+        self.assertEqual(wizard.shipping_weight, 1.5)  # 0.3 * 5
+        wizard.package_type_id = package_type
+        wizard.shipping_weight = 3
+        wizard.save().action_put_in_pack()
+        self.assertEqual(delivery.shipping_weight, 18)  # 15 + 3
+
+        # Pack both packages into a new package
+        wizard = Form.from_action(self.env, delivery.action_put_in_pack())
+        self.assertEqual(wizard.shipping_weight, 18)  # 15 + 3
+        wizard.package_type_id = package_type
+        wizard.shipping_weight = 20
+        wizard.save().action_put_in_pack()
+        self.assertEqual(delivery.shipping_weight, 20)
 
     def test_send_to_shipper_without_sale_order(self):
         """
