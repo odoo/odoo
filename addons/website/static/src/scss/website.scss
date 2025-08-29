@@ -380,6 +380,14 @@ body {
     @include o-add-gradient('menu-gradient');
 }
 
+@function format-color($color) {
+    // Check if the value is wrapped in quotes (initially it wasn't, and it
+    // didn't work) because we don't want the text color of the navbar to
+    // change once the fix is applied for users who tried the option when it
+    // wasn't working.
+    @return if(str-index(inspect($color), '"') == 1 or str-index(inspect($color), "'") == 1, o-color($color), $color);
+}
+
 // TODO this should be reviewed. While it allowed to choose a color for the
 // navbar text, there is no :hover effect, the active item is not visible and
 // the selector is probably too specific and should rather be about extending
@@ -387,13 +395,7 @@ body {
 #wrapwrap:not(.o_header_overlay) header, header.o_header_is_scrolled, header .o_navbar_mobile {
     .nav-item > .nav-link > *, .nav-item > .nav-link::after, .js_language_selector span, .badge, .nav-item > .accordion-item * {
         $header-text-color: o-website-value('header-text-color');
-        // Check if the value is wrapped in quotes (initially it wasn't, and it
-        // didn't work) because we don't want the text color of the navbar to
-        // change once the fix is applied for users who tried the option when it
-        // wasn't working.
-        color: if(str-index(inspect($header-text-color), '"') == 1 or str-index(inspect($header-text-color), "'") == 1,
-            o-color($header-text-color),
-            $header-text-color) !important;
+        color: format-color($header-text-color) !important;
     }
 }
 
@@ -1962,6 +1964,18 @@ header {
 }
 
 // Navbar Links Styles
+@mixin active-link-border-color {
+    $header-text-color: o-website-value('header-text-color');
+    @if $header-text-color {
+        border-color: format-color($header-text-color);
+    } @else {
+        border-color: var(--#{$variable-prefix}nav-active-color);
+        &:hover {
+            border-color: var(--#{$variable-prefix}nav-link-color);
+        }
+    }
+}
+
 @if index(('block', 'border-bottom'), o-website-value('header-links-style')) {
     @include media-breakpoint-up(md) {
         .navbar,
@@ -1973,6 +1987,7 @@ header {
 }
 :where(header#top) .navbar-nav:where([role="menu"]) {
     .nav-link:not(.o_nav-link_secondary) {
+        // Desktop Only
         @include media-breakpoint-up(lg) {
             @if o-website-value('header-links-style') == 'outline' {
                 // Need to force the padding in this case so that it stays in mobile
@@ -1989,10 +2004,9 @@ header {
             } @else if o-website-value('header-links-style') == 'border-bottom' {
                 // There is no way to control navbar links vertical padding in BS4
                 // independently from nav ones, just double them here instead
-                padding-top: ($nav-link-padding-y * 2);
-                padding-bottom: ($nav-link-padding-y * 2);
+                padding-top: $nav-link-padding-y * 2;
+                padding-bottom: $nav-link-padding-y * 2;
                 border-bottom: $nav-link-padding-y solid transparent;
-
                 // Replace horizontal paddings by margins (do this with an extra
                 // class to override .navbar-expand-* paddings priority).
                 .navbar & {
@@ -2004,10 +2018,22 @@ header {
         }
     }
 
-    @if index(('outline', 'border-bottom'), o-website-value('header-links-style')) {
-        .nav-link.active,
-        .show > .nav-link {
-            border-color: currentColor;
+    .nav-link.active, .show > .nav-link {
+        // Desktop Only
+        @include media-breakpoint-up(lg) {
+            @if index(('outline', 'border-bottom'), o-website-value('header-links-style')) {
+                @include active-link-border-color;
+            }
+        }
+        // Available in Mobile
+        @if o-website-value('header-links-style') == 'underline' {
+            @include active-link-border-color;
+            span {
+                border-bottom: 0.125em solid;
+            }
+        }
+        @if o-website-value('header-links-style') == 'bold' {
+            font-weight: bold !important;
         }
     }
 }
