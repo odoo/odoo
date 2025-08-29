@@ -1,7 +1,7 @@
 import { isTextNode, isParagraphRelatedElement } from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
-import { unwrapContents, wrapInlinesInBlocks, splitTextNode } from "../utils/dom";
+import { unwrapContents, wrapInlinesInBlocks, splitTextNode, setTagName } from "../utils/dom";
 import { ancestors, childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
 import {
@@ -519,6 +519,22 @@ export class ClipboardPlugin extends Plugin {
                 }
             }
         } else if (node.nodeType !== Node.TEXT_NODE) {
+            if (node.nodeName === "THEAD") {
+                const tbody = node.nextElementSibling;
+                if (tbody) {
+                    // If a <tbody> already exists, move all rows from
+                    // <thead> into the start of <tbody>.
+                    tbody.prepend(...node.children);
+                    node.remove();
+                    node = tbody;
+                } else {
+                    // Otherwise, replace the <thead> with <tbody>
+                    node = setTagName(node, "TBODY");
+                }
+            } else if (node.nodeName === "TH") {
+                // Convert all <th> into <td>
+                node = setTagName(node, "TD");
+            }
             if (node.nodeName === "TD") {
                 if (node.hasAttribute("bgcolor") && !node.style["background-color"]) {
                     node.style["background-color"] = node.getAttribute("bgcolor");
