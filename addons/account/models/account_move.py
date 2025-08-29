@@ -3439,10 +3439,18 @@ class AccountMove(models.Model):
         for old_move, new_move in zip(self, new_moves):
             message_origin = '' if not new_move.auto_post_origin_id else \
                 (Markup('<br/>') + _('This recurring entry originated from %s', new_move.auto_post_origin_id._get_html_link()))
-            message_content = _('This entry has been reversed from %s', old_move._get_html_link()) if default.get('reversed_entry_id') else _('This entry has been duplicated from %s', old_move._get_html_link())
+            message_content = old_move._get_copy_message_content(default)
             bodies[new_move.id] = message_content + message_origin
         new_moves._message_log_batch(bodies=bodies)
         return new_moves
+
+    def _get_copy_message_content(self, default):
+        """Hook method to customize the message content when copying a move.
+        This method can be overridden by other modules to add custom logic.
+        :param default: The default values dict passed to copy method
+        :return: The message content string
+        """
+        return _('This entry has been reversed from %s', self._get_html_link()) if default.get('reversed_entry_id') else _('This entry has been duplicated from %s', self._get_html_link())
 
     def _sanitize_vals(self, vals):
         if vals.get('invoice_line_ids') and vals.get('line_ids'):
