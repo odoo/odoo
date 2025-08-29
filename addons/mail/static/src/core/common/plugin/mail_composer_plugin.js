@@ -28,4 +28,12 @@ export class MailComposerPlugin extends Plugin {
             }
         },
     };
+
+    setup() {
+        this.addDomListener(
+            this.editable,
+            "keydown",
+            this.config.composerPluginDependencies.onKeydown
+        );
+    }
 }
