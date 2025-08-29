@@ -74,6 +74,18 @@ def _mock_call_peppol_proxy(func, self, *args, **kwargs):
         user.company_id.account_peppol_proxy_state = 'sender'
         return True
 
+    def _mock_participant_status(user, args, kwargs):
+        company = user.company_id
+        if (
+            company != company.peppol_parent_company_id
+            and company.peppol_can_send
+            and company.peppol_parent_company_id.peppol_can_send
+        ):
+            # Connected as a branch.
+            return {'peppol_state': 'sender'}
+        else:
+            return {'peppol_state': 'receiver'}
+
     endpoint = args[0].split('/')[-1]
     return {
         'ack': lambda _user, _args, _kwargs: {},
@@ -84,10 +96,11 @@ def _mock_call_peppol_proxy(func, self, *args, **kwargs):
         'unregister_to_sender': _mock_unregister_to_sender,
         'get_all_documents': _mock_get_all_documents,
         'get_document': _mock_get_document,
-        'participant_status': lambda _user, _args, _kwargs: {'peppol_state': 'receiver'},
+        'participant_status': _mock_participant_status,
         'send_document': _mock_send_document,
         'add_services': lambda _user, _args, _kwargs: {},
         'remove_services': lambda _user, _args, _kwargs: {},
+        'cancel_peppol_registration': lambda _user, _args, _kwargs: {},
     }[endpoint](self, args, kwargs)
 
 
