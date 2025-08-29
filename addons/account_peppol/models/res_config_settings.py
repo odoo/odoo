@@ -49,6 +49,7 @@ class ResConfigSettings(models.TransientModel):
         compute='_compute_account_peppol_mode_constraint',
         help="Using the config params, this field specifies which edi modes may be selected from the UI"
     )
+    peppol_use_parent_company = fields.Boolean(compute='_compute_peppol_use_parent_company')
 
     # -------------------------------------------------------------------------
     # HELPER METHODS
@@ -126,6 +127,21 @@ class ResConfigSettings(models.TransientModel):
                 config.account_peppol_endpoint_warning = _("The endpoint number might not be correct. "
                                                            "Please check if you entered the right identification number.")
 
+    @api.depends('account_peppol_edi_user', 'company_id.peppol_eas', 'company_id.peppol_endpoint')
+    def _compute_peppol_use_parent_company(self):
+        self.peppol_use_parent_company = False
+        for config in self:
+            if config.account_peppol_edi_user:
+                for parent_company in config.company_id.parent_ids[::-1][1:]:
+                    if all((
+                            config.company_id.peppol_eas,
+                            config.company_id.peppol_endpoint,
+                            config.company_id.peppol_eas == parent_company.peppol_eas,
+                            config.company_id.peppol_endpoint == parent_company.peppol_endpoint,
+                    )):
+                        config.peppol_use_parent_company = True
+                        break
+
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
@@ -138,6 +154,7 @@ class ResConfigSettings(models.TransientModel):
         - Calls /activate_participant to mark the EDI user as peppol user
         """
         self.ensure_one()
+        company = self.company_id
 
         if self.account_peppol_proxy_state != 'not_registered':
             raise UserError(
@@ -148,7 +165,22 @@ class ResConfigSettings(models.TransientModel):
         if not self.account_peppol_contact_email:
             raise ValidationError(_("Please enter a primary contact email to verify your application."))
 
-        company = self.company_id
+        for parent_company in company.parent_ids[::-1][1:]:
+            if all((
+                parent_company.sudo().account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol'),  # `sudo` needed otherwise empty from no access right
+                parent_company.peppol_eas == company.peppol_eas,
+                parent_company.peppol_endpoint == company.peppol_endpoint,
+            )):
+                # In 17.0 branch peppol support, we strictly restrict branches from registering their own peppol connection IF
+                # their peppol identification is already used by their parent. This is because in order to send by peppol in
+                # 17.0, you must also be a receiver. However, we can't register as receiver if a receiver participant with
+                # same identification is already registered on the peppol network (which, in the database means, the parent
+                # already registered as a receiver).
+                raise ValidationError(_(
+                    "This peppol identification is already used by %(parent_name)s. Please use something else.",
+                    parent_name=parent_company.name,
+                ))
+
         edi_proxy_client = self.env['account_edi_proxy_client.user']
         edi_identification = edi_proxy_client._get_proxy_identification(company, 'peppol')
 
