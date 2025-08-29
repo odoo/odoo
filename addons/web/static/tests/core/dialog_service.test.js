@@ -232,3 +232,47 @@ test("two dialogs, close the first one, closeAll", async () => {
     await animationFrame();
     expect(".o_dialog").toHaveCount(0);
 });
+
+test("two dialogs, close the first one twice, then closeAll", async () => {
+    class CustomDialog extends Component {
+        static components = { Dialog };
+        static template = xml`<Dialog title="props.title">content</Dialog>`;
+        static props = ["*"];
+    }
+    expect(".o_dialog").toHaveCount(0);
+    getService("dialog").add(
+        CustomDialog,
+        { title: "Hello" },
+        {
+            onClose: () => expect.step("close dialog 1"),
+        }
+    );
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(1);
+    expect("header .modal-title").toHaveText("Hello");
+    expect(document.body).toHaveClass("modal-open");
+
+    const close = getService("dialog").add(
+        CustomDialog,
+        { title: "Sauron" },
+        {
+            onClose: () => expect.step("close dialog 2"),
+        }
+    );
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(2);
+    expect(queryAllTexts("header .modal-title")).toEqual(["Hello", "Sauron"]);
+
+    close();
+    close();
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(1);
+    expect("header .modal-title").toHaveText("Hello");
+    expect(document.body).toHaveClass("modal-open");
+    expect.verifySteps(["close dialog 2"]);
+
+    getService("dialog").closeAll();
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(0);
+    expect.verifySteps(["close dialog 1"]);
+});
