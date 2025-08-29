@@ -43,3 +43,10 @@ class StockPackage(models.Model):
             context['default_package_carrier_type'] = move_lines._get_package_carrier_type_for_pack()
             res['context'] = context
         return res
+
+    def _post_put_in_pack_hook(self):
+        res = super()._post_put_in_pack_hook()
+        weight = self.env.context.get('weight')
+        if weight:
+            res.shipping_weight = weight
+        return res
