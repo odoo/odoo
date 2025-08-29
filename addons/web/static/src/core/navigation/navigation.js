@@ -194,6 +194,7 @@ export class Navigator {
         const elements = this._options.getItems();
         this.items = [];
 
+        let didUpdate = elements.length !== oldItems.size;
         for (let index = 0; index < elements.length; index++) {
             const element = elements[index];
 
@@ -201,7 +202,12 @@ export class Navigator {
             if (item) {
                 item.index = index;
                 oldItems.delete(element);
+
+                if (item.index !== index) {
+                    didUpdate = true;
+                }
             } else {
+                didUpdate = true;
                 item = new NavigationItem({
                     index,
                     el: element,
@@ -216,23 +222,25 @@ export class Navigator {
             item._removeListeners();
         }
 
-        const activeItemIndex =
-            oldActiveItem && oldActiveItem.el.isConnected
-                ? this.items.findIndex((item) => item.el === oldActiveItem.el)
-                : -1;
-        if (activeItemIndex > -1) {
-            this._updateActiveItemIndex(activeItemIndex);
-        } else if (this.activeItemIndex >= 0) {
-            const closest = Math.min(this.activeItemIndex, elements.length - 1);
-            this._updateActiveItemIndex(closest);
-        } else {
-            this._updateActiveItemIndex(-1);
-        }
+        if (didUpdate) {
+            const activeItemIndex =
+                oldActiveItem && oldActiveItem.el.isConnected
+                    ? this.items.findIndex((item) => item.el === oldActiveItem.el)
+                    : -1;
+            if (activeItemIndex > -1) {
+                this._updateActiveItemIndex(activeItemIndex);
+            } else if (this.activeItemIndex >= 0) {
+                const closest = Math.min(this.activeItemIndex, elements.length - 1);
+                this._updateActiveItemIndex(closest);
+            } else {
+                this._updateActiveItemIndex(-1);
+            }
 
-        this._options.onUpdated?.(this);
+            if (this._options.shouldFocusFirstItem) {
+                this.items[0]?.setActive();
+            }
 
-        if (this._options.shouldFocusFirstItem) {
-            this.items[0]?.setActive();
+            this._options.onUpdated?.(this);
         }
     }
 
@@ -281,6 +289,7 @@ export class Navigator {
             removeHotkey();
         }
         this._hotkeyRemoves = [];
+        this.activeItem = null;
     }
 
     /**
