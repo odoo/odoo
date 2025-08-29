@@ -216,6 +216,7 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
 
     @freeze_time('2017-01-01')
     def test_oioubl_import_exemple_file_1(self):
+        self.env.company.extract_single_line_per_tax = False
         file_name = 'external/ADVORD_01_01_00_Invoice_v2p1.xml'
         bill = self.import_bill_xml_file_in_purchase_journal(file_name)
         self.assertRecordValues(bill, ({
@@ -234,6 +235,7 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
 
     @freeze_time('2017-01-01')
     def test_oioubl_import_exemple_file_2(self):
+        self.env.company.extract_single_line_per_tax = False
         file_name = 'external/ADVORD_02_02_00_Invoice_v2p1.xml'
         bill = self.import_bill_xml_file_in_purchase_journal(file_name)
         self.assertRecordValues(bill, ({
@@ -252,6 +254,7 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
 
     @freeze_time('2017-01-01')
     def test_oioubl_import_exemple_file_3(self):
+        self.env.company.extract_single_line_per_tax = False
         file_name = 'external/ADVORD_03_03_00_Invoice_v2p1.xml'
         bill = self.import_bill_xml_file_in_purchase_journal(file_name)
         self.assertRecordValues(bill, ({
@@ -270,6 +273,7 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
 
     @freeze_time('2017-01-01')
     def test_oioubl_import_exemple_file_4(self):
+        self.env.company.extract_single_line_per_tax = False
         file_name = 'external/BASPRO_01_01_00_Invoice_v2p1.xml'
         bill = self.import_bill_xml_file_in_purchase_journal(file_name)
         self.assertRecordValues(bill, ({

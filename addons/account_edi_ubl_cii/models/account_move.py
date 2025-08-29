@@ -1,8 +1,12 @@
 import binascii
 
+from collections import defaultdict
+
 from base64 import b64decode
-from contextlib import suppress
+from contextlib import contextmanager, suppress
 from lxml import etree
+
+from odoo.exceptions import UserError
 
 from odoo import _, api, fields, models, Command
 
@@ -34,6 +38,126 @@ class AccountMove(models.Model):
                 'target': 'download',
             }
         return False
+
+    def action_group_ungroup_lines_by_tax(self):
+        """
+        This action allows the user to reload an xml imported move, grouping or not lines by tax
+        """
+        self.ensure_one()
+        self._check_move_for_group_ungroup_lines_by_tax()
+
+        # Check if lines looks like they're grouped
+        tax_ids = [str(line.tax_ids.ids) for line in self.line_ids if line.tax_ids]
+        lines_grouped = len(set(tax_ids)) == len(tax_ids)
+
+        old_amount_untaxed, old_amount_total = self.amount_untaxed, self.amount_total
+
+        if lines_grouped:
+            # if lines are grouped, we search the original xml and load it
+            attachments = self.env['ir.attachment'].search(
+                [
+                    ('res_model', '=', 'account.move'),
+                    ('res_id', '=', self.id),
+                ],
+                order='create_date',
+            )
+            if not attachments:
+                raise UserError(_("Cannot find the origin XML, try by importing it again"))
+
+            success = False
+            for attachment in attachments:
+                file_data = attachment._unwrap_edi_attachments()
+                if file_data[0].get('xml_tree') is None:
+                    continue
+                ubl_cii_xml_builder = self._get_ubl_cii_builder_from_xml_tree(file_data[0]['xml_tree'])
+                if ubl_cii_xml_builder is None:
+                    continue
+                self.invoice_line_ids = False
+                with self._deactivate_extract_single_line_per_tax():
+                    res = ubl_cii_xml_builder._import_invoice_ubl_cii(self, file_data[0])
+                if res and self.amount_untaxed == old_amount_untaxed and self.amount_total == old_amount_total:
+                    success = True
+                    self._message_log(body=_("Ungrouped lines from %s", attachment['name']))
+                    break
+            if not success:
+                raise UserError(_("Cannot find the origin XML, try by importing it again"))
+        else:
+            # if lines are not grouped, we group them based on the lines we have in the model
+            line_vals = self._get_lines_vals_group_by_tax(self.invoice_line_ids, self.partner_id, fields.Date.to_string(self.date), self.currency_id)
+            self.invoice_line_ids = False
+            self.write({
+                'invoice_line_ids': [Command.create(line) for line in line_vals]
+            })
+            if self.amount_untaxed != old_amount_untaxed or self.amount_total != old_amount_total:
+                raise UserError(_("Cannot find the origin XML, try by importing it again"))
+            self._message_log(body=_("Grouped lines by taxes"))
+
+    def _check_move_for_group_ungroup_lines_by_tax(self):
+        if self.state != 'draft':
+            raise UserError(_("You can only (un)group lines of a draft invoice"))
+
+    @api.model
+    def _get_lines_vals_group_by_tax(self, lines_vals, partner_id, date, currency):
+        """
+        This method group the lines in lines_vals by tax.
+        lines_vals can either be a list of vals dict(s) to create lines or account.move.line record(s)
+        :param lines_vals: list of dict or account.move.line records
+        :param partner_id: the partner of the move related to the lines
+        :param date: the date of the move in str format
+        :param currency: the currency of the move related to lines
+        :return: a list of dict vals line grouped by tax
+        """
+        def _get_attr(line, attr, default):
+            # Line is a record or a dict
+            if attr in line:
+                return line[attr]
+            return default
+        # squash amls with same tax id into one aml, with the total amount
+        taxes = dict()  # store taxes refs to not browse on it each iteration
+        line_vals_to_squash = defaultdict(list)
+        for line in lines_vals:
+            if currency.is_zero(_get_attr(line, 'price_unit', 0.0)):
+                continue
+            line_tax_ids = _get_attr(line, 'tax_ids', False)
+            is_record = not isinstance(line_tax_ids, list)
+
+            if not line_tax_ids:
+                tax_ref = '[]'
+            elif is_record:
+                tax_ref = str(line_tax_ids.ids)
+            elif all(isinstance(tax_id, int) for tax_id in line_tax_ids):
+                tax_ref = str(line_tax_ids)
+            else:
+                # unhandled scheme for tax_ids
+                return lines_vals
+
+            tax_ids = taxes.get(tax_ref)
+            if tax_ids is None:
+                tax_ids = taxes[tax_ref] = line_tax_ids or self.env['account.tax'] if is_record else self.env['account.tax'].browse(line_tax_ids)
+            line_vals_to_squash[tax_ids].append(line)
+
+        properties = ['name', 'product_id', 'price_unit', 'quantity', 'discount', 'tax_ids']
+
+        res = [(lines[0] if isinstance(lines[0], dict) else lines[0].read(properties)[0]) if len(lines) == 1 else {
+            'name': " - ".join([partner_id.name, date] + ([tax.description or tax.name for tax in tax_ids] or [_("Untaxed")])),
+            'product_id': False,
+            'price_unit': sum(
+                _get_attr(line, 'price_unit', 0.0) * _get_attr(line, 'quantity', 0.0) - _get_attr(line, 'price_unit', 0.0) * _get_attr(line, 'quantity', 0.0) * _get_attr(line, 'discount', 0.0) / 100
+                for line in lines
+            ),
+            'quantity': 1,
+            # 'deferred_start_date': None,
+            # 'deferred_end_date': None,
+            'tax_ids': tax_ids.ids
+        } for tax_ids, lines in line_vals_to_squash.items()]
+        return res
+
+    @contextmanager
+    def _deactivate_extract_single_line_per_tax(self):
+        old_value = self.company_id.extract_single_line_per_tax
+        self.company_id.extract_single_line_per_tax = False
+        yield
+        self.company_id.extract_single_line_per_tax = old_value
 
     # -------------------------------------------------------------------------
     # BUSINESS

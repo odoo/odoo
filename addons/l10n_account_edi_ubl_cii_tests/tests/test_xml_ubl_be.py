@@ -292,6 +292,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                 }
             },
         ]
+        self.env.company.extract_single_line_per_tax = False
         for test in test_data:
             cash_rounding_method = test['invoice_cash_rounding_id']
             with self.subTest(sub_test_name=f"cash rounding method: {cash_rounding_method.name if cash_rounding_method else 'None'}"):
@@ -1045,6 +1046,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         self.assertTrue(created_bill)
 
     def test_import_invoice_xml(self):
+        self.env.company.extract_single_line_per_tax = False
         kwargs = {
             'subfolder': 'tests/test_files/from_odoo',
             'invoice_vals': {

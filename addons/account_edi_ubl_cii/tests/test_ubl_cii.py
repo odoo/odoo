@@ -108,6 +108,7 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             'partner_id': company.partner_id.id,
             'acc_holder_name': 'The Chosen One'
         })]
+        company.extract_single_line_per_tax = False
 
         for ubl_cii_format in ['facturx', 'ubl_bis3']:
             with self.subTest(sub_test_name=f"format: {ubl_cii_format}"):

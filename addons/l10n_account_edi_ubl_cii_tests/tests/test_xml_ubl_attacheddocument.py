@@ -52,6 +52,7 @@ class TestUBLAttachedDocument(TestUBLCommon):
         string in EmbeddedDocumentBinaryObject or as a CDATA[] value inside of an
         ExternalReference/Description tag. Importing such files should ignore the outside wrapper
         and return the correct original invoice takes from a_nz_out_invoice. """
+        self.env.company.extract_single_line_per_tax = False
         self._assert_imported_invoice_from_file(
             subfolder='tests/test_files/from_odoo',
             filename='a_nz_out_invoice_attacheddocument_b64.xml',
