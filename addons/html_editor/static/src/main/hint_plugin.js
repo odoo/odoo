@@ -19,10 +19,10 @@ export class HintPlugin extends Plugin {
         content_updated_handlers: this.updateHints.bind(this),
 
         hint_targets_providers: (selectionData, editable) => {
-            if (!selectionData.currentSelectionIsInEditable) {
+            if (!selectionData.currentSelectionIsInEditable || !selectionData.documentSelection) {
                 return [];
             }
-            const blockEl = closestBlock(selectionData.editableSelection.anchorNode);
+            const blockEl = closestBlock(selectionData.documentSelection.anchorNode);
             if (this.dependencies.selection.isNodeEditable(blockEl)) {
                 return [blockEl];
             } else {
