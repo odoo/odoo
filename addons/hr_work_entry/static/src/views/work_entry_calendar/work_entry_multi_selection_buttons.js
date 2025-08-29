@@ -56,7 +56,7 @@ export class WorkEntryCalendarMultiSelectionButtons extends MultiSelectionButton
             record: {
                 data: {
                     employee_id: this.actionService.currentController.currentState.active_id,
-                    duration: 8,
+                    duration: -1,
                     work_entry_type_id: workEntryType.id,
                 },
                 fields: {
