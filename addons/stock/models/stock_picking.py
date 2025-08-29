@@ -1904,7 +1904,6 @@ class StockPicking(models.Model):
             'domain': [('picking_ids', 'in', self.ids)],
             'context': {
                 'picking_id': self.id,
-                'show_entire_packs': self.picking_type_id.show_entire_packs,
                 'search_default_main_packages': True,
             },
         }
