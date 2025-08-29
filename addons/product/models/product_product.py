@@ -363,11 +363,9 @@ class ProductProduct(models.Model):
         if not (order_id and order_model and line_field):
             return []
 
-        product_ids = self.env[order_model].browse(order_id)[line_field].filtered_domain([
-            '|',
-            ('id', 'child_of', ctx.get('selected_section_id')),
-            ('parent_id', '=', False),
-        ]).mapped('product_id').ids
+        product_ids = self.env[order_model].browse(order_id)[line_field].filtered(
+            lambda line: line.get_parent_section_line().id == ctx.get('selected_section_id'),
+        ).mapped('product_id').ids
 
         return [('id', 'in', product_ids)]
 

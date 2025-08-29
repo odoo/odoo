@@ -290,21 +290,15 @@ class ProductCatalogMixin(models.AbstractModel):
         lines = self[child_field].sorted('sequence')
         move_section, target_section = sections
 
-        move_block = lines.filtered_domain([
-            '|',
-            ('id', '=', move_section['id']),
-            '|',
-            ('id', 'child_of', move_section['id']),
-            ('parent_id', '=', False),
-        ])
+        move_block = lines.filtered(
+            lambda line: line.id == move_section['id']
+            or line.parent_id.id == move_section['id'],
+        )
 
-        target_block = lines.filtered_domain([
-            '|',
-            ('id', '=', target_section['id']),
-            '|',
-            ('id', 'child_of', target_section['id']),
-            ('parent_id', '=', False),
-        ])
+        target_block = lines.filtered(
+            lambda line: line.id == target_section['id']
+            or line.parent_id.id == target_section['id'],
+        )
 
         remaining_lines = lines - move_block
         insert_after = move_section['sequence'] < target_section['sequence']

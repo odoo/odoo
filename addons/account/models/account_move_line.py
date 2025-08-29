@@ -348,10 +348,7 @@ class AccountMoveLine(models.Model):
         'account.move.line',
         string="Parent Section Line",
         compute='_compute_parent_id',
-        index='btree_not_null',
-        store=True,
     )
-    child_ids = fields.One2many(comodel_name='account.move.line', inverse_name='parent_id')
     product_id = fields.Many2one(
         comodel_name='product.product',
         string='Product',
@@ -1183,10 +1180,12 @@ class AccountMoveLine(models.Model):
             )
             line.reconciled_lines_excluding_exchange_diff_ids = all_lines - excluded_ids
 
-    @api.depends('move_id.invoice_line_ids.move_id')
     def _compute_parent_id(self):
         amls = set(self)
-        for move in self.grouped('move_id'):
+        for move, lines in self.grouped('move_id').items():
+            if not move:
+                lines.parent_id = False
+                continue
             last_section = False
             last_sub = False
             for line in move.invoice_line_ids.sorted('sequence'):
@@ -3377,7 +3376,7 @@ class AccountMoveLine(models.Model):
         """
         self.ensure_one()
 
-        section_lines = self.move_id.invoice_line_ids.filtered_domain([('id', 'child_of', self.id)]) - self
+        section_lines = self._get_section_lines()
         result = []
         for taxes, lines in groupby(section_lines, key=lambda l: l.tax_ids):
             amls = sum(lines, start=self.env['account.move.line'])
@@ -3427,7 +3426,7 @@ class AccountMoveLine(models.Model):
         }]
 
     def get_section_subtotal(self):
-        section_lines = self.child_ids + self.child_ids.child_ids
+        section_lines = self._get_section_lines()
         return sum(section_lines.mapped('price_subtotal'))
 
     def get_parent_section_line(self):
@@ -3435,6 +3434,22 @@ class AccountMoveLine(models.Model):
             return self.parent_id.parent_id
 
         return self.parent_id
+
+    def _get_section_lines(self):
+        self.ensure_one()
+        return self.move_id.invoice_line_ids.filtered(self._is_line_in_section)
+
+    def _is_line_in_section(self, line):
+        """Return whether the line is a direct or indirect child of the section."""
+        self.ensure_one()
+        is_direct_child = line.parent_id == self and not line.display_type
+        is_indirect_child = (
+            self.display_type == 'line_section'
+            and line.parent_id
+            and line.parent_id.display_type == 'line_subsection'
+            and line.parent_id.parent_id == self
+        )
+        return is_direct_child or is_indirect_child
 
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS

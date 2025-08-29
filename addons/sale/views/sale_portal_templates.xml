@@ -751,7 +751,7 @@
                                 <t t-elif="is_subsection">
                                     <t t-set="current_subsection" t-value="line"/>
                                     <t t-set="line_padding" t-value="2"/>
-                                    <t t-set="collapse_prices" t-value="collapse_prices or line.collapse_prices"/>
+                                    <t t-set="collapse_prices" t-value="current_section.collapse_prices or line.collapse_prices"/>
                                 </t>
                                 <t t-else="">
                                     <t

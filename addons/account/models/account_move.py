@@ -2766,12 +2766,10 @@ class AccountMove(models.Model):
                  sale order and the quantity selected.
         :rtype: float
         """
-        move_line = self.line_ids.filtered_domain([
-            ('product_id', '=', product_id),
-            '|',
-            ('id', 'child_of', selected_section_id),
-            ('parent_id', '=', False),
-        ])
+        move_line = self.line_ids.filtered(
+            lambda line: line.product_id.id == product_id
+            and line.get_parent_section_line().id == selected_section_id,
+        )
         if move_line:
             if quantity != 0:
                 move_line.quantity = quantity
@@ -4278,9 +4276,6 @@ class AccountMove(models.Model):
 
     @api.onchange('invoice_line_ids')
     def _onchange_quick_edit_line_ids(self):
-        self.invoice_line_ids._conditional_add_to_compute('parent_id', lambda line: (
-            line.display_type in ('line_section', 'line_subsection', 'line_note', 'product')
-        ))
         quick_encode_suggestion = self.env.context.get('quick_encoding_vals')
         if (
             not self.quick_edit_total_amount
