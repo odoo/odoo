@@ -18,9 +18,44 @@ registry.category("web_tour.tours").add("test_tickets_questions", {
             trigger: 'button:disabled:contains("Register")',
         },
         {
-            content: "Select 2 'Free' tickets to buy",
-            trigger: 'div.o_wevent_ticket_selector:contains("Free") select.form-select',
-            run: "select 2",
+            content: "Check '-' spinner button is disabled when no ticket selected",
+            trigger: 'button[data-increment-type="minus"]:disabled',
+        },
+        {
+            content: "Try adding 53 'Free' tickets",
+            trigger: 'div.o_wevent_ticket_selector:contains("Free") input.form-control',
+            run: "edit 53",
+        },
+        {
+            content: "Check '+' spinner button is disabled when no ticket selected",
+            trigger: 'button[data-increment-type="plus"]:disabled',
+        },
+        {
+            // The input number should automatically be changed to the limit per order (22 < 28)
+            trigger: 'div.o_wevent_ticket_selector:contains("Free"):contains("22") input.form-control',
+        },
+        {
+            content: "Edit 2 'Free' tickets to buy",
+            trigger: 'div.o_wevent_ticket_selector:contains("Free") input.form-control',
+            run: "edit 2",
+        },
+        {
+            content: "Try adding 150 'Other' tickets",
+            trigger: 'div.o_wevent_ticket_selector:contains("Other") input.form-control',
+            run: "edit 150",
+        },
+        {
+            // The input number should automatically be changed to the event limit (28 < 150)
+            trigger: 'div.o_wevent_ticket_selector:contains("Other"):contains("28") input.form-control',
+        },
+        {
+            content: "Remove 'Other' tickets",
+            trigger: 'div.o_wevent_ticket_selector:contains("Other") input.form-control',
+            run: "edit 0",
+        },
+        {
+            content: "Check '-' spinner button is disabled when no ticket selected",
+            trigger: 'div.o_wevent_ticket_selector:contains("Other") button[data-increment-type="minus"]:disabled',
         },
         {
             content: "Click on Register (to fill tickets data) button",

@@ -83,9 +83,9 @@ const registerSteps = [
         run: "click",
     },
     {
-        content: "Select 2 units of 'Standard' ticket type",
-        trigger: ".modal .o_wevent_ticket_selector select",
-        run: "select 2",
+        content: "Edit 2 units of 'Standard' ticket type",
+        trigger: ".modal .o_wevent_ticket_selector input",
+        run: "edit 2",
     },
     {
         content: "Click on 'Register' button",

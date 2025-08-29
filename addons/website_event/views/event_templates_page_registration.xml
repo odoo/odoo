@@ -330,7 +330,12 @@
                     </div>
                     <t t-set="counter" t-value="0"/>
                     <t t-set="input_type_by_question_type" t-value="{'name': 'text', 'email': 'email', 'phone': 'tel', 'company_name': 'text'}"/>
-                    <t t-if="availability_check" t-foreach="tickets" t-as="ticket">
+                    <t t-if="not limit_check">
+                        <div class="modal-body border-bottom">
+                            <strong> You cannot order more than available seats</strong>
+                        </div>
+                    </t>
+                    <t t-if="availability_check and limit_check" t-foreach="tickets" t-as="ticket">
                         <t t-foreach="range(1, ticket['quantity'] + 1)" t-as="att_counter" name="attendee_loop">
                             <t t-set="counter" t-value="counter + 1"/>
                             <input t-if="event_slot_id" type="hidden" t-attf-name="#{counter}-event_slot_id" t-att-value="event_slot_id"/>
@@ -349,7 +354,7 @@
                             </div>
                         </t>
                     </t>
-                    <div t-if="availability_check and event.general_question_ids" class="modal-body border-top o_wevent_registration_question_global">
+                    <div t-if="availability_check and limit_check and event.general_question_ids" class="modal-body border-top o_wevent_registration_question_global">
                         <div class="row">
                             <t t-foreach="event.general_question_ids" t-as="question">
                                 <div class="mt-2" t-att-class="question.question_type=='text_box' and 'col-lg-12' or 'col-lg-6'">
@@ -360,14 +365,14 @@
                             </t>
                         </div>
                     </div>
-                    <t t-elif="not availability_check">
+                    <t t-elif="not availability_check and limit_check">
                         <div class="modal-body border-bottom">
                             <strong> You ordered more tickets than available seats</strong>
                         </div>
                     </t>
                     <div class="modal-footer border-top">
                         <button type="button" class="btn btn-secondary js_goto_event" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" t-if="availability_check">Confirm Registration</button>
+                        <button type="submit" class="btn btn-primary" t-if="availability_check and limit_check">Confirm Registration</button>
                     </div>
                 </div>
             </form>
@@ -514,7 +519,7 @@
                             <div t-foreach="tickets" t-as="ticket"
                                 t-attf-class="d-flex justify-content-between o_wevent_ticket_selector mb-2 pb-2 {{not ticket_last and 'border-bottom' or ''}}"
                                 t-att-name="ticket.name">
-                                <div itemscope="itemscope" itemtype="http://schema.org/Offer">
+                                <div class="col-6 pe-3" itemscope="itemscope" itemtype="http://schema.org/Offer">
                                     <h5 itemprop="name" t-field="ticket.name" class="h6 my-0"/>
                                     <t t-if="ticket.description">
                                         <small t-field="ticket.description" class="text-muted py-2"/>
@@ -533,26 +538,44 @@
                                         <span t-if="website_visitor_timezone != event.date_tz">(<t t-out="event.date_tz"/>)</span>
                                     </small>
                                 </div>
-                                <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
-                                    <div class="o_wevent_registration_multi_select flex-md-grow-1 text-end"/>
+                                <div class="d-flex flex-column col-6 flex-md-row align-items-end align-items-md-start text-end gap-2">
+                                    <div t-attf-class="o_wevent_registration_multi_select flex-md-grow-1 text-end"/> <!-- t-attf-class added for some dynamic classes inherited -->
                                     <div class="ms-auto">
+                                        <t t-set="limit_per_order" t-value="ticket._get_current_limit_per_order(event_slot if event_slot else False)[ticket.id]"/>
                                         <t t-set="seats_available_slot_ticket" t-value="seats_available_slot_tickets and seats_available_slot_tickets.get(ticket.id, 0) or 0"/>
                                         <t t-set="seats_available_slot" t-value="event_slot and event_slot.seats_available or 0"/>
-                                        <t t-set="seats_max_slot_ticket" t-value="((not event.seats_limited and not ticket.seats_limited) or seats_available_slot_ticket &gt; 9) and 10 or seats_available_slot_ticket + 1"/>
-                                        <t t-set="seats_max_slot" t-value="(not event.seats_limited or seats_available_slot &gt; 9) and 10 or seats_available_slot + 1"/>
-                                        <t t-set="seats_max_ticket" t-value="(not ticket.seats_limited or ticket.seats_available &gt; 9) and 10 or ticket.seats_available + 1"/>
-                                        <t t-set="seats_max_event" t-value="(not event.seats_limited or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
+                                        <t t-set="seats_max_slot_ticket" t-value="(not event.seats_limited and not ticket.seats_limited and limit_per_order) or min(limit_per_order or seats_available_slot_ticket, seats_available_slot_ticket)"/>
+                                        <t t-set="seats_max_slot" t-value="(not event.seats_limited and limit_per_order) or min(limit_per_order or seats_available_slot, seats_available_slot)"/>
+                                        <t t-set="seats_max_ticket" t-value="(not ticket.seats_limited and limit_per_order) or min(limit_per_order or ticket.seats_available, ticket.seats_available)"/>
+                                        <t t-set="seats_max_event" t-value="(not event.seats_limited and limit_per_order) or min(limit_per_order or event.seats_available, event.seats_available)"/>
                                         <t t-set="seats_max_event_or_slot" t-value="seats_max_slot if event_slot else seats_max_event"/>
                                         <t t-set="seats_max" t-value="seats_available_slot_tickets and seats_max_slot_ticket or min(seats_max_ticket, seats_max_event_or_slot)"/>
-                                        <select t-if="(not ticket.is_expired and ticket.sale_available) or seats_available_slot_ticket"
-                                            t-attf-name="nb_register-#{ticket.id}"
-                                            class="w-auto form-select">
-                                            <t t-foreach="range(0, seats_max)" t-as="nb">
-                                                <option t-out="nb" t-att-selected="len(ticket) == 0 and nb == 0 and 'selected'"/>
-                                            </t>
-                                        </select>
-                                        <div t-else="" class="text-danger">
-                                            <span t-if="not ticket.sale_available and not ticket.is_expired and ticket.is_launched" >Sold Out</span>
+                                        <t t-set="max_input_value" t-value="event.EVENT_MAX_TICKETS if seats_max > event.EVENT_MAX_TICKETS else (0 if 0 > seats_max else seats_max)"/>
+                                        <div t-if="(not ticket.is_expired and ticket.sale_available and max_input_value) or seats_available_slot_ticket">
+                                            <div class="rounded input-group d-inline-flex border" style="width: 120px;">
+                                                <button
+                                                    class="btn d-md-inline-block border-0 pe-2" data-increment-type="minus" type="button"
+                                                    t-att-disabled="True" t-attf-data-input-name="nb_register-#{ticket.id}">
+                                                    <i class="oi oi-minus text-600"/>
+                                                </button>
+                                                <input
+                                                    class="o_wevent_input_nb_tickets form-control text-center border-0 p-0"
+                                                    inputmode="numeric" pattern="[0-9]*" size="2" type="text" value="0"
+                                                    t-attf-max="#{max_input_value}" t-attf-name="nb_register-#{ticket.id}"/>
+                                                <button
+                                                    class="btn d-md-inline-block border-0 ps-2" data-increment-type="plus" type="button"
+                                                    t-attf-data-input-name="nb_register-#{ticket.id}">
+                                                    <i class="oi oi-plus text-600"/>
+                                                </button>
+                                            </div>
+                                            <div>
+                                                <p class="text-muted text-center mb-0" t-attf-name="nb_register-#{ticket.id}" t-att-hidden="max_input_value >= 1">
+                                                    (Max. <t t-out="max_input_value"/>)
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div t-else="" class="text-danger mt-1">
+                                            <span t-if="(not ticket.sale_available and not ticket.is_expired and ticket.is_launched) or not max_input_value">Sold Out</span>
                                             <span t-if="ticket.is_expired">Expired</span>
                                         </div>
                                     </div>
@@ -574,7 +597,7 @@
                     </t>
                     <div t-else="" class="o_wevent_registration_single">
                         <div class="modal-body row px-3 py-2 mx-0">
-                            <div class="col-12 col-md-8 p-0" itemscope="itemscope" itemtype="http://schema.org/Offer">
+                            <div class="col-12 col-md-6 p-0 pe-3" itemscope="itemscope" itemtype="http://schema.org/Offer">
                                 <h5 itemprop="name" class="my-0 pe-3 o_wevent_single_ticket_name">
                                     <span t-if="tickets" t-field="tickets.name"/>
                                     <span t-else="">Registration</span>
@@ -591,23 +614,42 @@
                                     <span t-if="website_visitor_timezone != event.date_tz">(<t t-out="event.date_tz"/>)</span>
                                 </small>
                             </div>
-                            <div class="col-md-4 d-flex align-items-center justify-content-between p-0">
+                            <div class="col-md-6 d-flex justify-content-between p-0">
                                 <t t-if="event.event_registrations_open">
                                     <link itemprop="availability" content="http://schema.org/InStock"/>
                                     <div class="o_wevent_registration_single_select w-auto ms-auto">
+                                        <t t-set="limit_per_order" t-value="tickets._get_current_limit_per_order(event_slot if event_slot else False)[tickets.id] if tickets else event.EVENT_MAX_TICKETS"/>
                                         <t t-set="seats_available_slot_ticket" t-value="seats_available_slot_tickets and tickets and seats_available_slot_tickets.get(tickets.id, 0) or 0"/>
-                                        <t t-set="seats_max_slot_ticket" t-value="((not event.seats_limited and not tickets.seats_limited) or seats_available_slot_ticket &gt; 9) and 10 or seats_available_slot_ticket + 1"/>
+                                        <t t-set="seats_max_slot_ticket" t-value="(not event.seats_limited and ((not tickets.seats_limited and limit_per_order) if tickets else event.EVENT_MAX_TICKETS)) or min(limit_per_order or seats_available_slot_ticket, seats_available_slot_ticket)"/>
                                         <t t-set="seats_available_slot" t-value="event_slot and event_slot.seats_available or 0"/>
-                                        <t t-set="seats_max_slot" t-value="(not event.seats_limited or seats_available_slot &gt; 9) and 10 or seats_available_slot + 1"/>
-                                        <t t-set="seats_max_ticket" t-value="(not tickets or not tickets.seats_limited or tickets.seats_available &gt; 9) and 10 or tickets.seats_available + 1"/>
-                                        <t t-set="seats_max_event" t-value="(not event.seats_limited or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
+                                        <t t-set="seats_max_slot" t-value="(not event.seats_limited and limit_per_order) or min(limit_per_order or seats_available_slot, seats_available_slot)"/>
+                                        <t t-set="seats_max_ticket" t-value="((not tickets or not tickets.seats_limited) and limit_per_order) or min(limit_per_order or tickets.seats_available, tickets.seats_available)"/>
+                                        <t t-set="seats_max_event" t-value="(not event.seats_limited and limit_per_order) or min(limit_per_order or event.seats_available, event.seats_available)"/>
                                         <t t-set="seats_max_event_or_slot" t-value="seats_max_slot if event_slot else seats_max_event"/>
                                         <t t-set="seats_max" t-value="(seats_available_slot_tickets and seats_max_slot_ticket or min(seats_max_ticket, seats_max_event_or_slot)) if tickets else seats_max_event_or_slot"/>
-                                        <select t-att-name="'nb_register-%s' % (tickets.id if tickets else 0)" class="d-inline w-auto form-select">
-                                            <t t-foreach="range(0, seats_max)" t-as="nb">
-                                                <option t-out="nb" t-att-selected="nb == 1 and 'selected'"/>
-                                            </t>
-                                        </select>
+                                        <t t-set="max_input_value" t-value="event.EVENT_MAX_TICKETS if seats_max > event.EVENT_MAX_TICKETS else (0 if 0 > seats_max else seats_max)"/>
+                                        <div class="rounded input-group d-inline-flex border" style="width: 120px;">
+                                            <t t-set="register_id" t-value="tickets.id if tickets else 0"/>
+                                            <button
+                                                class="btn d-md-inline-block border-0 pe-2" data-increment-type="minus" type="button"
+                                                t-attf-data-input-name="nb_register-#{register_id}">
+                                                <i class="oi oi-minus text-600"/>
+                                            </button>
+                                            <input
+                                                class="o_wevent_input_nb_tickets form-control quantity text-center border-0 p-0"
+                                                inputmode="numeric" pattern="[0-9]*" size="2" type="text" value="1"
+                                                t-attf-max="#{max_input_value}" t-attf-name="nb_register-#{register_id}"/>
+                                            <button
+                                                class="btn d-md-inline-block border-0 ps-2" data-increment-type="plus" type="button"
+                                                t-att-disabled="seats_max == 1" t-attf-data-input-name="nb_register-#{register_id}">
+                                                <i class="oi oi-plus text-600"/>
+                                            </button>
+                                        </div>
+                                        <div>
+                                            <p class="text-muted text-center mb-0" t-attf-name="nb_register-#{register_id}" t-att-hidden="max_input_value > 1">
+                                                (Max. <t t-out="max_input_value"/>)
+                                            </p>
+                                        </div>
                                     </div>
                                 </t>
                                 <t t-else="">
