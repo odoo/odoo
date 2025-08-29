@@ -1189,11 +1189,14 @@ class PosOrder(models.Model):
         return pos_order_ids.read_pos_data(orders, config_id)
 
     @api.model
+    def read_pos_orders(self, domain=False):
+        orders = self.search(domain)
+        config_id = orders[0].config_id.id if orders else False
+        return orders.read_pos_data([], config_id)
+
+    @api.model
     def read_pos_data_uuid(self, uuid):
-        order = self.search([('uuid', '=', uuid)], limit=1)
-        if not order:
-            return {}
-        return order.read_pos_data([], order.config_id.id)
+        return self.read_pos_orders([('uuid', '=', uuid)])
 
     def read_pos_data(self, data, config_id):
         # If the previous session is closed, the order will get a new session_id due to _get_valid_session in _process_order
