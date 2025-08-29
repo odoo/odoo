@@ -91,7 +91,10 @@ export class ColumnPlugin extends Plugin {
         move_node_whitelist_selectors: ".o_text_columns",
         move_node_blacklist_selectors: ".o_text_columns *",
         hint_targets_providers: (selectionData) => {
-            const anchorNode = selectionData.editableSelection.anchorNode;
+            if (!selectionData.documentSelection) {
+                return [];
+            }
+            const anchorNode = selectionData.documentSelection.anchorNode;
             const columnContainer = closestElement(anchorNode, "div.o_text_columns");
             if (!columnContainer) {
                 return [];
