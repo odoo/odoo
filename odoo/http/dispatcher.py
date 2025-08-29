@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import enum
 import logging
 import time
 import traceback
@@ -7,6 +8,7 @@ import typing
 import weakref
 from abc import ABC, abstractmethod
 from http import HTTPStatus
+from urllib.parse import urlsplit
 from wsgiref.handlers import format_date_time
 
 from werkzeug.exceptions import (
@@ -163,6 +165,12 @@ class Dispatcher(ABC):
         """
 
 
+class CsrfResult(enum.Enum):
+    NOT_A_BROWSER = enum.auto()
+    FETCH_SITE = enum.auto()
+    ORIGIN_HOST = enum.auto()
+
+
 class HttpDispatcher(Dispatcher):
     routing_type = 'http'
 
@@ -183,28 +191,76 @@ class HttpDispatcher(Dispatcher):
         """
         self.request.params = dict(self.request.get_http_params(), **args)
 
-        # Check for CSRF token for relevant requests
-        is_http_method_safe = self.request.httprequest.method in SAFE_HTTP_METHODS
-        if not is_http_method_safe and endpoint.routing.get('csrf', True):
-            if not self.request.db:
-                return self.request.redirect('/web/database/selector')
+        req = self.request.httprequest
+        if req.method not in SAFE_HTTP_METHODS:
+            csrf2 = self.check_csrf_tokenless()
+            if endpoint.routing.get('csrf', True):
+                # Can't check the CSRF token without a DB
+                if not self.request.db:
+                    if csrf2:
+                        _logger.runbot(
+                            "CSRF fix '%s %s' (nodb)\n\ttokenless=%s",
+                            req.method, req.full_path, csrf2,
+                        )
+                    return self.request.redirect('/web/database/selector')
 
-            token = self.request.params.pop('csrf_token', None)
-            if not self.request.validate_csrf(token):
-                if token is not None:
-                    _logger.warning(
-                        "CSRF validation failed on path '%s'",
-                        self.request.httprequest.path)
-                else:
-                    _logger.warning(MISSING_CSRF_WARNING, self.request.httprequest.path)
-                e = "Session expired (invalid CSRF token)"
-                raise BadRequest(e)
+                csrf = self.check_csrf_token()
+                if csrf != bool(csrf2):
+                    _logger.runbot(
+                        "CSRF mismatch '%s %s'\n"
+                        "\ttoken=%s\n"
+                        "\ttokenless=%s\n"
+                        "\t\tSec-Fetch-Site=%s\n"
+                        "\t\tOrigin=%s\n"
+                        "\t\tHost=%s",
+                        req.method, req.full_path,
+                        csrf, csrf2,
+                        req.headers.get('Sec-Fetch-Site'),
+                        req.headers.get('Origin'),
+                        req.headers.get('Host'),
+                    )
+                if not csrf:
+                    e = "Session expired (invalid CSRF token)"
+                    raise BadRequest(e)
+            elif csrf2:
+                _logger.runbot(
+                    "CSRF fix '%s %s' [csrf=False]\n\ttokenless=%s",
+                    req.method, req.full_path, csrf2,
+                )
 
         if self.request.db:
             response = self.request.registry['ir.http']._dispatch(endpoint)
         else:
             response = endpoint(**self.request.params)
         return response
+
+    def check_csrf_token(self) -> bool:
+        token = self.request.params.pop('csrf_token', None)
+        if not self.request.validate_csrf(token):
+            if token is not None:
+                _logger.warning(
+                    "CSRF validation failed on path '%s'",
+                    self.request.httprequest.path)
+            else:
+                _logger.warning(MISSING_CSRF_WARNING, self.request.httprequest.path)
+            return False
+        return True
+
+    def check_csrf_tokenless(self) -> CsrfResult | None:
+        headers = self.request.httprequest.headers
+        match (headers.get('Sec-Fetch-Site'), headers.get('Origin')):
+            case ('same-origin' | 'none', _):
+                return CsrfResult.FETCH_SITE
+            case (None, None):
+                # not a browser => not a concern
+                return CsrfResult.NOT_A_BROWSER
+            case (None, origin) if urlsplit(origin).netloc == headers.get('Host'):
+                # fallback for older browsers, does not protect against
+                # http/https cross-origin unless HSTS is enabled, as Host does
+                # not include scheme
+                return CsrfResult.ORIGIN_HOST
+            case _:
+                return None
 
     def handle_error(self, exc):
         """

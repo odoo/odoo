@@ -32,7 +32,6 @@ class TestHttpEchoReplyHttpNoDB(TestHttpBase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, "{'race': 'Asgard', 'commander': 'Thor'}")
 
-    @mute_logger('odoo.http')
     def test_echohttp4_post_json_nodb(self):
         payload = json.dumps({'commander': 'Thor'})
         res = self.nodb_url_open('/test_http/echo-http-post', data=payload, headers=CT_JSON)
@@ -144,13 +143,13 @@ class TestHttpEchoReplyHttpWithDB(TestHttpBase):
 
     @mute_logger('odoo.http')
     def test_echohttp5_post_no_csrf(self):
-        res = self.db_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor'})
+        res = self.db_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor'}, headers={'Sec-Fetch-Site': 'cross-site'})
         self.assertEqual(res.status_code, 400)
         self.assertIn("Session expired (invalid CSRF token)", res.text)
 
     @mute_logger('odoo.http')
     def test_echohttp6_post_bad_csrf(self):
-        res = self.db_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor', 'csrf_token': 'bad token'})
+        res = self.db_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor', 'csrf_token': 'bad token'}, headers={'Sec-Fetch-Site': 'cross-site'})
         self.assertEqual(res.status_code, 400)
         self.assertIn("Session expired (invalid CSRF token)", res.text)
 
