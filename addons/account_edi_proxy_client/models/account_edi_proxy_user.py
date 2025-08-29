@@ -63,11 +63,58 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         string='EDI operating mode',
     )
 
+<<<<<<< b43e845711633f586b700bb5b8b10c08854adc88
     _unique_id_client = models.Constraint('unique(id_client)', "This id_client is already used on another user.")
     _unique_active_company_proxy = models.UniqueIndex(
         '(company_id, proxy_type, edi_mode) WHERE (active IS TRUE)',
         "This company has an active user already created for this EDI type",
     )
+||||||| 13e8b462e74f144e085492857bfaa7b0d1f88f93
+    _sql_constraints = [
+        ('unique_id_client', 'unique(id_client)', 'This id_client is already used on another user.'),
+        ('unique_active_edi_identification', '', 'This edi identification is already assigned to an active user'),
+        ('unique_active_company_proxy', '', 'This company has an active user already created for this EDI type'),
+    ]
+
+    def _auto_init(self):
+        super()._auto_init()
+        if not index_exists(self.env.cr, 'account_edi_proxy_client_user_unique_active_edi_identification'):
+            self.env.cr.execute("""
+                CREATE UNIQUE INDEX account_edi_proxy_client_user_unique_active_edi_identification
+                                 ON account_edi_proxy_client_user(edi_identification, proxy_type, edi_mode)
+                              WHERE (active = True)
+            """)
+        if not index_exists(self.env.cr, 'account_edi_proxy_client_user_unique_active_company_proxy'):
+            self.env.cr.execute("""
+                CREATE UNIQUE INDEX account_edi_proxy_client_user_unique_active_company_proxy
+                                 ON account_edi_proxy_client_user(company_id, proxy_type, edi_mode)
+                              WHERE (active = True)
+            """)
+
+    def _compute_private_key_filename(self):
+        for record in self:
+            record.private_key_filename = f'{record.id_client}_{record.edi_identification}.key'
+=======
+    _sql_constraints = [
+        ('unique_id_client', 'unique(id_client)', 'This id_client is already used on another user.'),
+        ('unique_active_company_proxy', '', 'This company has an active user already created for this EDI type'),
+    ]
+
+    def _auto_init(self):
+        super()._auto_init()
+        if not index_exists(self.env.cr, 'account_edi_proxy_client_user_unique_active_company_proxy'):
+            self.env.cr.execute("""
+                CREATE UNIQUE INDEX account_edi_proxy_client_user_unique_active_company_proxy
+                                 ON account_edi_proxy_client_user(company_id, proxy_type, edi_mode)
+                              WHERE (active = True)
+            """)
+
+        self.env.cr.execute("DROP INDEX IF EXISTS account_edi_proxy_client_user_unique_active_edi_identification")
+
+    def _compute_private_key_filename(self):
+        for record in self:
+            record.private_key_filename = f'{record.id_client}_{record.edi_identification}.key'
+>>>>>>> 6f3b9a3dcabe936bd66dd5ad5cc6805135093504
 
     def _get_proxy_urls(self):
         # To extend
@@ -119,7 +166,14 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 _('The url that this service requested returned an error. The url it tried to contact was %s', url))
 
         if 'error' in response:
+<<<<<<< b43e845711633f586b700bb5b8b10c08854adc88
             message = _('The url that this service requested returned an error. The url it tried to contact was %(url)s. %(error_message)s', url=url, error_message=response['error']['message'])
+||||||| 13e8b462e74f144e085492857bfaa7b0d1f88f93
+            message = _('The url that this service requested returned an error. The url it tried to contact was %s. %s', url, response['error']['message'])
+=======
+            error_detail = response['error'].get('data', {}).get('message') or response['error']['message']
+            message = _('The url that this service requested returned an error. The url it tried to contact was %s. %s', url, error_detail)
+>>>>>>> 6f3b9a3dcabe936bd66dd5ad5cc6805135093504
             if response['error']['code'] == 404:
                 message = _('The url that this service tried to contact does not exist. The url was “%s”', url)
             raise AccountEdiProxyError('connection_error', message)

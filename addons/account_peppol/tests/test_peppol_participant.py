@@ -197,7 +197,29 @@ class TestPeppolParticipant(TransactionCase):
         with self.assertRaises(ValidationError):
             wizard.button_register_peppol_participant()
 
+<<<<<<< b43e845711633f586b700bb5b8b10c08854adc88
     def test_create_success_sender(self):
+||||||| 13e8b462e74f144e085492857bfaa7b0d1f88f93
+    def test_create_participant_already_exists(self):
+        # creating a participant that already exists on Peppol network should not be possible
+        vals = self._get_participant_vals()
+        vals['account_peppol_eas'] = '0208'
+        settings = self.env['res.config.settings'].create(vals)
+        with self.assertRaises(UserError), self.cr.savepoint():
+            settings.button_create_peppol_proxy_user()
+
+    def test_create_success_participant(self):
+        # should be possible to apply with all data
+        # the account_peppol_proxy_state should correctly change to pending
+        # then the account_peppol_proxy_state should change success
+        # after checking participant status
+=======
+    def test_create_success_participant(self):
+        # should be possible to apply with all data
+        # the account_peppol_proxy_state should correctly change to pending
+        # then the account_peppol_proxy_state should change success
+        # after checking participant status
+>>>>>>> 6f3b9a3dcabe936bd66dd5ad5cc6805135093504
         company = self.env.company
         vals = {**self._get_participant_vals(), 'peppol_eas': '0208', 'peppol_endpoint': '0239843188'}
         wizard = self.env['peppol.registration'].create(vals)
