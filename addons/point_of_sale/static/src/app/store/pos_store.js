@@ -425,12 +425,10 @@ export class PosStore extends Reactive {
                 return false;
             }
         }
-        const orderIsDeleted = await this.deleteOrders([order]);
-        if (orderIsDeleted) {
-            order.uiState.displayed = false;
-            this.afterOrderDeletion();
-        }
-        return orderIsDeleted;
+
+        this.deleteOrders([order]);
+        this.set_order(this.get_open_orders().at(-1) || this.createNewOrder());
+        return true;
     }
     afterOrderDeletion() {
         this.set_order(this.get_open_orders().at(-1) || this.createNewOrder());
@@ -470,9 +468,9 @@ export class PosStore extends Reactive {
 
         if (ids.size > 0) {
             await this.data.callRelated("pos.order", "action_pos_order_cancel", [Array.from(ids)]);
-            return true;
         }
 
+        this.afterOrderDeletion();
         return true;
     }
     /**

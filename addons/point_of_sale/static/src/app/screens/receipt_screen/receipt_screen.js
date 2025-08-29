@@ -6,6 +6,7 @@ import { useState, Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { useTrackedOrder } from "@point_of_sale/app/hooks/use_tracked_order";
 
 export class ReceiptScreen extends Component {
     static template = "point_of_sale.ReceiptScreen";
@@ -28,6 +29,7 @@ export class ReceiptScreen extends Component {
         this.sendReceipt = useTrackedAsync(this._sendReceiptToCustomer.bind(this));
         this.doFullPrint = useTrackedAsync(() => this.pos.printReceipt());
         this.doBasicPrint = useTrackedAsync(() => this.pos.printReceipt({ basic: true }));
+        useTrackedOrder(this.pos.get_order().uuid);
     }
 
     _addNewOrder() {

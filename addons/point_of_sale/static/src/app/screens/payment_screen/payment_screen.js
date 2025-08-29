@@ -19,6 +19,7 @@ import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { handleRPCError } from "@point_of_sale/app/errors/error_handlers";
 import { sprintf } from "@web/core/utils/strings";
 import { serializeDateTime } from "@web/core/l10n/dates";
+import { useTrackedOrder } from "@point_of_sale/app/hooks/use_tracked_order";
 
 export class PaymentScreen extends Component {
     static template = "point_of_sale.PaymentScreen";
@@ -45,6 +46,7 @@ export class PaymentScreen extends Component {
         this.numberBuffer = useService("number_buffer");
         this.numberBuffer.use(this._getNumberBufferConfig);
         useErrorHandlers();
+        useTrackedOrder(this.props.orderUuid);
         this.payment_interface = null;
         this.error = false;
         this.validateOrder = useAsyncLockedMethod(this.validateOrder);
