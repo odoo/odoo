@@ -1,3 +1,5 @@
+import { convertNumericToUnit, getHtmlStyle } from "@html_editor/utils/formatting";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
@@ -15,6 +17,7 @@ export class FloatingBlocks extends Interaction {
                 "top": this.boxesTops.get(blockEl),
                 "transform": this.boxesTransforms.get(blockEl),
             }),
+            "t-on-keydown": this.onKeydown,
         },
     };
 
@@ -169,6 +172,25 @@ export class FloatingBlocks extends Interaction {
      */
     onScroll() {
         this.updateZoom();
+    }
+    /**
+     * Support Shift+Tab navigation
+     *
+     * @param {KeyboardEvent} ev
+     */
+    onKeydown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (hotkey === "shift+tab") {
+            this.addListener(ev.currentTarget, "focusout", this.onShiftTabFocusout.bind(this), { once: true });
+        }
+    }
+    onShiftTabFocusout(ev) {
+        if (!ev.relatedTarget || ev.relatedTarget.closest(".s_floating_blocks_block") === ev.currentTarget) {
+            return;
+        }
+        // Account for `.gap-5` on the container.
+        const gap = convertNumericToUnit(3, "rem", "px", getHtmlStyle(document));
+        scrollTo(0, window.scrollY - (this.snippetHeight + gap));
     }
 }
 
