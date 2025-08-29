@@ -6,6 +6,7 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@id='account_peppol_install']" position="replace">
+<<<<<<< ecd3897728f2dcb52f30d365a4baab1396a26459
                 <div id="account_peppol" class="col-12 o_setting_box">
                     <div class="o_setting_right_pane border-0" invisible="account_is_token_out_of_sync">
                         <!-- Info in case of sender. -->
@@ -25,6 +26,28 @@
                             </span>
                             <div invisible="account_peppol_proxy_state != 'smp_registration'">
                                 Your registration should be activated within a day.
+||||||| 13e8b462e74f144e085492857bfaa7b0d1f88f93
+                <div id="account_peppol">
+                    <div class="col-12 col-lg-12 o_setting_box">
+                        <field name="account_peppol_proxy_state" invisible="1"/>
+                        <div class="o_setting_right_pane border-0">
+                            <div class="mb-2">
+                                <span class="o_form_label">
+                                    Peppol Details
+                                </span>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+=======
+                <div id="account_peppol">
+                    <div class="col-12 col-lg-12 o_setting_box">
+                        <field name="account_peppol_proxy_state" invisible="1"/>
+                        <field name="peppol_use_parent_company" invisible="1"/>
+                        <div class="o_setting_right_pane border-0">
+                            <div class="mb-2">
+                                <span class="o_form_label">
+                                    Peppol Details
+                                </span>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+>>>>>>> 6f3b9a3dcabe936bd66dd5ad5cc6805135093504
                             </div>
                             <div invisible="account_peppol_proxy_state not in ('smp_registration', 'receiver')" class="mt-4">
                                 <div class="row" name="peppol_journal_config">
