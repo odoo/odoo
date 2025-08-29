@@ -388,7 +388,6 @@ class StockPickingBatch(models.Model):
             'domain': [('picking_ids', 'in', self.picking_ids.ids)],
             'context': {
                 'picking_id': self.picking_ids[:1].id,
-                'show_entire_packs': self.picking_type_id.show_entire_packs,
                 'search_default_main_packages': True,
             },
         }
