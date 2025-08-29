@@ -46,6 +46,15 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 raise ValidationError(_('Email is required.'))
             if not details.get('country_id'):
                 raise ValidationError(_('Country is required.'))
+            if request.website.viewref('website_payment.donation_citizen_id_number').active and not details.get('citizen_id_number'):
+                raise ValidationError(_('Citizen ID number is required.'))
+            if request.website.viewref('website_payment.donation_full_address').active:
+                if not details.get('street'):
+                    raise ValidationError(_('Street is required.'))
+                if not details.get('city'):
+                    raise ValidationError(_('City is required.'))
+                if not details.get('zip'):
+                    raise ValidationError(_('ZIP is required.'))
             partner_id = request.website.user_id.partner_id.id
             del kwargs['partner_details']
         else:
@@ -66,6 +75,18 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 'partner_email': details['email'],
                 'partner_country_id': int(details['country_id']),
             })
+        if partner := tx_sudo.partner_id:
+            if request.website.viewref('website_payment.donation_citizen_id_number').active:
+                partner.update({
+                    'citizen_id_number': details.get('citizen_id_number'),
+                })
+            if request.website.viewref('website_payment.donation_full_address').active:
+                partner.update({
+                    'street': details.get('street'),
+                    'street2': details.get('street2'),
+                    'city': details.get('city'),
+                    'zip': details.get('zip'),
+                })
         elif not tx_sudo.partner_country_id:
             tx_sudo.partner_country_id = int(kwargs['partner_details']['country_id'])
         # the user can change the donation amount on the payment page,
@@ -107,6 +128,10 @@ class PaymentPortal(payment_portal.PaymentPortal):
                     'email': partner_sudo.email,
                     'country_id': partner_sudo.country_id.id,
                     'citizen_id_number': partner_sudo.citizen_id_number,
+                    'street': partner_sudo.street,
+                    'street2': partner_sudo.street2,
+                    'city': partner_sudo.city,
+                    'zip': partner_sudo.zip,
                 }
 
             countries = request.env['res.country'].sudo().search([])
