@@ -6,21 +6,14 @@
     'summary': 'Publish your resellers/partners and forward leads to them',
     'version': '1.2',
     'description': """
-This module allows to publish your resellers/partners on your website and to forward incoming leads/opportunities to them.
-
-
-**Publish a partner**
-
-To publish a partner, set a *Level* in their contact form (in the Partner Assignment section) and click the *Publish* button.
-
-**Forward leads**
+This module allows to forward incoming leads/opportunities to your resellers/partners.
 
 Forwarding leads can be done for one or several leads at a time. The action is available in the *Assigned Partner* section of the lead/opportunity form view and in the *Action* menu of the list view.
 
 The automatic assignment is figured from the weight of partner levels and the geolocalization. Partners get leads that are located around them.
 
     """,
-    'depends': ['base_geolocalize', 'crm', 'account', 'partnership',
+    'depends': ['base_geolocalize', 'crm', 'account', 'website_partnership',
                 'website_partner', 'website_google_map', 'portal'],
     'data': [
         'data/crm_lead_merge_template.xml',
@@ -43,7 +36,6 @@ The automatic assignment is figured from the weight of partner levels and the ge
     'demo': [
         'data/res_partner_demo.xml',
         'data/crm_lead_demo.xml',
-        'data/res_partner_grade_demo.xml',
     ],
     'assets': {
         'web.assets_frontend': [
@@ -51,9 +43,6 @@ The automatic assignment is figured from the weight of partner levels and the ge
         ],
         'website.website_builder_assets': [
             'website_crm_partner_assign/static/src/website_builder/**/*',
-        ],
-        'web.assets_tests': [
-            'website_crm_partner_assign/static/tests/tours/*',
         ],
     },
     'author': 'Odoo S.A.',
