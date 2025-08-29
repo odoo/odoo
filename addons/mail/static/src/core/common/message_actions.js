@@ -198,7 +198,7 @@ registerMessageAction("copy-message", {
     name: _t("Copy to Clipboard"),
     icon: "fa fa-copy",
     iconLarge: "fa fa-lg fa-copy",
-    sequence: 25,
+    sequence: 30,
 });
 registerMessageAction("copy-link", {
     condition: (component) =>
