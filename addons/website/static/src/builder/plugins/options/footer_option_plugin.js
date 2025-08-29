@@ -4,6 +4,9 @@ import { withSequence } from "@html_editor/utils/resource";
 import { rpc } from "@web/core/network/rpc";
 import { SNIPPET_SPECIFIC_END, SNIPPET_SPECIFIC_NEXT, splitBetween } from "@html_builder/utils/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { FooterTemplateChoice, FooterTemplateOption } from "./footer_template_option";
+import { reactive } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 
 const [
     FOOTER_TEMPLATE,
@@ -36,7 +39,8 @@ class FooterOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(FOOTER_TEMPLATE, {
-                template: "website.FooterTemplateOption",
+                OptionComponent: FooterTemplateOption,
+                props: { getTemplates: this.getFooterTemplates.bind(this) },
                 selector: "#wrapwrap > footer",
                 editableOnly: false,
                 groups: ["website.group_website_designer"],
@@ -86,6 +90,28 @@ class FooterOptionPlugin extends Plugin {
         },
         on_prepare_drag_handlers: this.prepareDrag.bind(this),
         unremovable_node_predicates: (node) => node.id === "o_footer_scrolltop",
+        footer_templates_providers: [
+            () =>
+                [
+                    { name: "default", title: _t("Default"), view: "website.footer_custom" },
+                    { name: "descriptive", title: _t("Descriptive") },
+                    { name: "centered", title: _t("Centered") },
+                    { name: "links", title: _t("Links") },
+                    { name: "minimalist", title: _t("Minimalist") },
+                    { name: "contact", title: _t("Contact") },
+                    { name: "call_to_action", title: _t("Call-to-action") },
+                    { name: "headline", title: _t("Headline") },
+                ].map((info) => ({
+                    key: info.name,
+                    Component: FooterTemplateChoice,
+                    props: {
+                        imgSrc: `/website/static/src/img/snippets_options/footer_template_${info.name}.svg`,
+                        varName: info.name,
+                        view: info.view ?? `website.template_footer_${info.name}`,
+                        title: info.title,
+                    },
+                })),
+        ],
     };
 
     prepareDrag() {
@@ -101,6 +127,23 @@ class FooterOptionPlugin extends Plugin {
             };
         }
         return restore;
+    }
+
+    getFooterTemplates() {
+        const templates = reactive([]);
+
+        // we don't wait for all promises to resolve and show the ones available
+        // as soon as they are (and keep them in the order of the providers)
+        const templatesByProvider = this.getResource("footer_templates_providers").map((p) => {
+            const provided = [];
+            Promise.resolve(p()).then((t) => {
+                provided.push(...t);
+                templates.splice(0, Infinity, ...templatesByProvider.flat());
+            });
+            return provided;
+        });
+
+        return templates;
     }
 }
 
