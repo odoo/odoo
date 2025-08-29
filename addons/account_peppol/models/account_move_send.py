@@ -72,16 +72,18 @@ class AccountMoveSend(models.AbstractModel):
                 'message': _("You can send this invoice electronically via Peppol."),
                 **what_is_peppol_alert,
             }
-        elif (peppol_not_selected_partners := filter_peppol_state(not_peppol_moves, ['valid'])) and any_moves_not_sent_peppol:
-            # Check for not peppol partners that are on the network.
-            if len(peppol_not_selected_partners) == 1:
-                alerts['account_peppol_partner_want_peppol'] = {
-                    'message': _(
-                        "%s has requested electronic invoices reception on Peppol.",
-                        peppol_not_selected_partners.display_name
-                    ),
-                    **what_is_peppol_alert,
-                }
+        elif (
+            (peppol_not_selected_partners := filter_peppol_state(not_peppol_moves, ['valid']))
+            and any_moves_not_sent_peppol
+            and len(peppol_not_selected_partners) == 1  # Check for not peppol partners that are on the network
+        ):
+            alerts['account_peppol_partner_want_peppol'] = {
+                'message': _(
+                    "%s has requested electronic invoices reception on Peppol.",
+                    peppol_not_selected_partners.display_name
+                ),
+                **what_is_peppol_alert,
+            }
         return alerts
 
     # -------------------------------------------------------------------------
@@ -201,8 +203,7 @@ class AccountMoveSend(models.AbstractModel):
         if not params['documents']:
             return
 
-        edi_user = next(iter(invoices_data)).company_id.account_edi_proxy_client_ids.filtered(
-            lambda u: u.proxy_type == 'peppol')
+        edi_user = next(iter(invoices_data)).company_id.account_peppol_edi_user
 
         try:
             response = edi_user._call_peppol_proxy(

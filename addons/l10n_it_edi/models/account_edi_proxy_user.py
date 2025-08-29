@@ -4,6 +4,7 @@ import logging
 
 from odoo import _, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import index_exists
 
 _logger = logging.getLogger(__name__)
 
@@ -12,6 +13,19 @@ class AccountEdiProxyClientUser(models.Model):
     _inherit = 'account_edi_proxy_client.user'
 
     proxy_type = fields.Selection(selection_add=[('l10n_it_edi', 'Italian EDI')], ondelete={'l10n_it_edi': 'cascade'})
+
+    _sql_constraints = [
+        ('unique_identification_l10n_it_edi', '', 'This edi identification is already assigned to an active user'),
+    ]
+
+    def _auto_init(self):
+        super()._auto_init()
+        if not index_exists(self.env.cr, 'account_edi_proxy_client_user_unique_identification_l10n_it_edi'):
+            self.env.cr.execute("""
+                CREATE UNIQUE INDEX account_edi_proxy_client_user_unique_identification_l10n_it_edi
+                                 ON account_edi_proxy_client_user(edi_identification, proxy_type, edi_mode)
+                              WHERE (active = True AND proxy_type = 'l10n_it_edi')
+            """)
 
     def _get_proxy_urls(self):
         urls = super()._get_proxy_urls()

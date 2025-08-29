@@ -72,6 +72,10 @@ class ResCompany(models.Model):
         ],
         string='PEPPOL status', required=True, default='not_registered',
     )
+    account_peppol_edi_user = fields.Many2one(
+        comodel_name='account_edi_proxy_client.user',
+        compute='_compute_account_peppol_edi_user',
+    )
     peppol_eas = fields.Selection(related='partner_id.peppol_eas', readonly=False)
     peppol_endpoint = fields.Char(related='partner_id.peppol_endpoint', readonly=False)
     peppol_purchase_journal_id = fields.Many2one(
@@ -81,10 +85,35 @@ class ResCompany(models.Model):
         compute='_compute_peppol_purchase_journal_id', store=True, readonly=False,
         inverse='_inverse_peppol_purchase_journal_id',
     )
+    peppol_can_send = fields.Boolean(compute='_compute_peppol_can_send')
+    peppol_parent_company_id = fields.Many2one(
+        comodel_name='res.company',
+        compute='_compute_peppol_parent_company_id',
+        compute_sudo=True,
+    )
 
     # -------------------------------------------------------------------------
     # HELPER METHODS
     # -------------------------------------------------------------------------
+
+    def _reset_peppol_configuration(self):
+        """
+        Reset all peppol configuration fields to their default value before registering.
+        The EAS, endpoint, email, and phone number will be recomputed so that branch companies that uses
+        their parent configuration can have their default values back
+        (as these fields will be overwritten for them when they register as parent).
+        """
+        self.account_peppol_proxy_state = 'not_registered'
+        self.sudo().account_peppol_migration_key = False
+        self.peppol_eas = False
+        self.peppol_endpoint = False
+        self.account_peppol_contact_email = False
+        self.account_peppol_phone_number = False
+
+        self.partner_id._compute_peppol_eas()
+        self.partner_id._compute_peppol_endpoint()
+        self._compute_account_peppol_contact_email()
+        self._compute_account_peppol_phone_number()
 
     @api.model
     def _check_phonenumbers_import(self):
@@ -151,6 +180,29 @@ class ResCompany(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
+    @api.depends('account_edi_proxy_client_ids')
+    def _compute_account_peppol_edi_user(self):
+        for company in self:
+            company.account_peppol_edi_user = company.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
+
+    @api.depends('peppol_eas', 'peppol_endpoint')
+    def _compute_peppol_parent_company_id(self):
+        self.peppol_parent_company_id = False
+        for company in self:
+            for parent_company in company.parent_ids[::-1][1:]:
+                if (
+                    company.peppol_eas
+                    and company.peppol_endpoint
+                    and company.peppol_eas == parent_company.peppol_eas
+                    and company.peppol_endpoint == parent_company.peppol_endpoint
+                ) or (
+                    not company.peppol_endpoint
+                    and parent_company.peppol_eas
+                    and parent_company.peppol_endpoint
+                ):
+                    company.peppol_parent_company_id = parent_company
+                    break
+
     @api.depends('account_peppol_proxy_state')
     def _compute_peppol_purchase_journal_id(self):
         for company in self:
@@ -190,6 +242,12 @@ class ResCompany(models.Model):
                     company.account_peppol_phone_number = company.phone
                 except ValidationError:
                     continue
+
+    @api.depends('account_peppol_proxy_state')
+    def _compute_peppol_can_send(self):
+        can_send_domain = self.env['account_edi_proxy_client.user']._get_can_send_domain()
+        for company in self:
+            company.peppol_can_send = company.account_peppol_proxy_state in can_send_domain
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
