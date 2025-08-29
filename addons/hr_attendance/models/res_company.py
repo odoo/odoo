@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 import uuid
 
-from odoo import fields, models, api
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.tools.urls import urljoin as url_join
 
@@ -38,7 +40,30 @@ class ResCompany(models.Model):
     auto_check_out = fields.Boolean(string="Automatic Check Out", default=False)
     auto_check_out_tolerance = fields.Float(default=2, export_string_translation=False)
     absence_management = fields.Boolean(string="Absence Management", default=False)
+    geo_fence_attendance = fields.Boolean(string="Geo Fence Attendance")
+    workplace_latitude = fields.Float(string="Workplace latitude", digits=(10, 7), readonly=True, compute='_compute_lat_lon', store=True)
+    workplace_longitude = fields.Float(string="Workplace Longitude", digits=(10, 7), readonly=True, compute='_compute_lat_lon', store=True)
+    workplace_location = fields.Char(string="Location", default=False)
+    workplace_radius = fields.Float(string="Workplace Radius")
     attendance_device_tracking = fields.Boolean(string="Device & Location Tracking", default=True)
+
+    @api.constrains("workplace_location")
+    def _check_workplace_location(self):
+        for rec in self:
+            if rec.workplace_location:
+                pattern = r'^-?\d+(\.\d+)?,\s*-?\d+(\.\d+)?$'
+                if not re.match(pattern, rec.workplace_location.strip()):
+                    raise ValidationError(_("Workplace Location must be two float numbers separated by a single comma (e.g., '12.345678,34.567890')."))
+
+    @api.depends("workplace_location")
+    def _compute_lat_lon(self):
+        for rec in self:
+            if rec.workplace_location:
+                pattern = r'^-?\d+(\.\d+)?,\s*-?\d+(\.\d+)?$'
+                if re.match(pattern, rec.workplace_location.strip()):
+                    lat_str, lon_str = [x.strip() for x in rec.workplace_location.split(',')]
+                    rec.workplace_latitude = float(lat_str)
+                    rec.workplace_longitude = float(lon_str)
 
     @api.depends("attendance_kiosk_key")
     def _compute_attendance_kiosk_url(self):

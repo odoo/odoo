@@ -76,6 +76,9 @@ class HrAttendance(models.Model):
                                            ('auto_check_out', 'Automatic Check-Out')],
                                 readonly=True,
                                 default='manual')
+    location_distance = fields.Float(string="Proximity", readonly=True, help="Distance between the check-in location and the reference point defined in the attendance settings.")
+    geo_fence_enabled = fields.Boolean(related="employee_id.company_id.geo_fence_attendance")
+    outside_geo_fence = fields.Boolean(string="Outside Geo-Fence", readonly=True)
     expected_hours = fields.Float(compute="_compute_expected_hours", store=True, aggregator="sum")
     device_tracking_enabled = fields.Boolean(related="employee_id.company_id.attendance_device_tracking")
     linked_overtime_ids = fields.Many2many('hr.attendance.overtime.line', compute='_compute_linked_overtime_ids', readonly=False)
