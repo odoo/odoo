@@ -224,7 +224,6 @@ describe("(non-)editable media", () => {
                     await click("img");
                     deleteForward(editor);
                 },
-                // TODO: there should be no difference between forward and backward.
                 contentAfter: `<div contenteditable="false">[<img src="${base64Img}">]</div>`,
             });
             // Backward
@@ -234,8 +233,7 @@ describe("(non-)editable media", () => {
                     await click("img");
                     deleteBackward(editor);
                 },
-                // TODO: there should be no difference between forward and backward.
-                contentAfter: `<div contenteditable="false">[]<img src="${base64Img}"></div>`,
+                contentAfter: `<div contenteditable="false">[<img src="${base64Img}">]</div>`,
             });
         });
         test("delete should remove an editable image in a non-editable context", async () => {

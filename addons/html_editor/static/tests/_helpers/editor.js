@@ -1,10 +1,10 @@
 import { Wysiwyg } from "@html_editor/wysiwyg";
-import { expect, getFixture } from "@odoo/hoot";
+import { destroy, expect, getFixture } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
-import { Component, markup, xml } from "@odoo/owl";
+import { Component, markup, onWillDestroy, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { getContent, getSelection, setContent } from "./selection";
-import { animationFrame, tick } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, tick } from "@odoo/hoot-mock";
 import { dispatchCleanForSave } from "./dispatch";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 import { toExplicitString } from "@web/../lib/hoot/hoot_utils";
@@ -25,7 +25,7 @@ class TestEditor extends Component {
         </t>
         <Wysiwyg t-props="wysiwygProps" />`;
     static components = { Wysiwyg };
-    static props = ["wysiwygProps", "content", "styleContent?", "onMounted?"];
+    static props = ["wysiwygProps", "content", "styleContent?", "onMounted?", "onWillDestroy?"];
 
     setup() {
         const props = this.props;
@@ -59,6 +59,9 @@ class TestEditor extends Component {
             };
             oldOnLoad.call(this, editor);
         };
+        if (this.props.onWillDestroy) {
+            onWillDestroy(this.props.onWillDestroy);
+        }
     }
 }
 
@@ -95,7 +98,7 @@ export async function setupEditor(content, options = {}) {
         };
     });
     const styleContent = options.styleContent || "";
-    await mountWithCleanup(TestEditor, {
+    const editorComponent = await mountWithCleanup(TestEditor, {
         props: {
             // TODO: Move the markup call up the chain and call markup at source.
             // markup: Not the correct place to call markup as content can be anything but would be okay for the tests.
@@ -103,6 +106,7 @@ export async function setupEditor(content, options = {}) {
             wysiwygProps,
             styleContent,
             onMounted: options.onMounted,
+            onWillDestroy: options.onWillDestroy,
         },
         env: options.env,
     });
@@ -124,6 +128,7 @@ export async function setupEditor(content, options = {}) {
         el: editor.editable,
         editor,
         plugins,
+        editorComponent,
     };
 }
 
@@ -160,7 +165,9 @@ export async function testEditor(config) {
         };
     }
     delete config.props?.mobile;
-    const { el, editor } = await setupEditor(contentBefore, config);
+    const willBeDestroyed = new Deferred();
+    config.onWillDestroy = () => willBeDestroyed.resolve();
+    const { el, editor, editorComponent } = await setupEditor(contentBefore, config);
     // The stageSelection should have been triggered by the click on
     // the editable. As we set the selection programmatically, we dispatch the
     // selection here for the commands that relies on it.
@@ -207,6 +214,8 @@ export async function testEditor(config) {
         // Test that the saved value matches the cleaned value tested above.
         await compareFunction(content, innerHTML, "Value from editor.getContent()", editor);
     }
+    destroy(editorComponent);
+    await willBeDestroyed;
 }
 /**
  * @todo: remove this?
