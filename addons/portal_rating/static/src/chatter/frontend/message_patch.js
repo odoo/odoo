@@ -26,7 +26,7 @@ patch(Message.prototype, {
             );
             this.props.message.composer = {
                 message: this.props.message,
-                text: messageContent,
+                composerHtml: this.props.message.rating_id.publisher_comment,
                 portalComment: true,
                 selection: {
                     start: messageContent.length,
