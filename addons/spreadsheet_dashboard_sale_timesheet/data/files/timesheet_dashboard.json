@@ -1894,4 +1894,590 @@
             "odooMenuId": "hr_timesheet.timesheet_menu_root"
         }
     }
+<<<<<<< 0da97694f76ab2b96d76276e53d35e7a1d5b063e
+||||||| 21d9c8b75567d7ede56c3cfe38bf191d8922f54d
+  ],
+  "styles": {
+    "1": { "textColor": "#01666b", "bold": true, "fontSize": 16 },
+    "2": { "textColor": "#434343", "fontSize": 11, "bold": true },
+    "3": { "textColor": "#434343", "verticalAlign": "middle" },
+    "4": {
+      "textColor": "#434343",
+      "fontSize": 11,
+      "bold": true,
+      "align": "center"
+    },
+    "5": { "bold": true },
+    "6": { "fillColor": "#f2f2f2" }
+  },
+  "formats": { "1": "0%", "2": "0.00%" },
+  "borders": {
+    "1": {
+      "bottom": { "style": "thin", "color": "#CCCCCC" }
+    },
+    "2": {
+      "top": { "style": "thin", "color": "#CCCCCC" }
+    },
+    "3": {
+      "bottom": { "style": "thick", "color": "#FFFFFF" }
+    },
+    "4": {
+      "top": { "style": "thick", "color": "#FFFFFF" },
+      "bottom": { "style": "thick", "color": "#FFFFFF" }
+    },
+    "5": {
+      "top": { "style": "thick", "color": "#FFFFFF" }
+    }
+  },
+  "revisionId": "START_REVISION",
+  "uniqueFigureIds": true,
+  "settings": {
+    "locale": {
+      "name": "English (US)",
+      "code": "en_US",
+      "thousandsSeparator": ",",
+      "decimalSeparator": ".",
+      "dateFormat": "mm/dd/yyyy",
+      "timeFormat": "hh:mm:ss",
+      "formulaArgSeparator": ",",
+      "weekStart": 7
+    }
+  },
+  "pivots": {
+    "1": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": 0 },
+        "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+        "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+        "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+        "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        ["project_id", "!=", false],
+        ["project_id", "!=", false]
+      ],
+      "id": "1",
+      "measures": [
+        { "id": "unit_amount", "fieldName": "unit_amount" },
+        { "id": "billable_time", "fieldName": "billable_time" }
+      ],
+      "model": "timesheets.analysis.report",
+      "name": "Timesheets Analysis by Project",
+      "sortedColumn": {
+        "measure": "billable_time",
+        "order": "desc",
+        "domain": []
+      },
+      "formulaId": "1",
+      "columns": [],
+      "rows": [
+        { "fieldName": "project_id" }
+      ]
+    },
+    "2": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": 0 },
+        "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+        "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+        "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+        "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        ["project_id", "!=", false],
+        ["task_id", "!=", false]
+      ],
+      "id": "2",
+      "measures": [
+        { "id": "unit_amount", "fieldName": "unit_amount" },
+        { "id": "billable_time", "fieldName": "billable_time" }
+      ],
+      "model": "timesheets.analysis.report",
+      "name": "Timesheets Analysis by Task",
+      "sortedColumn": {
+        "measure": "billable_time",
+        "order": "desc",
+        "domain": []
+      },
+      "formulaId": "2",
+      "columns": [],
+      "rows": [
+        { "fieldName": "task_id" }
+      ]
+    },
+    "3": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": 0 },
+        "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+        "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+        "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+        "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        ["project_id", "!=", false],
+        ["department_id", "!=", false]
+      ],
+      "id": "3",
+      "measures": [
+        { "id": "unit_amount", "fieldName": "unit_amount" },
+        { "id": "billable_time", "fieldName": "billable_time" }
+      ],
+      "model": "timesheets.analysis.report",
+      "name": "Timesheets Analysis by Department",
+      "sortedColumn": {
+        "measure": "billable_time",
+        "order": "desc",
+        "domain": []
+      },
+      "formulaId": "3",
+      "columns": [],
+      "rows": [
+        { "fieldName": "department_id" }
+      ]
+    },
+    "4": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": 0 },
+        "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+        "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+        "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+        "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        ["project_id", "!=", false],
+        ["employee_id", "!=", false]
+      ],
+      "id": "4",
+      "measures": [
+        { "id": "unit_amount", "fieldName": "unit_amount" },
+        { "id": "billable_time", "fieldName": "billable_time" }
+      ],
+      "model": "timesheets.analysis.report",
+      "name": "Timesheets Analysis by Employee",
+      "sortedColumn": {
+        "measure": "billable_time",
+        "order": "desc",
+        "domain": []
+      },
+      "formulaId": "4",
+      "columns": [],
+      "rows": [
+        { "fieldName": "employee_id" }
+      ]
+    },
+    "5": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": 0 },
+        "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+        "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+        "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+        "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+      },
+      "context": { "grid_anchor": "2022-09-12", "group_expand": true },
+      "domain": [
+        "&",
+        ["project_id", "!=", false],
+        ["user_id", "=", 2]
+      ],
+      "id": "5",
+      "measures": [
+        { "id": "unit_amount", "fieldName": "unit_amount" }
+      ],
+      "model": "account.analytic.line",
+      "name": "stats - current",
+      "sortedColumn": null,
+      "formulaId": "5",
+      "columns": [],
+      "rows": [
+        { "fieldName": "timesheet_invoice_type" }
+      ]
+    },
+    "6": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": -1 },
+        "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+        "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+        "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+        "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+      },
+      "context": { "grid_anchor": "2022-09-12", "group_expand": true },
+      "domain": [
+        "&",
+        ["project_id", "!=", false],
+        ["user_id", "=", 2]
+      ],
+      "id": "6",
+      "measures": [
+        { "id": "unit_amount", "fieldName": "unit_amount" }
+      ],
+      "model": "account.analytic.line",
+      "name": "stats - previous",
+      "sortedColumn": null,
+      "formulaId": "6",
+      "columns": [],
+      "rows": [
+        { "fieldName": "timesheet_invoice_type" }
+      ]
+    }
+  },
+  "pivotNextId": 7,
+  "customTableStyles": {},
+  "odooVersion": 13,
+  "globalFilters": [
+    {
+      "id": "fb3700b0-4ee9-4086-86ac-6c62a7d33d37",
+      "type": "date",
+      "label": "Period",
+      "defaultValue": "last_month",
+      "rangeType": "relative"
+    },
+    {
+      "id": "65e4bccf-3035-47a0-a268-9a4e5b48037f",
+      "type": "relation",
+      "label": "Project",
+      "modelName": "project.project",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    },
+    {
+      "id": "22a76320-0363-4391-9121-65e1db51b671",
+      "type": "relation",
+      "label": "Task",
+      "modelName": "project.task",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    },
+    {
+      "id": "541de762-4a6c-435e-a5ff-e94d393cf6df",
+      "type": "relation",
+      "label": "Department",
+      "modelName": "hr.department",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    },
+    {
+      "id": "4788ea63-ee8f-4082-a118-a26b4b6f1a71",
+      "type": "relation",
+      "label": "Employee",
+      "modelName": "hr.employee",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    }
+  ],
+  "lists": {},
+  "listNextId": 1,
+  "chartOdooMenusReferences": {
+    "711b3ea3-d7f4-4fa9-85a4-0fa7d46d3811": "hr_timesheet.timesheet_menu_root",
+    "6eba1314-09d2-4821-af97-ad22f43a87fa": "hr_timesheet.timesheet_menu_root",
+    "39c6667b-b74a-478e-87e9-75c22de5ea1f": "hr_timesheet.timesheet_menu_root",
+    "14907ee1-177b-4dda-97d7-223b1b00abe5": "hr_timesheet.timesheet_menu_activity_all",
+    "c484c691-bb4a-4a9d-8a25-8464162ee96a": "hr_timesheet.timesheet_menu_activity_all",
+    "0b033641-2a0f-4db7-893d-f14fbb320b94": "hr_timesheet.timesheet_menu_activity_all"
+  }
+=======
+  ],
+  "styles": {
+    "1": { "textColor": "#01666b", "bold": true, "fontSize": 16 },
+    "2": { "textColor": "#434343", "fontSize": 11, "bold": true },
+    "3": { "textColor": "#434343", "verticalAlign": "middle" },
+    "4": {
+      "textColor": "#434343",
+      "fontSize": 11,
+      "bold": true,
+      "align": "center"
+    },
+    "5": { "bold": true },
+    "6": { "fillColor": "#f2f2f2" }
+  },
+  "formats": { "1": "0%", "2": "0.00%" },
+  "borders": {
+    "1": {
+      "bottom": { "style": "thin", "color": "#CCCCCC" }
+    },
+    "2": {
+      "top": { "style": "thin", "color": "#CCCCCC" }
+    },
+    "3": {
+      "bottom": { "style": "thick", "color": "#FFFFFF" }
+    },
+    "4": {
+      "top": { "style": "thick", "color": "#FFFFFF" },
+      "bottom": { "style": "thick", "color": "#FFFFFF" }
+    },
+    "5": {
+      "top": { "style": "thick", "color": "#FFFFFF" }
+    }
+  },
+  "revisionId": "START_REVISION",
+  "uniqueFigureIds": true,
+  "settings": {
+    "locale": {
+      "name": "English (US)",
+      "code": "en_US",
+      "thousandsSeparator": ",",
+      "decimalSeparator": ".",
+      "dateFormat": "mm/dd/yyyy",
+      "timeFormat": "hh:mm:ss",
+      "formulaArgSeparator": ",",
+      "weekStart": 7
+    }
+  },
+  "pivots": {
+    "1": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": 0 },
+        "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+        "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+        "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+        "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        ["project_id", "!=", false],
+        ["project_id", "!=", false]
+      ],
+      "id": "1",
+      "measures": [
+        { "id": "unit_amount", "fieldName": "unit_amount" },
+        { "id": "billable_time", "fieldName": "billable_time" }
+      ],
+      "model": "timesheets.analysis.report",
+      "name": "Timesheets Analysis by Project",
+      "sortedColumn": {
+        "measure": "billable_time",
+        "order": "desc",
+        "domain": []
+      },
+      "formulaId": "1",
+      "columns": [],
+      "rows": [
+        { "fieldName": "project_id" }
+      ]
+    },
+    "2": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": 0 },
+        "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+        "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+        "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+        "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        ["project_id", "!=", false],
+        ["task_id", "!=", false]
+      ],
+      "id": "2",
+      "measures": [
+        { "id": "unit_amount", "fieldName": "unit_amount" },
+        { "id": "billable_time", "fieldName": "billable_time" }
+      ],
+      "model": "timesheets.analysis.report",
+      "name": "Timesheets Analysis by Task",
+      "sortedColumn": {
+        "measure": "billable_time",
+        "order": "desc",
+        "domain": []
+      },
+      "formulaId": "2",
+      "columns": [],
+      "rows": [
+        { "fieldName": "task_id" }
+      ]
+    },
+    "3": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": 0 },
+        "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+        "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+        "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+        "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        ["project_id", "!=", false],
+        ["department_id", "!=", false]
+      ],
+      "id": "3",
+      "measures": [
+        { "id": "unit_amount", "fieldName": "unit_amount" },
+        { "id": "billable_time", "fieldName": "billable_time" }
+      ],
+      "model": "timesheets.analysis.report",
+      "name": "Timesheets Analysis by Department",
+      "sortedColumn": {
+        "measure": "billable_time",
+        "order": "desc",
+        "domain": []
+      },
+      "formulaId": "3",
+      "columns": [],
+      "rows": [
+        { "fieldName": "department_id" }
+      ]
+    },
+    "4": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": 0 },
+        "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+        "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+        "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+        "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+      },
+      "context": {},
+      "domain": [
+        "&",
+        ["project_id", "!=", false],
+        ["employee_id", "!=", false]
+      ],
+      "id": "4",
+      "measures": [
+        { "id": "unit_amount", "fieldName": "unit_amount" },
+        { "id": "billable_time", "fieldName": "billable_time" }
+      ],
+      "model": "timesheets.analysis.report",
+      "name": "Timesheets Analysis by Employee",
+      "sortedColumn": {
+        "measure": "billable_time",
+        "order": "desc",
+        "domain": []
+      },
+      "formulaId": "4",
+      "columns": [],
+      "rows": [
+        { "fieldName": "employee_id" }
+      ]
+    },
+    "5": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": 0 },
+        "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+        "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+        "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+        "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+      },
+      "context": { "grid_anchor": "2022-09-12", "group_expand": true },
+      "domain": [["project_id", "!=", false]],
+      "id": "5",
+      "measures": [
+        { "id": "unit_amount", "fieldName": "unit_amount" }
+      ],
+      "model": "account.analytic.line",
+      "name": "stats - current",
+      "sortedColumn": null,
+      "formulaId": "5",
+      "columns": [],
+      "rows": [
+        { "fieldName": "timesheet_invoice_type" }
+      ]
+    },
+    "6": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": -1 },
+        "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+        "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+        "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+        "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+      },
+      "context": { "grid_anchor": "2022-09-12", "group_expand": true },
+      "domain": [["project_id", "!=", false]],
+      "id": "6",
+      "measures": [
+        { "id": "unit_amount", "fieldName": "unit_amount" }
+      ],
+      "model": "account.analytic.line",
+      "name": "stats - previous",
+      "sortedColumn": null,
+      "formulaId": "6",
+      "columns": [],
+      "rows": [
+        { "fieldName": "timesheet_invoice_type" }
+      ]
+    }
+  },
+  "pivotNextId": 7,
+  "customTableStyles": {},
+  "odooVersion": 13,
+  "globalFilters": [
+    {
+      "id": "fb3700b0-4ee9-4086-86ac-6c62a7d33d37",
+      "type": "date",
+      "label": "Period",
+      "defaultValue": "last_month",
+      "rangeType": "relative"
+    },
+    {
+      "id": "65e4bccf-3035-47a0-a268-9a4e5b48037f",
+      "type": "relation",
+      "label": "Project",
+      "modelName": "project.project",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    },
+    {
+      "id": "22a76320-0363-4391-9121-65e1db51b671",
+      "type": "relation",
+      "label": "Task",
+      "modelName": "project.task",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    },
+    {
+      "id": "541de762-4a6c-435e-a5ff-e94d393cf6df",
+      "type": "relation",
+      "label": "Department",
+      "modelName": "hr.department",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    },
+    {
+      "id": "4788ea63-ee8f-4082-a118-a26b4b6f1a71",
+      "type": "relation",
+      "label": "Employee",
+      "modelName": "hr.employee",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year"
+    }
+  ],
+  "lists": {},
+  "listNextId": 1,
+  "chartOdooMenusReferences": {
+    "711b3ea3-d7f4-4fa9-85a4-0fa7d46d3811": "hr_timesheet.timesheet_menu_root",
+    "6eba1314-09d2-4821-af97-ad22f43a87fa": "hr_timesheet.timesheet_menu_root",
+    "39c6667b-b74a-478e-87e9-75c22de5ea1f": "hr_timesheet.timesheet_menu_root",
+    "14907ee1-177b-4dda-97d7-223b1b00abe5": "hr_timesheet.timesheet_menu_activity_all",
+    "c484c691-bb4a-4a9d-8a25-8464162ee96a": "hr_timesheet.timesheet_menu_activity_all",
+    "0b033641-2a0f-4db7-893d-f14fbb320b94": "hr_timesheet.timesheet_menu_activity_all"
+  }
+>>>>>>> 566b317026c4a43fff138ef7e0e24a5ac97796bb
 }
