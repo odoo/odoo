@@ -531,8 +531,7 @@ export class ListPlugin extends Plugin {
             (compareListTypes(previousSibling, element) ||
                 (element.tagName === "LI" &&
                     isListItem(previousSibling) &&
-                    (isListElement(previousSibling.lastChild) ||
-                        isListElement(element.firstChild))))
+                    isListElement(element.firstChild)))
         ) {
             const cursors = this.dependencies.selection.preserveSelection();
             cursors.update(callbacksForCursorUpdate.merge(element));
