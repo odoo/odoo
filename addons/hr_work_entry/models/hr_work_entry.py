@@ -122,12 +122,20 @@ class HrWorkEntry(models.Model):
             return True
         return False
 
-    def action_split(self):
+    def action_split(self, vals):
         self.ensure_one()
         if self.duration < 1:
             raise UserError(self.env._("You can't split a work entry with less than 1 hour."))
-        self.duration /= 2
+        split_duration = vals['duration']
+        if self.duration <= split_duration:
+            raise UserError(
+                self.env._(
+                    "Split work entry duration has to be less than the existing work entry duration."
+                )
+            )
+        self.duration -= split_duration
         split_work_entry = self.copy()
+        split_work_entry.write(vals)
         return split_work_entry.id
 
     def _check_if_error(self):
