@@ -142,8 +142,8 @@ class HrVersion(models.Model):
         groups="hr.group_hr_manager")
     trial_date_end = fields.Date('End of Trial Period', help="End date of the trial period (if there is one).",
                                  groups="hr.group_hr_manager")
-    date_start = fields.Date(compute='_compute_dates', groups="hr.group_hr_manager")
-    date_end = fields.Date(compute='_compute_dates', groups="hr.group_hr_manager")
+    date_start = fields.Date(compute='_compute_dates', groups="hr.group_hr_manager", search="_search_start_date")
+    date_end = fields.Date(compute='_compute_dates', groups="hr.group_hr_manager", search="_search_end_date")
     is_current = fields.Boolean(compute='_compute_is_current', groups="hr.group_hr_manager")
     is_past = fields.Boolean(compute='_compute_is_past', groups="hr.group_hr_manager")
     is_future = fields.Boolean(compute='_compute_is_future', groups="hr.group_hr_manager")
@@ -495,6 +495,12 @@ class HrVersion(models.Model):
                 version.date_end = date_version_end
             else:
                 version.date_end = version.contract_date_end
+
+    def _search_start_date(self, operator, value):
+        return [('contract_date_start', operator, value)]
+
+    def _search_end_date(self, operator, value):
+        return [('contract_date_end', operator, value)]
 
     @api.model
     def _get_marital_status_selection(self):
