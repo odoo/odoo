@@ -18,7 +18,7 @@ class AccountMove(models.Model):
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
         if self.journal_id.company_id.account_fiscal_country_id != self.env.ref('base.cl') or not \
-                self.journal_id.l10n_latam_use_documents:
+                self.l10n_latam_use_documents:
             return super()._get_l10n_latam_documents_domain()
         if self.journal_id.type == 'sale':
             domain = [('country_id.code', '=', 'CL')]
@@ -67,13 +67,13 @@ class AccountMove(models.Model):
                                                   and latam_document_type_code not in ['35', '38', '39', '41']):
                 raise ValidationError(_('Tax payer type and vat number are mandatory for this type of '
                                         'document. Please set the current tax payer type of this customer'))
-            if rec.journal_id.type == 'sale' and rec.journal_id.l10n_latam_use_documents:
+            if rec.journal_id.type == 'sale' and rec.l10n_latam_use_documents:
                 if country_id.code != "CL":
                     if not ((tax_payer_type == '4' and latam_document_type_code in ['110', '111', '112']) or (
                             tax_payer_type == '3' and latam_document_type_code in ['39', '41', '61', '56'])):
                         raise ValidationError(_(
                             'Document types for foreign customers must be export type (codes 110, 111 or 112) or you should define the customer as an end consumer and use receipts (codes 39 or 41)'))
-            if rec.journal_id.type == 'purchase' and rec.journal_id.l10n_latam_use_documents:
+            if rec.journal_id.type == 'purchase' and rec.l10n_latam_use_documents:
                 if vat != SII_VAT and latam_document_type_code == '914':
                     raise ValidationError(_('The DIN document is intended to be used only with RUT 60805000-0'
                                             ' (Tesorería General de La República)'))
@@ -111,7 +111,7 @@ class AccountMove(models.Model):
     def _get_starting_sequence(self):
         """ If use documents then will create a new starting sequence using the document type code prefix and the
         journal document number with a 6 padding number """
-        if self.journal_id.l10n_latam_use_documents and self.company_id.account_fiscal_country_id.code == "CL":
+        if self.l10n_latam_use_documents and self.company_id.account_fiscal_country_id.code == "CL":
             if self.l10n_latam_document_type_id:
                 return self._l10n_cl_get_formatted_sequence()
         return super()._get_starting_sequence()
