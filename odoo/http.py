@@ -1939,11 +1939,29 @@ class Request:
                 # not include scheme)
                 if origin := headers.get('Origin'):
                     if urlsplit(origin).netloc == headers.get('Host'):
+                        if csrf:
+                            _logger.runbot(
+                                "[WIP] unnecessary CSRF token to %s in %s",
+                                self.httprequest.path,
+                                module_manager.current_test or None,
+                            )
                         return True
                 else:
+                    if csrf:
+                        _logger.runbot(
+                            "[WIP] unnecessary CSRF token to %s in %s",
+                            self.httprequest.path,
+                            module_manager.current_test or None,
+                        )
                     # not a browser (or non-cors-relevant) => not a concern
                     return True
             case 'same-origin' | 'none':
+                if csrf:
+                    _logger.runbot(
+                        "[WIP] unnecessary CSRF token to %s in %s",
+                        self.httprequest.path,
+                        module_manager.current_test or None,
+                    )
                 return True
             case _:
                 pass  # fallback to legacy csrf
@@ -2478,6 +2496,13 @@ class HttpDispatcher(Dispatcher):
                 else:
                     _logger.warning(MISSING_CSRF_WARNING, request.httprequest.path)
                 raise werkzeug.exceptions.BadRequest('Session expired (invalid CSRF token)')
+
+        if endpoint.routing.get('csrf', True) is False and self.request.validate_csrf(None):
+            _logger.runbot(
+                "[WIP] unnecessary csrf=False on %s (from %s)",
+                self.request.httprequest.path,
+                module_manager.current_test or '<no test>',
+            )
 
         if self.request.db:
             return self.request.registry['ir.http']._dispatch(endpoint)
