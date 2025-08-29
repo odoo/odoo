@@ -60,12 +60,9 @@ class ProductTemplate(models.Model):
     @api.depends_context('company')
     @api.depends('categ_id.property_valuation')
     def _compute_valuation(self):
-        pt_with_category = self.filtered('categ_id')
-        (self - pt_with_category).valuation = 'periodic'
-        for product_template in pt_with_category:
+        for product_template in self:
             product_template.valuation = product_template.categ_id.with_company(
-                product_template.company_id
-            ).property_valuation
+                product_template.company_id).property_valuation or self.env.company.inventory_valuation
 
     def write(self, vals):
         res = super().write(vals)
@@ -83,12 +80,11 @@ class ProductTemplate(models.Model):
         @return: dictionary which contains information regarding stock accounts and super (income+expense accounts)
         """
         accounts = super()._get_product_accounts()
-        AccountAccount = self.env['account.account']
 
         accounts['stock_valuation'] = (
                 self.categ_id.property_stock_valuation_account_id
                 or self.categ_id._fields['property_stock_valuation_account_id'].get_company_dependent_fallback(self.categ_id)
-                or AccountAccount
+                or self.env.company.account_stock_valuation_id
             )
         accounts['stock_variation'] = accounts['stock_valuation'].account_stock_variation_id
         return accounts
@@ -102,6 +98,7 @@ class ProductTemplate(models.Model):
             'stock_journal': (
                 self.categ_id.property_stock_journal
                 or self.categ_id._fields['property_stock_journal'].get_company_dependent_fallback(self.categ_id)
+                or self.env.company.account_stock_journal_id
             )
         })
         return accounts

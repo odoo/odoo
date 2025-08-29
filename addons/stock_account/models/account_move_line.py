@@ -18,15 +18,13 @@ class AccountMoveLine(models.Model):
             if not line.product_id.is_storable:
                 continue
             # Periodic with expense account
-            if line.product_id.valuation == 'periodic' and not line.move_id.company_id.anglo_saxon_accounting:
+            if line.product_id.valuation == 'periodic':
                 continue
             fiscal_position = line.move_id.fiscal_position_id
             accounts = line.with_company(line.company_id).product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
 
             if line.product_id.valuation == 'real_time' and accounts['stock_valuation']:
                 line.account_id = accounts['stock_valuation']
-            elif line.company_id.anglo_saxon_accounting and accounts['stock_variation']:
-                line.account_id = accounts['stock_variation']
 
     @api.onchange('product_id')
     def _inverse_product_id(self):
