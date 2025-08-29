@@ -539,6 +539,8 @@ class PurchaseOrderLine(models.Model):
         # _select_seller is used if the supplier have different price depending
         # the quantities ordered.
         today = fields.Date.today()
+        # TODO double check why select seller with force_uom off doesnt select the best seller regardless of uom
+        uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_id, rounding_method='HALF-UP')
         seller = product_id.with_company(company_id)._select_seller(
             partner_id=partner_id,
             quantity=product_qty if values.get('force_uom') else uom_po_qty,
@@ -546,6 +548,7 @@ class PurchaseOrderLine(models.Model):
             uom_id=product_uom if values.get('force_uom') else product_id.uom_id,
             params={'force_uom': values.get('force_uom')}
         )
+        uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_id, rounding_method='HALF-UP')
         if seller and (seller.product_uom_id or seller.product_tmpl_id.uom_id) != product_uom:
             uom_po_qty = product_id.uom_id._compute_quantity(uom_po_qty, seller.product_uom_id, rounding_method='HALF-UP')
 
@@ -571,7 +574,7 @@ class PurchaseOrderLine(models.Model):
             name += '\n' + product_lang.description_purchase
 
         date_planned = self.order_id.date_planned or self._get_date_planned(seller, po=po)
-        discount = seller.discount or 0.0
+        discount = seller.discount if seller and seller.discount else 0.0
 
         return {
             'name': name,

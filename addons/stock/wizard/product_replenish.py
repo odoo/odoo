@@ -75,9 +75,8 @@ class ProductReplenish(models.TransientModel):
             res['warehouse_id'] = warehouse.id
         if 'route_id' in fields and 'route_id' not in res and product_tmpl_id:
             res['route_id'] = self.env['stock.route'].search(self._get_route_domain(product_tmpl_id), limit=1).id
-            if not res['route_id']:
-                if product_tmpl_id.route_ids:
-                    res['route_id'] = product_tmpl_id.route_ids.filtered(lambda r: r.company_id == self.env.company or not r.company_id)[0].id
+            if not res['route_id'] and product_tmpl_id.route_ids:
+                res['route_id'] = product_tmpl_id.route_ids.filtered(lambda r: r.company_id == self.env.company or not r.company_id)[:1].id
         return res
 
     def _get_date_planned(self, route_id, **kwargs):

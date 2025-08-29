@@ -69,3 +69,33 @@ class ResPartner(models.Model):
             on_time, ordered = numbers
             partner.on_time_rate = on_time / ordered * 100 if ordered else -1   # use negative number to indicate no data
         (self - seen_partner).on_time_rate = -1
+
+    @api.model
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        """ Returns product vendors first if highlight_supplier flag in context"""
+        res = super().name_search(name, domain, operator, limit)
+        if not self.env.context.get('highlight_supplier', 0):  # Flag for replenish wizard
+            return res
+
+        product = self.env['product.product'].browse(self.env.context['product_id'])
+        listed_vendors = {partner_id for partner_id, _ in res}
+
+        missing_vendors = list(set(product.seller_ids.partner_id.ids) - listed_vendors)
+        if missing_vendors:  # Vendors not in res due to limit (eg. res: Abigail...Wood and Zut is a vendor)
+            vendor_domain = [('id', 'in', missing_vendors)]
+            res.extend(super().name_search(name, vendor_domain, operator, limit))
+
+        res.sort(key=lambda partner: 0 if partner[0] in product.seller_ids.partner_id.ids else 1)
+        return res[:limit] if limit else res
+
+    @api.depends('name')
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        ctx = self.env.context
+        if not ctx.get("highlight_supplier", 0) or not ctx.get("formatted_display_name", 0):
+            return  # If highlight flag OFF or dropdown not expanded return without styling
+
+        product = self.env['product.product'].browse(ctx['product_id'])
+        for rec in self:
+            if rec.id in product.seller_ids.partner_id.ids:
+                rec.display_name = f"**{rec.display_name}**"  # Bold
