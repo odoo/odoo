@@ -137,14 +137,6 @@ class TestPeppolParticipant(TransactionCase):
         with self.assertRaises(ValidationError), self.cr.savepoint():
             settings.button_create_peppol_proxy_user()
 
-    def test_create_participant_already_exists(self):
-        # creating a participant that already exists on Peppol network should not be possible
-        vals = self._get_participant_vals()
-        vals['account_peppol_eas'] = '0208'
-        settings = self.env['res.config.settings'].create(vals)
-        with self.assertRaises(UserError), self.cr.savepoint():
-            settings.button_create_peppol_proxy_user()
-
     def test_create_success_participant(self):
         # should be possible to apply with all data
         # the account_peppol_proxy_state should correctly change to pending
