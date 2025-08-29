@@ -123,7 +123,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         1)seq1 vendor1 140 min qty 1
         2)seq2 vendor2 90  min qty 10
         3)seq3 vendor1 100 min qty 10
-        -> 3) should be chosen
+        -> 2) should be chosen
         """
         product_to_buy = self.env['product.product'].create({
             'name': "Furniture Service",
@@ -161,8 +161,8 @@ class TestReplenishWizard(PurchaseTestCommon):
             'warehouse_id': self.wh.id,
         })
         po = self._get_purchase_order_from_replenishment(replenish_wizard)
-        self.assertEqual(po.partner_id, vendor1)
-        self.assertEqual(po.order_line.price_unit, 100)
+        self.assertEqual(po.partner_id, self.vendor2)
+        self.assertEqual(po.order_line.price_unit, 90)
 
     def test_chose_supplier_3(self):
         """ Choose supplier based on the ordered quantity and minimum price
