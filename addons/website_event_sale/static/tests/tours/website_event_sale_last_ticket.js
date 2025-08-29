@@ -22,12 +22,9 @@ registry.category("web_tour.tours").add('event_buy_last_ticket', {
         trigger: '#wrap:not(:has(a[href*="/event"]:contains("Last ticket test")))',
     },
     {
-        content: "Select 2 units of `VIP` ticket type",
-        trigger: ".modal select:eq(0)",
-        run: "select 2",
-    },
-    {
-        trigger: ".modal select:eq(0):has(option:contains(2):selected)",
+        content: "Edit 2 units of `VIP` ticket type",
+        trigger: ".modal input:eq(1)",
+        run: "edit 2",
     },
     {
         content: "Click on `Register` button",

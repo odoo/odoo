@@ -80,6 +80,7 @@
                 <field name="seats_max" sum="Total" width="120px" string="Maximum per slot" column_invisible="not context.get('is_event_multi_slots')"/>
                 <field name="seats_taken" sum="Total" width="120px" string="Registration" column_invisible="context.get('is_event_multi_slots')"/>
                 <field name="seats_taken" sum="Total" width="120px" string="Total Registration" column_invisible="not context.get('is_event_multi_slots')"/>
+                <field name="limit_max_per_order" optional="hidden"/>
                 <field name="color" widget="color" optional="hidden"/>
             </list>
         </field>
