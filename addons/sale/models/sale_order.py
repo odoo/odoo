@@ -901,9 +901,6 @@ class SaleOrder(models.Model):
 
     @api.onchange('order_line')
     def _onchange_order_line(self):
-        self.order_line.invalidate_recordset(['parent_id'])
-        self.env.add_to_compute(self.order_line._fields['parent_id'], self.order_line)
-
         for index, line in enumerate(self.order_line):
             if line.product_type != 'combo':
                 continue
@@ -1772,7 +1769,10 @@ class SaleOrder(models.Model):
                 )
             return (
                 line.display_type == 'line_section'
-                or not line.parent_id.collapse_composition
+                or not (
+                    line.parent_id.collapse_composition
+                    or line.parent_id.parent_id.collapse_composition
+                )
             )
 
         return self.order_line.filtered(show_line)
@@ -2091,6 +2091,7 @@ class SaleOrder(models.Model):
 
     def _get_product_catalog_record_lines(self, product_ids, *, selected_section_id=False, **kwargs):
         grouped_lines = defaultdict(lambda: self.env['sale.order.line'])
+        selected_section_id = selected_section_id or False
         for line in self.order_line:
             if (
                 line.display_type
@@ -2136,10 +2137,11 @@ class SaleOrder(models.Model):
         :rtype: float
         """
         request.update_context(catalog_skip_tracking=True)
-        sol = self.order_line.filtered_domain([
-            ('product_id', '=', product_id),
-            ('id', 'child_of', selected_section_id),
-        ])
+        selected_section_id = selected_section_id or False
+        sol = self.order_line.filtered(
+            lambda l: l.product_id.id == product_id
+            and l.get_parent_section_line().id == selected_section_id,
+        )
         if sol:
             if quantity != 0:
                 sol.product_uom_qty = quantity
