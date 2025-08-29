@@ -112,6 +112,7 @@ test("LinkPopover opens in full composer", async () => {
     await mailClick("button", { text: "Log note" });
     await mailClick("button[title='Open Full Composer']");
     await waitFor(".odoo-editor-editable");
+    htmlEditor.editable.focus();
     await insertText(htmlEditor, "test");
     const node = queryOne(".odoo-editor-editable div.o-paragraph");
     setSelection({ anchorNode: node, anchorOffset: 0, focusNode: node, focusOffset: 1 });

@@ -100,7 +100,9 @@ describe("should position the cursor outside the link", () => {
     test("clicking at the start of the link when format is applied on link", async () => {
         const { el } = await setupEditor('<p><strong><a href="#/">test</a></strong></p>');
         expect(getContent(el)).toBe(
-            '<p><strong>\ufeff<a href="#/">\ufefftest\ufeff</a>\ufeff</strong></p>'
+            // The editable selection is in the link (first leaf of the editable
+            // upon initialization).
+            '<p><strong>\ufeff<a href="#/" class="o_link_in_selection">\ufefftest\ufeff</a>\ufeff</strong></p>'
         );
 
         const aElement = queryOne("p a");
@@ -108,7 +110,7 @@ describe("should position the cursor outside the link", () => {
         // Simulate the selection with mousedown
         setSelection({ anchorNode: aElement.childNodes[0], anchorOffset: 0 });
         expect(getContent(el)).toBe(
-            '<p><strong>\ufeff<a href="#/">[]\ufefftest\ufeff</a>\ufeff</strong></p>'
+            '<p><strong>\ufeff<a href="#/" class="o_link_in_selection">[]\ufefftest\ufeff</a>\ufeff</strong></p>'
         );
         await animationFrame(); // selection change
         await pointerUp(el);
@@ -343,7 +345,10 @@ test("should not zwnbsp-pad link with image", async () => {
 test("should remove zwnbsp from middle of the link", async () => {
     await testEditor({
         contentBefore: '<p><a href="#/">content</a></p>',
-        contentBeforeEdit: '<p>\ufeff<a href="#/">\ufeffcontent\ufeff</a>\ufeff</p>',
+        contentBeforeEdit:
+            // The editable selection is in the link (first leaf of the editable
+            // upon initialization).
+            '<p>\ufeff<a href="#/" class="o_link_in_selection">\ufeffcontent\ufeff</a>\ufeff</p>',
         stepFunction: async (editor) => {
             // Cursor before the FEFF text node
             setSelection({ anchorNode: editor.editable.querySelector("a"), anchorOffset: 0 });
@@ -358,7 +363,10 @@ test("should remove zwnbsp from middle of the link", async () => {
 test("should remove zwnbsp from middle of the link (2)", async () => {
     await testEditor({
         contentBefore: '<p><a href="#/">content</a></p>',
-        contentBeforeEdit: '<p>\ufeff<a href="#/">\ufeffcontent\ufeff</a>\ufeff</p>',
+        contentBeforeEdit:
+            // The editable selection is in the link (first leaf of the editable
+            // upon initialization).
+            '<p>\ufeff<a href="#/" class="o_link_in_selection">\ufeffcontent\ufeff</a>\ufeff</p>',
         stepFunction: async (editor) => {
             // Cursor inside the FEFF text node
             setSelection({

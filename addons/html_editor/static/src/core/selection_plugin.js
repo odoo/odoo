@@ -336,16 +336,19 @@ export class SelectionPlugin extends Plugin {
         let range;
         let activeSelection;
         if (!selection || !selection.rangeCount) {
+            const [targetNode, targetOffset] = this.config.allowInlineAtRoot
+                ? [this.editable, 0]
+                : getDeepestPosition(this.editable, 0);
             activeSelection = {
-                anchorNode: this.editable,
-                anchorOffset: 0,
-                focusNode: this.editable,
-                focusOffset: 0,
-                startContainer: this.editable,
-                startOffset: 0,
-                endContainer: this.editable,
-                endOffset: 0,
-                commonAncestorContainer: this.editable,
+                anchorNode: targetNode,
+                anchorOffset: targetOffset,
+                focusNode: targetNode,
+                focusOffset: targetOffset,
+                startContainer: targetNode,
+                startOffset: targetOffset,
+                endContainer: targetNode,
+                endOffset: targetOffset,
+                commonAncestorContainer: targetNode,
                 isCollapsed: true,
                 direction: DIRECTIONS.RIGHT,
                 textContent: () => "",
