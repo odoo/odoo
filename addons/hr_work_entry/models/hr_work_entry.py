@@ -78,10 +78,6 @@ class HrWorkEntry(models.Model):
         if version_id := res.get('version_id'):
             self.version_id = version_id
 
-    def _is_duration_computed_from_calendar(self):
-        self.ensure_one()
-        return self._get_duration_is_valid()
-
     @api.model
     def _set_current_contract(self, vals):
         if not vals.get('version_id') and vals.get('date') and vals.get('employee_id'):
