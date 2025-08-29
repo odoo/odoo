@@ -44,7 +44,7 @@ class StockPackage(models.Model):
     child_package_ids = fields.One2many('stock.package', 'parent_package_id', string='Contained Packages')
     all_children_package_ids = fields.One2many('stock.package', compute='_compute_all_children_package_ids', search="_search_all_children_package_ids")
     package_dest_id = fields.Many2one('stock.package', 'Destination Container', index='btree_not_null')
-    outermost_package_id = fields.Many2one('stock.package', 'Outermost Destination Container', compute="_compute_outermost_package_id")
+    outermost_package_id = fields.Many2one('stock.package', 'Outermost Destination Container', compute="_compute_outermost_package_id", search="_search_outermost_package_id")
     child_package_dest_ids = fields.One2many('stock.package', 'package_dest_id', 'Assigned Contained Packages')
     move_line_ids = fields.One2many('stock.move.line', compute="_compute_move_line_ids", search="_search_move_line_ids")
     picking_ids = fields.Many2many('stock.picking', string='Transfers', compute='_compute_picking_ids', search="_search_picking_ids", help="Transfers in which the Package is set as Destination Package")
@@ -239,6 +239,17 @@ class StockPackage(models.Model):
 
         return [('id', 'in', all_package_ids)]
 
+    def _search_outermost_package_id(self, operator, value):
+        if operator not in ['in', 'not in']:
+            return NotImplemented
+
+        packages = self.env['stock.package'].search_fetch(
+            domain=[('package_dest_id', operator, value)],
+            field_names=['child_package_dest_ids']
+        )
+        __, all_children_ids = packages._get_all_children_package_dest_ids()
+        return [('id', 'in', all_children_ids)]
+
     def _search_owner(self, operator, value):
         if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
@@ -319,6 +330,10 @@ class StockPackage(models.Model):
             return action
         return False
 
+    def _post_put_in_pack_hook(self):
+        self.ensure_one()
+        return self
+
     def action_put_in_pack(self, *, package_id=False, package_type_id=False, package_name=False):
         action = self._pre_put_in_pack_hook(package_id, package_type_id, package_name, self.env.context.get('from_package_wizard'))
         if action:
@@ -332,7 +347,7 @@ class StockPackage(models.Model):
                 'name': package_name,
             })
         self.package_dest_id = package
-        return package
+        return package._post_put_in_pack_hook()
 
     def action_remove_package(self):
         move_line_ids_to_unlink = set()

@@ -16,21 +16,19 @@ class StockPutInPack(models.TransientModel):
     @api.depends('package_type_id', 'result_package_id')
     def _compute_shipping_weight(self):
         for wizard in self:
-            if not wizard.package_carrier_type or wizard.package_ids:
-                # No need to compute weights for multi-level packages as only lowest-level packages are going to be delivered.
-                wizard.shipping_weight = 0
-                continue
-
-            move_lines = wizard.move_line_ids
-            if wizard.result_package_id:
-                # If we use an existing package, we need to factor in the move lines already in the package.
-                move_lines += wizard.result_package_id.move_line_ids
-
             # Add package weights to shipping weight, package base weight is defined in package.type
             total_weight = wizard.package_type_id.base_weight or wizard.result_package_id.package_type_id.base_weight or 0.0
-            for ml in move_lines:
+
+            if wizard.result_package_id:
+                # If we use an existing package, we need to factor in the shipping weight already set on the package.
+                total_weight += wizard.result_package_id.shipping_weight
+
+            for ml in wizard.move_line_ids:
                 qty = ml.product_uom_id._compute_quantity(ml.quantity, ml.product_id.uom_id)
                 total_weight += qty * ml.product_id.weight
+            for package in wizard.package_ids:
+                total_weight += package.shipping_weight
+
             wizard.shipping_weight = total_weight
 
     @api.onchange('package_type_id', 'result_package_id', 'shipping_weight')
