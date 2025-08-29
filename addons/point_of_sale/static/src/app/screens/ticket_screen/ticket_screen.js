@@ -156,7 +156,15 @@ export class TicketScreen extends Component {
     async onClickScanOrder(qrcode) {
         if (qrcode) {
             const uuid = new URL(qrcode).searchParams.get("order_uuid");
-            const [order] = await this.pos.data.searchRead("pos.order", [["uuid", "=", uuid]]);
+            const results = await this.pos.data.callRelated(
+                "pos.order",
+                "read_pos_orders",
+                [[["uuid", "=", uuid]]],
+                {},
+                false,
+                true
+            );
+            const order = results["pos.order"][0];
             if (order) {
                 this.state.filter = "SYNCED";
                 this.state.selectedOrder = order;
@@ -817,7 +825,14 @@ export class TicketScreen extends Component {
             .map((info) => info[0]);
 
         if (idsNotInCacheOrOutdated.length > 0) {
-            await this.pos.data.read("pos.order", Array.from(new Set(idsNotInCacheOrOutdated)));
+            await this.pos.data.callRelated(
+                "pos.order",
+                "read_pos_orders",
+                [[["id", "in", Array.from(new Set(idsNotInCacheOrOutdated))]]],
+                {},
+                false,
+                true
+            );
         }
     }
     //#endregion
