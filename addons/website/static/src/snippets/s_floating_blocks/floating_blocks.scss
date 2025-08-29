@@ -30,7 +30,7 @@
             }
         }
     }
-    &:hover [data-snippet="s_floating_blocks"] .s_floating_blocks_block:nth-child(1) {
+    &:is(:hover, :focus-visible) [data-snippet="s_floating_blocks"] .s_floating_blocks_block:nth-child(1) {
         margin: 3% 0 -30%;
         transform: scale(.95);
     }

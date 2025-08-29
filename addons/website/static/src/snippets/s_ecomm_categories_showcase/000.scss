@@ -67,11 +67,13 @@
             transition: flex 0.3s ease-out;
         }
 
-        .s_ecomm_categories_showcase_wrapper:hover .s_ecomm_categories_showcase_block {
+        .s_ecomm_categories_showcase_wrapper:hover .s_ecomm_categories_showcase_block,
+        .s_ecomm_categories_showcase_wrapper:focus-within .s_ecomm_categories_showcase_block:not(:focus-within) {
             flex: var(--ecomm-categories-showcase-flex-base);
         }
 
-        .s_ecomm_categories_showcase_wrapper:hover .s_ecomm_categories_showcase_block:hover {
+        .s_ecomm_categories_showcase_wrapper:hover .s_ecomm_categories_showcase_block:hover
+        .s_ecomm_categories_showcase_wrapper .s_ecomm_categories_showcase_block:focus-within {
             flex: 3;
         }
 
