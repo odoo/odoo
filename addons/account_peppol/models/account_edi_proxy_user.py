@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
@@ -312,6 +312,17 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                         # First-time receivers get their initial email here.
                         # If already a sender, they'll receive a second (send+receive) welcome email.
                         edi_user.company_id._account_peppol_send_welcome_email()
+
+    def _peppol_fetch_remaining_daily_quota(self):
+        self.ensure_one()
+        try:
+            quota_info = self._call_peppol_proxy('/api/peppol/1/remaining_daily_quota')
+            quota_reset_at = datetime.fromtimestamp(quota_info['next_reset']) if 'next_reset' in quota_info else None
+            remaining_quota = quota_info.get('remaining_daily_quota', None)
+            return remaining_quota, quota_reset_at if remaining_quota is not None else None
+        except Exception:
+            # this is a UX nice-to-have, so we can continue the usual flow if it ever fails
+            _logger.exception('Error while fetching Peppol remaining daily quota')
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS

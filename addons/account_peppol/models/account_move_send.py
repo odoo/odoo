@@ -1,7 +1,9 @@
 from base64 import b64encode
-from datetime import timedelta
+from datetime import datetime, timedelta
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
+from odoo.tools import format_datetime
+
 from odoo.addons.account.models.company import PEPPOL_LIST
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 
@@ -81,6 +83,38 @@ class AccountMoveSend(models.AbstractModel):
                     ),
                     **what_is_peppol_alert,
                 }
+        if (quota_info := self._peppol_fetch_remaining_quota()) and quota_info[0] < len(moves):
+            remaining_quota, reset_at = quota_info
+            if remaining_quota > 0:
+                alerts['account_peppol_warning_quota'] = {
+                    'level': 'warning',
+                    'message': _(
+                        "You can only send %d more invoice(s) with Peppol today. "
+                        "If you want to send more, you'll need to wait until tomorrow (%s).",
+                        remaining_quota, format_datetime(self.env, reset_at)
+                    ),
+                    'action_text': _("Do you often reach this limit?"),
+                    'action': {
+                        'type': 'ir.actions.act_url',
+                        'target': 'new',
+                        'url': 'https://www.odoo.com/help',
+                    },
+                }
+            else:
+                alerts['account_peppol_warning_quota'] = {
+                    'level': 'warning',
+                    'message': _(
+                        "Peppol can't send any more invoices today. "
+                        "Please try again tomorrow (%s).",
+                        format_datetime(self.env, reset_at)
+                    ),
+                    'action_text': _("Do you often reach this limit?"),
+                    'action': {
+                        'type': 'ir.actions.act_url',
+                        'target': 'new',
+                        'url': 'https://www.odoo.com/help',
+                    },
+                }
         return alerts
 
     # -------------------------------------------------------------------------
@@ -97,6 +131,13 @@ class AccountMoveSend(models.AbstractModel):
     def _get_mail_layout(self):
         # OVERRIDE 'account'
         return 'account_peppol.mail_notification_layout_with_responsible_signature_and_peppol'
+
+    def _peppol_fetch_remaining_quota(self):
+        """Return how many invoices can still be sent today. Returns +inf if unlimited."""
+        edi_sender = self.env.company.peppol_can_send and self.env.company.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == "peppol")[:1]
+        if not edi_sender:
+            return None
+        return edi_sender._peppol_fetch_remaining_daily_quota()
 
     def _do_peppol_pre_send(self, moves):
         if len(moves.company_id) == 1:
@@ -190,11 +231,11 @@ class AccountMoveSend(models.AbstractModel):
         if not params['documents']:
             return
 
-        edi_user = next(iter(invoices_data)).company_id.account_edi_proxy_client_ids.filtered(
+        edi_sender = next(iter(invoices_data)).company_id.account_edi_proxy_client_ids.filtered(
             lambda u: u.proxy_type == 'peppol')
 
         try:
-            response = edi_user._call_peppol_proxy(
+            response = edi_sender._call_peppol_proxy(
                 "/api/peppol/1/send_document",
                 params=params,
             )
@@ -207,7 +248,7 @@ class AccountMoveSend(models.AbstractModel):
                 # at the moment the only error that can happen here is ParticipantNotReady error
                 for invoice, invoice_data in invoices_data_peppol.items():
                     invoice.peppol_move_state = 'error'
-                    invoice_data['error'] = edi_user._get_peppol_error_message(error_vals)
+                    invoice_data['error'] = edi_sender._get_peppol_error_message(error_vals)
             else:
                 # the response only contains message uuids,
                 # so we have to rely on the order to connect peppol messages to account.move
