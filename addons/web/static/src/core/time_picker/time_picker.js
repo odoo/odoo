@@ -28,6 +28,7 @@ export class TimePicker extends Component {
     };
     static props = {
         cssClass: { type: [String, Array, Object], optional: true },
+        inputCssClass: { type: [String, Array, Object], optional: true },
         value: { type: [String, Time, { value: false }, { value: null }], optional: true },
         onChange: { type: Function, optional: true },
         onInvalid: { type: Function, optional: true },
@@ -37,6 +38,7 @@ export class TimePicker extends Component {
     };
     static defaultProps = {
         cssClass: {},
+        inputCssClass: {},
         value: "00:00",
         onChange: () => {},
         onInvalid: () => {},
@@ -67,6 +69,12 @@ export class TimePicker extends Component {
     get cssClass() {
         return mergeClasses(this.props.cssClass, {
             o_time_picker_seconds: this.props.showSeconds,
+        });
+    }
+
+    get inputCssClass() {
+        return mergeClasses(this.props.inputCssClass, {
+            o_invalid: !this.state.isValid,
         });
     }
 
