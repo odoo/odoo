@@ -72,12 +72,11 @@ export class PosData extends Reactive {
             // available and an Odoo server is running locally.
             //
             // A ping is required to verify that the connection to the server is not possible.
-            await rpc("/pos/ping");
-            await this.syncData();
-
             this.network.offline = false;
             this.network.warningTriggered = false;
 
+            await rpc("/pos/ping");
+            await this.syncData();
             window.dispatchEvent(new CustomEvent("pos-network-online"));
         } catch (error) {
             if (error instanceof ConnectionLostError) {
@@ -782,8 +781,15 @@ export class PosData extends Reactive {
                 .filter((id) => typeof id === "number");
 
             if (ids.length) {
-                const result = await this.read("pos.order", ids);
-                const serverIds = result.map((r) => r.id);
+                const result = await this.callRelated(
+                    "pos.order",
+                    "read_pos_orders",
+                    [[["id", "in", ids]]],
+                    {},
+                    false,
+                    true
+                );
+                const serverIds = result["pos.order"].map((r) => r.id);
 
                 for (const id of ids) {
                     if (!serverIds.includes(id)) {
@@ -859,8 +865,20 @@ export class PosData extends Reactive {
         }
     }
 
-    async callRelated(model, method, args = [], kwargs = {}, queue = true) {
-        const data = await this.execute({ type: "call", model, method, args, kwargs, queue });
+    async callRelated(
+        model,
+        method,
+        args = [],
+        kwargs = {},
+        queue = true,
+        loadMessingRecords = false
+    ) {
+        let data = await this.execute({ type: "call", model, method, args, kwargs, queue });
+
+        if (loadMessingRecords) {
+            data = await this.missingRecursive(data);
+        }
+
         if (data) {
             this.deviceSync?.dispatch && this.deviceSync.dispatch(data);
             const result = this.models.connectNewData(data);
