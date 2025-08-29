@@ -61,7 +61,7 @@ class AccountMove(models.Model):
     l10n_latam_document_number = fields.Char(
         compute='_compute_l10n_latam_document_number', inverse='_inverse_l10n_latam_document_number',
         string='Document Number', readonly=False)
-    l10n_latam_use_documents = fields.Boolean(related='journal_id.l10n_latam_use_documents')
+    l10n_latam_use_documents = fields.Boolean(compute='_compute_l10n_latam_use_documents', search='_search_l10n_latam_use_documents')
     l10n_latam_manual_document_number = fields.Boolean(compute='_compute_l10n_latam_manual_document_number', string='Manual Number')
     l10n_latam_document_type_id_code = fields.Char(related='l10n_latam_document_type_id.code', string='Doc Type')
 
@@ -73,8 +73,8 @@ class AccountMove(models.Model):
         * If move use document and are numbered manually do not compute name at all (will be set manually)
         * If move use document and is in draft state and has not been posted before we restart name to False (this is
            when we change the document type) """
-        without_doc_type = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and not x.l10n_latam_document_type_id)
-        manual_documents = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and x.l10n_latam_manual_document_number)
+        without_doc_type = self.filtered(lambda x: x.l10n_latam_use_documents and not x.l10n_latam_document_type_id)
+        manual_documents = self.filtered(lambda x: x.l10n_latam_use_documents and x.l10n_latam_manual_document_number)
         (without_doc_type + manual_documents.filtered(lambda x: not x.name)).name = False
         # we need to group moves by document type as _compute_name will apply the same name prefix of the first record to the others
         group_by_document_type = defaultdict(self.env['account.move'].browse)
@@ -84,7 +84,7 @@ class AccountMove(models.Model):
             super(AccountMove, group)._compute_name()
 
     def _compute_name_placeholder(self):
-        use_documents_moves = self.filtered(lambda m: m.journal_id.l10n_latam_use_documents)
+        use_documents_moves = self.filtered(lambda m: m.l10n_latam_use_documents)
         use_documents_moves.name_placeholder = False
         if other_moves := self - use_documents_moves:
             super(AccountMove, other_moves)._compute_name_placeholder()
@@ -92,7 +92,7 @@ class AccountMove(models.Model):
     @api.depends('l10n_latam_document_type_id', 'journal_id')
     def _compute_l10n_latam_manual_document_number(self):
         """ Indicates if this document type uses a sequence or if the numbering is made manually """
-        recs_with_journal_id = self.filtered(lambda x: x.journal_id and x.journal_id.l10n_latam_use_documents)
+        recs_with_journal_id = self.filtered(lambda x: x.journal_id and x.l10n_latam_use_documents)
         for rec in recs_with_journal_id:
             rec.l10n_latam_manual_document_number = rec._is_manual_document_number()
         remaining = self - recs_with_journal_id
@@ -100,6 +100,10 @@ class AccountMove(models.Model):
 
     def _is_manual_document_number(self):
         return self.journal_id.type == 'purchase'
+
+    def _compute_l10n_latam_use_documents(self):
+        for rec in self:
+            rec.l10n_latam_use_documents = rec.journal_id.l10n_latam_use_documents and rec.move_type != 'in_receipt'
 
     @api.depends('name')
     def _compute_l10n_latam_document_number(self):
@@ -129,7 +133,7 @@ class AccountMove(models.Model):
     @api.onchange('l10n_latam_document_type_id')
     def _onchange_l10n_latam_document_type_id(self):
         # if we change document or journal and we are in draft and not posted, we clean number so that is recomputed
-        if (self.journal_id.l10n_latam_use_documents and self.l10n_latam_document_type_id
+        if (self.l10n_latam_use_documents and self.l10n_latam_document_type_id
               and not self.l10n_latam_manual_document_number and self.state == 'draft' and not self.posted_before):
             self.name = False
             self._compute_name()
@@ -152,7 +156,7 @@ class AccountMove(models.Model):
         return False
 
     def _get_starting_sequence(self):
-        if self.journal_id.l10n_latam_use_documents:
+        if self.l10n_latam_use_documents:
             if self.l10n_latam_document_type_id:
                 return "%s 00000000" % (self.l10n_latam_document_type_id.doc_code_prefix)
             # There was no pattern found, propose one
@@ -224,11 +228,16 @@ class AccountMove(models.Model):
                 rec.l10n_latam_document_type_id = document_types and document_types[0].id
 
     def _compute_made_sequence_gap(self):
-        use_documents_moves = self.filtered(lambda m: m.journal_id.l10n_latam_use_documents)
+        use_documents_moves = self.filtered(lambda m: m.l10n_latam_use_documents)
         use_documents_moves.made_sequence_gap = False
         if other_moves := self - use_documents_moves:
             super(AccountMove, other_moves)._compute_made_sequence_gap()
 
     def _set_next_made_sequence_gap(self, made_gap: bool):
-        if other_moves := self.filtered(lambda m: not m.journal_id.l10n_latam_use_documents):
+        if other_moves := self.filtered(lambda m: not m.l10n_latam_use_documents):
             super(AccountMove, other_moves)._set_next_made_sequence_gap(made_gap)
+
+    def _search_l10n_latam_use_documents(self, operator, value):
+        if operator not in ('=', '!='):
+            return NotImplemented
+        return [('journal_id.l10n_latam_use_documents', operator, value), ('move_type', '!=', 'in_receipt')]
