@@ -269,7 +269,7 @@
                                 <list decoration-muted="scrapped == True or state == 'cancel' or (state == 'done' and is_locked == True)" string="Stock Moves" editable="bottom">
                                     <control>
                                         <create string="Add a Product"/>
-                                        <button name="action_add_packages" invisible="not parent.picking_type_entire_packs" context="{'picking_id': parent.id, 'show_src_package': 1}" string="Move a Pack" type="object" class="px-4 btn-link" groups="stock.group_tracking_lot"/>
+                                        <button name="action_add_packages" context="{'picking_id': parent.id, 'show_src_package': 1}" string="Move a Pack" type="object" class="px-4 btn-link" groups="stock.group_tracking_lot"/>
                                     </control>
                                     <field name="company_id" column_invisible="True"/>
                                     <field name="state" readonly="0" column_invisible="True"/>
