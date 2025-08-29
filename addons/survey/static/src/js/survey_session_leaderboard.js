@@ -9,8 +9,11 @@ publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
         this.surveyAccessToken = options.surveyAccessToken;
         this.$sessionResults = options.sessionResults;
 
-        this.BAR_MIN_WIDTH = '3rem';
-        this.BAR_WIDTH = '24rem';
+        const BAR_QUEST_MIN_WIDTH_REM = 3.7;
+        this.BAR_MIN_WIDTH = `${BAR_QUEST_MIN_WIDTH_REM}rem`;
+        // Score width + margin + Bar score min width (css) + BAR_QUEST_MIN_WIDTH_REM + margin + nickname width
+        this.BAR_RESERVED_WIDTH_REM = 6.5 + 1 + 3.7 + BAR_QUEST_MIN_WIDTH_REM + 1 + 7.5;
+        this.BAR_WIDTH = `${this.BAR_RESERVED_WIDTH_REM}rem`;
         this.BAR_HEIGHT = '3.8rem';
     },
 
@@ -28,6 +31,8 @@ publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
      */
     showLeaderboard: function (fadeOut, isScoredQuestion) {
         var self = this;
+        // Fix leaderboard size
+        self.$el.css("min-width", `max(50vw, ${this.BAR_RESERVED_WIDTH_REM + 15}rem)`);
 
         var resolveFadeOut;
         var fadeOutPromise;
@@ -47,17 +52,25 @@ publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
         Promise.all([fadeOutPromise, leaderboardPromise]).then(function (results) {
             var leaderboardResults = results[1];
             var $renderedTemplate = $(leaderboardResults);
-            self.$('.o_survey_session_leaderboard_container').append($renderedTemplate);
-
+            const $container = self.$(".o_survey_session_leaderboard_container");
+            $container.addClass("d-none");
+            $container.append($renderedTemplate);
             self.$('.o_survey_session_leaderboard_item').each(function (index) {
+                // Fix current score bar size
+                const widthRatio = this.dataset.currentScore / this.dataset.maxUpdatedScore;
+                const $barEl = $(this).find(".o_survey_session_leaderboard_bar");
+                $barEl.css(
+                    "width",
+                    `calc(calc(100% - ${self.BAR_WIDTH}) * ${widthRatio})`
+                );
+
                 var rgb = SESSION_CHART_COLORS[index % 10];
-                $(this)
-                    .find('.o_survey_session_leaderboard_bar')
-                    .css('background-color', `rgba(${rgb},1)`);
+                $barEl.css("background-color", `rgba(${rgb},1)`);
                 $(this)
                     .find('.o_survey_session_leaderboard_bar_question')
                     .css('background-color', `rgba(${rgb},${0.4})`);
             });
+            $container.removeClass("d-none");
 
             self.$el.fadeIn(400, async function () {
                 if (isScoredQuestion) {
@@ -128,34 +141,11 @@ publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
     },
 
     /**
-     * Takes the leaderboard prior to the current question results
-     * and reduce all scores bars to a small width (3rem).
-     * We keep the small score bars on screen for 1s.
-     *
-     * This visually prepares the display of points for the current question.
-     *
+     * @deprecated
      * @private
      */
     _prepareScores: function () {
-        var self = this;
-        var animationDone;
-        var animationPromise = new Promise(function (resolve) {
-            animationDone = resolve;
-        });
-        setTimeout(function () {
-            this.$('.o_survey_session_leaderboard_bar').each(function () {
-                var currentScore = parseInt($(this)
-                    .closest('.o_survey_session_leaderboard_item')
-                    .data('currentScore'))
-                if (currentScore && currentScore !== 0) {
-                    $(this).css('transition', `width 1s cubic-bezier(.4,0,.4,1)`);
-                    $(this).css('width', self.BAR_MIN_WIDTH);
-                }
-            });
-            setTimeout(animationDone, 1000);
-        }, 300);
-
-        return animationPromise;
+        return Promise.resolve();
     },
 
     /**
@@ -204,7 +194,7 @@ publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
      *   (faded out bar right next to the global score one)
      * - animate the score for the question (ex: from + 0 p to + 40 p)
      *
-     * (We keep a minimum width of 3rem to be able to display '+30 p' within the bar).
+     * (We keep a minimum width of 3rem to be able to display '+30 p' within the bar through a min-width in css).
      *
      * @private
      */
@@ -214,10 +204,12 @@ publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
         var animationPromise = new Promise(function (resolve) {
             animationDone = resolve;
         });
+        const maxUpdatedScore = this.$('.o_survey_session_leaderboard_item').data("maxUpdatedScore");
         setTimeout(function () {
             this.$('.o_survey_session_leaderboard_bar_question').each(function () {
                 var $barEl = $(this);
-                var width = `calc(calc(100% - ${self.BAR_WIDTH}) * ${$barEl.data('widthRatio')} + ${self.BAR_MIN_WIDTH})`;
+                const widthRatio = $barEl.data("questionScore") / maxUpdatedScore;
+                var width = `max(calc(calc(100% - ${self.BAR_WIDTH}) * ${widthRatio}), ${self.BAR_MIN_WIDTH})`;
                 $barEl.css('transition', 'width 1s ease-out');
                 $barEl.css('width', width);
 
@@ -231,7 +223,6 @@ publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
                         increment = 1;
                     }
                     $scoreEl.text('+ 0 p');
-                    console.log($barEl.data('maxQuestionScore'));
                     setTimeout(function () {
                         self._animateScoreCounter(
                             $scoreEl,
@@ -249,28 +240,9 @@ publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
     },
 
     /**
-     * After displaying the score for the current question, we sum the total score
-     * of the user so far with the score of the current question.
-     *
-     * Ex:
-     * We have ('#' for total score before question and '=' for current question score):
-     * 210 p ####=================================== +30 p John
-     * We want:
-     * 240 p ###################################==== +30 p John
-     *
-     * Of course, we also have to weight the bars based on the maximum score.
-     * So if John here has 50% of the points of the leader user, both the question score bar
-     * and the total score bar need to have their width divided by 2:
-     * 240 p ##################== +30 p John
-     *
-     * The width of both bars move at the same time to reach their new position,
-     * with an animation on the width property.
-     * The new width of the "question bar" should represent the ratio of won points
-     * when compared to the total points.
-     * (We keep a minimum width of 3rem to be able to display '+30 p' within the bar).
-     *
-     * The updated total score is animated towards the new value.
-     * we keep this on screen for 500ms before reordering the bars.
+     * After displaying the score for the current question on top of the current score,
+     * we update the total score on the left with an animation by summing both and fade
+     * out the "+ x p" on the question score bar.
      *
      * @private
      */
@@ -280,8 +252,6 @@ publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
         var animationPromise = new Promise(function (resolve) {
             animationDone = resolve;
         });
-        // values that felt the best after a lot of testing
-        var growthAnimation = 'cubic-bezier(.5,0,.66,1.11)';
         setTimeout(function () {
             this.$('.o_survey_session_leaderboard_item').each(function () {
                 var currentScore = parseInt($(this).data('currentScore'));
@@ -295,31 +265,11 @@ publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
                     currentScore,
                     updatedScore,
                     increment,
-                    false);
-
-                var maxUpdatedScore = parseInt($(this).data('maxUpdatedScore'));
-                var baseRatio = maxUpdatedScore ? updatedScore / maxUpdatedScore : 1;
-                var questionScore = parseInt($(this).data('questionScore'));
-                var questionRatio = questionScore /
-                    (updatedScore && updatedScore !== 0 ? updatedScore : 1);
-                // we keep a min fixed with of 3rem to be able to display "+ 5 p"
-                // even if the user already has 1.000.000 points
-                var questionWith = `calc(calc(calc(100% - ${self.BAR_WIDTH}) * ${questionRatio * baseRatio}) + ${self.BAR_MIN_WIDTH})`;
-                $(this)
-                    .find('.o_survey_session_leaderboard_bar_question')
-                    .css('transition', `width ease .5s ${growthAnimation}`)
-                    .css('width', questionWith);
-
-                var updatedScoreRatio = 1 - questionRatio;
-                var updatedScoreWidth = `calc(calc(100% - ${self.BAR_WIDTH}) * ${updatedScoreRatio * baseRatio})`;
-                $(this)
-                    .find('.o_survey_session_leaderboard_bar')
-                    .css('min-width', '0px')
-                    .css('transition', `width ease .5s ${growthAnimation}`)
-                    .css('width', updatedScoreWidth);
-
-                setTimeout(animationDone, 500);
+                    false
+                );
+                $(this).find(".o_survey_session_leaderboard_bar_question_score").fadeOut(500);
             });
+            setTimeout(animationDone, 500);
         }, 1400);
 
         return animationPromise;
