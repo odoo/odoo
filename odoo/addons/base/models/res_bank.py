@@ -99,6 +99,7 @@ class ResPartnerBank(models.Model):
     company_id = fields.Many2one('res.company', 'Company', related='partner_id.company_id', store=True, readonly=True)
     country_code = fields.Char(related='partner_id.country_code', string="Country Code")
     note = fields.Text('Notes')
+    color = fields.Integer(compute='_compute_color')
 
     _unique_number = models.Constraint(
         'unique(sanitized_acc_number, partner_id)',
@@ -137,6 +138,11 @@ class ResPartnerBank(models.Model):
     def _compute_display_name(self):
         for acc in self:
             acc.display_name = f'{acc.acc_number} - {acc.bank_id.name}' if acc.bank_id else acc.acc_number
+
+    @api.depends('allow_out_payment')
+    def _compute_color(self):
+        for bank in self:
+            bank.color = 10 if bank.allow_out_payment else 1
 
     def action_archive_bank(self):
         """
