@@ -7,7 +7,9 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@id='account_peppol_install']" position="replace">
                 <div id="account_peppol" class="col-12 o_setting_box">
-                    <div class="o_setting_right_pane border-0">
+                    <field name="peppol_use_parent_company" invisible="1"/>
+                    <!-- Registering using the current company -->
+                    <div class="o_setting_right_pane border-0" invisible="peppol_use_parent_company">
                         <!-- Info in case of sender. -->
                         <div invisible="account_peppol_proxy_state != 'sender'">
                             You are sending your e-invoices via Odoo with this Peppol ID <field name="account_peppol_edi_identification" class="oe_inline o_form_label" readonly="1"/>.
@@ -71,6 +73,18 @@
                                         invisible="account_peppol_proxy_state != 'sender'"/>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <!-- Registering using the branch company -->
+                <div class="o_setting_right_pane border-0" invisible="not peppol_use_parent_company">
+                    <div>
+                        You are sending from <field name="peppol_parent_company_name" class="oe_inline o_form_label" readonly="1"/>.
+                    </div>
+                    <div class="mt-2">
+                        <button string="Disconnect"
+                                name="button_peppol_disconnect_branch_from_parent"
+                                type="object"
+                                class="btn-secondary me-1"/>
                     </div>
                 </div>
             </xpath>
