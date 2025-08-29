@@ -145,6 +145,7 @@ class TestPeppolParticipant(TransactionCase):
         with self.assertRaises(ValidationError), self.cr.savepoint():
             wizard.button_peppol_sender_registration()
 
+<<<<<<< 78f3cf65c65a70634da4cb0c377d6bc3c69f60d5
     def test_create_participant_already_exists(self):
         # creating a receiver participant that already exists on Peppol network should not be possible
         vals = {**self._get_participant_vals(), 'peppol_eas': '0208', 'peppol_endpoint': '0239843188'}
@@ -153,6 +154,19 @@ class TestPeppolParticipant(TransactionCase):
         wizard.button_register_peppol_participant()
 
     def test_create_success_sender(self):
+||||||| 13e8b462e74f144e085492857bfaa7b0d1f88f93
+    def test_create_participant_already_exists(self):
+        # creating a participant that already exists on Peppol network should not be possible
+        vals = self._get_participant_vals()
+        vals['account_peppol_eas'] = '0208'
+        settings = self.env['res.config.settings'].create(vals)
+        with self.assertRaises(UserError), self.cr.savepoint():
+            settings.button_create_peppol_proxy_user()
+
+    def test_create_success_participant(self):
+=======
+    def test_create_success_participant(self):
+>>>>>>> 6f3b9a3dcabe936bd66dd5ad5cc6805135093504
         # should be possible to apply with all data
         # the account_peppol_proxy_state should correctly change to sender
         # then the account_peppol_proxy_state should not change

@@ -31,7 +31,29 @@
                 <div class="mt-3">
                     <!-- TODO remove in master -->
                     <button type="button"
+<<<<<<< 78f3cf65c65a70634da4cb0c377d6bc3c69f60d5
                             class="btn btn-secondary me-1"
+||||||| 13e8b462e74f144e085492857bfaa7b0d1f88f93
+                            class="btn btn-primary"
+                            t-on-click="sendCode"
+                            t-if="proxyState === 'not_verified'">
+                            Verify mobile number
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <button type="button"
+                            class="btn btn-secondary ms-1"
+=======
+                            class="btn btn-primary"
+                            t-on-click="sendCode"
+                            t-if="proxyState === 'not_verified' and useParentCompany === false">
+                            Verify mobile number
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <button type="button"
+                            class="btn btn-secondary ms-1"
+>>>>>>> 6f3b9a3dcabe936bd66dd5ad5cc6805135093504
                             t-on-click="sendCode"
                             t-att-disabled="this.state.isSmsButtonDisabled"
                             t-if="proxyState === 'in_verification'">

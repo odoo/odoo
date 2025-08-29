@@ -29,6 +29,10 @@ class PeppolSettingsButtons extends Component {
         });
     }
 
+    get useParentCompany() {
+        return Boolean(this.props.record.data.peppol_use_parent_company);
+    }
+
     get proxyState() {
         return this.props.record.data.account_peppol_proxy_state;
     }
