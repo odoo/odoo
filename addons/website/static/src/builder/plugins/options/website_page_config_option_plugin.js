@@ -67,7 +67,10 @@ class WebsitePageConfigOptionPlugin extends Plugin {
         return matchingClass || rgbaToHex(headerEl.style.getPropertyValue(attribute));
     }
 
-    setDirty() {
+    setDirty(isPreviewing) {
+        if (isPreviewing) {
+            return;
+        }
         this.isDirty = true;
     }
 
@@ -176,14 +179,14 @@ export class BaseWebsitePageConfigAction extends BuilderAction {
 }
 export class SetWebsiteHeaderVisibilityAction extends BaseWebsitePageConfigAction {
     static id = "setWebsiteHeaderVisibility";
-    apply({ editingElement, value: headerPositionValue }) {
+    apply({ editingElement, value: headerPositionValue, isPreviewing }) {
         const lastValue = this.websitePageConfig.getVisibilityItem();
         this.history.applyCustomMutation({
             apply: () => this.visibilityHandlers[headerPositionValue](),
             revert: () => this.visibilityHandlers[lastValue](),
         });
 
-        this.websitePageConfig.setDirty();
+        this.websitePageConfig.setDirty(isPreviewing);
     }
     isApplied({ editingElement, value }) {
         return this.websitePageConfig.getVisibilityItem() === value;
@@ -194,20 +197,20 @@ export class SetWebsiteFooterVisibleAction extends BaseWebsitePageConfigAction {
     isApplied({ editingElement }) {
         return !this.websitePageConfig.getFooterVisibility();
     }
-    apply({ editingElement }) {
+    apply({ editingElement, isPreviewing }) {
         this.websitePageConfig.setFooterVisible(true);
-        this.websitePageConfig.setDirty();
+        this.websitePageConfig.setDirty(isPreviewing);
     }
-    clean({ editingElement }) {
+    clean({ editingElement, isPreviewing }) {
         this.websitePageConfig.setFooterVisible(false);
-        this.websitePageConfig.setDirty();
+        this.websitePageConfig.setDirty(isPreviewing);
     }
 }
 
 export class SetPageWebsiteDirtyAction extends BaseWebsitePageConfigAction {
     static id = "setPageWebsiteDirty";
-    apply({ editingElement }) {
-        this.websitePageConfig.setDirty();
+    apply({ editingElement, isPreviewing }) {
+        this.websitePageConfig.setDirty(isPreviewing);
     }
 }
 
