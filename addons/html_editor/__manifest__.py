@@ -20,12 +20,14 @@ This addon provides an extensible, maintainable editor.
             ('include', 'html_editor.assets_media_dialog'),
             ('include', 'html_editor.assets_readonly'),
             'html_editor/static/src/public/**/*',
+            'html_editor/static/src/common/*',
         ],
         'web.assets_backend': [
             ('include', 'html_editor.assets_editor'),
             'html_editor/static/src/others/dynamic_placeholder_plugin.js',
             'html_editor/static/src/backend/**/*',
             'html_editor/static/src/fields/**/*',
+            'html_editor/static/src/common/*',
         ],
         'html_editor.assets_editor': [
             'web/static/lib/dompurify/DOMpurify.js',

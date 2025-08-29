@@ -1,5 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { deduceURLfromText } from "@html_editor/main/link/utils";
+import { MediaDialog } from "@html_editor/main/media/media_dialog/media_dialog";
 import { pyToJsLocale, jsToPyLocale } from "@web/core/l10n/utils";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { rpc } from "@web/core/network/rpc";
@@ -7,7 +8,6 @@ import { escapeRegExp } from "@web/core/utils/strings";
 import { useService, useAutofocus } from '@web/core/utils/hooks';
 import { isVisible } from "@web/core/utils/ui";
 import { CheckBox } from '@web/core/checkbox/checkbox';
-import { MediaDialog } from '@web_editor/components/media_dialog/media_dialog';
 import { WebsiteDialog } from './dialog';
 import { Component, onMounted, onWillStart, reactive, useEffect, useState, useRef } from "@odoo/owl";
 import wUtils from "@website/js/utils";
