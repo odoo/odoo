@@ -121,25 +121,28 @@ class ResCompany(models.Model):
         parent_company = self.peppol_parent_company_id
         return parent_company and parent_company not in self.env.user.company_ids
 
-    def _reset_peppol_configuration(self):
+    def _reset_peppol_configuration(self, soft=False):
         """
         Reset all peppol configuration fields to their default value before registering.
         The EAS, endpoint, email, and phone number will be recomputed so that branch companies that uses
         their parent configuration can have their default values back
         (as these fields will be overwritten for them when they register as parent).
+
+        :param soft: If True, will only set state to unregistered, but keep peppol config intact, so the user can register again
         """
         self.account_peppol_proxy_state = 'not_registered'
         self.account_peppol_migration_key = False
-        self.peppol_external_provider = False
-        self.peppol_eas = False
-        self.peppol_endpoint = False
-        self.account_peppol_contact_email = False
-        self.account_peppol_phone_number = False
+        if not soft:
+            self.peppol_external_provider = False
+            self.peppol_eas = False
+            self.peppol_endpoint = False
+            self.account_peppol_contact_email = False
+            self.account_peppol_phone_number = False
 
+            self._compute_account_peppol_contact_email()
+            self._compute_account_peppol_phone_number()
         self.partner_id._compute_peppol_eas()
         self.partner_id._compute_peppol_endpoint()
-        self._compute_account_peppol_contact_email()
-        self._compute_account_peppol_phone_number()
 
     @api.model
     def _check_phonenumbers_import(self):

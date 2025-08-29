@@ -1,6 +1,7 @@
 import base64
 import logging
 import uuid
+from typing import Literal
 
 import requests
 
@@ -44,6 +45,14 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         help="The key to encrypt all the user's data",
     )
     refresh_token = fields.Char(groups="base.group_system")
+    is_token_out_of_sync = fields.Boolean(
+        string='Token Out of Sync',
+        help="This field is used to indicate that the edi user token is out of sync with the proxy server. "
+             "It is set to True when the token needs to be refreshed or updated.",
+    )
+    token_sync_version = fields.Integer(
+        string='Token Sync Version',
+    )
     proxy_type = fields.Selection(selection=[], required=True)
     edi_mode = fields.Selection(
         selection=[
@@ -84,7 +93,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         '''
         return False
 
-    def _make_request(self, url, params=False):
+    def _make_request(self, url, params=False, auth_type: Literal['hmac', 'asymmetric'] = 'hmac'):
         ''' Make a request to proxy and handle the generic elements of the reponse (errors, new refresh token).
         '''
         payload = {
@@ -104,7 +113,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 json=payload,
                 timeout=TIMEOUT,
                 headers={'content-type': 'application/json'},
-                auth=OdooEdiProxyAuth(user=self)).json()
+                auth=OdooEdiProxyAuth(user=self, auth_type=auth_type)).json()
         except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout, requests.exceptions.HTTPError):
             raise AccountEdiProxyError('connection_error',
                 _('The url that this service requested returned an error. The url it tried to contact was %s', url))
@@ -120,7 +129,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             error_code = proxy_error['code']
             if error_code == 'refresh_token_expired':
                 self._renew_token()
-                self.env.cr.commit() # We do not want to lose it if in the _make_request below something goes wrong
+                self.env.cr.commit()  # We do not want to lose it if in the _make_request below something goes wrong
                 return self._make_request(url, params)
             if error_code == 'no_such_user':
                 # This error is also raised if the user didn't exchange data and someone else claimed the edi_identificaiton.
@@ -128,7 +137,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             if error_code == 'invalid_signature':
                 raise AccountEdiProxyError(
                     error_code,
-                    _("Invalid signature for request. This might be due to another connection to odoo Access Point "
+                    _("Failed to connect to Odoo Access Point server. This might be due to another connection to Odoo Access Point "
                       "server. It can occur if you have duplicated your database. \n\n"
                       "If you are not sure how to fix this, please contact our support."),
                 )

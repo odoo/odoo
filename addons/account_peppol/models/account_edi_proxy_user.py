@@ -4,10 +4,11 @@ import logging
 from datetime import timedelta
 
 from odoo import _, api, fields, models, modules, tools
+from odoo.exceptions import UserError
+
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.account_peppol.exceptions import get_ebms_message, get_exception_message
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
-from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 BATCH_SIZE = 50
@@ -60,6 +61,14 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         if self.proxy_type != 'peppol':
             raise UserError(_('EDI user should be of type Peppol'))
 
+        token_out_of_sync_error_message = self.env._(
+            "Failed to connect to Peppol Access Point. This might happen if you restored a database from a backup or copied it without neutralization. "
+            "To fix this, please go to Settings > Accounting > Peppol Settings and click on 'Reconnect this database'."
+        )
+
+        if self.is_token_out_of_sync:
+            raise UserError(token_out_of_sync_error_message)
+
         params = params or {}
         try:
             response = self._make_request(
@@ -80,6 +89,12 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 if not modules.module.current_test:
                     self.env.cr.commit()
                 raise UserError(_('We could not find a user with this information on our server. Please check your information.'))
+
+            elif e.code == 'invalid_signature':
+                self._mark_connection_out_of_sync()
+                if not tools.config['test_enable'] and not modules.module.current_test:
+                    self.env.cr.commit()
+                raise UserError(token_out_of_sync_error_message)
             raise UserError(e.message)
 
         if error_vals := response.get('error'):
@@ -87,6 +102,63 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             raise UserError(error_message)
 
         return response
+
+    def _mark_connection_out_of_sync(self):
+        self.ensure_one()
+        if self.is_token_out_of_sync:
+            return
+        self.sudo().write({
+            'is_token_out_of_sync': True,
+            'refresh_token': None,
+        })
+        try:
+            self._make_request(
+                f'{self._get_server_url()}/api/peppol/1/mark_connection_out_of_sync',
+                params={'token_desync_counter': self.token_sync_version},
+                auth_type='asymmetric'
+            )
+        except AccountEdiProxyError as e:
+            if e.code == 'connection_superseded':
+                self._peppol_out_of_sync_disconnect_this_database()
+                if not tools.config['test_enable'] and not modules.module.current_test:
+                    self.env.cr.commit()
+                raise UserError(_('This connection has been superseded by another database. Register again.'))
+            raise
+
+    def _peppol_out_of_sync_reconnect_this_database(self):
+        self.ensure_one()
+        assert self.is_token_out_of_sync
+        self.token_sync_version += 1
+        response = self._make_request(
+            f'{self._get_server_url()}/api/peppol/1/resync_connection',
+            params={'token_desync_counter': self.token_sync_version},
+            auth_type='asymmetric'
+        )
+        if response.get('error'):
+            if response['error'].get('code') == 'connection_superseded':
+                self._peppol_out_of_sync_disconnect_this_database()
+                if not tools.config['test_enable'] and not modules.module.current_test:
+                    self.env.cr.commit()
+            raise AccountEdiProxyError(
+                response['error'].get('code', 'unknown_error'),
+                response['error'].get('message', "An unknown error occurred while authenticating with IAP server.")
+            )
+        self.write({
+            'refresh_token': response['refresh_token'],
+            'is_token_out_of_sync': False,
+        })
+
+        # trigger participant status update after resync to confirm token & keep state in sync
+        # but run async, since sync may confirm token server-side (thus increment token_sync_version)
+        # yet fail before commit, leaving unrecoverable state
+        self.env.ref('account_peppol.ir_cron_peppol_get_participant_status')._trigger()
+
+    def _peppol_out_of_sync_disconnect_this_database(self):
+        self.ensure_one()
+        assert self.is_token_out_of_sync
+        # delete this record and company's proxy state
+        self.company_id._reset_peppol_configuration(soft=True)
+        self.unlink()
 
     @api.model
     def _get_can_send_domain(self):
@@ -350,19 +422,6 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         self.company_id.account_peppol_proxy_state = 'sender'
         if peppol_external_provider:
             self.company_id.peppol_external_provider = peppol_external_provider
-
-    def _peppol_register_receiver(self):
-        # remove in master
-        self.ensure_one()
-        params = {
-            'company_details': self._get_company_details(),
-            'supported_identifiers': list(self.company_id._peppol_supported_document_types())
-        }
-        self._call_peppol_proxy(
-            endpoint='/api/peppol/1/register_receiver',
-            params=params,
-        )
-        self.company_id.account_peppol_proxy_state = 'smp_registration'
 
     def _peppol_register_sender_as_receiver(self):
         self.ensure_one()
