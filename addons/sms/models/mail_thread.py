@@ -111,7 +111,7 @@ class MailThread(models.AbstractModel):
         sms_pid_to_number = sms_pid_to_number if sms_pid_to_number is not None else {}
 
         if number_field or (partner_ids is False and sms_numbers is None):
-            info = self._sms_get_recipients_info(force_field=number_field)[self.id]
+            info = self._mail_get_recipients_info(force_field=number_field)[self.id]
             info_partner_ids = info['partner'].ids if info['partner'] else False
             info_number = info['sanitized'] if info['sanitized'] else info['number']
             if info_partner_ids and info_number:
