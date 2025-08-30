@@ -33,16 +33,16 @@ class TestSmsTwilio(MockSmsTwilio, TransactionCase):
         wizard = self.env["sms.twilio.account.manage"].create({
             'test_number': '+32455001122',
         })
-        for has_error, notif_params in zip(
-            (False, True),
+        for twilio_error, notif_params in zip(
+            (False, "wrong_number_format"),
             ({}, {
                 'message': 'sms_number_format: None',
                 'type': 'danger',
             }),
             strict=True,
         ):
-            with self.subTest(has_error=has_error):
-                with self.mock_sms_twilio_send(ok=not has_error):
+            with self.subTest(twilio_error=twilio_error):
+                with self.mock_sms_twilio_send(mock_error_type=twilio_error):
                     notif = wizard.action_send_test()
                 params = {
                     'title': "Twilio SMS",
