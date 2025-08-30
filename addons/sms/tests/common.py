@@ -6,7 +6,8 @@ from unittest.mock import patch
 from odoo import exceptions, tools
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.phone_validation.tools import phone_validation
-from odoo.addons.sms.models.sms_sms import SmsApi, SmsSms
+from odoo.addons.sms.models.sms_sms import SmsSms
+from odoo.addons.sms.tools.sms_api import SmsApi
 from odoo.tests import common
 
 
@@ -92,9 +93,10 @@ class MockSMS(common.BaseCase):
             return sms_send_origin(records, unlink_failed=False, unlink_sent=False, raise_exception=raise_exception)
 
         try:
-            with patch.object(SmsApi, '_contact_iap', side_effect=_contact_iap), \
+            with patch.object(SmsApi, '_contact_iap', side_effect=_contact_iap) as _sms_api_contact_iap_mock, \
                     patch.object(SmsSms, 'create', autospec=True, wraps=SmsSms, side_effect=_sms_sms_create), \
                     patch.object(SmsSms, '_send', autospec=True, wraps=SmsSms, side_effect=_sms_sms_send):
+                self._sms_api_contact_iap_mock = _sms_api_contact_iap_mock
                 yield
         finally:
             pass
@@ -131,15 +133,23 @@ class SMSCase(MockSMS):
             domain += [('state', '=', status)]
 
         sms = self.env['sms.sms'].sudo().search(domain)
-        if not sms:
-            raise AssertionError('sms.sms not found for %s (number: %s / status %s)' % (partner, number, status))
-        if len(sms) > 1:
-            raise NotImplementedError()
+        if not sms or len(sms) > 1:
+            debug_info = '\n'.join(
+                f'To: {sms.number} (partner: {sms.partner_id.id}), state: {sms.state})'
+                for sms in self._new_sms
+            )
+            raise AssertionError(
+                'Unique sms.sms not found for %s (number: %s / status %s)\n--MOCKED DATA\n%s' % (
+                    partner, number, status, debug_info
+                )
+            )
         return sms
 
     def assertSMSIapSent(self, numbers, content=None):
-        """ Check sent SMS. Order is not checked. Each number should have received
-        the same content. Useful to check batch sending.
+        """ Check sent SMS (to IAP, but other providers like twilio should be
+        mocked to fill up 'self._sms', allowing tests to pass). Order is not
+        checked. Each number should have received the same content. Useful to
+        check batch sending.
 
         :param numbers: list of numbers;
         :param content: content to check for each number;
