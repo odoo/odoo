@@ -197,7 +197,7 @@ class TestMailingSMSTest(TestMassSMSCommon, MockSmsTwilioApi):
         ]:
             with self.subTest(twilio_error=twilio_error):
                 with self.with_user('user_marketing'):
-                    with self.mock_sms_twilio_gateway(mock_error_type=twilio_error):
+                    with self.mock_sms_twilio_gateway(error_type=twilio_error):
                         mailing_test.action_send_sms()
 
                 notification = mailing.message_ids[0]
