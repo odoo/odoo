@@ -12,7 +12,7 @@
         </Dropdown>
         <t t-else="" t-call="mail.DiscussSearch.inputContainer"/>
         <t t-if="store.self.main_user_id">
-            <Dropdown t-if="store.discuss.isSidebarCompact and !ui.isSmall" state="meetingFloating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu o-discuss-dropdownMenu border-secondary px-2 mx-2 my-0 min-w-0'" manual="true">
+            <Dropdown t-if="store.discuss.isSidebarCompact and !ui.isSmall" state="meetingFloating" position="'right-middle'" menuClass="'o-mail-DiscussSidebar-floatingMenu o-discuss-dropdownMenu border-secondary px-2 mx-2 my-0 min-w-0'" manual="true">
                 <t t-call="mail.DiscussSearch.newMeeting"/>
                 <t t-set-slot="content">
                     <div t-ref="meeting-floating">
