@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_recruitment
-# 
+#
 # Translators:
 # Kovács Tibor <kovika@gmail.com>, 2024
 # f1b3a33e3b33fcf18004a5292e501f50_3500ca8 <373b677b151624c4521d9efc77b996fd_750224>, 2024
@@ -12,40 +12,29 @@
 # krnkris, 2024
 # Valics Lehel, 2025
 # gezza <geza.nagy@oregional.hu>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-08-29 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: gezza <geza.nagy@oregional.hu>, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__accepted_applications_count
-msgid "# Accepted Offers"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__applications_count
-msgid "# Offers"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__refused_applications_count
-msgid "# Refused Offers"
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__no_of_talents
+msgid "# Talents"
 msgstr ""
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
-#: code:addons/hr_recruitment/models/hr_candidate.py:0
 msgid "1 Meeting"
 msgstr "1 találkozó"
 
@@ -68,6 +57,283 @@ msgid "<b>Drag this card</b>, to qualify him for a first interview."
 msgstr ""
 
 #. module: hr_recruitment
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_congratulations
+msgid ""
+"<div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"    Hello,\n"
+"    <br/><br/>\n"
+"    We confirm we successfully received your application for the job\n"
+"    \"<a t-att-href=\"hasattr(object.job_id, 'website_url') and "
+"object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-"
+"out=\"object.job_id.name or ''\">Experienced Developer</strong></a>\" at "
+"<strong t-out=\"object.company_id.name or ''\">YourCompany</strong>.\n"
+"    <br/><br/>\n"
+"    We will come back to you shortly.\n"
+"\n"
+"    <div t-if=\"'website_url' in object.job_id and "
+"object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
+"        <a t-att-href=\"object.job_id.website_url\" style=\"background-"
+"color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px "
+"16px; border-radius: 5px;\">Job Description</a>\n"
+"    </div>\n"
+"\n"
+"    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: "
+"medium none; clear: both; display: block; font-size: 0px; min-height: 1px; "
+"line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"    <t t-if=\"object.user_id\">\n"
+"        <h3 style=\"color:#9A6C8E;\"><strong>Your Contact:</strong></h3>\n"
+"        <p>\n"
+"            <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</"
+"strong><br/>\n"
+"            <span>Email: <t t-out=\"object.user_id.email or "
+"''\">admin@yourcompany.example.com</t></span><br/>\n"
+"            <span>Phone: <t t-out=\"object.user_id.phone or ''\">+1 "
+"650-123-4567</t></span>\n"
+"        </p>\n"
+"        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); "
+"border: medium none; clear: both; display: block; font-size: 0px; min-"
+"height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"    </t>\n"
+"\n"
+"    <h3 style=\"color:#9A6C8E;\"><strong>What is the next step?</strong></"
+"h3>\n"
+"    We usually <strong>answer applications within a few days.</strong><br/"
+"><br/>\n"
+"    Feel free to <strong>contact us if you want a faster\n"
+"    feedback</strong> or if you don't get news from us\n"
+"    quickly enough (just reply to this email).\n"
+"\n"
+"    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: "
+"medium none; clear: both; display: block; font-size: 0px; min-height: 1px; "
+"line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
+"    <t t-set=\"location\" t-value=\"''\"/>\n"
+"    <t t-if=\"object.job_id.address_id.name\">\n"
+"        <strong t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</"
+"strong><br/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.street\">\n"
+"        <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero "
+"9710</t><br/>\n"
+"        <t t-set=\"location\" t-value=\"object.job_id.address_id.street\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.street2\">\n"
+"        <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, Santiago "
+"(RM)</t><br/>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.street2)\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.city\">\n"
+"        <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.city)\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.state_id.name\">\n"
+"        <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>,\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.state_id.name)\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.zip\">\n"
+"        <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.zip)\"/>\n"
+"    </t>\n"
+"    <br/>\n"
+"    <t t-if=\"object.job_id.address_id.country_id.name\">\n"
+"        <t t-out=\"object.job_id.address_id.country_id.name or "
+"''\">Argentina</t><br/>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.country_id.name)\"/>\n"
+"    </t>\n"
+"    <br/>\n"
+"</div>\n"
+"        "
+msgstr ""
+
+#. module: hr_recruitment
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_refuse
+msgid ""
+"<div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"    Hello,<br/><br/>\n"
+"    Thank you for your interest in joining the\n"
+"    <b><t t-out=\"object.company_id.name or ''\">YourCompany</t></b> team.  "
+"We\n"
+"    wanted to let you know that, although your resume is\n"
+"    competitive, our hiring team reviewed your application\n"
+"    and <b>did not select it for further consideration</b>.\n"
+"    <br/><br/>\n"
+"    Please note that recruiting is hard, and we can make\n"
+"    mistakes. Do not hesitate to reply to this email if you\n"
+"    think we made a mistake, or if you want more information\n"
+"    about our decision.\n"
+"    <br/><br/>\n"
+"    We will, however, keep your resume on record and get in\n"
+"    touch with you about future opportunities that may be a\n"
+"    better fit for your skills and experience.\n"
+"    <br/><br/>\n"
+"    We wish you all the best in your job search and hope we\n"
+"    will have the chance to consider you for another role\n"
+"    in the future.\n"
+"    <br/><br/>\n"
+"    Thank you,\n"
+"    <div style=\"font-size: 11px; color: grey;\">\n"
+"        <t t-if=\"object.user_id\">\n"
+"            -- <br/>\n"
+"            <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</"
+"strong><br/>\n"
+"            Email: <t t-out=\"object.user_id.email or "
+"''\">admin@yourcompany.example.com</t><br/>\n"
+"            Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</"
+"t>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            -- <br/>\n"
+"            <t t-out=\"object.company_id.name or ''\">YourCompany</t><br/>\n"
+"            The HR Team\n"
+"        </t>\n"
+"    </div>\n"
+"</div>\n"
+"        "
+msgstr ""
+
+#. module: hr_recruitment
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_not_interested
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"        Dear,<br/><br/>\n"
+"        We would like to thank you for your interest and your time.<br/>\n"
+"        We wish you all the best in your future endeavors.\n"
+"        <br/><br/>\n"
+"        Best<br/>\n"
+"        <div style=\"font-size: 11px; color: grey;\">\n"
+"            <t t-if=\"object.user_id\">\n"
+"                -- <br/>\n"
+"                <strong t-out=\"object.user_id.name or ''\">Marc Demo</"
+"strong><br/>\n"
+"                Email: <t t-out=\"object.user_id.email or "
+"''\">mark.brown23@example.com</t><br/>\n"
+"                Phone: <t t-out=\"object.user_id.phone or ''\">+1 "
+"650-123-4567</t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                -- <br/>\n"
+"                <t t-out=\"object.company_id.name or ''\">YourCompany</t><br/"
+">\n"
+"                The HR Team<br/>\n"
+"            </t>\n"
+"        </div>\n"
+"    </div>\n"
+"</div>\n"
+"        "
+msgstr ""
+
+#. module: hr_recruitment
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <div style=\"text-align: center\">\n"
+"        <h2>Congratulations!</h2>\n"
+"        <div style=\"color:grey;\">Your resume has been positively reviewed."
+"</div>\n"
+"    </div>\n"
+"    <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"        We just reviewed your resume, and it caught our\n"
+"        attention. As we think you might be great for the\n"
+"        position, your application has been short listed for a\n"
+"        call or an interview.\n"
+"        <br/><br/>\n"
+"        <div t-if=\"'website_url' in object.job_id and "
+"object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
+"            <a t-att-href=\"object.job_id.website_url\" style=\"background-"
+"color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px "
+"16px; border-radius: 5px;\">Job Description</a>\n"
+"        </div>\n"
+"\n"
+"        <t t-if=\"object.user_id\">\n"
+"            You will soon be contacted by:<br/>\n"
+"            <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</"
+"strong><br/>\n"
+"            <span>Email: <t t-out=\"object.user_id.email or "
+"''\">admin@yourcompany.example.com</t></span><br/>\n"
+"            <span>Phone: <t t-out=\"object.user_id.phone or ''\">+1 "
+"650-123-4567</t></span>\n"
+"            <br/><br/>\n"
+"        </t>\n"
+"        See you soon,\n"
+"        <div style=\"font-size: 11px; color: grey;\">\n"
+"            -- <br/>\n"
+"            The HR Team\n"
+"            <t t-if=\"'website_url' in object.job_id and "
+"hasattr(object.job_id, 'website_url') and object.job_id.website_url\">\n"
+"                Discover <a href=\"/jobs\" style=\"text-"
+"decoration:none;color:#717188;\">all our jobs</a>.<br/>\n"
+"            </t>\n"
+"        </div>\n"
+"\n"
+"        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); "
+"border: medium none; clear: both; display: block; font-size: 0px; min-"
+"height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"        <h3 style=\"color:#9A6C8E;\"><strong>What is the next step?</"
+"strong></h3>\n"
+"        We usually <strong>answer applications within a few days</strong>.\n"
+"        <br/><br/>\n"
+"        The next step is either a call or a meeting in our offices.\n"
+"        <br/>\n"
+"        Feel free to <strong>contact us if you want a faster\n"
+"        feedback</strong> or if you don't get news from us\n"
+"        quickly enough (just reply to this email).\n"
+"        <br/>\n"
+"\n"
+"        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); "
+"border: medium none; clear: both; display: block; font-size: 0px; min-"
+"height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
+"        <t t-set=\"location\" t-value=\"''\"/>\n"
+"        <t t-if=\"object.job_id.address_id.name\">\n"
+"            <strong t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</"
+"strong><br/>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.street\">\n"
+"            <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero "
+"9710</t><br/>\n"
+"            <t t-set=\"location\" t-"
+"value=\"object.job_id.address_id.street\"/>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.street2\">\n"
+"            <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, "
+"Santiago (RM)</t><br/>\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.street2)\"/>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.city\">\n"
+"            <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.city)\"/>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.state_id.name\">\n"
+"            <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</"
+"t>,\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.state_id.name)\"/>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.zip\">\n"
+"            <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.zip)\"/>\n"
+"        </t>\n"
+"        <br/>\n"
+"        <t t-if=\"object.job_id.address_id.country_id.name\">\n"
+"            <t t-out=\"object.job_id.address_id.country_id.name or "
+"''\">Argentina</t><br/>\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.country_id.name)\"/>\n"
+"        </t>\n"
+"        <br/>\n"
+"    </div>\n"
+"</div>\n"
+"        "
+msgstr ""
+
+#. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid ""
@@ -77,16 +343,23 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
-msgid "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=\"Company\"/>"
-msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=\"Company\"/>"
+msgid ""
+"<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" "
+"title=\"Company\"/>"
+msgstr ""
+"<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" "
+"title=\"Company\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
-msgid "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
-msgstr "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
+msgid ""
+"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Documents\"/>"
 msgstr "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Documents\"/>"
@@ -94,13 +367,12 @@ msgstr "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Documents\"/>"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 msgid ""
-"<span class=\"mx-2\" style=\"padding-top: 1px; padding-bottom: "
-"1px;\">to</span>"
+"<span class=\"mx-2\" style=\"padding-top: 1px; padding-bottom: 1px;\">to</"
+"span>"
 msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_form
 msgid "<span class=\"o_stat_text\">Employee</span>"
 msgstr "<span class=\"o_stat_value\">Munkavállaló</span>"
 
@@ -111,6 +383,14 @@ msgstr "<span class=\"o_stat_text\">Nyomkövetők</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+msgid ""
+"<span class=\"o_stat_value text-muted\">New</span>\n"
+"                            <span class=\"o_stat_text text-muted\">Job "
+"Board</span>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "<span invisible=\"address_id\" class=\"oe_read_only\">Remote</span>"
 msgstr ""
 
@@ -118,10 +398,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid ""
 "<span invisible=\"not is_warning_visible\">\n"
-"                                <span class=\"fa fa-exclamation-triangle text-danger ps-3\">\n"
+"                                <span class=\"fa fa-exclamation-triangle "
+"text-danger ps-3\">\n"
 "                                </span>\n"
 "                                <span class=\"text-danger\">\n"
-"                                    All applications will lose their hired date and hired status.\n"
+"                                    All applications will lose their hired "
+"date and hired status.\n"
 "                                </span>\n"
 "                            </span>"
 msgstr ""
@@ -147,245 +429,14 @@ msgid "<span>Reporting</span>"
 msgstr "<span>Kimutatások</span>"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_kanban
+msgid "<span>Talents</span>"
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "<span>View</span>"
 msgstr "<span>Nézet</span>"
-
-#. module: hr_recruitment
-#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_congratulations
-msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"background-color: white; border-collapse: collapse; margin-left: 20px;\">\n"
-"    <tr>\n"
-"        <td valign=\"top\" style=\"padding: 0px 10px;\">\n"
-"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
-"                Hello,\n"
-"                <br/><br/>\n"
-"                We confirm we successfully received your application for the job\n"
-"                \"<a t-att-href=\"hasattr(object.job_id, 'website_url') and object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-out=\"object.job_id.name or ''\">Experienced Developer</strong></a>\" at <strong t-out=\"object.company_id.name or ''\">YourCompany</strong>.\n"
-"                <br/><br/>\n"
-"                We will come back to you shortly.\n"
-"\n"
-"                <div t-if=\"'website_url' in object.job_id and object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
-"                    <a t-att-href=\"object.job_id.website_url\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Job Description</a>\n"
-"                </div>\n"
-"\n"
-"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
-"                <t t-if=\"object.user_id\">\n"
-"                    <h3 style=\"color:#9A6C8E;\"><strong>Your Contact:</strong></h3>\n"
-"                    <p>\n"
-"                        <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br/>\n"
-"                        <span>Email: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t></span><br/>\n"
-"                        <span>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t></span>\n"
-"                    </p>\n"
-"                    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
-"                </t>\n"
-"\n"
-"                <h3 style=\"color:#9A6C8E;\"><strong>What is the next step?</strong></h3>\n"
-"                We usually <strong>answer applications within a few days.</strong><br/><br/>\n"
-"                Feel free to <strong>contact us if you want a faster\n"
-"                feedback</strong> or if you don't get news from us\n"
-"                quickly enough (just reply to this email).\n"
-"\n"
-"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
-"                <t t-set=\"location\" t-value=\"''\"/>\n"
-"                <t t-if=\"object.job_id.address_id.name\">\n"
-"                    <strong t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</strong><br/>\n"
-"                </t>\n"
-"                <t t-if=\"object.job_id.address_id.street\">\n"
-"                    <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero 9710</t><br/>\n"
-"                    <t t-set=\"location\" t-value=\"object.job_id.address_id.street\"/>\n"
-"                </t>\n"
-"                <t t-if=\"object.job_id.address_id.street2\">\n"
-"                    <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, Santiago (RM)</t><br/>\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.street2)\"/>\n"
-"                </t>\n"
-"                <t t-if=\"object.job_id.address_id.city\">\n"
-"                    <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.city)\"/>\n"
-"                </t>\n"
-"                <t t-if=\"object.job_id.address_id.state_id.name\">\n"
-"                    <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>,\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.state_id.name)\"/>\n"
-"                </t>\n"
-"                <t t-if=\"object.job_id.address_id.zip\">\n"
-"                    <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.zip)\"/>\n"
-"                </t>\n"
-"                <br/>\n"
-"                <t t-if=\"object.job_id.address_id.country_id.name\">\n"
-"                    <t t-out=\"object.job_id.address_id.country_id.name or ''\">Argentina</t><br/>\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.country_id.name)\"/>\n"
-"                </t>\n"
-"                <br/>\n"
-"            </div>\n"
-"        </td>\n"
-"    </tr>\n"
-"</table>"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
-msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"background-color: white; border-collapse: collapse; margin-left: 20px;\">\n"
-"    <tr>\n"
-"        <td valign=\"top\" style=\"padding: 0px 10px;\">\n"
-"            <div style=\"text-align: center\">\n"
-"                <h2>Congratulations!</h2>\n"
-"                <div style=\"color:grey;\">Your resume has been positively reviewed.</div>\n"
-"            </div>\n"
-"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
-"                We just reviewed your resume, and it caught our\n"
-"                attention. As we think you might be great for the\n"
-"                position, your application has been short listed for a\n"
-"                call or an interview.\n"
-"                <br/><br/>\n"
-"                <div t-if=\"'website_url' in object.job_id and object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
-"                    <a t-att-href=\"object.job_id.website_url\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Job Description</a>\n"
-"                </div>\n"
-"\n"
-"                <t t-if=\"object.user_id\">\n"
-"                    You will soon be contacted by:<br/>\n"
-"                    <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br/>\n"
-"                    <span>Email: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t></span><br/>\n"
-"                    <span>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t></span>\n"
-"                    <br/><br/>\n"
-"                </t>\n"
-"                See you soon,\n"
-"                <div style=\"font-size: 11px; color: grey;\">\n"
-"                    -- <br/>\n"
-"                    The HR Team\n"
-"                    <t t-if=\"'website_url' in object.job_id and hasattr(object.job_id, 'website_url') and object.job_id.website_url\">\n"
-"                        Discover <a href=\"/jobs\" style=\"text-decoration:none;color:#717188;\">all our jobs</a>.<br/>\n"
-"                    </t>\n"
-"                </div>\n"
-"\n"
-"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
-"                <h3 style=\"color:#9A6C8E;\"><strong>What is the next step?</strong></h3>\n"
-"                We usually <strong>answer applications within a few days</strong>.\n"
-"                <br/><br/>\n"
-"                The next step is either a call or a meeting in our offices.\n"
-"                <br/>\n"
-"                Feel free to <strong>contact us if you want a faster\n"
-"                feedback</strong> or if you don't get news from us\n"
-"                quickly enough (just reply to this email).\n"
-"                <br/>\n"
-"\n"
-"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
-"                <t t-set=\"location\" t-value=\"''\"/>\n"
-"                <t t-if=\"object.job_id.address_id.name\">\n"
-"                    <strong t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</strong><br/>\n"
-"                </t>\n"
-"                <t t-if=\"object.job_id.address_id.street\">\n"
-"                    <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero 9710</t><br/>\n"
-"                    <t t-set=\"location\" t-value=\"object.job_id.address_id.street\"/>\n"
-"                </t>\n"
-"                <t t-if=\"object.job_id.address_id.street2\">\n"
-"                    <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, Santiago (RM)</t><br/>\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.street2)\"/>\n"
-"                </t>\n"
-"                <t t-if=\"object.job_id.address_id.city\">\n"
-"                    <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.city)\"/>\n"
-"                </t>\n"
-"                <t t-if=\"object.job_id.address_id.state_id.name\">\n"
-"                    <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>,\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.state_id.name)\"/>\n"
-"                </t>\n"
-"                <t t-if=\"object.job_id.address_id.zip\">\n"
-"                    <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.zip)\"/>\n"
-"                </t>\n"
-"                <br/>\n"
-"                <t t-if=\"object.job_id.address_id.country_id.name\">\n"
-"                    <t t-out=\"object.job_id.address_id.country_id.name or ''\">Argentina</t><br/>\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.country_id.name)\"/>\n"
-"                </t>\n"
-"                <br/>\n"
-"            </div>\n"
-"        </td>\n"
-"    </tr>\n"
-"</table>"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_not_interested
-msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"    <tr>\n"
-"        <td valign=\"top\">\n"
-"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
-"                Dear,<br/><br/>\n"
-"                We would like to thank you for your interest and your time.<br/>\n"
-"                We wish you all the best in your future endeavors.\n"
-"                <br/><br/>\n"
-"                Best<br/>\n"
-"                <div style=\"font-size: 11px; color: grey;\">\n"
-"                    <t t-if=\"object.user_id\">\n"
-"                        -- <br/>\n"
-"                        <strong t-out=\"object.user_id.name or ''\">Marc Demo</strong><br/>\n"
-"                        Email: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t><br/>\n"
-"                        Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
-"                    </t>\n"
-"                    <t t-else=\"\">\n"
-"                        -- <br/>\n"
-"                        <t t-out=\"object.company_id.name or ''\">YourCompany</t><br/>\n"
-"                        The HR Team<br/>\n"
-"                    </t>\n"
-"                </div>\n"
-"            </div>\n"
-"        </td>\n"
-"    </tr>\n"
-"</table>\n"
-"        "
-msgstr ""
-
-#. module: hr_recruitment
-#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_refuse
-msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"    <tr>\n"
-"        <td valign=\"top\">\n"
-"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
-"                Hello,<br/><br/>\n"
-"                Thank you for your interest in joining the\n"
-"                <b><t t-out=\"object.company_id.name or ''\">YourCompany</t></b> team.  We\n"
-"                wanted to let you know that, although your resume is\n"
-"                competitive, our hiring team reviewed your application\n"
-"                and <b>did not select it for further consideration</b>.\n"
-"                <br/><br/>\n"
-"                Please note that recruiting is hard, and we can make\n"
-"                mistakes. Do not hesitate to reply to this email if you\n"
-"                think we made a mistake, or if you want more information\n"
-"                about our decision.\n"
-"                <br/><br/>\n"
-"                We will, however, keep your resume on record and get in\n"
-"                touch with you about future opportunities that may be a\n"
-"                better fit for your skills and experience.\n"
-"                <br/><br/>\n"
-"                We wish you all the best in your job search and hope we\n"
-"                will have the chance to consider you for another role\n"
-"                in the future.\n"
-"                <br/><br/>\n"
-"                Thank you,\n"
-"                <div style=\"font-size: 11px; color: grey;\">\n"
-"                    <t t-if=\"object.user_id\">\n"
-"                        -- <br/>\n"
-"                        <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br/>\n"
-"                        Email: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t><br/>\n"
-"                        Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
-"                    </t>\n"
-"                    <t t-else=\"\">\n"
-"                        -- <br/>\n"
-"                        <t t-out=\"object.company_id.name or ''\">YourCompany</t><br/>\n"
-"                        The HR Team\n"
-"                    </t>\n"
-"                </div>\n"
-"            </div>\n"
-"        </td>\n"
-"    </tr>\n"
-"</table>\n"
-"        "
-msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_defaults
@@ -398,20 +449,20 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_needaction
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__message_needaction
 msgid "Action Needed"
 msgstr "Akció szükséges"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__active
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__active
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__active
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__active
 msgid "Active"
 msgstr "Aktív"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_ids
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__activity_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_ids
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_config_activities
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Activities"
@@ -430,7 +481,7 @@ msgstr "Mai tevékenységek"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_decoration
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__activity_exception_decoration
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_exception_decoration
 msgid "Activity Exception Decoration"
 msgstr "Tevékenység kivétel dekoráció"
 
@@ -446,13 +497,13 @@ msgstr "Tevékenység tervek"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_state
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__activity_state
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_state
 msgid "Activity State"
 msgstr "Tevékenység állapot"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_type_icon
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__activity_type_icon
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_type_icon
 msgid "Activity Type Icon"
 msgstr "Tevékenység típus ikon"
 
@@ -475,6 +526,22 @@ msgid "Activity schedule plan Wizard"
 msgstr "Tevékenység ütemezés terv varázsló"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+msgid "Add Applicants"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_view_form
+msgid "Add Applicants to Pool"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.talent_pool_add_applicants_view_form
+msgid "Add Applicants to the Pool"
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
 msgid "Add a new stage in the recruitment process"
@@ -484,6 +551,28 @@ msgstr "Új szakasz hozzáadása a toborzási folyamathoz"
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
 msgid "Add a new tag"
 msgstr "Új címke hozzáadása"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_job_add_applicants
+msgid "Add applicants to a job"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_talent_pool_add_applicants
+msgid "Add applicants to talent pool"
+msgstr ""
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
+msgid "Add applicants to the pool"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.talent_pool_add_applicants_view_form
+msgid "Add to Pool"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_manager
@@ -551,6 +640,11 @@ msgid "All Applications"
 msgstr "Összes jelentkezés"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__allowed_user_ids
+msgid "Allowed User"
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Analysis"
 msgstr "Elemzés"
@@ -560,7 +654,7 @@ msgstr "Elemzés"
 #: model:ir.model,name:hr_recruitment.model_hr_applicant
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_calendar_event__applicant_id
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__applicant_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee__applicant_ids
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.ir_attachment_hr_recruitment_list_view
@@ -604,11 +698,17 @@ msgid "Applicant created"
 msgstr "Pályázó létrehozva"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_name
+msgid "Applicant's Name"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_without_email
 msgid "Applicant(s) not having email"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_talent_pool_add_applicants__applicant_ids
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_calendar_view
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_activity
@@ -624,8 +724,10 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
 #: model_terms:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid ""
-"Applicants and their attached résumé are created automatically when an email is sent.\n"
-"                If you install the document management modules, all resumes are indexed automatically,\n"
+"Applicants and their attached résumé are created automatically when an email "
+"is sent.\n"
+"                If you install the document management modules, all resumes "
+"are indexed automatically,\n"
 "                so that you can easily search through their content."
 msgstr ""
 
@@ -635,7 +737,7 @@ msgid "Application"
 msgstr "Jelentkezés"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__application_count
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__application_count
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__application_count
 msgid "Application Count"
 msgstr "Jelentkezés száma"
@@ -651,19 +753,15 @@ msgid "Application email"
 msgstr "Jelentkezési e-mail"
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
-msgid "Application in Progress"
-msgstr ""
-
-#. module: hr_recruitment
 #. odoo-python
-#: code:addons/hr_recruitment/models/hr_candidate.py:0
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_applications
 #: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__applicant_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_job_add_applicants__applicant_ids
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_config_applications
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_view_tree_inherit
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Applications"
@@ -677,15 +775,25 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__application_count
+msgid "Applications with the same email or phone or mobile"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__create_date
 msgid "Applied on"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model,website_form_label:hr_recruitment.model_hr_applicant
+msgid "Apply for a Job"
+msgstr ""
+
+#. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/views/recruitment_kanban_view.js:0
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Archive"
 msgstr "Archiválás"
@@ -695,8 +803,6 @@ msgstr "Archiválás"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_form
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Archived"
 msgstr "Archivált"
@@ -716,39 +822,33 @@ msgstr "Hozzárendelve"
 #. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 msgid ""
-"At least one applicant doesn't have a email; you can't use send email "
-"option."
+"At least one applicant doesn't have a email; you can't use send email option."
 msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.candidate_send_mail_view_form
 msgid "Attach a file"
 msgstr "Fájl csatolása"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_attachment_count
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_attachment_count
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__message_attachment_count
 msgid "Attachment Count"
 msgstr "Mellékletek száma"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__attachment_ids
-#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__attachment_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__attachment_ids
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__attachment_ids
 msgid "Attachments"
 msgstr "Mellékletek"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__author_id
-#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__author_id
 msgid "Author"
 msgstr "Szerző"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__availability
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__availability
 msgid "Availability"
 msgstr "Elérhetőség"
 
@@ -758,17 +858,12 @@ msgid "Bachelor Degree"
 msgstr "Főiskolai végzettség"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__is_blacklisted
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__is_blacklisted
 msgid "Blacklist"
 msgstr "Tiltólista"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__mobile_blacklisted
-msgid "Blacklisted Phone Is Mobile"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__phone_blacklisted
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
 msgstr ""
 
@@ -787,12 +882,11 @@ msgstr "Blokkolva"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__body_has_template_value
-#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__body_has_template_value
 msgid "Body content is the same as the template"
 msgstr "A tartalom törzs megegyezik a sablonnal"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_bounce
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_bounce
 msgid "Bounce"
 msgstr "Visszadob"
 
@@ -823,60 +917,15 @@ msgstr "Kampány"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__can_edit_body
-#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__can_edit_body
 msgid "Can Edit Body"
 msgstr "Szerkesztheti a törzset"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.candidate_send_mail_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.talent_pool_add_applicants_view_form
 msgid "Cancel"
 msgstr "Visszavonás"
-
-#. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_candidate
-#: model:ir.model.fields,field_description:hr_recruitment.field_calendar_event__candidate_id
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__candidate_id
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee__candidate_id
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
-msgid "Candidate"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__user_id
-msgid "Candidate Manager"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_res_company__candidate_properties_definition
-msgid "Candidate Properties"
-msgstr ""
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_form
-msgid "Candidate's Name"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.action_hr_candidate
-#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__candidate_ids
-#: model:ir.ui.menu,name:hr_recruitment.menu_hr_candidate
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_calendar
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_tree
-msgid "Candidates"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__similar_candidates_count
-msgid "Candidates with the same email or phone or mobile"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__partner_name
-msgid "Candidates's Name"
-msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_graph_view_job
@@ -895,9 +944,13 @@ msgid "Choose an application email."
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__color
+msgid "Color"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__color
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__color
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__color
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__color
 msgid "Color Index"
 msgstr "Szín index"
@@ -909,11 +962,16 @@ msgstr "Vállalatok"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__company_id
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__company_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__company_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Company"
 msgstr "Vállalat"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__compensation
+msgid "Compensation"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_res_config_settings
@@ -922,6 +980,7 @@ msgstr "Beállítások"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_configuration
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Configuration"
 msgstr "Konfiguráció"
@@ -932,18 +991,9 @@ msgid "Confirmation email sent to all new job applications"
 msgstr ""
 
 #. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/models/hr_applicant.py:0
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_id
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__partner_id
 msgid "Contact"
 msgstr "Kapcsolat"
-
-#. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/models/hr_applicant.py:0
-msgid "Contact Email"
-msgstr "Kapcsolat email"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment
@@ -952,7 +1002,6 @@ msgstr "Tartalom"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__body
-#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__body
 msgid "Contents"
 msgstr "Tartalmak"
 
@@ -973,7 +1022,7 @@ msgid "Copy this email address, to paste it in your email composer, to apply."
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__message_bounce
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
 msgstr "Ezen kapcsolat visszadobott levél számlálója."
 
@@ -983,8 +1032,16 @@ msgid "Create"
 msgstr "Létrehozás"
 
 #. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_view_form
+msgid "Create Applications"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Create Employee"
 msgstr "Munkavállaló létrehozás"
 
@@ -1011,40 +1068,52 @@ msgid "Create your first Job Position."
 msgstr "Hozza létre az első munkakörét!"
 
 #. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/wizard/job_add_applicants.py:0
+msgid "Created %(amount)s new applications for: %(names)s"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__create_uid
-#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__create_uid
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__create_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__create_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_job_add_applicants__create_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_talent_pool_add_applicants__create_uid
 msgid "Created by"
 msgstr "Létrehozta"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__create_date
-#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__create_date
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__create_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__create_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_job_add_applicants__create_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_talent_pool_add_applicants__create_date
 msgid "Created on"
 msgstr "Létrehozva"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
 msgid "Creation Date"
 msgstr "Létrehozva"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__currency_id
+msgid "Currency"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_bounced_content
@@ -1099,13 +1168,13 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
 msgid ""
 "Define here your stages of the recruitment process, for example:\n"
-"                    qualification call, first interview, second interview, refused,\n"
+"                    qualification call, first interview, second interview, "
+"refused,\n"
 "                    hired."
 msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__type_id
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__type_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_degree_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_degree_tree
 msgid "Degree"
@@ -1128,7 +1197,6 @@ msgid "Delay to Close"
 msgstr "Késleltetés a zárásig"
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Delete"
 msgstr "Törlés"
@@ -1152,7 +1220,13 @@ msgid "Departments"
 msgstr "Részlegek"
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_form
+msgid "Describe the talent pool and common traits among talent pool applicants"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__name
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_form
 msgid "Description"
 msgstr "Leírás"
 
@@ -1178,12 +1252,12 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
 msgid "Directly Available"
 msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_view_form
 msgid "Discard"
 msgstr "Elvetés"
 
@@ -1195,15 +1269,29 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__display_name
-#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_calendar_event__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__display_name
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_ir_ui_menu__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_job_add_applicants__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_mail_activity_plan__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_mail_activity_schedule__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_company__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_users__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_talent_pool_add_applicants__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_utm_campaign__display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_utm_source__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
@@ -1231,7 +1319,6 @@ msgstr "Dokumentumok száma"
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
-#: code:addons/hr_recruitment/models/hr_candidate.py:0
 #: code:addons/hr_recruitment/models/hr_job.py:0
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__document_ids
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -1267,7 +1354,6 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_from
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__email_from
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__email
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__email
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -1299,7 +1385,6 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_cc
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__email_cc
 msgid "Email cc"
 msgstr "E-mail másolat"
 
@@ -1322,34 +1407,30 @@ msgstr "E-mailek"
 
 #. module: hr_recruitment
 #. odoo-python
-#: code:addons/hr_recruitment/models/hr_candidate.py:0
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
 #: model:ir.model,name:hr_recruitment.model_hr_employee
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__employee_id
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__employee_id
 msgid "Employee"
 msgstr "Munkavállaló"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__emp_is_active
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__emp_is_active
 msgid "Employee Active"
 msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__employee_name
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__employee_name
 msgid "Employee Name"
 msgstr "Munkavállaló neve"
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.candidate_hired_template
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_hired_template
 msgid "Employee created:"
 msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__employee_id
-#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__employee_id
-msgid "Employee linked to the candidate."
+msgid "Employee linked to the applicant."
 msgstr ""
 
 #. module: hr_recruitment
@@ -1364,13 +1445,11 @@ msgstr "Foglalkoztatás típusok"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__priority
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__priority
 msgid "Evaluation"
 msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__3
-#: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_candidate__priority__3
 msgid "Excellent"
 msgstr "Kiváló"
 
@@ -1406,7 +1485,7 @@ msgid "Favorite User"
 msgstr "Kedvenc felhasználó"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__phone_sanitized
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__phone_sanitized
 msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
@@ -1434,19 +1513,19 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_follower_ids
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_follower_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__message_follower_ids
 msgid "Followers"
 msgstr "Követők"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_partner_ids
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_partner_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Követők (Partnerek)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_type_icon
-#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__activity_type_icon
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr "Font awesome ikon pld: fa-tasks"
 
@@ -1467,7 +1546,6 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__1
-#: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_candidate__priority__1
 msgid "Good"
 msgstr "Jó"
 
@@ -1509,7 +1587,6 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
 msgid "Group By"
 msgstr "Csoportosítás"
 
@@ -1520,7 +1597,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__has_message
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__has_message
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__has_message
 msgid "Has Message"
 msgstr "Van üzenet"
 
@@ -1528,8 +1605,8 @@ msgstr "Van üzenet"
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid ""
-"Have you tried to <a>add skills to your job position</a> and search into the"
-" Reserve ?"
+"Have you tried to <a>add skills to your job position</a> and search into the "
+"Reserve ?"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1542,7 +1619,6 @@ msgstr "Felvétel dátuma"
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__application_status__hired
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Hired"
 msgstr "Felvéve"
@@ -1560,53 +1636,66 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__id
-#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_calendar_event__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__id
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_ir_ui_menu__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_job_add_applicants__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_mail_activity_plan__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_mail_activity_schedule__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_company__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_users__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_talent_pool_add_applicants__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_utm_campaign__id
+#: model:ir.model.fields,field_description:hr_recruitment.field_utm_source__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
 msgstr ""
 "Az álnevet tartalmazó szülő rekord azonosítója (példa: a feladat "
 "létrehozására szolgáló álnevet tartalmazó projekt)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_icon
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__activity_exception_icon
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_exception_icon
 msgid "Icon"
 msgstr "Ikon"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_exception_icon
-#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__activity_exception_icon
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr "Kivétel tevékenységet jelző ikon"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_needaction
-#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__message_needaction
+#: model:ir.model.fields,help:hr_recruitment.field_hr_talent_pool__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Ha be van jelölve, akkor az új üzenetek figyelmet igényelnek."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_has_error
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_has_sms_error
-#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__message_has_error
-#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__message_has_sms_error
+#: model:ir.model.fields,help:hr_recruitment.field_hr_talent_pool__message_has_error
+#: model:ir.model.fields,help:hr_recruitment.field_hr_talent_pool__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Ha be van jelölve, akkor néhány üzenetnél kézbesítési hiba lépett fel."
+msgstr "Ha be van jelölve, akkor néhány üzenetnél kézbesítési hiba lépett fel."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__hired_stage
@@ -1632,7 +1721,6 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__emp_is_active
-#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__emp_is_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
@@ -1650,7 +1738,7 @@ msgstr ""
 "eltüntetését, annak eltávolítása nélkül."
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__is_blacklisted
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__is_blacklisted
 msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
@@ -1659,10 +1747,10 @@ msgstr ""
 "tömegesen küldött leveleket kapni egyik listáról sem."
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__phone_sanitized_blacklisted
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__phone_sanitized_blacklisted
 msgid ""
-"If the sanitized phone number is on the blacklist, the contact won't receive"
-" mass mailing sms anymore, from any list"
+"If the sanitized phone number is on the blacklist, the contact won't receive "
+"mass mailing sms anymore, from any list"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1691,15 +1779,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__mobile_blacklisted
-msgid ""
-"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
-"distinguish which number is blacklisted             when there is both a "
-"mobile and phone field in a model."
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__phone_blacklisted
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__phone_blacklisted
 msgid ""
 "Indicates if a blacklisted sanitized phone number is a phone number. Helps "
 "distinguish which number is blacklisted             when there is both a "
@@ -1710,11 +1790,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__industry_id
 msgid "Industry"
 msgstr "Iparág"
-
-#. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
-msgid "Initial Qualification"
-msgstr "Kezdeti értékelés"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1738,8 +1813,12 @@ msgid "Interviewers"
 msgstr "Interjúztatók"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__is_applicant_in_pool
+msgid "Is Applicant In Pool"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__is_mail_template_editor
-#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__is_mail_template_editor
 msgid "Is Editor"
 msgstr "Szerkesztő"
 
@@ -1750,9 +1829,14 @@ msgstr "Kedvenc"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_is_follower
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_is_follower
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__message_is_follower
 msgid "Is Follower"
 msgstr "Követő"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__is_pool_applicant
+msgid "Is Pool Applicant"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__is_warning_visible
@@ -1762,7 +1846,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__date_from
 msgid ""
-"Is set, update candidates availability once hired for that specific mission."
+"Is set, update applicants availability once hired for that specific mission."
 msgstr ""
 
 #. module: hr_recruitment
@@ -1771,8 +1855,6 @@ msgid "JSON that maps ids from a many2one field to seconds spent"
 msgstr ""
 
 #. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/models/hr_job.py:0
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__job_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -1827,6 +1909,7 @@ msgstr "Munkakör létrehozva"
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_config
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_interviewer
+#: model:ir.model.fields,field_description:hr_recruitment.field_job_add_applicants__job_ids
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_config_jobs
 msgid "Job Positions"
 msgstr "Munkakörök"
@@ -1858,7 +1941,6 @@ msgstr "Állások"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_form
 msgid "Jobs - Recruitment Form"
 msgstr "Állások - Toborzási űrlap"
 
@@ -1889,14 +1971,12 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__lang
-#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__lang
 msgid "Language"
 msgstr "Nyelv"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
-#: code:addons/hr_recruitment/models/hr_candidate.py:0
 msgid "Last Meeting"
 msgstr "Legutóbbi találkozó"
 
@@ -1914,30 +1994,32 @@ msgstr "Szakasz legutóbb frissítve"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__write_uid
-#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__write_uid
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__write_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__write_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_job_add_applicants__write_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_talent_pool_add_applicants__write_uid
 msgid "Last Updated by"
 msgstr "Frissítette"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__write_date
-#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__write_date
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__write_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__write_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_job_add_applicants__write_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_talent_pool_add_applicants__write_date
 msgid "Last Updated on"
 msgstr "Frissítve"
 
@@ -1948,9 +2030,13 @@ msgid "Late Activities"
 msgstr "Késő tevékenységek"
 
 #. module: hr_recruitment
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
+msgid "Let's create a job position"
+msgstr ""
+
+#. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/views/recruitment_helper_view.xml:0
-#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Let's create a job position."
 msgstr "Hozzon létre egy munkakört!"
 
@@ -1982,7 +2068,6 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__linkedin_profile
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__linkedin_profile
 msgid "LinkedIn Profile"
 msgstr "LinkedIn profil"
 
@@ -1999,7 +2084,6 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.candidate_send_mail_view_form
 msgid "Load template"
 msgstr "Sablon betöltése"
 
@@ -2010,22 +2094,13 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__template_id
-#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__template_id
 msgid "Mail Template"
 msgstr "Levél sablon"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_main_attachment_id
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Fő melléklet"
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_form
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_tree
-msgid "Manager"
-msgstr "Menedzser"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
@@ -2045,19 +2120,16 @@ msgstr "Közepesek"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_display_date
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__meeting_display_date
 msgid "Meeting Display Date"
 msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_display_text
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__meeting_display_text
 msgid "Meeting Display Text"
 msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_ids
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__meeting_ids
 msgid "Meetings"
 msgstr "Találkozók"
 
@@ -2068,13 +2140,13 @@ msgstr "Menü"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_error
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_has_error
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__message_has_error
 msgid "Message Delivery error"
 msgstr "Üzenetkézbesítési hiba"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_ids
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__message_ids
 msgid "Messages"
 msgstr "Üzenetek"
 
@@ -2084,8 +2156,13 @@ msgid "Mission Dates"
 msgstr ""
 
 #. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_view_form
+msgid "Move to..."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__my_activity_date_deadline
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__my_activity_date_deadline
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr "Tevékenységeim határideje"
 
@@ -2093,11 +2170,6 @@ msgstr "Tevékenységeim határideje"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "My Applications"
 msgstr "Jelentkezéseim"
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
-msgid "My Candidates"
-msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
@@ -2112,7 +2184,6 @@ msgstr "Munkaköreim"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__name
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_tree
 msgid "Name"
 msgstr "Név"
 
@@ -2157,47 +2228,56 @@ msgid "New Hired Employee"
 msgstr "Új alkalmazottak"
 
 #. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_job.py:0
+msgid "New Job Board"
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_tree_activity
 msgid "Next Activities"
 msgstr "Következő tevékenységek"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_calendar_event_id
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__activity_calendar_event_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
 msgstr "Következő tevékenység naptár esemény"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_date_deadline
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__activity_date_deadline
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Következő tevékenység határideje"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_summary
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__activity_summary
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_summary
 msgid "Next Activity Summary"
 msgstr "Következő tevékenység összegzése"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_type_id
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__activity_type_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_type_id
 msgid "Next Activity Type"
 msgstr "Következő tevékenység típusa"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
-#: code:addons/hr_recruitment/models/hr_candidate.py:0
 msgid "Next Meeting"
 msgstr "Következő találkozó"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
-#: code:addons/hr_recruitment/models/hr_candidate.py:0
 msgid "No Meeting"
 msgstr "Nincs találkozó"
+
+#. module: hr_recruitment
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_talent_pool_applications
+msgid "No Talents in the pool yet"
+msgstr ""
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2210,11 +2290,6 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid "No applications yet"
 msgstr "Még nincs jelentkezés"
-
-#. module: hr_recruitment
-#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_candidate
-msgid "No candidates yet"
-msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_type_action_config_hr_applicant
@@ -2234,14 +2309,17 @@ msgid "No rules have been defined."
 msgstr ""
 
 #. module: hr_recruitment
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_talent_pool
+msgid "No talent pools yet"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__0
-#: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_candidate__priority__0
 msgid "Normal"
 msgstr "Normál"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_normalized
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__email_normalized
 msgid "Normalized Email"
 msgstr ""
 
@@ -2252,13 +2330,12 @@ msgstr "Megjegyzés"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction_counter
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_needaction_counter
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Akciók száma"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__attachment_number
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__attachment_count
 msgid "Number of Attachments"
 msgstr "Mellékletek száma"
 
@@ -2276,7 +2353,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_error_counter
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_has_error_counter
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__message_has_error_counter
 msgid "Number of errors"
 msgstr "Hibák száma"
 
@@ -2288,13 +2365,13 @@ msgstr "A toborzás fázisában ebbe a munkakörbe felvett munkavállalók szám
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_needaction_counter
-#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__message_needaction_counter
+#: model:ir.model.fields,help:hr_recruitment.field_hr_talent_pool__message_needaction_counter
 msgid "Number of messages requiring action"
 msgstr "Üzenetek száma, melyek akciót igényelnek"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_has_error_counter
-#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__message_has_error_counter
+#: model:ir.model.fields,help:hr_recruitment.field_hr_talent_pool__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Kézbesítési hibával rendelkező üzenetek száma"
 
@@ -2303,7 +2380,8 @@ msgstr "Kézbesítési hibával rendelkező üzenetek száma"
 #: model_terms:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid ""
 "Odoo helps you track applicants in the recruitment\n"
-"                process and follow up all operations: meetings, interviews, etc."
+"                process and follow up all operations: meetings, interviews, "
+"etc."
 msgstr ""
 "Az Odoo segít a toborzási folyamatnál a pályázók és az\n"
 "                 összes művelet nyomon követésében: találkozók, interjúk stb."
@@ -2349,39 +2427,22 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_applicant_send_mail__lang
-#: model:ir.model.fields,help:hr_recruitment.field_candidate_send_mail__lang
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"{{ object.partner_id.lang }}."
 msgstr ""
 "Opcionális fordítási nyelv (ISO kód), mely e-mail küldése során választható "
 "ki. Ha nincs beállítva, akkor az angol nyelv kerül felhasználásra. Ez "
-"általában csak egy kitöltő kifejezés, mely megadja a megfelelő nyelvet, pld:"
-" {{ object.partner_id.lang }}."
+"általában csak egy kitöltő kifejezés, mely megadja a megfelelő nyelvet, pld: "
+"{{ object.partner_id.lang }}."
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "Or talk about this applicant privately with your colleagues."
 msgstr ""
-
-#. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/models/hr_applicant.py:0
-msgid "Other Applications"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__other_applications_count
-msgid "Other Applications Count"
-msgstr ""
-
-#. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
-msgid "Other applications"
-msgstr "Egyéb jelentkezések"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -2401,8 +2462,8 @@ msgstr "Szülő rekord szál azonosító"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
 "Az álnevet tartalmazó szülő modell. Az álnév hivatkozást tartalmazó modell "
@@ -2410,30 +2471,24 @@ msgstr ""
 "projekt (parent_model) és feladat (model))."
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_name
-msgid "Partner Name"
-msgstr "Partner neve"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_phone
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__partner_phone
 msgid "Phone"
 msgstr "Telefon"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__phone_sanitized_blacklisted
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__phone_mobile_search
-msgid "Phone/Mobile"
-msgstr "Telefon/Mobil"
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__phone_mobile_search
+msgid "Phone Number"
+msgstr ""
 
 #. module: hr_recruitment
 #. odoo-python
-#: code:addons/hr_recruitment/models/hr_candidate.py:0
-msgid "Please provide an candidate name."
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
+msgid "Please provide an applicant name."
 msgstr ""
 
 #. module: hr_recruitment
@@ -2442,12 +2497,24 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
 msgstr ""
 "A dokumentumra küldött üzenetek szabályai a levélátjáró használatával.\n"
 "- mindenki: mindenki tud üzenni\n"
 "- partnerek: csak a hitelesített partnerek\n"
-"- követők: csak a kapcsolódó dokumentum követői vagy a következő csatornák tagjai\n"
+"- követők: csak a kapcsolódó dokumentum követői vagy a következő csatornák "
+"tagjai\n"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__pool_applicant_id
+msgid "Pool Applicant"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__pool_manager
+msgid "Pool Manager"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__probability
@@ -2461,8 +2528,8 @@ msgstr "Folyamat"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__applicant_properties
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__candidate_properties
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__job_properties
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Properties"
 msgstr "Tulajdonságok"
 
@@ -2487,8 +2554,13 @@ msgid "Publish job offers on your website"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
+msgid "Qualification"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__rating_ids
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__rating_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__rating_ids
 msgid "Ratings"
 msgstr "Értékelések"
 
@@ -2639,7 +2711,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Refused"
 msgstr "Elutasított"
@@ -2674,7 +2745,6 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__render_model
-#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__render_model
 msgid "Rendering Model"
 msgstr "Renderelő modell"
 
@@ -2697,7 +2767,7 @@ msgstr "Felelős"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_user_id
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__activity_user_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_user_id
 msgid "Responsible User"
 msgstr "Felelős felhasználó"
 
@@ -2728,7 +2798,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_sms_error
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_has_sms_error
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "SMS kézbesítési hiba"
 
@@ -2758,13 +2828,12 @@ msgid "Salary Proposed by the Organisation, extra advantages"
 msgstr "Fizetés a szervezet, extra előny által javasolva"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__phone_sanitized
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__phone_sanitized
 msgid "Sanitized Number"
 msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_phone_sanitized
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__partner_phone_sanitized
 msgid "Sanitized Phone Number"
 msgstr ""
 
@@ -2775,7 +2844,6 @@ msgid "Save it!"
 msgstr ""
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Schedule Interview"
 msgstr "Interjú ütemezés"
@@ -2798,13 +2866,12 @@ msgstr "Második interjú"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__address_id
 msgid ""
-"Select the location where the applicant will work. Addresses listed here are"
-" defined on the company's contact information."
+"Select the location where the applicant will work. Addresses listed here are "
+"defined on the company's contact information."
 msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.candidate_send_mail_view_form
 msgid "Send"
 msgstr "Küldés"
 
@@ -2816,9 +2883,7 @@ msgstr ""
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
-#: code:addons/hr_recruitment/models/hr_candidate.py:0
 #: model:ir.actions.server,name:hr_recruitment.action_applicant_send_mail
-#: model:ir.actions.server,name:hr_recruitment.action_candidate_send_mail
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__send_mail
 msgid "Send Email"
 msgstr "E-mail küldés"
@@ -2829,8 +2894,6 @@ msgid "Send Interview Survey"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.action_hr_applicant_mass_sms
-#: model:ir.actions.act_window,name:hr_recruitment.action_hr_candidate_mass_sms
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Send SMS"
 msgstr "SMS küldése"
@@ -2844,11 +2907,6 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_send_mail
 msgid "Send mails to applicants"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_candidate_send_mail
-msgid "Send mails to candidates"
 msgstr ""
 
 #. module: hr_recruitment
@@ -2886,20 +2944,8 @@ msgstr "Beállítások"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Show all records which has next action date is before today"
 msgstr ""
-"Az összes olyan rekord megjelenítése, melynél a következő akció dátuma a mai"
-" nap előtti"
-
-#. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/models/hr_candidate.py:0
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_form
-msgid "Similar Candidates"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__similar_candidates_count
-msgid "Similar Candidates Count"
-msgstr ""
+"Az összes olyan rekord megjelenítése, melynél a következő akció dátuma a mai "
+"nap előtti"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__single_applicant_email
@@ -2982,8 +3028,8 @@ msgid ""
 "Stage of the applicant before being in the current stage. Used for lost "
 "cases analysis."
 msgstr ""
-"A pályázati szakasza mielőtt ebbe a szakaszba lépett volna. Az eredménytelen"
-" esetek kiértékelésére használja."
+"A pályázati szakasza mielőtt ebbe a szakaszba lépett volna. Az eredménytelen "
+"esetek kiértékelésére használja."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
@@ -2994,7 +3040,7 @@ msgstr "Szakaszok"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_state
-#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__activity_state
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__activity_state
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
@@ -3013,7 +3059,6 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__subject
-#: model:ir.model.fields,field_description:hr_recruitment.field_candidate_send_mail__subject
 msgid "Subject"
 msgstr "Tárgy"
 
@@ -3030,7 +3075,8 @@ msgstr "A címke név már létezik!"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_category_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__categ_ids
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__categ_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__categ_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_talent_pool_add_applicants__categ_ids
 #: model:ir.ui.menu,name:hr_recruitment.hr_applicant_category_menu
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_tree
@@ -3038,6 +3084,42 @@ msgstr "A címke név már létezik!"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Tags"
 msgstr "Címkék"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__talent_ids
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+msgid "Talent"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_talent_pool
+#: model:ir.model,name:hr_recruitment.model_hr_talent_pool
+#: model:ir.model.fields,field_description:hr_recruitment.field_talent_pool_add_applicants__talent_pool_ids
+msgid "Talent Pool"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__talent_pool_count
+msgid "Talent Pool Count"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__description
+msgid "Talent Pool Description"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__talent_pool_ids
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_talent_pools
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+msgid "Talent Pools"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_talent_pool_applications
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_kanban
+msgid "Talents"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_job_platform_email_uniq
@@ -3058,8 +3140,8 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__user_id
 msgid ""
-"The Recruiter will be the default value for all Applicants in this job"
-"             position. The Recruiter is automatically added to all meetings "
+"The Recruiter will be the default value for all Applicants Recruiter's field "
+"in this job position. The Recruiter is automatically added to all meetings "
 "with the Applicant."
 msgstr ""
 
@@ -3072,16 +3154,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/models/hr_candidate.py:0
-msgid ""
-"The candidate is linked to an employee, to avoid losing information, archive"
-" it instead."
-msgstr ""
-
-#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__availability
-#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__availability
 msgid "The date at which the applicant will be available to start working"
 msgstr "Az a dátum, amikor a pályázó ténylegesen munkába tudna állni."
 
@@ -3092,17 +3165,11 @@ msgid "The following applicants are missing an email address: %s."
 msgstr ""
 
 #. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/wizard/candidate_send_mail.py:0
-msgid "The following candidates are missing an email address: %s."
-msgstr ""
-
-#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
 msgstr ""
 "A modell (Odoo dokumentum típus), amelyre ez az álnév vonatkozik. Bármely "
 "bejövő e-mail, amely nem válaszol egy meglévő rekordra, ezen modell egy új "
@@ -3123,10 +3190,15 @@ msgstr ""
 "leveleket kapni: <allasok@pelda.odoo.com>"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_talent_pool__no_of_talents
+msgid "The number of talents in this talent pool."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_platform__regex
 msgid ""
-"The regex facilitates to extract information from the subject or body of the"
-" received email to autopopulate the Applicant's name field"
+"The regex facilitates to extract information from the subject or body of the "
+"received email to autopopulate the Applicant's name field"
 msgstr ""
 
 #. module: hr_recruitment
@@ -3146,17 +3218,16 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_normalized
-#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__email_normalized
 msgid ""
-"This field is used to search on email address as the primary email field can"
-" contain more than strictly an email address."
+"This field is used to search on email address as the primary email field can "
+"contain more than strictly an email address."
 msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__campaign_id
 msgid ""
-"This is a name that helps you keep track of your different campaign efforts,"
-" e.g. Fall_Drive, Christmas_Special"
+"This is a name that helps you keep track of your different campaign efforts, "
+"e.g. Fall_Drive, Christmas_Special"
 msgstr ""
 "Ez egy név, ami segít a különböző kampányok nyomon követésében, pl. "
 "Őszi_kampány, Karácsonyi_ajánlat"
@@ -3167,8 +3238,8 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
-"Ez a hivatkozás forrása, pl. keresőmotor, egy másik tartomány vagy egy "
-"e-mail lista neve"
+"Ez a hivatkozás forrása, pl. keresőmotor, egy másik tartomány vagy egy e-"
+"mail lista neve"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -3195,6 +3266,11 @@ msgid "Tip: Let candidates apply by email"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__name
+msgid "Title"
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "To Recruit"
 msgstr "Toborozandó"
@@ -3213,6 +3289,11 @@ msgstr "Tippek"
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_sources
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Trackers"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_talent_pool_applications
+msgid "Try adding some to the pool"
 msgstr ""
 
 #. module: hr_recruitment
@@ -3240,7 +3321,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_exception_decoration
-#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__activity_exception_decoration
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Kivétel tevékenység típusa a rekordon."
 
@@ -3260,7 +3341,6 @@ msgid "UTMs"
 msgstr "UTMs"
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Unarchive"
@@ -3270,7 +3350,6 @@ msgstr "Visszatöltés"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
 msgid "Unassigned"
 msgstr "Nem hozzárendelt"
 
@@ -3293,8 +3372,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid ""
 "Use interview forms tailored to each job position during the recruitment "
-"process. Select the form to use in the job position detail form. This relies"
-" on the Survey app."
+"process. Select the form to use in the job position detail form. This relies "
+"on the Survey app."
 msgstr ""
 
 #. module: hr_recruitment
@@ -3309,14 +3388,14 @@ msgstr "Felhasználó e-mail"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__2
-#: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_candidate__priority__2
 msgid "Very Good"
 msgstr "Nagyon jó"
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
-msgid "Waiting"
-msgstr "Várakozó"
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+msgid "Visible to all"
+msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
@@ -3325,13 +3404,13 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__website_message_ids
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__website_message_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__website_message_ids
 msgid "Website Messages"
 msgstr "Weboldal üzenetek"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__website_message_ids
-#: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__website_message_ids
+#: model:ir.model.fields,help:hr_recruitment.field_hr_talent_pool__website_message_ids
 msgid "Website communication history"
 msgstr "Weboldal kommunikációs előzmények"
 
@@ -3349,7 +3428,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
-msgid "Who can access candidates"
+msgid "Who can access applicants"
 msgstr ""
 
 #. module: hr_recruitment
@@ -3359,20 +3438,20 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.candidate_send_mail_view_form
 msgid "Write your message here..."
 msgstr "Írjon egy üzenetet..."
 
 #. module: hr_recruitment
 #. odoo-python
-#: code:addons/hr_recruitment/models/hr_candidate.py:0
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "You are not allowed to perform this action."
 msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid ""
-"You can define here the labels that will be displayed for the kanban state instead\n"
+"You can define here the labels that will be displayed for the kanban state "
+"instead\n"
 "                            of the default labels."
 msgstr ""
 
@@ -3388,21 +3467,16 @@ msgstr ""
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 msgid ""
 "You can't select Send email option.\n"
-"The email will not be sent to the following applicant(s) as they don't have an email address:"
-msgstr ""
-
-#. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/models/hr_applicant.py:0
-msgid ""
-"You cannot create an applicant in a different company than the candidate"
+"The email will not be sent to the following applicant(s) as they don't have "
+"an email address:"
 msgstr ""
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/utm_source.py:0
 msgid ""
-"You cannot delete these UTM Sources as they are linked to the following recruitment sources in Recruitment:\n"
+"You cannot delete these UTM Sources as they are linked to the following "
+"recruitment sources in Recruitment:\n"
 "%(recruitment_sources)s"
 msgstr ""
 
@@ -3425,17 +3499,27 @@ msgid "You must define a Contact Name for this applicant."
 msgstr "Meg kell adnia egy kapcsolattartót ehhez a pályázóhoz."
 
 #. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/models/hr_candidate.py:0
-msgid "You must define a Contact Name for this candidate."
-msgstr ""
-
-#. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_congratulations
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_interest
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_not_interested
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
 msgid "Your Job Application: {{ object.job_id.name }}"
+msgstr ""
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_job.py:0
+msgid "auto_install"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_form
+msgid "e.g French-speaking, Immediately Available, Own a car"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_form
+msgid "e.g Reserve, Developers, Sales"
 msgstr ""
 
 #. module: hr_recruitment
@@ -3504,6 +3588,18 @@ msgid "e.g. sales-manager"
 msgstr ""
 
 #. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
+msgid "id"
+msgstr ""
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_job.py:0
+msgid "name"
+msgstr ""
+
+#. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/views/recruitment_helper_view.xml:0
 msgid "or"
@@ -3513,3 +3609,30 @@ msgstr "vagy"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 msgid "other application(s)"
 msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_list
+msgid "talent pool"
+msgstr ""
+
+#~ msgid "Contact Email"
+#~ msgstr "Kapcsolat email"
+
+#~ msgid "Initial Qualification"
+#~ msgstr "Kezdeti értékelés"
+
+#~ msgid "Manager"
+#~ msgstr "Menedzser"
+
+#~ msgid "Other applications"
+#~ msgstr "Egyéb jelentkezések"
+
+#~ msgid "Partner Name"
+#~ msgstr "Partner neve"
+
+#~ msgid "Phone/Mobile"
+#~ msgstr "Telefon/Mobil"
+
+#~ msgid "Waiting"
+#~ msgstr "Várakozó"
