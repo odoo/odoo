@@ -4,11 +4,21 @@ import { Call } from "@mail/discuss/call/common/call";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
 
-import { Component, onMounted, onWillUnmount, useChildSubEnv, useRef, useState } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillUnmount,
+    useChildSubEnv,
+    useRef,
+    useState,
+    useExternalListener,
+} from "@odoo/owl";
 
+import { isEventHandled } from "@web/core/utils/misc";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { browser } from "@web/core/browser/browser";
 
 /** @typedef {"chat"|"invite"} MeetingPanel */
 
@@ -35,6 +45,11 @@ export class Meeting extends Component {
         onMounted(() => (this.store.meetingViewOpened = true));
         onWillUnmount(() => (this.store.meetingViewOpened = false));
         useChildSubEnv({ inMeetingView: true });
+        useExternalListener(browser, "keydown", async (event) => {
+            if (event.key === "Escape" && !isEventHandled("NavigableList.close")) {
+                await this.rtc?.exitFullscreen();
+            }
+        });
     }
 
     /** @param {MeetingPanel} panelName */
