@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { WebsitePartnersPage } from "./website_partnership_option";
+import { WebsitePartnersPage } from "./website_partnerhip_option";
 
 class WebsitePartnershipPageOption extends Plugin {
     static id = "WebsitePartnershipPageOption";

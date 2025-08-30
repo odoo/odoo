@@ -57,13 +57,11 @@ class WebsitePartnership(WebsitePartnerPage):
             url=url, total=partner_count, page=page, step=references_per_page, scope=7,
             url_args=url_args)
 
-        print(base_partner_domain)
         # search partners matching current search parameters
         partner_ids = partner_obj.sudo().search(
             base_partner_domain, order="complete_name ASC, id ASC",
             offset=pager['offset'], limit=references_per_page)
         partners = partner_ids.sudo()
-        print(partner_ids)
         values = {
             'grades': grades,
             'current_grade': grade,
