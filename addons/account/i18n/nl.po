@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-15 18:37+0000\n"
+"POT-Creation-Date: 2025-08-29 18:37+0000\n"
 "PO-Revision-Date: 2025-08-20 23:52+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s18-3/account/"
@@ -9218,8 +9218,8 @@ msgid ""
 "(label)s',\n"
 "Failed to parse the cross report id or xml_id.\n"
 msgstr ""
-"In rapport '%(report_name)s', op regel '%(line_name)s', met label "
-"'%(label)s',\n"
+"In rapport '%(report_name)s', op regel '%(line_name)s', met label '%"
+"(label)s',\n"
 "kon de cross-rapport-id of xml_id niet worden geparsed.\n"
 
 #. module: account
@@ -9232,8 +9232,8 @@ msgid ""
 "Expected: cross_report(<report_id>|<xml_id>)Example:  "
 "cross_report(my_module.my_report) or cross_report(123)"
 msgstr ""
-"In rapport '%(report_name)s', op regel '%(line_name)s', met label "
-"'%(label)s',\n"
+"In rapport '%(report_name)s', op regel '%(line_name)s', met label '%"
+"(label)s',\n"
 "Het formaat van de cross-rapportuitdrukking is ongeldig.\n"
 "Verwacht: cross_report(<report_id>|<xml_id>) Voorbeeld: "
 "cross_report(my_module.my_report) of cross_report(123)"
@@ -16157,6 +16157,12 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_config_settings__account_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
 msgstr "Het land waarvandaan de btw-aangiften voor dit bedrijf worden gebruikt"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The currency rate must be strictly positive."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
