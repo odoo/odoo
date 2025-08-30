@@ -144,7 +144,7 @@ class SaleOrderLine(models.Model):
             if line.analytic_distribution:
                 applied_root_plans = self.env['account.analytic.account'].browse(
                     list({int(account_id) for ids in line.analytic_distribution for account_id in ids.split(",")})
-                ).root_plan_id
+                ).exists().root_plan_id
                 if accounts_to_add := project._get_analytic_accounts().filtered(
                     lambda account: account.root_plan_id not in applied_root_plans
                 ):
