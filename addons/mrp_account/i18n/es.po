@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:37+0000\n"
+"POT-Creation-Date: 2025-08-29 18:37+0000\n"
 "PO-Revision-Date: 2025-08-25 10:08+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-18/"
@@ -21,8 +21,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
-" ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: mrp_account
@@ -40,6 +40,12 @@ msgstr "5000 €"
 #: code:addons/mrp_account/models/mrp_production.py:0
 msgid "%s - Labour"
 msgstr "%s - Mano de obra"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/stock_move.py:0
+msgid "%s - Unbuild Cost Difference"
+msgstr ""
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -110,8 +116,8 @@ msgstr "Línea de movimiento de la cuenta|"
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting_line
 msgid "Account move line to be created when posting WIP account move"
 msgstr ""
-"Asiento de la cuenta a crear al registrar el asiento de la cuenta de trabajo"
-" en curso"
+"Asiento de la cuenta a crear al registrar el asiento de la cuenta de trabajo "
+"en curso"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -348,8 +354,7 @@ msgstr "Línea de cuenta analítica de orden de fabricación"
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
-msgid ""
-"Please make sure the total credit amount equals the total debit amount."
+msgid "Please make sure the total credit amount equals the total debit amount."
 msgstr ""
 "Asegúrese de que el importe total en el haber sea igual al importe total en "
 "el debe."
@@ -438,26 +443,21 @@ msgid "Stock Move"
 msgstr "Movimiento de stock"
 
 #. module: mrp_account
-#: model:ir.model,name:mrp_account.model_stock_valuation_layer
-msgid "Stock Valuation Layer"
-msgstr "Capa de valoración de stock"
-
-#. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_account_bank_statement_line__wip_production_ids
 #: model:ir.model.fields,help:mrp_account.field_account_move__wip_production_ids
 msgid ""
 "The MOs that this WIP entry was based on. Expected to be set at time of WIP "
 "entry creation."
 msgstr ""
-"Las órdenes de fabricación es las que está basada esta entrada de trabajo en"
-" curso. Se espera que se establezcan al crear la entrada correspondiente."
+"Las órdenes de fabricación es las que está basada esta entrada de trabajo en "
+"curso. Se espera que se establezcan al crear la entrada correspondiente."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
 msgid ""
-"The expense is accounted for when the manufacturing order is marked as done."
-" If not set, it is the expense account of the final product that will be "
-"used instead."
+"The expense is accounted for when the manufacturing order is marked as done. "
+"If not set, it is the expense account of the final product that will be used "
+"instead."
 msgstr ""
 "El gasto se contabiliza al marcar la orden de fabricación como hecha. Si no "
 "se establece, se utilizará la cuenta de gastos del producto final."
@@ -465,11 +465,16 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
 msgid ""
-"This account will be used as a valuation counterpart for both components and final products for manufacturing orders.\n"
-"                If there are any workcenter/employee costs, this value will remain on the account once the production is completed."
+"This account will be used as a valuation counterpart for both components and "
+"final products for manufacturing orders.\n"
+"                If there are any workcenter/employee costs, this value will "
+"remain on the account once the production is completed."
 msgstr ""
-"Esta cuenta se usará como una contrapartida de valuación tanto para los componentes como para los productos finales para las órdenes de fabricación.\n"
-"                Si hay costes del centro de trabajo/empleados, este valor permanecerá en la cuenta una vez que la fabricación esté terminada."
+"Esta cuenta se usará como una contrapartida de valuación tanto para los "
+"componentes como para los productos finales para las órdenes de "
+"fabricación.\n"
+"                Si hay costes del centro de trabajo/empleados, este valor "
+"permanecerá en la cuenta una vez que la fabricación esté terminada."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
@@ -577,3 +582,6 @@ msgstr "Registro de productividad del centro de trabajo"
 #: code:addons/mrp_account/models/mrp_workorder.py:0
 msgid "[WC] %s"
 msgstr "[Centro de trabajo] %s"
+
+#~ msgid "Stock Valuation Layer"
+#~ msgstr "Capa de valoración de stock"

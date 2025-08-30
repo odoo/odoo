@@ -54,7 +54,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-15 18:36+0000\n"
+"POT-Creation-Date: 2025-08-29 18:37+0000\n"
 "PO-Revision-Date: 2025-08-28 09:52+0000\n"
 "Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/account/"
@@ -1302,8 +1302,8 @@ msgid ""
 "<span invisible=\"rule_type != 'invoice_matching'\" class=\"o_form_label "
 "o_td_label\">Match Invoice/bill with</span>"
 msgstr ""
-"<span invisible=\"rule_type != 'invoice_matching'\" class="
-"\"o_form_label o_td_label\">Täsmää myynti-/ostolasku </span> kanssa"
+"<span invisible=\"rule_type != 'invoice_matching'\" class=\"o_form_label "
+"o_td_label\">Täsmää myynti-/ostolasku </span> kanssa"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -15664,6 +15664,12 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_config_settings__account_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
 msgstr "Maa, jonka veroraportteja käytetään tälle yritykselle"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The currency rate must be strictly positive."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
