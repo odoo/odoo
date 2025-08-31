@@ -154,7 +154,7 @@ from http import HTTPStatus
 from io import BytesIO
 from os.path import join as opj
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urlsplit, urlencode, quote
 from zlib import adler32
 
 import babel.core
@@ -179,7 +179,7 @@ import werkzeug.routing
 import werkzeug.security
 import werkzeug.wrappers
 import werkzeug.wsgi
-from werkzeug.urls import URL, url_parse, url_encode, url_quote
+from werkzeug.urls import URL
 from werkzeug.exceptions import (
     default_exceptions as werkzeug_default_exceptions,
     HTTPException, NotFound, UnsupportedMediaType, UnprocessableEntity,
@@ -353,10 +353,7 @@ def content_disposition(filename, disposition_type='attachment'):
     if disposition_type not in ('attachment', 'inline'):
         e = f"Invalid disposition_type: {disposition_type!r}"
         raise ValueError(e)
-    return "{}; filename*=UTF-8''{}".format(
-        disposition_type,
-        url_quote(filename, safe='', unsafe='()<>@,;:"/[]?={}\\*\'%') # RFC6266
-    )
+    return "{}; filename*=UTF-8''{}".format(disposition_type, quote(filename, safe=''))
 
 
 def db_list(force=False, host=None):
@@ -741,8 +738,8 @@ def route(route=None, **routing):
         route applies to. If not specified, all methods are allowed.
     :param str cors: The Access-Control-Allow-Origin cors directive value.
     :param bool csrf: Whether CSRF protection should be enabled for the
-        route. Enabled by default for ``'http'``-type requests, disabled
-        by default for ``'jsonrpc'``-type requests.
+        route. Enabled by default for ``'http'`` endpoints, not applicable
+        to ``'jsonrpc'`` endpoints.
     :param Union[bool, Callable[[registry, request], bool]] readonly:
         Whether this endpoint should open a cursor on a read-only
         replica instead of (by default) the primary read/write database.
@@ -1934,6 +1931,48 @@ class Request:
         :returns: ``True`` when valid, ``False`` when not.
         :rtype: bool
         """
+        headers = self.httprequest.headers
+        match headers.get('Sec-Fetch-Site'):
+            case None:
+                # fallback for older browsers, does not protect against
+                # http/https cross-origin unless HSTS is enabled, as Host does
+                # not include scheme)
+                if origin := headers.get('Origin'):
+                    if urlsplit(origin).netloc == headers.get('Host'):
+                        if csrf:
+                            _logger.runbot(
+                                "[WIP] unnecessary CSRF token to %s in %s",
+                                self.httprequest.path,
+                                module_manager.current_test or None,
+                            )
+                        return True
+                else:
+                    if csrf:
+                        _logger.runbot(
+                            "[WIP] unnecessary CSRF token to %s in %s",
+                            self.httprequest.path,
+                            module_manager.current_test or None,
+                        )
+                    # not a browser (or non-cors-relevant) => not a concern
+                    return True
+            case 'same-origin' | 'none':
+                if csrf:
+                    _logger.runbot(
+                        "[WIP] unnecessary CSRF token to %s in %s",
+                        self.httprequest.path,
+                        module_manager.current_test or None,
+                    )
+                return True
+            case _:
+                pass  # fallback to legacy csrf
+
+        _logger.runbot(
+            "csrf fallback: Sec-Fetch-Site=%r, Origin=%r, Host=%r",
+            headers.get('Sec-Fetch-Site'),
+            headers.get('Origin'),
+            headers.get('Host'),
+            stack_info=True,
+        )
         if not csrf:
             return False
 
@@ -2075,14 +2114,14 @@ class Request:
         if isinstance(location, URL):
             location = location.to_url()
         if local:
-            location = '/' + url_parse(location).replace(scheme='', netloc='').to_url().lstrip('/\\')
+            location = '/' + urlsplit(location)._replace(scheme='', netloc='').geturl().lstrip('/\\')
         if self.db:
             return self.env['ir.http']._redirect(location, code)
         return werkzeug.utils.redirect(location, code, Response=Response)
 
     def redirect_query(self, location, query=None, code=303, local=True):
         if query:
-            location += '?' + url_encode(query)
+            location += '?' + urlencode(query)
         return self.redirect(location, code=code, local=local)
 
     def render(self, template, qcontext=None, lazy=True, **kw):
@@ -2443,13 +2482,13 @@ class HttpDispatcher(Dispatcher):
         See :meth:`~odoo.http.Response.load` method for the compatible
         endpoint return types.
         """
+        if endpoint.routing['auth'] != 'none' and not self.request.db:
+            return self.request.redirect('/web/database/selector')
+
         self.request.params = dict(self.request.get_http_params(), **args)
 
         # Check for CSRF token for relevant requests
         if self.request.httprequest.method not in SAFE_HTTP_METHODS and endpoint.routing.get('csrf', True):
-            if not self.request.db:
-                return self.request.redirect('/web/database/selector')
-
             token = self.request.params.pop('csrf_token', None)
             if not self.request.validate_csrf(token):
                 if token is not None:
@@ -2457,6 +2496,13 @@ class HttpDispatcher(Dispatcher):
                 else:
                     _logger.warning(MISSING_CSRF_WARNING, request.httprequest.path)
                 raise werkzeug.exceptions.BadRequest('Session expired (invalid CSRF token)')
+
+        if endpoint.routing.get('csrf', True) is False and self.request.validate_csrf(None):
+            _logger.runbot(
+                "[WIP] unnecessary csrf=False on %s (from %s)",
+                self.request.httprequest.path,
+                module_manager.current_test or '<no test>',
+            )
 
         if self.request.db:
             return self.request.registry['ir.http']._dispatch(endpoint)
@@ -2631,7 +2677,7 @@ class Application:
         the given ``host``.
         """
 
-        netloc, path = urlparse(url)[1:3]
+        netloc, path = urlsplit(url)[1:3]
         try:
             path_netloc, module, static, resource = path.split('/', 3)
         except ValueError:
@@ -2763,7 +2809,7 @@ class Application:
                             # ensure_db() protected routes, remove ?db= from the query string
                             args_nodb = request.httprequest.args.copy()
                             args_nodb.pop('db', None)
-                            request.reroute(httprequest.path, url_encode(args_nodb))
+                            request.reroute(httprequest.path, urlencode(args_nodb))
                         response = request._serve_nodb()
                 else:
                     response = request._serve_nodb()

@@ -32,7 +32,7 @@ class XenditController(http.Controller):
         tx_sudo = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
         tx_sudo._xendit_create_charge(token_ref, auth_id=auth_id)
 
-    @http.route(_webhook_url, type='http', methods=['POST'], auth='public', csrf=False)
+    @http.route(_webhook_url, type='http', methods=['POST'], auth='public')
     def xendit_webhook(self):
         """Process the payment data sent by Xendit to the webhook.
 

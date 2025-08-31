@@ -23,7 +23,7 @@ DEVICE_TYPES = [
 
 class DriverController(http.Controller):
     @helpers.toggleable
-    @route.iot_route('/iot_drivers/action', type='jsonrpc', cors='*', csrf=False)
+    @route.iot_route('/iot_drivers/action', type='jsonrpc', cors='*')
     def action(self, session_id, device_identifier, data):
         """This route is called when we want to make an action with device (take picture, printing,...)
         We specify in data from which session_id that action is called
@@ -45,7 +45,7 @@ class DriverController(http.Controller):
         iot_device.action(data)
         return True
 
-    @route.iot_route('/iot_drivers/check_certificate', type='http', cors='*', csrf=False)
+    @route.iot_route('/iot_drivers/check_certificate', type='http', cors='*')
     def check_certificate(self):
         """
         This route is called when we want to check if certificate is up-to-date
@@ -54,7 +54,7 @@ class DriverController(http.Controller):
         helpers.get_certificate_status()
 
     @helpers.toggleable
-    @route.iot_route('/iot_drivers/event', type='jsonrpc', cors='*', csrf=False)
+    @route.iot_route('/iot_drivers/event', type='jsonrpc', cors='*')
     def event(self, listener):
         """
         listener is a dict in witch there are a sessions_id and a dict of device_identifier to listen
@@ -77,7 +77,7 @@ class DriverController(http.Controller):
             req['result']['session_id'] = req['session_id']
             return req['result']
 
-    @route.iot_route('/iot_drivers/download_logs', type='http', cors='*', csrf=False)
+    @route.iot_route('/iot_drivers/download_logs', type='http', cors='*')
     def download_logs(self):
         """
         Downloads the log file

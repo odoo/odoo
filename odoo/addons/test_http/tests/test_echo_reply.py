@@ -3,6 +3,7 @@
 import json
 import time
 from http import HTTPStatus
+from urllib.parse import urlsplit
 
 from odoo.http import Request, root, SESSION_ROTATION_INTERVAL
 from odoo.tests import Like, new_test_user, tagged
@@ -39,11 +40,13 @@ class TestHttpEchoReplyHttpNoDB(TestHttpBase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, '{}')
 
-
+    @mute_logger('odoo.http')
     def test_echohttp5_post_csrf(self):
         res = self.nodb_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor'})
-        self.assertEqual(res.status_code, 303)
-        self.assertURLEqual(res.headers.get('Location'), '/web/database/selector')
+        self.assertEqual(res.status_code, 200)
+
+        res = self.nodb_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor'}, headers={'Sec-Fetch-Site': 'cross-origin'})
+        self.assertEqual(res.status_code, 400)
 
     def test_echohttp6_json_over_http(self):
         payload = json.dumps({'commander': 'Thor'})
@@ -133,19 +136,19 @@ class TestHttpEchoReplyHttpWithDB(TestHttpBase):
 
     @mute_logger('odoo.http')
     def test_echohttp5_post_no_csrf(self):
-        res = self.db_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor'})
+        res = self.db_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor'}, headers={'Sec-Fetch-Site': 'cross-site'})
         self.assertEqual(res.status_code, 400)
         self.assertIn("Session expired (invalid CSRF token)", res.text)
 
     @mute_logger('odoo.http')
     def test_echohttp6_post_bad_csrf(self):
-        res = self.db_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor', 'csrf_token': 'bad token'})
+        res = self.db_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor', 'csrf_token': 'bad token'}, headers={'Sec-Fetch-Site': 'cross-site'})
         self.assertEqual(res.status_code, 400)
         self.assertIn("Session expired (invalid CSRF token)", res.text)
 
     @mute_logger('odoo.http')
     def test_echohttp7_post_good_csrf(self):
-        res = self.db_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor', 'csrf_token': Request.csrf_token(self)})
+        res = self.db_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor', 'csrf_token': Request.csrf_token(self)}, headers={'Sec-Fetch-Site': 'cross-site'})
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, "{'race': 'Asgard', 'commander': 'Thor'}")
 
@@ -169,9 +172,34 @@ class TestHttpEchoReplyHttpWithDB(TestHttpBase):
         )
 
         # Do the post with the CSRF token computed in advance
-        res = self.db_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor', 'csrf_token': csrf_token})
+        res = self.db_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor', 'csrf_token': csrf_token}, headers={'Sec-Fetch-Site': 'cross-site'})
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, "{'race': 'Asgard', 'commander': 'Thor'}")
+
+    @mute_logger('odoo.http')
+    def test_echohttp_csrf_natural(self):
+        host = urlsplit(self.base_url()).netloc
+        for headers in (
+            {},  # non-browser access
+            {'Sec-Fetch-Site': 'same-origin'},
+            {'Sec-Fetch-Site': 'none'},
+            {'Origin': f"http://{host}"},  # host/origin match fallback
+        ):
+            with self.subTest(headers=headers):
+                res = self.db_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor'}, headers=headers)
+                self.assertEqual(res.status_code, 200)
+                self.assertEqual(res.text, "{'race': 'Asgard', 'commander': 'Thor'}")
+
+    @mute_logger('odoo.http')
+    def test_echohttp_csrf_notural(self):
+        for headers in (
+            {'Sec-Fetch-Site': 'same-site'},
+            {'Sec-Fetch-Site': 'cross-origin'},
+            {'Origin': "http://example.org"},  # host/origin match fallback
+        ):
+            with self.subTest(headers=headers):
+                res = self.db_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor'}, headers=headers)
+                self.assertEqual(res.status_code, 400)
 
 
 @tagged('post_install', '-at_install')

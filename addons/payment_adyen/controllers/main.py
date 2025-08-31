@@ -214,7 +214,7 @@ class AdyenController(http.Controller):
         # Redirect the user to the status page
         return request.redirect('/payment/status')
 
-    @http.route(_webhook_url, type='http', methods=['POST'], auth='public', csrf=False)
+    @http.route(_webhook_url, type='http', methods=['POST'], auth='public')
     def adyen_webhook(self):
         """ Process the data sent by Adyen to the webhook based on the event code.
 

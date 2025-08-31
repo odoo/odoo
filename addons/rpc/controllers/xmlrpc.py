@@ -132,7 +132,7 @@ class XMLRPC(Controller):
         result = dispatch_rpc(service, method, params)
         return dumps((result,))
 
-    @route("/xmlrpc/<service>", auth="none", methods=["POST"], csrf=False, save_session=False)
+    @route("/xmlrpc/<service>", auth="none", methods=["POST"], save_session=False)
     def xmlrpc_1(self, service):
         """XML-RPC service that returns faultCode as strings.
 
@@ -150,7 +150,7 @@ class XMLRPC(Controller):
             raise
         return Response(response=response, mimetype='text/xml')
 
-    @route("/xmlrpc/2/<service>", auth="none", methods=["POST"], csrf=False, save_session=False)
+    @route("/xmlrpc/2/<service>", auth="none", methods=["POST"], save_session=False)
     def xmlrpc_2(self, service):
         """XML-RPC service that returns faultCode as int."""
         _check_request()

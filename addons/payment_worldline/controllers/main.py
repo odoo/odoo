@@ -50,7 +50,7 @@ class WorldlineController(http.Controller):
             )
         return request.redirect('/payment/status')
 
-    @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
+    @http.route(_webhook_url, type='http', auth='public', methods=['POST'])
     def worldline_webhook(self):
         """Process the payment data sent by Worldline to the webhook.
 

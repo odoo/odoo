@@ -68,8 +68,7 @@ class MercadoPagoPaymentController(http.Controller):
         return request.redirect('/payment/status')
 
     @http.route(
-        f'{const.WEBHOOK_ROUTE}/<reference>', type='http', auth='public', methods=['POST'],
-        csrf=False
+        f'{const.WEBHOOK_ROUTE}/<reference>', type='http', auth='public', methods=['POST']
     )
     def mercado_pago_webhook(self, reference, **_kwargs):
         """ Process the payment data sent by Mercado Pago to the webhook.

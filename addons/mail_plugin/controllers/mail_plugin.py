@@ -18,7 +18,7 @@ _logger = logging.getLogger(__name__)
 
 class MailPluginController(http.Controller):
 
-    @http.route('/mail_client_extension/modules/get', type="jsonrpc", auth="outlook", csrf=False, cors="*")
+    @http.route('/mail_client_extension/modules/get', type="jsonrpc", auth="outlook", cors="*")
     def modules_get(self, **kwargs):
         """
             deprecated as of saas-14.3, not needed for newer versions of the mail plugin but necessary

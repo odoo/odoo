@@ -85,7 +85,7 @@ class TestHttp(http.Controller):
     def echo_http_post(self, **kwargs):
         return str(kwargs)
 
-    @http.route('/test_http/echo-http-csrf', type='http', auth='none', methods=['POST'], csrf=True)
+    @http.route('/test_http/echo-http-csrf', type='http', auth='none', methods=['POST'])
     def echo_http_csrf(self, **kwargs):
         return str(kwargs)
 
@@ -93,11 +93,11 @@ class TestHttp(http.Controller):
     def echo_http_context_lang(self, **kwargs):
         return self.env.context.get('lang', '')
 
-    @http.route('/test_http/echo-json', type='jsonrpc', auth='none', methods=['POST'], csrf=False)
+    @http.route('/test_http/echo-json', type='jsonrpc', auth='none', methods=['POST'])
     def echo_json(self, **kwargs):
         return kwargs
 
-    @http.route('/test_http/echo-json-context', type='jsonrpc', auth='user', methods=['POST'], csrf=False, readonly=True)
+    @http.route('/test_http/echo-json-context', type='jsonrpc', auth='user', methods=['POST'], readonly=True)
     def echo_json_context(self, **kwargs):
         return self.env.context
 

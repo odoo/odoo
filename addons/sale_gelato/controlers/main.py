@@ -16,7 +16,7 @@ _logger = logging.getLogger(__name__)
 class GelatoController(Controller):
     _webhook_url = '/gelato/webhook'
 
-    @route(_webhook_url, type='http', methods=['POST'], auth='public', csrf=False)
+    @route(_webhook_url, type='http', methods=['POST'], auth='public')
     def gelato_webhook(self):
         """ Process the notification data sent by Gelato to the webhook.
 

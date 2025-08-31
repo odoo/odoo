@@ -211,8 +211,7 @@ class MailController(http.Controller):
                 res_id = False
         return self._redirect_to_record(model, res_id, access_token, **kwargs)
 
-    # csrf is disabled here because it will be called by the MUA with unpredictable session at that time
-    @http.route('/mail/unfollow', type='http', auth='public', csrf=False)
+    @http.route('/mail/unfollow', type='http', auth='public')
     def mail_action_unfollow(self, model, res_id, pid, token, **kwargs):
         comparison, record, __ = MailController._check_token_and_record_or_redirect(model, int(res_id), token)
         if not comparison or not record:
