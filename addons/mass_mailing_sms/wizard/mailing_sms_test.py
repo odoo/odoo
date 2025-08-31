@@ -46,17 +46,18 @@ class MassSMSTest(models.TransientModel):
 
         for sent_sms, db_sms in zip(sent_sms_list, new_sms_messages_sudo):
             recipient = db_sms.number or sent_sms.get('res_id')
-            if sent_sms.get('state') == 'success':
+            # 'success' and 'sent' IAP/Twilio both resolve to 'pending' SMS state
+            # (= send for Odoo) via IAP_TO_SMS_STATE_SUCCESS
+            if sent_sms.get('state') in ('success', 'sent'):
                 notification_messages.append(
                     _('Test SMS successfully sent to %s', recipient))
             elif sent_sms.get('state'):
+                failure_explanation = sms_api._get_sms_api_error_messages().get(sent_sms['state'])
                 failure_reason = sent_sms.get('failure_reason')
                 message = _('Test SMS could not be sent to %s: %s',
                     recipient,
-                    sms_api._get_sms_api_error_messages().get(sent_sms['state']),
+                    failure_explanation or failure_reason or _("An error occurred."),
                 )
-                if failure_reason:
-                    message += ' %s' % failure_reason
                 notification_messages.append(message)
 
         if notification_messages:
