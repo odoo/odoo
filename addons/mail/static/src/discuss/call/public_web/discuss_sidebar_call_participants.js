@@ -72,6 +72,12 @@ export class DiscussSidebarCallParticipants extends Component {
         return sessions[0];
     }
 
+    get attClass() {
+        return {
+            "justify-content-center bg-inherit": this.compact,
+        };
+    }
+
     get sessions() {
         const sessions = [...this.props.thread.rtc_session_ids];
         return sessions.sort((s1, s2) => {
@@ -104,4 +110,6 @@ export class DiscussSidebarCallParticipants extends Component {
     get title() {
         return this.state.expanded ? _t("Collapse participants") : _t("Expand participants");
     }
+
+    onClickParticipant(ev, session) {}
 }
