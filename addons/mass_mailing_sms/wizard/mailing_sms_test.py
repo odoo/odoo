@@ -46,7 +46,8 @@ class MailingSmsTest(models.TransientModel):
 
         for sent_sms, db_sms in zip(sent_sms_list, new_sms_messages_sudo):
             recipient = db_sms.number or sent_sms.get('res_id')
-            if sent_sms.get('state') == 'success':
+            # 'success' and 'sent' both resolve to 'send' SMS state via IAP_TO_SMS_STATE_SUCCESS
+            if sent_sms.get('state') in ('success', 'sent'):
                 notification_messages.append(
                     _('Test SMS successfully sent to %s', recipient))
             elif sent_sms.get('state'):
