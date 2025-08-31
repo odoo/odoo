@@ -86,7 +86,7 @@ class MailingSmsTest(models.TransientModel):
         sms_uuid_to_number_map = {sms.uuid: sms.number for sms in sms_sudo}
         for sent_sms in sent_sms_list:
             recipient = sms_uuid_to_number_map.get(sent_sms.get('uuid'))
-            if sent_sms.get('state') == 'success':
+            if sent_sms.get('state') in ('success', 'sent'):
                 notification_messages.append(
                     _('Test SMS successfully sent to %s', recipient)
                 )
