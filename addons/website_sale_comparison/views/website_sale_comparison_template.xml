@@ -217,7 +217,7 @@
             <t t-set="additional_title">Shop Comparator</t>
             <div id="wrap" class="js_sale">
                 <div class="oe_structure oe_empty" id="oe_structure_website_sale_comparison_product_compare_1"/>
-                <div t-attf-class="oe_website_sale o_wsale_comparison_page pb-5 #{is_view_active('website_sale.shop_fullwidth') and 'container-fluid' or 'container'}">
+                <div t-attf-class="oe_website_sale o_wsale_comparison_page pb-5 #{website.shop_page_container == 'fluid' and 'container-fluid' or 'container'}">
                     <h1 class="h4 mt-4 mb-3">Compare Products</h1>
                     <t
                         t-set="img_ratio_class"
@@ -236,7 +236,7 @@
                         class="o_wsale_comparison_mini_sticky fixed-top d-none bg-body"
                         id="miniStickyComparison"
                     >
-                        <div t-attf-class="px-3 #{is_view_active('website_sale.shop_fullwidth') and 'container-fluid' or 'container'}">
+                        <div t-attf-class="px-3 #{website.shop_page_container == 'fluid' and 'container-fluid' or 'container'}">
                             <div class="o_wsale_comparison_scroll_container overflow-x-auto">
                                 <ul class="list-unstyled d-flex align-items-stretch mb-0 py-3">
                                     <li
@@ -455,7 +455,7 @@
                 <div class="oe_structure" id="oe_structure_website_sale_comparison_product_compare_2"/>
                 <div class="align-items-end bottom-0 d-flex end-0 justify-content-end o_not_editable p-0 position-absolute top-0 start-0 pe-none">
                     <div class="o_wsale_comparison_bottom_bar sticky-bottom flex-shrink-0 w-100 bg-body shadow-lg pe-auto">
-                        <div t-attf-class="d-flex align-items-center py-3 #{is_view_active('website_sale.shop_fullwidth') and 'container-fluid' or 'container'}">
+                        <div t-attf-class="d-flex align-items-center py-3 #{website.shop_page_container == 'fluid' and 'container-fluid' or 'container'}">
                             <button
                                 class="btn btn-link ps-0 text-decoration-none"
                                 aria-label="Continue shopping"
