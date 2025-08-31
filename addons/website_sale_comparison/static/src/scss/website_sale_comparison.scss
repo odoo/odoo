@@ -114,8 +114,26 @@
         width: 2.5rem;
     }
 
+    .btn[data-bs-toggle="collapse"] {
+        .oi-chevron-up {
+            transition: transform 0.2s ease-in-out;
+        }
+        &[aria-expanded="true"] .oi-chevron-up {
+            transform: rotate(180deg);
+        }
+    }
+
     .o_wsale_comparison_offcanvas_image {
         width: 5rem;
+    }
+
+    a[title="Compare products"] .badge {
+        --badge-color: var(--btn-hover-bg);
+        --badge-bg: var(--btn-color);
+    }
+
+    div[name="product_comparison_bottom_bar_row"]:where(:has(button[aria-label="Remove product from comparison"]:hover)) {
+        background: $light;
     }
 
 }
