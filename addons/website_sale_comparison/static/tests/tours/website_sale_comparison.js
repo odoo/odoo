@@ -26,20 +26,20 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
     },
     {
         content: "check products name are correct in the comparelist",
-        trigger: '[name="product_comparison_popover_row"]:contains("Color T-Shirt")',
+        trigger: '[name="product_comparison_bottom_bar_row"]:contains("Color T-Shirt")',
     },
     {
         content: "check products name are correct in the comparelist",
-        trigger: '[name="product_comparison_popover_row"]:contains("Color Pants")',
+        trigger: '[name="product_comparison_bottom_bar_row"]:contains("Color Pants")',
     },
     {
         content: "remove product",
-        trigger: '[name="product_comparison_popover_row"]:contains("Color T-Shirt") button:has(i.oi-close)',
+        trigger: '[name="product_comparison_bottom_bar_row"]:contains("Color T-Shirt") button:has(i.oi-close)',
         run: "click",
     },
     {
         content: "wait for 'Color T-Shirt' to be removed from the popover",
-        trigger: '[name="product_comparison_popover_row"]:not(:contains("Color T-Shirt"))',
+        trigger: '[name="product_comparison_bottom_bar_row"]:not(:contains("Color T-Shirt"))',
     },
     {
         content: "re-add 'Color T-Shirt' in comparison list",
@@ -64,7 +64,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
     },
     {
         content: "check the comparelist is now open and contains 3rd product with correct variant",
-        trigger: '[name="product_comparison_popover_row"]:contains("Color Shoes (Red)")',
+        trigger: '[name="product_comparison_bottom_bar_row"]:contains("Color Shoes (Red)")',
     },
     {
         content: "select 2nd variant(Pink Color)",
@@ -84,7 +84,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
     },
     {
         content: "comparelist contains 4th product with correct variant",
-        trigger: '[name="product_comparison_popover_row"]:contains("Color Shoes (Red)")',
+        trigger: '[name="product_comparison_bottom_bar_row"]:contains("Color Shoes (Red)")',
     },
     {
         content: "check limit is not reached",
