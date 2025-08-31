@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mrp_account
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Junko Augias, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:37+0000\n"
+"POT-Creation-Date: 2025-08-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mrp_account
@@ -35,6 +35,12 @@ msgstr "$5000"
 #: code:addons/mrp_account/models/mrp_production.py:0
 msgid "%s - Labour"
 msgstr "%s - 労働"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/stock_move.py:0
+msgid "%s - Unbuild Cost Difference"
+msgstr ""
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -174,7 +180,9 @@ msgstr "部品表から価格を計算"
 msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
-msgstr "製造された製品のみに関連する部品表の製品および操作を使用して、製品の価格を計算します。"
+msgstr ""
+"製造された製品のみに関連する部品表の製品および操作を使用して、製品の価格を計"
+"算します。"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_ids
@@ -338,8 +346,7 @@ msgstr "製造オーダ分析勘定明細"
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
-msgid ""
-"Please make sure the total credit amount equals the total debit amount."
+msgid "Please make sure the total credit amount equals the total debit amount."
 msgstr "合計のクレジット額と合計のデビット額が一致していることをご確認下さい。"
 
 #. module: mrp_account
@@ -426,34 +433,36 @@ msgid "Stock Move"
 msgstr "在庫移動"
 
 #. module: mrp_account
-#: model:ir.model,name:mrp_account.model_stock_valuation_layer
-msgid "Stock Valuation Layer"
-msgstr "在庫評価レイヤ"
-
-#. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_account_bank_statement_line__wip_production_ids
 #: model:ir.model.fields,help:mrp_account.field_account_move__wip_production_ids
 msgid ""
 "The MOs that this WIP entry was based on. Expected to be set at time of WIP "
 "entry creation."
-msgstr "このWIP仕訳の元になっている製造オーダ。仕訳作成時に設定される予定です。"
+msgstr ""
+"このWIP仕訳の元になっている製造オーダ。仕訳作成時に設定される予定です。"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
 msgid ""
-"The expense is accounted for when the manufacturing order is marked as done."
-" If not set, it is the expense account of the final product that will be "
-"used instead."
-msgstr "この費用は、製造オーダが完了とマークされたときに計上されます。設定されていない場合は、最終プロダクトの費用勘定が代わりに使用されます。"
+"The expense is accounted for when the manufacturing order is marked as done. "
+"If not set, it is the expense account of the final product that will be used "
+"instead."
+msgstr ""
+"この費用は、製造オーダが完了とマークされたときに計上されます。設定されていな"
+"い場合は、最終プロダクトの費用勘定が代わりに使用されます。"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
 msgid ""
-"This account will be used as a valuation counterpart for both components and final products for manufacturing orders.\n"
-"                If there are any workcenter/employee costs, this value will remain on the account once the production is completed."
+"This account will be used as a valuation counterpart for both components and "
+"final products for manufacturing orders.\n"
+"                If there are any workcenter/employee costs, this value will "
+"remain on the account once the production is completed."
 msgstr ""
-"この勘定は、製造オーダの構成品と最終プロダクトの両方の評価対象として使用されます。\n"
-"　　　　作業区/従業員原価がある場合、この値は生産が完了した後も勘定に残ります。"
+"この勘定は、製造オーダの構成品と最終プロダクトの両方の評価対象として使用され"
+"ます。\n"
+"　　　　作業区/従業員原価がある場合、この値は生産が完了した後も勘定に残りま"
+"す。"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
@@ -560,3 +569,6 @@ msgstr "作業区 生産記録"
 #: code:addons/mrp_account/models/mrp_workorder.py:0
 msgid "[WC] %s"
 msgstr "[WC] %s"
+
+#~ msgid "Stock Valuation Layer"
+#~ msgstr "在庫評価レイヤ"

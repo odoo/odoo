@@ -47,7 +47,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 18:37+0000\n"
+"POT-Creation-Date: 2025-08-29 18:37+0000\n"
 "PO-Revision-Date: 2025-08-28 11:53+0000\n"
 "Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-18/"
@@ -415,8 +415,8 @@ msgid ""
 "title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
 "<span class=\"o_form_label\">Barkodlar</span>\n"
-"                                <i class=\"fa fa-info-circle me-1\" title="
-"\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                <i class=\"fa fa-info-circle me-1\" "
+"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -1867,6 +1867,12 @@ msgstr "Bir sipariş seçin"
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__point_of_sale_ticket_portal_url_display_mode
 msgid "Choose how the URL to the portal will be print on the receipt."
 msgstr "URL’nin makbuzda nasıl yazdırılacağını seçin."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
+msgid "Choose the tax you want to apply"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3497,7 +3503,8 @@ msgstr "POS’ta görselleri gizle"
 #: model:product.template,description_sale:point_of_sale.product_wholemeal_loaf_product_template
 msgid ""
 "High fibre loaf. Baked with fine wholemeal flour to give a soft texture."
-msgstr "Yumuşak doku için ince tam buğday unuyla pişirilmiş yüksek lifli ekmek."
+msgstr ""
+"Yumuşak doku için ince tam buğday unuyla pişirilmiş yüksek lifli ekmek."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5488,12 +5495,6 @@ msgstr "Satış için bir iş ortağı seçiniz."
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
-msgid "Please register the voucher number"
-msgstr "Lütfen kupon numarasını kaydedin"
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/qr_code_popup/qr_code_popup.js:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_facing_qr.js:0
 msgid "Please scan the QR code with %s"
@@ -5726,7 +5727,8 @@ msgstr "Satış Noktası"
 #: model:product.template,description_sale:point_of_sale.product_crocheted_poncho_unisize_product_template
 msgid ""
 "Poncho in a soft, crochet-look knit with a round, gently draped neckline."
-msgstr "Yuvarlak ve hafif dökümlü yakalı, yumuşak tığ işi görünümlü örgü panço."
+msgstr ""
+"Yuvarlak ve hafif dökümlü yakalı, yumuşak tığ işi görünümlü örgü panço."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_url
@@ -9113,8 +9115,8 @@ msgid ""
 "You cannot archive '%(picking_type)s' as it is used by POS configuration '%"
 "(config)s'."
 msgstr ""
-"'%(config)s' POS yapılandırması tarafından kullanıldığı için '%(picking_type)"
-"s' arşivlenemez."
+"'%(config)s' POS yapılandırması tarafından kullanıldığı için '%"
+"(picking_type)s' arşivlenemez."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9503,3 +9505,6 @@ msgstr "butonları etkinleştirmek için."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "kullanma"
+
+#~ msgid "Please register the voucher number"
+#~ msgstr "Lütfen kupon numarasını kaydedin"

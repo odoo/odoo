@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mrp_account
-# 
+#
 # Translators:
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
 # Maitê Dietze, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:37+0000\n"
+"POT-Creation-Date: 2025-08-29 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Maitê Dietze, 2025\n"
-"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/"
+"41243/pt_BR/)\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt_BR\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -36,6 +38,12 @@ msgstr "$5000"
 #: code:addons/mrp_account/models/mrp_production.py:0
 msgid "%s - Labour"
 msgstr "%s - Mão-de-obra"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/stock_move.py:0
+msgid "%s - Unbuild Cost Difference"
+msgstr ""
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -106,8 +114,8 @@ msgstr "Linha de movimentação da conta"
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting_line
 msgid "Account move line to be created when posting WIP account move"
 msgstr ""
-"Linha de movimentação de conta a ser criada no lançamento de movimentação de"
-" conta WIP"
+"Linha de movimentação de conta a ser criada no lançamento de movimentação de "
+"conta WIP"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -343,8 +351,7 @@ msgstr "Linha de conta analítica da OP"
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
-msgid ""
-"Please make sure the total credit amount equals the total debit amount."
+msgid "Please make sure the total credit amount equals the total debit amount."
 msgstr ""
 "Certifique-se de que o valor total do crédito seja igual ao valor total do "
 "débito."
@@ -433,26 +440,21 @@ msgid "Stock Move"
 msgstr "Movimentação de estoque"
 
 #. module: mrp_account
-#: model:ir.model,name:mrp_account.model_stock_valuation_layer
-msgid "Stock Valuation Layer"
-msgstr "Camada de valoração de estoque"
-
-#. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_account_bank_statement_line__wip_production_ids
 #: model:ir.model.fields,help:mrp_account.field_account_move__wip_production_ids
 msgid ""
 "The MOs that this WIP entry was based on. Expected to be set at time of WIP "
 "entry creation."
 msgstr ""
-"As OPs nas quais esse registro de TEP foi baseado. A definição é prevista no"
-" momento da criação do registro de TEP."
+"As OPs nas quais esse registro de TEP foi baseado. A definição é prevista no "
+"momento da criação do registro de TEP."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
 msgid ""
-"The expense is accounted for when the manufacturing order is marked as done."
-" If not set, it is the expense account of the final product that will be "
-"used instead."
+"The expense is accounted for when the manufacturing order is marked as done. "
+"If not set, it is the expense account of the final product that will be used "
+"instead."
 msgstr ""
 "A despesa é contabilizada quando a ordem de produção é marcada como "
 "concluída. Se não for definida, será usada a conta de despesas do produto "
@@ -461,11 +463,15 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
 msgid ""
-"This account will be used as a valuation counterpart for both components and final products for manufacturing orders.\n"
-"                If there are any workcenter/employee costs, this value will remain on the account once the production is completed."
+"This account will be used as a valuation counterpart for both components and "
+"final products for manufacturing orders.\n"
+"                If there are any workcenter/employee costs, this value will "
+"remain on the account once the production is completed."
 msgstr ""
-"Essa conta será usada como uma contrapartida de avaliação para componentes e produtos finais para ordens de produção.\n"
-"Se houver custos de centro de trabalho/funcionário, esse valor permanecerá na conta depois que a fabricação for concluída."
+"Essa conta será usada como uma contrapartida de avaliação para componentes e "
+"produtos finais para ordens de produção.\n"
+"Se houver custos de centro de trabalho/funcionário, esse valor permanecerá "
+"na conta depois que a fabricação for concluída."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
@@ -572,3 +578,6 @@ msgstr "Registro de produtividade do centro de trabalho"
 #: code:addons/mrp_account/models/mrp_workorder.py:0
 msgid "[WC] %s"
 msgstr "[CT] %s"
+
+#~ msgid "Stock Valuation Layer"
+#~ msgstr "Camada de valoração de estoque"

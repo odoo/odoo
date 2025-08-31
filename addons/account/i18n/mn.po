@@ -37,7 +37,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-15 18:36+0000\n"
+"POT-Creation-Date: 2025-08-29 18:37+0000\n"
 "PO-Revision-Date: 2025-08-25 06:40+0000\n"
 "Last-Translator: Lodoikhuu <baskhuujacara@gmail.com>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-18/"
@@ -161,8 +161,8 @@ msgid ""
 "%(attachment_name)s (detached by %(user)s on %(date)s)%"
 "(attachment_extension)s"
 msgstr ""
-"%(attachment_name)s ( %(user)s ээс %(date)s-д "
-"салбарласан)%(attachment_extension)s"
+"%(attachment_name)s ( %(user)s ээс %(date)s-д салбарласан)%"
+"(attachment_extension)s"
 
 #. module: account
 #. odoo-python
@@ -236,8 +236,8 @@ msgid ""
 "(receivable)s\" or \"%(payable)s\" with both options \"%"
 "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 msgstr ""
-"%(tax_account)s (%(account_name)s) нь \"%(receivable)s\" эсвэл "
-"\"%(payable)s\" төрөлтэй данс байх ёстой бөгөөд \"%(allow_reconciliation)s\" "
+"%(tax_account)s (%(account_name)s) нь \"%(receivable)s\" эсвэл \"%"
+"(payable)s\" төрөлтэй данс байх ёстой бөгөөд \"%(allow_reconciliation)s\" "
 "болон \"%(non_trade)s\" гэсэн тохиргоонууд идэвхтэй байх шаардлагатай."
 
 #. module: account
@@ -613,8 +613,8 @@ msgid ""
 "behavior.</span>"
 msgstr ""
 "<br/>\n"
-"                        <span>Энэ таны хүлээсэн үр дүнтэй нийцэж байна "
-"уу.</span>"
+"                        <span>Энэ таны хүлээсэн үр дүнтэй нийцэж байна уу.</"
+"span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -897,8 +897,8 @@ msgid ""
 "<i class=\"fa fa-clock-o fw-bold\" aria-label=\"Date\" role=\"img\" "
 "title=\"Date\"/>"
 msgstr ""
-"<i class=\"fa fa-clock-o fw-bold\" aria-label=\"Огноо\" role=\"img\" title="
-"\"Огноо\"/>"
+"<i class=\"fa fa-clock-o fw-bold\" aria-label=\"Огноо\" role=\"img\" "
+"title=\"Огноо\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_kanban
@@ -906,16 +906,16 @@ msgid ""
 "<i class=\"fa fa-clock-o fw-bold\" role=\"img\" aria-label=\"Date\" "
 "title=\"Date\"/>"
 msgstr ""
-"<i class=\"fa fa-clock-o fw-bold\" role=\"img\" aria-label=\"Огноо\" title="
-"\"Огноо\"/>"
+"<i class=\"fa fa-clock-o fw-bold\" role=\"img\" aria-label=\"Огноо\" "
+"title=\"Огноо\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 msgid ""
 "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
 msgstr ""
-"<i class=\"fa fa-clock-o\" aria-label=\"Огноо\" role=\"img\" title=\"Огноо\""
-"/>"
+"<i class=\"fa fa-clock-o\" aria-label=\"Огноо\" role=\"img\" title=\"Огноо\"/"
+">"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -1264,8 +1264,8 @@ msgid ""
 "<span invisible=\"rule_type != 'invoice_matching'\" class=\"o_form_label "
 "o_td_label\">Match Invoice/bill with</span>"
 msgstr ""
-"<span invisible=\"rule_type != 'invoice_matching'\" class="
-"\"o_form_label o_td_label\">Тохирч буй нэхэмжлэл/төлбөр</span>"
+"<span invisible=\"rule_type != 'invoice_matching'\" class=\"o_form_label "
+"o_td_label\">Тохирч буй нэхэмжлэл/төлбөр</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -15648,6 +15648,12 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_config_settings__account_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
 msgstr "Энэхүү компанийн татварын тайлангуудыг ашиглах улс."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The currency rate must be strictly positive."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
