@@ -86,17 +86,19 @@ class MailingSmsTest(models.TransientModel):
         sms_uuid_to_number_map = {sms.uuid: sms.number for sms in sms_sudo}
         for sent_sms in sent_sms_list:
             recipient = sms_uuid_to_number_map.get(sent_sms.get('uuid'))
+            # 'success' and 'sent' IAP/Twilio both resolve to 'pending' SMS state
+            # (= send for Odoo) via IAP_TO_SMS_STATE_SUCCESS
             if sent_sms.get('state') in ('success', 'sent'):
                 notification_messages.append(
                     _('Test SMS successfully sent to %s', recipient)
                 )
             else:
+                failure_explanation = sms_api._get_sms_api_error_messages().get(sent_sms['state'])
+                failure_reason = sent_sms.get('failure_reason')
                 notification_messages.append(_(
                     "Test SMS could not be sent to %(destination)s: %(state)s",
                     destination=recipient,
-                    state=sms_api._get_sms_api_error_messages().get(
-                        sent_sms['state'], _("An error occurred.")
-                    ),
+                    state=failure_explanation or failure_reason or _("An error occurred."),
                 ))
         if invalid_numbers:
             notification_messages.append(
