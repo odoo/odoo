@@ -14,6 +14,13 @@ class ResPartnerExtended(models.Model):
     """
     _inherit = 'res.partner'
 
+    # === 企業客戶專用基本欄位 ===
+    
+    code = fields.Char(
+        string='客戶編碼',
+        help='客戶/公司的內部識別編碼，用於管理和辨識'
+    )
+    
     # === 企業客戶專用財務欄位 ===
     
     x_payment_bank = fields.Selection([
@@ -88,6 +95,12 @@ class ResPartnerExtended(models.Model):
         help='公司完整地址'
     )
     
+    # === 地理位置欄位（兼容性） ===
+    date_localization = fields.Date(
+        string='地理位置更新日期', 
+        help='地理位置座標的最後更新日期'
+    )
+    
     # === 關聯欄位 ===
     x_department_ids = fields.One2many(
         'company.department', 
@@ -101,6 +114,14 @@ class ResPartnerExtended(models.Model):
         'company_id',
         string='聯絡人清單', 
         help='該公司的所有聯絡人'
+    )
+    
+    # === 原生聯絡人部門管理 ===
+    x_department_id = fields.Many2one(
+        'company.department',
+        string='所屬部門',
+        domain="[('company_id', '=', parent_id)]",
+        help='聯絡人所屬的部門（僅限子聯絡人）'
     )
     
     # 從 fieldservice 模組繼承的設備關聯
@@ -275,7 +296,35 @@ class ResPartnerExtended(models.Model):
         # 擴展點：子模組實作此方法
         return {'type': 'ir.actions.act_window_close'}
 
+    # === onchange 方法 ===
+    @api.onchange('x_department_id')
+    def _onchange_x_department_id(self):
+        """當選擇部門時的處理邏輯"""
+        if self.x_department_id and not self.parent_id:
+            # 如果是公司層級且選擇了部門，清空部門（部門只適用於子聯絡人）
+            self.x_department_id = False
+        elif self.x_department_id and self.parent_id:
+            # 如果是子聯絡人且選擇了部門，檢查部門是否屬於父公司
+            if self.x_department_id.company_id != self.parent_id:
+                self.x_department_id = False
+
+    @api.onchange('parent_id')
+    def _onchange_parent_id_department(self):
+        """當更改父公司時，清空不匹配的部門"""
+        if self.x_department_id:
+            if not self.parent_id or self.x_department_id.company_id != self.parent_id:
+                self.x_department_id = False
+
     # === 約束和驗證 ===
+    @api.constrains('x_department_id', 'parent_id')
+    def _check_department_parent_consistency(self):
+        """確保部門與父公司的一致性"""
+        for partner in self:
+            if partner.x_department_id:
+                if not partner.parent_id:
+                    raise models.ValidationError('只有子聯絡人才能指定所屬部門')
+                if partner.x_department_id.company_id != partner.parent_id:
+                    raise models.ValidationError(f'部門 "{partner.x_department_id.name}" 必須屬於父公司 "{partner.parent_id.name}"')
 
     @api.constrains('x_payment_account')
     def _check_payment_account(self):

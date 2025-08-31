@@ -34,7 +34,16 @@
                                 class="oe_stat_button"
                                 icon="fa-users">
                             <field name="contact_count" widget="statinfo" 
-                                   string="聯絡人"/>
+                                   string="總聯絡人"/>
+                        </button>
+                        
+                        <!-- 原生聯絡人統計 -->
+                        <button name="action_open_partner_contacts"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-user">
+                            <field name="partner_contact_count" widget="statinfo" 
+                                   string="原生聯絡人"/>
                         </button>
                         
                         <!-- 設備統計 -->

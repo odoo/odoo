@@ -47,4 +47,46 @@
         </field>
     </record>
 
+    <!-- 公司表單增加部門管理分頁 -->
+    <record id="res_partner_form_view_medical_departments" model="ir.ui.view">
+        <field name="name">res.partner.form.medical.departments</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- 按照 Employee 模組設計，在職位欄位後添加部門選擇 -->
+            <field name="function" position="after">
+                <field name="x_department_id" 
+                       string="部門"
+                       invisible="is_company or not parent_id"
+                       domain="[('company_id', '=', parent_id)]"
+                       options="{'no_create': True}"
+                       context="{'default_company_id': parent_id}"/>
+            </field>
+            
+            <!-- 在公司的 notebook 中增加部門管理分頁（僅對公司顯示） -->
+            <xpath expr="//notebook" position="inside">
+                <page name="department_management" 
+                      string="部門架構" 
+                      invisible="not is_company">
+                    <div class="o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="code" invisible="1"/>
+                            <field name="x_department_count" invisible="1"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="x_department_ids" string="部門清單"/>
+                            <div class="text-muted">
+                                管理該公司的組織架構和部門設定
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <field name="x_department_ids" 
+                           widget="one2many" 
+                           context="{'default_company_id': id}"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>

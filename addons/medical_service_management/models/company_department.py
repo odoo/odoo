@@ -38,6 +38,12 @@ class CompanyDepartment(models.Model):
         help='部門的唯一識別代碼'
     )
     
+    # 防禦性欄位，避免其他模組或系統的衝突
+    unit_number = fields.Char(
+        string='單位編號',
+        help='系統內部使用，通常留空'
+    )
+    
     sequence = fields.Integer(
         string='順序',
         default=10,
@@ -104,11 +110,26 @@ class CompanyDepartment(models.Model):
         help='此部門的聯絡人清單'
     )
     
+    # 原生聯絡人關聯
+    partner_contact_ids = fields.One2many(
+        'res.partner',
+        'x_department_id',
+        string='原生聯絡人',
+        help='此部門的原生聯絡人（子聯絡人）'
+    )
+    
     contact_count = fields.Integer(
         string='聯絡人數量',
         compute='_compute_contact_count',
         store=True,
-        help='此部門的聯絡人總數'
+        help='此部門的聯絡人總數（包含自訂和原生聯絡人）'
+    )
+    
+    partner_contact_count = fields.Integer(
+        string='原生聯絡人數量',
+        compute='_compute_partner_contact_count',
+        store=True,
+        help='此部門的原生聯絡人數量'
     )
     
     equipment_count = fields.Integer(
@@ -136,11 +157,17 @@ class CompanyDepartment(models.Model):
             names.reverse()
             department.display_name = ' / '.join(names) if names else False
 
-    @api.depends('contact_ids')
+    @api.depends('contact_ids', 'partner_contact_ids')
     def _compute_contact_count(self):
-        """計算聯絡人數量"""
+        """計算聯絡人數量（自訂 + 原生）"""
         for department in self:
-            department.contact_count = len(department.contact_ids)
+            department.contact_count = len(department.contact_ids) + len(department.partner_contact_ids)
+    
+    @api.depends('partner_contact_ids')
+    def _compute_partner_contact_count(self):
+        """計算原生聯絡人數量"""
+        for department in self:
+            department.partner_contact_count = len(department.partner_contact_ids)
 
     @api.depends('company_id')
     def _compute_equipment_count(self):
@@ -201,17 +228,34 @@ class CompanyDepartment(models.Model):
 
     # === 動作方法 ===
     def action_open_contacts(self):
-        """開啟此部門的聯絡人清單"""
+        """開啟此部門的聯絡人清單（自訂聯絡人）"""
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': f'{self.display_name} - 聯絡人',
+            'name': f'{self.display_name} - 自訂聯絡人',
             'res_model': 'company.contact',
             'view_mode': 'list,form',
             'domain': [('department_id', '=', self.id)],
             'context': {
                 'default_department_id': self.id,
                 'default_company_id': self.company_id.id,
+            },
+            'target': 'current',
+        }
+    
+    def action_open_partner_contacts(self):
+        """開啟此部門的原生聯絡人清單"""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': f'{self.display_name} - 原生聯絡人',
+            'res_model': 'res.partner',
+            'view_mode': 'list,form',
+            'domain': [('x_department_id', '=', self.id)],
+            'context': {
+                'default_x_department_id': self.id,
+                'default_parent_id': self.company_id.id,
+                'default_is_company': False,
             },
             'target': 'current',
         }
