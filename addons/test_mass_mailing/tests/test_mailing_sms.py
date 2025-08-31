@@ -13,7 +13,7 @@ from odoo.tools import mute_logger
 
 
 @tagged('mass_mailing', 'mass_mailing_sms')
-class TestMassSMSInternals(TestMassSMSCommon, MockSmsTwilioApi):
+class TestMassSMSInternals(TestMassSMSCommon):
 
     @users('user_marketing')
     def test_mass_sms_domain(self):
