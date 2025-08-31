@@ -11,6 +11,12 @@ patch(DiscussSidebarCallParticipants.prototype, {
             position: "right",
         });
     },
+    get attClass() {
+        return {
+            ...super.attClass,
+            "o-active cursor-pointer rounded-4": this.session.persona.main_user_id,
+        };
+    },
     onClickParticipant(ev, session) {
         if (!session.persona.main_user_id) {
             return;
