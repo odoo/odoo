@@ -144,7 +144,11 @@ class CompanyContact(models.Model):
     def _compute_display_name(self):
         """計算顯示名稱"""
         for contact in self:
-            parts = [contact.name]
+            parts = []
+            
+            # 確保 name 不是 False
+            if contact.name:
+                parts.append(contact.name)
             
             if contact.function:
                 parts.append(f"({contact.function})")
@@ -154,7 +158,7 @@ class CompanyContact(models.Model):
             elif contact.company_id:
                 parts.append(f"- {contact.company_id.name}")
                 
-            contact.display_name = ' '.join(parts)
+            contact.display_name = ' '.join(parts) if parts else False
 
     @api.depends('company_id', 'department_id')
     def _compute_service_order_count(self):

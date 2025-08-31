@@ -90,6 +90,7 @@ class CompanyDepartment(models.Model):
     zip = fields.Char(string='郵遞區號')
     
     phone = fields.Char(string='電話')
+    phone_extension = fields.Char(string='分機', help='電話分機號碼')
     mobile = fields.Char(string='手機') 
     fax = fields.Char(string='傳真')
     email = fields.Char(string='Email')
@@ -128,10 +129,12 @@ class CompanyDepartment(models.Model):
             names = []
             current = department
             while current:
-                names.append(current.name)
+                # 確保 name 不是 False
+                if current.name:
+                    names.append(current.name)
                 current = current.parent_id
             names.reverse()
-            department.display_name = ' / '.join(names)
+            department.display_name = ' / '.join(names) if names else False
 
     @api.depends('contact_ids')
     def _compute_contact_count(self):

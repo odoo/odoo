@@ -7,6 +7,9 @@
         <field name="model">company.contact</field>
         <field name="arch" type="xml">
             <form string="聯絡人">
+                <header>
+                    <!-- 標準按鈕會自動顯示（儲存/捨棄） -->
+                </header>
                 <sheet>
                     <!-- 狀態標示 -->
                     <widget name="web_ribbon" title="已停用" bg_color="bg-danger" 

@@ -5,20 +5,16 @@ from odoo import models, fields, api
 
 class ResPartnerExtended(models.Model):
     """
-    擴展 res.partner 模型，新增醫療設備服務管理所需的企業客戶欄位
+    擴展 res.partner 模型，新增企業客戶管理所需的專用欄位
     
     主要功能：
     - 新增企業客戶專用財務資訊欄位
-    - 建立與部門、設備、合約的關聯
+    - 建立與部門、聯絡人的關聯
     - 提供統計資訊和快捷操作
     """
     _inherit = 'res.partner'
 
     # === 企業客戶專用財務欄位 ===
-    x_tax_id = fields.Char(
-        string='統一編號',
-        help='企業統一編號，用於發票和稅務處理'
-    )
     
     x_payment_bank = fields.Selection([
         ('ctbc', '中國信託商業銀行'),
@@ -50,6 +46,47 @@ class ResPartnerExtended(models.Model):
         ('USD', '美元 (USD)'),
         ('EUR', '歐元 (EUR)'),
     ], string='交易幣別', default='TWD', help='主要交易使用幣別')
+    
+    # === 兼容性欄位 ===
+    company_country_id = fields.Many2one(
+        'res.country',
+        string='公司國家',
+        compute='_compute_company_country_id',
+        help='公司所在國家，提供與其他模組的兼容性'
+    )
+    
+    company_language = fields.Selection(
+        string='公司語言',
+        selection='_get_lang_selection',
+        help='公司主要使用的語言',
+        default=lambda self: self.env.lang
+    )
+    
+    company_phone = fields.Char(
+        string='公司電話',
+        help='公司總機或主要聯絡電話'
+    )
+
+    company_mobile = fields.Char(
+        string='公司手機',
+        help='公司業務手機或緊急聯絡電話'
+    )
+
+    company_email = fields.Char(
+        string='公司郵箱',
+        help='公司主要聯絡郵箱'
+    )
+
+    company_website = fields.Char(
+        string='公司網站',
+        help='公司官方網站'
+    )
+    
+    company_address = fields.Text(
+        string='公司地址',
+        compute='_compute_company_address',
+        help='公司完整地址'
+    )
     
     # === 關聯欄位 ===
     x_department_ids = fields.One2many(
@@ -92,6 +129,12 @@ class ResPartnerExtended(models.Model):
     )
 
     # === 計算方法 ===
+    @api.model
+    def _get_lang_selection(self):
+        """獲取可用語言列表"""
+        langs = self.env['res.lang'].search([('active', '=', True)])
+        return [(lang.code, lang.name) for lang in langs]
+    
     @api.depends('x_department_ids')
     def _compute_department_count(self):
         """計算部門數量"""
@@ -103,6 +146,36 @@ class ResPartnerExtended(models.Model):
         """計算聯絡人數量"""
         for partner in self:
             partner.x_contact_count = len(partner.x_contact_ids)
+    
+    @api.depends('country_id')
+    def _compute_company_country_id(self):
+        """
+        計算公司國家 - 兼容性方法
+        
+        為了與其他模組（如 account）的視圖保持兼容性，
+        提供 company_country_id 欄位，基於聯絡人的國家資訊。
+        """
+        for partner in self:
+            partner.company_country_id = partner.country_id
+    
+    @api.depends('street', 'street2', 'city', 'state_id', 'zip', 'country_id')
+    def _compute_company_address(self):
+        """計算公司完整地址"""
+        for partner in self:
+            address_parts = []
+            if partner.street:
+                address_parts.append(partner.street)
+            if partner.street2:
+                address_parts.append(partner.street2)
+            if partner.city:
+                address_parts.append(partner.city)
+            if partner.state_id:
+                address_parts.append(partner.state_id.name)
+            if partner.zip:
+                address_parts.append(partner.zip)
+            if partner.country_id:
+                address_parts.append(partner.country_id.name)
+            partner.company_address = ', '.join(address_parts) if address_parts else False
     
     @api.depends('is_company')
     def _compute_equipment_count(self):
@@ -203,13 +276,6 @@ class ResPartnerExtended(models.Model):
         return {'type': 'ir.actions.act_window_close'}
 
     # === 約束和驗證 ===
-    @api.constrains('x_tax_id')
-    def _check_tax_id_format(self):
-        """驗證統一編號格式（台灣統一編號為8位數字）"""
-        for partner in self:
-            if partner.x_tax_id and partner.country_id and partner.country_id.code == 'TW':
-                if not (partner.x_tax_id.isdigit() and len(partner.x_tax_id) == 8):
-                    raise models.ValidationError('台灣統一編號必須為8位數字')
 
     @api.constrains('x_payment_account')
     def _check_payment_account(self):

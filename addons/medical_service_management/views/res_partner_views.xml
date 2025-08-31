@@ -1,20 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- 擴展客戶公司表單視圖 - 簡化版本 -->
-    <record id="res_partner_form_view_medical_service" model="ir.ui.view">
-        <field name="name">res.partner.form.medical.service</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_form"/>
-        <field name="arch" type="xml">
-            
-            <!-- 在客戶名稱後新增統一編號欄位 -->
-            <field name="name" position="after">
-                <field name="x_tax_id" string="統一編號" placeholder="例：12345678" 
-                       invisible="not is_company"/>
-            </field>
-            
-        </field>
-    </record>
 
     <!-- 客戶清單視圖增強 -->
     <record id="res_partner_tree_view_medical_service" model="ir.ui.view">
@@ -25,7 +10,6 @@
             
             <!-- 在清單中新增相關欄位 -->
             <field name="complete_name" position="after">
-                <field name="x_tax_id" optional="hide"/>
                 <field name="x_payment_method" optional="hide"/>
                 <field name="x_department_count" string="部門數" optional="show"/>
                 <field name="x_contact_count" string="聯絡人數" optional="show"/>
@@ -41,12 +25,6 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_res_partner_filter"/>
         <field name="arch" type="xml">
-            
-            <!-- 新增搜尋欄位 -->
-            <field name="name" position="after">
-                <field name="x_tax_id" string="統一編號"/>
-            </field>
-            
             <!-- 新增群組篩選 -->
             <filter name="inactive" position="after">
                 <separator/>

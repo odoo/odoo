@@ -7,6 +7,9 @@
         <field name="model">company.department</field>
         <field name="arch" type="xml">
             <form string="公司部門">
+                <header>
+                    <!-- 標準按鈕會自動顯示（儲存/捨棄） -->
+                </header>
                 <sheet>
                     <!-- 狀態標示 -->
                     <widget name="web_ribbon" title="已停用" bg_color="bg-danger" 
@@ -55,6 +58,7 @@
                         
                         <group string="主要聯絡資訊">
                             <field name="phone" widget="phone"/>
+                            <field name="phone_extension"/>
                             <field name="mobile" widget="phone"/>
                             <field name="email" widget="email"/>
                             <field name="fax"/>
@@ -118,6 +122,7 @@
                 <field name="company_id"/>
                 <field name="parent_id" optional="hide"/>
                 <field name="phone" optional="show"/>
+                <field name="phone_extension" string="分機" optional="hide"/>
                 <field name="email" optional="show"/>
                 <field name="contact_count" string="聯絡人" optional="show"/>
                 <field name="equipment_count" string="設備" optional="hide"/>
