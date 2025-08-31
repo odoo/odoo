@@ -188,10 +188,20 @@ class TestMailingSMSTest(TestMassSMSCommon, MockSmsTwilioApi):
             'mailing_id': mailing.id,
         })
 
-        with self.with_user('user_marketing'):
-            with self.mock_sms_twilio_gateway():
-                mailing_test.action_send_sms()
+        for twilio_error, exp_state, exp_msg in [
+            (False, 'outgoing', '<ul><li>Test SMS successfully sent to +32456001122</li></ul>'),
+            (
+                'wrong_number_format', 'outgoing',  # not sure why outgoing but hey
+                "<ul><li>Test SMS could not be sent to +32456001122: The number you're trying to reach is not correctly formatted.</li></ul>"
+            ),
+        ]:
+            with self.subTest(twilio_error=twilio_error):
+                with self.with_user('user_marketing'):
+                    with self.mock_sms_twilio_gateway(mock_error_type=twilio_error):
+                        mailing_test.action_send_sms()
 
-        self.assertSMS(
-            self.env["res.partner"], '+32456001122', 'outgoing',
-        )
+                notification = mailing.message_ids[0]
+                self.assertEqual(notification.body, exp_msg)
+                self.assertSMS(
+                    self.env["res.partner"], '+32456001122', exp_state,
+                )
