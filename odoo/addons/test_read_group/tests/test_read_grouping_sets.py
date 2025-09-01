@@ -537,7 +537,7 @@ class TestFormattedReadGroupingSets(common.TransactionCase):
         with self.assertRaises(ValueError):
             RelatedBar.formatted_read_grouping_sets([], [['foo_names_sudo']], ['__count'])
 
-    def test_groupby_sequence_fnames(self):
+    def test_groupby_chain_fnames(self):
         RelatedBar = self.env['test_read_group.related_bar']
         RelatedFoo = self.env['test_read_group.related_foo']
         RelatedBase = self.env['test_read_group.related_base']
@@ -577,10 +577,10 @@ class TestFormattedReadGroupingSets(common.TransactionCase):
             ],
         )
 
-    def test_sequence_inherited_fname(self):
+    def test_chain_inherited_fname(self):
         RelatedBase = self.env['test_read_group.related_base']
         RelatedInherits = self.env['test_read_group.related_inherits']
-        SequenceInherits = self.env['test_read_group.sequence_inherits']
+        ChainInherits = self.env['test_read_group.chain_inherits']
 
         bases = RelatedBase.create([
             {'name': 'a', 'value': 1},
@@ -596,7 +596,7 @@ class TestFormattedReadGroupingSets(common.TransactionCase):
             {'base_id': bases[3].id},
         ])
 
-        SequenceInherits.create([
+        ChainInherits.create([
             {'inherited_id': inherits_records[0].id},
             {'inherited_id': inherits_records[1].id},
             {'inherited_id': inherits_records[2].id},
@@ -605,7 +605,7 @@ class TestFormattedReadGroupingSets(common.TransactionCase):
         ])
 
         # env.su => false
-        SequenceInherits = SequenceInherits.with_user(self.base_user)
+        ChainInherits = ChainInherits.with_user(self.base_user)
 
         inherits_model = self.env['ir.model']._get(RelatedInherits._name)
         self.env['ir.rule'].create({
@@ -616,15 +616,15 @@ class TestFormattedReadGroupingSets(common.TransactionCase):
 
         grouping_sets = [['inherited_id.value'], ['inherited_id.base_id.name'], ['inherited_id.foo_id.name'], []]
         expected_result = [
-            SequenceInherits.formatted_read_group([], groupby, ['__count'])
+            ChainInherits.formatted_read_group([], groupby, ['__count'])
             for groupby in grouping_sets
         ]
         self.assertEqual(
-            SequenceInherits.formatted_read_grouping_sets([], grouping_sets, ['__count']),
+            ChainInherits.formatted_read_grouping_sets([], grouping_sets, ['__count']),
             expected_result,
         )
 
-    def test_sequence_many2many(self):
+    def test_chain_many2many(self):
         RelatedBase = self.env['test_read_group.related_base']
         RelatedBar = self.env['test_read_group.related_bar']
         RelatedFoo = self.env['test_read_group.related_foo']

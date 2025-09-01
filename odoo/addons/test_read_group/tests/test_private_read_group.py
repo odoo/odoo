@@ -1277,7 +1277,7 @@ class TestPrivateReadGroup(common.TransactionCase):
         """]):
             RelatedFoo._read_group([], ['bar_base_ids'], ['__count'])
 
-        # Test sequence of fields have the same result than the related one (no ir.rule)
+        # Test chain of fields have the same result than the related one (no ir.rule)
         self.assertEqual(
             RelatedFoo._read_group([], ['bar_base_ids'], ['__count']),
             RelatedFoo._read_group([], ['bar_id.base_ids'], ['__count']),
@@ -1308,7 +1308,7 @@ class TestPrivateReadGroup(common.TransactionCase):
             ],
         )
 
-    def test_groupby_sequence_fnames_many2one(self):
+    def test_groupby_chain_fnames_many2one(self):
         RelatedBar = self.env['test_read_group.related_bar']
         RelatedFoo = self.env['test_read_group.related_foo']
         RelatedBase = self.env['test_read_group.related_base']
@@ -1397,7 +1397,7 @@ class TestPrivateReadGroup(common.TransactionCase):
                 [(bars[0], 1), (bars[1], 1), (RelatedBar, 3)],
             )
 
-    def test_groupby_sequence_fnames_char(self):
+    def test_groupby_chain_fnames_char(self):
         RelatedBar = self.env['test_read_group.related_bar']
         RelatedFoo = self.env['test_read_group.related_foo']
         RelatedBase = self.env['test_read_group.related_base']
@@ -1438,9 +1438,9 @@ class TestPrivateReadGroup(common.TransactionCase):
             ORDER BY "test_read_group_related_base__foo_id__bar_id"."name" ASC
         """
         with self.assertQueries([query_expected] * 3):
-            for fname_sequence in ['foo_id.bar_id.name', 'foo_id.bar_name_sudo', 'foo_id.bar_name']:
+            for fname_chain in ['foo_id.bar_id.name', 'foo_id.bar_name_sudo', 'foo_id.bar_name']:
                 self.assertEqual(
-                    RelatedBase._read_group([], [fname_sequence], ['__count']),
+                    RelatedBase._read_group([], [fname_chain], ['__count']),
                     [('bar_a', 3), (False, 2)],
                 )
 
@@ -1466,10 +1466,10 @@ class TestPrivateReadGroup(common.TransactionCase):
             GROUP BY "test_read_group_related_base__foo_id__bar_id"."name"
             ORDER BY "test_read_group_related_base__foo_id__bar_id"."name" ASC
         """
-        for fname_sequence in ['foo_id.bar_id.name', 'foo_id.bar_name_sudo']:
+        for fname_chain in ['foo_id.bar_id.name', 'foo_id.bar_name_sudo']:
             with self.assertQueries([expected_query]):
                 self.assertEqual(
-                    RelatedBase._read_group([], [fname_sequence], ['__count']),
+                    RelatedBase._read_group([], [fname_chain], ['__count']),
                     [('bar_a', 3), (False, 2)],
                 )
 
@@ -1509,9 +1509,9 @@ class TestPrivateReadGroup(common.TransactionCase):
         """
 
         with self.assertQueries([expected_query] * 2):
-            for fname_sequence in ['foo_id.bar_id.name', 'foo_id.bar_name_sudo']:
+            for fname_chain in ['foo_id.bar_id.name', 'foo_id.bar_name_sudo']:
                 # foos[0] not accessible, then bar_a is only exist via foos[2]
                 self.assertEqual(
-                    RelatedBase._read_group([], [fname_sequence], ['__count']),
+                    RelatedBase._read_group([], [fname_chain], ['__count']),
                     [('bar_a', 1), (False, 4)],
                 )
