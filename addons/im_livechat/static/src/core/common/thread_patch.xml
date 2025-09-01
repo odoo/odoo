@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.Thread" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o-mail-Thread')]" position="before">
-            <div t-if="showVisitorDisconnected" class="o-livechat-VisitorDisconnected bg-secondary p-1 fw-bold smaller o-rounded-bubble mx-1 o-mt-0_5 shadow-sm border border-secondary">
+            <div t-if="showVisitorDisconnected" class="o-livechat-VisitorDisconnected bg-secondary p-1 fw-bold smaller shadow-sm border border-secondary">
                 <i class="fa fa fa-circle-o text-700 mx-1"/><t t-esc="disconnectedText"/>
             </div>
         </xpath>
