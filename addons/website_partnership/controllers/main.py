@@ -5,8 +5,6 @@ import werkzeug.urls
 from odoo.http import request, route
 from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
 
-from odoo.tools.translate import _
-
 
 class WebsitePartnership(WebsitePartnerPage):
     _references_per_page = 40
