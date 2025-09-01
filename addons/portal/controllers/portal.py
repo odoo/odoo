@@ -157,7 +157,6 @@ class CustomerPortal(Controller):
             fallback_sales_user = partner_sudo.commercial_partner_id.user_id
             if fallback_sales_user and not fallback_sales_user._is_public():
                 sales_user_sudo = fallback_sales_user
-
         return {
             'sales_user': sales_user_sudo,
             'page_name': 'home',
@@ -572,7 +571,7 @@ class CustomerPortal(Controller):
             if company_name and parent_company and parent_company.name != company_name:
                 parent_company.name = company_name
 
-        self._handle_extra_form_data(extra_form_data, address_values)
+        self._handle_extra_form_data(partner_sudo, extra_form_data, address_values)
 
         return partner_sudo, {'redirectUrl': callback}
 
@@ -813,13 +812,18 @@ class CustomerPortal(Controller):
                 return False
         return True
 
-    def _handle_extra_form_data(self, extra_form_data, address_values):
+    def _handle_extra_form_data(self, partner_sudo, extra_form_data, address_values):
         """ Handling extra form data that were not processed on the address from.
 
         :param dict extra_form_data: The extra form data.
         :param dict address_values: The address value.
         :return: None
         """
+        if 'lang' in extra_form_data:
+            lang_id = int(extra_form_data['lang'])
+            lang = self.env['res.lang'].browse(lang_id)
+            if lang.active:
+                partner_sudo.lang = lang.code
 
     @route(
         '/my/address/country_info/<model("res.country"):country>',

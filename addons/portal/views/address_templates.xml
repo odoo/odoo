@@ -353,6 +353,19 @@
                 />
             </select>
         </div>
+        <div id="div_lang" class="col-lg-12 mb-2" t-if="len(frontend_languages) &gt; 1">
+            <label class="col-form-label fw-normal label-optional" for="o_name">Language</label>
+            <select name="lang" class="form-select">
+                <option
+                    t-foreach="frontend_languages.values()"
+                    t-as="lg"
+                    t-att-value="lg.id"
+                    t-att-selected="lg.id == partner_sudo.lang"
+                    t-att-code="lg.url_code"
+                    t-out="lg.name.split('/').pop()"
+                />
+            </select>
+        </div>
         <input
             type="hidden"
             name="csrf_token"

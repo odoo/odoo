@@ -16,12 +16,22 @@ class Home(WebHome):
         return super().index(*args, **kw)
 
     def _login_redirect(self, uid, redirect=None):
-        if not redirect and not is_user_internal(uid):
-            redirect = '/my'
+        if redirect == '/my' or (not redirect or redirect == '/odoo?') and not is_user_internal(uid):
+            lang = request.env(user=uid)['res.users'].browse(uid).lang
+            if self.env['res.lang']._get_frontend()[lang]:
+                redirect = f'/{lang}/my'
+            else:
+                redirect = f'/my'
         return super()._login_redirect(uid, redirect=redirect)
 
     @http.route()
     def web_client(self, s_action=None, **kw):
-        if request.session.uid and not is_user_internal(request.session.uid):
-            return request.redirect_query('/my', query=request.params)
+        uid = request.session.uid
+        if uid and not is_user_internal(uid):
+            lang = request.env(user=uid)['res.users'].browse(uid).lang
+            if self.env['res.lang']._get_frontend()[lang]:
+                redirect = f'/{lang}/my'
+            else:
+                redirect = f'/my'
+            return request.redirect_query(redirect, query=request.params)
         return super().web_client(s_action, **kw)
