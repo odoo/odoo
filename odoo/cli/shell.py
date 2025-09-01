@@ -116,6 +116,10 @@ class Shell(Command):
                 env = odoo.api.Environment(cr, uid, ctx)
                 local_vars['env'] = env
                 local_vars['self'] = env.user
+                # context_get() has started the transaction already. Rollback to
+                # avoid logging warning "rolling back the transaction before testing"
+                # from odoo.tests.shell.run_tests if the user hasn't done anything.
+                cr.rollback()
                 self.console(local_vars)
                 cr.rollback()
         else:
