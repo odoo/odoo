@@ -6,8 +6,8 @@
         <field name="inherit_id" ref="hr_recruitment.hr_job_survey"/>
         <field name="arch" type="xml">
             <field name="interviewer_ids" position="after">
-                <label for="survey_id" groups="hr_recruitment.group_hr_recruitment_interviewer"/>
-                <div groups="hr_recruitment.group_hr_recruitment_interviewer">
+                <label for="survey_id"/>
+                <div>
                     <field name="survey_id"
                         context="{'default_access_mode': 'token'}"
                         domain="[('survey_type', '=', 'recruitment')]"/>
