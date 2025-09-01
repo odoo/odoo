@@ -408,68 +408,78 @@ class TestChannelInternals(MailCommon, HttpCase):
         )
 
     @users('employee')
-    def test_set_last_seen_message_should_send_notification_only_once(self):
+    def test_set_last_seen_message_should_always_send_notification(self):
         chat = self.env['discuss.channel'].with_user(self.user_admin)._get_or_create_chat((self.partner_employee | self.user_admin.partner_id).ids)
+        # avoid testing behavior when member has no seen_message_id
+        read_message = self._add_messages(chat, "Read message", author=self.user_employee.partner_id)
         msg_1 = self._add_messages(chat, 'Body1', author=self.user_employee.partner_id)
         member = chat.channel_member_ids.filtered(lambda m: m.partner_id == self.user_admin.partner_id)
+        member.seen_message_id = read_message
         self._reset_bus()
+
+        mark_as_read_notifs = [
+            {
+                "type": "mail.record/insert",
+                "payload": {
+                    "discuss.channel.member": [
+                        {
+                            "id": member.id,
+                            "message_unread_counter": 0,
+                            "message_unread_counter_bus_id": 0,
+                            "new_message_separator": msg_1.id + 1,
+                            "persona": {"id": self.user_admin.partner_id.id, "type": "partner"},
+                            "thread": {
+                                "id": chat.id,
+                                "model": "discuss.channel",
+                            },
+                        },
+                    ],
+                },
+            },
+            {
+                "type": "mail.record/insert",
+                "payload": {
+                    "discuss.channel.member": [
+                        {
+                            "id": member.id,
+                            "persona": {"id": self.user_admin.partner_id.id, "type": "partner"},
+                            "seen_message_id": msg_1.id,
+                            "thread": {"id": chat.id, "model": "discuss.channel"},
+                        },
+                    ],
+                    "res.partner": self._filter_partners_fields(
+                        {
+                            "avatar_128_access_token": limited_field_access_token(
+                                self.user_admin.partner_id, "avatar_128"
+                            ),
+                            "id": self.user_admin.partner_id.id,
+                            "im_status": self.user_admin.im_status,
+                            "name": self.user_admin.partner_id.name,
+                            "write_date": fields.Datetime.to_string(
+                                self.user_admin.partner_id.write_date
+                            ),
+                        },
+                    ),
+                },
+            },
+        ]
+
         with self.assertBus(
             [
                 (self.env.cr.dbname, "discuss.channel", chat.id),
                 (self.env.cr.dbname, "res.partner", self.user_admin.partner_id.id),
             ],
-            [
-                {
-                    "type": "mail.record/insert",
-                    "payload": {
-                        "discuss.channel.member": [
-                            {
-                                "id": member.id,
-                                "message_unread_counter": 0,
-                                "message_unread_counter_bus_id": 0,
-                                "new_message_separator": msg_1.id + 1,
-                                "persona": {"id": self.user_admin.partner_id.id, "type": "partner"},
-                                "thread": {
-                                    "id": chat.id,
-                                    "model": "discuss.channel",
-                                },
-                            },
-                        ],
-                    },
-                },
-                {
-                    "type": "mail.record/insert",
-                    "payload": {
-                        "discuss.channel.member": [
-                            {
-                                "id": member.id,
-                                "persona": {"id": self.user_admin.partner_id.id, "type": "partner"},
-                                "seen_message_id": msg_1.id,
-                                "thread": {"id": chat.id, "model": "discuss.channel"},
-                            },
-                        ],
-                        "res.partner": self._filter_partners_fields(
-                            {
-                                "avatar_128_access_token": limited_field_access_token(
-                                    self.user_admin.partner_id, "avatar_128"
-                                ),
-                                "id": self.user_admin.partner_id.id,
-                                "im_status": self.user_admin.im_status,
-                                "name": self.user_admin.partner_id.name,
-                                "write_date": fields.Datetime.to_string(
-                                    self.user_admin.partner_id.write_date
-                                ),
-                            },
-                        ),
-                    },
-                },
-            ],
+            mark_as_read_notifs,
         ):
             member._mark_as_read(msg_1.id)
-        # There should be no channel member to be set as seen in the second time
-        # So no notification should be sent
         self._reset_bus()
-        with self.assertBus([], []):
+        with self.assertBus(
+            [
+                (self.env.cr.dbname, "res.partner", self.user_admin.partner_id.id),
+                (self.env.cr.dbname, "res.partner", self.user_admin.partner_id.id),
+            ],
+            mark_as_read_notifs
+        ):
             member._mark_as_read(msg_1.id)
 
     def test_channel_message_post_should_not_allow_adding_wrong_parent(self):
