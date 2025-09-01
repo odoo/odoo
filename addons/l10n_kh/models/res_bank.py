@@ -47,6 +47,12 @@ class ResPartnerBank(models.Model):
         bank_kh.display_qr_setting = self.env.company.qr_code
         super(ResPartnerBank, self - bank_kh)._compute_display_qr_setting()
 
+    @api.depends('country_code')
+    def _compute_country_proxy_keys(self):
+        bank_kh = self.filtered(lambda b: b.country_code == 'KH')
+        bank_kh.country_proxy_keys = 'bakong_id_solo,bakong_id_merchant'
+        super(ResPartnerBank, self - bank_kh)._compute_country_proxy_keys()
+
     def _get_merchant_account_info(self):
         if self.country_code == 'KH':
             if self.proxy_type == 'bakong_id_solo':
