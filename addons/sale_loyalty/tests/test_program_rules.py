@@ -408,7 +408,7 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
     def test_program_rules_validity_date_timezones(self):
         """Test that the validity dates are checked according to the company's time zone"""
         self.env.company.partner_id.tz = 'Europe/London'
-        self.steve.tz = 'America/Los_Angeles'
+        self.partner.tz = 'America/Los_Angeles'
         midnight = Datetime.today()
         yesterday = (midnight - timedelta(days=1)).date()
         self.immediate_promotion_program.update({
@@ -416,7 +416,7 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
             'limit_usage': True,
             'max_usage': 1,
         })
-        order = self.empty_order.with_context(tz=self.steve.tz)
+        order = self.empty_order.with_context(tz=self.partner.tz)
         order.order_line = [
             Command.create({'product_id': self.product_A.id}),
             Command.create({'product_id': self.product_B.id}),
@@ -438,8 +438,8 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
                 "Promo should not be applied if only valid in the customer's time zone",
             )
 
-        self.steve.tz = 'Europe/Brussels'
-        with freeze_time(timezone(self.steve.tz).localize(midnight)):
+        self.partner.tz = 'Europe/Brussels'
+        with freeze_time(timezone(self.partner.tz).localize(midnight)):
             # Apply reward at Brussels midnight (still valid in company's time zone)
             self._auto_rewards(order, self.immediate_promotion_program)
             self.assertTrue(
