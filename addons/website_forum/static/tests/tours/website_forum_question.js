@@ -54,7 +54,7 @@ registry.category("web_tour.tours").add('forum_question', {
     },
     {
         content: "Open dropdown to edit the post",
-        trigger: '.o_wforum_question a#dropdownMenuLink',
+        trigger: '.o_wforum_question button#dropdownMenuLink',
         run: "click",
     },
     {
@@ -74,7 +74,7 @@ registry.category("web_tour.tours").add('forum_question', {
         expectUnloadPage: true,
     },
     {
-        trigger: "a:contains(\"Reply\").collapsed",
+        trigger: "button:contains(\"Reply\").collapsed",
         content: "Click to reply.",
         tooltipPosition: "bottom",
         run: "click",
