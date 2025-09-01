@@ -110,6 +110,7 @@ class TestItEdiDDT(TestItEdi):
                 ],
                 'pricelist_id': self.default_pricelist.id,
                 'picking_policy': 'direct',
+                'name': 'SO-ITDDT0001',
             })
             self.sale_order.action_confirm()
 
