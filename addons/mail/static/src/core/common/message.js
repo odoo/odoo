@@ -222,8 +222,7 @@ export class Message extends Component {
         return {
             "user-select-none": isMobileOS(),
             [this.props.className]: true,
-            "o-card p-2 ps-1 mx-1 mt-1 mb-1 border border-dark shadow-sm rounded-3":
-                this.props.asCard,
+            "o-card p-2 ps-1 mx-1 mt-1 mb-1 border border-dark rounded-2": this.props.asCard,
             "pt-1": !this.props.asCard && !this.props.squashed,
             "o-pt-0_5": !this.props.asCard && this.props.squashed,
             "o-selfAuthored": this.message.isSelfAuthored && !this.env.messageCard,
