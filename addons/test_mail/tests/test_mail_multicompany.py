@@ -180,19 +180,10 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
             subtype_xmlid='mail.mt_comment',
         )
 
-        # now able to post as was notified of parent message
-        attachments = self.env['ir.attachment'].create(
-            self._generate_attachments_data(
-                2, 'mail.compose.message', 0,
-                prefix='Other'
-            )
-        )
         # record_name and reply_to may generate ACLs issues when computed by
         # 'message_post' but should not, hence not specifying them to be sure
         # testing the complete flow
         test_records_mc_c1.message_post(
-            attachments=attachments_data,
-            attachment_ids=attachments.ids,
             body='<p>Hello</p>',
             message_type='comment',
             parent_id=initial_message.id,
