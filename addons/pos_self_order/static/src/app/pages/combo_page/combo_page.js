@@ -211,7 +211,7 @@ export class ComboPage extends Component {
         if (!selection) {
             return true;
         }
-        return selection.hasMissingAttributeValues(product.attribute_line_ids);
+        return Boolean(selection.getMissingAttributeValue(product.attribute_line_ids));
     }
 
     changeQuantity(increase) {
@@ -438,6 +438,17 @@ export class ComboPage extends Component {
 
     goBack() {
         this.router.navigate("product_list");
+    }
+
+    scrollUpToRequired() {
+        const selectedItem = this.currentChoiceState.displayAttributesOfItem.product_id;
+        const selection = this.state.selectedValues[selectedItem.id];
+        const missingAttribute = selection?.getMissingAttributeValue(
+            selectedItem.attribute_line_ids
+        );
+        document
+            .getElementById(missingAttribute?.attribute_id?.id)
+            ?.scrollIntoView({ behavior: "smooth" });
     }
 
     /*
