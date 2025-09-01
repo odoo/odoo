@@ -163,6 +163,7 @@ export class FormatPlugin extends Plugin {
         normalize_handlers: this.normalize.bind(this),
         selectionchange_handlers: this.removeEmptyInlineElement.bind(this),
         set_tag_handlers: this.removeFontSizeFormat.bind(this),
+        before_insert_processors: this.unwrapEmptyFormat.bind(this),
 
         intangible_char_for_keyboard_navigation_predicates: (_, char) => char === "\u200b",
     };
@@ -181,6 +182,22 @@ export class FormatPlugin extends Plugin {
             }
             this.formatSelection(format, { applyStyle: false, removeFormat: true });
         }
+    }
+
+    unwrapEmptyFormat(insertedNode, block) {
+        const anchorNode = this.dependencies.selection.getEditableSelection().anchorNode;
+        if (!block.contains(anchorNode)) {
+            return insertedNode;
+        }
+        const emptyZWS = closestElement(anchorNode, "[data-oe-zws-empty-inline]");
+        if (!emptyZWS) {
+            return insertedNode;
+        }
+        const cursors = this.dependencies.selection.preserveSelection();
+        cursors.update(callbacksForCursorUpdate.remove(emptyZWS));
+        emptyZWS.remove();
+        cursors.restore();
+        return insertedNode;
     }
 
     removeAllFormats() {
