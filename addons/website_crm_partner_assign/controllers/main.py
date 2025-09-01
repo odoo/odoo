@@ -378,7 +378,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
             references_per_page=self._references_per_page,
             **post
         )
-        return request.render("website_crm_partner_assign.index", values, status=values.get('partners') and 200 or 404)
+        return request.render("website_partnership.index_layout", values, status=values.get('partners') and 200 or 404)
 
     # Do not use semantic controller due to sudo()
     @http.route()
@@ -405,5 +405,5 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
                     'current_grade': current_grade,
                     'current_country': current_country
                 }
-                return request.render("website_crm_partner_assign.partner", values)
+                return request.render("webiste_partnership.partner_page", values)
         raise request.not_found()

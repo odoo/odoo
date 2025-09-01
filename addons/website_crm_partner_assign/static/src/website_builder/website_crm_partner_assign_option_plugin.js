@@ -10,7 +10,7 @@ class WebsiteCRMPartnersPageOption extends Plugin {
         builder_options: [
             {
                 OptionComponent: WebsiteCRMPartnersPage,
-                selector: "main:has(#oe_structure_website_crm_partner_assign_layout_1):has(.o_wcrm_filters_top)",
+                selector: "main:has(#oe_structure_website_partnership_layout_1):has(.o_wcrm_filters_top)",
                 title: _t("Partners Page"),
                 editableOnly: false,
                 groups: ["website.group_website_designer"],

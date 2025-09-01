@@ -81,7 +81,11 @@
         </div>
     </div>
     <div class="row mb-4">
-        <div class="my-5 py-5 text-center" t-if="not partners">
+        <div class="my-5 py-5 text-center" t-if="not partners and not searches.get('search', '')">
+            <h3>We're expanding our partner network.</h3>
+            <p class="lead">Please check back soon.</p>
+        </div>
+        <div class="my-5 py-5 text-center" t-elif="not partners">
             <h5>No results found for "<span t-out="searches.get('search', '')"/>"</h5>
             <a href="/partners">See all partners</a>
         </div>
@@ -175,18 +179,6 @@
         <span class="col-lg-12 text-muted" t-if="partner.grade_id and partner.grade_id.website_published">
             <span t-field="partner.grade_id"/>
         </span>
-    </xpath>
-</template>
-
-<template id="o_wcrm_partner_address" inherit_id="website_partnership.index" name="Address">
-    <xpath expr="//small[@id='o_wcrm_partners_address']" position="inside">
-        <div t-field="partner.self"
-            t-options="{
-                'widget': 'contact',
-                'fields': ['country_id']
-            }"
-            class="py-2"
-        />
     </xpath>
 </template>
 
