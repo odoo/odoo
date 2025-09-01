@@ -1689,6 +1689,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             'location_dest_id': self.location_dest_id.id,
             'picking_id': self.picking_id.id,
             'company_id': self.company_id.id,
+            'picked': self.picked,
         }
         if quantity:
             # TODO could be also move in create/write
