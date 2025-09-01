@@ -63,6 +63,11 @@ class ProductProduct(models.Model):
     purchased_product_qty = fields.Float(compute='_compute_purchased_product_qty', string='Purchased',
         digits='Product Unit of Measure')
 
+    @api.model
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+        domain = ['|', ('default_code', operator, name), ('name', operator, name)]
+        return self._search(domain, limit=limit, order=order)
+
     def _compute_purchased_product_qty(self):
         date_from = fields.Datetime.to_string(fields.Date.context_today(self) - relativedelta(years=1))
         domain = [
