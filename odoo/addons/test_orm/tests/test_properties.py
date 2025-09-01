@@ -3285,3 +3285,87 @@ class PropertiesGroupByCase(TestPropertiesMixin):
 
         self.assertTrue(not any(_get_records_values(falsy_records)))
         self.assertTrue(all(_get_records_values(nonfalsy_records)))
+
+    def subtest_properties_field_web_read_group_date_like(self, date_type='date'):
+        self._properties_field_read_group_date_prepare(date_type)
+        Model = self.env['test_orm.message']
+
+        hour_min = " 00:00:00" if date_type == "datetime" else ""
+        hour_max = " 00:00:59" if date_type == "datetime" else ""
+
+        # Initial web_read_group everything folded (list view)
+        self.assertEqual(
+            Model.web_read_group(
+                domain=[],
+                groupby=["attributes.mydate:year"],
+                aggregates=[],
+            ),
+            {
+                "groups": [
+                    {
+                        "__extra_domain": ['&', ('attributes.mydate', '>=', f'2023-01-01{hour_min}'), ('attributes.mydate', '<', f'2024-01-01{hour_max}')],
+                        "attributes.mydate:year": (f'2023-01-01{hour_min}', "2023"),
+                        "__count": 4,
+                    },
+                    {
+                        "__extra_domain": ['&', ('attributes.mydate', '>=', f'2077-01-01{hour_min}'), ('attributes.mydate', '<', f'2078-01-01{hour_max}')],
+                        "attributes.mydate:year": (f'2077-01-01{hour_min}', "2077"),
+                        "__count": 1,
+                    },
+                    {
+                        "__extra_domain": [('attributes.mydate', '=', False)],
+                        "attributes.mydate:year": False,
+                        "__count": 2,
+                    },
+                ],
+                "length": 3,
+            },
+        )
+        # Second web_read_group year 2077 unfolded
+        self.assertEqual(
+            Model.web_read_group(
+                domain=[],
+                groupby=["attributes.mydate:year"],
+                aggregates=[],
+                opening_info=[
+                    {
+                        "value": f'2077-01-01{hour_min}',
+                        "folded": False,
+                        "limit": 80,
+                        "offset": 0,
+                        "progressbar_domain": False,
+                        "groups": [],
+                    },
+                    {"value": f"2023-01-01{hour_min}", "folded": True},
+                    {"value": False, "folded": True},
+                ],
+                unfold_read_specification={'id': {}},
+            ),
+            {
+                "groups": [
+                    {
+                        "__extra_domain": ['&', ('attributes.mydate', '>=', f'2023-01-01{hour_min}'), ('attributes.mydate', '<', f'2024-01-01{hour_max}')],
+                        "attributes.mydate:year": (f'2023-01-01{hour_min}', "2023"),
+                        "__count": 4,
+                    },
+                    {
+                        "__extra_domain": ['&', ('attributes.mydate', '>=', f'2077-01-01{hour_min}'), ('attributes.mydate', '<', f'2078-01-01{hour_max}')],
+                        "attributes.mydate:year": (f'2077-01-01{hour_min}', "2077"),
+                        '__records': [{'id': self.message_5.id}],
+                        "__count": 1,
+                    },
+                    {
+                        "__extra_domain": [('attributes.mydate', '=', False)],
+                        "attributes.mydate:year": False,
+                        "__count": 2,
+                    },
+                ],
+                "length": 3,
+            },
+        )
+
+    def test_properties_field_read_group_date(self):
+        self.subtest_properties_field_web_read_group_date_like('date')
+
+    def test_properties_field_read_group_datetime(self):
+        self.subtest_properties_field_web_read_group_date_like('datetime')
