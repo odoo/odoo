@@ -361,10 +361,10 @@ class PaymentPortal(portal.CustomerPortal):
             **(custom_create_values or {}),
         })  # In sudo mode to allow writing on callback fields
 
-        if flow == 'token':
-            tx_sudo._charge_with_token()  # Token payments are charged immediately.
-        else:
+        if flow != 'token':
             tx_sudo._log_sent_message()  # Direct/Redirect payments go through the payment form.
+        elif not request.env.context.get('delay_token_charge'):
+            tx_sudo._charge_with_token()  # Token payments are charged immediately.
 
         # Monitor the transaction to make it available in the portal.
         PaymentPostProcessing.monitor_transaction(tx_sudo)
