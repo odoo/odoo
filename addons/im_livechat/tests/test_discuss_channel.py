@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.tests import new_test_user, tagged
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon, TestGetOperatorCommon
 from odoo.addons.mail.tests.common import MailCase
@@ -196,3 +197,26 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         has_joined = chat.with_user(jane).livechat_join_channel_needing_help()
         self.assertFalse(has_joined)
         self.assertNotIn(jane.partner_id, chat.channel_member_ids.partner_id)
+
+    def test_livechat_conversation_history(self):
+        """Test livechat conversation history formatting"""
+        self.authenticate(self.operators[0].login, self.password)
+        channel = self.env["discuss.channel"].create(
+            {
+                "name": "test",
+                "channel_type": "livechat",
+                "livechat_operator_id": self.operators[0].partner_id.id,
+                "channel_member_ids": [
+                    Command.create({"partner_id": self.operators[0].partner_id.id}),
+                    Command.create({"partner_id": self.visitor_user.partner_id.id}),
+                ],
+            }
+        )
+        attachment1 = self.env["ir.attachment"].create({"name": "test.txt"})
+        attachment2 = self.env["ir.attachment"].with_user(self.visitor_user).create({"name": "test2.txt"})
+        channel.message_post(body="Operator Here")
+        channel.message_post(body="", attachment_ids=[attachment1.id])
+        channel.with_user(self.visitor_user).message_post(body="Visitor Here")
+        channel.with_user(self.visitor_user).message_post(body="", attachment_ids=[attachment2.id])
+        channel_history = channel._get_channel_history()
+        self.assertEqual(channel_history, 'Operator Here<br/>Visitor Here<br/>')
