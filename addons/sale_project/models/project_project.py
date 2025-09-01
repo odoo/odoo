@@ -184,6 +184,8 @@ class ProjectProject(models.Model):
                 sol_ids.add(vals['sale_line_id'])
             if project.sale_order_id and not project.sale_order_id.project_id:
                 project.sale_order_id.project_id = project.id
+            elif project.sudo().reinvoiced_sale_order_id and not project.sudo().reinvoiced_sale_order_id.project_id:
+                project.sudo().reinvoiced_sale_order_id.project_id = project.id
         if sol_ids:
             projects._ensure_sale_order_linked(list(sol_ids))
         return projects

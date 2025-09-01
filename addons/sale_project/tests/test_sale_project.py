@@ -1649,6 +1649,21 @@ class TestSaleProject(TestSaleProjectCommon):
             'allow_billable': True,
         })
         self.assertEqual(sale_order.project_id, project, "The created project should be linked to this sale order")
+        self.assertEqual(project.reinvoiced_sale_order_id, sale_order, "The created project should be linked to this sale order")
+
+    def test_create_project_from_sale_order_none_service_type(self):
+        """Test that a project created from a sale order is linked to that sale order."""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({'product_id': self.company_data['product_order_cost'].id})],
+        })
+        sale_order.action_confirm()
+        action = sale_order.action_create_project()
+        project = self.env['project.project'].with_context(action['context']).create({
+            'name': 'Test Project',
+            'allow_billable': True,
+        })
+        self.assertEqual(sale_order.project_id, project, "The created project should be linked to this sale order")
 
     def test_sale_order_project_task_smartbutton(self):
         """Test to verify that the project & task smart button is visible when a project is linked to a sale order.
