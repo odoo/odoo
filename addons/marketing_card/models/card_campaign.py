@@ -50,8 +50,11 @@ class CardCampaign(models.Model):
     post_suggestion = fields.Text(help="Description below the card and default text when sharing on X")
     preview_record_ref = fields.Reference(string="Preview On", selection="_get_model_selection", required=True)
     tag_ids = fields.Many2many('card.campaign.tag', string='Tags')
-    target_url = fields.Char(string='Post Link')
+    target_url = fields.Char(
+        string='Post Link', help='Redirection link for clicks on the cards, defaults to the relevant record or the home page.',
+    )
     target_url_click_count = fields.Integer(related="link_tracker_id.count")
+    target_url_placeholder = fields.Char(compute='_compute_target_url_placeholder')
 
     user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.user, domain="[('share', '=', False)]")
 
@@ -199,6 +202,15 @@ class CardCampaign(models.Model):
         for campaign in self:
             preview_model = campaign.preview_record_ref and campaign.preview_record_ref._name
             campaign.res_model = preview_model or campaign.res_model or 'res.partner'
+
+    @api.depends('res_model')
+    def _compute_target_url_placeholder(self):
+        """Overridable in case `_get_record_url` implements other fallbacks."""
+        for model_name, campaigns in self.grouped('res_model').items():
+            if model_name and isinstance(self.env[model_name], self.env.registry['website.published.mixin']):
+                campaigns.target_url_placeholder = _("Target record (if published) or Home page")
+            else:
+                campaigns.target_url_placeholder = _("Home page")
 
     @api.onchange('preview_record_ref')
     def _onchange_model(self):
@@ -380,6 +392,19 @@ class CardCampaign(models.Model):
 
 </div></div></div></div>
 """
+
+    # ==========================================================================
+    # URL Redirection
+    # ==========================================================================
+
+    def _get_record_url(self, record):
+        """Return url to be used for redirection on cards linked to this record when not target url is specified."""
+        if (
+            isinstance(record, self.env.registry['website.published.mixin'])
+            and record.is_published
+        ):
+            return record.website_absolute_url
+        return ''
 
     # ==========================================================================
     # Image generation

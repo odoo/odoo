@@ -106,10 +106,30 @@ class MarketingCardController(Controller):
         card = _get_card_from_url(card_id, card_slug)
 
         campaign_sudo = card.sudo().campaign_id
+
+        untracked_url = ''
+        record_url = (
+            not campaign_sudo.target_url
+            and (record_sudo := self.env[card.res_model].browse(card.res_id).sudo().exists())
+            and campaign_sudo._get_record_url(record_sudo)
+        )
+        untracked_url = campaign_sudo.target_url or record_url or campaign_sudo.get_base_url()
+
         # don't count clicks from preview
-        redirect_url = campaign_sudo.target_url or campaign_sudo.get_base_url()
         if card.active:
-            redirect_url = campaign_sudo.link_tracker_id.short_url or redirect_url
+            if record_url:
+                redirect_url = untracked_url
+                # still track on the link tracker since it's meant to track accross the whole campaign
+                if link_tracker_code := campaign_sudo.link_tracker_id.code:
+                    request.env['link.tracker.click'].sudo().add_click(
+                        link_tracker_code,
+                        ip=request.httprequest.remote_addr,
+                        country_code=request.geoip.country_code,
+                    )
+            else:
+                redirect_url = campaign_sudo.link_tracker_id.short_url or untracked_url
+        else:
+            redirect_url = untracked_url
 
         if _is_crawler(request):
             return request.render('marketing_card.card_campaign_crawler', {
