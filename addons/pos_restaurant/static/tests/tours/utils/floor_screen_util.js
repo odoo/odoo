@@ -62,7 +62,7 @@ export function clickTableSelectorButton() {
     return [
         {
             content: "click on table selector button",
-            trigger: ".floor-screen .right-buttons button.btn-secondary",
+            trigger: ".floor-screen .right-buttons button i.fa-hashtag",
             run: "click",
         },
     ];
