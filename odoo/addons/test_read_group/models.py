@@ -258,8 +258,8 @@ class Test_Read_GroupRelated_Inherits(models.Model):
     base_id = fields.Many2one('test_read_group.related_base', required=True, ondelete='cascade')
 
 
-class Test_Read_GroupSequence_Inherits(models.Model):
-    _name = 'test_read_group.sequence_inherits'
-    _description = "SequenceInherits"
+class Test_Read_GroupChain_Inherits(models.Model):
+    _name = 'test_read_group.chain_inherits'
+    _description = "ChainInherits"
 
     inherited_id = fields.Many2one('test_read_group.related_inherits', required=True)
