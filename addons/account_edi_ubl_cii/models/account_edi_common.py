@@ -594,7 +594,7 @@ class AccountEdiCommon(models.AbstractModel):
             }
 
         return {
-            **self._retrieve_line_vals(tree, document_type, qty_factor),
+            **self.with_context(edi_autocreate_product_on_invoice=True)._retrieve_line_vals(tree, document_type, qty_factor),
             **deferred_values,
         }
 
@@ -679,6 +679,13 @@ class AccountEdiCommon(models.AbstractModel):
                 ]
                 if uom_infered_xmlid:
                     product_uom = self.env.ref(uom_infered_xmlid[0], raise_if_not_found=False) or self.env['uom.uom']
+        if not product and self.env.context.get('edi_autocreate_product_on_invoice'):
+            product = self.env['product.product'].create({
+                'name': product_vals.get('name') or _('Unknown Product'),
+                'default_code': product_vals.get('default_code'),
+                'barcode': product_vals.get('barcode'),
+                'company_id': self.env.company.id,
+            })
         if product and product_uom and product_uom.category_id != product.product_tmpl_id.uom_id.category_id:
             # uom incompatibility
             product_uom = self.env['uom.uom']
