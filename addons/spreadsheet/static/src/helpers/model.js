@@ -143,6 +143,24 @@ export async function freezeOdooData(model) {
                     path: img,
                     size: { width: figure.width, height: figure.height },
                 };
+            } else if (figure.tag === "carousel") {
+                const hasImageChart = figure.data.items.some((item) => {
+                    if (item.type !== "chart") {
+                        return false;
+                    }
+                    const chartDefinition = model.getters.getChartDefinition(item.chartId);
+                    return (
+                        chartDefinition.type.startsWith("odoo_") || chartDefinition.type === "geo"
+                    );
+                });
+                if (hasImageChart) {
+                    const chartId = figure.data.items.find((item) => item.type === "chart").chartId;
+                    figure.tag = "image";
+                    figure.data = {
+                        path: odooChartToImage(model, figure, chartId),
+                        size: { width: figure.width, height: figure.height },
+                    };
+                }
             }
         }
     }
