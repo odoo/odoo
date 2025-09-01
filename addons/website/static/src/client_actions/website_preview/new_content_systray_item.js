@@ -136,36 +136,43 @@ export class NewContentSystrayItem extends Component {
         }
         this.dropdownWasAlreadyOpened = true;
 
-        this.canInstall = user.isAdmin;
-        if (this.canInstall) {
-            const moduleNames = this.state.newContentElements
-                .filter(({ status }) => status === MODULE_STATUS.NOT_INSTALLED)
-                .map(({ moduleName }) => moduleName);
-            this.modulesInfo = {};
-            for (const record of await this.orm.cache().searchRead(
-                "ir.module.module",
-                [["name", "in", moduleNames]],
-                ["id", "name", "shortdesc"]
-            )) {
-                this.modulesInfo[record.name] = { id: record.id, name: record.shortdesc };
-            }
-        }
+        const proms = [];
 
-        const modelsToCheck = [];
-        const elementsToUpdate = {};
-        for (const element of this.state.newContentElements) {
-            if (element.model) {
-                modelsToCheck.push(element.model);
-                elementsToUpdate[element.model] = element;
+        proms.push((async () => {
+            this.canInstall = user.isAdmin;
+            if (this.canInstall) {
+                const moduleNames = this.state.newContentElements
+                    .filter(({ status }) => status === MODULE_STATUS.NOT_INSTALLED)
+                    .map(({ moduleName }) => moduleName);
+                this.modulesInfo = {};
+                for (const record of await this.orm.cache().searchRead(
+                    "ir.module.module",
+                    [["name", "in", moduleNames]],
+                    ["id", "name", "shortdesc"]
+                )) {
+                    this.modulesInfo[record.name] = { id: record.id, name: record.shortdesc };
+                }
             }
-        }
-        const accesses = await rpc("/website/check_new_content_access_rights", {
-            models: modelsToCheck,
-        }, { cache: true });
-        for (const [model, access] of Object.entries(accesses)) {
-            elementsToUpdate[model].isDisplayed = access;
-        }
+        })());
 
+        proms.push((async () => {
+            const modelsToCheck = [];
+            const elementsToUpdate = {};
+            for (const element of this.state.newContentElements) {
+                if (element.model) {
+                    modelsToCheck.push(element.model);
+                    elementsToUpdate[element.model] = element;
+                }
+            }
+            const accesses = await rpc("/website/check_new_content_access_rights", {
+                models: modelsToCheck,
+            }, { cache: true });
+            for (const [model, access] of Object.entries(accesses)) {
+                elementsToUpdate[model].isDisplayed = access;
+            }
+        })());
+
+        await Promise.all(proms);
         this.dropdown.open();
 
         // Preload the new page templates so they are ready as soon as possible
