@@ -253,7 +253,7 @@ export class KanbanController extends Component {
     get actionMenuProps() {
         return {
             getActiveIds: () => this.model.root.selection.map((r) => r.resId),
-            context: this.props.context,
+            context: this.model.root.context,
             domain: this.props.domain,
             items: this.actionMenuItems,
             isDomainSelected: this.model.root.isDomainSelected,

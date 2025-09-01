@@ -336,7 +336,7 @@ export class FormController extends Component {
     get cogMenuProps() {
         return {
             getActiveIds: () => (this.model.root.isNew ? [] : [this.model.root.resId]),
-            context: this.props.context,
+            context: this.model.root.context,
             items: this.props.info.actionMenus ? this.actionMenuItems : {},
             isDomainSelected: this.model.root.isDomainSelected,
             resModel: this.model.root.resModel,
