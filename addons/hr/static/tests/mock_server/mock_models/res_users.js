@@ -1,6 +1,5 @@
 import { mailModels } from "@mail/../tests/mail_test_helpers";
-import { fields, makeKwArgs } from "@web/../tests/web_test_helpers";
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { fields } from "@web/../tests/web_test_helpers";
 
 export class ResUsers extends mailModels.ResUsers {
     employee_id = fields.Many2one({ relation: "hr.employee" });
@@ -20,17 +19,4 @@ export class ResUsers extends mailModels.ResUsers {
         relation: "hr.work.location",
     });
     job_title = fields.Char({ related: "employee_id.job_title" });
-
-    _get_store_avatar_card_fields() {
-        return [
-            ...super._get_store_avatar_card_fields(),
-            mailDataHelpers.Store.many(
-                "employee_ids",
-                makeKwArgs({
-                    fields: this.env["hr.employee"]._get_store_avatar_card_fields(),
-                    mode: "ADD",
-                })
-            ),
-        ];
-    }
 }

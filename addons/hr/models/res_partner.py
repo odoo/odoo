@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError
+from odoo.addons.mail.tools.discuss import Store
 
 
 class ResPartner(models.Model):
@@ -100,3 +101,11 @@ class ResPartner(models.Model):
                 'res_id': self.id,
             })
         return action
+
+    def _get_store_avatar_card_fields(self, target):
+        avatar_card_fields = super()._get_store_avatar_card_fields(target)
+        if target.is_internal(self.env):
+            # sudo: res.partner - internal users can access employee information of partner
+            employee_fields = self.sudo().employee_ids._get_store_avatar_card_fields(target)
+            avatar_card_fields.append(Store.Many("employee_ids", employee_fields, mode="ADD", sudo=True))
+        return avatar_card_fields

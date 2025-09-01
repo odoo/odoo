@@ -510,10 +510,7 @@ class ResUsers(models.Model):
         return list(user_activities.values())
 
     def _get_store_avatar_card_fields(self, target):
-        fields = ["name", "im_status", "share", "partner_id"]
-        if target.is_internal(self.env):
-            fields.extend(["email", "phone"])
-        return fields
+        return ["share", Store.One("partner_id", self.partner_id._get_store_avatar_card_fields(target))]
 
     # ------------------------------------------------------------
     # Mail Servers

@@ -1,12 +1,11 @@
 import { useService } from "@web/core/utils/hooks";
 
 export const helpers = {
-    SUPPORTED_M2X_AVATAR_MODELS: ["res.users"],
-    buildOpenChatParams: (resModel, id) => {
-        if (resModel === "res.users") {
-            return { userId: id };
-        }
-    },
+    SUPPORTED_M2X_AVATAR_MODELS: ["res.users", "res.partner"],
+    buildOpenChatParams: (resModel, id) => ({
+        userId: resModel === "res.users" ? id : undefined,
+        partnerId: resModel === "res.partner" ? id : undefined,
+    }),
 };
 
 export function useOpenChat(resModel) {
