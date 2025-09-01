@@ -104,7 +104,9 @@
                     t-if="this.isActiveItems(['hover_effect_zoom_in_opt', 'hover_effect_zoom_out_opt', 'hover_effect_mirror_blur_opt', 'hover_effect_dolly_zoom_opt'])"
                     preview="false" min="1" max="100" step="1" displayRangeValue="true"/>
             </BuilderRow>
-            <BuilderRow label.translate="Color" level="2">
+            <t t-if="this.isActiveItems(['hover_effect_zoom_in_opt', 'hover_effect_zoom_out_opt', 'hover_effect_dolly_zoom_opt'])" t-set="color_label">Overlay</t>
+            <t t-else="" t-set="color_label">Color</t>
+            <BuilderRow label="color_label" level="2">
                 <BuilderColorPicker action="'setHoverEffectColor'"
                     enabledTabs="['custom']"
                     t-if="this.isActiveItems(['hover_effect_dolly_zoom_opt', 'hover_effect_overlay_opt', 'hover_effect_zoom_in_opt', 'hover_effect_zoom_out_opt', 'hover_effect_outline_opt'])"
