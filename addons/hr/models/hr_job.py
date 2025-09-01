@@ -15,19 +15,20 @@ class HrJob(models.Model):
     name = fields.Char(string='Job Position', required=True, index='trigram', translate=True)
     sequence = fields.Integer(default=10)
     expected_employees = fields.Integer(compute='_compute_employees', string='Total Forecasted Employees',
-        help='Expected number of employees for this job position after new recruitment.')
+        help='Expected number of employees for this job position after new recruitment.', groups="hr.group_hr_user")
     no_of_employee = fields.Integer(compute='_compute_employees', string="Current Number of Employees",
-        help='Number of employees currently occupying this job position.')
+        help='Number of employees currently occupying this job position.', groups="hr.group_hr_user")
     no_of_recruitment = fields.Integer(string='Target', copy=False,
         help='Number of new employees you expect to recruit.', default=1)
     employee_ids = fields.One2many('hr.employee', 'job_id', string='Employees', groups='base.group_user')
     description = fields.Html(string='Job Description', sanitize_attributes=False)
-    requirements = fields.Text('Requirements')
+    requirements = fields.Text('Requirements', groups="hr.group_hr_user")
     user_id = fields.Many2one(
         "res.users",
         "Recruiter",
         domain="[('share', '=', False), ('id', 'in', allowed_user_ids)]",
         default=lambda self: self.env.user,
+        groups="hr.group_hr_user",
         tracking=True,
         help="The Recruiter will be the default value for all Applicants in this job \
             position. The Recruiter is automatically added to all meetings with the Applicant.",

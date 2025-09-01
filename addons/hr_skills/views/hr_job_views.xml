@@ -8,6 +8,18 @@
             <page name="recruitment_page" position="attributes">
                 <attribute name="invisible">0</attribute>
             </page>
+            <div class="oe_title" position="after">
+                <group id="job_skills">
+                    <field
+                        name="current_job_skill_ids"
+                        widget="many2many_tags"
+                        options="{'color_field': 'color'}"
+                        readonly="True"
+                        string="Expected Skills"
+                        groups="!hr.group_hr_user"
+                    />
+                </group>
+            </div>
             <div name="recruitment_target" position="after">
                 <field
                     name="current_job_skill_ids"

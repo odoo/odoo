@@ -30,28 +30,34 @@ class HrJob(models.Model):
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
 
+    expected_employees = fields.Integer(groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user")
+    no_of_employee = fields.Integer(groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user")
+    requirements = fields.Text(groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user")
+    user_id = fields.Many2one(groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user")
+
     address_id = fields.Many2one(
         'res.partner', "Job Location", default=_default_address_id,
         domain=lambda self: self._address_id_domain(), tracking=True,
         help="Select the location where the applicant will work. Addresses listed here are defined on the company's contact information.")
-    application_ids = fields.One2many('hr.applicant', 'job_id', "Job Applications")
-    application_count = fields.Integer(compute='_compute_application_count', string="Application Count")
+    application_ids = fields.One2many('hr.applicant', 'job_id', "Job Applications", groups="hr_recruitment.group_hr_recruitment_interviewer")
+    application_count = fields.Integer(compute='_compute_application_count', string="Application Count", groups="hr_recruitment.group_hr_recruitment_interviewer")
     open_application_count = fields.Integer(compute='_compute_open_application_count', string="Open Application Count",
-                                            help="Number of applications that are still ongoing (not hired or refused)")
-    all_application_count = fields.Integer(compute='_compute_all_application_count', string="All Application Count")
+        groups="hr_recruitment.group_hr_recruitment_interviewer", help="Number of applications that are still ongoing (not hired or refused)")
+    all_application_count = fields.Integer(compute='_compute_all_application_count', string="All Application Count",
+        groups="hr_recruitment.group_hr_recruitment_interviewer")
     new_application_count = fields.Integer(
-        compute='_compute_new_application_count', string="New Application",
+        compute='_compute_new_application_count', string="New Application", groups="hr_recruitment.group_hr_recruitment_interviewer",
         help="Number of applications that are new in the flow (typically at first step of the flow)")
     old_application_count = fields.Integer(
-        compute='_compute_old_application_count', string="Old Application")
-    applicant_hired = fields.Integer(compute='_compute_applicant_hired', string="Applicants Hired")
+        compute='_compute_old_application_count', string="Old Application", groups="hr_recruitment.group_hr_recruitment_interviewer")
+    applicant_hired = fields.Integer(compute='_compute_applicant_hired', string="Applicants Hired", groups="hr_recruitment.group_hr_recruitment_interviewer")
     manager_id = fields.Many2one(
         'hr.employee', related='department_id.manager_id', string="Department Manager",
-        readonly=True, store=True)
-    document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Documents", readonly=True)
-    documents_count = fields.Integer(compute='_compute_document_ids', string="Document Count")
+        readonly=True, store=True, groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user")
+    document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Documents", readonly=True, groups="hr_recruitment.group_hr_recruitment_interviewer")
+    documents_count = fields.Integer(compute='_compute_document_ids', string="Document Count", groups="hr_recruitment.group_hr_recruitment_interviewer")
     employee_count = fields.Integer(compute='_compute_employee_count')
-    alias_id = fields.Many2one(help="Email alias for this job position. New emails will automatically create new applicants for this job position.")
+    alias_id = fields.Many2one(help="Email alias for this job position. New emails will automatically create new applicants for this job position.", groups="hr_recruitment.group_hr_recruitment_interviewer")
     color = fields.Integer("Color Index")
     is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite')
     favorite_user_ids = fields.Many2many('res.users', 'job_favorite_user_rel', 'job_id', 'user_id', default=_get_default_favorite_user_ids)
@@ -59,24 +65,25 @@ class HrJob(models.Model):
         "res.users",
         domain="[('id', 'in', allowed_user_ids)]",
         string="Interviewers",
+        groups="hr_recruitment.group_hr_recruitment_interviewer",
         help="The Interviewers set on the job position can see all Applicants in it. They have access to the information, the attachments, the meeting management and they can refuse him. You don't need to have Recruitment rights to be set as an interviewer.",
     )
-    extended_interviewer_ids = fields.Many2many('res.users', 'hr_job_extended_interviewer_res_users', compute='_compute_extended_interviewer_ids', store=True)
-    industry_id = fields.Many2one('res.partner.industry', 'Industry', tracking=True)
-    expected_degree = fields.Many2one("hr.recruitment.degree")
+    extended_interviewer_ids = fields.Many2many('res.users', 'hr_job_extended_interviewer_res_users', compute='_compute_extended_interviewer_ids', store=True, groups="hr_recruitment.group_hr_recruitment_interviewer")
+    industry_id = fields.Many2one('res.partner.industry', 'Industry', tracking=True, groups="hr_recruitment.group_hr_recruitment_interviewer")
+    expected_degree = fields.Many2one("hr.recruitment.degree", groups="hr_recruitment.group_hr_recruitment_interviewer")
 
-    activity_count = fields.Integer(compute='_compute_activities')
+    activity_count = fields.Integer(compute='_compute_activities', groups="hr_recruitment.group_hr_recruitment_interviewer")
 
-    job_properties = fields.Properties('Properties', definition='company_id.job_properties_definition')
+    job_properties = fields.Properties('Properties', definition='company_id.job_properties_definition', groups="hr_recruitment.group_hr_recruitment_interviewer")
 
-    applicant_properties_definition = fields.PropertiesDefinition('Applicant Properties')
+    applicant_properties_definition = fields.PropertiesDefinition('Applicant Properties', groups="hr_recruitment.group_hr_recruitment_interviewer")
     no_of_hired_employee = fields.Integer(
         compute='_compute_no_of_hired_employee',
-        string='Hired', copy=False,
+        string='Hired', copy=False, groups="hr_recruitment.group_hr_recruitment_interviewer",
         help='Number of hired employees for this job position during recruitment phase.',
         store=True)
 
-    job_source_ids = fields.One2many('hr.recruitment.source', 'job_id')
+    job_source_ids = fields.One2many('hr.recruitment.source', 'job_id', groups="hr_recruitment.group_hr_recruitment_interviewer")
 
     @api.depends('application_ids.date_closed')
     def _compute_no_of_hired_employee(self):
