@@ -86,7 +86,7 @@ export class ProductPage extends Component {
         if (!selection) {
             return true;
         }
-        return selection.hasMissingAttributeValues(this.productTemplate.attribute_line_ids);
+        return Boolean(selection.getMissingAttributeValue(this.productTemplate.attribute_line_ids));
     }
 
     isAddToCartEnabled() {
@@ -145,6 +145,16 @@ export class ProductPage extends Component {
 
     goBack() {
         this.router.navigate("product_list");
+    }
+
+    scrollUpToRequired() {
+        const selection = this.state.selectedValues[this.productTemplate.id];
+        const missingAttribute = selection?.getMissingAttributeValue(
+            this.productTemplate.attribute_line_ids
+        );
+        document
+            .getElementById(missingAttribute?.attribute_id?.id)
+            ?.scrollIntoView({ behavior: "smooth" });
     }
 
     /*

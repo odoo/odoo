@@ -3,6 +3,7 @@ import * as Utils from "@pos_self_order/../tests/tours/utils/common";
 import * as CartPage from "@pos_self_order/../tests/tours/utils/cart_page_util";
 import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_util";
 import * as LandingPage from "@pos_self_order/../tests/tours/utils/landing_page_util";
+import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("self_attribute_selector", {
     steps: () => [
@@ -101,13 +102,20 @@ registry.category("web_tour.tours").add("test_self_order_multi_check_attribute_w
             ProductPage.setupAttribute(
                 [
                     { name: "Fabric", value: "Leather" },
-                    { name: "Size", value: "M" },
                     { name: "Add-ons", value: "Pen Holder" },
                     { name: "Add-ons", value: "Mini Drawer" },
                     { name: "Colour", value: "Blue" },
                 ],
                 false
             ),
+            Utils.checkMissingRequiredsExists(),
+            Utils.clickMissingRequireds(),
+            {
+                content: "Size attribute selection is visible",
+                trigger: "h2:contains('Size'):visible",
+            },
+            ProductPage.setupAttribute([{ name: "Size", value: "M" }], false),
+            negateStep(Utils.checkMissingRequiredsExists()),
             Utils.clickBtn("Add to Cart"),
             Utils.clickBtn("Checkout"),
             CartPage.checkProduct("Desk Organizer", "11.62", "1"),
