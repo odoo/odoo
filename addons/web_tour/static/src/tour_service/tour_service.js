@@ -204,7 +204,7 @@ export const tourService = {
             if (tourConfig.mode === "auto") {
                 new TourAutomatic(tour).start();
             } else {
-                new TourInteractive(tour).start(pointer, async () => {
+                new TourInteractive(tour).start(env, pointer, async () => {
                     pointer.stop();
                     tourState.clear();
                     browser.console.log("tour succeeded");
