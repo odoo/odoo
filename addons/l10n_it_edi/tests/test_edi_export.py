@@ -479,6 +479,7 @@ class TestItEdiExport(TestItEdi):
                 Command.create({'product_id': self.service_product.id, 'price_unit': 200.00}),
             ],
         })
+        sale_order.name = 'SO-IT0001'
         sale_order.action_confirm()
 
         for amount in (50, 100):
