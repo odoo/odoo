@@ -2952,7 +2952,8 @@ class MailThread(models.AbstractModel):
     def _message_compute_parent_id(self, parent_id):
         """ Parent management, depending on ``_mail_flat_thread``. If "flat"
         and no parent is given, link to ancestor. Otherwise just check it
-        is a valid parent for the thread, otherwise link to ancestor. """
+        is a valid parent for the thread, otherwise link to last comment or
+        email, or if none last message, considering people reply to a thread. """
         MailMessage_sudo = self.env['mail.message'].sudo()
         current_ancestor = self.env['mail.message'].sudo()
         if parent_id:
@@ -2964,8 +2965,10 @@ class MailThread(models.AbstractModel):
             # Note that with sudo we will match message with internal subtypes.
             current_ancestor = MailMessage_sudo.search(
                 [('res_id', '=', self.id), ('model', '=', self._name), ('message_type', '!=', 'user_notification')],
-                order="id ASC", limit=1,
-            )
+                order='date desc, id desc',
+                limit=200,  # arbitrary, but sometimes loops / spam may creater a long history
+            ).sorted(lambda msg: (msg.message_type in ('comment', 'email'), msg.date, msg.id), reverse=True)
+            current_ancestor = current_ancestor[:1]
         return current_ancestor.id
 
     def _message_compute_subject(self):

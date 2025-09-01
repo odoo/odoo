@@ -11,7 +11,7 @@ Subject: {subject}
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
     boundary="----=_Part_4200734_24778174.1344608186754"
-Date: Fri, 10 Aug 2012 14:16:26 +0000
+Date: {date}
 Message-ID: {msg_id}
 {extra}
 ------=_Part_4200734_24778174.1344608186754
