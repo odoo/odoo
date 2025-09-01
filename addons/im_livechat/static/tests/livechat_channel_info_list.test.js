@@ -66,26 +66,19 @@ test("editing livechat note is synced between tabs", async () => {
     const tab2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: tab1 });
     await openDiscuss(channelId, { target: tab2 });
-    await contains(
-        ".o-livechat-ChannelInfoList textarea",
-        { value: "Initial note" },
-        { target: tab1 }
-    );
-    await contains(
-        ".o-livechat-ChannelInfoList textarea",
-        { value: "Initial note" },
-        { target: tab2 }
-    );
-    await insertText(".o-livechat-ChannelInfoList textarea", "Updated note", {
-        target: tab1,
+    await contains(`${tab1.selector} .o-livechat-ChannelInfoList textarea`, {
+        value: "Initial note",
+    });
+    await contains(`${tab2.selector} .o-livechat-ChannelInfoList textarea`, {
+        value: "Initial note",
+    });
+    await insertText(`${tab1.selector} .o-livechat-ChannelInfoList textarea`, "Updated note", {
         replace: true,
     });
-    await click(".o-mail-ActionPanel-header", { target: tab1 }); // Trigger the blur event to save the note
-    await contains(
-        ".o-livechat-ChannelInfoList textarea",
-        { value: "Updated note" },
-        { target: tab2 }
-    ); // Note should be synced with bus
+    document.querySelector(`${tab1.selector} .o-livechat-ChannelInfoList textarea`).blur(); // Trigger the blur event to save the note
+    await contains(`${tab2.selector} .o-livechat-ChannelInfoList textarea`, {
+        value: "Updated note",
+    }); // Note should be synced with bus
 });
 
 test("shows live chat status in discuss sidebar", async () => {
@@ -145,25 +138,20 @@ test("editing livechat status is synced between tabs", async () => {
     const tab2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: tab1 });
     await openDiscuss(channelId, { target: tab2 });
-    await contains(".o-livechat-ChannelInfoList button.active", {
+    await contains(`${tab1.selector} .o-livechat-ChannelInfoList button.active`, {
         text: "In progress",
-        target: tab1,
     });
-    await contains(".o-livechat-ChannelInfoList button.active", {
+    await contains(`${tab2.selector} .o-livechat-ChannelInfoList button.active`, {
         text: "In progress",
-        target: tab2,
     });
-    await click(".o-livechat-ChannelInfoList button", {
+    await click(`${tab1.selector} .o-livechat-ChannelInfoList button`, {
         text: "Waiting for customer",
-        target: tab1,
     });
-    await contains(".o-livechat-ChannelInfoList button.active", {
+    await contains(`${tab1.selector} .o-livechat-ChannelInfoList button.active`, {
         text: "Waiting for customer",
-        target: tab1,
     });
-    await contains(".o-livechat-ChannelInfoList button.active", {
+    await contains(`${tab2.selector} .o-livechat-ChannelInfoList button.active`, {
         text: "Waiting for customer",
-        target: tab2,
     }); // Status should be synced with bus
 });
 
