@@ -7,7 +7,7 @@ patch(PosStore.prototype, {
     getReceiptHeaderData() {
         return {
             ...super.getReceiptHeaderData(...arguments),
-            partner: this.selectedOrder.partner_id,
+            partner: this.selectedOrder?.partner_id,
         };
     },
 });
