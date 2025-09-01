@@ -8,7 +8,8 @@ from odoo import api, fields, models
 class HrJob(models.Model):
     _inherit = "hr.job"
 
-    applicant_matching_score = fields.Float(string="Matching Score(%)", compute="_compute_applicant_matching_score")
+    applicant_matching_score = fields.Float(string="Matching Score(%)", compute="_compute_applicant_matching_score",
+        groups="hr_recruitment.group_hr_recruitment_interviewer")
 
     @api.depends_context("active_applicant_id")
     def _compute_applicant_matching_score(self):
