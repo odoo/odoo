@@ -1290,6 +1290,7 @@ class Base(models.AbstractModel):
 
                 # Date / Datetime are not JSONifiable, so they are stored as raw text
                 db_format = '%Y-%m-%d' if property_type == 'date' else '%Y-%m-%d %H:%M:%S'
+                fmt = DEFAULT_SERVER_DATE_FORMAT if property_type == 'date' else DEFAULT_SERVER_DATETIME_FORMAT
 
                 if func == 'week':
                     # the value is the first day of the week (based on local)
@@ -1304,7 +1305,7 @@ class Base(models.AbstractModel):
                     format=READ_GROUP_DISPLAY_FORMAT[func],
                     locale=get_lang(self.env).code,
                 )
-                return (value, label), [(fullname, '>=', start), (fullname, '<', end)]
+                return (value.strftime(fmt), label), [(fullname, '>=', start), (fullname, '<', end)]
 
             return formatter_property_datetime
 
