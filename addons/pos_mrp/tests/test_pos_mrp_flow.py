@@ -4,7 +4,7 @@
 import odoo
 
 from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
-from odoo import fields
+from odoo import fields, Command
 from odoo.tests import Form
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -538,4 +538,93 @@ class TestPosMrp(TestPointOfSaleCommon):
         self.assertRecordValues(pos_order.lines, [
             {'product_id': kit_3.id, 'total_cost': 100.0},
             {'product_id': kit_2.id, 'total_cost': 100.0},
+        ])
+
+    def test_bom_variant_exclusive_bom_lines(self):
+        """This test make sure that the cost is correctly computed when a product has a BoM with lines linked
+              to specific variant."""
+        category = self.env['product.category'].create({
+            'name': 'Category for kit',
+            'property_cost_method': 'fifo',
+            'property_valuation': 'real_time',
+        })
+        attribute_size = self.env['product.attribute'].create({
+            'name': 'Size',
+            'create_variant': 'always',
+            'value_ids': [Command.create({'name': 'S'}), Command.create({'name': 'L'})],
+        })
+        product_test = self.env['product.template'].create({
+            'name': 'Test product',
+            'categ_id': category.id,
+            'is_storable': True,
+            'available_in_pos': True,
+            'attribute_line_ids': [Command.create({
+                'attribute_id': attribute_size.id,
+                'value_ids': [Command.set(attribute_size.value_ids.ids)],
+            })],
+        })
+
+        component_size = self.env['product.product'].create({
+            'name': 'Test Product - Small',
+            'standard_price': 10.0,
+        })
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product_test.id,
+            'product_uom_id': product_test.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': component_size.id,
+                    'product_qty': 1,
+                    'bom_product_template_attribute_value_ids': product_test.product_variant_ids[0].product_template_variant_value_ids.ids
+                    }),
+                Command.create({
+                    'product_id': component_size.id,
+                    'product_qty': 2,
+                    'bom_product_template_attribute_value_ids': product_test.product_variant_ids[1].product_template_variant_value_ids.ids
+                    }),
+            ]
+        })
+        product_1 = product_test.product_variant_ids[0]
+        product_2 = product_test.product_variant_ids[1]
+        self.pos_config.open_ui()
+        order = self.env['pos.order'].create({
+            'session_id': self.pos_config.current_session_id.id,
+            'lines': [(0, 0, {
+                'name': product_2.name,
+                'product_id': product_2.id,
+                'price_unit': product_2.lst_price,
+                'qty': 1,
+                'tax_ids': [],
+                'price_subtotal': product_2.lst_price,
+                'price_subtotal_incl': product_2.lst_price,
+            }),
+            (0, 0, {
+                'name': product_1.name,
+                'product_id': product_1.id,
+                'price_unit': product_1.lst_price,
+                'qty': 1,
+                'tax_ids': [],
+                'price_subtotal': product_1.lst_price,
+                'price_subtotal_incl': product_1.lst_price,
+            })],
+            'pricelist_id': self.pos_config.pricelist_id.id,
+            'amount_paid': product_2.lst_price + product_1.lst_price,
+            'amount_total': product_2.lst_price + product_1.lst_price,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+        })
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.PosMakePayment.with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.cash_payment_method.id
+        })
+        order_payment.with_context(**payment_context).check()
+        self.pos_config.current_session_id.action_pos_session_closing_control()
+        self.assertRecordValues(order.lines, [
+            {'product_id': product_2.id, 'total_cost': 20},
+            {'product_id': product_1.id, 'total_cost': 10},
         ])
