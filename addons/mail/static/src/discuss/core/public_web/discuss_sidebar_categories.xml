@@ -89,7 +89,7 @@
                     </t>
                 </Dropdown>
                 <t t-else="" t-call="mail.DiscussSidebarChannel.main"/>
-                <ul t-if="subChannels.length > 0" class="list-unstyled position-relative flex-grow-1 my-0 d-flex flex-column o-gap-0_5">
+                <ul t-if="subChannels.length > 0" class="o-mail-DiscussSidebarChannel-subChannelList list-unstyled position-relative flex-grow-1 my-0 d-flex flex-column">
                     <t t-foreach="subChannels" t-as="sub" t-key="sub.localId">
                         <DiscussSidebarSubchannel t-if="showThread(sub)" thread="sub" isFirst="sub_first or !thread.discussAppCategory.open"/>
                     </t>
@@ -114,13 +114,13 @@
     </t>
 
     <t t-name="mail.DiscussSidebarSubchannel.main">
-        <li class="o-mail-DiscussSidebarSubchannel d-flex align-items-center flex-grow-1 position-relative" t-att-class="{ 'p-0': !store.discuss.isSidebarCompact, 'pt-1': !store.discuss.isSidebarCompact and props.isFirst }" t-ref="root">
+        <li class="o-mail-DiscussSidebarSubchannel d-flex align-items-center flex-grow-1 position-relative" t-att-class="{ 'p-0': !store.discuss.isSidebarCompact, 'o-pt-0_5': !store.discuss.isSidebarCompact and props.isFirst }" t-ref="root">
             <t t-if="!store.discuss.isSidebarCompact">
                 <svg t-if="props.isFirst" class="position-absolute opacity-75" style="top: -8px;" xmlns="http://www.w3.org/2000/svg" width="10" height="25" viewBox="0 0 10 25">
                     <line x1="0" y1="3" x2="0" y2="100%" stroke="currentColor" stroke-width="3"/>
                     <line x1="0" y1="100%" x2="100%" y2="100%" stroke="currentColor" stroke-width="3"/>
                 </svg>
-                <svg t-else="" class="position-absolute opacity-75" style="top: -16px;" xmlns="http://www.w3.org/2000/svg" width="10" height="29" viewBox="0 0 10 29">
+                <svg t-else="" class="position-absolute opacity-75" style="top: -18px;" xmlns="http://www.w3.org/2000/svg" width="10" height="33" viewBox="0 0 10 33">
                     <line x1="0" y1="3" x2="0" y2="100%" stroke="currentColor" stroke-width="3"/>
                     <line x1="0" y1="100%" x2="100%" y2="100%" stroke="currentColor" stroke-width="3"/>
                 </svg>
@@ -128,7 +128,7 @@
             <button class="o-mail-DiscussSidebarChannel-subChannel o-mail-DiscussSidebar-item btn btn-secondary border-0 bg-inherit d-flex flex-grow-1 smaller rounded-2 text-start text-truncate align-items-center" t-att-title="store.discuss.isSidebarCompact ? undefined : thread.displayName" t-on-click="(ev) => this.openThread(ev, thread)" t-att-class="{
                 'o-active': thread.eq(this.store.discuss.thread),
                 'px-1 py-2 mx-1 text-wrap word-break lh-1': store.discuss.isSidebarCompact,
-                'o-nonCompact me-1 p-0 ps-1': !store.discuss.isSidebarCompact,
+                'o-nonCompact me-1 pe-0 ps-1 o-py-0_5': !store.discuss.isSidebarCompact,
                 'o-unread': thread.self_member_id?.message_unread_counter > 0 and !thread.self_member_id?.mute_until_dt,
                 'opacity-50': thread.self_member_id?.mute_until_dt,
             }">
@@ -185,7 +185,7 @@
             'ms-1': thread.importantCounter > 0,
         }">
             <Dropdown state="showingActions" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu o-discuss-dropdownMenu border-secondary my-0 min-w-0 mx-1'">
-                <button class="btn me-1 btn-light rounded-circle d-flex o-p-0_5 align-items-center justify-content-center o-mail-discussSidebarBgColor border" t-att-class="{ 'o-showingActions': showingActions.isOpen }" t-att-title="actionsTitle">
+                <button class="btn btn-light rounded-circle d-flex o-p-0_5 align-items-center justify-content-center o-mail-discussSidebarBgColor border" t-att-class="{ 'o-showingActions': showingActions.isOpen, 'me-1': !thread.parent_channel_id }" t-att-title="actionsTitle">
                     <i role="img" class="oi oi-fw oi-lg oi-ellipsis-h"/>
                 </button>
                 <t t-set-slot="content">
