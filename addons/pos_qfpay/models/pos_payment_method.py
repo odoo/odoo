@@ -77,3 +77,10 @@ class PosPaymentMethod(models.Model):
         padded_data = padder.update(payload_to_encrypt.encode('utf-8')) + padder.finalize()
         encrypted = encryptor.update(padded_data) + encryptor.finalize()
         return base64.b64encode(encrypted).decode('utf-8')
+
+    @api.model
+    def _qfpay_handle_webhook(self, config, data, uuid):
+        config._notify("QFPAY_LATEST_RESPONSE", {
+            'response': data,
+            'line_uuid': uuid,
+        })
