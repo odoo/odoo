@@ -77,7 +77,7 @@ class ProjectUpdate(models.Model):
     @api.depends('name')
     def _compute_name_cropped(self):
         for update in self:
-            update.name_cropped = (update.name[:57] + '...') if len(update.name) > 60 else update.name
+            update.name_cropped = (update.name[:57] + '...') if update.name and len(update.name) > 60 else update.name
 
     def _compute_closed_task_percentage(self):
         for update in self:
