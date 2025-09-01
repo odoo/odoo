@@ -3036,6 +3036,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             line.with_context(skip_analytic_sync=True).analytic_distribution = {
                 analytic_line._get_distribution_key(): -analytic_line.amount / line.balance * 100
+                if line.balance else 100
                 for analytic_line in line.analytic_line_ids
             }
 
