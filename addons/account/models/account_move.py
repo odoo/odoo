@@ -383,6 +383,16 @@ class AccountMove(models.Model):
         readonly=False,
     )
     show_delivery_date = fields.Boolean(compute='_compute_show_delivery_date')
+    taxable_supply_date = fields.Date(
+        string="Taxable Supply Date",
+        copy=False,
+        store=True,
+        compute='_compute_taxable_supply_date',
+        precompute=True,
+        readonly=False,
+    )
+    show_taxable_supply_date = fields.Boolean(compute='_compute_show_taxable_supply_date')
+    taxable_supply_date_placeholder = fields.Char(compute='_compute_taxable_supply_date_placeholder')
     invoice_payment_term_id = fields.Many2one(
         comodel_name='account.payment.term',
         string='Payment Terms',
@@ -810,7 +820,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.invoice_date or self.date
 
-    @api.depends('invoice_date', 'company_id', 'move_type')
+    @api.depends('invoice_date', 'company_id', 'move_type', 'taxable_supply_date')
     def _compute_date(self):
         for move in self:
             accounting_date = move._get_accounting_date_source()
@@ -1075,6 +1085,17 @@ class AccountMove(models.Model):
         for move in self:
             move.show_delivery_date = move.delivery_date and move.is_sale_document()
 
+    def _compute_taxable_supply_date(self):
+        pass
+
+    def _compute_show_taxable_supply_date(self):
+        for move in self:
+            move.show_taxable_supply_date = False
+
+    def _compute_taxable_supply_date_placeholder(self):
+        for move in self:
+            move.taxable_supply_date_placeholder = ''
+
     @api.depends('journal_id', 'statement_line_id')
     def _compute_currency_id(self):
         for invoice in self:
@@ -1090,7 +1111,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.invoice_date or fields.Date.context_today(self)
 
-    @api.depends('currency_id', 'company_currency_id', 'company_id', 'invoice_date')
+    @api.depends('currency_id', 'company_currency_id', 'company_id', 'invoice_date', 'taxable_supply_date')
     def _compute_expected_currency_rate(self):
         for move in self:
             if move.currency_id:
@@ -1103,7 +1124,7 @@ class AccountMove(models.Model):
             else:
                 move.expected_currency_rate = 1
 
-    @api.depends('currency_id', 'company_currency_id', 'company_id', 'invoice_date')
+    @api.depends('currency_id', 'company_currency_id', 'company_id', 'invoice_date', 'taxable_supply_date')
     def _compute_invoice_currency_rate(self):
         for move in self:
             if move.is_invoice(include_receipts=True):
