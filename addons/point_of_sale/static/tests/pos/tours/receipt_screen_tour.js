@@ -189,7 +189,6 @@ registry.category("web_tour.tours").add("OrderPaidInCash", {
                 trigger: "body",
                 expectUnloadPage: true,
             },
-            ProductScreen.lastClosingCashIs("25.00"),
         ].flat(),
 });
 

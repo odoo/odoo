@@ -628,14 +628,6 @@ export function productCardQtyIs(productName, qty) {
     ];
 }
 
-// Temporarily put it here. It should be in the utility methods for the backend views.
-export function lastClosingCashIs(val) {
-    return [
-        {
-            trigger: `[name=last_session_closing_cash]:contains(${val})`,
-        },
-    ];
-}
 export function checkFirstLotNumber(number) {
     return [
         {

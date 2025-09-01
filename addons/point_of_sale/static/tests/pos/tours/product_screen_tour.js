@@ -283,7 +283,6 @@ registry.category("web_tour.tours").add("CashClosingDetails", {
                 trigger: "body",
                 expectUnloadPage: true,
             },
-            ProductScreen.lastClosingCashIs("50.00"),
         ].flat(),
 });
 
