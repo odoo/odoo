@@ -246,6 +246,32 @@ test("parseDateTime with escaped characters (eg. Basque locale)", async () => {
     );
 });
 
+test("parseDateTime in am/pm format", async () => {
+    const dateFormat = strftimeToLuxonFormat("%m/%d/%Y");
+    const timeFormat = strftimeToLuxonFormat("%I:%M:%S %p");
+    const dateTimeFormat = `${dateFormat} ${timeFormat}`;
+    const shortTimeFormat = strftimeToLuxonFormat("%I:%M %p");
+    patchWithCleanup(localization, {
+        dateFormat,
+        timeFormat,
+        dateTimeFormat,
+        shortTimeFormat,
+    });
+
+    expect(parseDateTime("01/31/1985 08:30:15 am").toFormat(dateTimeFormat)).toBe(
+        "01/31/1985 08:30:15 AM"
+    );
+    expect(parseDateTime("01/31/1985 08:30:15 pm").toFormat(dateTimeFormat)).toBe(
+        "01/31/1985 08:30:15 PM"
+    );
+    expect(parseDateTime("01/31/1985 08:30 am").toFormat(dateTimeFormat)).toBe(
+        "01/31/1985 08:30:00 AM"
+    );
+    expect(parseDateTime("01/31/1985 08:30 pm").toFormat(dateTimeFormat)).toBe(
+        "01/31/1985 08:30:00 PM"
+    );
+});
+
 test("parse smart date input", async () => {
     mockDate("2020-01-01 00:00:00", 0);
 

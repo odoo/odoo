@@ -502,6 +502,12 @@ export function parseDateTime(value, options = {}) {
     // Base case: try parsing with the given format and options
     let result = DateTime.fromFormat(value, fmt, parseOpts);
 
+    // Try parsing with the short time format (without seconds)
+    if (!isValidDate(result)) {
+        const format = `${localization.dateFormat} ${localization.shortTimeFormat}`;
+        result = DateTime.fromFormat(value, format, parseOpts);
+    }
+
     // Try parsing as a smart date
     if (!isValidDate(result)) {
         result = parseSmartDateInput(value);
