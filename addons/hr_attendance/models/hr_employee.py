@@ -44,7 +44,7 @@ class HrEmployee(models.Model):
     hours_last_month_display = fields.Char(
         compute='_compute_hours_last_month', groups="hr.group_hr_user")
     overtime_ids = fields.One2many(
-        'hr.attendance.overtime', 'employee_id', groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
+        'hr.attendance.overtime.line', 'employee_id', groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
     total_overtime = fields.Float(compute='_compute_total_overtime', compute_sudo=True)
     display_extra_hours = fields.Boolean(related='company_id.hr_attendance_display_overtime')
 
@@ -75,7 +75,7 @@ class HrEmployee(models.Model):
 
         return res
 
-    @api.depends('overtime_ids.duration', 'attendance_ids', 'attendance_ids.overtime_status')
+    @api.depends('overtime_ids.manual_duration', 'overtime_ids', 'overtime_ids.status')
     def _compute_total_overtime(self):
         mapped_validated_overtimes = dict(
             self.env['hr.attendance.overtime.line']._read_group(
@@ -117,13 +117,13 @@ class HrEmployee(models.Model):
                 overtime_hours += att.validated_overtime_hours or 0
             employee.hours_last_month = round(hours, 2)
             employee.hours_last_month_display = "%g" % employee.hours_last_month
-            overtime_adjustments = sum(
-                ot.duration or 0
-                for ot in employee.overtime_ids.filtered(
-                    lambda ot: ot.date >= start_tz.date() and ot.date <= end_tz.date() and ot.adjustment
-                )
-            )
-            employee.hours_last_month_overtime = round(overtime_hours + overtime_adjustments, 2)
+            # overtime_adjustments = sum(
+            #     ot.duration or 0
+            #     for ot in employee.overtime_ids.filtered(
+            #         lambda ot: ot.date >= start_tz.date() and ot.date <= end_tz.date() and ot.adjustment
+            #     )
+            # )
+            employee.hours_last_month_overtime = round(overtime_hours, 2)
 
     def _compute_hours_today(self):
         now = fields.Datetime.now()

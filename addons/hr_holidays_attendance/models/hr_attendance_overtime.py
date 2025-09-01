@@ -2,6 +2,7 @@
 
 from odoo import models, fields
 
+
 class HrAttendanceOvertimeLine(models.Model):
     _name = 'hr.attendance.overtime.line'
     _inherit = 'hr.attendance.overtime.line'

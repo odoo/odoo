@@ -42,7 +42,6 @@ class HrWorkEntry(models.Model):
     conflict = fields.Boolean('Conflicts', compute='_compute_conflict', store=True)  # Used to show conflicting work entries first
     department_id = fields.Many2one('hr.department', related='employee_id.department_id', store=True)
     country_id = fields.Many2one('res.country', related='employee_id.company_id.country_id')
-    #amount_rate = fields.Float("Pay rate", default=lambda self: self.work_entry_type_id.amount_rate)
     amount_rate = fields.Float("Pay rate")
 
     # FROM 7s by query to 2ms (with 2.6 millions entries)

@@ -16,10 +16,10 @@ class HrAttendanceOvertimeRule(models.Model):
                 **super()._extra_overtime_vals(),
                 'compensable_as_leave': False,
             }
-        
+
         res = super()._extra_overtime_vals()
         res['compensable_as_leave'] = any(self.mapped('compensable_as_leave'))
-        if self.ruleset_id.combine_overtime_rates == 'sum' and any(self.mapped('paid')):
+        if self.ruleset_id.rate_combination_mode == 'sum' and any(self.mapped('paid')):
             combined_rate = 1.0
             combined_rate += sum(r.amount_rate-1.0 for r in self.filtered(
                 lambda r: r.paid and not r.compensable_as_leave

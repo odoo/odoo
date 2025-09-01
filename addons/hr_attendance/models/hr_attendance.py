@@ -52,7 +52,6 @@ class HrAttendance(models.Model):
                                                   ('approved', "Approved"),
                                                   ('refused', "Refused")], compute="_compute_overtime_status", store=True, tracking=True, readonly=False)
     validated_overtime_hours = fields.Float(string="Extra Hours", compute='_compute_validated_overtime_hours', tracking=True, store=True, readonly=True)
-    no_validated_overtime_hours = fields.Boolean(compute='_compute_no_validated_overtime_hours')
     in_latitude = fields.Float(string="Latitude", digits=(10, 7), readonly=True, aggregator=None)
     in_longitude = fields.Float(string="Longitude", digits=(10, 7), readonly=True, aggregator=None)
     in_location = fields.Char(help="Based on GPS-Coordinates if available or on IP Address")
@@ -78,14 +77,22 @@ class HrAttendance(models.Model):
                                 readonly=True,
                                 default='manual')
     expected_hours = fields.Float(compute="_compute_expected_hours", store=True, aggregator="sum")
+    linked_overtime_ids = fields.Many2many('hr.attendance.overtime.line', compute='_compute_linked_overtime_ids')
+
+    @api.model
+    def _attendance_date(self, check_in, employee):
+        naive_date = check_in.date()  # TODO short overlap problem if change of tz between version
+        version = employee._get_version(naive_date)
+        tz = timezone(version._get_tz())
+        return utc.localize(check_in).astimezone(tz).date()
 
     @api.depends("check_in", "employee_id")
     def _compute_date(self):
         for attendance in self:
-            naive_date = attendance.check_in.date()  # TODO short overlap problem if change of tz between version
-            version = attendance.employee_id._get_version(naive_date)
-            tz = timezone(version._get_tz())
-            attendance.date = utc.localize(attendance.check_in).astimezone(tz).date()
+            if not attendance.employee_id: # weird precompute edge cases. Never after creation
+                attendance.date = datetime.today()
+                continue
+            attendance.date = self._attendance_date(attendance.check_in, attendance.employee_id)
 
     @api.depends("worked_hours", "overtime_hours")
     def _compute_expected_hours(self):
@@ -98,6 +105,35 @@ class HrAttendance(models.Model):
                 attendance.color = 1 if attendance.worked_hours > 16 or attendance.out_mode == 'technical' else 0
             else:
                 attendance.color = 1 if attendance.check_in < (datetime.today() - timedelta(days=1)) else 10
+
+    def _get_overtimes_to_update_domain(self):
+        if not self:
+            return Domain.FALSE
+        date_start, date_end = self._get_week_date_range()
+        return [
+            ('date', '>=', date_start),
+            ('date', '<=', date_end),
+            ('employee_id', 'in', self.employee_id.ids)
+        ]
+
+    @api.depends('overtime_hours')
+    def _compute_overtime_status(self):
+        mapped_overtimes = self._linked_overtimes().grouped(
+            lambda ot: (ot.employee_id, ot.date)
+        )
+        for attendance in self:
+            overtimes = mapped_overtimes.get(
+                (attendance.employee_id, attendance.date),
+                self.env['hr.attendance.overtime.line'],
+            )
+            if not overtimes:
+                attendance.overtime_status = False
+            elif all(overtimes.mapped(lambda ot: ot.status == 'approved')):
+                attendance.overtime_status = 'approved'
+            elif all(overtimes.mapped(lambda ot: ot.status == 'refused')):
+                attendance.overtime_status = 'refused'
+            else:
+                attendance.overtime_status = 'to_approve'
 
     @api.depends('check_in', 'check_out', 'employee_id')
     def _compute_overtime_hours(self):
@@ -124,7 +160,7 @@ class HrAttendance(models.Model):
                 overtime_reserve -= ot_hours
                 att.overtime_hours = ot_hours
 
-    @api.depends('employee_id', 'overtime_status', 'overtime_hours')
+    @api.depends('employee_id', 'overtime_hours', 'overtime_status')
     def _compute_validated_overtime_hours(self):
         domain = self._get_overtimes_to_update_domain()
         all_attendances = self | self.env['hr.attendance'].search(domain)
@@ -151,16 +187,19 @@ class HrAttendance(models.Model):
                 overtime_reserve -= ot_hours
                 att.validated_overtime_hours = ot_hours
 
-    @api.depends('validated_overtime_hours')
-    def _compute_no_validated_overtime_hours(self):
-        for attendance in self:
-            attendance.no_validated_overtime_hours = not float_compare(attendance.validated_overtime_hours, 0.0, precision_digits=5)
-
-    @api.depends('employee_id')
-    def _compute_overtime_status(self):
-        for attendance in self:
-            if not attendance.overtime_status:
-                attendance.overtime_status = "to_approve" if attendance.employee_id.company_id.attendance_overtime_validation == 'by_manager' else "approved"
+    @api.depends('check_in', 'check_out', 'employee_id')
+    def _compute_linked_overtime_ids(self):
+        all_linked_overtimes = self.env['hr.attendance.overtime.line']._read_group([
+                ('date', 'in', self.mapped('date')),
+                ('employee_id', 'in', self.employee_id.ids),
+            ],
+            groupby=['employee_id', 'date:day'],
+            aggregates=['id:recordset'],
+        )
+        mapped_attendances = self.grouped(lambda att: (att.employee_id, att.date))
+        self.linked_overtime_ids = False
+        for employee, date, overtimes in all_linked_overtimes:
+            mapped_attendances[employee, date].linked_overtime_ids = overtimes
 
     @api.depends('employee_id', 'check_in', 'check_out')
     def _compute_display_name(self):
@@ -275,38 +314,12 @@ class HrAttendance(models.Model):
         start_day_employee_tz = date_employee_tz.replace(hour=0, minute=0, second=0)
         return (start_day_employee_tz.astimezone(pytz.utc).replace(tzinfo=None), start_day_employee_tz.date())
 
-    # def _get_versions_by_employee_and_date(self, extra_dates):
-    #     # Generate a 2 level dict[employee][date] -> version
-    #     # for all employees and dates of an attendance in self.
-    #     # Optionally also fill the dict for employees and dates in 
-    #     # the `extra_dates` {employee: dates} mapping.
-    #     if not self:
-    #         return {}
-    #     date_to = max(self.mapped('date'))
-    #     employees = self.employee_id
-    #     all_versions = self.env['hr.version'].search([
-    #         ('employee_id', 'in', self.employee_id.ids),
-    #         ('date_version', '<=', date_to),
-    #         # note: no check on date_from because we don't store the version date end
-    #     ])
-    #     versions_by_employee = all_versions.grouped('employee_id')
-    #     version_by_employee_and_date = {employee: {} for employee in employees}
-    #     for employee, attendances in self.grouped('employee_id').items():
-    #         if not (versions := versions_by_employee[employee]):
-    #             continue
-    #         version_index = 0
-    #         for date in sorted([attendances.mapped('date') + extra_dates[employee
-    #             if version_index + 1 < len(versions) and attendance.date >= versions[version_index+1].date_version:
-    #                 version_index += 1
-    #             version_by_employee_and_date[employee][attendance.date] = versions[version_index]
-    #     return version_by_employee_and_date
-
     def _get_week_date_range(self):
         assert self
         dates = self.mapped('date')
         date_start, date_end = min(dates), max(dates)
         date_start = date_start - relativedelta(days=date_start.weekday())
-        date_end = date_end + relativedelta(days=6-date_end.weekday())
+        date_end = date_end + relativedelta(days=6 - date_end.weekday())
         return date_start, date_end
 
     def _get_overtimes_to_update_domain(self):
@@ -333,6 +346,11 @@ class HrAttendance(models.Model):
                 {attendance.date, *Rule._get_period_keys(attendance.date).values()}
             )
         version_map = self.env['hr.version']._get_versions_by_employee_and_date(employee_dates)
+        
+        # attendances on dates for which the employee did not exist do no not generate overtimes
+        all_attendances = all_attendances.filtered(
+            lambda a: version_map[a.employee_id].get(a.date)
+        )
 
         overtime_vals_list = []
         for employee, attendances in all_attendances.grouped('employee_id').items():
@@ -348,7 +366,6 @@ class HrAttendance(models.Model):
                 )
         self.env['hr.attendance.overtime.line'].create(overtime_vals_list)
         self.env.add_to_compute(self._fields['overtime_hours'], all_attendances)
-        self.env.add_to_compute(self._fields['expected_hours'], all_attendances)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -580,20 +597,20 @@ class HrAttendance(models.Model):
     def action_refuse_overtime(self):
         self._linked_overtimes().action_refuse()
 
-    def action_list_overtimes(self):
-        self.ensure_one()
-        assert self.date
-        return {
-            "type": "ir.actions.act_window",
-            "name": _("Overtime details"),
-            "res_model": "hr.attendance.overtime.line",
-            "view_mode": 'list',
-            "context": {
-                "create": 0,
-                "editable": 'top',
-            },
-            "domain": [('id', 'in', self._linked_overtimes().ids)]
-        }
+    # def action_list_overtimes(self):
+    #     self.ensure_one()
+    #     assert self.date
+    #     return {
+    #         "type": "ir.actions.act_window",
+    #         "name": _("Overtime details"),
+    #         "res_model": "hr.attendance.overtime.line",
+    #         "view_mode": 'list',
+    #         "context": {
+    #             "create": 0,
+    #             "editable": 'top',
+    #         },
+    #         "domain": [('id', 'in', self._linked_overtimes().ids)]
+    #     }
 
     def _cron_auto_check_out(self):
         def check_in_tz(attendance):
@@ -649,8 +666,7 @@ class HrAttendance(models.Model):
         if not companies:
             return
 
-        checked_in_employees = self.env['hr.attendance.overtime'].search([('date', '=', yesterday),
-                                                                          ('adjustment', '=', False)]).employee_id
+        checked_in_employees = self.env['hr.attendance.overtime.line'].search([('date', '=', yesterday)]).employee_id
 
         technical_attendances_vals = []
         absent_employees = self.env['hr.employee'].search([('id', 'not in', checked_in_employees.ids),

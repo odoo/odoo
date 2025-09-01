@@ -13,8 +13,6 @@
                         <h1><field name="name" placeholder="e.g. Over 8 hours daily"/></h1>
                         <group>
                             <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="employer_tolerance" widget="float_time"/>
-                            <!-- TODO field country_id -->
                         </group>
                     </div>
                     <notebook>
@@ -23,7 +21,7 @@
                                 string="Condition" 
                                 style="grid-template-columns:max-content 1fr"
                             >
-                                <field name="base_off" widget="radio" string="The rule is based off"/>
+                                <field name="base_off" widget="radio" string="The rule is based on"/>
                                 <!-- QUANTITY -->
                                 <span colspan="2" class="d-flex gap-1" invisible="base_off != 'quantity'">
                                     <label for="quantity_period" string="If the worked hours on a"/>
@@ -41,6 +39,7 @@
                                     <field name="expected_hours" widget="float_time" style="width:10ch"/>
                                     hours
                                 </span>
+                                <field name="employer_tolerance" widget="float_time" string="With a tolerance in favor of the employer of"/>
                                 <!-- TIMING -->
                                 <field name="timing_type" widget="radio" string="If the employee works" invisible="base_off != 'timing'"/>
                                 <span class="fw-bold" invisible="base_off != 'timing' or timing_type not in ['work_days', 'non_work_days']">Beetween</span>
@@ -50,7 +49,6 @@
                                     <field nolabel="1" name="timing_stop" widget="float_time" style="width:10ch"/>
                                 </span>
                                 <field name="resource_calendar_id" string="Schedule" invisible="base_off != 'timing' or timing_type != 'schedule'"/>
-                                <field name="calendar_attendance_ids" invisible="base_off != 'timing' or timing_type != 'schedule' or not resource_calendar_id" nolabel="1" colspan="2"/>
                             </group>
                             <group 
                                 id="action_section"
@@ -90,66 +88,84 @@
         <field name="model">hr.attendance.overtime.ruleset</field>
         <field name="arch" type="xml">
             <form string="Extra Hours Rules">
-            <sheet>
-                <div class="oe_title">
-                    <label for="name" string="Ruleset Name"/>
-                    <h1><field name="name" placeholder="e.g. Regular Employee"/></h1>
-                </div>
-                <group>
-                    <field name="country_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_company"/>
-                    <field name="combine_overtime_rates"/>
-                </group>
-                <notebook colspan="4">
-                    <page name="overtime_rules" string="Overtime Rules">
-                        <field name="rule_ids" readonly="not id">
-                            <list>
-                                <field name="sequence" widget="handle"/>
-                                <field name="name"/>
-                                <field name="base_off"/>
-                                <field name="quantity_display"/>
-                                <field name="timing_display"/>
-                                <field name="amount_rate" widget="percentage"/>
-                            </list>
-                        </field>
-                    </page>
-                    <page string="Description">
-                        <field name="description"/>
-                    </page>
-                </notebook>
-            </sheet>
-            </form>
-        </field>
-    </record>
-
-    <!--
-    <record id="hr_attendance_overtime_ruleset_view_form" model="ir.ui.view">
-        <field name="name">hr.attendance.overtime.ruleset.form</field>
-        <field name="model">hr.attendance.overtime.ruleset</field>
-        <field name="arch" type="xml">
-            <form>
+                <field name="active" invisible="1"/>
+                <header>
+                    <button name="action_regenerate_overtimes"
+                        class="btn"
+                        string="Regenerate overtimes"
+                        icon="fa-clock-o"
+                        type="object"
+                        groups="hr_attendance.group_hr_attendance_officer"
+                        help="Regenerate overtimes for this ruleset"/>
+                </header>
                 <sheet>
                     <header>
-                        <field name="name"/>
+                        <div class="oe_title">
+                            <label for="name" string="Ruleset Name"/>
+                            <h1><field name="name" placeholder="e.g. Legal Rules"/></h1>
+                        </div>
                     </header>
                     <group>
-                        <field name="rule_ids" widget="many2many_tags"/>
-                        <field name="version_ids" widget="many2many_tags"/>
+                        <group>
+                            <field name="rate_combination_mode"/>
+                        </group>
+                        <group>
+                            <field name="country_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_company"/>
+                        </group>
                     </group>
+                    <group colspan="4">
+                        <field 
+                            name="description" colspan="4"
+                            placeholder="Provide a description or sources for this ruleset."/>
+                    </group>
+                    <notebook colspan="4">
+                        <page name="overtime_rules" string="Overtime Rules">
+                            <field name="rule_ids" readonly="not id">
+                                <list>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="base_off"/>
+                                    <field name="quantity_display"/>
+                                    <field name="timing_display"/>
+                                    <field name="amount_rate" widget="percentage"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
     </record>
-    -->
 
     <record id="hr_attendance_overtime_ruleset_view_list" model="ir.ui.view">
-        <field name="name">hr.attendance.overtime.ruleset.form</field>
+        <field name="name">hr.attendance.overtime.ruleset.list</field>
         <field name="model">hr.attendance.overtime.ruleset</field>
         <field name="arch" type="xml">
             <list>
                 <field name="name"/>
+                <field name="country_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="rate_combination_mode" string="Rate Mode"/>
+                <field name="rules_count"/>
             </list>
         </field>
     </record>
+
+    <record id="hr_attendance_overtime_ruleset_view_filter" model="ir.ui.view">
+        <field name="name">hr_attendance_overtime_ruleset_view_filter</field>
+        <field name="model">hr.attendance.overtime.ruleset</field>
+        <field name="arch" type="xml">
+            <search string="Ruleset Search">
+                <filter string="At least one rule" name="has_rules" domain="[('rule_ids', '!=', False)]"/>
+                <separator invisible="1"/>
+                <filter string="Archived" name="archived_rulesets" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Rate Mode" name="rate_mode" context="{'group_by': 'rate_combination_mode'}"/>
+                    <filter string="Country" name="country" context="{'group_by': 'country_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
 
     <record id="hr_attendance_overtime_rule_action" model="ir.actions.act_window">
         <field name="name">Overtime Rules</field>
@@ -160,10 +176,10 @@
     <record id="hr_attendance_overtime_ruleset_action" model="ir.actions.act_window">
         <field name="name">Rulesets</field>
         <field name="res_model">hr.attendance.overtime.ruleset</field>
+        <field name="search_view_id" ref="hr_attendance_overtime_ruleset_view_filter"/>
         <field name="view_mode">list,form</field>
     </record>
 
-    <menuitem id="menu_hr_attendance_overtime_rules" name="Overtime Rules" parent="hr_attendance.menu_hr_attendance_config" sequence="200" action="hr_attendance_overtime_rule_action" groups="hr_attendance.group_hr_attendance_manager"/>
     <menuitem id="menu_hr_attendance_overtime_rulesets" name="Overtime Rulesets" parent="hr_attendance.menu_hr_attendance_config" sequence="300" action="hr_attendance_overtime_ruleset_action" groups="hr_attendance.group_hr_attendance_manager"/>
 
 </odoo>

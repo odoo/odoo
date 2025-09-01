@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields
-from odoo import api # TODO remove
+from odoo import api, models, fields
 
 
 class HrAttendanceOvertime(models.Model):
@@ -28,17 +27,12 @@ class HrAttendanceOvertime(models.Model):
     # Allows only 1 overtime record per employee per day unless it's an adjustment
     _unique_employee_per_day = models.UniqueIndex("(employee_id, date) WHERE adjustment IS NOT TRUE")
 
+
 class HrAttendanceOvertimeLine(models.Model):
     _name = 'hr.attendance.overtime.line'
     _description = "Attendance Overtime Line"
     _rec_name = 'employee_id'
     _order = 'time_start'
-
-    def _get_default_status(self):
-        if self.employee_id.company_id.attendance_overtime_validation != 'by_manager':
-            return 'approved'
-        return 'to_approve'
-
 
     employee_id = fields.Many2one(
         'hr.employee', string="Employee",
@@ -50,23 +44,19 @@ class HrAttendanceOvertimeLine(models.Model):
             ('to_approve', "To Approve"),
             ('approved', "Approved"),
             ('refused', "Refused")
-        ], 
-        required=True,
-        default=_get_default_status,
+        ],
+        compute='_compute_status',
+        required=True, store=True, readonly=False, precompute=True,
     )
     duration = fields.Float(string='Extra Hours', default=0.0, required=True)
-    manual_duration = fields.Float(
+    manual_duration = fields.Float(  # TODO -> real_duration for easier upgrade
         string='Extra Hours (encoded)',
         compute='_compute_manual_duration',
         store=True, readonly=False,
     )
-    # duration_real = fields.Float(
-    #     string='Extra Hours (Real)', default=0.0,
-    #     help="Extra-hours including the threshold duration")
-    # adjustment = fields.Boolean(default=False)
 
-    time_start = fields.Datetime(string='Start', required=True)
-    time_stop = fields.Datetime(string='Stop', required=True)
+    time_start = fields.Datetime(string='Start')
+    time_stop = fields.Datetime(string='Stop')
     amount_rate = fields.Float("Overtime pay rate", required=True, default=1.0)
 
     is_manager = fields.Boolean(compute="_compute_is_manager")
@@ -75,6 +65,35 @@ class HrAttendanceOvertimeLine(models.Model):
     rule_ids = fields.Many2many("hr.attendance.overtime.rule")
     # TODO remove (debug only)
     rules_display = fields.Char(compute='_compute_rules_display')
+
+
+    # in payroll: rate, work_entry_type
+    # in time_off: convertible_to_time_off
+
+    # Check no overlapping overtimes for the same employee.
+    # Technical explanation: Exclude constraints compares the given expression on rows 2 by 2 using the given operator; && on tsrange is the intersection.
+    # cf: https://www.postgresql.org/docs/current/ddl-constraints.html#DDL-CONSTRAINTS-EXCLUSION
+    # for employee_id we compare [employee_id -> employee_id] ranges bc raw integer is not supported (?)
+    _overtime_no_overlap_same_employee = models.Constraint("""
+        EXCLUDE USING GIST (
+            tsrange(time_start, time_stop, '()') WITH &&,
+            int4range(employee_id, employee_id, '[]') WITH =
+        )
+        """,
+        "Employee cannot have overlapping overtimes",
+    )
+    _overtime_start_before_end = models.Constraint(
+        'CHECK (time_stop > time_start)',
+        'Starting time should be before end time.',
+    )
+
+    @api.depends('employee_id')
+    def _compute_status(self):
+        for overtime in self:
+            if self.employee_id.company_id.attendance_overtime_validation != 'by_manager':
+                self.status = 'approved'
+            else:
+                self.status = 'to_approve'
 
     @api.depends('rule_ids')
     def _compute_rules_display(self):
@@ -98,9 +117,9 @@ class HrAttendanceOvertimeLine(models.Model):
         has_officer_right = self.env.user.has_group('hr_attendance.group_hr_attendance_officer')
         for overtime in self:
             overtime.is_manager = (
-                has_manager_right or 
+                has_manager_right or
                 (
-                    has_officer_right 
+                    has_officer_right
                     and overtime.employee_id.attendance_maneger_id == self.env.user
                 )
             )
@@ -111,22 +130,21 @@ class HrAttendanceOvertimeLine(models.Model):
     def action_refuse(self):
         self.write({'status': 'refused'})
 
-    # in payroll: rate, work_entry_type
-    # in time_off: convertible_to_time_off
+    def _linked_attendances(self):
+        return self.env['hr.attendance'].search([
+            ('date', 'in', self.mapped('date')),
+            ('employee_id', 'in', self.employee_id.ids),
+        ])
 
-    # Check no overlapping overtimes for the same employee.
-    # Technical explanation: Exclude constraints compares the given expression on rows 2 by 2 using the given operator; && on tsrange is the intersection.
-    # cf: https://www.postgresql.org/docs/current/ddl-constraints.html#DDL-CONSTRAINTS-EXCLUSION
-    # for employee_id we compare [employee_id -> employee_id] ranges bc raw integer is not supported (?)
-    _overtime_no_overlap_same_employee = models.Constraint("""
-        EXCLUDE USING GIST (
-            tsrange(time_start, time_stop, '()') WITH &&,
-            int4range(employee_id, employee_id, '[]') WITH = 
-        )
-        """,
-        "Employee cannot have overlapping overtimes",
-    )
-    _overtime_start_before_end = models.Constraint(
-        'CHECK (time_stop > time_start)',
-        'Starting time should be before end time.',
-    )
+    def write(self, vals):
+        if any(key in vals for key in ['status', 'manual_duration']):
+            attendances = self._linked_attendances()
+            self.env.add_to_compute(
+                 attendances._fields['overtime_status'],
+                 attendances
+            )
+            self.env.add_to_compute(
+                 attendances._fields['validated_overtime_hours'],
+                 attendances
+            )
+        return super().write(vals)

@@ -52,31 +52,31 @@ class HrLeave(models.Model):
         # return dict {employee: number of hours}
         diff_by_employee = defaultdict(lambda: 0)
         for employee, hours in self.env['hr.attendance.overtime.line']._read_group(
-            domain = [
+            domain=[
                 ('compensable_as_leave', '=', True),
                 ('employee_id', 'in', employees.ids),
                 ('status', '!=', 'refused'),
             ],
-            groupby = ['employee_id'],
-            aggregates = ['manual_duration:sum'],
+            groupby=['employee_id'],
+            aggregates=['manual_duration:sum'],
         ):
             diff_by_employee[employee] += hours
         for employee, hours in self._read_group(
-            domain = [
+            domain=[
                 ('holiday_status_id.overtime_deductible', '=', True),
                 ('holiday_status_id.requires_allocation', '=', False),
                 ('employee_id', 'in', employees.ids),
                 ('state', 'not in', ['refused', 'cancel']),
             ],
-            groupby = ['employee_id'],
-            aggregates = ['number_of_hours:sum'],
+            groupby=['employee_id'],
+            aggregates=['number_of_hours:sum'],
         ):
             diff_by_employee[employee] -= hours
         return diff_by_employee
-        
+
     @api.depends('number_of_hours', 'employee_id', 'holiday_status_id')
     def _compute_employee_overtime(self):
-        diff_by_employee = self._get_deductible_employee_overtime(self.employee_id)  
+        diff_by_employee = self._get_deductible_employee_overtime(self.employee_id)
         for leave in self:
             leave.employee_overtime = diff_by_employee[leave.employee_id]
 
@@ -92,13 +92,6 @@ class HrLeave(models.Model):
                 if employee.user_id == self.env.user:
                     raise ValidationError(_('You do not have enough extra hours to request this leave'))
                 raise ValidationError(_('The employee does not have enough extra hours to request this leave.'))
-        #     # if not leave.sudo().overtime_id:
-        #     #     leave.sudo().overtime_id = self.env['hr.attendance.overtime'].sudo().create({
-        #     #         'employee_id': employee.id,
-        #     #         'date': leave.date_from,
-        #     #         'adjustment': True,
-        #     #         'duration': -1 * duration,
-        #     #     })
 
     def action_confirm(self):
         res = super().action_confirm()
@@ -120,14 +113,17 @@ class HrLeave(models.Model):
         return res
 
     def _update_leaves_overtime(self):
-        employee_dates = defaultdict(set)
-        for leave in self:
-            if leave.employee_id:
-                for d in range((leave.date_to - leave.date_from).days + 1):
-                    # Sudo employee to get info from version.
-                    employee_dates[leave.employee_id].add(self.env['hr.attendance']._get_day_start_and_day(leave.employee_id.sudo(), leave.date_from + timedelta(days=d)))
-        if employee_dates:
-            self.env['hr.attendance'].sudo()._update_overtime(employee_dates)
+        Attendance = self.env['hr.attendance']
+        dates = [
+            Attendance._attendance_date(leave.date_from, leave.employee_id)
+            for leave in self.filtered(lambda leave: leave.state == 'confirmed')
+        ]
+        if dates:
+            Attendance.search([
+                ('date', '>=', min(dates)),
+                ('date', '<=', max(dates)),
+                ('employee_id', 'in', self.employee_id.ids),
+            ])._update_overtimes()
 
     def unlink(self):
         # TODO master change to ondelete

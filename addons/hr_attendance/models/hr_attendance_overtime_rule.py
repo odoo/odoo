@@ -4,7 +4,7 @@ import itertools
 from pytz import timezone, utc
 
 from collections import defaultdict
-from datetime import date, datetime
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, models, fields
@@ -12,17 +12,21 @@ from odoo.exceptions import ValidationError
 from odoo.tools.intervals import Intervals
 from odoo.tools.intervals import _boundaries
 
+
 def _naive_utc(dt):
     return dt.astimezone(utc).replace(tzinfo=None)
+
 
 def _midnight(date):
     return datetime.combine(date, datetime.min.time())
 
+
 def _replace_interval_records(intervals, records):
     return Intervals((start, end, records) for (start, end, _) in intervals)
 
-def _record_overlap_intervals(interval_sets):
-    boundaries = sorted(_boundaries(itertools.chain(*interval_sets), 'start', 'stop'))
+
+def _record_overlap_intervals(intervals):
+    boundaries = sorted(_boundaries(intervals, 'start', 'stop'))
     counts = {}
     interval_vals = []
     ids = set()
@@ -43,15 +47,20 @@ def _record_overlap_intervals(interval_sets):
         ids = set(new_ids)
     return Intervals(interval_vals, keep_distinct=True)
 
-def _last_hours_as_intervals(starting_intervals, hours, records=set()):
+
+def _time_delta_hours(td): # TODO better way?
+    return td.days * 24 + td.seconds / 3600
+
+
+def _last_hours_as_intervals(starting_intervals, hours):
     last_hours_intervals = []
-    for (start, stop, _) in reversed(starting_intervals):
-        duration = (stop - start).seconds / 3600
+    for (start, stop, record) in reversed(starting_intervals):
+        duration = _time_delta_hours(stop - start)
         if hours >= duration:
-            last_hours_intervals.append((start, stop, records))
+            last_hours_intervals.append((start, stop, record))
             hours -= duration
         elif hours > 0:
-            last_hours_intervals.append((stop - relativedelta(hours=hours), stop, records))
+            last_hours_intervals.append((stop - relativedelta(hours=hours), stop, record))
             break
         else:
             break
@@ -62,7 +71,7 @@ class HrAttendanceOvertimeRule(models.Model):
     _name = 'hr.attendance.overtime.rule'
     _description = "Overtime Rule"
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, default='overtime rule')
     description = fields.Html()
     base_off = fields.Selection([
             ('quantity', "Quantity"),
@@ -81,21 +90,23 @@ class HrAttendanceOvertimeRule(models.Model):
     timing_type = fields.Selection([
         ('work_days', "On any working day"),
         ('non_work_days', "On any non-working day"),
-        #('employee', "Outside the employee's working schedule"),
+        ('leave', "When employee is off"),
         ('schedule', "Outside of a specific schedule"),
+        # ('employee', "Outside the employee's working schedule"),
+        # ('off_time', "When employee is off"),  # TODO in ..._holidays
+        # ('public_leave', "On a holiday"), ......
     ])
-    timing_start = fields.Float("From", required=True, default=0) # TODO hour logic, add constraints...
+    timing_start = fields.Float("From", required=True, default=0)
     timing_stop = fields.Float("To", required=True, default=24)
     expected_hours_from_contract = fields.Boolean("Hours from employee schedule", default=True)
 
-    expected_hours = fields.Float(string="Usual work hours")
     resource_calendar_id = fields.Many2one(
-        'resource.calendar', 
+        'resource.calendar',
         string="Schedule",
         domain=[('flexible_hours', '=', False)],
     )
-    calendar_attendance_ids = fields.One2many(related='resource_calendar_id.attendance_ids')
 
+    expected_hours = fields.Float(string="Usual work hours")
     quantity_period = fields.Selection([
             ('day', 'Day'),
             ('week', 'Week')
@@ -107,32 +118,31 @@ class HrAttendanceOvertimeRule(models.Model):
 
     ruleset_id = fields.Many2one('hr.attendance.overtime.ruleset')
 
-    paid = fields.Boolean("Pay Extra Hours", default=True)
+    paid = fields.Boolean("Pay Extra Hours")
     amount_rate = fields.Float("Salary Rate", default=1.0)
 
-    # TODO replace with widget?
+    # employee_tolerance = fields.Float() TODO with undertime rules (naja)
+    employer_tolerance = fields.Float()
+
+    # TODO naja: replace with widget?
     quantity_display = fields.Char("Quantity", compute='_compute_quantity_display')
     timing_display = fields.Char("Timing", compute='_compute_timing_display')
 
-    #employee_tolerance = fields.Float() TODO with retenues
-    employer_tolerance = fields.Float()
-
-    # timing_start, timing_stop are hours
-    # TODO could be SQL
-    @api.constrains('timing_start', 'timing_stop')
-    def _check_hours(self):
-        for rule in self:
-            if rule.timing_start and not 0 <= rule.timing_start < 24: 
-                raise ValidationError(self.env._("Rule %(name): invalid start hour"))
-            if rule.timing_stop and not 0 <= rule.timing_stop <= 24: 
-                raise ValidationError(self.env._("Rule %(name): invalid end hour"))
+    _timing_start_is_hour = models.Constraint(
+        'CHECK(0 <= timing_start AND timing_start < 24)',
+        "Timing Start is an hour of the day",
+    )
+    _timing_stop_is_hour = models.Constraint(
+        'CHECK(0 <= timing_stop AND timing_stop <= 24)',
+        "Timing Stop is an hour of the day",
+    )
 
     # Quantity rule well defined
     @api.constrains('base_off', 'expected_hours', 'quantity_period')
     def _check_expected_hours(self):
         for rule in self:
             if (
-                rule.base_off == 'quantity' 
+                rule.base_off == 'quantity'
                 and not rule.expected_hours_from_contract
                 and not rule.expected_hours
             ):
@@ -146,17 +156,11 @@ class HrAttendanceOvertimeRule(models.Model):
     def _check_work_schedule(self):
         for rule in self:
             if (
-                rule.base_off == 'timing' 
+                rule.base_off == 'timing'
                 and rule.timing_type == 'schedule'
                 and not rule.resource_calendar_id
             ):
                 raise ValidationError(self.env._("Rule '%(name)s' is based off timing, but the work schedule is not specified", name=rule.name))
-            if (
-                rule.base_off == 'timing'
-                and rule.timing_type in ['work_days', 'non_work_days']
-                and (not rule.timing_start or not rule.timing_stop)
-            ):
-                raise ValidationError(self.env._("Missing start/end times for rule: %(name)s", rule_name=rule.name))
 
     def _get_local_time_start(self, date, tz):
         self.ensure_one()
@@ -181,10 +185,9 @@ class HrAttendanceOvertimeRule(models.Model):
         end_dt = max(attendances.mapped('check_out'))
 
         if self.timing_type in ['work_days', 'non_work_days']:
-            assert self.timing_start and self.timing_stop
 
             unusual_days = self.company_id.resource_calendar_id._get_unusual_days(start_dt, end_dt)
-            
+
             attendance_intervals = []
             for date, day_attendances in attendances.filtered(
                 lambda att: unusual_days[att.date.strftime('%Y-%m-%d')] == (self.timing_type == 'non_work_days')
@@ -208,17 +211,16 @@ class HrAttendanceOvertimeRule(models.Model):
                 for att in attendances
             ]
             resource = attendances.employee_id.resource_id
-            work_schedule = self.resource_calendar_id
-            work_intervals = Intervals()
-            # Use last timezone
-            tz = timezone(
-                version_map[employee][max(attendances.mapped('date'))]._get_tz()
-            )
+            # Just use last version for now
+            last_version = version_map[employee][max(attendances.mapped('date'))]
+            tz = timezone(last_version._get_tz())
             if self.timing_type == 'schedule':
+                work_schedule = self.resource_calendar_id
+                work_intervals = Intervals()
                 for lunch in [False, True]:
                     work_intervals |= Intervals(
-                        (_naive_utc(start), _naive_utc(end), records) 
-                        for (start, end, records) 
+                        (_naive_utc(start), _naive_utc(end), records)
+                        for (start, end, records)
                         in work_schedule._attendance_intervals_batch(
                             utc.localize(start_dt),
                             utc.localize(end_dt),
@@ -227,74 +229,25 @@ class HrAttendanceOvertimeRule(models.Model):
                             lunch=lunch,
                         )[resource.id]
                     )
-
-            overtime_intervals = Intervals(attendance_intervals, keep_distinct=True) - work_intervals
+                overtime_intervals = Intervals(attendance_intervals, keep_distinct=True) - work_intervals
+            elif self.timing_type == 'leave':
+                # TODO: completely untested
+                leave_intervals = last_version.resource_calendar_id._leave_intervals_batch(
+                    utc.localize(start_dt),
+                    utc.localize(end_dt),
+                    resource,
+                    tz=tz,
+                )[resource.id]
+                overtime_intervals = Intervals(attendance_intervals, keep_distinct=True) & leave_intervals
 
         if self.employer_tolerance:
             overtime_intervals = Intervals((
                     ot for ot in overtime_intervals
-                    if (ot[1] - ot[0]).seconds / 3600 >= self.employer_tolerance
+                    if _time_delta_hours(ot[1] - ot[0]) >= self.employer_tolerance
                 ),
                 keep_distinct=True,
             )
         return overtime_intervals
-        # NOT really in spec actually but feels needed: TODO remove?
-        # if self.timing_type == 'employee':
-        #     work_intervals = Intervals()
-        #     for version in set(version_map[employee]):
-        #         tz = version._get_tz()
-        #         version_start = tz.localize(_midnight(version.date_start))
-        #         version_end = tz.localize(
-        #              datetime.combine(version.date_end, datetime.max.time())
-        #         )
-        #         work_schedule = version.resource_calendar_id
-        #              
-        #         for lunch in [False, True]:
-        #             work_intervals |= Intervals(
-        #                 (_naive_utc(start), _naive_utc(end), records) 
-        #                 for (start, end, records) 
-        #                 in work_schedule._attendance_intervals_batch(
-        #                     max(utc.localize(start_dt), version_start),
-        #                     min(utc.localize(end_dt), version_end),
-        #                     resource,
-        #                     lunch=lunch,
-        #                 )[resource.id]
-            # TODO: if we want to avoid the last version timezon thing it would look something like this
-            # versions = sorted(
-            #     set(version_map[employee].values), 
-            #     key=lambda v: v.date_version,
-            # )
-            # tz = timezones(versions[0]._get_tz())
-            # first_version_tz = [(versions[0], tz)]
-            # for version in versions:
-            #     if new_tz := timezone(version._get_tz()) != tz:
-            #         tz = new_tz
-            #         first_version_tz.append((version, tz))
-
-            # work_schedule = self.resource_calendar_id
-            # for i, (version, tz) in enumerate(first_version_tz):
-            #     tz = timezone(version._get_tz())
-            #     version_start = tz.localize(_midnight(version.date_version))
-            #     datetime_min = min(version_start, utc.localize(start_dt))
-            #     datetime_max = utc.localize(end_dt)
-            #     if i < len(first_version_tz):
-            #         next_version, next_tz = first_version_tz[i+1]
-            #         version_end = next_tz.localize(_midnight(version.date_version))
-            #         datetime_max = max(version_end, datetime_max)
-
-            #     for lunch in [False, True]:
-            #         work_intervals |= Intervals(
-            #             (_naive_utc(start), _naive_utc(end), records) 
-            #             for (start, end, records) 
-            #             in work_schedule._attendance_intervals_batch(
-            #                 datetime_min,
-            #                 datetime_max,
-            #                 resource,
-            #                 tz=tz,
-            #                 lunch=lunch,
-            #             )[resource.id]
-            #         )
-
 
     @api.model
     def _get_periods(self):
@@ -306,10 +259,10 @@ class HrAttendanceOvertimeRule(models.Model):
             'day': date,
             # use sunday as key for whole week;
             # also determines which version we use for the whole week
-            'week': date + relativedelta(days=6-date.weekday()),
+            'week': date + relativedelta(days=6 - date.weekday()),
         }
 
-    def _get_overtime_intervals(self, attendances, version_map):
+    def _get_overtime_intervals_by_date(self, attendances, version_map):
         """ return all overtime over the attendances (all of the SAME employee)
             as a list of `Intervals` sets with the rule as the recordset
             generated by `timing` rules in self
@@ -320,14 +273,19 @@ class HrAttendanceOvertimeRule(models.Model):
             return [Intervals(keep_distinct=True)]
 
         # Timing based
-        timing_intervals_list = []
+        timing_intervals_by_date = defaultdict(list)
         all_timing_overtime_intervals = Intervals(keep_distinct=True)
         for rule in self.filtered(lambda r: r.base_off == 'timing'):
             new_intervals = rule._get1_timing_overtime_intervals(attendances, version_map)
             all_timing_overtime_intervals |= new_intervals
-            timing_intervals_list.append(
-                _replace_interval_records(new_intervals, rule)
-            )
+            for start, end, attendance in new_intervals:
+                timing_intervals_by_date[attendance.date].append((start, end, rule))
+            # timing_intervals_list.append(
+            #     Intervals((start, end, (rule, attendance.date)) for (start, end, attendance) in intervals)
+            # )
+            # timing_intervals_list.append(
+            #     _replace_interval_records(new_intervals, rule)
+            # )
 
         # Quantity Based
         periods = self._get_periods()
@@ -338,23 +296,23 @@ class HrAttendanceOvertimeRule(models.Model):
         overtimes_by = {period: defaultdict(list) for period in periods}
         for attendance in attendances:
             tz = timezone(version_map[employee][attendance.date]._get_tz())
-            for period, key_date in self._get_period_keys(attendance.check_in.astimezone(tz).date()).items():
+            for period, key_date in self._get_period_keys(attendance.date).items():
                 work_hours_by[period][key_date] += attendance.worked_hours
                 attendances_by[period][key_date].append(
-                    (attendance.check_in, attendance.check_out, set())
+                    (attendance.check_in, attendance.check_out, attendance)
                 )
         for start, end, attendance in all_timing_overtime_intervals:
             tz = timezone(version_map[employee][attendance.date]._get_tz())
-            for period, key_date in self._get_period_keys(start.astimezone(tz).date()).items():
-                overtime_hours_by[period][key_date] += (end - start).seconds / 3600
-                overtimes_by[period][key_date].append((start, end, set()))
+            for period, key_date in self._get_period_keys(attendance.date).items():
+                overtime_hours_by[period][key_date] += _time_delta_hours(end - start)
+                overtimes_by[period][key_date].append((start, end, attendance))
 
         # list -> Intervals
         for period in periods:
             overtimes_by[period] = defaultdict(
                 lambda: Intervals(keep_distinct=True),
                 {
-                    date: Intervals(ots, keep_distinct=True) 
+                    date: Intervals(ots, keep_distinct=True)
                     for date, ots in overtimes_by[period].items()
                 }
             )
@@ -367,7 +325,7 @@ class HrAttendanceOvertimeRule(models.Model):
                 }
             )
 
-        quantity_intervals_list = []
+        quantity_intervals_by_date = defaultdict(list)
         for rule in self.filtered(lambda r: r.base_off == 'quantity').sorted(
             lambda r: {p: i for i, p in enumerate(periods)}[r.quantity_period]
         ):
@@ -384,57 +342,69 @@ class HrAttendanceOvertimeRule(models.Model):
                     expected_hours = rule.expected_hours
 
                 overtime_quantity = work_hours_by[period][date] - expected_hours
+                # if overtime_quantity <= -rule.employee_tolerance and rule.undertime: make negative adjustment
                 if overtime_quantity <= 0:
-                    continue  # TODO handle negative
+                    continue
                 elif overtime_quantity <= rule.employer_tolerance:
                     continue
                 elif overtime_quantity < overtime_hours_by[period][date]:
-                    quantity_intervals_list.append(_last_hours_as_intervals(
+                    for start, end, attendance in _last_hours_as_intervals(
                         starting_intervals=overtimes_by[period][date],
                         hours=overtime_quantity,
-                        records=rule,
-                    ))
+                    ):
+                        quantity_intervals_by_date[attendance.date].append((start, end, rule))
                 else:
                     new_intervals = _last_hours_as_intervals(
                         starting_intervals=attendances_by[period][date],
-                        hours=overtime_quantity-overtime_hours_by[period][date],
-                        records=rule,
+                        hours=overtime_quantity - overtime_hours_by[period][date],
                     )
 
-                    for outer_period, key_date in self._get_period_keys(date).items():
-                        overtimes_by[outer_period][key_date] |= new_intervals
-                        attendances_by[outer_period][key_date] -= new_intervals
-                        overtime_hours_by[outer_period][key_date] += sum(
-                            (end - start).seconds / 3600
-                            for (start, end, _) in new_intervals
-                        )
+                    # Uncommenting this changes the logic of how rules for different periods will interact.
+                    # Would make it so weekly overtimes try to overlap daily overtimes as much as possible
+                    # for outer_period, key_date in self._get_period_keys(date).items():
+                    #     overtimes_by[outer_period][key_date] |= new_intervals
+                    #     attendances_by[outer_period][key_date] -= new_intervals
+                    #     overtime_hours_by[outer_period][key_date] += sum(
+                    #         (end - start).seconds / 3600
+                    #         for (start, end, _) in new_intervals
+                    #     )
 
-                    quantity_intervals_list.append(
-                        new_intervals |
-                        _replace_interval_records(overtimes_by[period][date], rule)
-                    )
-        return _record_overlap_intervals([*timing_intervals_list, *quantity_intervals_list])
+                    for start, end, attendance in (
+                        new_intervals | overtimes_by[period][date]
+                    ):
+                        date = attendance[0].date # naja: I **think** oki bc if several the dates are always the same
+                        quantity_intervals_by_date[date].append((start, end, rule))
+        intervals_by_date = {}
+        for date in quantity_intervals_by_date.keys() | timing_intervals_by_date.keys():
+            intervals_by_date[date] = _record_overlap_intervals([
+                *timing_intervals_by_date[date],
+                *quantity_intervals_by_date[date],
+            ])
+        return intervals_by_date
 
     def _generate_overtime_vals(self, employee, attendances, version_map):
-        # * Some attendances "see each other" 
-        #   -- when they happen in the same week for the same employee 
+        # * Some attendances "see each other"
+        #   -- when they happen in the same week for the same employee
         #   -- the overtimes linked to them will depend on surrounding attendances.
         #   this assume ``attendances`` is a self contained subset
         #   (i.e. we ignore all attendances not passed in the argument)
         #   (in pratices the attendances that see each other are found in `_update_overtime`)
         # * version_map[a.employee_id][a.date] is in the map for every attendance a in attendances
-        return [
-            {
-                'time_start': start,
-                'time_stop': stop,
-                'duration': (stop - start).seconds / 3600,
-                'employee_id': employee.id,
-                'date': start.astimezone(timezone(employee.tz)).date(),
-                'rule_ids': rules.ids,
-                **rules._extra_overtime_vals(),
-            } 
-            for start, stop, rules in self._get_overtime_intervals(attendances, version_map)
-        ]
+        vals = []
+        for date, intervals in self._get_overtime_intervals_by_date(attendances, version_map).items():
+            vals.extend([
+                {
+                    'time_start': start,
+                    'time_stop': stop,
+                    'duration': _time_delta_hours(stop - start),
+                    'employee_id': employee.id,
+                    'date': date,
+                    'rule_ids': rules.ids,
+                    **rules._extra_overtime_vals(),
+                }
+                for start, stop, rules in intervals
+            ])
+        return vals
 
     def _extra_overtime_vals(self):
         paid_rules = self.filtered('paid')
@@ -442,9 +412,9 @@ class HrAttendanceOvertimeRule(models.Model):
             return {'amount_rate': 0.0}
 
         max_rate_rule = max(paid_rules, key=lambda r: (r.amount_rate, r.sequence))
-        if self.ruleset_id.combine_overtime_rates == 'max':
+        if self.ruleset_id.rate_combination_mode == 'max':
             combined_rate = max_rate_rule.amount_rate
-        if self.ruleset_id.combine_overtime_rates == 'sum':
+        if self.ruleset_id.rate_combination_mode == 'sum':
             combined_rate = sum((r.amount_rate-1. for r in paid_rules), start=1.)
 
         return {
@@ -472,7 +442,7 @@ class HrAttendanceOvertimeRule(models.Model):
         for rule in self.filtered(lambda r: r.base_off == 'timing'):
             if rule.timing_type == 'schedule':
                 rule.timing_display = self.env._(
-                     "Outside Schedule: %(schedule_name)s", 
+                     "Outside Schedule: %(schedule_name)s",
                      schedule_name=rule.resource_calendar_id.name,
                 )
                 continue
