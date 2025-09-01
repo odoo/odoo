@@ -34,6 +34,7 @@ class Manager(Thread):
         self.version = helpers.get_version(detailed_version=True)
         self.previous_iot_devices = {}
         self.previous_unsupported_devices = {}
+        self.serial_number = helpers.get_serial_number()
 
     def _get_domain(self):
         """
@@ -88,6 +89,7 @@ class Manager(Thread):
             'identifier': self.mac_address,
             'ip': self.domain,
             'token': helpers.get_token(),
+            'serial_number': self.serial_number,
             'version': self.version,
         }
         devices_list = {}
