@@ -1357,9 +1357,8 @@ test("Toggle star should update starred counter on all tabs", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(undefined, { target: env2 });
-    await click(".o-mail-Message [title='Mark as Todo']", { target: env1 });
-    await contains("button", {
-        target: env2,
+    await click(`${env1.selector} .o-mail-Message [title='Mark as Todo']`);
+    await contains(`${env2.selector} button`, {
         text: "Starred messages",
         contains: [".badge", { text: "1" }],
     });
