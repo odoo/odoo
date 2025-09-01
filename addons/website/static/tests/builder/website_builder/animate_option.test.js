@@ -2,7 +2,11 @@ import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
 import { describe, expect, test } from "@odoo/hoot";
 import { queryFirst, queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+    waitForEndOfOperation,
+} from "../website_helpers";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 
 defineWebsiteModels();
@@ -195,26 +199,80 @@ test("animation=onScroll should not be visible when the animation is limited", a
     expect(".o-dropdown--menu [data-action-value='onScroll']").not.toHaveCount();
 });
 test("visibility of animation animation=onHover", async () => {
-    await setupWebsiteBuilder(`
+    function expectOnHoverOptions(options) {
+        const labels = [
+            "Effect",
+            "Direction",
+            "Trigger",
+            "Intensity",
+            "Scroll Zone",
+            "Start After",
+            "Duration",
+            "Color",
+            "Overlay",
+            "Stroke Width",
+        ];
+        expect(new Set(labels).isSupersetOf(new Set(Object.keys(options)))).toBe(true, {
+            message: `keys not in labels: ${[
+                ...new Set(Object.keys(options)).difference(new Set(labels)),
+            ].join()}`,
+        });
+        for (const label of labels) {
+            const labelSelector = `.options-container [data-label='${label}']:visible`;
+            if (typeof options[label] === "string") {
+                expect(labelSelector + " button").toHaveText(options[label]);
+            } else {
+                expect(labelSelector).toHaveCount(options[label] ?? 0);
+            }
+        }
+    }
+
+    const { waitDomUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
             ${testImg}
         </div>
     `);
     await contains(":iframe .test-options-target img").click();
 
+    // NOTE: we use waitDomUpdated and waitForEndOfOperation because setting the
+    // hover effect may take some time (and setting "On Hover" sets a default)
+
     await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
     await contains(".o-dropdown--menu [data-action-value='onHover']").click();
+    await waitDomUpdated();
+    await waitForEndOfOperation();
     expect(".options-container [data-label='Animation'] .o-dropdown").toHaveText("On Hover");
+    expectOnHoverOptions({ Effect: "Overlay", Color: 1 });
 
-    expect(".options-container [data-label='Effect']").not.toBeVisible();
-    expect(".options-container [data-label='Direction']").not.toHaveCount();
-    expect(".options-container [data-label='Trigger']").not.toBeVisible();
-    expect(".options-container [data-label='Intensity']").not.toHaveCount();
-    expect(".options-container [data-label='Scroll Zone']").not.toHaveCount();
-    expect(".options-container [data-label='Start After']").not.toHaveCount();
-    expect(".options-container [data-label='Duration']").not.toHaveCount();
+    await contains(".options-container [data-label='Effect'] .dropdown-toggle").click();
+    await contains(".o-dropdown--menu [data-action-value='image_zoom_in']").click();
+    await waitDomUpdated();
+    await waitForEndOfOperation();
+    expectOnHoverOptions({ Effect: "Zoom In", Intensity: 1, Overlay: 1 });
 
-    // todo: check all the hover options
+    await contains(".options-container [data-label='Effect'] .dropdown-toggle").click();
+    await contains(".o-dropdown--menu [data-action-value='image_zoom_out']").click();
+    await waitDomUpdated();
+    await waitForEndOfOperation();
+    expectOnHoverOptions({ Effect: "Zoom Out", Intensity: 1, Overlay: 1 });
+
+    await contains(".options-container [data-label='Effect'] .dropdown-toggle").click();
+    await contains(".o-dropdown--menu [data-action-value='dolly_zoom']").click();
+    await waitDomUpdated();
+    await waitForEndOfOperation();
+    expectOnHoverOptions({ Effect: "Dolly Zoom", Intensity: 1, Overlay: 1 });
+
+    await contains(".options-container [data-label='Effect'] .dropdown-toggle").click();
+    await contains(".o-dropdown--menu [data-action-value='outline']").click();
+    await waitDomUpdated();
+    await waitForEndOfOperation();
+    expectOnHoverOptions({ Effect: "Outline", Color: 1, "Stroke Width": 1 });
+
+    await contains(".options-container [data-label='Effect'] .dropdown-toggle").click();
+    await contains(".o-dropdown--menu [data-action-value='image_mirror_blur']").click();
+    await waitDomUpdated();
+    await waitForEndOfOperation();
+    expectOnHoverOptions({ Effect: "Mirror Blur", Intensity: 1 });
 });
 test("animation=onHover should not be visible when the image is a device shape", async () => {
     await setupWebsiteBuilder(`
