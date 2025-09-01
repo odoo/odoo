@@ -254,6 +254,14 @@ class TestEdiZatca(TestSaEdiCommon):
             final.invoice_date_due = '2022-09-22'
 
         # Test invoices
+        additional_xpath = f'''
+            <xpath expr="(//*[local-name()='OrderReference']/*[local-name()='ID'])" position="replace">
+                <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">{sale_order.name}</cbc:ID>
+            </xpath>
+            <xpath expr="(//*[local-name()='PaymentMeans']/*[local-name()='InstructionID'])" position="after">
+                <cbc:InstructionNote xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">{sale_order.name}</cbc:InstructionNote>
+            </xpath>
+        '''
         for move, test_file in [
             (downpayment, "downpayment_invoice"),
             (final, "final_invoice")
@@ -262,6 +270,7 @@ class TestEdiZatca(TestSaEdiCommon):
                 self._test_document_generation(
                     test_file_path=f'l10n_sa_edi/tests/test_files/{test_file}.xml',
                     expected_xpath=self.invoice_applied_xpath,
+                    additional_xpath=additional_xpath,
                     freeze_time_at=freeze,
                     move=move,
                 )
