@@ -244,6 +244,10 @@ export class PropertyDefinition extends Component {
             propertyDefinition.currency_field = this.defaultCurrencyField;
         }
 
+        if (newType === "separator") {
+            propertyDefinition.fold_by_default = true;
+        }
+
         PropertyDefinition._propertyParametersMap.forEach((types, param) => {
             if (!types.includes(propertyDefinition.type)) {
                 delete propertyDefinition[param];

@@ -203,15 +203,20 @@
                     />
                 </div>
                 <div t-else="" class="o_field_property_definition_kanban d-contents mb-3 mb-sm-0">
-                    <label t-att-for="getUniqueDomID('fold')" class="o_form_label align-self-center text-900">
-                        Fold by default
+                    <t t-set="separatorId" t-value="getUniqueDomID('separator')"/>
+                    <label t-att-for="separatorId" class="o_form_label align-self-center text-900">
+                        Default State
                     </label>
-                    <CheckBox
-                        id="getUniqueDomID('fold')"
-                        value="props.propertyDefinition.fold_by_default"
-                        disabled="props.readonly"
-                        onChange.bind="onFoldByDefaultChange"
-                    />
+                    <div class="o_field_property_definition_fold text-nowrap d-inline-flex w-100 align-items-baseline">
+                        <label class="form-check o_radio_item p-0">
+                            <input type="radio" class="form-check-input o_radio_input" t-att-checked="!state.propertyDefinition.fold_by_default" t-attf-name="{{separatorId}}_separator" t-attf-id="{{separatorId}}_open" t-on-change="() => this.onFoldByDefaultChange(false)"/>
+                            <label class="form-check-label o_form_label ms-1" t-attf-for="{{separatorId}}_open">Open</label>
+                        </label>
+                        <label class="form-check o_radio_item">
+                            <input type="radio" class="form-check-input o_radio_input" t-att-checked="!!state.propertyDefinition.fold_by_default" t-attf-name="{{separatorId}}_separator" t-attf-id="{{separatorId}}_fold" t-on-change="() => this.onFoldByDefaultChange(true)"/>
+                            <label class="form-check-label o_form_label ms-1" t-attf-for="{{separatorId}}_fold">Fold</label>
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
