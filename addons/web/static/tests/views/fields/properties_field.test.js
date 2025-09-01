@@ -119,6 +119,10 @@ async function toggleSeparator(separatorName, isSeparator) {
     await click(`[property-name="${separatorName}"] > * > .o_field_property_open_popover`);
     await animationFrame();
     await changeType(isSeparator ? "separator" : "char");
+    if (isSeparator) {
+        // set unfold by default when switching to a separator
+        await click(`.o_field_property_definition_fold .o_form_label:eq(0)`);
+    }
     await closePopover();
 }
 
@@ -2084,7 +2088,8 @@ test("properties: separators layout", async () => {
             ["Property 3", "property_3"],
         ],
         [
-            ["", "property_gen_2"],
+            // invisible separator to fill the space
+            ["", ""],
             ["Property 4", "property_4"],
         ],
     ]);
@@ -2094,7 +2099,13 @@ test("properties: separators layout", async () => {
         ".o_field_properties .o_property_group[property-name='property_gen_2']:first-child .o_field_property_group_label"
     );
     await animationFrame();
-    expect(getGroups()).toEqual([[["PROPERTY 1", "property_gen_2"]], [["", "property_gen_2"]]]);
+    expect(getGroups()).toEqual([
+        [["PROPERTY 1", "property_gen_2"]],
+        [
+            ["", ""],
+            ["Property 4", "property_4"],
+        ],
+    ]);
     await click(
         ".o_field_properties .o_property_group[property-name='property_gen_2']:first-child .o_field_property_group_label"
     );
@@ -2156,7 +2167,7 @@ test("properties: separators layout", async () => {
         ],
         [
             // invisible separator to fill the space
-            ["", "property_gen_2"],
+            ["", ""],
             ["Property 5", "property_gen_4"],
             ["Property 6", "property_gen_5"],
             ["Property 7", "property_gen_6"],
@@ -2183,14 +2194,15 @@ test("properties: separators layout", async () => {
     ]);
 });
 
-test("properties: fold section by default", async () => {
+test("properties: open section by default", async () => {
     onRpc("has_access", () => true);
     ResCompany._records[0].definitions = [
-        { name: "property_1", string: "Separator 1", type: "separator", fold_by_default: true },
+        { name: "property_1", string: "Separator 1", type: "separator", fold_by_default: false },
         { name: "property_2", string: "Property 2", type: "char" },
         { name: "property_3", string: "Separator 3", type: "separator" },
         { name: "property_4", string: "Property 4", type: "char" },
     ];
+    delete Partner._records[1].properties.property_1; // remove char value
 
     await mountView({
         type: "form",
@@ -2209,26 +2221,67 @@ test("properties: fold section by default", async () => {
     });
 
     expect(getGroups()).toEqual([
-        [["SEPARATOR 1", "property_1"]],
         [
-            ["SEPARATOR 3", "property_3"],
-            ["Property 4", "property_4"],
+            ["SEPARATOR 1", "property_1"],
+            ["Property 2", "property_2"],
         ],
+        [["SEPARATOR 3", "property_3"]],
     ]);
 
     await click("div[property-name='property_1'] .o_field_property_group_label");
     await animationFrame();
 
     expect(getGroups()).toEqual([
-        [
-            ["SEPARATOR 1", "property_1"],
-            ["Property 2", "property_2"],
-        ],
-        [
-            ["SEPARATOR 3", "property_3"],
-            ["Property 4", "property_4"],
-        ],
+        [["SEPARATOR 1", "property_1"]],
+        [["SEPARATOR 3", "property_3"]],
     ]);
+});
+
+test.tags("desktop");
+test("properties: save separator folded state", async () => {
+    onRpc("web_save", ({ args }) => {
+        expect.step(args[1].properties.map((p) => [p.name, p.value]));
+    });
+
+    await makePropertiesGroupView([true, true, true, true]);
+    expect(getGroups()).toEqual([
+        [["SEPARATOR 1", "property_1"]],
+        [["SEPARATOR 2", "property_2"]],
+        [["SEPARATOR 3", "property_3"]],
+        [["SEPARATOR 4", "property_4"]],
+    ]);
+
+    // return true if the given separator is folded
+    const foldState = (separatorName) =>
+        !queryFirst(`div[property-name='${separatorName}'] .o_field_property_label .fa-caret-down`);
+
+    const assertFolded = (values) => {
+        expect(values.length).toBe(4);
+        expect(foldState("property_1")).toBe(values[0]);
+        expect(foldState("property_2")).toBe(values[1]);
+        expect(foldState("property_3")).toBe(values[2]);
+        expect(foldState("property_4")).toBe(values[3]);
+    };
+
+    await click(
+        ".o_field_properties .o_property_group[property-name='property_1'] .o_field_property_group_label"
+    );
+    await animationFrame();
+    assertFolded([true, false, false, false]);
+
+    await click(
+        ".o_field_properties .o_property_group[property-name='property_3'] .o_field_property_group_label"
+    );
+    await animationFrame();
+    assertFolded([true, false, true, false]);
+
+    await clickSave();
+    expect.verifySteps([[
+        ["property_1", true],
+        ["property_2", false],
+        ["property_3", true],
+        ["property_4", false],
+    ]]);
 });
 
 /**
@@ -2244,10 +2297,10 @@ test("properties: separators move properties", async () => {
 
     const assertFolded = (values) => {
         expect(values.length).toBe(4);
-        expect(values[0]).toBe(foldState("property_2"));
-        expect(values[1]).toBe(foldState("property_3"));
-        expect(values[2]).toBe(foldState("property_5"));
-        expect(values[3]).toBe(foldState("property_6"));
+        expect(foldState("property_2")).toBe(values[0]);
+        expect(foldState("property_3")).toBe(values[1]);
+        expect(foldState("property_5")).toBe(values[2]);
+        expect(foldState("property_6")).toBe(values[3]);
     };
 
     // fold all groups

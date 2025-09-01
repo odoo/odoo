@@ -602,10 +602,6 @@ class Properties(Field):
                 # Do not store None key
                 continue
 
-            if property_type == 'separator':
-                # "separator" is used as a visual separator in the form view UI
-                # it does not have a value and does not need to be stored on children
-                continue
             if property_type not in ('integer', 'float') or property_value != 0:
                 property_value = property_value or False
             if property_type in ('many2one', 'many2many') and property_model and property_value:

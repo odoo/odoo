@@ -65,7 +65,6 @@ export class PropertiesField extends Component {
             canChangeDefinition: false,
             isInEditMode: false,
             movedPropertyName: null,
-            unfoldedSeparators: this._getUnfoldedSeparators(),
         });
 
         // Properties can be added from the cog menu of the form controller
@@ -219,7 +218,7 @@ export class PropertiesField extends Component {
             },
             onGroupEnter: ({ group }) => {
                 group.classList.add("o_property_drag_group");
-                this._unfoldSeparators([group.getAttribute("property-name")], true);
+                this._toggleSeparators([group.getAttribute("property-name")], false);
             },
             onGroupLeave: ({ group }) => {
                 group.classList.remove("o_property_drag_group");
@@ -310,6 +309,7 @@ export class PropertiesField extends Component {
                     title: property.string,
                     name: property.name,
                     elements: [],
+                    isFolded: property.value ?? property.fold_by_default,
                 });
             } else {
                 groupedProperties.at(-1).elements.push(property);
@@ -324,10 +324,10 @@ export class PropertiesField extends Component {
             for (let col = 1; col < this.renderedColumnsCount; ++col) {
                 groupedProperties.push({
                     title: null,
-                    name: groupedProperties[0].name,
+                    name: null,
                     columnSeparator: true,
                     elements: [],
-                    invisibleLabel,
+                    invisibleLabel: true,
                 });
             }
             const properties = propertiesList.filter((property) => property.type !== "separator");
@@ -451,9 +451,9 @@ export class PropertiesField extends Component {
         propertiesValues[propertyIndex] = prop;
         propertiesValues[propertyIndex].definition_changed = true;
 
-        this._unfoldPropertyGroup(targetIndex, propertiesValues);
-
         await this.props.record.update({ [this.props.name]: propertiesValues });
+        await this._unfoldPropertyGroup(targetIndex, propertiesValues);
+
         // move the popover once the DOM is updated
         this.movePopoverToProperty = propertyName;
     }
@@ -465,7 +465,7 @@ export class PropertiesField extends Component {
      * @param {string} toPropertyName, the target property
      *  (null if we move the property to the first index)
      */
-    onPropertyMoveTo(propertyName, toPropertyName, moveBefore) {
+    async onPropertyMoveTo(propertyName, toPropertyName, moveBefore) {
         const propertiesValues = this.propertiesList || [];
 
         let fromIndex = propertiesValues.findIndex((property) => property.name === propertyName);
@@ -496,7 +496,7 @@ export class PropertiesField extends Component {
                 newSeparators.push(newSeparator.name);
                 propertiesValues.splice(separatorIndex, 0, newSeparator);
             }
-            this._unfoldSeparators(newSeparators, true);
+            await this._toggleSeparators(newSeparators, false);
             toPropertyName = toPropertyName || propertiesValues.at(-1).name;
 
             // indexes might have changed
@@ -602,6 +602,7 @@ export class PropertiesField extends Component {
                 "name",
                 "string",
                 "type",
+                "value",
             ]);
             // remove all other keys in place, since propertyDefinition instance
             // will be used as a PropertyDefinition component state value.
@@ -624,7 +625,7 @@ export class PropertiesField extends Component {
 
         if (newType === "separator" && oldType !== "separator") {
             // unfold automatically the new separator
-            this._unfoldSeparators([propertyDefinition.name], true);
+            await this._toggleSeparators([propertyDefinition.name], propertyDefinition.fold_by_default);
             // layout has been changed, move the definition popover
             this.movePopoverToProperty = propertyDefinition.name;
         } else if (oldType === "separator" && newType !== "separator") {
@@ -633,7 +634,7 @@ export class PropertiesField extends Component {
                 (property, index) => index < propertyIndex && property.type === "separator"
             );
             if (previousSeperator) {
-                this._unfoldSeparators([previousSeperator.name], true);
+                await this._toggleSeparators([previousSeperator.name], propertyDefinition.fold_by_default);
             }
             // layout has been changed, move the definition popover
             this.movePopoverToProperty = propertyDefinition.name;
@@ -705,32 +706,31 @@ export class PropertiesField extends Component {
             });
             return;
         }
-
-        this._unfoldPropertyGroup(propertiesDefinitions.length - 1, propertiesDefinitions);
+        const count = propertiesDefinitions.length;
 
         this.propertiesRef.el.closest(".o_field_properties").classList.remove("o_field_invalid");
 
         const newName = this.generatePropertyName("char");
         propertiesDefinitions.push({
             name: newName,
-            string: _t("Property %s", propertiesDefinitions.length + 1),
+            string: _t("Property %s", count + 1),
             type: "char",
             definition_changed: true,
         });
         this.initialValues[newName] = { name: newName, type: "char" };
         this.openPropertyDefinition = newName;
-        this.props.record.update({ [this.props.name]: propertiesDefinitions });
+        await this.props.record.update({ [this.props.name]: propertiesDefinitions });
+        await this._unfoldPropertyGroup(count - 1, propertiesDefinitions);
     }
 
     /**
      * Fold / unfold the given separator property.
      *
      * @param {string} propertyName, Name of the separator property
-     * @param {boolean} forceUnfold, Always unfold
      */
     onSeparatorClick(propertyName) {
         if (propertyName) {
-            this._unfoldSeparators([propertyName]);
+            this._toggleSeparators([propertyName]);
         }
     }
 
@@ -775,43 +775,20 @@ export class PropertiesField extends Component {
      * -------------------------------------------------------- */
 
     /**
-     * Read the local storage and return the fold state stored in it.
-     *
-     * We clean the dictionary state because a property might have been deleted,
-     * and so there's no reason to keep the corresponding key in the dict.
-     *
-     * @returns {array} The folded state (name of the properties unfolded)
-     */
-    _getUnfoldedSeparators() {
-        const names = [];
-        for (const property of this.propertiesList) {
-            if (property.type === "separator" && !property.fold_by_default) {
-                names.push(property.name);
-            }
-        }
-        return names;
-    }
-
-    /**
      * Switch the folded state of the given separators.
      *
      * @param {array} separatorNames, list of separator name to fold / unfold
-     * @param {boolean} (forceUnfold) force the separator to be unfolded
+     * @param {boolean} [forceState] force the separator to be folded or open
      */
-    _unfoldSeparators(separatorNames, forceUnfold) {
-        let unfoldedSeparators = this.state.unfoldedSeparators;
+    _toggleSeparators(separatorNames, forceState) {
+        const propertiesValues = this.propertiesList;
         for (const separatorName of separatorNames) {
-            if (unfoldedSeparators.includes(separatorName)) {
-                if (!forceUnfold) {
-                    unfoldedSeparators = unfoldedSeparators.filter(
-                        (name) => name !== separatorName
-                    );
-                }
-            } else {
-                unfoldedSeparators.push(separatorName);
+            const property = propertiesValues.find((prop) => prop.name === separatorName);
+            if (property) {
+                property.value = forceState ?? !(property.value ?? property.fold_by_default);
             }
         }
-        this.state.unfoldedSeparators = unfoldedSeparators;
+        return this.props.record.update({ [this.props.name]: propertiesValues });
     }
 
     /**
@@ -998,7 +975,7 @@ export class PropertiesField extends Component {
             (property, index) => property.type === "separator" && index <= targetIndex
         );
         if (separator) {
-            this._unfoldSeparators([separator.name], true);
+            return this._toggleSeparators([separator.name], false);
         }
     }
 
