@@ -1,6 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import Form, tagged
+import datetime
+
+from odoo import fields
+from odoo.fields import Command
+from odoo.tests import Form, freeze_time, tagged
 
 from odoo.addons.sale.tests.common import TestSaleCommon
 
@@ -253,3 +257,43 @@ class TestStockMoveInvoice(TestSaleCommon):
         self.assertEqual(picking.weight, 1.0, "The weight of the picking should not change")
         picking.move_ids.product_id = self.product_a
         self.assertEqual(picking.weight, 2.0, "The weight of the picking should be 2.0")
+
+    @freeze_time("2024-06-06 11:00")
+    def test_picking_change_scheduled_date(self):
+        """
+        Check that changing the scheduled date of a move can affect the scheduled date
+        of the picking but not its sibling moves.
+        """
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': wh.in_type_id.id,
+            'location_id': self.ref('stock.stock_location_customers'),
+            'location_dest_id': wh.lot_stock_id.id,
+            'move_ids': [
+                Command.create({
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 1,
+                    'location_id': self.ref('stock.stock_location_customers'),
+                    'location_dest_id': wh.lot_stock_id.id,
+                }),
+                Command.create({
+                    'name': self.product_b.name,
+                    'product_id': self.product_b.id,
+                    'product_uom_qty': 1,
+                    'location_id': self.ref('stock.stock_location_customers'),
+                    'location_dest_id': wh.lot_stock_id.id,
+                }),
+            ],
+        })
+        receipt.action_confirm()
+        today, yesterday = fields.Datetime.now(), fields.Datetime.now() - datetime.timedelta(days=1)
+        self.assertEqual(receipt.scheduled_date, today)
+        with Form(receipt) as picking_form:
+            with picking_form.move_ids_without_package.edit(0) as move:
+                move.date = yesterday
+        self.assertEqual(receipt.scheduled_date, yesterday)
+        self.assertRecordValues(receipt.move_ids, [
+            {'date': yesterday},
+            {'date': today},
+        ])
