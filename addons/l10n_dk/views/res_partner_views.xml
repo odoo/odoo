@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="view_partner_form_inherit_l10n_dk" model="ir.ui.view">
+            <field name="name">res.partner.form.inherit.l10n_dk</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_registry']" position="attributes">
+                    <attribute name="invisible" add="country_code == 'DK'" separator=" or "/>
+                </xpath>
+                <xpath expr="//field[@name='company_registry']" position="after">
+                    <field name="company_registry" string="CVR" options="{'placeholder_field': 'company_registry_placeholder'}" invisible="country_code != 'DK'"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
