@@ -1,10 +1,10 @@
 import {
-    navigateToOdooDatasourceFromChart,
+    navigateToOdoolinkFromChart,
     isChartJSMiddleClick,
 } from "@spreadsheet/chart/odoo_chart/odoo_chart_helpers";
 
-export const chartOdooDataSourcePlugin = {
-    id: "chartOdooDataSourcePlugin",
+export const chartOdooLinkPlugin = {
+    id: "chartOdooLinkPlugin",
     afterEvent(chart, { event }, { env, chartId }) {
         const isDashboard = env?.model.getters.isDashboard();
         const middleClick = isChartJSMiddleClick(event);
@@ -16,6 +16,6 @@ export const chartOdooDataSourcePlugin = {
         ) {
             return;
         }
-        navigateToOdooDatasourceFromChart(env, chartId, middleClick);
+        navigateToOdoolinkFromChart(env, chartId, middleClick);
     },
 };

@@ -6,6 +6,9 @@ import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot"
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { createSpreadsheetWithList } from "../../helpers/list";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
+import { makeMockEnv } from "@web/../tests/web_test_helpers";
+
+import { Model } from "@odoo/o-spreadsheet";
 
 const chartId = "uuid1";
 
@@ -13,66 +16,90 @@ describe.current.tags("headless");
 
 defineSpreadsheetModels();
 
+test("Links between charts and ir.menus are correctly imported/exported", async function () {
+    const env = await makeMockEnv();
+    const model = new Model({}, { custom: { env } });
+    createBasicChart(model, chartId);
+    model.dispatch("SET_ODOO_LINK_TO_CHART", {
+        chartId,
+        odooLink: { type: "odooMenuId", odooMenuId: 1 },
+    });
+    const exportedData = model.exportData();
+    expect(exportedData.odooLinkReferences[chartId]).toEqual(
+        { type: "odooMenuId", odooMenuId: 1 },
+        { message: "Link to odoo menu is exported" }
+    );
+    const importedModel = new Model(exportedData, { custom: { env } });
+    const chartMenu = importedModel.getters.getChartOdooLink(chartId);
+    expect(chartMenu).toEqual(
+        { type: "odooMenuId", odooMenuId: 1 },
+        { message: "Link to odoo menu is imported" }
+    );
+});
+
 test("Links between charts and datasources are correctly imported/exported", async function () {
     const { model, pivotId } = await createSpreadsheetWithPivot();
     createBasicChart(model, chartId);
-    model.dispatch("LINK_ODOO_DATASOURCE_TO_CHART", {
+    model.dispatch("SET_ODOO_LINK_TO_CHART", {
         chartId,
-        odooDataSource: { dataSourceId: pivotId, type: "pivot" },
+        odooLink: { type: "dataSource", dataSourceType: "pivot", dataSourceId: pivotId },
     });
     const exportedData = model.exportData();
-    expect(exportedData.chartOdooDataSourcesReference[chartId]).toEqual(
-        { dataSourceId: pivotId, type: "pivot" },
+    expect(exportedData.odooLinkReferences[chartId]).toEqual(
+        { type: "dataSource", dataSourceType: "pivot", dataSourceId: pivotId },
         {
-            message: "Link to odoo menu is exported",
+            message: "Link to datasource is exported",
         }
     );
     const { model: importedModel } = await createModelWithDataSource({
         spreadsheetData: exportedData,
     });
-    const dataSourceLink = importedModel.getters.getChartLinkedDataSource(chartId);
+    const dataSourceLink = importedModel.getters.getChartOdooLink(chartId);
     expect(dataSourceLink).toEqual(
-        { dataSourceId: pivotId, type: "pivot" },
-        { message: "Link to odoo menu is imported" }
+        { type: "dataSource", dataSourceType: "pivot", dataSourceId: pivotId },
+        { message: "Link to odoo datasource is imported" }
     );
 });
 
-test("Can undo-redo a LINK_ODOO_DATASOURCE_TO_CHART", async function () {
+test("Can undo-redo a SET_ODOO_LINK_TO_CHART", async function () {
     const { model, pivotId } = await createSpreadsheetWithPivot();
     createBasicChart(model, chartId);
-    model.dispatch("LINK_ODOO_DATASOURCE_TO_CHART", {
+    model.dispatch("SET_ODOO_LINK_TO_CHART", {
         chartId,
-        odooDataSource: { dataSourceId: pivotId, type: "pivot" },
+        odooLink: { type: "dataSource", dataSourceType: "pivot", dataSourceId: pivotId },
     });
-    expect(model.getters.getChartLinkedDataSource(chartId)).toEqual({
+    expect(model.getters.getChartOdooLink(chartId)).toEqual({
+        type: "dataSource",
         dataSourceId: pivotId,
-        type: "pivot",
+        dataSourceType: "pivot",
     });
     model.dispatch("REQUEST_UNDO");
-    expect(model.getters.getChartLinkedDataSource(chartId)).toBe(undefined);
+    expect(model.getters.getChartOdooLink(chartId)).toBe(undefined);
     model.dispatch("REQUEST_REDO");
-    expect(model.getters.getChartLinkedDataSource(chartId)).toEqual({
+    expect(model.getters.getChartOdooLink(chartId)).toEqual({
+        type: "dataSource",
         dataSourceId: pivotId,
-        type: "pivot",
+        dataSourceType: "pivot",
     });
 });
 
 test("link is removed when figure is deleted", async function () {
     const { model, pivotId } = await createSpreadsheetWithPivot();
     createBasicChart(model, chartId);
-    model.dispatch("LINK_ODOO_DATASOURCE_TO_CHART", {
+    model.dispatch("SET_ODOO_LINK_TO_CHART", {
         chartId,
-        odooDataSource: { dataSourceId: pivotId, type: "pivot" },
+        odooLink: { type: "dataSource", dataSourceType: "pivot", dataSourceId: pivotId },
     });
-    expect(model.getters.getChartLinkedDataSource(chartId)).toEqual({
+    expect(model.getters.getChartOdooLink(chartId)).toEqual({
         dataSourceId: pivotId,
-        type: "pivot",
+        type: "dataSource",
+        dataSourceType: "pivot",
     });
     model.dispatch("DELETE_FIGURE", {
         sheetId: model.getters.getActiveSheetId(),
         figureId: model.getters.getFigureIdFromChartId(chartId),
     });
-    expect(model.getters.getChartLinkedDataSource(chartId)).toBe(undefined);
+    expect(model.getters.getChartOdooLink(chartId)).toBe(undefined);
 });
 
 test("Links of Odoo charts are duplicated when duplicating a sheet", async function () {
@@ -81,14 +108,14 @@ test("Links of Odoo charts are duplicated when duplicating a sheet", async funct
     const sheetId = model.getters.getActiveSheetId();
     const secondSheetId = "mySecondSheetId";
     const chartId = model.getters.getChartIds(sheetId)[0];
-    model.dispatch("LINK_ODOO_DATASOURCE_TO_CHART", {
+    model.dispatch("SET_ODOO_LINK_TO_CHART", {
         chartId,
-        odooDataSource: { dataSourceId: pivotId, type: "pivot" },
+        odooLink: { type: "dataSource", dataSourceType: "pivot", dataSourceId: pivotId },
     });
     model.dispatch("DUPLICATE_SHEET", { sheetId, sheetIdTo: secondSheetId });
     const newChartId = model.getters.getChartIds(secondSheetId)[0];
-    expect(model.getters.getChartLinkedDataSource(newChartId)).toEqual(
-        model.getters.getChartLinkedDataSource(chartId)
+    expect(model.getters.getChartOdooLink(newChartId)).toEqual(
+        model.getters.getChartOdooLink(chartId)
     );
 });
 
@@ -97,84 +124,87 @@ test("Links of standard charts are duplicated when duplicating a sheet", async f
     const sheetId = model.getters.getActiveSheetId();
     const secondSheetId = "mySecondSheetId";
     createBasicChart(model, chartId);
-    model.dispatch("LINK_ODOO_DATASOURCE_TO_CHART", {
+    model.dispatch("SET_ODOO_LINK_TO_CHART", {
         chartId,
-        odooDataSource: { dataSourceId: pivotId, type: "pivot" },
+        odooLink: { type: "dataSource", dataSourceType: "pivot", dataSourceId: pivotId },
     });
     model.dispatch("DUPLICATE_SHEET", { sheetId, sheetIdTo: secondSheetId });
     const newChartId = model.getters.getChartIds(secondSheetId)[0];
-    expect(model.getters.getChartLinkedDataSource(newChartId)).toEqual(
-        model.getters.getChartLinkedDataSource(chartId)
+    expect(model.getters.getChartOdooLink(newChartId)).toEqual(
+        model.getters.getChartOdooLink(chartId)
     );
 });
 
 test("Datasource link is removed when a pivot is deleted", async function () {
     const { model, pivotId } = await createSpreadsheetWithPivot();
     createBasicChart(model, chartId);
-    model.dispatch("LINK_ODOO_DATASOURCE_TO_CHART", {
+    model.dispatch("SET_ODOO_LINK_TO_CHART", {
         chartId,
-        odooDataSource: { dataSourceId: pivotId, type: "pivot" },
+        odooLink: { type: "dataSource", dataSourceType: "pivot", dataSourceId: pivotId },
     });
-    expect(model.getters.getChartLinkedDataSource(chartId)).toEqual({
+    expect(model.getters.getChartOdooLink(chartId)).toEqual({
+        type: "dataSource",
+        dataSourceType: "pivot",
         dataSourceId: pivotId,
-        type: "pivot",
     });
     model.dispatch("REMOVE_PIVOT", { pivotId });
-    expect(model.getters.getChartLinkedDataSource(chartId)).toBe(undefined);
+    expect(model.getters.getChartOdooLink(chartId)).toBe(undefined);
     console.log("exportData", model.exportData());
-    expect(model.exportData().chartOdooDataSourcesReference).toBeEmpty();
+    expect(model.exportData().odooLinkReferences).toBeEmpty();
 });
 
 test("Datasource link is removed when a list is deleted", async function () {
     const { model } = await createSpreadsheetWithList();
     const listId = model.getters.getListIds()[0];
     createBasicChart(model, chartId);
-    model.dispatch("LINK_ODOO_DATASOURCE_TO_CHART", {
+    model.dispatch("SET_ODOO_LINK_TO_CHART", {
         chartId,
-        odooDataSource: { dataSourceId: listId, type: "list" },
+        odooLink: { dataSourceId: listId, type: "dataSource", dataSourceType: "list" },
     });
-    expect(model.getters.getChartLinkedDataSource(chartId)).toEqual({
+    expect(model.getters.getChartOdooLink(chartId)).toEqual({
         dataSourceId: listId,
-        type: "list",
+        type: "dataSource",
+        dataSourceType: "list",
     });
     model.dispatch("REMOVE_ODOO_LIST", { listId });
-    expect(model.getters.getChartLinkedDataSource(chartId)).toBe(undefined);
+    expect(model.getters.getChartOdooLink(chartId)).toBe(undefined);
     console.log("exportData", model.exportData());
-    expect(model.exportData().chartOdooDataSourcesReference).toBeEmpty();
+    expect(model.exportData().odooLinkReferences).toBeEmpty();
 });
 
 test("Datasource link is removed when an odoo chart is deleted", async function () {
     const { model } = await createModelWithDataSource();
     const odooChartId = insertChartInSpreadsheet(model, "odoo_line");
     createBasicChart(model, chartId);
-    model.dispatch("LINK_ODOO_DATASOURCE_TO_CHART", {
+    model.dispatch("SET_ODOO_LINK_TO_CHART", {
         chartId,
-        odooDataSource: { dataSourceId: odooChartId, type: "chart" },
+        odooLink: { dataSourceId: odooChartId, type: "dataSource", dataSourceType: "chart" },
     });
-    expect(model.getters.getChartLinkedDataSource(chartId)).toEqual({
+    expect(model.getters.getChartOdooLink(chartId)).toEqual({
         dataSourceId: odooChartId,
-        type: "chart",
+        type: "dataSource",
+        dataSourceType: "chart",
     });
     model.dispatch("DELETE_FIGURE", {
         figureId: model.getters.getFigureIdFromChartId(odooChartId),
         sheetId: model.getters.getActiveSheetId(),
     });
-    expect(model.getters.getChartLinkedDataSource(chartId)).toBe(undefined);
+    expect(model.getters.getChartOdooLink(chartId)).toBe(undefined);
     console.log("exportData", model.exportData());
-    expect(model.exportData().chartOdooDataSourcesReference).toBeEmpty();
+    expect(model.exportData().odooLinkReferences).toBeEmpty();
 });
 
 test("cannot link against a non-existing datasource", async function () {
     const { model, pivotId } = await createSpreadsheetWithPivot();
     createBasicChart(model, chartId);
-    const result1 = model.dispatch("LINK_ODOO_DATASOURCE_TO_CHART", {
+    const result1 = model.dispatch("SET_ODOO_LINK_TO_CHART", {
         chartId,
-        odooDataSource: { dataSourceId: pivotId, type: "notAType" },
+        odooLink: { dataSourceId: pivotId, type: "dataSource", dataSourceType: "shityType" },
     });
     expect(result1.reasons).toEqual([CommandResult.InvalidDataSourceType]);
-    const result2 = model.dispatch("LINK_ODOO_DATASOURCE_TO_CHART", {
+    const result2 = model.dispatch("SET_ODOO_LINK_TO_CHART", {
         chartId,
-        odooDataSource: { dataSourceId: "coucou", type: "pivot" },
+        odooLink: { dataSourceId: "coucou", type: "dataSource", dataSourceType: "pivot" },
     });
     expect(result2.reasons).toEqual([CommandResult.InvalidDataSourceId]);
 });

@@ -4,7 +4,7 @@
             <div
                 t-if="hasOdooLink and !env.isDashboard()"
                 class="o-figure-menu-item o-chart-external-link"
-                t-custom-click="(ev, isMiddleClick) => this.navigateToOdooDataSource(isMiddleClick)">
+                t-custom-click="(ev, isMiddleClick) => this.navigateToOdooLink(isMiddleClick)">
                 <span class="fa fa-external-link" />
             </div>
         </xpath>

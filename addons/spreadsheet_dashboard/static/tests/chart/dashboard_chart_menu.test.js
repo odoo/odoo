@@ -74,13 +74,13 @@ test("Click on chart in dashboard mode redirect to the datasource action", async
     const fixture = await mountSpreadsheet(model);
 
     createBasicChart(model, chartId);
-    model.dispatch("LINK_ODOO_DATASOURCE_TO_CHART", {
+    model.dispatch("SET_ODOO_LINK_TO_CHART", {
         chartId,
-        odooDataSource: { dataSourceId: pivotId, type: "pivot" },
+        odooLink: { type: "dataSource", dataSourceType: "pivot", dataSourceId: pivotId },
     });
-    const chartMenu = model.getters.getChartLinkedDataSource(chartId);
+    const chartMenu = model.getters.getChartOdooLink(chartId);
     expect(chartMenu).toEqual(
-        { dataSourceId: pivotId, type: "pivot" },
+        { type: "dataSource", dataSourceType: "pivot", dataSourceId: pivotId },
         { message: "Odoo menu is linked to chart" }
     );
     await animationFrame();
@@ -126,9 +126,9 @@ test("Click on chart element in dashboard mode do not redirect twice", async fun
     });
     const fixture = await mountSpreadsheet(model);
     const chartId = insertChartInSpreadsheet(model, "odoo_pie");
-    model.dispatch("LINK_ODOO_DATASOURCE_TO_CHART", {
+    model.dispatch("SET_ODOO_LINK_TO_CHART", {
         chartId,
-        odooDataSource: { dataSourceId: pivotId, type: "pivot" },
+        odooLink: { type: "dataSource", dataSourceType: "pivot", dataSourceId: pivotId },
     });
     await animationFrame();
     model.updateMode("dashboard");
@@ -138,8 +138,8 @@ test("Click on chart element in dashboard mode do not redirect twice", async fun
     const chartCanvas = fixture.querySelector(".o-chart-container canvas");
     const canvasRect = chartCanvas.getBoundingClientRect();
     const canvasCenter = {
-        x: canvasRect.left + canvasRect.width / 2,
-        y: canvasRect.top + canvasRect.height / 2,
+        x: canvasRect.left + canvasRect.width / 2 - 5,
+        y: canvasRect.top + canvasRect.height / 2 - 5,
     };
     await click(".o-chart-container canvas", { position: canvasCenter, relative: true });
     await animationFrame();
@@ -163,13 +163,13 @@ test("Clicking on a scorecard or gauge redirects to the linked datasource", asyn
     await mountSpreadsheet(model);
     createScorecardChart(model, "scorecardId");
     createGaugeChart(model, "gaugeId");
-    model.dispatch("LINK_ODOO_DATASOURCE_TO_CHART", {
+    model.dispatch("SET_ODOO_LINK_TO_CHART", {
         chartId: "scorecardId",
-        odooDataSource: { dataSourceId: pivotId, type: "pivot" },
+        odooLink: { type: "dataSource", dataSourceType: "pivot", dataSourceId: pivotId },
     });
-    model.dispatch("LINK_ODOO_DATASOURCE_TO_CHART", {
+    model.dispatch("SET_ODOO_LINK_TO_CHART", {
         chartId: "gaugeId",
-        odooDataSource: { dataSourceId: pivotId, type: "pivot" },
+        odooLink: { type: "dataSource", dataSourceType: "pivot", dataSourceId: pivotId },
     });
     await animationFrame();
 
@@ -205,9 +205,9 @@ test("Middle-click on chart in dashboard mode open the linked datasource in a ne
     });
 
     createBasicChart(model, chartId);
-    model.dispatch("LINK_ODOO_DATASOURCE_TO_CHART", {
+    model.dispatch("SET_ODOO_LINK_TO_CHART", {
         chartId,
-        odooDataSource: { dataSourceId: pivotId, type: "pivot" },
+        odooLink: { type: "dataSource", dataSourceType: "pivot", dataSourceId: pivotId },
     });
 
     model.updateMode("dashboard");

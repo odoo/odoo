@@ -115,10 +115,16 @@ declare module "@spreadsheet" {
         delta: number;
     }
 
-    export interface LinkOdooDataSourceToChartCommand {
-        type: "LINK_ODOO_DATASOURCE_TO_CHART";
+    export interface SetOdooLinkToChartCommand {
+        type: "SET_ODOO_LINK_TO_CHART";
         chartId: string;
-        odooDataSource: { dataSourceId: string, type: string } | undefined;
+        odooLink:
+            | { type: "odooMenuId"; data: number | string }
+            | {
+                  type: "dataSource";
+                  data: { dataSourceId: string; datasourceType: string };
+              }
+            | undefined;
     }
 
     // UI

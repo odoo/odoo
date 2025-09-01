@@ -7,7 +7,7 @@ function identity(cmd) {
 
 otRegistry.addTransformation(
     "DELETE_CHART",
-    ["LINK_ODOO_DATASOURCE_TO_CHART"],
+    ["SET_ODOO_LINK_TO_CHART"],
     (toTransform, executed) => {
         if (executed.chartId === toTransform.chartId) {
             return undefined;
@@ -22,7 +22,7 @@ otRegistry.addTransformation(
 
 otRegistry.addTransformation(
     "REMOVE_PIVOT",
-    ["LINK_ODOO_DATASOURCE_TO_CHART"],
+    ["SET_ODOO_LINK_TO_CHART"],
     (toTransform, executed) => {
         const { dataSourceId, type } = toTransform.odooDataSource;
         if (type === "pivot" && dataSourceId === executed.pivotId) {
@@ -34,7 +34,7 @@ otRegistry.addTransformation(
 
 otRegistry.addTransformation(
     "REMOVE_ODOO_LIST",
-    ["LINK_ODOO_DATASOURCE_TO_CHART"],
+    ["SET_ODOO_LINK_TO_CHART"],
     (toTransform, executed) => {
         const { dataSourceId, type } = toTransform.odooDataSource;
         if (type === "list" && dataSourceId === executed.listId) {
@@ -46,4 +46,4 @@ otRegistry.addTransformation(
 
 // add transformation pour les remove pivotFormulaRegex, remove list and delete figure?
 
-inverseCommandRegistry.add("LINK_ODOO_DATASOURCE_TO_CHART", identity);
+inverseCommandRegistry.add("SET_ODOO_LINK_TO_CHART", identity);

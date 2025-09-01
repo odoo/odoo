@@ -156,7 +156,9 @@ export function onGeoOdooChartItemHover() {
     };
 }
 
-export async function navigateToOdooMenu(menu, actionService, notificationService, newWindow) {
+export async function navigateToOdooMenu(env, odooMenuId, newWindow) {
+    const { action: actionService, notification: notificationService } = env.services;
+    const menu = env.model.getters.getIrMenu(odooMenuId);
     if (!menu) {
         throw new Error(`Cannot find any menu associated with the chart`);
     }
@@ -172,10 +174,14 @@ export async function navigateToOdooMenu(menu, actionService, notificationServic
     await actionService.doAction(menu.actionID, { newWindow });
 }
 
-export async function navigateToOdooDatasourceFromChart(env, figureId, newWindow) {
+export async function navigateToOdooDatasourceFromChart(
+    env,
+    dataSourceType,
+    dataSourceId,
+    newWindow
+) {
     const getters = env.model.getters;
-    const { type, dataSourceId } = getters.getChartLinkedDataSource(figureId);
-    const reg = globalFieldMatchingRegistry.get(type);
+    const reg = globalFieldMatchingRegistry.get(dataSourceType);
     const domain = reg.getDomain(getters, dataSourceId);
     const actionXmlId = reg.getActionXmlId(getters, dataSourceId);
     const model = reg.getModel(getters, dataSourceId);
@@ -202,6 +208,23 @@ export async function navigateToOdooDatasourceFromChart(env, figureId, newWindow
         },
         { viewType: "graph", newWindow }
     );
+}
+
+export async function navigateToOdoolinkFromChart(env, chartId, newWindow) {
+    const getters = env.model.getters;
+    const odooLink = getters.getChartOdooLink(chartId);
+    if (!odooLink) {
+        throw new Error(`The chart is not linked to an Odoo resource`);
+    } else if (odooLink.type === "dataSource") {
+        return navigateToOdooDatasourceFromChart(
+            env,
+            odooLink.dataSourceType,
+            odooLink.dataSourceId,
+            newWindow
+        );
+    } else {
+        await navigateToOdooMenu(env, odooLink.odooMenuId, newWindow);
+    }
 }
 
 /**

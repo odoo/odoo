@@ -1,9 +1,9 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { OdooChartCorePlugin } from "./plugins/odoo_chart_core_plugin";
-import { ChartOdooDatasourcePlugin } from "./plugins/chart_odoo_datasource_plugin";
+import { ChartOdooLinkPlugin } from "./plugins/chart_odoo_link_plugin";
 import { OdooChartCoreViewPlugin } from "./plugins/odoo_chart_core_view_plugin";
 import { _t } from "@web/core/l10n/translation";
-import { chartOdooDataSourcePlugin } from "./odoo_link/odoo_datasource_chartjs_plugin";
+import { chartOdooLinkPlugin } from "./odoo_link/odoo_link_chartjs_plugin";
 
 const { chartComponentRegistry, chartSubtypeRegistry, chartJsExtensionRegistry } =
     spreadsheet.registries;
@@ -197,9 +197,9 @@ chartSubtypeRegistry.add("odoo_sunburst", {
     preview: "o-spreadsheet-ChartPreview.SUNBURST_CHART",
 });
 
-chartJsExtensionRegistry.add("chartOdooDataSourcePlugin", {
-    register: (Chart) => Chart.register(chartOdooDataSourcePlugin),
-    unregister: (Chart) => Chart.unregister(chartOdooDataSourcePlugin),
+chartJsExtensionRegistry.add("chartOdooLinkPlugin", {
+    register: (Chart) => Chart.register(chartOdooLinkPlugin),
+    unregister: (Chart) => Chart.unregister(chartOdooLinkPlugin),
 });
 
-export { OdooChartCorePlugin, ChartOdooDatasourcePlugin, OdooChartCoreViewPlugin };
+export { OdooChartCorePlugin, ChartOdooLinkPlugin, OdooChartCoreViewPlugin };

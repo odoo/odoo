@@ -825,5 +825,8 @@ test("Odoo Menu references are dropped starting from 18.5.11", () => {
         },
     };
     const migratedData = load(data);
-    expect(migratedData.chartOdooMenusReferences).toBe(undefined);
+    expect(migratedData.odooLinkReferences).toEqual({
+        chart1: { type: "odooMenuId", odooMenuId: "menu.menu_1" },
+        chart2: { type: "odooMenuId", odooMenuId: "menu.menu_2" },
+    });
 });

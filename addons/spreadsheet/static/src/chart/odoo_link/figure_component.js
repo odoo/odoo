@@ -1,7 +1,7 @@
 import { patch } from "@web/core/utils/patch";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { useService } from "@web/core/utils/hooks";
-import { navigateToOdooDatasourceFromChart } from "../odoo_chart/odoo_chart_helpers";
+import { navigateToOdoolinkFromChart } from "../odoo_chart/odoo_chart_helpers";
 
 patch(spreadsheet.components.FigureComponent.prototype, {
     setup() {
@@ -16,11 +16,11 @@ patch(spreadsheet.components.FigureComponent.prototype, {
         }
         return this.env.model.getters.getChartIdFromFigureId(this.props.figureUI.id);
     },
-    async navigateToOdooDataSource(newWindow) {
-        await navigateToOdooDatasourceFromChart(this.env, this.chartId, newWindow);
+    async navigateToOdooLink(newWindow) {
+        await navigateToOdoolinkFromChart(this.env, this.chartId, newWindow);
     },
     get hasOdooLink() {
-        return this.env.model.getters.getChartLinkedDataSource(this.chartId) !== undefined;
+        return this.env.model.getters.getChartOdooLink(this.chartId) !== undefined;
     },
     async onClick() {
         try {
@@ -30,7 +30,7 @@ patch(spreadsheet.components.FigureComponent.prototype, {
                 this.hasOdooLink &&
                 (definition.type === "scorecard" || definition.type === "gauge")
             ) {
-                await this.navigateToOdooDataSource();
+                await this.navigateToOdooLink();
             }
         } catch {
             // Throws if the figure isn't a chart

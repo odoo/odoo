@@ -32,7 +32,7 @@ import {
 } from "@spreadsheet/pivot/index"; // list depends on filter for its getters
 import { ListCorePlugin, ListCoreViewPlugin, ListUIPlugin } from "@spreadsheet/list/index"; // pivot depends on filter for its getters
 import {
-    ChartOdooDatasourcePlugin,
+    ChartOdooLinkPlugin,
     OdooChartCorePlugin,
     OdooChartCoreViewPlugin,
 } from "@spreadsheet/chart/index"; // Odoochart depends on filter for its getters
@@ -114,7 +114,7 @@ corePluginRegistry.add("OdooPivotGlobalFiltersCorePlugin", PivotCoreGlobalFilter
 corePluginRegistry.add("OdooListCorePlugin", ListCorePlugin);
 corePluginRegistry.add("OdooListCoreGlobalFilterPlugin", ListCoreGlobalFilterPlugin);
 corePluginRegistry.add("odooChartCorePlugin", OdooChartCorePlugin);
-corePluginRegistry.add("chartOdooDataSourcePlugin", ChartOdooDatasourcePlugin);
+corePluginRegistry.add("ChartOdooLinkPlugin", ChartOdooLinkPlugin);
 
 coreViewsPluginRegistry.add("OdooGlobalFiltersCoreViewPlugin", GlobalFiltersCoreViewPlugin);
 coreViewsPluginRegistry.add(
