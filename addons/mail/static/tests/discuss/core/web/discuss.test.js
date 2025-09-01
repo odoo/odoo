@@ -156,11 +156,11 @@ test("Chat is pinned on other tabs when joined", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(undefined, { target: env1 });
     await openDiscuss(undefined, { target: env2 });
-    await click("input[placeholder='Search conversations']", { target: env1 });
-    await insertText("input[placeholder='Search a conversation']", "Jer", { target: env1 });
-    await click("a", { text: "Jerry Golay", target: env1 });
-    await contains(".o-mail-DiscussSidebar-item", { target: env1, text: "Jerry Golay" });
-    await contains(".o-mail-DiscussSidebar-item", { target: env2, text: "Jerry Golay" });
+    await click(`${env1.selector} input[placeholder='Search conversations']`);
+    await insertText(`${env1.selector} input[placeholder='Search a conversation']`, "Jer");
+    await click(`${env1.selector} a`, { text: "Jerry Golay" });
+    await contains(`${env1.selector} .o-mail-DiscussSidebar-item`, { text: "Jerry Golay" });
+    await contains(`${env2.selector} .o-mail-DiscussSidebar-item`, { text: "Jerry Golay" });
 });
 
 test("no conversation selected when opening non-existing channel in discuss", async () => {

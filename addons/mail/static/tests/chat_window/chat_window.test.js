@@ -136,18 +136,18 @@ test.skip("Fold state of chat window is sync among browser tabs", async () => {
     pyEnv["discuss.channel"].create({ name: "General" });
     const env1 = await start({ asTab: true });
     const env2 = await start({ asTab: true });
-    await click(".o_menu_systray i[aria-label='Messages']", { target: env1 });
-    await click(".o-mail-NotificationItem", { target: env1 });
-    await contains(".o-mail-ChatWindow-header", { target: env2 });
-    await click(".o-mail-ChatWindow-header", { target: env1 }); // Fold
-    await contains(".o-mail-Thread", { count: 0, target: env1 });
-    await contains(".o-mail-Thread", { count: 0, target: env2 });
-    await click(".o-mail-ChatBubble", { target: env2 }); // Unfold
-    await contains(".o-mail-ChatWindow .o-mail-Thread", { target: env1 });
-    await contains(".o-mail-ChatWindow .o-mail-Thread", { target: env2 });
-    await click("[title*='Close Chat Window']", { target: env1 });
-    await contains(".o-mail-ChatWindow", { count: 0, target: env1 });
-    await contains(".o-mail-ChatWindow", { count: 0, target: env2 });
+    await click(`${env1.selector} .o_menu_systray i[aria-label='Messages']`);
+    await click(`${env1.selector} .o-mail-NotificationItem`);
+    await contains(`${env2.selector} .o-mail-ChatWindow-header`);
+    await click(`${env1.selector} .o-mail-ChatWindow-header`); // Fold
+    await contains(`${env1.selector} .o-mail-Thread`, { count: 0 });
+    await contains(`${env2.selector} .o-mail-Thread`, { count: 0 });
+    await click(`${env2.selector} .o-mail-ChatBubble`); // Unfold
+    await contains(`${env1.selector} .o-mail-ChatWindow .o-mail-Thread`);
+    await contains(`${env2.selector} .o-mail-ChatWindow .o-mail-Thread`);
+    await click(`${env1.selector} [title*='Close Chat Window']`);
+    await contains(`${env1.selector} .o-mail-ChatWindow`, { count: 0 });
+    await contains(`${env2.selector} .o-mail-ChatWindow`, { count: 0 });
 });
 
 test("chat window: fold", async () => {

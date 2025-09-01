@@ -435,11 +435,11 @@ test("Local sidebar category state is shared between tabs", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(undefined, { target: env1 });
     await openDiscuss(undefined, { target: env2 });
-    await contains(".o-mail-DiscussSidebarCategory-livechat .oi-chevron-down", { target: env1 });
-    await contains(".o-mail-DiscussSidebarCategory-livechat .oi-chevron-down", { target: env2 });
-    await click(".o-mail-DiscussSidebarCategory-livechat .btn", { target: env1 });
-    await contains(".o-mail-DiscussSidebarCategory-livechat .oi-chevron-right", { target: env1 });
-    await contains(".o-mail-DiscussSidebarCategory-livechat .oi-chevron-right", { target: env2 });
+    await contains(`${env1.selector} .o-mail-DiscussSidebarCategory-livechat .oi-chevron-down`);
+    await contains(`${env2.selector} .o-mail-DiscussSidebarCategory-livechat .oi-chevron-down`);
+    await click(`${env1.selector} .o-mail-DiscussSidebarCategory-livechat .btn`);
+    await contains(`${env1.selector} .o-mail-DiscussSidebarCategory-livechat .oi-chevron-right`);
+    await contains(`${env2.selector} .o-mail-DiscussSidebarCategory-livechat .oi-chevron-right`);
 });
 
 test("live chat is displayed below its category", async () => {
