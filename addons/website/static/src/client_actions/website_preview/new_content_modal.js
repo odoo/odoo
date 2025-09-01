@@ -129,6 +129,8 @@ export class NewContentModal extends Component {
         for (const [model, access] of Object.entries(accesses)) {
             elementsToUpdate[model].isDisplayed = access;
         }
+
+        this._handlePostInstallContent();
     }
 
     get sortedNewContentElements() {
@@ -141,7 +143,7 @@ export class NewContentModal extends Component {
             );
     }
 
-    async installModule(id, redirectUrl) {
+    async installModule(id, redirectUrl, moduleXmlId) {
         await this.orm.silent.call("ir.module.module", "button_immediate_install", [id]);
         if (redirectUrl) {
             this.website.prepareOutLoader();
@@ -161,7 +163,7 @@ export class NewContentModal extends Component {
             redirect(
                 `/odoo/action-website.website_preview?website_id=${id}&path=${encodeURIComponent(
                     url.toString()
-                )}&display_new_content=true`
+                )}&display_new_content=true&display_dialog_after_module_install=${moduleXmlId}`
             );
         }
     }
@@ -187,7 +189,7 @@ export class NewContentModal extends Component {
                 });
                 this.website.showLoader({ title: _t("Building your %s", name) });
                 try {
-                    await this.installModule(id, element.redirectUrl);
+                    await this.installModule(id, element.redirectUrl, element.moduleXmlId);
                 } catch (error) {
                     this.website.hideLoader();
                     // Update the NewContentElement with failure icon and text.
@@ -233,5 +235,25 @@ export class NewContentModal extends Component {
                 },
             },
         });
+    }
+
+    _handlePostInstallContent() {
+        if (
+            !this.websiteContext.showNewContentModal ||
+            !this.websiteContext.newInstalledModule
+        ) {
+            return;
+        }
+
+        const moduleXmlId = this.websiteContext.newInstalledModule;
+        this.websiteContext.newInstalledModule = null;
+
+        const newContentElement = this.state.newContentElements.find(
+            (element) => element.moduleXmlId === moduleXmlId
+        );
+
+        if (newContentElement) {
+            this.onClickNewContent(newContentElement);
+        }
     }
 }

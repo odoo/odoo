@@ -17,6 +17,23 @@
                 </t>
             </BuilderSelect>
         </BuilderRow>
+        <BuilderRow label.translate="Tag">
+            <BuilderSelect dataAttributeAction="'filterByTagId'" preview="false">
+                <BuilderSelectItem dataAttributeActionValue="'-1'">All Tags</BuilderSelectItem>
+                <t t-foreach="blogState.tags" t-as="tag" t-key="tag.id">
+                    <BuilderSelectItem dataAttributeActionValue="`${tag.id}`" t-out="tag.name"/>
+                </t>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Author">
+            <BuilderSelect dataAttributeAction="'filterByAuthorId'" preview="false">
+                <BuilderSelectItem dataAttributeActionValue="'-1'">All Author</BuilderSelectItem>
+                <t t-foreach="blogState.authors" t-as="author" t-key="author.id">
+                    <BuilderSelectItem dataAttributeActionValue="`${author.id}`"
+                            t-out="author.name"/>
+                </t>
+            </BuilderSelect>
+        </BuilderRow>
     </xpath>
     <xpath expr="//BuilderRow[*[@id=&quot;'template_opt'&quot;]]" position="after">
         <!-- TODO noWidgetRefresh="true" => refreshInteraction="false" ? -->
