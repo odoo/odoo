@@ -52,8 +52,8 @@ export class AttributeSelectionHelper {
         }
     }
 
-    hasMissingAttributeValues(attributes) {
-        return attributes.some(
+    getMissingAttributeValue(attributes) {
+        return attributes.find(
             (attr) => attr.attribute_id.display_type !== "multi" && !this.hasValueSelected(attr)
         );
     }

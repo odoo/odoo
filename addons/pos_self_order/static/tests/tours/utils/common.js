@@ -108,3 +108,18 @@ export function setProductAvailability(productName, value) {
         },
     };
 }
+
+export function checkMissingRequiredsExists() {
+    return {
+        content: "Redirecting component is available for handling missing details",
+        trigger: "div.missing_required_details",
+    };
+}
+
+export function clickMissingRequireds() {
+    return {
+        content: "Click on missing required details button",
+        trigger: "div.missing_required_details button",
+        run: "click",
+    };
+}
