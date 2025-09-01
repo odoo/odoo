@@ -37,6 +37,9 @@ class SaleOrder(models.Model):
                 return expression.AND([res, [('program_id.website_id', 'in', (self.website_id.id, False))]])
         return res
 
+    def _get_program_timezone(self):
+        return self.website_id.salesperson_id.tz or super()._get_program_timezone()
+
     def _try_pending_coupon(self):
         if not request:
             return False
