@@ -2063,6 +2063,28 @@ test("pivot.getPossibleFieldValues does not ignore falsy values", async function
     ]);
 });
 
+test("pivot.getPossibleFieldValues do not throw when the pivot is error", async function () {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+                <pivot>
+                    <field name="product_id" type="col"/>
+                    <field name="bar" type="row"/>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+    });
+    const pivot = model.getters.getPivot(model.getters.getPivotIds()[0]);
+    updatePivot(model, pivotId, {
+        measures: [{ id: "__count:sum", fieldName: "__count", aggregator: "sum" }],
+    });
+    const barField = pivot.definition.rows[0];
+    expect(pivot.getPossibleFieldValues(barField)).toEqual([]);
+    await animationFrame();
+    expect(pivot.getPossibleFieldValues(barField)).toEqual([
+        { value: false, label: "No" },
+        { value: true, label: "Yes" },
+    ]);
+});
+
 test("Can change display type of a measure", async function () {
     const { model } = await createSpreadsheetWithPivot({
         arch: /* xml */ `
