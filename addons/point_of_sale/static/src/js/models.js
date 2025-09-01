@@ -1623,11 +1623,14 @@ class Product extends PosModel {
 
         // In case of nested pricelists, it is necessary that all pricelists are made available in
         // the POS. Display a basic alert to the user in this case.
-        if (!pricelist) {
+        if (!pricelist && !this.pos.restrictAlertDialog) {
             alert(_t(
                 'An error occurred when loading product prices. ' +
                 'Make sure all pricelists are available in the POS.'
             ));
+            if (this.pos.restrictAlertDialog === false){
+                this.pos.restrictAlertDialog = true;
+            }
         }
 
         var pricelist_items = _.filter(

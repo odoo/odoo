@@ -657,9 +657,11 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 await this.env.pos._loadMissingPartners(fetchedOrders);
                 // Cache these fetched orders so that next time, no need to fetch
                 // them again, unless invalidated. See `_onInvoiceOrder`.
+                this.env.pos.restrictAlertDialog = false;
                 fetchedOrders.forEach((order) => {
                     this._state.syncedOrders.cache[order.id] = Order.create({}, { pos: this.env.pos, json: order });
                 });
+                delete this.env.pos.restrictAlertDialog;
             }
             this._state.syncedOrders.totalCount = totalCount;
             this._state.syncedOrders.toShow = ids.map((id) => this._state.syncedOrders.cache[id]);
