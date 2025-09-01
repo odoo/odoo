@@ -5,6 +5,7 @@ import { describe, destroy, expect, test } from "@odoo/hoot";
 import {
     hover,
     press,
+    click,
     queryAllTexts,
     queryOne,
     manuallyDispatchProgrammaticEvent,
@@ -274,4 +275,40 @@ test("items are focused only on mousemove, not on mouseenter", async () => {
     manuallyDispatchProgrammaticEvent(queryOne(".three"), "mousemove");
     await animationFrame();
     expect(".three").toHaveClass("focus");
+});
+
+test("non-navigable dom update does NOT cause re-focus", async () => {
+    // An issue could be cause when for example the ALT key is pressed
+    // to show the hotkeys, which would cause a DOM update and a refocus
+    // of one of the navigable item.
+
+    class Parent extends Component {
+        static props = [];
+        static template = xml`
+            <button class="outside" t-ref="outsideRef">outside target</button>
+            <div class="container" t-ref="containerRef">
+                <button class="o-navigable one" t-on-click="() => this.onClick(1)">target one</button>
+                <div class="test-non-navigable" t-if="state.show">
+                </div>
+            </div>
+        `;
+
+        setup() {
+            this.navigation = useNavigation("containerRef");
+            onMounted(() => this.navigation.items[0]?.setActive());
+            this.state = useState({ show: false });
+        }
+    }
+
+    const component = await mountWithCleanup(Parent);
+    expect(".test-non-navigable").toHaveCount(0);
+    expect(".one").toBeFocused();
+
+    await click(".outside");
+    expect(".one").not.toBeFocused();
+
+    component.state.show = true;
+    await animationFrame();
+    expect(".test-non-navigable").toHaveCount(1);
+    expect(".one").not.toBeFocused();
 });
