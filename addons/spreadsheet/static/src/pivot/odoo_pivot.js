@@ -440,7 +440,7 @@ export class OdooPivot {
      * @returns {{ value: string | number | boolean, label: string }[]}
      */
     getPossibleFieldValues(dimension) {
-        if (!this.isValid()) {
+        if (this.assertIsValid({ throwOnError: false })) {
             return [];
         }
         return this.model.getPossibleFieldValues(dimension);
