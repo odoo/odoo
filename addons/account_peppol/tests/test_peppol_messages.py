@@ -142,24 +142,24 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
     def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
         response = Response()
         response.status_code = 200
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A0477472701'):
+        url = r.path_url.lower()
+        if url.endswith(('iso6523-actorid-upis%3A%3A0208%3A0477472701'.lower(), 'iso6523-actorid-upis%3A%3A9925%3ABE0477472701'.lower())):
             response._content = b"""<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0208:0477472701</id:ParticipantIdentifier>'
             '<smp:ServiceMetadataReferenceCollection><smp:ServiceMetadataReference href="https://iap-services.odoo.com/iso6523-actorid-upis%3A%3A0208%3A0477472701/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1"/>'
             '</smp:ServiceMetadataReferenceCollection></smp:ServiceGroup>"""
             return response
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A3141592654'):
+        if url.endswith(('iso6523-actorid-upis%3A%3A0208%3A3141592654'.lower(), 'iso6523-actorid-upis%3A%3A9925%3ABE3141592654'.lower())):
             response.status_code = 404
             return response
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A2718281828'):
+        if url.endswith(('iso6523-actorid-upis%3A%3A0208%3A2718281828'.lower(), 'iso6523-actorid-upis%3A%3A9925%3ABE2718281828'.lower())):
             response._content = b"""<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0208:2718281828</id:ParticipantIdentifier>
             '<smp:ServiceMetadataReferenceCollection><smp:ServiceMetadataReference href="https://iap-services.odoo.com/iso6523-actorid-upis%3A%3A0208%3A0477472701/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1"/>'
             '</smp:ServiceMetadataReferenceCollection></smp:ServiceGroup>"""
             return response
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0198%3Adk16356706'):
+        if url.endswith('iso6523-actorid-upis%3A%3A0198%3Adk16356706'.lower()):
             response._content = b'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0198:dk16356706</id:ParticipantIdentifier></smp:ServiceGroup>'
             return response
 
-        url = r.path_url
         body = json.loads(r.body)
         if url == '/api/peppol/1/send_document':
             if not body['params']['documents']:
