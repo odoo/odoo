@@ -72,6 +72,15 @@
         .o-mail-ChatWindow &.btn-success i {
             font-size: 0.9em !important;
         }
+        &.o-dropdown-item.btn-danger {
+            &.focus {
+                background-color: rgba($danger, 0.75);
+                color: white;
+            }
+            &:not(.focus) {
+                color: var(--o-mail-ActionList-dropdownDangerUnfocusedColor, #{$danger});
+            }
+        }
     }
 
     .o_popover > & {
