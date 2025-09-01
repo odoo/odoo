@@ -350,7 +350,8 @@ export async function start(options) {
         target.dataset.asTabId = discussAsTabId;
         rootTarget.appendChild(target);
         addSwitchTabDropdownItem(rootTarget, target);
-        env = await makeMockEnv({ discussAsTabId }, { makeNew: true });
+        const selector = `.o-mail-Discuss-asTabContainer[data-as-tab-id="${target.dataset.asTabId}"]`;
+        env = await makeMockEnv({ discussAsTabId, selector }, { makeNew: true });
     } else {
         env = getMockEnv() || (await makeMockEnv({}));
     }
