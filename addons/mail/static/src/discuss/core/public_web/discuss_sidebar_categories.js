@@ -115,7 +115,7 @@ export class DiscussSidebarChannel extends Component {
 
     get attClassContainer() {
         return {
-            "border border-dark o-rounded-bubble o-bordered": this.bordered,
+            "border border-dark rounded-2 o-bordered": this.bordered,
             "o-compact": this.store.discuss.isSidebarCompact,
         };
     }
