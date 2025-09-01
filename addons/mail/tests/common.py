@@ -207,13 +207,13 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
     def format(self, template, to='groups@example.com, other@gmail.com', subject='Frogs',
                email_from='Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>', return_path='', cc='',
                extra='', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>',
-               references='', **kwargs):
+               references='', date='Fri, 10 Aug 2012 14:16:26 +0000', **kwargs):
         if not return_path:
             return_path = '<whatever-2a840@postmaster.twitter.com>'
         return template.format(
             subject=subject, to=to, cc=cc,
             email_from=email_from, return_path=return_path,
-            extra=extra, msg_id=msg_id, references=references,
+            extra=extra, msg_id=msg_id, references=references, date=date,
             **kwargs)
 
     def format_and_process(self, template, email_from, to, subject='Frogs', cc='',
