@@ -398,6 +398,7 @@ test("performRPC: formatted_read_group, group by date", async () => {
     patchWithCleanup(localization, {
         dateFormat: "MM/dd/yyyy",
         dateTimeFormat: "MM/dd/yyyy HH:mm:ss",
+        shortTimeFormat: "HH:mm",
         weekStart: 1,
     });
     await makeMockServer();
@@ -635,6 +636,7 @@ test("performRPC: formatted_read_group, group by datetime", async () => {
     patchWithCleanup(localization, {
         dateFormat: "MM/dd/yyyy",
         dateTimeFormat: "MM/dd/yyyy HH:mm:ss",
+        shortTimeFormat: "HH:mm",
         weekStart: 1,
     });
     await makeMockServer();
@@ -1675,6 +1677,7 @@ test("performRPC: read_progress_bar grouped by datetime", async () => {
     patchWithCleanup(localization, {
         dateFormat: "MM/dd/yyyy",
         dateTimeFormat: "MM/dd/yyyy HH:mm:ss",
+        shortTimeFormat: "HH:mm",
         weekStart: 1,
     });
     await makeMockServer();
