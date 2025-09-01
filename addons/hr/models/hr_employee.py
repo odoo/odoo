@@ -16,6 +16,7 @@ from odoo.fields import Domain
 from odoo.exceptions import ValidationError, AccessError, RedirectWarning, UserError
 from odoo.tools import convert, format_time, email_normalize, SQL, Query
 from odoo.tools.intervals import Intervals
+from odoo.addons.hr.models.hr_version import format_date_abbr
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -273,6 +274,14 @@ class HrEmployee(models.Model):
             or field.name not in ('activity_calendar_event_id', 'rating_ids', 'website_message_ids', 'message_has_sms_error')
         )
 
+    def check_no_existing_contract(self, date):
+        if isinstance(date, str):
+            date = fields.Date.from_string(date)
+        if self._is_in_contract(date):
+            raise ValidationError(self.env._("The employee is already in contract on %s. "
+                                             "Please select a date outside existing contracts",
+                                             format_date_abbr(self.env, date)))
+
     @api.onchange('contract_template_id')
     def _onchange_contract_template_id(self):
         if self.contract_template_id:
@@ -474,8 +483,32 @@ class HrEmployee(models.Model):
         new_version = version_to_copy.sudo().copy(values)
         return new_version.sudo(False)
 
+    def create_contract(self, date):
+        # Here we can assume that there is no existing contract on the date given
+        self.ensure_one()
+        if date and isinstance(date, str):
+            date = fields.Date.to_date(date)
+
+        contracts = self._get_contract_versions(date)[self.id]
+        future_contract_dates = [d for d in list(contracts.keys()) if d > date]
+        new_contract_date_end = min(future_contract_dates) + relativedelta(days=-1) if future_contract_dates else False
+
+        # There is already a version but with no contract defined on it so we simply write on it the dates
+        if version_same_date := self.version_ids.filtered(lambda v: v.date_version == date):
+            version_same_date.write({
+                'contract_date_start': date,
+                'contract_date_end': new_contract_date_end
+            })
+            return version_same_date
+
+        return self.create_version({
+            'date_version': date,
+            'contract_date_start': date,
+            'contract_date_end': new_contract_date_end
+        })
+
     def _is_in_contract(self, date):
-        return self._get_version(date)._is_in_contract(date)
+        return self._get_contract_dates(date) != (False, False)
 
     def _get_contracts(self, date_start=None, date_end=None, use_latest_version=True, domain=None):
         """
@@ -1551,17 +1584,6 @@ class HrEmployee(models.Model):
             'domain': [('employee_id', '=', self.employee_id.id)],
             'search_view_id': self.env.ref('hr.hr_version_search_view').id
         }
-
-    def action_new_contract(self):
-        self.ensure_one()
-        if not self.contract_date_end:
-            raise UserError(self.env._("Before creating a new contract, close the current one by setting an end date."))
-        if self.current_date_version <= self.contract_date_end:
-            raise UserError(self.env._("Before creating a new contract, create a version that is set after the contract end date"))
-        self.write({
-            'contract_date_start': False,
-            'contract_date_end': False,
-        })
 
     def _get_store_avatar_card_fields(self, target):
         employee_fields = [
