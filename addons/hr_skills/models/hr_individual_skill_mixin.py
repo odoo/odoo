@@ -33,6 +33,12 @@ class HrIndividualSkillMixin(models.AbstractModel):
         """
         return []
 
+    def _can_edit_certification_validity_period(self):
+        # If True, the overlapping constraint on a certification is released:
+        # two certifications are overlapping each other if they have the same skill_level_id, valid_from and valid_to.
+        # This behavior is wanted when the user can change the validity.
+        return True
+
     def _default_skill_type_id(self):
         if self.env.context.get('certificate_skill', False):
             return self.env['hr.skill.type'].search([('is_certification', '=', True)], limit=1)
@@ -103,6 +109,7 @@ class HrIndividualSkillMixin(models.AbstractModel):
             raise ValidationError(error_msg)
 
     def _get_overlapping_individual_skill(self, vals_list):
+        can_edit_certification_validity_period = self._can_edit_certification_validity_period()
         matching_skill_domain = Domain.FALSE
         overlapping_dict = defaultdict(list)
         certification_dict = defaultdict(list)
@@ -114,7 +121,7 @@ class HrIndividualSkillMixin(models.AbstractModel):
                 Domain("id", "!=", individual_skill_vals['id']),
             ])
 
-            if individual_skill_vals['is_certification']:
+            if can_edit_certification_validity_period and individual_skill_vals['is_certification']:
                 ind_domain = Domain.AND([
                     ind_domain,
                     Domain("skill_level_id.id", "=", individual_skill_vals['skill_level_id']),
@@ -159,7 +166,7 @@ class HrIndividualSkillMixin(models.AbstractModel):
             matching_skill_domain = Domain.OR([matching_skill_domain, ind_domain])
         matching_individual_skills = self.env[self._name].search(matching_skill_domain)
         for matching_ind_skill in matching_individual_skills:
-            if matching_ind_skill.is_certification:
+            if can_edit_certification_validity_period and matching_ind_skill.is_certification:
                 similar_certifications = certification_dict.get((
                     matching_ind_skill[self._linked_field_name()].id,
                     matching_ind_skill.skill_id.id,
@@ -308,11 +315,24 @@ class HrIndividualSkillMixin(models.AbstractModel):
         @param {List[vals]} vals_list: list of right leaf of CREATE commands
         @return {List[COMMANDS]} List of CREATE, WRITE, UNLINK commands
         """
+        can_edit_certification_validity_period = self._can_edit_certification_validity_period()
         seen_skills = set()
         skills_to_archive = self.env[self._name]
         vals_to_return = []
 
-        # Retrieve all no expired regular skills and all certification related to the linked_field and skill in vals_list
+        validity_domain = Domain.OR(
+            [
+                Domain("valid_to", "=", False),
+                Domain("valid_to", ">=", fields.Date.today()),
+            ]
+        )
+
+        if can_edit_certification_validity_period:
+            validity_domain = Domain.OR([
+                validity_domain,
+                Domain("is_certification", "=", True),
+            ])
+
         existing_skills_domain = Domain.AND(
             [
                 Domain.OR(
@@ -326,13 +346,7 @@ class HrIndividualSkillMixin(models.AbstractModel):
                         for vals in vals_list
                     ]
                 ),
-                Domain.OR(
-                    [
-                        Domain("valid_to", "=", False),
-                        Domain("valid_to", ">=", fields.Date.today()),
-                        Domain("is_certification", "=", True),
-                    ]
-                ),
+                validity_domain
             ]
         )
 
@@ -341,24 +355,25 @@ class HrIndividualSkillMixin(models.AbstractModel):
             lambda skill: (skill[self._linked_field_name()].id, skill.skill_id.id)
         )
 
-        existing_certifications = existing_skills.filtered(lambda s: s.is_certification)
-        certification_set = {}
-        for cert in existing_certifications:
-            key = (
-                cert[self._linked_field_name()].id,
-                cert.skill_id.id,
-                cert.skill_level_id.id,
-                fields.Date.from_string(cert.valid_from),
-                fields.Date.from_string(cert.valid_to),
-            )
-            certification_set[key] = cert
+        if can_edit_certification_validity_period:
+            existing_certifications = existing_skills.filtered(lambda s: s.is_certification)
+            certification_set = {}
+            for cert in existing_certifications:
+                key = (
+                    cert[self._linked_field_name()].id,
+                    cert.skill_id.id,
+                    cert.skill_level_id.id,
+                    fields.Date.from_string(cert.valid_from),
+                    fields.Date.from_string(cert.valid_to),
+                )
+                certification_set[key] = cert
 
-        certification_types = set(
-            self.env["hr.skill.type"]
-            .browse([vals["skill_type_id"] for vals in vals_list])
-            .filtered("is_certification")
-            .ids
-        )
+            certification_types = set(
+                self.env["hr.skill.type"]
+                .browse([vals["skill_type_id"] for vals in vals_list])
+                .filtered("is_certification")
+                .ids
+            )
         for vals in vals_list:
             individual_skill_id = vals.get(self._linked_field_name(), False)
             skill_id = vals["skill_id"]
@@ -366,7 +381,11 @@ class HrIndividualSkillMixin(models.AbstractModel):
             skill_level_id = vals["skill_level_id"]
             valid_from = fields.Date.from_string(vals.get("valid_from"))
             valid_to = fields.Date.from_string(vals.get("valid_to"))
-            is_certificate = skill_type_id in certification_types
+
+            if can_edit_certification_validity_period:
+                is_certificate = skill_type_id in certification_types
+            else:
+                is_certificate = False
 
             skill_key = (individual_skill_id, skill_id, valid_from, valid_to)
 
