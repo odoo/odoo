@@ -1064,6 +1064,8 @@
                                            placeholder="Payment Terms"
                                            options="{'no_quick_create':True}" readonly="state in ['cancel', 'posted']"/>
                                 </div>
+                                <field name="taxable_supply_date_placeholder" invisible="1"/> <!-- Needed for the placeholder widget -->
+                                <field name="taxable_supply_date" invisible="not show_taxable_supply_date" readonly="state != 'draft'" options="{'placeholder_field': 'taxable_supply_date_placeholder'}"/>
                                 <field name="delivery_date" invisible="not show_delivery_date" readonly="state != 'draft'"/>
                                 <label for="journal_id" groups="account.group_account_readonly"/>
                                 <label for="currency_id" groups="!account.group_account_readonly,base.group_multi_currency"/>
