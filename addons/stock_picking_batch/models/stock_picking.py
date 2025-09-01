@@ -174,13 +174,13 @@ class StockPicking(models.Model):
 
         return res
 
-    def _create_backorder(self, backorder_moves=None):
+    def _create_backorder(self, backorder_moves=None, from_manual_backorder=False):
         pickings_to_detach = self.env['stock.picking'].browse(self.env.context.get('pickings_to_detach'))
         for picking in self:
             # Avoid inconsistencies in states of the same batch when validating a single picking in a batch.
             if picking.batch_id and picking.state != 'done' and any(p not in self for p in picking.batch_id.picking_ids - pickings_to_detach):
                 picking.batch_id = None
-        return super()._create_backorder(backorder_moves)
+        return super()._create_backorder(backorder_moves, from_manual_backorder)
 
     def action_cancel(self):
         res = super().action_cancel()

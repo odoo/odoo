@@ -1600,11 +1600,16 @@ class TestPacking(TestPackingCommon):
         picking.action_confirm()
         picking.action_split_transfer()
         self.assertEqual(len(picking.move_ids), 1)
-        self.assertEqual(picking.move_ids[0].product_uom_qty, 8)
+        # Since the reservation method is set to 'manual' for the internal picking type,
+        # So, both original picking and it's backorder should also follow the 'manual' reservation.
+        self.assertRecordValues(picking.move_ids, [
+            {'product_id': self.productA.id, 'product_uom_qty': 8, 'quantity': 0},
+        ])
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
-        self.assertEqual(len(backorder.move_ids), 2)
-        self.assertEqual(backorder.move_ids[0].product_uom_qty, 2)
-        self.assertEqual(backorder.move_ids[1].product_uom_qty, 10)
+        self.assertRecordValues(backorder.move_ids.sorted('product_id'), [
+            {'product_id': self.productA.id, 'product_uom_qty': 2, 'quantity': 0},
+            {'product_id': self.productB.id, 'product_uom_qty': 10, 'quantity': 0},
+        ])
 
     def test_put_in_pack_partial_different_destinations(self):
         """ Test putting some of the move lines of a pikcing with different destinations in a package """
