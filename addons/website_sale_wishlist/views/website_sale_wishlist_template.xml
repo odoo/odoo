@@ -308,9 +308,8 @@
 
                         <div
                             id="o_comparelist_table"
-                            class="o_wishlist_table"
                             style="--o-wsale-products-grid-gap: 16px;"
-                            t-attf-class="grid table-comparator mb-5 {{website.wishlist_opt_products_design_classes}}"
+                            t-attf-class="o_wishlist_table grid table-comparator mb-5 {{website.wishlist_opt_products_design_classes}}"
                         >
                             <t t-foreach="wishes" t-as="wish">
                                 <t t-set="combination_info" t-value="wish.product_id._get_combination_info_variant()"/>
