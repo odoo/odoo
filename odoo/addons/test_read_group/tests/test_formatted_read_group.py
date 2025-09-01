@@ -1615,7 +1615,7 @@ class TestFormattedReadGroup(common.TransactionCase):
         with self.assertQueries([expected_query + ' DESC']):
             OrderLine.formatted_read_group([], ['order_id'], ['__count'], order='order_id DESC')
 
-    def test_groupby_sequence_fnames_many2one(self):
+    def test_groupby_chain_fnames_many2one(self):
         RelatedBar = self.env['test_read_group.related_bar']
         RelatedFoo = self.env['test_read_group.related_foo']
         RelatedBase = self.env['test_read_group.related_base']
@@ -1761,7 +1761,7 @@ class TestFormattedReadGroup(common.TransactionCase):
         for group in result:
             self.assertEqual(group['__count'], RelatedBase.search_count(group['__extra_domain']))
 
-    def test_groupby_sequence_fnames_char(self):
+    def test_groupby_chain_fnames_char(self):
         RelatedBar = self.env['test_read_group.related_bar']
         RelatedFoo = self.env['test_read_group.related_foo']
         RelatedBase = self.env['test_read_group.related_base']
@@ -1953,7 +1953,7 @@ class TestFormattedReadGroup(common.TransactionCase):
             for group in result:
                 self.assertEqual(group['__count'], RelatedBase.search_count(group['__extra_domain']))
 
-    def test_groupby_sequence_fnames_date(self):
+    def test_groupby_chain_fnames_date(self):
         RelatedFoo = self.env['test_read_group.related_foo']
         RelatedBase = self.env['test_read_group.related_base']
 
