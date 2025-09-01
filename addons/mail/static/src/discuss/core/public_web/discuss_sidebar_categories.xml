@@ -34,15 +34,15 @@
         <div class="o-mail-DiscussSidebarCategory position-relative d-flex align-items-center rounded opacity-trigger-hover" t-att-class="{ 'mx-2 my-1 position-relative': store.discuss.isSidebarCompact, 'mt-1 ms-4 me-2 pe-1': !store.discuss.isSidebarCompact }" t-attf-class="#{category.extraClass}" name="header" t-ref="root">
             <button class="o-mail-DiscussSidebarCategory-toggler btn btn-link text-reset flex-grow-1 d-flex p-0 text-start" t-att-class="{ 'align-items-baseline o-gap-0_5': !store.discuss.isSidebarCompact, 'align-items-center justify-content-center border-0 o-compact gap-1': store.discuss.isSidebarCompact }" t-on-click="() => this.toggle()" name="toggler">
                 <t t-if="store.discuss.isSidebarCompact">
-                    <i class="o-mail-DiscussSidebarCategory-chevronCompact position-absolute fa-fw o-xsmaller" t-att-class="{
+                    <i class="o-mail-DiscussSidebarCategory-chevronCompact position-absolute fa-fw o-xsmaller o-mt-0_5" t-att-class="{
                         'oi oi-chevron-down': category.open,
                         'oi oi-chevron-right': !category.open,
                     }"/>
                     <span class="rounded p-1"><i t-if="store.channels.status === 'fetching'" class="fa fa-fw fa-circle-o-notch fa-spin"/><i t-else="" class="fa-fw fa-lg" t-att-class="category.icon ?? 'fa fa-user'"/></span>
                 </t>
                 <t t-else="">
-                    <span t-if="store.channels.status === 'fetching'" class="o-visible-short-delay"><i class="o-mail-DiscussSidebarCategory-icon o-xxsmaller fa fa-fw fa-circle-o-notch fa-spin opacity-50"/></span>
-                    <i t-else="" class="o-mail-DiscussSidebarCategory-icon o-xsmaller fa-fw position-absolute ms-n3 align-self-center" t-att-class="category.open ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
+                    <span t-if="store.channels.status === 'fetching'" class="o-visible-short-delay"><i class="o-mail-DiscussSidebarCategory-icon o-xxsmaller fa fa-fw fa-circle-o-notch fa-spin opacity-50 o-mt-0_5"/></span>
+                    <i t-else="" class="o-mail-DiscussSidebarCategory-icon o-xsmaller fa-fw position-absolute ms-n3 align-self-center o-mt-0_5" t-att-class="category.open ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
                     <span class="o-mail-DiscussSidebarCategory-title text-break smaller"
                         t-att-class="{
                             'fs-bold': category.open,
