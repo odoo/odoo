@@ -383,10 +383,3 @@ class ResUsers(models.Model):
             res['views'] = [(self.env.ref('base.view_users_form').id, 'form')]
 
         return res
-
-    def _get_store_avatar_card_fields(self, target):
-        avatar_card_fields = super()._get_store_avatar_card_fields(target)
-        if target.is_internal(self.env):
-            employee_fields = self.employee_ids._get_store_avatar_card_fields(target)
-            avatar_card_fields.append(Store.Many("employee_ids", employee_fields, mode="ADD"))
-        return avatar_card_fields

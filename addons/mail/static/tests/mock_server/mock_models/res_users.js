@@ -197,6 +197,12 @@ export class ResUsers extends webModels.ResUsers {
     }
 
     _get_store_avatar_card_fields() {
-        return ["email", "im_status", "name", "partner_id", "phone", "share"];
+        return [
+            "share",
+            mailDataHelpers.Store.one(
+                "partner_id",
+                this.env["res.partner"]._get_store_avatar_card_fields()
+            ),
+        ];
     }
 }
