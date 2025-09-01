@@ -22,7 +22,7 @@ To publish a partner, set a *Level* in their contact form (in the Partner Assign
         'demo/res_partner_grade_demo.xml',
     ],
     'assets': {
-        'website.website_builder_assets': [
+        'html_builder.assets': [
             'website_partnership/static/src/website_builder/**/*',
         ],
         'web.assets_tests': [
