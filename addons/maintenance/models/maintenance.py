@@ -131,14 +131,16 @@ class MaintenanceEquipment(models.Model):
 
     name = fields.Char('Equipment Name', required=True, translate=True)
     active = fields.Boolean(default=True)
-    owner_user_id = fields.Many2one('res.users', string='Owner', tracking=True, index='btree_not_null')
+    owner_user_id = fields.Many2one('res.users', string='Owner', compute='_compute_owner', store=True, readonly=False,
+                        tracking=True, index='btree_not_null')
     category_id = fields.Many2one('maintenance.equipment.category', string='Equipment Category',
                                   tracking=True, group_expand='_read_group_category_ids', index='btree_not_null')
     partner_id = fields.Many2one('res.partner', string='Vendor', check_company=True)
     partner_ref = fields.Char('Vendor Reference')
     model = fields.Char('Model')
     serial_no = fields.Char('Serial Number', copy=False)
-    assign_date = fields.Date('Assigned Date', tracking=True)
+    assign_date = fields.Date(string='Assigned Date', compute='_compute_equipment_assignment_fields', store=True,
+                    readonly=False, tracking=True)
     cost = fields.Float('Cost')
     note = fields.Html('Note')
     warranty_date = fields.Date('Warranty Expiration Date')
@@ -146,6 +148,49 @@ class MaintenanceEquipment(models.Model):
     scrap_date = fields.Date('Scrap Date')
     maintenance_ids = fields.One2many('maintenance.request', 'equipment_id')
     equipment_properties = fields.Properties('Properties', definition='category_id.equipment_properties_definition', copy=True)
+    equipment_assign_to = fields.Selection(selection=[('other', 'Other')], string='Used By')
+    is_assigned = fields.Boolean(compute='_compute_is_assigned', search='_search_is_assigned')
+
+    def _get_owner_methods_by_equipment_assign_to(self):
+        return {
+            False: lambda equipment: equipment.owner_user_id,
+            'other': lambda equipment: self.env.user.id,
+        }
+
+    def _get_assign_fields(self):
+        return []
+
+    def _get_assignment_handlers_by_equipment_assign_to(self):
+        return {
+            'other': lambda eq: {field: eq[field] or False for field in self._get_assign_fields()},
+        }
+
+    @api.depends(lambda self: self._get_assign_fields() + ['equipment_assign_to'])
+    def _compute_owner(self):
+        owner_methods = self._get_owner_methods_by_equipment_assign_to()
+        for equipment in self:
+            owner_method = owner_methods.get(equipment.equipment_assign_to)
+            if owner_method:
+                equipment.owner_user_id = owner_method(equipment)
+            else:
+                equipment.owner_user_id = self.env.user.id
+
+    @api.depends("equipment_assign_to")
+    def _compute_equipment_assignment_fields(self):
+        assignment_handlers = self._get_assignment_handlers_by_equipment_assign_to()
+        today = fields.Date.context_today(self)
+        for equipment in self:
+            assign_to = equipment.equipment_assign_to
+            assignment_handler = assignment_handlers.get(assign_to)
+            if assignment_handler:
+                values = assignment_handler(equipment)
+                values['assign_date'] = today
+                equipment.update(values)
+
+    @api.depends('owner_user_id')
+    def _compute_is_assigned(self):
+        for equipment in self:
+            equipment.is_assigned = bool(equipment.owner_user_id)
 
     @api.onchange('category_id')
     def _onchange_category_id(self):
@@ -178,6 +223,14 @@ class MaintenanceEquipment(models.Model):
         search_domain = self.env['ir.rule']._compute_domain(categories._name)
         category_ids = categories.sudo()._search(search_domain, order=categories._order)
         return categories.browse(category_ids)
+
+    def _search_is_assigned(self, operator, value):
+        if operator not in ('=', '!=') or value not in (True, False):
+            return NotImplemented
+        is_equipment_assigned = (operator == "=") == value
+        if is_equipment_assigned:
+            return [('owner_user_id', '!=', False)]
+        return [('owner_user_id', '=', False)]
 
 
 class MaintenanceRequest(models.Model):
