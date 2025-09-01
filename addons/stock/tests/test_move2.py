@@ -2895,7 +2895,6 @@ class TestRoutes(TestStockCommon):
         new_loc = self.env['stock.location'].create({
             'name': 'New_location',
             'usage': 'internal',
-            'location_id': self.env.ref('stock.stock_location_locations').id,
         })
         picking_type = self.env['stock.picking.type'].create({
             'name': 'new_picking_type',

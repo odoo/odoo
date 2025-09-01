@@ -55,12 +55,10 @@ class ResCompany(models.Model):
            in case of resuply routes between warehouses belonging to the same company, because
            we don't want to create accounting entries at that time.
         '''
-        parent_location = self.env.ref('stock.stock_location_locations', raise_if_not_found=False)
         for company in self:
             location = self.env['stock.location'].create({
                 'name': _('Inter-warehouse transit'),
                 'usage': 'transit',
-                'location_id': parent_location and parent_location.id or False,
                 'company_id': company.id,
                 'active': False
             })
@@ -73,34 +71,28 @@ class ResCompany(models.Model):
             })
 
     def _create_inventory_loss_location(self):
-        parent_location = self.env.ref('stock.stock_location_locations_virtual', raise_if_not_found=False)
         for company in self:
             inventory_loss_location = self.env['stock.location'].create({
                 'name': 'Inventory adjustment',
                 'usage': 'inventory',
-                'location_id': parent_location.id,
                 'company_id': company.id,
             })
             self.env['ir.default'].set('product.template', 'property_stock_inventory', inventory_loss_location.id, company_id=company.id)
 
     def _create_production_location(self):
-        parent_location = self.env.ref('stock.stock_location_locations_virtual', raise_if_not_found=False)
         for company in self:
             production_location = self.env['stock.location'].create({
                 'name': 'Production',
                 'usage': 'production',
-                'location_id': parent_location.id,
                 'company_id': company.id,
             })
             self.env['ir.default'].set('product.template', 'property_stock_production', production_location.id, company_id=company.id)
 
     def _create_scrap_location(self):
-        parent_location = self.env.ref('stock.stock_location_locations_virtual', raise_if_not_found=False)
         for company in self:
             scrap_location = self.env['stock.location'].create({
                 'name': 'Scrap',
                 'usage': 'inventory',
-                'location_id': parent_location.id,
                 'company_id': company.id,
             })
 

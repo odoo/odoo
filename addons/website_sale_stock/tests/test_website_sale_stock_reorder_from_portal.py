@@ -40,8 +40,9 @@ class TestWebsiteSaleStockReorderFromPortal(HttpCase, WebsiteSaleStockCommon):
         })
         order.message_subscribe(user_admin.partner_id.ids)
 
-        cls._add_product_qty_to_wh(cls.available_product.id, 10, 8)
-        cls._add_product_qty_to_wh(cls.partially_available_product.id, 3, 8)
+        stock_loc_id = cls.env.ref('stock.stock_location_stock').id
+        cls._add_product_qty_to_wh(cls.available_product.id, 10, stock_loc_id)
+        cls._add_product_qty_to_wh(cls.partially_available_product.id, 3, stock_loc_id)
 
     def test_website_sale_stock_reorder_from_portal_stock(self):
         self.start_tour("/", 'website_sale_stock_reorder_from_portal', login='admin')

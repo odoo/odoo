@@ -309,9 +309,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         # Set 2 steps receipt
         self.warehouse.write({"reception_steps": "two_steps"})
         # Set 'Input' parent location to 'Physical locations'
-        physical_locations = self.env.ref("stock.stock_location_locations")
         input_location = self.warehouse.wh_input_stock_loc_id
-        input_location.write({"location_id": physical_locations.id})
 
         # Create Purchase
         po = self.env['purchase.order'].create({

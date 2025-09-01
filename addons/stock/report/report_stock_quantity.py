@@ -53,7 +53,9 @@ WITH
     warehouse_cte AS(
         SELECT sl.id as sl_id, w.id as w_id
         FROM stock_location sl
-        LEFT JOIN stock_warehouse w ON sl.parent_path::text like concat('%%/', w.view_location_id, '/%%')
+        LEFT JOIN stock_warehouse w
+            ON sl.parent_path LIKE concat('%%/', w.view_location_id, '/%%')
+            OR sl.parent_path LIKE concat(w.view_location_id, '/%%')
     ),
     existing_sm (id, product_id, tmpl_id, product_qty, date, state, company_id, whs_id, whd_id) AS (
         SELECT m.id, m.product_id, pt.id, m.product_qty, m.date, m.state, m.company_id, source.w_id, dest.w_id
@@ -136,7 +138,9 @@ FROM (SELECT
         (now() at time zone 'utc')::date + interval '%(report_period)s month', '1 day'::interval) date,
         stock_quant q
     LEFT JOIN stock_location l on (l.id=q.location_id)
-    LEFT JOIN stock_warehouse wh ON l.parent_path like concat('%%/', wh.view_location_id, '/%%')
+    LEFT JOIN stock_warehouse wh
+        ON l.parent_path LIKE concat('%%/', wh.view_location_id, '/%%')
+        OR l.parent_path LIKE concat(wh.view_location_id, '/%%')
     LEFT JOIN product_product pp on pp.id=q.product_id
     WHERE
         (l.usage = 'internal' AND wh.id IS NOT NULL) OR
