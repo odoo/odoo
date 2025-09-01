@@ -729,11 +729,10 @@ class ForumPost(models.Model):
     # ----------------------------------------------------------------------
 
     def _mail_get_operation_for_mail_message_operation(self, message_operation):
+        operations = super()._mail_get_operation_for_mail_message_operation(message_operation)
         if message_operation in ('write', 'unlink'):
-            filtered_self = self.filtered(lambda post: post.can_edit)
-        else:
-            filtered_self = self
-        return super(ForumPost, filtered_self)._mail_get_operation_for_mail_message_operation(message_operation)
+            operations = [(Domain('can_edit', '=', True) & domain, op) for domain, op in operations]
+        return operations
 
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
         groups = super()._notify_get_recipients_groups(

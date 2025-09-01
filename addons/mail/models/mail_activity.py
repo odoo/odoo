@@ -9,12 +9,15 @@ from datetime import date, datetime, timedelta
 from dateutil.relativedelta import MO, relativedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
+from odoo.fields import Domain
 from odoo.tools import is_html_empty
 from odoo.tools.misc import clean_context, get_lang, groupby
 from odoo.addons.mail.tools.discuss import Store
+from .mail_message import condition_values
 
 _logger = logging.getLogger(__name__)
+SECURITY_FIELDS = ('res_model', 'res_id', 'user_id')
 
 
 class MailActivity(models.Model):
@@ -243,9 +246,37 @@ class MailActivity(models.Model):
             doc_operation = getattr(
                 documents, '_mail_post_access', 'read' if operation == 'read' else 'write'
             )
-            if doc_result := documents._check_access(doc_operation):
-                for document in doc_result[0]:
-                    forbidden_ids.extend(docid_actids[document.id])
+            try:
+                doc_result = documents._check_access(doc_operation)
+                if doc_result is None or not documents:
+                    # Validation of whether the res_id exists is required.
+                    # Check if the record exists by looking up any value in
+                    # cache, if no value is found, just fetch any field.
+                    some_field = None
+                    for field in documents._fields.values():
+                        if not (field.store and field.column_type):
+                            continue
+                        if documents._ids[0] in field._get_all_cache_ids(documents.env):
+                            break
+                        if field.prefetch is True and documents._has_field_access(field, 'read'):
+                            some_field = field
+                    else:
+                        if some_field is not None:
+                            for doc in documents:
+                                some_field.__get__(doc)
+                                break
+                        else:
+                            doc_forbidden = documents - documents.exists()
+                    continue
+                doc_forbidden = doc_result[0]
+            except MissingError:
+                doc_existing = documents.exists()
+                doc_result = doc_existing._check_access(doc_operation)
+                doc_forbidden = documents - doc_existing
+                if doc_result:
+                    doc_forbidden += doc_result[0]
+            for document in doc_forbidden:
+                forbidden_ids.extend(docid_actids[document.id])
 
         if forbidden_ids:
             forbidden = self.browse(forbidden_ids)
@@ -253,6 +284,7 @@ class MailActivity(models.Model):
                 result = (result[0] + forbidden, result[1])
             else:
                 result = (forbidden, lambda: forbidden._make_access_error(operation))
+            forbidden.invalidate_recordset()  # avoid cache pollution
 
         return result
 
@@ -369,39 +401,47 @@ class MailActivity(models.Model):
 
         The method is inspired by what has been done on mail.message. """
 
+        domain = Domain(domain).optimize(self)
         # Rules do not apply to administrator
-        if self.env.is_superuser() or bypass_access:
-            return super()._search(domain, offset, limit, order, bypass_access=True, **kwargs)
+        if self.env.su or bypass_access or domain.is_false():
+            return super()._search(domain, offset, limit, order, bypass_access=bypass_access, **kwargs)
 
-        # retrieve activities and their corresponding res_model, res_id
-        # Don't use the ORM to avoid cache pollution
+        res_model_names = condition_values(self, 'res_model', domain) or ()
+        if 0 < len(res_model_names) <= 5:
+            # search by model and res_id
+            sec_domain = Domain('user_id', '=', self.env.uid)
+            env = self.with_context(active_test=False).env
+            for res_model_name in res_model_names:
+                if res_model_name not in env:
+                    continue
+                comodel = env[res_model_name]
+                codomain = Domain('res_model', '=', comodel._name)
+                comodel_res_ids = condition_values(self, 'res_id', domain.map_conditions(
+                    lambda cond: codomain & cond if cond.field_expr == 'res_model' else cond
+                ))
+                comodel_domain = Domain('id', 'in', comodel_res_ids) if comodel_res_ids else Domain.TRUE
+                operation = getattr(comodel, '_mail_post_access', 'read')
+                if operation == 'read':
+                    query = comodel._search(comodel_domain)
+                elif comodel.has_access(operation):
+                    comodel = comodel.sudo()
+                    comodel_domain &= self.env['ir.rule']._compute_domain(comodel._name, operation)
+                    comodel_domain = comodel_domain.optimize_full(comodel)
+                    query = comodel._search(comodel_domain)
+                else:
+                    continue
+                if query.is_empty():
+                    continue
+                if query.where_clause:
+                    codomain &= Domain('res_id', 'in', query)
+                sec_domain |= codomain
+
+            return super()._search(domain & sec_domain, offset, limit, order, **kwargs)
+
+        # retrieve activities and filter using their security rules
         query = super()._search(domain, offset, limit, order, **kwargs)
-        fnames_to_read = ['id', 'res_model', 'res_id', 'user_id']
-        rows = self.env.execute_query(query.select(
-            *[self._field_to_sql(self._table, fname) for fname in fnames_to_read],
-        ))
-
-        # group res_ids by model, and determine accessible records
-        # Note: the user can read all activities assigned to him (see at the end of the method)
-        model_ids = defaultdict(set)
-        for __, res_model, res_id, user_id in rows:
-            if user_id != self.env.uid and res_model:
-                model_ids[res_model].add(res_id)
-
-        allowed_ids = defaultdict(set)
-        for res_model, res_ids in model_ids.items():
-            records = self.env[res_model].browse(res_ids).exists()
-            # fall back on related document access right checks. Use the same as defined for mail.thread
-            # if available; otherwise fall back on read
-            operation = getattr(records, '_mail_post_access', 'read')
-            allowed_ids[res_model] = set(records._filtered_access(operation)._ids)
-
-        activities = self.browse(
-            id_
-            for id_, res_model, res_id, user_id in rows
-            if user_id == self.env.uid or res_id in allowed_ids[res_model]
-        )
-        return activities._as_query(order)
+        records = self._fetch_query(query, [self._fields[f] for f in SECURITY_FIELDS])
+        return records._filtered_access('read')._as_query(ordered=bool(order))
 
     @api.depends('summary', 'activity_type_id')
     def _compute_display_name(self):

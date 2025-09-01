@@ -39,8 +39,10 @@ class ThreadController(http.Controller):
         behavior is to rely on _mail_post_access but it might be customized.
         See '_mail_get_operation_for_mail_message_operation'. """
         thread_su = request.env[thread_model].sudo().browse(int(thread_id))
-        access_mode = thread_su._mail_get_operation_for_mail_message_operation('create')[thread_su]
-        if not access_mode:
+        for document_domain, access_mode in thread_su._mail_get_operation_for_mail_message_operation('create'):
+            if thread_su.filtered_domain(document_domain):
+                break
+        else:
             return request.env[thread_model]  # match _get_thread_with_access void result
         return cls._get_thread_with_access(thread_model, thread_id, mode=access_mode, **kwargs)
 

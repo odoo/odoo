@@ -495,7 +495,7 @@ class Many2one(_Relational):
         if left_join:
             comodel, coalias = self.join(model, alias, query)
             if not positive:
-                value = (~value).optimize_full(model)
+                value = (~value).optimize_full(comodel)
             sql = value._to_sql(comodel, coalias, query)
             if self.company_dependent:
                 sql = self._condition_to_sql_company(sql, field_expr, operator, value, model, alias, query)
