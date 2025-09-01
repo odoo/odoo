@@ -134,25 +134,20 @@ test("editing livechat status is synced between tabs", async () => {
     const tab2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: tab1 });
     await openDiscuss(channelId, { target: tab2 });
-    await contains(".o-livechat-ChannelInfoList button.active", {
+    await contains(`${tab1.selector} .o-livechat-ChannelInfoList button.active`, {
         text: "In progress",
-        target: tab1,
     });
-    await contains(".o-livechat-ChannelInfoList button.active", {
+    await contains(`${tab2.selector} .o-livechat-ChannelInfoList button.active`, {
         text: "In progress",
-        target: tab2,
     });
-    await click(".o-livechat-ChannelInfoList button", {
+    await click(`${tab1.selector} .o-livechat-ChannelInfoList button`, {
         text: "Waiting for customer",
-        target: tab1,
     });
-    await contains(".o-livechat-ChannelInfoList button.active", {
+    await contains(`${tab1.selector} .o-livechat-ChannelInfoList button.active`, {
         text: "Waiting for customer",
-        target: tab1,
     });
-    await contains(".o-livechat-ChannelInfoList button.active", {
+    await contains(`${tab2.selector} .o-livechat-ChannelInfoList button.active`, {
         text: "Waiting for customer",
-        target: tab2,
     }); // Status should be synced with bus
 });
 
