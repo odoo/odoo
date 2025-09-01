@@ -1,5 +1,5 @@
 .o-livechat-LivechatStatusLabel.o-help {
-    color: $purple;
+    color: var(--livechat-LivechatStatusLabel-helpColor, #{$purple});
 }
 
 .o-livechat-LivechatStatusSelection {
@@ -88,4 +88,9 @@
             margin: 0;
         }
     }
+}
+
+.o-livechat-LivechatStatusLabel.position-absolute {
+    background-color: $white;
+    border-radius: 50%;
 }

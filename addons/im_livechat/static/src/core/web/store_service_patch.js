@@ -58,7 +58,7 @@ const storePatch = {
             {
                 label: _t("Looking for help"),
                 status: "need_help",
-                icon: "fa fa-exclamation-circle",
+                icon: "fa fa-lg fa-exclamation-circle",
             },
         ];
     },
