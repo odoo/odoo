@@ -71,7 +71,8 @@
                 <group>
                     <group>
                         <field name="preview_record_ref" string="Recipients" placeholder="Preview on..." options="{'no_create': True}"/>
-                        <field name="target_url" placeholder="Your Home Page"/>
+                        <field name="target_url_placeholder" invisible="1"/><!--used in char field options-->
+                        <field name="target_url" placeholder="Target record (if published) or Home page" options="{'placeholder_field': 'target_url_placeholder'}"/>
                         <field name="res_model" invisible="1"/><!--Get the default model for field pickers-->
                         <field name="res_model" groups="base.group_no_one"/>
                         <field name="post_suggestion" placeholder="Join me at this event!" widget="text_emojis"/>
