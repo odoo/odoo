@@ -11,6 +11,8 @@ export class HrPresenceCogMenu extends FormCogMenu {
     setup() {
         super.setup();
 
+        this.presenceActionItems = [];
+
         onWillStart(async () => {
             await super.onWillStart;
             this.records = await getActionRecords(this.orm);
