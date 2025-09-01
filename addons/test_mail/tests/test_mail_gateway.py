@@ -1454,6 +1454,7 @@ class TestMailgateway(MailGatewayCommon):
         self.format_and_process(
             MAIL_TEMPLATE, self.email_from, f'groups@{self.alias_domain}',
             subject='Reply to reply2_1 (with noise)',
+            date=datetime.now(),
             extra=f'References: {reply1_1.message_id} {reply2_1.message_id}'
         )
         new_msg = self.test_record.message_ids[0]
@@ -1467,9 +1468,9 @@ class TestMailgateway(MailGatewayCommon):
             subject='New thread',
             extra='References:'
         )
-        new_msg = self.test_record.message_ids[0]
-        self.assertEqual(new_msg.parent_id, self.fake_email, 'No free message, attached to thread')
-        self.assertEqual(new_msg.subtype_id, self.env.ref('mail.mt_comment'), 'Mail: parent should be a comment')
+        last_msg = self.test_record.message_ids[0]
+        self.assertEqual(last_msg.parent_id, new_msg, 'No free message, attached to last thread comment / email')
+        self.assertEqual(last_msg.subtype_id, self.env.ref('mail.mt_comment'), 'Mail: parent should be a comment')
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models.unlink', 'odoo.addons.mail.models.mail_mail', 'odoo.tests')
     def test_message_process_references_multi_parent_notflat(self):
@@ -2398,7 +2399,7 @@ class TestMailGatewayReplies(MailGatewayCommon):
                 },
                 'mail_mail_values': {
                     'notified_partner_ids': self.partner_1 + self.partner_admin,
-                    'parent_id': log,  # log serves as thread ancestor
+                    'parent_id': odooext_msg,  # attached to last comment / email when possible
                 },
                 'notif': [
                     {'partner': self.partner_1, 'type': 'email',},
@@ -2418,6 +2419,7 @@ class TestMailGatewayReplies(MailGatewayCommon):
             self.format_and_process(
                 MAIL_TEMPLATE, self.email_from, reply.reply_to,
                 subject='Gateway Creation',
+                date=datetime.now(),
                 extra=f'References: {reply.message_id} <msg1@odoo1>',
                 debug_log=True,
             )
@@ -2467,7 +2469,7 @@ class TestMailGatewayReplies(MailGatewayCommon):
                 },
                 'mail_mail_values': {
                     'notified_partner_ids': self.partner_1 + self.partner_admin,
-                    'parent_id': log,  # log serves as thread ancestor
+                    'parent_id': reply_2,  # attached to last comment / email when possible
                 },
                 'notif': [
                     {'partner': self.partner_1, 'type': 'email',},

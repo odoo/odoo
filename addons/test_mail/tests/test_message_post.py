@@ -1445,7 +1445,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                         subtype_id=self.env.ref('test_mail.st_mail_test_ticket_internal').id,
                         partner_ids=self.user_admin.partner_id.ids,
                     )
-                self.assertEqual(internal_msg.parent_id, initial_msg)
+                self.assertEqual(internal_msg.parent_id, log_msg, 'No email/comment, attached to last message')
                 if subtype:
                     references = f'{initial_msg.message_id} {log_msg.message_id} {internal_msg.message_id}'
                 else:  # no subtype = pure log = not in references
@@ -1471,7 +1471,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                         subject='Welcome',
                         subtype_xmlid='mail.mt_comment',
                     )
-                self.assertEqual(msg.parent_id, initial_msg)
+                self.assertEqual(msg.parent_id, internal_msg, 'No email/comment, attached to last message')
                 self.assertEqual(msg.partner_ids, self.partner_1)
                 self.assertFalse(initial_msg.partner_ids)
                 if subtype:

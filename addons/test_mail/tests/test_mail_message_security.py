@@ -143,7 +143,7 @@ class TestMailMessageAccess(MessageAccessCommon):
     def test_access_create(self):
         """ Test 'group_user' creation rules """
         # prepare 'notified of parent' condition
-        admin_msg = self.record_admin.message_ids[0]
+        admin_msg = self.record_admin.message_ids[-1]
         admin_msg.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
 
         # prepare 'followers' condition
