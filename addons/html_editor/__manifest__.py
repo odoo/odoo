@@ -46,6 +46,7 @@ This addon provides an extensible, maintainable editor.
             ('remove', 'html_editor/static/src/main/toolbar/toolbar.dark.scss'),
             ('remove', 'html_editor/static/src/main/chatgpt/language_selector.dark.scss'),
             ('remove', 'html_editor/static/src/main/table/table_align_selector.dark.scss'),
+            ('remove', 'html_editor/static/src/main/font/font_size_selector.dark.scss'),
         ],
         'html_editor.assets_media_dialog': [
             # Bundle to use the media dialog in the backend and the frontend
@@ -69,6 +70,7 @@ This addon provides an extensible, maintainable editor.
             'html_editor/static/src/main/toolbar/toolbar.dark.scss',
             'html_editor/static/src/main/chatgpt/language_selector.dark.scss',
             'html_editor/static/src/main/table/table_align_selector.dark.scss',
+            'html_editor/static/src/main/font/font_size_selector.dark.scss',
         ],
         'web.assets_tests': [
             'html_editor/static/tests/tours/**/*',
