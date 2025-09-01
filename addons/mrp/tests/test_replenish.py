@@ -270,3 +270,24 @@ class TestMrpReplenish(TestMrpCommon):
             self.assertEqual(form.qty_to_order, 0)
         self.assertEqual(form.qty_to_order, 8)
         self.assertEqual(orderpoint.qty_to_order, 8)
+
+    def test_manuf_lead_time_without_bom(self):
+        """
+        Test that the manufacturing lead time is correctly applied to a product
+        without a Bill of Materials (BoM).
+        """
+        self.env.company.write({'manufacturing_lead': 3.0})
+        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
+        product = self.env['product.product'].create({
+            'name': 'test',
+            'is_storable': True,
+            'route_ids': route_manufacture.ids,
+        })
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'test',
+            'location_id': self.warehouse_1.lot_stock_id.id,
+            'product_id': product.id,
+            'product_min_qty': 0,
+            'product_max_qty': 5,
+        })
+        self.assertEqual(orderpoint.lead_days_date, fields.Date.today() + timedelta(days=3))
