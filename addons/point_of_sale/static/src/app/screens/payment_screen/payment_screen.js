@@ -288,6 +288,9 @@ export class PaymentScreen extends Component {
             await this._finalizeValidation();
         }
     }
+    async beforeSyncAllOrders(){
+        // A hook to perform potential additional localization operations and/or transfomrations on the currentOrder before running sync
+    }
     async _finalizeValidation() {
         if (this.currentOrder.is_paid_with_cash() || this.currentOrder.get_change()) {
             this.hardwareProxy.openCashbox();
@@ -306,6 +309,9 @@ export class PaymentScreen extends Component {
         this.env.services.ui.block();
         let syncOrderResult;
         try {
+            // 0. Execute before sync hook
+            await this.beforeSyncAllOrders();
+
             // 1. Save order to server.
             syncOrderResult = await this.pos.syncAllOrders({ throw: true });
             if (!syncOrderResult) {
