@@ -6,11 +6,11 @@
                 <i t-att-class="props.action.icon"/>
             </button>
             <t t-set-slot="content">
-                <div class="o-mail-QuickReactionMenu d-flex align-items-center px-1 bg-100 border border-secondary rounded-pill shadow-sm" t-ref="toggle">
-                    <button t-foreach="mostFrequentEmojis" t-as="emoji" t-key="emoji" class="o-mail-QuickReactionMenu-emoji o-mail-QuickReactionMenu-popEffect o-navigable d-flex justify-content-center align-items-center rounded-circle btn lh-1 p-1" t-att-class="{ 'bg-secondary': reactedBySelf(emoji) }" t-att-title="getEmojiShortcode(emoji)" t-on-click="() => this.toggleReaction(emoji)">
+                <div class="o-mail-QuickReactionMenu d-flex align-items-center o-px-0_5 bg-100 border border-secondary o-rounded-bubble shadow-sm gap-1" t-ref="toggle">
+                    <button t-foreach="mostFrequentEmojis" t-as="emoji" t-key="emoji" class="o-mail-QuickReactionMenu-emoji o-mail-QuickReactionMenu-popEffect o-navigable d-flex justify-content-center align-items-center o-rounded-bubble btn lh-1 p-1" t-att-class="{ 'bg-secondary': reactedBySelf(emoji) }" t-att-title="getEmojiShortcode(emoji)" t-on-click="() => this.toggleReaction(emoji)">
                         <span class="fs-2" t-esc="emoji"/>
                     </button>
-                    <button class="o-mail-QuickReactionMenu-emojiPicker o-mail-QuickReactionMenu-popEffect o-mail-QuickReactionMenu-popEffect--smaller o-navigable text-muted d-flex justify-content-center align-items-center btn btn-secondary rounded-circle" title="Toggle Emoji Picker" t-on-click="() => this.togglePicker()">
+                    <button class="o-mail-QuickReactionMenu-emojiPicker o-mail-QuickReactionMenu-popEffect o-mail-QuickReactionMenu-popEffect--smaller o-navigable text-muted d-flex justify-content-center align-items-center btn btn-secondary o-rounded-bubble border border-dark-subtle" title="Toggle Emoji Picker" t-on-click="() => this.togglePicker()">
                         <i class="oi oi-close"/>
                     </button>
                 </div>
