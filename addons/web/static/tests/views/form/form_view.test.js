@@ -12701,6 +12701,54 @@ test(`CogMenu dropdown's open/close state shouldn't be modified after 'onchange'
     });
 });
 
+test(`cog menu action is executed with up to date context`, async () => {
+    // this test simulates a case where the context of a form view evolves, which can happen with
+    // js customizations (js_class, custom widgets...) and the user then executes a cog menu action.
+    mockService("action", {
+        doAction(id, { additionalContext }) {
+            expect.step(`doAction ${additionalContext.x}`);
+        },
+    });
+
+    class MyField extends CharField {
+        static template = xml`<button class="my_btn" t-on-click="onClick">Reload</button>`;
+        onClick() {
+            this.props.record.model.load({ context: { x: "z" } });
+        }
+    }
+    fieldsRegistry.add("my_widget", {
+        component: MyField,
+    });
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        resId: 1,
+        arch: `<form><field name="bar" widget="my_widget"/></form>`,
+        context: {
+            x: "y",
+        },
+        info: {
+            actionMenus: {
+                action: [
+                    {
+                        id: 29,
+                        name: "Action partner",
+                    },
+                ],
+            },
+        },
+    });
+    expect(`.o_cp_action_menus .dropdown-toggle`).toHaveCount(1);
+    await toggleActionMenu();
+    await toggleMenuItem("Action Partner");
+
+    await contains(".my_btn").click();
+    await toggleActionMenu();
+    await toggleMenuItem("Action Partner");
+    expect.verifySteps(["doAction y", "doAction z"]);
+});
+
 test.tags("mobile");
 test(`preserve current scroll position on form view while closing dialog`, async () => {
     Partner._views = {
