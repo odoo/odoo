@@ -620,7 +620,7 @@ pivotRegistry.add("ODOO", {
         ((MEASURES_TYPES.includes(field.type) && field.aggregator) || field.type === "many2one") &&
         field.name !== "id" &&
         field.store,
-    isGroupable: (field) => field.groupable,
+    isGroupable: (field) => field.groupable && field.type !== "json",
 });
 
 supportedPivotPositionalFormulaRegistry.add("ODOO", true);
