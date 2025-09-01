@@ -60,12 +60,6 @@
       <field name="model">maintenance.equipment</field>
       <field name="inherit_id" ref="maintenance.hr_equipment_view_search"/>
       <field name="arch" type="xml">
-        <filter name="assigned" position="attributes">
-          <attribute name="domain">['|', ('employee_id', '!=', False), ('department_id', '!=', False)]</attribute>
-        </filter>
-        <filter name="available" position="attributes">
-          <attribute name="domain">[('employee_id', '=', False), ('department_id', '=', False)]</attribute>
-        </filter>
         <field name="owner_user_id" position="after">
           <field name="employee_id"/>
           <field name="department_id"/>
@@ -82,10 +76,17 @@
         <field name="model">maintenance.equipment</field>
         <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='owner_user_id']" position="replace">
-                <field name="equipment_assign_to" widget="radio"/>
-                <field name="employee_id" string="Employee" invisible="equipment_assign_to == 'department' or not equipment_assign_to" widget="many2one_avatar_employee"/>
-                <field name="department_id" string="Department" invisible="equipment_assign_to == 'employee' or not equipment_assign_to"/>
+            <xpath expr="//field[@name='equipment_assign_to']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='equipment_assign_to']" position="after">
+                <field name="employee_id" string="Employee" widget="many2one_avatar_employee"
+                    invisible="equipment_assign_to != 'employee' and equipment_assign_to != 'other'"/>
+                <field name="department_id" string="Department"
+                    invisible="equipment_assign_to != 'department' and equipment_assign_to != 'other'"/>
+            </xpath>
+            <xpath expr="//field[@name='owner_user_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
             </xpath>
         </field>
     </record>
@@ -95,11 +96,16 @@
         <field name="model">maintenance.equipment</field>
         <field name="inherit_id" ref="maintenance.hr_equipment_view_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='owner_user_id']" position='replace'>
+            <xpath expr="//field[@name='owner_user_id']" position='attributes'>
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='owner_user_id']" position='after'>
                 <field name="employee_id" widget="many2one_avatar_employee"/>
             </xpath>
+            <xpath expr="//div[@id='unassigned']" position='attributes'>
+                <attribute name="invisible">is_assigned</attribute>
+            </xpath>
             <xpath expr="//field[@name='serial_no']" position='after'>
-                <div t-if="!record.employee_id.raw_value">Unassigned</div>
                 <field name="employee_id"/>
                 <field name="department_id"/>
             </xpath>
@@ -111,7 +117,10 @@
         <field name="model">maintenance.equipment</field>
         <field name="inherit_id" ref="maintenance.hr_equipment_view_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='owner_user_id']" position="replace">
+            <xpath expr="//field[@name='owner_user_id']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='owner_user_id']" position="after">
                 <field name="employee_id" string="Employee"/>
                 <field name="department_id" string="Department"/>
             </xpath>
