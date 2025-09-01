@@ -14,4 +14,15 @@ patch(ChartDashboardMenu.prototype, {
             granularity: ev.target.value,
         });
     },
+
+    get regionOptions() {
+        return this.env.model.getters.getAvailableChartRegions(this.props.chartId);
+    },
+
+    onRegionSelected(ev) {
+        this.env.model.dispatch("UPDATE_CHART_REGION", {
+            chartId: this.props.chartId,
+            region: ev.target.value,
+        });
+    },
 });

@@ -11,6 +11,16 @@
                     </t>
                 </select>
             </t>
+            <t t-set="region" t-value="env.model.getters.getChartDefinition(props.chartId)?.region"/>
+            <t t-if="regionOptions.length">
+                <select t-on-change="onRegionSelected" class="position-relative o-chart-dashboard-item w-auto form-select rounded py-0 px-1 text-muted" name="chart-region">
+                    <t t-foreach="regionOptions" t-as="option" t-key="option.id">
+                        <option t-att-value="option.id" t-att-selected="option.id === region">
+                            <span t-esc="option.label"/>
+                        </option>
+                    </t>
+                </select>
+            </t>
         </xpath>
     </div>
 </odoo>
