@@ -2,7 +2,7 @@ import { test, expect } from "@odoo/hoot";
 import { click, edit } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { Component, reactive, useState, xml } from "@odoo/owl";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, defineParams, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { useDateTimePicker } from "@web/core/datetime/datetime_hook";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 
@@ -142,4 +142,33 @@ test("value is not updated if it did not change", async () => {
 
     expect(getShortDate(pickerProps.value)).toBe("2023-07-07");
     expect.verifySteps(["2023-07-07"]);
+});
+
+test("select time in the afternoon with pm format (showSeconds = false)", async () => {
+    defineParams({
+        lang_parameters: {
+            date_format: "%d/%m/%Y",
+            time_format: "%I:%M:%S %p",
+            short_time_format: "%I:%M %p",
+        },
+    });
+
+    const defaultPickerProps = {
+        value: DateTime.fromSQL("2023-06-06 08:00:00"),
+        type: "datetime",
+    };
+
+    await mountInput(() => {
+        useDateTimePicker({
+            pickerProps: defaultPickerProps,
+            showSeconds: false,
+        }).state;
+    });
+
+    expect(".datetime_hook_input").toHaveValue("06/06/2023 08:00 AM");
+
+    await click(".datetime_hook_input");
+    await contains(".o_time_picker input").edit("10:00pm");
+    await click(document.body);
+    expect(".datetime_hook_input").toHaveValue("06/06/2023 10:00 PM");
 });
