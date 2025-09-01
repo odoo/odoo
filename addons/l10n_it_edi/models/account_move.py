@@ -1019,11 +1019,13 @@ class AccountMove(models.Model):
                 general_discount = discounted_amount - taxable_amount
                 sequence = len(elements) + 1
 
-                self.invoice_line_ids = [Command.create({
-                    'sequence': sequence,
-                    'name': 'SCONTO' if general_discount < 0 else 'MAGGIORAZIONE',
-                    'price_unit': general_discount,
-                })]
+                # Check if a global discount has been already applied
+                if not self.invoice_line_ids.filtered(lambda l: l.price_total == general_discount):
+                    self.invoice_line_ids = [Command.create({
+                        'sequence': sequence,
+                        'name': 'SCONTO' if general_discount < 0 else 'MAGGIORAZIONE',
+                        'price_unit': general_discount,
+                    })]
 
             for element in tree.xpath('.//Allegati'):
                 attachment_64 = self.env['ir.attachment'].create({
