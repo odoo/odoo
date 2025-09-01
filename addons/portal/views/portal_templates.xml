@@ -81,7 +81,7 @@
             </button>
             <div t-attf-class="dropdown-menu #{_dropdown_menu_class}" role="menu">
                 <t t-foreach="frontend_languages.values()" t-as="lg">
-                    <a class="dropdown-item" t-att-href="url_localized(lang_code=lg.code, prefetch_langs=True, force_default_lang=True)"
+                    <a class="dropdown-item" t-att-href="url_localized(lang_code=lg.code, prefetch_langs=True, force_default_lang=True, change_in_user=change_in_user)"
                     t-attf-class="dropdown-item js_change_lang #{active_lang == lg and 'active'}"
                     t-att-data-url_code="lg.url_code" t-att-title="lg.name.split('/').pop()"
                     role="menuitem">
@@ -409,6 +409,16 @@
                 <i class="fa fa-map-marker fa-fw me-1 text-600"/>
                 <span t-esc="sales_user.city"/>
             </div>
+            <t t-if="len(frontend_languages) &gt; 1">
+                <h5 class="pt-2">Language</h5>
+                <hr class="mt-1"/>
+                <div class="d-flex flex-nowrap align-items-center mb-1">
+                    <i class="fa fa-language fa-fw me-1 text-600"/>
+                    <t t-call="portal.language_selector">
+                        <t t-set="change_in_user" t-value="True"/>
+                    </t>
+                </div>
+            </t>
         </div>
     </template>
 
