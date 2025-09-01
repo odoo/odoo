@@ -7,6 +7,8 @@ import {
     setCellFormat,
     setCellStyle,
     setGlobalFilterValue,
+    createCarousel,
+    addChartFigureToCarousel,
 } from "@spreadsheet/../tests/helpers/commands";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { getCell, getEvaluatedCell } from "@spreadsheet/../tests/helpers/getters";
@@ -161,6 +163,18 @@ test("geo charts are replaced with an image", async function () {
             legendPosition: "none",
         },
     });
+
+    const data = await freezeOdooData(model);
+    expect(data.sheets[0].figures.length).toBe(1);
+    expect(data.sheets[0].figures[0].tag).toBe("image");
+});
+
+test("Carousels figure with odoo data is converted to an image", async function () {
+    const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartFigureId = model.getters.getFigures(sheetId)[0].id;
+    createCarousel(model, { items: [] }, "carouselId");
+    addChartFigureToCarousel(model, "carouselId", chartFigureId);
 
     const data = await freezeOdooData(model);
     expect(data.sheets[0].figures.length).toBe(1);
