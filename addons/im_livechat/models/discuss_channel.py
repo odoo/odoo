@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, tools
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tools import email_normalize, email_split, html2plaintext, plaintext2html
 
@@ -463,11 +463,12 @@ class DiscussChannel(models.Model):
         for message in (self.message_ids - self.message_ids.sudo()._filter_empty()).sorted("id"):
             if message.author_id == chatbot_op and not last_msg_from_chatbot:
                 parts.append(Markup("<br/>"))
-            if message.author_id == chatbot_op:
-                parts.append(Markup("<strong>%s</strong><br/>") % html2plaintext(message.body))
-            else:
-                parts.append(Markup("%s<br/>") % html2plaintext(message.body))
-            last_msg_from_chatbot = message.author_id == chatbot_op
+            if not tools.is_html_empty(message.body):
+                if message.author_id == chatbot_op:
+                    parts.append(Markup("<strong>%s</strong><br/>") % html2plaintext(message.body))
+                else:
+                    parts.append(Markup("%s<br/>") % html2plaintext(message.body))
+                last_msg_from_chatbot = message.author_id == chatbot_op
         return Markup("").join(parts)
 
     def _get_livechat_session_fields_to_store(self):
