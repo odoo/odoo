@@ -747,6 +747,19 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
             f"{self.analytic_account_2.id}": 60,
         })
 
+    def test_zero_balance_invoice_with_analytic_line(self):
+        """ Test that creating an analytic line on a 0-amount invoice does not crash and updates analytic_distribution safely. """
+        self.product_a.list_price = 0.0
+        invoice = self.create_invoice(self.partner_a, self.product_a)
+        invoice.action_post()
+        self.env['account.analytic.line'].create({
+            'name': 'Zero Balance Test',
+            'account_id': self.analytic_account_1.id,
+            'amount': 33.0,
+            'move_line_id': invoice.invoice_line_ids.id,
+        })
+        self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {f"{self.analytic_account_1.id}": 100.0})
+
     def test_analytic_dynamic_update(self):
         plan1 = self.analytic_account_1.plan_id._column_name()
         plan2 = self.analytic_account_3.plan_id._column_name()
