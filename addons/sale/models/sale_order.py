@@ -1395,7 +1395,7 @@ class SaleOrder(models.Model):
         )
 
         values = {
-            'ref': self.client_order_ref or '',
+            'ref': self.client_order_ref or self.name,
             'move_type': 'out_invoice',
             'narration': self.note,
             'currency_id': self.currency_id.id,
