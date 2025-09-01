@@ -38,17 +38,13 @@ export class VersionsTimeline extends StatusBarField {
             });
         }
 
-        const pickerProps = {
-            type: "date",
-        };
-
         this.dateTimePicker = useDateTimePicker({
             target: `datetime-picker-target-version`,
             onApply: (date) => {
                 if (date) this.createVersion(date);
             },
             get pickerProps() {
-                return pickerProps;
+                return { type: "date" };
             },
         });
     }
@@ -59,7 +55,6 @@ export class VersionsTimeline extends StatusBarField {
             { date_version: date },
         ]);
 
-        // TODO: why chat button and org chart button disappear
         const { record } = this.props;
         await record.save();
         await this.props.record.model.load({

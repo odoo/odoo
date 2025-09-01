@@ -290,8 +290,7 @@
                                             <span invisible="not contract_date_start">to</span>
                                             <field name="contract_date_end" string="End Date" placeholder="Indefinite"
                                                 class="o_hr_narrow_field ms-3" invisible="not contract_date_start"/>
-                                            <button name="action_new_contract" type="object" string="New Contract" class="btn btn-link p-0 ms-auto"
-                                                invisible="not contract_date_start and not contract_date_end"/>
+                                            <widget name="button_new_contract"/>
                                         </div>
                                         <label for="wage"/>
                                         <div class="o_row" name="wage">
