@@ -103,7 +103,8 @@ class ProductCatalogMixin(models.AbstractModel):
                 else:
                     no_section_count += 1
 
-        if no_section_count > 0 or not lines:
+        if no_section_count > 0 or not sections:
+            # If there are products outside of a section or no section at all
             sections[False] = {
                 'id': False,
                 'name': self.env._("No Section"),
