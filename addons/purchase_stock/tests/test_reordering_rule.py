@@ -211,7 +211,6 @@ class TestReorderingRule(TransactionCase):
         outside_loc = self.env['stock.location'].create({
             'name': 'outside',
             'usage': 'internal',
-            'location_id': self.env.ref('stock.stock_location_locations').id,
         })
         route = self.env['stock.route'].create({
             'name': 'resupply outside',

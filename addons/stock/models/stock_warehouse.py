@@ -122,8 +122,7 @@ class StockWarehouse(models.Model):
                 if 'partner_id' not in vals:
                     vals['partner_id'] = company.partner_id.id
             # create view location for warehouse then create all locations
-            loc_vals = {'name': vals.get('code'), 'usage': 'view',
-                        'location_id': self.env.ref('stock.stock_location_locations').id}
+            loc_vals = {'name': vals.get('code'), 'usage': 'view'}
             if vals.get('company_id'):
                 loc_vals['company_id'] = vals.get('company_id')
             vals['view_location_id'] = self.env['stock.location'].create(loc_vals).id

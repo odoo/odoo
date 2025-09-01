@@ -248,7 +248,6 @@ class TestReports(TestReportsCommon):
         stock_without_wh = self.env['stock.location'].create({
             'name': 'Stock Outside Warehouse',
             'usage': 'internal',
-            'location_id': self.env.ref('stock.stock_location_locations').id,
         })
         self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': product.id,
