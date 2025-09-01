@@ -1,6 +1,7 @@
 import { fields, OR, Record } from "@mail/core/common/record";
 import { convertBrToLineBreak, prettifyMessageText } from "@mail/utils/common/format";
 import { markup } from "@odoo/owl";
+import { isHtmlEmpty } from "@web/core/utils/html";
 
 export class Composer extends Record {
     static id = OR("thread", "message");
@@ -8,7 +9,7 @@ export class Composer extends Record {
     clear() {
         this.attachments.length = 0;
         this.replyToMessage = undefined;
-        this.composerHtml = "";
+        this.composerHtml = markup("<p><br></p>");
         Object.assign(this.selection, {
             start: 0,
             end: 0,
@@ -53,7 +54,9 @@ export class Composer extends Record {
                 return;
             }
             this.updateFrom = "html";
-            this.composerText = convertBrToLineBreak(this.composerHtml);
+            this.composerText = isHtmlEmpty(this.composerHtml)
+                ? ""
+                : convertBrToLineBreak(this.composerHtml);
         },
     });
     thread = fields.One("Thread");
