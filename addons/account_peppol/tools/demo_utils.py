@@ -40,22 +40,23 @@ def _get_notification_message(proxy_state):
 # MOCKED FUNCTIONS
 # -------------------------------------------------------------------------
 
-def _mock_call_peppol_proxy(func, self, *args, **kwargs):
 
-    def _mock_get_all_documents(user, args, kwargs):
+def _mock_call_peppol_proxy(func, self, endpoint, params=None):
+
+    def _mock_get_all_documents(user):
         if not user.env['account.move'].search_count([
             ('peppol_message_uuid', '=', f'{user.company_id.id}_demo_vendor_bill')
         ]):
             return {'messages': [get_demo_vendor_bill(user)]}
         return {'messages': []}
 
-    def _mock_get_document(user, args, kwargs):
-        message_uuid = args[1]['message_uuids'][0]
+    def _mock_get_document(user):
+        message_uuid = params['message_uuids'][0]
         if message_uuid.endswith('_demo_vendor_bill'):
             return {message_uuid: get_demo_vendor_bill(user)}
         return {message_uuid: {'state': 'done'}}
 
-    def _mock_send_document(user, args, kwargs):
+    def _mock_send_document(user):
         # Trigger the reception of vendor bills
         get_messages_cron = user.env['ir.cron'].sudo().env.ref(
             'account_peppol.ir_cron_peppol_get_new_documents',
@@ -66,30 +67,31 @@ def _mock_call_peppol_proxy(func, self, *args, **kwargs):
         return {
             'messages': [{
                 'message_uuid': 'demo_%s' % uuid.uuid4(),
-            } for i in args[1]['documents']],
+            } for i in params['documents']],
         }
 
-    endpoint = args[0].split('/')[-1]
+    endpoint = endpoint.rsplit('/', 1)[-1]
+    params = params or {}
     return {
         # participant routes
-        'register_sender': lambda _user, _args, _kwargs: {},
-        'register_receiver': lambda _user, _args, _kwargs: {},
-        'register_sender_as_receiver': lambda _user, _args, _kwargs: {},
-        'update_user': lambda _user, _args, _kwargs: {},
-        'cancel_peppol_registration': lambda _user, _args, _kwargs: {},
-        'migrate_peppol_registration': lambda _user, _args, _kwargs: {'migration_key': 'demo_migration_key'},
-        'participant_status': lambda _user, _args, _kwargs: {'peppol_state': 'receiver'},
-        'set_webhook': lambda _user, _args, _kwargs: {},
+        'register_sender': lambda _user: {},
+        'register_receiver': lambda _user: {},
+        'register_sender_as_receiver': lambda _user: {},
+        'update_user': lambda _user: {},
+        'cancel_peppol_registration': lambda _user: {},
+        'migrate_peppol_registration': lambda _user: {'migration_key': 'demo_migration_key'},
+        'participant_status': lambda _user: {'peppol_state': 'receiver'},
+        'set_webhook': lambda _user: {},
         # document routes
         'get_all_documents': _mock_get_all_documents,
         'get_document': _mock_get_document,
         'send_document': _mock_send_document,
-        'ack': lambda _user, _args, _kwargs: {},
+        'ack': lambda _user: {},
         # service routes are not available in demo mode, mocked by safety
-        'add_services': lambda _user, _args, _kwargs: {},
-        'get_services': lambda _user, _args, _kwargs:  {'services': self.env['res.company']._peppol_supported_document_types()},
-        'remove_services': lambda _user, _args, _kwargs: {},
-    }[endpoint](self, args, kwargs)
+        'add_services': lambda _user: {},
+        'get_services': lambda _user:  {'services': self.env['res.company']._peppol_supported_document_types()},
+        'remove_services': lambda _user: {},
+    }[endpoint](self)
 
 
 def _mock_get_peppol_verification_state(func, self, *args, **kwargs):
