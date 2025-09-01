@@ -120,6 +120,10 @@
                                 <strong>Due Date</strong>
                                 <div t-field="o.invoice_date_due">2023-10-31</div>
                             </div>
+                            <div class="col" t-if="o.taxable_supply_date and o.show_taxable_supply_date" name="taxable_supply_date">
+                                <strong>Taxable Supply</strong>
+                                <div t-field="o.taxable_supply_date">2023-10-31</div>
+                            </div>
                             <div class="col" t-if="o.delivery_date" name="delivery_date">
                                 <strong>Delivery Date</strong>
                                 <div t-field="o.delivery_date">2023-09-25</div>
