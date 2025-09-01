@@ -81,10 +81,12 @@
                                                 <field class="fs-3" name="name"/>
                                             </div>
                                             <div t-if="record.alias_email.value" class="d-flex flex-wrap">
-                                                <field name="alias_id"/>
+                                                <field name="alias_id"
+                                                    groups="hr_recruitment.group_hr_recruitment_interviewer"/>
                                             </div>
                                         </div>
-                                        <div class="d-flex flex-row">
+                                        <div class="d-flex flex-row"
+                                            groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user">
                                             <div class="col">
                                                 <div groups="!base.group_multi_company">
                                                     <field name="user_id" widget="many2one_avatar_user"
@@ -114,7 +116,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col align-content-center">
+                                    <div class="col align-content-center"
+                                        groups="hr_recruitment.group_hr_recruitment_interviewer">
                                         <div class="d-flex justify-content-center">
                                             <field name="new_application_count" class="number"/>
                                             <div class="number_description text-body-secondary fs-4 lh-1">
@@ -122,7 +125,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col align-content-center">
+                                    <div class="col align-content-center"
+                                        groups="hr_recruitment.group_hr_recruitment_interviewer">
                                         <div class="d-flex justify-content-center">
                                             <field name="open_application_count" class="number"/>
                                             <div class=" number_description text-body-secondary fs-4 lh-1">
@@ -130,7 +134,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col align-content-center">
+                                    <div class="col align-content-center"
+                                        groups="hr_recruitment.group_hr_recruitment_interviewer">
                                         <div class="d-flex flex-row justify-content-center mt-1">
                                             <div class="position-relative">
                                                 <button name="action_open_activities" type="object" class="ps-1 pe-1 pt-0 pb-0">
@@ -166,10 +171,12 @@
                                             <field name="name"/>
                                         </div>
                                         <div t-if="record.alias_email.value" class="d-flex flex-wrap">
-                                            <field name="alias_id"/>
+                                            <field name="alias_id"
+                                                groups="hr_recruitment.group_hr_recruitment_interviewer"/>
                                         </div>
                                     </div>
-                                    <div class="d-flex flex-row">
+                                    <div class="d-flex flex-row"
+                                        groups="hr_recruitment.group_hr_recruitment_interviewer">
                                         <div class="col-1 align-content-end me-1">
                                             <div class="d-flex flex-row justify-content-center">
                                                 <field name="user_id" widget="many2one_avatar_user"
@@ -190,7 +197,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-flex flex-row">
+                                    <div class="d-flex flex-row"
+                                        groups="hr_recruitment.group_hr_recruitment_interviewer">
                                         <div class="col-1 align-content-end me-1">
                                             <div class="d-flex flex-row justify-content-center">
                                                 <i class="fa fa-user fa-2x" title="new_applications_icon"/>
@@ -235,7 +243,8 @@
                     <label for="alias_name" string="Application email"
                            help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
                     <div name="alias_def">
-                        <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
+                        <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"
+                            groups="hr_recruitment.group_hr_recruitment_interviewer"/>
                         <div class="oe_edit_only" name="edit_alias">
                             <field name="alias_name" class="oe_inline o_job_alias" placeholder="e.g. sales-manager"/>@
                             <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
@@ -277,12 +286,16 @@
             </xpath>
             <page name="recruitment_page" position="attributes">
                 <attribute name="invisible">0</attribute>
+                <attribute name="groups">hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user</attribute>
             </page>
             <page name="job_description_page" position="attributes">
                 <attribute name="invisible">0</attribute>
+                <attribute name="groups">hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user</attribute>
             </page>
             <group name="hiring_process" position="inside">
-                <field name="interviewer_ids" widget="many2many_tags_avatar" options="{'no_create': True, 'no_create_edit': True}" />
+                <field name="interviewer_ids" widget="many2many_tags_avatar"
+                    options="{'no_create': True, 'no_create_edit': True}"
+                    groups="hr_recruitment.group_hr_recruitment_interviewer"/>
                 <label for="alias_name"
                     string="Email Alias"
                     help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"
@@ -295,7 +308,7 @@
             </group>
 
             <group name="job_posting" position="inside">
-                <field name="expected_degree" />
+                <field name="expected_degree" groups="hr_recruitment.group_hr_recruitment_interviewer"/>
             </group>
 
             <group name="job" position="inside">
@@ -307,10 +320,11 @@
             </group>
 
             <xpath expr="//group" position="after">
-                <field name="job_properties" columns="2"/>
+                <field name="job_properties" columns="2" groups="hr_recruitment.group_hr_recruitment_interviewer"/>
             </xpath>
             <div name="button_box" position="inside">
                 <button class="oe_stat_button"
+                    groups="hr_recruitment.group_hr_recruitment_interviewer"
                     icon="fa-pencil"
                     name="%(action_hr_job_applications)d"
                     context="{'default_user_id': user_id, 'active_test': False}"
@@ -318,6 +332,7 @@
                     <field name="all_application_count" widget="statinfo" string="Applications"/>
                 </button>
                 <button class="oe_stat_button"
+                    groups="hr_recruitment.group_hr_recruitment_interviewer"
                     icon="fa-file-text-o"
                     name="action_open_attachments"
                     type="object"
@@ -325,6 +340,7 @@
                     <field name="documents_count" widget="statinfo" string="Documents"/>
                 </button>
                 <button name="action_open_employees"
+                    groups="hr_recruitment.group_hr_recruitment_interviewer"
                     class="oe_stat_button"
                     icon="fa-users"
                     invisible="not employee_count"
@@ -333,12 +349,13 @@
                 </button>
             </div>
             <xpath expr="//page[@name='job_description_page']" position="after">
-                <page string="Trackers" name="trackers_page">
-                    <field name="job_source_ids"></field>    
+                <page string="Trackers" name="trackers_page" groups="hr.group_hr_user">
+                    <field name="job_source_ids" groups="hr_recruitment.group_hr_recruitment_interviewer"/>
                 </page>
             </xpath>
             <xpath expr="//sheet" position="after">
-                <chatter open_attachments="True"/>
+                <chatter open_attachments="True"
+                    groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user"/>
             </xpath>
         </field>
     </record>
@@ -391,15 +408,19 @@
                 <field name="no_of_recruitment"/>
             </field>
             <field name="no_of_employee" position="after">
-                <field name="expected_employees" optional="hide"/>
-                <field name="no_of_hired_employee" optional="hide"/>
+                <field name="expected_employees" optional="hide"
+                    groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user"/>
+                <field name="no_of_hired_employee" optional="hide"
+                    groups="hr_recruitment.group_hr_recruitment_interviewer"/>
                 <field name="message_needaction" column_invisible="True"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                 <field name="company_id" column_invisible="True"/>
                 <field name="alias_name" column_invisible="True"/>
-                <field name="alias_id" invisible="not alias_name" optional="hide"/>
+                <field name="alias_id" invisible="not alias_name" optional="hide"
+                    groups="hr_recruitment.group_hr_recruitment_interviewer"/>
                 <field name="allowed_user_ids" invisible="1"/>
-                <field name="user_id" widget="many2one_avatar_user" optional="hide"/>
+                <field name="user_id" widget="many2one_avatar_user" optional="hide"
+                    groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user"/>
             </field>
             <list position="attributes">
                 <attribute name="js_class">recruitment_list_view</attribute>

@@ -26,7 +26,8 @@
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='job_description_page']" position="after">
-                <page string="Application Info" name="recruitment_page">
+                <page string="Application Info" name="recruitment_page"
+                    groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user">
                     <separator string="Process Details"/>
                     <field name="job_details" nolabel="1"/>
                 </page>
