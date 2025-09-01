@@ -20,7 +20,8 @@
                     'o-editing': props.composer.message,
                     'o-chatWindow mx-2': env.inChatWindow,
                     'mb-3': env.inChatWindow and !props.composer.message,
-                    'o-discussApp ps-2 ps-xl-3 pt-1 pe-4 pb-2': env.inDiscussApp,
+                    'o-discussApp pt-1 ps-2 pe-4 pb-2': env.inDiscussApp,
+                    'ps-xl-3': env.inDiscussApp and !ui.isSmall,
                     'm-1': env.inChatWindow,
                 }" t-attf-class="{{ props.className }}">
             <FileUploader t-if="allowUpload" multiUpload="isMultiUpload" onUploaded.bind="(data) => { attachmentUploader.uploadData(data) }">
