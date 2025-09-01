@@ -1494,7 +1494,7 @@ export class Order extends PosModel {
             this.sequence_number = json.sequence_number;
             this.pos_session_id = json.pos_session_id;
         } else if (json.pos_session_id !== this.pos.pos_session.id) {
-            this.sequence_number = this.pos.pos_session.sequence_number++;
+            this.sequence_number = json.sequence_number;
         } else {
             this.sequence_number = json.sequence_number;
             this.updateSequenceNumber(json);
@@ -1589,7 +1589,7 @@ export class Order extends PosModel {
     }
     updateSequenceNumber(json) {
         this.pos.pos_session.sequence_number = Math.max(
-            this.sequence_number + 1,
+            this.sequence_number,
             this.pos.pos_session.sequence_number
         );
     }
