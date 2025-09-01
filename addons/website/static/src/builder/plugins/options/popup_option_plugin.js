@@ -41,6 +41,7 @@ class PopupOptionPlugin extends Plugin {
         },
         on_cloned_handlers: this.onCloned.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
+        on_will_remove_handlers: this.onWillRemove.bind(this),
         no_parent_containers: ".s_popup",
     };
 
@@ -57,9 +58,23 @@ class PopupOptionPlugin extends Plugin {
                 apply: () => {
                     this.dependencies.visibility.toggleTargetVisibility(snippetEl, true);
                 },
-                revert: () => {},
+                revert: () => {
+                    this.dependencies.visibility.toggleTargetVisibility(snippetEl, false);
+                },
             });
         }
+    }
+
+    onWillRemove(el) {
+        this.dependencies.visibility.toggleTargetVisibility(el, false);
+        this.dependencies.history.addCustomMutation({
+            apply: () => {
+                this.dependencies.visibility.toggleTargetVisibility(el, false);
+            },
+            revert: () => {
+                this.dependencies.visibility.toggleTargetVisibility(el, true);
+            },
+        });
     }
 
     assignUniqueID(editingElement) {
