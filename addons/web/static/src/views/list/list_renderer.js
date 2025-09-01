@@ -1223,14 +1223,17 @@ export class ListRenderer extends Component {
      * @param {RelationalRecord} record
      * @param {PointerEvent} ev
      */
-    onRemoveCellClicked(record, ev) {
+    async onRemoveCellClicked(record, ev) {
         const element = ev.target.closest(".o_list_record_remove");
         if (element.dataset.clicked) {
             return;
         }
         element.dataset.clicked = true;
-
-        this.onDeleteRecord(record, ev);
+        try {
+            await this.onDeleteRecord(record, ev);
+        } finally {
+            delete element.dataset.clicked;
+        }
     }
 
     /**
@@ -1244,7 +1247,7 @@ export class ListRenderer extends Component {
             }
         }
         if (this.activeActions.onDelete) {
-            this.activeActions.onDelete(record);
+            return this.activeActions.onDelete(record);
         }
     }
 
