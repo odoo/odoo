@@ -99,6 +99,8 @@ Produkt setup:
         'data/account_tax_report_data.xml',
         'data/account.account.tag.csv',
         'views/account_journal_views.xml',
+        'views/res_partner_views.xml',
+        'views/res_company_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
