@@ -40,6 +40,8 @@ class Interface(Thread):
         )
         if supported_driver:
             _logger.info('Device %s is now connected', identifier)
+            if identifier in unsupported_devices:
+                del unsupported_devices[identifier]
             d = supported_driver(identifier, device)
             iot_devices[identifier] = d
             # Start the thread after creating the iot_devices entry so the
@@ -47,7 +49,7 @@ class Interface(Thread):
             # running, at least until the `disconnect` above gets triggered
             # when `removed` is not empty.
             d.start()
-        elif self.allow_unsupported:
+        elif self.allow_unsupported and identifier not in unsupported_devices:
             _logger.info('Unsupported device %s is now connected', identifier)
             unsupported_devices[identifier] = {
                 'name': f'Unknown device ({self.connection_type})',
@@ -70,12 +72,13 @@ class Interface(Thread):
 
         added = devices.keys() - self._detected_devices
         removed = self._detected_devices - devices.keys()
+        unsupported = {device for device in unsupported_devices if device in devices}
         self._detected_devices = set(devices.keys())
 
         for identifier in removed:
             self.remove_device(identifier)
 
-        for identifier in added:
+        for identifier in added | unsupported:
             self.add_device(identifier, devices[identifier])
 
     def get_devices(self):
