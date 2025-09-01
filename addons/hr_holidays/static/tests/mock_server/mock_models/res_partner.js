@@ -1,8 +1,8 @@
-import { mailModels } from "@mail/../tests/mail_test_helpers";
+import { hrModels } from "@hr/../tests/hr_test_helpers";
 import { fields } from "@web/../tests/web_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
-export class ResPartner extends mailModels.ResPartner {
+export class ResPartner extends hrModels.ResPartner {
     leave_date_to = fields.Date({ related: false });
 
     compute_im_status(partner) {

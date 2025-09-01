@@ -24,6 +24,7 @@ test("Show 'back on' in avatar card", async () => {
     const pyEnv = await startServer();
     const employee = pyEnv["hr.employee"].create({
         user_id: serverState.userId,
+        work_contact_id: serverState.partnerId,
         leave_date_to: DateTime.now().plus({ days: 3 }).toISODate(),
     });
     pyEnv["res.users"].write([serverState.userId], {
@@ -69,6 +70,7 @@ test("Show year when 'back on' is on different year than now", async () => {
     const pyEnv = await startServer();
     const employee = pyEnv["hr.employee"].create({
         user_id: serverState.userId,
+        work_contact_id: serverState.partnerId,
         leave_date_to: DateTime.now().plus({ days: 15 }).toISODate(),
     });
     pyEnv["res.users"].write([serverState.userId], {

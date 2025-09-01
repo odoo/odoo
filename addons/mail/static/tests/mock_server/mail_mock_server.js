@@ -1131,11 +1131,15 @@ function _process_request_for_internal_user(store, name, params) {
         store.add(CannedResponse.browse(cannedResponses));
     }
     if (name === "avatar_card") {
-        const userId = params.user_id;
-        const [user] = ResUsers.search([["id", "=", userId]]);
-        if (user) {
-            const fields = ResUsers._get_store_avatar_card_fields();
-            store.add(ResUsers.browse(user), makeKwArgs({ fields }));
+        const { id, model } = params;
+        if (!id || !["res.users", "res.partner"].includes(model)) {
+            return;
+        }
+        const Model = this.env[model];
+        const [record] = Model.search([["id", "=", id]]);
+        if (record) {
+            const fields = Model._get_store_avatar_card_fields();
+            store.add(Model.browse(record), makeKwArgs({ fields }));
         }
     }
 }

@@ -438,4 +438,8 @@ export class ResPartner extends webModels.ResPartner {
         }
         return [this.browse(this.env.user.partner_id)[0], null];
     }
+
+    _get_store_avatar_card_fields() {
+        return ["email", "partner_share", "name", "phone"];
+    }
 }

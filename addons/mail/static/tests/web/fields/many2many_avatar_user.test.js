@@ -321,6 +321,55 @@ test("avatar card preview", async () => {
     await contains(".o_avatar_card", { count: 0 });
 });
 
+test("avatar card preview (partner_id field)", async () => {
+    registry.category("services").add(
+        "im_status",
+        {
+            start() {
+                return {
+                    registerToImStatus() {},
+                    unregisterFromImStatus() {},
+                    updateBusPresence() {},
+                };
+            },
+        },
+        { force: true }
+    );
+    const pyEnv = await startServer();
+    const userId = pyEnv["res.users"].create({
+        im_status: "online",
+    });
+    const partnerId = pyEnv["res.partner"].create({
+        email: "Mario@odoo.test",
+        name: "Mario",
+        phone: "+78786987",
+        user_ids: [userId],
+    });
+    const avatarUserId = pyEnv["m2x.avatar.user"].create({ partner_id: partnerId });
+    await start();
+    await openKanbanView("m2x.avatar.user", {
+        res_id: avatarUserId,
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="partner_id" widget="many2one_avatar_user"/>
+                    </t>
+                </templates>
+            </kanban>
+        `,
+    });
+    // Open card
+    await click(".o_m2o_avatar > img");
+    await contains(".o_avatar_card");
+    await contains(".o_card_user_infos > span", { text: "Mario" });
+    await contains(".o_card_user_infos > a", { text: "Mario@odoo.test" });
+    await contains(".o_card_user_infos > a", { text: "+78786987" });
+    // Close card
+    await click(".o_action_manager");
+    await contains(".o_avatar_card", { count: 0 });
+});
+
 test("avatar_user widget displays the appropriate user image in form view", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({

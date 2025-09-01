@@ -256,6 +256,16 @@ class ResPartner(models.Model):
     def _get_store_mention_fields(self):
         return [Store.Attr("mention_token", lambda p: p._get_mention_token())]
 
+    def _get_store_avatar_card_fields(self, target):
+        fields = [
+            "im_status",
+            "name",
+            "partner_share",
+        ]
+        if target.is_internal(self.env):
+            fields.extend(["email", "phone"])
+        return fields
+
     def _field_store_repr(self, field_name):
         if field_name == "avatar_128":
             return [

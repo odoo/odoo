@@ -19,9 +19,10 @@ export function getOutOfOfficeDateEndText(datetime) {
 patch(ResPartner.prototype, {
     /** @returns {string} */
     get outOfOfficeDateEndText() {
-        if (!this.main_user_id?.employee_id?.leave_date_to) {
+        const employee_id = this.employee_id || this.main_user_id?.employee_id;
+        if (!employee_id?.leave_date_to) {
             return "";
         }
-        return getOutOfOfficeDateEndText(this.main_user_id.employee_id.leave_date_to);
+        return getOutOfOfficeDateEndText(employee_id.leave_date_to);
     },
 });

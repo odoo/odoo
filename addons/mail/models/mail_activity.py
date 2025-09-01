@@ -625,7 +625,7 @@ class MailActivity(models.Model):
             "can_write",
             "chaining_type",
             "create_date",
-            Store.One("create_uid", "name"),
+            Store.One("create_uid", Store.One("partner_id", "name")),
             "date_deadline",
             "date_done",
             "icon",

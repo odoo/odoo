@@ -8,6 +8,7 @@ export class AvatarCardResourcePopover extends AvatarCardPopover {
 
     static props = {
         ...AvatarCardPopover.props,
+        model: { type: String, optional: true },
         recordModel: {
             type: String,
             optional: true,
@@ -62,5 +63,10 @@ export class AvatarCardResourcePopover extends AvatarCardPopover {
 
     get userId() {
         return this.record.user_id[0];
+    }
+
+    onSendClick() {
+        this.openChat(this.userId);
+        this.props.close();
     }
 }

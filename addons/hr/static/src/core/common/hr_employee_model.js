@@ -11,6 +11,7 @@ export class HrEmployee extends Record {
     department_id = fields.One("hr.department");
     /** @type {string} */
     job_title;
+    work_contact_id = fields.One("res.partner");
     user_id = fields.One("res.users");
     /** @type {string} */
     work_email;
