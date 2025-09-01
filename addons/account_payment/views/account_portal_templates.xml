@@ -227,6 +227,7 @@
                                             </t>
                                         </div>
                                     </div>
+                                    <input name="providers_by_amount" type="hidden" t-att-value="json.dumps(providers_by_amount)"/>
                                     <!-- set default amount as the max. amount due, the 'amount'
                                          will be updated/set js-side depending the active tab -->
                                     <t t-call="account_payment.form">
