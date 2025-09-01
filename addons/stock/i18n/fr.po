@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-18 18:36+0000\n"
-"PO-Revision-Date: 2025-08-29 08:49+0000\n"
+"PO-Revision-Date: 2025-09-01 23:40+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s18-4/stock/"
 "fr/>\n"
@@ -844,7 +844,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
 msgid "<span class=\"text-muted small\"> On Hand</span>"
-msgstr "<span class=\"text-muted small\"> En stock</span>"
+msgstr "<span class=\"text-muted small\"> Disponible</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1683,13 +1683,14 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
-"Quantité disponible (calculée comme Quantité en stock - quantité réservée - "
-"quantité à retirer)\n"
+"Quantité disponible (calculée comme Quantité disponible en stock – quantité "
+"réservée – quantité à retirer)\n"
 "Dans un contexte avec un seul emplacement de stock, cela inclut les "
-"marchandises stockées à cet emplacement ou dans l’un de ses enfants.\n"
+"marchandises stockées à cet emplacement ou dans l’un de ses sous-"
+"emplacements.\n"
 "Dans un contexte avec un seul entrepôt, cela inclut les marchandises "
 "stockées dans l’emplacement de stock de cet entrepôt ou dans l’un de ses "
-"enfants.\n"
+"sous-emplacements.\n"
 "Sinon, cela inclut les marchandises stockées dans tout emplacement de stock "
 "de type \"interne\"."
 
@@ -3840,12 +3841,12 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
-"Quantité prévue (calculée comme Quantité en stock - Sorties + Entrées - "
+"Quantité prévue (calculée comme Quantité disponible – Sorties + Entrées – "
 "Quantité à retirer)\n"
 "Dans un contexte avec un seul emplacement de stock, cela inclut les biens "
-"stockés dans cet emplacement, ou dans l’un de ses enfants.\n"
-"Dans un contexte avec un seul entrepôt, cela inclut les biens stockés dans "
-"l’emplacement de stock de cet entrepôt, ou dans l’un de ses enfants.\n"
+"stockés dans cet emplacement ou dans l’un de ses sous-emplacements.\n"
+"Dans un contexte avec un seul entrepôt, cela inclut les biens stockés dans l’"
+"emplacement de stock de cet entrepôt ou dans l’un de ses sous-emplacements.\n"
 "Sinon, cela inclut les biens stockés dans tout emplacement de stock de type "
 "\"interne\"."
 
@@ -5963,7 +5964,7 @@ msgstr "Transferts suivants"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_date
 msgid "Next date the On Hand Quantity should be counted."
-msgstr "Prochaine date à laquelle la quantité en stock doit être comptée."
+msgstr "Prochaine date de comptage de la quantité disponible."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -6238,19 +6239,19 @@ msgstr "Chaise de bureau"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_simple
 msgid "On Hand"
-msgstr "En stock"
+msgstr "Disponible"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__product_qty
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "On Hand Quantity"
-msgstr "Quantité en stock"
+msgstr "Quantité disponible"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "On hand Quantity"
-msgstr "Quantité en stock"
+msgstr "Quantité disponible"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__available_quantity
@@ -6258,13 +6259,13 @@ msgid ""
 "On hand quantity which hasn't been reserved on a transfer and is still "
 "fresh, in the default unit of measure of the product"
 msgstr ""
-"Quantité en stock qui n’a pas été réservée lors d’un transfert et qui est "
-"encore fraîche, dans l’unité de mesure par défaut du produit"
+"Quantité disponible, non réservée sur un transfert et encore fraîche, "
+"exprimée dans l’unité de mesure par défaut du produit"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
 msgid "On hand:"
-msgstr "En stock :"
+msgstr "Disponible :"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__lots
@@ -7568,7 +7569,7 @@ msgstr "Quantité"
 #: model:ir.model.fields,field_description:stock.field_product_template__qty_available
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 msgid "Quantity On Hand"
-msgstr "Quantité en stock"
+msgstr "Quantité disponible"
 
 #. module: stock
 #. odoo-javascript
@@ -8443,7 +8444,7 @@ msgstr "Données démo"
 #: code:addons/stock/models/product.py:0
 msgid "Save the product form before updating the Quantity On Hand."
 msgstr ""
-"Enregistrez la fiche produit avant de mettre à jour la quantité en stock."
+"Enregistrez la fiche produit avant de mettre à jour la quantité disponible."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__date_planned
@@ -8797,7 +8798,7 @@ msgstr "Définir sur 0"
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
 msgid "Set to quantity on hand"
-msgstr "Définir sur la quantité en stock"
+msgstr "Définir sur la quantité disponible"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_config_settings
@@ -8912,7 +8913,7 @@ msgstr "Afficher les transferts suivants"
 #: model:ir.model.fields,field_description:stock.field_product_product__show_on_hand_qty_status_button
 #: model:ir.model.fields,field_description:stock.field_product_template__show_on_hand_qty_status_button
 msgid "Show On Hand Qty Status Button"
-msgstr "Montrer le Bouton de Statut de la Qté en stock"
+msgstr "Montrer le Bouton de Statut Qté disponible"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__is_favorite
@@ -10287,7 +10288,7 @@ msgstr "Total entrant"
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "Total On Hand"
-msgstr "Total en stock"
+msgstr "Total disponible"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
