@@ -494,7 +494,7 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             'amount_total': 345.0,
         }])
 
-        down_payment_dp_invoice_1 = f"Down Payment (ref: {dp_invoice_1.name} on {so.create_date.strftime('%m/%d/%Y')})"
+        down_payment_dp_invoice_1 = f"Down Payment (ref: {dp_invoice_1.name} on {dp_invoice_1.invoice_date.strftime('%m/%d/%Y')})"
         self.assertRecordValues(so.order_line, [
             {'name': 'line_1',                      'tax_ids': tax_15.ids,                  'price_subtotal': 1000.0},
             {'name': "Down Payments",               'tax_ids': [],                          'price_subtotal': 0.0},
@@ -543,7 +543,7 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             'amount_total': 575.0,
         }])
 
-        down_payment_dp_invoice_2 = f"Down Payment (ref: {dp_invoice_2.name} on {so.create_date.strftime('%m/%d/%Y')})"
+        down_payment_dp_invoice_2 = f"Down Payment (ref: {dp_invoice_2.name} on {dp_invoice_2.invoice_date.strftime('%m/%d/%Y')})"
         self.assertRecordValues(so.order_line, [
             {'name': 'line_1',                  'tax_ids': tax_15.ids,                  'price_subtotal': 1000.0},
             {'name': "Down Payments",           'tax_ids': [],                          'price_subtotal': 0.0},
