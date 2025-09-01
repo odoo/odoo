@@ -158,7 +158,7 @@
     <div t-if="props.hasActions and message.hasActions and !isEditing and !env.inChatter?.disabled" class="o-mail-Message-actions d-print-none d-flex align-items-start mx-1"
         t-att-class="{
             'start-0': isAlignedRight,
-            'mt-1': message.bubbleColor and !props.asCard and !isMobileOS,
+            'o-mt-0_5': message.bubbleColor and !props.asCard and !isMobileOS,
             'my-n2': !message.bubbleColor and !props.asCard and !isMobileOS,
             'invisible': !isActive and !isMobileOS,
             'o-expanded': optionsDropdown.isOpen
