@@ -1444,7 +1444,17 @@ class StockPicking(models.Model):
         moves = self.move_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.quantity != 0)
         backorder_moves = moves._create_backorder()
         backorder_moves += self.move_ids.filtered(lambda m: m.quantity == 0)
-        self._create_backorder(backorder_moves=backorder_moves)
+        backorder = self._create_backorder(backorder_moves=backorder_moves, from_manual_backorder=True)
+        backorder.message_post(
+            body=self.env._('Split from %(original_picking_link)s.', original_picking_link=self._get_html_link())
+        )
+        return {
+            'name': self.env._('Split Backorder'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.picking',
+            'view_mode': 'form',
+            'res_id': backorder.id,
+        }
 
     def _pre_action_done_hook(self):
         for picking in self:
@@ -1544,7 +1554,7 @@ class StockPicking(models.Model):
             'backorder_id': self.id,
         })
 
-    def _create_backorder(self, backorder_moves=None):
+    def _create_backorder(self, backorder_moves=None, from_manual_backorder=False):
         """ This method is called when the user chose to create a backorder. It will create a new
         picking, the backorder, and move the stock.moves that are not `done` or `cancel` into it.
         """
@@ -1563,10 +1573,16 @@ class StockPicking(models.Model):
                 backorders |= backorder_picking
                 backorder_picking.user_id = False
                 picking.message_post(
-                    body=_('The backorder %s has been created.', backorder_picking._get_html_link())
+                    body=self.env._('The backorder %(backorder_picking_link)s has been created.', backorder_picking_link=backorder_picking._get_html_link())
                 )
                 if backorder_picking.picking_type_id.reservation_method == 'at_confirm':
                     bo_to_assign |= backorder_picking
+                elif from_manual_backorder:
+                    # For 'manual' reservation method: we always need to unreserve the picking.
+                    # For the 'by_date' reservation method: unreserve the picking only if none of
+                    # it's moves need to be reserved for today or earlier.
+                    if not any(move._should_assign_at_confirm() for move in picking.move_ids):
+                        picking.do_unreserve()
         if bo_to_assign:
             bo_to_assign.action_assign()
         return backorders
