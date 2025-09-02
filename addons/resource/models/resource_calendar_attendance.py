@@ -79,6 +79,7 @@ class ResourceCalendarAttendance(models.Model):
         for attendance in self.filtered('hour_to'):
             attendance.duration_hours = (attendance.hour_to - attendance.hour_from) if attendance.day_period != 'lunch' else 0
 
+    @api.onchange('duration_hours')
     def _inverse_duration_hours(self):
         for calendar, attendances in self.grouped('calendar_id').items():
             if not calendar.duration_based:
@@ -86,14 +87,20 @@ class ResourceCalendarAttendance(models.Model):
             for attendance in attendances:
                 if attendance.day_period == 'full_day':
                     period_duration = attendance.duration_hours / 2
-                    attendance.hour_to = 12 + period_duration
-                    attendance.hour_from = 12 - period_duration
+                    attendance.write({
+                        'hour_from': 12 - period_duration,
+                        'hour_to': 12 + period_duration,
+                    })
                 elif attendance.day_period == 'morning':
-                    attendance.hour_to = 12
-                    attendance.hour_from = 12 - attendance.duration_hours
+                    attendance.write({
+                        'hour_from': 12 - attendance.duration_hours,
+                        'hour_to': 12,
+                    })
                 elif attendance.day_period == 'afternoon':
-                    attendance.hour_to = 12 + attendance.duration_hours
-                    attendance.hour_from = 12
+                    attendance.write({
+                        'hour_from': 12,
+                        'hour_to': 12 + attendance.duration_hours,
+                    })
 
     @api.depends('day_period')
     def _compute_duration_days(self):
