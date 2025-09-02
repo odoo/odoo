@@ -557,7 +557,7 @@ export class RelationalModel extends Model {
                     }
                 } else {
                     if (!groupConfig.isFolded) {
-                        group.records = groupData.__records;
+                        group.records = groupData.__records || [];
                         group.length = groupData.__count;
                     } else {
                         group.records = [];
