@@ -57,8 +57,15 @@
     <record model="ir.rule" id="project_project_manager_rule">
         <field name="name">Project: project manager: see all</field>
         <field name="model_id" ref="model_project_project"/>
+        <field name="domain_force">[('privacy_visibility', '!=', 'followers')]</field>
+        <field name="groups" eval="[(4, ref('project.group_project_manager'))]"/>
+    </record>
+
+    <record model="ir.rule" id="user_administrator_rule">
+        <field name="name">Project: administrator: see all</field>
+        <field name="model_id" ref="model_project_project"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
     </record>
 
     <record model="ir.rule" id="project_public_members_rule">
