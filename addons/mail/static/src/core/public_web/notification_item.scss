@@ -1,7 +1,6 @@
 .o-mail-NotificationItem {
     outline: 1px solid transparent;
     outline-offset: -1px;
-    background-color: inherit !important;
 
     &:not(.o-interest) {
         --border-opacity: .35;
@@ -53,22 +52,23 @@
 }
 
 .o-mail-NotificationItem-markAsRead {
-    background-color: rgba($success, .15) !important;
+    background-color: transparent !important;
     font-size: 0.85rem !important;
     color: $success !important;
-    outline: 1px solid rgba($success, .25);
+    outline: 1px solid rgba($success, .75);
     outline-offset: -1px;
     padding: map-get($spacers, 1) / 2;
 
     &:hover {
-        outline-color: rgba(darken($success, 10%), .5);
+        outline-color: rgba(darken($success, 10%), 1);
+        color: darken($success, 10%) !important;
         background-color: transparent !important;
         box-shadow: $box-shadow-sm
     }
 }
 
 .o-mail-NotificationItem-text {
-    opacity: .5;
+    opacity: .75;
 
     &:before {
         // invisible character so that typing status bar has constant height, regardless of text content.
