@@ -10,6 +10,7 @@ const websocketState = {
 };
 
 const PING_MESSAGE = "2";
+const PONG_MESSAGE = "3";
 const OPEN_MESSAGE = '0{"sid":"testSocketId", "pingInterval": 5000}';
 const CONNECT_MESSAGE = "40";
 const EVENT_MESSAGE = '42["test message"]';
@@ -22,7 +23,7 @@ beforeEach(() => {
         websocketState.instance = ws;
         websocketState.closed = false;
         ws.addEventListener("message", (event) => {
-            websocketState.received.push(event.data);
+            websocketState.sent.push(event.data);
         });
         ws.addEventListener("close", () => {
             websocketState.closed = true;
@@ -33,7 +34,7 @@ beforeEach(() => {
 afterEach(() => {
     websocketState.instance?.close();
     websocketState.instance = null;
-    websocketState.received = [];
+    websocketState.sent = [];
     websocketState.closed = true;
 });
 
@@ -48,15 +49,42 @@ describe("when open message is received", () => {
     });
 
     test("sends ping request every 5 seconds", async () => {
-        new SocketIoService("mockUrl", {});
+        new SocketIoService("mockUrl", { onClose: () => {} });
         await waitUntil(() => websocketState.instance.readyState);
 
         websocketState.instance.send(OPEN_MESSAGE);
         await advanceTime(11000);
 
-        expect(websocketState.received).toHaveLength(2);
-        expect(websocketState.received[0]).toBe(PING_MESSAGE);
-        expect(websocketState.received[1]).toBe(PING_MESSAGE);
+        expect(websocketState.sent).toHaveLength(2);
+        expect(websocketState.sent[0]).toBe(PING_MESSAGE);
+        expect(websocketState.sent[1]).toBe(PING_MESSAGE);
+    });
+
+    test("closes connection if pong response is not received in 10s after ping", async () => {
+        new SocketIoService("mockUrl", { onClose: () => {} });
+        await waitUntil(() => websocketState.instance.readyState);
+
+        websocketState.instance.send(OPEN_MESSAGE);
+        await advanceTime(6000);
+        expect(websocketState.sent).toHaveLength(1);
+        expect(websocketState.sent[0]).toBe(PING_MESSAGE);
+        await advanceTime(10000);
+
+        expect(websocketState.closed).toBe(true);
+    });
+
+    test("keep connection open if pong response is received", async () => {
+        new SocketIoService("mockUrl", {});
+        await waitUntil(() => websocketState.instance.readyState);
+
+        websocketState.instance.send(OPEN_MESSAGE);
+        await advanceTime(1000);
+        websocketState.instance.send(PONG_MESSAGE);
+        await advanceTime(5000);
+        websocketState.instance.send(PONG_MESSAGE);
+        await advanceTime(5000);
+
+        expect(websocketState.closed).toBe(false);
     });
 });
 
@@ -80,6 +108,7 @@ describe("when event message is received", () => {
     test("does not call callback and closes websocket if message is empty", async () => {
         let eventReceived = null;
         new SocketIoService("mockUrl", {
+            onClose: () => {},
             onEvent: (event) => {
                 eventReceived = event;
             },
@@ -95,6 +124,7 @@ describe("when event message is received", () => {
     test("does not call callback and closes websocket if message is invalid", async () => {
         let eventReceived = null;
         new SocketIoService("mockUrl", {
+            onClose: () => {},
             onEvent: (event) => {
                 eventReceived = event;
             },
@@ -147,7 +177,7 @@ describe("when sending a message", () => {
 
         socketIo.sendMessage("test");
 
-        expect(websocketState.received).toHaveLength(1);
-        expect(websocketState.received[0]).toBe('42["test"]');
+        expect(websocketState.sent).toHaveLength(1);
+        expect(websocketState.sent[0]).toBe('42["test"]');
     });
 });
