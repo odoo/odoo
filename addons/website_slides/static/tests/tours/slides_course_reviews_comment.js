@@ -45,5 +45,41 @@ registry.category("web_tour.tours").add("course_reviews_comment", {
             trigger:
                 "#chatterRoot:shadow .o-mail-Message:contains('Putting a comment...') :not(:has(button:contains('comment')))",
         },
+        {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message:contains(Putting a comment...) .o_wrating_publisher_comment .o-dropdown",
+            run: "click",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-dropdown-item:contains(Edit)",
+            run: "click",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
+            run: "edit Editing the comment...",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message button:contains(save)",
+            run: "click",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message:contains(Editing the comment...)",
+        },
+        {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message:contains(Editing the comment...) .o_wrating_publisher_comment .o-dropdown",
+            run: "click",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-dropdown-item:contains(Delete)",
+            run: "click",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message:not(:contains(Editing the comment...)",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message button:contains(comment)",
+            run: "click",
+        },
     ],
 });
