@@ -1909,6 +1909,15 @@ class TestViews(ViewCase):
             '''Field "not_a_field" does not exist in model "ir.ui.view"''',
         )
 
+    def test_invalid_type(self):
+        """Ensure invalid root tag infers an invalid type and raises ValidationError"""
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'invalid_view',
+                'arch': '<template></template>',
+                'inherit_id': False,
+            })
+
     def test_context_in_view(self):
         arch = """
             <form string="View">

@@ -1019,6 +1019,34 @@ test("header field don't dirty settings", async () => {
     expect(".o_list_view").toHaveCount(1, { message: "should be open list view" });
 });
 
+test("header without string or field", async () => {
+    onRpc("has_group", () => true);
+    defineActions([
+        {
+            id: 1,
+            name: "Settings view",
+            res_model: "res.config.settings",
+            views: [[false, "form"]],
+        },
+    ]);
+    ResConfigSettings._views.form = /* xml */ `
+        <form string="Settings" js_class="base_settings">
+            <app string="CRM" name="crm">
+                <setting type="header">
+                    <div><span>Personalize setting</span></div>
+                </setting>
+                <button name="4" string="Execute action" type="action"/>
+            </app>
+        </form>
+    `;
+
+    await mountWithCleanup(WebClient);
+
+    await getService("action").doAction(1);
+    expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
+    expect(".app_settings_header label").toHaveCount(0);
+});
+
 test("clicking a button with dirty settings -- save", async () => {
     mockService("action", {
         doActionButton(params) {

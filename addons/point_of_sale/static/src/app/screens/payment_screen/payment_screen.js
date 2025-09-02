@@ -388,6 +388,10 @@ export class PaymentScreen extends Component {
         if (switchScreen) {
             this.pos.showScreen(nextScreen);
         }
+
+        if (!this.pos.config.module_pos_restaurant) {
+            this.pos.checkPreparationStateAndSentOrderInPreparation(this.currentOrder);
+        }
     }
     selectNextOrder() {
         if (this.currentOrder.originalSplittedOrder) {
