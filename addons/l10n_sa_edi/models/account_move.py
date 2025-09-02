@@ -206,8 +206,6 @@ class AccountMove(models.Model):
             Save submitted invoice XML hash in case of either Rejection or Acceptance.
         """
         self.ensure_one()
-        if not response_data.get("excepted"):
-            self.journal_id.l10n_sa_latest_submission_hash = self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_generate_invoice_xml_hash(xml_content)
         bootstrap_cls, title, subtitle, content = ("success", _("Success: Invoice accepted by ZATCA"), "", "" if (not error or not response_data) else response_data)
         status_code = response_data.get('status_code')
         attachment = False
@@ -254,6 +252,14 @@ class AccountMove(models.Model):
                     } for m in response_data['validationResults']['errorMessages']
                 ])
             }
+        if response_data.get("error") and not content:
+            # if there is an error, but no exception or rejection in the response
+            # then it is due to an internal error raised. No need to log a note
+            return
+
+        if not response_data.get("excepted"):
+            self.journal_id.l10n_sa_latest_submission_hash = self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_generate_invoice_xml_hash(xml_content)
+
         self.message_post(body=Markup("""
                 <div role='alert' class='alert alert-%s'>
                     <h4 class='alert-heading my-0'>%s</h4>
