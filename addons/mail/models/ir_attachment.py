@@ -2,7 +2,7 @@
 
 import contextlib
 
-from odoo import _, models
+from odoo import _, models, fields, api
 from odoo.exceptions import AccessError, UserError
 from odoo.tools.misc import limited_field_access_token, verify_limited_field_access_token
 from odoo.addons.mail.tools.discuss import Store
@@ -10,6 +10,14 @@ from odoo.addons.mail.tools.discuss import Store
 
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
+
+    thumbnail = fields.Image()
+    has_thumbnail = fields.Boolean(compute="_compute_has_thumbnail")
+
+    @api.depends("thumbnail")
+    def _compute_has_thumbnail(self):
+        for attachment in self.with_context(bin_size=True):
+            attachment.has_thumbnail = bool(attachment.thumbnail)
 
     def _has_attachments_ownership(self, attachment_tokens):
         """ Checks if the current user has ownership of all attachments in the recordset.
@@ -86,11 +94,13 @@ class IrAttachment(models.Model):
             "checksum",
             "create_date",
             "file_size",
+            "has_thumbnail",
             "mimetype",
             "name",
             Store.Attr("raw_access_token", lambda a: a._get_raw_access_token()),
             "res_name",
             Store.One("thread", [], as_thread=True),
+            Store.Attr("thumbnail_access_token", lambda a: a._get_thumbnail_token()),
             "type",
             "url",
         ]
@@ -104,3 +114,7 @@ class IrAttachment(models.Model):
         """
         self.ensure_one()
         return limited_field_access_token(self, field_name="id", scope="attachment_ownership")
+
+    def _get_thumbnail_token(self):
+        self.ensure_one()
+        return limited_field_access_token(self, "thumbnail", scope="binary")

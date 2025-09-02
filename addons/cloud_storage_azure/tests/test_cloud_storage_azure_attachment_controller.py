@@ -63,6 +63,7 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                                             attachment.create_date
                                         ),
                                         "file_size": 0,
+                                        "has_thumbnail": False,
                                         "id": attachment.id,
                                         "mimetype": "text/x-python",
                                         "name": "__init__.py",
@@ -70,9 +71,10 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                                         "raw_access_token": attachment._get_raw_access_token(),
                                         "res_name": False,
                                         "thread": False,
-                                        "voice": False,
+                                        "thumbnail_access_token": attachment._get_thumbnail_token(),
                                         "type": "cloud_storage",
                                         "url": "[url]",
+                                        "voice": False,
                                     }
                                 ],
                             }
