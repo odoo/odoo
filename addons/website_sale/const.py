@@ -404,7 +404,6 @@ SNIPPET_DEFAULTS = {
         },
         'add_classes': [
             'o_wsale_products_opt_design_cards',
-            'o_wsale_products_opt_rounded_2',
             'o_wsale_products_opt_has_comparison',
             {
                 's_dynamic_snippet_title': 's_dynamic_snippet_title_aside col-lg-3 flex-lg-column justify-content-lg-start',
