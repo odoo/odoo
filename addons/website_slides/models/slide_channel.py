@@ -475,7 +475,6 @@ class SlideChannel(models.Model):
             query = """
                 UPDATE %(table_name)s
                 SET access_token = md5(md5(random()::varchar || id::varchar) || clock_timestamp()::varchar)::uuid::varchar
-                WHERE access_token IS NULL
             """ % {'table_name': self._table}
             self.env.cr.execute(query)
 

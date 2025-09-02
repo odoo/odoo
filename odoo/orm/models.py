@@ -3101,29 +3101,8 @@ class BaseModel(metaclass=MetaModel):
                 sql.drop_not_null(cr, self._table, row['attname'])
 
     def _init_column(self, column_name):
-        """ Initialize the value of the given column for existing rows. """
-        # get the default value; ideally, we should use default_get(), but it
-        # fails due to ir.default not being ready
-        field = self._fields[column_name]
-        if field.default:
-            value = field.default(self)
-            value = field.convert_to_write(value, self)
-            value = field.convert_to_column_insert(value, self)
-        else:
-            value = None
-        # Write value if non-NULL, except for booleans for which False means
-        # the same as NULL - this saves us an expensive query on large tables,
-        # if the boolean is required we still write False to allow NOT NULL constraints.
-        necessary = (value is not None) if field.type != 'boolean' or field.required else value
-        if necessary:
-            _logger.debug("Table '%s': setting default value of new column %s to %r",
-                          self._table, column_name, value)
-            self.env.cr.execute(SQL(
-                "UPDATE %(table)s SET %(field)s = %(value)s WHERE %(field)s IS NULL",
-                table=SQL.identifier(self._table),
-                field=SQL.identifier(column_name),
-                value=value,
-            ))
+        """ To be override if default value change depending of the record """
+        pass
 
     @ormcache()
     def _table_has_rows(self) -> bool:

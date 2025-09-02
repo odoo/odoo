@@ -62,7 +62,7 @@ class EventTypeTicket(models.Model):
             return super()._init_column(column_name)
 
         # fetch void columns
-        self.env.cr.execute("SELECT id FROM %s WHERE product_id IS NULL" % self._table)
+        self.env.cr.execute("SELECT id FROM %s" % self._table)
         ticket_type_ids = self.env.cr.fetchall()
         if not ticket_type_ids:
             return

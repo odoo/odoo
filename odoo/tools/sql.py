@@ -323,14 +323,14 @@ def column_exists(cr, tablename, columnname):
     return cr.rowcount
 
 
-def create_column(cr, tablename, columnname, columntype, comment=None):
+def create_column(cr, tablename, columnname, columntype, default_value=None, comment=None):
     """ Create a column with the given type. """
     sql = SQL(
         "ALTER TABLE %s ADD COLUMN %s %s %s",
         SQL.identifier(tablename),
         SQL.identifier(columnname),
         SQL(columntype),
-        SQL("DEFAULT false" if columntype.upper() == 'BOOLEAN' else ""),
+        SQL("DEFAULT %s", default_value) if default_value is not None else SQL(""),
     )
     if comment:
         sql = SQL("%s; %s", sql, SQL(

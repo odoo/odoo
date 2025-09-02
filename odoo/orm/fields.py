@@ -1127,7 +1127,16 @@ class Field(typing.Generic[T]):
         """
         if not column:
             # the column does not exist, create it
-            sql.create_column(model.env.cr, model._table, self.name, self.column_type[1], self.string)
+            default_value = None
+            if self.default:
+                default_value = self.default(model)
+                default_value = self.convert_to_write(default_value, model)
+                default_value = self.convert_to_column_insert(default_value, model)
+
+            if default_value is None and self.type == 'bool':
+                default_value = False
+
+            sql.create_column(model.env.cr, model._table, self.name, self.column_type[1], default_value, self.string)
             return
         if column['udt_name'] == self.column_type[0]:
             return
@@ -1148,7 +1157,7 @@ class Field(typing.Generic[T]):
         """
         has_notnull = column and column['is_nullable'] == 'NO'
 
-        if not column or (self.required and not has_notnull):
+        if not column:
             # the column is new or it becomes required; initialize its values
             if model._table_has_rows():
                 model._init_column(self.name)

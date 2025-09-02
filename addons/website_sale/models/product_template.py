@@ -750,7 +750,7 @@ class ProductTemplate(models.Model):
         # we need to set the default row by row for this column
         if column_name == "website_sequence":
             _logger.debug("Table '%s': setting default value of new column %s to unique values for each row", self._table, column_name)
-            self.env.cr.execute("SELECT id FROM %s WHERE website_sequence IS NULL" % self._table)
+            self.env.cr.execute("SELECT id FROM %s" % self._table)
             prod_tmpl_ids = self.env.cr.dictfetchall()
             max_seq = self._default_website_sequence()
             query = f"""
