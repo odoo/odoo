@@ -57,16 +57,13 @@ class EventManager:
         # Make notification available to longpolling event route
         event = {
             **device.data,
+            'iot_box_identifier': helpers.get_identifier(),
             'device_identifier': device.device_identifier,
+            'session_id': device.session_id,
             'time': time.time(),
             **data,
         }
-        send_to_controller({
-            **event,
-            'session_id': data.get('action_args', {}).get('session_id', ''),
-            'iot_box_identifier': helpers.get_identifier(),
-            **data,
-        })
+        send_to_controller(event)
         webrtc_client.send(event)
         self.events.append(event)
         for session in self.sessions:

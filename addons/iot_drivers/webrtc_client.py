@@ -66,7 +66,7 @@ class WebRtcClient(Thread):
                     else:
                         # Notify that the device is not connected
                         self.send({
-                            'owner': message['session_id'],
+                            'session_id': message['session_id'],
                             'device_identifier': device_identifier,
                             'time': time.time(),
                             'status': 'disconnected',

@@ -86,7 +86,7 @@ class PrinterDriverBase(Driver, ABC):
         """
         self.data['status'] = status
         self.data['message'] = message
-        event_manager.device_changed(self, {'session_id': self.data.get('owner')})
+        event_manager.device_changed(self)
 
     def print_receipt(self, data):
         _logger.debug("print_receipt called for printer %s", self.device_name)
