@@ -57,8 +57,8 @@ export class OverlayPlugin extends Plugin {
 
     getScrollContainer() {
         return (
-            closestScrollableY(this.editable) ||
             closestScrollableY(this.iframe) ||
+            closestScrollableY(this.editable) ||
             this.topDocument.documentElement
         );
     }
