@@ -165,7 +165,7 @@ export class MessagingMenu extends Component {
     }
 
     canUnpinItem(thread) {
-        return thread.canUnpin && thread.message_unread_counter === 0;
+        return thread.canUnpin && thread.selfMember?.message_unread_counter === 0;
     }
 }
 
