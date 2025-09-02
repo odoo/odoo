@@ -1295,7 +1295,7 @@ test("Redirect to the thread containing the starred message and highlight the me
     await start();
     await openDiscuss("mail.box_inbox");
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
-    await click(".o-mail-Message [title='Mark as Todo']");
+    await click(".o-mail-Message [title='Add Star']");
     await click("button", { text: "Starred messages", contains: [".badge", { count: 1 }] });
     await click(".o-mail-Message-header a", { text: "#General" });
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "General" });

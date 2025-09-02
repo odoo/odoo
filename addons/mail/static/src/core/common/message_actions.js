@@ -117,7 +117,7 @@ registerMessageAction("toggle-star", {
         component.props.message.starred
             ? "fa fa-lg fa-star o-mail-Message-starred"
             : "fa fa-lg fa-star-o",
-    name: _t("Mark as Todo"),
+    name: (component) => (component.props.message.starred ? _t("Remove Star") : _t("Add Star")),
     onSelected: (component) => component.props.message.toggleStar(),
     sequence: 30,
 });

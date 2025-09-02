@@ -181,7 +181,7 @@ test("Message (hard) delete notification", async () => {
     });
     await start();
     await openDiscuss("mail.box_inbox");
-    await click("[title='Mark as Todo']");
+    await click("[title='Add Star']");
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
     await contains("button", { text: "Starred messages", contains: [".badge", { text: "1" }] });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);

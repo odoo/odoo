@@ -6,7 +6,7 @@ registry.category("web_tour.tours").add("star_message_tour", {
         {
             trigger:
                 "#chatterRoot:shadow .o-mail-Message:not([data-starred]):contains(Test Message)",
-            run: "hover && click #chatterRoot:shadow [title='Mark as Todo']",
+            run: "hover && click #chatterRoot:shadow [title='Add Star']",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message[data-starred]:contains(Test Message)",
