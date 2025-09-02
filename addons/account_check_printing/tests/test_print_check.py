@@ -4,6 +4,7 @@ from odoo.addons.account_check_printing.models.account_payment import INV_LINES_
 from odoo.tests import tagged
 from odoo.tools.misc import NON_BREAKING_SPACE
 from odoo import Command
+from odoo.exceptions import ValidationError
 
 import math
 
@@ -347,3 +348,20 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         move_names = payments.move_id.line_ids.mapped('name')
         self.assertIn(f"Checks - 10001: {payments[0].memo}", move_names)
         self.assertIn(f"Checks - 10002: {payments[1].memo}", move_names)
+
+    def test_number_exceeds_int32_limit(self):
+        """Numbers greater than 2,147,483,647 should raise a ValidationError."""
+        self.journal = self.env['account.journal'].create({
+            'name': 'Test Bank Journal',
+            'type': 'bank',
+            'code': 'TBJ',
+            'bank_statements_source': 'manual',
+            'check_manual_sequencing': True,
+        })
+
+        check_number_too_big = str(2_147_483_648)
+        check_number_normal = str(2_147_483_647)
+        with self.assertRaisesRegex(ValidationError, "The check number you entered .* exceeds the maximum allowed value"):
+            self.journal.check_next_number = check_number_too_big
+        self.journal.check_next_number = check_number_normal
+        self.assertEqual(self.journal.check_sequence_id.number_next_actual, int(check_number_normal), "The check sequence should be updated correctly")
