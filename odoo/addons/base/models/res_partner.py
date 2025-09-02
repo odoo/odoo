@@ -758,6 +758,7 @@ class Partner(models.Model):
                     if len(companies) > 1 or company not in companies:
                         raise UserError(
                             ("The selected company is not compatible with the companies of the related user(s)"))
+
                 if partner.child_ids:
                     partner.child_ids.write({'company_id': company_id})
         result = True
