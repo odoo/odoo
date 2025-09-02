@@ -6,13 +6,13 @@ import { Deferred } from "@odoo/hoot-dom";
 defineWebsiteModels();
 
 test("theme tab: warning on palette change", async () => {
-    class WebEditorAssets extends models.Model {
-        _name = "web_editor.assets";
+    class WebsiteAssets extends models.Model {
+        _name = "website.assets";
         make_scss_customization(location, changes) {
             expect.step(`${location} ${JSON.stringify(changes)}`);
         }
     }
-    defineModels([WebEditorAssets]);
+    defineModels([WebsiteAssets]);
     const def = new Deferred();
     onRpc("/website/theme_customize_bundle_reload", async (request) => {
         expect.step("asset reload");
@@ -44,13 +44,13 @@ test("theme tab: warning on palette change", async () => {
 });
 
 test("theme tab: no warning on palette change", async () => {
-    class WebEditorAssets extends models.Model {
-        _name = "web_editor.assets";
+    class WebsiteAssets extends models.Model {
+        _name = "website.assets";
         make_scss_customization(location, changes) {
             expect.step(`${location} ${JSON.stringify(changes)}`);
         }
     }
-    defineModels([WebEditorAssets]);
+    defineModels([WebsiteAssets]);
     const def = new Deferred();
     onRpc("/website/theme_customize_bundle_reload", async (request) => {
         expect.step("asset reload");
