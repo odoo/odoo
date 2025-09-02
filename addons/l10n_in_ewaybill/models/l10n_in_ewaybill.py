@@ -455,7 +455,7 @@ class L10nInEwaybill(models.Model):
         self._handle_internal_warning_if_present(ewaybill_error.error_json)
         error_message = ewaybill_error.get_all_error_message()
         blocking_level = 'error'
-        if '404' in ewaybill_error.error_codes:
+        if 'access_error' in ewaybill_error.error_codes:
             blocking_level = 'warning'
         self._write_error(error_message, blocking_level)
 
