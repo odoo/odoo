@@ -24,6 +24,7 @@ from . import test_chart_template
 from . import test_company_branch
 from . import test_digest
 from . import test_fiscal_position
+from . import test_kpi_provider
 from . import test_sequence_mixin
 from . import test_tax
 from . import test_invoice_taxes
