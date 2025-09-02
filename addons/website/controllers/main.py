@@ -1256,7 +1256,7 @@ class Website(Home):
         }
 
     def _load_resources(self, file_type, views, bundles_restriction, only_user_custom_files):
-        AssetsUtils = request.env['web_editor.assets']
+        AssetsUtils = request.env['website.assets']
 
         files_data_by_bundle = []
         t_call_assets_attribute = 't-js'

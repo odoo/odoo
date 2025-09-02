@@ -356,7 +356,7 @@ class Website(models.Model):
         views_to_enable = []
         scss_customization_params = {}
         ThemeUtils = self.env['theme.utils'].with_context(website_id=website.id)
-        Assets = self.env['web_editor.assets']
+        Assets = self.env['website.assets']
 
         def parse_style_config(style_config_):
             website_settings.update(style_config_['website_fields'])

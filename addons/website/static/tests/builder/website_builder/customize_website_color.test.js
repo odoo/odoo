@@ -7,13 +7,13 @@ import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../website_
 defineWebsiteModels();
 
 test("BuilderColorPicker with action “customizeWebsiteColor” is correctly displayed", async () => {
-    class WebEditorAssets extends models.Model {
-        _name = "web_editor.assets";
+    class WebsiteAssets extends models.Model {
+        _name = "website.assets";
         make_scss_customization(location, changes) {
             expect.step(`${location} ${JSON.stringify(changes)}`);
         }
     }
-    defineModels([WebEditorAssets]);
+    defineModels([WebsiteAssets]);
 
     let def = new Deferred();
     onRpc("/website/theme_customize_bundle_reload", async (request) => {

@@ -730,7 +730,7 @@ class Website(models.Model):
         # Configure the color palette
         selected_palette = kwargs.get('selected_palette')
         if selected_palette:
-            Assets = self.env['web_editor.assets']
+            Assets = self.env['website.assets']
             selected_palette_name = selected_palette if isinstance(selected_palette, str) else 'base-1'
             Assets.make_scss_customization(
                 '/website/static/src/scss/options/user_values.scss',
