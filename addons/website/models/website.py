@@ -528,6 +528,12 @@ class Website(models.Model):
             if template_class not in snippet_classes:
                 snippet_classes.append(template_class)
 
+        # Add 'o_colored_level' to maintain correct color configuration.
+        snippet_classes.append('o_colored_level')
+
+        # Apply class modifications (add/remove) to the snippet or its children.
+        # - If dict is found, apply to the first child matching the selector.
+        # - Otherwise, treated as direct modification on the snippet element.
         class_modifications = [
             ('remove', customizations.get('remove_classes', []) or default_settings.get('remove_classes', [])),
             ('add', customizations.get('add_classes', []) or default_settings.get('add_classes', [])),
