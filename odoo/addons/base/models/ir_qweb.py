@@ -223,8 +223,8 @@ dict. (for example: ``t-options="{'widget': 'float'}"`` is equal to
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 **Values**: python expression (or format string expression for ``t-attf-``)
 
-Compile the attributes to create ``values['__qweb_attrs__']`` dictionary code
-in the compiled function. Use the ``t-att`` expression and add each key-value
+Compile the attributes to create ``attrs`` dictionary code in the compiled
+function. Use the ``t-att`` expression and add each key-value
 ``t-att-key="expression value"`` to this dict. (for example:
 ``t-att="{'class': f'float_{1}'}"`` is equal to ``t-att-class="f'float_{1}'"``
 and is equal to ``t-attf-class="float_{{1}}")
@@ -883,14 +883,19 @@ class IrQweb(models.AbstractModel):
                 if found:
                     break
                 continue
+
+            c_path = match[1][1:-1]
+            c_html = match[2][1:-1]
+            if c_html == '<t/>':
+                continue
             if found:
-                info = (ref, match[1][1:-1], match[2][1:-1])
+                info = (ref, c_path, c_html)
                 if info not in source:
                     source.append(info)
             else:
                 found = True
-                path = match[1][1:-1]
-                html = match[2][1:-1]
+                path = c_path
+                html = c_html
 
         if path:
             source.append((ref, path, html))
@@ -1070,11 +1075,13 @@ class IrQweb(models.AbstractModel):
         self._append_text("", compile_context)  # To ensure the template function is a generator and doesn't become a regular function
         compile_context['template_functions'][f'{def_name}_content'] = (
             [f"def {def_name}_content(self, values):"]
-            + self._compile_node(element, compile_context, 2)
-            + self._flush_text(compile_context, 2, rstrip=True))
+            + [indent_code('attrs = None', 1)]
+            + self._compile_node(element, compile_context, 1)
+            + self._flush_text(compile_context, 1, rstrip=True))
 
         compile_context['template_functions'][def_name] = [indent_code(f"""
             def {def_name}(self, values):
+                attrs = None
                 if 'xmlid' not in values:
                     values['xmlid'] = {options['ref_name']!r}
                     values['viewid'] = {options['ref']!r}
@@ -1751,6 +1758,8 @@ class IrQweb(models.AbstractModel):
             el.attrib.pop('t-tag-close', None)
             return self._compile_static_node(el, compile_context, level)
 
+        ref, path, xml = compile_context['_qweb_error_path_xml']
+
         code = []
 
         # compile the directives still present on the element
@@ -1773,7 +1782,7 @@ class IrQweb(models.AbstractModel):
 
         remaining = set(el.attrib) - SPECIAL_DIRECTIVES
         if remaining:
-            _logger.warning('Unknown directives or unused attributes: %s in %s', remaining, compile_context['ref_name'] or compile_context['template'])
+            _logger.warning('Unknown directives or unused attributes: %s from %s\nPath: %s\nTemplate: %s', remaining, xml, path, compile_context['ref_name'] or ref)
 
         return code
 
@@ -1839,8 +1848,8 @@ class IrQweb(models.AbstractModel):
     def _compile_directive_att(self, el, compile_context, level):
         """ Compile the attributes of the given elements.
 
-        The compiled function will create the ``values['__qweb_attrs__']``
-        dictionary. Then the dictionary will be output.
+        The compiled function will create the ``attrs`` dictionary.
+        Then the dictionary will be output.
 
 
         The new namespaces of the current element.
@@ -1856,7 +1865,7 @@ class IrQweb(models.AbstractModel):
         - value from keys that start with ``t-attf-``: format string
             expression.
         """
-        code = [indent_code("attrs = values['__qweb_attrs__'] = {}", level)]
+        code = []
 
         # Compile the introduced new namespaces of the given element.
         #
@@ -1909,6 +1918,19 @@ class IrQweb(models.AbstractModel):
                         attrs.update(dict(atts_value))
                     """, level))
 
+        if (not el.nsmap and el.tag == 't') or (el.nsmap and etree.QName(el.tag).localname == 't'):
+            # if it's an invisible element <t>
+            if not el.get('t-out') and not el.get('t-esc') and not el.get('t-raw') and el.getparent() is not None:
+                # if this invisible doesn't generate content, attributes will never be consumed
+                return []
+            if el.attrib.get('t-consumed-options') != 'True':
+                # If the content is inserted without using a widget, attributes will never be consumed
+                return []
+
+        if code:
+            code = [indent_code("attrs = {}", level)] + code
+            compile_context['qweb_attrs_created'] = True
+
         return code
 
     def _compile_directive_tag_open(self, el, compile_context, level):
@@ -1945,15 +1967,16 @@ class IrQweb(models.AbstractModel):
         #
         # Use str(value) to change Markup into str and escape it, then use str
         # to avoid the escaping of the other html content.
-        code.append(indent_code(f"""
-            attrs = values.pop('__qweb_attrs__', None)
-            if attrs:
-                tagName = {el.tag!r}
-                attrs = self._post_processing_att(tagName, attrs)
-                for name, value in attrs.items():
-                    if value or isinstance(value, str):
-                        yield f' {{escape(str(name))}}="{{escape(str(value))}}"'
-        """, level))
+
+        if compile_context.get('qweb_attrs_created'):
+            code.append(indent_code(f"""
+                if attrs:
+                    tagName = {el.tag!r}
+                    for name, value in self._post_processing_att(tagName, attrs).items():
+                        if value or isinstance(value, str):
+                            yield f' {{escape(str(name))}}="{{escape(str(value))}}"'
+                    attrs = None
+            """, level))
 
         # close the open tag
         if 't-tag-close' in el.attrib:
@@ -2016,11 +2039,12 @@ class IrQweb(models.AbstractModel):
                 # set the content as value
                 _ref, path, xml = compile_context['_qweb_error_path_xml']
                 content = (
-                    self._compile_directive(el, compile_context, 'inner-content', 1) +
+                    self._compile_directive(el, dict(compile_context, qweb_attrs_created=False), 'inner-content', 1) +
                     self._flush_text(compile_context, 1))
                 if content:
                     def_name = compile_context['make_name']('t_set')
                     def_code = [f"def {def_name}(self, values):"]
+                    def_code.append(indent_code('attrs = None', 1))
                     def_code.append(indent_code(f'# element: {path!r} , {xml!r}', 1))
                     def_code.extend(content)
                     compile_context['template_functions'][def_name] = def_code
@@ -2257,7 +2281,9 @@ class IrQweb(models.AbstractModel):
             """, level))
 
         code.append(indent_code(f"""
+                foreach_attrs = attrs
                 for index, item in enumerate({t_foreach}):
+                    attrs = foreach_attrs
                     values[{expr_as + '_index'!r}] = index
                     if {has_value}:
                         values[{expr_as!r}], values[{expr_as + '_value'!r}] = item
@@ -2272,6 +2298,7 @@ class IrQweb(models.AbstractModel):
             """, level))
 
         code.extend(content_foreach or indent_code('continue', level + 1))
+        code.append(indent_code("attrs = None", level + 1))
 
         return code
 
@@ -2312,59 +2339,60 @@ class IrQweb(models.AbstractModel):
                 ttype = 't-raw'
                 expr = el.attrib.pop('t-raw')
 
-        code = self._flush_text(compile_context, level)
+        flush = self._flush_text(compile_context, level)
 
         _ref, path, xml = compile_context['_qweb_error_path_xml']
 
         code_options = el.attrib.pop('t-consumed-options', 'None')
-        tag_open = (
-            self._compile_directive(el, compile_context, 'tag-open', level + 1) +
-            self._flush_text(compile_context, level + 1))
-        tag_close = (
-            self._compile_directive(el, compile_context, 'tag-close', level + 1) +
-            self._flush_text(compile_context, level + 1))
-        default_body = (
-            self._compile_directive(el, compile_context, 'inner-content', level + 1) +
-            self._flush_text(compile_context, level + 1))
 
         # The generated code will set the values of the content, attrs (used to
         # output attributes) and the force_display (if the widget or field
         # mark force_display as True, the tag will be inserted in the output
         # even the value of content is None and without default value)
 
-        if expr == T_CALL_SLOT and code_options != 'True':
-            code.append(indent_code("if True:", level))
-            code.extend(tag_open)
-            code.append(indent_code(f"yield values.get({T_CALL_SLOT}, '')", level + 1))
-            code.extend(tag_close)
-            return code
+        is_slot = expr == T_CALL_SLOT and code_options != 'True'
+
+        if is_slot:
+            code = [indent_code(f"yield values.get({T_CALL_SLOT}, '')", level)]
         elif ttype == 't-field':
+            code = []
             record, field_name = expr.rsplit('.', 1)
-            code.append(indent_code(f"""
-                field_attrs, content, force_display = self._get_field({self._compile_expr(record, raise_on_missing=True)}, {field_name!r}, {expr!r}, {el.tag!r}, values.pop('__qweb_options__', {{}}), values)
-                if values.get('__qweb_attrs__') is None:
-                    values['__qweb_attrs__'] = field_attrs
-                else:
-                    values['__qweb_attrs__'].update(field_attrs)
+            attr_name = 'field_attrs' if compile_context.get('qweb_attrs_created') else 'attrs'
+            code.append(indent_code(f"""{attr_name}, content, force_display = self._get_field({self._compile_expr(record, raise_on_missing=True)}, {field_name!r}, {expr!r}, {el.tag!r}, values.pop('__qweb_options__', {{}}), values)""", level))
+            if compile_context.get('qweb_attrs_created'):
+                code.append(indent_code("""
+                    if attrs is None:
+                        attrs = field_attrs
+                    else:
+                        attrs.update(field_attrs)
+                    """, level))
+            else:
+                compile_context['qweb_attrs_created'] = True
+            code.append(indent_code("""
                 if content is not None and content is not False:
                     content = self._compile_to_str(content)
                 """, level))
             force_display_dependent = True
         else:
+            code = []
             if expr == T_CALL_SLOT:
                 code.append(indent_code(f"content = values.get({T_CALL_SLOT}, '')", level))
             else:
                 code.append(indent_code(f"content = {self._compile_expr(expr)}", level))
 
             if code_options == 'True':
-                code.append(indent_code(f"""
-                    widget_attrs, content, force_display = self._get_widget(content, {expr!r}, {el.tag!r}, values.pop('__qweb_options__', {{}}), values)
-                    if values.get('__qweb_attrs__') is None:
-                        values['__qweb_attrs__'] = widget_attrs
-                    else:
-                        values['__qweb_attrs__'].update(widget_attrs)
-                    content = self._compile_to_str(content)
-                    """, level))
+                attr_name = 'widget_attrs' if compile_context.get('qweb_attrs_created') else 'attrs'
+                code.append(indent_code(f"""{attr_name}, content, force_display = self._get_widget(content, {expr!r}, {el.tag!r}, values.pop('__qweb_options__', {{}}), values)""", level))
+                if compile_context.get('qweb_attrs_created'):
+                    code.append(indent_code("""
+                        if attrs is None:
+                            attrs = widget_attrs
+                        else:
+                            attrs.update(widget_attrs)
+                        """, level))
+                else:
+                    compile_context['qweb_attrs_created'] = True
+                code.append(indent_code("content = self._compile_to_str(content)", level))
                 force_display_dependent = True
             else:
                 force_display_dependent = False
@@ -2375,6 +2403,22 @@ class IrQweb(models.AbstractModel):
                     if content is not None and content is not False:
                         content = Markup(content)
                 """, level))
+
+        level_tag = level + (0 if is_slot else 1)
+        tag_open = (
+            self._compile_directive(el, compile_context, 'tag-open', level_tag) +
+            self._flush_text(compile_context, level_tag))
+        tag_close = (
+            self._compile_directive(el, compile_context, 'tag-close', level_tag) +
+            self._flush_text(compile_context, level_tag))
+        default_body = (
+            self._compile_directive(el, compile_context, 'inner-content', level_tag) +
+            self._flush_text(compile_context, level_tag))
+
+        if is_slot:
+            return flush + tag_open + code + tag_close
+
+        code = flush + code
 
         # The generated code will create the output tag with all attribute.
         # If the value is not falsy or if there is default content or if it's
@@ -2419,7 +2463,7 @@ class IrQweb(models.AbstractModel):
                 code.append(indent_code("elif force_display:", level))
                 code.extend(tag_open + tag_close)
 
-            code.append(indent_code("""else: values.pop('__qweb_attrs__', None)""", level))
+            code.append(indent_code("""else: attrs = None""", level))
 
         return code
 
@@ -2506,8 +2550,9 @@ class IrQweb(models.AbstractModel):
 
             def_name = compile_context['make_name']('t_call')
             code_content = [f"def {def_name}(self, values):"]
+            code_content.append(indent_code('attrs = None', 1))
             code_content.append(indent_code(f'# element: {path!r} , {xml!r}', 1))
-            code_content.extend(self._compile_directive(el, compile_context, 'inner-content', 1))
+            code_content.extend(self._compile_directive(el, dict(compile_context, qweb_attrs_created=False), 'inner-content', 1))
             self._append_text('', compile_context)  # To ensure the template function is a generator and doesn't become a regular function
             code_content.extend(self._flush_text(compile_context, 1, rstrip=True))
 
@@ -2606,8 +2651,7 @@ class IrQweb(models.AbstractModel):
                 yield '<'
                 yield tagName
 
-                attrs = self._post_processing_att(tagName, asset_attrs)
-                for name, value in attrs.items():
+                for name, value in self._post_processing_att(tagName, asset_attrs).items():
                     if value or isinstance(value, str):
                         yield f' {escape(str(name))}="{escape(str(value))}"'
 
