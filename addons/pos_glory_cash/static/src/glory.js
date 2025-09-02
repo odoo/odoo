@@ -1,9 +1,14 @@
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 import { uuidv4 } from "@point_of_sale/utils";
 import { CancelDialog } from "@pos_glory_cash/app/components/cancel_dialog";
-import { serializeGloryXml, parseGloryXml, makeGloryHeader } from "@pos_glory_cash/utils/glory_xml";
 import {
-    GLORY_RESULT,
+    serializeGloryXml,
+    parseGloryXml,
+    makeGloryHeader,
+    parseGloryResult,
+    parseVerificationInfo,
+} from "@pos_glory_cash/utils/glory_xml";
+import {
     GLORY_STATUS,
     GLORY_STATUS_STRING,
     GLORY_CURRENCY_STATUS,
@@ -16,6 +21,8 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { sortBy } from "@web/core/utils/arrays";
 import { browser } from "@web/core/browser/browser";
+import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { Logger } from "@bus/workers/bus_worker_utils";
 
 const { DateTime } = luxon;
 
@@ -27,6 +34,7 @@ export class GloryService extends PaymentInterface {
     setup() {
         super.setup(...arguments);
         this.dialog = this.env.services.dialog;
+        this.logger = new Logger("pos_glory_cash");
 
         /**
          * @type {import("models").GlorySettings}
@@ -62,6 +70,21 @@ export class GloryService extends PaymentInterface {
 
         this.socketIo = new SocketIoService(websocketEndpoint, {
             onConnect: () => this.onConnect(),
+            onClose: () => {
+                if (this.state.status !== "DISCONNECTED") {
+                    this.state.status = "DISCONNECTED";
+                    // When the tab is in the background, we get false-positive disconnections due to the ping running too
+                    // slowly (Chrome slows down timers for inactive tabs). Therefore we only show the disconnection message
+                    // if the tab is focused.
+                    if (!document.hidden) {
+                        this.showError(
+                            _t(
+                                "Failed to connect to Glory cash machine, please ensure it is switched on and connected to the network."
+                            )
+                        );
+                    }
+                }
+            },
             onEvent: ([responseType, data]) => {
                 if (this.resolvers[responseType]) {
                     this.resolvers[responseType](data);
@@ -69,6 +92,7 @@ export class GloryService extends PaymentInterface {
             },
             onBinaryEvent: (data) =>
                 parseGloryXml(data).then((response) => {
+                    this.logXml("RECV", response);
                     const message = response.firstChild;
                     if (this.resolvers[message.tagName]) {
                         this.resolvers[message.tagName](message);
@@ -77,6 +101,16 @@ export class GloryService extends PaymentInterface {
                     }
                 }),
         });
+
+        setTimeout(() => {
+            if (this.state.status === "DISCONNECTED") {
+                this.showError(
+                    _t(
+                        "Failed to connect to Glory cash machine, please ensure it is switched on and connected to the network."
+                    )
+                );
+            }
+        }, 5000);
     }
 
     async login() {
@@ -92,13 +126,100 @@ export class GloryService extends PaymentInterface {
         }
 
         // If access control is enabled and we don't have a valid user/pass, we receive this 'credential ng' message
-        this.waitForResponseWithType("credential ng").then(
-            () => (this.state.status = "BAD_CREDENTIALS")
-        );
+        this.waitForResponseWithType("credential ng").then(() => {
+            this.state.status = "BAD_CREDENTIALS";
+            this.showError(
+                _t(
+                    "Failed to login to Glory cash machine, please check the configured username and password."
+                )
+            );
+        });
         await this.sendWebsocketRequest(
             WEBSOCKET_REQUESTS.checkCredentials,
             this.gloryUser?.session_id
         );
+    }
+
+    async checkStatusAndVerifyIfNeeded() {
+        const firstConnection = this.state.inventory.length === 0;
+        const { xmlResponse } = await this.sendXmlRequest(XML_REQUESTS.getStatus, [
+            { name: "RequireVerification", attributes: { type: "1" } },
+        ]);
+        this.statusChangeHandler(xmlResponse, true);
+
+        const requireVerifyType = parseVerificationInfo(xmlResponse);
+        if (!firstConnection || !requireVerifyType) {
+            return;
+        }
+
+        this.showError(
+            _t(
+                "The cash machine requires verification of its contents, a collection process will now start. Please refer to the cash machine display."
+            )
+        );
+
+        const { statusCode } = await this.sendXmlRequest(XML_REQUESTS.collect, [
+            { name: "RequireVerification", attributes: { type: requireVerifyType.toString() } },
+        ]);
+
+        if (statusCode === "EXCLUSIVE_ERROR") {
+            this.showError(
+                _t(
+                    "The cash machine contents could not be verified as it is busy with another operation."
+                )
+            );
+        }
+    }
+
+    async reset(skipDialog = false) {
+        if (!skipDialog) {
+            const userConfirmed = await ask(this.dialog, {
+                title: _t("Reset cash machine"),
+                body: _t("Are you sure you want to reset the cash machine?"),
+                confirmLabel: _t("Reset"),
+                cancelLabel: _t("Discard"),
+            });
+            if (!userConfirmed) {
+                return;
+            }
+        }
+
+        if (this.settings.OccupyEnable && !this.occupied) {
+            await this.occupy();
+        }
+
+        await this.sendXmlRequest(XML_REQUESTS.reset);
+
+        if (this.occupied) {
+            await this.release();
+        }
+    }
+
+    logXml(message, xml) {
+        if (typeof xml === "string") {
+            xml = xml.replace("\0", "");
+        } else {
+            xml = new XMLSerializer().serializeToString(xml);
+        }
+
+        this.logger.log(
+            `${luxon.DateTime.now().toFormat("yyyy-LL-dd HH:mm:ss")} ${message}: ${xml}`
+        );
+    }
+
+    async downloadLogs() {
+        const logs = await this.logger.getLogs();
+        const blob = new Blob([logs.join("\n")], {
+            type: "text/plain",
+        });
+        const url = URL.createObjectURL(blob);
+        const aElement = document.createElement("a");
+        aElement.href = url;
+        aElement.download = `glory_logs_${luxon.DateTime.now().toFormat(
+            "yyyy-LL-dd-HH-mm-ss"
+        )}.txt`;
+        aElement.click();
+        URL.revokeObjectURL(url);
     }
 
     async onConnect() {
@@ -112,15 +233,13 @@ export class GloryService extends PaymentInterface {
         }
 
         await this.setDateAndTime();
+        await this.checkStatusAndVerifyIfNeeded();
 
-        const initialStatus = await this.sendXmlRequest(XML_REQUESTS.getStatus);
-        this.statusChangeHandler(initialStatus, true);
-
-        const initialInventory = await this.sendXmlRequest(XML_REQUESTS.getInventory, [
+        const { xmlResponse } = await this.sendXmlRequest(XML_REQUESTS.getInventory, [
             // Option Type 2 = 'Payable' inventory, see p76 of the IF Specification document
             { name: "Option", attributes: { type: "2" } },
         ]);
-        this.inventoryChangeHandler(initialInventory);
+        this.inventoryChangeHandler(xmlResponse);
     }
 
     get status() {
@@ -157,6 +276,13 @@ export class GloryService extends PaymentInterface {
 
         this.state.status = GLORY_STATUS[statusCodeElement.textContent];
 
+        if (this.state.status === "WAITING_ERROR_RECOVERY") {
+            this.showError(
+                _t("The cash machine has an error, please consult its display for details.")
+            );
+            return;
+        }
+
         if (!this.paymentLine) {
             return;
         }
@@ -190,6 +316,28 @@ export class GloryService extends PaymentInterface {
         }
     }
 
+    parseGloryCashElement(cashElement) {
+        const denominationElements = Array.from(cashElement.getElementsByTagName("Denomination"));
+        return denominationElements.map((denomination) => ({
+            value: this.gloryAmountToPosAmount(denomination.getAttribute("fv")),
+            amount: parseInt(denomination.getElementsByTagName("Piece")[0].textContent),
+            status: GLORY_CURRENCY_STATUS[
+                denomination.getElementsByTagName("Status")[0].textContent
+            ],
+        }));
+    }
+
+    /**
+     * @param {Element} cashElement
+     * @returns {number}
+     */
+    getTotalFromGloryCashElement(cashElement) {
+        const denominations = this.parseGloryCashElement(cashElement);
+        return this.env.utils.roundCurrency(
+            denominations.reduce((total, next) => total + next.amount * next.value, 0)
+        );
+    }
+
     inventoryChangeHandler(inventoryResponse) {
         const cashElements = Array.from(inventoryResponse.getElementsByTagName("Cash"));
         const dispensableCash = cashElements.find(
@@ -199,16 +347,7 @@ export class GloryService extends PaymentInterface {
             return;
         }
 
-        const denominationElements = Array.from(
-            dispensableCash.getElementsByTagName("Denomination")
-        );
-        const denominations = denominationElements.map((denomination) => ({
-            value: this.gloryAmountToPosAmount(denomination.getAttribute("fv")),
-            amount: denomination.getElementsByTagName("Piece")[0].textContent,
-            status: GLORY_CURRENCY_STATUS[
-                denomination.getElementsByTagName("Status")[0].textContent
-            ],
-        }));
+        const denominations = this.parseGloryCashElement(dispensableCash);
         this.state.inventory = sortBy(denominations, "value");
     }
 
@@ -217,7 +356,7 @@ export class GloryService extends PaymentInterface {
             return false;
         }
 
-        if (this.paymentLine.amount < 0 && this.pos.getCashier().role !== "manager") {
+        if (this.paymentLine.amount < 0 && this.pos.getCashier()._role !== "manager") {
             this.showError(_t("Only managers can withdraw cash from the cash machine."));
             return false;
         }
@@ -235,16 +374,26 @@ export class GloryService extends PaymentInterface {
             );
             return false;
         }
+        if (this.state.status === "COLLECTING" || this.state.status === "WAITING_REPLENISHMENT") {
+            this.showError(
+                _t(
+                    "The cash machine is currently in collection/replenishment mode, please finish this process on the machine before making a payment."
+                )
+            );
+            return false;
+        }
 
         if (this.settings.OccupyEnable) {
             await this.occupy();
         }
 
         this.state.amountInserted = 0;
-        const amountString = Math.round(this.paymentLine.amount * 100).toString(10);
+        const amountString = Math.round(
+            this.paymentLine.amount * Math.pow(10, this.pos.currency.decimal_places)
+        ).toString(10);
         this.newSequenceNumber();
 
-        const paymentResponse = await this.sendXmlRequest(XML_REQUESTS.startPayment, [
+        const { xmlResponse } = await this.sendXmlRequest(XML_REQUESTS.startPayment, [
             {
                 name: "Amount",
                 children: [amountString],
@@ -256,41 +405,38 @@ export class GloryService extends PaymentInterface {
             },
         ]);
 
-        if (this.cancellationResolver) {
-            this.cancellationResolver();
-            this.cancellationResolver = null;
-        }
-
-        const result = await this.handlePaymentResponse(paymentResponse);
+        const result = await this.handlePaymentResponse(xmlResponse);
 
         if (this.occupied) {
             await this.release();
         }
 
+        if (this.cancellationResolver) {
+            this.cancellationResolver();
+            this.cancellationResolver = null;
+        }
+
         return result;
     }
 
+    /**
+     * @param {Element} paymentResponse
+     * @returns {Promise<boolean>}
+     */
     async handlePaymentResponse(paymentResponse) {
         if (!this.paymentLine) {
             console.warn("Glory payment response received, but no payment in progress");
             return false;
         }
 
-        const paymentStatus = GLORY_RESULT[paymentResponse.getAttribute("result")];
-
-        switch (paymentStatus) {
+        switch (parseGloryResult(paymentResponse)) {
             case "SUCCESS": {
-                this.paymentLine.setAmount(this.state.amountInserted);
+                this.setPaymentInfo(paymentResponse, true);
                 return true;
             }
-            case "SESSION_TIMEOUT":
-            case "INVALID_SESSION": {
-                await this.refreshSession();
-                return this.sendPaymentRequest();
-            }
             case "CHANGE_SHORTAGE":
-                this.paymentLine.setAmount(this.state.amountInserted);
-                this.pos.printReceipt({ printBillActionTriggered: true });
+                this.setPaymentInfo(paymentResponse, false);
+                await this.pos.printReceipt({ printBillActionTriggered: true });
                 this.showError(_t("There is insufficient cash in the machine to give change."));
                 return false;
             case "OCCUPIED_BY_OTHER":
@@ -321,18 +467,59 @@ export class GloryService extends PaymentInterface {
             return false;
         }
 
-        const cancelResponse = await this.sendXmlRequest(XML_REQUESTS.cancelPayment);
-
-        const cancelStatus = GLORY_RESULT[cancelResponse.getAttribute("result")];
-        if (cancelStatus === "SESSION_TIMEOUT" || cancelStatus === "INVALID_SESSION") {
-            await this.refreshSession();
-            return this.sendPaymentCancel();
-        }
+        await this.sendXmlRequest(XML_REQUESTS.cancelPayment);
 
         const cancelPromise = new Promise((resolve) => {
             this.cancellationResolver = resolve;
         });
         return await cancelPromise;
+    }
+
+    /**
+     * @param {Element} paymentResponse
+     * @param {boolean} isSuccessful
+     */
+    setPaymentInfo(paymentResponse, isSuccessful) {
+        const cashElements = Array.from(paymentResponse.getElementsByTagName("Cash"));
+        const cashGivenElement = cashElements.find(
+            (cashElement) => cashElement.getAttribute("type") === "1"
+        );
+        const cashReturnedElement = cashElements.find(
+            (cashElement) => cashElement.getAttribute("type") === "2"
+        );
+        const cashGiven = this.getTotalFromGloryCashElement(cashGivenElement);
+        const cashReturned = this.getTotalFromGloryCashElement(cashReturnedElement);
+        const transactionId = paymentResponse.getElementsByTagName("TransactionId")[0].textContent;
+
+        this.paymentLine.transaction_id = transactionId;
+        this.paymentLine.setAmount(cashGiven);
+        this.paymentLine.setReceiptInfo(
+            this.makeReceiptMessage(transactionId, cashGiven, cashReturned, isSuccessful)
+        );
+    }
+
+    /**
+     * @param {string} transactionId
+     * @param {number} amountDeposited
+     * @param {number} amountReturned
+     * @param {boolean} isSuccessful
+     * @returns {string}
+     */
+    makeReceiptMessage(transactionId, amountDeposited, amountReturned, isSuccessful) {
+        const header = isSuccessful
+            ? _t("GLORY TRANSACTION SUCCESSFUL")
+            : _t("GLORY TRANSACTION CANCELLED");
+        const transactionIdLine = _t("Transaction ID: %s", transactionId);
+        const depositedLine = _t(
+            "Cash deposited: %s",
+            this.env.utils.formatCurrency(amountDeposited)
+        );
+        const changeGivenLine = _t(
+            "Change given: %s",
+            this.env.utils.formatCurrency(amountReturned)
+        );
+
+        return `${header}\n${transactionIdLine}\n${depositedLine}\n${changeGivenLine}\n\n`;
     }
 
     async setDateAndTime() {
@@ -390,7 +577,7 @@ export class GloryService extends PaymentInterface {
      * @param {import("models").GloryRequestInfo} request
      * @param {import("models").GloryXmlElement[]?} children
      */
-    sendXmlRequest(request, children) {
+    async sendXmlRequest(request, children, secondAttempt = false) {
         const xmlElement = {
             name: request.requestName,
             children: [
@@ -399,9 +586,21 @@ export class GloryService extends PaymentInterface {
             ],
         };
         const xmlString = serializeGloryXml(xmlElement);
+        this.logXml("SEND", xmlString);
         this.socketIo.sendMessage(["xml send", xmlString]);
 
-        return this.waitForResponseWithType(request.responseName);
+        const xmlResponse = await this.waitForResponseWithType(request.responseName);
+        const statusCode = parseGloryResult(xmlResponse);
+
+        if (
+            !secondAttempt &&
+            (statusCode === "SESSION_TIMEOUT" || statusCode === "INVALID_SESSION")
+        ) {
+            await this.refreshSession();
+            return this.sendXmlRequest(request, children, true);
+        }
+
+        return { statusCode, xmlResponse };
     }
 
     gloryAmountToPosAmount(amountStringInCents) {
@@ -428,9 +627,9 @@ export class GloryService extends PaymentInterface {
                     await this.occupy();
                 }
 
-                const cancelResponse = await this.sendXmlRequest(XML_REQUESTS.cancelPayment);
-                if (GLORY_RESULT[cancelResponse.getAttribute("result")] !== "SUCCESS") {
-                    await this.sendXmlRequest(XML_REQUESTS.reset);
+                const { statusCode } = await this.sendXmlRequest(XML_REQUESTS.cancelPayment);
+                if (statusCode !== "SUCCESS") {
+                    await this.reset(true);
                 }
 
                 if (this.occupied) {
