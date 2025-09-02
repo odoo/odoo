@@ -52,7 +52,7 @@ class EventManager:
         :param Driver device: actual device class
         :param dict data: data returned by the device (optional)
         """
-        data = data or request.params.get('data', {}) if request else {}
+        data = data or (request.params.get('data', {}) if request else {})
 
         # Make notification available to longpolling event route
         event = {
