@@ -332,6 +332,26 @@ class TestPartner(TransactionCaseWithUserDemo):
 
         self.assertEqual(child_contact.with_context(lang='fr_FR').display_name, 'Parent, Autre')
 
+    def test_import_identical_partner_false_company(self):
+        og_partner = self.env['res.partner'].create([{
+            "name": "partner",
+            "email": "mail@mail.mail",
+            "company_id": self.env.company.id,
+        }])
+        parent_company = self.env['res.partner'].create([{
+            "name": "parent_company",
+            "email": "mail@mail.mail",
+            "company_id": self.env.company.id,
+            "child_ids": [Command.set(og_partner.ids)],
+        }])
+        og_partner.parent_id = parent_company.id
+        with self.assertRaises(UserError):
+            self.env['res.partner'].with_context(import_file=True).create([{
+                "name": og_partner.name,
+                "email": og_partner.email,
+                "company_id": False,
+            }])
+
 
 @tagged('res_partner', 'res_partner_address')
 class TestPartnerAddressCompany(TransactionCase):

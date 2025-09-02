@@ -885,6 +885,18 @@ class ResPartner(models.Model):
     def create(self, vals_list):
         if self.env.context.get('import_file'):
             self._check_import_consistency(vals_list)
+            vals_no_company = [val for val in vals_list if not val.get("company_id")]
+            for val in vals_no_company:
+                if "email" in val:
+                    partner = self.env['res.partner'].with_context(allowed_company_ids=[self.env.company.id]).search([
+                        ("name", "=", val["name"]),
+                        ("email", "=", val["email"]),
+                        ("parent_id", "!=", False),
+                        ("company_id", "!=", False),
+                    ])
+                    if partner:
+                        raise UserError(
+                            self.env._("This record requires a company ID"))
         for vals in vals_list:
             if vals.get('website'):
                 vals['website'] = self._clean_website(vals['website'])
