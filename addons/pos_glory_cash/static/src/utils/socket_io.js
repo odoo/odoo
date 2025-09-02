@@ -18,6 +18,8 @@ const MSG_TYPES = {
     BINARY_ACK: "6",
 };
 
+const CONNECTION_TIMEOUT_MS = 10000;
+
 export class SocketIoService {
     /**
      * @param {string} url
@@ -35,6 +37,7 @@ export class SocketIoService {
         this.websocket = null;
         this.socketId = null;
         this.pingIntervalId = null;
+        this.pongTimeoutIds = [];
 
         this.callbacks = callbacks;
         this._connect(url);
@@ -57,6 +60,7 @@ export class SocketIoService {
             if (this.pingIntervalId) {
                 clearInterval(this.pingIntervalId);
             }
+            this.callbacks.onClose();
             setTimeout(() => this._connect(url), 5000);
         };
         this.websocket.onmessage = (event) => this._onMessageReceived(event.data);
@@ -69,10 +73,13 @@ export class SocketIoService {
     _handleOpenMessage(data) {
         const info = JSON.parse(data);
         this.socketId = info.sid;
-        this.pingIntervalId = setInterval(
-            () => this.websocket.send(PACKET_TYPES.PING),
-            info.pingInterval
-        );
+        this.pingIntervalId = setInterval(() => {
+            this.websocket.send(PACKET_TYPES.PING);
+            const pongTimeoutId = setTimeout(() => {
+                this.websocket.close();
+            }, CONNECTION_TIMEOUT_MS);
+            this.pongTimeoutIds.push(pongTimeoutId);
+        }, info.pingInterval);
     }
 
     async _handleMessage(data) {
@@ -104,6 +111,11 @@ export class SocketIoService {
         const packetData = data.slice(1);
         if (packetType === PACKET_TYPES.OPEN) {
             this._handleOpenMessage(packetData);
+        } else if (packetType === PACKET_TYPES.PONG) {
+            for (const timeoutId of this.pongTimeoutIds) {
+                clearTimeout(timeoutId);
+            }
+            this.pongTimeoutIds = [];
         } else if (packetType === PACKET_TYPES.MESSAGE) {
             this._handleMessage(packetData);
         }
