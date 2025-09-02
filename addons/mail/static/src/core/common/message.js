@@ -8,6 +8,7 @@ import { MessageReactionMenu } from "@mail/core/common/message_reaction_menu";
 import { MessageReactions } from "@mail/core/common/message_reactions";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
+import { getBundle } from "@web/core/assets";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { renderToElement } from "@web/core/utils/render";
 
@@ -136,9 +137,24 @@ export class Message extends Component {
             message: this.props.message,
             alignedRight: this.isAlignedRight,
         });
-        onMounted(() => {
+        onMounted(async () => {
             if (this.shadowBody.el) {
                 this.shadowRoot = this.shadowBody.el.attachShadow({ mode: "open" });
+
+                const res = await getBundle("web.assets_web");
+                const loadPromises = res.cssLibs.map((url) => {
+                    const link = document.createElement("link");
+                    link.rel = "stylesheet";
+                    link.href = url;
+                    this.shadowRoot.appendChild(link);
+
+                    return new Promise((resolve, reject) => {
+                        link.addEventListener("load", resolve);
+                        link.addEventListener("error", reject);
+                    });
+                });
+                await Promise.all(loadPromises);
+
                 const color = cookie.get("color_scheme") === "dark" ? "white" : "black";
                 const shadowStyle = document.createElement("style");
                 shadowStyle.textContent = `
