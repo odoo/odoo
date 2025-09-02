@@ -319,5 +319,8 @@ class ProductProduct(models.Model):
             sorted_domains.append((10, Domain('default_code', '=', default_code)))
         if name := vals.get('name'):
             name = name.split('\n', 1)[0]  # Cut sales description from the name
-            sorted_domains += [(15, Domain('name', '=', name)), (20, Domain('name', 'ilike', name))]
+            sorted_domains.append((15, Domain('name', '=', name)))
+            # avoid matching unrelated products whose names merely contain that short string
+            if len(name) > 4:
+                sorted_domains.append((20, Domain('name', 'ilike', name)))
         return sorted_domains
