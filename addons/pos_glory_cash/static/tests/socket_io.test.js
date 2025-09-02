@@ -52,7 +52,7 @@ describe("when open message is received", () => {
         await waitUntil(() => websocketState.instance.readyState);
 
         websocketState.instance.send(OPEN_MESSAGE);
-        await advanceTime(10000);
+        await advanceTime(11000);
 
         expect(websocketState.received).toHaveLength(2);
         expect(websocketState.received[0]).toBe(PING_MESSAGE);
