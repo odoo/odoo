@@ -137,21 +137,23 @@
                 <t t-call="portal.portal_record_sidebar">
                     <t t-set="classes" t-value="'col-lg-4 col-xxl-3 d-print-none'"/>
                     <t t-set="title">
+                        <h2 t-else="" t-field="sale_order.amount_total" class="mb-0 text-break"/>
                         <t t-if="sale_order.state in 'draft,sent' and sale_order.prepayment_percent != 1.0">
-                            <h4>Down payment</h4>
-                            <h2>
-                                <t
-                                    t-out="sale_order._get_prepayment_required_amount()"
-                                    t-options="{
-                                        'widget': 'monetary',
-                                        'display_currency': sale_order.currency_id,
-                                    }"
-                                />
-                                (<t t-out="sale_order.prepayment_percent * 100"/>%)
-                            </h2>
-                        </t>
-                        <t t-else="">
-                            <h2 t-field="sale_order.amount_total" class="mb-0 text-break"/>
+                            <h5 class="d-inline align-middle">Down payment</h5>
+                            <div class="d-flex align-items-baseline flex-wrap gap-2">
+                                <h2>
+                                    <t
+                                        t-out="sale_order._get_prepayment_required_amount()"
+                                        t-options="{
+                                            'widget': 'monetary',
+                                            'display_currency': sale_order.currency_id,
+                                        }"
+                                    />
+                                </h2>
+                                <h5 class="text-muted">
+                                    (<t t-out="sale_order.prepayment_percent * 100"/>% on <t t-out="sale_order.currency_id.format(amount_total)"/>)
+                                </h5>
+                            </div>
                         </t>
                     </t>
                     <t t-set="entries">
