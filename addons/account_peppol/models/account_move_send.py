@@ -101,7 +101,7 @@ class AccountMoveSend(models.AbstractModel):
     def _do_peppol_pre_send(self, moves):
         if len(moves.company_id) == 1:
             if not moves.company_id.peppol_can_send:
-                return self.env['peppol.registration'].with_context(default_company_id=moves.company_id.id)._action_open_peppol_form(reopen=False)
+                return self.env['peppol.registration.wizard'].with_context(default_company_id=moves.company_id.id)._action_open_peppol_form(reopen=False)
 
         for move in moves:
             if move.peppol_move_state in ('ready', False):
@@ -151,12 +151,7 @@ class AccountMoveSend(models.AbstractModel):
         for invoice, invoice_data in invoices_data.items():
             partner = invoice.partner_id.commercial_partner_id.with_company(invoice.company_id)
             if 'peppol' in invoice_data['sending_methods']:
-                if not partner.peppol_eas or not partner.peppol_endpoint:
-                    invoice.peppol_move_state = 'error'
-                    invoice_data['error'] = _('The partner is missing Peppol EAS and/or Endpoint identifier.')
-                    continue
-
-                if self.env['res.partner']._get_peppol_verification_state(partner.peppol_endpoint, partner.peppol_eas, invoice_data['invoice_edi_format']) != 'valid':
+                if partner.peppol_verification_state != 'valid':
                     invoice.peppol_move_state = 'error'
                     invoice_data['error'] = _('Please verify partner configuration in partner settings.')
                     continue
@@ -179,7 +174,7 @@ class AccountMoveSend(models.AbstractModel):
                     )
                     continue
 
-                receiver_identification = f"{partner.peppol_eas}:{partner.peppol_endpoint}"
+                receiver_identification = partner.peppol_identifier_ids.iso_identifier
                 params['documents'].append({
                     'filename': filename,
                     'receiver': receiver_identification,
@@ -226,7 +221,7 @@ class AccountMoveSend(models.AbstractModel):
     def action_what_is_peppol_activate(self, moves):
         companies = moves.company_id
         if len(companies) == 1 and not companies.peppol_can_send:
-            action = self.env['peppol.registration']._action_open_peppol_form()
+            action = self.env['peppol.registration.wizard']._action_open_peppol_form()
             action['context'] = {
                 'active_model': "account.move",
                 'active_ids': moves.ids,

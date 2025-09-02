@@ -3,7 +3,6 @@
     <record id="base.partner_demo_company_sg" model="res.partner" forcecreate="1">
         <field name="name">SG Company</field>
         <field name="vat">197401143C</field>
-        <field name="l10n_sg_unique_entity_number">201131415A</field>
         <field name="street">Tyersall Avenue</field>
         <field name="city">Central Singapore</field>
         <field name="country_id" ref="base.sg"/>
@@ -12,6 +11,12 @@
         <field name="email">info@company.sg.example.com</field>
         <field name="website">www.sg.example.com</field>
         <field name="is_company" eval="True"/>
+    </record>
+
+    <record id="l10n_no_0192_identification" model="res.partner.identification">
+        <field name="code">SG:UEN</field>
+        <field name="identifier">201131415A</field>
+        <field name="partner_id" ref="base.partner_demo_company_sg"/>
     </record>
 
     <record id="base.demo_company_sg" model="res.company" forcecreate="1">

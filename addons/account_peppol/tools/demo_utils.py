@@ -93,20 +93,18 @@ def _mock_call_peppol_proxy(func, self, *args, **kwargs):
     }[endpoint](self, args, kwargs)
 
 
-def _mock_get_peppol_verification_state(func, self, *args, **kwargs):
-    (endpoint, eas, xml_format) = args
-    if not (eas and endpoint):
-        return 'not_verified'
-    if not xml_format:
-        return 'not_valid'
-    if xml_format not in self._get_peppol_formats():
-        return 'not_valid_format'
-    return 'valid'
+def _mock_call_peppol_proxy_public(func, self, endpoint, peppol_mode='prod', params=None):
 
-def _mock_check_peppol_participant_exists(func, self, *args, **kwargs):
-    # in demo, no participant already exists
-    return False
+    def _mock__sync_peppol_partners(user):
+        return {'result': {
+            partner_id: {'is_on_peppol': True, 'preferred_identifier': partner_vals['identifiers'][0], 'provider': 'NotOdoo (Demo)', 'services': []}
+            for partner_id, partner_vals in params.items()
+        }}
 
+    endpoint = endpoint.rsplit('/', 1)[-1]
+    return {
+        '_sync_peppol_partners': _mock__sync_peppol_partners,
+    }[endpoint](self)
 
 def _mock_register_proxy_user(func, self, *args, **kwargs):
     edi_user = func(self, *args, **kwargs)
@@ -131,10 +129,18 @@ def _mock_register_proxy_user(func, self, *args, **kwargs):
     return edi_user
 
 
+def _mock_get_company_info_on_peppol(func, self, allow_raising=False):
+    return {
+        'is_on_peppol': False,
+        'external_provider': False,
+        'error_msg': False,
+    }
+
+
 _demo_behaviour = {
+    '_get_company_info_on_peppol': _mock_get_company_info_on_peppol,  # res.company
     '_call_peppol_proxy': _mock_call_peppol_proxy,  # account_edi_proxy_client.user
-    '_get_peppol_verification_state': _mock_get_peppol_verification_state,  # res.partner
-    '_check_peppol_participant_exists': _mock_check_peppol_participant_exists,  # res.partner
+    '_call_peppol_proxy_public': _mock_call_peppol_proxy_public,  # account_edi_proxy_client.user
     '_register_proxy_user': _mock_register_proxy_user,  # account_edi_proxy_client.user
 }
 

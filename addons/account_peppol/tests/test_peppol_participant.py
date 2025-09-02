@@ -105,7 +105,7 @@ class TestPeppolParticipant(TransactionCase):
             yield
 
     def test_ignore_archived_edi_users(self):
-        wizard = self.env['peppol.registration'].create(self._get_participant_vals())
+        wizard = self.env['peppol.registration.wizard'].create(self._get_participant_vals())
         wizard.button_register_peppol_participant()
 
         self.env['account_edi_proxy_client.user'].create([{
@@ -118,11 +118,11 @@ class TestPeppolParticipant(TransactionCase):
             'proxy_type': 'peppol',
             'edi_mode': 'demo',
         }])
-        self.env.company.with_context(active_test=False).partner_id.button_account_peppol_check_partner_endpoint()
+        self.env.company.with_context(active_test=False).partner_id.button_sync_partners_peppol_info()
 
     def test_create_participant_missing_data(self):
         # creating a participant without eas/endpoint/document should not be possible
-        wizard = self.env['peppol.registration'].create({
+        wizard = self.env['peppol.registration.wizard'].create({
             'peppol_eas': False,
             'peppol_endpoint': False,
         })
@@ -133,7 +133,7 @@ class TestPeppolParticipant(TransactionCase):
         company = self.env.company
         vals = self._get_participant_vals()
         vals['peppol_eas'] = '0208'
-        wizard = self.env['peppol.registration'].create(vals)
+        wizard = self.env['peppol.registration.wizard'].create(vals)
         self.assertFalse(wizard.smp_registration)
         wizard.button_register_peppol_participant()
         self.assertEqual(company.account_peppol_proxy_state, 'sender')
@@ -144,7 +144,7 @@ class TestPeppolParticipant(TransactionCase):
 
     def test_create_success_receiver(self):
         company = self.env.company
-        wizard = self.env['peppol.registration'].create(self._get_participant_vals())
+        wizard = self.env['peppol.registration.wizard'].create(self._get_participant_vals())
         self.assertTrue(wizard.smp_registration)
         wizard.button_register_peppol_participant()
         self.assertIn(company.account_peppol_proxy_state, ('smp_registration', 'receiver'))
@@ -157,7 +157,7 @@ class TestPeppolParticipant(TransactionCase):
 
         with patch('odoo.addons.account_peppol.models.res_company.ResCompany._get_company_info_on_peppol',
                    _get_company_info_on_peppol):
-            wizard = self.env['peppol.registration'].create(self._get_participant_vals())
+            wizard = self.env['peppol.registration.wizard'].create(self._get_participant_vals())
             wizard.button_register_peppol_participant()
         self.assertEqual(company.account_peppol_proxy_state, 'sender')
         settings = self.env['res.config.settings'].create({})
@@ -170,7 +170,7 @@ class TestPeppolParticipant(TransactionCase):
         # the account_peppol_proxy_state should change to rejected
         # if we reject the participant
         company = self.env.company
-        wizard = self.env['peppol.registration'].create(self._get_participant_vals())
+        wizard = self.env['peppol.registration.wizard'].create(self._get_participant_vals())
         with self._set_context({'participant_state': 'rejected'}):
             wizard = wizard.with_env(self.env)
             wizard.button_register_peppol_participant()
@@ -181,22 +181,22 @@ class TestPeppolParticipant(TransactionCase):
     @mute_logger('odoo.sql_db')
     def test_create_duplicate_participant(self):
         # should not be possible to create a duplicate participant
-        wizard = self.env['peppol.registration'].create(self._get_participant_vals())
+        wizard = self.env['peppol.registration.wizard'].create(self._get_participant_vals())
         wizard.button_register_peppol_participant()
         with self.assertRaises(IntegrityError):
             wizard.account_peppol_proxy_state = 'not_registered'
             wizard.button_register_peppol_participant()
 
     def test_config_unregister_participant(self):
-        wizard = self.env['peppol.registration'].create({**self._get_participant_vals(), 'peppol_eas': '0208'})
+        wizard = self.env['peppol.registration.wizard'].create({**self._get_participant_vals(), 'peppol_eas': '0208'})
         wizard.button_register_peppol_participant()
         config_wizard = self.env['peppol.config.wizard'].new({})
         config_wizard.button_peppol_unregister()
         self.assertEqual(self.env.company.account_peppol_proxy_state, 'not_registered')
 
     def test_config_update_email(self):
-        wizard = self.env['peppol.registration'].create({**self._get_participant_vals(), 'peppol_eas': '0208'})
-        wizard.button_register_peppol_participant()
+        wizard = self.env['peppol.registration.wizard'].create({**self._get_participant_vals(), 'peppol_eas': '0208'})
+        wizard.button_register_peppol_participaµnt()
         self.assertEqual(self.env.company.account_peppol_contact_email, self._get_participant_vals()['contact_email'])
         config_wizard = self.env['peppol.config.wizard'].new({})
         config_wizard.account_peppol_contact_email = 'another@email.be'

@@ -11,8 +11,13 @@
         <field name="phone">+47 406 12 345</field>
         <field name="email">info@company.noexample.com</field>
         <field name="website">www.noexample.com</field>
-        <field name="l10n_no_bronnoysund_number">123456785</field>
         <field name="is_company" eval="True"/>
+    </record>
+
+    <record id="l10n_no_org_identification" model="res.partner.identification">
+        <field name="code">NO:ORG</field>
+        <field name="identifier">123456785</field>
+        <field name="partner_id" ref="base.partner_demo_company_no"/>
     </record>
 
     <record id="base.demo_company_no" model="res.company" forcecreate="1">

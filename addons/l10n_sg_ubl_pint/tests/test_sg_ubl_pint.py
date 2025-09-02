@@ -3,6 +3,7 @@ from datetime import datetime
 
 from freezegun import freeze_time
 
+from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tools import file_open
 from odoo.tests import tagged
@@ -21,7 +22,7 @@ class TestSgUBLPint(AccountTestInvoicingCommon):
         # TIN number is required
         cls.company_data['company'].write({
             'vat': '197401143C',
-            'l10n_sg_unique_entity_number': '201131415A',
+            'identifier_ids': [Command.create({'code': 'SG:UEN', 'identifier': '201131415A'})],
             'street': 'Tyersall Avenue',
             'zip': '248048',
             'city': 'Central Singapore',

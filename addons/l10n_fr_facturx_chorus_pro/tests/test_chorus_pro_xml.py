@@ -16,14 +16,14 @@ class TestChorusProXml(AccountTestInvoicingCommon):
         cls.company = cls.company_data['company']
         cls.company.company_registry = "02546465000024"
         chorus_eas, chorus_endpoint = CHORUS_PRO_PEPPOL_ID.split(":")
+        chorus_code = cls.env['res.partner.identification']._get_code_from_iso(chorus_eas)
         cls.chorus_pro_partner = cls.env['res.partner'].create({
             'name': "Chorus Pro - Commune de Nantes",
             # Commune de Nantes
             'vat': "FR74214401093",
             'company_registry': "21440109300015",
             # Peppol ID for the AIFE (= Chorus Pro)
-            'peppol_eas': chorus_eas,
-            'peppol_endpoint': chorus_endpoint,
+            'identifier_ids': [Command.create({'code': chorus_code, 'identifier': chorus_endpoint})],
             'country_id': cls.env.ref('base.fr').id,
         })
 

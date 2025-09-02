@@ -27,8 +27,6 @@ This module add, for accounting:
         'data/account_tax_report_data.xml',
         'views/account_invoice_view.xml',
         'views/res_bank_views.xml',
-        'views/res_company_view.xml',
-        'views/res_partner_view.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

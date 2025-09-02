@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="peppol_registration_form" model="ir.ui.view">
-        <field name="name">peppol.registration.form</field>
-        <field name="model">peppol.registration</field>
+        <field name="name">peppol.registration.wizard.form</field>
+        <field name="model">peppol.registration.wizard</field>
         <field name="group_ids" eval="[Command.link(ref('account.group_account_manager'))]"/>
         <field name="arch" type="xml">
             <form class="form_peppol_registration">
@@ -16,9 +16,12 @@
                         <p class="text-muted">Send electronic invoices, and receive bills automatically via Peppol</p>
                         <group col="1">
                             <group>
+                                <field name="country_id" invisible="country_id"/> <!-- invisible if already set, otherwise display it -->
                                 <field name="peppol_eas"
                                        placeholder="Peppol ID"
                                        nolabel="1"
+                                       widget="filterable_selection"
+                                       options="{'whitelist_fname': 'mandatory_peppol_eas'}"
                                        class="o_field_peppol_eas_selection"/>
                                 <field name="peppol_endpoint" nolabel="1" placeholder="Your endpoint"/>
                                 <field name="contact_email" string="Email"/>

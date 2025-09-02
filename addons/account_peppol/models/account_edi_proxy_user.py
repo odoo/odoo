@@ -1,10 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import uuid
 from datetime import timedelta
 
+import requests
+
 from odoo import _, api, fields, models, modules, tools
-from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
+from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError, TIMEOUT
 from odoo.addons.account_peppol.exceptions import get_ebms_message, get_exception_message
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from odoo.exceptions import UserError
@@ -53,6 +56,29 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             error_subject=error_vals['subject'],
             error_message=error_message,
         )
+
+    @api.model
+    @handle_demo
+    def _call_peppol_proxy_public(self, endpoint, peppol_mode='prod', params=None):
+        assert peppol_mode in ('prod', 'test')
+        payload = {
+            'jsonrpc': '2.0',
+            'method': 'call',
+            'params': params or {},
+            'id': uuid.uuid4().hex,
+        }
+        url = f"{self._get_proxy_urls()['peppol'][peppol_mode]}/{endpoint}"
+        try:
+            response = requests.post(
+                url,
+                json=payload,
+                timeout=TIMEOUT,
+                headers={'content-type': 'application/json'},
+            )
+            response.raise_for_status()
+        except requests.exceptions.RequestException:
+            return {'error': {'code': 'connection_error', 'message': self.env._('Could not connect to the Peppol Proxy URL %s.', url)}}
+        return response.json()
 
     @handle_demo
     def _call_peppol_proxy(self, endpoint, params=None):
@@ -106,7 +132,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
     def _cron_peppol_get_participant_status(self):
         edi_users = self.search([('proxy_type', '=', 'peppol')])
-        edi_users._peppol_get_participant_status()
+        for edi_user in edi_users:
+            edi_user._peppol_get_participant_status()
 
         # throughout the registration process, we need to check the status more frequently
         if self.search_count([('company_id.account_peppol_proxy_state', '=', 'smp_registration')], limit=1):
@@ -122,10 +149,10 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
     def _get_proxy_identification(self, company, proxy_type):
         if proxy_type == 'peppol':
-            if not company.peppol_eas or not company.peppol_endpoint:
+            if not company.peppol_identifier_ids:
                 raise UserError(
-                    _("Please fill in the EAS code and the Participant ID code."))
-            return f'{company.peppol_eas}:{company.peppol_endpoint}'
+                    _("No valid identification for Peppol exists on the company."))
+            return company.peppol_identifier_ids[:1]
         return super()._get_proxy_identification(company, proxy_type)
 
     def _peppol_import_invoice(self, attachment, peppol_state, uuid, journal=None):
@@ -211,7 +238,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 "/api/peppol/1/get_document",
                 params={'message_uuids': message_uuids},
             )
-            for uuid, content in all_messages.items():
+            for message_uuid, content in all_messages.items():
                 enc_key = content["enc_key"]
                 document_content = content["document"]
                 filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
@@ -222,7 +249,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     "type": "binary",
                     "mimetype": "application/xml",
                 })
-                vals_to_ack = edi_user._peppol_import_invoice(attachment, content["state"], uuid, journal=journal)
+                vals_to_ack = edi_user._peppol_import_invoice(attachment, content["state"], message_uuid, journal=journal)
                 if move_to_ack := vals_to_ack.get('move'):
                     created_moves |= move_to_ack
                 if uuid_to_ack := vals_to_ack.get('uuid'):
@@ -264,8 +291,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 params={'message_uuids': list(message_uuids.keys())},
             )
 
-            for uuid, content in messages_to_process.items():
-                if uuid == 'error':
+            for message_uuid, content in messages_to_process.items():
+                if message_uuid == 'error':
                     # this rare edge case can happen if the participant is not active on the proxy side
                     # in this case we can't get information about the invoices
                     edi_user_moves.peppol_move_state = 'error'
@@ -273,7 +300,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     edi_user_moves._message_log_batch(bodies={move.id: log_message for move in edi_user_moves})
                     break
 
-                move = message_uuids[uuid]
+                move = message_uuids[message_uuid]
                 if error_vals := content.get('error'):
                     if error_vals['code'] == 702:
                         # "Peppol request not ready" error:
@@ -297,21 +324,22 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             self.env.ref('account_peppol.ir_cron_peppol_get_message_status')._trigger()
 
     def _peppol_get_participant_status(self):
-        for edi_user in self:
-            edi_user = edi_user.with_company(edi_user.company_id)
-            try:
-                proxy_user = edi_user._call_peppol_proxy("/api/peppol/2/participant_status")
-            except AccountEdiProxyError as e:
-                _logger.error('Error while updating Peppol participant status: %s', e)
-                continue
-
-            if proxy_user['peppol_state'] in ('sender', 'smp_registration', 'receiver', 'rejected'):
-                if edi_user.company_id.account_peppol_proxy_state != proxy_user['peppol_state']:
-                    edi_user.company_id.account_peppol_proxy_state = proxy_user['peppol_state']
-                    if proxy_user['peppol_state'] == 'receiver':
-                        # First-time receivers get their initial email here.
-                        # If already a sender, they'll receive a second (send+receive) welcome email.
-                        edi_user.company_id._account_peppol_send_welcome_email()
+        self.ensure_one()
+        edi_user = self.with_company(self.company_id)
+        try:
+            proxy_user = edi_user._call_peppol_proxy("/api/peppol/2/participant_status")
+        except AccountEdiProxyError as e:
+            _logger.error('Error while updating Peppol participant status: %s', e)
+            return
+        else:
+            previous_state = edi_user.company_id.account_peppol_proxy_state
+            new_state = proxy_user['peppol_state']
+            if previous_state != new_state:
+                if new_state == 'sender' or (previous_state != 'sender' and new_state == 'receiver'):
+                    # First-time senders & receivers get their initial email here.
+                    edi_user.company_id._account_peppol_send_welcome_email()
+                edi_user.company_id.account_peppol_proxy_state = new_state
+            return new_state
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
@@ -337,6 +365,10 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             'peppol_webhook_endpoint': self.company_id._get_peppol_webhook_endpoint(),
             'peppol_webhook_token': self._generate_webhook_token(),
         }
+
+    def _peppol_register(self):
+        # TODO register single entry point
+        pass
 
     def _peppol_register_sender(self, peppol_external_provider=None):
         self.ensure_one()

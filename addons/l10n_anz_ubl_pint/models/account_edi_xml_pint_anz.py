@@ -69,7 +69,13 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
 
         # In both cases the scheme must be set to a value that comes from the eas.
         if commercial_partner.country_code in ('AU', 'NZ'):
-            party_node['cac:PartyLegalEntity']['cbc:CompanyID']['schemeID'] = commercial_partner.peppol_eas
+            identifier = commercial_partner._get_main_endpoint()
+            party_node['cac:PartyLegalEntity']['cbc:CompanyID'] = {
+                # DK-R-014: For Danish Suppliers it is mandatory to specify schemeID as "0184" (DK CVR-number) when
+                # PartyLegalEntity/CompanyID is used for AccountingSupplierParty
+                '_text': identifier.identifier,
+                'schemeID': identifier.iso_code,
+            }
 
         return party_node
 
@@ -100,14 +106,14 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         tax_total_node = vals['document_node']['cac:TaxTotal'][0]
         for tax_subtotal_node in tax_total_node['cac:TaxSubtotal']:
             if tax_subtotal_node['cac:TaxCategory']['cbc:ID']['_text'] not in ANZ_TAX_CATEGORIES:
-                constraints['sg_vat_category_required'] = _("You must set a tax category on each taxes of the invoice.\nValid categories are: S, E, Z, G, O")
+                constraints['anz_vat_category_required'] = _("You must set a tax category on each taxes of the invoice.\nValid categories are: S, E, Z, G, O")
 
         # ALIGNED-IBR-001-AUNZ and ALIGNED-IBR-002-AUNZ
         for partner_type in ('supplier', 'customer'):
-            partner = vals[partner_type]
-            if partner.country_code == 'AU' and partner.peppol_eas != '0151':
+            partner = vals[partner_type].commercial_partner_id
+            if partner.country_code == 'AU' and partner.identifier_ids.filetered(lambda i: i.iso_code == '0151'):
                 constraints[f'au_{partner_type}_eas_0151'] = _("The Peppol EAS must be set to ABN (0151) if the partner country is Australia.")
-            elif partner.country_code == 'NZ' and partner.peppol_eas != '0088':
+            elif partner.country_code == 'NZ' and partner.identifier_ids.filetered(lambda i: i.iso_code == '0088'):
                 constraints[f'nz_{partner_type}_eas_0088'] = _("The Peppol EAS must be set to EAN (0088) if the partner country is New Zealand.")
 
         return constraints

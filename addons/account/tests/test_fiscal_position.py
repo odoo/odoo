@@ -40,7 +40,7 @@ class TestFiscalPosition(common.TransactionCase):
                                            country_id=be.id))
         cls.george = cls.res_partner.create(dict(
                                            name="George",
-                                           vat="BE0477472701",
+                                           vat="BE1477472701",
                                            country_id=fr.id))
         cls.alberto = cls.res_partner.create(dict(
                                            name="Alberto",

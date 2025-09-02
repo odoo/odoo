@@ -6,7 +6,7 @@ import re
 from collections import defaultdict
 from psycopg2 import errors as pgerrors
 
-from odoo import _, api, fields, models
+from odoo import _, api, Command, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL, unique
@@ -603,6 +603,16 @@ class ResPartner(models.Model):
         company_dependent=True,
         domain=lambda self: [('payment_type', '=', 'inbound'), ('company_id', '=', self.env.company.id)],
     )
+    vat = fields.Char(inverse='_inverse_vat')  # EXTENDS 'base' - add the inverse
+    country_id = fields.Many2one('res.country', default=lambda self: self.env.company.country_id)  # EXTENDS 'base' - add the default
+    identifiers = fields.Json(
+        compute='_compute_identifiers',
+        inverse='_inverse_identifiers',
+    )
+    identifier_ids = fields.One2many(
+        comodel_name='res.partner.identification',
+        inverse_name='partner_id',
+    )
 
     def _compute_bank_count(self):
         bank_data = self.env['res.partner.bank']._read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['__count'])
@@ -674,6 +684,65 @@ class ResPartner(models.Model):
             data_list[partner.id].append(stat_info)
         return data_list
 
+    @api.depends('country_id', 'identifier_ids', 'vat', 'company_registry')
+    def _compute_identifiers(self):
+        for partner in self:
+            placeholder_codes = self.env['res.partner.identification']._get_codes_by_country(partner.country_code, include_international=False)
+            placeholder_vals = {
+                placeholder_code: {
+                    'label': placeholder_vals.get('scheme-name'),
+                    'value': '',
+                    'sequence': placeholder_vals.get('sequence', 100),
+                    'is_placeholder': True,
+                }
+                for placeholder_code, placeholder_vals in placeholder_codes.items()
+            }
+            existing_identifier_vals = {
+                identifier.code: {
+                    'label': identifier.label,
+                    'value': identifier.identifier,
+                    'sequence': identifier.sequence,
+                }
+                for identifier in partner.identifier_ids
+            }
+            partner.identifiers = {
+                **placeholder_vals,
+                **existing_identifier_vals,
+            }
+
+    def _inverse_identifiers(self):
+        for partner in self:
+            commands = []
+            for code, vals in partner.identifiers.items():
+                value = vals['value']
+                if vals.get('is_placeholder') and not value:
+                    continue
+                if code not in partner.identifier_ids.mapped('code'):
+                    vals = {'code': code, 'identifier': value}
+                    commands.append(Command.create(vals))
+                else:
+                    identifier = partner.identifier_ids.filtered(lambda i: i.code == code)
+                    if not value:
+                        # identification removed
+                        commands.append(Command.unlink(identifier.id))
+                    else:
+                        # identification updated
+                        identifier.identifier = value
+            partner.identifier_ids = commands
+
+    def _inverse_vat(self):
+        # Update or insert identification after a vat number change
+        for partner in self:
+            if partner.vat:
+                partner_country_code, vat = partner.country_code, partner.vat
+                vat_country_code, _vat = self.env['res.partner']._split_vat(vat)
+                country_code = vat_country_code or partner_country_code
+                if not partner.country_code:
+                    partner.country_code = country_code
+                if vat_code := self.env['res.partner.identification']._get_code_for_vat(country_code):
+                    self._create_or_update_identification(vat_code, vat)
+                    partner._try_deduce_identifications()
+
     def _get_account_statistics_count(self):
         return self.account_move_count + self.supplier_invoice_count
 
@@ -728,6 +797,12 @@ class ResPartner(models.Model):
         return super().can_edit_vat() and not self._has_invoice(
             [('partner_id', 'child_of', self.commercial_partner_id.id)]
         )
+
+    def _split_vat(self, vat):
+        vat_prefix, vat_number = vat[:2].upper(), vat[2:].replace(' ', '')
+        if not vat_prefix.isalpha():
+            return '', vat
+        return vat_prefix, vat_number
 
     def write(self, vals):
         if 'parent_id' in vals:
@@ -813,7 +888,7 @@ class ResPartner(models.Model):
 
     def _get_frontend_writable_fields(self):
         frontend_writable_fields = super()._get_frontend_writable_fields()
-        frontend_writable_fields.update({'invoice_sending_method', 'invoice_edi_format'})
+        frontend_writable_fields.update({'invoice_sending_method', 'invoice_edi_format', 'identifier_ids'})
 
         return frontend_writable_fields
 
@@ -862,9 +937,35 @@ class ResPartner(models.Model):
         """
         return []
 
+    def _create_or_update_identification(self, code, identifier, **identifier_vals):
+        self.ensure_one()
+        assert code and identifier
+        if existing := self.identifier_ids.filtered(lambda i: i.code == code):
+            self.identifier_ids = [Command.update(existing.id, {'identifier': identifier, **identifier_vals})]
+        else:
+            self.identifier_ids = [Command.create({'code': code, 'identifier': identifier, **identifier_vals})]
+
+    def _try_deduce_identifications(self):
+        self.ensure_one()
+        # its a belgian vat, let's deduce BCE Enterprise Number if necessary
+        if be_vat := self.identifier_ids.filtered(lambda i: i.code == 'BE:VAT'):
+            _country_code, enterprise_number = self.env['res.partner']._split_vat(be_vat.identifier)
+            self._create_or_update_identification('BE:EN', enterprise_number)
+
     # -------------------------------------------------------------------------
     # EDI
     # -------------------------------------------------------------------------
+
+    @api.model
+    def _retrieve_partner_with_identifications(self, identifications):
+        for code, identifier in identifications.items():
+            normalized_identifier = identifier  # TODO sanitize
+            identification = self.env['res.partner.identification'].search([
+                ('code', '=', code),
+                ('identifier', '=', normalized_identifier),
+            ], limit=1)
+            return identification.partner_id
+        return None
 
     @api.model
     def _retrieve_partner_with_vat(self, vat, extra_domain):
@@ -939,16 +1040,20 @@ class ResPartner(models.Model):
             return None
         return self.env['res.partner'].search([('name', 'ilike', name)] + extra_domain, limit=2)
 
-    def _retrieve_partner(self, name=None, phone=None, email=None, vat=None, domain=None, company=None):
+    def _retrieve_partner(self, name=None, phone=None, email=None, vat=None, identifications=None, domain=None, company=None):
         '''Search all partners and find one that matches one of the parameters.
         :param name:    The name of the partner.
         :param phone:   The phone or mobile of the partner.
         :param mail:    The mail of the partner.
         :param vat:     The vat number of the partner.
+        :param identifications:     A dict with identifications of the partner with format {'code': 'value'}.
         :param domain:  An extra domain to apply.
         :param company: The company of the partner.
         :returns:       A partner or an empty recordset if not found.
         '''
+
+        def search_with_identifications():
+            return self._retrieve_partner_with_identifications(identifications)
 
         def search_with_vat(extra_domain):
             return self._retrieve_partner_with_vat(vat, extra_domain)
@@ -964,15 +1069,15 @@ class ResPartner(models.Model):
                 return None
             return self.env['res.partner'].search(domain + extra_domain, limit=1)
 
-        for search_method in (search_with_vat, search_with_domain, search_with_phone_mail, search_with_name):
+        for search_method in (search_with_identifications, search_with_vat, search_with_domain, search_with_phone_mail, search_with_name):
             for extra_domain in (
                 [*self.env['res.partner']._check_company_domain(company or self.env.company), ('company_id', '!=', False)],
                 [('company_id', '=', False)],
             ):
                 partner = search_method(extra_domain)
 
-                # The VAT should be a sufficiently distinctive criterion
-                if partner and search_method == search_with_vat:
+                # The identification/VAT should be a sufficiently distinctive criterion
+                if partner and search_method in (search_with_identifications, search_with_vat):
                     return partner[:1]
                 if partner and len(partner) == 1:
                     return partner
@@ -995,6 +1100,7 @@ class ResPartner(models.Model):
         """
         self.ensure_one()
         _vat, country_code = self._run_vat_checks(self.country_id, self.vat, validation=False)
+        self.identifier_ids.mapped(lambda i: i._get_country)
         return country_code or self.country_code
 
     @api.depends('country_id')

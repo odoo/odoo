@@ -996,7 +996,10 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
 
     def _import_retrieve_partner_vals(self, tree, role):
         """ Returns a dict of values that will be used to retrieve the partner """
+        endpoint_node = tree.find(f'.//cac:{role}Party//cac:EndpointID', UBL_NAMESPACES)
+        identifications = {endpoint_node.attrib.get('schemeID'): endpoint_node.text} if endpoint_node is not None else {}
         return {
+            'identifications': identifications,
             'vat': self._find_value(f'.//cac:{role}Party//cbc:CompanyID[string-length(text()) > 5]', tree),
             'phone': self._find_value(f'.//cac:{role}Party//cac:Contact//cbc:Telephone', tree),
             'email': self._find_value(f'.//cac:{role}Party//cac:Contact//cbc:ElectronicMail', tree),

@@ -10,6 +10,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.urls import urljoin
 from odoo.addons.account.models.company import PEPPOL_LIST
+from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 
 try:
     import phonenumbers
@@ -17,37 +18,6 @@ except ImportError:
     phonenumbers = None
 
 
-def _cc_checker(country_code, code_type):
-    return lambda endpoint: get_cc_module(country_code, code_type).is_valid(endpoint)
-
-
-def _re_sanitizer(expression):
-    return lambda endpoint: (res.group(0) if (res := re.search(expression, endpoint)) else endpoint)
-
-
-PEPPOL_ENDPOINT_RULES = {
-    '0007': _cc_checker('se', 'orgnr'),
-    '0088': ean.is_valid,
-    '0184': _cc_checker('dk', 'cvr'),
-    '0192': _cc_checker('no', 'orgnr'),
-    '0208': _cc_checker('be', 'vat'),
-}
-
-PEPPOL_ENDPOINT_WARNINGS = {
-    '0151': _cc_checker('au', 'abn'),
-    '0201': lambda endpoint: bool(re.match('[0-9a-zA-Z]{6}$', endpoint)),
-    '0210': _cc_checker('it', 'codicefiscale'),
-    '0211': _cc_checker('it', 'iva'),
-    '9906': _cc_checker('it', 'iva'),
-    '9907': _cc_checker('it', 'codicefiscale'),
-}
-
-PEPPOL_ENDPOINT_SANITIZERS = {
-    '0007': _re_sanitizer(r'\d{10}'),
-    '0184': _re_sanitizer(r'\d{8}'),
-    '0192': _re_sanitizer(r'\d{9}'),
-    '0208': _re_sanitizer(r'\d{10}'),
-}
 TIMEOUT = 10
 
 
@@ -75,8 +45,10 @@ class ResCompany(models.Model):
         ],
         string='PEPPOL status', required=True, default='not_registered',
     )
-    peppol_eas = fields.Selection(related='partner_id.peppol_eas', readonly=False)
-    peppol_endpoint = fields.Char(related='partner_id.peppol_endpoint', readonly=False)
+    peppol_identifier_ids = fields.One2many(
+        comodel_name='res.partner.identification',
+        related='partner_id.peppol_identifier_ids',
+    )
     peppol_purchase_journal_id = fields.Many2one(
         comodel_name='account.journal',
         string='Peppol Purchase Journal',
@@ -124,12 +96,6 @@ class ResCompany(models.Model):
         if country_code not in PEPPOL_LIST or not phonenumbers.is_valid_number(phone_nbr):
             raise ValidationError(error_message)
 
-    def _check_peppol_endpoint_number(self, warning=False):
-        self.ensure_one()
-        peppol_dict = PEPPOL_ENDPOINT_WARNINGS if warning else PEPPOL_ENDPOINT_RULES
-
-        return True if (endpoint_rule := peppol_dict.get(self.peppol_eas)) is None else endpoint_rule(self.peppol_endpoint)
-
     # -------------------------------------------------------------------------
     # CONSTRAINTS
     # -------------------------------------------------------------------------
@@ -139,14 +105,6 @@ class ResCompany(models.Model):
         for company in self:
             if company.account_peppol_phone_number:
                 company._sanitize_peppol_phone_number()
-
-    @api.constrains('peppol_endpoint')
-    def _check_peppol_endpoint(self):
-        for company in self:
-            if not company.peppol_endpoint:
-                continue
-            if not company._check_peppol_endpoint_number(PEPPOL_ENDPOINT_RULES):
-                raise ValidationError(_("The Peppol endpoint identification number is not correct."))
 
     @api.constrains('peppol_purchase_journal_id')
     def _check_peppol_purchase_journal_id(self):
@@ -205,41 +163,6 @@ class ResCompany(models.Model):
             company.peppol_can_send = company.account_peppol_proxy_state in can_send_domain
 
     # -------------------------------------------------------------------------
-    # LOW-LEVEL METHODS
-    # -------------------------------------------------------------------------
-
-    @api.model
-    def _sanitize_peppol_endpoint_in_values(self, values):
-        eas = values.get('peppol_eas')
-        endpoint = values.get('peppol_endpoint')
-        if not eas or not endpoint:
-            return
-        if sanitizer := PEPPOL_ENDPOINT_SANITIZERS.get(eas):
-            new_endpoint = sanitizer(endpoint)
-            if new_endpoint:
-                values['peppol_endpoint'] = new_endpoint
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            self._sanitize_peppol_endpoint_in_values(vals)
-
-        res = super().create(vals_list)
-        if res:
-            for company in res:
-                self.env['ir.default'].sudo().set(
-                    'res.partner',
-                    'peppol_verification_state',
-                    'not_verified',
-                    company_id=company.id,
-                )
-        return res
-
-    def write(self, vals):
-        self._sanitize_peppol_endpoint_in_values(vals)
-        return super().write(vals)
-
-    # -------------------------------------------------------------------------
     # PEPPOL PARTICIPANT MANAGEMENT
     # -------------------------------------------------------------------------
 
@@ -281,52 +204,30 @@ class ResCompany(models.Model):
             for identifier, document_name in identifiers.items()
         }
 
-    def _get_peppol_edi_mode(self, temporary_eas=False):
+    def _get_peppol_edi_mode(self):
         self.ensure_one()
         config_param = self.env['ir.config_parameter'].sudo().get_param('account_peppol.edi.mode')
-        # by design, we can only have zero or one proxy user per company with type Peppol
-        peppol_user = self.sudo().account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
-        demo_if_demo_identifier = 'demo' if (temporary_eas or self.peppol_eas) == 'odemo' else False
+        peppol_user = self.sudo().account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')[:1]
+        demo_if_demo_identifier = 'demo' if 'peppol_demo' in self.partner_id.peppol_identifier_ids.mapped('code') else False
         return demo_if_demo_identifier or peppol_user.edi_mode or config_param or 'prod'
 
     def _get_peppol_webhook_endpoint(self):
         self.ensure_one()
         return urljoin(self.get_base_url(), '/peppol/webhook')
 
-    def _get_company_info_on_peppol(self, edi_identification):
-
-        def _get_peppol_provider(participant_info):
-            service_metadata = participant_info.find('.//{*}ServiceMetadataReference')
-            service_href = ''
-            if service_metadata is not None:
-                service_href = service_metadata.attrib.get('href', '')
-            if not service_href:
-                return None
-
-            provider_name = None
-            with contextlib.suppress(requests.exceptions.RequestException, etree.XMLSyntaxError):
-                response = requests.get(service_href, timeout=TIMEOUT)
-                if response.status_code == 200:
-                    access_point_info = etree.fromstring(response.content)
-                    provider_name = access_point_info.findtext('.//{*}ServiceDescription')
-            return provider_name
-
+    @handle_demo
+    def _get_company_info_on_peppol(self, allow_raising=False):
         self.ensure_one()
-        is_company_on_peppol = False
-        external_provider = None
-        error_msg = ''
-        if (
-            (participant_info := self.partner_id._get_participant_info(edi_identification)) is not None
-            and (is_company_on_peppol := self.partner_id._check_peppol_participant_exists(participant_info, edi_identification))
-        ):
-            error_msg = _(
-                "A participant with these details has already been registered on the network. "
-                "If you have previously registered to a Peppol service, please deregister."
-            )
-            if (external_provider := _get_peppol_provider(participant_info)) and "Odoo" not in external_provider:
-                error_msg += _("The Peppol service that is used is %s.", external_provider)
+        result = self.partner_id._peppol_fetch_partner_info(allow_raising=allow_raising)
+        is_on_peppol, external_provider = result[self.partner_id.id]['is_on_peppol'], result[self.partner_id.id]['provider']
+        error_msg = _(
+            "A participant with these details has already been registered on the network. "
+            "If you have previously registered to a Peppol service, please deregister."
+        )
+        if external_provider and "Odoo" not in external_provider:
+            error_msg += _("The Peppol service that is used is %s.", external_provider)
         return {
-            'is_on_peppol': is_company_on_peppol,
+            'is_on_peppol': is_on_peppol,
             'external_provider': external_provider,
             'error_msg': error_msg,
         }

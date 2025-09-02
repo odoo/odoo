@@ -13,7 +13,7 @@ from zeep.wsdl import Document
 class TestStructure(TransactionCase):
     @classmethod
     def setUpClass(cls):
-        def check_vies(vat_number):
+        def check_vies(vat_number, timeout=10):
             return {'valid': vat_number == 'BE0477472701'}
 
         super().setUpClass()
@@ -162,8 +162,8 @@ class TestStructure(TransactionCase):
         gr_country = self.env.ref('base.gr').id
         test_partner_1 = self.env['res.partner'].create({'name': 'Roman', 'country_id': gr_country, 'vat': 'GR123456783'})
         self.assertEqual(test_partner_1.vat, 'EL123456783')
-        test_partner_1 = self.env['res.partner'].create({'name': 'Roman', 'country_id': gr_country, 'vat': 'EL123456783'})
-        self.assertEqual(test_partner_1.vat, 'EL123456783')
+        test_partner_1 = self.env['res.partner'].create({'name': 'Roman', 'country_id': gr_country, 'vat': 'EL123456782'})
+        self.assertEqual(test_partner_1.vat, 'EL123456782')
 
     def test_weird_roro_input(self):
         be_country = self.env.ref('base.be').id

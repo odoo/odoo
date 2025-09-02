@@ -149,7 +149,9 @@ class ResPartner(models.Model):
         return vat_to_return, code_to_check
 
     def _inverse_vat(self):
+        # EXTENDS 'account' - validate VAT number
         self._check_vat()
+        super()._inverse_vat()
 
     @api.onchange('vat', 'country_id')
     def _onchange_vat(self):
@@ -198,12 +200,6 @@ class ResPartner(models.Model):
                     partner._origin.message_post(body=msg)
                 _logger.warning("The VAT number %s failed VIES check.", partner.vat)
                 partner.vies_valid = False
-
-    def _split_vat(self, vat):
-        vat_prefix, vat_number = vat[:2].upper(), vat[2:].replace(' ', '')
-        if not vat_prefix.isalpha():
-            return '', vat
-        return vat_prefix, vat_number
 
     @api.model
     def _check_vat_number(self, country_code, vat_number):

@@ -6,7 +6,7 @@ import requests
 
 from odoo import _, fields, models
 from odoo.exceptions import LockError, UserError
-from .account_edi_proxy_auth import OdooEdiProxyAuth
+from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_auth import OdooEdiProxyAuth
 
 _logger = logging.getLogger(__name__)
 
@@ -150,6 +150,9 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             'public_key': private_key_sudo._get_public_key_bytes(encoding='pem').decode(),
             'proxy_type': proxy_type,
         }
+
+    def _prepare_register_proxy_user(self):
+        pass
 
     def _register_proxy_user(self, company, proxy_type, edi_mode):
         ''' Generate the public_key/private_key that will be used to encrypt the file, send a request to the proxy

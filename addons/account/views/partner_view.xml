@@ -229,6 +229,7 @@
                                 <field name="invoice_template_pdf_report_id"
                                        invisible="not display_invoice_template_pdf_report_id"
                                        options="{'no_create': True, 'no_edit': True}"/>
+                                <field name="identifiers" widget="one2many_json" nolabel="1" colspan="2"/>
                             </group>
                             <group string="Credit Limits"
                                    name="credit_limits"

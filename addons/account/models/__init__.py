@@ -2,6 +2,7 @@ from . import sequence_mixin
 from . import account_document_import_mixin
 from . import partner
 from . import res_partner_bank
+from . import res_partner_identification
 from . import account_account_tag
 from . import account_account
 from . import account_code_mapping

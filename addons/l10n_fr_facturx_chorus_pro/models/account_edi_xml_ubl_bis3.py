@@ -1,9 +1,7 @@
 from odoo import models, _
-from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
 
 
 CHORUS_PRO_PEPPOL_ID = "0009:11000201100044"
-FR_SCHEME_IDS = {v: k for k, v in EAS_MAPPING['FR'].items()}
 
 
 class AccountEdiXmlUbl_Bis3(models.AbstractModel):
@@ -17,11 +15,10 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
     def _export_invoice_constraints(self, invoice, vals):
         constraints = super()._export_invoice_constraints(invoice, vals)
         customer, supplier = vals['customer'].commercial_partner_id, vals['supplier']
-        if customer.peppol_eas and customer.peppol_endpoint and customer.peppol_eas + ":" + customer.peppol_endpoint == CHORUS_PRO_PEPPOL_ID:
-            if customer.company_registry:
-                constraints['chorus_customer'] = _("The company_registry is mandatory for the customer when invoicing to Chorus Pro.")
-            if supplier.company_registry:
-                constraints['chorus_supplier'] = _("The company_registry is mandatory for french suppliers when invoicing to Chorus Pro.")
+        if not customer.identifier_ids.filtered(lambda i: i.iso_identifier == CHORUS_PRO_PEPPOL_ID):
+            constraints['chorus_customer'] = _("No partner identification matches Chorus Pro.")
+        if supplier.identifier_ids.filtered(lambda i: i.iso_code == '0009'):
+            constraints['chorus_supplier'] = _("The SIRET is mandatory for french suppliers when invoicing to Chorus Pro.")
         return constraints
 
     def _add_invoice_header_nodes(self, document_node, vals):
@@ -46,25 +43,15 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         # should put their VAT
         party_node = super()._get_party_node(vals)
 
-        customer = vals['customer'].commercial_partner_id
-        partner = vals['partner']
-        commercial_partner = partner.commercial_partner_id
+        customer = vals['customer'].commercial_partner_id  # FIXME It think there's something wrong in the logic here...
+        # partner = vals['partner']
+        # commercial_partner = partner.commercial_partner_id
 
-        if (
-            customer.peppol_eas and
-            customer.peppol_endpoint and
-            customer.peppol_eas + ":" + customer.peppol_endpoint == CHORUS_PRO_PEPPOL_ID
-        ):
+        if (chorus_identification := customer.identifier_ids.filtered(lambda i: i.iso_identifier == CHORUS_PRO_PEPPOL_ID)):
             party_node['cac:PartyIdentification'] = {
                 'cbc:ID': {
-                    '_text': (
-                        commercial_partner.company_registry
-                        if partner.company_registry and partner.country_code == 'FR'
-                        else commercial_partner.vat
-                    ),
-                    'schemeID': (
-                        FR_SCHEME_IDS['company_registry'] if partner.company_registry and partner.country_code == 'FR' else FR_SCHEME_IDS['vat']
-                    ),
+                    '_text': chorus_identification.identifier,
+                    'schemeID': chorus_identification.iso_code,
                 }
             }
 

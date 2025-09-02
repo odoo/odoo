@@ -16,7 +16,7 @@ class WhatIsPeppol extends Component {
     }
 
     closeButtonLabel() {
-        if (this.props.action.context.action_on_activate.res_model === "peppol.registration") {
+        if (this.props.action.context.action_on_activate.res_model === "peppol.registration.wizard") {
             return _t("Activate")
         } else {
             return _t("Got it !")

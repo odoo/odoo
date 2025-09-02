@@ -192,15 +192,6 @@ class ResPartner(models.Model):
                     }
         return errors
 
-    def _deduce_country_code(self):
-        if self.l10n_it_codice_fiscale:
-            return 'IT'
-        return super()._deduce_country_code()
-
-    def _peppol_eas_endpoint_depends(self):
-        # extends account_edi_ubl_cii
-        return super()._peppol_eas_endpoint_depends() + ['l10n_it_codice_fiscale']
-
     def _get_frontend_writable_fields(self):
         frontend_writable_fields = super()._get_frontend_writable_fields()
         frontend_writable_fields.update({'l10n_it_codice_fiscale', 'l10n_it_pa_index'})

@@ -120,7 +120,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': cls.company_data['currency'].id,
             'journal_id': cls.company_data['default_journal_purchase'].id,
             'date': fields.Date.from_string('2019-01-01'),
-            'fiscal_position_id': False,
+            'fiscal_position_id': cls.partner_a.country_id.id,
             'payment_reference': False,
             'invoice_payment_term_id': cls.pay_terms_a.id,
             'amount_untaxed': 960.0,

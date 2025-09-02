@@ -4,12 +4,16 @@
         <field name="name">res.partner.form.account.peppol</field>
             <field name="model">res.partner</field>
             <field name="priority">20</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
             <field name="arch" type="xml">
             <data>
                 <xpath expr="//field[@name='invoice_sending_method']" position="before">
                     <field name="available_peppol_sending_methods" invisible="1"/>
                     <field name="available_peppol_edi_formats" invisible="1"/>
+                    <!-- Peppol specific warnings -->
+                    <div class="m-0" colspan="2" id="peppol_alerts_div" invisible="not peppol_alerts">
+                        <field name="peppol_alerts" class="o_field_html" widget="actionable_errors"/>
+                    </div>
                 </xpath>
                 <xpath expr="//field[@name='invoice_sending_method']" position="attributes">
                     <attribute name="widget">filterable_selection</attribute>
@@ -19,39 +23,21 @@
                     <attribute name="widget">filterable_selection</attribute>
                     <attribute name="options">{'whitelist_fname': 'available_peppol_edi_formats'}</attribute>
                 </xpath>
-                <xpath expr="//field[@name='peppol_eas']" position="before">
-                    <field name="bank_account_count" invisible="1"/>
-                    <div class="alert alert-warning mb-0"
-                         colspan="2"
-                         role="alert"
-                         invisible="country_code != 'BE' or not peppol_endpoint or peppol_eas in (False, '0208')">
-                         The recommended identification method for Belgium is your Company Registry Number.
-                    </div>
-                    <div class="alert alert-warning"
-                         colspan="2"
-                         role="alert"
-                         invisible="peppol_verification_state != 'valid' or country_code">
-                         To generate complete electronic invoices, also set a country for this partner.
-                    </div>
-                </xpath>
-                <xpath expr="//div[@id='peppol_address']" position="after">
-                    <field name="is_peppol_edi_format" invisible="1"/>
-                    <field name="peppol_verification_state" invisible="1" force_save="1"/>
+                <xpath expr="//field[@name='identifiers']" position="after">
                     <label for="peppol_verification_state"
-                           groups="base.group_no_one"
-                           invisible="not peppol_endpoint"/>
-                    <div class="row"
-                         groups="base.group_no_one"
-                         invisible="not peppol_endpoint">
+                           invisible="not peppol_identifier_ids"/>
+                    <div class="row" invisible="not peppol_identifier_ids">
                         <div class="col-6">
                             <field name="peppol_verification_state" readonly="1"/>
                         </div>
                         <div class="col-6 pt-0">
-                            <button name="button_account_peppol_check_partner_endpoint"
+                            <field name="peppol_last_sync" readonly="1"/>
+                            <button name="button_sync_partners_peppol_info"
                                     class="btn btn-secondary"
                                     type="object"
-                                    string="Verify"
-                                    help="Verify partner's PEPPOL endpoint"/>
+                                    help="Verify partner's Peppol information">
+                                <i class="fa fa-arrows-alt pe-2" title="Synchronize with Peppol"/>
+                            </button>
                         </div>
                     </div>
                 </xpath>
@@ -66,8 +52,7 @@
         <field name="binding_view_types">list,kanban</field>
         <field name="state">code</field>
         <field name="code">
-            for record in records:
-                record.button_account_peppol_check_partner_endpoint()
+            records.button_sync_partners_peppol_info(notify=False)
         </field>
     </record>
 </odoo>

@@ -140,6 +140,7 @@ class AccountTestInvoicingCommon(ProductCommon):
             'property_account_receivable_id': cls.company_data['default_account_receivable'].id,
             'property_account_payable_id': cls.company_data['default_account_payable'].id,
             'company_id': False,
+            'country_id': False,
         })
         cls.partner_b = cls.env['res.partner'].create({
             'name': 'partner_b',
@@ -151,6 +152,7 @@ class AccountTestInvoicingCommon(ProductCommon):
             'property_account_receivable_id': cls.company_data['default_account_receivable'].copy().id,
             'property_account_payable_id': cls.company_data['default_account_payable'].copy().id,
             'company_id': False,
+            'country_id': False,
         })
 
         # ==== Cash rounding ====

@@ -41,7 +41,7 @@ EAS_SCHEME_ID_MAPPING = {
     '0196': 'IS:KT',
     '0198': 'DK:SE',
     '0201': 'IT:IPA',
-    '0208': 'BE:VAT',
+    '0208': 'BE:EN',  # FIXME this was wrong. generally, this mapping is almost correct, but not exactly...
     '0210': 'IT:CF',
     '0211': 'IT:VAT',
     '0212': 'FI:ORGNR',
@@ -242,11 +242,12 @@ class AccountEdiXmlOioubl_201(models.AbstractModel):
         partner = vals['partner']
         commercial_partner = partner.commercial_partner_id
         vat = format_vat_number(commercial_partner)
+        endpoint = partner._get_main_endpoint()
 
-        if partner.peppol_endpoint and partner.peppol_eas in EAS_SCHEME_ID_MAPPING:
+        if endpoint.iso_code in EAS_SCHEME_ID_MAPPING:
             # if we don't know the mapping with real names for the Peppol Endpoint, fallback on VAT simply
-            endpoint_id = partner.peppol_endpoint
-            scheme_id = EAS_SCHEME_ID_MAPPING[partner.peppol_eas]
+            endpoint_id = endpoint.identifier
+            scheme_id = EAS_SCHEME_ID_MAPPING[endpoint.iso_code]
             if (scheme_id in ('DK:CVR', 'FR:SIRET') or scheme_id[3:] == 'VAT') and endpoint_id.isnumeric():
                 endpoint_id = scheme_id[:2] + endpoint_id
         else:

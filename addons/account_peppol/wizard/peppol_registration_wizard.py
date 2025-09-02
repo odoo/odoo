@@ -6,19 +6,37 @@ except ImportError:
     phonenumbers = None
 
 from odoo import _, api, fields, models, modules
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 
+from odoo.addons.account.models.res_partner_identification import ODOO_IDENTIFIER_VALUES
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 
+PEPPOL_CODES_SELECTION = [
+    (identifier_vals['schemeid'], identifier_vals.get('odoo-name') or identifier_vals['scheme-name'])
+    for identifier_vals
+    in ODOO_IDENTIFIER_VALUES
+    if identifier_vals.get('state') == 'active' and identifier_vals.get('peppol-registrable', False)
+]
+# This list depends on Country specific rules defined by Peppol Authorities.
+# https://openpeppol.atlassian.net/wiki/spaces/AF/pages/2889318401/Peppol+Authority+Specific+Requirements
+MANDATORY_EAS_MAPPING = {
+    'BE': ['BE:EN'],
+}
 
-class PeppolRegistration(models.TransientModel):
-    _name = 'peppol.registration'
-    _description = "Peppol Registration"
+
+class PeppolRegistrationWizard(models.TransientModel):
+    _name = 'peppol.registration.wizard'
+    _description = "Peppol Registration Wizard"
 
     company_id = fields.Many2one(
         comodel_name='res.company',
         required=True,
         default=lambda self: self.env.company,
+    )
+    country_id = fields.Many2one(
+        comodel_name='res.country',
+        related='company_id.country_id',
+        readonly=False,
     )
     edi_mode = fields.Selection(
         string='EDI mode',
@@ -40,9 +58,21 @@ class PeppolRegistration(models.TransientModel):
         readonly=False,
         required=True,
     )
-    phone_number = fields.Char(related='company_id.account_peppol_phone_number', readonly=False)
-    peppol_eas = fields.Selection(related='company_id.peppol_eas', readonly=False, required=True)
-    peppol_endpoint = fields.Char(related='company_id.peppol_endpoint', readonly=False, required=True)
+    phone_number = fields.Char(
+        related='company_id.account_peppol_phone_number',
+        readonly=False,
+        required=True,
+    )
+    force_mandatory_eas = fields.Boolean(compute='_compute_force_mandatory_eas')
+    peppol_eas = fields.Selection(
+        selection=PEPPOL_CODES_SELECTION,
+        compute='_compute_peppol_eas',
+        store=True,
+        readonly=False,
+        required=True,
+    )
+    available_peppol_eas = fields.Json(compute='_compute_available_peppol_eas')
+    peppol_endpoint = fields.Char(compute='_compute_peppol_endpoint', store=True, readonly=False, required=True)
     smp_registration = fields.Boolean(  # you're registering to SMP when you register as a sender+receiver
         string='Register as a receiver',
         compute='_compute_smp_registration_external_provider'
@@ -52,12 +82,6 @@ class PeppolRegistration(models.TransientModel):
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
-
-    @api.onchange('peppol_endpoint')
-    def _onchange_peppol_endpoint(self):
-        for wizard in self:
-            if wizard.peppol_endpoint:
-                wizard.peppol_endpoint = ''.join(char for char in wizard.peppol_endpoint if char.isalnum())
 
     @api.onchange('phone_number')
     def _onchange_phone_number(self):
@@ -88,10 +112,11 @@ class PeppolRegistration(models.TransientModel):
     def _compute_peppol_warnings(self):
         for wizard in self:
             peppol_warnings = {}
+            valid_endpoint, _error_message = self.env['res.partner.identification']._apply_validation_rules(wizard.peppol_eas, wizard.peppol_endpoint)
             if (
                 wizard.peppol_eas
                 and wizard.peppol_endpoint
-                and not wizard.company_id._check_peppol_endpoint_number(warning=True)
+                and not valid_endpoint
             ):
                 peppol_warnings['company_peppol_endpoint_warning'] = {
                     'message': _("The endpoint number might not be correct. "
@@ -104,10 +129,33 @@ class PeppolRegistration(models.TransientModel):
                 }
             wizard.peppol_warnings = peppol_warnings or False
 
-    @api.depends('company_id', 'edi_user_id', 'peppol_eas')
+    @api.depends('company_id', 'edi_user_id')
     def _compute_edi_mode(self):
         for wizard in self:
-            wizard.edi_mode = wizard.company_id._get_peppol_edi_mode(temporary_eas=wizard.peppol_eas)
+            wizard.edi_mode = wizard.company_id._get_peppol_edi_mode()
+
+    @api.depends('country_id')
+    def _compute_force_mandatory_eas(self):
+        for wizard in self:
+            wizard.force_mandatory_eas = wizard.country_id.code in MANDATORY_EAS_MAPPING
+
+    @api.depends('country_id', 'force_mandatory_eas')
+    def _compute_peppol_eas(self):
+        for wizard in self:
+            if wizard.force_mandatory_eas:
+                wizard.peppol_eas = MANDATORY_EAS_MAPPING[wizard.country_id.code][0]
+            else:
+                wizard.peppol_eas = next(iter(self.env['res.partner.identification']._get_peppol_codes_by_country()))[0]
+
+    @api.depends('country_id')
+    def _compute_available_peppol_eas(self):
+        for wizard in self:
+            wizard.available_peppol_eas = []  # FIXME continue
+
+    @api.depends('peppol_eas')
+    def _compute_peppol_endpoint(self):
+        for wizard in self:
+            wizard.peppol_endpoint = wizard.company_id.partner_id.identifier_ids.filtered(lambda i: i.code == wizard.peppol_eas).identifier
 
     @api.depends('peppol_eas', 'peppol_endpoint')
     def _compute_smp_registration_external_provider(self):
@@ -126,18 +174,12 @@ class PeppolRegistration(models.TransientModel):
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
 
-    def _ensure_mandatory_fields(self):
-        if not self.contact_email or not self.phone_number:
-            raise ValidationError(_("Contact email and phone number are required."))
-        if not self.peppol_eas or not self.peppol_endpoint:
-            raise ValidationError(_("Peppol Address should be provided."))
-
     def _action_open_peppol_form(self, reopen=True):
         action_dict = {
             'name': _("Activate Electronic Invoicing (via Peppol)"),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
-            'res_model': 'peppol.registration',
+            'res_model': 'peppol.registration.wizard',
             'target': 'new',
             'context': {
                 'dialog_size': 'medium',
@@ -151,53 +193,29 @@ class PeppolRegistration(models.TransientModel):
             })
         return action_dict
 
-    def _action_send_notification(self, title, message):
-        move_ids = self.env.context.get('active_ids')
-        if move_ids and self.env.context.get('active_model') == 'account.move':
-            next_action = self.env['account.move'].browse(move_ids).action_send_and_print()
-            next_action['views'] = [(False, 'form')]
-        else:
-            next_action = {'type': 'ir.actions.act_window_close'}
-
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': title,
-                'type': 'success',
-                'message': message,
-                'next': next_action,
-            }
-        }
-
     def button_register_peppol_participant(self):
         self.ensure_one()
-        self._ensure_mandatory_fields()
 
-        if self.account_peppol_proxy_state in ('smp_registration', 'receiver', 'rejected'):
-            raise UserError(
-                _('Cannot register a user with a %s application', self.account_peppol_proxy_state))
+        if self.account_peppol_proxy_state != 'not_registered':
+            raise UserError(self.env._('Cannot re-register.', self.account_peppol_proxy_state))
 
         edi_user = self.edi_user_id or self.env['account_edi_proxy_client.user']._register_proxy_user(self.company_id, 'peppol', self.edi_mode)
 
         # if there is an error when activating the participant below,
-        # the client side is rolled back and the edi user is deleted on the client side
+        # the client side is rolled back, and the edi user is deleted on the client side
         # but remains on the proxy side.
         # it is important to keep these two in sync, so commit before activating.
         if not modules.module.current_test:
             self.env.cr.commit()
 
-        edi_user._peppol_register_sender(peppol_external_provider=self.peppol_external_provider)
+        try:
+            self.env['account_edi_proxy_client.user']._peppol_register(smp_registration=self.smp_registration)
+            state = edi_user._peppol_get_participant_status()
+            self.company_id.partner_id._create_or_update_identification(self.peppol_eas, self.peppol_endpoint, is_on_odoo_peppol=True)
+        except (UserError, AccountEdiProxyError):
+            edi_user._peppol_deregister_participant()
+            raise
 
-        if self.smp_registration:
-            try:
-                edi_user._peppol_register_sender_as_receiver()
-                edi_user._peppol_get_participant_status()
-            except (UserError, AccountEdiProxyError):
-                edi_user._peppol_deregister_participant()
-                raise
-
-        # success or rejected
         notifications = {
             'sender': {
                 'message': _('You can now send electronic invoices via Peppol.'),
@@ -213,14 +231,13 @@ class PeppolRegistration(models.TransientModel):
                 'message': _('Your registration has been rejected. Please contact the support for further assistance.'),
             },
         }
-        state = self.company_id.account_peppol_proxy_state
 
-        if state == 'sender':
-            # if user asked to register as a receiver, state would've been 'smp_registration'
-            # so this is the final registration state for sender-only registration
-            self.company_id._account_peppol_send_welcome_email()
-
-        return self._action_send_notification(
-            title=None,
-            message=notifications[state]['message'],
-        )
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'message': notifications[state]['message'],
+                'next': {'type': 'ir.actions.act_window_close'},
+            }
+        }

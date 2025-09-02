@@ -23,24 +23,24 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         alerts = super()._get_alerts(moves, moves_data)
 
-        peppol_formats = set(self.env['res.partner']._get_peppol_formats())
-        if peppol_format_moves := moves.filtered(lambda m: moves_data[m]['invoice_edi_format'] in peppol_formats):
-            not_configured_company_partners = peppol_format_moves.company_id.partner_id.filtered(
-                lambda partner: not (partner.peppol_eas and partner.peppol_endpoint)
+        ubl_cii_formats = set(self.env['res.partner']._get_ubl_cii_formats())
+        if ubl_cii_format_moves := moves.filtered(lambda m: moves_data[m]['invoice_edi_format'] in ubl_cii_formats):
+            not_configured_company_partners = ubl_cii_format_moves.company_id.partner_id.filtered(
+                lambda partner: not partner.endpoint_ids
             )
             if not_configured_company_partners:
                 alerts['account_edi_ubl_cii_configure_company'] = {
-                    'message': _("Please fill in your company's VAT or Peppol Address to generate a complete XML file."),
+                    'message': _("Please fill in your company's VAT or identifications to generate a complete XML file."),
                     'level': 'info',
                     'action_text': _("Configure"),
                     'action': not_configured_company_partners._get_records_action(),
                 }
-            not_configured_partners = peppol_format_moves.partner_id.commercial_partner_id.filtered(
-                lambda partner: not (partner.peppol_eas and partner.peppol_endpoint)
+            not_configured_partners = ubl_cii_format_moves.partner_id.commercial_partner_id.filtered(
+                lambda partner: not partner.endpoint_ids
             )
             if not_configured_partners:
                 alerts['account_edi_ubl_cii_configure_partner'] = {
-                    'message': _("Please fill in partner's VAT or Peppol Address."),
+                    'message': _("Please fill in partner's VAT or identifications."),
                     'level': 'info',
                     'action_text': _("View Partner(s)"),
                     'action': not_configured_partners._get_records_action(name=_("Check Partner(s)"))

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_partner_identification_tree" model="ir.ui.view">
+            <field name="name">res.partner.identification.list</field>
+            <field name="model">res.partner.identification</field>
+            <field name="arch" type="xml">
+                <list string="IDs" multi_edit="1">
+                    <field name="code"/>
+                    <field name="identifier"/>
+                </list>
+            </field>
+        </record>
+
+    </data>
+</odoo>

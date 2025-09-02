@@ -4,6 +4,7 @@ from contextlib import contextmanager
 from requests import Session, PreparedRequest, Response
 from unittest.mock import patch
 
+from odoo import Command
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import UserError
@@ -27,8 +28,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
 
         cls.env.company.write({
             'country_id': cls.env.ref('base.be').id,
-            'peppol_eas': '0208',
-            'peppol_endpoint': '0477472701',
+            'identifier_ids': [Command.create({'code': '0208', 'identifier': '0477472701'})],
             'account_peppol_proxy_state': 'receiver',
         })
 
@@ -50,15 +50,13 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             'name': 'Wintermute',
             'city': 'Charleroi',
             'country_id': cls.env.ref('base.be').id,
-            'peppol_eas': '0208',
-            'peppol_endpoint': '3141592654',
+            'identifier_ids': [Command.create({'code': '0208', 'identifier': '3141592654'})],
         }, {
             'name': 'Molly',
             'city': 'Namur',
             'email': 'Namur@company.com',
             'country_id': cls.env.ref('base.be').id,
-            'peppol_eas': '0208',
-            'peppol_endpoint': '2718281828',
+            'identifier_ids': [Command.create({'code': '0208', 'identifier': '2718281828'})],
         }])
 
         cls.env['res.partner.bank'].create({
@@ -342,21 +340,15 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         self.assertRecordValues(
             new_partner, [{
                 'peppol_verification_state': 'not_verified',
-                'peppol_eas': '0208',
-                'peppol_endpoint': False,
             }])
 
-        new_partner.peppol_endpoint = '0477472701'
-        new_partner.button_account_peppol_check_partner_endpoint()
-        self.assertRecordValues(
-            new_partner, [{
-                'peppol_verification_state': 'valid',
-                'peppol_eas': '0208',
-                'peppol_endpoint': '0477472701',
-            }])
+        new_partner.identifier_ids = [Command.create({'code': 'BE:EN', 'identifier': '0477472701'})]
+        new_partner.button_sync_partners_peppol_info()
+        self.assertEqual(new_partner.peppol_verification_state, 'valid')
+        self.assertRecordValues(new_partner.identifier_ids, [{'code': 'BE:EN', 'identifier': '0477472701'}])
 
-        new_partner.peppol_endpoint = '3141592654'
-        new_partner.button_account_peppol_check_partner_endpoint()
+        new_partner.identifier_ids.filtered(lambda i: i.code == 'BE:EN').identifier = '3141592654'
+        new_partner.button_sync_partners_peppol_info()
         self.assertRecordValues(
             new_partner, [{
                 'peppol_verification_state': 'not_valid',
@@ -369,7 +361,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             'invoice_edi_format': 'xrechnung',
             'peppol_endpoint': '0477472701',
         })
-        new_partner.button_account_peppol_check_partner_endpoint()
+        new_partner.button_sync_partners_peppol_info()
         self.assertRecordValues(
             new_partner, [{
                 'peppol_verification_state': 'not_valid_format',
@@ -400,7 +392,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         }])
         # but not valid for company 2
         new_partner.with_company(company_2).invoice_edi_format = 'nlcius'
-        new_partner.button_account_peppol_check_partner_endpoint(company=company_2)
+        new_partner.button_sync_partners_peppol_info()
         self.assertRecordValues(new_partner.with_company(company_2), [{
             'peppol_verification_state': 'not_valid_format',
             'peppol_eas': '0208',

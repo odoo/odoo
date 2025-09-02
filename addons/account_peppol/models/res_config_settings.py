@@ -16,9 +16,7 @@ class ResConfigSettings(models.TransientModel):
     )
     account_peppol_edi_mode = fields.Selection(related='account_peppol_edi_user.edi_mode')
     account_peppol_contact_email = fields.Char(related='company_id.account_peppol_contact_email', readonly=False)
-    account_peppol_eas = fields.Selection(related='company_id.peppol_eas', readonly=False)
     account_peppol_edi_identification = fields.Char(related='account_peppol_edi_user.edi_identification')
-    account_peppol_endpoint = fields.Char(related='company_id.peppol_endpoint', readonly=False)
     account_peppol_migration_key = fields.Char(related='company_id.account_peppol_migration_key', readonly=False)
     account_peppol_phone_number = fields.Char(related='company_id.account_peppol_phone_number', readonly=False)
     account_peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state', readonly=False)
@@ -40,9 +38,16 @@ class ResConfigSettings(models.TransientModel):
     # -------------------------------------------------------------------------
 
     def action_open_peppol_form(self):
-        registration_wizard = self.env['peppol.registration'].create({'company_id': self.company_id.id})
-        registration_action = registration_wizard._action_open_peppol_form(reopen=False)
-        return registration_action
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Activate Electronic Invoicing (via Peppol)"),
+            'res_model': 'peppol.registration.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'dialog_size': 'medium',
+            },
+        }
 
     def button_open_peppol_config_wizard(self):
         return {
