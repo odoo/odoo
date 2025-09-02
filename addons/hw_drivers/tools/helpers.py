@@ -280,6 +280,20 @@ def get_mac_address():
             if addr != '00:00:00:00:00:00':
                 return addr
 
+
+def get_serial_number():
+    if platform.system() == 'Linux':
+        return read_file_first_line('/sys/firmware/devicetree/base/serial-number').strip("\x00")
+
+    # On windows, get motherboard's uuid (serial number isn't reliable as it's not always present)
+    command = ['powershell', '-Command', "(Get-CimInstance Win32_ComputerSystemProduct).UUID"]
+    p = subprocess.run(command, stdout=subprocess.PIPE, check=False)
+    if p.returncode != 0:
+        _logger.error("Failed to get Windows IoT serial number")
+        return False
+
+    return p.stdout.decode().strip() or False
+
 def get_path_nginx():
     return str(list(Path().absolute().parent.glob('*nginx*'))[0])
 

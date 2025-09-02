@@ -1053,6 +1053,45 @@ QUnit.module("SettingsFormView", (hooks) => {
         assert.containsOnce(target, ".o_list_view", "should be open list view");
     });
 
+    QUnit.test("header without string or field", async (assert) => {
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Settings view",
+                res_model: "res.config.settings",
+                type: "ir.actions.act_window",
+                views: [[1, "form"]],
+            },
+            4: {
+                id: 4,
+                name: "Other action",
+                res_model: "task",
+                type: "ir.actions.act_window",
+                views: [[2, "list"]],
+            },
+        };
+
+        serverData.views = {
+            "res.config.settings,1,form": `
+                <form string="Settings" js_class="base_settings">
+                    <app string="CRM" name="crm">
+                        <setting type="header">
+                            <div><span>Personalize setting</span></div>
+                        </setting>
+                    </app>
+                </form>`,
+            "task,2,list": '<tree><field name="display_name"/></tree>',
+            "res.config.settings,false,search": "<search></search>",
+            "task,false,search": "<search></search>",
+        };
+        const webClient = await createWebClient({ serverData });
+
+        await doAction(webClient, 1);
+
+        assert.containsOnce(target, ".app_settings_block:not(.d-none) .app_settings_header");
+        assert.containsNone(target, ".app_settings_header label");
+    });
+
     QUnit.test("clicking a button with dirty settings -- save", async (assert) => {
         registry.category("services").add(
             "action",

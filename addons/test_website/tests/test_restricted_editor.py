@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import unittest
+
 import odoo.tests
 
 from odoo.tests.common import new_test_user
@@ -54,6 +56,11 @@ class TestRestrictedEditor(odoo.tests.HttpCase):
         })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'test_restricted_editor_test_admin', login='restricted')
 
+    # FIXME the logic of the commit that introduced the fix at 8c41c147a4c6a415e
+    # was reverted, so this test is disabled for now. Branding *on views* as
+    # a restricted editor is something we want in some custo (e.g. odoo.com).
+    # See commit messages for details.
+    @unittest.skip
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_03_restricted_editor_tester(self):
         """

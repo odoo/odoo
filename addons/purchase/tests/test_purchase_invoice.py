@@ -1051,3 +1051,19 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po2.id)
         invoice2 = move_form.save()
         self.assertFalse(invoice2.invoice_user_id)
+
+    def test_link_bill_origin_to_purchase_orders(self):
+        """
+        Test if the corresponding purchase orders are linked if the bill when there is multiple origin purchase orders
+        """
+        po = self.init_purchase(confirm=True, products=[self.product_order])
+        po_2 = self.init_purchase(confirm=True, products=[self.service_order])
+
+        bill = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order, self.service_order])
+        bill.invoice_origin = po.name + ', ' + po_2.name
+
+        bill._link_bill_origin_to_purchase_orders()
+
+        self.assertTrue(bill.id in po.invoice_ids.ids)
+        self.assertTrue(bill.id in po_2.invoice_ids.ids)
+        self.assertEqual(bill.amount_total, po.amount_total + po_2.amount_total)

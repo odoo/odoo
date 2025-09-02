@@ -45,6 +45,7 @@ class Manager(Thread):
             iot_box = {
                 'name': helpers.get_hostname(),
                 'identifier': helpers.get_mac_address(),
+                'serial_number': helpers.get_serial_number(),
                 'ip': domain,
                 'token': helpers.get_token(),
                 'version': helpers.get_version(detailed_version=True),
