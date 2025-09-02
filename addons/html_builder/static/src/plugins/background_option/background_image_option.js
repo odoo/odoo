@@ -8,6 +8,7 @@ export class BackgroundImageOption extends BaseOptionComponent {
     static props = {};
     static components = { ImageSize };
     setup() {
+        this.editingElement = this.env.getEditingElement();
         // done here because we have direct access to the editing element
         // (which we don't have in the normalize of the current plugin)
         this.toggleBgImageClasses();
@@ -15,17 +16,15 @@ export class BackgroundImageOption extends BaseOptionComponent {
     }
     toggleBgImageClasses() {
         this.env.editor.shared.history.ignoreDOMMutations(() => {
-            const editingEl = this.env.getEditingElement();
-            const backgroundURL = getBgImageURLFromEl(editingEl);
+            const backgroundURL = getBgImageURLFromEl(this.editingElement);
             this.env.editor.shared.backgroundImageOption.setImageBackground(
-                editingEl,
+                this.editingElement,
                 backgroundURL
             );
         });
     }
     showMainColorPicker() {
-        const editingEl = this.env.getEditingElement();
-        const src = new URL(getBgImageURLFromEl(editingEl), window.location.origin);
+        const src = new URL(getBgImageURLFromEl(this.editingElement), window.location.origin);
         return (
             src.origin === window.location.origin &&
             (src.pathname.startsWith("/html_editor/shape/") ||
@@ -34,10 +33,9 @@ export class BackgroundImageOption extends BaseOptionComponent {
     }
     getColorPickerColorNames() {
         const colorNames = [];
-        const editingEl = this.env.getEditingElement();
         for (let nbr = 1; nbr <= 5; nbr++) {
             const colorName = `c${nbr}`;
-            if (getBackgroundImageColor(editingEl, colorName)) {
+            if (getBackgroundImageColor(this.editingElement, colorName)) {
                 colorNames.push(colorName);
             }
         }
