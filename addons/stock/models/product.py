@@ -762,11 +762,15 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
     _check_company_auto = True
 
+    def _default_responsible_id(self):
+        # Return the current user unless it's OdooBot
+        return not self.env.user._is_superuser() and self.env.uid
+
     is_storable = fields.Boolean(
         'Track Inventory', store=True, compute='compute_is_storable', readonly=False,
         default=False, precompute=True, tracking=True, help='A storable product is a product for which you manage stock.')
     responsible_id = fields.Many2one(
-        'res.users', string='Responsible', default=lambda self: self.env.uid, company_dependent=True, check_company=True,
+        'res.users', string='Responsible', default=lambda self: self._default_responsible_id(), company_dependent=True, check_company=True,
         help="This user will be responsible of the next activities related to logistic operations for this product.")
     property_stock_production = fields.Many2one(
         'stock.location', "Production Location",

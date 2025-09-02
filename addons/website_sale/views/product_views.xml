@@ -6,8 +6,7 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_search_view"/>
         <field name="arch" type="xml">
-            <filter name="combo" position="after">
-                <separator/>
+            <filter name="favorites" position="after">
                 <filter string="Published" name="published" domain="[('is_published', '=', True)]"/>
             </filter>
             <filter name="group_by_categ_id" position="after">
@@ -168,7 +167,9 @@
                 <attribute name="invisible">0</attribute>
             </group>
             <group name="upsell" position="inside">
-                <field name="accessory_product_ids" widget="many2many_tags" invisible="not sale_ok"
+                <field name="accessory_product_ids" widget="many2many_tags"
+                       domain="[('sale_ok', '=', True)]"
+                       invisible="not sale_ok"
                        placeholder="Suggested accessories in the eCommerce cart"/>
                 <field name="alternative_product_ids" widget="many2many_tags"
                        domain="[('id', '!=', id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
@@ -203,14 +204,16 @@
                     />
                 </group>
             </xpath>
-            <group name="extra_info" position="inside">
-                <field name="is_published"/>
+            <xpath expr="//group[@name='extra_info']//field[@name='product_tag_ids']" position="before">
                 <field
                     name="website_id"
                     options="{'no_create': True}"
                     groups="website.group_multi_website"
                     placeholder="All"
                 />
+            </xpath>
+            <group name="extra_info" position="inside">
+                <field name="is_published" widget="boolean_toggle"/>
                 <field name="website_sequence" groups="base.group_no_one"/>
                 <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
                 <field

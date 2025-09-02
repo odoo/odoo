@@ -145,9 +145,12 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_search_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='categ_id']" position="after">
-                    <field string="Vendor" name="seller_ids"/>
-                </xpath>
+                <field name="categ_id" position="after">
+                    <field name="seller_ids" string="Vendor"/>
+                </field>
+                <filter name="filter_to_sell" position="after">
+                    <filter name="filter_to_purchase" string="Purchase" domain="[('purchase_ok', '=', True)]"/>
+                </filter>
             </field>
         </record>
 
@@ -160,7 +163,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//kanban" position="attributes">
                     <attribute name="js_class">purchase_product_kanban_catalog</attribute>
-                    <attribute name="sample">1</attribute> 
+                    <attribute name="sample">1</attribute>
                 </xpath>
             </field>
         </record>

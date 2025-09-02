@@ -88,7 +88,7 @@
                     groups="product.group_product_variant"
                     invisible="type == 'combo'"
                 >
-                    <field name="attribute_line_ids" widget="one2many" context="{'show_attribute': False}">
+                    <field name="attribute_line_ids" widget="one2many" context="{'show_attribute': False}" force_save="1">
                         <list string="Variants" editable="bottom" decoration-info="value_count &lt;= 1">
                             <field name="value_count" column_invisible="True"/>
                             <field name="sequence" widget="handle"/>
