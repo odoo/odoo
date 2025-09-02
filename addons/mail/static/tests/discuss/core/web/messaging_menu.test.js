@@ -12,8 +12,15 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
-import { disableAnimations } from "@odoo/hoot-mock";
-import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { disableAnimations, mockTouch } from "@odoo/hoot-mock";
+import {
+    Command,
+    getService,
+    serverState,
+    swipeLeft,
+    swipeRight,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -259,4 +266,34 @@ test("counter is updated on receiving message on non-fetched channels", async ()
         })
     );
     await contains(".o-mail-MessagingMenu-counter", { text: "1" });
+});
+
+test("can use notification item swipe actions", async () => {
+    mockTouch(true);
+    patchUiSize({ size: SIZES.SM });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo", email: "demo@odoo.com" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "A message",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss();
+    await contains("button.active", { text: "Inbox" });
+    await click("button", { text: "Chat" });
+    await contains(".o-mail-NotificationItem-badge:contains(1)");
+    await swipeRight(".o_actionswiper"); // marks as read
+    await contains(".o-mail-NotificationItem-badge", { count: 0 });
+    await swipeLeft(".o_actionswiper"); // unpins
+    await contains(".o-mail-NotificationItem", { count: 0 });
 });
