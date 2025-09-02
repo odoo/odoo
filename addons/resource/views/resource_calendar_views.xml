@@ -62,17 +62,21 @@
                                 icon="fa-check-square" title="Switch to fixed attendance" class="btn p-0"
                                 confirm="If unchecked, the working schedule will be based on a defined start and end hours.Do you confirm ?"
                                 confirm-label="Confirm"/>
-                            <label for="full_time_required_hours" invisible="not company_id"/>
-                            <label for="full_time_required_hours" string="Required Full Time" invisible="company_id"/>
-                            <div>
-                                <field name="full_time_required_hours" style="width: 6ch;" widget="float_time" readonly="company_id"/>
-                                <span>hours/week</span>
-                            </div>
-                            <label for="work_time_rate" string="Work Time Rate"/>
-                            <div>
-                                <field name="work_time_rate" nolabel="1" style="width: 6ch;"/>
-                                <span class="ms-1">%</span>
-                            </div>
+                            <group colspan="2">
+                                <label for="full_time_required_hours" invisible="not company_id"/>
+                                <label for="full_time_required_hours" string="Required Full Time" invisible="company_id"/>
+                                <div>
+                                    <field name="full_time_required_hours" style="width: 6ch;" widget="float_time" readonly="company_id"/>
+                                    <span>hours/week</span>
+                                </div>
+                            </group>
+                            <group colspan="2" invisible="schedule_type == 'fully_flexible'">
+                                <label for="work_time_rate" string="Work Time Rate"/>
+                                <div>
+                                    <field name="work_time_rate" nolabel="1" style="width: 6ch;"/>
+                                    <span class="ms-1">%</span>
+                                </div>
+                            </group>
                         </group>
                         <group>
                             <group name="resource_company" colspan="2">
@@ -80,7 +84,7 @@
                                 <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset', 'mismatch_title': 'Timezone Mismatch : This timezone is different from that of your browser.\nPlease, be mindful of this when setting the working hours or the time off.'}" />
                                 <field name="tz_offset" invisible="1"/> <!-- Computed field needed for timezone_mismatch widget -->
                             </group>
-                            <group name="flex_details" invisible="not flexible_hours" colspan="2">
+                            <group name="flex_details" invisible="schedule_type != 'flexible'" colspan="2">
                                 <label for="hours_per_day" string="Avg"/>
                                 <div class="d-flex">
                                     <field name="hours_per_day" nolabel="1" style="width: 6ch;" widget="float_time"/>
