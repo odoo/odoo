@@ -338,6 +338,7 @@ class Website(models.Model):
 
         website = self.get_current_website()
         website_settings = {}
+        category_settings = {}
         views_to_disable = []
         views_to_enable = []
         scss_customization_params = {}
@@ -346,6 +347,7 @@ class Website(models.Model):
 
         def parse_style_config(style_config_):
             website_settings.update(style_config_['website_fields'])
+            category_settings.update(style_config_.get('category_fields', {}))
             views_to_disable.extend(style_config_['views']['disable'])
             views_to_enable.extend(style_config_['views']['enable'])
             scss_customization_params.update(style_config_.get('scss_customization_params', {}))
@@ -363,12 +365,11 @@ class Website(models.Model):
         # Apply eCommerce page style configurations.
         if website_settings:
             website.write(website_settings)
+        if category_settings:
+            self.env['product.public.category'].search(website.website_domain()).write(
+                category_settings
+            )
         for xml_id in views_to_disable:
-            if (
-                xml_id == 'website_sale_comparison.product_add_to_compare'
-                and 'website_sale_comparison' not in self.env['ir.module.module']._installed()
-            ):
-                continue
             ThemeUtils.disable_view(xml_id)
         for xml_id in views_to_enable:
             ThemeUtils.enable_view(xml_id)
