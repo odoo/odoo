@@ -4403,15 +4403,16 @@ class BaseModel(metaclass=MetaModel):
             root_company_msg = _lt("- Only a root company can be set on “%(record)s”. Currently set to “%(company)s”")
             for record, name, corecords in inconsistencies[:5]:
                 if record._name == 'res.company':
-                    msg, company = company_msg, record
+                    msg, companies = company_msg, record
                 elif record == corecords and name == 'company_id':
-                    msg, company = root_company_msg, record.company_id
+                    msg, companies = root_company_msg, record.company_id
                 else:
-                    msg, company = record_msg, record.company_id
+                    msg = record_msg
+                    companies = record.company_id if 'company_id' in record else record.company_ids
                 field = self.env['ir.model.fields']._get(self._name, name)
                 lines.append(str(msg) % {
                     'record': record.display_name,
-                    'company': company.display_name,
+                    'company': ", ".join(company.display_name for company in companies),
                     'field': field.field_description,
                     'fname': field.name,
                     'values': ", ".join(repr(rec.display_name) for rec in corecords),
