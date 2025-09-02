@@ -3,17 +3,19 @@ import { reactive } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 export const busLogsService = {
-    dependencies: ["bus_service", "legacy_multi_tab"],
+    dependencies: ["bus_service", "legacy_multi_tab", "worker_service"],
     /**
      * @param {import("@web/env").OdooEnv}
      * @param {Partial<import("services").Services>} services
      */
-    start(env, { bus_service, legacy_multi_tab }) {
+    start(env, { bus_service, legacy_multi_tab, worker_service }) {
         const state = reactive({
             enabled: legacy_multi_tab.getSharedValue("bus_log_menu.enabled", false),
             toggleLogging() {
                 state.enabled = !state.enabled;
-                bus_service.setLoggingEnabled(state.enabled);
+                if (bus_service.isActive) {
+                    bus_service.setLoggingEnabled(state.enabled);
+                }
                 legacy_multi_tab.setSharedValue("bus_log_menu.enabled", state.enabled);
             },
         });
@@ -22,7 +24,9 @@ export const busLogsService = {
                 state.enabled = JSON.parse(detail.newValue);
             }
         });
-        bus_service.setLoggingEnabled(state.enabled);
+        worker_service.connectionInitializedDeferred.then(() => {
+            bus_service.setLoggingEnabled(state.enabled);
+        });
         odoo.busLogging = {
             stop: () => state.enabled && state.toggleLogging(),
             start: () => !state.enabled && state.toggleLogging(),
