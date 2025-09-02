@@ -1387,6 +1387,9 @@ class SaleOrderLine(models.Model):
         """
         return new or old
 
+    def _prepare_invoice_lines_vals_list(self, **optional_values):
+        return [self._prepare_invoice_line(**optional_values)]
+
     def _prepare_invoice_line(self, **optional_values):
         """Prepare the values to create the new invoice line for a sales order line.
 
