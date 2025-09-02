@@ -195,7 +195,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         Object.keys(values).forEach((key) => {
             values[key] = values[key] || defaultValue;
         });
-        await this.services.orm.call("web_editor.assets", "make_scss_customization", [url, values]);
+        await this.services.orm.call("website.assets", "make_scss_customization", [url, values]);
     }
     reloadBundles = debounce(this._reloadBundles.bind(this), 0);
     async _reloadBundles() {

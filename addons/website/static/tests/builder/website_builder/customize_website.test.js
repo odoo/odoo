@@ -443,8 +443,8 @@ test("theme background image is properly set", async () => {
         },
     });
 
-    class WebEditorAssets extends models.Model {
-        _name = "web_editor.assets";
+    class WebsiteAssets extends models.Model {
+        _name = "website.assets";
         make_scss_customization(location, changes) {
             expect(
                 changes["body-image"].includes(base64Image) &&
@@ -453,7 +453,7 @@ test("theme background image is properly set", async () => {
             expect.step("scss_customization");
         }
     }
-    defineModels([WebEditorAssets]);
+    defineModels([WebsiteAssets]);
 
     onRpc("/website/theme_customize_bundle_reload", async (request) => {
         expect.step("bundle_reload");
