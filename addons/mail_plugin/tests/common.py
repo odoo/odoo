@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
@@ -53,16 +52,11 @@ class TestMailPluginControllerCommon(HttpCase):
             "params": {"email": email, "name": name},
         }
 
-        with patch(
-            "odoo.addons.mail_plugin.controllers.mail_plugin.MailPluginController"
-            "._iap_enrich",
-            new=patched_iap_enrich,
-        ):
-            result = self.url_open(
-                "/mail_plugin/partner/get",
-                data=json.dumps(data).encode(),
-                headers={"Content-Type": "application/json"},
-            )
+        result = self.url_open(
+            "/mail_plugin/partner/get",
+            data=json.dumps(data).encode(),
+            headers={"Content-Type": "application/json"},
+        )
 
         if not result.ok:
             return {}
