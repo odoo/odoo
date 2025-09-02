@@ -30,7 +30,7 @@
                 </button>
                 <div class="dropdown-menu">
                     <t t-foreach="grades" t-as="grade">
-                        <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }?#{ keep_query('search', 'country_all', 'industry') }"
+                        <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }?#{ keep_query('search') }"
                         class="dropdown-item d-flex justify-content-between">
                             <t t-out="grade['grade_id'][1] if grade['grade_id'][0] != 0 else all_categories_label" />&amp;nbsp;&amp;nbsp;
                             <span class="badge text-white bg-secondary rounded-pill px-2 py-1" t-esc="grade['grade_id_count']"/>
@@ -64,7 +64,7 @@
                             <ul class="list-group list-group-flush">
                                 <t t-foreach="grades" t-as="grade">
                                     <li class="list-group-item d-flex justify-content-between align-items-center ps-0 pb-0 border-0">
-                                        <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }"
+                                        <a id="filter_category_link" t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }#{ '?' + (search_path or '') }"
                                         class="text-reset" aria-label="See categories filters">
                                             <div class="form-check">
                                                 <input class="form-check-input pe-none" type="radio" t-attf-name="#{grade}" t-att-checked="bool(grade['active'])"/>
@@ -103,13 +103,13 @@
             </t>
             <div class="col-md-4 col-xl-3 col-12 mb-4">
                 <div class="card h-100 text-decoration-none">
-                    <a id="partner_link_card" class="text-decoration-none" aria-label="Go to reseller">
+                    <a id="partner_link_card" class="text-decoration-none" aria-label="Go to partner">
                         <div t-field="partner.avatar_1920"
                             class="card-img-top border-bottom"
                             t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img img-fluid h-100 w-100 mw-100", "style": "max-height: 208px; min-height: 208px; object-fit: cover"}'
                             />
                         <div class="card-body">
-                            <h5 class="card-title m-0" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}" t-field="partner.display_name"/>
+                            <h5 class="card-title m-0" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}" t-field="partner.display_name"/>
                             <small id="o_wcrm_partners_address"/>
                             <small class="o_wcrm_short_description text-muted overflow-hidden">
                                 <span t-field="partner.website_short_description"/>
@@ -144,37 +144,13 @@
     </t>
 </template>
 
-<template id="partner_detail" name="Partner Details">
-    <div t-if="not edit_page" class="mt-4 mb-3">
-        <a t-attf-href="/partners#{current_country and '/country/%s' % slug(current_country)}" aria-label="Back to partners list"><i class="oi oi-chevron-left me-2"/>Back to partners</a>
-    </div>
-    <div class="row" itemscope="itemscope" itemtype="http://schema.org/Organization">
-        <div class="col-lg-3 col-md-4">
-            <div t-field="partner.avatar_1920" t-options='{"widget": "image", "preview_image": "avatar_1920", "style": "object-fit: cover", "class": "w-100 mb-2 rounded-3 border", "itemprop": "image"}'/>
-            <div class="o_wcrm_contact_details">
-                <div t-field="partner.self" t-options='{
-                    "widget": "contact",
-                    "fields": ["address", "website", "phone", "email"],
-                    "with_microdata": True,
-                }'/>
-                <t t-out="left_column or ''"/>
-            </div>
+<template id="partner_detail" inherit_id="website_partner.partner_detail" name="Partner Details">
+    <xpath expr="//div" position="before">
+        <div t-if="not edit_page" class="mt-4 mb-3">
+            <a id="link_back_to_partners" t-attf-href="/partners#{current_grade and 'grade_id=%s&amp;' % current_grade.id}" aria-label="Back to partners list"><i class="oi oi-chevron-left me-2"/>Back to partners</a>
         </div>
-        <div class="col-lg-9 col-md-8">
-            <div class="d-flex align-items-center flex-wrap mb-4">
-                <div class="flex-grow-1">
-                    <h1 id="partner_name" t-field="partner.display_name" itemprop="name"/>
-                </div>
-            </div>
-            <t t-if="partner">
-                <div t-field="partner.website_description" class="mb-5"/>
-            </t>
-            <t t-out="right_column or ''"/>
-        </div>
-    </div>
-</template>
+    </xpath>
 
-<template id="grade_in_detail" inherit_id="website_partnership.partner_detail">
     <xpath expr="//*[@id='partner_name']" position="before">
         <span class="col-lg-12 text-muted" t-if="partner.grade_id and partner.grade_id.website_published">
             <span t-field="partner.grade_id"/>
@@ -186,10 +162,8 @@
     <xpath expr="//div[@id='dropdown_grades_selection']" position="after">
         <div class="o_wcrm_search d-flex w-100 w-lg-25">
             <form class="flex-grow-1" action="" method="get">
-                <input t-if="country_all" type="hidden" name="country_all" value="True" />
-                <div class="input-group" role="search">
-                    <input type="hidden" t-if='current_industry' name="industry" t-att-value='slug(current_industry)'/>
-                    <input type="text" name="search" class="search-query form-control border-0 bg-light" placeholder="Search" t-att-value="searches.get('search', '')"/>
+                <div id="search_input_group" class="input-group" role="search">
+                    <input id="search_input_text" type="text" name="search" class="search-query form-control border-0 bg-light" placeholder="Search" t-att-value="searches.get('search', '')"/>
                     <button type="submit" aria-label="Search" title="Search" class="oe_search_button btn btn-light">
                         <i class="oi oi-search"/>
                     </button>
@@ -204,15 +178,15 @@
     </xpath>
 </template>
 
-<template id="companies_only_setting" inherit_id="website_partnership.index" name="Companies only">
+<template id="companies_only_setting" inherit_id="website_partnership.index" name="Companies only" active="False">
     <xpath expr="//t[@id='partners_cards']" position="before">
-        <t t-set="partners" t-value="partners.filtered(lambda p: p.is_company)"/>
+        <t t-set="partners" t-value="partners.filtered('is_company')"/>
     </xpath>
 </template>
 
 <template id="linked_partner_page_setting" inherit_id="website_partnership.index" name="Partner page">
     <xpath expr="//a[@id='partner_link_card']" position="attributes">
-        <attribute name="t-attf-href">/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}</attribute>
+        <attribute name="t-attf-href">/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}</attribute>
     </xpath>
 </template>
 

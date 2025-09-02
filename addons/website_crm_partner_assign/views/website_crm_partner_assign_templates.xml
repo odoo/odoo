@@ -2,7 +2,84 @@
 <odoo>
 
 <!-- Page -->
-<template id='index_filter_by_industry' customize_show="True" active='False' name="Filter Industries" inherit_id="website_partnership.index">
+<template id="index_layout" inherit_id="website_partnership.index_layout" name="Find Resellers">
+    <xpath expr="//t[@t-set='additional_title']" position="replace">
+        <t t-set="additional_title">Resellers</t>
+    </xpath>
+</template>
+
+<template id="index" inherit_id="website_partnership.index">
+    <xpath expr="//h1[@id='page_title']" position="inside">
+        <t t-foreach="countries" t-as="country"><span t-if="country['active'] and country['country_id'][0] != 0 and country['country_id']">in <t t-out="country['country_id'][1]"/></span></t>
+    </xpath>
+    <xpath expr="//t[@t-foreach='grades']/a" position="attributes">
+        <attribute name="t-attf-href">/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }?#{ keep_query('search', 'country_all', 'industry') }</attribute>
+    </xpath>
+    <xpath expr="//div[@id='dropdown_grades_selection']" position="after">
+        <div class="dropdown d-none d-lg-block">
+            <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by country" aria-label="Filter by country" aria-expanded="false">
+                <t t-foreach="countries" t-as="country">
+                    <span t-if="country['active']" t-out="country['country_id'][1]"/>
+                </t>
+            </button>
+            <div class="dropdown-menu">
+                <t t-foreach="countries" t-as="country" t-if="country['country_id']">
+                    <t t-set='all_countries' t-value="dict(country_all=1) if country['country_id'][0] == 0 else {} "/>
+                    <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }?#{ keep_query('search', 'industry', **all_countries)}" class="dropdown-item d-flex justify-content-between">
+                        <t t-out="country['country_id'][1]"/>&amp;nbsp;&amp;nbsp;
+                        <span class="badge text-white bg-secondary rounded-pill px-2 py-1" t-esc="country['country_id_count']"/>
+                    </a>
+                </t>
+            </div>
+        </div>
+    </xpath>
+    <xpath expr="//a[@id='filter_category_link']" position="attributes">
+        <attribute name="t-attf-href">/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('accordion')]" position="inside">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target=".o_wcrm_offcanvas_country"
+                    aria-expanded="false"
+                    aria-controls="o_wcrm_offcanvas_country">
+                    Filter by country
+                </button>
+            </h2>
+            <div class="o_wcrm_offcanvas_country accordion-collapse collapse">
+                <div class="accordion-body pt-0">
+                    <ul class="list-group list-group-flush">
+                        <t t-foreach="countries" t-as="country">
+                            <li t-if="country['country_id']" class="list-group-item d-flex justify-content-between align-items-center ps-0 pb-0 border-0">
+                                <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
+                                class="text-reset" aria-label="See countries filters">
+                                    <div class="form-check">
+                                        <input class="form-check-input pe-none" type="radio" t-attf-name="#{country['country_id'][1]}" t-att-checked="bool(country['active'])"/>
+                                        <label class="form-check-label" t-attf-for="#{country['country_id'][1]}" t-out="country['country_id'][1]"/>
+                                    </div>
+                                </a>
+                            </li>
+                        </t>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </xpath>
+    <xpath expr="//div[@t-elif='not partners']" position="after">
+        <div t-elif="fallback_all_countries" class="mt-4 alert alert-primary alert-dismissible fade show" role="alert">
+            <i class="fa fa-info-circle me-2"/>
+            There are no matching partners found for the selected country. Displaying results across all countries instead.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </xpath>
+    <xpath expr="//h5[hasclass('card-title')]" position="attributes">
+        <attribute name="t-attf-href">/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}</attribute>
+    </xpath>
+</template>
+
+<template id='index_filter_by_industry' customize_show="True" active='False' name="Filter Industries" inherit_id="index">
     <xpath expr="//t[@t-set='all_categories_label']" position="before">
         <div class="dropdown d-none d-lg-block">
             <a role="button" href="#" data-bs-toggle="dropdown" class="dropdown-toggle btn btn-light" aria-expanded="true" aria-label="Open industries dropdown">
@@ -54,7 +131,7 @@
     </xpath>
 </template>
 
-<template id="ref_country" inherit_id="website_partnership.index" name="World Map">
+<template id="ref_country" inherit_id="website_partnership.search_setting" name="World Map">
     <xpath expr="//div[hasclass('o_wcrm_search')]" position="inside">
         <t t-if="google_maps_api_key">
             <!-- modal for large map -->
@@ -83,7 +160,7 @@
     </xpath>
 </template>
 
-<template id="o_wcrm_partner_address" inherit_id="website_partnership.index" name="Address">
+<template id="o_wcrm_partner_address" inherit_id="index" name="Address">
     <xpath expr="//small[@id='o_wcrm_partners_address']" position="inside">
         <div t-field="partner.self"
             t-options="{
@@ -99,6 +176,58 @@
     <xpath expr="//t[@t-call='website_partnership.partner_detail']" position="inside">
         <t t-set="contact_details" t-value="True"/>
     </xpath>
+</template>
+
+<template id="partner_page" inherit_id="website_partnership.partner_page">
+    <xpath expr="//t[@t-call='website_partnership.partner_detail']" position="inside">
+        <t t-set="right_column">
+            <div id="right_column"><t t-call="website_crm_partner_assign.references_block"/></div>
+        </t>
+    </xpath>
+</template>
+
+<template id="partner_detail" inherit_id="website_partnership.partner_detail">
+    <xpath expr="//a[@id='link_back_to_partners']" position="replace">
+        <a t-attf-href="/partners?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}" aria-label="Back to resellers list">
+            <i class="oi oi-chevron-left me-2"/>Back to resellers
+        </a>
+    </xpath>
+</template>
+
+<template id="search_setting" inherit_id="website_partnership.search_setting">
+    <xpath expr="//div[@id='search_input_group']" position="before">
+        <input t-if="country_all" type="hidden" name="country_all" value="True" />
+    </xpath>
+    <xpath expr="//input[@id='search_input_text']" position="before">
+        <input type="hidden" t-if='current_industry' name="industry" t-att-value='slug(current_industry)'/>
+    </xpath>
+</template>
+
+<record id="website_partnership.companies_only_setting" model="ir.ui.view">
+    <field name="active" eval="True"/>
+</record>
+
+<template id="linked_partner_page_setting" inherit_id="website_partnership.linked_partner_page_setting">
+    <xpath expr="//a[@id='partner_link_card']" position="attributes">
+        <attribute name="t-attf-href">/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}</attribute>
+    </xpath>
+</template>
+
+<template id="references_block" name="Partner References Block">
+    <t t-if="any(p.website_published for p in partner.implemented_partner_ids)">
+        <h4 id="references">References</h4>
+        <div t-foreach="partner.implemented_partner_ids" t-if="reference.website_published" t-as="reference" class="card mt-3 border-0">
+            <div class="row">
+                <div class="col-md-2">
+                    <span t-field="reference.avatar_128" class="d-flex justify-content-center" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img-fluid rounded mw-100"}'/>
+                </div>
+                <div class="card-body col-md-10">
+                    <span t-field="reference.self"/>
+                    <div t-field='reference.website_short_description'/>
+                </div>
+            </div>
+        </div>
+    </t>
 </template>
 
 <!-- Portal -->
