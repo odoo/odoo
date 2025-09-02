@@ -16,8 +16,15 @@
     --bg: #{$o-we-toolbar-bg};
     --text-rgb: #{red($o-we-toolbar-color-text)}, #{green($o-we-toolbar-color-text)}, #{blue($o-we-toolbar-color-text)};
     --border-rgb: var(--text-rgb);
-    width: 250px;
+    width: 208px;
+    max-height: inherit;
+    overflow-y: auto;
+    border-radius: inherit;
+    background-color: inherit;
     box-shadow: $box-shadow;
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 .o_color_button {
@@ -51,8 +58,8 @@
 .o_color_button {
     @extend %o-preview-alpha-background;
 
-    &:focus,
-    &:hover {
+    &:not(.selected):focus,
+    &:not(.selected):hover {
         outline: solid $o-enterprise-action-color;
         z-index: 1;
         transition: transform 0.1s ease-out;
@@ -161,12 +168,17 @@
 }
 .o_font_color_selector .o_colorpicker_widget {
     width: 100%;
+    margin-top: 2px;
     .o_hex_input {
         border: 1px solid !important;
         padding: 0 2px !important;
         width: 10ch !important;
         opacity: 0.7;
     }
+}
+
+.custom-gradient-configurator + .o_colorpicker_widget {
+    padding-bottom: 8px;
 }
 
 :root {

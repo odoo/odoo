@@ -11,6 +11,10 @@
     background-color: $o-we-item-clickable-bg;
     color: $white;
 
+    &:has(.theme-tab){
+        width: 250px;
+    }
+
     & > div:first-child {
         background-color: $o-we-bg-darker;
         padding-block: 0.5em;
@@ -105,19 +109,8 @@
     .gradient-angle-thumb {
         background-color: $white;
     }
-    .gradient-angle-knob + input[name=angle],
-    input[name=positionX],
-    input[name=positionY] {
-        @extend %o-hb-input-base;
 
-        & + .input-group-text {
-            background-color: revert;
-            border: revert;
-            color: inherit;
-        }
-    }
-
-    .o_color_picker_inputs {
+    .o_color_picker_inputs, .o_color_gradient_input {
         color: $o-we-item-clickable-color;
 
         & input {
