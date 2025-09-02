@@ -62,6 +62,8 @@ class TestPortalProject(TestProjectPortalCommon, HttpCase):
         access_token = self.project_pigs.access_token
         task_access_token = self.task_1.access_token
         self.project_pigs.privacy_visibility = 'followers'
+        self.project_pigs.access_token = False
+        self.project_pigs.task_ids.write({'access_token': False})
         self.assertFalse(self.project_pigs.access_token, 'The access token should no longer be set since now the project is private.')
         self.assertFalse(all(self.project_pigs.tasks.mapped('access_token')), 'The access token should no longer be set in any tasks linked to the project since now the project is private.')
         self.project_pigs.privacy_visibility = 'portal'
