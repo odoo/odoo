@@ -11,7 +11,7 @@ import {
 } from '@website_sale_comparison/js/product_comparison_bottom_bar/product_comparison_bottom_bar';
 
 export class ProductComparison extends Interaction {
-    static selector = 'main:has(.o_add_compare, .o_add_compare_dyn, .o_add_to_compare)';
+    static selector = '.js_sale:not(.o_wsale_comparison_page)';
 
     dynamicContent = {
         '.o_add_compare, .o_add_compare_dyn': { 't-on-click': this.addProduct },
