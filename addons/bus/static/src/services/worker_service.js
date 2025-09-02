@@ -47,6 +47,13 @@ export class WorkerService {
         this._send("BASE:INIT");
     }
 
+    async ensureWorkerStarted() {
+        if (this._state === WORKER_STATE.UNINITIALIZED) {
+            this.startWorker();
+        }
+        await this.connectionInitializedDeferred;
+    }
+
     onInitError(e) {
         // FIXME: SharedWorker can still fail for unknown reasons even when it is supported.
         if (this._state === WORKER_STATE.INITIALIZING && this.isUsingSharedWorker) {
@@ -79,7 +86,9 @@ export class WorkerService {
     }
 
     /**
-     * Send a message to the worker.
+     * Send a message to the worker. If the worker is not yet started,
+     * ignore the message. One should call `ensureWorkerStarted` if one
+     * really needs the message to reach the worker.
      *
      * @param {String} action Action to be executed by the worker.
      * @param {Object|undefined} data Data required for the action to be
@@ -87,7 +96,7 @@ export class WorkerService {
      */
     async send(action, data) {
         if (this._state === WORKER_STATE.UNINITIALIZED) {
-            this.startWorker();
+            return;
         }
         await this.connectionInitializedDeferred;
         if (this._state === WORKER_STATE.FAILED) {
