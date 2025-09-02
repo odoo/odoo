@@ -324,7 +324,7 @@ class AccountMoveLine(models.Model):
 
     def _get_exchange_journal(self, company):
         if (
-            self and self.move_id.sudo().stock_valuation_layer_ids and
+            self and self.account_id == self.product_id._get_product_accounts()['stock_input'] and
             self.product_id.categ_id.property_valuation == 'real_time'
         ):
             return self.product_id.categ_id.property_stock_journal
@@ -332,7 +332,7 @@ class AccountMoveLine(models.Model):
 
     def _get_exchange_account(self, company, amount):
         if (
-            self and self.move_id.sudo().stock_valuation_layer_ids and
+            self and self.account_id == self.product_id._get_product_accounts()['stock_input'] and
             self.product_id.categ_id.property_valuation == 'real_time'
         ):
             return self.product_id.categ_id.property_stock_valuation_account_id
