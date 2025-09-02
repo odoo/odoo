@@ -628,3 +628,6 @@ class PurchaseOrderLine(models.Model):
             "order_id": self.order_id,
             "force_uom": True,
         }
+
+    def _ensure_merge_compatibility(self, rfq_line):
+        return False
