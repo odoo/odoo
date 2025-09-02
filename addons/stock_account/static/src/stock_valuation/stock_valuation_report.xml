@@ -24,7 +24,7 @@
                     <table class="table table-borderless table-hover w-print-100">
                         <tbody>
                             <t t-call="stock_account.StockValuationReport.InitialBalance"/>
-                            <t t-call="stock_account.StockValuationReport.InventoryLoss"/>
+                            <t t-if="data.inventory_loss" t-call="stock_account.StockValuationReport.InventoryLoss"/>
                             <t t-call="stock_account.StockValuationReport.StockVariation"/>
                             <t t-call="stock_account.StockValuationReport.EndingStock"/>
                             <!-- <t t-call="stock_account.StockValuationReport.Accrual"/> -->

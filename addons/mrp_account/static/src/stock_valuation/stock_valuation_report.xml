@@ -2,7 +2,7 @@
 <templates>
     <t t-inherit="stock_account.StockValuationReport" t-inherit-mode="extension">
         <xpath expr="//t[@t-call='stock_account.StockValuationReport.InventoryLoss']" position="after">
-            <t t-call="mrp_account.StockValuationReport.CostOfProduction"/>
+            <t t-if="data.cost_of_production" t-call="mrp_account.StockValuationReport.CostOfProduction"/>
         </xpath>
     </t>
 
