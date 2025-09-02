@@ -49,11 +49,6 @@ export const busService = {
         const bus = new EventBus();
         const notificationBus = new EventBus();
         const subscribeFnToWrapper = new Map();
-        /**
-         * @typedef {typeof import("@bus/workers/websocket_worker").WORKER_STATE} WORKER_STATE
-         * @type {WORKER_STATE[keyof WORKER_STATE]}
-         */
-        let isInitialized = false;
         let backOnlineTimeout;
         const startedAt = luxon.DateTime.now().set({ milliseconds: 0 });
         let connectionInitializedDeferred;
@@ -93,7 +88,6 @@ export const busService = {
                     break;
                 }
                 case "BUS:INITIALIZED": {
-                    isInitialized = true;
                     connectionInitializedDeferred.resolve();
                     break;
                 }
@@ -130,44 +124,31 @@ export const busService = {
         }
 
         /**
-         * Initialize the connection to the worker by sending it usefull
-         * initial informations (last notification id, debug mode,
-         * ...).
-         */
-        function initializeWorkerConnection() {
-            // User_id has different values according to its origin:
-            //     - user service : number or false (key: userId)
-            //     - guest page: array containing null or number
-            //     - public pages: undefined
-            // Let's format it in order to ease its usage:
-            //     - number if user is logged, false otherwise, keep
-            //       undefined to indicate session_info is not available.
-            let uid = Array.isArray(session.user_id) ? session.user_id[0] : user.userId;
-            if (!uid && uid !== undefined) {
-                uid = false;
-            }
-            workerService.send("BUS:INITIALIZE_CONNECTION", {
-                websocketURL: `${params.serverURL.replace("http", "ws")}/websocket?version=${
-                    session.websocket_worker_version
-                }`,
-                db: session.db,
-                debug: odoo.debug,
-                lastNotificationId: legacyMultiTab.getSharedValue("last_notification_id", 0),
-                uid,
-                startTs: startedAt.valueOf(),
-            });
-        }
-
-        /**
          * Start the "bus_service" workerService.
          */
-        async function startWorker() {
+        async function ensureWorkerStarted() {
             if (!connectionInitializedDeferred) {
                 connectionInitializedDeferred = new Deferred();
+                let uid = Array.isArray(session.user_id) ? session.user_id[0] : user.userId;
+                if (!uid && uid !== undefined) {
+                    uid = false;
+                }
+                await workerService.ensureWorkerStarted();
+                await workerService.registerHandler(handleMessage);
+                workerService.send("BUS:INITIALIZE_CONNECTION", {
+                    websocketURL: `${params.serverURL.replace("http", "ws")}/websocket?version=${
+                        session.websocket_worker_version
+                    }`,
+                    db: session.db,
+                    debug: odoo.debug,
+                    lastNotificationId: legacyMultiTab.getSharedValue("last_notification_id", 0),
+                    uid,
+                    startTs: startedAt.valueOf(),
+                });
             }
-            await workerService.registerHandler(handleMessage);
-            initializeWorkerConnection();
+            await connectionInitializedDeferred;
         }
+
         browser.addEventListener("pagehide", ({ persisted }) => {
             if (!persisted) {
                 // Page is gonna be unloaded, disconnect this client
@@ -199,10 +180,7 @@ export const busService = {
         const state = reactive({
             addEventListener: bus.addEventListener.bind(bus),
             addChannel: async (channel) => {
-                if (!connectionInitializedDeferred && !isInitialized) {
-                    await startWorker();
-                }
-                await connectionInitializedDeferred;
+                await ensureWorkerStarted();
                 workerService.send("BUS:ADD_CHANNEL", channel);
                 workerService.send("BUS:START");
                 state.isActive = true;
@@ -219,10 +197,7 @@ export const busService = {
             send: (eventName, data) =>
                 workerService.send("BUS:SEND", { event_name: eventName, data }),
             start: async () => {
-                if (!connectionInitializedDeferred && !isInitialized) {
-                    await startWorker();
-                }
-                await connectionInitializedDeferred;
+                await ensureWorkerStarted();
                 workerService.send("BUS:START");
                 state.isActive = true;
             },

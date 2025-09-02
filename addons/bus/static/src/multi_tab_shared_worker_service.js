@@ -49,6 +49,7 @@ export const multiTabSharedWorkerService = {
         }
 
         async function startWorker() {
+            await workerService.ensureWorkerStarted();
             await workerService.registerHandler(messageHandler);
             workerService.send("ELECTION:REGISTER");
             state = STATE.REGISTERED;
