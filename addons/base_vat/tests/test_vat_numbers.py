@@ -39,6 +39,24 @@ class TestStructure(TransactionCase):
         })
         self.assertEqual(partner.vat, 'RORO790707I47', "Partner VAT should not be altered")
 
+    def test_missing_company_country(self):
+        company = self.env['res.company'].create({
+            'name': 'Test Company',
+            'country_id': False,
+            'vat_check_vies': True,
+        })
+        partner = self.env['res.partner'].create({
+            'name': 'Customer BE',
+            'country_id': self.env.ref('base.be').id,
+            'vat': 'DE123456788',
+            'company_id': company.id,
+        })
+        valid = partner._get_vat_required_valid(company=company)
+        self.assertEqual(valid, True)
+        partner.vat = False
+        invalid = partner._get_vat_required_valid(company=company)
+        self.assertEqual(invalid, False)
+
     def test_parent_validation(self):
         """Test the validation with company and contact"""
 
