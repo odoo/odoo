@@ -1123,8 +1123,10 @@ class PreforkServer(CommonServer):
         if not is_main_server:
             processes = {}
             for pid in self.workers:
-                with contextlib.suppress(psutil.NoSuchProcess):
+                try:
                     processes[pid] = psutil.Process(pid)
+                except psutil.NoSuchProcess:
+                    self.worker_pop(pid)
 
         self.beat = 0.1
         while self.workers:
