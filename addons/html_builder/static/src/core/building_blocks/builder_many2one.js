@@ -42,11 +42,10 @@ export class BuilderMany2One extends Component {
             ({ actionId }) => getAction(actionId).getValue
         );
         const { actionId, actionParam } = actionWithGetValue;
+        const getValue = (el) =>
+            getAction(actionId).getValue({ editingElement: el, params: actionParam });
         this.domState = useDomState(async (el) => {
-            const selectedString = getAction(actionId).getValue({
-                editingElement: el,
-                params: actionParam,
-            });
+            const selectedString = getValue(el);
             const selected = selectedString && JSON.parse(selectedString);
             if (selected && !("display_name" in selected && "name" in selected)) {
                 Object.assign(
@@ -65,7 +64,7 @@ export class BuilderMany2One extends Component {
         });
         if (this.props.id) {
             useDependencyDefinition(this.props.id, {
-                getValue: () => this.domState.selected && JSON.stringify(this.domState.selected),
+                getValue: () => getValue(this.env.getEditingElement()),
             });
         }
 
