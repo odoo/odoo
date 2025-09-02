@@ -32,6 +32,11 @@ SHOP_PAGE_STYLE_MAPPING = {
                                                 'o_wsale_products_opt_has_comparison '
                                                 'o_wsale_products_opt_actions_promote',
         },
+        'category_fields': {
+            'show_category_title': False,
+            'show_category_description': True,
+            'align_category_content': False,
+        },
     },
     'modern_grid': {
         'title': _lt("Modern Grid"),
@@ -41,11 +46,14 @@ SHOP_PAGE_STYLE_MAPPING = {
                 'website.template_header_search',  # Header menu with search bar
                 'website.header_width_full',  # Header width
                 'website_sale.products_mobile_cols_single',  # Mobile cols single
+                'website_sale.products_attributes_top',  # Filters
                 'website_sale.filmstrip_categories_grid',  # Category style
                 'website_sale.template_footer_website_sale',  # Footer
                 'website.footer_copyright_content_width_fluid',  # Footer width
             ],
-            'disable': [],
+            'disable': [
+                'website_sale.products_attributes',  # Filters
+            ],
         },
         'website_fields': {
             'shop_ppr': 5,
@@ -65,6 +73,11 @@ SHOP_PAGE_STYLE_MAPPING = {
                                                 'o_wsale_products_opt_thumb_4_5 '
                                                 'o_wsale_products_opt_text_align_center',
         },
+        'category_fields': {
+            'show_category_title': True,
+            'show_category_description': True,
+            'align_category_content': False,
+        },
         'scss_customization_params': {
             'header-links-style': 'default',
             'header-template': 'search',
@@ -77,6 +90,7 @@ SHOP_PAGE_STYLE_MAPPING = {
             'enable': [
                 'website.template_header_sales_four',  # Header
                 'website.header_width_full',  # Header width
+                'website_sale.products_shop_title_align',  # Shop title centered
                 'website_sale.filmstrip_categories_pills',  # Category style
                 'website_sale.products_attributes_top',  # Filters
                 'website_sale.floating_bar',  # Toolbar/floating
@@ -92,15 +106,21 @@ SHOP_PAGE_STYLE_MAPPING = {
             'shop_page_container': 'fluid',  # Content fullwidth
             'shop_opt_products_design_classes': 'o_wsale_products_opt_name_color_regular '
                                                 'o_wsale_products_opt_thumb_cover '
+                                                'o_wsale_products_opt_has_cta '
+                                                'o_wsale_products_opt_has_wishlist '
                                                 'o_wsale_products_opt_has_description '
+                                                'o_wsale_products_opt_actions_inline '
                                                 'o_wsale_products_opt_cc o_wsale_products_opt_cc5 '
+                                                ' o_wsale_products_opt_actions_theme '
+                                                'o_wsale_products_opt_thumb_4_3 '
                                                 'o_wsale_products_opt_layout_list '
                                                 'o_wsale_products_opt_design_showcase '
-                                                'o_wsale_products_opt_thumb_4_5 '
-                                                'o_wsale_products_opt_has_wishlist '
-                                                'o_wsale_products_opt_actions_onhover '
-                                                'o_wsale_products_opt_wishlist_fixed '
-                                                'o_wsale_products_opt_actions_subtle',
+                                                'o_wsale_products_opt_rounded_0'
+        },
+        'category_fields': {
+            'show_category_title': True,
+            'show_category_description': True,
+            'align_category_content': True,
         },
         'scss_customization_params': {
             'header-links-style': 'default',
@@ -113,6 +133,7 @@ SHOP_PAGE_STYLE_MAPPING = {
         'views': {
             'enable': [
                 'website.template_header_sales_one',  # Header
+                'website_sale.products_shop_title_align',  # Shop title centered
                 'website_sale.products_mobile_cols_single',  # Mobile cols single
                 'website_sale.filmstrip_categories_bordered',  # Category style
                 'website_sale.products_attributes_top',  # Filters
@@ -139,6 +160,11 @@ SHOP_PAGE_STYLE_MAPPING = {
                                                 'o_wsale_products_opt_rounded_4 '
                                                 'o_wsale_products_opt_layout_catalog '
                                                 'o_wsale_products_opt_design_chips',
+        },
+        'category_fields': {
+            'show_category_title': True,
+            'show_category_description': True,
+            'align_category_content': True,
         },
         'scss_customization_params': {
             'header-links-style': 'default',
@@ -170,6 +196,11 @@ SHOP_PAGE_STYLE_MAPPING = {
                                                 'o_wsale_products_opt_actions_promote '
                                                 'o_wsale_products_opt_layout_list '
                                                 'o_wsale_products_opt_design_thumbs',
+        },
+        'category_fields': {
+            'show_category_title': True,
+            'show_category_description': True,
+            'align_category_content': False,
         },
         'scss_customization_params': {
             'header-links-style': 'default',
@@ -208,40 +239,39 @@ SHOP_PAGE_STYLE_MAPPING = {
                                                 'o_wsale_products_opt_thumb_4_5 '
                                                 'o_wsale_products_opt_has_comparison',
         },
+        'category_fields': {
+            'show_category_title': False,
+            'show_category_description': True,
+            'align_category_content': False,
+        },
     },
 }
-
 PRODUCT_PAGE_STYLE_MAPPING = {
     'classic': {
         'title': _lt("Classic"),
         'img_src': '/website_sale/static/src/img/configurator/product/classic.jpg',
         'views': {
-            'enable': [
-                'website_sale.carousel_product_indicators_left',  # Layout/Thumbnails
-            ],
-            'disable': [
-                'website_sale.carousel_product_indicators_bottom',  # Layout/Thumbnails
-                'website_sale_comparison.product_add_to_compare',  # Comparison
-                'website_sale.product_terms_and_conditions',  # Terms and Conditions
-            ],
+            'enable': [],
+            'disable': [],
         },
-        'website_fields': {},  # Default
+        'website_fields': {
+            'product_page_image_roundness': 'medium',
+        },
     },
     'image_grid': {
         'title': _lt("Image Grid"),
         'img_src': '/website_sale/static/src/img/configurator/product/image_grid.jpg',
         'views': {
-            'enable': [
-                'website_sale.product_picture_magnify_click',
-            ],
-            'disable': [
-                'website_sale_comparison.product_add_to_compare',  # Comparison
-                'website_sale.product_terms_and_conditions',  # Terms and Conditions
-            ],
+            'enable': [],
+            'disable': [],
         },
         'website_fields': {
-            'product_page_image_layout': 'grid',
             'product_page_image_width': '66_pc',
+            'product_page_cols_order': 'inverse',
+            'product_page_image_layout': 'grid',
+            'product_page_image_spacing': 'medium',
+            'product_page_image_roundness': 'medium',
+            'product_page_image_ratio': '2_3',
         },
     },
     'focused': {
@@ -249,18 +279,21 @@ PRODUCT_PAGE_STYLE_MAPPING = {
         'img_src': '/website_sale/static/src/img/configurator/product/focused.jpg',
         'views': {
             'enable': [
-                'website_sale.products_carousel_4x3',
+                # Purchase style
+                'website_sale.cta_wrapper_large',
+                'website_sale.product_buy_now_large',
+                'website_sale.product_quantity_large',
             ],
             'disable': [
-                'website_sale.products_carousel_4x5',
-                'website_sale.products_carousel_16x9',
-                'website_sale.products_carousel_21x9',
-                'website_sale_comparison.product_add_to_compare',  # Comparison
-                'website_sale.product_terms_and_conditions',  # Terms and Conditions
+                'website_sale.cta_wrapper_boxed',  # Purchase style
             ],
         },
         'website_fields': {
             'product_page_image_width': '66_pc',
+            'product_page_image_layout': 'grid',
+            'product_page_grid_columns': 1,
+            'product_page_image_spacing': 'small',
+            'product_page_image_roundness': 'small',
         },
     },
     'large_image': {
@@ -268,15 +301,66 @@ PRODUCT_PAGE_STYLE_MAPPING = {
         'img_src': '/website_sale/static/src/img/configurator/product/large_image.jpg',
         'views': {
             'enable': [
-                'website_sale.product_picture_magnify_click',
+                'website_sale.carousel_product_indicators_bottom',  # Thumbnail position
+                'website_sale.cta_wrapper_boxed',  # Purchase style
             ],
             'disable': [
-                'website_sale_comparison.product_add_to_compare',  # Comparison
-                'website_sale.product_terms_and_conditions',  # Terms and Conditions
+                'website_sale.carousel_product_indicators_left',  # Thumbnail position
+                'website_sale.cta_separator',  # Separator
+                # Purchase style
+                'website_sale.cta_wrapper_large',
+                'website_sale.product_buy_now_large',
+                'website_sale.product_quantity_large',
             ],
         },
         'website_fields': {
             'product_page_image_width': '100_pc',
+            'product_page_image_ratio': '21_9',
+        },
+    },
+    'functional': {
+        'title': _lt("Functional"),
+        'img_src': '/website_sale/static/src/img/configurator/product/functional.jpg',
+        'views': {
+            'enable': [
+                'website_sale.carousel_product_indicators_bottom',  # Thumbnail position
+                'website_sale.cta_wrapper_boxed',  # Purchase style
+            ],
+            'disable': [
+                'website_sale.carousel_product_indicators_left',  # Thumbnail position
+                # Purchase style
+                'website_sale.cta_wrapper_large',
+                'website_sale.product_buy_now_large',
+                'website_sale.product_quantity_large',
+            ],
+        },
+        'website_fields': {
+            'product_page_image_width': '33_pc',
+            'product_page_image_roundness': 'small',
+
+        },
+    },
+    'large_grid': {
+        'title': _lt("Large Grid"),
+        'img_src': '/website_sale/static/src/img/configurator/product/large_grid.jpg',
+        'views': {
+            'enable': [
+                # Purchase style
+                'website_sale.cta_wrapper_large',
+                'website_sale.product_buy_now_large',
+                'website_sale.product_quantity_large',
+            ],
+            'disable': [
+                'website_sale.cta_separator',  # Separator
+                'website_sale.cta_wrapper_boxed',  # Purchase style
+            ],
+        },
+        'website_fields': {
+            'product_page_image_width': '100_pc',
+            'product_page_image_layout': 'grid',
+            'product_page_image_spacing': 'big',
+            'product_page_image_roundness': 'big',
+            'product_page_image_ratio': '16_9',
         },
     },
 }
