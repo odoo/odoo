@@ -1046,7 +1046,7 @@ export class LinkPlugin extends Plugin {
         if (linkEl && linkEl.isContentEditable) {
             const label = linkEl.innerText;
             const url = deduceURLfromText(label, linkEl);
-            if (url && this?.isCurrentLinkInSync) {
+            if (url && this.isCurrentLinkInSync) {
                 linkEl.setAttribute("href", url);
                 this.isCurrentLinkInSync = false;
                 if (this.currentOverlay.isOpen) {
