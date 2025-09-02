@@ -1535,9 +1535,9 @@ class SaleOrder(models.Model):
                     optional_values['extra_tax_data'] = self.env['account.tax']\
                         ._reverse_quantity_base_line_extra_tax_data(line.extra_tax_data)
 
-                invoice_line_vals.append(
-                    Command.create(line._prepare_invoice_line(**optional_values))
-                )
+                for vals in line._prepare_invoice_lines_vals_list(**optional_values):
+                    invoice_line_vals.append(Command.create(vals))
+
                 invoice_item_sequence += 1
 
             invoice_vals['invoice_line_ids'] += invoice_line_vals
