@@ -9,6 +9,7 @@ import { user } from "@web/core/user";
 import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
 import { READONLY_MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
 import { browser } from "@web/core/browser/browser";
+import { cookie } from "@web/core/browser/cookie";
 import { loadBundle } from "@web/core/assets";
 
 const { DateTime } = luxon;
@@ -134,11 +135,13 @@ export class HistoryDialog extends Component {
             );
             // Remove unnecessary linebreaks
             unifiedDiffString = unifiedDiffString.replace(/^\s*[\r\n]/gm, "");
+            const colorScheme = cookie.get("color_scheme") === "dark" ? "dark" : "light";
             // eslint-disable-next-line no-undef
             const diffHtml = Diff2Html.html(unifiedDiffString, {
                 drawFileList: false,
                 matching: "lines",
                 outputFormat: "side-by-side",
+                colorScheme: colorScheme,
             });
             return markup(diffHtml);
         }.bind(this)
