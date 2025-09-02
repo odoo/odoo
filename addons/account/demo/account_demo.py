@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 import time
-from datetime import datetime, timedelta
+from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, Command
@@ -96,14 +96,6 @@ class AccountChartTemplate(models.AbstractModel):
                 move.action_post()
             except (UserError, ValidationError):
                 _logger.exception('Error while posting demo data')
-
-        # We want the initial balance to be set in the equity_unaffected account
-        cid = company.id or self.env.company.id
-        current_year_earnings_account = self.env['account.account'].search([
-            *self.env['account.account']._check_company_domain(cid),
-            ('account_type', '=', 'equity_unaffected')
-        ], limit=1)
-        self.ref('demo_bank_statement_1').line_ids[0].line_ids[1]['account_id'] = current_year_earnings_account.id
 
     @api.model
     def _get_demo_data_bank(self, company=False):
@@ -393,9 +385,23 @@ class AccountChartTemplate(models.AbstractModel):
             limit=1,
         )
         return {
+            'demo_bank_statement_1': {
+                'name': "Opening Statement: First Synchronization",
+                'balance_end_real': 4253.0,
+                'balance_start': 5103.0,
+                'attachment_ids': [Command.set(['ir_attachment_bank_statement_1'])],
+                'line_ids': [
+                    Command.create({
+                        'journal_id': bnk_journal.id,
+                        'payment_ref': 'Office rent',
+                        'amount': -850.0,
+                        'date': (fields.Date.today() + relativedelta(months=-2)).strftime('%Y-%m-%d'),
+                    }),
+                ]
+            },
             'demo_bank_statement_2': {
                 'name': f'{bnk_journal.name} - {(fields.Date.today() + relativedelta(months=-1)).strftime("%Y-%m-%d")}',
-                'balance_end_real': 6678,
+                'balance_end_real': 6678.0,
                 'balance_start': 4253.0,
                 'attachment_ids': [Command.set(['ir_attachment_bank_statement_2'])],
                 'line_ids': [
@@ -418,26 +424,6 @@ class AccountChartTemplate(models.AbstractModel):
                         'amount': 2000.0,
                         'date': (fields.Date.today() + timedelta(days=-40)).strftime('%Y-%m-%d'),
                         'partner_name': 'Open Wood Inc.',
-                    }),
-                ],
-            },
-            'demo_bank_statement_1': {
-                'name': f'{bnk_journal.name} - {(fields.Date.today() + relativedelta(months=-2)).strftime("%Y-%m-%d")}',
-                'balance_end_real': 4253.0,
-                'balance_start': 0.0,
-                'attachment_ids': [Command.set(['ir_attachment_bank_statement_1'])],
-                'line_ids': [
-                    Command.create({
-                        'journal_id': bnk_journal.id,
-                        'payment_ref': 'Initial balance',
-                        'amount': 5103.0,
-                        'date': (datetime.now() + relativedelta(months=-2)).strftime("%Y-%m-%d"),
-                    }),
-                    Command.create({
-                        'journal_id': bnk_journal.id,
-                        'payment_ref': 'Office rent',
-                        'amount': -850.0,
-                        'date': (fields.Date.today() + relativedelta(months=-2)).strftime('%Y-%m-%d'),
                     }),
                 ],
             },
@@ -561,11 +547,11 @@ class AccountChartTemplate(models.AbstractModel):
             },
             'ir_attachment_bank_statement_1': {
                 'type': 'binary',
-                'name': 'bank_statement_two_month_old.pdf',
+                'name': 'bank_opening_statement.pdf',
                 'res_model': 'account.bank.statement',
                 'res_id': 'demo_bank_statement_1',
                 'raw': file_open(
-                    'account/static/demo/bank_statement_two_month_old.pdf', 'rb'
+                    'account/static/demo/bank_opening_statement.pdf', 'rb'
                 ).read()
             },
             'ir_attachment_bank_statement_2': {
