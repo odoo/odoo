@@ -37,11 +37,17 @@
                         <field name="name">Base - Supply of goods/services, out of the country</field>
                         <field name="name@pl">Podstawa - Dostawa towarów/usług, poza kraj</field>
                         <field name="code">PLTAXC_02_11</field>
+                        <field name="aggregation_formula">PLTAXC_02_11.sale + PLTAXC_02_11.purchase</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_poza_kraj_tag" model="account.report.expression">
-                                <field name="label">balance</field>
+                                <field name="label">sale</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">K_11</field>
+                            </record>
+                            <record id="account_tax_report_line_poza_kraj_tag_rc" model="account.report.expression">
+                                <field name="label">purchase</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_11rc</field>
                             </record>
                         </field>
                         <field name="children_ids">
@@ -256,11 +262,17 @@
                         <field name="name">Base - Supply of goods, taxable person acquiring</field>
                         <field name="name@pl">Podstawa - Dostawa towarów, podatnik nabywca</field>
                         <field name="code">PLTAXC_12_31</field>
+                        <field name="aggregation_formula">PLTAXC_12_31.sale + PLTAXC_12_31.purchase</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_podatnik_nabywca_tag" model="account.report.expression">
-                                <field name="label">balance</field>
+                                <field name="label">sale</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">K_31</field>
+                            </record>
+                            <record id="account_tax_report_line_podatnik_nabywca_tag_rc" model="account.report.expression">
+                                <field name="label">purchase</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_31rc</field>
                             </record>
                         </field>
                     </record>

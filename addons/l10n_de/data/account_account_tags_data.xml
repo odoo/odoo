@@ -328,11 +328,17 @@
                                         <field name="name">60. other taxable transactions for which the recipient of the service is liable for the tax in accordance with Section 13b (5) UStG (line 33)</field>
                                         <field name="name@de">60. Übrige steuerpflichtige Umsätze, für die der Leistungsempfänger die Steuer nach § 13b Abs. 5 UStG schuldet (zeile 33)</field>
                                         <field name="code">DE_60</field>
+                                        <field name="aggregation_formula">DE_60.sales + DE_60.purchases</field>
                                         <field name="expression_ids">
-                                            <record id="tax_report_de_tag_60_tag" model="account.report.expression">
-                                                <field name="label">balance</field>
+                                            <record id="tax_report_de_tag_60_sale_tag" model="account.report.expression">
+                                                <field name="label">sales</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">60</field>
+                                            </record>
+                                            <record id="tax_report_de_tag_60_purchase_tag" model="account.report.expression">
+                                                <field name="label">purchases</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">60rc</field>
                                             </record>
                                         </field>
                                     </record>

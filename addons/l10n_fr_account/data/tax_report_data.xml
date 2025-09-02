@@ -661,13 +661,18 @@
                                     <record id="tax_report_08_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">box_08_base.balance_from_tags + box_08_base.adjustment</field>
+                                        <field name="formula">box_08_base.sale + box_08_base.purchase + box_08_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
                                     <record id="tax_report_08_base_balance_from_tags" model="account.report.expression">
-                                        <field name="label">balance_from_tags</field>
+                                        <field name="label">sale</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">08_base</field>
+                                    </record>
+                                    <record id="tax_report_08_base_balance_from_tags_purchase" model="account.report.expression">
+                                        <field name="label">purchase</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">08_base_rc</field>
                                     </record>
                                     <record id="tax_report_08_base_adjustment" model="account.report.expression">
                                         <field name="label">adjustment</field>
@@ -703,13 +708,18 @@
                                     <record id="tax_report_09_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">box_09_base.balance_from_tags + box_09_base.adjustment</field>
+                                        <field name="formula">box_09_base.sale + box_09_base.purchase + box_09_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
                                     <record id="tax_report_09_base_balance_from_tags" model="account.report.expression">
-                                        <field name="label">balance_from_tags</field>
+                                        <field name="label">sale</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">09_base</field>
+                                    </record>
+                                    <record id="tax_report_09_base_balance_from_tags_purchase" model="account.report.expression">
+                                        <field name="label">purchase</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">09_base_rc</field>
                                     </record>
                                     <record id="tax_report_09_base_adjustment" model="account.report.expression">
                                         <field name="label">adjustment</field>
@@ -745,13 +755,18 @@
                                     <record id="tax_report_9B_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">box_9B_base.balance_from_tags + box_9B_base.adjustment</field>
+                                        <field name="formula">box_9B_base.sale + box_9B_base.purchase + box_9B_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
                                     <record id="tax_report_9B_base_balance_from_tags" model="account.report.expression">
-                                        <field name="label">balance_from_tags</field>
+                                        <field name="label">sale</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">9B_base</field>
+                                    </record>
+                                    <record id="tax_report_9B_base_balance_from_tags_purchase" model="account.report.expression">
+                                        <field name="label">purchase</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">9B_base_rc</field>
                                     </record>
                                     <record id="tax_report_9B_base_adjustment" model="account.report.expression">
                                         <field name="label">adjustment</field>
@@ -793,13 +808,18 @@
                                     <record id="tax_report_10_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">box_10_base.balance_from_tags + box_10_base.adjustment</field>
+                                        <field name="formula">box_10_base.sale + box_10_base.purchase + box_10_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
                                     <record id="tax_report_10_base_balance_from_tags" model="account.report.expression">
-                                        <field name="label">balance_from_tags</field>
+                                        <field name="label">sale</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">10_base</field>
+                                    </record>
+                                    <record id="tax_report_10_base_balance_from_tags_purchase" model="account.report.expression">
+                                        <field name="label">purchase</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">10_base_rc</field>
                                     </record>
                                     <record id="tax_report_10_base_adjustment" model="account.report.expression">
                                         <field name="label">adjustment</field>
@@ -835,13 +855,18 @@
                                     <record id="tax_report_11_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">box_11_base.balance_from_tags + box_11_base.adjustment</field>
+                                        <field name="formula">box_11_base.sale + box_11_base.purchase + box_11_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
                                     <record id="tax_report_11_base_balance_from_tags" model="account.report.expression">
-                                        <field name="label">balance_from_tags</field>
+                                        <field name="label">sale</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">11_base</field>
+                                    </record>
+                                    <record id="tax_report_11_base_balance_from_tags_purchase" model="account.report.expression">
+                                        <field name="label">purchase</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">11_base_rc</field>
                                     </record>
                                     <record id="tax_report_11_base_adjustment" model="account.report.expression">
                                         <field name="label">adjustment</field>

@@ -25,8 +25,18 @@
                 <field name="expression_ids">
                     <record id="tax_report_line_1_tag" model="account.report.expression">
                         <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_ee_vat_1.sale + l10n_ee_vat_1.purchase</field>
+                    </record>
+                    <record id="tax_report_line_1_tag_sale" model="account.report.expression">
+                        <field name="label">sale</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">1_base</field>
+                    </record>
+                    <record id="tax_report_line_1_tag_purchase" model="account.report.expression">
+                        <field name="label">purchase</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">1_base_rc</field>
                     </record>
                     <record id="tax_report_line_1_tax_tag" model="account.report.expression">
                         <field name="label">tax</field>
@@ -45,8 +55,18 @@
                 <field name="expression_ids">
                     <record id="tax_report_line_1_24_tag" model="account.report.expression">
                         <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_ee_vat_1_24.sale + l10n_ee_vat_1_24.purchase</field>
+                    </record>
+                    <record id="tax_report_line_1_24_tag_sale" model="account.report.expression">
+                        <field name="label">sale</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">1_base_24</field>
+                    </record>
+                    <record id="tax_report_line_1_24_tag_purchase" model="account.report.expression">
+                        <field name="label">purchase</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">1_base_24_rc</field>
                     </record>
                     <record id="tax_report_line_1_24_tax_tag" model="account.report.expression">
                         <field name="label">tax</field>
@@ -63,8 +83,18 @@
                 <field name="expression_ids">
                     <record id="tax_report_line_1_1_tag" model="account.report.expression">
                         <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_ee_vat_1_1.sale + l10n_ee_vat_1_1.purchase</field>
+                    </record>
+                    <record id="tax_report_line_1_1_tag_sale" model="account.report.expression">
+                        <field name="label">sale</field>
                         <field name="engine">tax_tags</field>
                         <field name="formula">1_1_base</field>
+                    </record>
+                    <record id="tax_report_line_1_1_tag_purchase" model="account.report.expression">
+                        <field name="label">purchase</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">1_1_base_rc</field>
                     </record>
                     <record id="tax_report_line_1_1_tax_tag" model="account.report.expression">
                         <field name="label">tax</field>
