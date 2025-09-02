@@ -38,7 +38,7 @@ class LivechatChatbotScriptController(http.Controller):
 
     @http.route("/chatbot/step/trigger", type="jsonrpc", auth="public")
     @add_guest_to_context
-    def chatbot_trigger_step(self, channel_id, chatbot_script_id=None):
+    def chatbot_trigger_step(self, channel_id, chatbot_script_id=None, data_id=None):
         chatbot_language = self.env["chatbot.script"]._get_chatbot_language()
         discuss_channel = request.env["discuss.channel"].with_context(lang=chatbot_language).search([("id", "=", channel_id)])
         if not discuss_channel:
@@ -66,15 +66,22 @@ class LivechatChatbotScriptController(http.Controller):
             chatbot = request.env['chatbot.script'].sudo().browse(chatbot_script_id).with_context(lang=chatbot_language)
             if chatbot.exists():
                 next_step = chatbot.script_step_ids[:1]
-
+        partner, guest = self.env["res.partner"]._get_current_persona()
+        store = Store(bus_channel=partner or guest)
+        store.data_id = data_id
         if not next_step:
             # sudo - discuss.channel: marking the channel as closed as part of the chat bot flow
             discuss_channel.sudo().livechat_end_dt = fields.Datetime.now()
+            store.resolve_data_request()
+            store.bus_send()
             return None
         # sudo: discuss.channel - updating current step on the channel is allowed
         discuss_channel.sudo().chatbot_current_step_id = next_step.id
         posted_message = next_step._process_step(discuss_channel)
-        store = Store(posted_message)
+        store.add(posted_message)
+        store.resolve_data_request(
+            chatbot_step={"scriptStep": next_step.id, "message": posted_message.id}
+        )
         store.add(next_step)
         store.add_model_values(
             "ChatbotStep",
@@ -100,6 +107,7 @@ class LivechatChatbotScriptController(http.Controller):
                 "thread": Store.One(discuss_channel, [], as_thread=True),
             },
         )
+        store.bus_send()
         return store.get_result()
 
     @http.route("/chatbot/step/validate_email", type="jsonrpc", auth="public")
