@@ -20,7 +20,7 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _get_default_sending_methods(self, move) -> set:
         """ By default, we use the sending method set on the partner or email. """
-        return {move.partner_id.with_company(move.company_id).invoice_sending_method or 'email'}
+        return {move.commercial_partner_id.with_company(move.company_id).invoice_sending_method or 'email'}
 
     @api.model
     def _get_all_extra_edis(self) -> dict:
@@ -38,11 +38,11 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _get_default_invoice_edi_format(self, move, **kwargs) -> str:
         """ By default, we generate the EDI format set on partner. """
-        return move.partner_id.with_company(move.company_id).invoice_edi_format
+        return move.commercial_partner_id.with_company(move.company_id).invoice_edi_format
 
     @api.model
     def _get_default_pdf_report_id(self, move):
-        if partner_default_template := move.partner_id.with_company(move.company_id).invoice_template_pdf_report_id:
+        if partner_default_template := move.commercial_partner_id.with_company(move.company_id).invoice_template_pdf_report_id:
             return partner_default_template
 
         if journal_default_template := move.journal_id.with_company(move.company_id).invoice_template_pdf_report_id:
