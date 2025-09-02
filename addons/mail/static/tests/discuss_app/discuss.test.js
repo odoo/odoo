@@ -597,7 +597,7 @@ test("last discuss conversation is remembered", async () => {
     browser.localStorage.setItem(LAST_DISCUSS_ACTIVE_ID_LS, "discuss.channel_" + channelId);
     await start();
     await openDiscuss();
-    await contains("[role=\"heading\"]", { text: "Welcome to #General!" });
+    await contains('[role="heading"]', { text: "Welcome to #General!" });
 });
 
 test("sidebar: default no conversation selected", async () => {
@@ -762,7 +762,7 @@ test("rendering of inbox message", async () => {
     await contains(".o-mail-Message-header small", { text: "on Refactoring" });
     await contains(".o-mail-Message-actions i", { count: 4 });
     await contains("[title='Add a Reaction']");
-    await contains("[title='Mark as Todo']");
+    await contains("[title='Add Star']");
     await contains("[title='Mark as Read']");
     await contains("[title='Reply']");
 });
