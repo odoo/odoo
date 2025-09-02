@@ -221,7 +221,7 @@ export function useGetItemValue() {
     });
     return function getItemValue(itemId) {
         listenedKeys.add(itemId);
-        if (state[itemId] === undefined) {
+        if (!(itemId in state)) {
             return getValue(itemId);
         }
         return state[itemId];
