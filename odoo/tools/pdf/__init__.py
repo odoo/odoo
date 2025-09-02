@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 import importlib
 import io
 import re
@@ -11,6 +12,7 @@ from zlib import compress, decompress, decompressobj
 
 from PIL import Image, PdfImagePlugin
 
+from odoo import modules
 from odoo.tools.arabic_reshaper import reshape
 from odoo.tools.parse_version import parse_version
 from odoo.tools.misc import file_open, SENTINEL
@@ -215,6 +217,20 @@ def to_pdf_stream(attachment) -> io.BytesIO:
         Image.open(stream).convert("RGB").save(output_stream, format="pdf")
         return output_stream
     _logger.warning("mimetype (%s) not recognized for %s", attachment.mimetype, attachment)
+
+
+def extract_page(attachment, num_page=0) -> io.BytesIO | None:
+    """Exctract a specific page form an attachement pdf"""
+    pdf_stream = to_pdf_stream(attachment)
+    if not pdf_stream:
+        return
+    pdf = PdfFileReader(pdf_stream)
+    page = pdf.getPage(num_page)
+    pdf_writer = PdfFileWriter()
+    pdf_writer.addPage(page)
+    stream = io.BytesIO()
+    pdf_writer.write(stream)
+    return stream
 
 
 def add_banner(pdf_stream, text=None, logo=False, thickness=SENTINEL):
