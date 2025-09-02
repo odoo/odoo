@@ -214,13 +214,37 @@
                 </xpath>
                 <filter name="month" position="inside">
                     <filter name="date_this_week" string="This Week" domain="[
+<<<<<<< 4f9f317324800d49c370845da93fe523a83622dc
                         ('date', '&gt;=', '=week_start'),
                         ('date', '&lt;', '=week_start +1w'),
+||||||| c0a7b51c9e14d29cefa96c29dd716b7aec698818
+                        ('date', '&gt;=', (datetime.datetime.combine(context_today() + relativedelta(weeks=-1,days=1,weekday=0), datetime.time(0,0,0)).to_utc())),
+                        ('date', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(days=1,weekday=0), datetime.time(0,0,0)).to_utc())),
+                    ]"/>
+                    <filter name="date_today" string="Today" domain="[
+                        ('date', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc()),
+                        ('date', '&lt;', datetime.datetime.combine(context_today() + relativedelta(days=1), datetime.time(0, 0, 0)).to_utc())
+=======
+                        ('date', '&gt;=', context_today() + relativedelta(weeks=-1,days=1,weekday=0)),
+                        ('date', '&lt;', context_today() + relativedelta(days=1,weekday=0)),
+                    ]"/>
+                    <filter name="date_today" string="Today" domain="[
+                        ('date', '&gt;=', context_today()),
+                        ('date', '&lt;', context_today() + relativedelta(days=1)),
+>>>>>>> 56a3605d0a885e53db87a52251037e2963048a8d
                     ]"/>
                     <filter name="date_today" string="Today" domain="[('date', '&gt;=', 'today'), ('date', '&lt;', 'today +1d')]"/>
                     <filter name="date_last_week" string="Last Week" domain="[
+<<<<<<< 4f9f317324800d49c370845da93fe523a83622dc
                         ('date', '&gt;=', '=week_start -1w'),
                         ('date', '&lt;', '=week_start'),
+||||||| c0a7b51c9e14d29cefa96c29dd716b7aec698818
+                        ('date', '&gt;=', (datetime.datetime.combine(context_today() + relativedelta(weeks=-2,days=1,weekday=0), datetime.time(0,0,0)).to_utc())),
+                        ('date', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(weeks=-1,days=1,weekday=0), datetime.time(0,0,0)).to_utc())),
+=======
+                        ('date', '&gt;=', context_today() + relativedelta(weeks=-2,days=1,weekday=0)),
+                        ('date', '&lt;', context_today() + relativedelta(weeks=-1,days=1,weekday=0)),
+>>>>>>> 56a3605d0a885e53db87a52251037e2963048a8d
                     ]"/>
                 </filter>
                 <xpath expr="//group[@name='groupby']" position="before">
