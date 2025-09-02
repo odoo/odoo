@@ -1161,8 +1161,18 @@
                         <field name="expression_ids">
                             <record id="tax_report_line_129_base" model="account.report.expression">
                                 <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_129.sale + l10n_ma_vat_129.purchase</field>
+                            </record>
+                            <record id="tax_report_line_129_base_sale" model="account.report.expression">
+                                <field name="label">sale</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">129B</field>
+                            </record>
+                            <record id="tax_report_line_129_base_purchase" model="account.report.expression">
+                                <field name="label">purchase</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">129Brc</field>
                             </record>
                             <record id="tax_report_line_129_tax" model="account.report.expression">
                                 <field name="label">tax</field>
