@@ -5,6 +5,10 @@ import werkzeug.urls
 from odoo.http import request, route
 from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
 
+from odoo.tools.translate import LazyTranslate
+
+_lt = LazyTranslate(__name__)
+
 
 class WebsitePartnership(WebsitePartnerPage):
     _references_per_page = 40
@@ -77,7 +81,7 @@ class WebsitePartnership(WebsitePartnerPage):
 
         '/partners/grade/<model("res.partner.grade"):grade>',
         '/partners/grade/<model("res.partner.grade"):grade>/page/<int:page>',
-    ], type='http', auth="public", website=True, readonly=True)
+    ], type='http', auth="public", website=True, readonly=True, list_as_website_content=_lt("Partners"))
     def partners(self, grade=None, page=0, **post):
         values = self._get_partners_values(
             grade=grade,

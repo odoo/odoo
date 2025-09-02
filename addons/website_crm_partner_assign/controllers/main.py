@@ -212,7 +212,6 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
 
         slug = env['ir.http']._slug
         base_partner_domain = [
-            ('is_company', '=', True),
             ('grade_id', '!=', False),
             ('website_published', '=', True),
             ('grade_id.website_published', '=', True),
@@ -241,7 +240,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
 
         search = post.get('search', '')
 
-        base_partner_domain = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True), ('grade_id.active', '=', True)]
+        base_partner_domain = [('grade_id', '!=', False), ('website_published', '=', True), ('grade_id.active', '=', True)]
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             base_partner_domain += [('grade_id.website_published', '=', True)]
         if search:
@@ -369,7 +368,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
 
         '/partners/grade/<model("res.partner.grade"):grade>/country/<model("res.country"):country>',
         '/partners/grade/<model("res.partner.grade"):grade>/country/<model("res.country"):country>/page/<int:page>',
-    ], type='http', auth="public", website=True, sitemap=sitemap_partners, readonly=True, list_as_website_content=_lt("Partners"))
+    ], sitemap=sitemap_partners)
     def partners(self, country=None, grade=None, page=0, **post):
         values = self._get_partners_values(
             country=country,
