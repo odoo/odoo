@@ -4,6 +4,7 @@
 import re
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+MAX_INT32 = 2147483647
 
 
 class AccountJournal(models.Model):
@@ -55,16 +56,24 @@ class AccountJournal(models.Model):
 
     def _inverse_check_next_number(self):
         for journal in self:
+            next_num = int(journal.check_next_number)
             if journal.check_next_number and not re.match(r'^[0-9]+$', journal.check_next_number):
                 raise ValidationError(_('Next Check Number should only contains numbers.'))
-            if int(journal.check_next_number) < journal.check_sequence_id.number_next_actual:
+            if next_num < journal.check_sequence_id.number_next_actual:
                 raise ValidationError(_(
                     "The last check number was %s. In order to avoid a check being rejected "
                     "by the bank, you can only use a greater number.",
                     journal.check_sequence_id.number_next_actual
                 ))
             if journal.check_sequence_id:
-                journal.check_sequence_id.sudo().number_next_actual = int(journal.check_next_number)
+                if next_num > MAX_INT32:
+                    raise ValidationError(_(
+                        "The check number you entered (%(num)s) exceeds the maximum allowed value of %(max)d. "
+                        "Please enter a smaller number.",
+                        num=next_num,
+                        max=MAX_INT32,
+                    ))
+                journal.check_sequence_id.sudo().number_next_actual = next_num
                 journal.check_sequence_id.sudo().padding = len(journal.check_next_number)
 
     @api.model_create_multi
