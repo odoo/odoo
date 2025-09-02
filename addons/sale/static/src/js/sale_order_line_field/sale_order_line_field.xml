@@ -5,11 +5,51 @@
         t-inherit="account.SectionAndNoteListRenderer.RecordRow"
         t-inherit-mode="primary"
     >
-        <!-- Remove the drag-and-drop handle for combo lines and combo item lines. -->
-        <Field position="attributes">
-            <attribute name="t-if">
-                !((isCombo(record) || isComboItem(record)) &amp;&amp; column.widget === 'handle')
-            </attribute>
-        </Field>
+        <t t-set="isInvisible" position="attributes">
+            <attribute
+                name="t-value"
+                separator=" or "
+                add="isCombo(record) and !this.comboColumns.includes(column.name)"
+            />
+        </t>
+
+        <xpath expr="//td[hasclass('o_list_record_remove')]" position="attributes">
+            <attribute name="t-if" separator=" and " add="!isCombo(record)"/>
+        </xpath>
+
+        <xpath expr="//td[hasclass('o_list_section_options')]" position="before">
+            <td t-elif="isCombo(record)" class="o_list_section_options w-print-0 p-print-0 text-center">
+                <Dropdown position="'bottom-end'" t-if="!props.readonly">
+                    <button class="btn px-1cursor-pointer">
+                        <i class="fa fa-ellipsis-v"/>
+                    </button>
+                    <t t-set-slot="content">
+                        <DropdownItem
+                            t-if="!record.isNew and this.getPreviousRecords(record)"
+                            onSelected="() => this.moveCombo(record, 'up')"
+                        >
+                            <i class="me-1 fa fa-fw fa-arrow-up"/>
+                            <span>Move Up</span>
+                        </DropdownItem>
+                        <DropdownItem
+                            t-if="!record.isNew and this.getNextRecords(record)"
+                            onSelected="() => this.moveCombo(record, 'down')"
+                        >
+                            <i class="me-1 fa fa-fw fa-arrow-down"/>
+                            <span>Move Down</span>
+                        </DropdownItem>
+                        <t t-if="hasDeleteButton">
+                            <DropdownItem
+                                onSelected="() => this.onDeleteRecord(record)"
+                                class="'text-danger'"
+                            >
+                                <i class="me-1 fa fa-fw fa-trash"/>
+                                <span>Delete</span>
+                            </DropdownItem>
+                        </t>
+                    </t>
+                </Dropdown>
+            </td>
+        </xpath>
     </t>
 </templates>
