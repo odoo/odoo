@@ -9,6 +9,7 @@ import {
     setupWebsiteBuilder,
 } from "../../website_helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent, useGetItemValue } from "@html_builder/core/utils";
 
 class Test extends models.Model {
     _name = "test";
@@ -72,4 +73,56 @@ test("many2one: async load", async () => {
     expect(editableContent).toHaveInnerHTML(
         `<div class="test-options-target o-paragraph" data-test="{&quot;id&quot;:1,&quot;display_name&quot;:&quot;First&quot;,&quot;name&quot;:&quot;First&quot;}">b</div>`
     );
+});
+
+test("dependency definition should not be outdated", async () => {
+    onRpc("test", "name_search", () => [
+        [1, "First"],
+        [2, "Second"],
+        [3, "Third"],
+    ]);
+    addActionOption({
+        testAction: class extends BuilderAction {
+            static id = "testAction";
+            apply({ editingElement, value }) {
+                editingElement.dataset.test = value;
+            }
+            getValue({ editingElement }) {
+                return editingElement.dataset.test;
+            }
+        },
+    });
+    class TestMany2One extends BaseOptionComponent {
+        static template = xml`
+            <BuilderMany2One action="'testAction'" model="'test'" limit="10" id="'test_many2one_opt'"/>
+            <BuilderRow t-if="getItemValueJSON('test_many2one_opt')?.id === 2"><span>Dependant</span></BuilderRow>
+        `;
+        setup() {
+            super.setup();
+            this.getItemValue = useGetItemValue();
+        }
+        getItemValueJSON(id) {
+            const value = this.getItemValue(id);
+            return value && JSON.parse(value);
+        }
+    }
+    addOption({
+        selector: ".test-options-target",
+        Component: TestMany2One,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+
+    await contains(":iframe .test-options-target").click();
+
+    await contains(".btn.o-dropdown").click();
+    await contains("span.o-dropdown-item:contains(First)").click();
+    expect("span:contains(Dependant)").toHaveCount(0);
+
+    await contains(".btn.o-dropdown").click();
+    await contains("span.o-dropdown-item:contains(Second)").click();
+    expect("span:contains(Dependant)").toHaveCount(1);
+
+    await contains(".btn.o-dropdown").click();
+    await contains("span.o-dropdown-item:contains(Third)").click();
+    expect("span:contains(Dependant)").toHaveCount(0);
 });
