@@ -240,6 +240,18 @@ class TestUi(TestUICommon):
         self.user_portal.karma = 20
         self.start_tour("/slides", "course_review_modification", login=self.user_portal.login)
 
+    def test_fullscreen_slide_text_highlights(self):
+        self.env['slide.slide'].create({
+            'name': 'Article test',
+            'channel_id': self.channel.id,
+            'slide_type': 'article',
+            'slide_category': 'article',
+            'is_published': True,
+            'html_content': "<section class=\"s_text_block\" data-snippet=\"s_text_block\"><p>Hello World!</p></section>"
+        })
+
+        self.start_tour("/slides", 'fullscreen_slide_text_highlights', login='admin')
+
 
 @tests.common.tagged('post_install', '-at_install')
 class TestUiPublisher(HttpCaseGamification):
