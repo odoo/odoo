@@ -542,6 +542,14 @@
                 const slide = this._slideValue;
                 var $content = this.$('.o_wslides_fs_content');
                 $content.empty();
+                if (this.websiteAnimateWidget) {
+                    this.websiteAnimateWidget.destroy()
+                    this.websiteAnimateWidget = null;
+                }
+                if (this.textHighlightWidget) {
+                    this.textHighlightWidget.destroy()
+                    this.textHighlightWidget = null;
+                }
 
                 // display quiz slide, or quiz attached to a slide
                 if (slide.category === 'quiz' || slide.isQuiz) {
@@ -568,6 +576,9 @@
                     this.trigger_up('widgets_start_request', {
                         $target: $content,
                     });
+                    this.websiteAnimateWidget.attachTo($wpContainer);
+                    this.textHighlightWidget = new publicWidget.registry.TextHighlight();
+                    this.textHighlightWidget.attachTo($wpContainer);
                 }
                 unhideConditionalElements();
             } finally {
