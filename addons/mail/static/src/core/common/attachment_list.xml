@@ -40,7 +40,8 @@
                     <!-- display of non image attachments -->
                     <div t-else="" class="o-mail-AttachmentCard d-flex flex-column w-100 h-100">
                         <div class="d-flex justify-content-center align-items-center flex-grow-1 bg-white position-relative rounded-3 rounded-bottom-0" t-on-click="() => this.onClickAttachment(attachment)">
-                            <div class="o_image" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
+                            <div t-if="!attachment.has_thumbnail" class="o_image" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
+                            <img t-else="" t-att-src="attachment.thumbnailUrl" t-att-alt="attachment.name"/>
                         </div>
                          <div class="o-mail-AttachmentCard-info d-flex align-items-center px-2 py-1 bg-200 rounded-bottom-3">
                             <div class="o-mail-AttachmentCard-image o_image me-2 flex-shrink-0" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>

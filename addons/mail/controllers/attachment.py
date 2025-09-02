@@ -4,13 +4,14 @@ import io
 import logging
 import zipfile
 
-from werkzeug.exceptions import NotFound
+from werkzeug.exceptions import NotFound, UnsupportedMediaType
 
 from odoo import _, http
 from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.exceptions import AccessError
 from odoo.http import request, content_disposition
 from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
+from odoo.tools.pdf import PdfReadError, extract_page
 
 logger = logging.getLogger(__name__)
 
@@ -103,3 +104,59 @@ class AttachmentController(ThreadController):
         ids_list = list(map(int, file_ids.split(',')))
         attachments = request.env['ir.attachment'].browse(ids_list)
         return self._make_zip(zip_name, attachments)
+
+    @http.route(
+        "/mail/attachment/pdf_first_page/<int:attachment_id>",
+        auth="public",
+        methods=["GET"],
+        readonly=True,
+        type="http",
+    )
+    @add_guest_to_context
+    def mail_attachment_pdf_first_page(self, attachment_id, access_token=None):
+        """Returns the first page of a pdf."""
+        attachment = request.env["ir.attachment"].browse(int(attachment_id)).exists()
+        if not attachment or (
+            not attachment.has_access("read")
+            and not attachment._has_attachments_ownership([access_token])
+        ):
+            raise request.not_found()
+        # sudo: ir.attachment: access check is done above, sudo necessary for guests
+        return self._get_pdf_first_page_response(attachment.sudo())
+
+    @http.route(
+        "/mail/attachment/update_thumbnail",
+        auth="public",
+        methods=["POST"],
+        type="jsonrpc",
+    )
+    @add_guest_to_context
+    def mail_attachement_update_thumbnail(self, attachment_id, thumbnail, access_token=None):
+        """Updates the thumbnail of an attachment."""
+        attachment = request.env["ir.attachment"].browse(int(attachment_id)).exists()
+        if not attachment or (
+            not attachment.has_access("write")
+            and not attachment._has_attachments_ownership([access_token])
+        ):
+            raise request.not_found()
+        # sudo: ir.attachment: access check is done above, sudo necessary for guests
+        attachment_sudo = attachment.sudo()
+        attachment_sudo.thumbnail = thumbnail
+        Store(bus_channel=attachment_sudo).add(attachment_sudo, ["has_thumbnail"]).bus_send()
+
+    def _get_pdf_first_page_response(self, attachment):
+        try:
+            page_stream = extract_page(attachment, 0)
+        except PdfReadError as e:
+            raise UnsupportedMediaType() from e
+        if not page_stream:
+            raise UnsupportedMediaType()
+        content = page_stream.getvalue()
+        headers = [
+            ("Content-Type", "attachment/pdf"),
+            ("X-Content-Type-Options", "nosniff"),
+            ("Content-Length", len(content)),
+        ]
+        if attachment.name:
+            headers.append(("Content-Disposition", content_disposition(attachment.name)))
+        return request.make_response(content, headers)
