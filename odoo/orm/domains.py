@@ -1532,7 +1532,7 @@ def _optimize_type_binary_attachment(condition, model):
             condition._raise('Binary field stored in attachment, accepts only existence check; skipping domain')
         except ValueError:
             # log with stacktrace
-            _logger.exception("Invalid operator for a binary field")
+            _logger.warning("Invalid operator for a binary field", exc_info=True)
         return _TRUE_DOMAIN
     if operator.endswith('like'):
         condition._raise('Cannot use like operators with binary fields', error=NotImplementedError)
