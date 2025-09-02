@@ -34,7 +34,7 @@ test("can make DM chat in mobile", async () => {
     pyEnv["res.users"].create({ partner_id: partnerId });
     await start();
     await openDiscuss();
-    await contains("button.o-active", { text: "Notifications" });
+    await contains("button.active", { text: "Notifications" });
     await click("button", { text: "Chats" });
     await click(".o-mail-DiscussSearch-inputContainer");
     await insertText("input[placeholder='Search a conversation']", "Gandalf");
@@ -48,7 +48,7 @@ test("can search channel in mobile", async () => {
     pyEnv["discuss.channel"].create({ name: "Gryffindors" });
     await start();
     await openDiscuss();
-    await contains("button.o-active", { text: "Notifications" });
+    await contains("button.active", { text: "Notifications" });
     await click("button", { text: "Channels" });
     await click(".o-mail-DiscussSearch-inputContainer");
     await insertText("input[placeholder='Search a conversation']", "Gryff");
@@ -60,7 +60,7 @@ test("can make new channel in mobile", async () => {
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss();
-    await contains("button.o-active", { text: "Notifications" });
+    await contains("button.active", { text: "Notifications" });
     await click("button", { text: "Channels" });
     await click(".o-mail-DiscussSearch-inputContainer");
     await insertText("input[placeholder='Search a conversation']", "slytherins");
@@ -292,7 +292,7 @@ test("can use notification item swipe actions", async () => {
     });
     await start();
     await openDiscuss();
-    await contains("button.o-active", { text: "Notifications" });
+    await contains("button.active", { text: "Notifications" });
     await click("button", { text: "Chats" });
     await contains(".o-mail-NotificationItem .o-mail-NotificationItem-badge:contains(1)");
     await swipeRight(".o_actionswiper"); // marks as read

@@ -95,6 +95,7 @@ patch(MessagingMenu.prototype, {
         return [
             {
                 icon: "fa fa-bell-o",
+                activeIcon: "fa fa-bell",
                 id: "notification",
                 label: _t("Notifications"),
                 sequence: 10,
@@ -108,6 +109,7 @@ patch(MessagingMenu.prototype, {
                     this.store.self.main_user_id?.notification_type === "inbox"
                         ? "fa fa-inbox"
                         : "fa fa-star-o",
+                activeIcon: this.store.self.main_user_id?.notification_type !== "inbox" && "fa fa-star",
                 id:
                     this.store.self.main_user_id?.notification_type === "inbox"
                         ? "inbox"
