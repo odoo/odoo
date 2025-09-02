@@ -630,4 +630,4 @@ class PurchaseOrderLine(models.Model):
         }
 
     def _ensure_merge_compatibility(self, rfq_line):
-        return False
+        return True
