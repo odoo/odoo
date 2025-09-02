@@ -679,3 +679,6 @@ class PurchaseOrderLine(models.Model):
         return {
             "order_id": self.order_id,
         }
+
+    def _ensure_merge_compatibility(self, rfq_line):
+        return False
