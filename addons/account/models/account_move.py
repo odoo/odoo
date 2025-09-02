@@ -2478,6 +2478,10 @@ class AccountMove(models.Model):
         '''
         self.ensure_one()
 
+        # No cash basis journal entry should be created for an account move in a bank or cash journal
+        if self.journal_id.type in ('bank', 'cash'):
+            return None
+
         values = {
             'move': self,
             'to_process_lines': [],
