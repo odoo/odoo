@@ -48,7 +48,6 @@
         'views/product_product_add.xml',
         'views/product_public_category_views.xml',
         'views/product_ribbon_views.xml',
-        'views/product_tag_views.xml',
         'views/product_views.xml',
         'views/res_config_settings_views.xml',
         'views/sale_order_views.xml',

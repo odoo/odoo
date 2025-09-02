@@ -7,15 +7,22 @@
         <field name="arch" type="xml">
             <form string="Product Tag">
                 <sheet>
+                    <field
+                        name="image"
+                        widget="image"
+                        class="oe_avatar"
+                        invisible="not visible_to_customers"
+                    />
+                    <div name="product_tag_form_div" class="oe_title">
+                        <label for="name" string="Tag"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
                     <group>
-                        <field name="name"/>
-                        <field name="visible_to_customers"/>
+                        <field name="visible_to_customers" widget="boolean_toggle"/>
                         <field name="color"
                                widget='color'
-                               invisible="not visible_to_customers"/>
-                        <field name="image"
-                               widget="image"
-                               options="{'size': [0, 55]}"
                                invisible="not visible_to_customers"/>
                     </group>
                 </sheet>

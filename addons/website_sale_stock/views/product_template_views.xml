@@ -6,10 +6,7 @@
         <field name="inherit_id" ref="website_sale.product_template_form_view" />
         <field name="arch" type="xml">
             <field name="website_ribbon_id" position="before">
-                <label for="allow_out_of_stock_order" invisible="not is_storable" string="Out-of-Stock"/>
-                <div invisible="not is_storable">
-                    <field name="allow_out_of_stock_order" class="oe_inline" /> Continue Selling
-                </div>
+                <field name="allow_out_of_stock_order" invisible="not is_storable"/>
             </field>
             <field name="website_ribbon_id" position="after">
                 <label for="show_availability" invisible="not is_storable" string="Show Available Qty"/>
@@ -24,7 +21,11 @@
                         <field name="available_threshold" class="oe_inline col-1" digits="[42, 0]"/>
                     </span>
                 </div>
-                <field name="out_of_stock_message" invisible="not is_storable"/>
+                <field
+                    name="out_of_stock_message"
+                    invisible="not is_storable"
+                    placeholder="e.g. 'Will be back soon'"
+                />
             </field>
         </field>
     </record>

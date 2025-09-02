@@ -19,7 +19,7 @@
                     </group>
                 </group>
                 <footer>
-                    <button name="process" string="Confirm" type="object" class="btn-primary"/>
+                    <button name="process" string="Print" type="object" class="btn-primary"/>
                     <button string="Discard" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
@@ -27,7 +27,7 @@
     </record>
 
     <record id="action_open_label_layout" model="ir.actions.act_window">
-        <field name="name">Choose Labels Layout</field>
+        <field name="name">Print Labels</field>
         <field name="res_model">product.label.layout</field>
         <field name="view_ids"
                 eval="[(5, 0, 0),
