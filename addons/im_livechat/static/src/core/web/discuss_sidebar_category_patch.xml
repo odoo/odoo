@@ -34,8 +34,10 @@
             'bg-warning': livechatThread.livechat_status === 'waiting' and env.inDiscussSidebar,
             'bg-info': livechatThread.livechat_status === 'need_help' and env.inDiscussSidebar,
         }">
-            <i t-if="!env.inDiscussSidebar" class="o-livechat-LivechatStatusLabel-icon fa-fw" t-attf-class="{{ livechatThread.livechat_end_dt ? 'fa fa-flag-checkered' : store.livechatStatusButtons.find(btn => btn.status === livechatThread.livechat_status)?.icon }}" t-att-class="{
+            <i class="o-livechat-LivechatStatusLabel-icon" t-attf-class="{{ livechatThread.livechat_end_dt ? 'fa fa-flag-checkered' : store.livechatStatusButtons.find(btn => btn.status === livechatThread.livechat_status)?.icon }}" t-att-class="{
                 'o-white': livechatThread.livechat_end_dt,
+                'position-absolute start-0 top-0 z-1 o-inDiscussSidebar rounded-circle o-px-0_5 m-n1': env.inDiscussSidebar,
+                'fa-fw': !env.inDiscussSidebar,
             }"/>
         </span>
     </t>
