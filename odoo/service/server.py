@@ -817,9 +817,9 @@ class GeventServer(CommonServer):
                     environ['wsgi.input_terminated'] = False
                 return environ
 
+        # Set process memory limit as an extra safeguard
         set_limit_memory_hard()
         if os.name == 'posix':
-            # Set process memory limit as an extra safeguard
             signal.signal(signal.SIGQUIT, dumpstacks)
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
             signal.signal(signal.SIGUSR2, log_ormcache_stats)
