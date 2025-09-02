@@ -66,7 +66,7 @@ export class StockValuationReportController {
 
     async setDate(date) {
         this.state.date = date;
-        this.dateSelected = true;
+        this.dateAsString = date.toFormat('y-LL-dd HH:mm:ss');
         await this.loadReportData();
     }
 

@@ -6,6 +6,6 @@ import { StockValuationReport } from "@stock_account/stock_valuation/stock_valua
 
 patch(StockValuationReport.prototype, {
     openCostOfProduction() {
-        return this.openStockMoveLineView(_t("Cost of Production"), "production");
+        return this.openStockMoveView(_t("Cost of Production"), "production");
     }
 });
