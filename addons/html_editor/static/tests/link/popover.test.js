@@ -1658,7 +1658,7 @@ describe("link popover with empty URL", () => {
         await animationFrame();
         await expectElementCount(".o-we-linkpopover", 1);
     });
-    test("should close the popover and not create a link when clicking outside the popover when link URL is empty", async () => {
+    test("should close the popover and create a link with href '#' when URL is empty and clicking outside", async () => {
         const { editor, el } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "/link");
         await animationFrame();
@@ -1673,10 +1673,19 @@ describe("link popover with empty URL", () => {
         );
         await contains(".o-we-linkpopover input.o_we_href_input_link").clear();
         await click(el);
+        // Simulate click outside
+        const pNode = queryOne("p");
+        setSelection({
+            anchorNode: pNode,
+            anchorOffset: 0,
+            focusNode: pNode,
+            focusOffset: 0,
+        });
+        await tick(); // wait for selection change.
         await waitForNone(".o-we-linkpopover", { timeout: 1500 });
-        expect(getContent(el)).toBe("<p>ab[]</p>");
+        expect(getContent(el)).toBe('<p>[]ab\ufeff<a href="#">\ufefflabel\ufeff</a>\ufeff</p>');
     });
-    test("should close the popover and discard changes when clicking outside the popover when link URL is empty", async () => {
+    test("should close the popover and fallback href to '#' on empty URL when clicking outside", async () => {
         const { el } = await setupEditor("<p>[abc]</p>");
         await waitFor(".o-we-toolbar");
         await click(".o-we-toolbar .fa-link");
@@ -1700,10 +1709,11 @@ describe("link popover with empty URL", () => {
             focusNode: pNode,
             focusOffset: 0,
         });
+        await tick(); // wait for selection change.
         await waitForNone(".o-we-linkpopover", { timeout: 1500 });
-        expect(getContent(el)).toBe("<p>[]abc</p>");
+        expect(getContent(el)).toBe('<p>[]\ufeff<a href="#">\ufeffabcd\ufeff</a>\ufeff</p>');
     });
-    test("when edit a link URL to '', and clicking outside the link popover should discard the changes", async () => {
+    test("when edit a link URL to '', and clicking outside the link popover should set href to '#'", async () => {
         const { el } = await setupEditor('<p>this is a <a href="http://test.com/">li[]nk</a></p>');
         await waitFor(".o-we-linkpopover");
         await click(".o_we_edit_link");
@@ -1717,9 +1727,31 @@ describe("link popover with empty URL", () => {
             focusNode: pNode,
             focusOffset: 0,
         });
+        await tick(); // wait for selection change.
         await waitForNone(".o-we-linkpopover", { timeout: 1500 });
-        expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p>[]this is a <a href="http://test.com/">link</a></p>'
+        expect(cleanLinkArtifacts(getContent(el))).toBe('<p>[]this is a <a href="#">link</a></p>');
+    });
+    test("when clearing link URL for an image and clicking outside does not change href", async () => {
+        const { el } = await setupEditor(
+            `<p><a href="http://test.test/">[<img src="${base64Img}">]</a></p>`
+        );
+        await waitFor(".o-we-linkpopover", { timeout: 1500 });
+        await click(".o_we_edit_link");
+        await waitFor(".o_we_href_input_link");
+        await contains(".o-we-linkpopover input.o_we_href_input_link").clear();
+        await click(el);
+        // Simulate click outside
+        const pNode = queryOne("p");
+        setSelection({
+            anchorNode: pNode,
+            anchorOffset: 0,
+            focusNode: pNode,
+            focusOffset: 0,
+        });
+        await tick(); // wait for selection change.
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
+        expect(getContent(el)).toBe(
+            `<p>[]<a href="http://test.test/"><img src="${base64Img}"></a></p>`
         );
     });
 });
