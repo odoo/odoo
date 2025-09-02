@@ -221,7 +221,55 @@ else:
 
 ClassVar = typing.ClassVar
 
+# Vendored from cpython typing._SpecialFrom
+# Having a separate class means that instances will not be rejected by
+# typing._type_check.
+class _SpecialForm(typing._Final, _root=True):
+    __slots__ = ('_name', '__doc__', '_getitem')
 
+    def __init__(self, getitem):
+        self._getitem = getitem
+        self._name = getitem.__name__
+        self.__doc__ = getitem.__doc__
+
+    def __getattr__(self, item):
+        if item in {'__name__', '__qualname__'}:
+            return self._name
+
+        raise AttributeError(item)
+
+    def __mro_entries__(self, bases):
+        raise TypeError(f"Cannot subclass {self!r}")
+
+    def __repr__(self):
+        return f'typing_extensions.{self._name}'
+
+    def __reduce__(self):
+        return self._name
+
+    def __call__(self, *args, **kwds):
+        raise TypeError(f"Cannot instantiate {self!r}")
+
+    def __or__(self, other):
+        return typing.Union[self, other]
+
+    def __ror__(self, other):
+        return typing.Union[other, self]
+
+    def __instancecheck__(self, obj):
+        raise TypeError(f"{self} cannot be used with isinstance()")
+
+    def __subclasscheck__(self, cls):
+        raise TypeError(f"{self} cannot be used with issubclass()")
+
+    @typing._tp_cache
+    def __getitem__(self, parameters):
+        return self._getitem(self, parameters)
+
+
+# Note that inheriting from this class means that the object will be
+# rejected by typing._type_check, so do not use it if the special form
+# is arguably valid as a type by itself.
 class _ExtensionsSpecialForm(typing._SpecialForm, _root=True):
     def __repr__(self):
         return 'typing_extensions.' + self._name
@@ -1223,7 +1271,7 @@ else:
         td.__orig_bases__ = (TypedDict,)
         return td
 
-    class _TypedDictSpecialForm(_ExtensionsSpecialForm, _root=True):
+    class _TypedDictSpecialForm(_SpecialForm, _root=True):
         def __call__(
             self,
             typename,
@@ -2201,48 +2249,6 @@ else:
         return typing._GenericAlias(self, (item,))
 
 
-# Vendored from cpython typing._SpecialFrom
-class _SpecialForm(typing._Final, _root=True):
-    __slots__ = ('_name', '__doc__', '_getitem')
-
-    def __init__(self, getitem):
-        self._getitem = getitem
-        self._name = getitem.__name__
-        self.__doc__ = getitem.__doc__
-
-    def __getattr__(self, item):
-        if item in {'__name__', '__qualname__'}:
-            return self._name
-
-        raise AttributeError(item)
-
-    def __mro_entries__(self, bases):
-        raise TypeError(f"Cannot subclass {self!r}")
-
-    def __repr__(self):
-        return f'typing_extensions.{self._name}'
-
-    def __reduce__(self):
-        return self._name
-
-    def __call__(self, *args, **kwds):
-        raise TypeError(f"Cannot instantiate {self!r}")
-
-    def __or__(self, other):
-        return typing.Union[self, other]
-
-    def __ror__(self, other):
-        return typing.Union[other, self]
-
-    def __instancecheck__(self, obj):
-        raise TypeError(f"{self} cannot be used with isinstance()")
-
-    def __subclasscheck__(self, cls):
-        raise TypeError(f"{self} cannot be used with issubclass()")
-
-    @typing._tp_cache
-    def __getitem__(self, parameters):
-        return self._getitem(self, parameters)
 
 
 if hasattr(typing, "LiteralString"):  # 3.11+
