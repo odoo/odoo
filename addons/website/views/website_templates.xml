@@ -409,18 +409,20 @@
                             _submit_classes.f="rounded-end-pill bg-o-color-3 pe-3"
                             limit.f="0"/>
                         <!-- Navbar -->
-                        <t t-call="website.navbar_nav"
-                            is_vertical_nav.f="True"
-                            _no_autohide_menu_mobile.f="True">
-                            <!-- Menu -->
-                            <t t-foreach="website.menu_id.child_id" t-as="submenu">
-                                <t t-call="website.submenu"
-                                    item_class.f="nav-item border-top #{submenu_last and 'border-bottom'}"
-                                    link_class.f="nav-link p-3 text-wrap"
-                                    dropdown_toggler_classes.f="d-flex justify-content-between align-items-center"
-                                    dropdown_menu_classes.f="position-relative rounded-0 o_dropdown_without_offset"/>
+                        <li>
+                            <t t-call="website.navbar_nav"
+                                    is_vertical_nav.f="True"
+                                    _no_autohide_menu_mobile.f="True">
+                                <!-- Menu -->
+                                <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                                    <t t-call="website.submenu"
+                                        item_class.f="nav-item border-top #{submenu_last and 'border-bottom'}"
+                                        link_class.f="nav-link p-3 text-wrap"
+                                        dropdown_toggler_classes.f="d-flex justify-content-between align-items-center"
+                                        dropdown_menu_classes.f="position-relative rounded-0 o_dropdown_without_offset"/>
+                                </t>
                             </t>
-                        </t>
+                        </li>
                         <!-- Text element -->
                         <t t-call="website.placeholder_header_text_element"
                             _div_class.f="mt-2"/>
