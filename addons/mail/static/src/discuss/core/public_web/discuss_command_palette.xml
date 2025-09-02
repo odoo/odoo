@@ -3,8 +3,8 @@
 
     <t t-name="mail.DiscussCommand">
         <div class="o-mail-DiscussCommand o_command_default d-flex align-items-center ps-3 pe-4" t-att-class="{ 'o-uiSmall': ui.isSmall }">
-            <i t-if="props.channel" class="fa-fw opacity-50 text-muted me-2" t-att-class="props.channel.parent_channel_id ? 'fa fa-comments-o' : props.channel.discussAppCategory?.icon ?? 'fa fa-user opacity-0'"/>
-            <i t-elif="props.persona" class="fa fa-fw fa-user opacity-50 text-muted me-2"/>
+            <i t-if="props.channel" class="fa-fw opacity-75 text-muted me-2" t-att-class="props.channel.parent_channel_id ? 'fa fa-comments-o' : props.channel.discussAppCategory?.icon ?? 'oi oi-user opacity-0'"/>
+            <i t-elif="props.persona" class="oi fa-fw oi-user opacity-75 text-muted me-2"/>
             <img class="rounded-3 me-2 object-fit-cover shadow-sm" t-if="props.imgUrl" t-att-src="props.imgUrl"  style="width: 32px; height: 32px"/>
             <ImStatus t-if="props.persona" className="'me-1'" persona="props.persona"/>
             <span class="pe-1 text-ellipsis d-flex align-items-center fw-bold" t-att-class="{ 'o-action': props.action }">
@@ -25,10 +25,10 @@
     </t>
 
     <t t-name="mail.CreateChannelDialog">
-        <Dialog size="'sm'" title.translate="New Channel">
+        <Dialog size="'sm'" title.translate="New Channel" contentClass="'o-mail-CreateChannelDialog'" bodyClass="'py-0'">
             <div class="d-flex flex-column" t-on-keydown="onKeydown">
                 <span class="ms-1 text-uppercase text-muted o-xsmaller opacity-75"><i class="fa fa-hashtag"/> Channel name</span>
-                <input type="text" class="form-control lh-1 shadow-sm" t-att-class="{ 'is-invalid': state.isInvalid }" placeholder="Channel name" t-model="state.name" tabindex="1"/>
+                <input type="text" class="form-control" t-att-class="{ 'is-invalid': state.isInvalid }" placeholder="Channel name" t-model="state.name" tabindex="1"/>
                 <div class="invalid-feedback">Channel must have a name.</div>
             </div>
             <t t-set-slot="footer">
@@ -39,7 +39,7 @@
     </t>
 
 <t t-name="mail.CreateChatDialog">
-    <Dialog size="'md'" title.translate="Make Chat">
+    <Dialog size="'md'" title.translate="Make Chat" contentClass="'o-mail-CreateChatDialog'" bodyClass="'py-0'">
         <div class="d-flex flex-column flex-grow-1 bg-inherit w-100">
             <div class="d-flex align-items-center px-0 mb-1 gap-1">
                 <span class="ms-2 my-1 text-uppercase text-muted o-xsmaller opacity-75"><i class="fa fa-user-plus"/> Invite people</span>
