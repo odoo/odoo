@@ -30,6 +30,7 @@ This module adds several features to the Point of Sale that are specific to rest
         'data/demo_data.xml',
     ],
     'application': True,
+    'post_init_hook': '_auto_install_pos_urban_piper_with_demo',
     'assets': {
         'point_of_sale._assets_pos': [
             'pos_restaurant/static/src/**/*',
