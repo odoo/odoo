@@ -22,7 +22,7 @@ test("can open DM from @username in command palette", async () => {
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@");
     await insertText("input[placeholder='Search a conversation']", "Mario");
-    await click(".o_command.focused:has(.fa-user)", { text: "Mario" });
+    await click(".o_command.focused:has(.oi-user)", { text: "Mario" });
     await contains(".o-mail-ChatWindow", { text: "Mario" });
 });
 
@@ -52,8 +52,8 @@ test("can open channel from @channel_name in command palette", async () => {
     await contains(".o_command", { count: 6 });
     await contains(".o_command:eq(0):has(.fa-hashtag)", { text: "project" });
     await contains(".o_command:eq(1):has(.fa-hashtag)", { text: "general" });
-    await contains(".o_command:has(.fa-user)", { text: "OdooBot" });
-    await contains(".o_command:has(.fa-user)", { text: "Mitchell Admin" }); // self-conversation
+    await contains(".o_command:has(.oi-user)", { text: "OdooBot" });
+    await contains(".o_command:has(.oi-user)", { text: "Mitchell Admin" }); // self-conversation
     await contains(".o_command", { text: "Create Channel" });
     await contains(".o_command", { text: "Create Chat" });
     await click(".o_command.focused:has(.fa-hashtag)", { text: "project" });
