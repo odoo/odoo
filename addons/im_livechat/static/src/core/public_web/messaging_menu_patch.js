@@ -21,6 +21,7 @@ patch(MessagingMenu.prototype, {
                 ),
                 id: "livechat",
                 icon: "fa fa-commenting-o",
+                activeIcon: "fa fa-commenting",
                 label: _t("Live Chats"),
                 sequence: 60,
             });

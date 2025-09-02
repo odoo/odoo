@@ -1814,7 +1814,7 @@ test('auto-select "Inbox nav bar" when discuss had inbox as active thread', asyn
     await openDiscuss();
     await click("button:contains('Inbox')");
     await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
-    await contains(".o-mail-MessagingMenu-navbar button.o-active", { text: "Inbox" });
+    await contains(".o-mail-MessagingMenu-navbar button.active", { text: "Inbox" });
     await contains("button.active.o-active", { text: "Inbox" });
     await contains("h4", { text: "Congratulations, your inbox is empty" });
 });
