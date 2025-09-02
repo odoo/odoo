@@ -10,8 +10,14 @@
     --list-group-border-color: #{var(--mail-MessagingMenu-listBorderColor, rgba($gray-200, .5))};
 }
 
-.o-mail-MessagingMenu-tabCounter, .o-mail-MessagingMenu-tabUnread {
-    transform: translate(80%, 50%) !important;
+.o-mail-MessagingMenu-tabCounter {
+    left: 50%;
+    transform: translate(50%, 25%) !important;
+}
+
+.o-mail-MessagingMenu-tabUnread {
+    left: 50%;
+    transform: translate(0, 25%) !important;
 }
 
 .o-mail-MessagingMenu-tabCounter.o-starred {
@@ -26,4 +32,66 @@
 
 .o_popover:has(.o-mail-MessagingMenu) {
     --popover-border-color: #{$secondary};
+}
+
+.o-mail-MessagingMenu-navbar {
+    container: navbar / inline-size;
+
+    &.o-mail-MessagingMenu-navbar-with-4-elements {
+        .o-mail-MessagingMenu-tab {
+            width: calc(100% / 4);
+        }
+    }
+
+    &.o-mail-MessagingMenu-navbar-with-5-elements,
+    &.o-mail-MessagingMenu-navbar-with-6-elements {
+        .o-mail-MessagingMenu-tab {
+            @container navbar (max-width: 400px) {
+                min-width: calc((100% / 4) - 0.85rem)
+            }
+
+            @container navbar (min-width: 550px) {
+                max-width: calc((100% / 5) - 1.5rem);
+
+                &:first-child {
+                    margin-left: auto;
+                }
+
+                &:last-child {
+                    margin-right: auto;
+                }
+            }
+        }
+    }
+
+    &.o-mail-MessagingMenu-navbar-with-6-elements {
+        .o-mail-MessagingMenu-tab {
+            @container navbar (min-width: 400px) and (max-width: 550px) {
+                min-width: calc((100% / 4) - 1.2rem)
+            }
+        }
+    }
+}
+
+.o-mail-MessagingMenu-tab {
+    &:hover .o-mail-MessagingMenu-tabIcon {
+        background: $gray-200;
+    }
+
+    &.active {
+        --btn-active-color: #{$o-enterprise-action-color};
+
+        .o-mail-MessagingMenu-tabIcon {
+            background: $o-component-active-bg;
+            color: $o-enterprise-action-color;
+        }
+    }
+
+    &:focus-visible {
+        outline: $border-width solid $o-enterprise-action-color !important;
+    }
+
+    .o-mail-MessagingMenu-tabIcon {
+        width: $spacer * 3;
+    }
 }

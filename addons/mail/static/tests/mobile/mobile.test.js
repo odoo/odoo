@@ -28,10 +28,10 @@ test("auto-select 'Inbox' when discuss had channel as active thread", async () =
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-ChatWindow [title*='Close Chat Window']");
-    await contains(".o-mail-MessagingMenu-tab.o-active", { text: "Channels" });
+    await contains(".o-mail-MessagingMenu-tab.active", { text: "Channels" });
     await click("button", { text: "Inbox" });
-    await contains(".o-mail-MessagingMenu-tab.o-active", { text: "Inbox" });
-    await contains("button.active", { text: "Inbox" }); // in header
+    await contains(".o-mail-MessagingMenu-tab.active", { text: "Inbox" });
+    await contains(".btn-secondary.active", { text: "Inbox" }); // in header
 });
 
 test("show loading on initial opening", async () => {
