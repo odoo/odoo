@@ -1,11 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date
-from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 
-from odoo.exceptions import AccessError
-from odoo.tools import date_utils
+from odoo.exceptions import AccessError, ValidationError
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
@@ -13,19 +10,58 @@ from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 class TestHrLeaveType(TestHrHolidaysCommon):
 
     def test_time_type(self):
+        employee = self.env['hr.employee'].create({'name': 'Test Employee'})
+
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
             'time_type': 'leave',
             'requires_allocation': False,
         })
 
-        leave_date = date_utils.start_of((date.today() - relativedelta(days=1)), 'week')
+        with self.assertRaises(ValidationError):
+            leave_type.allow_request_on_top = True
+
+        worked_leave_type = self.env['hr.leave.type'].create({
+            'name': 'Worked Time',
+            'time_type': 'other',
+            'requires_allocation': False,
+        })
+
+        with self.assertRaises(ValidationError):
+            worked_leave_type.elligible_for_accrual_rate = False
+
+        leave_0 = self.env['hr.leave'].create({
+            'name': 'Remote Work',
+            'employee_id': employee.id,
+            'holiday_status_id': worked_leave_type.id,
+            'request_date_from': '2025-09-01',  # Monday
+            'request_date_to': '2025-09-05',
+        })
+        leave_0.action_approve()
+        self.assertEqual(
+            self.env['resource.calendar.leaves'].search([('holiday_id', '=', leave_0.id)]).time_type,
+            'other',
+        )
+        with freeze_time('2025-09-03 13:00:00'):
+            employee._compute_leave_status()
+            self.assertFalse(employee.is_absent)
+
+        with self.assertRaises(ValidationError):
+            leave_1 = self.env['hr.leave'].create({
+                'name': 'Doctor Appointment',
+                'employee_id': employee.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': '2025-09-03',
+                'request_date_to': '2025-09-03',
+            })
+
+        worked_leave_type.allow_request_on_top = True
         leave_1 = self.env['hr.leave'].create({
             'name': 'Doctor Appointment',
-            'employee_id': self.employee_hruser_id,
+            'employee_id': employee.id,
             'holiday_status_id': leave_type.id,
-            'request_date_from': leave_date,
-            'request_date_to': leave_date,
+            'request_date_from': '2025-09-03',
+            'request_date_to': '2025-09-03',
         })
         leave_1.action_approve()
 
@@ -33,6 +69,9 @@ class TestHrLeaveType(TestHrHolidaysCommon):
             self.env['resource.calendar.leaves'].search([('holiday_id', '=', leave_1.id)]).time_type,
             'leave'
         )
+        with freeze_time('2025-09-03 13:00:00'):
+            employee._compute_leave_status()
+            self.assertTrue(employee.is_absent)
 
     def test_type_creation_right(self):
         # HrUser creates some holiday statuses -> crash because only HrManagers should do this
