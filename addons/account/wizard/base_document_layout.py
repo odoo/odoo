@@ -64,12 +64,12 @@ class BaseDocumentLayout(models.TransientModel):
 
     def _inverse_account_number(self):
         for record in self:
-            if record.partner_id.bank_ids and record.account_number:
-                record.partner_id.bank_ids[0].acc_number = record.account_number
-            elif record.account_number:
-                record.partner_id.bank_ids = [
-                    Command.create({
-                        'acc_number': record.account_number,
-                        'partner_id': record.partner_id.id,
-                    })
-                ]
+            partner = record.partner_id
+            acc_number = record.account_number
+            if not partner or not acc_number:
+                continue
+
+            existing_bank = partner.bank_ids.filtered(lambda b: b.acc_number == acc_number)
+
+            if not existing_bank:
+                partner.bank_ids = ([Command.link(bank.id) for bank in partner.bank_ids] + [Command.create({'acc_number': acc_number, 'partner_id': partner.id})])
