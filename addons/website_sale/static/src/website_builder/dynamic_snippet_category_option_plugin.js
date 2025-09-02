@@ -41,7 +41,6 @@ export class DynamicSnippetCategoryOptionPlugin extends Plugin {
                 ['rounded', 2],
                 ['gap', 2],
                 ['size', 'medium'],
-                ['button', 'Explore Now'],
                 ['alignment', 'center'],
             ]) {
                 setDatasetIfUndefined(snippetEl, optionName, value);

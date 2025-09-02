@@ -22,13 +22,14 @@ export class DynamicSnippetCategory extends DynamicSnippet {
         super.setup();
         this.templateKey = 'website_sale.s_dynamic_snippet_category.grid';
         const nodeData = this.el.dataset;
+        nodeData.button = nodeData.button || _t("Explore Now");
         const colsCount = uiUtils.isSmall() ? 1 : parseInt(nodeData.columns);
         const colSpanTwo = colsCount !== 1 && (nodeData.size !== 'small' || colsCount === 5);
         // Pass custom data to the template.
         nodeData.customTemplateData = JSON.stringify({
             size: SIZE_CONFIG[nodeData.size].span,
             alignmentClass: ALIGNMENT_CLASSES_MAPPING[nodeData.alignment],
-            buttonText: _t(nodeData.button),
+            buttonText: nodeData.button,
             colSpanTwo: colSpanTwo,
             includeParent: nodeData.parentCategoryId && nodeData.showParent,
             parentCategoryId: parseInt(nodeData.parentCategoryId),
