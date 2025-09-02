@@ -1029,19 +1029,19 @@ test("toggle_star message", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
-    await contains(".o-mail-Message [title='Mark as Todo']");
-    await contains(".o-mail-Message [title='Mark as Todo']" + " i.fa-star-o");
+    await contains(".o-mail-Message [title='Add Star']");
+    await contains(".o-mail-Message [title='Add Star']" + " i.fa-star-o");
     await contains("button", { text: "Starred messages", contains: [".badge", { count: 0 }] });
-    await click(".o-mail-Message [title='Mark as Todo']");
+    await click(".o-mail-Message [title='Add Star']");
     await contains("button", { text: "Starred messages", contains: [".badge", { text: "1" }] });
     await waitForSteps(["rpc:toggle_message_starred"]);
     await contains(".o-mail-Message");
-    await contains(".o-mail-Message [title='Mark as Todo']" + " i.fa-star");
-    await click(".o-mail-Message [title='Mark as Todo']");
+    await contains(".o-mail-Message [title='Remove Star']" + " i.fa-star");
+    await click(".o-mail-Message [title='Remove Star']");
     await contains("button", { text: "Starred messages", contains: [".badge", { count: 0 }] });
     await waitForSteps(["rpc:toggle_message_starred"]);
     await contains(".o-mail-Message");
-    await contains(".o-mail-Message [title='Mark as Todo']" + " i.fa-star-o");
+    await contains(".o-mail-Message [title='Add Star']" + " i.fa-star-o");
 });
 
 test("Name of message author is only displayed in chat window for partners others than the current user", async () => {
@@ -1357,7 +1357,7 @@ test("Toggle star should update starred counter on all tabs", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(undefined, { target: env2 });
-    await click(`${env1.selector} .o-mail-Message [title='Mark as Todo']`);
+    await click(`${env1.selector} .o-mail-Message [title='Add Star']`);
     await contains(`${env2.selector} button`, {
         text: "Starred messages",
         contains: [".badge", { text: "1" }],
@@ -2067,7 +2067,7 @@ test("deleted message should not have translate feature", async () => {
     await click(".modal button:contains('Delete')");
     await contains(".o-mail-Message:contains('This message has been removed')");
     await contains(".o-mail-Message [title='Add a Reaction']");
-    await contains(".o-mail-Message [title='Mark as Todo']");
+    await contains(".o-mail-Message [title='Add Star']");
     await contains(".o-mail-Message [title*='Translate']", { count: 0 });
     await animationFrame(); // in case some extra rendering for expand
     if (queryFirst(".o-mail-Message [title='Expand']")) {

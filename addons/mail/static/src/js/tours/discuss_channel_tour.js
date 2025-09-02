@@ -53,8 +53,8 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "press Enter",
         },
         {
-            trigger: ".o-mail-Message[data-persistent] [title='Mark as Todo']:not(:visible)",
-            content: _t("Hover on your message and mark as todo"),
+            trigger: ".o-mail-Message[data-persistent] [title='Add Star']:not(:visible)",
+            content: _t("Hover on your message and add a star"),
             tooltipPosition: "top",
             async run(helpers) {
                 await delay(1000);
