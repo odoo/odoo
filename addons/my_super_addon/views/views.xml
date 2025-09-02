@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="my_super_addon.list">
+      <field name="name">my_super_addon list</field>
+      <field name="model">my_super_addon.my_super_addon</field>
+      <field name="arch" type="xml">
+        <list>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </list>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="my_super_addon.action_window">
+      <field name="name">my_super_addon window</field>
+      <field name="res_model">my_super_addon.my_super_addon</field>
+      <field name="view_mode">list,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="my_super_addon.action_server">
+      <field name="name">my_super_addon server</field>
+      <field name="model_id" ref="model_my_super_addon_my_super_addon"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "list,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="my_super_addon" id="my_super_addon.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="my_super_addon.menu_1" parent="my_super_addon.menu_root"/>
+    <menuitem name="Menu 2" id="my_super_addon.menu_2" parent="my_super_addon.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="my_super_addon.menu_1_list" parent="my_super_addon.menu_1"
+              action="my_super_addon.action_window"/>
+    <menuitem name="Server to list" id="my_super_addon" parent="my_super_addon.menu_2"
+              action="my_super_addon.action_server"/>
+-->
+  </data>
+</odoo>

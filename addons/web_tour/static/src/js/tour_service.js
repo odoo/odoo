@@ -66,6 +66,7 @@ export const tourService = {
     dependencies: ["orm", "effect", "overlay", "localization"],
     start: async (env, { orm, effect, overlay }) => {
         await whenReady();
+        let logWarning = false;
         let toursEnabled = session?.tour_enabled;
         const tourRegistry = registry.category("web_tour.tours");
         const pointer = createPointerState();
@@ -89,7 +90,11 @@ export const tourService = {
         }));
 
         function getTourFromRegistry(tourName) {
-            if (!tourRegistry.contains(tourName)) {
+            if (!tourRegistry.contains(tourName) && !logWarning) {
+                logWarning = true;
+                console.warn(
+                    `${tourName} is not in web_tour.tours registry. Don't forget to add your js file in web.assets_tests bundle`
+                );
                 return;
             }
             const tour = tourRegistry.get(tourName);
