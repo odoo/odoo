@@ -79,16 +79,16 @@ export class SearchBarResults extends Interaction {
 
         // Adjust the menu's position based on the scroll height.
         this.isDropup = false;
-        this.dropdownSticksOut = false;
         if (this.el.getBoundingClientRect().bottom > document.documentElement.offsetHeight) {
-            this.dropdownSticksOut = true;
             // If the menu overflows below the page, we reduce its height.
             this.el.style.overflowY = "auto";
             // We then recheck if the menu still overflows below the page.
             if (this.el.getBoundingClientRect().bottom > document.documentElement.offsetHeight) {
-                // If the menu still overflows below the page after its height
-                // has been reduced, we position it above the input.
-                this.isDropup = true;
+                // If the menu still overflows below the viewport after its
+                // height has been reduced, we position it where most space is
+                // available
+                const searchPosition = this.searchBarEl.getBoundingClientRect();
+                this.isDropup = searchPosition.top > document.documentElement.offsetHeight - searchPosition.bottom;
             }
         }
     }
