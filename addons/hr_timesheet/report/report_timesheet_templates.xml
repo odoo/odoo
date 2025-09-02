@@ -35,7 +35,9 @@
                             <t t-set="timesheet_record_info" t-value="False"/>
                             <t t-if="show_project">
                                 <t t-set="timesheet_record_info" t-value="line.project_id.sudo().name"/>
-                                <t t-if="show_task and line.task_id" t-set="timesheet_record_info" t-value="'%s / %s' % (timesheet_record_info, line.task_id.sudo().name)"/>
+                                <t t-if="show_task and (line.task_id or line.helpdesk_ticket_id)"
+                                   t-set="timesheet_record_info"
+                                   t-value="'%s / %s' % (timesheet_record_info, (line.task_id.sudo().name if line.task_id else line.helpdesk_ticket_id.sudo().name))"/>
                             </t>
                             <t t-elif="show_task" t-set="timesheet_record_info" t-value="line.task_id.sudo().name"/>
                             <td t-if="show_task or show_project" class="align-middle">
