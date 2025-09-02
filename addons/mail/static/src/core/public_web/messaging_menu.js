@@ -134,7 +134,7 @@ export class MessagingMenu extends Component {
         return [
             {
                 counter: this.store.discuss.chats.threadsWithCounter.length,
-                icon: "fa fa-user",
+                icon: "oi oi-users",
                 id: "chat",
                 label: _t("Chats"),
                 sequence: 20,
@@ -142,7 +142,7 @@ export class MessagingMenu extends Component {
             {
                 channelHasUnread: Boolean(this.store.discuss.unreadChannels.length),
                 counter: this.store.discuss.channels.threadsWithCounter.length,
-                icon: "fa fa-users",
+                icon: "fa fa-hashtag",
                 id: "channel",
                 label: _t("Channels"),
                 sequence: 40,

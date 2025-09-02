@@ -94,7 +94,7 @@ patch(MessagingMenu.prototype, {
     get _tabs() {
         return [
             {
-                icon: "fa fa-envelope",
+                icon: "fa fa-bell-o",
                 id: "notification",
                 label: _t("Notifications"),
                 sequence: 10,
