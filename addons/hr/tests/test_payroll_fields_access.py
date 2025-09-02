@@ -79,6 +79,7 @@ class TestPayrollFieldsAccess(TransactionCase):
             'new_bike',
             'new_bike_model_id',
             'originated_offer_id',
+            'is_non_resident',
         ]
         missing_group_field_names = [
             f_name
