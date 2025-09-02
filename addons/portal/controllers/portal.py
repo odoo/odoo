@@ -996,6 +996,8 @@ class CustomerPortal(Controller):
             values['warning'] = kwargs['warning']
         if kwargs.get('success'):
             values['success'] = kwargs['success']
+        if kwargs.get('display_success_msg'):
+            values['display_success_msg'] = kwargs['display_success_msg']
         # Email token for posting messages in portal view with identified author
         if kwargs.get('pid'):
             values['pid'] = kwargs['pid']

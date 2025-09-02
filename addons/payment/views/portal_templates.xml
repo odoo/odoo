@@ -305,13 +305,13 @@
         </t>
         <t t-elif="tx.state == 'done'">
             <t t-set="alert_style" t-value="'success'"/>
-            <t t-if="not is_processing" t-set="status_heading">
+            <t t-if="not is_processing and display_success_msg" t-set="status_heading">
                 <p>Thank you!</p>
             </t>
             <t t-if="tx.operation == 'validation'" t-set="status_message">
                 <p>Your payment method has been saved.</p>
             </t>
-            <t t-else="" t-set="status_message" t-value="tx.provider_id.sudo().done_msg"/>
+            <t t-elif="is_processing or display_success_msg" t-set="status_message" t-value="tx.provider_id.sudo().done_msg"/>
         </t>
         <t t-elif="tx.state == 'cancel'">
             <t t-set="alert_style" t-value="'danger'"/>
@@ -354,7 +354,7 @@
                 <t t-if="tx.state_message" t-out="tx.state_message" class="mb-0"/>
             </div>
             <a t-if="is_processing"
-               t-att-href="tx.landing_route"
+               t-att-href="tx.landing_route + ('&amp;' if '?' in tx.landing_route else '?') + 'display_success_msg=True'"
                class="alert-link ms-auto text-nowrap"
             >
                 Skip <i class="oi oi-arrow-right ms-1 small"/>
