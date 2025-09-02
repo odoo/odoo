@@ -13,6 +13,8 @@ class ResourceCalendarLeaves(models.Model):
     _inherit = "resource.calendar.leaves"
 
     holiday_id = fields.Many2one("hr.leave", string='Time Off Request')
+    elligible_for_accrual_rate = fields.Boolean(string='Eligible for Accrual Rate', default=False,
+        help="If checked, this time off type will be taken into account for accruals computation.")
 
     @api.constrains('date_from', 'date_to', 'calendar_id')
     def _check_compare_dates(self):

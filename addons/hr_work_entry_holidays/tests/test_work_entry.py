@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, date
@@ -28,6 +27,20 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'resource_calendar_id': cls.resource_calendar_id.id,
             'wage': 1000,
             'date_generated_from': cls.end.date() + relativedelta(days=5),
+        })
+
+        cls.work_entry_type_remote = cls.env['hr.work.entry.type'].create({
+            'name': 'Remote Work',
+            'is_leave': True,
+            'code': 'WORKTEST100',
+        })
+
+        cls.leave_remote_type = cls.env['hr.leave.type'].create({
+            'name': 'Legal Leaves',
+            'time_type': 'other',
+            'requires_allocation': False,
+            'allow_request_on_top': True,
+            'work_entry_type_id': cls.work_entry_type_remote.id,
         })
 
     def test_time_week_leave_work_entry(self):
@@ -127,3 +140,35 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
 
         public_holiday_work_entry = work_entries.filtered(lambda we: we.work_entry_type_id == work_entry_type_holiday)
         self.assertEqual(len(public_holiday_work_entry.leave_id), 0, "Public holiday work entry should not have leave_id")
+
+    def test_work_entries_overlap_work_leaves(self):
+        remote = self.env['hr.leave'].create({
+            'name': 'remote1',
+            'employee_id': self.richard_emp.id,
+            'holiday_status_id': self.leave_remote_type.id,
+            'request_date_from': date(2015, 11, 2),  # Monday
+            'request_date_to': date(2015, 11, 6),
+        })
+        remote.action_approve()
+
+        self.leave_type.request_unit = 'hour'
+        leave = self.env['hr.leave'].create({
+            'name': '1leave',
+            'employee_id': self.richard_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'request_date_from': date(2015, 11, 3),
+            'request_date_to': date(2015, 11, 3),
+            'request_hour_from': 11,
+            'request_hour_to': 17,
+        })
+        leave.action_approve()
+
+        work_entries = self.richard_emp.generate_work_entries(self.start.date(), self.end.date())
+        remote_work_entry = work_entries.filtered(lambda we: we.work_entry_type_id in self.work_entry_type_remote)
+        leave_work_entry = work_entries.filtered(lambda we: we.work_entry_type_id in self.work_entry_type_leave)
+        self.assertEqual(len(remote_work_entry), 5, "There should be five remote work entries")
+        self.assertEqual(len(leave_work_entry), 1, "There should be one leave work entry")
+        sum_remote_hours = sum(remote_work_entry.mapped('duration'))
+        sum_leave_hours = sum(leave_work_entry.mapped('duration'))
+        self.assertEqual(sum_remote_hours, 35, "It should equal the number of hours richard worked in remote")  # 5 days * 8 hours - 5 hours for leave
+        self.assertEqual(sum_leave_hours, 5.0, "It should equal the number of hours richard was on leave")
