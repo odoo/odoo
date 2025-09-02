@@ -95,16 +95,20 @@ export class StockValuationReport extends Component {
         );
     }
 
-    openStockMoveLineView(title, usage) {
+    openStockMoveView(title, usage) {
         const domain = [
             "|",
             ["location_id.usage", "=", usage],
             ["location_dest_id.usage", "=", usage],
         ];
+        if (this.controller.dateAsString) {
+            domain.unshift("&");
+            domain.push(["date", "<=", this.controller.dateAsString]);
+        }
         return this.actionService.doAction({
             name: title,
             type: "ir.actions.act_window",
-            res_model: "stock.move.line",
+            res_model: "stock.move",
             domain,
             views: [[false, 'list'], [false, 'form']],
             target: 'current',
@@ -112,13 +116,13 @@ export class StockValuationReport extends Component {
     }
 
     openInventoryLoss() {
-        return this.openStockMoveLineView(_t("Inventory Loss"), "inventory");
+        return this.openStockMoveView(_t("Inventory Loss"), "inventory");
     }
 
     openStockReport() {
         const additionalContext = {};
-        if (this.controller.dateSelected) {
-            additionalContext.to_date = this.controller.state.date.toFormat('y-LL-dd HH:mm:ss');
+        if (this.controller.dateAsString) {
+            additionalContext.to_date = this.controller.dateAsString;
         }
         return this.actionService.doAction(
             "stock.action_product_stock_view",
