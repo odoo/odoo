@@ -1,6 +1,9 @@
 import math
+
 from num2words import num2words
+
 from odoo import api, models
+from odoo.exceptions import UserError
 
 
 class AccountEdiXmlUblTr(models.AbstractModel):
@@ -38,6 +41,9 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         # Check the customer status if it hasn't been done before as it's needed for profile_id
         if invoice.partner_id.l10n_tr_nilvera_customer_status == 'not_checked':
             invoice.partner_id.check_nilvera_customer()
+
+        if invoice._l10n_tr_nilvera_einvoice_check_negative_lines():
+            raise UserError(self.env._("Nilvera portal cannot process negative quantity nor negative price on invoice lines"))
 
         # For now, we assume that the sequence is going to be in the format {prefix}/{year}/{invoice_number}.
         # To send an invoice to Nlvera, the format needs to follow ABC2009123456789.
@@ -264,6 +270,15 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         super()._add_document_line_allowance_charge_nodes(line_node, vals)
         for allowance_charge_node in line_node['cac:AllowanceCharge']:
             allowance_charge_node['cbc:AllowanceChargeReasonCode'] = None
+            discount_percentage = vals.get('discount_amount') / vals.get('gross_subtotal') if vals.get('gross_subtotal') else 0
+            allowance_charge_node['cbc:MultiplierFactorNumeric'] = {
+            '_text': self.format_float(discount_percentage, vals['currency_dp']),
+            }
+
+    def _add_document_line_item_nodes(self, line_node, vals):
+        super()._add_document_line_item_nodes(line_node, vals)
+        if line_node.get('cac:Item', {}).get('cac:StandardItemIdentification'):
+            line_node['cac:Item']['cac:StandardItemIdentification'] = None
 
     def _add_document_line_tax_category_nodes(self, line_node, vals):
         # No InvoiceLine/Item/ClassifiedTaxCategory in Turkey
