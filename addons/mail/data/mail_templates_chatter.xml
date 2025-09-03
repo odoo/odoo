@@ -56,5 +56,22 @@
                 </t>
             </p>
         </template>
+
+        <template id="discuss_channel_invitation_template">
+            <div style="padding: 16px; background-color: #F1F1F1; font-family: Verdana, Arial, sans-serif; color: #454748; width: 100%; display: flex; justify-content: center;">
+                <div style="max-width: 590px; width: 100%; background-color: #ffffff; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; align-items: center;">
+                    <div style="width: 100%; font-size: 14px; line-height: 1.5; text-align: left;">
+                        <t t-esc="mail_body"/>
+                        <p style="text-align: center; margin: 24px 0;">
+                            <a t-attf-href="{{base_url}}{{channel.invitation_url}}?email_token={{email_token}}"
+                               t-attf-style="background-color: {{user.company_id.email_secondary_color or '#875A7B'}}; color: {{user.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; padding: 8px 12px; border-radius: 4px; display: inline-block; font-weight: bold;"
+                            >
+                                Join Channel
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </template>
     </data>
 </odoo>

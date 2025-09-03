@@ -9,12 +9,13 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models, tools, Command
 from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
+from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_TYPE
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import format_list, get_lang, html_escape
-from odoo.tools.misc import OrderedSet
+from odoo.tools import format_list, email_normalize, html_escape
+from odoo.tools.misc import hash_sign, OrderedSet
 from odoo.tools.sql import SQL
 
 channel_avatar = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 530.06">
@@ -683,6 +684,83 @@ class DiscussChannel(models.Model):
                     current_channel_member.sudo()._rtc_invite_members(member_ids=new_members.ids)
         return all_new_members
 
+    def invite_by_email(self, emails):
+        """
+        Send channel invitation emails to a list of email addresses. Existing members'
+        email addresses are ignored.
+
+        :param emails: List of email addresses to invite.
+        :type emails: list[str]
+
+        """
+        if not self.env.user._is_internal() or not self.has_access("read"):
+            raise AccessError(self.env._("You don't have access to invite users to this channel."))
+        if not self._allow_invite_by_email():
+            raise UserError(
+                self.env._("Inviting by email is not allowed for this channel type (%s).")
+                % self.channel_type
+            )
+        eligible_emails = OrderedSet(norm for email in emails if email and (norm := email_normalize(email)))
+        # Removing emails linked to members of this channel.
+        member_domain = Domain("channel_id", "=", self.id) & Domain.OR(
+            [
+                [(field, "=ilike", email)]
+                for email in eligible_emails
+                for field in ("guest_id.email", "partner_id.email")
+            ],
+        )
+        eligible_emails -= set(
+            self.env["discuss.channel.member"]
+            .search_fetch(member_domain, ["partner_id", "guest_id"])
+            .mapped(lambda m: email_normalize(m.partner_id.email or m.guest_id.email))
+        )
+        mail_body = Markup("<p>%s</p>") % self.env._(
+            "%(user_name)s has invited you to the %(strong_start)s%(channel_name)s%(strong_end)s channel."
+        ) % {
+            "user_name": self.env.user.name,
+            "channel_name": self.name,
+            "strong_start": Markup("<strong>"),
+            "strong_end": Markup("</strong>"),
+        }
+        to_create = []
+        for addr in eligible_emails:
+            body = self.env["ir.qweb"]._render(
+                "mail.discuss_channel_invitation_template",
+                {
+                    "base_url": self.env["ir.config_parameter"].get_base_url(),
+                    "channel": self,
+                    "email_token": hash_sign(self.env(su=True), "mail.invite_email", addr),
+                    "mail_body": mail_body,
+                    "user": self.env.user,
+                },
+                minimal_qcontext=True,
+            )
+            to_create.append(
+                {
+                    "body_html": body,
+                    "email_from": self.env.user.partner_id.email_formatted,
+                    "email_to": addr,
+                    "model": "discuss.channel",
+                    "res_id": self.id,
+                    "subject": self.env._("%(author_name)s has invited you to a channel")
+                    % {"author_name": self.env.user.name},
+                },
+            )
+        if not to_create:
+            return
+        try:
+            # sudo - mail.mail: internal users having read access to the channel can invite others.
+            self.env["mail.mail"].sudo().create(to_create).send(raise_exception=True)
+        except MailDeliveryException as mde:
+            error_msg = self.env._(
+                "There was an error when trying to deliver your Email, please check your configuration."
+            )
+            if len(mde.args) == 2 and isinstance(mde.args[1], ConnectionRefusedError):
+                error_msg = self.env._(
+                    "Could not contact the mail server, please check your outgoing email server configuration."
+                )
+            raise UserError(error_msg) from mde
+
     # ------------------------------------------------------------
     # RTC
     # ------------------------------------------------------------
@@ -1320,6 +1398,11 @@ class DiscussChannel(models.Model):
         else:
             store.add(self)
         store.bus_send()
+
+    def _allow_invite_by_email(self):
+        return self.channel_type == "group" or (
+            self.channel_type == "channel" and not self.group_public_id
+        )
 
     def _types_allowing_seen_infos(self):
         """ Return the channel types which allow sending seen infos notification

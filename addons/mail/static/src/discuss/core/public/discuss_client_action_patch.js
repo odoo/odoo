@@ -19,6 +19,9 @@ patch(DiscussClientAction.prototype, {
                 `/discuss/channel/${this.store.discuss.thread.id}${browser.location.search}`
             );
         }
+        const url = new URL(browser.location.href);
+        url.searchParams.delete("email_token");
+        browser.history.replaceState(browser.history.state, null, url.toString());
         browser.addEventListener("popstate", () => this.restoreDiscussThread(this.props));
     },
     getActiveId() {

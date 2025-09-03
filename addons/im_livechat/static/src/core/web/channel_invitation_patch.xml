@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-inherit="discuss.ChannelInvitation.main" t-inherit-mode="extension">
+    <t t-inherit="discuss.ChannelInvitation-selectableItem" t-inherit-mode="extension">
         <xpath expr="//*[@name='selectablePartnerName']" position="inside">
             <span t-if="props.thread?.channel_type === 'livechat' and selectablePartner.user_livechat_username" t-esc="selectablePartner.user_livechat_username" class="text-truncate text-muted smaller mx-2"/>
             <span t-if="props.thread?.channel_type === 'livechat' and selectablePartner.is_in_call" class="flex-shrink-0 opacity-75 smaller mx-2">
