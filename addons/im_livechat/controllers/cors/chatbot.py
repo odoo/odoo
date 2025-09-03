@@ -17,9 +17,9 @@ class CorsLivechatChatbotScriptController(LivechatChatbotScriptController):
         return self.chatbot_save_answer(channel_id, message_id, selected_answer_id)
 
     @route("/chatbot/cors/step/trigger", type="jsonrpc", auth="public", cors="*")
-    def cors_chatbot_trigger_step(self, guest_token, channel_id, chatbot_script_id=None):
+    def cors_chatbot_trigger_step(self, guest_token, channel_id, chatbot_script_id=None, data_id=None):
         force_guest_env(guest_token)
-        return self.chatbot_trigger_step(channel_id, chatbot_script_id)
+        return self.chatbot_trigger_step(channel_id, chatbot_script_id, data_id)
 
     @route("/chatbot/cors/step/validate_email", type="jsonrpc", auth="public", cors="*")
     def cors_chatbot_validate_email(self, guest_token, channel_id):
