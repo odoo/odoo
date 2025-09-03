@@ -1583,6 +1583,12 @@ class AccountTax(models.Model):
         if 'price_unit' in extra_tax_data:
             base_line['price_unit'] = extra_tax_data['price_unit']
 
+        # Propagate custom values.
+        if record and isinstance(record, dict):
+            for k, v in record.items():
+                if k.startswith('_') and k not in base_line:
+                    base_line[k] = v
+
         return base_line
 
     @api.model
@@ -3281,10 +3287,18 @@ class AccountTax(models.Model):
             target_base_line = base_line_map.get(grouping_key)
             if target_base_line:
                 target_base_line['price_unit'] += new_base_line['price_unit']
+                target_base_line['tax_details'] = self._merge_tax_details(
+                    tax_details_1=target_base_line['tax_details'],
+                    tax_details_2=base_line['tax_details'],
+                )
             else:
                 target_base_line = base_line_map[grouping_key] = self._prepare_base_line_for_taxes_computation(
                     new_base_line,
                     **grouping_key,
+                    tax_details={
+                        **base_line['tax_details'],
+                        'taxes_data': [dict(tax_data) for tax_data in base_line['tax_details']['taxes_data']],
+                    },
                 )
             aggregated_base_lines.setdefault(grouping_key, []).append(base_line)
 
@@ -3597,36 +3611,32 @@ class AccountTax(models.Model):
             target_base_amount -= target_tax_amounts['tax_amount']
             target_tax_amounts_mapping[tax_id_str] = target_tax_amounts
 
-        # Apply the percentage to each line.
-        new_base_lines = []
-        for base_line in discountable_base_lines:
-            new_base_line = self._prepare_base_line_for_taxes_computation(
-                base_line,
-                computation_key=computation_key,
-                price_unit=base_line['price_unit'] * -percentage,
-            )
-
-            # Propagate custom values.
-            for k, v in base_line.items():
-                if k not in new_base_line:
-                    new_base_line[k] = v
-
-            new_base_lines.append(new_base_line)
-
-        reduced_base_lines = self._reduce_base_lines_with_grouping_function(new_base_lines, grouping_function=grouping_function)
+        reduced_base_lines = self._reduce_base_lines_with_grouping_function(
+            base_lines=discountable_base_lines,
+            grouping_function=grouping_function,
+        )
         if not reduced_base_lines:
             return []
 
-        self._add_tax_details_in_base_lines(reduced_base_lines, company)
-        self._round_base_lines_tax_details(reduced_base_lines, company)
+        # Apply the percentage to each line.
+        new_base_lines = []
+        for base_line in reduced_base_lines:
+            new_base_lines.append(self._prepare_base_line_for_taxes_computation(
+                base_line,
+                computation_key=computation_key,
+                price_unit=base_line['price_unit'] * -percentage,
+            ))
+
+        self._add_tax_details_in_base_lines(new_base_lines, company)
+        self._round_base_lines_tax_details(new_base_lines, company)
         self._apply_base_lines_manual_amounts_to_reach(
-            base_lines=reduced_base_lines,
+            base_lines=new_base_lines,
             company=company,
             target_base_amount_currency=target_base_amount_currency,
             target_base_amount=target_base_amount,
             target_tax_amounts_mapping=target_tax_amounts_mapping,
         )
-        return reduced_base_lines
+        return new_base_lines
 
     # -------------------------------------------------------------------------
     # DOWN PAYMENT
@@ -3762,36 +3772,29 @@ class AccountTax(models.Model):
             target_base_amount -= target_tax_amounts['tax_amount']
             target_tax_amounts_mapping[tax_id_str] = target_tax_amounts
 
-        # Apply the percentage to each line.
-        new_base_lines = []
-        for base_line in base_lines_for_dp:
-            new_base_line = self._prepare_base_line_for_taxes_computation(
-                base_line,
-                computation_key=computation_key,
-                price_unit=base_line['price_unit'] * percentage,
-            )
-
-            # Propagate custom values.
-            for k, v in base_line.items():
-                if k not in new_base_line:
-                    new_base_line[k] = v
-
-            new_base_lines.append(new_base_line)
-
-        reduced_base_lines = self._reduce_base_lines_with_grouping_function(new_base_lines, grouping_function=grouping_function)
+        reduced_base_lines = self._reduce_base_lines_with_grouping_function(base_lines_for_dp, grouping_function=grouping_function)
         if not reduced_base_lines:
             return []
 
-        self._add_tax_details_in_base_lines(reduced_base_lines, company)
-        self._round_base_lines_tax_details(reduced_base_lines, company)
+        # Apply the percentage to each line.
+        new_base_lines = []
+        for base_line in reduced_base_lines:
+            new_base_lines.append(self._prepare_base_line_for_taxes_computation(
+                base_line,
+                computation_key=computation_key,
+                price_unit=base_line['price_unit'] * percentage,
+            ))
+
+        self._add_tax_details_in_base_lines(new_base_lines, company)
+        self._round_base_lines_tax_details(new_base_lines, company)
         self._apply_base_lines_manual_amounts_to_reach(
-            base_lines=reduced_base_lines,
+            base_lines=new_base_lines,
             company=company,
             target_base_amount_currency=target_base_amount_currency,
             target_base_amount=target_base_amount,
             target_tax_amounts_mapping=target_tax_amounts_mapping,
         )
-        return reduced_base_lines
+        return new_base_lines
 
     # -------------------------------------------------------------------------
     # DISPATCHING OF LINES
