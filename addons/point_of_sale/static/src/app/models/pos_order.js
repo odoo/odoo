@@ -878,6 +878,10 @@ export class PosOrder extends Base {
         }
     }
 
+    canBeValidated() {
+        return this.isPaid() && this._isValidEmptyOrder();
+    }
+
     // NOTE: Overrided in pos_loyalty to put loyalty rewards at this end of array.
     getOrderlines() {
         return this.lines;
