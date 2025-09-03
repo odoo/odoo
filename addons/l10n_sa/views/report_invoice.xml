@@ -4,7 +4,7 @@
         <!-- Header & Footer -->
          <t name="l10n_gcc_settings" position="inside">
             <t t-set="additional_footer_text" t-value="o.get_l10n_sa_confirmation_datetime_sa_tz()"/>
-            <t t-if="o.company_id.country_id.code == 'SA' and not o._l10n_sa_is_legal() " t-set="custom_header">
+            <t t-if="o.company_id.country_id.code == 'SA' and not o._l10n_sa_is_legal() " t-set="custom_header_sa">
                 <div class="fw-bold text-center mt-2">
                     <h5>THIS IS NOT A LEGAL DOCUMENT</h5>
                     <h5>هذا المستند ليس مستنداً قانونياً</h5>
