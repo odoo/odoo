@@ -8,7 +8,7 @@ export class PlausiblePush extends Interaction {
         const { eventName, eventParams } = this.el.dataset;
 
         window.plausible ||= function () { (window.plausible.q = window.plausible.q || []).push(arguments) };
-        window.plausible(eventName, { props: eventParams || {} });
+        window.plausible(eventName, { props: JSON.parse(eventParams) || {} });
     }
 }
 
