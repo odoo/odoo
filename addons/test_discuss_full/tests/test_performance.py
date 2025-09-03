@@ -91,7 +91,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   2: _get_channels_as_member
     #       - search discuss_channel (member_domain)
     #       - search discuss_channel (pinned_member_domain)
-    #   34: channel _to_store_defaults:
+    #   36: channel _to_store_defaults:
     #       - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #       - read group member (_compute_invited_member_ids)
     #       - search discuss_channel_rtc_session
@@ -130,6 +130,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - _compute_message_unread
     #       - fetch im_livechat_channel
     #       2: fetch livechat_expertise_ids
+    #       - fetch livechat_conversation_tag_ids
+    #       - read livechat_conversation_tag_ids
     #   1: _get_last_messages
     #   20: message _to_store:
     #       - search mail_message_schedule
@@ -152,17 +154,18 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch discuss_call_history
     #       - search mail_tracking_value
     #       - _compute_rating_stats
-    _query_count_discuss_channels = 62
+    _query_count_discuss_channels = 64
 
     def setUp(self):
         super().setUp()
         self.maxDiff = None
         self.group_user = self.env.ref('base.group_user')
+        self.livechat_user = self.env.ref("im_livechat.im_livechat_group_user")
         self.password = 'Pl1bhD@2!kXZ'
         self.users = self.env['res.users'].create([
             {
                 'email': 'e.e@example.com',
-                'group_ids': [Command.link(self.group_user.id)],
+                'group_ids': [Command.link(self.group_user.id), Command.link(self.livechat_user.id)],
                 'login': 'emp',
                 'name': 'Ernest Employee',
                 'notification_type': 'inbox',
@@ -247,6 +250,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             )["channel_id"]
         )
         self.channel_livechat_1.with_user(self.users[1]).message_post(body="test")
+        # add conversation tags into livechat channels
+        self.conversation_tag = self.env["im_livechat.conversation.tag"].create({"name": "Support", "color": 1})
+        self.channel_livechat_1.livechat_conversation_tag_ids = [Command.link(self.conversation_tag.id)]
         self.authenticate(None, None)
         with patch(
             "odoo.http.GeoIP.country_code",
@@ -430,7 +436,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "hasCannedResponses": False,
                 "hasGifPickerFeature": False,
                 "hasLinkPreviewFeature": True,
-                "has_access_livechat": False,
+                "has_access_livechat": True,
                 "hasMessageTranslationFeature": False,
                 "has_access_create_lead": False,
                 "internalUserGroupId": self.env.ref("base.group_user").id,
@@ -561,6 +567,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             "im_livechat.channel": [
                 self._expected_result_for_livechat_channel(),
             ],
+            "im_livechat.conversation.tag": [
+                {"id": self.conversation_tag.id, "name": "Support", "color": self.conversation_tag.color},
+            ],
             "mail.guest": [
                 self._expected_result_for_persona(guest=True),
             ],
@@ -597,7 +606,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 {"code": "IN", "id": self.env.ref("base.in").id, "name": "India"},
                 {"code": "BE", "id": self.env.ref("base.be").id, "name": "Belgium"},
             ],
-            "res.groups": [{'full_name': 'Role / Member', 'id': self.env.ref("base.group_user").id}],
+            "res.groups": [{"full_name": "Role / Member", "id": self.env.ref("base.group_user").id}],
             "res.partner": self._filter_partners_fields(
                 self._expected_result_for_persona(
                     self.users[0],
@@ -861,9 +870,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_interest_dt": last_interest_dt,
                 "livechat_end_dt": False,
                 "livechat_channel_id": self.im_livechat_channel.id,
+                "livechat_conversation_tag_ids": [self.conversation_tag.id],
                 "livechat_note": False,
                 "livechat_outcome": "no_answer",
                 "livechat_status": "in_progress",
+                "livechat_visitor_id": False,
                 "livechat_expertise_ids": [],
                 "livechat_operator_id": self.users[0].partner_id.id,
                 "member_count": 2,
@@ -889,9 +900,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_interest_dt": last_interest_dt,
                 "livechat_end_dt": False,
                 "livechat_channel_id": self.im_livechat_channel.id,
+                "livechat_conversation_tag_ids": [],
                 "livechat_note": False,
                 "livechat_outcome": "no_answer",
                 "livechat_status": "in_progress",
+                "livechat_visitor_id": False,
                 "livechat_expertise_ids": [],
                 "livechat_operator_id": self.users[0].partner_id.id,
                 "member_count": 2,
