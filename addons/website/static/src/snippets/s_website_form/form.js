@@ -662,6 +662,21 @@ export class Form extends Interaction {
                 }
             }
         }
+        // Checking the allowed file input
+        const onlyAllowPdf = inputEl.dataset.onlyAllowPdf;
+        if (onlyAllowPdf === "true") {
+            for (const file of Object.values(inputEl.files)) {
+                if (file.type !== "application/pdf") {
+                    const errorMessage = _t(
+                        "Please upload a PDF file. The file “%(fileName)s” is not a PDF.",
+                        { fileName: file.name }
+                    );
+                    this.updateStatusInline(errorMessage, inputEl);
+                    return false;
+                }
+            }
+        }
+
         return true;
     }
 

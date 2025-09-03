@@ -274,6 +274,7 @@ export function setActiveProperties(fieldEl, field) {
     } else if (fileInputEl) {
         field.maxFilesNumber = fileInputEl.dataset.maxFilesNumber;
         field.maxFileSize = fileInputEl.dataset.maxFileSize;
+        field.onlyAllowPdf = fileInputEl.dataset.onlyAllowPdf;
     }
     // property value is needed for date/datetime (formated date).
     field.propertyValue = input && input.value;

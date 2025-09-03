@@ -215,6 +215,9 @@
             applyWithUnit="false"
         />
     </BuilderRow>
+    <BuilderRow label.translate="Restrict to PDF">
+        <BuilderCheckbox dataAttributeAction="'onlyAllowPdf'" dataAttributeActionValue="'true'" applyTo="`input[type='file']`"/>
+    </BuilderRow>
     <BuilderRow t-if="state.valueList">
         <div class="d-flex flex-column w-100">
             <p class="hb-row-label mb-0 flex-grow-0 flex-shrink-0 flex-basis-auto">
