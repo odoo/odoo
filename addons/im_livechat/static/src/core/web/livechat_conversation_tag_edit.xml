@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="im_livechat.ConversationTagEdit">
+        <div class="o-livechat-ConversationTagEdit rounded d-flex flex-column p-2 flex-grow-1 bg-inherit">
+            <div class="d-flex">
+                <input class="o-livechat-ConversationTagEdit-search form-control lh-1 px-2 bg-view shadow-sm" t-model="state.searchStr" t-ref="autofocus" placeholder="Search or create new tags" t-on-keydown="onKeydownSearchInput"/>
+                <button class="btn btn-secondary ms-1" t-att-disabled="!state.searchStr || allSelectableTagNames.includes(state.searchStr)" t-on-click="onClickCreateToggle">
+                    Create
+                </button>
+            </div>
+            <ul class="d-flex flex-column mx-0 pt-1 pb-0 overflow-auto o-scrollbar-thin list-group border-0 flex-grow-1" t-att-class="{ 'align-items-start': state.selectableTags.length === 0 }">
+                <div t-if="allSelectedTagNames.includes(state.searchStr)" class="smaller fst-italic text-muted mx-1 opacity-50">
+                    Tag has already been selected
+                </div>
+                <div t-elif="remainingSelectableTags.length === 0" class="smaller fst-italic text-muted mx-1 opacity-50">
+                    No tags found
+                </div>
+                <t t-foreach="remainingSelectableTags" t-as="selectableTag" t-key="selectableTag.id">
+                    <li class="o-livechat-ConversationTagEdit-selectable object-fit-cover d-flex align-items-center p-1 gap-1 btn list-group-item border-0 rounded-0" t-att-class="{ 'o-odd': selectableTag_index % 2 === 1 }" t-on-click="() => this.toggleSelectedTag(selectableTag)">
+                        <div class="d-flex flex-grow-1 mx-2 overflow-hidden align-items-baseline">
+                            <span class="text-truncate" t-esc="selectableTag.name"/>
+                        </div>
+                    </li>
+                </t>
+            </ul>
+            <div t-if="props.thread.livechat_conversation_tag_ids.length > 0" class="overflow-auto pt-2">
+                <div class="o-livechat-ConversationTagEdit-selectedList d-flex flex-wrap overflow-auto o-scrollbar-thin">
+                    <t t-foreach="props.thread.livechat_conversation_tag_ids" t-as="selectedTag" t-key="selectedTag.id">
+                        <button class="btn btn-light fw-bolder smaller pe-1 o_tag" t-att-class="'o_tag_color_' + selectedTag.color" title="Unselect tag" t-on-click="() => this.onClickFooterSelectedTag(selectedTag)">
+                            <t t-esc="selectedTag.name"/><i class="oi oi-close border border-dark-subtle ms-1"/>
+                        </button>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>
