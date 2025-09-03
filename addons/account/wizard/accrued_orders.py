@@ -182,14 +182,14 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                     if is_purchase:
                         # Compute the price unit from the amount to invoice if there is one,
                         # otherwise use the PO line price unit.
-                        price_unit = order_line.price_unit
+                        price_unit = order_line.price_unit_discounted
                         quantity_to_invoice = order_line.qty_invoiced_at_date - order_line.qty_received_at_date
                         if quantity_to_invoice >= 1:
                             posted_invoice_lines = order_line.invoice_lines.filtered(lambda ivl:
                                 ivl.move_id.state == 'posted' and ivl.date <= accrual_entry_date
                             )
                             invoiced_values = sum(ivl.price_subtotal for ivl in posted_invoice_lines)
-                            received_values = order_line.qty_received_at_date * order_line.price_unit
+                            received_values = order_line.qty_received_at_date * order_line.price_unit_discounted
                             value_to_invoice = invoiced_values - received_values
                             price_unit = value_to_invoice / quantity_to_invoice
 
