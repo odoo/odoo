@@ -1,9 +1,10 @@
-import { Component, useState, useRef, onWillUpdateProps } from "@odoo/owl";
-import { Time, parseTime } from "@web/core/l10n/time";
+import { Component, onWillUpdateProps, useRef, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { Time, parseTime } from "@web/core/l10n/time";
+import { mergeClasses } from "@web/core/utils/classname";
 import { useChildRef } from "@web/core/utils/hooks";
 
 const HOURS = [...Array(24)].map((_, i) => i);
@@ -26,7 +27,7 @@ export class TimePicker extends Component {
         DropdownItem,
     };
     static props = {
-        class: { type: String, optional: true },
+        cssClass: { type: [String, Array, Object], optional: true },
         value: { type: [String, Time, { value: false }, { value: null }], optional: true },
         onChange: { type: Function, optional: true },
         onInvalid: { type: Function, optional: true },
@@ -35,7 +36,7 @@ export class TimePicker extends Component {
         placeholder: { type: String, optional: true },
     };
     static defaultProps = {
-        class: "",
+        cssClass: {},
         value: "00:00",
         onChange: () => {},
         onInvalid: () => {},
@@ -61,6 +62,12 @@ export class TimePicker extends Component {
         this.onPropsUpdated(this.props);
 
         onWillUpdateProps((nextProps) => this.onPropsUpdated(nextProps));
+    }
+
+    get cssClass() {
+        return mergeClasses(this.props.cssClass, {
+            o_time_picker_seconds: this.props.showSeconds,
+        });
     }
 
     /**
