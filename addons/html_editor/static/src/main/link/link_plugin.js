@@ -273,6 +273,7 @@ export class LinkPlugin extends Plugin {
         split_element_block_overrides: this.handleSplitBlock.bind(this),
         insert_line_break_element_overrides: this.handleInsertLineBreak.bind(this),
         delete_image_overrides: this.deleteImageLink.bind(this),
+        double_click_overrides: this.doubleClickLinkOverrides.bind(this),
         triple_click_overrides: this.tripleClickButtonOverrides.bind(this),
     };
 
@@ -1248,6 +1249,55 @@ export class LinkPlugin extends Plugin {
 
     isLinkImmutable(linkEl) {
         return this.getResource("immutable_link_selectors").some((s) => linkEl.matches(s));
+    }
+
+    doubleClickLinkOverrides(ev) {
+        const clickedLink = closestElement(ev.target, "a");
+        // If we double click on a link, limit the selection inside the link
+        if (clickedLink) {
+            // mimic the double click behavior of browsers
+            this.dependencies.selection.modifySelection("extend", "backward", "word");
+            this.document.getSelection().collapseToStart();
+            this.dependencies.selection.modifySelection("extend", "forward", "word");
+
+            const { anchorNode, focusNode, anchorOffset, focusOffset } =
+                this.dependencies.selection.getEditableSelection();
+
+            // We reset the word selection of double click to be inside the current clicked link
+            // when it spreads over different links. Because it's a word selection, we need to keep
+            // the correct offsets when resetting.
+            if (clickedLink.contains(anchorNode) && !clickedLink.contains(focusNode)) {
+                this.dependencies.selection.setSelection({
+                    anchorNode,
+                    anchorOffset,
+                    focusNode: clickedLink,
+                    focusOffset: nodeSize(clickedLink) - 1, // -1 to avoid the FEFF char
+                });
+            } else if (!clickedLink.contains(anchorNode) && clickedLink.contains(focusNode)) {
+                this.dependencies.selection.setSelection({
+                    anchorNode: clickedLink,
+                    anchorOffset: 1, // 1 to avoid the FEFF char
+                    focusNode,
+                    focusOffset,
+                });
+            } else if (!clickedLink.contains(anchorNode) && !clickedLink.contains(focusNode)) {
+                this.dependencies.selection.setSelection({
+                    anchorNode: clickedLink,
+                    anchorOffset: 1, // 1 to avoid the FEFF char
+                    focusNode: clickedLink,
+                    focusOffset: nodeSize(clickedLink) - 1, // -1 to avoid the FEFF char
+                });
+            } else {
+                this.dependencies.selection.setSelection({
+                    anchorNode,
+                    anchorOffset,
+                    focusNode,
+                    focusOffset,
+                });
+            }
+
+            return true;
+        }
     }
 
     tripleClickButtonOverrides(ev) {
