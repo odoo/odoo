@@ -5,7 +5,7 @@
                 t-on-close="props.close" t-on-cancel="props.close" t-on-confirm="_onRestoreRevisionClick"
                 t-on-after-render="_onAfterRender">
             <div t-attf-class="dialog-container html-history-dialog #{state.revisionLoading ? 'html-history-loading' : 'html-history-loaded'}">
-                <div class="revision-list d-flex flex-column align-content-stretch">
+                <div class="revision-list d-flex flex-column align-content-stretch" t-attf-style="max-height: {{state.cssMaxHeight}}px;">
                     <t t-if="!state.revisionsData.length">
                         <div class="text-center w-100 pb-2 pt-0 px-0 fw-bolder">No history</div>
                     </t>
@@ -24,7 +24,7 @@
                         </a>
                     </t>
                 </div>
-                <div class="history-container">
+                <div class="history-container" t-attf-style="max-height: {{state.cssMaxHeight}}px;">
                     <div t-attf-class="history-content-view #{state.currentView === 'content' ? '' : 'd-none'}">
                         <div class="history-view-top-bar">
                             <div>
@@ -40,7 +40,7 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="history-view-inner">
+                        <div class="history-view-inner" t-attf-style="max-height: {{state.cssMaxHeight-20}}px;">
                             <t t-if="state.revisionLoading">
                                 <div class="d-flex flex-column justify-content-center align-items-center">
                                     <img src="/web/static/img/spin.svg" alt="Loading..." class="me-2"
@@ -87,7 +87,7 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="history-view-inner">
+                        <div class="history-view-inner" t-attf-style="max-height: {{state.cssMaxHeight-60}}px;">
                             <t t-if="state.revisionLoading">
                                 <div class="d-flex flex-column justify-content-center align-items-center">
                                     <img src="/web/static/img/spin.svg" alt="Loading..." class="me-2"
