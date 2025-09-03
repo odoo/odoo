@@ -152,15 +152,18 @@ export class Chatbot extends Record {
             return;
         }
         if (this.steps.at(-1)?.eq(this.currentStep)) {
-            const res = await rpc("/chatbot/step/trigger", {
+            const dataRequest = this.store.DataResponse.createRequest();
+            await rpc("/chatbot/step/trigger", {
                 channel_id: this.thread.id,
                 chatbot_script_id: this.script.id,
+                data_id: dataRequest.id,
             });
-            if (!res) {
+            await dataRequest._resultDef;
+            if (!dataRequest.chatbot_step) {
                 this.currentStep.isLast = true;
                 return;
             }
-            this.store.insert(res);
+            this.steps.push(dataRequest.chatbot_step);
         } else {
             const nextStepIndex = this.steps.lastIndexOf(this.currentStep) + 1;
             this.currentStep = this.steps[nextStepIndex];
