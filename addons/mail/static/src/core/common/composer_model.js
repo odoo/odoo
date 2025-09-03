@@ -32,13 +32,16 @@ export class Composer extends Record {
                 this.updateFrom = undefined;
                 return;
             }
-            this.updateFrom = "text";
             const validMentions = this.store.getMentionsFromText(this.composerText, {
                 mentionedChannels: this.mentionedChannels,
                 mentionedPartners: this.mentionedPartners,
                 mentionedRoles: this.mentionedRoles,
             });
-            this.composerHtml = prettifyMessageText(this.composerText, { validMentions });
+            const prettifiedHtml = prettifyMessageText(this.composerText, { validMentions });
+            if (this.composerHtml.toString() !== prettifiedHtml.toString()) {
+                this.updateFrom = "text";
+                this.composerHtml = prettifiedHtml;
+            }
         },
     });
     composerHtml = fields.Html(markup("<p><br></p>"), {
@@ -53,10 +56,13 @@ export class Composer extends Record {
                 this.updateFrom = undefined;
                 return;
             }
-            this.updateFrom = "html";
-            this.composerText = isHtmlEmpty(this.composerHtml)
+            const prettifiedText = isHtmlEmpty(this.composerHtml)
                 ? ""
                 : convertBrToLineBreak(this.composerHtml);
+            if (this.composerText !== prettifiedText) {
+                this.updateFrom = "html";
+                this.composerText = prettifiedText;
+            }
         },
     });
     thread = fields.One("Thread");
