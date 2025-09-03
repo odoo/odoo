@@ -182,22 +182,39 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                             # As included taxes are not taken into account in the price_unit, we need to compute the price_subtotal
                             qty_to_invoice = order_line.qty_received_at_date - order_line.qty_invoiced_at_date
                             price_subtotal = order_line.tax_ids.compute_all(
-                                order_line.price_unit,
+                                order_line.price_unit_discounted,
                                 currency=order_line.order_id.currency_id,
                                 quantity=qty_to_invoice,
                                 product=order_line.product_id,
                                 partner=order_line.order_id.partner_id)['total_excluded']
+
                         else:
+<<<<<<< ad6b835e9133495faeda9d50af0ddfdd5ebe413a
                             price_subtotal = order_line.amount_to_invoice_at_date
+||||||| bbd096ca1e1d0491151bd5174a9ee1805646130e
+                            price_subtotal = order_line.qty_to_invoice * order_line.price_unit
+=======
+                            price_subtotal = order_line.qty_to_invoice * order_line.price_unit_discounted
+>>>>>>> c85081305e0587f468a3e540ada2fc4730205ce1
                         amount_currency = order_line.currency_id.round(price_subtotal)
                         amount = order.currency_id._convert(amount_currency, self.company_id.currency_id, self.company_id)
                         label = _(
                             '%(order)s - %(order_line)s; %(quantity_billed)s Billed, %(quantity_received)s Received at %(unit_price)s each',
                             order=order.name,
                             order_line=_ellipsis(order_line.name, 20),
+<<<<<<< ad6b835e9133495faeda9d50af0ddfdd5ebe413a
                             quantity_billed=order_line.qty_invoiced_at_date,
                             quantity_received=order_line.qty_received_at_date,
                             unit_price=formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id),
+||||||| bbd096ca1e1d0491151bd5174a9ee1805646130e
+                            quantity_billed=order_line.qty_invoiced,
+                            quantity_received=order_line.qty_received,
+                            unit_price=formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id),
+=======
+                            quantity_billed=order_line.qty_invoiced,
+                            quantity_received=order_line.qty_received,
+                            unit_price=formatLang(self.env, amount_currency / order_line.qty_to_invoice, currency_obj=order.currency_id),
+>>>>>>> c85081305e0587f468a3e540ada2fc4730205ce1
                         )
                     else:
                         expense_account, stock_variation_account = self._get_product_expense_and_stock_var_accounts(product)
@@ -208,9 +225,19 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                             '%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, %(quantity_delivered)s Delivered at %(unit_price)s each',
                             order=order.name,
                             order_line=_ellipsis(order_line.name, 20),
+<<<<<<< ad6b835e9133495faeda9d50af0ddfdd5ebe413a
                             quantity_invoiced=order_line.qty_invoiced_at_date,
                             quantity_delivered=order_line.qty_delivered_at_date,
                             unit_price=formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id),
+||||||| bbd096ca1e1d0491151bd5174a9ee1805646130e
+                            quantity_invoiced=order_line.qty_invoiced,
+                            quantity_delivered=order_line.qty_delivered,
+                            unit_price=formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id),
+=======
+                            quantity_invoiced=order_line.qty_invoiced,
+                            quantity_delivered=order_line.qty_delivered,
+                            unit_price=formatLang(self.env, amount_currency / order_line.qty_to_invoice, currency_obj=order.currency_id),
+>>>>>>> c85081305e0587f468a3e540ada2fc4730205ce1
                         )
                         if expense_account and stock_variation_account:
                             label += " (*)"
