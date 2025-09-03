@@ -210,6 +210,7 @@ class ResConfigSettings(models.TransientModel):
 
     def action_website_create_new(self):
         return {
+            'name': _('Add Website'),
             'view_mode': 'form',
             'view_id': self.env.ref('website.view_website_form_view_themes_modal').id,
             'res_model': 'website',
