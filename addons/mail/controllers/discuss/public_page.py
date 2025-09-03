@@ -98,7 +98,7 @@ class PublicPageController(http.Controller):
                 timezone=request.env["mail.guest"]._get_timezone_from_request(request),
             )
         if guest and not guest_already_known:
-            store.add_global_values(shouldDisplayWelcomeViewInitially=True)
+            store.add_global_values(is_welcome_page_displayed=True)
             channel = channel.with_context(guest=guest)
         return self._response_discuss_public_template(store, channel)
 
