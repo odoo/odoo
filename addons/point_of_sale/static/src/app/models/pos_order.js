@@ -927,6 +927,10 @@ export class PosOrder extends Base {
         }
     }
 
+    canBeValidated() {
+        return this.isPaid() && this._isValidEmptyOrder();
+    }
+
     _generateTicketCode() {
         return random5Chars();
     }
