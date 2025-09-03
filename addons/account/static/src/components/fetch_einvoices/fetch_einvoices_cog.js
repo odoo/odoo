@@ -17,6 +17,12 @@ export class FetchEInvoices extends Component {
         this.action = useService("action");
     }
 
+    get buttonAction() {
+        return this.env.searchModel.globalContext.show_fetch_in_einvoices_button
+            ? "button_fetch_in_einvoices"
+            : "button_refresh_out_einvoices_status";
+    }
+
     get buttonLabel() {
         return this.env.searchModel.globalContext.show_fetch_in_einvoices_button
             ? _t("Fetch e-Invoices")
@@ -32,7 +38,7 @@ export class FetchEInvoices extends Component {
         this.action.doActionButton({
             type: "object",
             resId: journalId,
-            name: "button_fetch_in_einvoices",
+            name: this.buttonAction,
             resModel: "account.journal",
             onClose: () => window.location.reload(),
         });
