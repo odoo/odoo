@@ -519,7 +519,7 @@ export class ListPlugin extends Plugin {
     mergeSimilarLists(element) {
         if (
             !element.matches("ul, ol, li.oe-nested") ||
-            (element.matches("li.oe-nested") && !element.querySelector("ul, ol"))
+            (element.matches("li.oe-nested") && ![...element.childNodes].every(isListElement))
         ) {
             return;
         }
