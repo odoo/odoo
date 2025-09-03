@@ -34,14 +34,18 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         base_warehouse = self.picking_type_out.default_location_src_id.warehouse_id
         warehouse_id = (warehouse or base_warehouse).id
         suggest_context = {
+            "order_id": po.id,
+            "partner_id": po.partner_id.id,
             "domain": domain,
             "warehouse_id": warehouse_id,
             "suggest_based_on": based_on,
             "suggest_days": days,
             "suggest_percent": factor,
         }
-        po_id = self.env["purchase.order"].with_context(suggest_context).browse(po.id).ensure_one()
-        self.assertEqual(po_id.suggest_estimated_price, price)
+        products = self.env["product.product"].with_context(suggest_context).search(domain)
+        # Invalidate so changes such as partner_id or new deliveries without changing the @api_depends of the computes
+        products.invalidate_recordset(["suggest_estimated_price", "suggested_qty"])
+        self.assertEqual(sum(products.mapped("suggest_estimated_price")), price)
 
     def actionAddAll(self, po, based_on='30_days', days=30, factor=100, warehouse=False):
         base_warehouse = self.picking_type_out.default_location_src_id.warehouse_id
@@ -389,7 +393,6 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         receipt.action_confirm()
         receipt.action_assign()
         # Check estimed price deduce the forecast quantity.
-        po.invalidate_recordset(["suggest_estimated_price"])
         self.assertEstimatedPrice(po, 600, days=30)
         self.actionAddAll(po, based_on='30_days', days=30, factor=100)
         self.assertRecordValues(po.order_line, [
@@ -439,7 +442,6 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         receipt.action_confirm()
         receipt.action_assign()
 
-        po.invalidate_recordset(["suggest_estimated_price"])
         self.assertEstimatedPrice(po, 55, based_on='actual_demand', days=4)
         self.actionAddAll(po, based_on='actual_demand', days=30, factor=100)
         self.assertRecordValues(po.order_line, [

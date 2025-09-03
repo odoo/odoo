@@ -37,27 +37,6 @@ class PurchaseOrder(models.Model):
        help="Red: Late\n\
             Orange: To process today\n\
             Green: On time")
-    suggest_estimated_price = fields.Float(compute='_compute_suggest_estimated_price')
-
-    @api.depends_context("suggest_based_on", "suggest_percent", "suggest_days", "warehouse_id", "hashable_domain")
-    def _compute_suggest_estimated_price(self):
-        for purchase_order in self:
-            estimated_price = 0
-            seller_args = {
-                "partner_id": purchase_order.partner_id,
-                "params": {'order_id': purchase_order}
-            }
-            domain = [('type', '=', 'consu')]
-            if self.env.context.get('domain'):
-                domain = fields.Domain.AND([domain, self.env.context.get('domain')])
-            products = self.env['product.product'].search(domain)
-            for product in products.filtered(lambda p: p.suggested_qty > 0):
-                # Get lowest price pricelist for suggested_qty or lowest min_qty pricelist
-                seller = product._select_seller(quantity=product.suggested_qty, **seller_args) or \
-                         product._select_seller(quantity=None, ordered_by="min_qty", **seller_args)
-                price = seller.price_discounted if seller else product.standard_price
-                estimated_price += price * product.suggested_qty
-            purchase_order.suggest_estimated_price = estimated_price
 
     @api.depends('order_line.move_ids.picking_id')
     def _compute_picking_ids(self):
