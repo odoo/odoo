@@ -590,6 +590,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             self.assertAlmostEqual(allocation_worked_time.number_of_days, 8, 4, 'There should be 8 days allocated.')
             self.assertEqual(allocation_worked_time.nextcall, next_date, 'The next call date of the cron should be September 20th')
 
+    @freeze_time('2025-09-01')  # Monday
     def test_non_elligible_leaves(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'is_based_on_worked_time': True,
@@ -611,13 +612,12 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'number_of_days': 0,
             'allocation_type': 'accrual',
         })
-        self.setAllocationCreateDate(allocation_worked_time.id, '2025-09-01 00:00:00')  # Monday
         allocation_worked_time.action_approve()
         self.assertEqual(allocation_worked_time.number_of_days, 0, 'There should be no days allocated yet.')
 
         with freeze_time('2025-09-13'):  # Saturday 10 working days
             allocation_worked_time._update_accrual()
-            self.assertEqual(allocation_worked_time.number_of_days, 9, 'There should be 9 days allocated.')
+            self.assertEqual(allocation_worked_time.number_of_days, 10, 'There should be 10 days allocated.')
 
         timeoff_type = self.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
@@ -636,8 +636,9 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         with freeze_time('2025-09-20'):  # Saturday 15 working days - 3 leaves
             allocation_worked_time._update_accrual()
-            self.assertEqual(allocation_worked_time.number_of_days, 11, 'There should be 11 days allocated.')
+            self.assertEqual(allocation_worked_time.number_of_days, 12, 'There should be 12 days allocated.')
 
+    @freeze_time('2025-09-01')  # Monday
     def test_elligible_leaves(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'is_based_on_worked_time': True,
@@ -659,13 +660,12 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'number_of_days': 0,
             'allocation_type': 'accrual',
         })
-        self.setAllocationCreateDate(allocation_worked_time.id, '2025-09-01 00:00:00')  # Monday
         allocation_worked_time.action_approve()
         self.assertEqual(allocation_worked_time.number_of_days, 0, 'There should be no days allocated yet.')
 
         with freeze_time('2025-09-13'):  # Saturday 10 working days
             allocation_worked_time._update_accrual()
-            self.assertEqual(allocation_worked_time.number_of_days, 9, 'There should be 9 days allocated.')
+            self.assertEqual(allocation_worked_time.number_of_days, 10, 'There should be 10 days allocated.')
 
         timeoff_eligible_type = self.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
@@ -684,8 +684,9 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         with freeze_time('2025-09-20'):  # Saturday 15 working days
             allocation_worked_time._update_accrual()
-            self.assertEqual(allocation_worked_time.number_of_days, 14, 'There should be 14 days allocated.')
+            self.assertEqual(allocation_worked_time.number_of_days, 15, 'There should be 15 days allocated.')
 
+    @freeze_time('2025-09-01')  # Monday
     def test_worked_leaves(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'is_based_on_worked_time': True,
@@ -707,13 +708,12 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'number_of_days': 0,
             'allocation_type': 'accrual',
         })
-        self.setAllocationCreateDate(allocation_worked_time.id, '2025-09-01 00:00:00')  # Monday
         allocation_worked_time.action_approve()
         self.assertEqual(allocation_worked_time.number_of_days, 0, 'There should be no days allocated yet.')
 
         with freeze_time('2025-09-13'):  # Saturday 10 working days
             allocation_worked_time._update_accrual()
-            self.assertEqual(allocation_worked_time.number_of_days, 9, 'There should be 9 days allocated.')
+            self.assertEqual(allocation_worked_time.number_of_days, 10, 'There should be 10 days allocated.')
 
         remote_work_type = self.env['hr.leave.type'].create({
             'name': 'Remote Work',
@@ -731,7 +731,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         with freeze_time('2025-09-20'):  # Saturday 15 working days
             allocation_worked_time._update_accrual()
-            self.assertEqual(allocation_worked_time.number_of_days, 14, 'There should be 14 days allocated.')
+            self.assertEqual(allocation_worked_time.number_of_days, 15, 'There should be 15 days allocated.')
 
     def test_check_max_value(self):
         with freeze_time("2017-12-05"):
