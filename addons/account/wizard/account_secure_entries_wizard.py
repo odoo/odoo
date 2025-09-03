@@ -156,7 +156,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
                                  "The entries from journal prefixes containing them will not be secured: %(prefix_info)s",
                                  prefix_info=ignored_sequence_prefixes),
                     'level': 'danger',
-                    'action_text': _("Review"),
+                    'action_text': _("Review Statements"),
                     'action': wizard.company_id._get_unreconciled_statement_lines_redirect_action(wizard.unreconciled_bank_statement_line_ids),
                 }
 
@@ -167,7 +167,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
             if draft_entries:
                 warnings['account_unhashed_draft_entries'] = {
                     'message': _("There are still draft entries before the selected date."),
-                    'action_text': _("Review"),
+                    'action_text': _("Review Entries"),
                     'action': wizard.action_show_draft_moves_in_hashed_period(),
                 }
 
@@ -175,7 +175,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
             if not_hashable_unlocked_moves:
                 warnings['account_not_hashable_unlocked_moves'] = {
                     'message': _("There are entries that cannot be hashed. They can be protected by the Hard Lock Date."),
-                    'action_text': _("Review"),
+                    'action_text': _("Review Entries"),
                     'action': wizard.action_show_moves(not_hashable_unlocked_moves),
                 }
 
@@ -194,7 +194,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
                 domain = Domain.OR(OR_domains)
                 warnings['account_sequence_gap'] = {
                     'message': _("Securing these entries will create at least one gap in the sequence."),
-                    'action_text': _("Review"),
+                    'action_text': _("Review Entries"),
                     'action': {
                         **self.env['account.journal']._show_sequence_holes(domain),
                         'views': [[self.env.ref('account.view_move_tree_multi_edit').id, 'list'], [self.env.ref('account.view_move_form').id, 'form']],
@@ -205,7 +205,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
             if moves_to_hash_after_selected_date:
                 warnings['account_move_to_secure_after_selected_date'] = {
                     'message': _("Securing these entries will also secure entries after the selected date."),
-                    'action_text': _("Review"),
+                    'action_text': _("Review Entries"),
                     'action': wizard.action_show_moves(moves_to_hash_after_selected_date),
                 }
 
