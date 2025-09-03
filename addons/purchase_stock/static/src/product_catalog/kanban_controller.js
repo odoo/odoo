@@ -16,7 +16,7 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
             basedOn: this.props.context.vendor_suggest_based_on,
             percentFactor: this.props.context.vendo_suggest_percent,
             poState: this.props.context.po_state,
-            estimatedPrice: 0.0,
+            totalEstimatedPrice: 0.0,
             currencyId: this.props.context.product_catalog_currency_id,
             digits: this.props.context.product_catalog_digits,
             vendorName: this.props.context.vendor_name,
@@ -34,13 +34,16 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
             await this.model.root.load({}); // Reload the Kanban with ctx
 
             if (this.state.suggestToggle.isOn) {
-                const [po] = await this.orm.read(
-                    "purchase.order",
-                    [this.orderId],
+                const product_prices = await this.orm.searchRead(
+                    "product.product",
+                    this.model.config.domain,
                     ["suggest_estimated_price"],
                     { context: this._getCatalogContext() }
                 );
-                this.state.estimatedPrice = po?.suggest_estimated_price || 0;
+                this.state.totalEstimatedPrice = product_prices.reduce(
+                    (sum, p) => sum + Number(p.suggest_estimated_price || 0),
+                    0
+                );
                 await this._reorderKanbanGrid();
             }
         }, 300); // Enough to type eg. 110 in percent input without rendering 3 times
@@ -146,7 +149,6 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
         return {
             ...ctx,
             domain: this.model.config.domain,
-            hashable_domain: JSON.stringify(this.model.config.domain), // To trigger api.depends
             warehouse_id: this.props.context.warehouse_id,
             suggest_based_on: this.state.basedOn,
             suggest_days: this.state.numberOfDays,

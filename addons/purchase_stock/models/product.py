@@ -28,8 +28,9 @@ class ProductProduct(models.Model):
     purchase_order_line_ids = fields.One2many('purchase.order.line', 'product_id', string="PO Lines")  # used to compute quantities
     monthly_demand = fields.Float(compute='_compute_monthly_demand')
     suggested_qty = fields.Integer(compute="_compute_suggested_quantity")
+    suggest_estimated_price = fields.Float(compute='_compute_suggest_estimated_price')
 
-    @api.depends("qty_available", "virtual_available", "incoming_qty", "monthly_demand")
+    @api.depends("monthly_demand")
     @api.depends_context("suggest_based_on", "suggest_days", "suggest_percent", "warehouse_id")
     def _compute_suggested_quantity(self):
         """ IMPROVE: computes too many time for one suggestion """
@@ -46,6 +47,27 @@ class ProductProduct(models.Model):
                 qty -= max(product.qty_available, 0) + max(product.incoming_qty, 0)
             product.suggested_qty = max(float_round(qty, precision_digits=0, rounding_method="UP"), 0)
 
+    @api.depends("monthly_demand")
+    @api.depends_context("suggest_based_on", "suggest_days", "suggest_percent", "warehouse_id")
+    def _compute_suggest_estimated_price(self):
+        """ IMPROVE: computes too many time for one suggestion """
+        ctx = self.env.context
+        seller_args = {
+            "partner_id": self.env['res.partner'].browse(ctx.get("partner_id")),
+            "params": {'order_id': self.env['purchase.order'].browse(ctx.get("order_id"))}
+        }
+        # for product in products.filtered(lambda p: p.suggested_qty > 0):
+        for product in self:
+            product.suggest_estimated_price = 0.0
+            if product.suggested_qty <= 0:
+                continue
+            # Get lowest price pricelist for suggested_qty or lowest min_qty pricelist
+            seller = product._select_seller(quantity=product.suggested_qty, **seller_args) or \
+                     product._select_seller(quantity=None, ordered_by="min_qty", **seller_args)
+
+            price = seller.price_discounted if seller else product.standard_price
+            product.suggest_estimated_price = price * product.suggested_qty
+
     @api.depends_context('suggest_days', 'suggest_based_on', 'warehouse_id')
     def _compute_quantities(self):
         return super()._compute_quantities()
@@ -53,7 +75,8 @@ class ProductProduct(models.Model):
     def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
         if self.env.context.get("suggest_based_on") and "suggest_days" in self.env.context:
             # Override to compute actual demand suggestion and update forecast on Kanban card
-            to_date = fields.Datetime.now() + relativedelta(days=self.env.context.get("suggest_days"))
+            if self.env.context.get("suggest_based_on") == "actual_demand":
+                to_date = fields.Datetime.now() + relativedelta(days=self.env.context.get("suggest_days"))
         return super()._compute_quantities_dict(
             lot_id=lot_id,
             owner_id=owner_id,
