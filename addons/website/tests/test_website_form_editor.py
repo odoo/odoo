@@ -21,8 +21,6 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
             'phone': "+1 555-555-5555",
         })
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_tour(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_form_editor_tour', login='admin', timeout=240)
         self.start_tour('/', 'website_form_editor_tour_submit')

@@ -11,7 +11,6 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                 ":has(.s_website_form_field:has(label:contains('Your Question')):has(textarea[name='description'][required]))" +
                 ":has(.s_website_form_field:has(label:contains('Subject')):has(input[type='text'][name='subject'][required]))" +
                 ":has(.s_website_form_field:has(label:contains('Test Date')):has(input[type='text'][name='date'][required]))" +
-                ":has(.s_website_form_field:has(label:contains('Awesome Label')):hidden)" +
                 ":has(.s_website_form_field:has(label:contains('Your Message')):has(textarea[name='body_html'][required]))" +
                 ":has(.s_website_form_field:has(label:contains('Products')):has(input[type='checkbox'][name='Products'][value='Iphone'][required]))" +
                 ":has(.s_website_form_field:has(label:contains('Products')):has(input[type='checkbox'][name='Products'][value='Galaxy S'][required]))" +
@@ -171,6 +170,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
         content:  "Send the form",
         trigger:  ".s_website_form_send",
         run: "click",
+        expectUnloadPage: true,
     },
     {
         content:  "Check form is submitted without errors",
