@@ -47,6 +47,8 @@ export class HolidaysListController extends ListController {
             } else {
                 this.onClickViewButton(params);
             }
+        } else {
+            this.onClickViewButton(params);
         }
     }
 
